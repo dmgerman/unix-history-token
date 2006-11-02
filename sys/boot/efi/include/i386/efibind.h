@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efefind.h  Abstract:      EFI to compile bindings     Revision History  --*/
+comment|/*++  Copyright (c)  1999 - 2003 Intel Corporation. All rights reserved This software and associated documentation (if any) is furnished under a license and may only be used or copied in accordance with the terms of the license. Except as permitted by such license, no part of this software or documentation may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the express written consent of Intel Corporation.  Module Name:      efefind.h  Abstract:      EFI to compile bindings     Revision History  --*/
 end_comment
 
 begin_pragma
@@ -15,8 +15,33 @@ name|(
 name|)
 end_pragma
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
-comment|/*  * Basic int types of various widths  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Basic int types of various widths
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_if
@@ -30,7 +55,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/* No ANSI C 1999/2000 stdint.h integer width declarations */
+comment|// No ANSI C 1999/2000 stdint.h integer width declarations
 end_comment
 
 begin_if
@@ -40,7 +65,7 @@ name|_MSC_EXTENSIONS
 end_if
 
 begin_comment
-comment|/* Use Microsoft C compiler integer width declarations */
+comment|// Use Microsoft C compiler integer width declarations
 end_comment
 
 begin_typedef
@@ -115,7 +140,7 @@ name|UNIX_LP64
 end_ifdef
 
 begin_comment
-comment|/* Use LP64 programming model from C_FLAGS for integer width declarations */
+comment|// Use LP64 programming model from C_FLAGS for integer width declarations
 end_comment
 
 begin_typedef
@@ -184,7 +209,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Assume P64 programming model from C_FLAGS for integer width declarations */
+comment|// Assume P64 programming model from C_FLAGS for integer width declarations
 end_comment
 
 begin_typedef
@@ -264,8 +289,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Basic EFI types of various widths  */
+comment|/* __FreeBSD__ */
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Basic EFI types of various widths
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -463,12 +505,6 @@ name|MAX_ADDRESS
 value|0xFFFFFFFF
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EFI_NT_EMULATOR
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -477,26 +513,16 @@ parameter_list|()
 value|__asm { int 3 }
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BREAKPOINT
-parameter_list|()
-value|while (TRUE);
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|//
+end_comment
 
 begin_comment
-comment|/*  * Pointers must be aligned to these address to function  */
+comment|// Pointers must be aligned to these address to function
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -520,7 +546,15 @@ value|(UINTN)Adjustment = 0; \             if((UINTN)Value % MIN_ALIGNMENT_SIZE)
 end_define
 
 begin_comment
-comment|/*  * Define macros to build data structure signatures from characters.  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Define macros to build data structure signatures from characters.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -576,44 +610,31 @@ value|(EFI_SIGNATURE_32(A,B,C,D) | ((UINT64)(EFI_SIGNATURE_32(E,F,G,H))<< 32))
 end_define
 
 begin_comment
-comment|/*  * To export& import functions in the EFI emulator environment  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|EFI_NT_EMULATOR
-end_if
-
-begin_define
-define|#
-directive|define
-name|EXPORTAPI
-value|__declspec( dllexport )
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|EXPORTAPI
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * EFIAPI - prototype calling convention for EFI function pointers  * BOOTSERVICE - prototype for implementation of a boot service interface  * RUNTIMESERVICE - prototype for implementation of a runtime service interface  * RUNTIMEFUNCTION - prototype for implementation of a runtime function that  *	is not a service  * RUNTIME_CODE - pragma macro for declaring runtime code      */
+comment|//
 end_comment
 
 begin_comment
-comment|/* Forces EFI calling conventions reguardless of compiler options */
+comment|// EFIAPI - prototype calling convention for EFI function pointers
+end_comment
+
+begin_comment
+comment|// BOOTSERVICE - prototype for implementation of a boot service interface
+end_comment
+
+begin_comment
+comment|// RUNTIMESERVICE - prototype for implementation of a runtime service interface
+end_comment
+
+begin_comment
+comment|// RUNTIMEFUNCTION - prototype for implementation of a runtime function that is not a service
+end_comment
+
+begin_comment
+comment|// RUNTIME_CODE - pragma macro for declaring runtime code
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_ifndef
@@ -621,6 +642,10 @@ ifndef|#
 directive|ifndef
 name|EFIAPI
 end_ifndef
+
+begin_comment
+comment|// Forces EFI calling conventions reguardless of compiler options
+end_comment
 
 begin_if
 if|#
@@ -635,6 +660,10 @@ name|EFIAPI
 value|__cdecl
 end_define
 
+begin_comment
+comment|// Force C calling convention for Microsoft C compiler
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -645,6 +674,10 @@ define|#
 directive|define
 name|EFIAPI
 end_define
+
+begin_comment
+comment|// Substitute expresion to force C calling convention
+end_comment
 
 begin_endif
 endif|#
@@ -661,6 +694,14 @@ define|#
 directive|define
 name|BOOTSERVICE
 end_define
+
+begin_comment
+comment|//#define RUNTIMESERVICE(proto,a)    alloc_text("rtcode",a); proto a
+end_comment
+
+begin_comment
+comment|//#define RUNTIMEFUNCTION(proto,a)   alloc_text("rtcode",a); proto a
+end_comment
 
 begin_define
 define|#
@@ -697,7 +738,7 @@ define|#
 directive|define
 name|END_RUNTIME_DATA
 parameter_list|()
-value|data_seg("")
+value|data_seg()
 end_define
 
 begin_define
@@ -717,11 +758,81 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|EFI_NO_INTERFACE_DECL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EFI_FORWARD_DECLARATION
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFI_INTERFACE_DECL
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|EFI_FORWARD_DECLARATION
+parameter_list|(
+name|x
+parameter_list|)
+value|typedef struct _##x x
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFI_INTERFACE_DECL
+parameter_list|(
+name|x
+parameter_list|)
+value|typedef struct x
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFI_NT_EMULATOR
 end_ifdef
 
 begin_comment
-comment|/*  * To help ensure proper coding of integrated drivers, they are  * compiled as DLLs.  In NT they require a dll init entry pointer.  * The macro puts a stub entry point into the DLL so it will load.  */
+comment|//
+end_comment
+
+begin_comment
+comment|// To help ensure proper coding of integrated drivers, they are
+end_comment
+
+begin_comment
+comment|// compiled as DLLs.  In NT they require a dll init entry pointer.
+end_comment
+
+begin_comment
+comment|// The macro puts a stub entry point into the DLL so it will load.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -732,7 +843,7 @@ parameter_list|(
 name|InitFunction
 parameter_list|)
 define|\
-value|UINTN                                       \     __stdcall                                   \     _DllMainCRTStartup (                        \         UINTN    Inst,                          \         UINTN    reason_for_call,               \         VOID    *rserved                        \         )                                       \     {                                           \         return 1;                               \     }                                           \                                                 \     int                                         \     EXPORTAPI                                   \     __cdecl                                     \     InitializeDriver (                          \         void *ImageHandle,                      \         void *SystemTable                       \         )                                       \     {                                           \         return InitFunction(ImageHandle, SystemTable);       \     }
+value|EFI_STATUS                                          \     InitFunction (                                      \       EFI_HANDLE  ImageHandle,                          \       EFI_SYSTEM_TABLE  *SystemTable                    \       );                                                \                                                         \     UINTN                                               \     __stdcall                                           \     _DllMainCRTStartup (                                \         UINTN    Inst,                                  \         UINTN    reason_for_call,                       \         VOID    *rserved                                \         )                                               \     {                                                   \         return 1;                                       \     }                                                   \                                                         \     int                                                 \     __declspec( dllexport )                             \     __cdecl                                             \     InitializeDriver (                                  \         void *ImageHandle,                              \         void *SystemTable                               \         )                                               \     {                                                   \         return InitFunction(ImageHandle, SystemTable);  \     }
 end_define
 
 begin_define
@@ -758,11 +869,23 @@ directive|else
 end_else
 
 begin_comment
-comment|/* EFI_NT_EMULATOR */
+comment|// EFI_NT_EMULATOR
 end_comment
 
 begin_comment
-comment|/*  * When build similiar to FW, then link everything together as  * one big module.  */
+comment|//
+end_comment
+
+begin_comment
+comment|// When build similiar to FW, then link everything together as
+end_comment
+
+begin_comment
+comment|// one big module.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -797,8 +920,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFI_FW_NT */
+comment|// EFI_FW_NT
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
 
 begin_define
 define|#
@@ -809,6 +938,79 @@ name|x
 parameter_list|)
 value|struct x
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Some compilers don't support the forward reference construct:
+end_comment
+
+begin_comment
+comment|//  typedef struct XXXXX
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// The following macro provide a workaround for such cases.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO_INTERFACE_DECL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INTERFACE_DECL
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|INTERFACE_DECL
+parameter_list|(
+name|x
+parameter_list|)
+value|typedef struct x
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
 
 begin_if
 if|#
@@ -826,6 +1028,10 @@ name|:
 name|4731
 name|)
 end_pragma
+
+begin_comment
+comment|// Suppress warnings about modification of EBP
+end_comment
 
 begin_endif
 endif|#

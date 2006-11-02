@@ -16,11 +16,19 @@ name|_EFI_SER_H
 end_define
 
 begin_comment
-comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efiser.h  Abstract:      EFI serial protocol  Revision History  --*/
+comment|/*++  Copyright (c)  1999 - 2002 Intel Corporation. All rights reserved This software and associated documentation (if any) is furnished under a license and may only be used or copied in accordance with the terms of the license. Except as permitted by such license, no part of this software or documentation may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the express written consent of Intel Corporation.  Module Name:      efiser.h  Abstract:      EFI serial protocol  Revision History  --*/
 end_comment
 
 begin_comment
-comment|/*  * Serial protocol  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Serial protocol
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -67,9 +75,12 @@ name|DefaultStopBits
 block|,
 name|OneStopBit
 block|,
+comment|// 1 stop bit
 name|OneFiveStopBits
 block|,
+comment|// 1.5 stop bits
 name|TwoStopBits
+comment|// 2 stop bits
 block|}
 name|EFI_STOP_BITS_TYPE
 typedef|;
@@ -82,12 +93,20 @@ name|EFI_SERIAL_CLEAR_TO_SEND
 value|0x0010
 end_define
 
+begin_comment
+comment|// RO
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EFI_SERIAL_DATA_SET_READY
 value|0x0020
 end_define
+
+begin_comment
+comment|// RO
+end_comment
 
 begin_define
 define|#
@@ -96,12 +115,20 @@ name|EFI_SERIAL_RING_INDICATE
 value|0x0040
 end_define
 
+begin_comment
+comment|// RO
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EFI_SERIAL_CARRIER_DETECT
 value|0x0080
 end_define
+
+begin_comment
+comment|// RO
+end_comment
 
 begin_define
 define|#
@@ -110,12 +137,20 @@ name|EFI_SERIAL_REQUEST_TO_SEND
 value|0x0002
 end_define
 
+begin_comment
+comment|// WO
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EFI_SERIAL_DATA_TERMINAL_READY
 value|0x0001
 end_define
+
+begin_comment
+comment|// WO
+end_comment
 
 begin_define
 define|#
@@ -124,12 +159,20 @@ name|EFI_SERIAL_INPUT_BUFFER_EMPTY
 value|0x0100
 end_define
 
+begin_comment
+comment|// RO
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EFI_SERIAL_OUTPUT_BUFFER_EMPTY
 value|0x0200
 end_define
+
+begin_comment
+comment|// RO
+end_comment
 
 begin_define
 define|#
@@ -138,6 +181,10 @@ name|EFI_SERIAL_HARDWARE_LOOPBACK_ENABLE
 value|0x1000
 end_define
 
+begin_comment
+comment|// RW
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -145,12 +192,20 @@ name|EFI_SERIAL_SOFTWARE_LOOPBACK_ENABLE
 value|0x2000
 end_define
 
+begin_comment
+comment|// RW
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EFI_SERIAL_HARDWARE_FLOW_CONTROL_ENABLE
 value|0x4000
 end_define
+
+begin_comment
+comment|// RW
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -322,7 +377,7 @@ block|{
 name|UINT32
 name|ControlMask
 decl_stmt|;
-comment|/* current Attributes. */
+comment|// current Attributes
 name|UINT32
 name|Timeout
 decl_stmt|;

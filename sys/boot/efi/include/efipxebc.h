@@ -16,11 +16,19 @@ name|_EFIPXEBC_H
 end_define
 
 begin_comment
-comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efipxebc.h  Abstract:      EFI PXE Base Code Protocol    Revision History  --*/
+comment|/*++  Copyright (c)  1999 - 2002 Intel Corporation. All rights reserved This software and associated documentation (if any) is furnished under a license and may only be used or copied in accordance with the terms of the license. Except as permitted by such license, no part of this software or documentation may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the express written consent of Intel Corporation.  Module Name:      efipxebc.h  Abstract:      EFI PXE Base Code Protocol    Revision History  --*/
 end_comment
 
 begin_comment
-comment|/*  * PXE Base Code protocol  */
+comment|//
+end_comment
+
+begin_comment
+comment|// PXE Base Code protocol
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -43,7 +51,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_TTL
-value|4
+value|8
 end_define
 
 begin_define
@@ -54,7 +62,15 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * Address definitions  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Address definitions
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -86,7 +102,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Packet definitions  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Packet definitions
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -170,6 +194,22 @@ name|EFI_PXE_BASE_CODE_DHCPV4_PACKET
 typedef|;
 end_typedef
 
+begin_comment
+comment|// TBD in EFI v1.1
+end_comment
+
+begin_comment
+comment|//typedef struct {
+end_comment
+
+begin_comment
+comment|//    UINT8                           reserved;
+end_comment
+
+begin_comment
+comment|//} EFI_PXE_BASE_CODE_DHCPV6_PACKET;
+end_comment
+
 begin_typedef
 typedef|typedef
 union|union
@@ -183,6 +223,7 @@ decl_stmt|;
 name|EFI_PXE_BASE_CODE_DHCPV4_PACKET
 name|Dhcpv4
 decl_stmt|;
+comment|//    EFI_PXE_BASE_CODE_DHCPV6_PACKET     Dhcpv6;
 block|}
 name|EFI_PXE_BASE_CODE_PACKET
 typedef|;
@@ -256,7 +297,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * IP Receive Filter definitions  */
+comment|//
+end_comment
+
+begin_comment
+comment|// IP Receive Filter definitions
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -319,7 +368,15 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/*  * ARP Cache definitions  */
+comment|//
+end_comment
+
+begin_comment
+comment|// ARP Cache definitions
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -356,7 +413,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * UDP definitions  */
+comment|//
+end_comment
+
+begin_comment
+comment|// UDP definitions
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -402,7 +467,15 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/*  * Discover() definitions  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Discover() definitions
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -525,7 +598,23 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * 17 through 32767 are reserved  * 32768 through 65279 are for vendor use  * 65280 through 65534 are reserved  */
+comment|//
+end_comment
+
+begin_comment
+comment|// 17 through 32767 are reserved
+end_comment
+
+begin_comment
+comment|// 32768 through 65279 are for vendor use
+end_comment
+
+begin_comment
+comment|// 65280 through 65534 are reserved
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -547,6 +636,13 @@ define|#
 directive|define
 name|EFI_PXE_BASE_CODE_BOOT_LAYER_INITIAL
 value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFI_PXE_BASE_CODE_BOOT_LAYER_CREDENTIALS
+value|0x8000
 end_define
 
 begin_typedef
@@ -604,7 +700,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Mtftp() definitions  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Mtftp() definitions
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -658,7 +762,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * PXE Base Code Mode structure  */
+comment|//
+end_comment
+
+begin_comment
+comment|// PXE Base Code Mode structure
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -793,7 +905,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * PXE Base Code Interface Function definitions  */
+comment|//
+end_comment
+
+begin_comment
+comment|// PXE Base Code Interface Function definitions
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -928,7 +1048,7 @@ name|Overwrite
 parameter_list|,
 name|IN
 name|OUT
-name|UINTN
+name|UINT64
 modifier|*
 name|BufferSize
 parameter_list|,
@@ -1322,7 +1442,15 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * PXE Base Code Protocol structure  */
+comment|//
+end_comment
+
+begin_comment
+comment|// PXE Base Code Protocol structure
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -1386,7 +1514,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Call Back Definitions  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Call Back Definitions
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -1398,7 +1534,15 @@ value|{ 0x245dca21, 0xfb7b, 0x11d3, 0x8f, 0x01, 0x00, 0xa0, 0xc9, 0x69, 0x72, 0x
 end_define
 
 begin_comment
-comment|/*  * Revision Number  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Revision Number
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define

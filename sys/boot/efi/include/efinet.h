@@ -16,7 +16,23 @@ name|_EFINET_H
 end_define
 
 begin_comment
-comment|/*++ Copyright (c) 1999  Intel Corporation  Module Name:     efinet.h  Abstract:     EFI Simple Network protocol  Revision History --*/
+comment|/*++ Copyright (c)  1999 - 2002 Intel Corporation. All rights reserved This software and associated documentation (if any) is furnished under a license and may only be used or copied in accordance with the terms of the license. Except as permitted by such license, no part of this software or documentation may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the express written consent of Intel Corporation.  Module Name:     efinet.h  Abstract:     EFI Simple Network protocol  Revision History --*/
+end_comment
+
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//      Simple Network Protocol
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -35,51 +51,85 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
-comment|/* 	 * Total number of frames received.  Includes frames with errors and 	 * dropped frames. 	 */
+comment|//
+comment|// Total number of frames received.  Includes frames with errors and
+comment|// dropped frames.
+comment|//
 name|UINT64
 name|RxTotalFrames
 decl_stmt|;
-comment|/* Number of valid frames received and copied into receive buffers. */
+comment|//
+comment|// Number of valid frames received and copied into receive buffers.
+comment|//
 name|UINT64
 name|RxGoodFrames
 decl_stmt|;
-comment|/* 	 * Number of frames below the minimum length for the media. 	 * This would be<64 for ethernet. 	 */
+comment|//
+comment|// Number of frames below the minimum length for the media.
+comment|// This would be<64 for ethernet.
+comment|//
 name|UINT64
 name|RxUndersizeFrames
 decl_stmt|;
-comment|/* 	 * Number of frames longer than the maxminum length for the 	 * media.  This would be>1500 for ethernet. 	 */
+comment|//
+comment|// Number of frames longer than the maxminum length for the
+comment|// media.  This would be>1500 for ethernet.
+comment|//
 name|UINT64
 name|RxOversizeFrames
 decl_stmt|;
-comment|/* Valid frames that were dropped because receive buffers were full. */
+comment|//
+comment|// Valid frames that were dropped because receive buffers were full.
+comment|//
 name|UINT64
 name|RxDroppedFrames
 decl_stmt|;
-comment|/* Number of valid unicast frames received and not dropped. */
+comment|//
+comment|// Number of valid unicast frames received and not dropped.
+comment|//
 name|UINT64
 name|RxUnicastFrames
 decl_stmt|;
-comment|/* Number of valid broadcast frames received and not dropped. */
+comment|//
+comment|// Number of valid broadcast frames received and not dropped.
+comment|//
 name|UINT64
 name|RxBroadcastFrames
 decl_stmt|;
-comment|/* Number of valid mutlicast frames received and not dropped. */
+comment|//
+comment|// Number of valid mutlicast frames received and not dropped.
+comment|//
 name|UINT64
 name|RxMulticastFrames
 decl_stmt|;
-comment|/* Number of frames w/ CRC or alignment errors. */
+comment|//
+comment|// Number of frames w/ CRC or alignment errors.
+comment|//
 name|UINT64
 name|RxCrcErrorFrames
 decl_stmt|;
-comment|/* 	 * Total number of bytes received.  Includes frames with errors 	 * and dropped frames. 	 */
+comment|//
+comment|// Total number of bytes received.  Includes frames with errors
+comment|// and dropped frames.
+comment|//
 name|UINT64
 name|RxTotalBytes
 decl_stmt|;
-comment|/* Transmit statistics. */
+comment|//
+comment|// Transmit statistics.
+comment|//
 name|UINT64
 name|TxTotalFrames
 decl_stmt|;
@@ -110,11 +160,15 @@ decl_stmt|;
 name|UINT64
 name|TxTotalBytes
 decl_stmt|;
-comment|/* Number of collisions detection on this subnet. */
+comment|//
+comment|// Number of collisions detection on this subnet.
+comment|//
 name|UINT64
 name|Collisions
 decl_stmt|;
-comment|/* Number of frames destined for unsupported protocol. */
+comment|//
+comment|// Number of frames destined for unsupported protocol.
+comment|//
 name|UINT64
 name|UnsupportedProtocol
 decl_stmt|;
@@ -122,6 +176,14 @@ block|}
 name|EFI_NETWORK_STATISTICS
 typedef|;
 end_typedef
+
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -138,6 +200,14 @@ block|}
 name|EFI_SIMPLE_NETWORK_STATE
 typedef|;
 end_typedef
+
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
 
 begin_define
 define|#
@@ -174,6 +244,14 @@ name|EFI_SIMPLE_NETWORK_RECEIVE_PROMISCUOUS_MULTICAST
 value|0x10
 end_define
 
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -201,6 +279,14 @@ directive|define
 name|EFI_SIMPLE_NETWORK_SOFTWARE_INTERRUPT
 value|0x08
 end_define
+
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
 
 begin_define
 define|#
@@ -278,6 +364,14 @@ name|EFI_SIMPLE_NETWORK_MODE
 typedef|;
 end_typedef
 
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
 begin_typedef
 typedef|typedef
 name|EFI_STATUS
@@ -296,6 +390,14 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
 begin_typedef
 typedef|typedef
 name|EFI_STATUS
@@ -313,6 +415,14 @@ name|This
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -342,6 +452,14 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
 begin_typedef
 typedef|typedef
 name|EFI_STATUS
@@ -364,6 +482,14 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
 begin_typedef
 typedef|typedef
 name|EFI_STATUS
@@ -381,6 +507,14 @@ name|This
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -423,6 +557,14 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
 begin_typedef
 typedef|typedef
 name|EFI_STATUS
@@ -450,6 +592,14 @@ name|OPTIONAL
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -486,6 +636,14 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
 begin_typedef
 typedef|typedef
 name|EFI_STATUS
@@ -517,6 +675,14 @@ name|MAC
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -554,6 +720,14 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
 begin_typedef
 typedef|typedef
 name|EFI_STATUS
@@ -584,6 +758,14 @@ name|OPTIONAL
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -633,6 +815,14 @@ name|OPTIONAL
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -686,6 +876,14 @@ name|OPTIONAL
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|///////////////////////////////////////////////////////////////////////////////
+end_comment
+
+begin_comment
+comment|//
+end_comment
 
 begin_define
 define|#

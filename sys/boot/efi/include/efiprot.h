@@ -16,11 +16,19 @@ name|_EFI_PROT_H
 end_define
 
 begin_comment
-comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efiprot.h  Abstract:      EFI Protocols    Revision History  --*/
+comment|/*++  Copyright (c)  1999 - 2002 Intel Corporation. All rights reserved This software and associated documentation (if any) is furnished under a license and may only be used or copied in accordance with the terms of the license. Except as permitted by such license, no part of this software or documentation may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the express written consent of Intel Corporation.  Module Name:      efiprot.h  Abstract:      EFI Protocols    Revision History  --*/
 end_comment
 
 begin_comment
-comment|/*  * Device Path protocol  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Device Path protocol
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -32,7 +40,15 @@ value|{ 0x9576e91, 0x6d3f, 0x11d2, 0x8e, 0x39, 0x0, 0xa0, 0xc9, 0x69, 0x72, 0x3b
 end_define
 
 begin_comment
-comment|/*  * Block IO protocol  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Block IO protocol
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -234,7 +250,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Disk Block IO protocol  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Disk Block IO protocol
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -350,7 +374,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Simple filesystem protocol  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Simple file system protocol
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -425,6 +457,18 @@ name|EFI_FILE_IO_INTERFACE
 typedef|;
 end_typedef
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
 begin_typedef
 typedef|typedef
 name|EFI_STATUS
@@ -464,7 +508,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/* Open modes */
+comment|// Open modes
 end_comment
 
 begin_define
@@ -489,7 +533,7 @@ value|0x8000000000000000
 end_define
 
 begin_comment
-comment|/* File attributes */
+comment|// File attributes
 end_comment
 
 begin_define
@@ -818,7 +862,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * File information types  */
+comment|//
+end_comment
+
+begin_comment
+comment|// File information types
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -866,7 +918,31 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The FileName field of the EFI_FILE_INFO data structure is variable length.  * Whenever code needs to know the size of the EFI_FILE_INFO data structure,  * it needs to be the size of the data structure without the FileName field.  * The following macro computes this size correctly no matter how big the  * FileName array is declared. This is required to make the EFI_FILE_INFO  * data structure ANSI compliant.   */
+comment|//
+end_comment
+
+begin_comment
+comment|// The FileName field of the EFI_FILE_INFO data structure is variable length.
+end_comment
+
+begin_comment
+comment|// Whenever code needs to know the size of the EFI_FILE_INFO data structure, it needs to
+end_comment
+
+begin_comment
+comment|// be the size of the data structure without the FileName field.  The following macro
+end_comment
+
+begin_comment
+comment|// computes this size correctly no matter how big the FileName array is declared.
+end_comment
+
+begin_comment
+comment|// This is required to make the EFI_FILE_INFO data structure ANSI compilant.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -915,7 +991,31 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The VolumeLabel field of the EFI_FILE_SYSTEM_INFO data structure is  * variable length. Whenever code needs to know the size of the  * EFI_FILE_SYSTEM_INFO data structure, it needs to be the size of the data  * structure without the VolumeLable field.  The following macro computes  * this size correctly no matter how big the VolumeLable array is declared.  * This is required to make the EFI_FILE_SYSTEM_INFO data structure ANSI  * compilant.   */
+comment|//
+end_comment
+
+begin_comment
+comment|// The VolumeLabel field of the EFI_FILE_SYSTEM_INFO data structure is variable length.
+end_comment
+
+begin_comment
+comment|// Whenever code needs to know the size of the EFI_FILE_SYSTEM_INFO data structure, it needs
+end_comment
+
+begin_comment
+comment|// to be the size of the data structure without the VolumeLable field.  The following macro
+end_comment
+
+begin_comment
+comment|// computes this size correctly no matter how big the VolumeLable array is declared.
+end_comment
+
+begin_comment
+comment|// This is required to make the EFI_FILE_SYSTEM_INFO data structure ANSI compilant.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -956,7 +1056,15 @@ value|EFI_FIELD_OFFSET(EFI_FILE_SYSTEM_VOLUME_LABEL_INFO,VolumeLabel)
 end_define
 
 begin_comment
-comment|/*  * Load file protocol  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Load file protocol
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -1028,7 +1136,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Device IO protocol  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Device IO protocol
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -1059,7 +1175,9 @@ name|IO_UINT32
 block|,
 name|IO_UINT64
 block|,
-comment|/*  * Specification Change: Copy from MMIO to MMIO vs. MMIO to buffer, buffer to  * MMIO  */
+comment|//
+comment|// Specification Change: Copy from MMIO to MMIO vs. MMIO to buffer, buffer to MMIO
+comment|//
 name|MMIO_COPY_UINT8
 block|,
 name|MMIO_COPY_UINT16
@@ -1077,14 +1195,16 @@ define|#
 directive|define
 name|EFI_PCI_ADDRESS
 parameter_list|(
-name|_bus
+name|bus
 parameter_list|,
-name|_dev
+name|dev
 parameter_list|,
-name|_func
+name|func
+parameter_list|,
+name|reg
 parameter_list|)
 define|\
-value|( (UINT64) ( (((UINTN)_bus)<< 24) + (((UINTN)_dev)<< 16) + (((UINTN)_func)<< 8) ) )
+value|( (UINT64) ( (((UINTN)bus)<< 24) + (((UINTN)dev)<< 16) + (((UINTN)func)<< 8) + ((UINTN)reg) ))
 end_define
 
 begin_typedef
@@ -1366,7 +1486,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Unicode Collation protocol  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Unicode Collation protocol
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -1398,7 +1526,7 @@ name|INTN
 function_decl|(
 name|EFIAPI
 modifier|*
-name|EFI_UNICODE_STRICOLL
+name|EFI_UNICODE_COLLATION_STRICOLL
 function_decl|)
 parameter_list|(
 name|IN
@@ -1426,7 +1554,7 @@ name|BOOLEAN
 function_decl|(
 name|EFIAPI
 modifier|*
-name|EFI_UNICODE_METAIMATCH
+name|EFI_UNICODE_COLLATION_METAIMATCH
 function_decl|)
 parameter_list|(
 name|IN
@@ -1454,7 +1582,7 @@ name|VOID
 function_decl|(
 name|EFIAPI
 modifier|*
-name|EFI_UNICODE_STRLWR
+name|EFI_UNICODE_COLLATION_STRLWR
 function_decl|)
 parameter_list|(
 name|IN
@@ -1478,7 +1606,7 @@ name|VOID
 function_decl|(
 name|EFIAPI
 modifier|*
-name|EFI_UNICODE_STRUPR
+name|EFI_UNICODE_COLLATION_STRUPR
 function_decl|)
 parameter_list|(
 name|IN
@@ -1502,7 +1630,7 @@ name|VOID
 function_decl|(
 name|EFIAPI
 modifier|*
-name|EFI_UNICODE_FATTOSTR
+name|EFI_UNICODE_COLLATION_FATTOSTR
 function_decl|)
 parameter_list|(
 name|IN
@@ -1534,7 +1662,7 @@ name|BOOLEAN
 function_decl|(
 name|EFIAPI
 modifier|*
-name|EFI_UNICODE_STRTOFAT
+name|EFI_UNICODE_COLLATION_STRTOFAT
 function_decl|)
 parameter_list|(
 name|IN
@@ -1565,24 +1693,24 @@ typedef|typedef
 struct|struct
 name|_EFI_UNICODE_COLLATION_INTERFACE
 block|{
-comment|/* general */
-name|EFI_UNICODE_STRICOLL
+comment|// general
+name|EFI_UNICODE_COLLATION_STRICOLL
 name|StriColl
 decl_stmt|;
-name|EFI_UNICODE_METAIMATCH
+name|EFI_UNICODE_COLLATION_METAIMATCH
 name|MetaiMatch
 decl_stmt|;
-name|EFI_UNICODE_STRLWR
+name|EFI_UNICODE_COLLATION_STRLWR
 name|StrLwr
 decl_stmt|;
-name|EFI_UNICODE_STRUPR
+name|EFI_UNICODE_COLLATION_STRUPR
 name|StrUpr
 decl_stmt|;
-comment|/* for supporting fat volumes */
-name|EFI_UNICODE_FATTOSTR
+comment|// for supporting fat volumes
+name|EFI_UNICODE_COLLATION_FATTOSTR
 name|FatToStr
 decl_stmt|;
-name|EFI_UNICODE_STRTOFAT
+name|EFI_UNICODE_COLLATION_STRTOFAT
 name|StrToFat
 decl_stmt|;
 name|CHAR8

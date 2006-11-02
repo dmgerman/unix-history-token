@@ -16,11 +16,19 @@ name|_EFI_CON_H
 end_define
 
 begin_comment
-comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      eficon.h  Abstract:      EFI console protocols    Revision History  --*/
+comment|/*++  Copyright (c)  1999 - 2002 Intel Corporation. All rights reserved This software and associated documentation (if any) is furnished under a license and may only be used or copied in accordance with the terms of the license. Except as permitted by such license, no part of this software or documentation may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the express written consent of Intel Corporation.  Module Name:      eficon.h  Abstract:      EFI console protocols    Revision History  --*/
 end_comment
 
 begin_comment
-comment|/*  * Text output protocol  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Text output protocol
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -443,7 +451,7 @@ block|{
 name|INT32
 name|MaxMode
 decl_stmt|;
-comment|/* current settings */
+comment|// current settings
 name|INT32
 name|Mode
 decl_stmt|;
@@ -496,7 +504,7 @@ decl_stmt|;
 name|EFI_TEXT_ENABLE_CURSOR
 name|EnableCursor
 decl_stmt|;
-comment|/* Current mode */
+comment|// Current mode
 name|SIMPLE_TEXT_OUTPUT_MODE
 modifier|*
 name|Mode
@@ -507,7 +515,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Define's for required EFI Unicode Box Draw character  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Define's for required EFI Unicode Box Draw character
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -791,7 +807,15 @@ value|0x256c
 end_define
 
 begin_comment
-comment|/*  * EFI Required Block Elements Code Chart  */
+comment|//
+end_comment
+
+begin_comment
+comment|// EFI Required Block Elements Code Chart
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -809,7 +833,15 @@ value|0x2591
 end_define
 
 begin_comment
-comment|/*  * EFI Required Geometric Shapes Code Chart  */
+comment|//
+end_comment
+
+begin_comment
+comment|// EFI Required Geometric Shapes Code Chart
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -841,7 +873,15 @@ value|0x25c4
 end_define
 
 begin_comment
-comment|/*  * EFI Required Arrow shapes  */
+comment|//
+end_comment
+
+begin_comment
+comment|// EFI Required Arrow shapes
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -859,7 +899,15 @@ value|0x2193
 end_define
 
 begin_comment
-comment|/*  * Text input protocol  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Text input protocol
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -894,7 +942,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Baseline unicode control chars  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Baseline unicode control chars
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -933,7 +989,15 @@ value|0x000D
 end_define
 
 begin_comment
-comment|/*  * Scan codes for base line keys  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Scan codes for base line keys
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define

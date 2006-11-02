@@ -16,11 +16,19 @@ name|_DEVPATH_H
 end_define
 
 begin_comment
-comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      devpath.h  Abstract:      Defines for parsing the EFI Device Path structures    Revision History  --*/
+comment|/*++  Copyright (c)  1999 - 2002 Intel Corporation. All rights reserved This software and associated documentation (if any) is furnished under a license and may only be used or copied in accordance with the terms of the license. Except as permitted by such license, no part of this software or documentation may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the express written consent of Intel Corporation.  Module Name:      devpath.h  Abstract:      Defines for parsing the EFI Device Path structures    Revision History  --*/
 end_comment
 
 begin_comment
-comment|/*  * Device Path structures - Section C  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Device Path structures - Section C
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -59,12 +67,20 @@ name|EFI_DP_TYPE_UNPACKED
 value|0x80
 end_define
 
+begin_comment
+comment|//#define END_DEVICE_PATH_TYPE                0xff
+end_comment
+
 begin_define
 define|#
 directive|define
 name|END_DEVICE_PATH_TYPE
 value|0x7f
 end_define
+
+begin_comment
+comment|//#define END_DEVICE_PATH_TYPE_UNPACKED       0x7f
+end_comment
 
 begin_define
 define|#
@@ -145,6 +161,10 @@ name|a
 parameter_list|)
 value|( (EFI_DEVICE_PATH *) ( ((UINT8 *) (a)) + DevicePathNodeLength(a)))
 end_define
+
+begin_comment
+comment|//#define IsDevicePathEndType(a)      ( DevicePathType(a) == END_DEVICE_PATH_TYPE_UNPACKED )
+end_comment
 
 begin_define
 define|#
@@ -261,7 +281,7 @@ name|EFI_DEVICE_PATH
 name|Header
 decl_stmt|;
 name|UINT8
-name|SocketNumber
+name|FunctionNumber
 decl_stmt|;
 block|}
 name|PCCARD_DEVICE_PATH
@@ -404,8 +424,61 @@ name|ACPI_HID_DEVICE_PATH
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|ACPI_EXTENDED_DP
+value|0x02
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ACPI_EXTENDED_HID_DEVICE_PATH
+block|{
+name|EFI_DEVICE_PATH
+name|Header
+decl_stmt|;
+name|UINT32
+name|HID
+decl_stmt|;
+name|UINT32
+name|UID
+decl_stmt|;
+name|UINT32
+name|CID
+decl_stmt|;
+block|}
+name|ACPI_EXTENDED_HID_DEVICE_PATH
+typedef|;
+end_typedef
+
 begin_comment
-comment|/*  * EISA ID Macro  * EISA ID Definition 32-bits  *  bits[15:0] - three character compressed ASCII EISA ID.  *  bits[31:16] - binary number  *   Compressed ASCII is 5 bits per character 0b00001 = 'A' 0b11010 = 'Z'  */
+comment|//
+end_comment
+
+begin_comment
+comment|// EISA ID Macro
+end_comment
+
+begin_comment
+comment|// EISA ID Definition 32-bits
+end_comment
+
+begin_comment
+comment|//  bits[15:0] - three character compressed ASCII EISA ID.
+end_comment
+
+begin_comment
+comment|//  bits[31:16] - binary number
+end_comment
+
+begin_comment
+comment|//   Compressed ASCII is 5 bits per character 0b00001 = 'A' 0b11010 = 'Z'
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -431,6 +504,16 @@ begin_define
 define|#
 directive|define
 name|EISA_PNP_ID
+parameter_list|(
+name|_PNPId
+parameter_list|)
+value|(EISA_ID(PNP_EISA_ID_CONST, (_PNPId)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFI_PNP_ID
 parameter_list|(
 name|_PNPId
 parameter_list|)
@@ -591,10 +674,10 @@ name|EFI_DEVICE_PATH
 name|Header
 decl_stmt|;
 name|UINT8
-name|Port
+name|ParentPortNumber
 decl_stmt|;
 name|UINT8
-name|Endpoint
+name|InterfaceNumber
 decl_stmt|;
 block|}
 name|USB_DEVICE_PATH
@@ -626,7 +709,7 @@ name|UINT8
 name|DeviceClass
 decl_stmt|;
 name|UINT8
-name|DeviceSubclass
+name|DeviceSubClass
 decl_stmt|;
 name|UINT8
 name|DeviceProtocol
@@ -777,13 +860,19 @@ name|EFI_DEVICE_PATH
 name|Header
 decl_stmt|;
 name|UINT32
-name|Reserved
+name|ResourceFlags
+decl_stmt|;
+name|UINT8
+name|PortGid
+index|[
+literal|16
+index|]
 decl_stmt|;
 name|UINT64
-name|NodeGuid
+name|ServiceId
 decl_stmt|;
 name|UINT64
-name|IocGuid
+name|TargetPortId
 decl_stmt|;
 name|UINT64
 name|DeviceId
@@ -792,6 +881,41 @@ block|}
 name|INFINIBAND_DEVICE_PATH
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|INFINIBAND_RESOURCE_FLAG_IOC_SERVICE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|INFINIBAND_RESOURCE_FLAG_EXTENDED_BOOT_ENVIRONMENT
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|INFINIBAND_RESOURCE_FLAG_CONSOLE_PROTOCOL
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|INFINIBAND_RESOURCE_FLAG_STORAGE_PROTOCOL
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|INFINIBAND_RESOURCE_FLAG_NETWORK_PROTOCOL
+value|0x10
+end_define
 
 begin_define
 define|#
@@ -853,6 +977,22 @@ directive|define
 name|DEVICE_PATH_MESSAGING_VT_100
 define|\
 value|{ 0xdfa66065, 0xb419, 0x11d3,  0x9a, 0x2d, 0x00, 0x90, 0x27, 0x3f, 0xc1, 0x4d  }
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICE_PATH_MESSAGING_VT_100_PLUS
+define|\
+value|{ 0x7baec70b, 0x57e0, 0x4c76, 0x8e, 0x87, 0x2f, 0x9e, 0x28, 0x08, 0x83, 0x43  }
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICE_PATH_MESSAGING_VT_UTF8
+define|\
+value|{ 0xad15a0d6, 0x8bec, 0x4acf, 0xa0, 0x73, 0xd0, 0x1d, 0xe7, 0x7e, 0x2d, 0x88 }
 end_define
 
 begin_define
@@ -1245,6 +1385,10 @@ decl_stmt|;
 name|ACPI_HID_DEVICE_PATH
 modifier|*
 name|Acpi
+decl_stmt|;
+name|ACPI_EXTENDED_HID_DEVICE_PATH
+modifier|*
+name|ExtendedAcpi
 decl_stmt|;
 name|ATAPI_DEVICE_PATH
 modifier|*

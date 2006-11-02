@@ -16,11 +16,19 @@ name|_EFI_API_H
 end_define
 
 begin_comment
-comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efiapi.h  Abstract:      Global EFI runtime& boot service interfaces     Revision History  --*/
+comment|/*++  Copyright (c)  1999 - 2002 Intel Corporation. All rights reserved This software and associated documentation (if any) is furnished under a license and may only be used or copied in accordance with the terms of the license. Except as permitted by such license, no part of this software or documentation may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the express written consent of Intel Corporation.  Module Name:      efiapi.h  Abstract:      Global EFI runtime& boot service interfaces     Revision History  --*/
 end_comment
 
 begin_comment
-comment|/*  * EFI Specification Revision  */
+comment|//
+end_comment
+
+begin_comment
+comment|// EFI Specification Revision
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -34,11 +42,19 @@ begin_define
 define|#
 directive|define
 name|EFI_SPECIFICATION_MINOR_REVISION
-value|02
+value|10
 end_define
 
 begin_comment
-comment|/*  * Declare forward referenced data structures  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Declare forward referenced data structures
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_expr_stmt
@@ -50,7 +66,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * EFI Memory  */
+comment|//
+end_comment
+
+begin_comment
+comment|// EFI Memory
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -240,7 +264,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* Pointer to internal runtime fnc */
+comment|// Pointer to internal runtime fnc
 end_comment
 
 begin_define
@@ -251,7 +275,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* Pointer to internal runtime data */
+comment|// Pointer to internal runtime data
 end_comment
 
 begin_typedef
@@ -278,7 +302,15 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * EFI Events  */
+comment|//
+end_comment
+
+begin_comment
+comment|// EFI Events
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -514,7 +546,15 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Task priority level  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Task priority level
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -578,7 +618,15 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * EFI platform variables  */
+comment|//
+end_comment
+
+begin_comment
+comment|// EFI platform varibles
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -590,7 +638,7 @@ value|{ 0x8BE4DF61, 0x93CA, 0x11d2, 0xAA, 0x0D, 0x00, 0xE0, 0x98, 0x03, 0x2B, 0x
 end_define
 
 begin_comment
-comment|/* Variable attributes */
+comment|// Variable attributes
 end_comment
 
 begin_define
@@ -615,7 +663,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* Variable size limitation */
+comment|// Variable size limitation
 end_comment
 
 begin_define
@@ -730,7 +778,15 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * EFI Time  */
+comment|//
+end_comment
+
+begin_comment
+comment|// EFI Time
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -740,15 +796,15 @@ block|{
 name|UINT32
 name|Resolution
 decl_stmt|;
-comment|/* 1e-6 parts per million */
+comment|// 1e-6 parts per million
 name|UINT32
 name|Accuracy
 decl_stmt|;
-comment|/* hertz */
+comment|// hertz
 name|BOOLEAN
 name|SetsToZero
 decl_stmt|;
-comment|/* Set clears sub-second time */
+comment|// Set clears sub-second time
 block|}
 name|EFI_TIME_CAPABILITIES
 typedef|;
@@ -844,11 +900,19 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Image functions  */
+comment|//
 end_comment
 
 begin_comment
-comment|/* PE32+ Subsystem type for EFI images */
+comment|// Image functions
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PE32+ Subsystem type for EFI images
 end_comment
 
 begin_if
@@ -888,7 +952,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PE32+ Machine type for EFI images */
+comment|// PE32+ Machine type for EFI images
 end_comment
 
 begin_if
@@ -935,8 +999,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|EFI_IMAGE_MACHINE_EBC
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|EFI_IMAGE_MACHINE_EBC
+value|0x0EBC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* Image Entry prototype */
+comment|// Image Entry prototype
 end_comment
 
 begin_typedef
@@ -1076,7 +1162,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/* Image handle */
+comment|// Image handle
 end_comment
 
 begin_define
@@ -1090,7 +1176,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EFI_IMAGE_INFORMATION_REVISION
+name|EFI_LOADED_IMAGE_INFORMATION_REVISION
 value|0x1000
 end_define
 
@@ -1109,7 +1195,7 @@ name|_EFI_SYSTEM_TABLE
 modifier|*
 name|SystemTable
 decl_stmt|;
-comment|/* Source location of image */
+comment|// Source location of image
 name|EFI_HANDLE
 name|DeviceHandle
 decl_stmt|;
@@ -1121,7 +1207,7 @@ name|VOID
 modifier|*
 name|Reserved
 decl_stmt|;
-comment|/* Images load options */
+comment|// Images load options
 name|UINT32
 name|LoadOptionsSize
 decl_stmt|;
@@ -1129,7 +1215,7 @@ name|VOID
 modifier|*
 name|LoadOptions
 decl_stmt|;
-comment|/* Location of where image was loaded */
+comment|// Location of where image was loaded
 name|VOID
 modifier|*
 name|ImageBase
@@ -1143,7 +1229,7 @@ decl_stmt|;
 name|EFI_MEMORY_TYPE
 name|ImageDataType
 decl_stmt|;
-comment|/* If the driver image supports a dynamic unload request */
+comment|// If the driver image supports a dynamic unload request
 name|EFI_IMAGE_UNLOAD
 name|Unload
 decl_stmt|;
@@ -1173,7 +1259,15 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Misc  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Misc
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -1229,6 +1323,8 @@ block|{
 name|EfiResetCold
 block|,
 name|EfiResetWarm
+block|,
+name|EfiResetShutdown
 block|}
 name|EFI_RESET_TYPE
 typedef|;
@@ -1236,7 +1332,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|EFI_STATUS
+name|VOID
 function_decl|(
 name|EFIAPI
 modifier|*
@@ -1299,7 +1395,15 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Protocol handler functions  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Protocol handler functions
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -1307,8 +1411,6 @@ typedef|typedef
 enum|enum
 block|{
 name|EFI_NATIVE_INTERFACE
-block|,
-name|EFI_PCODE_INTERFACE
 block|}
 name|EFI_INTERFACE_TYPE
 typedef|;
@@ -1569,14 +1671,451 @@ name|EFIAPI
 modifier|*
 name|EFI_RESERVED_SERVICE
 function_decl|)
+parameter_list|(     )
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|EFI_STATUS
+function_decl|(
+name|EFIAPI
+modifier|*
+name|EFI_CONNECT_CONTROLLER
+function_decl|)
 parameter_list|(
+name|IN
+name|EFI_HANDLE
+name|ControllerHandle
+parameter_list|,
+name|IN
+name|EFI_HANDLE
+modifier|*
+name|DriverImageHandle
+name|OPTIONAL
+parameter_list|,
+name|IN
+name|EFI_DEVICE_PATH
+modifier|*
+name|RemainingDevicePath
+name|OPTIONAL
+parameter_list|,
+name|IN
+name|BOOLEAN
+name|Recursive
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|EFI_STATUS
+function_decl|(
+name|EFIAPI
+modifier|*
+name|EFI_DISCONNECT_CONTROLLER
+function_decl|)
+parameter_list|(
+name|IN
+name|EFI_HANDLE
+name|ControllerHandle
+parameter_list|,
+name|IN
+name|EFI_HANDLE
+name|DriverImageHandle
+parameter_list|,
+name|OPTIONAL
+name|IN
+name|EFI_HANDLE
+name|ChildHandle
+name|OPTIONAL
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|EFI_OPEN_PROTOCOL_BY_HANDLE_PROTOCOL
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFI_OPEN_PROTOCOL_GET_PROTOCOL
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFI_OPEN_PROTOCOL_TEST_PROTOCOL
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFI_OPEN_PROTOCOL_BY_CHILD_CONTROLLER
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFI_OPEN_PROTOCOL_BY_DRIVER
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFI_OPEN_PROTOCOL_EXCLUSIVE
+value|0x00000020
+end_define
+
+begin_typedef
+typedef|typedef
+name|EFI_STATUS
+function_decl|(
+name|EFIAPI
+modifier|*
+name|EFI_OPEN_PROTOCOL
+function_decl|)
+parameter_list|(
+name|IN
+name|EFI_HANDLE
+name|Handle
+parameter_list|,
+name|IN
+name|EFI_GUID
+modifier|*
+name|Protocol
+parameter_list|,
+name|OUT
 name|VOID
+modifier|*
+modifier|*
+name|Interface
+parameter_list|,
+name|IN
+name|EFI_HANDLE
+name|ImageHandle
+parameter_list|,
+name|IN
+name|EFI_HANDLE
+name|ControllerHandle
+parameter_list|,
+name|OPTIONAL
+name|IN
+name|UINT32
+name|Attributes
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|EFI_STATUS
+function_decl|(
+name|EFIAPI
+modifier|*
+name|EFI_CLOSE_PROTOCOL
+function_decl|)
+parameter_list|(
+name|IN
+name|EFI_HANDLE
+name|Handle
+parameter_list|,
+name|IN
+name|EFI_GUID
+modifier|*
+name|Protocol
+parameter_list|,
+name|IN
+name|EFI_HANDLE
+name|ImageHandle
+parameter_list|,
+name|IN
+name|EFI_HANDLE
+name|DeviceHandle
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|EFI_HANDLE
+name|AgentHandle
+decl_stmt|;
+name|EFI_HANDLE
+name|ControllerHandle
+decl_stmt|;
+name|UINT32
+name|Attributes
+decl_stmt|;
+name|UINT32
+name|OpenCount
+decl_stmt|;
+block|}
+name|EFI_OPEN_PROTOCOL_INFORMATION_ENTRY
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|EFI_STATUS
+function_decl|(
+name|EFIAPI
+modifier|*
+name|EFI_OPEN_PROTOCOL_INFORMATION
+function_decl|)
+parameter_list|(
+name|IN
+name|EFI_HANDLE
+name|UserHandle
+parameter_list|,
+name|IN
+name|EFI_GUID
+modifier|*
+name|Protocol
+parameter_list|,
+name|IN
+name|EFI_OPEN_PROTOCOL_INFORMATION_ENTRY
+modifier|*
+modifier|*
+name|EntryBuffer
+parameter_list|,
+name|OUT
+name|UINTN
+modifier|*
+name|EntryCount
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|EFI_STATUS
+function_decl|(
+name|EFIAPI
+modifier|*
+name|EFI_PROTOCOLS_PER_HANDLE
+function_decl|)
+parameter_list|(
+name|IN
+name|EFI_HANDLE
+name|UserHandle
+parameter_list|,
+name|OUT
+name|EFI_GUID
+modifier|*
+modifier|*
+modifier|*
+name|ProtocolBuffer
+parameter_list|,
+name|OUT
+name|UINTN
+modifier|*
+name|ProtocolBufferCount
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|EFI_STATUS
+function_decl|(
+name|EFIAPI
+modifier|*
+name|EFI_LOCATE_HANDLE_BUFFER
+function_decl|)
+parameter_list|(
+name|IN
+name|EFI_LOCATE_SEARCH_TYPE
+name|SearchType
+parameter_list|,
+name|IN
+name|EFI_GUID
+modifier|*
+name|Protocol
+name|OPTIONAL
+parameter_list|,
+name|IN
+name|VOID
+modifier|*
+name|SearchKey
+name|OPTIONAL
+parameter_list|,
+name|IN
+name|OUT
+name|UINTN
+modifier|*
+name|NumberHandles
+parameter_list|,
+name|OUT
+name|EFI_HANDLE
+modifier|*
+modifier|*
+name|Buffer
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|EFI_STATUS
+function_decl|(
+name|EFIAPI
+modifier|*
+name|EFI_LOCATE_PROTOCOL
+function_decl|)
+parameter_list|(
+name|EFI_GUID
+modifier|*
+name|Protocol
+parameter_list|,
+name|VOID
+modifier|*
+name|Registration
+parameter_list|,
+name|OPTIONAL
+name|VOID
+modifier|*
+modifier|*
+name|Interface
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|EFI_STATUS
+function_decl|(
+name|EFIAPI
+modifier|*
+name|EFI_INSTALL_MULTIPLE_PROTOCOL_INTERFACES
+function_decl|)
+parameter_list|(
+name|IN
+name|OUT
+name|EFI_HANDLE
+modifier|*
+name|Handle
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|EFI_STATUS
+function_decl|(
+name|EFIAPI
+modifier|*
+name|EFI_UNINSTALL_MULTIPLE_PROTOCOL_INTERFACES
+function_decl|)
+parameter_list|(
+name|IN
+name|EFI_HANDLE
+name|Handle
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|EFI_STATUS
+function_decl|(
+name|EFIAPI
+modifier|*
+name|EFI_CALCULATE_CRC32
+function_decl|)
+parameter_list|(
+name|IN
+name|VOID
+modifier|*
+name|Data
+parameter_list|,
+name|IN
+name|UINTN
+name|DataSize
+parameter_list|,
+name|OUT
+name|UINT32
+modifier|*
+name|Crc32
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|VOID
+function_decl|(
+name|EFIAPI
+modifier|*
+name|EFI_COPY_MEM
+function_decl|)
+parameter_list|(
+name|IN
+name|VOID
+modifier|*
+name|Destination
+parameter_list|,
+name|IN
+name|VOID
+modifier|*
+name|Source
+parameter_list|,
+name|IN
+name|UINTN
+name|Length
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|VOID
+function_decl|(
+name|EFIAPI
+modifier|*
+name|EFI_SET_MEM
+function_decl|)
+parameter_list|(
+name|IN
+name|VOID
+modifier|*
+name|Buffer
+parameter_list|,
+name|IN
+name|UINTN
+name|Size
+parameter_list|,
+name|IN
+name|UINT8
+name|Value
 parameter_list|)
 function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Standard EFI table header  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Standard EFI table header
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -1605,7 +2144,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * EFI Runtime Serivces Table  */
+comment|//
+end_comment
+
+begin_comment
+comment|// EFI Runtime Serivces Table
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -1619,7 +2166,7 @@ begin_define
 define|#
 directive|define
 name|EFI_RUNTIME_SERVICES_REVISION
-value|(EFI_SPECIFICATION_MAJOR_REVISION<<16) | (EFI_SPECIFICATION_MINOR_REVISION)
+value|((EFI_SPECIFICATION_MAJOR_REVISION<<16) | (EFI_SPECIFICATION_MINOR_REVISION))
 end_define
 
 begin_typedef
@@ -1629,7 +2176,9 @@ block|{
 name|EFI_TABLE_HEADER
 name|Hdr
 decl_stmt|;
-comment|/* Time services */
+comment|//
+comment|// Time services
+comment|//
 name|EFI_GET_TIME
 name|GetTime
 decl_stmt|;
@@ -1642,14 +2191,18 @@ decl_stmt|;
 name|EFI_SET_WAKEUP_TIME
 name|SetWakeupTime
 decl_stmt|;
-comment|/* Virtual memory services */
+comment|//
+comment|// Virtual memory services
+comment|//
 name|EFI_SET_VIRTUAL_ADDRESS_MAP
 name|SetVirtualAddressMap
 decl_stmt|;
 name|EFI_CONVERT_POINTER
 name|ConvertPointer
 decl_stmt|;
-comment|/* Variable serviers */
+comment|//
+comment|// Variable serviers
+comment|//
 name|EFI_GET_VARIABLE
 name|GetVariable
 decl_stmt|;
@@ -1659,7 +2212,9 @@ decl_stmt|;
 name|EFI_SET_VARIABLE
 name|SetVariable
 decl_stmt|;
-comment|/* Misc */
+comment|//
+comment|// Misc
+comment|//
 name|EFI_GET_NEXT_HIGH_MONO_COUNT
 name|GetNextHighMonotonicCount
 decl_stmt|;
@@ -1672,7 +2227,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * EFI Boot Services Table  */
+comment|//
+end_comment
+
+begin_comment
+comment|// EFI Boot Services Table
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -1686,25 +2249,28 @@ begin_define
 define|#
 directive|define
 name|EFI_BOOT_SERVICES_REVISION
-value|(EFI_SPECIFICATION_MAJOR_REVISION<<16) | (EFI_SPECIFICATION_MINOR_REVISION)
+value|((EFI_SPECIFICATION_MAJOR_REVISION<<16) | (EFI_SPECIFICATION_MINOR_REVISION))
 end_define
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|_EFI_BOOT_SERVICES
 block|{
 name|EFI_TABLE_HEADER
 name|Hdr
 decl_stmt|;
-comment|/* Task priority functions */
+comment|//
+comment|// Task priority functions
+comment|//
 name|EFI_RAISE_TPL
 name|RaiseTPL
 decl_stmt|;
 name|EFI_RESTORE_TPL
 name|RestoreTPL
 decl_stmt|;
-comment|/* Memory functions */
+comment|//
+comment|// Memory functions
+comment|//
 name|EFI_ALLOCATE_PAGES
 name|AllocatePages
 decl_stmt|;
@@ -1720,7 +2286,9 @@ decl_stmt|;
 name|EFI_FREE_POOL
 name|FreePool
 decl_stmt|;
-comment|/* Event& timer functions */
+comment|//
+comment|// Event& timer functions
+comment|//
 name|EFI_CREATE_EVENT
 name|CreateEvent
 decl_stmt|;
@@ -1739,7 +2307,9 @@ decl_stmt|;
 name|EFI_CHECK_EVENT
 name|CheckEvent
 decl_stmt|;
-comment|/* Protocol handler functions */
+comment|//
+comment|// Protocol handler functions
+comment|//
 name|EFI_INSTALL_PROTOCOL_INTERFACE
 name|InstallProtocolInterface
 decl_stmt|;
@@ -1752,8 +2322,9 @@ decl_stmt|;
 name|EFI_HANDLE_PROTOCOL
 name|HandleProtocol
 decl_stmt|;
-name|EFI_HANDLE_PROTOCOL
-name|PCHandleProtocol
+name|VOID
+modifier|*
+name|Reserved
 decl_stmt|;
 name|EFI_REGISTER_PROTOCOL_NOTIFY
 name|RegisterProtocolNotify
@@ -1767,7 +2338,9 @@ decl_stmt|;
 name|EFI_INSTALL_CONFIGURATION_TABLE
 name|InstallConfigurationTable
 decl_stmt|;
-comment|/* Image functions */
+comment|//
+comment|// Image functions
+comment|//
 name|EFI_IMAGE_LOAD
 name|LoadImage
 decl_stmt|;
@@ -1783,7 +2356,9 @@ decl_stmt|;
 name|EFI_EXIT_BOOT_SERVICES
 name|ExitBootServices
 decl_stmt|;
-comment|/* Misc functions */
+comment|//
+comment|// Misc functions
+comment|//
 name|EFI_GET_NEXT_MONOTONIC_COUNT
 name|GetNextMonotonicCount
 decl_stmt|;
@@ -1793,13 +2368,75 @@ decl_stmt|;
 name|EFI_SET_WATCHDOG_TIMER
 name|SetWatchdogTimer
 decl_stmt|;
+comment|//
+comment|// DriverSupport Services
+comment|//
+name|EFI_CONNECT_CONTROLLER
+name|ConnectController
+decl_stmt|;
+name|EFI_DISCONNECT_CONTROLLER
+name|DisconnectController
+decl_stmt|;
+comment|//
+comment|// Open and Close Protocol Services
+comment|//
+name|EFI_OPEN_PROTOCOL
+name|OpenProtocol
+decl_stmt|;
+name|EFI_CLOSE_PROTOCOL
+name|CloseProtocol
+decl_stmt|;
+name|EFI_OPEN_PROTOCOL_INFORMATION
+name|OpenProtocolInformation
+decl_stmt|;
+comment|//
+comment|// Library Services to reduce size of drivers
+comment|//
+name|EFI_PROTOCOLS_PER_HANDLE
+name|ProtocolsPerHandle
+decl_stmt|;
+name|EFI_LOCATE_HANDLE_BUFFER
+name|LocateHandleBuffer
+decl_stmt|;
+name|EFI_LOCATE_PROTOCOL
+name|LocateProtocol
+decl_stmt|;
+name|EFI_INSTALL_MULTIPLE_PROTOCOL_INTERFACES
+name|InstallMultipleProtocolInterfaces
+decl_stmt|;
+name|EFI_UNINSTALL_MULTIPLE_PROTOCOL_INTERFACES
+name|UninstallMultipleProtocolInterfaces
+decl_stmt|;
+comment|//
+comment|// CRC32 services
+comment|//
+name|EFI_CALCULATE_CRC32
+name|CalculateCrc32
+decl_stmt|;
+comment|//
+comment|// Memory Utility Services
+comment|//
+name|EFI_COPY_MEM
+name|CopyMem
+decl_stmt|;
+name|EFI_SET_MEM
+name|SetMem
+decl_stmt|;
 block|}
 name|EFI_BOOT_SERVICES
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * EFI Configuration Table and GUID definitions  */
+comment|//
+end_comment
+
+begin_comment
+comment|// EFI Configuration Table and GUID definitions
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -1807,7 +2444,7 @@ define|#
 directive|define
 name|MPS_TABLE_GUID
 define|\
-value|{ 0xeb9d2d2f, 0x2d88, 0x11d3, { 0x9a, 0x16, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d } }
+value|{ 0xeb9d2d2f, 0x2d88, 0x11d3, 0x9a, 0x16, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d }
 end_define
 
 begin_define
@@ -1815,7 +2452,7 @@ define|#
 directive|define
 name|ACPI_TABLE_GUID
 define|\
-value|{ 0xeb9d2d30, 0x2d88, 0x11d3, { 0x9a, 0x16, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d } }
+value|{ 0xeb9d2d30, 0x2d88, 0x11d3, 0x9a, 0x16, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d }
 end_define
 
 begin_define
@@ -1823,7 +2460,7 @@ define|#
 directive|define
 name|ACPI_20_TABLE_GUID
 define|\
-value|{ 0x8868e871, 0xe4f1, 0x11d3, { 0xbc, 0x22, 0x0, 0x80, 0xc7, 0x3c, 0x88, 0x81 } }
+value|{ 0x8868e871, 0xe4f1, 0x11d3, 0xbc, 0x22, 0x0, 0x80, 0xc7, 0x3c, 0x88, 0x81 }
 end_define
 
 begin_define
@@ -1831,7 +2468,7 @@ define|#
 directive|define
 name|SMBIOS_TABLE_GUID
 define|\
-value|{ 0xeb9d2d31, 0x2d88, 0x11d3, { 0x9a, 0x16, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d } }
+value|{ 0xeb9d2d31, 0x2d88, 0x11d3, 0x9a, 0x16, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d }
 end_define
 
 begin_define
@@ -1839,19 +2476,7 @@ define|#
 directive|define
 name|SAL_SYSTEM_TABLE_GUID
 define|\
-value|{ 0xeb9d2d32, 0x2d88, 0x11d3, { 0x9a, 0x16, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d } }
-end_define
-
-begin_comment
-comment|/* DIG64 Headless Console& Debug Port Table. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HCDP_TABLE_GUID
-define|\
-value|{0xf951938d,0x620b,0x42ef,{0x82,0x79,0xa8,0x4b,0x79,0x61,0x78,0x98}}
+value|{ 0xeb9d2d32, 0x2d88, 0x11d3, 0x9a, 0x16, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d }
 end_define
 
 begin_typedef
@@ -1872,7 +2497,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * EFI System Table  */
+comment|//
+end_comment
+
+begin_comment
+comment|// EFI System Table
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -1886,7 +2519,21 @@ begin_define
 define|#
 directive|define
 name|EFI_SYSTEM_TABLE_REVISION
-value|(EFI_SPECIFICATION_MAJOR_REVISION<<16) | (EFI_SPECIFICATION_MINOR_REVISION)
+value|((EFI_SPECIFICATION_MAJOR_REVISION<<16) | (EFI_SPECIFICATION_MINOR_REVISION))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFI_1_10_SYSTEM_TABLE_REVISION
+value|((1<<16) | 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFI_1_02_SYSTEM_TABLE_REVISION
+value|((1<<16) | 02)
 end_define
 
 begin_typedef

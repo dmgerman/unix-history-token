@@ -16,7 +16,7 @@ name|_EFI_ERR_H
 end_define
 
 begin_comment
-comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efierr.h  Abstract:      EFI error codes     Revision History  --*/
+comment|/*++  Copyright (c)  1999 - 2002 Intel Corporation. All rights reserved This software and associated documentation (if any) is furnished under a license and may only be used or copied in accordance with the terms of the license. Except as permitted by such license, no part of this software or documentation may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the express written consent of Intel Corporation.  Module Name:      efierr.h  Abstract:      EFI error codes     Revision History  --*/
 end_comment
 
 begin_define
@@ -217,7 +217,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EFI_WARN_UNKOWN_GLYPH
+name|EFI_WARN_UNKNOWN_GLYPH
 value|EFIWARN(1)
 end_define
 

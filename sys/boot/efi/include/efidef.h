@@ -16,7 +16,7 @@ name|_EFI_DEF_H
 end_define
 
 begin_comment
-comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efidef.h  Abstract:      EFI definitions     Revision History  --*/
+comment|/*++  Copyright (c)  1999 - 2002 Intel Corporation. All rights reserved This software and associated documentation (if any) is furnished under a license and may only be used or copied in accordance with the terms of the license. Except as permitted by such license, no part of this software or documentation may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the express written consent of Intel Corporation.  Module Name:      efidef.h  Abstract:      EFI definitions     Revision History  --*/
 end_comment
 
 begin_typedef
@@ -121,7 +121,35 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Prototype argument decoration for EFI parameters to indicate  * their direction  *  * IN - argument is passed into the function  * OUT - argument (pointer) is returned from the function  * OPTIONAL - argument is optional  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Prototype argument decoration for EFI parameters to indicate
+end_comment
+
+begin_comment
+comment|// their direction
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// IN - argument is passed into the function
+end_comment
+
+begin_comment
+comment|// OUT - argument (pointer) is returned from the function
+end_comment
+
+begin_comment
+comment|// OPTIONAL - argument is optional
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_ifndef
@@ -154,7 +182,15 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * A GUID  */
+comment|//
+end_comment
+
+begin_comment
+comment|// A GUID
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -182,7 +218,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Time  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Time
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -192,38 +236,38 @@ block|{
 name|UINT16
 name|Year
 decl_stmt|;
-comment|/* 1998 - 20XX */
+comment|// 1998 - 20XX
 name|UINT8
 name|Month
 decl_stmt|;
-comment|/* 1 - 12 */
+comment|// 1 - 12
 name|UINT8
 name|Day
 decl_stmt|;
-comment|/* 1 - 31 */
+comment|// 1 - 31
 name|UINT8
 name|Hour
 decl_stmt|;
-comment|/* 0 - 23 */
+comment|// 0 - 23
 name|UINT8
 name|Minute
 decl_stmt|;
-comment|/* 0 - 59 */
+comment|// 0 - 59
 name|UINT8
 name|Second
 decl_stmt|;
-comment|/* 0 - 59 */
+comment|// 0 - 59
 name|UINT8
 name|Pad1
 decl_stmt|;
 name|UINT32
 name|Nanosecond
 decl_stmt|;
-comment|/* 0 - 999,999,999 */
+comment|// 0 - 999,999,999
 name|INT16
 name|TimeZone
 decl_stmt|;
-comment|/* -1440 to 1440 or 2047 */
+comment|// -1440 to 1440 or 2047
 name|UINT8
 name|Daylight
 decl_stmt|;
@@ -236,7 +280,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Bit definitions for EFI_TIME.Daylight */
+comment|// Bit definitions for EFI_TIME.Daylight
 end_comment
 
 begin_define
@@ -254,7 +298,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Value definition for EFI_TIME.TimeZone */
+comment|// Value definition for EFI_TIME.TimeZone
 end_comment
 
 begin_define
@@ -265,7 +309,15 @@ value|0x07FF
 end_define
 
 begin_comment
-comment|/*  * Networking  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Networking
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -314,7 +366,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Memory  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Memory
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -348,7 +408,23 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Preseve the attr on any range supplied.  * ConventialMemory must have WB,SR,SW when supplied.  * When allocating from ConventialMemory always make it WB,SR,SW  * When returning to ConventialMemory always make it WB,SR,SW  * When getting the memory map, or on RT for runtime types  */
+comment|//Preseve the attr on any range supplied.
+end_comment
+
+begin_comment
+comment|//ConventialMemory must have WB,SR,SW when supplied.
+end_comment
+
+begin_comment
+comment|//When allocating from ConventialMemory always make it WB,SR,SW
+end_comment
+
+begin_comment
+comment|//When returning to ConventialMemory always make it WB,SR,SW
+end_comment
+
+begin_comment
+comment|//When getting the memory map, or on RT for runtime types
 end_comment
 
 begin_typedef
@@ -390,7 +466,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* possible caching types for the memory range */
+comment|// possible caching types for the memory range
 end_comment
 
 begin_define
@@ -429,7 +505,7 @@ value|0x0000000000000010
 end_define
 
 begin_comment
-comment|/* physical memory protection on range */
+comment|// physical memory protection on range
 end_comment
 
 begin_define
@@ -454,7 +530,7 @@ value|0x0000000000004000
 end_define
 
 begin_comment
-comment|/* range requires a runtime mapping */
+comment|// range requires a runtime mapping
 end_comment
 
 begin_define
@@ -478,26 +554,38 @@ block|{
 name|UINT32
 name|Type
 decl_stmt|;
-comment|/* 32 bit padding */
+comment|// Field size is 32 bits followed by 32 bit pad
 name|EFI_PHYSICAL_ADDRESS
 name|PhysicalStart
 decl_stmt|;
+comment|// Field size is 64 bits
 name|EFI_VIRTUAL_ADDRESS
 name|VirtualStart
 decl_stmt|;
+comment|// Field size is 64 bits
 name|UINT64
 name|NumberOfPages
 decl_stmt|;
+comment|// Field size is 64 bits
 name|UINT64
 name|Attribute
 decl_stmt|;
+comment|// Field size is 64 bits
 block|}
 name|EFI_MEMORY_DESCRIPTOR
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * International Language  */
+comment|//
+end_comment
+
+begin_comment
+comment|// International Language
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -513,6 +601,18 @@ directive|define
 name|ISO_639_2_ENTRY_SIZE
 value|3
 end_define
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
 
 begin_define
 define|#
@@ -543,7 +643,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|( ((a)>> EFI_PAGE_SHIFT) + ((a)& EFI_PAGE_MASK ? 1 : 0) )
+value|( ((a)>> EFI_PAGE_SHIFT) + (((a)& EFI_PAGE_MASK) ? 1 : 0) )
 end_define
 
 begin_endif

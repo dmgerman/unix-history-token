@@ -16,7 +16,7 @@ name|_EFI_DEBUG_H
 end_define
 
 begin_comment
-comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efidebug.h  Abstract:      EFI library debug functions    Revision History  --*/
+comment|/*++  Copyright (c)  1999 - 2002 Intel Corporation. All rights reserved This software and associated documentation (if any) is furnished under a license and may only be used or copied in accordance with the terms of the license. Except as permitted by such license, no part of this software or documentation may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the express written consent of Intel Corporation.  Module Name:      efidebug.h  Abstract:      EFI library debug functions    Revision History  --*/
 end_comment
 
 begin_decl_stmt
@@ -127,7 +127,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* Initialization style messages */
+comment|// Initialization style messages
 end_comment
 
 begin_define
@@ -138,7 +138,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* Warnings */
+comment|// Warnings
 end_comment
 
 begin_define
@@ -149,7 +149,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* Load events */
+comment|// Load events
 end_comment
 
 begin_define
@@ -160,7 +160,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* EFI File system */
+comment|// EFI File system
 end_comment
 
 begin_define
@@ -171,7 +171,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/* Alloc& Free's */
+comment|// Alloc& Free's
 end_comment
 
 begin_define
@@ -182,7 +182,7 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|/* Alloc& Free's */
+comment|// Alloc& Free's
 end_comment
 
 begin_define
@@ -193,7 +193,18 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* Verbose */
+comment|// Verbose
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_VARIABLE
+value|0x00000100
+end_define
+
+begin_comment
+comment|// Variable
 end_comment
 
 begin_define
@@ -204,18 +215,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/* Variable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|D_PARSE
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* Command parsing */
+comment|// Variable
 end_comment
 
 begin_define
@@ -226,7 +226,7 @@ value|0x00000400
 end_define
 
 begin_comment
-comment|/* Boot manager */
+comment|// Boot Manager
 end_comment
 
 begin_define
@@ -237,7 +237,7 @@ value|0x00001000
 end_define
 
 begin_comment
-comment|/* BlkIo Driver */
+comment|// BlkIo Driver
 end_comment
 
 begin_define
@@ -248,7 +248,7 @@ value|0x00002000
 end_define
 
 begin_comment
-comment|/* BlkIo Driver */
+comment|// BlkIo Driver
 end_comment
 
 begin_define
@@ -259,7 +259,7 @@ value|0x00004000
 end_define
 
 begin_comment
-comment|/* SNI Driver */
+comment|// SNI Driver
 end_comment
 
 begin_define
@@ -270,40 +270,40 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* SNI Driver */
+comment|// SNI Driver
 end_comment
 
 begin_define
 define|#
 directive|define
-name|D_TXTIN
+name|D_UNDI
 value|0x00010000
 end_define
 
 begin_comment
-comment|/* Simple Input Driver */
+comment|// UNDI Driver
 end_comment
 
 begin_define
 define|#
 directive|define
-name|D_TXTOUT
+name|D_LOADFILE
 value|0x00020000
 end_define
 
 begin_comment
-comment|/* Simple Text Output Driver */
+comment|// UNDI Driver
 end_comment
 
 begin_define
 define|#
 directive|define
-name|D_ERROR_ATA
-value|0x00040000
+name|D_EVENT
+value|0x00080000
 end_define
 
 begin_comment
-comment|/* ATA error messages */
+comment|// Event messages
 end_comment
 
 begin_define
@@ -314,22 +314,34 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/* Error */
+comment|// Error
 end_comment
 
 begin_define
 define|#
 directive|define
 name|D_RESERVED
-value|0x7fffC880
+value|0x7ff40A80
 end_define
 
 begin_comment
-comment|/* Bits not reserved above */
+comment|// Bits not reserved above
 end_comment
 
 begin_comment
-comment|/*  * Current Debug level of the system, value of EFIDebug  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Current Debug level of the system, value of EFIDebug
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//#define EFI_DBUG_MASK   (D_ERROR | D_WARN | D_LOAD | D_BLKIO | D_INIT)
 end_comment
 
 begin_define
@@ -338,6 +350,18 @@ directive|define
 name|EFI_DBUG_MASK
 value|(D_ERROR)
 end_define
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
 
 begin_if
 if|#
@@ -417,7 +441,15 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Prototypes  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Prototypes
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_function_decl

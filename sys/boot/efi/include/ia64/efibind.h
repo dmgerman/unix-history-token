@@ -4,8 +4,22 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efefind.h  Abstract:      EFI to compile bindings     Revision History  --*/
+comment|/*++  Copyright (c)  1999 - 2003 Intel Corporation. All rights reserved This software and associated documentation (if any) is furnished under a license and may only be used or copied in accordance with the terms of the license. Except as permitted by such license, no part of this software or documentation may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the express written consent of Intel Corporation.  Module Name:      efefind.h  Abstract:      EFI to compile bindings     Revision History  --*/
 end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|)
+end_pragma
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
 
 begin_include
 include|#
@@ -13,8 +27,287 @@ directive|include
 file|<sys/stdint.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
-comment|/* Basic EFI types of various widths. */
+comment|//
+end_comment
+
+begin_comment
+comment|// Basic int types of various widths
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__STDC_VERSION__
+operator|<
+literal|199901L
+operator|)
+end_if
+
+begin_comment
+comment|// No ANSI C 1999/2000 stdint.h integer width declarations
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_MSC_EXTENSIONS
+end_if
+
+begin_comment
+comment|// Use Microsoft C compiler integer width declarations
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|__int64
+name|uint64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__int64
+name|int64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|__int32
+name|uint32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__int32
+name|int32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|__int16
+name|uint16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__int16
+name|int16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|__int8
+name|uint8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__int8
+name|int8_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNIX_LP64
+end_ifdef
+
+begin_comment
+comment|// Use LP64 programming model from C_FLAGS for integer width declarations
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|uint64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|long
+name|int64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|uint32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|int32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|uint16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|short
+name|int16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|uint8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|char
+name|int8_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// Assume P64 programming model from C_FLAGS for integer width declarations
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|long
+name|uint64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|long
+name|long
+name|int64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|uint32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|int32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|uint16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|short
+name|int16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|uint8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|char
+name|int8_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Basic EFI types of various widths
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -101,7 +394,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  *XXX BugBug: Code to debug  */
+comment|//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+end_comment
+
+begin_comment
+comment|// BugBug: Code to debug
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -129,7 +430,15 @@ value|(PLATFORM_IOBASE_ADDRESS | ( ( ( (_Port)& 0xfffc)<< 10 ) | ( (_Port)& 0x0f
 end_define
 
 begin_comment
-comment|/* Macro's with casts make this much easier to use and read. */
+comment|//
+end_comment
+
+begin_comment
+comment|// Macro's with casts make this much easier to use and read.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -151,6 +460,18 @@ name|_Data
 parameter_list|)
 value|(PORT_TO_MEM8D(0x80) = (_Data))
 end_define
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// BugBug: End Debug Code!!!
+end_comment
+
+begin_comment
+comment|//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+end_comment
 
 begin_define
 define|#
@@ -193,16 +514,37 @@ name|MAX_ADDRESS
 value|0xFFFFFFFFFFFFFFFF
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|intrinsic
+name|(
+name|__break
+name|)
+end_pragma
+
 begin_define
 define|#
 directive|define
 name|BREAKPOINT
 parameter_list|()
-value|while (TRUE)
+value|__break(0)
 end_define
 
 begin_comment
-comment|/*  * Pointers must be aligned to these address to function  *  you will get an alignment fault if this value is less than 8  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Pointers must be aligned to these address to function
+end_comment
+
+begin_comment
+comment|//  you will get an alignment fault if this value is less than 8
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -226,7 +568,15 @@ value|(UINTN) Adjustment = 0; \             if((UINTN)Value % MIN_ALIGNMENT_SIZE
 end_define
 
 begin_comment
-comment|/*  * Define macros to create data structure signatures.  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Define macros to create data structure signatures.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -282,17 +632,31 @@ value|(EFI_SIGNATURE_32(A,B,C,D) | ((UINT64)(EFI_SIGNATURE_32(E,F,G,H))<< 32))
 end_define
 
 begin_comment
-comment|/*  * To export& import functions in the EFI emulator environment  */
+comment|//
 end_comment
 
-begin_define
-define|#
-directive|define
-name|EXPORTAPI
-end_define
+begin_comment
+comment|// EFIAPI - prototype calling convention for EFI function pointers
+end_comment
 
 begin_comment
-comment|/*  * EFIAPI - prototype calling convention for EFI function pointers  * BOOTSERVICE - prototype for implementation of a boot service interface  * RUNTIMESERVICE - prototype for implementation of a runtime service interface  * RUNTIMEFUNCTION - prototype for implementation of a runtime function that is not a service  * RUNTIME_CODE - pragma macro for declaring runtime code      */
+comment|// BOOTSERVICE - prototype for implementation of a boot service interface
+end_comment
+
+begin_comment
+comment|// RUNTIMESERVICE - prototype for implementation of a runtime service interface
+end_comment
+
+begin_comment
+comment|// RUNTIMEFUNCTION - prototype for implementation of a runtime function that is not a service
+end_comment
+
+begin_comment
+comment|// RUNTIME_CODE - pragma macro for declaring runtime code
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_ifndef
@@ -302,7 +666,7 @@ name|EFIAPI
 end_ifndef
 
 begin_comment
-comment|/* Forces EFI calling conventions reguardless of compiler options */
+comment|// Forces EFI calling conventions reguardless of compiler options
 end_comment
 
 begin_if
@@ -318,6 +682,10 @@ name|EFIAPI
 value|__cdecl
 end_define
 
+begin_comment
+comment|// Force C calling convention for Microsoft C compiler
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -328,6 +696,10 @@ define|#
 directive|define
 name|EFIAPI
 end_define
+
+begin_comment
+comment|// Substitute expresion to force C calling convention
+end_comment
 
 begin_endif
 endif|#
@@ -380,7 +752,7 @@ define|#
 directive|define
 name|END_RUNTIME_DATA
 parameter_list|()
-value|data_seg("")
+value|data_seg()
 end_define
 
 begin_define
@@ -391,48 +763,111 @@ value|volatile
 end_define
 
 begin_comment
-comment|/*  * XXX Need to find out if this is portable across compilers.  */
+comment|//
+end_comment
+
+begin_comment
+comment|// BugBug: Need to find out if this is portable accross compliers.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_function_decl
 name|void
-name|__mf
+name|__mfa
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__GNUC__
-end_ifndef
-
 begin_pragma
 pragma|#
 directive|pragma
 name|intrinsic
 name|(
-name|__mf
+name|__mfa
 name|)
 end_pragma
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
 directive|define
 name|MEMORY_FENCE
 parameter_list|()
-value|__mf()
+value|__mfa()
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EFI_NO_INTERFACE_DECL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EFI_FORWARD_DECLARATION
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFI_INTERFACE_DECL
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|EFI_FORWARD_DECLARATION
+parameter_list|(
+name|x
+parameter_list|)
+value|typedef struct _##x x
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFI_INTERFACE_DECL
+parameter_list|(
+name|x
+parameter_list|)
+value|typedef struct x
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * When build similiar to FW, then link everything together as  * one big module.  */
+comment|//
+end_comment
+
+begin_comment
+comment|// When build similiar to FW, then link everything together as
+end_comment
+
+begin_comment
+comment|// one big module.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -461,6 +896,16 @@ define|\
 value|(_if)->LoadInternal(type, name, entry)
 end_define
 
+begin_comment
+comment|//        entry(NULL, ST)
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -470,6 +915,75 @@ name|x
 parameter_list|)
 value|struct x
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Some compilers don't support the forward reference construct:
+end_comment
+
+begin_comment
+comment|//  typedef struct XXXXX
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// The following macro provide a workaround for such cases.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO_INTERFACE_DECL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INTERFACE_DECL
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|INTERFACE_DECL
+parameter_list|(
+name|x
+parameter_list|)
+value|typedef struct x
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

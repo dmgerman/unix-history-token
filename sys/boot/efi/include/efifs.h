@@ -16,11 +16,19 @@ name|_EFI_FS_H
 end_define
 
 begin_comment
-comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efifs.h  Abstract:      EFI File System structures    Revision History  --*/
+comment|/*++  Copyright (c)  1999 - 2002 Intel Corporation. All rights reserved This software and associated documentation (if any) is furnished under a license and may only be used or copied in accordance with the terms of the license. Except as permitted by such license, no part of this software or documentation may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the express written consent of Intel Corporation.  Module Name:      efifs.h  Abstract:      EFI File System structures    Revision History  --*/
 end_comment
 
 begin_comment
-comment|/*  * EFI Partition header (normaly starts in LBA 1)  */
+comment|//
+end_comment
+
+begin_comment
+comment|// EFI Partition header (normaly starts in LBA 1)
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -89,7 +97,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * File header  */
+comment|//
+end_comment
+
+begin_comment
+comment|// File header
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -157,7 +173,19 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Return the file's first LBAL which is in the same  * logical block as the file header  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Return the file's first LBAL which is in the same
+end_comment
+
+begin_comment
+comment|// logical block as the file header
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -192,7 +220,19 @@ value|3
 end_define
 
 begin_comment
-comment|/*  * Logical Block Address List - the fundemental block  * description structure  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Logical Block Address List - the fundemental block
+end_comment
+
+begin_comment
+comment|// description structure
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
@@ -238,7 +278,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Array size */
+comment|// Array size
 end_comment
 
 begin_define
@@ -257,7 +297,15 @@ value|(((blks) - (offs) - (lbal)->Hdr.HeaderSize) / sizeof(EFI_RL))
 end_define
 
 begin_comment
-comment|/*  * Logical Block run-length  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Logical Block run-length
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_typedef
@@ -276,7 +324,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Return the run-length structure from an LBAL header  */
+comment|//
+end_comment
+
+begin_comment
+comment|// Return the run-length structure from an LBAL header
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_define
