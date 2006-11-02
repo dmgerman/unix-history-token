@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|QR_VERSION
-value|10
+value|13
 end_define
 
 begin_typedef
@@ -138,6 +138,8 @@ decl_stmt|;
 name|int
 name|r_version
 decl_stmt|;
+struct|struct
+block|{
 enum|enum
 block|{
 name|R_FC
@@ -146,6 +148,37 @@ name|R_SCSI
 block|}
 name|r_type
 enum|;
+union|union
+block|{
+struct|struct
+block|{
+name|uint64_t
+name|r_wwnn
+decl_stmt|;
+name|uint64_t
+name|r_wwpn
+decl_stmt|;
+block|}
+name|fc
+struct|;
+struct|struct
+block|{
+name|int
+name|r_iid
+decl_stmt|;
+block|}
+name|scsi
+struct|;
+block|}
+name|r_id
+union|;
+block|}
+name|r_info
+struct|;
+name|void
+modifier|*
+name|r_private
+decl_stmt|;
 block|}
 name|hba_register_t
 typedef|;
@@ -212,9 +245,14 @@ name|nt_lun
 decl_stmt|;
 comment|/* logical unit */
 name|uint16_t
-name|nt_padding
-decl_stmt|;
-comment|/* padding */
+label|:
+literal|15
+operator|,
+name|nt_need_ack
+operator|:
+literal|1
+expr_stmt|;
+comment|/* this notify needs an ACK */
 name|uint32_t
 name|nt_tagval
 decl_stmt|;
@@ -373,7 +411,7 @@ begin_define
 define|#
 directive|define
 name|QCDS
-value|8
+value|(sizeof (void *))
 end_define
 
 begin_endif
@@ -523,12 +561,12 @@ decl_stmt|;
 block|}
 name|cd_lreserved
 index|[
-literal|3
+literal|4
 index|]
 union|,
 name|cd_hreserved
 index|[
-literal|3
+literal|4
 index|]
 union|;
 block|}
