@@ -9077,6 +9077,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -9098,14 +9100,6 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* XXX: This should not be a header mbuf. */
-name|m_demote
-argument_list|(
-name|m
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|headersize
 operator|=
 name|hdr_uio

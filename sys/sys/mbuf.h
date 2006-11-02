@@ -2200,6 +2200,23 @@ define|\
 value|m_extadd((m), (caddr_t)(buf), (size), (free), (args), (flags), (type))
 end_define
 
+begin_define
+define|#
+directive|define
+name|m_getm
+parameter_list|(
+name|m
+parameter_list|,
+name|len
+parameter_list|,
+name|how
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|m_getm2((m), (len), (how), (type), M_PKTHDR)
+end_define
+
 begin_comment
 comment|/*  * Evaluate TRUE if it's safe to write to the mbuf m's data region (this  * can be both the local data payload, or an external buffer area,  * depending on whether M_EXT is set).  */
 end_comment
@@ -2834,7 +2851,7 @@ begin_function_decl
 name|struct
 name|mbuf
 modifier|*
-name|m_getm
+name|m_getm2
 parameter_list|(
 name|struct
 name|mbuf
@@ -2845,6 +2862,8 @@ parameter_list|,
 name|int
 parameter_list|,
 name|short
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3003,6 +3022,8 @@ parameter_list|(
 name|struct
 name|uio
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,

@@ -3912,6 +3912,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|ETHER_ALIGN
+argument_list|,
+name|M_PKTHDR
 argument_list|)
 operator|)
 operator|==
