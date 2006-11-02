@@ -168,15 +168,6 @@ comment|/*  	 * XXX Chicken-and-egg problem; we want to have console output 	 * 
 name|cons_probe
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Initialise the block cache 	 */
-name|bcache_init
-argument_list|(
-literal|32
-argument_list|,
-literal|512
-argument_list|)
-expr_stmt|;
-comment|/* 16k XXX tune this */
 comment|/* 	 * March through the device switch probing for things. 	 */
 for|for
 control|(

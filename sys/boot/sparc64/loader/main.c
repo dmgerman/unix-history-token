@@ -2389,13 +2389,6 @@ operator|->
 name|tlb_init
 argument_list|()
 expr_stmt|;
-name|bcache_init
-argument_list|(
-literal|32
-argument_list|,
-literal|512
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Initialize devices. 	 */
 for|for
 control|(
