@@ -64,9 +64,6 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|result
 operator|=
 name|archsw
@@ -76,6 +73,7 @@ argument_list|(
 operator|(
 name|void
 operator|*
+operator|*
 operator|)
 operator|&
 name|dev
@@ -84,12 +82,16 @@ name|fname
 argument_list|,
 name|file
 argument_list|)
-operator|)
-operator|==
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|result
 condition|)
-block|{
-comment|/* get the device */
+return|return
+operator|(
+name|result
+operator|)
+return|;
 comment|/* point to device-specific data so that device open can use it */
 name|f
 operator|->
@@ -97,9 +99,6 @@ name|f_devdata
 operator|=
 name|dev
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|result
 operator|=
 name|dev
@@ -112,12 +111,31 @@ name|f
 argument_list|,
 name|dev
 argument_list|)
-operator|)
-operator|==
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
 literal|0
 condition|)
 block|{
-comment|/* try to open it */
+name|f
+operator|->
+name|f_devdata
+operator|=
+name|NULL
+expr_stmt|;
+name|free
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|result
+operator|)
+return|;
+block|}
 comment|/* reference the devsw entry from the open_file structure */
 name|f
 operator|->
@@ -127,20 +145,9 @@ name|dev
 operator|->
 name|d_dev
 expr_stmt|;
-block|}
-else|else
-block|{
-name|free
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-comment|/* release the device descriptor */
-block|}
-block|}
 return|return
 operator|(
-name|result
+literal|0
 operator|)
 return|;
 block|}
