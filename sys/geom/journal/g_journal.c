@@ -10875,6 +10875,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|sc
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* gcc */
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
