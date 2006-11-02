@@ -190,5 +190,22 @@ begin_comment
 comment|/* type 4/5/6 keyboard */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SKBD_KEY_RELEASE
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|SKBD_KEY_CHAR
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)& 0x7f)
+end_define
+
 end_unit
 
