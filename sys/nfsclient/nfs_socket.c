@@ -2652,7 +2652,7 @@ name|r_flags
 operator||=
 name|R_MUSTRESEND
 expr_stmt|;
-comment|/* 		 * Handle any recoverable (soft) socket errors here. (?) 		 */
+comment|/* 		 * Handle any recoverable (soft) socket errors here. (?) 		 * Make EWOULDBLOCK a recoverable error, we'll rexmit from nfs_timer(). 		 */
 if|if
 condition|(
 name|error
@@ -2666,10 +2666,6 @@ operator|&&
 name|error
 operator|!=
 name|EIO
-operator|&&
-name|error
-operator|!=
-name|EWOULDBLOCK
 operator|&&
 name|error
 operator|!=
