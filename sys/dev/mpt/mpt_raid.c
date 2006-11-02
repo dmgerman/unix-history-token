@@ -6808,6 +6808,11 @@ name|raid_rescan
 operator|=
 literal|0
 expr_stmt|;
+name|MPTLOCK_2_CAMLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|xpt_create_path
@@ -6841,6 +6846,11 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
+name|CAMLOCK_2_MPTLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|mpt_vol_prt
 argument_list|(
 name|mpt
@@ -6864,6 +6874,11 @@ expr_stmt|;
 name|xpt_free_path
 argument_list|(
 name|path
+argument_list|)
+expr_stmt|;
+name|CAMLOCK_2_MPTLOCK
+argument_list|(
+name|mpt
 argument_list|)
 expr_stmt|;
 block|}
