@@ -10070,6 +10070,11 @@ name|sc
 operator|=
 name|arg
 expr_stmt|;
+name|type
+operator|=
+literal|0
+expr_stmt|;
+comment|/* gcc */
 if|if
 condition|(
 name|sc
