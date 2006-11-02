@@ -5027,6 +5027,13 @@ if|if
 condition|(
 name|bp
 operator|->
+name|bp_state
+operator|!=
+name|BSTP_IFSTATE_FORWARDING
+operator|&&
+operator|(
+name|bp
+operator|->
 name|bp_forward_delay_timer
 operator|.
 name|active
@@ -5054,6 +5061,7 @@ operator|->
 name|bp_protover
 operator|==
 name|BSTP_PROTO_RSTP
+operator|)
 operator|)
 condition|)
 block|{
@@ -5306,6 +5314,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|bp
+operator|->
+name|bp_state
+operator|!=
+name|BSTP_IFSTATE_FORWARDING
+operator|&&
 operator|(
 name|bp
 operator|->
@@ -5345,6 +5359,23 @@ operator|->
 name|bp_sync
 condition|)
 block|{
+if|if
+condition|(
+name|bp
+operator|->
+name|bp_agreed
+condition|)
+name|DPRINTF
+argument_list|(
+literal|"%s -> AGREED\n"
+argument_list|,
+name|bp
+operator|->
+name|bp_ifp
+operator|->
+name|if_xname
+argument_list|)
+expr_stmt|;
 comment|/* 			 * If agreed|operedge then go straight to forwarding, 			 * otherwise follow discard -> learn -> forward. 			 */
 if|if
 condition|(
