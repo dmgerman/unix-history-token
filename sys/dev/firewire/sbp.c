@@ -9339,33 +9339,15 @@ argument|; 		strncpy(cpi->sim_vid,
 literal|"FreeBSD"
 argument|, SIM_IDLEN); 		strncpy(cpi->hba_vid,
 literal|"SBP"
-argument|, HBA_IDLEN); 		strncpy(cpi->dev_name, sim->sim_name, DEV_IDLEN); 		cpi->unit_number = sim->unit_number;
-ifdef|#
-directive|ifdef
-name|CAM_NEW_TRAN_CODE
-argument|cpi->transport = XPORT_SPI;
+argument|, HBA_IDLEN); 		strncpy(cpi->dev_name, sim->sim_name, DEV_IDLEN); 		cpi->unit_number = sim->unit_number;                 cpi->transport = XPORT_SPI;
 comment|/* XX should have a FireWire */
 argument|cpi->transport_version =
 literal|2
-argument|;                 cpi->protocol = PROTO_SCSI;                 cpi->protocol_version = SCSI_REV_2;
-endif|#
-directive|endif
-argument|cpi->ccb_h.status = CAM_REQ_CMP; 		xpt_done(ccb); 		break; 	} 	case XPT_GET_TRAN_SETTINGS: 	{ 		struct ccb_trans_settings *cts =&ccb->cts;
-ifdef|#
-directive|ifdef
-name|CAM_NEW_TRAN_CODE
-argument|struct ccb_trans_settings_scsi *scsi =&cts->proto_specific.scsi; 		struct ccb_trans_settings_spi *spi =&cts->xport_specific.spi;  		cts->protocol = PROTO_SCSI; 		cts->protocol_version = SCSI_REV_2; 		cts->transport = XPORT_SPI;
+argument|;                 cpi->protocol = PROTO_SCSI;                 cpi->protocol_version = SCSI_REV_2;  		cpi->ccb_h.status = CAM_REQ_CMP; 		xpt_done(ccb); 		break; 	} 	case XPT_GET_TRAN_SETTINGS: 	{ 		struct ccb_trans_settings *cts =&ccb->cts; 		struct ccb_trans_settings_scsi *scsi =&cts->proto_specific.scsi; 		struct ccb_trans_settings_spi *spi =&cts->xport_specific.spi;  		cts->protocol = PROTO_SCSI; 		cts->protocol_version = SCSI_REV_2; 		cts->transport = XPORT_SPI;
 comment|/* should have a FireWire */
 argument|cts->transport_version =
 literal|2
-argument|; 		spi->valid = CTS_SPI_VALID_DISC; 		spi->flags = CTS_SPI_FLAGS_DISC_ENB; 		scsi->valid = CTS_SCSI_VALID_TQ; 		scsi->flags = CTS_SCSI_FLAGS_TAG_ENB;
-else|#
-directive|else
-comment|/* Enable disconnect and tagged queuing */
-argument|cts->valid = CCB_TRANS_DISC_VALID | CCB_TRANS_TQ_VALID; 		cts->flags = CCB_TRANS_DISC_ENB | CCB_TRANS_TAG_ENB;
-endif|#
-directive|endif
-argument|SBP_DEBUG(
+argument|; 		spi->valid = CTS_SPI_VALID_DISC; 		spi->flags = CTS_SPI_FLAGS_DISC_ENB; 		scsi->valid = CTS_SCSI_VALID_TQ; 		scsi->flags = CTS_SCSI_FLAGS_TAG_ENB; SBP_DEBUG(
 literal|1
 argument|) 		printf(
 literal|"%s:%d:%d XPT_GET_TRAN_SETTINGS:.\n"

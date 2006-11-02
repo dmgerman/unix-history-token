@@ -1895,9 +1895,6 @@ name|base_transfer_speed
 operator|=
 literal|3300
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CAM_NEW_TRAN_CODE
 name|cpi
 operator|->
 name|transport
@@ -1922,8 +1919,6 @@ name|protocol_version
 operator|=
 name|SCSI_REV_2
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|softc
@@ -2252,9 +2247,6 @@ name|ccb
 operator|->
 name|cts
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CAM_NEW_TRAN_CODE
 name|cts
 operator|->
 name|protocol
@@ -2296,32 +2288,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* nothing more to do */
-else|#
-directive|else
-comment|/* 	 * The default CAM transport code is very SCSI-specific and 	 * doesn't understand IDE speeds very well. Be silent about it 	 * here and let it default to what is set in XPT_PATH_INQ 	 */
-name|cts
-operator|->
-name|valid
-operator|=
-operator|(
-name|CCB_TRANS_DISC_VALID
-operator||
-name|CCB_TRANS_TQ_VALID
-operator|)
-expr_stmt|;
-name|cts
-operator|->
-name|flags
-operator|&=
-operator|~
-operator|(
-name|CCB_TRANS_DISC_ENB
-operator||
-name|CCB_TRANS_TAG_ENB
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ccb
 operator|->
 name|ccb_h

@@ -11680,9 +11680,6 @@ operator|*
 literal|1024
 expr_stmt|;
 comment|/* XXX what to set this to? */
-ifdef|#
-directive|ifdef
-name|CAM_NEW_TRAN_CODE
 name|cpi
 operator|->
 name|transport
@@ -11707,8 +11704,6 @@ name|protocol_version
 operator|=
 name|SCSI_REV_2
 expr_stmt|;
-endif|#
-directive|endif
 name|ccb
 operator|->
 name|ccb_h
@@ -11738,9 +11733,6 @@ name|bus
 decl_stmt|,
 name|target
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CAM_NEW_TRAN_CODE
 name|struct
 name|ccb_trans_settings_spi
 modifier|*
@@ -11753,8 +11745,6 @@ name|xport_specific
 operator|.
 name|spi
 decl_stmt|;
-endif|#
-directive|endif
 name|bus
 operator|=
 name|cam_sim_bus
@@ -11782,9 +11772,6 @@ name|target
 argument_list|)
 expr_stmt|;
 comment|/* disconnect always OK */
-ifdef|#
-directive|ifdef
-name|CAM_NEW_TRAN_CODE
 name|cts
 operator|->
 name|protocol
@@ -11821,22 +11808,6 @@ name|flags
 operator|=
 name|CTS_SPI_FLAGS_DISC_ENB
 expr_stmt|;
-else|#
-directive|else
-name|cts
-operator|->
-name|flags
-operator||=
-name|CCB_TRANS_DISC_ENB
-expr_stmt|;
-name|cts
-operator|->
-name|valid
-operator|=
-name|CCB_TRANS_DISC_VALID
-expr_stmt|;
-endif|#
-directive|endif
 name|cts
 operator|->
 name|ccb_h

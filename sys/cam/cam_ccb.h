@@ -34,26 +34,11 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CAM_NEW_TRAN_CODE
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/limits.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CAM_NEW_TRAN_CODE */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -675,12 +660,6 @@ define|\
 value|(((ccb)->ccb_h.func_code& XPT_FC_QUEUED) != 0)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CAM_NEW_TRAN_CODE
-end_ifdef
-
 begin_typedef
 typedef|typedef
 enum|enum
@@ -764,15 +743,6 @@ directive|define
 name|XPORT_VERSION_UNSPECIFIED
 value|UINT_MAX
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CAM_NEW_TRAN_CODE */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -1770,12 +1740,6 @@ name|pi_miscflag
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CAM_NEW_TRAN_CODE
-end_ifdef
-
 begin_comment
 comment|/* Path Inquiry CCB */
 end_comment
@@ -1833,15 +1797,6 @@ directive|define
 name|PATHINQ_SETTINGS_SIZE
 value|128
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CAM_NEW_TRAN_CODE */
-end_comment
 
 begin_struct
 struct|struct
@@ -1931,9 +1886,6 @@ name|u_int32_t
 name|base_transfer_speed
 decl_stmt|;
 comment|/* Base bus speed in KB/sec */
-ifdef|#
-directive|ifdef
-name|CAM_NEW_TRAN_CODE
 name|cam_proto
 name|protocol
 decl_stmt|;
@@ -1969,9 +1921,6 @@ decl_stmt|;
 block|}
 name|xport_specific
 union|;
-endif|#
-directive|endif
-comment|/* CAM_NEW_TRAN_CODE */
 block|}
 struct|;
 end_struct
@@ -2435,89 +2384,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CAM_NEW_TRAN_CODE
-end_ifndef
-
-begin_comment
-comment|/* Get/Set transfer rate/width/disconnection/tag queueing settings */
-end_comment
-
-begin_struct
-struct|struct
-name|ccb_trans_settings
-block|{
-name|struct
-name|ccb_hdr
-name|ccb_h
-decl_stmt|;
-name|u_int
-name|valid
-decl_stmt|;
-comment|/* Which fields to honor */
-define|#
-directive|define
-name|CCB_TRANS_SYNC_RATE_VALID
-value|0x01
-define|#
-directive|define
-name|CCB_TRANS_SYNC_OFFSET_VALID
-value|0x02
-define|#
-directive|define
-name|CCB_TRANS_BUS_WIDTH_VALID
-value|0x04
-define|#
-directive|define
-name|CCB_TRANS_DISC_VALID
-value|0x08
-define|#
-directive|define
-name|CCB_TRANS_TQ_VALID
-value|0x10
-name|u_int
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|CCB_TRANS_CURRENT_SETTINGS
-value|0x01
-define|#
-directive|define
-name|CCB_TRANS_USER_SETTINGS
-value|0x02
-define|#
-directive|define
-name|CCB_TRANS_DISC_ENB
-value|0x04
-define|#
-directive|define
-name|CCB_TRANS_TAG_ENB
-value|0x08
-name|u_int
-name|sync_period
-decl_stmt|;
-name|u_int
-name|sync_offset
-decl_stmt|;
-name|u_int
-name|bus_width
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* CAM_NEW_TRAN_CODE */
-end_comment
-
 begin_typedef
 typedef|typedef
 enum|enum
@@ -2737,15 +2603,6 @@ union|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CAM_NEW_TRAN_CODE */
-end_comment
 
 begin_comment
 comment|/*  * Calculate the geometry parameters for a device  * give the block size and volume size in blocks.  */
