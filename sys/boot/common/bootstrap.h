@@ -53,6 +53,9 @@ define|#
 directive|define
 name|DEVT_CD
 value|3
+name|int
+name|d_unit
+decl_stmt|;
 block|}
 struct|;
 end_struct

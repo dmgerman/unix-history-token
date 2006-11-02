@@ -563,11 +563,7 @@ name|bc_unit2bios
 argument_list|(
 name|rootdev
 operator|->
-name|d_kind
-operator|.
-name|bioscd
-operator|.
-name|unit
+name|d_unit
 argument_list|)
 expr_stmt|;
 name|bootdevnr
@@ -590,11 +586,7 @@ name|bd_unit2bios
 argument_list|(
 name|rootdev
 operator|->
-name|d_kind
-operator|.
-name|biosdisk
-operator|.
-name|unit
+name|d_unit
 argument_list|)
 expr_stmt|;
 name|bootdevnr

@@ -25,6 +25,9 @@ decl_stmt|;
 name|int
 name|d_type
 decl_stmt|;
+name|int
+name|d_unit
+decl_stmt|;
 name|ihandle_t
 name|d_handle
 decl_stmt|;

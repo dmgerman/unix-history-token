@@ -258,11 +258,7 @@ name|dv_type
 expr_stmt|;
 name|currdev
 operator|.
-name|d_kind
-operator|.
-name|skidisk
-operator|.
-name|unit
+name|d_unit
 operator|=
 literal|0
 expr_stmt|;

@@ -529,11 +529,7 @@ expr_stmt|;
 comment|/* XXX disk */
 name|currdev
 operator|.
-name|d_kind
-operator|.
-name|efidisk
-operator|.
-name|unit
+name|d_unit
 operator|=
 name|i
 expr_stmt|;
@@ -574,11 +570,7 @@ expr_stmt|;
 comment|/* XXX net */
 name|currdev
 operator|.
-name|d_kind
-operator|.
-name|netif
-operator|.
-name|unit
+name|d_unit
 operator|=
 literal|0
 expr_stmt|;

@@ -1482,11 +1482,7 @@ name|unit
 operator|=
 name|dev
 operator|->
-name|d_kind
-operator|.
-name|efidisk
-operator|.
-name|unit
+name|d_unit
 expr_stmt|;
 if|if
 condition|(

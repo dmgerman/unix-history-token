@@ -31,6 +31,9 @@ define|#
 directive|define
 name|DEVT_NET
 value|2
+name|int
+name|d_unit
+decl_stmt|;
 name|EFI_HANDLE
 name|d_handle
 decl_stmt|;
@@ -39,9 +42,6 @@ block|{
 struct|struct
 block|{
 name|int
-name|unit
-decl_stmt|;
-name|int
 name|slice
 decl_stmt|;
 name|int
@@ -49,15 +49,6 @@ name|partition
 decl_stmt|;
 block|}
 name|efidisk
-struct|;
-struct|struct
-block|{
-name|int
-name|unit
-decl_stmt|;
-comment|/* XXX net layer lives over these? */
-block|}
-name|netif
 struct|;
 block|}
 name|d_kind

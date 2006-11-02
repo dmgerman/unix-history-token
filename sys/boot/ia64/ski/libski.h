@@ -31,13 +31,13 @@ define|#
 directive|define
 name|DEVT_NET
 value|2
+name|int
+name|d_unit
+decl_stmt|;
 union|union
 block|{
 struct|struct
 block|{
-name|int
-name|unit
-decl_stmt|;
 name|int
 name|slice
 decl_stmt|;
@@ -46,15 +46,6 @@ name|partition
 decl_stmt|;
 block|}
 name|skidisk
-struct|;
-struct|struct
-block|{
-name|int
-name|unit
-decl_stmt|;
-comment|/* XXX net layer lives over these? */
-block|}
-name|netif
 struct|;
 block|}
 name|d_kind
