@@ -244,7 +244,7 @@ name|ehdr
 operator|->
 name|e_entry
 operator|&
-literal|0x3fffffff
+literal|0xffffff
 expr_stmt|;
 ifdef|#
 directive|ifdef
