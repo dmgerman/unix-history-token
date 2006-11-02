@@ -1445,6 +1445,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DA_DEFAULT_SEND_ORDERED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DA_DEFAULT_SEND_ORDERED
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1460,6 +1478,15 @@ name|int
 name|da_default_timeout
 init|=
 name|DA_DEFAULT_TIMEOUT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|da_send_ordered
+init|=
+name|DA_DEFAULT_SEND_ORDERED
 decl_stmt|;
 end_decl_stmt
 
@@ -1541,6 +1568,38 @@ literal|"kern.cam.da.default_timeout"
 argument_list|,
 operator|&
 name|da_default_timeout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_cam_da
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|da_send_ordered
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|da_send_ordered
+argument_list|,
+literal|0
+argument_list|,
+literal|"Send Ordered Tags"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.da.da_send_ordered"
+argument_list|,
+operator|&
+name|da_send_ordered
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3043,7 +3102,11 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|da_send_ordered
+condition|)
 block|{
 comment|/* 		 * Schedule a periodic event to occasionally send an 		 * ordered tag to a device. 		 */
 name|timeout
@@ -7658,6 +7721,11 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|da_send_ordered
+condition|)
+block|{
 for|for
 control|(
 name|softc
@@ -7760,6 +7828,7 @@ operator|/
 name|DA_ORDEREDTAG_INTERVAL
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
