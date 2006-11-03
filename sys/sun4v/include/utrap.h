@@ -345,6 +345,13 @@ name|ST_FP_RESTORE
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|ST_FPEMU_CONTEXT
+value|11
+end_define
+
 begin_comment
 comment|/* 11-15 are available */
 end_comment
