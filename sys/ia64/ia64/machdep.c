@@ -2564,13 +2564,12 @@ if|if
 condition|(
 name|envmode
 operator|==
-literal|1
+literal|0
+operator|&&
+name|bootinfo
+operator|.
+name|bi_envp
 condition|)
-name|kern_envp
-operator|=
-name|static_env
-expr_stmt|;
-else|else
 name|kern_envp
 operator|=
 operator|(
@@ -2579,6 +2578,11 @@ operator|)
 name|bootinfo
 operator|.
 name|bi_envp
+expr_stmt|;
+else|else
+name|kern_envp
+operator|=
+name|static_env
 expr_stmt|;
 comment|/* 	 * Look at arguments passed to us and compute boothowto. 	 */
 name|boothowto
