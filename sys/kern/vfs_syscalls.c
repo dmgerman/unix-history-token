@@ -16648,6 +16648,16 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fromnd
+operator|.
+name|ni_dvp
+operator|!=
+name|fromnd
+operator|.
+name|ni_vp
+condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|fromnd
