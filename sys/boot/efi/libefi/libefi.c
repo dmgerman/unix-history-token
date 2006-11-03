@@ -375,17 +375,23 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|heap
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-operator|(
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 name|heap
 operator|+
 name|heapsize
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Use exit() from here on... */
