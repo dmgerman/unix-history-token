@@ -15232,12 +15232,14 @@ break|break;
 block|}
 name|on_off
 operator|=
+operator|*
 operator|(
 name|mtod
 argument_list|(
 name|m
 argument_list|,
 name|int
+operator|*
 argument_list|)
 operator|)
 expr_stmt|;

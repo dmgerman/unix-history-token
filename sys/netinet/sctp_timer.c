@@ -4028,9 +4028,7 @@ directive|ifdef
 name|SCTP_FR_LOGGING
 name|sctp_log_fr
 argument_list|(
-name|sctps_datadropchklmt
-operator|.
-name|sctps_senddata
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -7474,7 +7472,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Iterator collision, waiting for one at 0x%x\n"
+literal|"Iterator collision, waiting for one at %p\n"
 argument_list|,
 operator|(
 name|uint32_t

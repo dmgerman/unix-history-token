@@ -16519,7 +16519,10 @@ argument_list|,
 name|error
 argument_list|,
 operator|(
-name|uint32_t
+name|uint16_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|data
 argument_list|)
@@ -16528,7 +16531,7 @@ break|break;
 if|#
 directive|if
 literal|0
-block|case SCTP_NOTIFY_AUTH_KEY_CONFLICT: 		sctp_notify_authentication(stcb, SCTP_AUTH_KEY_CONFLICT, 		    error, (uint32_t) data); 		break;
+block|case SCTP_NOTIFY_AUTH_KEY_CONFLICT: 		sctp_notify_authentication(stcb, SCTP_AUTH_KEY_CONFLICT, 		    error, (uint16_t) (uintptr_t) data); 		break;
 endif|#
 directive|endif
 comment|/* not yet? remove? */

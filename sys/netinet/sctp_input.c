@@ -1124,7 +1124,7 @@ expr_stmt|;
 comment|/* Free the chunk */
 name|printf
 argument_list|(
-literal|"sp:%x tcb:%x weird free case\n"
+literal|"sp:%p tcb:%p weird free case\n"
 argument_list|,
 operator|(
 name|u_int

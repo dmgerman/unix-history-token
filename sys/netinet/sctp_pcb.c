@@ -9757,7 +9757,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Error, sp is NULL, locked on sending is %x strm:%d\n"
+literal|"Error, sp is NULL, locked on sending is %ps strm:%d\n"
 argument_list|,
 operator|(
 name|u_int
