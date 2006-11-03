@@ -653,14 +653,14 @@ name|RB_MULTIPLE
 condition|)
 block|{
 comment|/* 			 * Initialize console, and attach to it. 			 */
-name|cnadd
+name|cn
+operator|->
+name|cn_init
 argument_list|(
 name|cn
 argument_list|)
 expr_stmt|;
-name|cn
-operator|->
-name|cn_init
+name|cnadd
 argument_list|(
 name|cn
 argument_list|)
@@ -685,14 +685,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|cnadd
+name|best_cn
+operator|->
+name|cn_init
 argument_list|(
 name|best_cn
 argument_list|)
 expr_stmt|;
-name|best_cn
-operator|->
-name|cn_init
+name|cnadd
 argument_list|(
 name|best_cn
 argument_list|)
