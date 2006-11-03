@@ -266,6 +266,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/trap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/tte_hash.h>
 end_include
 
@@ -2656,6 +2662,22 @@ expr|struct
 name|pcb
 argument_list|,
 name|pcb_sp
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|PCB_PAD
+argument_list|,
+name|offsetof
+argument_list|(
+expr|struct
+name|pcb
+argument_list|,
+name|pcb_pad
 argument_list|)
 argument_list|)
 expr_stmt|;
