@@ -161,7 +161,7 @@ block|,
 comment|/* ACPI minor revision. */
 literal|0
 block|,
-comment|/* XXX checksum. */
+comment|/* Checksum. */
 literal|"FBSD"
 block|,
 comment|/* OEM Id. */
@@ -527,6 +527,24 @@ operator|&
 name|acpi_root
 operator|.
 name|ExtendedChecksum
+argument_list|)
+expr_stmt|;
+name|cksum
+argument_list|(
+operator|&
+name|apic
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|apic
+argument_list|)
+argument_list|,
+operator|&
+name|apic
+operator|.
+name|Header
+operator|.
+name|Checksum
 argument_list|)
 expr_stmt|;
 name|xsdt
