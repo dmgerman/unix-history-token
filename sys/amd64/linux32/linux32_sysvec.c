@@ -4502,7 +4502,7 @@ operator|-
 name|sigcodesz
 operator|)
 argument_list|,
-name|szsigcode
+name|sigcodesz
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we have a valid auxargs ptr, prepare some room 	 * on the stack. 	 */
