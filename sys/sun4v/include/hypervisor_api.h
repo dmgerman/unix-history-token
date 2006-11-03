@@ -614,6 +614,17 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|hv_cnputs
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|uint64_t
 name|hv_tod_get
 parameter_list|(
