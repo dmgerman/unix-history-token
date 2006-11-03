@@ -5928,18 +5928,12 @@ name|bp_infois
 operator|=
 name|BSTP_INFO_MINE
 expr_stmt|;
+comment|/* Set transmit flag but do not immediately send */
 name|bp
 operator|->
 name|bp_flags
 operator||=
 name|BSTP_PORT_NEWINFO
-expr_stmt|;
-name|bstp_transmit
-argument_list|(
-name|bs
-argument_list|,
-name|bp
-argument_list|)
 expr_stmt|;
 block|}
 end_function
