@@ -23,6 +23,12 @@ begin_comment
 comment|/*  * When working with the global SCTP lists we lock and unlock the INP_INFO  * lock. So when we go to lookup an association we will want to do a  * SCTP_INP_INFO_RLOCK() and then when we want to add a new association to  * the sctppcbinfo list's we will do a SCTP_INP_INFO_WLOCK().  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_expr_stmt
 name|__FBSDID
 argument_list|(

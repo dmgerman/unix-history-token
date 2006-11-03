@@ -7,14 +7,6 @@ begin_comment
 comment|/*	$KAME: sctp6_var.h,v 1.7 2004/08/17 04:06:22 itojun Exp $	*/
 end_comment
 
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -26,6 +18,20 @@ define|#
 directive|define
 name|_NETINET6_SCTP6_VAR_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_if
 if|#
