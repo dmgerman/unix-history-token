@@ -5480,14 +5480,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Error, sp is NULL, locked on sending is %x strm:%d\n"
-argument_list|,
-operator|(
-name|u_int
-operator|)
-name|asoc
-operator|->
-name|locked_on_sending
+literal|"Error, sp is NULL, locked on sending is non-null strm:%d\n"
 argument_list|,
 name|asoc
 operator|->
@@ -6113,14 +6106,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Error, sp is NULL, locked on sending is %x strm:%d\n"
-argument_list|,
-operator|(
-name|u_int
-operator|)
-name|asoc
-operator|->
-name|locked_on_sending
+literal|"Error, sp is NULL, locked on sending is non-null strm:%d\n"
 argument_list|,
 name|asoc
 operator|->
