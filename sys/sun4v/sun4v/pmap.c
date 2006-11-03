@@ -2389,6 +2389,10 @@ argument_list|,
 name|mr_cmp
 argument_list|)
 expr_stmt|;
+name|physmem_tunable
+operator|=
+name|physmem
+operator|=
 name|physsz
 operator|=
 literal|0
@@ -2403,6 +2407,7 @@ operator|&
 name|physmem_tunable
 argument_list|)
 condition|)
+block|{
 name|physmem
 operator|=
 name|atop
@@ -2417,6 +2422,7 @@ argument_list|,
 name|physmem_tunable
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -2495,6 +2501,7 @@ operator|.
 name|mr_size
 argument_list|)
 expr_stmt|;
+comment|/*  		 * Is kernel memory at the beginning of range? 		 */
 if|if
 condition|(
 name|nucleus_memory_start
@@ -2530,6 +2537,7 @@ operator|*
 name|PAGE_SIZE_4M
 expr_stmt|;
 block|}
+comment|/*  		 * Is kernel memory at the end of range? 		 */
 if|if
 condition|(
 name|nucleus_memory_start
@@ -2555,6 +2563,7 @@ literal|2
 operator|*
 name|PAGE_SIZE_4M
 expr_stmt|;
+comment|/*  		 * Is kernel memory in the middle somewhere? 		 */
 if|if
 condition|(
 operator|(
