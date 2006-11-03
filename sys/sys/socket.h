@@ -1865,6 +1865,17 @@ begin_comment
 comment|/* wait for full request or error */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MSG_NOTIFICATION
+value|0x2000
+end_define
+
+begin_comment
+comment|/* SCTP notification */
+end_comment
+
 begin_if
 if|#
 directive|if

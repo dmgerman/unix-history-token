@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_sctp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -110,6 +116,37 @@ include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCTP
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|sctp_addr_change
+parameter_list|(
+name|struct
+name|ifaddr
+modifier|*
+name|ifa
+parameter_list|,
+name|int
+name|cmd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SCTP */
+end_comment
 
 begin_expr_stmt
 name|MALLOC_DEFINE
@@ -4443,6 +4480,20 @@ name|cmd
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SCTP
+comment|/* 	 * notify the SCTP stack 	 * this will only get called when an address is added/deleted 	 * XXX pass the ifaddr struct instead if ifa->ifa_addr... 	 */
+name|sctp_addr_change
+argument_list|(
+name|ifa
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SCTP */
 if|if
 condition|(
 name|route_cb

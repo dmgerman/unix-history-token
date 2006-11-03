@@ -596,6 +596,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_NOTIFICATION
+value|0x2000
+end_define
+
+begin_comment
+comment|/* SCTP notification */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_SKIP_FIREWALL
 value|0x4000
 end_define

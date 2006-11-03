@@ -1424,6 +1424,18 @@ comment|/* 469 = __getpath_fromfd */
 literal|"#470"
 block|,
 comment|/* 470 = __getpath_fromaddr */
+literal|"sctp_peeloff"
+block|,
+comment|/* 471 = sctp_peeloff */
+literal|"sctp_generic_sendmsg"
+block|,
+comment|/* 472 = sctp_generic_sendmsg */
+literal|"sctp_generic_sendmsg_iov"
+block|,
+comment|/* 473 = sctp_generic_sendmsg_iov */
+literal|"sctp_generic_recvmsg"
+block|,
+comment|/* 474 = sctp_generic_recvmsg */
 block|}
 decl_stmt|;
 end_decl_stmt
