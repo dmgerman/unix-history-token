@@ -1766,10 +1766,7 @@ argument_list|,
 operator|&
 name|inq
 operator|->
-name|reserved
-index|[
-literal|1
-index|]
+name|spc2_flags
 argument_list|)
 expr_stmt|;
 name|inq
