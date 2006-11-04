@@ -15305,7 +15305,7 @@ name|a
 operator|->
 name|a_fvp
 argument_list|,
-literal|"vop_rename: tvp locked"
+literal|"vop_rename: fvp locked"
 argument_list|)
 expr_stmt|;
 comment|/* Check the target. */
