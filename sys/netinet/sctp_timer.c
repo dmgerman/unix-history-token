@@ -7474,9 +7474,6 @@ name|printf
 argument_list|(
 literal|"Iterator collision, waiting for one at %p\n"
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|it
 operator|->
 name|inp

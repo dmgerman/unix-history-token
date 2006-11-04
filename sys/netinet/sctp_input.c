@@ -1126,14 +1126,8 @@ name|printf
 argument_list|(
 literal|"sp:%p tcb:%p weird free case\n"
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|sp
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
