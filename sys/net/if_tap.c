@@ -3823,11 +3823,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|TAPDEBUG
 argument_list|(
 literal|"%s writting, minor = %#x\n"
@@ -3927,7 +3922,7 @@ operator|++
 expr_stmt|;
 return|return
 operator|(
-name|error
+name|ENOBUFS
 operator|)
 return|;
 block|}
