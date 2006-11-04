@@ -1506,31 +1506,6 @@ argument_list|(
 name|clock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize global registers. 	 */
-name|pc
-operator|=
-operator|(
-expr|struct
-name|pcpu
-operator|*
-operator|)
-operator|(
-name|pcpu0
-operator|+
-operator|(
-name|PCPU_PAGES
-operator|*
-name|PAGE_SIZE
-operator|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-name|cpu_setregs
-argument_list|(
-name|pc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Initialize the console before printing anything. 	 */
 name|cninit
 argument_list|()
@@ -1767,6 +1742,25 @@ operator|&
 name|frame0
 expr_stmt|;
 comment|/* 	 * Prime our per-cpu data page for use.  Note, we are using it for our 	 * stack, so don't pass the real size (PAGE_SIZE) to pcpu_init or 	 * it'll zero it out from under us. 	 */
+name|pc
+operator|=
+operator|(
+expr|struct
+name|pcpu
+operator|*
+operator|)
+operator|(
+name|pcpu0
+operator|+
+operator|(
+name|PCPU_PAGES
+operator|*
+name|PAGE_SIZE
+operator|)
+operator|)
+operator|-
+literal|1
+expr_stmt|;
 name|pcpu_init
 argument_list|(
 name|pc
@@ -1841,6 +1835,12 @@ operator|->
 name|pc_tlb_ctx_max
 operator|=
 name|TLB_CTX_USER_MAX
+expr_stmt|;
+comment|/* 	 * Initialize global registers. 	 */
+name|cpu_setregs
+argument_list|(
+name|pc
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the message buffer (after setting trap table). 	 */
 name|msgbufinit
