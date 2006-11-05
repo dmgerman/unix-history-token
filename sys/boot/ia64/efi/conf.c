@@ -35,12 +35,6 @@ directive|include
 file|<efilib.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"efiboot.h"
-end_include
-
 begin_comment
 comment|/*  * We could use linker sets for some or all of these, but  * then we would have to control what ended up linked into  * the bootstrap.  So it's easier to conditionalise things  * here.  *  * XXX rename these arrays to be consistent and less namespace-hostile  */
 end_comment
@@ -61,7 +55,7 @@ operator|&
 name|efifs_dev
 block|,
 operator|&
-name|netdev
+name|efinet_dev
 block|,
 name|NULL
 block|}
@@ -77,11 +71,13 @@ index|[]
 init|=
 block|{
 operator|&
-name|efi_fsops
+name|efifs_fsops
 block|,
-comment|/*&ufs_fsops, */
 operator|&
 name|nfs_fsops
+block|,
+operator|&
+name|ufs_fsops
 block|,
 operator|&
 name|gzipfs_fsops
@@ -100,16 +96,12 @@ index|[]
 init|=
 block|{
 operator|&
-name|efi_net
+name|efinetif
 block|,
 name|NULL
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Exported for ia64 only */
-end_comment
 
 begin_comment
 comment|/*   * Sort formats so that those that can detect based on arguments  * rather than reading the file go first.  */

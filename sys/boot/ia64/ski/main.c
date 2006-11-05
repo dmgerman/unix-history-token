@@ -44,7 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bootstrap.h"
+file|<libia64.h>
 end_include
 
 begin_include
@@ -87,7 +87,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ski_devdesc
+name|devdesc
 name|currdev
 decl_stmt|;
 end_decl_stmt
@@ -106,22 +106,6 @@ end_decl_stmt
 begin_comment
 comment|/* MI/MD interface boundary */
 end_comment
-
-begin_function
-specifier|static
-name|int
-name|ski_autoload
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 name|void
@@ -262,29 +246,6 @@ name|d_unit
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX should be able to detect this, default to autoprobe */
-name|currdev
-operator|.
-name|d_kind
-operator|.
-name|skidisk
-operator|.
-name|slice
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* default to 'a' */
-name|currdev
-operator|.
-name|d_kind
-operator|.
-name|skidisk
-operator|.
-name|partition
-operator|=
-literal|0
-expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -298,13 +259,13 @@ literal|"currdev"
 argument_list|,
 name|EV_VOLATILE
 argument_list|,
-name|ski_fmtdev
+name|ia64_fmtdev
 argument_list|(
 operator|&
 name|currdev
 argument_list|)
 argument_list|,
-name|ski_setcurrdev
+name|ia64_setcurrdev
 argument_list|,
 name|env_nounset
 argument_list|)
@@ -315,7 +276,7 @@ literal|"loaddev"
 argument_list|,
 name|EV_VOLATILE
 argument_list|,
-name|ski_fmtdev
+name|ia64_fmtdev
 argument_list|(
 operator|&
 name|currdev
@@ -340,31 +301,31 @@ name|archsw
 operator|.
 name|arch_autoload
 operator|=
-name|ski_autoload
+name|ia64_autoload
 expr_stmt|;
 name|archsw
 operator|.
 name|arch_getdev
 operator|=
-name|ski_getdev
+name|ia64_getdev
 expr_stmt|;
 name|archsw
 operator|.
 name|arch_copyin
 operator|=
-name|ski_copyin
+name|ia64_copyin
 expr_stmt|;
 name|archsw
 operator|.
 name|arch_copyout
 operator|=
-name|ski_copyout
+name|ia64_copyout
 expr_stmt|;
 name|archsw
 operator|.
 name|arch_readin
 operator|=
-name|ski_readin
+name|ia64_readin
 expr_stmt|;
 name|interact
 argument_list|()

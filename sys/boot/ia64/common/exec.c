@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: loadfile.c,v 1.10 1998/06/25 06:45:46 ross Exp $ */
-end_comment
-
-begin_comment
-comment|/*-  * Copyright (c) 1997 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Jason R. Thorpe of the Numerical Aerospace Simulation Facility,  * NASA Ames Research Center.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)boot.c	8.1 (Berkeley) 6/10/93  */
+comment|/*-  * Copyright (c) 2006 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -58,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bootinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/ia64_cpu.h>
 end_include
 
@@ -76,7 +62,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/vmparam.h>
+file|<ia64/include/bootinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ia64/include/vmparam.h>
 end_include
 
 begin_include
@@ -129,38 +121,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-name|__inline
-name|u_int64_t
-name|disable_ic
-parameter_list|()
-block|{
-name|u_int64_t
-name|psr
-decl_stmt|;
-asm|__asm __volatile("mov %0=psr;;" : "=r" (psr));
-asm|__asm __volatile("rsm psr.ic|psr.i;; srlz.i;;");
-return|return
-name|psr
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|restore_ic
-parameter_list|(
-name|u_int64_t
-name|psr
-parameter_list|)
-block|{
-asm|__asm __volatile("mov psr.l=%0;; srlz.i" :: "r" (psr));
-block|}
-end_function
-
 begin_comment
 comment|/*  * Entered with psr.ic and psr.i both zero.  */
 end_comment
@@ -169,18 +129,13 @@ begin_function
 name|void
 name|enter_kernel
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|start
 parameter_list|,
-name|struct
-name|bootinfo
-modifier|*
+name|uint64_t
 name|bi
 parameter_list|)
 block|{
-name|u_int64_t
-name|psr
-decl_stmt|;
 asm|__asm __volatile("srlz.i;;");
 asm|__asm __volatile("mov cr.ipsr=%0"
 operator|::
@@ -220,6 +175,10 @@ begin_asm
 asm|__asm __volatile("rfi;;");
 end_asm
 
+begin_comment
+comment|/* NOTREACHED */
+end_comment
+
 begin_function
 unit|}  static
 name|int
@@ -243,33 +202,9 @@ decl_stmt|;
 name|pt_entry_t
 name|pte
 decl_stmt|;
-name|struct
-name|bootinfo
-modifier|*
-name|bi
+name|uint64_t
+name|bi_addr
 decl_stmt|;
-name|u_int64_t
-name|psr
-decl_stmt|;
-name|UINTN
-name|mapkey
-decl_stmt|,
-name|pages
-decl_stmt|,
-name|size
-decl_stmt|;
-name|UINTN
-name|descsz
-decl_stmt|;
-name|UINT32
-name|descver
-decl_stmt|;
-name|EFI_STATUS
-name|status
-decl_stmt|;
-if|if
-condition|(
-operator|(
 name|md
 operator|=
 name|file_findmetadata
@@ -278,16 +213,18 @@ name|fp
 argument_list|,
 name|MODINFOMD_ELFHDR
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|md
 operator|==
 name|NULL
 condition|)
 return|return
 operator|(
-name|EFTYPE
+name|EINVAL
 operator|)
 return|;
-comment|/* XXX actually EFUCKUP */
 name|hdr
 operator|=
 operator|(
@@ -301,128 +238,12 @@ operator|->
 name|md_data
 operator|)
 expr_stmt|;
-comment|/* 	 * Allocate enough pages to hold the bootinfo block and the memory 	 * map EFI will return to us. The memory map has an unknown size, 	 * so we have to determine that first. Note that the AllocatePages 	 * call can itself modify the memory map, so we have to take that 	 * into account as well. The changes to the memory map are caused 	 * by splitting a range of free memory into two (AFAICT), so that 	 * one is marked as being loader data. 	 */
-name|size
-operator|=
-literal|0
-expr_stmt|;
-name|descsz
-operator|=
-sizeof|sizeof
-argument_list|(
-name|EFI_MEMORY_DESCRIPTOR
-argument_list|)
-expr_stmt|;
-name|BS
-operator|->
-name|GetMemoryMap
-argument_list|(
-operator|&
-name|size
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|mapkey
-argument_list|,
-operator|&
-name|descsz
-argument_list|,
-operator|&
-name|descver
-argument_list|)
-expr_stmt|;
-name|size
-operator|+=
-name|descsz
-operator|+
-operator|(
-operator|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|bootinfo
-argument_list|)
-operator|+
-literal|0x0f
-operator|)
-operator|&
-operator|~
-literal|0x0f
-operator|)
-expr_stmt|;
-name|pages
-operator|=
-name|EFI_SIZE_TO_PAGES
-argument_list|(
-name|size
-argument_list|)
-expr_stmt|;
-name|status
-operator|=
-name|BS
-operator|->
-name|AllocatePages
-argument_list|(
-name|AllocateAnyPages
-argument_list|,
-name|EfiLoaderData
-argument_list|,
-name|pages
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|bi
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|EFI_ERROR
-argument_list|(
-name|status
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"unable to create bootinfo block (status=0x%lx)\n"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|status
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
-name|bzero
-argument_list|(
-name|bi
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|bootinfo
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|bi_load
 argument_list|(
-name|bi
-argument_list|,
 name|fp
 argument_list|,
 operator|&
-name|mapkey
-argument_list|,
-name|pages
+name|bi_addr
 argument_list|)
 expr_stmt|;
 name|printf
@@ -438,43 +259,15 @@ operator|->
 name|e_entry
 argument_list|)
 expr_stmt|;
-name|status
-operator|=
-name|BS
+name|ldr_enter
+argument_list|(
+name|fp
 operator|->
-name|ExitBootServices
-argument_list|(
-name|IH
-argument_list|,
-name|mapkey
+name|f_name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|EFI_ERROR
-argument_list|(
-name|status
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ExitBootServices returned 0x%lx\n"
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-name|psr
-operator|=
-name|disable_ic
-argument_list|()
-expr_stmt|;
+asm|__asm __volatile("rsm psr.ic|psr.i;;");
+asm|__asm __volatile("srlz.i;;");
 comment|/* 	 * Region 6 is direct mapped UC and region 7 is direct mapped 	 * WC. The details of this is controlled by the Alt {I,D}TLB 	 * handlers. Here we just make sure that they have the largest  	 * possible page size to minimise TLB usage. 	 */
 name|ia64_set_rr
 argument_list|(
@@ -545,14 +338,15 @@ name|hdr
 operator|->
 name|e_entry
 argument_list|,
-name|bi
+name|bi_addr
 argument_list|)
 expr_stmt|;
-name|restore_ic
-argument_list|(
-name|psr
-argument_list|)
-expr_stmt|;
+comment|/* NOTREACHED */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bootinfo.h>
+file|<machine/efi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/efi.h>
+file|<ia64/include/bootinfo.h>
 end_include
 
 begin_include
@@ -60,26 +60,6 @@ name|void
 name|sal_systab
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|void
-name|acpi_stub_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|sal_stub_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -957,8 +937,8 @@ block|}
 end_function
 
 begin_function
-name|int
-name|ski_init_stubs
+name|void
+name|efi_stub_init
 parameter_list|(
 name|struct
 name|bootinfo
@@ -1258,17 +1238,6 @@ operator|)
 operator|&
 name|efi_systab
 expr_stmt|;
-name|sal_stub_init
-argument_list|()
-expr_stmt|;
-name|acpi_stub_init
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

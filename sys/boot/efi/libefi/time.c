@@ -71,7 +71,7 @@ end_define
 
 begin_function
 name|time_t
-name|EfiTimeToUnixTime
+name|efi_time
 parameter_list|(
 name|EFI_TIME
 modifier|*
@@ -707,7 +707,7 @@ name|tp
 operator|->
 name|tv_sec
 operator|=
-name|EfiTimeToUnixTime
+name|efi_time
 argument_list|(
 operator|&
 name|EfiTime
