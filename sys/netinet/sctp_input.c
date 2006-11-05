@@ -2795,6 +2795,17 @@ operator|->
 name|sctp_ep
 argument_list|)
 expr_stmt|;
+name|sctp_sorwakeup
+argument_list|(
+name|stcb
+operator|->
+name|sctp_ep
+argument_list|,
+name|stcb
+operator|->
+name|sctp_socket
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* goto SHUTDOWN_RECEIVED state to block new requests */
 if|if
@@ -3164,6 +3175,17 @@ argument_list|(
 name|stcb
 operator|->
 name|sctp_ep
+argument_list|)
+expr_stmt|;
+name|sctp_sorwakeup
+argument_list|(
+name|stcb
+operator|->
+name|sctp_ep
+argument_list|,
+name|stcb
+operator|->
+name|sctp_socket
 argument_list|)
 expr_stmt|;
 block|}
@@ -20084,11 +20106,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Ok, Common input processing called, m:%x iphlen:%d offset:%d\n"
+literal|"Ok, Common input processing called, m:%p iphlen:%d offset:%d\n"
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|m
 argument_list|,
 name|iphlen
@@ -21363,15 +21382,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Bad CSUM on SCTP packet calc_check:%x check:%x  m:%x mlen:%d iphlen:%d\n"
+literal|"Bad CSUM on SCTP packet calc_check:%x check:%x  m:%p mlen:%d iphlen:%d\n"
 argument_list|,
 name|calc_check
 argument_list|,
 name|check
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|m
 argument_list|,
 name|mlen
@@ -21702,17 +21718,18 @@ name|IPSEC
 comment|/* 	 * I very much doubt any of the IPSEC stuff will work but I have no 	 * idea, so I will leave it in place. 	 */
 if|if
 condition|(
-name|ipsec4_in_reject_so
+name|inp
+operator|&&
+name|ipsec4_in_reject
 argument_list|(
 name|m
 argument_list|,
+operator|&
 name|inp
 operator|->
 name|ip_inp
 operator|.
 name|inp
-operator|.
-name|inp_socket
 argument_list|)
 condition|)
 block|{

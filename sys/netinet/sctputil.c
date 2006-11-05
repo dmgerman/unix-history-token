@@ -654,9 +654,6 @@ name|sb
 operator|.
 name|stcb
 operator|=
-operator|(
-name|uint32_t
-operator|)
 name|stcb
 expr_stmt|;
 name|sctp_clog
@@ -794,7 +791,8 @@ operator|.
 name|inp
 operator|=
 operator|(
-name|uint32_t
+name|void
+operator|*
 operator|)
 name|inp
 expr_stmt|;
@@ -830,7 +828,8 @@ operator|.
 name|stcb
 operator|=
 operator|(
-name|uint32_t
+name|void
+operator|*
 operator|)
 name|stcb
 expr_stmt|;
@@ -967,7 +966,8 @@ operator|.
 name|net
 operator|=
 operator|(
-name|uint32_t
+name|void
+operator|*
 operator|)
 name|net
 expr_stmt|;
@@ -1197,7 +1197,8 @@ operator|.
 name|stcb
 operator|=
 operator|(
-name|uint32_t
+name|void
+operator|*
 operator|)
 name|stcb
 expr_stmt|;
@@ -2338,7 +2339,8 @@ operator|.
 name|sock
 operator|=
 operator|(
-name|uint32_t
+name|void
+operator|*
 operator|)
 name|inp
 operator|->
@@ -2356,7 +2358,8 @@ operator|.
 name|inp
 operator|=
 operator|(
-name|uint32_t
+name|void
+operator|*
 operator|)
 name|inp
 expr_stmt|;
@@ -3364,7 +3367,8 @@ operator|.
 name|stcb
 operator|=
 operator|(
-name|uint32_t
+name|void
+operator|*
 operator|)
 name|stcb
 expr_stmt|;
@@ -7612,7 +7616,7 @@ condition|(
 name|stcb
 condition|)
 block|{
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -7629,7 +7633,7 @@ argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -15203,6 +15207,17 @@ operator|->
 name|sctp_ep
 argument_list|)
 expr_stmt|;
+name|sctp_sorwakeup
+argument_list|(
+name|stcb
+operator|->
+name|sctp_ep
+argument_list|,
+name|stcb
+operator|->
+name|sctp_socket
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -20888,11 +20903,6 @@ name|r_unlocked
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|tcb_incr_up
-init|=
-literal|0
-decl_stmt|;
 name|uint32_t
 name|dif
 decl_stmt|,
@@ -20912,7 +20922,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -20923,10 +20933,6 @@ name|refcnt
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-name|tcb_incr_up
-operator|=
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -21294,12 +21300,7 @@ argument_list|)
 expr_stmt|;
 name|no_lock
 label|:
-if|if
-condition|(
-name|tcb_incr_up
-condition|)
-block|{
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -21312,7 +21313,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 block|}
 end_function
@@ -22531,6 +22531,12 @@ literal|0
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|freecnt_applied
+operator|==
+literal|0
+condition|)
 name|stcb
 operator|=
 name|NULL
@@ -22548,7 +22554,7 @@ condition|)
 block|{
 comment|/* you can't free it on me please */
 comment|/* 			 * The lock on the socket buffer protects us so the 			 * free code will stop. But since we used the 			 * socketbuf lock and the sender uses the tcb_lock 			 * to increment, we need to use the atomic add to 			 * the refcnt 			 */
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -24608,11 +24614,44 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* 			 * we must re-sync since data is probably being 			 * added 			 */
+name|SCTP_INP_READ_LOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|control
+operator|->
+name|length
+operator|>
+literal|0
+operator|)
+operator|&&
+operator|(
+name|control
+operator|->
+name|data
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+comment|/* 				 * big trouble.. we have the lock and its 				 * corrupt? 				 */
 name|panic
 argument_list|(
 literal|"Impossible data==NULL length !=0"
 argument_list|)
 expr_stmt|;
+block|}
+name|SCTP_INP_READ_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+comment|/* We will fall around to get more data */
 block|}
 goto|goto
 name|get_more_data
@@ -25731,15 +25770,24 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|stcb
-operator|)
-operator|&&
 name|freecnt_applied
 condition|)
 block|{
 comment|/* 		 * The lock on the socket buffer protects us so the free 		 * code will stop. But since we used the socketbuf lock and 		 * the sender uses the tcb_lock to increment, we need to use 		 * the atomic add to the refcnt. 		 */
-name|atomic_add_16
+if|if
+condition|(
+name|stcb
+operator|==
+name|NULL
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"stcb for refcnt has gone NULL?"
+argument_list|)
+expr_stmt|;
+block|}
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb

@@ -17093,6 +17093,11 @@ name|void
 name|sctp_hs_cwnd_increase
 parameter_list|(
 name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|,
+name|struct
 name|sctp_nets
 modifier|*
 name|net
@@ -17291,6 +17296,11 @@ specifier|static
 name|void
 name|sctp_hs_cwnd_decrease
 parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|,
 name|struct
 name|sctp_nets
 modifier|*
@@ -18001,6 +18011,8 @@ directive|ifdef
 name|SCTP_HIGH_SPEED
 name|sctp_hs_cwnd_increase
 argument_list|(
+name|stcb
+argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
@@ -22705,6 +22717,8 @@ directive|ifdef
 name|SCTP_HIGH_SPEED
 name|sctp_hs_cwnd_decrease
 argument_list|(
+name|stcb
+argument_list|,
 name|net
 argument_list|)
 expr_stmt|;

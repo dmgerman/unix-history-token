@@ -309,6 +309,12 @@ directive|include
 file|<netinet6/ipsec.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet6/ipsec6.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -887,15 +893,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Bad CSUM on SCTP packet calc_check:%x check:%x  m:%x mlen:%d iphlen:%d\n"
+literal|"Bad CSUM on SCTP packet calc_check:%x check:%x  m:%p mlen:%d iphlen:%d\n"
 argument_list|,
 name|calc_check
 argument_list|,
 name|check
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|m
 argument_list|,
 name|mlen
@@ -1179,20 +1182,17 @@ name|IPSEC
 comment|/* 	 * Check AH/ESP integrity. 	 */
 if|if
 condition|(
-name|in6p
-operator|->
-name|sctp_socket
+name|in6p_ip
 operator|&&
 operator|(
-name|ipsec6_in_reject_so
+name|ipsec6_in_reject
 argument_list|(
 name|m
 argument_list|,
-name|in6p
-operator|->
-name|sctp_socket
+name|in6p_ip
 argument_list|)
 operator|)
+condition|)
 block|{
 comment|/* XXX */
 name|ipsec6stat

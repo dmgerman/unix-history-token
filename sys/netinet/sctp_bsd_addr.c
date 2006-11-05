@@ -3202,11 +3202,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Found ifn:%x %d prefered source addresses\n"
+literal|"Found ifn:%p %d prefered source addresses\n"
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|ifn
 argument_list|,
 name|num_prefered
@@ -5859,13 +5856,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Selected address %d ifn:%x for the route\n"
+literal|"Selected address %d ifn:%p for the route\n"
 argument_list|,
 name|cur_addr_num
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|ifn
 argument_list|)
 expr_stmt|;
@@ -5948,11 +5942,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Start at first IFN:%x\n"
+literal|"Start at first IFN:%p\n"
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|inp
 operator|->
 name|next_ifn_touse
@@ -5989,11 +5980,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Resume at IFN:%x\n"
+literal|"Resume at IFN:%p\n"
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|inp
 operator|->
 name|next_ifn_touse
@@ -6137,11 +6125,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"IFN:%x has %d eligible\n"
+literal|"IFN:%p has %d eligible\n"
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|ifn
 argument_list|,
 name|num_eligible_addr
@@ -6235,13 +6220,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Selected the %d'th address of ifn:%x\n"
+literal|"Selected the %d'th address of ifn:%p\n"
 argument_list|,
 name|cur_addr_num
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|ifn
 argument_list|)
 expr_stmt|;

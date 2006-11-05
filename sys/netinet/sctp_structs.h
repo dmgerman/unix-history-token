@@ -1726,14 +1726,18 @@ name|sctp_authinfo_t
 name|authinfo
 decl_stmt|;
 comment|/* randoms, cached keys */
+comment|/* 	 * refcnt to block freeing when a sender or receiver is off coping 	 * user data in. 	 */
+name|uint32_t
+name|refcnt
+decl_stmt|;
+name|uint32_t
+name|chunks_on_out_queue
+decl_stmt|;
+comment|/* total chunks floating around, 					 * locked by send socket buffer */
 name|uint16_t
 name|peer_hmac_id
 decl_stmt|;
 comment|/* peer HMAC id to send */
-comment|/* 	 * refcnt to block freeing when a sender or receiver is off coping 	 * user data in. 	 */
-name|uint16_t
-name|refcnt
-decl_stmt|;
 comment|/* 	 * Being that we have no bag to collect stale cookies, and that we 	 * really would not want to anyway.. we will count them in this 	 * counter. We of course feed them to the pigeons right away (I have 	 * always thought of pigeons as flying rats). 	 */
 name|uint16_t
 name|stale_cookie_count
@@ -1778,10 +1782,6 @@ decl_stmt|;
 name|uint16_t
 name|last_strm_no_delivered
 decl_stmt|;
-name|uint16_t
-name|chunks_on_out_queue
-decl_stmt|;
-comment|/* total chunks floating around, 					 * locked by send socket buffer */
 name|uint16_t
 name|last_revoke_count
 decl_stmt|;

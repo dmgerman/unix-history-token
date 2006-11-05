@@ -23307,7 +23307,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * We add one here to keep the assoc from 			 * dis-appearing on us. 			 */
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -23336,7 +23336,7 @@ argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -23662,7 +23662,7 @@ condition|)
 block|{
 name|abort_anyway
 label|:
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -23687,7 +23687,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -48804,7 +48804,7 @@ goto|;
 block|}
 block|}
 comment|/* Keep the stcb from being freed under our feet */
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -49546,7 +49546,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -51723,7 +51723,7 @@ condition|(
 name|free_cnt_applied
 condition|)
 block|{
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -52396,16 +52396,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|stcb
-operator|)
 operator|&&
-operator|(
 name|free_cnt_applied
-operator|)
 condition|)
 block|{
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb

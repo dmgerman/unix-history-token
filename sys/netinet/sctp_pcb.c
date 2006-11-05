@@ -15367,7 +15367,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -15436,7 +15436,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -19564,7 +19564,7 @@ name|stcb
 operator|->
 name|sctp_ep
 expr_stmt|;
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -19593,7 +19593,7 @@ argument_list|,
 name|stcb
 argument_list|)
 expr_stmt|;
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -19938,7 +19938,7 @@ name|stcb
 operator|->
 name|sctp_ep
 expr_stmt|;
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -19967,7 +19967,7 @@ argument_list|,
 name|stcb
 argument_list|)
 expr_stmt|;
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -20234,7 +20234,7 @@ name|stcb
 operator|->
 name|sctp_ep
 expr_stmt|;
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
@@ -20263,7 +20263,7 @@ argument_list|,
 name|stcb
 argument_list|)
 expr_stmt|;
-name|atomic_add_16
+name|atomic_add_int
 argument_list|(
 operator|&
 name|stcb
