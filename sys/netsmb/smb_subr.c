@@ -1069,6 +1069,13 @@ return|return
 name|ENOTEMPTY
 return|;
 case|case
+name|ERRnotlocked
+case|:
+return|return
+literal|0
+return|;
+comment|/* file become unlocked */
+case|case
 literal|183
 case|:
 return|return
