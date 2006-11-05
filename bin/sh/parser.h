@@ -222,6 +222,17 @@ begin_comment
 comment|/* ${#var} */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VSERROR
+value|0xb
+end_define
+
+begin_comment
+comment|/* Syntax error, issue when expanded */
+end_comment
+
 begin_comment
 comment|/*  * NEOF is returned by parsecmd when it encounters an end of file.  It  * must be distinct from NULL, so we use the address of a variable that  * happens to be handy.  */
 end_comment
