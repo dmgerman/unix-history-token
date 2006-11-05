@@ -2699,18 +2699,20 @@ argument_list|(
 name|rqp
 argument_list|)
 expr_stmt|;
-name|SMBERROR
-argument_list|(
-literal|"%d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
 condition|)
+block|{
+name|SMBERROR
+argument_list|(
+literal|"smb_rq_simple(rqp) => error %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 block|}
 do|while
 condition|(

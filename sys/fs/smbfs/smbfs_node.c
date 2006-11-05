@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -2116,6 +2122,27 @@ operator|->
 name|sm_file_mode
 expr_stmt|;
 comment|/* files access mode and type */
+if|if
+condition|(
+name|np
+operator|->
+name|n_dosattr
+operator|&
+name|SMB_FA_RDONLY
+condition|)
+name|va
+operator|->
+name|va_mode
+operator|&=
+operator|~
+operator|(
+name|S_IWUSR
+operator||
+name|S_IWGRP
+operator||
+name|S_IWOTH
+operator|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
