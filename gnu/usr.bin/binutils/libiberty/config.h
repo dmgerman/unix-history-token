@@ -23,11 +23,24 @@ begin_comment
 comment|/* 1234 = LIL_ENDIAN, 4321 = BIGENDIAN */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sparc64__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ARMEB__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TARGET_BIG_ENDIAN
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -1127,11 +1140,24 @@ begin_comment
 comment|/* Define if the host machine stores words of multi-word integers in    big-endian order. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sparc64__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ARMEB__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TARGET_BIG_ENDIAN
+argument_list|)
+end_if
 
 begin_define
 define|#
