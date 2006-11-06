@@ -8820,7 +8820,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|done
+name|out
 goto|;
 name|vfslocked
 operator|=
@@ -8924,7 +8924,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|done
+name|out
 goto|;
 block|}
 if|if
@@ -8941,7 +8941,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|done
+name|out
 goto|;
 block|}
 comment|/* 	 * The socket must be a stream socket and connected. 	 * Remember if it a blocking or non-blocking socket. 	 */
@@ -8972,7 +8972,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|done
+name|out
 goto|;
 name|so
 operator|=
@@ -8994,7 +8994,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|done
+name|out
 goto|;
 block|}
 if|if
@@ -9015,7 +9015,7 @@ operator|=
 name|ENOTCONN
 expr_stmt|;
 goto|goto
-name|done
+name|out
 goto|;
 block|}
 comment|/* 	 * Do not wait on memory allocations but return ENOMEM for 	 * caller to retry later. 	 * XXX: Experimental. 	 */
@@ -9060,7 +9060,7 @@ condition|(
 name|error
 condition|)
 goto|goto
-name|done
+name|out
 goto|;
 endif|#
 directive|endif
@@ -9130,7 +9130,7 @@ else|:
 name|ENOBUFS
 expr_stmt|;
 goto|goto
-name|done
+name|out
 goto|;
 block|}
 name|headersize
@@ -10276,6 +10276,8 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 if|if
 condition|(
 name|headersent
