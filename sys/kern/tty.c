@@ -1980,6 +1980,8 @@ name|tp
 parameter_list|)
 block|{
 name|int
+name|ostate
+decl_stmt|,
 name|s
 decl_stmt|;
 name|funsetown
@@ -2066,6 +2068,12 @@ name|t_session
 operator|=
 name|NULL
 expr_stmt|;
+name|ostate
+operator|=
+name|tp
+operator|->
+name|t_state
+expr_stmt|;
 name|tp
 operator|->
 name|t_state
@@ -2096,14 +2104,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Any close with tp->t_refcnt == 1 is wrong and is 	 * an indication of a locking bug somewhere and that 	 * our open call has not been finished properly. 	 * Instead of putting an assert here we skip decrementing 	 * the refcount to work around any problems. 	 */
+comment|/* 	 * Both final close and revocation close might end up calling 	 * this method.  Only the thread clearing TS_ISOPEN should 	 * release the reference to the tty. 	 */
 if|if
 condition|(
-name|tp
-operator|->
-name|t_refcnt
-operator|>
-literal|1
+name|ISSET
+argument_list|(
+name|ostate
+argument_list|,
+name|TS_ISOPEN
+argument_list|)
 condition|)
 name|ttyrel
 argument_list|(
