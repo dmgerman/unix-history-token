@@ -81,15 +81,6 @@ directive|include
 file|"archive_private.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Allocate, initialize and return an archive object.  */
 end_comment
