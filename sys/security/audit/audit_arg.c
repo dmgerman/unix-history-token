@@ -1496,14 +1496,9 @@ name|k_ar
 operator|.
 name|ar_arg_sockaddr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ar
+name|sa
 operator|->
-name|k_ar
-operator|.
-name|ar_arg_sockaddr
-argument_list|)
+name|sa_len
 argument_list|)
 expr_stmt|;
 switch|switch

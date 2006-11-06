@@ -570,10 +570,6 @@ name|CTL_MAXNAME
 index|]
 decl_stmt|;
 name|struct
-name|sockaddr
-name|ar_arg_sockaddr
-decl_stmt|;
-name|struct
 name|socket_au_info
 name|ar_arg_sockinfo
 decl_stmt|;
@@ -645,6 +641,10 @@ name|ar_arg_exitstatus
 decl_stmt|;
 name|int
 name|ar_arg_exitretval
+decl_stmt|;
+name|struct
+name|sockaddr_storage
+name|ar_arg_sockaddr
 decl_stmt|;
 block|}
 struct|;
