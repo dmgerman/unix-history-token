@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -7996,13 +8002,11 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|suser_cred
+name|priv_check
 argument_list|(
 name|p
-operator|->
-name|td_ucred
 argument_list|,
-literal|0
+name|PRIV_NETINET_RESERVEDPORT
 argument_list|)
 operator|)
 condition|)
