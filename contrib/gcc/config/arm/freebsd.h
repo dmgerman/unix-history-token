@@ -14,7 +14,7 @@ define|#
 directive|define
 name|SUBTARGET_EXTRA_SPECS
 define|\
-value|{ "fbsd_dynamic_linker", FBSD_DYNAMIC_LINKER }
+value|{ "fbsd_dynamic_linker", FBSD_DYNAMIC_LINKER }, \   { "subtarget_extra_asm_spec", SUBTARGET_EXTRA_ASM_SPEC }, \   { "subtarget_asm_float_spec", SUBTARGET_ASM_FLOAT_SPEC }
 end_define
 
 begin_undef
@@ -40,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"							\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1) }		\   %{Wl,*:%*}								\   %{v:-V}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}							\   %{symbolic:-Bsymbolic}"
+value|"							\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1) }		\   %{Wl,*:%*}								\   %{v:-V}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}							\   %{symbolic:-Bsymbolic}						\   %{mbig-endian:-EB} %{mlittle-endian:-EL}"
 end_define
 
 begin_comment
@@ -127,7 +127,149 @@ begin_define
 define|#
 directive|define
 name|TARGET_VERSION
-value|fprintf (stderr, " (FreeBSD/StrongARM ELF)");
+value|fprintf (stderr, " (FreeBSD/ARM ELF)");
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TARGET_ENDIAN_DEFAULT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TARGET_ENDIAN_DEFAULT
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEFAULT
+define|\
+value|(ARM_FLAG_APCS_32                     \    | ARM_FLAG_SOFT_FLOAT                \    | ARM_FLAG_APCS_FRAME                \    | ARM_FLAG_ATPCS                     \    | ARM_FLAG_VFP                       \    | ARM_FLAG_MMU_TRAPS			\    | TARGET_ENDIAN_DEFAULT)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TYPE_OPERAND_FMT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TYPE_OPERAND_FMT
+value|"%%%s"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_EXTRA_ASM_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_ASM_SPEC
+define|\
+value|"-matpcs %{fpic|fpie:-k} %{fPIC|fPIE:-k}"
+end_define
+
+begin_comment
+comment|/* Default floating point model is soft-VFP.    *    FIXME: -mhard-float currently implies FPA.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_ASM_FLOAT_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_ASM_FLOAT_SPEC
+define|\
+value|"%{mhard-float:-mfpu=fpa} \   %{msoft-float:-mfpu=softvfp} \   %{!mhard-float: \ 	  %{!msoft-float:-mfpu=softvfp}}"
+end_define
+
+begin_comment
+comment|/* FreeBSD does its profiling differently to the Acorn compiler. We          don't need a word following the mcount call; and to skip it    requires either an assembly stub or use of fomit-frame-pointer when      compiling the profiling functions.  Since we break Acorn CC    compatibility below a little more won't hurt.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ARM_FUNCTION_PROFILER
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ARM_FUNCTION_PROFILER
+parameter_list|(
+name|STREAM
+parameter_list|,
+name|LABELNO
+parameter_list|)
+define|\
+value|{							\   asm_fprintf (STREAM, "\tmov\t%Rip, %Rlr\n");		\   asm_fprintf (STREAM, "\tbl\t_mcount%s\n",		\ 	       NEED_PLT_RELOC ? "(PLT)" : "");		\ }
+end_define
+
+begin_comment
+comment|/* Emit code to set up a trampoline and synchronize the caches.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|INITIALIZE_TRAMPOLINE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|INITIALIZE_TRAMPOLINE
+parameter_list|(
+name|TRAMP
+parameter_list|,
+name|FNADDR
+parameter_list|,
+name|CXT
+parameter_list|)
+define|\
+value|do									\   {									\     emit_move_insn (gen_rtx (MEM, SImode, plus_constant ((TRAMP), 8)),	\ 		    (CXT));						\     emit_move_insn (gen_rtx (MEM, SImode, plus_constant ((TRAMP), 12)),	\ 		    (FNADDR));						\     emit_library_call (gen_rtx_SYMBOL_REF (Pmode, "__clear_cache"),	\ 		       0, VOIDmode, 2, TRAMP, Pmode,			\ 		       plus_constant (TRAMP, TRAMPOLINE_SIZE), Pmode);	\   }									\ while (0)
+end_define
+
+begin_comment
+comment|/* Clear the instruction cache from `BEG' to `END'.  This makes a    call to the ARM_SYNC_ICACHE architecture specific syscall.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLEAR_INSN_CACHE
+parameter_list|(
+name|BEG
+parameter_list|,
+name|END
+parameter_list|)
+define|\
+value|do									\   {									\     extern int sysarch(int number, void *args);				\     struct								\       {									\ 	unsigned int addr;						\ 	int          len;						\       } s;								\     s.addr = (unsigned int)(BEG);					\     s.len = (END) - (BEG);						\     (void) sysarch (0,&s);						\   }									\ while (0)
 end_define
 
 end_unit
