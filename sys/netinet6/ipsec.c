@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/protosw.h>
 end_include
 
@@ -6022,6 +6028,7 @@ name|new
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXXRW: Can we avoid caching the privilege decision here, and 	 * instead cache the credential? 	 * 	 * XXXRW: Why is suser_allowjail set here? 	 */
 if|if
 condition|(
 name|so
@@ -6030,13 +6037,15 @@ name|so_cred
 operator|!=
 name|NULL
 operator|&&
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|so
 operator|->
 name|so_cred
 argument_list|,
-name|SUSER_ALLOWJAIL
+name|PRIV_NETINET_IPSEC
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 literal|0

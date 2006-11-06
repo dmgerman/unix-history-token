@@ -1894,7 +1894,7 @@ directive|ifdef
 name|IPR_VJ
 block|case IPRIOCSMAXCID: 			{ 			struct thread *td = curthread;
 comment|/* XXX */
-block|if((error = suser(td))) 				return (error); 		        sl_compress_setup(sc->sc_compr, *(int *)data); 			} 			break;
+block|if((error = priv_check(td, PRIV_DRIVER))) 				return (error); 		        sl_compress_setup(sc->sc_compr, *(int *)data); 			} 			break;
 endif|#
 directive|endif
 endif|#

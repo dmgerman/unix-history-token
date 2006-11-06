@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -752,9 +758,11 @@ case|:
 comment|/* Only root can set scheduler policy */
 if|if
 condition|(
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_SCHED_SETPOLICY
 argument_list|)
 operator|!=
 literal|0

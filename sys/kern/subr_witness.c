@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -2513,13 +2519,16 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 	 * XXXRW: Why a priv check here? 	 */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|req
 operator|->
 name|td
+argument_list|,
+name|PRIV_WITNESS
 argument_list|)
 expr_stmt|;
 if|if

@@ -71,6 +71,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -7462,9 +7468,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* __FreeBSD_version>= 500000 */
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
@@ -7472,9 +7476,19 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-comment|/* __FreeBSD_version>= 500000 */
 if|if
 condition|(
 name|error
@@ -7757,13 +7771,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7902,13 +7926,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7985,13 +8019,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8941,13 +8985,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -9139,13 +9193,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -9265,13 +9329,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -9371,13 +9445,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -9503,13 +9587,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -9630,13 +9724,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -9779,13 +9883,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -9883,13 +9997,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10021,13 +10145,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10135,13 +10269,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10260,13 +10404,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10390,13 +10544,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10520,13 +10684,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10697,13 +10871,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10813,9 +10997,11 @@ name|__FreeBSD_version
 operator|<
 literal|500000
 block|error = suser (p);
+empty|#elsif __FreeBSD_version< 700000
+block|error = suser (td);
 else|#
 directive|else
-block|error = suser (td);
+block|error = priv_check (td, PRIV_DRIVER);
 endif|#
 directive|endif
 block|if (error) 			return error; 		s = splimp (); 		CE_LOCK (bd);
@@ -10828,9 +11014,11 @@ name|__FreeBSD_version
 operator|<
 literal|500000
 block|error = suser (p);
+empty|#elsif __FreeBSD_version< 700000
+block|error = suser (td);
 else|#
 directive|else
-block|error = suser (td);
+block|error = priv_check (td, PRIV_DRIVER);
 endif|#
 directive|endif
 block|if (error) 			return error; 		s = splimp (); 		CE_LOCK (bd);
@@ -10961,13 +11149,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+empty|#elsif __FreeBSD_version< 700000
 name|error
 operator|=
 name|suser
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 endif|#

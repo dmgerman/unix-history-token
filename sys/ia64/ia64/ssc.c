@@ -650,9 +650,11 @@ operator|&
 name|TS_XCLUDE
 operator|)
 operator|&&
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_TTY_EXCLUSIVE
 argument_list|)
 condition|)
 block|{

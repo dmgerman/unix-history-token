@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -1887,9 +1893,11 @@ expr_stmt|;
 comment|/* do not show keys to non-root user */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|curthread
+argument_list|,
+name|PRIV_NET80211_GETKEY
 argument_list|)
 expr_stmt|;
 if|if
@@ -4737,9 +4745,11 @@ name|IEEE80211_KEY_DEFAULT
 expr_stmt|;
 if|if
 condition|(
-name|suser
+name|priv_check
 argument_list|(
 name|curthread
+argument_list|,
+name|PRIV_NET80211_GETKEY
 argument_list|)
 operator|==
 literal|0
@@ -8675,9 +8685,11 @@ expr_stmt|;
 comment|/* NB: only root can read WEP keys */
 if|if
 condition|(
-name|suser
+name|priv_check
 argument_list|(
 name|curthread
+argument_list|,
+name|PRIV_NET80211_GETKEY
 argument_list|)
 operator|==
 literal|0
@@ -14555,9 +14567,11 @@ name|SIOCS80211
 case|:
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|curthread
+argument_list|,
+name|PRIV_NET80211_MANAGE
 argument_list|)
 expr_stmt|;
 if|if
@@ -14603,9 +14617,11 @@ name|SIOCSIFGENERIC
 case|:
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|curthread
+argument_list|,
+name|PRIV_NET80211_MANAGE
 argument_list|)
 expr_stmt|;
 if|if

@@ -311,7 +311,7 @@ name|ncp_suser
 parameter_list|(
 name|cred
 parameter_list|)
-value|suser_cred(cred, 0)
+value|priv_check_cred(cred, PRIV_NETNCP, 0)
 end_define
 
 begin_define

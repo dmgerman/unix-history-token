@@ -764,22 +764,6 @@ index|]
 decl_stmt|,
 name|hlen
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|suser
-argument_list|(
-name|td
-argument_list|)
-operator|)
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 comment|/* W/out a hostname a domain-name is nonsense */
 if|if
 condition|(

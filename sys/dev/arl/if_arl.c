@@ -85,6 +85,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -2239,9 +2245,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_NET80211_MANAGE
 argument_list|)
 operator|)
 condition|)
@@ -2534,9 +2542,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 condition|)
 block|{
@@ -2700,9 +2710,11 @@ name|SIOCSARLALL
 case|:
 if|if
 condition|(
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 condition|)
 break|break;

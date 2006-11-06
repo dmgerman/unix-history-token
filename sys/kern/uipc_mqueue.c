@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -4540,6 +4546,7 @@ argument_list|,
 name|SX_LOCKED
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXXRW: Other instances of the message queue primitive are 	 * allowed in jail? 	 */
 if|if
 condition|(
 name|ucred
@@ -4553,9 +4560,11 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|ucred
+argument_list|,
+name|PRIV_MQ_ADMIN
 argument_list|,
 literal|0
 argument_list|)
@@ -5601,6 +5610,7 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 		 * XXXRW: Why is there a privilege check here: shouldn't the 		 * check in VOP_ACCESS() be enough?  Also, are the group bits 		 * below definitely right? 		 */
 if|if
 condition|(
 operator|(
@@ -5644,13 +5654,15 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|ap
 operator|->
 name|a_td
 operator|->
 name|td_ucred
+argument_list|,
+name|PRIV_MQ_ADMIN
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
@@ -5709,13 +5721,15 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|ap
 operator|->
 name|a_td
 operator|->
 name|td_ucred
+argument_list|,
+name|PRIV_MQ_ADMIN
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)

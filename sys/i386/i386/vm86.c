@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -3392,9 +3398,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_VM86_INTCALL
 argument_list|)
 operator|)
 condition|)

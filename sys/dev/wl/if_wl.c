@@ -95,6 +95,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -5626,9 +5632,11 @@ comment|/* work out if they're root */
 name|isroot
 operator|=
 operator|(
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_NET80211_GETKEY
 argument_list|)
 operator|==
 literal|0
@@ -5713,9 +5721,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 operator|)
 condition|)
@@ -5955,9 +5965,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 operator|)
 condition|)
@@ -6051,9 +6063,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 operator|)
 condition|)
@@ -6190,9 +6204,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 operator|)
 condition|)

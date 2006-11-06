@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -1500,14 +1506,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* 			 * If upgrade to read-write by non-root, then verify 			 * that user has necessary permissions on the device. 			 */
-if|if
-condition|(
-name|suser
-argument_list|(
-name|td
-argument_list|)
-condition|)
-block|{
 name|devvp
 operator|=
 name|pmp
@@ -1546,6 +1544,19 @@ if|if
 condition|(
 name|error
 condition|)
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_VFS_MOUNT_PERM
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
 block|{
 name|VOP_UNLOCK
 argument_list|(
@@ -1571,7 +1582,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-block|}
 name|DROP_GIANT
 argument_list|()
 expr_stmt|;
@@ -1825,14 +1835,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * If mount by non-root, then verify that user has necessary 	 * permissions on the device. 	 */
-if|if
-condition|(
-name|suser
-argument_list|(
-name|td
-argument_list|)
-condition|)
-block|{
 name|accessmode
 operator|=
 name|VREAD
@@ -1872,6 +1874,19 @@ if|if
 condition|(
 name|error
 condition|)
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_VFS_MOUNT_PERM
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
 block|{
 name|vput
 argument_list|(
@@ -1883,7 +1898,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(

@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -388,9 +394,11 @@ name|sat_port
 operator|<
 name|ATPORT_RESERVED
 operator|&&
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_NETATALK_RESERVEDPORT
 argument_list|)
 condition|)
 block|{

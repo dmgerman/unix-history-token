@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/refcount.h>
 end_include
 
@@ -2351,13 +2357,15 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * Unprivileged processes are not permitted to unset system 		 * flags, or modify flags if any system flags are set. 		 * Privileged non-jail processes may not modify system flags 		 * if securelevel> 0 and any existing system flags are set. 		 * Privileged jail processes behave like privileged non-jail 		 * processes if the security.jail.chflags_allowed sysctl is 		 * is non-zero; otherwise, they behave like unprivileged 		 * processes. 		 */
+comment|/* 		 * Unprivileged processes are not permitted to unset system 		 * flags, or modify flags if any system flags are set. 		 * Privileged non-jail processes may not modify system flags 		 * if securelevel> 0 and any existing system flags are set. 		 * Privileged jail processes behave like privileged non-jail 		 * processes if the security.jail.chflags_allowed sysctl is 		 * is non-zero; otherwise, they behave like unprivileged 		 * processes. 		 * 		 * XXXRW: Move implementation of jail_chflags_allowed to 		 * kern_jail.c. 		 */
 if|if
 condition|(
 operator|!
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|cred
+argument_list|,
+name|PRIV_VFS_SYSFLAGS
 argument_list|,
 name|jail_chflags_allowed
 condition|?
@@ -2806,10 +2814,16 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* 		 * From utimes(2): 		 * If times is NULL, ... The caller must be the owner of 		 * the file, have permission to write the file, or be the 		 * super-user. 		 * If times is non-NULL, ... The caller must be the owner of 		 * the file or be the super-user. 		 */
+comment|/* 		 * From utimes(2): 		 * If times is NULL, ... The caller must be the owner of 		 * the file, have permission to write the file, or be the 		 * super-user. 		 * If times is non-NULL, ... The caller must be the owner of 		 * the file or be the super-user. 		 * 		 * Possibly for historical reasons, try to use VADMIN in 		 * preference to VADMIN for a NULL timestamp.  This means we 		 * will return EACCES in preference to EPERM if neither 		 * check succeeds. 		 */
 if|if
 condition|(
-operator|(
+name|vap
+operator|->
+name|va_vaflags
+operator|&
+name|VA_UTIMES_NULL
+condition|)
+block|{
 name|error
 operator|=
 name|VOP_ACCESS
@@ -2822,20 +2836,11 @@ name|cred
 argument_list|,
 name|td
 argument_list|)
-operator|)
-operator|&&
-operator|(
-operator|(
-name|vap
-operator|->
-name|va_vaflags
-operator|&
-name|VA_UTIMES_NULL
-operator|)
-operator|==
-literal|0
-operator|||
-operator|(
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
 name|error
 operator|=
 name|VOP_ACCESS
@@ -2848,8 +2853,25 @@ name|cred
 argument_list|,
 name|td
 argument_list|)
-operator|)
-operator|)
+expr_stmt|;
+block|}
+else|else
+name|error
+operator|=
+name|VOP_ACCESS
+argument_list|(
+name|vp
+argument_list|,
+name|VADMIN
+argument_list|,
+name|cred
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -3243,9 +3265,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|cred
+argument_list|,
+name|PRIV_VFS_STICKYFILE
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
@@ -3277,9 +3301,11 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|cred
+argument_list|,
+name|PRIV_VFS_SETGID
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
@@ -3439,7 +3465,7 @@ name|ip
 operator|->
 name|i_gid
 expr_stmt|;
-comment|/* 	 * To modify the ownership of a file, must possess VADMIN 	 * for that file. 	 */
+comment|/* 	 * To modify the ownership of a file, must possess VADMIN for that 	 * file. 	 */
 if|if
 condition|(
 operator|(
@@ -3462,7 +3488,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * To change the owner of a file, or change the group of a file 	 * to a group of which we are not a member, the caller must 	 * have privilege. 	 */
+comment|/* 	 * To change the owner of a file, or change the group of a file to a 	 * group of which we are not a member, the caller must have 	 * privilege. 	 */
 if|if
 condition|(
 operator|(
@@ -3492,9 +3518,11 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|cred
+argument_list|,
+name|PRIV_VFS_CHOWN
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
@@ -4045,9 +4073,11 @@ name|IN_CHANGE
 expr_stmt|;
 if|if
 condition|(
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|cred
+argument_list|,
+name|PRIV_VFS_CLEARSUGID
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
@@ -11016,11 +11046,13 @@ operator|->
 name|cn_cred
 argument_list|)
 operator|&&
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|cnp
 operator|->
 name|cn_cred
+argument_list|,
+name|PRIV_VFS_SETGID
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)

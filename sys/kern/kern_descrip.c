@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -6112,11 +6118,13 @@ name|openfiles
 operator|>=
 name|maxuserfiles
 operator|&&
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|PRIV_MAXFILES
 argument_list|,
 name|SUSER_RUID
 argument_list|)

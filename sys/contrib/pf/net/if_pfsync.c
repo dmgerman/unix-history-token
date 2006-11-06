@@ -143,6 +143,23 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -5493,9 +5510,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|curthread
+argument_list|,
+name|PRIV_NETINET_PF
 argument_list|)
 operator|)
 operator|!=

@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -647,9 +653,11 @@ block|{
 comment|/* 		 * Require BSD privilege in order to change the partition. 		 * Originally we also required that the process not be 		 * in a partition in the first place, but this didn't 		 * interact well with sendmail. 		 */
 name|error
 operator|=
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|cred
+argument_list|,
+name|PRIV_MAC_PARTITION
 argument_list|,
 literal|0
 argument_list|)

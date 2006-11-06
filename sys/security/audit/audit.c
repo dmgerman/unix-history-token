@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -1763,9 +1769,11 @@ if|if
 condition|(
 name|audit_in_failure
 operator|&&
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_AUDIT_FAILSTOP
 argument_list|)
 operator|!=
 literal|0

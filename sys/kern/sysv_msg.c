@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -2270,9 +2276,11 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_IPC_MSGSIZE
 argument_list|)
 expr_stmt|;
 if|if

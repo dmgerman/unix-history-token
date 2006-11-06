@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -64,7 +70,7 @@ file|<sys/acl.h>
 end_include
 
 begin_comment
-comment|/*  * Implement a version of vaccess() that understands POSIX.1e ACL semantics;  * the access ACL has already been prepared for evaluation by the file  * system and is passed via 'uid', 'gid', and 'acl'.  Return 0 on success,  * else an errno value.  */
+comment|/*  * Implement a version of vaccess() that understands POSIX.1e ACL semantics;  * the access ACL has already been prepared for evaluation by the file system  * and is passed via 'uid', 'gid', and 'acl'.  Return 0 on success, else an  * errno value.  */
 end_comment
 
 begin_function
@@ -111,7 +117,7 @@ name|mode_t
 name|dac_granted
 decl_stmt|;
 name|mode_t
-name|cap_granted
+name|priv_granted
 decl_stmt|;
 name|mode_t
 name|acl_mask_granted
@@ -121,7 +127,7 @@ name|group_matched
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* 	 * Look for a normal, non-privileged way to access the file/directory 	 * as requested.  If it exists, go with that.  Otherwise, attempt to 	 * use privileges granted via cap_granted.  In some cases, which 	 * privileges to use may be ambiguous due to "best match", in which 	 * case fall back on first match for the time being. 	 */
+comment|/* 	 * Look for a normal, non-privileged way to access the file/directory 	 * as requested.  If it exists, go with that.  Otherwise, attempt to 	 * use privileges granted via priv_granted.  In some cases, which 	 * privileges to use may be ambiguous due to "best match", in which 	 * case fall back on first match for the time being. 	 */
 if|if
 condition|(
 name|privused
@@ -133,33 +139,8 @@ name|privused
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Determine privileges now, but don't apply until we've found a DAC 	 * entry that matches but has failed to allow access.  POSIX.1e 	 * capabilities are not implemented, but we document how they would 	 * behave here if implemented. 	 */
-ifndef|#
-directive|ifndef
-name|CAPABILITIES
-if|if
-condition|(
-name|suser_cred
-argument_list|(
-name|cred
-argument_list|,
-name|SUSER_ALLOWJAIL
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|cap_granted
-operator|=
-name|VALLPERM
-expr_stmt|;
-else|else
-name|cap_granted
-operator|=
-literal|0
-expr_stmt|;
-else|#
-directive|else
-name|cap_granted
+comment|/* 	 * Determine privileges now, but don't apply until we've found a DAC 	 * entry that matches but has failed to allow access. 	 * 	 * XXXRW: Ideally, we'd determine the privileges required before 	 * asking for them. 	 */
+name|priv_granted
 operator|=
 literal|0
 expr_stmt|;
@@ -179,18 +160,16 @@ name|VEXEC
 operator|)
 operator|&&
 operator|!
-name|cap_check
+name|priv_check_cred
 argument_list|(
 name|cred
 argument_list|,
-name|NULL
-argument_list|,
-name|CAP_DAC_READ_SEARCH
+name|PRIV_VFS_LOOKUP
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
-name|cap_granted
+name|priv_granted
 operator||=
 name|VEXEC
 expr_stmt|;
@@ -206,18 +185,16 @@ name|VEXEC
 operator|)
 operator|&&
 operator|!
-name|cap_check
+name|priv_check_cred
 argument_list|(
 name|cred
 argument_list|,
-name|NULL
-argument_list|,
-name|CAP_DAC_EXECUTE
+name|PRIV_VFS_EXEC
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
-name|cap_granted
+name|priv_granted
 operator||=
 name|VEXEC
 expr_stmt|;
@@ -231,18 +208,16 @@ name|VREAD
 operator|)
 operator|&&
 operator|!
-name|cap_check
+name|priv_check_cred
 argument_list|(
 name|cred
 argument_list|,
-name|NULL
-argument_list|,
-name|CAP_DAC_READ_SEARCH
+name|PRIV_VFS_READ
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
-name|cap_granted
+name|priv_granted
 operator||=
 name|VREAD
 expr_stmt|;
@@ -263,18 +238,16 @@ operator|)
 operator|)
 operator|&&
 operator|!
-name|cap_check
+name|priv_check_cred
 argument_list|(
 name|cred
 argument_list|,
-name|NULL
-argument_list|,
-name|CAP_DAC_WRITE
+name|PRIV_VFS_WRITE
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
-name|cap_granted
+name|priv_granted
 operator||=
 operator|(
 name|VWRITE
@@ -291,24 +264,19 @@ name|VADMIN
 operator|)
 operator|&&
 operator|!
-name|cap_check
+name|priv_check_cred
 argument_list|(
 name|cred
 argument_list|,
-name|NULL
-argument_list|,
-name|CAP_FOWNER
+name|PRIV_VFS_ADMIN
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
-name|cap_granted
+name|priv_granted
 operator||=
 name|VADMIN
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* CAPABILITIES */
 comment|/* 	 * The owner matches if the effective uid associated with the 	 * credential matches that of the ACL_USER_OBJ entry.  While we're 	 * doing the first scan, also cache the location of the ACL_MASK and 	 * ACL_OTHER entries, preventing some future iterations. 	 */
 name|acl_mask
 operator|=
@@ -434,6 +402,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 			 * XXXRW: Do privilege lookup here. 			 */
 if|if
 condition|(
 operator|(
@@ -442,7 +411,7 @@ operator|&
 operator|(
 name|dac_granted
 operator||
-name|cap_granted
+name|priv_granted
 operator|)
 operator|)
 operator|==
@@ -585,8 +554,7 @@ name|VWRITE
 operator||
 name|VAPPEND
 expr_stmt|;
-comment|/* 	 * Iterate through user ACL entries.  Do checks twice, first without 	 * privilege, and then if a match is found but failed, a second time 	 * with privilege. 	 */
-comment|/* 	 * Check ACL_USER ACL entries. 	 */
+comment|/* 	 * Check ACL_USER ACL entries.  There will either be one or no 	 * matches; if there is one, we accept or rejected based on the 	 * match; otherwise, we continue on to groups. 	 */
 for|for
 control|(
 name|i
@@ -712,6 +680,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 			 * XXXRW: Do privilege lookup here. 			 */
 if|if
 condition|(
 operator|(
@@ -720,7 +689,7 @@ operator|&
 operator|(
 name|dac_granted
 operator||
-name|cap_granted
+name|priv_granted
 operator|)
 operator|)
 operator|!=
@@ -1098,6 +1067,7 @@ name|dac_granted
 operator|&=
 name|acl_mask_granted
 expr_stmt|;
+comment|/* 				 * XXXRW: Do privilege lookup here. 				 */
 if|if
 condition|(
 operator|(
@@ -1106,7 +1076,7 @@ operator|&
 operator|(
 name|dac_granted
 operator||
-name|cap_granted
+name|priv_granted
 operator|)
 operator|)
 operator|!=
@@ -1213,6 +1183,7 @@ name|dac_granted
 operator|&=
 name|acl_mask_granted
 expr_stmt|;
+comment|/* 				 * XXXRW: Do privilege lookup here. 				 */
 if|if
 condition|(
 operator|(
@@ -1221,7 +1192,7 @@ operator|&
 operator|(
 name|dac_granted
 operator||
-name|cap_granted
+name|priv_granted
 operator|)
 operator|)
 operator|!=
@@ -1313,6 +1284,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * XXXRW: Do privilege lookup here. 	 */
 if|if
 condition|(
 operator|(
@@ -1321,7 +1293,7 @@ operator|&
 operator|(
 name|dac_granted
 operator||
-name|cap_granted
+name|priv_granted
 operator|)
 operator|)
 operator|==

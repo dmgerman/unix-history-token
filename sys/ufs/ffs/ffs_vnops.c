@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -3194,11 +3200,13 @@ name|ap
 operator|->
 name|a_cred
 operator|&&
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|ap
 operator|->
 name|a_cred
+argument_list|,
+name|PRIV_VFS_CLEARSUGID
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
@@ -4594,9 +4602,11 @@ name|uio_resid
 operator|&&
 name|ucred
 operator|&&
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|ucred
+argument_list|,
+name|PRIV_VFS_CLEARSUGID
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)

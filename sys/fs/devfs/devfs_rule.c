@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/dirent.h>
 end_include
 
@@ -619,19 +625,19 @@ argument_list|,
 name|SX_XLOCKED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: This returns an error regardless of whether we 	 * actually support the cmd or not. 	 */
+comment|/* 	 * XXX: This returns an error regardless of whether we actually 	 * support the cmd or not. 	 * 	 * We could make this privileges finer grained if desired. 	 */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DEVFS_RULE
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(

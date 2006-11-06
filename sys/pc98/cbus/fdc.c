@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -11847,9 +11853,11 @@ name|FD_CLRERR
 case|:
 if|if
 condition|(
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 operator|!=
 literal|0
@@ -12062,9 +12070,11 @@ comment|/* set drive type */
 comment|/* this is considered harmful; only allow for superuser */
 if|if
 condition|(
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 operator|!=
 literal|0
@@ -12183,9 +12193,11 @@ name|FD_CLRERR
 case|:
 if|if
 condition|(
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 operator|!=
 literal|0

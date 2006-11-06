@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sbuf.h>
 end_include
 
@@ -1882,12 +1888,14 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * XXX: Note that this is a redundant privilege check, since 	 * policies impose this check themselves if required by the 	 * policy.  Eventually, this should go away. 	 */
+comment|/* 	 * XXX: Note that this is a redundant privilege check, since policies 	 * impose this check themselves if required by the policy. 	 * Eventually, this should go away. 	 */
 name|error
 operator|=
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|cred
+argument_list|,
+name|PRIV_NET_SETIFMAC
 argument_list|,
 literal|0
 argument_list|)

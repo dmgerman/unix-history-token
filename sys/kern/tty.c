@@ -98,6 +98,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -5636,9 +5642,11 @@ case|:
 comment|/* must be root since the wait applies to following logins */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_TTY_DTRWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6428,9 +6436,11 @@ operator|)
 operator|==
 literal|0
 operator|&&
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_TTY_STI
 argument_list|)
 condition|)
 return|return
@@ -6448,9 +6458,11 @@ argument_list|,
 name|tp
 argument_list|)
 operator|&&
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_TTY_STI
 argument_list|)
 condition|)
 return|return
@@ -6867,9 +6879,11 @@ name|TIOCSDRAINWAIT
 case|:
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_TTY_DRAINWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -15455,9 +15469,11 @@ name|t_state
 operator|&
 name|TS_XCLUDE
 operator|&&
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_TTY_EXCLUSIVE
 argument_list|)
 condition|)
 return|return
@@ -16780,9 +16796,11 @@ name|TIOCSETA
 case|:
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_TTY_SETA
 argument_list|)
 expr_stmt|;
 if|if

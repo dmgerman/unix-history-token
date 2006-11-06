@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -1153,9 +1159,11 @@ name|p
 operator|->
 name|p_nice
 operator|&&
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_SCHED_SETPRIORITY
 argument_list|)
 operator|!=
 literal|0
@@ -2002,9 +2010,11 @@ break|break;
 comment|/* Disallow setting rtprio in most cases if not superuser. */
 if|if
 condition|(
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_SCHED_RTPRIO
 argument_list|)
 operator|!=
 literal|0
@@ -3121,11 +3131,13 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|PRIV_PROC_SETRLIMIT
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)

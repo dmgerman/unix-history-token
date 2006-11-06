@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -1276,9 +1282,11 @@ name|modes
 condition|)
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_NTP_ADJTIME
 argument_list|)
 expr_stmt|;
 if|if
@@ -3681,9 +3689,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_ADJTIME
 argument_list|)
 operator|)
 condition|)

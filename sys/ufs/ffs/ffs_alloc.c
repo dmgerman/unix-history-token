@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -643,9 +649,11 @@ name|nospace
 goto|;
 if|if
 condition|(
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|cred
+argument_list|,
+name|PRIV_VFS_BLOCKRESERVE
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
@@ -1131,9 +1139,11 @@ name|retry
 label|:
 if|if
 condition|(
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|cred
+argument_list|,
+name|PRIV_VFS_BLOCKRESERVE
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)

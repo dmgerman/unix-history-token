@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -1175,11 +1181,13 @@ name|maxproc
 operator|-
 literal|10
 operator|&&
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|PRIV_MAXPROC
 argument_list|,
 name|SUSER_RUID
 argument_list|)
@@ -1200,14 +1208,16 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * Increment the count of procs running with this uid. Don't allow 	 * a nonprivileged user to exceed their current limit. 	 */
+comment|/* 	 * Increment the count of procs running with this uid. Don't allow 	 * a nonprivileged user to exceed their current limit. 	 * 	 * XXXRW: Can we avoid privilege here if it's not needed? 	 */
 name|error
 operator|=
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|PRIV_PROC_LIMIT
 argument_list|,
 name|SUSER_RUID
 operator||

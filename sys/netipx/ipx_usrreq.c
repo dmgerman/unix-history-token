@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/protosw.h>
 end_include
 
@@ -2819,23 +2825,27 @@ condition|(
 name|td
 operator|!=
 name|NULL
-operator|&&
-operator|(
+condition|)
+block|{
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_NETIPX_RAW
 argument_list|)
-operator|)
-operator|!=
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/* 	 * We hold the IPX list lock for the duration as address parameters 	 * of the IPX pcb are changed.  Since no one else holds a reference 	 * to the ipxpcb yet, we don't need the ipxpcb lock here. 	 */
 name|IPX_LIST_LOCK
 argument_list|()

@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -389,19 +395,24 @@ condition|(
 name|flags
 operator|&
 name|PF_ISUGID
-operator|&&
-operator|(
+condition|)
+block|{
+comment|/* 			 * XXXRW: Is this specific check required here, as 			 * p_candebug() should implement it, or other checks 			 * are missing. 			 * 			 * XXXRW: Other debugging privileges are granted in 			 * jail, why isn't this? 			 */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DEBUG_SUGID
 argument_list|)
-operator|)
-operator|!=
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
+block|}
 name|p
 operator|->
 name|p_pfsflags

@@ -111,6 +111,25 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|700000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -1248,6 +1267,29 @@ begin_comment
 comment|/* DRM_SUSER returns true if the user is superuser */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|700000
+end_if
+
+begin_define
+define|#
+directive|define
+name|DRM_SUSER
+parameter_list|(
+name|p
+parameter_list|)
+value|(priv_check(p, PRIV_DRIVER) == 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -1257,6 +1299,11 @@ name|p
 parameter_list|)
 value|(suser(p) == 0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

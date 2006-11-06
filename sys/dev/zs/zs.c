@@ -2078,9 +2078,11 @@ operator|)
 operator|!=
 literal|0
 operator|&&
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_TTY_EXCLUSIVE
 argument_list|)
 operator|!=
 literal|0

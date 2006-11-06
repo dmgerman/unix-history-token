@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -294,9 +300,11 @@ name|FWRITE
 operator|)
 operator|&&
 operator|(
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_RANDOM_RESEED
 argument_list|)
 operator|==
 literal|0

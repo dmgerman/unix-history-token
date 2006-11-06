@@ -107,6 +107,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -5166,13 +5172,15 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|req
 operator|->
 name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|PRIV_NETINET_GETCRED
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
@@ -5438,13 +5446,15 @@ literal|0
 decl_stmt|;
 name|error
 operator|=
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|req
 operator|->
 name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|PRIV_NETINET_GETCRED
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)

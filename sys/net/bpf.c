@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -7034,11 +7040,13 @@ decl_stmt|;
 comment|/* 	 * XXX This is not technically correct. It is possible for non 	 * privileged users to open bpf devices. It would make sense 	 * if the users who opened the devices were able to retrieve 	 * the statistics for them, too. 	 */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|req
 operator|->
 name|td
+argument_list|,
+name|PRIV_NET_BPF
 argument_list|)
 expr_stmt|;
 if|if

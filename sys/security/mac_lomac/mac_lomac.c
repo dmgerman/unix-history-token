@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -7931,12 +7937,14 @@ argument_list|,
 name|new
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Rely on the traditional superuser status for the LOMAC 		 * interface relabel requirements.  XXXMAC: This will go 		 * away. 		 */
+comment|/* 		 * Rely on the traditional superuser status for the LOMAC 		 * interface relabel requirements.  XXXMAC: This will go 		 * away. 		 * 		 * XXXRW: This is also redundant to a higher layer check. 		 */
 name|error
 operator|=
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|cred
+argument_list|,
+name|PRIV_NET_SETIFMAC
 argument_list|,
 literal|0
 argument_list|)

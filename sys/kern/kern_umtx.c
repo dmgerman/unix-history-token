@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -7902,9 +7908,11 @@ return|;
 name|su
 operator|=
 operator|(
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_SCHED_RTPRIO
 argument_list|)
 operator|==
 literal|0
@@ -8497,9 +8505,11 @@ expr_stmt|;
 name|su
 operator|=
 operator|(
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_SCHED_RTPRIO
 argument_list|)
 operator|==
 literal|0

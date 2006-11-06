@@ -2063,6 +2063,7 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
+comment|/* 	 * XXXRW: More specific privilege selection needed? 	 */
 if|if
 condition|(
 name|suser_cred

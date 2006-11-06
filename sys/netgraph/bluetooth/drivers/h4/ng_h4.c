@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -606,9 +612,11 @@ decl_stmt|;
 comment|/* Super-user only */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|curthread
+argument_list|,
+name|PRIV_NETGRAPH_TTY
 argument_list|)
 expr_stmt|;
 comment|/* XXX */

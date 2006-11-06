@@ -6257,8 +6257,24 @@ directive|if
 operator|(
 name|__FreeBSD_version
 operator|>
-literal|400000
+literal|700000
 operator|)
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|p
+argument_list|,
+name|PRIV_ALTQ_MANAGE
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+empty|#elsif (__FreeBSD_version> 400000)
 if|if
 condition|(
 operator|(

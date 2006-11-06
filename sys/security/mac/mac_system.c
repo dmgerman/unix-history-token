@@ -183,6 +183,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * XXXRW: Some of these checks now duplicate privilege checks.  However,  * others provide additional security context that may be useful to policies.  * We need to review these and remove ones that are pure duplicates.  */
+end_comment
+
 begin_function
 name|int
 name|mac_check_kenv_dump

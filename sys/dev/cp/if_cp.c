@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -5989,9 +5995,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -6247,9 +6255,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -6376,9 +6386,11 @@ case|:
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -6466,9 +6478,11 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -7439,9 +7453,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -7625,9 +7641,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -7713,9 +7731,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -7812,9 +7832,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -7922,9 +7944,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -8023,9 +8047,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -8134,9 +8160,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -8244,9 +8272,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -8354,9 +8384,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -8469,9 +8501,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -8602,9 +8636,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -8716,9 +8752,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -8830,9 +8868,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -9037,9 +9077,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -9246,9 +9288,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -9378,9 +9422,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -9500,9 +9546,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -9610,9 +9658,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -9731,9 +9781,9 @@ directive|if
 literal|0
 block|case SERIAL_RESET: 		CP_DEBUG2 (d, ("ioctl: reset\n"));
 comment|/* Only for superuser! */
-block|error = suser (td); 		if (error) 			return error; 		s = splimp (); 		CP_LOCK (bd); 		cp_reset (c->board, 0, 0); 		CP_UNLOCK (bd); 		splx (s); 		return 0;  	case SERIAL_HARDRESET: 		CP_DEBUG2 (d, ("ioctl: hardreset\n"));
+block|error = priv_check (td, PRIV_DRIVER); 		if (error) 			return error; 		s = splimp (); 		CP_LOCK (bd); 		cp_reset (c->board, 0, 0); 		CP_UNLOCK (bd); 		splx (s); 		return 0;  	case SERIAL_HARDRESET: 		CP_DEBUG2 (d, ("ioctl: hardreset\n"));
 comment|/* Only for superuser! */
-block|error = suser (td); 		if (error) 			return error; 		s = splimp (); 		CP_LOCK (bd);
+block|error = priv_check (td, PRIV_DRIVER); 		if (error) 			return error; 		s = splimp (); 		CP_LOCK (bd);
 comment|/* hard_reset (c->board); */
 block|CP_UNLOCK (bd); 		splx (s); 		return 0;
 endif|#
@@ -9854,9 +9904,11 @@ expr_stmt|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -9995,9 +10047,11 @@ return|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -10117,9 +10171,11 @@ return|;
 comment|/* Only for superuser! */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if

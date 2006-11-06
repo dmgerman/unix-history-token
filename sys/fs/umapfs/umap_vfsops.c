@@ -229,18 +229,18 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Only for root 	 */
-if|if
-condition|(
-operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_VFS_MOUNT
 argument_list|)
-operator|)
-operator|!=
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(

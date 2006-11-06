@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -12518,9 +12524,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|curthread
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 operator|)
 condition|)
@@ -12708,9 +12716,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|curthread
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 operator|)
 condition|)
@@ -12898,9 +12908,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|curthread
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 operator|)
 condition|)
@@ -13942,9 +13954,11 @@ name|len
 decl_stmt|;
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|curthread
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -15478,9 +15492,11 @@ name|IEEE80211_IOC_STATIONNAME
 case|:
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|curthread
+argument_list|,
+name|PRIV_NET80211_MANAGE
 argument_list|)
 expr_stmt|;
 if|if

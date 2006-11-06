@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -376,9 +382,6 @@ argument_list|(
 name|lport
 argument_list|)
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 name|aport
@@ -389,20 +392,16 @@ name|td
 operator|!=
 name|NULL
 operator|&&
-operator|(
-name|error
-operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_NETIPX_RESERVEDPORT
 argument_list|)
-operator|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(
-name|error
+name|EACCES
 operator|)
 return|;
 if|if

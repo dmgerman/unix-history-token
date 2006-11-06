@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -2662,9 +2668,11 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_VM_MADV_PROTECT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3622,9 +3630,11 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_VM_MLOCK
 argument_list|)
 expr_stmt|;
 if|if
@@ -3917,9 +3927,11 @@ else|#
 directive|else
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_VM_MLOCK
 argument_list|)
 expr_stmt|;
 if|if
@@ -4082,9 +4094,11 @@ name|vm_map
 expr_stmt|;
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_VM_MUNLOCK
 argument_list|)
 expr_stmt|;
 if|if
@@ -4213,9 +4227,11 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_VM_MUNLOCK
 argument_list|)
 expr_stmt|;
 if|if

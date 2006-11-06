@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -2999,7 +3005,7 @@ expr_stmt|;
 define|#
 directive|define
 name|SUCHECK
-value|if ((error = suser(td))) goto out
+value|if ((error = priv_check(td, PRIV_DRIVER))) goto out
 switch|switch
 condition|(
 name|cmd

@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -2270,6 +2276,7 @@ name|ucred
 modifier|*
 name|uc
 decl_stmt|;
+comment|/* 	 * XXXRW: This permission routine appears to be incorrect.  If the 	 * user matches, we shouldn't go on to the group if the user 	 * permissions don't allow the action?  Not changed for now.  To fix, 	 * change from a series of if (); if (); to if () else if () else... 	 */
 name|uc
 operator|=
 name|td
@@ -2313,6 +2320,7 @@ operator|==
 name|ks
 operator|->
 name|ks_uid
+operator|)
 operator|&&
 operator|(
 name|ks
@@ -2323,8 +2331,14 @@ name|S_IWUSR
 operator|)
 operator|!=
 literal|0
+condition|)
+return|return
+operator|(
+literal|0
 operator|)
-operator|||
+return|;
+if|if
+condition|(
 operator|(
 name|uc
 operator|->
@@ -2333,6 +2347,7 @@ operator|==
 name|ks
 operator|->
 name|ks_gid
+operator|)
 operator|&&
 operator|(
 name|ks
@@ -2343,8 +2358,14 @@ name|S_IWGRP
 operator|)
 operator|!=
 literal|0
+condition|)
+return|return
+operator|(
+literal|0
 operator|)
-operator|||
+return|;
+if|if
+condition|(
 operator|(
 name|ks
 operator|->
@@ -2354,13 +2375,6 @@ name|S_IWOTH
 operator|)
 operator|!=
 literal|0
-operator|||
-name|suser
-argument_list|(
-name|td
-argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
@@ -2369,7 +2383,12 @@ operator|)
 return|;
 return|return
 operator|(
-name|EPERM
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_SEM_WRITE
+argument_list|)
 operator|)
 return|;
 block|}

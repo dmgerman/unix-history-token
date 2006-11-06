@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -4897,9 +4903,11 @@ comment|/* set flags */
 comment|/* root only */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -5047,9 +5055,11 @@ operator|!
 operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_DRIVER
 argument_list|)
 operator|)
 condition|)

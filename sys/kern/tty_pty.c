@@ -86,6 +86,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -929,9 +935,11 @@ name|t_state
 operator|&
 name|TS_XCLUDE
 operator|&&
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_TTY_EXCLUSIVE
 argument_list|)
 condition|)
 return|return
@@ -952,9 +960,11 @@ name|td_ucred
 operator|->
 name|cr_prison
 operator|&&
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_TTY_PRISON
 argument_list|)
 condition|)
 return|return

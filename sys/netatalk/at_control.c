@@ -460,7 +460,7 @@ comment|/*FALLTHROUGH*/
 case|case
 name|SIOCSIFADDR
 case|:
-comment|/*  		 * If we are not superuser, then we don't get to do these ops. 		 */
+comment|/*  		 * If we are not superuser, then we don't get to do these ops. 		 * 		 * XXXRW: Layering? 		 */
 if|if
 condition|(
 name|suser

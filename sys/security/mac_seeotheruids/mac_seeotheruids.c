@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -418,9 +424,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|u1
+argument_list|,
+name|PRIV_SEEOTHERUIDS
 argument_list|,
 literal|0
 argument_list|)

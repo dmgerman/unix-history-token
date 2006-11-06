@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -575,12 +581,13 @@ name|flags
 decl_stmt|,
 name|vfslocked
 decl_stmt|;
-comment|/* Make sure that the caller is root. */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_ACCT
 argument_list|)
 expr_stmt|;
 if|if

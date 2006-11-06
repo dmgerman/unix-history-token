@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -1325,9 +1331,15 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|suser
+name|priv_check_cred
 argument_list|(
 name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|PRIV_VFS_ADMIN
+argument_list|,
+name|SUSER_ALLOWJAIL
 argument_list|)
 operator|)
 operator|!=

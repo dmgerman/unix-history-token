@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -2938,16 +2944,18 @@ name|int
 name|error
 decl_stmt|;
 comment|/* 	 * Processes with privilege, but in jail, are not allowed to 	 * configure extended attributes. 	 */
-if|if
-condition|(
-operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_UFS_EXTATTRCTL
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 if|if

@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -2327,9 +2333,11 @@ name|p_tracevp
 operator|!=
 name|NULL
 operator|&&
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|oldcred
+argument_list|,
+name|PRIV_DEBUG_DIFFCRED
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)

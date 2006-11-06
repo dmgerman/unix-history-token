@@ -2363,7 +2363,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Audit pipe open method.  Explicit suser check isn't used as this allows  * file permissions on the special device to be used to grant audit review  * access.  */
+comment|/*  * Audit pipe open method.  Explicit privilege check isn't used as this  * allows file permissions on the special device to be used to grant audit  * review access.  Those file permissions should be managed carefully.  */
 end_comment
 
 begin_function

@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/protosw.h>
 end_include
 
@@ -2537,9 +2543,11 @@ decl_stmt|;
 comment|/*      * Currently the only function calling this ioctl routine is rtioctl().      * Typically, only root can create the raw socket in order to execute      * this ioctl method, however the request might be coming from a prison      */
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|curthread
+argument_list|,
+name|PRIV_NETINET_MROUTE
 argument_list|)
 expr_stmt|;
 if|if

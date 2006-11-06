@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -667,19 +673,23 @@ name|proc
 modifier|*
 name|targetp
 decl_stmt|;
-comment|/* Don't allow non root user to set a scheduler policy */
-if|if
-condition|(
-name|suser
+comment|/* Don't allow non root user to set a scheduler policy. */
+name|e
+operator|=
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_SCHED_SET
 argument_list|)
-operator|!=
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|e
 condition|)
 return|return
 operator|(
-name|EPERM
+name|e
 operator|)
 return|;
 name|e

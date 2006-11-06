@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -1884,9 +1890,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_VFS_MOUNT_OWNER
 argument_list|)
 operator|)
 operator|!=
@@ -14161,14 +14169,9 @@ block|{
 name|mode_t
 name|dac_granted
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CAPABILITIES
 name|mode_t
-name|cap_granted
+name|priv_granted
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Look for a normal, non-privileged way to access the file/directory 	 * as requested.  If it exists, go with that. 	 */
 if|if
 condition|(
@@ -14368,40 +14371,8 @@ operator|)
 return|;
 name|privcheck
 label|:
-if|if
-condition|(
-operator|!
-name|suser_cred
-argument_list|(
-name|cred
-argument_list|,
-name|SUSER_ALLOWJAIL
-argument_list|)
-condition|)
-block|{
-comment|/* XXX audit: privilege used */
-if|if
-condition|(
-name|privused
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|privused
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-ifdef|#
-directive|ifdef
-name|CAPABILITIES
-comment|/* 	 * Build a capability mask to determine if the set of capabilities 	 * satisfies the requirements when combined with the granted mask 	 * from above.  For each capability, if the capability is required, 	 * bitwise or the request type onto the cap_granted mask. 	 * 	 * Note: This is never actually used, but is here for reference 	 * purposes. 	 */
-name|cap_granted
+comment|/* 	 * Build a privilege mask to determine if the set of privileges 	 * satisfies the requirements when combined with the granted mask 	 * from above.  For each privilege, if the privilege is required, 	 * bitwise or the request type onto the priv_granted mask. 	 */
+name|priv_granted
 operator|=
 literal|0
 expr_stmt|;
@@ -14412,7 +14383,7 @@ operator|==
 name|VDIR
 condition|)
 block|{
-comment|/* 		 * For directories, use CAP_DAC_READ_SEARCH to satisfy 		 * VEXEC requests, instead of CAP_DAC_EXECUTE. 		 */
+comment|/* 		 * For directories, use PRIV_VFS_LOOKUP to satisfy VEXEC 		 * requests, instead of PRIV_VFS_EXEC. 		 */
 if|if
 condition|(
 operator|(
@@ -14432,18 +14403,16 @@ literal|0
 operator|)
 operator|&&
 operator|!
-name|cap_check
+name|priv_check_cred
 argument_list|(
 name|cred
 argument_list|,
-name|NULL
-argument_list|,
-name|CAP_DAC_READ_SEARCH
+name|PRIV_VFS_LOOKUP
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
-name|cap_granted
+name|priv_granted
 operator||=
 name|VEXEC
 expr_stmt|;
@@ -14469,18 +14438,16 @@ literal|0
 operator|)
 operator|&&
 operator|!
-name|cap_check
+name|priv_check_cred
 argument_list|(
 name|cred
 argument_list|,
-name|NULL
-argument_list|,
-name|CAP_DAC_EXECUTE
+name|PRIV_VFS_EXEC
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
-name|cap_granted
+name|priv_granted
 operator||=
 name|VEXEC
 expr_stmt|;
@@ -14504,18 +14471,16 @@ literal|0
 operator|)
 operator|&&
 operator|!
-name|cap_check
+name|priv_check_cred
 argument_list|(
 name|cred
 argument_list|,
-name|NULL
-argument_list|,
-name|CAP_DAC_READ_SEARCH
+name|PRIV_VFS_READ
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
-name|cap_granted
+name|priv_granted
 operator||=
 name|VREAD
 expr_stmt|;
@@ -14538,18 +14503,16 @@ literal|0
 operator|)
 operator|&&
 operator|!
-name|cap_check
+name|priv_check_cred
 argument_list|(
 name|cred
 argument_list|,
-name|NULL
-argument_list|,
-name|CAP_DAC_WRITE
+name|PRIV_VFS_WRITE
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
-name|cap_granted
+name|priv_granted
 operator||=
 operator|(
 name|VWRITE
@@ -14576,18 +14539,16 @@ literal|0
 operator|)
 operator|&&
 operator|!
-name|cap_check
+name|priv_check_cred
 argument_list|(
 name|cred
 argument_list|,
-name|NULL
-argument_list|,
-name|CAP_FOWNER
+name|PRIV_VFS_ADMIN
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
-name|cap_granted
+name|priv_granted
 operator||=
 name|VADMIN
 expr_stmt|;
@@ -14597,7 +14558,7 @@ operator|(
 name|acc_mode
 operator|&
 operator|(
-name|cap_granted
+name|priv_granted
 operator||
 name|dac_granted
 operator|)
@@ -14624,8 +14585,6 @@ literal|0
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 operator|(
@@ -14684,7 +14643,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Do not allow privileged processes in jail to directly 	 * manipulate system attributes. 	 * 	 * XXX What capability should apply here? 	 * Probably CAP_SYS_SETFFLAG. 	 */
+comment|/* 	 * Do not allow privileged processes in jail to directly manipulate 	 * system attributes. 	 */
 switch|switch
 condition|(
 name|attrnamespace
@@ -14696,9 +14655,11 @@ case|:
 comment|/* Potentially should be: return (EPERM); */
 return|return
 operator|(
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|cred
+argument_list|,
+name|PRIV_VFS_EXTATTR_SYSTEM
 argument_list|,
 literal|0
 argument_list|)
