@@ -3776,6 +3776,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|mac_priv_check
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|int
+name|priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mac_priv_grant
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|int
+name|priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Calls to help various file systems implement labeling functionality  * using their existing EA implementation.  */
 end_comment

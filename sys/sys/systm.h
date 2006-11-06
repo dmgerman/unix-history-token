@@ -1890,7 +1890,7 @@ modifier|*
 name|cred
 parameter_list|,
 name|int
-name|flag
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

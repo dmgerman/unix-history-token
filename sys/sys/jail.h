@@ -515,6 +515,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|prison_priv_check
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|int
+name|priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|prison_remote_ip
 parameter_list|(
