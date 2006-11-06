@@ -193,7 +193,7 @@ name|is_default
 parameter_list|(
 name|s
 parameter_list|)
-value|(strcmp((s), "-") == 0)
+value|(*(s) == 0 || strcmp((s), "-") == 0)
 end_define
 
 begin_decl_stmt
