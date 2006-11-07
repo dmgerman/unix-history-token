@@ -7916,7 +7916,7 @@ name|RB_VERBOSE
 condition|)
 name|printf
 argument_list|(
-literal|"Overlapping or non-montonic memory region, ignoring second region\n"
+literal|"Overlapping or non-monotonic memory region, ignoring second region\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
