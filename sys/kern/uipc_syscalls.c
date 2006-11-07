@@ -10435,6 +10435,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * SCTP syscalls.  * Functionality only compiled in if SCTP is defined in the kernel Makefile,  * otherwise all return EOPNOTSUPP.  * XXX: We should make this loadable one day.  */
+end_comment
+
 begin_function
 name|int
 name|sctp_peeloff
@@ -10448,7 +10452,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|sctp_peeloff_args
 comment|/* { 		int	sd; 		caddr_t	name; 	} */
@@ -10791,6 +10794,7 @@ operator|)
 return|;
 else|#
 directive|else
+comment|/* SCTP */
 return|return
 operator|(
 name|EOPNOTSUPP
@@ -10798,6 +10802,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* SCTP */
 block|}
 end_function
 
@@ -10814,10 +10819,9 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|sctp_generic_sendmsg_args
-comment|/* { 					  int sd,  					  caddr_t msg,  					  int mlen,  					  caddr_t to,  					  __socklen_t tolen,  					  struct sctp_sndrcvinfo *sinfo,  					  int flags 					     } */
+comment|/* { 		int sd,  		caddr_t msg,  		int mlen,  		caddr_t to,  		__socklen_t tolen,  		struct sctp_sndrcvinfo *sinfo,  		int flags 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -11055,6 +11059,7 @@ name|sctp_bad
 goto|;
 endif|#
 directive|endif
+comment|/* MAC */
 name|auio
 operator|.
 name|uio_iov
@@ -11175,7 +11180,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Generation of SIGPIPE can be controlled per socket */
+comment|/* Generation of SIGPIPE can be controlled per socket. */
 if|if
 condition|(
 name|error
@@ -11282,6 +11287,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* KTRACE */
 name|sctp_bad
 label|:
 name|fdrop
@@ -11297,7 +11303,7 @@ if|if
 condition|(
 name|to
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|to
 argument_list|,
@@ -11311,6 +11317,7 @@ operator|)
 return|;
 else|#
 directive|else
+comment|/* SCTP */
 return|return
 operator|(
 name|EOPNOTSUPP
@@ -11318,6 +11325,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* SCTP */
 block|}
 end_function
 
@@ -11334,10 +11342,9 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|sctp_generic_sendmsg_iov_args
-comment|/* { 					  int sd,  					  struct iovec *iov,  					  int iovlen,  					  caddr_t to,  					  __socklen_t tolen,  					  struct sctp_sndrcvinfo *sinfo,  					  int flags 					     } */
+comment|/* { 		int sd,  		struct iovec *iov,  		int iovlen,  		caddr_t to,  		__socklen_t tolen,  		struct sctp_sndrcvinfo *sinfo,  		int flags 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -11581,6 +11588,7 @@ name|sctp_bad
 goto|;
 endif|#
 directive|endif
+comment|/* MAC */
 name|auio
 operator|.
 name|uio_iov
@@ -11853,6 +11861,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* KTRACE */
 name|sctp_bad
 label|:
 name|free
@@ -11877,7 +11886,7 @@ if|if
 condition|(
 name|to
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|to
 argument_list|,
@@ -11891,6 +11900,7 @@ operator|)
 return|;
 else|#
 directive|else
+comment|/* SCTP */
 return|return
 operator|(
 name|EOPNOTSUPP
@@ -11898,6 +11908,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* SCTP */
 block|}
 end_function
 
@@ -11914,10 +11925,9 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|sctp_generic_recvmsg_args
-comment|/* { 					     int sd,  					     struct iovec *iov,  					     int iovlen, 					     struct sockaddr *from,  					     __socklen_t *fromlenaddr, 					     struct sctp_sndrcvinfo *sinfo,  					     int *msg_flags 					     } */
+comment|/* { 		int sd,  		struct iovec *iov,  		int iovlen, 		struct sockaddr *from,  		__socklen_t *fromlenaddr, 		struct sctp_sndrcvinfo *sinfo,  		int *msg_flags 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -12095,6 +12105,7 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* MAC */
 if|if
 condition|(
 name|uap
@@ -12265,6 +12276,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* KTRACE */
 name|error
 operator|=
 name|sctp_sorecvmsg
@@ -12400,6 +12412,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* KTRACE */
 if|if
 condition|(
 name|error
@@ -12573,6 +12586,7 @@ operator|)
 return|;
 else|#
 directive|else
+comment|/* SCTP */
 return|return
 operator|(
 name|EOPNOTSUPP
@@ -12580,6 +12594,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* SCTP */
 block|}
 end_function
 
