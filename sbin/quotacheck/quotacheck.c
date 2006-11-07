@@ -914,6 +914,21 @@ name|endpwent
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* 	 * Setting maxrun (-l) makes no sense without the -a flag. 	 * Historically this was never an error, so we just warn. 	 */
+if|if
+condition|(
+name|maxrun
+operator|>
+literal|0
+operator|&&
+operator|!
+name|aflag
+condition|)
+name|warnx
+argument_list|(
+literal|"ignoring -l without -a"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|aflag
@@ -1106,7 +1121,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: quotacheck [-guv] -a"
+literal|"usage: quotacheck [-guv] [-l maxrun] -a"
 argument_list|,
 literal|"       quotacheck [-guv] filesystem ..."
 argument_list|)
