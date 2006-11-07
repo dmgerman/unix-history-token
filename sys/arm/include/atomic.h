@@ -1028,6 +1028,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_cmpset_acq_32
+value|atomic_cmpset_32
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_store_rel_ptr
 value|atomic_store_ptr
 end_define
