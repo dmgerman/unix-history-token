@@ -3050,16 +3050,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|IDTVEC
-parameter_list|(
-name|name
-parameter_list|)
-value|__CONCAT(X,name)
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|inthand_t
