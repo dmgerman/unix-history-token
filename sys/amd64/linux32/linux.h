@@ -18,16 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
-end_include
-
-begin_comment
-comment|/* for sigval union */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<amd64/linux32/linux32_syscall.h>
 end_include
 
@@ -1565,6 +1555,20 @@ name|LINUX_SI_PAD_SIZE
 value|((LINUX_SI_MAX_SIZE/sizeof(l_int)) - 3)
 end_define
 
+begin_union
+union|union
+name|l_sigval
+block|{
+name|l_int
+name|sival_int
+decl_stmt|;
+name|l_uintptr_t
+name|sival_ptr
+decl_stmt|;
+block|}
+union|;
+end_union
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1622,7 +1626,7 @@ name|_uid
 decl_stmt|;
 comment|/* sender's uid */
 name|union
-name|sigval
+name|l_sigval
 name|_sigval
 decl_stmt|;
 block|}
