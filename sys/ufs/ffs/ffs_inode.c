@@ -167,7 +167,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Update the access, modified, and inode change times as specified by the  * IN_ACCESS, IN_UPDATE, and IN_CHANGE flags respectively.  Write the inode  * to disk if the IN_MODIFIED flag is set (it may be set initially, or by  * the timestamp update).  The IN_LAZYMOD flag is set to force a write  * later if not now.  If we write now, then clear both IN_MODIFIED and  * IN_LAZYMOD to reflect the presumably successful write, and if waitfor is  * set, then wait for the write to complete.  */
+comment|/*  * Update the access, modified, and inode change times as specified by the  * IN_ACCESS, IN_UPDATE, and IN_CHANGE flags respectively.  Write the inode  * to disk if the IN_MODIFIED flag is set (it may be set initially, or by  * the timestamp update).  The IN_LAZYMOD flag is set to force a write  * later if not now.  The IN_LAZYACCESS is set instead of IN_MODIFIED if the fs  * is currently being suspended (or is suspended) and vnode has been accessed.  * If we write now, then clear IN_MODIFIED, IN_LAZYACCESS and IN_LAZYMOD to  * reflect the presumably successful write, and if waitfor is set, then wait  * for the write to complete.  */
 end_comment
 
 begin_function
@@ -205,7 +205,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ASSERT_VOP_LOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
 argument_list|,
@@ -251,6 +251,8 @@ name|i_flag
 operator|&=
 operator|~
 operator|(
+name|IN_LAZYACCESS
+operator||
 name|IN_LAZYMOD
 operator||
 name|IN_MODIFIED
