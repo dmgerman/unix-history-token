@@ -7897,7 +7897,7 @@ operator|&
 name|sync_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Just sleep for a short period if time between 		 * iterations when shutting down to allow some I/O 		 * to happen. 		 * 		 * If it has taken us less than a second to process the 		 * current work, then wait. Otherwise start right over 		 * again. We can still lose time if any single round 		 * takes more than two seconds, but it does not really 		 * matter as we are just trying to generally pace the 		 * filesystem activity. 		 */
+comment|/* 		 * Just sleep for a short period of time between 		 * iterations when shutting down to allow some I/O 		 * to happen. 		 * 		 * If it has taken us less than a second to process the 		 * current work, then wait. Otherwise start right over 		 * again. We can still lose time if any single round 		 * takes more than two seconds, but it does not really 		 * matter as we are just trying to generally pace the 		 * filesystem activity. 		 */
 if|if
 condition|(
 name|syncer_state
@@ -7948,7 +7948,9 @@ end_comment
 begin_function
 name|int
 name|speedup_syncer
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|thread
