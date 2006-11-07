@@ -411,6 +411,8 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3041,6 +3043,10 @@ operator|)
 decl_stmt|;
 name|varflags
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 operator|++
@@ -3240,9 +3246,9 @@ name|varflags
 operator|&
 name|VSQUOTE
 argument_list|,
+name|subtype
+argument_list|,
 name|flag
-operator|&
-name|EXP_FULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3945,7 +3951,10 @@ name|int
 name|quoted
 parameter_list|,
 name|int
-name|allow_split
+name|subtype
+parameter_list|,
+name|int
+name|flag
 parameter_list|)
 block|{
 name|int
@@ -3982,7 +3991,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|do {\ 	if (allow_split) { \ 		syntax = quoted? DQSYNTAX : BASESYNTAX; \ 		while (*p) { \ 			if (syntax[(int)*p] == CCTL) \ 				STPUTC(CTLESC, expdest); \ 			STPUTC(*p++, expdest); \ 		} \ 	} else \ 		while (*p) \ 			STPUTC(*p++, expdest); \ 	} while (0)
+value|do {\ 	if (flag& (EXP_FULL | EXP_CASE)&& subtype != VSLENGTH) { \ 		syntax = quoted? DQSYNTAX : BASESYNTAX; \ 		while (*p) { \ 			if (syntax[(int)*p] == CCTL) \ 				STPUTC(CTLESC, expdest); \ 			STPUTC(*p++, expdest); \ 		} \ 	} else \ 		while (*p) \ 			STPUTC(*p++, expdest); \ 	} while (0)
 switch|switch
 condition|(
 operator|*
@@ -4085,7 +4094,9 @@ literal|'@'
 case|:
 if|if
 condition|(
-name|allow_split
+name|flag
+operator|&
+name|EXP_FULL
 operator|&&
 name|quoted
 condition|)
