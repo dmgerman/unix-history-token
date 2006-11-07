@@ -6865,7 +6865,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For ATA devices we need to decide early what addressing mode to use.  * Legacy demands that the primary and secondary ATA ports sits on the  * same addresses that old ISA hardware did. This dictates that we use  * those addresses and ignore the BAR's if we cannot set PCI native   * addressing mode.  */
+comment|/*  * For ATA devices we need to decide early what addressing mode to use.  * Legacy demands that the primary and secondary ATA ports sits on the  * same addresses that old ISA hardware did. This dictates that we use  * those addresses and ignore the BAR's if we cannot set PCI native  * addressing mode.  */
 end_comment
 
 begin_function
@@ -9864,7 +9864,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse the PCI device database, if loaded, and return a pointer to a   * description of the device.  *  * The database is flat text formatted as follows:  *  * Any line not in a valid format is ignored.  * Lines are terminated with newline '\n' characters.  *   * A VENDOR line consists of the 4 digit (hex) vendor code, a TAB, then  * the vendor name.  *   * A DEVICE line is entered immediately below the corresponding VENDOR ID.  * - devices cannot be listed without a corresponding VENDOR line.  * A DEVICE line consists of a TAB, the 4 digit (hex) device code,  * another TAB, then the device name.                                              */
+comment|/*  * Parse the PCI device database, if loaded, and return a pointer to a  * description of the device.  *  * The database is flat text formatted as follows:  *  * Any line not in a valid format is ignored.  * Lines are terminated with newline '\n' characters.  *  * A VENDOR line consists of the 4 digit (hex) vendor code, a TAB, then  * the vendor name.  *  * A DEVICE line is entered immediately below the corresponding VENDOR ID.  * - devices cannot be listed without a corresponding VENDOR line.  * A DEVICE line consists of a TAB, the 4 digit (hex) device code,  * another TAB, then the device name.  */
 end_comment
 
 begin_comment
@@ -11990,7 +11990,7 @@ name|rid
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * Why do we turn off the PCI configuration BAR when we delete a 	 * resource? -- imp 	 */
+comment|/* 	 * Why do we turn off the PCI configuration BAR when we delete a 	 * resource? -- imp 	 */
 name|pci_write_config
 argument_list|(
 name|child
