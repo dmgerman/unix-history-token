@@ -861,7 +861,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"usable memory  = %ju (%ju MB)\n"
+literal|"usable memory = %ju (%ju MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
@@ -984,7 +984,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"avail memory = %ju (%ju MB)\n"
+literal|"avail memory  = %ju (%ju MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
