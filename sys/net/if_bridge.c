@@ -8832,6 +8832,33 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * If the packet is for us, set the packets source as the 		 * bridge, and return the packet back to ether_input for 		 * local processing. 		 */
+comment|/* Note where to send the reply to */
+if|if
+condition|(
+name|bif
+operator|->
+name|bif_flags
+operator|&
+name|IFBIF_LEARNING
+condition|)
+operator|(
+name|void
+operator|)
+name|bridge_rtupdate
+argument_list|(
+name|sc
+argument_list|,
+name|eh
+operator|->
+name|ether_shost
+argument_list|,
+name|ifp
+argument_list|,
+literal|0
+argument_list|,
+name|IFBAF_DYNAMIC
+argument_list|)
+expr_stmt|;
 comment|/* Mark the packet as arriving on the bridge interface */
 name|m
 operator|->
