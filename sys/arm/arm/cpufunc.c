@@ -153,6 +153,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<arm/xscale/i8134x/i81342reg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -193,6 +213,11 @@ expr|\
 name|defined
 argument_list|(
 name|CPU_XSCALE_80219
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
 argument_list|)
 end_if
 
@@ -1427,6 +1452,134 @@ begin_comment
 comment|/* CPU_XSCALE_80200 || CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425    CPU_XSCALE_80219 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|cpu_functions
+name|xscalec3_cpufuncs
+init|=
+block|{
+comment|/* CPU functions */
+name|cpufunc_id
+block|,
+comment|/* id			*/
+name|xscale_cpwait
+block|,
+comment|/* cpwait		*/
+comment|/* MMU functions */
+name|xscale_control
+block|,
+comment|/* control		*/
+name|cpufunc_domains
+block|,
+comment|/* domain		*/
+name|xscalec3_setttb
+block|,
+comment|/* setttb		*/
+name|cpufunc_faultstatus
+block|,
+comment|/* faultstatus		*/
+name|cpufunc_faultaddress
+block|,
+comment|/* faultaddress		*/
+comment|/* TLB functions */
+name|armv4_tlb_flushID
+block|,
+comment|/* tlb_flushID		*/
+name|xscale_tlb_flushID_SE
+block|,
+comment|/* tlb_flushID_SE	*/
+name|armv4_tlb_flushI
+block|,
+comment|/* tlb_flushI		*/
+operator|(
+name|void
+operator|*
+operator|)
+name|armv4_tlb_flushI
+block|,
+comment|/* tlb_flushI_SE	*/
+name|armv4_tlb_flushD
+block|,
+comment|/* tlb_flushD		*/
+name|armv4_tlb_flushD_SE
+block|,
+comment|/* tlb_flushD_SE	*/
+comment|/* Cache operations */
+name|xscalec3_cache_syncI
+block|,
+comment|/* icache_sync_all	*/
+name|xscale_cache_syncI_rng
+block|,
+comment|/* icache_sync_range	*/
+name|xscalec3_cache_purgeD
+block|,
+comment|/* dcache_wbinv_all	*/
+name|xscalec3_cache_purgeD_rng
+block|,
+comment|/* dcache_wbinv_range	*/
+name|xscale_cache_flushD_rng
+block|,
+comment|/* dcache_inv_range	*/
+name|xscalec3_cache_cleanD_rng
+block|,
+comment|/* dcache_wb_range	*/
+name|xscalec3_cache_purgeID
+block|,
+comment|/* idcache_wbinv_all	*/
+name|xscalec3_cache_purgeID_rng
+block|,
+comment|/* idcache_wbinv_range	*/
+comment|/* Other functions */
+name|cpufunc_nullop
+block|,
+comment|/* flush_prefetchbuf	*/
+name|armv4_drain_writebuf
+block|,
+comment|/* drain_writebuf	*/
+name|cpufunc_nullop
+block|,
+comment|/* flush_brnchtgt_C	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* flush_brnchtgt_E	*/
+name|xscale_cpu_sleep
+block|,
+comment|/* sleep		*/
+comment|/* Soft functions */
+name|cpufunc_null_fixup
+block|,
+comment|/* dataabt_fixup	*/
+name|cpufunc_null_fixup
+block|,
+comment|/* prefetchabt_fixup	*/
+name|xscalec3_context_switch
+block|,
+comment|/* context_switch	*/
+name|xscale_setup
+comment|/* cpu setup		*/
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CPU_XSCALE_81342 */
+end_comment
+
 begin_comment
 comment|/*  * Global constants also used by locore.s  */
 end_comment
@@ -1504,6 +1657,11 @@ expr|\
 name|defined
 argument_list|(
 name|CPU_XSCALE_80219
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
 argument_list|)
 end_if
 
@@ -2953,41 +3111,26 @@ begin_comment
 comment|/* CPU_XSCALE_80321 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_XSCALE_PXA2X0
-end_ifdef
-
-begin_comment
-comment|/* ignore core revision to test PXA2xx CPUs */
-end_comment
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
+argument_list|)
+end_if
 
 begin_expr_stmt
 unit|if
 operator|(
-operator|(
 name|cputype
-operator|&
-operator|~
-name|CPU_ID_XSCALE_COREREV_MASK
-operator|)
 operator|==
-name|CPU_ID_PXA250
-operator|||
-operator|(
-name|cputype
-operator|&
-operator|~
-name|CPU_ID_XSCALE_COREREV_MASK
-operator|)
-operator|==
-name|CPU_ID_PXA210
+name|CPU_ID_81342
 operator|)
 block|{
 name|cpufuncs
 operator|=
-name|xscale_cpufuncs
+name|xscalec3_cpufuncs
 block|;
 if|#
 directive|if
@@ -3011,16 +3154,89 @@ block|;
 name|pmap_pte_init_xscale
 argument_list|()
 block|;
-comment|/* Use powersave on this CPU. */
-name|cpu_do_powersave
-operator|=
-literal|1
-block|;
 return|return
 literal|0
 return|;
 block|}
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CPU_XSCALE_81342 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_PXA2X0
+end_ifdef
+
+begin_comment
+comment|/* ignore core revision to test PXA2xx CPUs */
+end_comment
+
+begin_if
+if|if
+condition|(
+operator|(
+name|cputype
+operator|&
+operator|~
+name|CPU_ID_XSCALE_COREREV_MASK
+operator|)
+operator|==
+name|CPU_ID_PXA250
+operator|||
+operator|(
+name|cputype
+operator|&
+operator|~
+name|CPU_ID_XSCALE_COREREV_MASK
+operator|)
+operator|==
+name|CPU_ID_PXA210
+condition|)
+block|{
+name|cpufuncs
+operator|=
+name|xscale_cpufuncs
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PERFCTRS
+argument_list|)
+name|xscale_pmu_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|cpu_reset_needs_v4_MMU_disable
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XScale needs it */
+name|get_cachetype_cp15
+argument_list|()
+expr_stmt|;
+name|pmap_pte_init_xscale
+argument_list|()
+expr_stmt|;
+comment|/* Use powersave on this CPU. */
+name|cpu_do_powersave
+operator|=
+literal|1
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_if
 
 begin_endif
 endif|#
@@ -4386,6 +4602,11 @@ expr|\
 name|defined
 argument_list|(
 name|CPU_XSCALE_80219
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
 argument_list|)
 end_if
 
@@ -6616,6 +6837,11 @@ expr|\
 name|defined
 argument_list|(
 name|CPU_XSCALE_80219
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
 argument_list|)
 end_if
 

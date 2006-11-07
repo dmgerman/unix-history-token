@@ -833,6 +833,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPU_ID_81342
+value|0x69056810
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_IXP425_533
 value|0x690541c0
 end_define

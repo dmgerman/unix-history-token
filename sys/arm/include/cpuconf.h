@@ -124,9 +124,15 @@ argument_list|(
 name|CPU_XSCALE_80321
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|CPU_XSCALE_80219
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
 argument_list|)
 operator|||
 expr|\
@@ -395,6 +401,11 @@ argument_list|(
 name|CPU_XSCALE_80219
 argument_list|)
 operator|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
+argument_list|)
 end_if
 
 begin_define
@@ -482,6 +493,11 @@ argument_list|(
 name|CPU_XSCALE_80219
 argument_list|)
 operator|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
+argument_list|)
 end_if
 
 begin_define

@@ -477,6 +477,53 @@ specifier|const
 name|char
 modifier|*
 specifier|const
+name|i81342_steppings
+index|[
+literal|16
+index|]
+init|=
+block|{
+literal|"step A-0"
+block|,
+literal|"rev 1"
+block|,
+literal|"rev 2"
+block|,
+literal|"rev 3"
+block|,
+literal|"rev 4"
+block|,
+literal|"rev 5"
+block|,
+literal|"rev 6"
+block|,
+literal|"rev 7"
+block|,
+literal|"rev 8"
+block|,
+literal|"rev 9"
+block|,
+literal|"rev 10"
+block|,
+literal|"rev 11"
+block|,
+literal|"rev 12"
+block|,
+literal|"rev 13"
+block|,
+literal|"rev 14"
+block|,
+literal|"rev 15"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
 name|pxa2x0_steppings
 index|[
 literal|16
@@ -948,6 +995,16 @@ block|,
 literal|"i80321 600MHz"
 block|,
 name|i80321_steppings
+block|}
+block|,
+block|{
+name|CPU_ID_81342
+block|,
+name|CPU_CLASS_XSCALE
+block|,
+literal|"i81342"
+block|,
+name|i81342_steppings
 block|}
 block|,
 block|{

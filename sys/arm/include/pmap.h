@@ -1663,6 +1663,11 @@ name|ARM_MMU_SA1
 operator|)
 operator|!=
 literal|0
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
+argument_list|)
 end_if
 
 begin_function_decl
