@@ -799,6 +799,13 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|alloc_firstaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|_tmppt
@@ -9784,6 +9791,55 @@ operator|&
 name|L2_ADDR_MASK
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARM_USE_SMALL_ALLOC
+name|KASSERT
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|m
+operator|>=
+name|alloc_firstaddr
+argument_list|,
+operator|(
+literal|"Trying to access non-existent page va %x pte %x"
+operator|,
+name|pv
+operator|->
+name|pv_va
+operator|,
+operator|*
+name|pt
+operator|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|KASSERT
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|m
+operator|>=
+name|KERNBASE
+argument_list|,
+operator|(
+literal|"Trying to access non-existent page va %x pte %x"
+operator|,
+name|pv
+operator|->
+name|pv_va
+operator|,
+operator|*
+name|pt
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|*
 name|pt
 operator|=
@@ -16082,7 +16138,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pmap_link_l2pt:  *  *	Link the L2 page table specified by "pa" into the L1  *	page table at the slot for "va".  */
+comment|/*  * pmap_link_l2pt:  *  *	Link the L2 page table specified by l2pv.pv_pa into the L1  *	page table at the slot for "va".  */
 end_comment
 
 begin_function
@@ -16129,6 +16185,24 @@ argument_list|)
 operator||
 name|L1_C_PROTO
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VERBOSE_INIT_ARM
+name|printf
+argument_list|(
+literal|"pmap_link_l2pt: pa=0x%x va=0x%x\n"
+argument_list|,
+name|l2pv
+operator|->
+name|pv_pa
+argument_list|,
+name|l2pv
+operator|->
+name|pv_va
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|pde
 index|[
 name|slot
