@@ -3624,12 +3624,6 @@ condition|)
 name|print_transmeta_info
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|I686_CPU
-comment|/* 	 * XXX - Do PPro CPUID level=2 stuff here? 	 * 	 * No, but maybe in a print_Intel_info() function called from here. 	 */
-endif|#
-directive|endif
 block|}
 end_function
 
