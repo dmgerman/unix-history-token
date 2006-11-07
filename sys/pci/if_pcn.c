@@ -255,6 +255,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|pcn_type
 name|pcn_devs
@@ -290,12 +291,14 @@ end_decl_stmt
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 name|pcn_chipid
 block|{
 name|u_int32_t
 name|id
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -305,42 +308,6 @@ name|pcn_chipid
 index|[]
 init|=
 block|{
-block|{
-name|Am79C960
-block|,
-literal|"Am79C960"
-block|}
-block|,
-block|{
-name|Am79C961
-block|,
-literal|"Am79C961"
-block|}
-block|,
-block|{
-name|Am79C961A
-block|,
-literal|"Am79C961A"
-block|}
-block|,
-block|{
-name|Am79C965
-block|,
-literal|"Am79C965"
-block|}
-block|,
-block|{
-name|Am79C970
-block|,
-literal|"Am79C970"
-block|}
-block|,
-block|{
-name|Am79C970A
-block|,
-literal|"Am79C970A"
-block|}
-block|,
 block|{
 name|Am79C971
 block|,
@@ -388,6 +355,7 @@ end_struct
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|pcn_chipid_name
@@ -403,6 +371,21 @@ name|u_int32_t
 name|pcn_chip_id
 parameter_list|(
 name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|const
+name|struct
+name|pcn_type
+modifier|*
+name|pcn_match
+parameter_list|(
+name|u_int16_t
+parameter_list|,
+name|u_int16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1880,6 +1863,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|pcn_chipid_name
@@ -1888,13 +1872,16 @@ name|u_int32_t
 name|id
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|pcn_chipid
 modifier|*
 name|p
-init|=
-name|pcn_chipid
 decl_stmt|;
+name|p
+operator|=
+name|pcn_chipid
+expr_stmt|;
 while|while
 condition|(
 name|p
@@ -2055,6 +2042,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|struct
 name|pcn_type
 modifier|*
@@ -2067,6 +2055,7 @@ name|u_int16_t
 name|did
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|pcn_type
 modifier|*
@@ -2135,6 +2124,7 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
+specifier|const
 name|struct
 name|pcn_type
 modifier|*
@@ -2355,8 +2345,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -2366,13 +2354,6 @@ decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
@@ -2464,11 +2445,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"pcn%d: couldn't map ports/memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports/memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2533,11 +2514,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"pcn%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2578,12 +2559,6 @@ name|sc
 argument_list|,
 name|PCN_IO32_APROM01
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|pcn_unit
-operator|=
-name|unit
 expr_stmt|;
 name|callout_init_mtx
 argument_list|(
@@ -2634,11 +2609,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"pcn%d: no memory for list buffers!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"no memory for list buffers!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2680,11 +2655,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"pcn%d: can not if_alloc()\n"
+name|dev
 argument_list|,
-name|unit
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2784,13 +2759,11 @@ name|pcn_ifmedia_sts
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"pcn%d: MII without any PHY!\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|pcn_unit
+literal|"MII without any PHY!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2843,11 +2816,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"pcn%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -5080,14 +5053,12 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"pcn%d: initialization failed: no "
-literal|"memory for rx buffers\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|pcn_unit
+literal|"initialization failed: no "
+literal|"memory for rx buffers\n"
 argument_list|)
 expr_stmt|;
 name|pcn_stop
@@ -5926,13 +5897,11 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"pcn%d: watchdog timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|pcn_unit
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 name|pcn_stop
