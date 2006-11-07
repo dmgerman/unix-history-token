@@ -27406,7 +27406,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|cur_spi
+name|spi
 operator|->
 name|sync_offset
 operator|==
@@ -27414,7 +27414,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|cur_spi
+name|spi
 operator|->
 name|sync_period
 operator|==
