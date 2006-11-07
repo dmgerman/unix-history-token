@@ -1873,7 +1873,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* Enable all the drives befor we start */
+comment|/* Enable all the drives before we start */
 for|for
 control|(
 name|i

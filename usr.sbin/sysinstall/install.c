@@ -3489,7 +3489,7 @@ argument_list|(
 literal|"ln -s usr/compat /compat"
 argument_list|)
 expr_stmt|;
-comment|/* BOGON #5: aliases database not build for bin */
+comment|/* BOGON #5: aliases database not built for bin */
 name|vsystem
 argument_list|(
 literal|"newaliases"
