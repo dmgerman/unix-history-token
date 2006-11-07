@@ -901,7 +901,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"test_simplio: tried %d but wrote %d"
+literal|"test_simplio: tried %zu but wrote %zd"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -985,7 +985,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"test_simpleio: tried %d but read %d"
+literal|"test_simpleio: tried %zu but read %zd"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2012,7 +2012,7 @@ block|{
 name|warnx
 argument_list|(
 literal|"test_blocking_one_byte: timed_write: tried to write "
-literal|"%d, wrote %d"
+literal|"%zu, wrote %zd"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2107,8 +2107,8 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"test_blocking_one_byte: timed_read: wanted %d, "
-literal|"read %d"
+literal|"test_blocking_one_byte: timed_read: wanted %zu, "
+literal|"read %zd"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2352,7 +2352,7 @@ block|{
 name|warnx
 argument_list|(
 literal|"test_nonblocking_one_byte: timed_write: tried to write "
-literal|"%d, wrote %d"
+literal|"%zu, wrote %zd"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2447,8 +2447,8 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"test_nonblocking_one_byte: timed_read: wanted %d, read "
-literal|"%d"
+literal|"test_nonblocking_one_byte: timed_read: wanted %zu, read "
+literal|"%zd"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3057,7 +3057,7 @@ block|{
 name|warnx
 argument_list|(
 literal|"test_blocking_partial_write: timed_write: requested "
-literal|"%d, sent %d"
+literal|"%d, sent %zd"
 argument_list|,
 literal|512
 operator|*
@@ -3277,7 +3277,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"test_coalesce_big_read: write 5 wrote %d"
+literal|"test_coalesce_big_read: write 5 wrote %zd"
 argument_list|,
 name|len
 argument_list|)
@@ -3348,7 +3348,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"test_coalesce_big_read: write 5 wrote %d"
+literal|"test_coalesce_big_read: write 5 wrote %zd"
 argument_list|,
 name|len
 argument_list|)
@@ -3417,7 +3417,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"test_coalesce_big_read: read 10 read %d"
+literal|"test_coalesce_big_read: read 10 read %zd"
 argument_list|,
 name|len
 argument_list|)
@@ -3650,7 +3650,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"test_coalesce_big_write: write 10 wrote %d"
+literal|"test_coalesce_big_write: write 10 wrote %zd"
 argument_list|,
 name|len
 argument_list|)
@@ -3719,7 +3719,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"test_coalesce_big_write: read 5 read %d"
+literal|"test_coalesce_big_write: read 5 read %zd"
 argument_list|,
 name|len
 argument_list|)
@@ -3790,7 +3790,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"test_coalesce_big_write: read 5 read %d"
+literal|"test_coalesce_big_write: read 5 read %zd"
 argument_list|,
 name|len
 argument_list|)
