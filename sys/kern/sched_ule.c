@@ -5954,7 +5954,7 @@ name|oldprio
 operator|=
 name|td
 operator|->
-name|td__user_pri
+name|td_user_pri
 expr_stmt|;
 name|td
 operator|->
@@ -6711,11 +6711,11 @@ name|td_user_pri
 expr_stmt|;
 name|child
 operator|->
-name|kg_base_user_pri
+name|td_base_user_pri
 operator|=
-name|kg
+name|td
 operator|->
-name|kg_base_user_pri
+name|td_base_user_pri
 expr_stmt|;
 name|sched_interact_fork
 argument_list|(
