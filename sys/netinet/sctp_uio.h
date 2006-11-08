@@ -66,6 +66,12 @@ directive|include
 file|<sys/socket.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|uint32_t
@@ -3000,6 +3006,36 @@ name|_x
 parameter_list|)
 value|SCTP_STAT_DECR(_x)
 end_define
+
+begin_union
+union|union
+name|sctp_sockstore
+block|{
+ifdef|#
+directive|ifdef
+name|AF_INET
+name|struct
+name|sockaddr_in
+name|sin
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|AF_INET6
+name|struct
+name|sockaddr_in6
+name|sin6
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|sockaddr
+name|sa
+decl_stmt|;
+block|}
+union|;
+end_union
 
 begin_comment
 comment|/*  * Kernel defined for sctp_send  */

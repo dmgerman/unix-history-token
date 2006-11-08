@@ -2756,6 +2756,16 @@ name|end_added
 operator|=
 literal|1
 expr_stmt|;
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|control_pdapi
+operator|->
+name|pdapi_aborted
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|stcb
@@ -3135,6 +3145,16 @@ operator|.
 name|control_pdapi
 operator|->
 name|end_added
+operator|=
+literal|1
+expr_stmt|;
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|control_pdapi
+operator|->
+name|pdapi_aborted
 operator|=
 literal|1
 expr_stmt|;
@@ -8388,6 +8408,11 @@ name|NULL
 condition|)
 block|{
 comment|/* couldn't find signature */
+name|sctp_m_freem
+argument_list|(
+name|m_sig
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL

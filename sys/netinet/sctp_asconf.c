@@ -5902,6 +5902,11 @@ block|}
 else|else
 block|{
 comment|/* invalid family! */
+name|SCTP_FREE
+argument_list|(
+name|aa
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-

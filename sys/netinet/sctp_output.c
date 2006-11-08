@@ -50388,6 +50388,17 @@ operator|||
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|mm
+condition|)
+block|{
+name|sctp_m_freem
+argument_list|(
+name|mm
+argument_list|)
+expr_stmt|;
+block|}
 goto|goto
 name|out
 goto|;

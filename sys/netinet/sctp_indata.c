@@ -934,6 +934,12 @@ name|end_added
 operator|=
 literal|0
 expr_stmt|;
+name|read_queue_e
+operator|->
+name|pdapi_aborted
+operator|=
+literal|0
+expr_stmt|;
 name|failed_build
 label|:
 return|return
@@ -1155,6 +1161,12 @@ expr_stmt|;
 name|read_queue_e
 operator|->
 name|end_added
+operator|=
+literal|0
+expr_stmt|;
+name|read_queue_e
+operator|->
+name|pdapi_aborted
 operator|=
 literal|0
 expr_stmt|;
