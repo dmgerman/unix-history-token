@@ -1016,7 +1016,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Skip at most request bytes. Skipped data is marked as consumed.  */
+comment|/*  * Skip forward by exactly the requested bytes or else return  * ARCHIVE_FATAL.  Note that this differs from the contract for  * read_ahead, which does not gaurantee a minimum count.  */
 end_comment
 
 begin_function
@@ -1154,7 +1154,7 @@ operator|(
 name|total_bytes_skipped
 operator|)
 return|;
-comment|/* 	 * If no client_skipper is provided, just read the old way. It is very 	 * likely that after skipping, the request has not yet been fully 	 * satisfied (and is still> 0). In that case, read as well. 	 */
+comment|/* 	 * If a client_skipper was provided, try that first. 	 */
 if|if
 condition|(
 name|a
@@ -1260,6 +1260,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * Note that client_skipper will usually not satisfy the 	 * full request (due to low-level blocking concerns), 	 * so even if client_skipper is provided, we may still 	 * have to use ordinary reads to finish out the request. 	 */
 while|while
 condition|(
 name|request
@@ -1298,6 +1299,34 @@ operator|(
 name|bytes_read
 operator|)
 return|;
+if|if
+condition|(
+name|bytes_read
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* We hit EOF before we satisfied the skip request. */
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"Truncated input file (need to skip %d bytes)"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|request
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 name|assert
 argument_list|(
 name|bytes_read
