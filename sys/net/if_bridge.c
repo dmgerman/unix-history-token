@@ -8758,7 +8758,7 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-name|m_free
+name|m_freem
 argument_list|(
 name|m
 argument_list|)
