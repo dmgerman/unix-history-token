@@ -1666,6 +1666,12 @@ operator|&
 name|PG_ZERO
 operator|)
 expr_stmt|;
+name|m
+operator|->
+name|oflags
+operator|=
+literal|0
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|m
