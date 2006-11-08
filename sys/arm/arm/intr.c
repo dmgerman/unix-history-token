@@ -381,6 +381,13 @@ name|i
 decl_stmt|,
 name|thread
 decl_stmt|;
+name|PCPU_LAZY_INC
+argument_list|(
+name|cnt
+operator|.
+name|v_intr
+argument_list|)
+expr_stmt|;
 name|td
 operator|->
 name|td_intr_nesting_level
