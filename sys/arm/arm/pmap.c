@@ -6642,7 +6642,9 @@ name|shpgperproc
 operator|*
 name|maxproc
 operator|+
-name|vm_page_array_size
+name|cnt
+operator|.
+name|v_page_count
 expr_stmt|;
 name|pv_entry_high_water
 operator|=
