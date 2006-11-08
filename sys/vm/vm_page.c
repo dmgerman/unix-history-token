@@ -915,6 +915,27 @@ index|]
 operator|=
 name|new_end
 expr_stmt|;
+comment|/* 	 * Clear all of the page structures 	 */
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|vm_page_array
+argument_list|,
+name|page_range
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vm_page
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|vm_page_array_size
+operator|=
+name|page_range
+expr_stmt|;
 comment|/* 	 * This assertion tests the hypothesis that npages and total are 	 * redundant.  XXX 	 */
 name|page_range
 operator|=
@@ -966,27 +987,6 @@ operator|(
 literal|"vm_page_startup: inconsistent page counts"
 operator|)
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Clear all of the page structures 	 */
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|vm_page_array
-argument_list|,
-name|page_range
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|vm_page
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|vm_page_array_size
-operator|=
-name|page_range
 expr_stmt|;
 comment|/* 	 * Construct the free queue(s) in descending order (by physical 	 * address) so that the first 16MB of physical memory is allocated 	 * last rather than first.  On large-memory machines, this avoids 	 * the exhaustion of low physical memory before isa_dma_init has run. 	 */
 name|cnt
