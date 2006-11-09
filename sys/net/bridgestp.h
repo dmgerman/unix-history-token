@@ -1179,6 +1179,9 @@ argument|bstp_state
 argument_list|)
 name|bs_list
 expr_stmt|;
+name|uint8_t
+name|bs_running
+decl_stmt|;
 name|struct
 name|mtx
 name|bs_mtx
