@@ -156,19 +156,33 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pci_print_irqmask
+parameter_list|(
+name|u_int16_t
+name|irqs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|print_irq_line
 parameter_list|(
+name|int
+name|entry
+parameter_list|,
+name|pir_entry_t
+modifier|*
+name|p
+parameter_list|,
 name|char
 name|line
 parameter_list|,
 name|u_int8_t
 name|link
 parameter_list|,
-name|u_int8_t
+name|u_int16_t
 name|irqs
-index|[
-literal|2
-index|]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -484,7 +498,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"PIRTOOL for FreeBSD (c) 2002 Bruce M. Simpson\r\n"
+literal|"PIRTOOL (c) 2002-2006 Bruce M. Simpson\r\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -678,6 +692,87 @@ end_function
 
 begin_function
 name|void
+name|pci_print_irqmask
+parameter_list|(
+name|u_int16_t
+name|irqs
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|,
+name|first
+decl_stmt|;
+if|if
+condition|(
+name|irqs
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"none"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|first
+operator|=
+literal|1
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|16
+condition|;
+name|i
+operator|++
+operator|,
+name|irqs
+operator|>>=
+literal|1
+control|)
+if|if
+condition|(
+name|irqs
+operator|&
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+else|else
+name|first
+operator|=
+literal|0
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
 name|dump_pir_table
 parameter_list|(
 name|pir_table_t
@@ -729,11 +824,6 @@ literal|"0x%02x: Signature:          %c%c%c%c\r\n"
 literal|"0x%02x: Version:            %u.%u\r\n"
 literal|"0x%02x: Size:               %u bytes (%u entries)\r\n"
 literal|"0x%02x: Device:             %u:%u:%u\r\n"
-literal|"0x%02x: PCI Exclusive IRQs: 0x%08lX\r\n"
-literal|"0x%02x: Compatible with:    0x%08X %s\r\n"
-literal|"0x%02x: Miniport Data:      0x%08X\r\n"
-literal|"0x%02x: Checksum:           0x%02X\r\n"
-literal|"\r\n"
 argument_list|,
 call|(
 name|u_int32_t
@@ -867,6 +957,11 @@ name|pir
 operator|->
 name|devfunc
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"0x%02x: PCI Exclusive IRQs: "
 argument_list|,
 name|offsetof
 argument_list|(
@@ -874,10 +969,22 @@ name|pir_table_t
 argument_list|,
 name|excl_irqs
 argument_list|)
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|pci_print_irqmask
+argument_list|(
 name|pir
 operator|->
 name|excl_irqs
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\r\n"
+literal|"0x%02x: Compatible with:    0x%08X %s\r\n"
+literal|"0x%02x: Miniport Data:      0x%08X\r\n"
+literal|"0x%02x: Checksum:           0x%02X\r\n"
+literal|"\r\n"
 argument_list|,
 name|offsetof
 argument_list|(
@@ -936,6 +1043,11 @@ name|pend
 operator|+=
 name|num_slots
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Entry  Location  Bus Device Pin  Link  IRQs\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -953,47 +1065,12 @@ name|p
 operator|++
 control|)
 block|{
-name|printf
+name|print_irq_line
 argument_list|(
-literal|"Entry %u: Device %u:%u:%u Slot %u%s\r\n"
-argument_list|,
 name|i
 argument_list|,
 name|p
-operator|->
-name|bus
 argument_list|,
-name|PIR_DEV
-argument_list|(
-name|p
-operator|->
-name|devfunc
-argument_list|)
-argument_list|,
-name|PIR_FUNC
-argument_list|(
-name|p
-operator|->
-name|devfunc
-argument_list|)
-argument_list|,
-name|p
-operator|->
-name|slot
-argument_list|,
-name|p
-operator|->
-name|slot
-operator|==
-literal|0
-condition|?
-literal|" (on-board)"
-else|:
-literal|""
-argument_list|)
-expr_stmt|;
-name|print_irq_line
-argument_list|(
 literal|'A'
 argument_list|,
 name|p
@@ -1007,6 +1084,10 @@ argument_list|)
 expr_stmt|;
 name|print_irq_line
 argument_list|(
+name|i
+argument_list|,
+name|p
+argument_list|,
 literal|'B'
 argument_list|,
 name|p
@@ -1020,6 +1101,10 @@ argument_list|)
 expr_stmt|;
 name|print_irq_line
 argument_list|(
+name|i
+argument_list|,
+name|p
+argument_list|,
 literal|'C'
 argument_list|,
 name|p
@@ -1033,6 +1118,10 @@ argument_list|)
 expr_stmt|;
 name|print_irq_line
 argument_list|(
+name|i
+argument_list|,
+name|p
+argument_list|,
 literal|'D'
 argument_list|,
 name|p
@@ -1056,120 +1145,88 @@ begin_function
 name|void
 name|print_irq_line
 parameter_list|(
+name|int
+name|entry
+parameter_list|,
+name|pir_entry_t
+modifier|*
+name|p
+parameter_list|,
 name|char
 name|line
 parameter_list|,
 name|u_int8_t
 name|link
 parameter_list|,
-name|u_int8_t
+name|u_int16_t
 name|irqs
-index|[
-literal|2
-index|]
 parameter_list|)
 block|{
-name|u_int16_t
-name|map
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
+if|if
+condition|(
+name|link
+operator|==
+literal|0
+condition|)
+return|return;
 name|printf
 argument_list|(
-literal|"\tINT%c: %02xh "
+literal|"%3d    "
+argument_list|,
+name|entry
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|slot
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"embedded "
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"slot %-3d "
+argument_list|,
+name|p
+operator|->
+name|slot
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %3d  %3d    %c   0x%02x  "
+argument_list|,
+name|p
+operator|->
+name|bus
+argument_list|,
+name|PIR_DEV
+argument_list|(
+name|p
+operator|->
+name|devfunc
+argument_list|)
 argument_list|,
 name|line
 argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|link
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
+name|pci_print_irqmask
 argument_list|(
-literal|"(not connected)\r\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|map
-operator|=
 name|irqs
-index|[
-literal|1
-index|]
-expr_stmt|;
-name|map
-operator|<<=
-literal|8
-expr_stmt|;
-name|map
-operator||=
-name|irqs
-index|[
-literal|0
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|map
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"(not routable)\r\n"
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|printf
 argument_list|(
-literal|"routable irqs:"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|16
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|map
-operator|&
-literal|0x1
-condition|)
-name|printf
-argument_list|(
-literal|" %d"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-name|map
-operator|>>=
-literal|1
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"\r\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1194,11 +1251,19 @@ name|id
 condition|)
 block|{
 case|case
+literal|0x157310b9
+case|:
+return|return
+operator|(
+literal|"ALi M1573 (Hypertransport)"
+operator|)
+return|;
+case|case
 literal|0x06861106
 case|:
 return|return
 operator|(
-literal|"VIA VT82C686/686A/686B"
+literal|"VIA VT82C686/686A/686B (Apollo)"
 operator|)
 return|;
 case|case
@@ -1206,7 +1271,15 @@ literal|0x122E8086
 case|:
 return|return
 operator|(
-literal|"Intel 82371FB (Triton I)"
+literal|"Intel 82371FB (Triton I/PIIX)"
+operator|)
+return|;
+case|case
+literal|0x26418086
+case|:
+return|return
+operator|(
+literal|"Intel 82801FBM (ICH6M)"
 operator|)
 return|;
 case|case
@@ -1214,7 +1287,7 @@ literal|0x70008086
 case|:
 return|return
 operator|(
-literal|"Intel 82371SB (Triton II/PIIX3)"
+literal|"Intel 82371SB (Natoma/Triton II/PIIX3)"
 operator|)
 return|;
 default|default:

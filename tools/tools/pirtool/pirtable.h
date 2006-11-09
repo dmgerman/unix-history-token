@@ -76,39 +76,27 @@ name|u_int8_t
 name|inta_link
 decl_stmt|;
 comment|/* how INTA is linked */
-name|u_int8_t
+name|u_int16_t
 name|inta_irqs
-index|[
-literal|2
-index|]
 decl_stmt|;
 comment|/* how INTA may be routed (bitset) */
 name|u_int8_t
 name|intb_link
 decl_stmt|;
-name|u_int8_t
+name|u_int16_t
 name|intb_irqs
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|u_int8_t
 name|intc_link
 decl_stmt|;
-name|u_int8_t
+name|u_int16_t
 name|intc_irqs
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|u_int8_t
 name|intd_link
 decl_stmt|;
-name|u_int8_t
+name|u_int16_t
 name|intd_irqs
-index|[
-literal|2
-index|]
 decl_stmt|;
 comment|/* how this pin may be routed */
 name|u_int8_t
@@ -120,8 +108,8 @@ name|reserved00
 decl_stmt|;
 comment|/* must be zero */
 block|}
-name|pir_entry_t
 name|__packed
+name|pir_entry_t
 typedef|;
 end_typedef
 
@@ -144,7 +132,7 @@ comment|/* major version (1) */
 name|u_int16_t
 name|size
 decl_stmt|;
-comment|/* total size of tab;e */
+comment|/* total size of table */
 name|u_int8_t
 name|bus
 decl_stmt|;
@@ -184,8 +172,8 @@ index|]
 decl_stmt|;
 comment|/* 1..N device entries */
 block|}
-name|pir_table_t
 name|__packed
+name|pir_table_t
 typedef|;
 end_typedef
 
