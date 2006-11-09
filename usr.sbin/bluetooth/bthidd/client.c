@@ -93,7 +93,7 @@ parameter_list|(
 name|bdaddr_p
 name|bdaddr
 parameter_list|,
-name|int32_t
+name|uint16_t
 name|psm
 parameter_list|)
 function_decl|;
@@ -859,7 +859,7 @@ parameter_list|(
 name|bdaddr_p
 name|bdaddr
 parameter_list|,
-name|int32_t
+name|uint16_t
 name|psm
 parameter_list|)
 block|{
@@ -1047,7 +1047,10 @@ name|l2addr
 operator|.
 name|l2cap_psm
 operator|=
+name|htole16
+argument_list|(
 name|psm
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
