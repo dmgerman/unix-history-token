@@ -3134,12 +3134,16 @@ literal|5
 expr_stmt|;
 break|break;
 default|default:
-comment|/* XXX - unimplemented */
-name|state
+comment|/* Invalid data, abort */
+name|end
 operator|=
-literal|4
+literal|1
 expr_stmt|;
-break|break;
+name|cksumvalid
+operator|=
+literal|0
+expr_stmt|;
+continue|continue;
 block|}
 break|break;
 case|case
