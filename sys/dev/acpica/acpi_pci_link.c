@@ -1441,12 +1441,26 @@ name|struct
 name|acpi_pci_link_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|header
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|tag
 parameter_list|)
 block|{
 name|struct
 name|link
 modifier|*
 name|link
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|16
+index|]
 decl_stmt|;
 name|int
 name|i
@@ -1458,11 +1472,38 @@ argument_list|(
 name|pci_link
 argument_list|)
 expr_stmt|;
-name|printf
+if|if
+condition|(
+name|header
+condition|)
+block|{
+name|snprintf
 argument_list|(
-literal|"Index  IRQ  Rtd  Ref  IRQs\n"
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s:"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|sc
+operator|->
+name|pl_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-16.16s  Index  IRQ  Rtd  Ref  IRQs\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -1491,7 +1532,15 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%5d  %3d   %c   %3d "
+literal|"  %-14.14s  %5d  %3d   %c   %3d "
+argument_list|,
+name|i
+operator|==
+literal|0
+condition|?
+name|tag
+else|:
+literal|""
 argument_list|,
 name|i
 argument_list|,
@@ -1995,20 +2044,15 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Links after initial probe:\n"
-argument_list|)
-expr_stmt|;
 name|acpi_pci_link_dump
 argument_list|(
 name|sc
+argument_list|,
+literal|1
+argument_list|,
+literal|"Initial Probe"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Verify initial IRQs if we have _PRS. */
 if|if
 condition|(
@@ -2069,20 +2113,15 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Links after initial validation:\n"
-argument_list|)
-expr_stmt|;
 name|acpi_pci_link_dump
 argument_list|(
 name|sc
+argument_list|,
+literal|0
+argument_list|,
+literal|"Validation"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Save initial IRQs. */
 for|for
 control|(
@@ -2208,20 +2247,15 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Links after disable:\n"
-argument_list|)
-expr_stmt|;
 name|acpi_pci_link_dump
 argument_list|(
 name|sc
+argument_list|,
+literal|0
+argument_list|,
+literal|"After Disable"
 argument_list|)
 expr_stmt|;
-block|}
 name|ACPI_SERIAL_END
 argument_list|(
 name|pci_link
