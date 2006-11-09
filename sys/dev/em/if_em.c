@@ -1129,7 +1129,7 @@ name|void
 name|em_watchdog
 parameter_list|(
 name|struct
-name|ifnet
+name|adapter
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4039,9 +4039,9 @@ name|m_head
 argument_list|)
 expr_stmt|;
 comment|/* Set timeout in case hardware has problems transmitting. */
-name|ifp
+name|adapter
 operator|->
-name|if_timer
+name|watchdog_timer
 operator|=
 name|EM_TX_TIMEOUT
 expr_stmt|;
@@ -4865,7 +4865,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  Watchdog entry point  *  *  This routine is called whenever hardware quits transmitting.  *  **********************************************************************/
+comment|/*********************************************************************  *  Watchdog timer:  *  *  This routine is called from the local timer every second.  *  As long as transmit descriptors are being cleaned the value  *  is non-zero and we do nothing. Reaching 0 indicates a tx hang  *  and we then reset the device.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -4874,25 +4874,31 @@ name|void
 name|em_watchdog
 parameter_list|(
 name|struct
-name|ifnet
+name|adapter
 modifier|*
-name|ifp
+name|adapter
 parameter_list|)
 block|{
-name|struct
-name|adapter
-modifier|*
-name|adapter
-init|=
-name|ifp
-operator|->
-name|if_softc
-decl_stmt|;
-name|EM_LOCK
+name|EM_LOCK_ASSERT
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The timer is set to 5 every time em_start() queues a packet. 	 * Then em_txeof() keeps resetting to 5 as long as it cleans at 	 * least one descriptor. 	 * Finally, anytime all descriptors are clean the timer is 	 * set to 0. 	 */
+if|if
+condition|(
+name|adapter
+operator|->
+name|watchdog_timer
+operator|==
+literal|0
+operator|||
+operator|--
+name|adapter
+operator|->
+name|watchdog_timer
+condition|)
+return|return;
 comment|/* If we are in this routine because of pause frames, then 	 * don't reset the hardware. 	 */
 if|if
 condition|(
@@ -4909,40 +4915,11 @@ operator|&
 name|E1000_STATUS_TXOFF
 condition|)
 block|{
-name|ifp
+name|adapter
 operator|->
-name|if_timer
+name|watchdog_timer
 operator|=
 name|EM_TX_TIMEOUT
-expr_stmt|;
-name|EM_UNLOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* 	 * Reclaim first as there is a possibility of losing Tx completion 	 * interrupts. Possible cause of missing Tx completion interrupts 	 * comes from Tx interrupt moderation mechanism(delayed interrupts) 	 * or chipset bug. 	 */
-name|em_txeof
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|adapter
-operator|->
-name|num_tx_desc_avail
-operator|==
-name|adapter
-operator|->
-name|num_tx_desc
-condition|)
-block|{
-name|EM_UNLOCK
-argument_list|(
-name|adapter
-argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -4967,6 +4944,8 @@ argument_list|,
 literal|"watchdog timeout -- resetting\n"
 argument_list|)
 expr_stmt|;
+name|adapter
+operator|->
 name|ifp
 operator|->
 name|if_drv_flags
@@ -4980,11 +4959,6 @@ name|watchdog_events
 operator|++
 expr_stmt|;
 name|em_init_locked
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-name|EM_UNLOCK
 argument_list|(
 name|adapter
 argument_list|)
@@ -9288,6 +9262,12 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Each second we check the watchdog to  	 * protect against hardware hangs. 	 */
+name|em_watchdog
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -11067,12 +11047,6 @@ operator|->
 name|if_start
 operator|=
 name|em_start
-expr_stmt|;
-name|ifp
-operator|->
-name|if_watchdog
-operator|=
-name|em_watchdog
 expr_stmt|;
 name|IFQ_SET_MAXLEN
 argument_list|(
@@ -14921,9 +14895,9 @@ name|adapter
 operator|->
 name|num_tx_desc
 condition|)
-name|ifp
+name|adapter
 operator|->
-name|if_timer
+name|watchdog_timer
 operator|=
 literal|0
 expr_stmt|;
@@ -14936,9 +14910,9 @@ name|adapter
 operator|->
 name|num_tx_desc_avail
 condition|)
-name|ifp
+name|adapter
 operator|->
-name|if_timer
+name|watchdog_timer
 operator|=
 name|EM_TX_TIMEOUT
 expr_stmt|;

@@ -691,6 +691,9 @@ name|callout
 name|tx_fifo_timer
 decl_stmt|;
 name|int
+name|watchdog_timer
+decl_stmt|;
+name|int
 name|io_rid
 decl_stmt|;
 name|int
