@@ -8222,10 +8222,6 @@ name|NULL
 condition|)
 block|{
 comment|/* Gak! no memory */
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
 goto|goto
 name|out_now
 goto|;
