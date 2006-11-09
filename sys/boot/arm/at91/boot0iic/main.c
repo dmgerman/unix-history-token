@@ -61,7 +61,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Writing EEPROM from 0x%x to addr 0\r\n"
+literal|"Writing EEPROM from 0x%x to addr 0\n"
 argument_list|,
 name|addr
 argument_list|)
@@ -77,7 +77,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Write complete.  Press reset\r\n"
+literal|"Write complete.  Press reset\n"
 argument_list|)
 expr_stmt|;
 return|return
