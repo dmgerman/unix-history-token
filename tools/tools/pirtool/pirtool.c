@@ -158,7 +158,7 @@ begin_function_decl
 name|void
 name|pci_print_irqmask
 parameter_list|(
-name|u_int16_t
+name|uint16_t
 name|irqs
 parameter_list|)
 function_decl|;
@@ -178,10 +178,10 @@ parameter_list|,
 name|char
 name|line
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|link
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|irqs
 parameter_list|)
 function_decl|;
@@ -192,7 +192,7 @@ name|char
 modifier|*
 name|lookup_southbridge
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|id
 parameter_list|)
 function_decl|;
@@ -694,7 +694,7 @@ begin_function
 name|void
 name|pci_print_irqmask
 parameter_list|(
-name|u_int16_t
+name|uint16_t
 name|irqs
 parameter_list|)
 block|{
@@ -826,7 +826,7 @@ literal|"0x%02x: Size:               %u bytes (%u entries)\r\n"
 literal|"0x%02x: Device:             %u:%u:%u\r\n"
 argument_list|,
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 operator|(
@@ -1155,10 +1155,10 @@ parameter_list|,
 name|char
 name|line
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|link
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|irqs
 parameter_list|)
 block|{
@@ -1241,7 +1241,7 @@ name|char
 modifier|*
 name|lookup_southbridge
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|id
 parameter_list|)
 block|{

@@ -64,46 +64,46 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|bus
 decl_stmt|;
 comment|/* bus number of this device */
-name|u_int8_t
+name|uint8_t
 name|devfunc
 decl_stmt|;
 comment|/* only upper 5 device bits valid */
-name|u_int8_t
+name|uint8_t
 name|inta_link
 decl_stmt|;
 comment|/* how INTA is linked */
-name|u_int16_t
+name|uint16_t
 name|inta_irqs
 decl_stmt|;
 comment|/* how INTA may be routed (bitset) */
-name|u_int8_t
+name|uint8_t
 name|intb_link
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|intb_irqs
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|intc_link
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|intc_irqs
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|intd_link
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|intd_irqs
 decl_stmt|;
 comment|/* how this pin may be routed */
-name|u_int8_t
+name|uint8_t
 name|slot
 decl_stmt|;
 comment|/* physical slot number on bus, 					 * slot 0 if motherboard */
-name|u_int8_t
+name|uint8_t
 name|reserved00
 decl_stmt|;
 comment|/* must be zero */
@@ -117,50 +117,50 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|signature
 decl_stmt|;
 comment|/* $PIR */
-name|u_int8_t
+name|uint8_t
 name|minor
 decl_stmt|;
 comment|/* minor version (0) */
-name|u_int8_t
+name|uint8_t
 name|major
 decl_stmt|;
 comment|/* major version (1) */
-name|u_int16_t
+name|uint16_t
 name|size
 decl_stmt|;
 comment|/* total size of table */
-name|u_int8_t
+name|uint8_t
 name|bus
 decl_stmt|;
 comment|/* Bus number of router */
-name|u_int8_t
+name|uint8_t
 name|devfunc
 decl_stmt|;
 comment|/* Dev/Func of router */
-name|u_int16_t
+name|uint16_t
 name|excl_irqs
 decl_stmt|;
 comment|/* PCI Exclusive IRQs */
-name|u_int32_t
+name|uint32_t
 name|compatible
 decl_stmt|;
 comment|/* Device/Vendor ID of a register 					 * compatible PCI IRQ router device */
-name|u_int32_t
+name|uint32_t
 name|miniport_data
 decl_stmt|;
 comment|/* Windows specific */
-name|u_int8_t
+name|uint8_t
 name|reserved00
 index|[
 literal|11
 index|]
 decl_stmt|;
 comment|/* Must be zero */
-name|u_int8_t
+name|uint8_t
 name|checksum
 decl_stmt|;
 comment|/* Inverse mod-256 sum of table bytes */
