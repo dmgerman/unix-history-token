@@ -1402,10 +1402,46 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|,
+modifier|*
+name|suffix
+decl_stmt|;
 name|int
 name|ok
 decl_stmt|;
 comment|/* 	 * Fail the allocation for this range if it's not supported. 	 */
+name|name
+operator|=
+name|device_get_nameunit
+argument_list|(
+name|child
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|NULL
+condition|)
+block|{
+name|name
+operator|=
+literal|""
+expr_stmt|;
+name|suffix
+operator|=
+literal|""
+expr_stmt|;
+block|}
+else|else
+name|suffix
+operator|=
+literal|" "
+expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -1610,13 +1646,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s requested unsupported I/O "
+literal|"%s%srequested unsupported I/O "
 literal|"range 0x%lx-0x%lx (decoding 0x%x-0x%x)\n"
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|child
-argument_list|)
+name|name
+argument_list|,
+name|suffix
 argument_list|,
 name|start
 argument_list|,
@@ -1645,12 +1680,11 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s requested I/O range 0x%lx-0x%lx: in range\n"
+literal|"%s%srequested I/O range 0x%lx-0x%lx: in range\n"
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|child
-argument_list|)
+name|name
+argument_list|,
+name|suffix
 argument_list|,
 name|start
 argument_list|,
@@ -2001,13 +2035,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s requested unsupported memory range %#lx-%#lx "
+literal|"%s%srequested unsupported memory range %#lx-%#lx "
 literal|"(decoding %#jx-%#jx, %#jx-%#jx)\n"
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|child
-argument_list|)
+name|name
+argument_list|,
+name|suffix
 argument_list|,
 name|start
 argument_list|,
@@ -2060,13 +2093,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s requested memory range "
+literal|"%s%srequested memory range "
 literal|"0x%lx-0x%lx: good\n"
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|child
-argument_list|)
+name|name
+argument_list|,
+name|suffix
 argument_list|,
 name|start
 argument_list|,
