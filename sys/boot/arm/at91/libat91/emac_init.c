@@ -224,7 +224,7 @@ name|AT91C_PA7_ETXCK_EREFCK
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BOOT_KB9202
+name|BOOT_KB920X
 comment|/* Really !RMII */
 name|AT91C_BASE_PIOB
 operator|->

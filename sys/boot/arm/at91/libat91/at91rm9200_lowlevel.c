@@ -96,17 +96,70 @@ operator|*
 operator|)
 name|SDRAM_BASE
 decl_stmt|;
-if|#
-directive|if
-literal|0
 ifdef|#
 directive|ifdef
 name|BOOT_TSC
 comment|// For the TSC board, we turn ON the one LED we have while
 comment|// early in boot.
-block|AT91C_BASE_PIOC->PIO_PER = AT91C_PIO_PC10; 	AT91C_BASE_PIOC->PIO_OER = AT91C_PIO_PC10; 	AT91C_BASE_PIOC->PIO_CODR = AT91C_PIO_PC10;
+name|AT91C_BASE_PIOC
+operator|->
+name|PIO_PER
+operator|=
+name|AT91C_PIO_PC10
+expr_stmt|;
+name|AT91C_BASE_PIOC
+operator|->
+name|PIO_OER
+operator|=
+name|AT91C_PIO_PC10
+expr_stmt|;
+name|AT91C_BASE_PIOC
+operator|->
+name|PIO_CODR
+operator|=
+name|AT91C_PIO_PC10
+expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|BOOT_KB920X
+name|AT91C_BASE_PIOC
+operator|->
+name|PIO_PER
+operator|=
+name|AT91C_PIO_PC18
+operator||
+name|AT91C_PIO_PC19
+operator||
+name|AT91C_PIO_PC20
+expr_stmt|;
+name|AT91C_BASE_PIOC
+operator|->
+name|PIO_OER
+operator|=
+name|AT91C_PIO_PC18
+operator||
+name|AT91C_PIO_PC19
+operator||
+name|AT91C_PIO_PC20
+expr_stmt|;
+name|AT91C_BASE_PIOC
+operator|->
+name|PIO_SODR
+operator|=
+name|AT91C_PIO_PC18
+operator||
+name|AT91C_PIO_PC19
+operator||
+name|AT91C_PIO_PC20
+expr_stmt|;
+name|AT91C_BASE_PIOC
+operator|->
+name|PIO_CODR
+operator|=
+name|AT91C_PIO_PC18
+expr_stmt|;
 endif|#
 directive|endif
 comment|// configure clocks
@@ -243,7 +296,7 @@ condition|)
 continue|continue;
 ifdef|#
 directive|ifdef
-name|BOOT_KB9202
+name|BOOT_KB920X
 comment|// setup flash access (allow ample margin)
 comment|// 9 wait states, 1 setup, 1 hold, 1 float for 8-bit device
 operator|(

@@ -1727,7 +1727,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|BOOT_KB9202
+name|BOOT_KB920X
 name|stat2
 operator|=
 name|AT91F_MII_ReadPhy

@@ -458,7 +458,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BOOT_KB9202
+name|BOOT_KB920X
 end_ifdef
 
 begin_define
