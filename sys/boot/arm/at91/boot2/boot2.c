@@ -83,6 +83,12 @@ directive|include
 file|"ee.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"board.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -255,7 +261,7 @@ begin_define
 define|#
 directive|define
 name|PATH_KERNEL
-value|"/kernel.gz.tramp"
+value|"/boot/kernel/kernel.gz.tramp"
 end_define
 
 begin_define
@@ -626,19 +632,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_comment
-comment|// Each board has to provide one of these.
-end_comment
-
-begin_function_decl
-name|void
-name|board_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|int
