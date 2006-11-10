@@ -21,11 +21,22 @@ directive|include
 file|<stdarg.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Basic resizable/reusable string support a la Java's "StringBuffer."  *  * Unlike sbuf(9), the buffers here are fully reusable and track the  * length throughout.  *  * Note that all visible symbols here begin with "__archive" as they  * are internal symbols not intended for anyone outside of this library  * to see or use.  */

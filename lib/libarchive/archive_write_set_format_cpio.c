@@ -17,11 +17,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_STAT_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
 
 begin_include
 include|#
@@ -29,11 +46,22 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
 
 begin_include
 include|#
@@ -41,11 +69,27 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -279,6 +323,11 @@ argument_list|)
 expr_stmt|;
 name|cpio
 operator|=
+operator|(
+expr|struct
+name|cpio
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -425,6 +474,11 @@ name|h
 decl_stmt|;
 name|cpio
 operator|=
+operator|(
+expr|struct
+name|cpio
+operator|*
+operator|)
 name|a
 operator|->
 name|format_data
@@ -906,6 +960,11 @@ name|ret
 decl_stmt|;
 name|cpio
 operator|=
+operator|(
+expr|struct
+name|cpio
+operator|*
+operator|)
 name|a
 operator|->
 name|format_data
@@ -1013,6 +1072,10 @@ name|format_octal_recursive
 argument_list|(
 name|v
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|p
 argument_list|,
 name|digits
@@ -1029,6 +1092,10 @@ name|format_octal_recursive
 argument_list|(
 name|max
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|p
 argument_list|,
 name|digits
@@ -1141,6 +1208,11 @@ name|trailer
 decl_stmt|;
 name|cpio
 operator|=
+operator|(
+expr|struct
+name|cpio
+operator|*
+operator|)
 name|a
 operator|->
 name|format_data
@@ -1240,6 +1312,11 @@ name|ret
 decl_stmt|;
 name|cpio
 operator|=
+operator|(
+expr|struct
+name|cpio
+operator|*
+operator|)
 name|a
 operator|->
 name|format_data

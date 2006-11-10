@@ -27,11 +27,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -39,11 +50,28 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
 
 begin_include
 include|#
@@ -51,11 +79,27 @@ directive|include
 file|<string.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_BZLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<bzlib.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -104,7 +148,7 @@ parameter_list|,
 name|src
 parameter_list|)
 define|\
-value|(st)->stream.next_in = (void *)(uintptr_t)(const void *)(src)
+value|(st)->stream.next_in = (char *)(uintptr_t)(const void *)(src)
 end_define
 
 begin_function_decl
@@ -293,6 +337,11 @@ return|;
 block|}
 name|state
 operator|=
+operator|(
+expr|struct
+name|private_data
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -349,6 +398,10 @@ name|state
 operator|->
 name|compressed
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|state
@@ -564,6 +617,11 @@ name|state
 decl_stmt|;
 name|state
 operator|=
+operator|(
+expr|struct
+name|private_data
+operator|*
+operator|)
 name|a
 operator|->
 name|compression_data
@@ -683,6 +741,11 @@ name|tocopy
 decl_stmt|;
 name|state
 operator|=
+operator|(
+expr|struct
+name|private_data
+operator|*
+operator|)
 name|a
 operator|->
 name|compression_data

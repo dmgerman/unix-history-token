@@ -37,7 +37,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* A default configuration for FreeBSD, used if there is no config.h. */
+comment|/*  * If there's no 'config.h' file, check if we have a hand-coded config  * for this platform.  This handles systems where the library is built  * without running the configure script, such as FreeBSD (where  * libarchive is part of the base system).  */
 end_comment
 
 begin_ifdef
@@ -45,6 +45,10 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 end_ifdef
+
+begin_comment
+comment|/* Begin of hand-coded __FreeBSD__ configuration. */
+end_comment
 
 begin_if
 if|#
@@ -181,7 +185,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_FSEEKO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_FUTIMES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_GRP_H
 value|1
 end_define
 
@@ -244,13 +262,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_MEMORY_H
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_MEMSET
 value|1
 end_define
@@ -272,7 +283,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_PATHS_H
+name|HAVE_PWD_H
 value|1
 end_define
 
@@ -437,6 +448,10 @@ name|TIME_WITH_SYS_TIME
 value|1
 end_define
 
+begin_comment
+comment|/* End of __FreeBSD__ definitions. */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -527,6 +542,18 @@ begin_include
 include|#
 directive|include
 file|<inttypes.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|HAVE_STDINT_H
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_endif
@@ -957,6 +984,7 @@ name|st
 parameter_list|,
 name|n
 parameter_list|)
+value|((void)(n))
 end_define
 
 begin_define
@@ -968,6 +996,7 @@ name|st
 parameter_list|,
 name|n
 parameter_list|)
+value|((void)(n))
 end_define
 
 begin_define
@@ -979,6 +1008,7 @@ name|st
 parameter_list|,
 name|n
 parameter_list|)
+value|((void)(n))
 end_define
 
 begin_endif

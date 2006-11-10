@@ -17,11 +17,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_STAT_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -40,11 +51,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* #include<stdint.h> */
@@ -54,11 +76,28 @@ begin_comment
 comment|/* See archive_platform.h */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
 
 begin_include
 include|#
@@ -66,11 +105,27 @@ directive|include
 file|<string.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -702,6 +757,11 @@ name|r
 decl_stmt|;
 name|cpio
 operator|=
+operator|(
+expr|struct
+name|cpio
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -824,6 +884,11 @@ name|cpio
 decl_stmt|;
 name|cpio
 operator|=
+operator|(
+expr|struct
+name|cpio
+operator|*
+operator|)
 operator|*
 operator|(
 name|a
@@ -880,6 +945,12 @@ operator|)
 return|;
 name|p
 operator|=
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
 name|h
 expr_stmt|;
 if|if
@@ -1099,6 +1170,11 @@ argument_list|)
 expr_stmt|;
 name|cpio
 operator|=
+operator|(
+expr|struct
+name|cpio
+operator|*
+operator|)
 operator|*
 operator|(
 name|a
@@ -1200,6 +1276,11 @@ name|cpio
 operator|->
 name|entry_name
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|h
 argument_list|,
 name|namelength
@@ -1287,6 +1368,11 @@ name|cpio
 operator|->
 name|entry_linkname
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|h
 argument_list|,
 name|cpio
@@ -1321,6 +1407,11 @@ literal|11
 operator|&&
 name|strcmp
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|h
 argument_list|,
 literal|"TRAILER!!!"
@@ -1399,6 +1490,11 @@ name|cpio
 decl_stmt|;
 name|cpio
 operator|=
+operator|(
+expr|struct
+name|cpio
+operator|*
+operator|)
 operator|*
 operator|(
 name|a
@@ -1688,6 +1784,12 @@ expr_stmt|;
 comment|/* Parse out hex fields into struct stat. */
 name|header
 operator|=
+operator|(
+specifier|const
+expr|struct
+name|cpio_newc_header
+operator|*
+operator|)
 name|h
 expr_stmt|;
 if|if
@@ -2117,6 +2219,12 @@ expr_stmt|;
 comment|/* Parse out octal fields into struct stat. */
 name|header
 operator|=
+operator|(
+specifier|const
+expr|struct
+name|cpio_odc_header
+operator|*
+operator|)
 name|h
 expr_stmt|;
 name|st
@@ -2436,6 +2544,12 @@ expr_stmt|;
 comment|/* Parse out binary fields into struct stat. */
 name|header
 operator|=
+operator|(
+specifier|const
+expr|struct
+name|cpio_bin_header
+operator|*
+operator|)
 name|h
 expr_stmt|;
 name|st
@@ -2764,6 +2878,12 @@ expr_stmt|;
 comment|/* Parse out binary fields into struct stat. */
 name|header
 operator|=
+operator|(
+specifier|const
+expr|struct
+name|cpio_bin_header
+operator|*
+operator|)
 name|h
 expr_stmt|;
 name|st
@@ -3001,6 +3121,11 @@ name|cpio
 decl_stmt|;
 name|cpio
 operator|=
+operator|(
+expr|struct
+name|cpio
+operator|*
+operator|)
 operator|*
 operator|(
 name|a
@@ -3534,6 +3659,11 @@ block|}
 block|}
 name|le
 operator|=
+operator|(
+expr|struct
+name|links_entry
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof

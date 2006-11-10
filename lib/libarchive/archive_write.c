@@ -21,11 +21,28 @@ begin_comment
 comment|/*  * This file contains the "essential" portions of the write API, that  * is, stuff that will essentially always be used by any client that  * actually needs to write a archive.  Optional pieces have been, as  * far as possible, separated out into separate files to reduce  * needlessly bloating statically-linked clients.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_WAIT_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/wait.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIMITS_H
+end_ifdef
 
 begin_include
 include|#
@@ -33,11 +50,22 @@ directive|include
 file|<limits.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
 
 begin_include
 include|#
@@ -45,11 +73,27 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -57,11 +101,22 @@ directive|include
 file|<time.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -106,6 +161,11 @@ name|nulls
 decl_stmt|;
 name|a
 operator|=
+operator|(
+expr|struct
+name|archive
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -192,6 +252,11 @@ literal|1024
 expr_stmt|;
 name|nulls
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|a

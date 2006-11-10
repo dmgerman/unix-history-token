@@ -17,11 +17,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_STAT_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
 
 begin_include
 include|#
@@ -29,11 +46,33 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
 
 begin_include
 include|#
@@ -41,11 +80,27 @@ directive|include
 file|<string.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -144,6 +199,11 @@ name|mine
 decl_stmt|;
 name|mine
 operator|=
+operator|(
+expr|struct
+name|write_fd_data
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -233,6 +293,11 @@ name|NULL
 expr_stmt|;
 name|mine
 operator|=
+operator|(
+expr|struct
+name|write_fd_data
+operator|*
+operator|)
 name|client_data
 expr_stmt|;
 comment|/* 	 * If client hasn't explicitly set the last block handling, 	 * then set it here: If the output is a block or character 	 * device, pad the last block, otherwise leave it unpadded. 	 */
@@ -452,6 +517,11 @@ name|bytesWritten
 decl_stmt|;
 name|mine
 operator|=
+operator|(
+expr|struct
+name|write_fd_data
+operator|*
+operator|)
 name|client_data
 expr_stmt|;
 name|bytesWritten
@@ -518,6 +588,11 @@ name|write_fd_data
 modifier|*
 name|mine
 init|=
+operator|(
+expr|struct
+name|write_fd_data
+operator|*
+operator|)
 name|client_data
 decl_stmt|;
 operator|(

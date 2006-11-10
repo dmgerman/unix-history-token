@@ -17,11 +17,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_STAT_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -62,11 +73,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -74,17 +96,39 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -297,7 +341,17 @@ block|}
 block|,
 comment|/* name */
 block|{
-literal|"000000"
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
 block|}
 block|,
 block|{
@@ -306,9 +360,19 @@ block|,
 literal|'\0'
 block|}
 block|,
-comment|/* mode, space-null termination. */
+comment|/* mode, space-null term.*/
 block|{
-literal|"000000"
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
 block|}
 block|,
 block|{
@@ -317,9 +381,19 @@ block|,
 literal|'\0'
 block|}
 block|,
-comment|/* uid, space-null termination. */
+comment|/* uid, space-null term. */
 block|{
-literal|"000000"
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
 block|}
 block|,
 block|{
@@ -328,9 +402,29 @@ block|,
 literal|'\0'
 block|}
 block|,
-comment|/* gid, space-null termination. */
+comment|/* gid, space-null term. */
 block|{
-literal|"00000000000"
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
 block|}
 block|,
 block|{
@@ -339,7 +433,27 @@ block|}
 block|,
 comment|/* size, space termination. */
 block|{
-literal|"00000000000"
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
 block|}
 block|,
 block|{
@@ -348,7 +462,21 @@ block|}
 block|,
 comment|/* mtime, space termination. */
 block|{
-literal|"        "
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 comment|/* Initial checksum value. */
@@ -363,7 +491,15 @@ block|}
 block|,
 comment|/* linkname */
 block|{
-literal|"ustar"
+literal|'u'
+block|,
+literal|'s'
+block|,
+literal|'t'
+block|,
+literal|'a'
+block|,
+literal|'r'
 block|}
 block|,
 comment|/* magic */
@@ -385,7 +521,17 @@ block|}
 block|,
 comment|/* gname */
 block|{
-literal|"000000"
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
 block|}
 block|,
 block|{
@@ -394,9 +540,19 @@ block|,
 literal|'\0'
 block|}
 block|,
-comment|/* rdevmajor, space-null termination */
+comment|/* rdevmajor, space-null */
 block|{
-literal|"000000"
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
 block|}
 block|,
 block|{
@@ -405,7 +561,7 @@ block|,
 literal|'\0'
 block|}
 block|,
-comment|/* rdevminor, space-null termination */
+comment|/* rdevminor, space-null */
 block|{
 literal|""
 block|}
@@ -587,6 +743,11 @@ argument_list|)
 expr_stmt|;
 name|ustar
 operator|=
+operator|(
+expr|struct
+name|ustar
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -720,6 +881,11 @@ name|ustar
 decl_stmt|;
 name|ustar
 operator|=
+operator|(
+expr|struct
+name|ustar
+operator|*
+operator|)
 name|a
 operator|->
 name|format_data
@@ -2197,6 +2363,11 @@ name|ARCHIVE_OK
 expr_stmt|;
 name|ustar
 operator|=
+operator|(
+expr|struct
+name|ustar
+operator|*
+operator|)
 name|a
 operator|->
 name|format_data
@@ -2265,6 +2436,11 @@ name|ret
 decl_stmt|;
 name|ustar
 operator|=
+operator|(
+expr|struct
+name|ustar
+operator|*
+operator|)
 name|a
 operator|->
 name|format_data
@@ -2412,6 +2588,11 @@ name|ret
 decl_stmt|;
 name|ustar
 operator|=
+operator|(
+expr|struct
+name|ustar
+operator|*
+operator|)
 name|a
 operator|->
 name|format_data

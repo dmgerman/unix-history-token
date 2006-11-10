@@ -17,17 +17,39 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_STAT_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_TYPES_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -89,11 +111,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIMITS_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<limits.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -107,17 +140,39 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Obtain suitable wide-character manipulation functions. */
@@ -923,6 +978,10 @@ name|dest
 operator|->
 name|aes_wcs_alloc
 operator|=
+operator|(
+name|wchar_t
+operator|*
+operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -1044,6 +1103,10 @@ name|aes
 operator|->
 name|aes_mbs_alloc
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|mbs_length
@@ -1169,6 +1232,10 @@ name|aes
 operator|->
 name|aes_wcs_alloc
 operator|=
+operator|(
+name|wchar_t
+operator|*
+operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -1374,6 +1441,10 @@ name|aes
 operator|->
 name|aes_mbs_alloc
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -1512,6 +1583,10 @@ name|aes
 operator|->
 name|aes_wcs_alloc
 operator|=
+operator|(
+name|wchar_t
+operator|*
+operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -1673,6 +1748,11 @@ decl_stmt|;
 comment|/* Allocate new structure and copy over all of the fields. */
 name|entry2
 operator|=
+operator|(
+expr|struct
+name|archive_entry
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -1857,6 +1937,11 @@ name|entry
 decl_stmt|;
 name|entry
 operator|=
+operator|(
+expr|struct
+name|archive_entry
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -4109,6 +4194,11 @@ block|}
 comment|/* Add a new entry to the list. */
 name|ap
 operator|=
+operator|(
+expr|struct
+name|ae_acl
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -4958,6 +5048,10 @@ name|entry
 operator|->
 name|acl_text_w
 operator|=
+operator|(
+name|wchar_t
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|length
@@ -6288,6 +6382,10 @@ literal|256
 expr_stmt|;
 name|namebuff
 operator|=
+operator|(
+name|wchar_t
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|namebuff_length
@@ -6512,6 +6610,11 @@ condition|(
 operator|(
 name|xp
 operator|=
+operator|(
+expr|struct
+name|ae_xattr
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -7562,6 +7665,10 @@ operator|)
 return|;
 name|string
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|length

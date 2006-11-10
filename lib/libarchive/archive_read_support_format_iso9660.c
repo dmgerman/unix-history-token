@@ -17,17 +17,39 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_STAT_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* #include<stdint.h> */
@@ -43,11 +65,28 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
 
 begin_include
 include|#
@@ -55,17 +94,33 @@ directive|include
 file|<string.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<time.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -843,6 +898,11 @@ name|r
 decl_stmt|;
 name|iso9660
 operator|=
+operator|(
+expr|struct
+name|iso9660
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -977,6 +1037,11 @@ name|p
 decl_stmt|;
 name|iso9660
 operator|=
+operator|(
+expr|struct
+name|iso9660
+operator|*
+operator|)
 operator|*
 operator|(
 name|a
@@ -1286,6 +1351,11 @@ name|r
 decl_stmt|;
 name|iso9660
 operator|=
+operator|(
+expr|struct
+name|iso9660
+operator|*
+operator|)
 operator|*
 operator|(
 name|a
@@ -1763,6 +1833,12 @@ for|for
 control|(
 name|p
 operator|=
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
 name|block
 init|;
 operator|*
@@ -1942,6 +2018,11 @@ name|iso9660
 decl_stmt|;
 name|iso9660
 operator|=
+operator|(
+expr|struct
+name|iso9660
+operator|*
+operator|)
 operator|*
 operator|(
 name|a
@@ -2108,6 +2189,11 @@ name|file
 decl_stmt|;
 name|iso9660
 operator|=
+operator|(
+expr|struct
+name|iso9660
+operator|*
+operator|)
 operator|*
 operator|(
 name|a
@@ -2210,6 +2296,11 @@ comment|/* TODO: Sanity check that name_len doesn't exceed length, etc. */
 comment|/* Create a new file entry and copy data from the ISO dir record. */
 name|file
 operator|=
+operator|(
+expr|struct
+name|file_info
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -2317,6 +2408,10 @@ name|file
 operator|->
 name|name
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|isodirrec
@@ -2740,6 +2835,12 @@ literal|1024
 expr_stmt|;
 name|new_pending_files
 operator|=
+operator|(
+expr|struct
+name|file_info
+operator|*
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|new_size
@@ -3067,6 +3168,10 @@ name|file
 operator|->
 name|name
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|data_length

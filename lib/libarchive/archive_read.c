@@ -21,11 +21,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -33,11 +44,28 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
 
 begin_include
 include|#
@@ -45,11 +73,27 @@ directive|include
 file|<string.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -124,6 +168,11 @@ name|nulls
 decl_stmt|;
 name|a
 operator|=
+operator|(
+expr|struct
+name|archive
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -195,6 +244,11 @@ literal|1024
 expr_stmt|;
 name|nulls
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|a
@@ -1429,6 +1483,10 @@ literal|0
 expr_stmt|;
 name|dest
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|buff
 expr_stmt|;
 while|while

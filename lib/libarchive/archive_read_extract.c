@@ -17,11 +17,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_TYPES_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -74,17 +85,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_STAT_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_TIME_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/time.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -107,11 +140,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FCNTL_H
+end_ifdef
 
 begin_include
 include|#
@@ -119,11 +169,27 @@ directive|include
 file|<fcntl.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GRP_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<grp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -146,11 +212,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIMITS_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<limits.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PWD_H
+end_ifdef
 
 begin_include
 include|#
@@ -158,11 +241,22 @@ directive|include
 file|<pwd.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
 
 begin_include
 include|#
@@ -170,17 +264,44 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1472,6 +1593,11 @@ name|extract
 decl_stmt|;
 name|extract
 operator|=
+operator|(
+expr|struct
+name|extract
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -2135,6 +2261,11 @@ name|extract
 expr_stmt|;
 name|fe
 operator|=
+operator|(
+expr|struct
+name|fixup_entry
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -6390,7 +6521,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|typename
+name|tname
 parameter_list|)
 block|{
 name|acl_t
@@ -6754,7 +6885,7 @@ name|errno
 argument_list|,
 literal|"Failed to set %s acl"
 argument_list|,
-name|typename
+name|tname
 argument_list|)
 expr_stmt|;
 name|ret

@@ -21,17 +21,39 @@ begin_comment
 comment|/*  * Basic resizable string support, to simplify manipulating arbitrary-sized  * strings while minimizing heap activity.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -226,6 +248,10 @@ name|as
 operator|->
 name|s
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|realloc
 argument_list|(
 name|as

@@ -17,11 +17,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -29,11 +40,28 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
 
 begin_include
 include|#
@@ -41,11 +69,27 @@ directive|include
 file|<string.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -275,6 +319,12 @@ operator|)
 return|;
 name|buffer
 operator|=
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
 name|buff
 expr_stmt|;
 name|bits_checked
@@ -520,6 +570,11 @@ literal|"bzip2"
 expr_stmt|;
 name|state
 operator|=
+operator|(
+expr|struct
+name|private_data
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -580,6 +635,10 @@ name|state
 operator|->
 name|uncompressed_buffer
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|state
@@ -656,7 +715,7 @@ operator|.
 name|next_in
 operator|=
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 operator|(
@@ -888,6 +947,11 @@ name|ret
 decl_stmt|;
 name|state
 operator|=
+operator|(
+expr|struct
+name|private_data
+operator|*
+operator|)
 name|a
 operator|->
 name|compression_data
@@ -1095,6 +1159,11 @@ name|state
 decl_stmt|;
 name|state
 operator|=
+operator|(
+expr|struct
+name|private_data
+operator|*
+operator|)
 name|a
 operator|->
 name|compression_data
@@ -1164,6 +1233,11 @@ name|ret
 decl_stmt|;
 name|state
 operator|=
+operator|(
+expr|struct
+name|private_data
+operator|*
+operator|)
 name|a
 operator|->
 name|compression_data
