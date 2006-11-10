@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: scard.c,v 1.35 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: scard.c,v 1.36 2006/11/06 21:25:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -1875,6 +1875,9 @@ argument_list|(
 name|KEY_RSA1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|BN_copy
 argument_list|(
 name|n
@@ -1889,7 +1892,11 @@ name|rsa
 operator|->
 name|n
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|BN_copy
 argument_list|(
 name|n
@@ -1903,6 +1910,14 @@ operator|->
 name|rsa
 operator|->
 name|e
+argument_list|)
+operator|==
+name|NULL
+operator|)
+condition|)
+name|fatal
+argument_list|(
+literal|"sc_get_keys: BN_copy failed"
 argument_list|)
 expr_stmt|;
 name|RSA_set_method
@@ -1935,6 +1950,9 @@ argument_list|(
 name|KEY_RSA
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|BN_copy
 argument_list|(
 name|n
@@ -1949,7 +1967,11 @@ name|rsa
 operator|->
 name|n
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|BN_copy
 argument_list|(
 name|n
@@ -1963,6 +1985,14 @@ operator|->
 name|rsa
 operator|->
 name|e
+argument_list|)
+operator|==
+name|NULL
+operator|)
+condition|)
+name|fatal
+argument_list|(
+literal|"sc_get_keys: BN_copy failed"
 argument_list|)
 expr_stmt|;
 name|RSA_set_method

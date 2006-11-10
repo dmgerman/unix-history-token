@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: bufbn.c,v 1.3 2006/08/03 03:34:41 deraadt Exp $*/
+comment|/* $OpenBSD: bufbn.c,v 1.4 2006/11/06 21:25:28 markus Exp $*/
 end_comment
 
 begin_comment
@@ -370,6 +370,8 @@ argument_list|(
 name|buffer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|BN_bin2bn
 argument_list|(
 name|bin
@@ -378,7 +380,22 @@ name|bytes
 argument_list|,
 name|value
 argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"buffer_get_bignum_ret: BN_bin2bn failed"
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|buffer_consume_ret
@@ -803,6 +820,8 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
 name|BN_bin2bn
 argument_list|(
 name|bin
@@ -811,7 +830,22 @@ name|len
 argument_list|,
 name|value
 argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"buffer_get_bignum2_ret: BN_bin2bn failed"
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|xfree
 argument_list|(
 name|bin

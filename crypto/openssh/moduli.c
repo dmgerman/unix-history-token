@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: moduli.c,v 1.18 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: moduli.c,v 1.19 2006/11/06 21:25:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -1172,16 +1172,38 @@ name|largetries
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|q
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_new failed"
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Generate random starting point for subprime search, or use 	 * specified parameter. 	 */
+if|if
+condition|(
+operator|(
 name|largebase
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_new failed"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1189,6 +1211,9 @@ name|start
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
 name|BN_rand
 argument_list|(
 name|largebase
@@ -1199,21 +1224,49 @@ literal|1
 argument_list|,
 literal|1
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_rand failed"
+argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+if|if
+condition|(
 name|BN_copy
 argument_list|(
 name|largebase
 argument_list|,
 name|start
 argument_list|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_copy: failed"
+argument_list|)
 expr_stmt|;
+block|}
 comment|/* ensure odd */
+if|if
+condition|(
 name|BN_set_bit
 argument_list|(
 name|largebase
 argument_list|,
 literal|0
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_set_bit: failed"
 argument_list|)
 expr_stmt|;
 name|time
@@ -1547,6 +1600,8 @@ operator|*
 name|j
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|BN_set_word
 argument_list|(
 name|q
@@ -1555,7 +1610,16 @@ literal|2
 operator|*
 name|j
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_set_word failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|BN_add
 argument_list|(
 name|q
@@ -1563,6 +1627,13 @@ argument_list|,
 name|q
 argument_list|,
 name|largebase
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_add failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1752,20 +1823,53 @@ operator|&
 name|time_start
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|p
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_new failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|q
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_new failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|ctx
 operator|=
 name|BN_CTX_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_CTX_new failed"
+argument_list|)
 expr_stmt|;
 name|debug2
 argument_list|(
@@ -1970,6 +2074,8 @@ name|a
 operator|=
 name|q
 expr_stmt|;
+if|if
+condition|(
 name|BN_hex2bn
 argument_list|(
 operator|&
@@ -1977,8 +2083,17 @@ name|a
 argument_list|,
 name|cp
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_hex2bn failed"
+argument_list|)
 expr_stmt|;
 comment|/* p = 2*q + 1 */
+if|if
+condition|(
 name|BN_lshift
 argument_list|(
 name|p
@@ -1987,12 +2102,28 @@ name|q
 argument_list|,
 literal|1
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_lshift failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|BN_add_word
 argument_list|(
 name|p
 argument_list|,
 literal|1
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_add_word failed"
 argument_list|)
 expr_stmt|;
 name|in_size
@@ -2032,6 +2163,8 @@ name|a
 operator|=
 name|p
 expr_stmt|;
+if|if
+condition|(
 name|BN_hex2bn
 argument_list|(
 operator|&
@@ -2039,8 +2172,17 @@ name|a
 argument_list|,
 name|cp
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_hex2bn failed"
+argument_list|)
 expr_stmt|;
 comment|/* q = (p-1) / 2 */
+if|if
+condition|(
 name|BN_rshift
 argument_list|(
 name|q
@@ -2048,6 +2190,13 @@ argument_list|,
 name|p
 argument_list|,
 literal|1
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_rshift failed"
 argument_list|)
 expr_stmt|;
 break|break;

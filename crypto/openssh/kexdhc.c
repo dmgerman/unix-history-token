@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexdhc.c,v 1.9 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: kexdhc.c,v 1.11 2006/11/06 21:25:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -146,13 +146,14 @@ decl_stmt|;
 name|u_int
 name|klen
 decl_stmt|,
-name|kout
-decl_stmt|,
 name|slen
 decl_stmt|,
 name|sbloblen
 decl_stmt|,
 name|hashlen
+decl_stmt|;
+name|int
+name|kout
 decl_stmt|;
 comment|/* generate and send 'e', client DH public key */
 switch|switch
@@ -442,6 +443,9 @@ argument_list|(
 name|klen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|kout
 operator|=
 name|DH_compute_key
@@ -451,6 +455,14 @@ argument_list|,
 name|dh_server_pub
 argument_list|,
 name|dh
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"DH_compute_key: failed"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -483,6 +495,8 @@ argument_list|(
 literal|"kexdh_client: BN_new failed"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|BN_bin2bn
 argument_list|(
 name|kbuf
@@ -490,6 +504,13 @@ argument_list|,
 name|kout
 argument_list|,
 name|shared_secret
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"kexdh_client: BN_bin2bn failed"
 argument_list|)
 expr_stmt|;
 name|memset
