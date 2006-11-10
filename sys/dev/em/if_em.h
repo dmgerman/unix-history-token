@@ -180,7 +180,7 @@ comment|/* set to 5 seconds */
 end_comment
 
 begin_comment
-comment|/*  * This parameter controls when the driver calls the routine to reclaim  * transmit descriptors.  */
+comment|/*  * These parameters controls when the driver calls the routine to reclaim  * transmit descriptors.  */
 end_comment
 
 begin_define
@@ -188,6 +188,13 @@ define|#
 directive|define
 name|EM_TX_CLEANUP_THRESHOLD
 value|(adapter->num_tx_desc / 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_TX_OP_THRESHOLD
+value|(adapter->num_tx_desc / 32)
 end_define
 
 begin_comment
@@ -387,7 +394,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/*  * Backward compatibility hack  */
+comment|/*  * Backward compatibility workaround  */
 end_comment
 
 begin_if
@@ -695,16 +702,11 @@ name|XSUM_CONTEXT_T
 typedef|;
 end_typedef
 
-begin_decl_stmt
-name|struct
+begin_struct_decl
+struct_decl|struct
 name|adapter
-name|adapter
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX: ugly forward declaration */
-end_comment
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -837,6 +839,9 @@ name|callout
 name|tx_fifo_timer
 decl_stmt|;
 name|int
+name|watchdog_timer
+decl_stmt|;
+name|int
 name|io_rid
 decl_stmt|;
 name|int
@@ -849,6 +854,24 @@ decl_stmt|;
 name|int
 name|em_insert_vlan_header
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|EM_FAST_INTR
+name|struct
+name|task
+name|link_task
+decl_stmt|;
+name|struct
+name|task
+name|rxtx_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|tq
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Info about the board itself */
 name|uint32_t
 name|part_num
