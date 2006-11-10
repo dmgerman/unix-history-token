@@ -6171,6 +6171,25 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Get the nonce tags */
+name|asoc
+operator|->
+name|my_vtag_nonce
+operator|=
+name|sctp_select_a_tag
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|asoc
+operator|->
+name|peer_vtag_nonce
+operator|=
+name|sctp_select_a_tag
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sctp_is_feature_on
