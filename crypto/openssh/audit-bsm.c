@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: audit-bsm.c,v 1.4 2006/09/01 05:38:36 djm Exp $ */
+comment|/* $Id: audit-bsm.c,v 1.5 2006/09/30 22:09:50 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -34,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include

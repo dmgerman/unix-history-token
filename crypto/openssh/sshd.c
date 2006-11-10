@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.347 2006/08/18 09:15:20 markus Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.348 2006/11/06 21:25:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -6068,7 +6068,7 @@ argument_list|,
 name|SSH_RELEASE
 argument_list|)
 expr_stmt|;
-comment|/* Store privilege separation user for later use */
+comment|/* Store privilege separation user for later use if required. */
 if|if
 condition|(
 operator|(
@@ -6082,6 +6082,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|use_privsep
+operator|||
+name|options
+operator|.
+name|kerberos_authentication
+condition|)
 name|fatal
 argument_list|(
 literal|"Privilege separation user %s does not exist"
@@ -6089,6 +6098,9 @@ argument_list|,
 name|SSH_PRIVSEP_USER
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|memset
 argument_list|(
 name|privsep_pw
@@ -6106,18 +6118,29 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|privsep_pw
-operator|->
-name|pw_passwd
-operator|=
-literal|"*"
-expr_stmt|;
-name|privsep_pw
 operator|=
 name|pwcopy
 argument_list|(
 name|privsep_pw
 argument_list|)
 expr_stmt|;
+name|xfree
+argument_list|(
+name|privsep_pw
+operator|->
+name|pw_passwd
+argument_list|)
+expr_stmt|;
+name|privsep_pw
+operator|->
+name|pw_passwd
+operator|=
+name|xstrdup
+argument_list|(
+literal|"*"
+argument_list|)
+expr_stmt|;
+block|}
 name|endpwent
 argument_list|()
 expr_stmt|;
@@ -8430,6 +8453,9 @@ operator|!
 name|rsafail
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|BN_mask_bits
 argument_list|(
 name|session_key_int
@@ -8468,7 +8494,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"do_connection: bad session key len from %s: "
+literal|"do_ssh1_kex: bad session key len from %s: "
 literal|"session_key_int %d> sizeof(session_key) %lu"
 argument_list|,
 name|get_remote_ipaddr

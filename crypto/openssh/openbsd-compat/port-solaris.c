@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-solaris.c,v 1.2 2006/09/01 05:38:41 djm Exp $ */
+comment|/* $Id: port-solaris.c,v 1.3 2006/10/31 23:28:49 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -320,7 +320,36 @@ argument_list|,
 name|tmpl_fd
 argument_list|)
 expr_stmt|;
-comment|/* We have to set certain attributes before activating the template */
+comment|/* First we set the template parameters and event sets. */
+if|if
+condition|(
+name|ct_pr_tmpl_set_param
+argument_list|(
+name|tmpl_fd
+argument_list|,
+name|CT_PR_PGRPONLY
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%s: Error setting process contract parameter set "
+literal|"(pgrponly): %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 if|if
 condition|(
 name|ct_pr_tmpl_set_fatal
@@ -328,10 +357,6 @@ argument_list|(
 name|tmpl_fd
 argument_list|,
 name|CT_PR_EV_HWERR
-operator||
-name|CT_PR_EV_SIGNAL
-operator||
-name|CT_PR_EV_CORE
 argument_list|)
 operator|!=
 literal|0
@@ -360,7 +385,7 @@ name|ct_tmpl_set_critical
 argument_list|(
 name|tmpl_fd
 argument_list|,
-name|CT_PR_EV_HWERR
+literal|0
 argument_list|)
 operator|!=
 literal|0
@@ -370,6 +395,35 @@ name|error
 argument_list|(
 literal|"%s: Error setting process contract template "
 literal|"critical events: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+if|if
+condition|(
+name|ct_tmpl_set_informative
+argument_list|(
+name|tmpl_fd
+argument_list|,
+name|CT_PR_EV_HWERR
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%s: Error setting process contract template "
+literal|"informative events: %s"
 argument_list|,
 name|__func__
 argument_list|,
