@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.c,v 1.199 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: sshconnect.c,v 1.200 2006/10/10 10:12:45 markus Exp $ */
 end_comment
 
 begin_comment
@@ -1506,11 +1506,19 @@ name|attempt
 operator|>
 literal|0
 condition|)
+block|{
+comment|/* Sleep a moment before retrying. */
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|debug
 argument_list|(
 literal|"Trying again..."
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * Loop through addresses for this host, and try each one in 		 * sequence until the connection succeeds. 		 */
 for|for
 control|(
@@ -1687,12 +1695,6 @@ literal|1
 condition|)
 break|break;
 comment|/* Successful connection. */
-comment|/* Sleep a moment before retrying. */
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 name|freeaddrinfo
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.88 2006/08/12 20:46:46 miod Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.89 2006/11/07 10:31:31 markus Exp $ */
 end_comment
 
 begin_comment
@@ -2024,6 +2024,7 @@ literal|"unknown"
 expr_stmt|;
 name|authenticated
 operator|=
+operator|(
 name|monitor_read
 argument_list|(
 name|pmonitor
@@ -2033,6 +2034,9 @@ argument_list|,
 operator|&
 name|ent
 argument_list|)
+operator|==
+literal|1
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -6233,7 +6237,11 @@ name|__func__
 argument_list|,
 name|key
 argument_list|,
+operator|(
 name|verified
+operator|==
+literal|1
+operator|)
 condition|?
 literal|"verified"
 else|:
@@ -6297,6 +6305,8 @@ expr_stmt|;
 return|return
 operator|(
 name|verified
+operator|==
+literal|1
 operator|)
 return|;
 block|}

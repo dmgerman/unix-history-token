@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: rsa.c,v 1.28 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: rsa.c,v 1.29 2006/11/06 21:25:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -167,6 +167,8 @@ argument_list|(
 literal|"rsa_public_encrypt() failed"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|BN_bin2bn
 argument_list|(
 name|outbuf
@@ -174,6 +176,13 @@ argument_list|,
 name|len
 argument_list|,
 name|out
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"rsa_public_encrypt: BN_bin2bn failed"
 argument_list|)
 expr_stmt|;
 name|memset
@@ -305,6 +314,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
 name|BN_bin2bn
 argument_list|(
 name|outbuf
@@ -312,6 +323,13 @@ argument_list|,
 name|len
 argument_list|,
 name|out
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"rsa_private_decrypt: BN_bin2bn failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -402,6 +420,9 @@ argument_list|(
 literal|"rsa_generate_additional_parameters: BN_CTX_new failed"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|BN_sub
 argument_list|(
 name|aux
@@ -413,7 +434,11 @@ argument_list|,
 name|BN_value_one
 argument_list|()
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
 name|BN_mod
 argument_list|(
 name|rsa
@@ -428,7 +453,11 @@ name|aux
 argument_list|,
 name|ctx
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
 name|BN_sub
 argument_list|(
 name|aux
@@ -440,7 +469,11 @@ argument_list|,
 name|BN_value_one
 argument_list|()
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
 name|BN_mod
 argument_list|(
 name|rsa
@@ -454,6 +487,14 @@ argument_list|,
 name|aux
 argument_list|,
 name|ctx
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+name|fatal
+argument_list|(
+literal|"rsa_generate_additional_parameters: BN_sub/mod failed"
 argument_list|)
 expr_stmt|;
 name|BN_clear_free
