@@ -151,8 +151,6 @@ index|[]
 parameter_list|)
 block|{
 name|int
-name|childerr
-decl_stmt|,
 name|envlen
 decl_stmt|,
 name|i
@@ -174,6 +172,10 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|tmp
+decl_stmt|;
+specifier|volatile
+name|int
+name|childerr
 decl_stmt|;
 name|pid_t
 name|pid
