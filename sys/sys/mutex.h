@@ -141,6 +141,13 @@ begin_comment
 comment|/* Don't do any witness checking. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MTX_NOPROFILE
+value|0x00000020
+end_define
+
 begin_comment
 comment|/*  * Option flags passed to certain lock/unlock routines, through the use  * of corresponding mtx_{lock,unlock}_flags() interface macros.  */
 end_comment

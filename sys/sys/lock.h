@@ -230,6 +230,17 @@ begin_comment
 comment|/* Class index bitmask. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LO_NOPROFILE
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Don't profile this lock */
+end_comment
+
 begin_comment
 comment|/*  * Lock classes are statically assigned an index into the gobal lock_classes  * array.  Debugging code looks up the lock class for a given lock object  * by indexing the array.  */
 end_comment
@@ -523,7 +534,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|MUTEX_PROFILING
+name|LOCK_PROFILING
 argument_list|)
 end_if
 

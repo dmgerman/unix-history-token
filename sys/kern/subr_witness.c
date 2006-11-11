@@ -2202,6 +2202,8 @@ operator||
 name|MTX_QUIET
 operator||
 name|MTX_NOWITNESS
+operator||
+name|MTX_NOPROFILE
 argument_list|)
 expr_stmt|;
 for|for

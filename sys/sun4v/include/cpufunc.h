@@ -830,6 +830,20 @@ directive|include
 file|<machine/sun4v_cpufunc.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|USE_CPU_NANOSECONDS
+end_define
+
+begin_define
+define|#
+directive|define
+name|nanoseconds
+parameter_list|()
+value|rd(tick)
+end_define
+
 begin_undef
 undef|#
 directive|undef

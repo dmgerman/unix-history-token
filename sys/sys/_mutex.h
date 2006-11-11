@@ -38,30 +38,6 @@ name|u_int
 name|mtx_recurse
 decl_stmt|;
 comment|/* Number of recursive holds. */
-ifdef|#
-directive|ifdef
-name|MUTEX_PROFILING
-comment|/* 	 * This does not result in variant structure sizes because 	 * MUTEX_PROFILING is in opt_global.h 	 */
-name|u_int64_t
-name|mtx_acqtime
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|mtx_filename
-decl_stmt|;
-name|int
-name|mtx_lineno
-decl_stmt|;
-comment|/* 	 * Fields relating to measuring contention on mutexes. 	 * holding must be accessed atomically since it's 	 * modified by threads that don't yet hold the mutex. 	 * locking is only modified and referenced while 	 * the mutex is held. 	 */
-name|u_int
-name|mtx_contest_holding
-decl_stmt|;
-name|u_int
-name|mtx_contest_locking
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
