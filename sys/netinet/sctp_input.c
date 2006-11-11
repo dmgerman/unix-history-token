@@ -3355,6 +3355,8 @@ block|{
 name|sctp_report_all_outbound
 argument_list|(
 name|stcb
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4862,6 +4864,11 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
+name|int
+name|spec_flag
+init|=
+literal|0
+decl_stmt|;
 comment|/* I know that the TCB is non-NULL from the caller */
 name|asoc
 operator|=
@@ -5650,7 +5657,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * FIX? Should we go out, in this case (if the seq numbers 		 * changed on the peer) and set any data to RETRANSMIT? 		 */
 name|asoc
 operator|->
 name|my_rwnd
@@ -5677,6 +5683,7 @@ operator|.
 name|num_outbound_streams
 argument_list|)
 expr_stmt|;
+comment|/* Note last_cwr_tsn? where is this used? */
 name|asoc
 operator|->
 name|last_cwr_tsn
@@ -5687,36 +5694,65 @@ name|init_seq_number
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|ntohl
+argument_list|(
+name|init_cp
+operator|->
+name|init
+operator|.
+name|initiate_tag
+argument_list|)
+operator|!=
 name|asoc
 operator|->
-name|asconf_seq_in
+name|peer_vtag
+condition|)
+block|{
+comment|/* 			 * Ok the peer probably discarded our data (if we 			 * echoed a cookie+data). So anything on the 			 * sent_queue should be marked for retransmit, we 			 * may not get something to kick us so it COULD 			 * still take a timeout to move these.. but it can't 			 * hurt to mark them. 			 */
+name|struct
+name|sctp_tmit_chunk
+modifier|*
+name|chk
+decl_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|chk
+argument_list|,
+argument|&stcb->asoc.sent_queue
+argument_list|,
+argument|sctp_next
+argument_list|)
+block|{
+if|if
+condition|(
+name|chk
+operator|->
+name|sent
+operator|<
+name|SCTP_DATAGRAM_RESEND
+condition|)
+block|{
+name|chk
+operator|->
+name|sent
 operator|=
-name|asoc
-operator|->
-name|last_acked_seq
-operator|=
-name|asoc
-operator|->
-name|init_seq_number
-operator|-
-literal|1
+name|SCTP_DATAGRAM_RESEND
 expr_stmt|;
-name|asoc
+name|stcb
 operator|->
-name|str_reset_seq_in
-operator|=
 name|asoc
-operator|->
-name|init_seq_number
+operator|.
+name|sent_queue_retran_cnt
+operator|++
 expr_stmt|;
-name|asoc
-operator|->
-name|advanced_peer_ack_point
-operator|=
-name|asoc
-operator|->
-name|last_acked_seq
+name|spec_flag
+operator|++
 expr_stmt|;
+block|}
+block|}
+block|}
 comment|/* process the INIT info (peer's info) */
 name|retval
 operator|=
@@ -5904,6 +5940,22 @@ argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|spec_flag
+condition|)
+block|{
+comment|/* 			 * only if we have retrans set do we do this. What 			 * this call does is get only the COOKIE-ACK out and 			 * then when we return the normal call to 			 * sctp_chunk_output will get the retrans out behind 			 * this. 			 */
+name|sctp_chunk_output
+argument_list|(
+name|inp
+argument_list|,
+name|stcb
+argument_list|,
+name|SCTP_OUTPUT_FROM_COOKIE_ACK
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|stcb
@@ -6006,9 +6058,16 @@ operator|=
 name|SCTP_NOTIFY_ASSOC_RESTART
 expr_stmt|;
 comment|/* send up all the data */
+name|SCTP_TCB_SEND_LOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 name|sctp_report_all_outbound
 argument_list|(
 name|stcb
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* process the INIT-ACK info (my info) */
@@ -6232,6 +6291,11 @@ name|mapping_array_size
 argument_list|)
 expr_stmt|;
 comment|/* process the INIT info (peer's info) */
+name|SCTP_TCB_SEND_UNLOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 name|retval
 operator|=
 name|sctp_process_init
@@ -10994,6 +11058,8 @@ block|{
 name|sctp_report_all_outbound
 argument_list|(
 name|stcb
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

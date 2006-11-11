@@ -16466,6 +16466,9 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+parameter_list|,
+name|int
+name|holds_lock
 parameter_list|)
 block|{
 name|struct
@@ -16487,6 +16490,9 @@ name|struct
 name|sctp_stream_queue_pending
 modifier|*
 name|sp
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|asoc
 operator|=
@@ -16531,16 +16537,49 @@ block|{
 return|return;
 block|}
 comment|/* now through all the gunk freeing chunks */
-name|TAILQ_FOREACH
+if|if
+condition|(
+name|holds_lock
+operator|==
+literal|0
+condition|)
+name|SCTP_TCB_SEND_LOCK
 argument_list|(
-argument|outs
-argument_list|,
-argument|&asoc->out_wheel
-argument_list|,
-argument|next_spoke
+name|stcb
 argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|streamoutcnt
+condition|;
+name|i
+operator|++
+control|)
 block|{
-comment|/* now clean up any chunks here */
+comment|/* For each stream */
+name|outs
+operator|=
+operator|&
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|strmout
+index|[
+name|i
+index|]
+expr_stmt|;
+comment|/* clean up any sends there */
 name|stcb
 operator|->
 name|asoc
@@ -16995,6 +17034,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|holds_lock
+operator|==
+literal|0
+condition|)
+name|SCTP_TCB_SEND_UNLOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -17050,6 +17100,8 @@ comment|/* Tell them we lost the asoc */
 name|sctp_report_all_outbound
 argument_list|(
 name|stcb
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

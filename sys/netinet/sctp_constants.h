@@ -1395,6 +1395,13 @@ name|SCTP_OUTPUT_FROM_USR_RCVD
 value|13
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_OUTPUT_FROM_COOKIE_ACK
+value|14
+end_define
+
 begin_comment
 comment|/* SCTP chunk types are moved sctp.h for application (NAT, FW) use */
 end_comment
