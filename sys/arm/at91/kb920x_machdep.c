@@ -472,14 +472,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_offset_t
-name|clean_sva
-decl_stmt|,
-name|clean_eva
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|pv_addr
 name|systempage
@@ -2177,14 +2169,6 @@ name|init_param2
 argument_list|(
 name|physmem
 argument_list|)
-expr_stmt|;
-name|avail_end
-operator|=
-name|KERNPHYSADDR
-operator|+
-name|memsize
-operator|-
-literal|1
 expr_stmt|;
 name|kdb_init
 argument_list|()
