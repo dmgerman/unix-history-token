@@ -4143,8 +4143,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Warning:  Using existing root partition.  It will be assumed\n"
-literal|"that you have the appropriate device entries already in /dev."
+literal|"Warning:  Using existing root partition."
 argument_list|)
 expr_stmt|;
 block|}
