@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<posix4/posix4.h>
+file|<sys/posix4.h>
 end_include
 
 begin_decl_stmt
