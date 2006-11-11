@@ -648,6 +648,15 @@ literal|"Intel 82562EZ (ICH6)"
 block|}
 block|,
 block|{
+literal|0x1065
+block|,
+operator|-
+literal|1
+block|,
+literal|"Intel 82562ET/EZ/GT/GZ PRO/100 VE Ethernet"
+block|}
+block|,
+block|{
 literal|0x1068
 block|,
 operator|-
@@ -672,6 +681,15 @@ operator|-
 literal|1
 block|,
 literal|"Intel Pro/100 VE Network Connection"
+block|}
+block|,
+block|{
+literal|0x1094
+block|,
+operator|-
+literal|1
+block|,
+literal|"Intel Pro/100 946GZ (ICH7) Network Connection"
 block|}
 block|,
 block|{
