@@ -1812,7 +1812,7 @@ literal|"Hashing %s(%x) %s:%d to %d"
 argument_list|,
 name|l
 operator|->
-name|lpo_name
+name|lpo_filename
 argument_list|,
 name|l
 operator|->
