@@ -65,6 +65,11 @@ name|LPROF_HASH_MASK
 value|(LPROF_HASH_SIZE - 1)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
