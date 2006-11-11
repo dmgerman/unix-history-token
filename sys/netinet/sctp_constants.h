@@ -799,8 +799,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_LOG_MAX_TYPES
+name|SCTP_STRMOUT_LOG_ASSIGN
 value|104
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STRMOUT_LOG_SEND
+value|105
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LOG_MAX_TYPES
+value|106
 end_define
 
 begin_comment

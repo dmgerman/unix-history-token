@@ -1977,6 +1977,10 @@ begin_struct
 struct|struct
 name|sctp_str_log
 block|{
+name|void
+modifier|*
+name|stcb
+decl_stmt|;
 name|uint32_t
 name|n_tsn
 decl_stmt|;
@@ -1988,6 +1992,9 @@ name|n_sseq
 decl_stmt|;
 name|uint16_t
 name|e_sseq
+decl_stmt|;
+name|uint16_t
+name|strm
 decl_stmt|;
 block|}
 struct|;

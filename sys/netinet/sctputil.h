@@ -944,7 +944,14 @@ begin_function_decl
 name|void
 name|sctp_log_strm_del_alt
 parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|,
 name|uint32_t
+parameter_list|,
+name|uint16_t
 parameter_list|,
 name|uint16_t
 parameter_list|,

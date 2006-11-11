@@ -8350,9 +8350,13 @@ directive|ifdef
 name|SCTP_STR_LOGGING
 name|sctp_log_strm_del_alt
 argument_list|(
+name|stcb
+argument_list|,
 name|tsn
 argument_list|,
 name|strmseq
+argument_list|,
+name|strmno
 argument_list|,
 name|SCTP_STR_LOG_FROM_EXPRS_DEL
 argument_list|)
@@ -9940,9 +9944,13 @@ directive|ifdef
 name|SCTP_STR_LOGGING
 name|sctp_log_strm_del_alt
 argument_list|(
+name|stcb
+argument_list|,
 name|tsn
 argument_list|,
 name|strmseq
+argument_list|,
+name|strmno
 argument_list|,
 name|SCTP_STR_LOG_FROM_MARK_TSN
 argument_list|)
