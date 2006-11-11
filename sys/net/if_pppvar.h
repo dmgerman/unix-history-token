@@ -25,8 +25,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NUM_NP
+name|NP_IPV6
 value|1
+end_define
+
+begin_comment
+comment|/* Internet Protocol version 6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUM_NP
+value|2
 end_define
 
 begin_comment
