@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: serverloop.c,v 1.144 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: serverloop.c,v 1.145 2006/10/11 12:38:03 markus Exp $ */
 end_comment
 
 begin_comment
@@ -1110,11 +1110,18 @@ name|options
 operator|.
 name|client_alive_count_max
 condition|)
-name|packet_disconnect
+block|{
+name|logit
 argument_list|(
-literal|"Timeout, your session not responding."
+literal|"Timeout, client not responding."
 argument_list|)
 expr_stmt|;
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * send a bogus global/channel request with "wantreply", 	 * we should get back a failure 	 */
 if|if
 condition|(

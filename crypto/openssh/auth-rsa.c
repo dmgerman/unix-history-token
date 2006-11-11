@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rsa.c,v 1.71 2006/08/03 03:34:41 deraadt Exp $ */
+comment|/* $OpenBSD: auth-rsa.c,v 1.72 2006/11/06 21:25:27 markus Exp $ */
 end_comment
 
 begin_comment
@@ -244,6 +244,8 @@ literal|"auth_rsa_generate_challenge: BN_new() failed"
 argument_list|)
 expr_stmt|;
 comment|/* Generate a random challenge. */
+if|if
+condition|(
 name|BN_rand
 argument_list|(
 name|challenge
@@ -253,6 +255,13 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"auth_rsa_generate_challenge: BN_rand failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -268,9 +277,11 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"auth_rsa_generate_challenge: BN_CTX_new() failed"
+literal|"auth_rsa_generate_challenge: BN_CTX_new failed"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|BN_mod
 argument_list|(
 name|challenge
@@ -284,6 +295,13 @@ operator|->
 name|n
 argument_list|,
 name|ctx
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"auth_rsa_generate_challenge: BN_mod failed"
 argument_list|)
 expr_stmt|;
 name|BN_CTX_free

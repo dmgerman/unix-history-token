@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.175 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.176 2006/10/11 12:38:03 markus Exp $ */
 end_comment
 
 begin_comment
@@ -1720,11 +1720,18 @@ name|options
 operator|.
 name|server_alive_count_max
 condition|)
-name|packet_disconnect
+block|{
+name|logit
 argument_list|(
 literal|"Timeout, server not responding."
 argument_list|)
 expr_stmt|;
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
+expr_stmt|;
+block|}
 name|packet_start
 argument_list|(
 name|SSH2_MSG_GLOBAL_REQUEST

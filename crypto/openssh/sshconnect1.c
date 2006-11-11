@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect1.c,v 1.69 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: sshconnect1.c,v 1.70 2006/11/06 21:25:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -2277,14 +2277,23 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"respond_to_rsa_challenge: BN_new failed"
+literal|"ssh_kex: BN_new failed"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|BN_set_word
 argument_list|(
 name|key
 argument_list|,
 literal|0
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"ssh_kex: BN_set_word failed"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2301,6 +2310,8 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
 name|BN_lshift
 argument_list|(
 name|key
@@ -2309,6 +2320,13 @@ name|key
 argument_list|,
 literal|8
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"ssh_kex: BN_lshift failed"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2316,6 +2334,9 @@ name|i
 operator|<
 literal|16
 condition|)
+block|{
+if|if
+condition|(
 name|BN_add_word
 argument_list|(
 name|key
@@ -2330,8 +2351,19 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"ssh_kex: BN_add_word failed"
+argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+if|if
+condition|(
 name|BN_add_word
 argument_list|(
 name|key
@@ -2341,7 +2373,15 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"ssh_kex: BN_add_word failed"
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Encrypt the integer using the public key and host key of the 	 * server (key with smaller modulus first). 	 */
 if|if

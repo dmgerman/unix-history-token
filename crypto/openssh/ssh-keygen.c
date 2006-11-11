@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.154 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.155 2006/11/06 21:25:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -1075,6 +1075,8 @@ name|b
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|BN_bin2bn
 argument_list|(
 name|buffer_ptr
@@ -1085,6 +1087,13 @@ argument_list|,
 name|bytes
 argument_list|,
 name|value
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"buffer_get_bignum_bits: BN_bin2bn failed"
 argument_list|)
 expr_stmt|;
 name|buffer_consume

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.c,v 1.74 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: sftp-client.c,v 1.75 2006/10/22 02:25:50 djm Exp $ */
 end_comment
 
 begin_comment
@@ -5858,6 +5858,13 @@ argument_list|(
 name|status
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|showprogress
+condition|)
+name|stop_progress_meter
+argument_list|()
 expr_stmt|;
 name|do_close
 argument_list|(

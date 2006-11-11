@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-dss.c,v 1.23 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: ssh-dss.c,v 1.24 2006/11/06 21:25:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -789,6 +789,9 @@ argument_list|(
 literal|"ssh_dss_verify: BN_new failed"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|BN_bin2bn
 argument_list|(
 name|sigblob
@@ -799,7 +802,11 @@ name|sig
 operator|->
 name|r
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|BN_bin2bn
 argument_list|(
 name|sigblob
@@ -811,6 +818,14 @@ argument_list|,
 name|sig
 operator|->
 name|s
+argument_list|)
+operator|==
+name|NULL
+operator|)
+condition|)
+name|fatal
+argument_list|(
+literal|"ssh_dss_verify: BN_bin2bn failed"
 argument_list|)
 expr_stmt|;
 comment|/* clean up */
