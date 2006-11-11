@@ -65,6 +65,21 @@ name|LPROF_HASH_MASK
 value|(LPROF_HASH_SIZE - 1)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_CPU_NANOSECONDS
+end_ifndef
+
+begin_function_decl
+name|u_int64_t
+name|nanoseconds
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
