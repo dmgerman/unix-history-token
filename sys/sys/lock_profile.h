@@ -39,6 +39,12 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -481,10 +487,8 @@ condition|)
 operator|*
 name|waittime
 operator|=
-name|rd
-argument_list|(
-name|tick
-argument_list|)
+name|nanoseconds
+argument_list|()
 expr_stmt|;
 block|}
 end_function

@@ -435,7 +435,6 @@ name|USE_CPU_NANOSECONDS
 end_ifndef
 
 begin_function
-specifier|static
 name|u_int64_t
 name|nanoseconds
 parameter_list|(
