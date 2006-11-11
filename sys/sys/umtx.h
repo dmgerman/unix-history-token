@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|UMUTEX_CONTESTED
-value|0x80000000
+value|0x80000000U
 end_define
 
 begin_define
