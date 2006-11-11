@@ -277,7 +277,7 @@ name|lock_prof_acquisitions
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of mutex acquistions recorded"
+literal|"Number of lock acquistions recorded"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -940,7 +940,7 @@ name|dump_lock_prof_stats
 argument_list|,
 literal|"A"
 argument_list|,
-literal|"Mutex profiling statistics"
+literal|"Lock profiling statistics"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -966,7 +966,7 @@ name|reset_lock_prof_stats
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Reset mutex profiling statistics"
+literal|"Reset lock profiling statistics"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1999,7 +1999,7 @@ argument_list|(
 name|hash
 argument_list|)
 expr_stmt|;
-comment|/*                  * Record if the mutex has been held longer now than ever                  * before.                  */
+comment|/*                  * Record if the lock has been held longer now than ever                  * before.                  */
 if|if
 condition|(
 name|now
