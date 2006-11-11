@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/posix4.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -129,18 +135,6 @@ begin_include
 include|#
 directive|include
 file|<sys/rtprio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<posix4/sched.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<posix4/posix4.h>
 end_include
 
 begin_include
