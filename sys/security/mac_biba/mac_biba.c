@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ksem.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mac.h>
 end_include
 
@@ -161,12 +167,6 @@ begin_include
 include|#
 directive|include
 file|<sys/shm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<posix4/ksem.h>
 end_include
 
 begin_include

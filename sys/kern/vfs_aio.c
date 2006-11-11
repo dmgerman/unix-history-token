@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/posix4.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -223,12 +229,6 @@ begin_include
 include|#
 directive|include
 file|<machine/atomic.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<posix4/posix4.h>
 end_include
 
 begin_include

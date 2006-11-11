@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ksem.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/priv.h>
 end_include
 
@@ -69,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/posix4.h>
 end_include
 
 begin_include
@@ -105,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/semaphore.h>
 end_include
 
 begin_include
@@ -152,25 +170,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<posix4/ksem.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<posix4/posix4.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<posix4/semaphore.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<posix4/_semaphore.h>
+file|<sys/_semaphore.h>
 end_include
 
 begin_include

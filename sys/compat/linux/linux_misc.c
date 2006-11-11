@@ -148,6 +148,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -251,12 +257,6 @@ begin_include
 include|#
 directive|include
 file|<vm/swap_pager.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<posix4/sched.h>
 end_include
 
 begin_include

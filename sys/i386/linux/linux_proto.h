@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<posix4/_semaphore.h>
+file|<sys/_semaphore.h>
 end_include
 
 begin_include

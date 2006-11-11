@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/posix4.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -141,12 +147,6 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<posix4/posix4.h>
 end_include
 
 begin_include

@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<posix4/sched.h>
+file|<sys/sched.h>
 end_include
 
 begin_comment
