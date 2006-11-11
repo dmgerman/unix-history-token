@@ -1628,7 +1628,7 @@ return|;
 block|}
 name|msgNotify
 argument_list|(
-literal|"Beginning extraction of distributions.."
+literal|"Beginning extraction of distributions."
 argument_list|)
 expr_stmt|;
 if|if
@@ -2121,7 +2121,7 @@ expr_stmt|;
 block|}
 name|msgNotify
 argument_list|(
-literal|"Beginning extraction of distributions.."
+literal|"Beginning extraction of distributions."
 argument_list|)
 expr_stmt|;
 if|if
