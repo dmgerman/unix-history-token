@@ -2099,35 +2099,25 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
+comment|/*      * Back up the old kernel, leaving it in place in case we      *  crash and reboot.      */
 if|if
 condition|(
-name|file_readable
+name|directory_exists
 argument_list|(
-literal|"/kernel"
+literal|"/boot/kernel"
 argument_list|)
 condition|)
 block|{
 name|msgNotify
 argument_list|(
-literal|"Moving old kernel to /kernel.prev"
+literal|"Copying old kernel to /boot/kernel.prev"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|system
+name|vsystem
 argument_list|(
-literal|"chflags noschg /kernel&& mv /kernel /kernel.prev"
-argument_list|)
-condition|)
-block|{
-comment|/* Give us a working kernel in case we crash and reboot */
-name|system
-argument_list|(
-literal|"cp /kernel.prev /kernel"
+literal|"cp -Rp /boot/kernel /boot/kernel.prev"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|msgNotify
 argument_list|(
