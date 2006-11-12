@@ -592,7 +592,7 @@ specifier|static
 name|uint64_t
 name|nucleus_mappings
 index|[
-literal|2
+literal|4
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -2132,18 +2132,20 @@ name|i
 index|]
 operator|.
 name|om_start
-operator|==
+operator|>=
 name|KERNBASE
-operator|||
+operator|&&
 name|translations
 index|[
 name|i
 index|]
 operator|.
 name|om_start
-operator|==
+operator|<=
 name|KERNBASE
 operator|+
+literal|3
+operator|*
 name|PAGE_SIZE_4M
 operator|)
 condition|)
@@ -2521,9 +2523,7 @@ index|]
 operator|.
 name|mr_start
 operator|+=
-literal|2
-operator|*
-name|PAGE_SIZE_4M
+name|nucleus_memory
 expr_stmt|;
 name|mra
 index|[
@@ -2532,9 +2532,7 @@ index|]
 operator|.
 name|mr_size
 operator|-=
-literal|2
-operator|*
-name|PAGE_SIZE_4M
+name|nucleus_memory
 expr_stmt|;
 block|}
 comment|/*  		 * Is kernel memory at the end of range? 		 */
@@ -2547,9 +2545,7 @@ name|start
 operator|+
 name|size
 operator|-
-literal|2
-operator|*
-name|PAGE_SIZE_4M
+name|nucleus_memory
 operator|)
 condition|)
 name|mra
@@ -2559,9 +2555,7 @@ index|]
 operator|.
 name|mr_size
 operator|-=
-literal|2
-operator|*
-name|PAGE_SIZE_4M
+name|nucleus_memory
 expr_stmt|;
 comment|/*  		 * Is kernel memory in the middle somewhere? 		 */
 if|if
@@ -2654,9 +2648,7 @@ name|size
 operator|-
 name|firstsize
 operator|-
-literal|2
-operator|*
-name|PAGE_SIZE_4M
+name|nucleus_memory
 expr_stmt|;
 name|mra
 index|[
@@ -2667,9 +2659,7 @@ name|mr_start
 operator|=
 name|nucleus_memory_start
 operator|+
-literal|2
-operator|*
-name|PAGE_SIZE_4M
+name|nucleus_memory
 expr_stmt|;
 name|mra
 index|[
@@ -2684,9 +2674,7 @@ name|physsz
 operator|+=
 name|firstsize
 operator|+
-literal|2
-operator|*
-name|PAGE_SIZE_4M
+name|nucleus_memory
 expr_stmt|;
 name|j
 operator|+=
@@ -2726,9 +2714,7 @@ index|]
 operator|.
 name|mr_size
 operator|<
-literal|2
-operator|*
-name|PAGE_SIZE_4M
+name|nucleus_memory
 operator|)
 condition|)
 continue|continue;
@@ -3832,7 +3818,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|2
+name|permanent_mappings
 condition|;
 name|i
 operator|++
