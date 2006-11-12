@@ -1680,6 +1680,12 @@ name|td_user_pri
 operator|=
 name|PUSER
 expr_stmt|;
+name|td
+operator|->
+name|td_base_user_pri
+operator|=
+name|PUSER
+expr_stmt|;
 endif|#
 directive|endif
 name|td
