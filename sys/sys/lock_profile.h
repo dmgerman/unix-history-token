@@ -102,6 +102,11 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
+name|type
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
 name|file
 decl_stmt|;
 name|u_int
