@@ -437,7 +437,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * The KSEGRP is allocated resources across a number of CPUs.  * (Including a number of CPUxQUANTA. It parcels these QUANTA up among  * its threads, each of which should be running in a different CPU.  * BASE priority and total available quanta are properties of a KSEGRP.  * Multiple KSEGRPs in a single process compete against each other  * for total quanta in the same way that a forked child competes against  * it's parent process.  */
+comment|/*  * The KSEGRP is allocated resources across a number of CPUs.  * (Including a number of CPUxQUANTA. It parcels these QUANTA up among  * its threads, each of which should be running in a different CPU.  * BASE priority and total available quanta are properties of a KSEGRP.  * Multiple KSEGRPs in a single process compete against each other  * for total quanta in the same way that a forked child competes against  * its parent process.  */
 end_comment
 
 begin_struct_decl
@@ -3339,7 +3339,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* XXXKSE: Missing values for thread_suspsend_check(). */
+comment|/* XXXKSE: Missing values for thread_suspend_check(). */
 end_comment
 
 begin_ifdef
