@@ -174,6 +174,13 @@ operator|==
 name|ARCHIVE_OK
 condition|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|p
+init|=
+name|buff
+decl_stmt|;
 if|if
 condition|(
 name|offset
@@ -224,7 +231,7 @@ name|write
 argument_list|(
 name|fd
 argument_list|,
-name|buff
+name|p
 argument_list|,
 name|bytes_to_write
 argument_list|)
@@ -257,6 +264,10 @@ operator|+=
 name|bytes_written
 expr_stmt|;
 name|total_written
+operator|+=
+name|bytes_written
+expr_stmt|;
+name|p
 operator|+=
 name|bytes_written
 expr_stmt|;
