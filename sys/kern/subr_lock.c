@@ -1095,9 +1095,7 @@ name|NULL
 condition|?
 name|type
 else|:
-name|class
-operator|->
-name|lc_name
+name|name
 expr_stmt|;
 name|lock
 operator|->
