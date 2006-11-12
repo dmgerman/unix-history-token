@@ -2784,21 +2784,6 @@ operator|&
 name|VM_PROT_WRITE
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_flag_set
-argument_list|(
-name|fs
-operator|.
-name|m
-argument_list|,
-name|PG_WRITEABLE
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|vm_object_set_writeable_dirty
 argument_list|(
 name|fs
@@ -4063,6 +4048,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Mark it no longer busy, and put it on the active list. 		 */
 name|VM_OBJECT_LOCK
 argument_list|(
 name|dst_object
@@ -4071,24 +4057,6 @@ expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|prot
-operator|&
-name|VM_PROT_WRITE
-operator|)
-operator|!=
-literal|0
-condition|)
-name|vm_page_flag_set
-argument_list|(
-name|dst_m
-argument_list|,
-name|PG_WRITEABLE
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Mark it no longer busy, and put it on the active list. 		 */
 name|vm_page_activate
 argument_list|(
 name|dst_m
