@@ -642,6 +642,14 @@ operator|&
 name|waitstart
 argument_list|)
 expr_stmt|;
+name|lkp
+operator|->
+name|lk_object
+operator|.
+name|lo_type
+operator|=
+literal|"lockmgr"
+expr_stmt|;
 if|if
 condition|(
 operator|(

@@ -562,7 +562,7 @@ literal|"wait_avg"
 argument_list|,
 literal|"cnt_hold"
 argument_list|,
-literal|"cn\ t_lock"
+literal|"cnt_lock"
 argument_list|,
 literal|"name"
 argument_list|)
@@ -629,7 +629,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%6ju %12ju %12ju %11ju %5ju %5ju %12ju %12ju %s:%d (\ %s)\n"
+literal|"%6ju %12ju %12ju %11ju %5ju %5ju %12ju %12ju %s:%d (%s:%s)\n"
 argument_list|,
 name|lprof_buf
 index|[
@@ -751,6 +751,13 @@ name|i
 index|]
 operator|.
 name|line
+argument_list|,
+name|lprof_buf
+index|[
+name|i
+index|]
+operator|.
+name|type
 argument_list|,
 name|lprof_buf
 index|[
@@ -1088,7 +1095,9 @@ name|NULL
 condition|?
 name|type
 else|:
-name|name
+name|class
+operator|->
+name|lc_name
 expr_stmt|;
 name|lock
 operator|->
@@ -1630,6 +1639,14 @@ name|lo_name
 expr_stmt|;
 name|mpp
 operator|->
+name|type
+operator|=
+name|lo
+operator|->
+name|lo_type
+expr_stmt|;
+name|mpp
+operator|->
 name|namehash
 operator|=
 name|l
@@ -1967,19 +1984,27 @@ name|lpo_lineno
 expr_stmt|;
 name|mpp
 operator|->
-name|name
-operator|=
-name|lo
-operator|->
-name|lo_name
-expr_stmt|;
-name|mpp
-operator|->
 name|namehash
 operator|=
 name|l
 operator|->
 name|lpo_namehash
+expr_stmt|;
+name|mpp
+operator|->
+name|type
+operator|=
+name|lo
+operator|->
+name|lo_type
+expr_stmt|;
+name|mpp
+operator|->
+name|name
+operator|=
+name|lo
+operator|->
+name|lo_name
 expr_stmt|;
 if|if
 condition|(
