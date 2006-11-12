@@ -11,12 +11,37 @@ begin_comment
 comment|/*  * Derived from :  *  *  * ipcp.c - PPP IP Control Protocol.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipv6cp.c,v 1.7 1999/10/08 01:08:18 masputra Exp $   */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|RCSID
 value|"$Id: ipv6cp.c,v 1.7 1999/10/08 01:08:18 masputra Exp $"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * TODO:   *  * Proxy Neighbour Discovery.  *  * Better defines for selecting the ordering of  *   interface up / set address. (currently checks for __linux__,  *   since SVR4&& (SNI || __USLC__) didn't work properly)  */
@@ -32,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_include
@@ -112,6 +143,19 @@ directive|include
 file|"pathnames.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|s6_addr32
+value|__u6_addr.__u6_addr32
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RCSID
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -122,6 +166,11 @@ init|=
 name|RCSID
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* global vars */
@@ -480,218 +529,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Command-line options.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|setifaceid
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-name|arg
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|option_t
-name|ipv6cp_option_list
-index|[]
-init|=
-block|{
-block|{
-literal|"ipv6"
-block|,
-name|o_special
-block|,
-name|setifaceid
-block|,
-literal|"Set interface identifiers for IPV6"
-block|}
-block|,
-block|{
-literal|"noipv6"
-block|,
-name|o_bool
-block|,
-operator|&
-name|ipv6cp_protent
-operator|.
-name|enabled_flag
-block|,
-literal|"Disable IPv6 and IPv6CP"
-block|}
-block|,
-block|{
-literal|"-ipv6"
-block|,
-name|o_bool
-block|,
-operator|&
-name|ipv6cp_protent
-operator|.
-name|enabled_flag
-block|,
-literal|"Disable IPv6 and IPv6CP"
-block|}
-block|,
-block|{
-literal|"+ipv6"
-block|,
-name|o_bool
-block|,
-operator|&
-name|ipv6cp_protent
-operator|.
-name|enabled_flag
-block|,
-literal|"Enable IPv6 and IPv6CP"
-block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"ipv6cp-accept-local"
-block|,
-name|o_bool
-block|,
-operator|&
-name|ipv6cp_allowoptions
-index|[
-literal|0
-index|]
-operator|.
-name|accept_local
-block|,
-literal|"Accept peer's interface identifier for us"
-block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"ipv6cp-use-ipaddr"
-block|,
-name|o_bool
-block|,
-operator|&
-name|ipv6cp_allowoptions
-index|[
-literal|0
-index|]
-operator|.
-name|use_ip
-block|,
-literal|"Use (default) IPv4 address as interface identifier"
-block|,
-literal|0
-block|}
-block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SOL2
-argument_list|)
-block|{
-literal|"ipv6cp-use-persistent"
-block|,
-name|o_bool
-block|,
-operator|&
-name|ipv6cp_wantoptions
-index|[
-literal|0
-index|]
-operator|.
-name|use_persistent
-block|,
-literal|"Use uniquely-available persistent value for link local address"
-block|,
-literal|1
-block|}
-block|,
-endif|#
-directive|endif
-comment|/* defined(SOL2) */
-block|{
-literal|"ipv6cp-restart"
-block|,
-name|o_int
-block|,
-operator|&
-name|ipv6cp_fsm
-index|[
-literal|0
-index|]
-operator|.
-name|timeouttime
-block|,
-literal|"Set timeout for IPv6CP"
-block|}
-block|,
-block|{
-literal|"ipv6cp-max-terminate"
-block|,
-name|o_int
-block|,
-operator|&
-name|ipv6cp_fsm
-index|[
-literal|0
-index|]
-operator|.
-name|maxtermtransmits
-block|,
-literal|"Set max #xmits for term-reqs"
-block|}
-block|,
-block|{
-literal|"ipv6cp-max-configure"
-block|,
-name|o_int
-block|,
-operator|&
-name|ipv6cp_fsm
-index|[
-literal|0
-index|]
-operator|.
-name|maxconfreqtransmits
-block|,
-literal|"Set max #xmits for conf-reqs"
-block|}
-block|,
-block|{
-literal|"ipv6cp-max-failure"
-block|,
-name|o_int
-block|,
-operator|&
-name|ipv6cp_fsm
-index|[
-literal|0
-index|]
-operator|.
-name|maxnakloops
-block|,
-literal|"Set max #conf-naks for IPv6CP"
-block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Protocol entry points from main code.  */
 end_comment
 
@@ -902,10 +739,6 @@ literal|0
 block|,
 literal|"IPV6CP"
 block|,
-literal|"IPV6"
-block|,
-name|ipv6cp_option_list
-block|,
 name|ipv6_check_options
 block|,
 name|ipv6_demand_conf
@@ -940,20 +773,6 @@ name|__P
 argument_list|(
 operator|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|ipv6cp_script_done
-name|__P
-argument_list|(
-operator|(
-name|void
 operator|*
 operator|)
 argument_list|)
@@ -1020,19 +839,11 @@ name|ipv6cp_script_state
 enum|;
 end_enum
 
-begin_decl_stmt
-specifier|static
-name|pid_t
-name|ipv6cp_script_pid
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * setifaceid - set the interface identifiers manually  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|setifaceid
 parameter_list|(
@@ -3705,13 +3516,17 @@ condition|)
 return|return
 literal|0
 return|;
-name|notice
+name|syslog
 argument_list|(
+name|LOG_NOTICE
+argument_list|,
 literal|"ipv6_demand_conf"
 argument_list|)
 expr_stmt|;
-name|notice
+name|syslog
 argument_list|(
+name|LOG_NOTICE
+argument_list|,
 literal|"local  LL address %s"
 argument_list|,
 name|llv6_ntoa
@@ -3722,8 +3537,10 @@ name|ourid
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|notice
+name|syslog
 argument_list|(
+name|LOG_NOTICE
+argument_list|,
 literal|"remote LL address %s"
 argument_list|,
 name|llv6_ntoa
@@ -3831,8 +3648,10 @@ name|hisid
 argument_list|)
 condition|)
 block|{
-name|error
+name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"Could not determine remote LL address"
 argument_list|)
 expr_stmt|;
@@ -3857,8 +3676,10 @@ name|ourid
 argument_list|)
 condition|)
 block|{
-name|error
+name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"Could not determine local LL address"
 argument_list|)
 expr_stmt|;
@@ -3887,8 +3708,10 @@ name|hisid
 argument_list|)
 condition|)
 block|{
-name|error
+name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"local and remote LL addresses are equal"
 argument_list|)
 expr_stmt|;
@@ -4336,8 +4159,10 @@ argument_list|,
 name|NPMODE_PASS
 argument_list|)
 expr_stmt|;
-name|notice
+name|syslog
 argument_list|(
+name|LOG_NOTICE
+argument_list|,
 literal|"local  LL address %s"
 argument_list|,
 name|llv6_ntoa
@@ -4348,8 +4173,10 @@ name|ourid
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|notice
+name|syslog
 argument_list|(
+name|LOG_NOTICE
+argument_list|,
 literal|"remote LL address %s"
 argument_list|,
 name|llv6_ntoa
@@ -4380,10 +4207,6 @@ condition|(
 name|ipv6cp_script_state
 operator|==
 name|s_down
-operator|&&
-name|ipv6cp_script_pid
-operator|==
-literal|0
 condition|)
 block|{
 name|ipv6cp_script_state
@@ -4420,13 +4243,6 @@ argument_list|(
 operator|(
 literal|"ipv6cp: down"
 operator|)
-argument_list|)
-expr_stmt|;
-name|update_link_stats
-argument_list|(
-name|f
-operator|->
-name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -4613,10 +4429,6 @@ condition|(
 name|ipv6cp_script_state
 operator|==
 name|s_up
-operator|&&
-name|ipv6cp_script_pid
-operator|==
-literal|0
 condition|)
 block|{
 name|ipv6cp_script_state
@@ -4694,87 +4506,6 @@ argument_list|,
 name|PPP_IPV6
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * ipv6cp_script_done - called when the ipv6-up or ipv6-down script  * has finished.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ipv6cp_script_done
-parameter_list|(
-name|arg
-parameter_list|)
-name|void
-modifier|*
-name|arg
-decl_stmt|;
-block|{
-name|ipv6cp_script_pid
-operator|=
-literal|0
-expr_stmt|;
-switch|switch
-condition|(
-name|ipv6cp_script_state
-condition|)
-block|{
-case|case
-name|s_up
-case|:
-if|if
-condition|(
-name|ipv6cp_fsm
-index|[
-literal|0
-index|]
-operator|.
-name|state
-operator|!=
-name|OPENED
-condition|)
-block|{
-name|ipv6cp_script_state
-operator|=
-name|s_down
-expr_stmt|;
-name|ipv6cp_script
-argument_list|(
-name|_PATH_IPV6DOWN
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-case|case
-name|s_down
-case|:
-if|if
-condition|(
-name|ipv6cp_fsm
-index|[
-literal|0
-index|]
-operator|.
-name|state
-operator|==
-name|OPENED
-condition|)
-block|{
-name|ipv6cp_script_state
-operator|=
-name|s_up
-expr_stmt|;
-name|ipv6cp_script
-argument_list|(
-name|_PATH_IPV6UP
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-block|}
 block|}
 end_function
 
@@ -4912,8 +4643,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|ipv6cp_script_pid
-operator|=
 name|run_program
 argument_list|(
 name|script
@@ -4921,10 +4650,6 @@ argument_list|,
 name|argv
 argument_list|,
 literal|0
-argument_list|,
-name|ipv6cp_script_done
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}

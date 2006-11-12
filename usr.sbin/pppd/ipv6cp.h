@@ -8,7 +8,7 @@ comment|/*  Original version, based on RFC2023 :      Copyright (c) 1995, 1996, 
 end_comment
 
 begin_comment
-comment|/*  * Derived from :  *  *  * ipcp.h - IP Control Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipv6cp.h,v 1.3 1999/09/30 19:57:45 masputra Exp $  */
+comment|/*  * Derived from :  *  *  * ipcp.h - IP Control Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipv6cp.h,v 1.3 1999/09/30 19:57:45 masputra Exp $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -147,6 +147,22 @@ specifier|extern
 name|struct
 name|protent
 name|ipv6cp_protent
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|setifaceid
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+name|arg
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
