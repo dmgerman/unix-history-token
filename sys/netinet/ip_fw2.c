@@ -329,6 +329,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/sctp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_ipfw.h>
 end_include
 
@@ -1419,6 +1425,16 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((struct tcphdr *)(p))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP
+parameter_list|(
+name|p
+parameter_list|)
+value|((struct sctphdr *)(p))
 end_define
 
 begin_define
@@ -10182,6 +10198,38 @@ name|ulp
 argument_list|)
 operator|->
 name|th_flags
+expr_stmt|;
+break|break;
+case|case
+name|IPPROTO_SCTP
+case|:
+name|PULLUP_TO
+argument_list|(
+name|hlen
+argument_list|,
+name|ulp
+argument_list|,
+expr|struct
+name|sctphdr
+argument_list|)
+expr_stmt|;
+name|src_port
+operator|=
+name|SCTP
+argument_list|(
+name|ulp
+argument_list|)
+operator|->
+name|src_port
+expr_stmt|;
+name|dst_port
+operator|=
+name|SCTP
+argument_list|(
+name|ulp
+argument_list|)
+operator|->
+name|dest_port
 expr_stmt|;
 break|break;
 case|case
