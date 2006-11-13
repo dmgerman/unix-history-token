@@ -327,7 +327,7 @@ value|((vm_offset_t)(((pdi)<<PDRSHIFT)|((pti)<<PAGE_SHIFT)))
 end_define
 
 begin_comment
-comment|/* Actual number of kernel page tables */
+comment|/* Initial number of kernel page tables. */
 end_comment
 
 begin_ifndef
@@ -342,6 +342,10 @@ directive|ifdef
 name|PAE
 end_ifdef
 
+begin_comment
+comment|/* 152 page tables needed to map 16G (76B "struct vm_page", 2M page tables). */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -349,14 +353,14 @@ name|NKPT
 value|240
 end_define
 
-begin_comment
-comment|/* Enough for 16GB (2MB page tables) */
-end_comment
-
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* 18 page tables needed to map 4G (72B "struct vm_page", 4M page tables). */
+end_comment
 
 begin_define
 define|#
@@ -364,10 +368,6 @@ directive|define
 name|NKPT
 value|30
 end_define
-
-begin_comment
-comment|/* Enough for 4GB (4MB page tables) */
-end_comment
 
 begin_endif
 endif|#

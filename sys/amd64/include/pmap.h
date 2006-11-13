@@ -335,7 +335,7 @@ value|( \ 	((unsigned long)(l4)<< PML4SHIFT) | \ 	((unsigned long)(l3)<< PDPSHIF
 end_define
 
 begin_comment
-comment|/* Initial number of kernel page tables */
+comment|/* Initial number of kernel page tables. */
 end_comment
 
 begin_ifndef
@@ -344,16 +344,16 @@ directive|ifndef
 name|NKPT
 end_ifndef
 
+begin_comment
+comment|/* 240 page tables needed to map 16G (120B "struct vm_page", 2M page tables). */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NKPT
 value|240
 end_define
-
-begin_comment
-comment|/* Enough for 16GB (2MB page tables) */
-end_comment
 
 begin_endif
 endif|#
