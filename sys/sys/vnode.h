@@ -2985,7 +2985,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vn_lock
+name|_vn_lock
 parameter_list|(
 name|struct
 name|vnode
@@ -2999,9 +2999,30 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|vn_lock
+parameter_list|(
+name|vp
+parameter_list|,
+name|flags
+parameter_list|,
+name|td
+parameter_list|)
+value|_vn_lock(vp, flags, td, __FILE__, __LINE__)
+end_define
 
 begin_function_decl
 name|int
@@ -3510,7 +3531,7 @@ name|int
 name|vop_stdlock
 parameter_list|(
 name|struct
-name|vop_lock_args
+name|_vop_lock_args
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3892,6 +3913,20 @@ name|ret
 parameter_list|)
 define|\
 value|noffset = (ap)->a_uio->uio_offset;				\ 	if (noffset> ooffset&& !VN_KNLIST_EMPTY((ap)->a_vp)) {	\ 		VFS_KNOTE_LOCKED((ap)->a_vp, NOTE_WRITE			\ 		    | (noffset> osize ? NOTE_EXTEND : 0));		\ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|VOP_LOCK
+parameter_list|(
+name|vp
+parameter_list|,
+name|flags
+parameter_list|,
+name|td
+parameter_list|)
+value|_VOP_LOCK(vp, flags, td, __FILE__, __LINE__)
 end_define
 
 begin_function_decl

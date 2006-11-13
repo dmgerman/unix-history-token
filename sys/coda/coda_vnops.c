@@ -471,7 +471,7 @@ name|coda_reclaim
 block|,
 comment|/* reclaim */
 operator|.
-name|vop_lock
+name|_vop_lock
 operator|=
 name|coda_lock
 block|,
@@ -7029,7 +7029,7 @@ name|int
 name|coda_lock
 parameter_list|(
 name|struct
-name|vop_lock_args
+name|_vop_lock_args
 modifier|*
 name|ap
 parameter_list|)

@@ -251,7 +251,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vop_lock_t
+name|_vop_lock_t
 name|ffs_lock
 decl_stmt|;
 end_decl_stmt
@@ -400,7 +400,7 @@ operator|=
 name|ffs_getpages
 block|,
 operator|.
-name|vop_lock
+name|_vop_lock
 operator|=
 name|ffs_lock
 block|,
@@ -476,7 +476,7 @@ operator|=
 name|ffs_getpages
 block|,
 operator|.
-name|vop_lock
+name|_vop_lock
 operator|=
 name|ffs_lock
 block|,
@@ -546,7 +546,7 @@ operator|=
 name|ffs_fsync
 block|,
 operator|.
-name|vop_lock
+name|_vop_lock
 operator|=
 name|ffs_lock
 block|,
@@ -1280,8 +1280,8 @@ parameter_list|(
 name|ap
 parameter_list|)
 name|struct
-name|vop_lock_args
-comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 	} */
+name|_vop_lock_args
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 		char *file; 		int line; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1371,7 +1371,7 @@ name|v_vnlock
 expr_stmt|;
 name|result
 operator|=
-name|lockmgr
+name|_lockmgr
 argument_list|(
 name|lkp
 argument_list|,
@@ -1385,6 +1385,14 @@ argument_list|,
 name|ap
 operator|->
 name|a_td
+argument_list|,
+name|ap
+operator|->
+name|a_file
+argument_list|,
+name|ap
+operator|->
+name|a_line
 argument_list|)
 expr_stmt|;
 if|if
@@ -1404,7 +1412,7 @@ comment|/* 			 * Apparent success, except that the vnode 			 * mutated between s
 operator|(
 name|void
 operator|)
-name|lockmgr
+name|_lockmgr
 argument_list|(
 name|lkp
 argument_list|,
@@ -1418,6 +1426,14 @@ argument_list|,
 name|ap
 operator|->
 name|a_td
+argument_list|,
+name|ap
+operator|->
+name|a_file
+argument_list|,
+name|ap
+operator|->
+name|a_line
 argument_list|)
 expr_stmt|;
 if|if
@@ -1451,7 +1467,7 @@ break|break;
 default|default:
 name|result
 operator|=
-name|VOP_LOCK_APV
+name|_VOP_LOCK_APV
 argument_list|(
 operator|&
 name|ufs_vnodeops
@@ -1469,7 +1485,7 @@ else|#
 directive|else
 return|return
 operator|(
-name|VOP_LOCK_APV
+name|_VOP_LOCK_APV
 argument_list|(
 operator|&
 name|ufs_vnodeops

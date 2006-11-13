@@ -1399,7 +1399,7 @@ name|int
 name|null_lock
 parameter_list|(
 name|struct
-name|vop_lock_args
+name|_vop_lock_args
 modifier|*
 name|ap
 parameter_list|)
@@ -2206,7 +2206,7 @@ operator|=
 name|null_islocked
 block|,
 operator|.
-name|vop_lock
+name|_vop_lock
 operator|=
 name|null_lock
 block|,

@@ -255,7 +255,7 @@ operator|=
 name|VOP_NULL
 block|,
 operator|.
-name|vop_lock
+name|_vop_lock
 operator|=
 name|vop_stdlock
 block|,
@@ -697,8 +697,8 @@ parameter_list|(
 name|ap
 parameter_list|)
 name|struct
-name|vop_lock_args
-comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 	} */
+name|_vop_lock_args
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 		char *file; 		int line; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -714,7 +714,7 @@ name|a_vp
 decl_stmt|;
 return|return
 operator|(
-name|lockmgr
+name|_lockmgr
 argument_list|(
 name|vp
 operator|->
@@ -732,6 +732,14 @@ argument_list|,
 name|ap
 operator|->
 name|a_td
+argument_list|,
+name|ap
+operator|->
+name|a_file
+argument_list|,
+name|ap
+operator|->
+name|a_line
 argument_list|)
 operator|)
 return|;
