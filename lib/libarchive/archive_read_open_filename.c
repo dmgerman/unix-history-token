@@ -550,22 +550,28 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Set dev/ino of archive file so extract won't overwrite. */
+comment|/* If we're reading a file from disk, ensure that we don't 		   overwrite it with an extracted file. */
+if|if
+condition|(
+name|S_ISREG
+argument_list|(
+name|st
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+name|archive_read_extract_set_skip_file
+argument_list|(
 name|a
-operator|->
-name|skip_file_dev
-operator|=
+argument_list|,
 name|st
 operator|.
 name|st_dev
-expr_stmt|;
-name|a
-operator|->
-name|skip_file_ino
-operator|=
+argument_list|,
 name|st
 operator|.
 name|st_ino
+argument_list|)
 expr_stmt|;
 comment|/* Remember mode so close can decide whether to flush. */
 name|mine
