@@ -241,7 +241,7 @@ value|mtx_unlock(&(pmap)->pm_mtx)
 end_define
 
 begin_comment
-comment|/*  * For each vm_page_t, there is a list of all currently valid virtual  * mappings of that page.  An entry is a pv_entry_t, the list is pv_table.  */
+comment|/*  * For each vm_page_t, there is a list of all currently valid virtual  * mappings of that page.  An entry is a pv_entry_t, the list is pv_list.  */
 end_comment
 
 begin_typedef
