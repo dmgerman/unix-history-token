@@ -37,6 +37,11 @@ decl_stmt|;
 name|int
 name|lpo_lineno
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|lpo_type
+decl_stmt|;
 comment|/*          * Fields relating to measuring contention on mutexes.          * holding must be accessed atomically since it's          * modified by threads that don't yet hold the mutex.          * locking is only modified and referenced while          * the mutex is held.          */
 name|u_int
 name|lpo_contest_holding

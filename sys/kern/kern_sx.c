@@ -276,6 +276,9 @@ name|sx
 operator|->
 name|sx_object
 argument_list|,
+operator|&
+name|lock_class_sx
+argument_list|,
 name|description
 argument_list|)
 expr_stmt|;

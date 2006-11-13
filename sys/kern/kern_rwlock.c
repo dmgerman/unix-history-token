@@ -224,6 +224,9 @@ name|rw
 operator|->
 name|rw_object
 argument_list|,
+operator|&
+name|lock_class_rw
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;

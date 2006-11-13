@@ -360,6 +360,11 @@ name|lock_object
 modifier|*
 name|lo
 parameter_list|,
+name|struct
+name|lock_class
+modifier|*
+name|class
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -433,6 +438,14 @@ operator|->
 name|lpo_contest_locking
 operator|=
 literal|0
+expr_stmt|;
+name|l
+operator|->
+name|lpo_type
+operator|=
+name|class
+operator|->
+name|lc_name
 expr_stmt|;
 comment|/* Hash the mutex name to an int so we don't have to strcmp() it repeatedly */
 for|for
@@ -821,6 +834,11 @@ name|struct
 name|lock_object
 modifier|*
 name|lo
+parameter_list|,
+name|struct
+name|lock_class
+modifier|*
+name|class
 parameter_list|,
 specifier|const
 name|char

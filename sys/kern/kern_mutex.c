@@ -2840,6 +2840,8 @@ name|m
 operator|->
 name|mtx_object
 argument_list|,
+name|class
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
