@@ -1096,7 +1096,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Loop thru pages, entering them in the pmap. (We cannot add them to 	 * the wired count without wrapping the vm_page_queue_lock in 	 * splimp...) 	 */
+comment|/* 	 * Loop thru pages, entering them in the pmap. 	 */
 name|VM_OBJECT_LOCK
 argument_list|(
 name|kmem_object
@@ -1146,19 +1146,6 @@ name|VM_PROT_ALL
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_flag_set
-argument_list|(
-name|m
-argument_list|,
-name|PG_REFERENCED
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
