@@ -125,12 +125,6 @@ directive|include
 file|"archive.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"archive_private.h"
-end_include
-
 begin_struct
 struct|struct
 name|write_file_data
