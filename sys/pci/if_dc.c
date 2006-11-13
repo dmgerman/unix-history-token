@@ -1815,7 +1815,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__i386__
+name|__NO_STRICT_ALIGNMENT
 end_ifdef
 
 begin_decl_stmt
@@ -6764,15 +6764,95 @@ name|i
 operator|==
 name|DC_TIMEOUT
 condition|)
-name|if_printf
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|isr
+operator|&
+name|DC_ISR_TX_IDLE
+operator|)
+operator|&&
+operator|!
+name|DC_IS_ASIX
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|dc_ifp
+name|dc_dev
 argument_list|,
-literal|"failed to force tx and rx to idle state\n"
+literal|"%s: failed to force tx to idle state\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+operator|(
+name|isr
+operator|&
+name|DC_ISR_RX_STATE
+operator|)
+operator|==
+name|DC_RXSTATE_STOPPED
+operator|||
+operator|(
+name|isr
+operator|&
+name|DC_ISR_RX_STATE
+operator|)
+operator|==
+name|DC_RXSTATE_WAIT
+operator|)
+operator|&&
+operator|!
+operator|(
+name|DC_IS_CENTAUR
+argument_list|(
+name|sc
+argument_list|)
+operator|||
+name|DC_IS_CONEXANT
+argument_list|(
+name|sc
+argument_list|)
+operator|||
+operator|(
+name|DC_IS_DAVICOM
+argument_list|(
+name|sc
+argument_list|)
+operator|&&
+name|pci_get_revid
+argument_list|(
+name|sc
+operator|->
+name|dc_dev
+argument_list|)
+operator|>=
+name|DC_REVISION_DM9102A
+operator|)
+operator|)
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dc_dev
+argument_list|,
+literal|"%s: failed to force rx to idle state\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -7600,11 +7680,11 @@ name|i
 operator|==
 name|DC_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|dc_ifp
+name|dc_dev
 argument_list|,
 literal|"reset never completed!\n"
 argument_list|)
@@ -8836,6 +8916,12 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|dc_dev
+operator|=
+name|dev
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -12860,6 +12946,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+decl_stmt|,
+modifier|*
+name|m0
 decl_stmt|;
 name|struct
 name|ifnet
@@ -13195,12 +13284,10 @@ name|ETHER_CRC_LEN
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__i386__
-comment|/* 		 * On the x86 we do not have alignment problems, so try to 		 * allocate a new buffer for the receive ring, and pass up 		 * the one where the packet is already, saving the expensive 		 * copy done in m_devget(). 		 * If we are on an architecture with alignment problems, or 		 * if the allocation fails, then use m_devget and leave the 		 * existing buffer in the receive ring. 		 */
+name|__NO_STRICT_ALIGNMENT
+comment|/* 		 * On architectures without alignment problems we try to 		 * allocate a new buffer for the receive ring, and pass up 		 * the one where the packet is already, saving the expensive 		 * copy done in m_devget(). 		 * If we are on an architecture with alignment problems, or 		 * if the allocation fails, then use m_devget and leave the 		 * existing buffer in the receive ring. 		 */
 if|if
 condition|(
-name|dc_quick
-operator|&&
 name|dc_newbuf
 argument_list|(
 name|sc
@@ -13245,11 +13332,6 @@ else|else
 endif|#
 directive|endif
 block|{
-name|struct
-name|mbuf
-modifier|*
-name|m0
-decl_stmt|;
 name|m0
 operator|=
 name|m_devget
@@ -14210,13 +14292,15 @@ operator|==
 name|DC_TIMEOUT
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|dc_ifp
+name|dc_dev
 argument_list|,
-literal|"failed to force tx to idle state\n"
+literal|"%s: failed to force tx to idle state\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|dc_init_locked
@@ -14226,11 +14310,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|dc_ifp
+name|dc_dev
 argument_list|,
 literal|"TX underrun -- "
 argument_list|)
@@ -14574,7 +14658,9 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"dc_poll: bus error\n"
+literal|"%s: bus error\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|dc_reset
@@ -16483,9 +16569,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|dc_dev
 argument_list|,
 literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)
@@ -16942,6 +17030,11 @@ operator|->
 name|ifm_status
 operator|=
 literal|0
+expr_stmt|;
+name|DC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
