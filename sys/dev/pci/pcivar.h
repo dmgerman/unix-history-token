@@ -249,7 +249,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Interesting values for PCI MSI */
+comment|/* Interesting values for PCI MSI-X */
 end_comment
 
 begin_struct
@@ -263,7 +263,7 @@ comment|/* Message Control */
 name|uint8_t
 name|msix_location
 decl_stmt|;
-comment|/* Offset of MSI capability registers. */
+comment|/* Offset of MSI-X capability registers. */
 name|uint16_t
 name|msix_msgnum
 decl_stmt|;
