@@ -318,7 +318,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/*  * RFT_ID Requet CT_IU  *  * Source: INCITS xxx-200x Generic Services- 5 Rev 8.5 Section 5.2.5.30  */
+comment|/*  * RFT_ID Requet CT_IU  *  * Source: NCITS xxx-200x Generic Services- 5 Rev 8.5 Section 5.2.5.30  */
 end_comment
 
 begin_typedef
@@ -347,6 +347,59 @@ block|}
 name|rft_id_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * FCP Response Code Definitions  * Source: NCITS T10, Project 1144D, Revision 07a (aka FCP2r07a)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FCP_RSPNS_CODE_OFFSET
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_RSPNS_TMF_DONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_RSPNS_DLBRSTX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_RSPNS_BADCMND
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_RSPNS_EROFS
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_RSPNS_TMF_REJECT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_RSPNS_TMF_FAILED
+value|5
+end_define
 
 begin_comment
 comment|/* unconverted miscellany */

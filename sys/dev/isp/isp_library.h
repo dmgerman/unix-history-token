@@ -162,6 +162,17 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|isp_dump_portdb
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|isp_shutdown
 parameter_list|(
 name|ispsoftc_t
