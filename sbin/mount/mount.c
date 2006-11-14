@@ -2710,12 +2710,24 @@ condition|(
 name|debug
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+name|use_mountprog
+argument_list|(
+name|vfstype
+argument_list|)
+condition|)
 name|printf
 argument_list|(
 literal|"exec: mount_%s"
+argument_list|,
+name|vfstype
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"mount -t %s"
 argument_list|,
 name|vfstype
 argument_list|)
