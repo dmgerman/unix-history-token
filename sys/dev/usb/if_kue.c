@@ -347,6 +347,12 @@ name|USB_PRODUCT_ABOCOM_URE450
 block|}
 block|,
 block|{
+name|USB_VENDOR_SILICOM
+block|,
+name|USB_PRODUCT_SILICOM_GPE
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0

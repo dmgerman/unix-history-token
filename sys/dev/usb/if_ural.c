@@ -456,6 +456,12 @@ name|USB_PRODUCT_MSI_RT2570_3
 block|}
 block|,
 block|{
+name|USB_VENDOR_NOVATECH
+block|,
+name|USB_PRODUCT_NOVATECH_NV902
+block|}
+block|,
+block|{
 name|USB_VENDOR_RALINK
 block|,
 name|USB_PRODUCT_RALINK_RT2570
