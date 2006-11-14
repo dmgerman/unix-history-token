@@ -2086,10 +2086,10 @@ condition|(
 name|ke
 operator|->
 name|ke_cpticks
-operator|==
+operator|!=
 literal|0
 condition|)
-continue|continue;
+block|{
 if|#
 directive|if
 operator|(
@@ -2177,6 +2177,7 @@ name|ke_cpticks
 operator|=
 literal|0
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/*  			 * ifdef KSE 			 * If there are ANY running threads in this KSEGRP, 			 * else 			 * If there are ANY running threads in this process, 			 * endif 			 * then don't count it as sleeping. 			 */
