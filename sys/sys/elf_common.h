@@ -2114,6 +2114,17 @@ comment|/* Processor-specific. */
 end_comment
 
 begin_comment
+comment|/* Extended program header index. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PN_XNUM
+value|0xffff
+end_define
+
+begin_comment
 comment|/* Values for d_tag. */
 end_comment
 
