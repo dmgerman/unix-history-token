@@ -4233,9 +4233,7 @@ comment|/*parent*/
 name|NULL
 argument_list|,
 comment|/*alignment*/
-name|sc
-operator|->
-name|bufsz
+literal|2
 argument_list|,
 comment|/*boundary*/
 literal|0
