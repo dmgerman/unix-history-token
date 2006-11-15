@@ -3788,6 +3788,8 @@ operator||
 name|WNOHANG
 operator||
 name|WCONTINUED
+operator||
+name|__WCLONE
 operator|)
 condition|)
 return|return
