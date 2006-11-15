@@ -1367,7 +1367,7 @@ init|;
 name|j
 operator|<
 operator|*
-name|newirq
+name|newcount
 condition|;
 name|j
 operator|++
