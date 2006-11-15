@@ -199,7 +199,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|ssize_t
 name|archive_write_shar_data_sed
 parameter_list|(
 name|struct
@@ -218,7 +218,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|ssize_t
 name|archive_write_shar_data_uuencode
 parameter_list|(
 name|struct
@@ -1531,7 +1531,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|archive_write_shar_data_sed
 parameter_list|(
 name|struct
@@ -1560,6 +1560,11 @@ name|src
 decl_stmt|;
 name|int
 name|ret
+decl_stmt|;
+name|int
+name|written
+init|=
+name|n
 decl_stmt|;
 name|shar
 operator|=
@@ -1745,9 +1750,20 @@ operator|->
 name|outpos
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+name|ARCHIVE_OK
+condition|)
 return|return
 operator|(
 name|ret
+operator|)
+return|;
+return|return
+operator|(
+name|written
 operator|)
 return|;
 block|}
@@ -1964,7 +1980,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|archive_write_shar_data_uuencode
 parameter_list|(
 name|struct
@@ -2129,7 +2145,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|ARCHIVE_OK
+name|length
 operator|)
 return|;
 block|}

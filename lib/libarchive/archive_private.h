@@ -448,7 +448,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|ssize_t
 function_decl|(
 modifier|*
 name|format_write_data

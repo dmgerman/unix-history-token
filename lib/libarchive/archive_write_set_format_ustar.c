@@ -577,7 +577,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|int
+name|ssize_t
 name|archive_write_ustar_data
 parameter_list|(
 name|struct
@@ -2561,7 +2561,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|archive_write_ustar_data
 parameter_list|(
 name|struct
@@ -2632,9 +2632,20 @@ name|entry_bytes_remaining
 operator|-=
 name|s
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+name|ARCHIVE_OK
+condition|)
 return|return
 operator|(
 name|ret
+operator|)
+return|;
+return|return
+operator|(
+name|s
 operator|)
 return|;
 block|}

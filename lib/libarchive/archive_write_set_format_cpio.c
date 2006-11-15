@@ -111,7 +111,7 @@ end_include
 
 begin_function_decl
 specifier|static
-name|int
+name|ssize_t
 name|archive_write_cpio_data
 parameter_list|(
 name|struct
@@ -933,7 +933,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|archive_write_cpio_data
 parameter_list|(
 name|struct
@@ -1004,6 +1004,18 @@ name|entry_bytes_remaining
 operator|-=
 name|s
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|>=
+literal|0
+condition|)
+return|return
+operator|(
+name|s
+operator|)
+return|;
+else|else
 return|return
 operator|(
 name|ret
