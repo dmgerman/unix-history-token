@@ -289,7 +289,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|CLONE_VM
+name|CLONE_THREAD
 condition|)
 block|{
 comment|/* handled later in the code */
@@ -429,7 +429,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|CLONE_VM
+name|CLONE_THREAD
 condition|)
 block|{
 comment|/* lookup the parent */
@@ -451,7 +451,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"proc_init: parent emuldata not found for CLONE_VM\n"
+literal|"proc_init: parent emuldata not found for CLONE_THREAD\n"
 operator|)
 argument_list|)
 expr_stmt|;
