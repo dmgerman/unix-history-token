@@ -697,6 +697,9 @@ name|int
 name|io_rid
 decl_stmt|;
 name|int
+name|msi
+decl_stmt|;
+name|int
 name|if_flags
 decl_stmt|;
 name|struct

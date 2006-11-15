@@ -1961,6 +1961,9 @@ name|callout
 name|raid_timer
 decl_stmt|;
 comment|/* 	 * PCI Hardware info 	 */
+name|int
+name|pci_msi_count
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
