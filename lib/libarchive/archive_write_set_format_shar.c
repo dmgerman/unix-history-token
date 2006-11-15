@@ -1561,7 +1561,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|int
+name|size_t
 name|written
 init|=
 name|n
