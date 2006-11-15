@@ -211,7 +211,7 @@ value|((d)->dr[(x)])
 end_define
 
 begin_comment
-comment|/* reference dr0 - dr15 by                                          register number */
+comment|/* reference dr0 - dr15 by 					   register number */
 end_comment
 
 begin_ifdef
