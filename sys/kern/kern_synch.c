@@ -480,6 +480,11 @@ operator|||
 name|mtx
 operator|!=
 name|NULL
+operator|||
+name|ident
+operator|==
+operator|&
+name|lbolt
 argument_list|,
 operator|(
 literal|"sleeping without a mutex"
@@ -652,6 +657,13 @@ name|sleepq_add
 argument_list|(
 name|ident
 argument_list|,
+name|ident
+operator|==
+operator|&
+name|lbolt
+condition|?
+name|NULL
+else|:
 name|mtx
 argument_list|,
 name|wmesg
