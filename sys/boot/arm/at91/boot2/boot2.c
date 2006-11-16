@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ee.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"board.h"
 end_include
 
