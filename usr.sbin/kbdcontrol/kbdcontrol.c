@@ -4820,7 +4820,7 @@ condition|)
 block|{
 name|bell
 operator|=
-literal|2
+name|CONS_QUIET_BELL
 expr_stmt|;
 name|opt
 operator|+=
@@ -4839,7 +4839,7 @@ argument_list|)
 condition|)
 name|bell
 operator||=
-literal|1
+name|CONS_VISUAL_BELL
 expr_stmt|;
 elseif|else
 if|if
@@ -4999,14 +4999,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 operator|(
 name|bell
 operator|&
-operator|~
-literal|2
+name|CONS_VISUAL_BELL
 operator|)
-operator|==
-literal|0
 condition|)
 name|fprintf
 argument_list|(

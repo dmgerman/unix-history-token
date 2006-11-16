@@ -4484,7 +4484,7 @@ operator|)
 name|data
 operator|)
 operator|&
-literal|0x01
+name|CONS_VISUAL_BELL
 condition|)
 name|sc
 operator|->
@@ -4511,7 +4511,7 @@ operator|)
 name|data
 operator|)
 operator|&
-literal|0x02
+name|CONS_QUIET_BELL
 condition|)
 name|sc
 operator|->
