@@ -2306,9 +2306,14 @@ operator|)
 expr_stmt|;
 name|pv_maxchunks
 operator|=
+name|MAX
+argument_list|(
 name|pv_entry_max
 operator|/
 name|_NPCPV
+argument_list|,
+name|maxproc
+argument_list|)
 expr_stmt|;
 name|pv_chunkbase
 operator|=
