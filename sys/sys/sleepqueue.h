@@ -21,7 +21,7 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|mtx
+name|lock_object
 struct_decl|;
 end_struct_decl
 
@@ -119,7 +119,7 @@ name|void
 modifier|*
 parameter_list|,
 name|struct
-name|mtx
+name|lock_object
 modifier|*
 parameter_list|,
 specifier|const

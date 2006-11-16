@@ -409,7 +409,10 @@ name|sleepq_add
 argument_list|(
 name|cvp
 argument_list|,
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|,
 name|cvp
 operator|->
@@ -570,7 +573,10 @@ name|sleepq_add
 argument_list|(
 name|cvp
 argument_list|,
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|,
 name|cvp
 operator|->
@@ -770,7 +776,10 @@ name|sleepq_add
 argument_list|(
 name|cvp
 argument_list|,
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|,
 name|cvp
 operator|->
@@ -986,7 +995,10 @@ name|sleepq_add
 argument_list|(
 name|cvp
 argument_list|,
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|,
 name|cvp
 operator|->
