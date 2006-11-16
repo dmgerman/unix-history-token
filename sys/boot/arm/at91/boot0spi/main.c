@@ -30,8 +30,22 @@ end_include
 begin_define
 define|#
 directive|define
-name|OFFSET
+name|LOADER_OFFSET
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FPGA_OFFSET
+value|(15 * FLASH_PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OFFSET
+value|LOADER_OFFSET
 end_define
 
 begin_function
@@ -66,7 +80,7 @@ operator|<<
 literal|20
 operator|)
 decl_stmt|;
-comment|/* Load to base + 1MB */
+comment|/* download at + 1MB */
 name|char
 modifier|*
 name|addr2
@@ -83,7 +97,7 @@ operator|<<
 literal|20
 operator|)
 decl_stmt|;
-comment|/* Load to base + 2MB */
+comment|/* readback to + 2MB */
 name|char
 modifier|*
 name|addr3
@@ -100,7 +114,7 @@ operator|<<
 literal|20
 operator|)
 decl_stmt|;
-comment|/* Load to base + 2MB */
+comment|/* extra copy at + 3MB */
 name|SPI_InitFlash
 argument_list|()
 expr_stmt|;
@@ -124,13 +138,7 @@ operator|-
 literal|1
 condition|)
 continue|continue;
-name|printf
-argument_list|(
-literal|"\nDownloaded %u bytes.\n"
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
+comment|// Need extra copy at addr3
 name|memcpy
 argument_list|(
 name|addr3
@@ -249,6 +257,11 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"Done\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
