@@ -20214,35 +20214,7 @@ argument_list|,
 name|prod_bseq
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Ensure that the map for this transmission 	 * is placed at the array index of the last 	 * descriptor in this chain.  This is done 	 * because a single map is used for all  	 * segments of the mbuf and we don't want to 	 * delete the map before all of the segments 	 * have been freed. 	 */
-name|sc
-operator|->
-name|tx_mbuf_map
-index|[
-name|TX_CHAIN_IDX
-argument_list|(
-name|sc
-operator|->
-name|tx_prod
-argument_list|)
-index|]
-operator|=
-name|sc
-operator|->
-name|tx_mbuf_map
-index|[
-name|chain_prod
-index|]
-expr_stmt|;
-name|sc
-operator|->
-name|tx_mbuf_map
-index|[
-name|chain_prod
-index|]
-operator|=
-name|map
-expr_stmt|;
+comment|/* 	 * Ensure that the mbuf pointer for this transmission 	 * is placed at the array index of the last 	 * descriptor in this chain.  This is done 	 * because a single map is used for all  	 * segments of the mbuf and we don't want to 	 * unload the map before all of the segments 	 * have been freed. 	 */
 name|sc
 operator|->
 name|tx_mbuf_ptr
@@ -20303,7 +20275,7 @@ name|nsegs
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* prod still points the last used tx_bd at this point. */
+comment|/* prod points to the next free tx_bd at this point. */
 name|sc
 operator|->
 name|tx_prod
@@ -20451,17 +20423,16 @@ operator|->
 name|tx_prod_bseq
 argument_list|)
 expr_stmt|;
-comment|/* Keep adding entries while there is space in the ring. */
+comment|/* 	 * Keep adding entries while there is space in the ring.  We keep 	 * BCE_TX_SLACK_SPACE entries unused at all times. 	 */
 while|while
 condition|(
 name|sc
 operator|->
-name|tx_mbuf_ptr
-index|[
-name|tx_chain_prod
-index|]
-operator|==
-name|NULL
+name|used_tx_bd
+operator|<
+name|USABLE_TX_BD
+operator|-
+name|BCE_TX_SLACK_SPACE
 condition|)
 block|{
 comment|/* Check for any frames to send. */
