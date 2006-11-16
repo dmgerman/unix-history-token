@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1997-2006 by Matthew Jacob  * All rights reserved. 
 end_comment
 
 begin_comment
-comment|/*  * Machine and OS Independent (well, as best as possible)  * code for the Qlogic ISP SCSI adapters.  */
+comment|/*  * Machine and OS Independent (well, as best as possible)  * code for the Qlogic ISP SCSI and FC-SCSI adapters.  */
 end_comment
 
 begin_comment
