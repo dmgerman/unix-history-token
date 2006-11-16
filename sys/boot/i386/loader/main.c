@@ -669,8 +669,6 @@ name|i386_devdesc
 name|new_currdev
 decl_stmt|;
 name|int
-name|major
-decl_stmt|,
 name|biosdev
 init|=
 operator|-
@@ -869,13 +867,6 @@ operator|=
 name|initial_bootinfo
 operator|->
 name|bi_bios_dev
-expr_stmt|;
-name|major
-operator|=
-name|B_TYPE
-argument_list|(
-name|initial_bootdev
-argument_list|)
 expr_stmt|;
 comment|/* 	 * If we are booted by an old bootstrap, we have to guess at the BIOS 	 * unit number.  We will lose if there is more than one disk type 	 * and we are not booting from the lowest-numbered disk type  	 * (ie. SCSI when IDE also exists). 	 */
 if|if
