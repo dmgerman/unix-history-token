@@ -132,7 +132,7 @@ name|tte_hash_kernel_create
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
-name|uint64_t
+name|uint16_t
 parameter_list|,
 name|vm_paddr_t
 parameter_list|)
@@ -229,11 +229,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|tte_hash_t
 name|tte_hash_reset
 parameter_list|(
 name|tte_hash_t
 name|hash
+parameter_list|,
+name|uint64_t
+modifier|*
+name|scratchval
 parameter_list|)
 function_decl|;
 end_function_decl
