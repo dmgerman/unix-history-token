@@ -45,25 +45,61 @@ literal|20
 operator|)
 decl_stmt|;
 comment|/* Load to base + 1MB */
+name|int
+name|len
+decl_stmt|,
+name|sec
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"\nSend data to be written into EEPROM\n"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
+operator|(
+name|len
+operator|=
 name|xmodem_rx
 argument_list|(
 name|addr
 argument_list|)
+operator|)
 operator|==
 operator|-
 literal|1
 condition|)
 continue|continue;
+name|sec
+operator|=
+name|GetSeconds
+argument_list|()
+operator|+
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|sec
+operator|>=
+name|GetSeconds
+argument_list|()
+condition|)
+continue|continue;
+name|printf
+argument_list|(
+literal|"\nWriting EEPROM from 0x%x to addr 0, 0x%x bytes\n"
+argument_list|,
+name|addr
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 name|InitEEPROM
 argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Writing EEPROM from 0x%x to addr 0\n"
-argument_list|,
-name|addr
+literal|"init done\n"
 argument_list|)
 expr_stmt|;
 name|WriteEEPROM
@@ -72,12 +108,14 @@ literal|0
 argument_list|,
 name|addr
 argument_list|,
-literal|8192
+name|len
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Write complete.  Press reset\n"
+literal|"\nWrote %d bytes.  Press reset\n"
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 return|return
