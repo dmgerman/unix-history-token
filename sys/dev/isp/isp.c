@@ -11102,7 +11102,7 @@ name|mbs
 operator|.
 name|timeout
 operator|=
-literal|250000
+literal|500000
 expr_stmt|;
 name|isp_mboxcmd
 argument_list|(
@@ -11363,6 +11363,12 @@ name|logval
 operator|=
 name|MBLOGNONE
 expr_stmt|;
+name|mbs
+operator|.
+name|timeout
+operator|=
+literal|100000
+expr_stmt|;
 name|isp_mboxcmd
 argument_list|(
 name|isp
@@ -11564,6 +11570,12 @@ name|fcp
 operator|->
 name|isp_scdma
 argument_list|)
+expr_stmt|;
+name|mbs
+operator|.
+name|timeout
+operator|=
+literal|250000
 expr_stmt|;
 name|mbs
 operator|.
@@ -11957,12 +11969,6 @@ name|MBLOGALL
 operator|&
 operator|~
 name|MBOX_COMMAND_PARAM_ERROR
-expr_stmt|;
-name|mbs
-operator|.
-name|timeout
-operator|=
-literal|30000
 expr_stmt|;
 name|isp_mboxcmd
 argument_list|(
@@ -14495,13 +14501,56 @@ operator|==
 literal|0
 condition|)
 block|{
+name|int
+name|a
+decl_stmt|,
+name|b
+decl_stmt|,
+name|c
+decl_stmt|;
+name|a
+operator|=
+operator|(
+name|tmp
+operator|.
+name|node_wwn
+operator|==
+literal|0
+operator|)
+expr_stmt|;
+name|b
+operator|=
+operator|(
+name|tmp
+operator|.
+name|port_wwn
+operator|==
+literal|0
+operator|)
+expr_stmt|;
+name|c
+operator|=
+operator|(
+name|tmp
+operator|.
+name|portid
+operator|==
+literal|0
+operator|)
+expr_stmt|;
 name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"bad pdb @ loop %d"
+literal|"bad pdb (%1d%1d%1d) @ handle 0x%x"
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|,
+name|c
 argument_list|,
 name|handle
 argument_list|)
@@ -14717,7 +14766,7 @@ name|isp
 argument_list|,
 name|ISP_LOGSANCFG
 argument_list|,
-literal|"Loop Port 0x%06x@0x%x changed"
+literal|"Loop Port 0x%02x@0x%x changed"
 argument_list|,
 name|tmp
 operator|.
@@ -14890,7 +14939,7 @@ name|isp
 argument_list|,
 name|ISP_LOGSANCFG
 argument_list|,
-literal|"Loop Port 0x%06x@0x%x is New Entry"
+literal|"Loop Port 0x%02x@0x%x is New Entry"
 argument_list|,
 name|tmp
 operator|.
@@ -24241,6 +24290,17 @@ expr_stmt|;
 if|if
 condition|(
 name|resp
+operator|&&
+name|rlen
+operator|>=
+literal|4
+operator|&&
+name|resp
+index|[
+name|FCP_RSPNS_CODE_OFFSET
+index|]
+operator|!=
+literal|0
 condition|)
 block|{
 name|isp_prt
@@ -33510,12 +33570,6 @@ operator|.
 name|logval
 operator|=
 name|MBLOGALL
-expr_stmt|;
-name|mbs
-operator|.
-name|timeout
-operator|=
-literal|100000
 expr_stmt|;
 name|isp_mboxcmd
 argument_list|(

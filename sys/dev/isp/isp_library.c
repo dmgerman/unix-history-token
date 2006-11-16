@@ -1275,10 +1275,14 @@ name|isp
 argument_list|,
 name|ISP_LOGALL
 argument_list|,
-literal|"%d: %s al%d tgt %s %s 0x%06x =>%s"
-literal|" 0x%06x; WWNN 0x%08x%08x WWPN 0x%08x%08x"
+literal|"%d: hdl 0x%x %s al%d tgt %s %s "
+literal|"0x%06x =>%s 0x%06x; WWNN 0x%08x%08x WWPN 0x%08x%08x"
 argument_list|,
 name|i
+argument_list|,
+name|lp
+operator|->
+name|handle
 argument_list|,
 name|dbs
 index|[
