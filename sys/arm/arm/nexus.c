@@ -615,10 +615,7 @@ operator|++
 control|)
 name|arm_mask_irq
 argument_list|(
-name|rman_get_start
-argument_list|(
-name|r
-argument_list|)
+name|i
 argument_list|)
 expr_stmt|;
 name|error
