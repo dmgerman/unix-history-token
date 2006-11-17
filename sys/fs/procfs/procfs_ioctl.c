@@ -446,6 +446,16 @@ operator|->
 name|p_step
 operator|==
 literal|0
+operator|&&
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_WEXIT
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* sleep until p stops */
@@ -560,6 +570,16 @@ condition|(
 name|p
 operator|->
 name|p_step
+operator|==
+literal|0
+operator|&&
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_WEXIT
+operator|)
 operator|==
 literal|0
 condition|)
