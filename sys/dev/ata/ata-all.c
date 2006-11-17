@@ -3191,11 +3191,9 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
+ifndef|#
+directive|ifndef
+name|__ARMEB__
 name|int16_t
 modifier|*
 name|ptr
@@ -3233,7 +3231,7 @@ block|{
 operator|*
 name|ptr
 operator|=
-name|bswap16
+name|le16toh
 argument_list|(
 operator|*
 name|ptr
