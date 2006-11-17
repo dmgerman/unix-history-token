@@ -3720,7 +3720,7 @@ block|}
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"goodnight\n"
+literal|"msgsnd:  goodnight\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3741,15 +3741,15 @@ operator|)
 operator||
 name|PCATCH
 argument_list|,
-literal|"msgwait"
+literal|"msgsnd"
 argument_list|,
-literal|0
+name|hz
 argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"good morning, error=%d\n"
+literal|"msgsnd:  good morning, error=%d\n"
 operator|,
 name|error
 operator|)
@@ -3770,6 +3770,22 @@ operator|&=
 operator|~
 name|MSG_LOCKED
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|EWOULDBLOCK
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"msgsnd:  timed out\n"
+operator|)
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|error
@@ -5380,7 +5396,7 @@ operator|)
 operator||
 name|PCATCH
 argument_list|,
-literal|"msgwait"
+literal|"msgrcv"
 argument_list|,
 literal|0
 argument_list|)
@@ -5404,7 +5420,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"msgsnd:  interrupted system call\n"
+literal|"msgrcv:  interrupted system call\n"
 operator|)
 argument_list|)
 expr_stmt|;
