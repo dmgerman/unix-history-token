@@ -2107,14 +2107,6 @@ argument_list|(
 name|physmem
 argument_list|)
 expr_stmt|;
-name|avail_end
-operator|=
-literal|0xa0000000
-operator|+
-name|memsize
-operator|-
-literal|1
-expr_stmt|;
 name|kdb_init
 argument_list|()
 expr_stmt|;
