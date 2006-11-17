@@ -207,6 +207,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DBREG_DR7_LEN_8
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
 name|DBREG_DR7_EXEC
 value|0x00
 end_define

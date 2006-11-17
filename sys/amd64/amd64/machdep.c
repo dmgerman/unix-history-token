@@ -8214,6 +8214,14 @@ operator|)
 return|;
 if|if
 condition|(
+name|td
+operator|->
+name|td_frame
+operator|->
+name|tf_cs
+operator|==
+name|_ucode32sel
+operator|&&
 name|DBREG_DR7_LEN
 argument_list|(
 name|dbregs
@@ -8226,7 +8234,7 @@ argument_list|,
 name|i
 argument_list|)
 operator|==
-literal|0x02
+name|DBREG_DR7_LEN_8
 condition|)
 return|return
 operator|(

@@ -2727,7 +2727,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * we can watch a 1, 2, or 4 byte sized location 	 */
+comment|/* 	 * we can watch a 1, 2, 4, or 8 byte sized location 	 */
 switch|switch
 condition|(
 name|size
@@ -2755,6 +2755,14 @@ case|:
 name|len
 operator|=
 name|DBREG_DR7_LEN_4
+expr_stmt|;
+break|break;
+case|case
+literal|8
+case|:
+name|len
+operator|=
+name|DBREG_DR7_LEN_8
 expr_stmt|;
 break|break;
 default|default:
@@ -2954,7 +2962,7 @@ if|if
 condition|(
 name|avail
 operator|*
-literal|4
+literal|8
 operator|<
 name|size
 condition|)
@@ -3003,6 +3011,27 @@ block|{
 if|if
 condition|(
 name|size
+operator|>=
+literal|8
+operator|||
+operator|(
+name|avail
+operator|==
+literal|1
+operator|&&
+name|size
+operator|>
+literal|4
+operator|)
+condition|)
+name|wsize
+operator|=
+literal|8
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|size
 operator|>
 literal|2
 condition|)
@@ -3036,6 +3065,9 @@ expr_stmt|;
 name|size
 operator|-=
 name|wsize
+expr_stmt|;
+name|avail
+operator|--
 expr_stmt|;
 block|}
 block|}
@@ -3316,6 +3348,20 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+name|DBREG_DR7_LEN_8
+condition|)
+name|len
+operator|=
+literal|8
+expr_stmt|;
+else|else
+name|len
+operator|++
+expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"  %-5d  %-8s  %10s  %3d  "
@@ -3330,8 +3376,6 @@ name|type
 argument_list|)
 argument_list|,
 name|len
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|db_printsym
