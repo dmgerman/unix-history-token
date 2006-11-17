@@ -21865,6 +21865,9 @@ name|MPT_PRT_DEBUG
 argument_list|,
 literal|"local inquiry %ld bytes\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -21930,6 +21933,9 @@ name|MPT_PRT_DEBUG
 argument_list|,
 literal|"local reqsense %ld bytes\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
