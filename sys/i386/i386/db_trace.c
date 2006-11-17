@@ -944,6 +944,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|watchtype_str
@@ -3316,12 +3317,12 @@ name|db_expr_t
 name|size
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
 name|struct
 name|dbreg
 name|d
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|fill_dbregs
 argument_list|(
@@ -3425,6 +3426,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|watchtype_str
