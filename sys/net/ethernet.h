@@ -2539,7 +2539,7 @@ value|(ETHER_MAX_LEN_JUMBO - ETHER_HDR_LEN - ETHER_CRC_LEN)
 end_define
 
 begin_comment
-comment|/*  * The ETHER_BPF_MTAP macro should be used by drivers which support hardware  * offload for VLAN tag processing.  It will check the mbuf to see if it has  * M_VLANTAG set, and if it does, will pass the packet along to  * ether_vlan_mtap.  This function will re-insert VLAN tags for the duration  * of the tap, show they show up properly for network analyzers.  */
+comment|/*  * The ETHER_BPF_MTAP macro should be used by drivers which support hardware  * offload for VLAN tag processing.  It will check the mbuf to see if it has  * M_VLANTAG set, and if it does, will pass the packet along to  * ether_vlan_mtap.  This function will re-insert VLAN tags for the duration  * of the tap, so they show up properly for network analyzers.  */
 end_comment
 
 begin_define
