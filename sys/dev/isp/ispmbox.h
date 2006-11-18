@@ -1740,6 +1740,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RQSTYPE_MS_PASSTHRU
+value|0x29
+end_define
+
+begin_define
+define|#
+directive|define
 name|RQSTYPE_ABORT_IO
 value|0x33
 end_define
@@ -2882,6 +2889,83 @@ index|]
 decl_stmt|;
 block|}
 name|isp_ct_pt_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * MS Passthru IOCB  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|isphdr_t
+name|ms_header
+decl_stmt|;
+name|uint32_t
+name|ms_handle
+decl_stmt|;
+name|uint16_t
+name|ms_nphdl
+decl_stmt|;
+comment|/* XXX: Note, this is for 2K Logins only */
+name|uint16_t
+name|ms_status
+decl_stmt|;
+name|uint16_t
+name|ms_flags
+decl_stmt|;
+name|uint16_t
+name|ms_reserved1
+decl_stmt|;
+comment|/* low 8 bits */
+name|uint16_t
+name|ms_time
+decl_stmt|;
+name|uint16_t
+name|ms_cmd_cnt
+decl_stmt|;
+comment|/* Command DSD count */
+empty_stmt|;
+name|uint16_t
+name|ms_tot_cnt
+decl_stmt|;
+comment|/* Total DSD Count */
+name|uint8_t
+name|ms_type
+decl_stmt|;
+comment|/* MS type */
+name|uint8_t
+name|ms_r_ctl
+decl_stmt|;
+comment|/* R_CTL */
+name|uint16_t
+name|ms_rxid
+decl_stmt|;
+comment|/* RX_ID */
+name|uint16_t
+name|ms_reserved2
+decl_stmt|;
+name|uint32_t
+name|ms_handle2
+decl_stmt|;
+name|uint32_t
+name|ms_rsp_bcnt
+decl_stmt|;
+comment|/* Response byte count */
+name|uint32_t
+name|ms_cmd_bcnt
+decl_stmt|;
+comment|/* Command byte count */
+name|ispds64_t
+name|ms_dataseg
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|isp_ms_t
 typedef|;
 end_typedef
 
@@ -5085,6 +5169,35 @@ block|}
 name|isp_pdb_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * Genericized Port Login/Logout software structure  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint16_t
+name|handle
+decl_stmt|;
+name|uint32_t
+name|flags
+range|:
+literal|8
+decl_stmt|,
+name|portid
+range|:
+literal|24
+decl_stmt|;
+block|}
+name|isp_plcmd_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* the flags to use are those for PLOGX_FLG_* below */
+end_comment
 
 begin_comment
 comment|/*  * ISP24XX- Login/Logout Port IOCB  */

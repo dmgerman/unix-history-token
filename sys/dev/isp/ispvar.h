@@ -2966,7 +2966,10 @@ name|ISPCTL_TOGGLE_TMODE
 block|,
 comment|/* toggle target mode */
 name|ISPCTL_GET_PDB
+block|,
 comment|/* get a single port database entry */
+name|ISPCTL_PLOGX
+comment|/* do a port login/logout */
 block|}
 name|ispctl_t
 typedef|;
