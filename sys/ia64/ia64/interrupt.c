@@ -1131,7 +1131,7 @@ argument_list|()
 expr_stmt|;
 name|savectx
 argument_list|(
-name|PCPU_GET
+name|PCPU_PTR
 argument_list|(
 name|pcb
 argument_list|)

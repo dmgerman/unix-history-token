@@ -21,23 +21,29 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|struct pcb	*pc_pcb;
+value|struct pcb	pc_pcb;
 comment|/* Used by IPI_STOP */
 value|\ 	struct pmap	*pc_current_pmap;
 comment|/* active pmap */
 value|\ 	uint64_t	pc_lid;
 comment|/* local CPU ID */
-value|\ 	uint32_t	pc_awake:1;
-comment|/* CPU is awake? */
 value|\ 	uint64_t	pc_clock;
 comment|/* Clock counter. */
 value|\ 	uint64_t	pc_clockadj;
 comment|/* Clock adjust. */
+value|\ 	uint32_t	pc_awake:1;
+comment|/* CPU is awake? */
 value|\ 	uint32_t	pc_acpi_id
 end_define
 
