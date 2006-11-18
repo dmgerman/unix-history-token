@@ -2538,6 +2538,22 @@ name|ETHERMTU_JUMBO
 value|(ETHER_MAX_LEN_JUMBO - ETHER_HDR_LEN - ETHER_CRC_LEN)
 end_define
 
+begin_comment
+comment|/*  * The ETHER_BPF_MTAP macro should be used by drivers which support hardware  * offload for VLAN tag processing.  It will check the mbuf to see if it has  * M_VLANTAG set, and if it does, will pass the packet along to  * ether_vlan_mtap.  This function will re-insert VLAN tags for the duration  * of the tap, show they show up properly for network analyzers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHER_BPF_MTAP
+parameter_list|(
+name|_ifp
+parameter_list|,
+name|_m
+parameter_list|)
+value|do {					\ 	if (bpf_peers_present((_ifp)->if_bpf)) {			\ 		M_ASSERTVALID(_m);					\ 		if (((_m)->m_flags& M_VLANTAG) != 0)			\ 			ether_vlan_mtap((_ifp)->if_bpf, (_m), NULL, 0);	\ 		else							\ 			bpf_mtap((_ifp)->if_bpf, (_m));			\ 	}								\ } while (0)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2565,6 +2581,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|sockaddr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|bpf_if
 struct_decl|;
 end_struct_decl
 
@@ -2705,6 +2727,26 @@ parameter_list|(
 specifier|const
 name|u_int8_t
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ether_vlan_mtap
+parameter_list|(
+name|struct
+name|bpf_if
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
