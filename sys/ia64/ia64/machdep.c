@@ -448,7 +448,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|pcpu
-name|early_pcpu
+name|pcpu0
 decl_stmt|;
 end_decl_stmt
 
@@ -2591,11 +2591,11 @@ name|bootverbose
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Setup the global data for the bootstrap cpu. 	 */
+comment|/* 	 * Setup the PCPU data for the bootstrap processor. It is needed 	 * by printf(). Also, since printf() has critical sections, we 	 * need to initialize at least pc_curthread. 	 */
 name|pcpup
 operator|=
 operator|&
-name|early_pcpu
+name|pcpu0
 expr_stmt|;
 name|ia64_set_k4
 argument_list|(
@@ -2613,8 +2613,16 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|early_pcpu
+name|pcpu0
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|curthread
+argument_list|,
+operator|&
+name|thread0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */
@@ -3242,14 +3250,6 @@ operator|.
 name|td_kstack_pages
 operator|=
 name|KSTACK_PAGES
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|curthread
-argument_list|,
-operator|&
-name|thread0
-argument_list|)
 expr_stmt|;
 name|mutex_init
 argument_list|()
