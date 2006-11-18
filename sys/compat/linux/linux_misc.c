@@ -444,6 +444,9 @@ name|l_ushort
 name|procs
 decl_stmt|;
 comment|/* Number of current processes */
+name|l_ushort
+name|pads
+decl_stmt|;
 name|l_ulong
 name|totalbig
 decl_stmt|;
@@ -456,10 +459,22 @@ decl_stmt|;
 name|char
 name|_f
 index|[
-literal|6
+literal|20
+operator|-
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|l_long
+argument_list|)
+operator|-
+sizeof|sizeof
+argument_list|(
+name|l_int
+argument_list|)
 index|]
 decl_stmt|;
-comment|/* Pads structure to 64 bytes */
+comment|/* padding */
 block|}
 struct|;
 end_struct
