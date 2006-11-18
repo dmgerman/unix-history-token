@@ -6631,13 +6631,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|PROC_LOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_retval
@@ -6650,13 +6643,6 @@ operator|->
 name|td_proc
 operator|->
 name|p_pid
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
-argument_list|)
 expr_stmt|;
 block|}
 return|return
