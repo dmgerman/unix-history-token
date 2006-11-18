@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_global.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -197,6 +203,16 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|SUN4V
+name|intr_restore_all
+argument_list|(
+literal|0x16
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|root_bus_configure
 argument_list|()
 expr_stmt|;

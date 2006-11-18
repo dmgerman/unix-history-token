@@ -50,7 +50,7 @@ name|char
 name|machine
 index|[]
 init|=
-literal|"sparc64"
+name|MACHINE
 decl_stmt|;
 end_decl_stmt
 
@@ -104,11 +104,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SUN4V
+end_ifndef
+
 begin_decl_stmt
 name|int
 name|cpu_impl
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -142,6 +153,24 @@ specifier|const
 name|ways
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|SUN4V
+comment|/* XXX hardcoding is lame */
+operator|*
+name|size
+operator|=
+literal|3
+operator|*
+literal|1024
+expr_stmt|;
+operator|*
+name|ways
+operator|=
+literal|12
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 end_function
