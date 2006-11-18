@@ -151,6 +151,13 @@ name|rs_stired
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|arc4_count
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 specifier|inline
@@ -494,10 +501,17 @@ condition|;
 name|n
 operator|++
 control|)
+operator|(
+name|void
+operator|)
 name|arc4_getbyte
 argument_list|(
 name|as
 argument_list|)
+expr_stmt|;
+name|arc4_count
+operator|=
+literal|400000
 expr_stmt|;
 block|}
 end_function
@@ -707,6 +721,11 @@ if|if
 condition|(
 operator|!
 name|rs_stired
+operator|||
+operator|--
+name|arc4_count
+operator|==
+literal|0
 condition|)
 block|{
 name|arc4_stir
