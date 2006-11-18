@@ -209,6 +209,7 @@ name|u_short
 name|ether_type
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
