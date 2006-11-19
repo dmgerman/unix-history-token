@@ -1682,7 +1682,11 @@ range|:
 literal|8
 decl_stmt|,
 range|:
-literal|3
+literal|2
+decl_stmt|,
+name|msi_enable
+range|:
+literal|1
 decl_stmt|,
 name|twildcard
 range|:
