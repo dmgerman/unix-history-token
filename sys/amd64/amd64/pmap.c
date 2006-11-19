@@ -360,6 +360,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|vm_paddr_t
 name|avail_start
 decl_stmt|;
@@ -367,16 +368,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* PA of first available physical page */
-end_comment
-
-begin_decl_stmt
-name|vm_paddr_t
-name|avail_end
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* PA of last available physical page */
 end_comment
 
 begin_decl_stmt

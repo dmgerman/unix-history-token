@@ -1196,13 +1196,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|vm_paddr_t
-name|avail_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_paddr_t
 name|phys_avail
 index|[]
 decl_stmt|;
