@@ -35,26 +35,6 @@ directive|include
 file|"libia64.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|LDR_LOG2_PGSZ
-value|20
-end_define
-
-begin_decl_stmt
-name|uint64_t
-modifier|*
-name|ia64_pgtbl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|uint32_t
-name|ia64_pgtblsz
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void

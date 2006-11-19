@@ -72,21 +72,6 @@ begin_comment
 comment|/*  * Functions and variables provided by the ia64 common code  * and shared by all loader implementations.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|uint64_t
-modifier|*
-name|ia64_pgtbl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|ia64_pgtblsz
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|extern
 name|int
