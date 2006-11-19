@@ -10584,7 +10584,7 @@ name|mpt_lprt
 argument_list|(
 name|mpt
 argument_list|,
-name|MPT_PRT_INFO
+name|MPT_PRT_DEBUG
 argument_list|,
 literal|"TMF complete: req %p:%u status 0x%x\n"
 argument_list|,
@@ -16448,7 +16448,7 @@ name|mpt_lprt
 argument_list|(
 name|mpt
 argument_list|,
-name|MPT_PRT_INFO
+name|MPT_PRT_DEBUG
 argument_list|,
 literal|"Issuing TMF %p:%u with MsgContext of 0x%x\n"
 argument_list|,
@@ -16536,6 +16536,28 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|mpt
+operator|->
+name|request_pending_list
+argument_list|,
+name|mpt
+operator|->
+name|tmf_req
+argument_list|,
+name|links
+argument_list|)
+expr_stmt|;
+name|mpt
+operator|->
+name|tmf_req
+operator|->
+name|state
+operator|=
+name|REQ_STATE_FREE
+expr_stmt|;
 name|mpt_reset
 argument_list|(
 name|mpt
