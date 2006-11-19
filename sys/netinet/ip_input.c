@@ -8700,12 +8700,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ipstat
-operator|.
-name|ips_cantfrag
-operator|++
-expr_stmt|;
-break|break;
 block|}
 block|}
 endif|#
