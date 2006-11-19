@@ -1273,7 +1273,7 @@ name|mpt
 operator|->
 name|msi_enable
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(
