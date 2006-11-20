@@ -532,7 +532,7 @@ operator|)
 return|;
 name|resid
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|uio
 operator|->
@@ -585,7 +585,7 @@ argument_list|)
 expr_stmt|;
 name|toread
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|off
 operator|+
@@ -1250,7 +1250,7 @@ expr_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"strategy: bcount: %d flags: 0x%lx\n"
+literal|"strategy: bcount: %d flags: 0x%x\n"
 operator|,
 operator|(
 name|u_int32_t
@@ -1305,7 +1305,7 @@ else|else
 block|{
 name|toread
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|bp
 operator|->
@@ -1461,7 +1461,7 @@ else|else
 block|{
 name|towrite
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|bp
 operator|->
@@ -1709,7 +1709,7 @@ return|;
 block|}
 name|towrite
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|uio
 operator|->

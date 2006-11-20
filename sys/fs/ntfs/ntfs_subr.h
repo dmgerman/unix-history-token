@@ -65,10 +65,10 @@ decl_stmt|;
 name|u_int32_t
 name|va_compressalg
 decl_stmt|;
-name|u_int32_t
+name|u_int64_t
 name|va_datalen
 decl_stmt|;
-name|u_int32_t
+name|u_int64_t
 name|va_allocated
 decl_stmt|;
 name|cn_t
