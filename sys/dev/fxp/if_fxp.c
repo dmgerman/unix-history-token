@@ -684,6 +684,15 @@ literal|"Intel Pro/100 VE Network Connection"
 block|}
 block|,
 block|{
+literal|0x1093
+block|,
+operator|-
+literal|1
+block|,
+literal|"Intel Pro/100 VM Network Connection"
+block|}
+block|,
+block|{
 literal|0x1094
 block|,
 operator|-
