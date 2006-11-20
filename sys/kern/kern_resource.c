@@ -2233,6 +2233,9 @@ parameter_list|)
 endif|#
 directive|endif
 block|{
+name|u_char
+name|newpri
+decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -2270,9 +2273,7 @@ case|:
 ifdef|#
 directive|ifdef
 name|KSE
-name|kg
-operator|->
-name|kg_user_pri
+name|newpri
 operator|=
 name|PRI_MIN_REALTIME
 operator|+
@@ -2282,9 +2283,7 @@ name|prio
 expr_stmt|;
 else|#
 directive|else
-name|td
-operator|->
-name|td_user_pri
+name|newpri
 operator|=
 name|PRI_MIN_REALTIME
 operator|+
@@ -2301,9 +2300,7 @@ case|:
 ifdef|#
 directive|ifdef
 name|KSE
-name|kg
-operator|->
-name|kg_user_pri
+name|newpri
 operator|=
 name|PRI_MIN_TIMESHARE
 operator|+
@@ -2313,9 +2310,7 @@ name|prio
 expr_stmt|;
 else|#
 directive|else
-name|td
-operator|->
-name|td_user_pri
+name|newpri
 operator|=
 name|PRI_MIN_TIMESHARE
 operator|+
@@ -2332,9 +2327,7 @@ case|:
 ifdef|#
 directive|ifdef
 name|KSE
-name|kg
-operator|->
-name|kg_user_pri
+name|newpri
 operator|=
 name|PRI_MIN_IDLE
 operator|+
@@ -2344,9 +2337,7 @@ name|prio
 expr_stmt|;
 else|#
 directive|else
-name|td
-operator|->
-name|td_user_pri
+name|newpri
 operator|=
 name|PRI_MIN_IDLE
 operator|+
@@ -2374,6 +2365,13 @@ argument_list|,
 name|rtp
 operator|->
 name|type
+argument_list|)
+expr_stmt|;
+name|sched_user_prio
+argument_list|(
+name|kg
+argument_list|,
+name|newpri
 argument_list|)
 expr_stmt|;
 if|if
@@ -2408,6 +2406,13 @@ name|type
 argument_list|)
 expr_stmt|;
 comment|/* XXX fix */
+name|sched_user_prio
+argument_list|(
+name|td
+argument_list|,
+name|newpri
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|curthread
@@ -2512,7 +2517,7 @@ name|prio
 operator|=
 name|kg
 operator|->
-name|kg_user_pri
+name|kg_base_user_pri
 operator|-
 name|PRI_MIN_REALTIME
 expr_stmt|;
@@ -2524,7 +2529,7 @@ name|prio
 operator|=
 name|td
 operator|->
-name|td_user_pri
+name|td_base_user_pri
 operator|-
 name|PRI_MIN_REALTIME
 expr_stmt|;
@@ -2543,7 +2548,7 @@ name|prio
 operator|=
 name|kg
 operator|->
-name|kg_user_pri
+name|kg_base_user_pri
 operator|-
 name|PRI_MIN_TIMESHARE
 expr_stmt|;
@@ -2555,7 +2560,7 @@ name|prio
 operator|=
 name|td
 operator|->
-name|td_user_pri
+name|td_base_user_pri
 operator|-
 name|PRI_MIN_TIMESHARE
 expr_stmt|;
@@ -2574,7 +2579,7 @@ name|prio
 operator|=
 name|kg
 operator|->
-name|kg_user_pri
+name|kg_base_user_pri
 operator|-
 name|PRI_MIN_IDLE
 expr_stmt|;
@@ -2586,7 +2591,7 @@ name|prio
 operator|=
 name|td
 operator|->
-name|td_user_pri
+name|td_base_user_pri
 operator|-
 name|PRI_MIN_IDLE
 expr_stmt|;
