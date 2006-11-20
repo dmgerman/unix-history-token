@@ -876,6 +876,18 @@ block|{
 comment|/* 			 * Devices, like /dev/mem, will badly skew our totals. 			 */
 continue|continue;
 block|}
+if|if
+condition|(
+name|object
+operator|->
+name|ref_count
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * Also skip unreferenced objects, including 			 * vnodes representing mounted file systems. 			 */
+continue|continue;
+block|}
 name|totalp
 operator|->
 name|t_vm
