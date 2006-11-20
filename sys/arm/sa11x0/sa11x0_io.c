@@ -486,11 +486,16 @@ name|sa11x0_bs_unmap
 parameter_list|(
 name|t
 parameter_list|,
+name|h
+parameter_list|,
 name|size
 parameter_list|)
 name|void
 modifier|*
 name|t
+decl_stmt|;
+name|bus_space_handle_t
+name|h
 decl_stmt|;
 name|bus_size_t
 name|size

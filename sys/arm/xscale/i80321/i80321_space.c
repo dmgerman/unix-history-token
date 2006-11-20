@@ -583,6 +583,9 @@ name|void
 modifier|*
 name|t
 parameter_list|,
+name|bus_space_handle_t
+name|h
+parameter_list|,
 name|bus_size_t
 name|size
 parameter_list|)
@@ -750,6 +753,9 @@ parameter_list|(
 name|void
 modifier|*
 name|t
+parameter_list|,
+name|bus_space_handle_t
+name|h
 parameter_list|,
 name|bus_size_t
 name|size
