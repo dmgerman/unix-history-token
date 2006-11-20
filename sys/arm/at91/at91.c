@@ -480,7 +480,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"AT91RM9200 device bus"
+literal|"AT91 device bus"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1379,7 +1379,7 @@ name|sc_irq_rman
 operator|.
 name|rm_descr
 operator|=
-literal|"AT91RM92 IRQs"
+literal|"AT91 IRQs"
 expr_stmt|;
 name|sc
 operator|->
@@ -1395,12 +1395,12 @@ name|sc_mem_rman
 operator|.
 name|rm_descr
 operator|=
-literal|"AT91RM92 Memory"
+literal|"AT91 Memory"
 expr_stmt|;
 if|#
 directive|if
 literal|0
-block|sc->sc_usbmem_rman.rm_type = RMAN_ARRAY; 	sc->sc_usbmem_rman.rm_descr = "AT91RM92 USB Memory-mapped regs";
+block|sc->sc_usbmem_rman.rm_type = RMAN_ARRAY; 	sc->sc_usbmem_rman.rm_descr = "AT91RM9200 USB Memory-mapped regs";
 endif|#
 directive|endif
 if|if
