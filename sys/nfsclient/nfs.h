@@ -895,12 +895,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_REXMIT_INPROG
+name|R_PIN_REQ
 value|0x100
 end_define
 
 begin_comment
-comment|/* Re-transmit in progress */
+comment|/* Pin request down (rexmit in prog or other) */
 end_comment
 
 begin_struct_decl
