@@ -1893,6 +1893,14 @@ operator|)
 expr_stmt|;
 name|kn
 operator|->
+name|kn_data
+operator|=
+name|p
+operator|->
+name|p_xstat
+expr_stmt|;
+name|kn
+operator|->
 name|kn_ptr
 operator|.
 name|p_proc
