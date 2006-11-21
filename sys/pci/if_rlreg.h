@@ -2830,6 +2830,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RL_TDESC_CMD_MSSVAL_SHIFT
+value|16
+end_define
+
+begin_comment
+comment|/* Large send MSS value shift */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RL_TDESC_CMD_LGSEND
 value|0x08000000
 end_define
