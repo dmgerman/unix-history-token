@@ -3345,10 +3345,6 @@ name|end
 operator|=
 literal|1
 expr_stmt|;
-name|cksumvalid
-operator|=
-literal|0
-expr_stmt|;
 continue|continue;
 block|}
 break|break;
