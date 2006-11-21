@@ -10523,7 +10523,7 @@ else|else
 name|ifp
 operator|->
 name|if_hwassist
-operator|=
+operator|&=
 operator|~
 name|RE_CSUM_FEATURES
 expr_stmt|;
