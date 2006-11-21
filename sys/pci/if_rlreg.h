@@ -3351,21 +3351,11 @@ begin_comment
 comment|/*  * Rx/Tx descriptor parameters (8139C+ and 8169 only)  *  * Tx/Rx count must be equal.  Shared code like re_dma_map_desc assumes this.  * Buffers must be a multiple of 8 bytes.  Currently limit to 64 descriptors  * due to the 8139C+.  We need to put the number of descriptors in the ring  * structure and use that value instead.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__NO_STRICT_ALIGNMENT
+end_ifndef
 
 begin_define
 define|#
