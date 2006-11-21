@@ -2573,7 +2573,7 @@ name|i
 operator|=
 name|package_add
 argument_list|(
-literal|"linux_base-8"
+literal|"linux_base-fc4"
 argument_list|)
 expr_stmt|;
 name|restorescr
