@@ -1015,6 +1015,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+name|device_add_child
+argument_list|(
+name|dev
+argument_list|,
+literal|"led_avila"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_space_map
