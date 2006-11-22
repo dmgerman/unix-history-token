@@ -14057,9 +14057,9 @@ name|reg
 operator|+
 literal|0x8
 argument_list|,
-literal|2
-argument_list|,
 name|pectl
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
