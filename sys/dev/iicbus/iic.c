@@ -1467,7 +1467,7 @@ condition|(
 name|error
 condition|)
 break|break;
-comment|/* Allocate kernel buffers for userland data, copyin write data */
+comment|/* Alloc kernel buffers for userland data, copyin write data */
 for|for
 control|(
 name|i
@@ -1603,14 +1603,11 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|IIC_M_RD
-operator|)
 condition|)
 name|copyout
 argument_list|(
