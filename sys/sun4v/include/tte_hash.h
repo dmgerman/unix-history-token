@@ -297,10 +297,6 @@ name|tte_hash_resize
 parameter_list|(
 name|tte_hash_t
 name|th
-parameter_list|,
-name|uint64_t
-modifier|*
-name|scratchval
 parameter_list|)
 function_decl|;
 end_function_decl
