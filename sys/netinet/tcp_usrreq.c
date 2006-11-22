@@ -2539,7 +2539,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|EINVAL
+name|ECONNRESET
 expr_stmt|;
 goto|goto
 name|out
@@ -2865,7 +2865,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|EINVAL
+name|ECONNABORTED
 expr_stmt|;
 goto|goto
 name|out
@@ -3137,7 +3137,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|EINVAL
+name|ECONNRESET
 expr_stmt|;
 goto|goto
 name|out
@@ -3271,7 +3271,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|EINVAL
+name|ECONNRESET
 expr_stmt|;
 goto|goto
 name|out
@@ -3465,7 +3465,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|EINVAL
+name|ECONNRESET
 expr_stmt|;
 goto|goto
 name|out
@@ -4370,7 +4370,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|EINVAL
+name|ECONNRESET
 expr_stmt|;
 goto|goto
 name|out
