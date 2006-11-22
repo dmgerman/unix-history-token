@@ -20043,6 +20043,10 @@ condition|(
 name|width
 operator|<=
 literal|0
+operator|||
+name|width
+operator|>
+name|DWIDTH
 condition|)
 name|errx
 argument_list|(
@@ -20086,7 +20090,7 @@ name|j
 operator|=
 name|i
 operator|*
-literal|132
+name|DWIDTH
 operator|/
 name|width
 expr_stmt|;
