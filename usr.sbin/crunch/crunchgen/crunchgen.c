@@ -5095,7 +5095,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"%s: %s.o $(CRUNCHED_OBJS)\n"
+literal|"%s: %s.o $(CRUNCHED_OBJS) $(SUBMAKE_TARGETS)\n"
 argument_list|,
 name|execfname
 argument_list|,
