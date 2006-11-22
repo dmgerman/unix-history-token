@@ -289,6 +289,13 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|var
+name|vps4
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|var
 name|vvers
 decl_stmt|;
 end_decl_stmt
@@ -412,6 +419,19 @@ operator||
 name|VTEXTFIXED
 block|,
 literal|"PS2=> "
+block|,
+name|NULL
+block|}
+block|,
+block|{
+operator|&
+name|vps4
+block|,
+name|VSTRFIXED
+operator||
+name|VTEXTFIXED
+block|,
+literal|"PS4=+ "
 block|,
 name|NULL
 block|}
