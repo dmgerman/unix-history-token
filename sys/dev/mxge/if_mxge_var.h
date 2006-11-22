@@ -455,6 +455,9 @@ decl_stmt|;
 name|int
 name|fw_multicast_support
 decl_stmt|;
+name|int
+name|link_width
+decl_stmt|;
 name|char
 modifier|*
 name|mac_addr_string
