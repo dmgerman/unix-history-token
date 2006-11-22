@@ -153,6 +153,12 @@ name|struct
 name|pmap_statistics
 name|pm_stats
 decl_stmt|;
+name|uint32_t
+name|pm_tsb_miss_count
+decl_stmt|;
+name|uint32_t
+name|pm_tsb_cap_miss_count
+decl_stmt|;
 block|}
 struct|;
 end_struct
