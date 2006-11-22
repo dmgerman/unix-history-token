@@ -102,13 +102,6 @@ name|hv_tsb_info
 struct_decl|;
 end_struct_decl
 
-begin_define
-define|#
-directive|define
-name|TSB_INIT_SHIFT
-value|3
-end_define
-
 begin_function_decl
 name|void
 name|tsb_init

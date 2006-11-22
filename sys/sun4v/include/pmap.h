@@ -54,8 +54,26 @@ end_include
 begin_define
 define|#
 directive|define
+name|TSB_INIT_SHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|PMAP_CONTEXT_MAX
 value|8192
+end_define
+
+begin_comment
+comment|/*   *  We don't want TSBs getting above 1MB - which is enough   *  for a working set of 512MB - revisit in the future   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSB_MAX_RESIZE
+value|(20 - TSB_INIT_SHIFT - PAGE_SHIFT)
 end_define
 
 begin_typedef
@@ -158,6 +176,12 @@ name|pm_tsb_miss_count
 decl_stmt|;
 name|uint32_t
 name|pm_tsb_cap_miss_count
+decl_stmt|;
+name|vm_paddr_t
+name|pm_old_tsb_pa
+index|[
+name|TSB_MAX_RESIZE
+index|]
 decl_stmt|;
 block|}
 struct|;
