@@ -114,6 +114,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|hexdump
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|reportid
@@ -382,7 +390,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s -f device [-l] [-n] [-r] [-t tablefile] [-v] name ...\n"
+literal|"usage: %s -f device "
+literal|"[-l] [-n] [-r] [-t tablefile] [-v] [x] name ...\n"
 argument_list|,
 name|__progname
 argument_list|)
@@ -391,7 +400,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s -f device [-l] [-n] [-r] [-t tablefile] [-v] -a\n"
+literal|"       %s -f device "
+literal|"[-l] [-n] [-r] [-t tablefile] [-v] [x] -a\n"
 argument_list|,
 name|__progname
 argument_list|)
@@ -866,6 +876,17 @@ else|else
 name|printf
 argument_list|(
 literal|"%u"
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hexdump
+condition|)
+name|printf
+argument_list|(
+literal|" [0x%x]"
 argument_list|,
 name|data
 argument_list|)
@@ -1347,7 +1368,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"af:lnrt:v"
+literal|"af:lnrt:vx"
 argument_list|)
 operator|)
 operator|!=
@@ -1410,6 +1431,14 @@ literal|'v'
 case|:
 name|verbose
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|hexdump
+operator|^=
+literal|1
 expr_stmt|;
 break|break;
 case|case
