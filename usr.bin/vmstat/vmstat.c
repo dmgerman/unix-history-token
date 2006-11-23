@@ -2846,7 +2846,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %7zu %6zu "
+literal|" %7ju %6ju "
 argument_list|,
 name|vmstat_pgtok
 argument_list|(
