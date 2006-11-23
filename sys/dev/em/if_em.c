@@ -17684,10 +17684,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * We may eventually really do this, but its unnecessary   * for now so we just return unsupported.  */
-end_comment
-
 begin_function
 name|int32_t
 name|em_read_pcie_cap_reg
