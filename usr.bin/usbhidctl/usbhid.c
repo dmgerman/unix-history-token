@@ -391,7 +391,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s -f device "
-literal|"[-l] [-n] [-r] [-t tablefile] [-v] [x] name ...\n"
+literal|"[-l] [-n] [-r] [-t tablefile] [-v] [-x] name ...\n"
 argument_list|,
 name|__progname
 argument_list|)
@@ -401,7 +401,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"       %s -f device "
-literal|"[-l] [-n] [-r] [-t tablefile] [-v] [x] -a\n"
+literal|"[-l] [-n] [-r] [-t tablefile] [-v] [-x] -a\n"
 argument_list|,
 name|__progname
 argument_list|)
@@ -1437,7 +1437,7 @@ case|case
 literal|'x'
 case|:
 name|hexdump
-operator|^=
+operator|=
 literal|1
 expr_stmt|;
 break|break;
