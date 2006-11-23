@@ -480,9 +480,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%7ld %7ld %7ld%7ld"
+literal|"%7lu %7lu %7lu%7lu"
 argument_list|,
 operator|(
+name|unsigned
 name|long
 operator|)
 name|pgtok
@@ -493,6 +494,7 @@ name|t_vm
 argument_list|)
 argument_list|,
 operator|(
+name|unsigned
 name|long
 operator|)
 name|pgtok
@@ -503,6 +505,7 @@ name|t_avm
 argument_list|)
 argument_list|,
 operator|(
+name|unsigned
 name|long
 operator|)
 name|pgtok
@@ -513,6 +516,7 @@ name|t_rm
 argument_list|)
 argument_list|,
 operator|(
+name|unsigned
 name|long
 operator|)
 name|pgtok
@@ -525,9 +529,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%7ld%7ld%7ld%7ld%7ld\n"
+literal|"%7lu%7lu%7lu%7lu%7lu\n"
 argument_list|,
 operator|(
+name|unsigned
 name|long
 operator|)
 name|pgtok
@@ -538,6 +543,7 @@ name|t_vmshr
 argument_list|)
 argument_list|,
 operator|(
+name|unsigned
 name|long
 operator|)
 name|pgtok
@@ -548,6 +554,7 @@ name|t_avmshr
 argument_list|)
 argument_list|,
 operator|(
+name|unsigned
 name|long
 operator|)
 name|pgtok
@@ -558,6 +565,7 @@ name|t_rmshr
 argument_list|)
 argument_list|,
 operator|(
+name|unsigned
 name|long
 operator|)
 name|pgtok
@@ -568,6 +576,7 @@ name|t_armshr
 argument_list|)
 argument_list|,
 operator|(
+name|unsigned
 name|long
 operator|)
 name|pgtok

@@ -145,6 +145,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<locale.h>
 end_include
 
@@ -1916,21 +1922,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Virtual Memory:\t\t(Total: %luK, Active %lldK)\n"
+literal|"Virtual Memory:\t\t(Total: %juK, Active %juK)\n"
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|uintmax_t
 operator|)
 name|v
 operator|->
 name|t_vm
-operator|/
-literal|1024
+operator|*
+name|pageKilo
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|v
 operator|->
@@ -1941,11 +1945,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Real Memory:\t\t(Total: %lldK Active %lldK)\n"
+literal|"Real Memory:\t\t(Total: %juK Active %juK)\n"
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|v
 operator|->
@@ -1954,8 +1957,7 @@ operator|*
 name|pageKilo
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|v
 operator|->
@@ -1966,11 +1968,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Shared Virtual Memory:\t(Total: %lldK Active: %lldK)\n"
+literal|"Shared Virtual Memory:\t(Total: %juK Active: %juK)\n"
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|v
 operator|->
@@ -1979,8 +1980,7 @@ operator|*
 name|pageKilo
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|v
 operator|->
@@ -1991,11 +1991,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Shared Real Memory:\t(Total: %lldK Active: %lldK)\n"
+literal|"Shared Real Memory:\t(Total: %juK Active: %juK)\n"
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|v
 operator|->
@@ -2004,8 +2003,7 @@ operator|*
 name|pageKilo
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|v
 operator|->
@@ -2016,11 +2014,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Free Memory Pages:\t%lldK\n"
+literal|"Free Memory Pages:\t%juK\n"
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|v
 operator|->

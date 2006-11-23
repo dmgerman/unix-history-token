@@ -175,6 +175,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<kvm.h>
 end_include
 
@@ -2879,7 +2885,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%2d %1d %1d"
+literal|"%2u %1u %1u"
 argument_list|,
 name|total
 operator|.
@@ -2906,7 +2912,7 @@ name|vmstat_pgtok
 parameter_list|(
 name|a
 parameter_list|)
-value|((a) * (sum.v_page_size>> 10))
+value|((uintmax_t)(a) * (sum.v_page_size>> 10))
 define|#
 directive|define
 name|rate
@@ -2920,11 +2926,8 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %7ld %6ld "
+literal|" %7ju %6ju "
 argument_list|,
-operator|(
-name|long
-operator|)
 name|vmstat_pgtok
 argument_list|(
 name|total
@@ -2932,9 +2935,6 @@ operator|.
 name|t_avm
 argument_list|)
 argument_list|,
-operator|(
-name|long
-operator|)
 name|vmstat_pgtok
 argument_list|(
 name|total
