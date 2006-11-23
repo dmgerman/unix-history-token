@@ -6777,7 +6777,7 @@ specifier|static
 name|uint64_t
 name|pc_freemask
 index|[
-literal|3
+name|_NPCM
 index|]
 init|=
 block|{
