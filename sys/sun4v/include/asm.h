@@ -195,16 +195,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SET_SIZE
-parameter_list|(
-name|x
-parameter_list|)
-value|END(x)
-end_define
-
-begin_define
-define|#
-directive|define
 name|SA
 parameter_list|(
 name|X
