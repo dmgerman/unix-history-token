@@ -12072,9 +12072,8 @@ name|EM_TSO_SIZE
 expr_stmt|;
 name|segsize
 operator|=
-literal|4096
+name|EM_TSO_PCIE_SEGMENT_SIZE
 expr_stmt|;
-comment|/* page size isn't always 4k */
 block|}
 if|if
 condition|(

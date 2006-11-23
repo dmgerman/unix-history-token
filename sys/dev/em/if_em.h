@@ -210,6 +210,17 @@ comment|/* #define EM_MASTER_SLAVE      2 */
 end_comment
 
 begin_comment
+comment|/*  * Limitation of some PCIe chipsets when using TSO  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_TSO_PCIE_SEGMENT_SIZE
+value|4096
+end_define
+
+begin_comment
 comment|/* Tunables -- End */
 end_comment
 
