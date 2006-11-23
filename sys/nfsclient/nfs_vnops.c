@@ -2833,7 +2833,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Setting of flags is not supported. 	 */
+comment|/* 	 * Setting of flags and marking of atimes are not supported. 	 */
 if|if
 condition|(
 name|vap
@@ -2841,6 +2841,14 @@ operator|->
 name|va_flags
 operator|!=
 name|VNOVAL
+operator|||
+operator|(
+name|vap
+operator|->
+name|va_vaflags
+operator|&
+name|VA_MARK_ATIME
+operator|)
 condition|)
 return|return
 operator|(
