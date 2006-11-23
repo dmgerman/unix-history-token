@@ -252,6 +252,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|H_ETOOMANY
+value|15
+end_define
+
+begin_comment
+comment|/* Too many items specified / limit reached */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_ECHANNEL
+value|16
+end_define
+
+begin_comment
+comment|/* Invalid LDC channel */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|H_BREAK
 value|-1
 end_define
@@ -321,56 +343,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HV_MACH_EXIT
+name|MACH_EXIT
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_MACH_DESC
+name|MACH_DESC
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_MACH_SET_SOFT_STATE
+name|MACH_SET_SOFT_STATE
 value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_MACH_GET_SOFT_STATE
+name|MACH_GET_SOFT_STATE
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_MACH_SET_WATCHDOG
+name|MACH_SET_WATCHDOG
 value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_CPU_START
+name|CPU_START
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_CPU_STOP
+name|CPU_STOP
 value|0x11
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_CPU_YIELD
+name|CPU_YIELD
 value|0x12
 end_define
 
@@ -398,21 +420,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|HV_CPU_STATE
+name|CPU_STATE
 value|0x17
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_CPU_SET_RTBA
+name|CPU_SET_RTBA
 value|0x18
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_CPU_GET_RTBA
+name|CPU_GET_RTBA
 value|0x19
 end_define
 
@@ -461,7 +483,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MMU_SET_INFOPTR
+name|MMU_MAP_PERM_ADDR
 value|0x26
 end_define
 
@@ -475,7 +497,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|UNMAP_PERM_ADDR
+name|MMU_UNMAP_PERM_ADDR
 value|0x28
 end_define
 
@@ -500,24 +522,42 @@ name|MMU_FAULT_AREA_INFO
 value|0x2b
 end_define
 
+begin_comment
+comment|/*  * Bits for MMU functions flags argument:  *	arg3 of MMU_MAP_ADDR  *	arg3 of MMU_DEMAP_CTX  *	arg2 of MMU_DEMAP_ALL  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|HV_MEM_SCRUB
+name|MAP_DTLB
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ITLB
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEM_SCRUB
 value|0x31
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_MEM_SYNC
+name|MEM_SYNC
 value|0x32
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_INTR_SEND
+name|CPU_MONDO_SEND
 value|0x42
 end_define
 
@@ -643,339 +683,359 @@ end_define
 begin_define
 define|#
 directive|define
-name|HVIO_INTR_DEVINO2SYSINO
+name|INTR_DEVINO2SYSINO
 value|0xa0
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_INTR_GETENABLED
+name|INTR_GETENABLED
 value|0xa1
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_INTR_SETENABLED
+name|INTR_SETENABLED
 value|0xa2
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_INTR_GETSTATE
+name|INTR_GETSTATE
 value|0xa3
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_INTR_SETSTATE
+name|INTR_SETSTATE
 value|0xa4
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_INTR_GETTARGET
+name|INTR_GETTARGET
 value|0xa5
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_INTR_SETTARGET
+name|INTR_SETTARGET
 value|0xa6
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_IOMMU_MAP
+name|PCI_IOMMU_MAP
 value|0xb0
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_IOMMU_DEMAP
+name|PCI_IOMMU_DEMAP
 value|0xb1
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_IOMMU_GETMAP
+name|PCI_IOMMU_GETMAP
 value|0xb2
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_IOMMU_GETBYPASS
+name|PCI_IOMMU_GETBYPASS
 value|0xb3
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_CONFIG_GET
+name|PCI_CONFIG_GET
 value|0xb4
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_CONFIG_PUT
+name|PCI_CONFIG_PUT
 value|0xb5
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_PEEK
+name|PCI_PEEK
 value|0xb6
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_POKE
+name|PCI_POKE
 value|0xb7
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_DMA_SYNC
+name|PCI_DMA_SYNC
 value|0xb8
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSIQ_CONF
+name|PCI_MSIQ_CONF
 value|0xc0
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSIQ_INFO
+name|PCI_MSIQ_INFO
 value|0xc1
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSIQ_GETVALID
+name|PCI_MSIQ_GETVALID
 value|0xc2
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSIQ_SETVALID
+name|PCI_MSIQ_SETVALID
 value|0xc3
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSIQ_GETSTATE
+name|PCI_MSIQ_GETSTATE
 value|0xc4
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSIQ_SETSTATE
+name|PCI_MSIQ_SETSTATE
 value|0xc5
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSIQ_GETHEAD
+name|PCI_MSIQ_GETHEAD
 value|0xc6
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSIQ_SETHEAD
+name|PCI_MSIQ_SETHEAD
 value|0xc7
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSIQ_GETTAIL
+name|PCI_MSIQ_GETTAIL
 value|0xc8
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSI_GETVALID
+name|PCI_MSI_GETVALID
 value|0xc9
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSI_SETVALID
+name|PCI_MSI_SETVALID
 value|0xca
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSI_GETMSIQ
+name|PCI_MSI_GETMSIQ
 value|0xcb
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSI_SETMSIQ
+name|PCI_MSI_SETMSIQ
 value|0xcc
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSI_GETSTATE
+name|PCI_MSI_GETSTATE
 value|0xcd
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSI_SETSTATE
+name|PCI_MSI_SETSTATE
 value|0xce
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSG_GETMSIQ
+name|PCI_MSG_GETMSIQ
 value|0xd0
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSG_SETMSIQ
+name|PCI_MSG_SETMSIQ
 value|0xd1
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSG_GETVALID
+name|PCI_MSG_GETVALID
 value|0xd2
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_MSG_SETVALID
+name|PCI_MSG_SETVALID
 value|0xd3
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_LDC_TX_QCONF
+name|LDC_TX_QCONF
 value|0xe0
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_LDC_TX_QINFO
+name|LDC_TX_QINFO
 value|0xe1
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_LDC_TX_GET_STATE
+name|LDC_TX_GET_STATE
 value|0xe2
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_LDC_TX_SET_QTAIL
+name|LDC_TX_SET_QTAIL
 value|0xe3
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_LDC_RX_QCONF
+name|LDC_RX_QCONF
 value|0xe4
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_LDC_RX_QINFO
+name|LDC_RX_QINFO
 value|0xe5
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_LDC_RX_GET_STATE
+name|LDC_RX_GET_STATE
 value|0xe6
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_LDC_RX_SET_QHEAD
+name|LDC_RX_SET_QHEAD
 value|0xe7
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_SIM_READ
+name|LDC_SET_MAP_TABLE
+value|0xea
+end_define
+
+begin_define
+define|#
+directive|define
+name|LDC_GET_MAP_TABLE
+value|0xeb
+end_define
+
+begin_define
+define|#
+directive|define
+name|LDC_COPY
+value|0xec
+end_define
+
+begin_define
+define|#
+directive|define
+name|LDC_MAPIN
+value|0xed
+end_define
+
+begin_define
+define|#
+directive|define
+name|LDC_UNMAP
+value|0xee
+end_define
+
+begin_define
+define|#
+directive|define
+name|LDC_REVOKE
+value|0xef
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIM_READ
 value|0xf0
 end_define
 
 begin_define
 define|#
 directive|define
-name|HVIO_SIM_WRITE
+name|SIM_WRITE
 value|0xf1
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SET_MMU_STATS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MMU_STAT_AREA
-value|0xfc
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SET_MMU_STATS */
-end_comment
 
 begin_define
 define|#
@@ -1003,59 +1063,6 @@ define|#
 directive|define
 name|NIAGARA_MMUSTAT_INFO
 value|0x103
-end_define
-
-begin_define
-define|#
-directive|define
-name|HV_NCS_REQUEST
-value|0x110
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIRE_GET_PERFREG
-value|0x120
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIRE_SET_PERFREG
-value|0x121
-end_define
-
-begin_define
-define|#
-directive|define
-name|HV_RA2PA
-value|0x200
-end_define
-
-begin_define
-define|#
-directive|define
-name|HV_HPRIV
-value|0x201
-end_define
-
-begin_comment
-comment|/*  * Bits for MMU functions flags argument:  *	arg3 of MMU_MAP_ADDR  *	arg3 of MMU_DEMAP_CTX  *	arg2 of MMU_DEMAP_ALL  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAP_DTLB
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAP_ITLB
-value|0x2
 end_define
 
 begin_comment
@@ -1102,55 +1109,6 @@ ifndef|#
 directive|ifndef
 name|LOCORE
 end_ifndef
-
-begin_comment
-comment|/*  * TSB description structure for MMU_TSB_CTX0 and MMU_TSB_CTXNON0.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|hv_tsb_info
-block|{
-name|uint16_t
-name|hvtsb_idxpgsz
-decl_stmt|;
-comment|/* page size used to index TSB */
-name|uint16_t
-name|hvtsb_assoc
-decl_stmt|;
-comment|/* TSB associativity */
-name|uint32_t
-name|hvtsb_ntte
-decl_stmt|;
-comment|/* TSB size (#TTE entries) */
-name|uint32_t
-name|hvtsb_ctx_index
-decl_stmt|;
-comment|/* context reg index */
-name|uint32_t
-name|hvtsb_pgszs
-decl_stmt|;
-comment|/* sizes in use */
-name|uint64_t
-name|hvtsb_pa
-decl_stmt|;
-comment|/* real address of TSB base */
-name|uint64_t
-name|hvtsb_rsvd
-decl_stmt|;
-comment|/* reserved */
-block|}
-name|hv_tsb_info_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|HVTSB_SHARE_INDEX
-value|((uint32_t)-1)
-end_define
 
 begin_ifdef
 ifdef|#
@@ -1716,122 +1674,6 @@ define|#
 directive|define
 name|HVIO_DMA_SYNC_DIR_FROM_DEV
 value|0x02
-end_define
-
-begin_comment
-comment|/*  * Performance counter register definitions.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_JBC_SEL
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_JBC_CNT0
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_JBC_CNT1
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_PCIE_IMU_SEL
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_PCIE_IMU_CNT0
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_PCIE_IMU_CNT1
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_PCIE_MMU_SEL
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_PCIE_MMU_CNT0
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_PCIE_MMU_CNT1
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_PCIE_TLU_SEL
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_PCIE_TLU_CNT0
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_PCIE_TLU_CNT1
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_PCIE_TLU_CNT2
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_PCIE_LNK_SEL
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_PCIE_LNK_CNT1
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVIO_FIRE_PERFREG_PCIE_LNK_CNT2
-value|15
 end_define
 
 begin_ifdef

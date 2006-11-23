@@ -278,7 +278,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/hypervisor_api.h>
+file|<machine/hv_api.h>
 end_include
 
 begin_ifdef
@@ -3135,7 +3135,7 @@ index|[
 name|TSB8K_INDEX
 index|]
 operator|.
-name|hvtsb_idxpgsz
+name|hti_idxpgsz
 operator|=
 name|TTE8K
 expr_stmt|;
@@ -3144,7 +3144,7 @@ index|[
 name|TSB8K_INDEX
 index|]
 operator|.
-name|hvtsb_assoc
+name|hti_assoc
 operator|=
 literal|1
 expr_stmt|;
@@ -3153,7 +3153,7 @@ index|[
 name|TSB8K_INDEX
 index|]
 operator|.
-name|hvtsb_ntte
+name|hti_ntte
 operator|=
 operator|(
 name|tsb_8k_size
@@ -3166,7 +3166,7 @@ index|[
 name|TSB8K_INDEX
 index|]
 operator|.
-name|hvtsb_ctx_index
+name|hti_ctx_index
 operator|=
 literal|0
 expr_stmt|;
@@ -3175,7 +3175,7 @@ index|[
 name|TSB8K_INDEX
 index|]
 operator|.
-name|hvtsb_pgszs
+name|hti_pgszs
 operator|=
 name|TSB8K
 expr_stmt|;
@@ -3184,7 +3184,7 @@ index|[
 name|TSB8K_INDEX
 index|]
 operator|.
-name|hvtsb_rsvd
+name|hti_rsvd
 operator|=
 literal|0
 expr_stmt|;
@@ -3193,7 +3193,7 @@ index|[
 name|TSB8K_INDEX
 index|]
 operator|.
-name|hvtsb_pa
+name|hti_pa
 operator|=
 name|pa
 expr_stmt|;
@@ -3202,7 +3202,7 @@ name|kernel_pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hvtsb_idxpgsz
+name|hti_idxpgsz
 operator|=
 name|TTE8K
 expr_stmt|;
@@ -3210,7 +3210,7 @@ name|kernel_pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hvtsb_assoc
+name|hti_assoc
 operator|=
 literal|1
 expr_stmt|;
@@ -3218,7 +3218,7 @@ name|kernel_pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hvtsb_ntte
+name|hti_ntte
 operator|=
 operator|(
 name|tsb_8k_size
@@ -3230,7 +3230,7 @@ name|kernel_pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hvtsb_ctx_index
+name|hti_ctx_index
 operator|=
 literal|0
 expr_stmt|;
@@ -3238,7 +3238,7 @@ name|kernel_pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hvtsb_pgszs
+name|hti_pgszs
 operator|=
 name|TSB8K
 expr_stmt|;
@@ -3246,7 +3246,7 @@ name|kernel_pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hvtsb_rsvd
+name|hti_rsvd
 operator|=
 literal|0
 expr_stmt|;
@@ -3254,7 +3254,7 @@ name|kernel_pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hvtsb_pa
+name|hti_pa
 operator|=
 name|pa
 expr_stmt|;
@@ -3317,7 +3317,7 @@ index|[
 name|TSB4M_INDEX
 index|]
 operator|.
-name|hvtsb_idxpgsz
+name|hti_idxpgsz
 operator|=
 name|TTE4M
 expr_stmt|;
@@ -3326,7 +3326,7 @@ index|[
 name|TSB4M_INDEX
 index|]
 operator|.
-name|hvtsb_assoc
+name|hti_assoc
 operator|=
 literal|1
 expr_stmt|;
@@ -3335,7 +3335,7 @@ index|[
 name|TSB4M_INDEX
 index|]
 operator|.
-name|hvtsb_ntte
+name|hti_ntte
 operator|=
 operator|(
 name|tsb_4m_size
@@ -3348,7 +3348,7 @@ index|[
 name|TSB4M_INDEX
 index|]
 operator|.
-name|hvtsb_ctx_index
+name|hti_ctx_index
 operator|=
 literal|0
 expr_stmt|;
@@ -3357,7 +3357,7 @@ index|[
 name|TSB4M_INDEX
 index|]
 operator|.
-name|hvtsb_pgszs
+name|hti_pgszs
 operator|=
 name|TSB4M
 expr_stmt|;
@@ -3366,7 +3366,7 @@ index|[
 name|TSB4M_INDEX
 index|]
 operator|.
-name|hvtsb_rsvd
+name|hti_rsvd
 operator|=
 literal|0
 expr_stmt|;
@@ -3375,7 +3375,7 @@ index|[
 name|TSB4M_INDEX
 index|]
 operator|.
-name|hvtsb_pa
+name|hti_pa
 operator|=
 name|pa
 expr_stmt|;
@@ -9375,7 +9375,7 @@ name|pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hvtsb_pa
+name|hti_pa
 decl_stmt|;
 name|int
 name|size
@@ -9392,7 +9392,7 @@ name|pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hvtsb_ntte
+name|hti_ntte
 operator|=
 operator|(
 literal|1
@@ -9410,7 +9410,7 @@ name|pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hvtsb_pa
+name|hti_pa
 operator|=
 name|pmap
 operator|->
@@ -9441,7 +9441,7 @@ name|pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hvtsb_pa
+name|hti_pa
 operator||
 operator|(
 name|uint64_t
@@ -9743,7 +9743,7 @@ name|pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hvtsb_pa
+name|hti_pa
 expr_stmt|;
 comment|/* double TSB size */
 name|tsb_init
