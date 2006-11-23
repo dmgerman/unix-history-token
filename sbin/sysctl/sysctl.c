@@ -1922,7 +1922,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Virtual Memory:\t\t(Total: %zuK, Active %zuK)\n"
+literal|"Virtual Memory:\t\t(Total: %juK, Active %juK)\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1945,7 +1945,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Real Memory:\t\t(Total: %zuK Active %zuK)\n"
+literal|"Real Memory:\t\t(Total: %juK Active %juK)\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1968,7 +1968,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Shared Virtual Memory:\t(Total: %zuK Active: %zuK)\n"
+literal|"Shared Virtual Memory:\t(Total: %juK Active: %juK)\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1991,7 +1991,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Shared Real Memory:\t(Total: %zuK Active: %zuK)\n"
+literal|"Shared Real Memory:\t(Total: %juK Active: %juK)\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -2014,7 +2014,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Free Memory Pages:\t%zuK\n"
+literal|"Free Memory Pages:\t%juK\n"
 argument_list|,
 operator|(
 name|uintmax_t

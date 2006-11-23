@@ -4932,7 +4932,7 @@ argument_list|(
 name|b
 argument_list|)
 argument_list|,
-literal|"%*zu"
+literal|"%*ju"
 argument_list|,
 name|w
 argument_list|,
@@ -4956,7 +4956,7 @@ argument_list|(
 name|b
 argument_list|)
 argument_list|,
-literal|"%*zuk"
+literal|"%*juk"
 argument_list|,
 name|w
 operator|-
@@ -4984,7 +4984,7 @@ argument_list|(
 name|b
 argument_list|)
 argument_list|,
-literal|"%*zuM"
+literal|"%*juM"
 argument_list|,
 name|w
 operator|-
