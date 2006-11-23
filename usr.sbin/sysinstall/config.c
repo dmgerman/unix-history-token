@@ -2574,7 +2574,7 @@ name|i
 operator|=
 name|package_add
 argument_list|(
-literal|"linux_base-fc4"
+literal|"linux_base-fc"
 argument_list|)
 expr_stmt|;
 name|restorescr
