@@ -408,15 +408,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|CONS_READ
+name|CONS_GETCHAR
 value|0x60
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONS_WRITE
+name|CONS_PUTCHAR
 value|0x61
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_READ
+value|0x62
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_WRITE
+value|0x63
 end_define
 
 begin_define
