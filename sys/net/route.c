@@ -481,17 +481,6 @@ name|newrt
 operator|=
 name|NULL
 expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|info
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|info
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Look up the address in the table for that Address Family 	 */
 if|if
 condition|(
@@ -647,6 +636,17 @@ name|miss
 goto|;
 block|}
 comment|/* Inform listeners of the new route. */
+name|bzero
+argument_list|(
+operator|&
+name|info
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|info
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|info
 operator|.
 name|rti_info
@@ -788,6 +788,17 @@ name|report
 condition|)
 block|{
 comment|/* 			 * If required, report the failure to the supervising 			 * Authorities. 			 * For a delete, this is not an error. (report == 0) 			 */
+name|bzero
+argument_list|(
+operator|&
+name|info
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|info
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|info
 operator|.
 name|rti_info
