@@ -92,6 +92,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/hypervisorvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/hv_api.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/intr_machdep.h>
 end_include
 
@@ -1234,7 +1246,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|hvio_intr_devino_to_sysino
+name|hv_intr_devino_to_sysino
 argument_list|(
 name|cfg
 argument_list|,
@@ -1264,7 +1276,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|hvio_intr_settarget
+name|hv_intr_settarget
 argument_list|(
 name|ihdl
 argument_list|,
@@ -1284,7 +1296,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|hvio_intr_setstate
+name|hv_intr_setstate
 argument_list|(
 name|ihdl
 argument_list|,
@@ -1304,11 +1316,11 @@ goto|;
 block|}
 if|if
 condition|(
-name|hvio_intr_setvalid
+name|hv_intr_setenabled
 argument_list|(
 name|ihdl
 argument_list|,
-name|HV_INTR_VALID
+name|HV_INTR_ENABLED
 argument_list|)
 operator|!=
 name|H_EOK

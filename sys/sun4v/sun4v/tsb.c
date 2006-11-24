@@ -178,7 +178,7 @@ name|TSB_MASK
 parameter_list|(
 name|tsb
 parameter_list|)
-value|((tsb->hvtsb_ntte) - 1)
+value|((tsb->hti_ntte) - 1)
 end_define
 
 begin_comment
@@ -303,19 +303,19 @@ argument_list|)
 expr_stmt|;
 name|hvtsb
 operator|->
-name|hvtsb_idxpgsz
+name|hti_idxpgsz
 operator|=
 name|TTE8K
 expr_stmt|;
 name|hvtsb
 operator|->
-name|hvtsb_assoc
+name|hti_assoc
 operator|=
 literal|1
 expr_stmt|;
 name|hvtsb
 operator|->
-name|hvtsb_ntte
+name|hti_ntte
 operator|=
 operator|(
 name|npages
@@ -327,7 +327,7 @@ operator|)
 expr_stmt|;
 name|hvtsb
 operator|->
-name|hvtsb_ctx_index
+name|hti_ctx_index
 operator|=
 operator|-
 literal|1
@@ -335,19 +335,19 @@ expr_stmt|;
 comment|/* TSBs aren't shared so if we don't  					 * set the context in the TTEs we can  					 * simplify miss handling slightly 					 */
 name|hvtsb
 operator|->
-name|hvtsb_pgszs
+name|hti_pgszs
 operator|=
 name|TSB8K
 expr_stmt|;
 name|hvtsb
 operator|->
-name|hvtsb_rsvd
+name|hti_rsvd
 operator|=
 literal|0
 expr_stmt|;
 name|hvtsb
 operator|->
-name|hvtsb_pa
+name|hti_ra
 operator|=
 name|TLB_DIRECT_TO_PHYS
 argument_list|(
@@ -398,7 +398,7 @@ name|vm_paddr_t
 operator|)
 name|hvtsb
 operator|->
-name|hvtsb_pa
+name|hti_ra
 argument_list|)
 expr_stmt|;
 for|for
@@ -476,7 +476,7 @@ name|TTE_PAGE_SHIFT
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_idxpgsz
+name|hti_idxpgsz
 argument_list|)
 expr_stmt|;
 name|tsb_index
@@ -496,7 +496,7 @@ name|tsb_load_pa
 operator|=
 name|tsb
 operator|->
-name|hvtsb_pa
+name|hti_ra
 operator|+
 literal|2
 operator|*
@@ -599,7 +599,7 @@ name|va
 argument_list|,
 name|tsb
 operator|->
-name|hvtsb_idxpgsz
+name|hti_idxpgsz
 argument_list|)
 expr_stmt|;
 name|tsb_shift
@@ -608,7 +608,7 @@ name|TTE_PAGE_SHIFT
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_idxpgsz
+name|hti_idxpgsz
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -648,7 +648,7 @@ name|tsb_store_pa
 operator|=
 name|tsb
 operator|->
-name|hvtsb_pa
+name|hti_ra
 operator|+
 literal|2
 operator|*
@@ -752,7 +752,7 @@ name|TTE_PAGE_SHIFT
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_idxpgsz
+name|hti_idxpgsz
 argument_list|)
 expr_stmt|;
 name|tsb_index
@@ -778,7 +778,7 @@ name|TLB_PHYS_TO_DIRECT
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_pa
+name|hti_ra
 operator|+
 literal|2
 operator|*
@@ -862,12 +862,12 @@ name|TLB_PHYS_TO_DIRECT
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_pa
+name|hti_ra
 argument_list|)
 argument_list|,
 name|tsb
 operator|->
-name|hvtsb_ntte
+name|hti_ntte
 operator|<<
 name|TTE_SHIFT
 argument_list|)
@@ -902,7 +902,7 @@ name|TTE_PAGE_SHIFT
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_idxpgsz
+name|hti_idxpgsz
 argument_list|)
 expr_stmt|;
 name|tsb_index
@@ -928,7 +928,7 @@ name|TLB_PHYS_TO_DIRECT
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_pa
+name|hti_ra
 operator|+
 literal|2
 operator|*
@@ -999,7 +999,7 @@ name|TTE_PAGE_SHIFT
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_idxpgsz
+name|hti_idxpgsz
 argument_list|)
 expr_stmt|;
 for|for
@@ -1037,7 +1037,7 @@ name|TLB_PHYS_TO_DIRECT
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_pa
+name|hti_ra
 operator|+
 literal|2
 operator|*
@@ -1098,7 +1098,7 @@ name|TTE_PAGE_SHIFT
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_idxpgsz
+name|hti_idxpgsz
 argument_list|)
 expr_stmt|;
 name|tsb_index
@@ -1124,7 +1124,7 @@ name|TLB_PHYS_TO_DIRECT
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_pa
+name|hti_ra
 operator|+
 literal|2
 operator|*
@@ -1247,7 +1247,7 @@ name|ffs
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_ntte
+name|hti_ntte
 operator|>>
 operator|(
 name|PAGE_SHIFT
@@ -1264,7 +1264,7 @@ name|TLB_PHYS_TO_DIRECT
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_pa
+name|hti_ra
 argument_list|)
 operator||
 name|tsb_shift
@@ -1305,7 +1305,7 @@ name|ffs
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_ntte
+name|hti_ntte
 operator|>>
 operator|(
 name|PAGE_SHIFT
@@ -1322,7 +1322,7 @@ name|TLB_PHYS_TO_DIRECT
 argument_list|(
 name|tsb
 operator|->
-name|hvtsb_pa
+name|hti_ra
 argument_list|)
 operator||
 name|tsb_shift
@@ -1356,7 +1356,7 @@ return|return
 operator|(
 name|hvtsb
 operator|->
-name|hvtsb_ntte
+name|hti_ntte
 operator|>>
 operator|(
 name|PAGE_SHIFT

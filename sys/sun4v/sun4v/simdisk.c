@@ -116,7 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/hypervisor_api.h>
+file|<machine/hv_api.h>
 end_include
 
 begin_define

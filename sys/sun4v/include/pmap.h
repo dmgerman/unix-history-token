@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/hypervisorvar.h>
+file|<machine/hv_api.h>
 end_include
 
 begin_define
@@ -178,7 +178,7 @@ name|uint32_t
 name|pm_tsb_cap_miss_count
 decl_stmt|;
 name|vm_paddr_t
-name|pm_old_tsb_pa
+name|pm_old_tsb_ra
 index|[
 name|TSB_MAX_RESIZE
 index|]

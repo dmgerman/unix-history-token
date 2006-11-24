@@ -787,7 +787,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|hvio_iommu_demap
+name|hv_pci_iommu_demap
 argument_list|(
 name|him
 operator|->
@@ -2372,7 +2372,7 @@ condition|(
 operator|(
 name|err
 operator|=
-name|hvio_iommu_map
+name|hv_pci_iommu_map
 argument_list|(
 name|him
 operator|->
@@ -2448,7 +2448,7 @@ name|DPRINTF
 argument_list|(
 literal|"err: %ld"
 argument_list|,
-name|hvio_iommu_getmap
+name|hv_pci_iommu_getmap
 argument_list|(
 name|him
 operator|->
@@ -4295,7 +4295,7 @@ condition|(
 operator|(
 name|err
 operator|=
-name|hvio_iommu_getmap
+name|hv_pci_iommu_getmap
 argument_list|(
 name|him
 operator|->
@@ -4348,7 +4348,7 @@ condition|(
 operator|(
 name|err
 operator|=
-name|hvio_dma_sync
+name|hv_pci_dma_sync
 argument_list|(
 name|him
 operator|->
@@ -4433,7 +4433,7 @@ name|printf
 argument_list|(
 literal|"err: %ld"
 argument_list|,
-name|hvio_iommu_getmap
+name|hv_pci_iommu_getmap
 argument_list|(
 name|him
 operator|->

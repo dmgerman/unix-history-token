@@ -128,7 +128,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/hypervisor_api.h>
+file|<machine/hypervisorvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/hv_api.h>
 end_include
 
 begin_define
@@ -424,7 +430,7 @@ do|do
 block|{
 name|error
 operator|=
-name|hv_cnputchar
+name|hv_cons_putchar
 argument_list|(
 literal|'\r'
 argument_list|)
@@ -442,7 +448,7 @@ do|do
 block|{
 name|error
 operator|=
-name|hv_cnputchar
+name|hv_cons_putchar
 argument_list|(
 name|c
 argument_list|)
@@ -830,7 +836,7 @@ condition|(
 operator|(
 name|l
 operator|=
-name|hv_cngetchar
+name|hv_cons_getchar
 argument_list|(
 operator|&
 name|ch
@@ -929,7 +935,7 @@ condition|(
 operator|(
 name|l
 operator|=
-name|hv_cngetchar
+name|hv_cons_getchar
 argument_list|(
 operator|&
 name|ch
@@ -1038,7 +1044,7 @@ literal|'\n'
 condition|)
 name|error
 operator|=
-name|hv_cnputchar
+name|hv_cons_putchar
 argument_list|(
 literal|'\r'
 argument_list|)
@@ -1055,7 +1061,7 @@ do|do
 block|{
 name|error
 operator|=
-name|hv_cnputchar
+name|hv_cons_putchar
 argument_list|(
 name|c
 argument_list|)
@@ -1189,7 +1195,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|hv_cnputchar
+name|hv_cons_putchar
 argument_list|(
 name|buf
 index|[

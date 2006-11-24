@@ -90,7 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/hypervisor_api.h>
+file|<machine/hypervisorvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/hv_api.h>
 end_include
 
 begin_include
@@ -1152,18 +1158,6 @@ define|\
 value|((b& 0xff)<< 16) | ((d& 0x1f)<< 11) | ((f& 0x7)<< 8)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|hvio_config_get(devhandle_t dev_hdl, pci_device_t bdf,     pci_config_offset_t off, pci_config_size_t size, pci_cfg_data_t *data_p) { return (0); }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|uint32_t
@@ -1214,7 +1208,7 @@ argument_list|)
 expr_stmt|;
 name|r
 operator|=
-name|hvio_config_get
+name|hv_pci_config_get
 argument_list|(
 name|sc
 operator|->
@@ -1312,18 +1306,6 @@ literal|1
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|uint64_t hvio_config_put(devhandle_t dev_hdl, pci_device_t bdf,     pci_config_offset_t off, pci_config_size_t size, pci_cfg_data_t data)
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -1433,7 +1415,7 @@ expr_stmt|;
 block|}
 name|r
 operator|=
-name|hvio_config_put
+name|hv_pci_config_put
 argument_list|(
 name|sc
 operator|->

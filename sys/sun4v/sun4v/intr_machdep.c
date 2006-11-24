@@ -126,12 +126,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/hypervisor_api.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -139,6 +133,18 @@ begin_include
 include|#
 directive|include
 file|<machine/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/hypervisorvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/hv_api.h>
 end_include
 
 begin_include
@@ -1288,7 +1294,7 @@ name|iv
 argument_list|)
 expr_stmt|;
 else|else
-name|hvio_intr_setstate
+name|hv_intr_setstate
 argument_list|(
 name|iv
 operator|->
@@ -1333,7 +1339,7 @@ name|ivh_arg
 argument_list|)
 expr_stmt|;
 comment|/* re-enable interrupt */
-name|hvio_intr_setstate
+name|hv_intr_setstate
 argument_list|(
 name|ivh
 operator|->

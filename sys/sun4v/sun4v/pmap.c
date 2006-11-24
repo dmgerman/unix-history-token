@@ -278,6 +278,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/hypervisorvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/hv_api.h>
 end_include
 
@@ -1874,7 +1880,7 @@ condition|(
 operator|(
 name|err
 operator|=
-name|hv_set_ctxnon0
+name|hv_mmu_tsb_ctxnon0
 argument_list|(
 literal|1
 argument_list|,
@@ -3193,7 +3199,7 @@ index|[
 name|TSB8K_INDEX
 index|]
 operator|.
-name|hti_pa
+name|hti_ra
 operator|=
 name|pa
 expr_stmt|;
@@ -3254,7 +3260,7 @@ name|kernel_pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hti_pa
+name|hti_ra
 operator|=
 name|pa
 expr_stmt|;
@@ -3375,7 +3381,7 @@ index|[
 name|TSB4M_INDEX
 index|]
 operator|.
-name|hti_pa
+name|hti_ra
 operator|=
 name|pa
 expr_stmt|;
@@ -3736,7 +3742,7 @@ block|}
 block|}
 name|error
 operator|=
-name|hv_set_ctx0
+name|hv_mmu_tsb_ctx0
 argument_list|(
 name|MAX_TSB_INFO
 argument_list|,
@@ -7966,7 +7972,7 @@ operator|++
 control|)
 name|pmap
 operator|->
-name|pm_old_tsb_pa
+name|pm_old_tsb_ra
 index|[
 name|i
 index|]
@@ -9310,7 +9316,7 @@ name|TSB_MAX_RESIZE
 operator|&&
 name|pmap
 operator|->
-name|pm_old_tsb_pa
+name|pm_old_tsb_ra
 index|[
 name|i
 index|]
@@ -9329,7 +9335,7 @@ name|TLB_PHYS_TO_DIRECT
 argument_list|(
 name|pmap
 operator|->
-name|pm_old_tsb_pa
+name|pm_old_tsb_ra
 index|[
 name|i
 index|]
@@ -9348,7 +9354,7 @@ argument_list|)
 expr_stmt|;
 name|pmap
 operator|->
-name|pm_old_tsb_pa
+name|pm_old_tsb_ra
 index|[
 name|i
 index|]
@@ -9360,7 +9366,7 @@ if|if
 condition|(
 name|pmap
 operator|->
-name|pm_old_tsb_pa
+name|pm_old_tsb_ra
 index|[
 literal|0
 index|]
@@ -9375,7 +9381,7 @@ name|pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hti_pa
+name|hti_ra
 decl_stmt|;
 name|int
 name|size
@@ -9410,11 +9416,11 @@ name|pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hti_pa
+name|hti_ra
 operator|=
 name|pmap
 operator|->
-name|pm_old_tsb_pa
+name|pm_old_tsb_ra
 index|[
 literal|0
 index|]
@@ -9441,7 +9447,7 @@ name|pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hti_pa
+name|hti_ra
 operator||
 operator|(
 name|uint64_t
@@ -9450,7 +9456,7 @@ name|TSB_INIT_SHIFT
 expr_stmt|;
 name|pmap
 operator|->
-name|pm_old_tsb_pa
+name|pm_old_tsb_ra
 index|[
 literal|0
 index|]
@@ -9732,7 +9738,7 @@ argument_list|)
 expr_stmt|;
 name|pmap
 operator|->
-name|pm_old_tsb_pa
+name|pm_old_tsb_ra
 index|[
 name|npages_shift
 operator|-
@@ -9743,7 +9749,7 @@ name|pmap
 operator|->
 name|pm_tsb
 operator|.
-name|hti_pa
+name|hti_ra
 expr_stmt|;
 comment|/* double TSB size */
 name|tsb_init
@@ -9796,7 +9802,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|hv_set_ctxnon0
+name|hv_mmu_tsb_ctxnon0
 argument_list|(
 literal|1
 argument_list|,
@@ -9884,7 +9890,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|hv_set_ctxnon0
+name|hv_mmu_tsb_ctxnon0
 argument_list|(
 literal|1
 argument_list|,
