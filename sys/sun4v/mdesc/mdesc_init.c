@@ -564,7 +564,7 @@ name|size
 argument_list|,
 name|M_MDPROP
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 return|;
 block|}
