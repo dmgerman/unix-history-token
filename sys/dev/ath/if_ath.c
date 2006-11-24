@@ -11673,6 +11673,8 @@ operator|->
 name|dd_desc
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|dd
