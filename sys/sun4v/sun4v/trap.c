@@ -281,7 +281,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/hv_api.h>
+file|<machine/hypervisorvar.h>
 end_include
 
 begin_include

@@ -162,6 +162,45 @@ begin_comment
 comment|/*  * Section 11 CPU Services  */
 end_comment
 
+begin_function_decl
+specifier|extern
+name|uint64_t
+name|hv_cpu_yield
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|uint64_t
+name|hv_cpu_state
+parameter_list|(
+name|uint64_t
+name|cpuid
+parameter_list|,
+name|uint64_t
+modifier|*
+name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|uint64_t
+name|hv_cpu_mondo_send
+parameter_list|(
+name|int
+name|ncpu
+parameter_list|,
+name|vm_paddr_t
+name|cpulist_ra
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Section 12 MMU Services  */
 end_comment
@@ -232,9 +271,46 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|uint64_t
+name|hv_mmu_map_perm_addr
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|tte_t
+name|tte
+parameter_list|,
+name|uint64_t
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Section 13 Cache and Memory Services  */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|uint64_t
+name|hv_mem_scrub
+parameter_list|(
+name|vm_paddr_t
+name|ra
+parameter_list|,
+name|uint64_t
+name|length
+parameter_list|,
+name|uint64_t
+modifier|*
+name|scrubbed
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Section 14 Device Interrupt Services  */

@@ -2225,10 +2225,6 @@ name|error
 operator|=
 name|hv_mmu_map_perm_addr
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|translations
 index|[
 name|i

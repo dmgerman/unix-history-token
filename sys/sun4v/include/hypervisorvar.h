@@ -73,7 +73,7 @@ value|0xff
 end_define
 
 begin_comment
-comment|/*  * Error returns in %o0.  * (Additional result is returned in %o1.)  */
+comment|/*  * Status returns in %o0.  */
 end_comment
 
 begin_define
@@ -305,7 +305,7 @@ value|0xffff
 end_define
 
 begin_comment
-comment|/*  * Function numbers for API_TRAP.  */
+comment|/*  * Function numbers for CORE_TRAP.  */
 end_comment
 
 begin_define
