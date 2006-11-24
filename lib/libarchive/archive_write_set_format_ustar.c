@@ -999,6 +999,9 @@ literal|0x1ff
 operator|&
 operator|(
 operator|-
+operator|(
+name|int64_t
+operator|)
 name|ustar
 operator|->
 name|entry_bytes_remaining
@@ -2291,6 +2294,10 @@ operator|*
 operator|--
 name|p
 operator|=
+call|(
+name|char
+call|)
+argument_list|(
 literal|'0'
 operator|+
 operator|(
@@ -2298,6 +2305,7 @@ name|v
 operator|&
 literal|7
 operator|)
+argument_list|)
 expr_stmt|;
 name|v
 operator|>>=

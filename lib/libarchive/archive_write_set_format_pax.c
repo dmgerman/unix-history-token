@@ -3779,6 +3779,9 @@ literal|0x1ff
 operator|&
 operator|(
 operator|-
+operator|(
+name|int64_t
+operator|)
 name|pax
 operator|->
 name|entry_bytes_remaining
@@ -3917,6 +3920,9 @@ literal|0x1ff
 operator|&
 operator|(
 operator|-
+operator|(
+name|int64_t
+operator|)
 name|pax
 operator|->
 name|entry_bytes_remaining
