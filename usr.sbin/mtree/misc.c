@@ -215,6 +215,14 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+literal|"optional"
+block|,
+name|F_OPT
+block|,
+literal|0
+block|}
+block|,
 ifdef|#
 directive|ifdef
 name|RMD160
