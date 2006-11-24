@@ -713,8 +713,6 @@ decl_stmt|;
 name|int
 name|val
 decl_stmt|,
-name|oldcancel
-decl_stmt|,
 name|retval
 decl_stmt|;
 if|if
@@ -749,8 +747,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|oldcancel
-operator|=
 name|_thr_cancel_enter
 argument_list|(
 name|curthread
@@ -771,8 +767,6 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
-argument_list|,
-name|oldcancel
 argument_list|)
 expr_stmt|;
 return|return
@@ -827,8 +821,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|oldcancel
-operator|=
 name|_thr_cancel_enter
 argument_list|(
 name|curthread
@@ -858,8 +850,6 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
-argument_list|,
-name|oldcancel
 argument_list|)
 expr_stmt|;
 block|}
@@ -914,8 +904,6 @@ decl_stmt|;
 name|int
 name|val
 decl_stmt|,
-name|oldcancel
-decl_stmt|,
 name|retval
 decl_stmt|;
 if|if
@@ -950,8 +938,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|oldcancel
-operator|=
 name|_thr_cancel_enter
 argument_list|(
 name|curthread
@@ -974,8 +960,6 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
-argument_list|,
-name|oldcancel
 argument_list|)
 expr_stmt|;
 return|return
@@ -1068,8 +1052,6 @@ operator|&
 name|ts
 argument_list|)
 expr_stmt|;
-name|oldcancel
-operator|=
 name|_thr_cancel_enter
 argument_list|(
 name|curthread
@@ -1100,8 +1082,6 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
-argument_list|,
-name|oldcancel
 argument_list|)
 expr_stmt|;
 block|}

@@ -995,41 +995,33 @@ name|struct
 name|pthread_attr
 name|attr
 decl_stmt|;
-comment|/* 	 * Cancelability flags  	 */
-define|#
-directive|define
-name|THR_CANCEL_DISABLE
-value|0x0001
-define|#
-directive|define
-name|THR_CANCEL_EXITING
-value|0x0002
-define|#
-directive|define
-name|THR_CANCEL_AT_POINT
-value|0x0004
-define|#
-directive|define
-name|THR_CANCEL_NEEDED
-value|0x0008
 define|#
 directive|define
 name|SHOULD_CANCEL
 parameter_list|(
-name|val
+name|thr
 parameter_list|)
 define|\
-value|(((val)& (THR_CANCEL_DISABLE | THR_CANCEL_EXITING |	\ 		 THR_CANCEL_NEEDED)) == THR_CANCEL_NEEDED)
-define|#
-directive|define
-name|SHOULD_ASYNC_CANCEL
-parameter_list|(
-name|val
-parameter_list|)
-define|\
-value|(((val)& (THR_CANCEL_DISABLE | THR_CANCEL_EXITING |	\ 		 THR_CANCEL_NEEDED | THR_CANCEL_AT_POINT)) ==	\ 		 (THR_CANCEL_NEEDED | THR_CANCEL_AT_POINT))
+value|((thr)->cancel_pending&&				\ 	 ((thr)->cancel_point || (thr)->cancel_async)&&	\ 	 (thr)->cancel_enable&& (thr)->cancelling == 0)
+comment|/* Cancellation is enabled */
 name|int
-name|cancelflags
+name|cancel_enable
+decl_stmt|;
+comment|/* Cancellation request is pending */
+name|int
+name|cancel_pending
+decl_stmt|;
+comment|/* Thread is at cancellation point */
+name|int
+name|cancel_point
+decl_stmt|;
+comment|/* Asynchronouse cancellation is enabled */
+name|int
+name|cancel_async
+decl_stmt|;
+comment|/* Cancellation is in progress */
+name|int
+name|cancelling
 decl_stmt|;
 comment|/* Thread temporary signal mask. */
 name|sigset_t
@@ -2035,7 +2027,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|_thr_cancel_enter
 argument_list|(
 expr|struct
@@ -2053,8 +2045,18 @@ argument_list|(
 expr|struct
 name|pthread
 operator|*
-argument_list|,
-name|int
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_thr_testcancel
+argument_list|(
+expr|struct
+name|pthread
+operator|*
 argument_list|)
 name|__hidden
 decl_stmt|;

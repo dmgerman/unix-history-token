@@ -403,11 +403,15 @@ name|arg
 expr_stmt|;
 name|new_thread
 operator|->
-name|cancelflags
+name|cancel_enable
 operator|=
-name|PTHREAD_CANCEL_ENABLE
-operator||
-name|PTHREAD_CANCEL_DEFERRED
+literal|1
+expr_stmt|;
+name|new_thread
+operator|->
+name|cancel_async
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Initialize the mutex queue: */
 name|TAILQ_INIT

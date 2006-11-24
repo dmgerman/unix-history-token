@@ -144,15 +144,9 @@ decl_stmt|;
 comment|/* Check if this thread is already in the process of exiting: */
 if|if
 condition|(
-operator|(
 name|curthread
 operator|->
-name|cancelflags
-operator|&
-name|THR_CANCEL_EXITING
-operator|)
-operator|!=
-literal|0
+name|cancelling
 condition|)
 block|{
 name|char
@@ -184,15 +178,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Flag this thread as exiting. */
-name|atomic_set_int
-argument_list|(
-operator|&
 name|curthread
 operator|->
-name|cancelflags
-argument_list|,
-name|THR_CANCEL_EXITING
-argument_list|)
+name|cancelling
+operator|=
+literal|1
 expr_stmt|;
 name|_thr_exit_cleanup
 argument_list|()

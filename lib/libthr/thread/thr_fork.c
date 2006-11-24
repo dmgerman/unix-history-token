@@ -347,10 +347,9 @@ name|errno
 expr_stmt|;
 name|curthread
 operator|->
-name|cancelflags
-operator|&=
-operator|~
-name|THR_CANCEL_NEEDED
+name|cancel_pending
+operator|=
+literal|0
 expr_stmt|;
 name|curthread
 operator|->

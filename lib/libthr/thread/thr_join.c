@@ -278,9 +278,6 @@ name|long
 name|tid
 decl_stmt|;
 name|int
-name|oldcancel
-decl_stmt|;
-name|int
 name|ret
 init|=
 literal|0
@@ -407,8 +404,6 @@ argument_list|,
 name|pthread
 argument_list|)
 expr_stmt|;
-name|oldcancel
-operator|=
 name|_thr_cancel_enter
 argument_list|(
 name|curthread
@@ -506,8 +501,6 @@ block|}
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
-argument_list|,
-name|oldcancel
 argument_list|)
 expr_stmt|;
 name|THR_CLEANUP_POP

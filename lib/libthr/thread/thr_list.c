@@ -1157,6 +1157,11 @@ operator|->
 name|refcount
 operator|++
 expr_stmt|;
+name|THR_CRITICAL_ENTER
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 block|}
 name|THREAD_LIST_UNLOCK
 argument_list|(
@@ -1215,7 +1220,6 @@ name|struct
 name|pthread
 modifier|*
 name|curthread
-name|__unused
 parameter_list|,
 name|struct
 name|pthread
@@ -1264,6 +1268,11 @@ condition|)
 name|THR_GCLIST_ADD
 argument_list|(
 name|thread
+argument_list|)
+expr_stmt|;
+name|THR_CRITICAL_LEAVE
+argument_list|(
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}

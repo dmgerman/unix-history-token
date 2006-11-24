@@ -249,20 +249,10 @@ name|curthread
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|__predict_false
-argument_list|(
-name|SHOULD_ASYNC_CANCEL
+name|_thr_testcancel
 argument_list|(
 name|curthread
-operator|->
-name|cancelflags
 argument_list|)
-argument_list|)
-condition|)
-name|_pthread_testcancel
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -551,13 +541,8 @@ name|_get_curthread
 argument_list|()
 decl_stmt|;
 name|int
-name|oldcancel
-decl_stmt|;
-name|int
 name|ret
 decl_stmt|;
-name|oldcancel
-operator|=
 name|_thr_cancel_enter
 argument_list|(
 name|curthread
@@ -571,8 +556,6 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
-argument_list|,
-name|oldcancel
 argument_list|)
 expr_stmt|;
 return|return
@@ -950,9 +933,6 @@ modifier|*
 name|pset
 decl_stmt|;
 name|int
-name|oldcancel
-decl_stmt|;
-name|int
 name|ret
 decl_stmt|;
 if|if
@@ -989,8 +969,6 @@ name|pset
 operator|=
 name|set
 expr_stmt|;
-name|oldcancel
-operator|=
 name|_thr_cancel_enter
 argument_list|(
 name|curthread
@@ -1006,8 +984,6 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
-argument_list|,
-name|oldcancel
 argument_list|)
 expr_stmt|;
 return|return
@@ -1169,9 +1145,6 @@ modifier|*
 name|pset
 decl_stmt|;
 name|int
-name|oldcancel
-decl_stmt|;
-name|int
 name|ret
 decl_stmt|;
 if|if
@@ -1208,8 +1181,6 @@ name|pset
 operator|=
 name|set
 expr_stmt|;
-name|oldcancel
-operator|=
 name|_thr_cancel_enter
 argument_list|(
 name|curthread
@@ -1229,8 +1200,6 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
-argument_list|,
-name|oldcancel
 argument_list|)
 expr_stmt|;
 return|return
@@ -1348,9 +1317,6 @@ modifier|*
 name|pset
 decl_stmt|;
 name|int
-name|oldcancel
-decl_stmt|;
-name|int
 name|ret
 decl_stmt|;
 if|if
@@ -1387,8 +1353,6 @@ name|pset
 operator|=
 name|set
 expr_stmt|;
-name|oldcancel
-operator|=
 name|_thr_cancel_enter
 argument_list|(
 name|curthread
@@ -1406,8 +1370,6 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
-argument_list|,
-name|oldcancel
 argument_list|)
 expr_stmt|;
 return|return
@@ -1525,9 +1487,6 @@ modifier|*
 name|pset
 decl_stmt|;
 name|int
-name|oldcancel
-decl_stmt|;
-name|int
 name|ret
 decl_stmt|;
 if|if
@@ -1564,8 +1523,6 @@ name|pset
 operator|=
 name|set
 expr_stmt|;
-name|oldcancel
-operator|=
 name|_thr_cancel_enter
 argument_list|(
 name|curthread
@@ -1583,8 +1540,6 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
-argument_list|,
-name|oldcancel
 argument_list|)
 expr_stmt|;
 return|return
