@@ -68,7 +68,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|API_TRAP
+name|CORE_TRAP
 value|0xff
 end_define
 
