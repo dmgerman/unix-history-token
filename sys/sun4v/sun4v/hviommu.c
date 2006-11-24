@@ -2405,7 +2405,6 @@ name|PCI_MAP_ATTR_WRITE
 argument_list|,
 operator|(
 name|io_page_list_t
-operator|*
 operator|)
 name|pmap_kextract
 argument_list|(

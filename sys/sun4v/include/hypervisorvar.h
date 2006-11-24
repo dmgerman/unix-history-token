@@ -357,6 +357,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MACH_SIR
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
 name|MACH_SET_SOFT_STATE
 value|0x03
 end_define
@@ -476,14 +483,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAP_PERM_ADDR
+name|MMU_MAP_PERM_ADDR
 value|0x25
 end_define
 
 begin_define
 define|#
 directive|define
-name|MMU_MAP_PERM_ADDR
+name|MMU_FAULT_AREA_CONF
 value|0x26
 end_define
 
@@ -984,14 +991,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|LDC_SET_MAP_TABLE
+name|LDC_SET_MAPTABLE
 value|0xea
 end_define
 
 begin_define
 define|#
 directive|define
-name|LDC_GET_MAP_TABLE
+name|LDC_GET_MAPTABLE
 value|0xeb
 end_define
 
@@ -1093,14 +1100,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|HV_INTR_NOTVALID
+name|HV_INTR_DISABLED
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_INTR_VALID
+name|HV_INTR_ENABLED
 value|1
 end_define
 
