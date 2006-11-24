@@ -371,7 +371,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MACH_SET_WATCHDOG
+name|MACH_WATCHDOG
 value|0x05
 end_define
 
