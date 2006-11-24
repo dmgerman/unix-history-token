@@ -439,7 +439,7 @@ end_expr_stmt
 begin_function_decl
 specifier|static
 name|int
-name|nfsrv_access_withgiant
+name|nfsrv_access
 parameter_list|(
 name|struct
 name|vnode
@@ -464,32 +464,6 @@ name|td
 parameter_list|,
 name|int
 name|override
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|nfsrv_access
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -690,6 +664,9 @@ operator|&
 name|ND_NFSV3
 operator|)
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -736,6 +713,9 @@ argument_list|,
 name|NFSX_UNSIGNED
 argument_list|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|nfsrv_fhtovp
@@ -764,6 +744,9 @@ condition|(
 name|error
 condition|)
 block|{
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|nfsm_reply
 argument_list|(
 name|NFSX_UNSIGNED
@@ -794,16 +777,15 @@ operator|*
 name|tl
 argument_list|)
 expr_stmt|;
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 if|if
 condition|(
 operator|(
@@ -812,7 +794,7 @@ operator|&
 name|NFSV3ACCESS_READ
 operator|)
 operator|&&
-name|nfsrv_access_withgiant
+name|nfsrv_access
 argument_list|(
 name|vp
 argument_list|,
@@ -867,7 +849,7 @@ operator|&
 name|testmode
 operator|)
 operator|&&
-name|nfsrv_access_withgiant
+name|nfsrv_access
 argument_list|(
 name|vp
 argument_list|,
@@ -912,7 +894,7 @@ operator|&
 name|testmode
 operator|)
 operator|&&
-name|nfsrv_access_withgiant
+name|nfsrv_access
 argument_list|(
 name|vp
 argument_list|,
@@ -950,13 +932,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -1012,25 +992,25 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -1163,6 +1143,9 @@ decl_stmt|,
 modifier|*
 name|mreq
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -1188,6 +1171,9 @@ name|nfsm_srvmtofh
 argument_list|(
 name|fhp
 argument_list|)
+expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
 expr_stmt|;
 name|error
 operator|=
@@ -1217,6 +1203,9 @@ condition|(
 name|error
 condition|)
 block|{
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|nfsm_reply
 argument_list|(
 literal|0
@@ -1230,16 +1219,15 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|error
 operator|=
 name|VOP_GETATTR
@@ -1258,13 +1246,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -1336,25 +1322,25 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -1532,6 +1518,9 @@ name|mp
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -1558,6 +1547,9 @@ argument_list|(
 name|fhp
 argument_list|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1583,16 +1575,13 @@ goto|goto
 name|out
 goto|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 operator|(
 name|void
 operator|)
@@ -1612,20 +1601,18 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* The write holds a ref. */
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
-expr_stmt|;
-comment|/* VFS */
-name|NFSD_LOCK
-argument_list|()
 expr_stmt|;
 name|VATTR_NULL
 argument_list|(
 name|vap
 argument_list|)
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1870,6 +1857,9 @@ name|va_mtime
 argument_list|)
 expr_stmt|;
 block|}
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Now that we have all the fields, lets do it. 	 */
 name|error
 operator|=
@@ -1899,6 +1889,9 @@ condition|(
 name|error
 condition|)
 block|{
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|nfsm_reply
 argument_list|(
 literal|2
@@ -1936,16 +1929,15 @@ condition|(
 name|v3
 condition|)
 block|{
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|error
 operator|=
 name|preat_ret
@@ -2005,13 +1997,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -2051,20 +2041,12 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
-name|NFSD_LOCK
-argument_list|()
-expr_stmt|;
 block|}
-name|NFSD_LOCK_ASSERT
-argument_list|()
-expr_stmt|;
 comment|/* 	 * If the size is being changed write acces is required, otherwise 	 * just check for a read only filesystem. 	 */
 if|if
 condition|(
@@ -2157,16 +2139,15 @@ goto|goto
 name|out
 goto|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|error
 operator|=
 name|VOP_SETATTR
@@ -2193,15 +2174,10 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
-expr_stmt|;
-comment|/* VFS */
-name|NFSD_LOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2214,7 +2190,7 @@ name|postat_ret
 expr_stmt|;
 name|out
 label|:
-name|NFSD_LOCK_ASSERT
+name|NFSD_UNLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 if|if
@@ -2224,35 +2200,32 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
-expr_stmt|;
-comment|/* VFS */
-name|NFSD_LOCK
-argument_list|()
 expr_stmt|;
 block|}
 name|vp
 operator|=
 name|NULL
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 name|nfsm_reply
 argument_list|(
@@ -2320,13 +2293,13 @@ expr_stmt|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 if|if
 condition|(
 name|vp
@@ -2341,13 +2314,11 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -2618,10 +2589,10 @@ argument_list|,
 name|pubflag
 argument_list|)
 expr_stmt|;
-comment|/* 	 * namei failure, only dirp to cleanup.  Clear out garbarge from 	 * structure in case macros jump to nfsmout. 	 */
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
+comment|/* 	 * namei failure, only dirp to cleanup.  Clear out garbarge from 	 * structure in case macros jump to nfsmout. 	 * 	 * XXXRW: For now, use Giant unconditionally during name lookup, 	 * rather than deal with complexity of conditional Giant acqusition 	 * as moving across the name space. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3399,6 +3370,9 @@ init|=
 operator|&
 name|io
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -3438,6 +3412,9 @@ argument_list|(
 name|fhp
 argument_list|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|len
 operator|=
 literal|0
@@ -3445,9 +3422,6 @@ expr_stmt|;
 name|i
 operator|=
 literal|0
-expr_stmt|;
-name|NFSD_UNLOCK
-argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -3607,9 +3581,6 @@ name|uio_td
 operator|=
 name|NULL
 expr_stmt|;
-name|NFSD_LOCK
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|nfsrv_fhtovp
@@ -3638,6 +3609,9 @@ condition|(
 name|error
 condition|)
 block|{
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|nfsm_reply
 argument_list|(
 literal|2
@@ -3664,16 +3638,15 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 if|if
 condition|(
 name|vp
@@ -3728,13 +3701,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -3863,25 +3834,25 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -4087,6 +4058,9 @@ name|ioflag
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -4174,6 +4148,9 @@ name|nfsd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Reference vp.  If an error occurs, vp will be invalid, but we 	 * have to NULL it just in case.  The macros might goto nfsmout 	 * as well. 	 */
 name|error
 operator|=
@@ -4206,6 +4183,9 @@ block|{
 name|vp
 operator|=
 name|NULL
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 name|nfsm_reply
 argument_list|(
@@ -4266,16 +4246,15 @@ else|:
 name|EACCES
 expr_stmt|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 if|if
 condition|(
 operator|!
@@ -4287,7 +4266,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|nfsrv_access_withgiant
+name|nfsrv_access
 argument_list|(
 name|vp
 argument_list|,
@@ -4307,7 +4286,7 @@ literal|0
 condition|)
 name|error
 operator|=
-name|nfsrv_access_withgiant
+name|nfsrv_access
 argument_list|(
 name|vp
 argument_list|,
@@ -4355,13 +4334,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -4396,15 +4373,10 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
-expr_stmt|;
-comment|/* VFS */
-name|NFSD_LOCK
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Calculate byte count to read 	 */
 if|if
@@ -4444,6 +4416,9 @@ else|else
 name|cnt
 operator|=
 name|reqlen
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Calculate seqcount for heuristic 	 */
 block|{
@@ -4801,6 +4776,9 @@ argument_list|)
 operator|)
 expr_stmt|;
 block|}
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|len
 operator|=
 name|left
@@ -4809,9 +4787,6 @@ name|nfsm_rndup
 argument_list|(
 name|cnt
 argument_list|)
-expr_stmt|;
-name|NFSD_UNLOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -5059,13 +5034,15 @@ name|uio_segflg
 operator|=
 name|UIO_SYSSPACE
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|error
 operator|=
 name|VOP_READ
@@ -5142,13 +5119,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -5192,35 +5167,33 @@ name|uio_resid
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 block|}
-name|mtx_assert
+name|VFS_ASSERT_GIANT
 argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_OWNED
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -5338,25 +5311,25 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -5572,6 +5545,9 @@ name|mntp
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -5618,6 +5594,9 @@ argument_list|(
 name|fhp
 argument_list|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5639,20 +5618,20 @@ name|error
 operator|=
 name|ESTALE
 expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|ereply
 goto|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mntp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 operator|(
 name|void
 operator|)
@@ -5672,21 +5651,19 @@ name|mntp
 argument_list|)
 expr_stmt|;
 comment|/* The write holds a ref. */
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
-expr_stmt|;
-comment|/* VFS */
-name|NFSD_LOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
 name|v3
 condition|)
 block|{
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|tl
 operator|=
 name|nfsm_dissect_nonblock
@@ -5698,6 +5675,9 @@ literal|5
 operator|*
 name|NFSX_UNSIGNED
 argument_list|)
+expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
 expr_stmt|;
 name|off
 operator|=
@@ -5724,6 +5704,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|tl
 operator|=
 name|nfsm_dissect_nonblock
@@ -5735,6 +5718,9 @@ literal|4
 operator|*
 name|NFSX_UNSIGNED
 argument_list|)
+expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
 expr_stmt|;
 name|off
 operator|=
@@ -5936,6 +5922,9 @@ name|error
 operator|=
 name|EIO
 expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|nfsm_reply
 argument_list|(
 literal|2
@@ -5999,6 +5988,9 @@ name|vp
 operator|=
 name|NULL
 expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|nfsm_reply
 argument_list|(
 literal|2
@@ -6035,16 +6027,15 @@ condition|(
 name|v3
 condition|)
 block|{
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|forat_ret
 operator|=
 name|VOP_GETATTR
@@ -6059,15 +6050,10 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
-expr_stmt|;
-comment|/* VFS */
-name|NFSD_LOCK
-argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -6108,6 +6094,16 @@ condition|(
 operator|!
 name|error
 condition|)
+block|{
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|nfsrv_access
@@ -6125,39 +6121,42 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
 condition|)
 block|{
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
-expr_stmt|;
-comment|/* VFS */
-name|NFSD_LOCK
-argument_list|()
 expr_stmt|;
 name|vp
 operator|=
 name|NULL
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 name|nfsm_reply
 argument_list|(
@@ -6191,9 +6190,6 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|len
@@ -6351,13 +6347,15 @@ name|uio_offset
 operator|=
 name|off
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|error
 operator|=
 name|VOP_WRITE
@@ -6389,22 +6387,22 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
-name|mtx_assert
+name|VFS_ASSERT_GIANT
 argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_OWNED
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|aftat_ret
 operator|=
 name|VOP_GETATTR
@@ -6423,15 +6421,10 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
-expr_stmt|;
-comment|/* VFS */
-name|NFSD_LOCK
-argument_list|()
 expr_stmt|;
 name|vp
 operator|=
@@ -6445,6 +6438,9 @@ condition|)
 name|error
 operator|=
 name|aftat_ret
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 name|ereply
 label|:
@@ -6627,13 +6623,13 @@ expr_stmt|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mntp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 if|if
 condition|(
 name|vp
@@ -6648,13 +6644,11 @@ argument_list|(
 name|mntp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -6689,6 +6683,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|NFSD_LOCK_DONTCARE
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|cr1
@@ -6926,6 +6923,9 @@ modifier|*
 name|mntp
 init|=
 name|NULL
+decl_stmt|;
+name|int
+name|vfslocked
 decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
@@ -7772,6 +7772,9 @@ operator|&
 name|ND_NFSV3
 operator|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|forat_ret
 operator|=
 name|aftat_ret
@@ -7817,16 +7820,15 @@ condition|(
 name|v3
 condition|)
 block|{
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|forat_ret
 operator|=
 name|VOP_GETATTR
@@ -7841,15 +7843,10 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
-expr_stmt|;
-comment|/* VFS */
-name|NFSD_LOCK
-argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -7893,16 +7890,15 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 if|if
 condition|(
 operator|!
@@ -7910,7 +7906,7 @@ name|error
 condition|)
 name|error
 operator|=
-name|nfsrv_access_withgiant
+name|nfsrv_access
 argument_list|(
 name|vp
 argument_list|,
@@ -8257,17 +8253,15 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
+comment|/* 		 * Loop around generating replies for all write rpcs that have 		 * now been completed. 		 */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
-comment|/* 		 * Loop around generating replies for all write rpcs that have 		 * now been completed. 		 */
 name|swp
 operator|=
 name|nfsd
@@ -8580,6 +8574,9 @@ comment|/* 	 * Search for a reply to return. 	 */
 name|s
 operator|=
 name|splsoftclock
+argument_list|()
+expr_stmt|;
+name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -9094,6 +9091,9 @@ name|mp
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -9135,6 +9135,9 @@ argument_list|(
 name|fhp
 argument_list|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -9156,20 +9159,20 @@ name|error
 operator|=
 name|ESTALE
 expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|ereply_locked
 goto|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 operator|(
 name|void
 operator|)
@@ -9189,13 +9192,11 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* The write holds a ref. */
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -9281,25 +9282,25 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|dirp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vrele
 argument_list|(
 name|dirp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -9436,6 +9437,9 @@ expr_stmt|;
 break|break;
 block|}
 empty_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|vap
 operator|->
 name|va_type
@@ -9471,6 +9475,9 @@ operator|->
 name|sa_mode
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -9561,10 +9568,7 @@ break|break;
 block|}
 empty_stmt|;
 block|}
-comment|/* 	 * Iff doesn't exist, create it 	 * otherwise just truncate to 0 length 	 *   should I set the mode too ? 	 * 	 * The only possible error we can have at this point is EEXIST. 	 * nd.ni_vp will also be non-NULL in that case. 	 */
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
+comment|/* 	 * Iff doesn't exist, create it 	 * otherwise just truncate to 0 length 	 *   should I set the mode too ? 	 * 	 * The only possible error we can have at this point is EEXIST. 	 * nd.ni_vp will also be non-NULL in that case. 	 * 	 * XXXRW: For now acquire Giant unconditionally during create to 	 * avoid interactions between Giant for ndvp and Giant for vp if it 	 * already exists. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -9957,7 +9961,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|nfsrv_access_withgiant
+name|nfsrv_access
 argument_list|(
 name|nd
 operator|.
@@ -10642,6 +10646,9 @@ operator|&
 name|ND_NFSV3
 operator|)
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -10684,6 +10691,9 @@ argument_list|(
 name|fhp
 argument_list|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -10705,20 +10715,20 @@ name|error
 operator|=
 name|ESTALE
 expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|ereply
 goto|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 operator|(
 name|void
 operator|)
@@ -10738,13 +10748,11 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* The write holds a ref. */
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -10853,6 +10861,7 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
+comment|/* 	 * XXXRW: For now, acquire Giant unconditionally to avoid complexity 	 * of dealing with Giant separately for dvp and vp. 	 */
 name|tl
 operator|=
 name|nfsm_dissect_nonblock
@@ -10893,6 +10902,10 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
+name|error
+operator|=
+name|NFSERR_BADTYPE
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -10900,10 +10913,6 @@ name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* VFS */
-name|error
-operator|=
-name|NFSERR_BADTYPE
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -10985,6 +10994,10 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
+name|error
+operator|=
+name|EEXIST
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -10992,10 +11005,6 @@ name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* VFS */
-name|error
-operator|=
-name|EEXIST
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -11277,6 +11286,8 @@ block|}
 comment|/* 	 * send response, cleanup, return. 	 */
 name|out
 label|:
+name|GIANT_REQUIRED
+expr_stmt|;
 name|NFSD_UNLOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -11551,25 +11562,23 @@ block|}
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vn_finished_write
 argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -11829,6 +11838,9 @@ name|mp
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -11861,6 +11873,9 @@ argument_list|(
 name|fhp
 argument_list|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -11882,20 +11897,20 @@ name|error
 operator|=
 name|ESTALE
 expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|ereply
 goto|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 operator|(
 name|void
 operator|)
@@ -11915,13 +11930,11 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* The write holds a ref. */
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -12560,6 +12573,9 @@ name|mp
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -12615,6 +12631,9 @@ argument_list|(
 name|ffhp
 argument_list|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -12636,17 +12655,18 @@ name|error
 operator|=
 name|ESTALE
 expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|out1
 goto|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
 operator|(
@@ -12668,10 +12688,9 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* The write holds a ref. */
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
 name|NFSD_LOCK
@@ -12763,25 +12782,25 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|fdirp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vrele
 argument_list|(
 name|fdirp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -13229,6 +13248,8 @@ literal|1
 expr_stmt|;
 name|out
 label|:
+name|GIANT_REQUIRED
+expr_stmt|;
 name|NFSD_UNLOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -13885,6 +13906,9 @@ name|mp
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -13952,13 +13976,13 @@ block|}
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 operator|(
 name|void
 operator|)
@@ -13978,13 +14002,11 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* The write holds a ref. */
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -14000,7 +14022,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|nfsrv_fhtovp
+name|nfsrv_fhtovp_locked
 argument_list|(
 name|fhp
 argument_list|,
@@ -14836,6 +14858,9 @@ name|mp
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -14856,6 +14881,7 @@ operator|&
 name|nd
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXXRW: For now, unconditionally acquire Giant in several places to 	 * avoid complexity of unwinding separately when several vnodes are 	 * in flight. 	 */
 name|fhp
 operator|=
 operator|&
@@ -14906,13 +14932,13 @@ block|}
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 operator|(
 name|void
 operator|)
@@ -14932,13 +14958,11 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* The write holds a ref. */
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -15914,6 +15938,9 @@ name|mp
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -15934,6 +15961,7 @@ operator|&
 name|nd
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXXRW: For now, unconditionally acquire Giant so as to avoid the 	 * complexity of tracking it for several in-flight vnodes. 	 */
 name|fhp
 operator|=
 operator|&
@@ -15984,13 +16012,13 @@ block|}
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 operator|(
 name|void
 operator|)
@@ -16010,13 +16038,11 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* The write holds a ref. */
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -16097,25 +16123,25 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|dirp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vrele
 argument_list|(
 name|dirp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -16895,6 +16921,9 @@ name|mp
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -16955,13 +16984,13 @@ block|}
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 operator|(
 name|void
 operator|)
@@ -16981,13 +17010,11 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* The write holds a ref. */
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -17070,25 +17097,25 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|dirp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vrele
 argument_list|(
 name|dirp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -17191,7 +17218,7 @@ name|EBUSY
 expr_stmt|;
 name|out
 label|:
-comment|/* 	 * Issue or abort op.  Since SAVESTART is not set, path name 	 * component is freed by the VOP after either. 	 */
+comment|/* 	 * Issue or abort op.  Since SAVESTART is not set, path name 	 * component is freed by the VOP after either. 	 * 	 * XXXRW: For now, acquire Giant unconditionally to avoid the 	 * complexity of unwinding Giant for several vnodes in flight. 	 */
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -17747,6 +17774,9 @@ modifier|*
 name|cookiep
 decl_stmt|;
 comment|/* needs to be int64_t or off_t */
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -17844,6 +17874,9 @@ literal|0
 expr_stmt|;
 comment|/* shut up gcc */
 block|}
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|off
 operator|=
 name|toff
@@ -17947,30 +17980,24 @@ name|error
 operator|=
 name|ENOTDIR
 expr_stmt|;
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
-expr_stmt|;
-comment|/* VFS */
-name|NFSD_LOCK
-argument_list|()
 expr_stmt|;
 name|vp
 operator|=
@@ -17982,6 +18009,9 @@ condition|(
 name|error
 condition|)
 block|{
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|nfsm_reply
 argument_list|(
 name|NFSX_UNSIGNED
@@ -18008,16 +18038,15 @@ name|nfsmout
 goto|;
 block|}
 comment|/* 	 * Obtain lock on vnode for this section of the code 	 */
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 if|if
 condition|(
 name|v3
@@ -18054,7 +18083,7 @@ name|error
 condition|)
 name|error
 operator|=
-name|nfsrv_access_withgiant
+name|nfsrv_access
 argument_list|(
 name|vp
 argument_list|,
@@ -18079,13 +18108,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -18332,13 +18359,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -18424,13 +18449,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -18654,13 +18677,11 @@ goto|goto
 name|again
 goto|;
 block|}
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -19022,25 +19043,25 @@ block|}
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vrele
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -19149,25 +19170,25 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vrele
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -19413,6 +19434,9 @@ operator|&
 name|ND_NFSV3
 operator|)
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -19534,6 +19558,9 @@ argument_list|(
 name|nfsd
 argument_list|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|cnt
@@ -19597,34 +19624,28 @@ name|error
 operator|=
 name|ENOTDIR
 expr_stmt|;
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
-expr_stmt|;
-name|NFSD_LOCK
-argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -19632,6 +19653,9 @@ condition|(
 name|error
 condition|)
 block|{
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|nfsm_reply
 argument_list|(
 name|NFSX_UNSIGNED
@@ -19653,16 +19677,15 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|error
 operator|=
 name|getret
@@ -19693,7 +19716,7 @@ name|error
 condition|)
 name|error
 operator|=
-name|nfsrv_access_withgiant
+name|nfsrv_access
 argument_list|(
 name|vp
 argument_list|,
@@ -19718,13 +19741,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -19957,13 +19978,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -20042,13 +20061,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -20278,13 +20295,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -20338,13 +20353,11 @@ argument_list|(
 name|nvp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|nvp
 operator|=
 name|NULL
@@ -20418,13 +20431,13 @@ expr_stmt|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 comment|/* Loop through the records and build reply */
 while|while
 condition|(
@@ -20510,6 +20523,22 @@ operator|->
 name|mnt_stat
 operator|.
 name|f_fsid
+expr_stmt|;
+comment|/* 			 * XXXRW: Assert the mountpoints are the same so that 			 * we know that acquiring Giant based on the 			 * directory is the right thing for the child. 			 */
+name|KASSERT
+argument_list|(
+name|nvp
+operator|->
+name|v_mount
+operator|==
+name|vp
+operator|->
+name|v_mount
+argument_list|,
+operator|(
+literal|"nfsrv_readdirplus: nvp mount != vp mount"
+operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -20935,13 +20964,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -21050,25 +21077,25 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vrele
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -21225,6 +21252,9 @@ operator|&
 name|ND_NFSV3
 operator|)
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -21289,13 +21319,13 @@ block|}
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 operator|(
 name|void
 operator|)
@@ -21315,15 +21345,10 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* The write holds a ref. */
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
-expr_stmt|;
-comment|/* VFS */
-name|NFSD_LOCK
-argument_list|()
 expr_stmt|;
 name|tl
 operator|=
@@ -21387,6 +21412,9 @@ condition|(
 name|error
 condition|)
 block|{
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|nfsm_reply
 argument_list|(
 literal|2
@@ -21415,16 +21443,15 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|for_ret
 operator|=
 name|VOP_GETATTR
@@ -21804,13 +21831,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -21908,13 +21933,13 @@ expr_stmt|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|mp
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 if|if
 condition|(
 name|vp
@@ -21929,13 +21954,11 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -22086,7 +22109,13 @@ decl_stmt|;
 name|u_quad_t
 name|tval
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
+name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
 name|nfsdbprintf
@@ -22140,6 +22169,9 @@ condition|(
 name|error
 condition|)
 block|{
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|nfsm_reply
 argument_list|(
 name|NFSX_UNSIGNED
@@ -22170,16 +22202,15 @@ operator|=
 operator|&
 name|statfs
 expr_stmt|;
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|error
 operator|=
 name|VFS_STATFS
@@ -22212,13 +22243,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -22553,25 +22582,25 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -22720,7 +22749,13 @@ operator|&
 name|ND_NFSV3
 operator|)
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
+name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
 name|nfsdbprintf
@@ -22784,6 +22819,9 @@ condition|(
 name|error
 condition|)
 block|{
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|nfsm_reply
 argument_list|(
 name|NFSX_UNSIGNED
@@ -22805,16 +22843,15 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 comment|/* XXX Try to make a guess on the max file size. */
 name|VFS_STATFS
 argument_list|(
@@ -22860,13 +22897,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -23040,25 +23075,25 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -23207,7 +23242,13 @@ operator|&
 name|ND_NFSV3
 operator|)
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
+name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
 name|nfsdbprintf
@@ -23271,6 +23312,9 @@ condition|(
 name|error
 condition|)
 block|{
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|nfsm_reply
 argument_list|(
 name|NFSX_UNSIGNED
@@ -23292,16 +23336,15 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|error
 operator|=
 name|VOP_PATHCONF
@@ -23384,13 +23427,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vp
 operator|=
 name|NULL
@@ -23499,25 +23540,25 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -23732,13 +23773,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform access checking for vnodes obtained from file handles that would  * refer to files already opened by a Unix client. You cannot just use  * vn_writechk() and VOP_ACCESS() for two reasons.  * 1 - You must check for exported rdonly as well as MNT_RDONLY for the write  *     case.  * 2 - The owner is to be given access irrespective of mode bits for some  *     operations, so that processes that chmod after opening a file don't  *     break. I don't like this because it opens a security hole, but since  *     the nfs server opens a security hole the size of a barn door anyhow,  *     what the heck.  *  * The exception to rule 2 is EPERM. If a file is IMMUTABLE, VOP_ACCESS()  * will return EPERM instead of EACCESS. EPERM is always an error.  *  * There are two versions: one to be called while holding Giant (which is  * needed due to use of VFS), and the other called with the NFS server lock  * (which will be dropped and reacquired).  This is necessary because  * nfsrv_access checks are required from both classes of contexts.  */
+comment|/*  * Perform access checking for vnodes obtained from file handles that would  * refer to files already opened by a Unix client. You cannot just use  * vn_writechk() and VOP_ACCESS() for two reasons.  * 1 - You must check for exported rdonly as well as MNT_RDONLY for the write  *     case.  * 2 - The owner is to be given access irrespective of mode bits for some  *     operations, so that processes that chmod after opening a file don't  *     break. I don't like this because it opens a security hole, but since  *     the nfs server opens a security hole the size of a barn door anyhow,  *     what the heck.  *  * The exception to rule 2 is EPERM. If a file is IMMUTABLE, VOP_ACCESS()  * will return EPERM instead of EACCESS. EPERM is always an error.  *  * There are two versions: one called while holding the NFS server lock,  * which will be dropped and re-acquired, and one called without it.  *  * nfsrv_access() assumes that the NFS server lock is not held, but that if  * Giant is required for the vnode it will already be acquired.  *  * nfsrv_access_locked() assumes that the NFS server lock is held, but that  * it will need to acquire Giant for the vnode.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|nfsrv_access_withgiant
+name|nfsrv_access
 parameter_list|(
 name|struct
 name|vnode
@@ -23772,7 +23813,15 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|GIANT_REQUIRED
+name|NFSD_UNLOCK_ASSERT
+argument_list|()
+expr_stmt|;
+name|VFS_ASSERT_GIANT
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+argument_list|)
 expr_stmt|;
 name|nfsdbprintf
 argument_list|(
@@ -23905,87 +23954,6 @@ condition|)
 name|error
 operator|=
 literal|0
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|nfsrv_access
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|,
-name|int
-name|rdonly
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|override
-parameter_list|)
-block|{
-name|int
-name|error
-decl_stmt|;
-name|NFSD_LOCK_ASSERT
-argument_list|()
-expr_stmt|;
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* VFS */
-name|error
-operator|=
-name|nfsrv_access_withgiant
-argument_list|(
-name|vp
-argument_list|,
-name|flags
-argument_list|,
-name|cred
-argument_list|,
-name|rdonly
-argument_list|,
-name|td
-argument_list|,
-name|override
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* VFS */
-name|NFSD_LOCK
-argument_list|()
 expr_stmt|;
 return|return
 operator|(

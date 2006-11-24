@@ -1874,13 +1874,6 @@ expr_stmt|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* VFS */
 operator|*
 name|retdirp
 operator|=
@@ -1974,7 +1967,7 @@ operator|=
 name|EBADRPC
 expr_stmt|;
 goto|goto
-name|out
+name|out_nogiant
 goto|;
 block|}
 name|fromcp
@@ -2016,7 +2009,7 @@ operator|=
 name|EACCES
 expr_stmt|;
 goto|goto
-name|out
+name|out_nogiant
 goto|;
 block|}
 operator|*
@@ -2094,20 +2087,10 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|out
+name|out_nogiant
 goto|;
 block|}
-comment|/* 	 * Extract and set starting directory. 	 */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* VFS */
-name|NFSD_LOCK
-argument_list|()
-expr_stmt|;
+comment|/* 	 * Extract and set starting directory. 	 * 	 * XXXRW: For now, acquire Giant unconditionally to avoid tracking it 	 * on multiple vnodes. 	 */
 name|error
 operator|=
 name|nfsrv_fhtovp
@@ -2134,9 +2117,6 @@ name|rdonly
 argument_list|,
 name|pubflag
 argument_list|)
-expr_stmt|;
-name|NFSD_UNLOCK
-argument_list|()
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -2986,6 +2966,15 @@ block|}
 comment|/* 	 * nfs_namei() guarentees that fields will not contain garbage 	 * whether an error occurs or not.  This allows the caller to track 	 * cleanup state trivially. 	 */
 name|out
 label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* VFS */
+name|out_nogiant
+label|:
 if|if
 condition|(
 name|error
@@ -3053,13 +3042,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* VFS */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -4010,7 +3992,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * nfsrv_fhtovp() - convert a fh to a vnode ptr (optionally locked)  * 	- look up fsid in mount list (if not found ret error)  *	- get vp and export rights by calling VFS_FHTOVP()  *	- if cred->cr_uid == 0 or MNT_EXPORTANON set it to credanon  *	- if not lockflag unlock it with VOP_UNLOCK()  */
+comment|/*  * nfsrv_fhtovp() - convert a fh to a vnode ptr (optionally locked)  * 	- look up fsid in mount list (if not found ret error)  *	- get vp and export rights by calling VFS_FHTOVP()  *	- if cred->cr_uid == 0 or MNT_EXPORTANON set it to credanon  *	- if not lockflag unlock it with VOP_UNLOCK()  *  * As this routine may acquire Giant and may sleep, it can't be called with  * nfsd_mtx.  Caller should invoke nfsrv_fhtovp_locked() if the lock is held  * so that it can be automatically dropped and re-acquired.  */
 end_comment
 
 begin_function
@@ -4093,7 +4075,7 @@ name|saddr
 decl_stmt|;
 endif|#
 directive|endif
-name|NFSD_LOCK_ASSERT
+name|NFSD_UNLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 operator|*
@@ -4152,9 +4134,6 @@ operator|(
 name|ESTALE
 operator|)
 return|;
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
 name|vfslocked
 operator|=
 name|VFS_LOCK_GIANT
@@ -4385,6 +4364,88 @@ expr_stmt|;
 name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Version of nfsrv_fhtovp() that can be called holding nfsd_mtx: it will  * drop and re-acquire the lock for the caller.  */
+end_comment
+
+begin_function
+name|int
+name|nfsrv_fhtovp_locked
+parameter_list|(
+name|fhandle_t
+modifier|*
+name|fhp
+parameter_list|,
+name|int
+name|lockflag
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|vpp
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|nfssvc_sock
+modifier|*
+name|slp
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|nam
+parameter_list|,
+name|int
+modifier|*
+name|rdonlyp
+parameter_list|,
+name|int
+name|pubflag
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
+name|error
+operator|=
+name|nfsrv_fhtovp
+argument_list|(
+name|fhp
+argument_list|,
+name|lockflag
+argument_list|,
+name|vpp
+argument_list|,
+name|cred
+argument_list|,
+name|slp
+argument_list|,
+name|nam
+argument_list|,
+name|rdonlyp
+argument_list|,
+name|pubflag
 argument_list|)
 expr_stmt|;
 name|NFSD_LOCK
