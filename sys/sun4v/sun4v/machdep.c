@@ -3374,8 +3374,10 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|OF_exit
-argument_list|()
+name|hv_mach_exit
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function

@@ -1941,9 +1941,6 @@ name|cpumask
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|OF_exit
-argument_list|()
-expr_stmt|;
 block|}
 block|}
 name|atomic_clear_rel_int

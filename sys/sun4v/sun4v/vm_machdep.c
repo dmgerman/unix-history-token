@@ -1446,18 +1446,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|notyet
-comment|/* XXX SUN4V_FIXME */
-name|openfirmware_exit
-argument_list|(
-operator|&
-name|args
-argument_list|)
+name|hv_mach_sir
+argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
