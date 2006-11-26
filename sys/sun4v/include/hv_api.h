@@ -131,6 +131,16 @@ end_comment
 begin_function_decl
 specifier|extern
 name|void
+name|hv_mach_sir
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|hv_mach_exit
 parameter_list|(
 name|uint64_t
