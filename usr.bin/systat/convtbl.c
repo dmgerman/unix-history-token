@@ -113,35 +113,39 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
 specifier|static
-name|__inline
-expr|struct
+name|struct
 name|convtbl
-operator|*
+modifier|*
 name|get_tbl_ptr
-argument_list|(
-argument|const u_long size
-argument_list|,
-argument|const u_int scale
-argument_list|)
-block|{ 	struct
+parameter_list|(
+specifier|const
+name|u_long
+name|size
+parameter_list|,
+specifier|const
+name|u_int
+name|scale
+parameter_list|)
+block|{
+name|struct
 name|convtbl
-operator|*
+modifier|*
 name|tbl_ptr
-operator|=
+init|=
 name|NULL
-block|;
+decl_stmt|;
 name|u_long
 name|tmp
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 name|u_int
 name|idx
-operator|=
+init|=
 name|scale
-block|;
+decl_stmt|;
 comment|/* If our index is out of range, default to auto-scaling. */
 if|if
 condition|(
@@ -153,9 +157,6 @@ name|idx
 operator|=
 name|SC_AUTO
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|idx
@@ -189,9 +190,6 @@ name|idx
 operator|++
 control|)
 empty_stmt|;
-end_if
-
-begin_expr_stmt
 name|tbl_ptr
 operator|=
 operator|&
@@ -200,25 +198,24 @@ index|[
 name|idx
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|tbl_ptr
 return|;
-end_return
+block|}
+end_function
 
-begin_macro
-unit|}  double
+begin_function
+name|double
 name|convert
-argument_list|(
-argument|const u_long size
-argument_list|,
-argument|const u_int scale
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+specifier|const
+name|u_long
+name|size
+parameter_list|,
+specifier|const
+name|u_int
+name|scale
+parameter_list|)
 block|{
 name|struct
 name|convtbl
@@ -253,7 +250,7 @@ name|scale
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|const
