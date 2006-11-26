@@ -1399,7 +1399,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|bstp_add
+name|bstp_create
 parameter_list|(
 name|struct
 name|bstp_state
@@ -1417,8 +1417,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|bstp_delete
+name|int
+name|bstp_enable
 parameter_list|(
 name|struct
 name|bstp_port
@@ -1429,7 +1429,18 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|bstp_drain
+name|bstp_disable
+parameter_list|(
+name|struct
+name|bstp_port
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bstp_destroy
 parameter_list|(
 name|struct
 name|bstp_port
