@@ -164,6 +164,7 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buff
@@ -426,6 +427,7 @@ name|void
 modifier|*
 name|client_data
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buff
