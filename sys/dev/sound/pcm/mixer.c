@@ -3911,6 +3911,15 @@ name|arg_i
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|OSS_GETVERSION
+case|:
+operator|*
+name|arg_i
+operator|=
+name|SOUND_VERSION
+expr_stmt|;
+break|break;
 default|default:
 name|ret
 operator|=

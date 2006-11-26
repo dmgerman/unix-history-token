@@ -5786,6 +5786,17 @@ comment|/* See the manual */
 end_comment
 
 begin_comment
+comment|/*  * OSS_SYSIFO is obsolete. Use SNDCTL_SYSINFO insteads.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSS_GETVERSION
+value|_IOR ('M', 118, int)
+end_define
+
+begin_comment
 comment|/**  * @brief	Argument for SNDCTL_SYSINFO ioctl.  *  * For use w/ the SNDCTL_SYSINFO ioctl available on audio (/dev/dsp*),  * mixer, and MIDI devices.  */
 end_comment
 
