@@ -10138,6 +10138,12 @@ expr_stmt|;
 comment|/* Init state */
 name|bp
 operator|->
+name|bp_infois
+operator|=
+name|BSTP_INFO_DISABLED
+expr_stmt|;
+name|bp
+operator|->
 name|bp_flags
 operator|=
 name|BSTP_PORT_AUTOEDGE
