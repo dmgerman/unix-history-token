@@ -8545,13 +8545,6 @@ name|bp_infois
 operator|=
 name|BSTP_INFO_DISABLED
 expr_stmt|;
-name|bstp_set_port_state
-argument_list|(
-name|bp
-argument_list|,
-name|BSTP_IFSTATE_DISCARDING
-argument_list|)
-expr_stmt|;
 name|bstp_assign_roles
 argument_list|(
 name|bs
