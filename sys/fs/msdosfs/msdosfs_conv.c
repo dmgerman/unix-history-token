@@ -2561,6 +2561,8 @@ operator|&
 name|i
 argument_list|,
 name|lower
+operator|&
+name|LCASE_BASE
 argument_list|,
 name|pmp
 argument_list|)
@@ -2650,6 +2652,8 @@ operator|&
 name|i
 argument_list|,
 name|lower
+operator|&
+name|LCASE_EXT
 argument_list|,
 name|pmp
 argument_list|)
