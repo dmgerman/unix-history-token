@@ -370,13 +370,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AC97_F_SOFTVOL
-value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
 name|AC97_DECLARE
 parameter_list|(
 name|name

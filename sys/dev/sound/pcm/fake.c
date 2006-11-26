@@ -498,10 +498,16 @@ name|parentsnddev
 operator|=
 name|d
 expr_stmt|;
-comment|/* 	 * Fake channel is such a blessing in disguise. Using this, 	 * we can keep track prefered virtual channel speed without 	 * querying kernel hint repetitively (see vchan_create / vchan.c). 	 */
+comment|/* 	 * Fake channel is such a blessing in disguise. Using this, 	 * we can keep track prefered virtual channel speed / format without 	 * querying kernel hint repetitively (see vchan_create / vchan.c). 	 */
 name|c
 operator|->
 name|speed
+operator|=
+literal|0
+expr_stmt|;
+name|c
+operator|->
+name|format
 operator|=
 literal|0
 expr_stmt|;

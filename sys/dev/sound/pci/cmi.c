@@ -3643,7 +3643,7 @@ name|SND_DYNSYSCTL
 comment|/* XXX: an user should be able to set this with a control tool, 	   if not done before 7.0-RELEASE, this needs to be converted 	   to a device specific sysctl "dev.pcm.X.yyy" via 	   device_get_sysctl_*() as discussed on multimedia@ in msg-id<861wujij2q.fsf@xps.des.no> */
 name|SYSCTL_ADD_INT
 argument_list|(
-name|snd_sysctl_tree
+name|device_get_sysctl_ctx
 argument_list|(
 name|sc
 operator|->
@@ -3652,7 +3652,7 @@ argument_list|)
 argument_list|,
 name|SYSCTL_CHILDREN
 argument_list|(
-name|snd_sysctl_tree_top
+name|device_get_sysctl_tree
 argument_list|(
 name|sc
 operator|->
@@ -3662,7 +3662,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"_spdif_enabled"
+literal|"spdif_enabled"
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,

@@ -14435,7 +14435,7 @@ name|type
 operator|=
 name|AUDIO_MIXER_VALUE
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|mi
 operator|->

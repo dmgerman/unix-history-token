@@ -262,9 +262,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
-name|sndstat_verbose
+name|snd_verbose
 init|=
 literal|1
 decl_stmt|;
@@ -282,7 +281,7 @@ argument_list|(
 literal|"hw.snd.verbose"
 argument_list|,
 operator|&
-name|sndstat_verbose
+name|snd_verbose
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -299,7 +298,7 @@ literal|"hw.snd.verbose"
 argument_list|,
 literal|1
 argument_list|,
-name|sndstat_verbose
+name|snd_verbose
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -337,7 +336,7 @@ name|verbose
 decl_stmt|;
 name|verbose
 operator|=
-name|sndstat_verbose
+name|snd_verbose
 expr_stmt|;
 name|error
 operator|=
@@ -383,14 +382,14 @@ literal|0
 operator|||
 name|verbose
 operator|>
-literal|3
+literal|4
 condition|)
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
 else|else
-name|sndstat_verbose
+name|snd_verbose
 operator|=
 name|verbose
 expr_stmt|;
@@ -431,7 +430,7 @@ name|sysctl_hw_sndverbose
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"verbosity level"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1315,7 +1314,18 @@ name|sbuf_printf
 argument_list|(
 name|s
 argument_list|,
-literal|"FreeBSD Audio Driver (newpcm)\n"
+literal|"FreeBSD Audio Driver (newpcm: %ubit)\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|intpcm_t
+argument_list|)
+operator|<<
+literal|3
 argument_list|)
 expr_stmt|;
 if|if
@@ -1451,7 +1461,7 @@ name|ent
 operator|->
 name|dev
 argument_list|,
-name|sndstat_verbose
+name|snd_verbose
 argument_list|)
 expr_stmt|;
 else|else
@@ -1473,7 +1483,7 @@ block|}
 block|}
 if|if
 condition|(
-name|sndstat_verbose
+name|snd_verbose
 operator|>=
 literal|3
 operator|&&

@@ -964,7 +964,7 @@ name|supp_stream_formats
 decl_stmt|,
 name|supp_pcm_size_rate
 decl_stmt|;
-name|int
+name|uint32_t
 name|ptr
 decl_stmt|,
 name|prevptr
@@ -972,6 +972,9 @@ decl_stmt|,
 name|blkcnt
 decl_stmt|,
 name|blksz
+decl_stmt|;
+name|int
+name|active
 decl_stmt|;
 name|int
 name|dir
@@ -1080,6 +1083,21 @@ name|chan_size
 decl_stmt|;
 name|int
 name|chan_blkcnt
+decl_stmt|;
+comment|/* 	 * Polling 	 */
+name|int
+name|polling
+decl_stmt|;
+name|int
+name|poll_ticks
+decl_stmt|;
+name|struct
+name|callout
+name|poll_hda
+decl_stmt|;
+name|struct
+name|callout
+name|poll_hdac
 decl_stmt|;
 define|#
 directive|define
