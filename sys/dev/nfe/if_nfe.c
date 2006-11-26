@@ -2383,6 +2383,10 @@ name|dev
 argument_list|)
 condition|)
 block|{
+name|NFE_LOCK
+argument_list|(
+argument|sc
+argument_list|)
 name|nfe_stop
 argument_list|(
 name|ifp
@@ -2397,6 +2401,10 @@ operator|&=
 operator|~
 name|IFF_UP
 expr_stmt|;
+name|NFE_UNLOCK
+argument_list|(
+argument|sc
+argument_list|)
 name|callout_drain
 argument_list|(
 operator|&
