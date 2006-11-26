@@ -178,7 +178,7 @@ operator|>=
 name|MEGA
 operator|&&
 name|idx
-operator|<=
+operator|<
 name|SC_GIGABYTE
 condition|;
 name|tmp
