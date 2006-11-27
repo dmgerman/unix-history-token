@@ -892,7 +892,7 @@ decl_stmt|;
 name|off_t
 name|entry_sparse_offset
 decl_stmt|;
-name|ssize_t
+name|int64_t
 name|entry_bytes_remaining
 decl_stmt|;
 block|}
@@ -959,6 +959,18 @@ name|size_t
 modifier|*
 parameter_list|,
 name|off_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|archive_read_format_iso9660_read_data_skip
+parameter_list|(
+name|struct
+name|archive
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1182,7 +1194,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|unsigned
 name|toi
 parameter_list|(
 specifier|const
@@ -1293,7 +1305,7 @@ name|archive_read_format_iso9660_read_header
 argument_list|,
 name|archive_read_format_iso9660_read_data
 argument_list|,
-name|NULL
+name|archive_read_format_iso9660_read_data_skip
 argument_list|,
 name|archive_read_format_iso9660_cleanup
 argument_list|)
@@ -2257,6 +2269,32 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|archive_read_format_iso9660_read_data_skip
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|a
+parameter_list|)
+block|{
+comment|/* Because read_next_header always does an explicit skip 	 * to the next entry, we don't need to do anything here. */
+operator|(
+name|void
+operator|)
+name|a
+expr_stmt|;
+comment|/* UNUSED */
 return|return
 operator|(
 name|ARCHIVE_OK
@@ -4466,6 +4504,55 @@ operator|->
 name|offset
 expr_stmt|;
 comment|/* Seek forward to the start of the entry. */
+comment|/* Use fast compression_skip if it's available. */
+if|if
+condition|(
+name|iso9660
+operator|->
+name|current_position
+operator|<
+name|offset
+operator|&&
+name|a
+operator|->
+name|compression_skip
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ssize_t
+name|step
+init|=
+name|offset
+operator|-
+name|iso9660
+operator|->
+name|current_position
+decl_stmt|;
+name|ssize_t
+name|bytes_read
+decl_stmt|;
+name|bytes_read
+operator|=
+call|(
+name|a
+operator|->
+name|compression_skip
+call|)
+argument_list|(
+name|a
+argument_list|,
+name|step
+argument_list|)
+expr_stmt|;
+name|iso9660
+operator|->
+name|current_position
+operator|+=
+name|bytes_read
+expr_stmt|;
+block|}
+comment|/* Use a series of reads if compression_skip didn't 		 * get us all the way there. */
 while|while
 condition|(
 name|iso9660
@@ -4913,6 +5000,7 @@ end_function
 
 begin_function
 specifier|static
+name|unsigned
 name|int
 name|toi
 parameter_list|(
