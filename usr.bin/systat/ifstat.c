@@ -281,7 +281,6 @@ specifier|static
 name|void
 name|right_align_string
 parameter_list|(
-specifier|const
 name|struct
 name|if_stat
 modifier|*
@@ -1185,7 +1184,6 @@ specifier|static
 name|void
 name|right_align_string
 parameter_list|(
-specifier|const
 name|struct
 name|if_stat
 modifier|*
@@ -1253,10 +1251,6 @@ operator|)
 expr_stmt|;
 name|newstr
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|ifp
 operator|->
 name|if_name
