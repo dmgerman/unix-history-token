@@ -5431,21 +5431,12 @@ name|buildopts
 argument_list|)
 expr_stmt|;
 block|}
-name|fprintf
-argument_list|(
-name|outmk
-argument_list|,
-literal|"$(%s_OBJPATHS): %s_make\n\n"
-argument_list|,
-name|p
-operator|->
-name|ident
-argument_list|,
-name|p
-operator|->
-name|ident
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|fprintf(outmk, "$(%s_OBJPATHS): %s_make\n\n", p->ident, p->ident);
+endif|#
+directive|endif
 name|fprintf
 argument_list|(
 name|outmk
