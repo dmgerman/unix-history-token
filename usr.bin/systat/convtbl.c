@@ -76,6 +76,13 @@ name|GIGA
 value|(MEGA * 1024)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TERA
+value|(GIGA * 1024)
+end_define
+
 begin_struct
 struct|struct
 name|convtbl
@@ -166,6 +173,20 @@ literal|"gbyte"
 block|}
 block|,
 index|[
+name|SC_TERABYTE
+index|]
+operator|=
+block|{
+name|BYTE
+block|,
+name|TERA
+block|,
+literal|"TB"
+block|,
+literal|"tbyte"
+block|}
+block|,
+index|[
 name|SC_BIT
 index|]
 operator|=
@@ -219,6 +240,20 @@ block|,
 literal|"Gb"
 block|,
 literal|"gbit"
+block|}
+block|,
+index|[
+name|SC_TERABIT
+index|]
+operator|=
+block|{
+name|BIT
+block|,
+name|TERA
+block|,
+literal|"Tb"
+block|,
+literal|"tbit"
 block|}
 block|,
 index|[
@@ -294,7 +329,9 @@ name|MEGA
 operator|&&
 name|idx
 operator|<
-name|SC_GIGABYTE
+name|SC_BIT
+operator|-
+literal|1
 condition|;
 name|tmp
 operator|>>=

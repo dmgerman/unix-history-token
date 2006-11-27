@@ -27,6 +27,10 @@ directive|include
 file|<stdint.h>
 end_include
 
+begin_comment
+comment|/*  * Keep the order in the enum.  */
+end_comment
+
 begin_enum
 enum|enum
 name|scale
@@ -39,6 +43,8 @@ name|SC_MEGABYTE
 block|,
 name|SC_GIGABYTE
 block|,
+name|SC_TERABYTE
+block|,
 name|SC_BIT
 block|,
 name|SC_KILOBIT
@@ -46,6 +52,8 @@ block|,
 name|SC_MEGABIT
 block|,
 name|SC_GIGABIT
+block|,
+name|SC_TERABIT
 block|,
 name|SC_AUTO
 comment|/* KEEP THIS LAST */
