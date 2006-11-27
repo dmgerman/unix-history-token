@@ -303,12 +303,11 @@ define|#
 directive|define
 name|NFE_HW_VLAN
 value|0x08
-define|#
-directive|define
-name|NFE_USE_JUMBO
-value|0x10
 name|u_int32_t
 name|rxtxctl
+decl_stmt|;
+name|u_int32_t
+name|nfe_mtu
 decl_stmt|;
 name|u_int8_t
 name|mii_phyaddr

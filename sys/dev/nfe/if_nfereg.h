@@ -28,6 +28,43 @@ name|NFE_TX_RING_COUNT
 value|256
 end_define
 
+begin_comment
+comment|/* RX/TX MAC addr + type + VLAN + align + slack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFE_RX_HEADERS
+value|64
+end_define
+
+begin_comment
+comment|/* Maximum MTU size. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NV_PKTLIMIT_1
+value|ETH_DATA_LEN
+end_define
+
+begin_comment
+comment|/* Hard limit not known. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NV_PKTLIMIT_2
+value|9100
+end_define
+
+begin_comment
+comment|/* Actual limit according to NVidia:9202 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -39,14 +76,7 @@ begin_define
 define|#
 directive|define
 name|NFE_JPOOL_COUNT
-value|(NFE_RX_RING_COUNT + 64)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFE_JPOOL_SIZE
-value|(NFE_JPOOL_COUNT * NFE_JBYTES)
+value|(NFE_RX_RING_COUNT + NFE_RX_HEADERS)
 end_define
 
 begin_define
