@@ -1810,10 +1810,13 @@ name|nseg
 expr_stmt|;
 if|if
 condition|(
-name|segs
+name|nseg
 operator|>
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|usbd_xfer_isread
 argument_list|(
@@ -1821,7 +1824,7 @@ name|xfer
 argument_list|)
 condition|)
 block|{
-comment|/* Copy data if it is not already in the correct buffer. */
+comment|/* 			 * Copy data if it is not already in the correct 			 * buffer. 			 */
 if|if
 condition|(
 operator|!
@@ -1874,9 +1877,7 @@ name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-comment|/* 		 * Even if we have no data portion we still need to sync the 		 * dmamap for the request data in the SETUP packet 		 */
+elseif|else
 if|if
 condition|(
 name|xfer
@@ -1885,6 +1886,8 @@ name|rqflags
 operator|&
 name|URQ_REQUEST
 condition|)
+block|{
+comment|/* 			 * Even if we have no data portion we still need to 			 * sync the dmamap for the request data in the SETUP 			 * packet. 			 */
 name|bus_dmamap_sync
 argument_list|(
 name|tag
@@ -1896,6 +1899,7 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|err
 operator|=
