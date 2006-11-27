@@ -6555,6 +6555,7 @@ name|now
 operator|.
 name|tv_sec
 expr_stmt|;
+comment|/* 			 * Pin down the request and drop locks for the acquisition 			 * of Giant from tprintf() in nfs_down(). 			 */
 name|rep
 operator|->
 name|r_flags
@@ -8742,9 +8743,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
-comment|/* tprintf */
 name|p
 operator|=
 name|td
@@ -9012,12 +9010,6 @@ operator|->
 name|r_mtx
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|nfs_msg
 argument_list|(
 name|td
@@ -9033,12 +9025,6 @@ argument_list|,
 name|msg
 argument_list|,
 name|error
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
@@ -9122,12 +9108,6 @@ operator|->
 name|r_mtx
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|nfs_msg
 argument_list|(
 name|td
@@ -9143,12 +9123,6 @@ argument_list|,
 name|msg
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
