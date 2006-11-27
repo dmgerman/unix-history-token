@@ -508,24 +508,6 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|mii_capabilities
-operator|&
-name|BMSR_MEDIAMASK
-operator|)
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"no media present"
-argument_list|)
-expr_stmt|;
-else|else
 name|mii_phy_add_media
 argument_list|(
 name|sc

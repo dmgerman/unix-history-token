@@ -1535,6 +1535,36 @@ name|sep
 init|=
 literal|""
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|mii_capabilities
+operator|&
+name|BMSR_MEDIAMASK
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|sc
+operator|->
+name|mii_extcapabilities
+operator|&
+name|EXTSR_MEDIAMASK
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"no media present"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Set aneg timer for 10/100 media. Gigabit media handled below. */
 name|sc
 operator|->
