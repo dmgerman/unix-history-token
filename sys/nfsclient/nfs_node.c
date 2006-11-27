@@ -536,6 +536,21 @@ name|n_vnode
 operator|=
 name|vp
 expr_stmt|;
+comment|/*  	 * Initialize the mutex even if the vnode is going to be a loser. 	 * This simplifies the logic in reclaim, which can then unconditionally 	 * destroy the mutex (in the case of the loser, or if hash_insert happened 	 * to return an error no special casing is needed). 	 */
+name|mtx_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|n_mtx
+argument_list|,
+literal|"NFSnode lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* 	 * NFS supports recursive and shared locking. 	 */
 name|vp
 operator|->
@@ -662,20 +677,6 @@ operator|->
 name|n_fhsize
 operator|=
 name|fhsize
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|np
-operator|->
-name|n_mtx
-argument_list|,
-literal|"NFSnode lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
 expr_stmt|;
 operator|*
 name|npp
