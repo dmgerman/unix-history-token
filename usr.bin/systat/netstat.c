@@ -2339,7 +2339,9 @@ name|proto
 index|[
 literal|6
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|family
 init|=
