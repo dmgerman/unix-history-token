@@ -330,7 +330,7 @@ name|bpf_stats
 parameter_list|(
 name|char
 modifier|*
-name|interface
+name|ifname
 parameter_list|)
 block|{
 name|struct
@@ -491,11 +491,11 @@ control|)
 block|{
 if|if
 condition|(
-name|interface
+name|ifname
 operator|&&
 name|strcmp
 argument_list|(
-name|interface
+name|ifname
 argument_list|,
 name|d
 operator|->
