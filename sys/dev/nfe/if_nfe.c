@@ -2385,8 +2385,9 @@ condition|)
 block|{
 name|NFE_LOCK
 argument_list|(
-argument|sc
+name|sc
 argument_list|)
+expr_stmt|;
 name|nfe_stop
 argument_list|(
 name|ifp
@@ -2403,8 +2404,9 @@ name|IFF_UP
 expr_stmt|;
 name|NFE_UNLOCK
 argument_list|(
-argument|sc
+name|sc
 argument_list|)
+expr_stmt|;
 name|callout_drain
 argument_list|(
 operator|&
