@@ -367,28 +367,6 @@ begin_comment
 comment|/* set tx hold count (ifbrparam) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|BRDGSEDGE
-value|30
-end_define
-
-begin_comment
-comment|/* set edge status (ifbreq) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BRDGSAEDGE
-value|31
-end_define
-
-begin_comment
-comment|/* set autoedge status (ifbreq) */
-end_comment
-
 begin_comment
 comment|/*  * Generic bridge control request.  */
 end_comment
@@ -412,18 +390,6 @@ name|uint32_t
 name|ifbr_stpflags
 decl_stmt|;
 comment|/* member if STP flags */
-name|uint8_t
-name|ifbr_edge
-decl_stmt|;
-comment|/* member if STP edge */
-name|uint8_t
-name|ifbr_autoedge
-decl_stmt|;
-comment|/* member if STP autoedge */
-name|uint8_t
-name|ifbr_p2p
-decl_stmt|;
-comment|/* member if STP p2p */
 name|uint32_t
 name|ifbr_path_cost
 decl_stmt|;
@@ -460,7 +426,7 @@ begin_define
 define|#
 directive|define
 name|IFBIF_LEARNING
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -471,7 +437,7 @@ begin_define
 define|#
 directive|define
 name|IFBIF_DISCOVER
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
@@ -482,7 +448,7 @@ begin_define
 define|#
 directive|define
 name|IFBIF_STP
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -493,7 +459,7 @@ begin_define
 define|#
 directive|define
 name|IFBIF_SPAN
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
@@ -504,7 +470,7 @@ begin_define
 define|#
 directive|define
 name|IFBIF_STICKY
-value|0x10
+value|0x0010
 end_define
 
 begin_comment
@@ -514,9 +480,64 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFBIFBITS
-value|"\020\1LEARNING\2DISCOVER\3STP\4SPAN\5STICKY"
+name|IFBIF_BSTP_EDGE
+value|0x0020
 end_define
+
+begin_comment
+comment|/* member stp edge port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFBIF_BSTP_AUTOEDGE
+value|0x0040
+end_define
+
+begin_comment
+comment|/* member stp autoedge enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFBIF_BSTP_P2P
+value|0x0080
+end_define
+
+begin_comment
+comment|/* member stp p2p */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFBIF_BSTP_AUTOP2P
+value|0x0100
+end_define
+
+begin_comment
+comment|/* member stp autop2p enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFBIFBITS
+value|"\020\001LEARNING\002DISCOVER\003STP\004SPAN" \ 			"\005STICKY\006EDGE\007AUTOEDGE\010P2P\011AUTOP2P"
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFBIFMASK
+value|~(IFBIF_BSTP_EDGE|IFBIF_BSTP_AUTOEDGE|IFBIF_BSTP_P2P| \ 			IFBIF_BSTP_AUTOP2P)
+end_define
+
+begin_comment
+comment|/* not saved */
+end_comment
 
 begin_comment
 comment|/* BRDGFLUSH */
@@ -862,7 +883,13 @@ name|uint32_t
 name|ifbop_root_path_cost
 decl_stmt|;
 name|uint64_t
+name|ifbop_bridgeid
+decl_stmt|;
+name|uint64_t
 name|ifbop_designated_root
+decl_stmt|;
+name|uint64_t
+name|ifbop_designated_bridge
 decl_stmt|;
 name|struct
 name|timeval

@@ -209,6 +209,13 @@ name|BSTP_PORT_AUTOEDGE
 value|0x0010
 end_define
 
+begin_define
+define|#
+directive|define
+name|BSTP_PORT_AUTOP2P
+value|0x0020
+end_define
+
 begin_comment
 comment|/* BPDU priority */
 end_comment
@@ -1582,6 +1589,32 @@ end_function_decl
 begin_function_decl
 name|int
 name|bstp_set_autoedge
+parameter_list|(
+name|struct
+name|bstp_port
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bstp_set_p2p
+parameter_list|(
+name|struct
+name|bstp_port
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bstp_set_autop2p
 parameter_list|(
 name|struct
 name|bstp_port
