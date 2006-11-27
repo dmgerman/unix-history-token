@@ -110,7 +110,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -128,8 +130,6 @@ parameter_list|)
 block|{
 name|int
 name|retval
-init|=
-literal|0
 decl_stmt|;
 define|#
 directive|define
@@ -251,7 +251,9 @@ operator|-
 literal|1
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
