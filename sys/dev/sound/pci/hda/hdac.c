@@ -637,22 +637,47 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LNV_VENDORID
+name|LENOVO_VENDORID
 value|0x17aa
 end_define
 
 begin_define
 define|#
 directive|define
-name|LNV_3KN100_SUBVENDOR
-value|HDA_MODEL_CONSTRUCT(LNV, 0x2066)
+name|LENOVO_3KN100_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x2066)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LNV_ALL_SUBVENDOR
-value|HDA_MODEL_CONSTRUCT(LNV, 0xffff)
+name|LENOVO_ALL_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0xffff)
+end_define
+
+begin_comment
+comment|/* Samsung */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAMSUNG_VENDORID
+value|0x144d
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAMSUNG_Q1_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(SAMSUNG, 0xc027)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAMSUNG_ALL_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(SAMSUNG, 0xffff)
 end_define
 
 begin_comment
@@ -17307,7 +17332,17 @@ literal|0
 block|}
 block|,
 block|{
-name|LNV_3KN100_SUBVENDOR
+name|LENOVO_3KN100_SUBVENDOR
+block|,
+name|HDA_CODEC_AD1986A
+block|,
+name|HDA_QUIRK_EAPDINV
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|SAMSUNG_Q1_SUBVENDOR
 block|,
 name|HDA_CODEC_AD1986A
 block|,
