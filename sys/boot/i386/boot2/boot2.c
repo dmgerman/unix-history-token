@@ -359,7 +359,7 @@ begin_define
 define|#
 directive|define
 name|NOPT
-value|12
+value|14
 end_define
 
 begin_define
@@ -481,7 +481,7 @@ index|[
 name|NOPT
 index|]
 init|=
-literal|"DhaCgmnpqrsv"
+literal|"DhaCcdgmnpqrsv"
 decl_stmt|;
 end_decl_stmt
 
@@ -507,6 +507,10 @@ block|,
 name|RBX_ASKNAME
 block|,
 name|RBX_CDROM
+block|,
+name|RBX_CONFIG
+block|,
+name|RBX_KDB
 block|,
 name|RBX_GDB
 block|,
@@ -1678,6 +1682,8 @@ operator|.
 name|ex
 operator|.
 name|a_entry
+operator|&
+literal|0xffffff
 expr_stmt|;
 name|p
 operator|=
@@ -1977,6 +1983,8 @@ name|i
 index|]
 operator|.
 name|p_paddr
+operator|&
+literal|0xffffff
 argument_list|)
 expr_stmt|;
 name|fs_off
@@ -2181,6 +2189,8 @@ operator|.
 name|eh
 operator|.
 name|e_entry
+operator|&
+literal|0xffffff
 expr_stmt|;
 block|}
 name|bootinfo
