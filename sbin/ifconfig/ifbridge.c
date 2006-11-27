@@ -4049,7 +4049,7 @@ argument_list|)
 block|,
 name|DEF_CMD_ARG
 argument_list|(
-literal|"holdcount"
+literal|"holdcnt"
 argument_list|,
 name|setbridge_holdcount
 argument_list|)
