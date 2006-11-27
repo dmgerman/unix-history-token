@@ -1739,14 +1739,8 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-name|char
-name|hdblk
-index|[
-sizeof|sizeof
-argument_list|(
 name|HD_TAR
-argument_list|)
-index|]
+name|hdblk
 decl_stmt|;
 comment|/* 	 * check for those file system types which tar cannot store 	 */
 switch|switch
@@ -1952,10 +1946,7 @@ block|}
 comment|/* 	 * copy the data out of the ARCHD into the tar header based on the type 	 * of the file. Remember many tar readers want the unused fields to be 	 * padded with zero. We set the linkflag field (type), the linkname 	 * (or zero if not used),the size, and set the padding (if any) to be 	 * added after the file data (0 for all other types, as they only have 	 * a header) 	 */
 name|hd
 operator|=
-operator|(
-name|HD_TAR
-operator|*
-operator|)
+operator|&
 name|hdblk
 expr_stmt|;
 name|l_strncpy
@@ -2472,6 +2463,11 @@ name|ul_oct
 argument_list|(
 name|tar_chksm
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 name|hdblk
 argument_list|,
 sizeof|sizeof
@@ -2501,6 +2497,11 @@ if|if
 condition|(
 name|wr_rdbuf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 name|hdblk
 argument_list|,
 sizeof|sizeof
@@ -3649,14 +3650,8 @@ name|char
 modifier|*
 name|pt
 decl_stmt|;
-name|char
-name|hdblk
-index|[
-sizeof|sizeof
-argument_list|(
 name|HD_USTAR
-argument_list|)
-index|]
+name|hdblk
 decl_stmt|;
 comment|/* 	 * check for those file system types ustar cannot store 	 */
 if|if
@@ -3788,10 +3783,7 @@ return|;
 block|}
 name|hd
 operator|=
-operator|(
-name|HD_USTAR
-operator|*
-operator|)
+operator|&
 name|hdblk
 expr_stmt|;
 name|arcn
@@ -4642,6 +4634,11 @@ name|ul_oct
 argument_list|(
 name|tar_chksm
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 name|hdblk
 argument_list|,
 sizeof|sizeof
@@ -4671,6 +4668,11 @@ if|if
 condition|(
 name|wr_rdbuf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 name|hdblk
 argument_list|,
 sizeof|sizeof
