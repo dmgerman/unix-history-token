@@ -21,6 +21,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -39,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|KILO
-value|(1024)
+value|(1024LL)
 end_define
 
 begin_define
@@ -99,10 +105,10 @@ begin_struct
 struct|struct
 name|convtbl
 block|{
-name|u_int
+name|uintmax_t
 name|mul
 decl_stmt|;
-name|u_int
+name|uintmax_t
 name|scale
 decl_stmt|;
 specifier|const
@@ -129,10 +135,10 @@ name|double
 name|convert
 parameter_list|(
 specifier|const
-name|u_long
+name|uintmax_t
 parameter_list|,
 specifier|const
-name|u_int
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -145,10 +151,10 @@ modifier|*
 name|get_string
 parameter_list|(
 specifier|const
-name|u_long
+name|uintmax_t
 parameter_list|,
 specifier|const
-name|u_int
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
