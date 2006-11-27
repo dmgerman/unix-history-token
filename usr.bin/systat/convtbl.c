@@ -29,6 +29,10 @@ index|[]
 init|=
 block|{
 comment|/* mul, scale, str */
+index|[
+name|SC_BYTE
+index|]
+operator|=
 block|{
 name|BYTE
 block|,
@@ -37,7 +41,10 @@ block|,
 literal|"bytes"
 block|}
 block|,
-comment|/* SC_BYTE	(0) */
+index|[
+name|SC_KILOBYTE
+index|]
+operator|=
 block|{
 name|BYTE
 block|,
@@ -46,7 +53,10 @@ block|,
 literal|"KB"
 block|}
 block|,
-comment|/* SC_KILOBYTE	(1) */
+index|[
+name|SC_MEGABYTE
+index|]
+operator|=
 block|{
 name|BYTE
 block|,
@@ -55,7 +65,10 @@ block|,
 literal|"MB"
 block|}
 block|,
-comment|/* SC_MEGABYTE	(2) */
+index|[
+name|SC_GIGABYTE
+index|]
+operator|=
 block|{
 name|BYTE
 block|,
@@ -64,7 +77,10 @@ block|,
 literal|"GB"
 block|}
 block|,
-comment|/* SC_GIGABYTE	(3) */
+index|[
+name|SC_BIT
+index|]
+operator|=
 block|{
 name|BIT
 block|,
@@ -73,7 +89,10 @@ block|,
 literal|"b"
 block|}
 block|,
-comment|/* SC_BITS	(4) */
+index|[
+name|SC_KILOBIT
+index|]
+operator|=
 block|{
 name|BIT
 block|,
@@ -82,7 +101,10 @@ block|,
 literal|"Kb"
 block|}
 block|,
-comment|/* SC_KILOBITS	(5) */
+index|[
+name|SC_MEGABIT
+index|]
+operator|=
 block|{
 name|BIT
 block|,
@@ -91,7 +113,10 @@ block|,
 literal|"Mb"
 block|}
 block|,
-comment|/* SC_MEGABITS	(6) */
+index|[
+name|SC_GIGABIT
+index|]
+operator|=
 block|{
 name|BIT
 block|,
@@ -100,7 +125,10 @@ block|,
 literal|"Gb"
 block|}
 block|,
-comment|/* SC_GIGABITS	(7) */
+index|[
+name|SC_AUTO
+index|]
+operator|=
 block|{
 literal|0
 block|,
@@ -108,7 +136,6 @@ literal|0
 block|,
 literal|""
 block|}
-comment|/* SC_AUTO	(8) */
 block|}
 decl_stmt|;
 end_decl_stmt
