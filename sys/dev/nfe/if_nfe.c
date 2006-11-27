@@ -3635,7 +3635,6 @@ name|void
 operator|*
 argument_list|)
 argument_list|,
-comment|/*DEO,MCLBYTES*/
 name|ring
 operator|->
 name|bufsz
@@ -7178,6 +7177,7 @@ operator|%
 name|NFE_RX_RING_COUNT
 expr_stmt|;
 block|}
+comment|//end for(;;)
 block|}
 end_function
 
