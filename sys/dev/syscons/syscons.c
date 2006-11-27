@@ -11890,6 +11890,12 @@ return|return
 literal|0
 return|;
 block|}
+name|sc
+operator|->
+name|delayed_next_scr
+operator|=
+literal|0
+expr_stmt|;
 name|s
 operator|=
 name|spltty
@@ -12459,12 +12465,6 @@ operator|++
 name|sc
 operator|->
 name|switch_in_progress
-expr_stmt|;
-name|sc
-operator|->
-name|delayed_next_scr
-operator|=
-literal|0
 expr_stmt|;
 name|sc
 operator|->
