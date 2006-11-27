@@ -633,6 +633,13 @@ name|NFE_PROMISC
 value|(1<< 7)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFE_CSUM_FEATURES
+value|(CSUM_IP | CSUM_TCP | CSUM_UDP)
+end_define
+
 begin_comment
 comment|/* default interrupt moderation timer of 128us */
 end_comment
