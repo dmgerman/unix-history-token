@@ -2918,6 +2918,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
+literal|0
+operator|)
+return|;
+comment|/* XXX disabel resize for the moment */
+return|return
+operator|(
 operator|(
 name|th
 operator|->
