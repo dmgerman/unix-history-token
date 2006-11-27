@@ -130,6 +130,8 @@ parameter_list|)
 block|{
 name|int
 name|retval
+init|=
+literal|0
 decl_stmt|;
 define|#
 directive|define
