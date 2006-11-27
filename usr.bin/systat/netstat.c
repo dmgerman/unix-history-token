@@ -629,6 +629,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|char
+name|tcb
+index|[]
+init|=
+literal|"tcb"
+decl_stmt|,
+name|udb
+index|[]
+init|=
+literal|"udb"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|nlist
 name|namelist
@@ -640,7 +655,10 @@ directive|define
 name|X_TCB
 value|0
 block|{
-literal|"tcb"
+operator|.
+name|n_name
+operator|=
+name|tcb
 block|}
 block|,
 define|#
@@ -648,11 +666,17 @@ directive|define
 name|X_UDB
 value|1
 block|{
-literal|"udb"
+operator|.
+name|n_name
+operator|=
+name|udb
 block|}
 block|,
 block|{
-literal|""
+operator|.
+name|n_name
+operator|=
+name|NULL
 block|}
 block|, }
 decl_stmt|;
