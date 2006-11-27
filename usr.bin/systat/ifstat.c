@@ -24,18 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -48,22 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_types.h>
-end_include
-
-begin_comment
-comment|/* For IFT_ETHER */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -71,18 +43,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<float.h>
 end_include
 
 begin_include
@@ -101,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|"extern.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mode.h"
 end_include
 
 begin_include
