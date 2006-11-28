@@ -83,38 +83,6 @@ value|bus_space_write_1((bas)->bst, (bas)->bsh, uart_regofs(bas, reg), value)
 end_define
 
 begin_comment
-comment|/* 16-bit I/O (e.g. to divisor latch) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|uart_getdreg
-parameter_list|(
-name|bas
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|bus_space_read_2((bas)->bst, (bas)->bsh, uart_regofs(bas, reg))
-end_define
-
-begin_define
-define|#
-directive|define
-name|uart_setdreg
-parameter_list|(
-name|bas
-parameter_list|,
-name|reg
-parameter_list|,
-name|value
-parameter_list|)
-define|\
-value|bus_space_write_2((bas)->bst, (bas)->bsh, uart_regofs(bas, reg), value)
-end_define
-
-begin_comment
 comment|/*  * XXX we don't know the length of the bus space address range in use by  * the UART. Since barriers don't use the length field currently, we put  * a zero there for now.  */
 end_comment
 
