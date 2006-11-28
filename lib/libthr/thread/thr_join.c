@@ -348,7 +348,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|ESRCH
+name|EINVAL
 expr_stmt|;
 block|}
 elseif|else
