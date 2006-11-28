@@ -257,6 +257,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|MFID_CDEV_MAJOR
+value|178
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -282,7 +289,7 @@ name|mfi_disk_strategy
 block|,
 literal|"mfid"
 block|,
-literal|201
+name|MFID_CDEV_MAJOR
 block|,
 name|mfi_disk_dump
 block|,

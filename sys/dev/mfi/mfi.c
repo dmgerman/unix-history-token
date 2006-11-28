@@ -607,6 +607,13 @@ name|mfi_poll
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|MFI_CDEV_MAJOR
+value|177
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -632,7 +639,7 @@ name|nostrategy
 block|,
 literal|"mfi"
 block|,
-literal|200
+name|MFI_CDEV_MAJOR
 block|,
 name|nodump
 block|,
