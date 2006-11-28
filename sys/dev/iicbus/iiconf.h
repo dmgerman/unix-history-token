@@ -41,16 +41,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|n
-parameter_list|(
-name|flags
-parameter_list|)
-value|(~(flags)& (flags))
-end_define
-
-begin_define
-define|#
-directive|define
 name|LSB
 value|0x1
 end_define
@@ -364,21 +354,6 @@ begin_comment
 comment|/* no address assigned to the interface */
 end_comment
 
-begin_comment
-comment|/*  * ivars codes  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IICBUS_IVAR_ADDR
-value|0x1
-end_define
-
-begin_comment
-comment|/* I2C address of the device */
-end_comment
-
 begin_function_decl
 specifier|extern
 name|int
@@ -640,16 +615,6 @@ name|int
 parameter_list|,
 name|int
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|u_char
-name|iicbus_get_addr
-parameter_list|(
-name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
