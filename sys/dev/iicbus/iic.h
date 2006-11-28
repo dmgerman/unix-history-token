@@ -37,6 +37,11 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
+name|IIC_M_WR
+value|0
+comment|/* Fake flag for write */
+define|#
+directive|define
 name|IIC_M_RD
 value|0x0001
 comment|/* read vs write */
