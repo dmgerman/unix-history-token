@@ -659,7 +659,7 @@ specifier|static
 name|int
 name|netisr_direct
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
