@@ -163,7 +163,7 @@ begin_define
 define|#
 directive|define
 name|USR_MIN_SIZE
-value|128
+value|160
 end_define
 
 begin_define
