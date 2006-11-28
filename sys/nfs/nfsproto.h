@@ -2511,6 +2511,10 @@ name|fa4_atime
 decl_stmt|;
 name|struct
 name|timespec
+name|fa4_btime
+decl_stmt|;
+name|struct
+name|timespec
 name|fa4_ctime
 decl_stmt|;
 name|struct
@@ -2624,106 +2628,113 @@ end_define
 begin_define
 define|#
 directive|define
-name|FA4V_CTIME
+name|FA4V_BTIME
 value|0x00000200
 end_define
 
 begin_define
 define|#
 directive|define
-name|FA4V_MTIME
+name|FA4V_CTIME
 value|0x00000400
 end_define
 
 begin_define
 define|#
 directive|define
-name|FA4V_MAXREAD
+name|FA4V_MTIME
 value|0x00000800
 end_define
 
 begin_define
 define|#
 directive|define
-name|FA4V_MAXWRITE
+name|FA4V_MAXREAD
 value|0x00001000
 end_define
 
 begin_define
 define|#
 directive|define
-name|FA4V_TYPE
+name|FA4V_MAXWRITE
 value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
-name|FA4V_FFREE
+name|FA4V_TYPE
 value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
-name|FA4V_FTOTAL
+name|FA4V_FFREE
 value|0x00008000
 end_define
 
 begin_define
 define|#
 directive|define
-name|FA4V_MAXNAME
+name|FA4V_FTOTAL
 value|0x00010000
 end_define
 
 begin_define
 define|#
 directive|define
-name|FA4V_SAVAIL
+name|FA4V_MAXNAME
 value|0x00020000
 end_define
 
 begin_define
 define|#
 directive|define
-name|FA4V_SFREE
+name|FA4V_SAVAIL
 value|0x00040000
 end_define
 
 begin_define
 define|#
 directive|define
-name|FA4V_STOTAL
+name|FA4V_SFREE
 value|0x00080000
 end_define
 
 begin_define
 define|#
 directive|define
-name|FA4V_CHANGEID
+name|FA4V_STOTAL
 value|0x00100000
 end_define
 
 begin_define
 define|#
 directive|define
-name|FA4V_LEASE_TIME
+name|FA4V_CHANGEID
 value|0x00200000
 end_define
 
 begin_define
 define|#
 directive|define
-name|FA4V_MAXFILESIZE
+name|FA4V_LEASE_TIME
 value|0x00400000
 end_define
 
 begin_define
 define|#
 directive|define
-name|FA4V_ACL
+name|FA4V_MAXFILESIZE
 value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FA4V_ACL
+value|0x01000000
 end_define
 
 begin_comment
