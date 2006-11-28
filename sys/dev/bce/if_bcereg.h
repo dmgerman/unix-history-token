@@ -3918,8 +3918,11 @@ decl_stmt|;
 name|u32
 name|tx_bd_mss_nbytes
 decl_stmt|;
-name|u32
-name|tx_bd_vlan_tag_flags
+name|u16
+name|tx_bd_flags
+decl_stmt|;
+name|u16
+name|tx_bd_vlan_tag
 decl_stmt|;
 define|#
 directive|define
