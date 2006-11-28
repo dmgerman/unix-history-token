@@ -4384,11 +4384,14 @@ directive|endif
 comment|/* INET6 */
 name|error
 operator|=
-name|ip_ctloutput
+name|ip_ctloutput_pcbinfo
 argument_list|(
 name|so
 argument_list|,
 name|sopt
+argument_list|,
+operator|&
+name|tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
