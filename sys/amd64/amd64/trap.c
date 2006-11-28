@@ -2168,7 +2168,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"fault code		= %s %s, %s\n"
+literal|"fault code		= %s %s %s, %s\n"
 argument_list|,
 name|code
 operator|&
@@ -2185,6 +2185,14 @@ condition|?
 literal|"write"
 else|:
 literal|"read"
+argument_list|,
+name|code
+operator|&
+name|PGEX_I
+condition|?
+literal|"instruction"
+else|:
+literal|"data"
 argument_list|,
 name|code
 operator|&
