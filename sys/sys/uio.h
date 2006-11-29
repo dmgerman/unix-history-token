@@ -138,28 +138,35 @@ name|iovec
 modifier|*
 name|uio_iov
 decl_stmt|;
+comment|/* scatter/gather list */
 name|int
 name|uio_iovcnt
 decl_stmt|;
+comment|/* length of scatter/gather list */
 name|off_t
 name|uio_offset
 decl_stmt|;
+comment|/* offset in target object */
 name|int
 name|uio_resid
 decl_stmt|;
+comment|/* remaining bytes to process */
 name|enum
 name|uio_seg
 name|uio_segflg
 decl_stmt|;
+comment|/* address space */
 name|enum
 name|uio_rw
 name|uio_rw
 decl_stmt|;
+comment|/* operation */
 name|struct
 name|thread
 modifier|*
 name|uio_td
 decl_stmt|;
+comment|/* owner */
 block|}
 struct|;
 end_struct
