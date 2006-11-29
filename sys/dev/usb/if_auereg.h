@@ -924,6 +924,10 @@ name|struct
 name|callout_handle
 name|aue_stat_ch
 decl_stmt|;
+name|struct
+name|task
+name|aue_stat_task
+decl_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
