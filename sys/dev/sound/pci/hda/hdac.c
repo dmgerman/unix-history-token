@@ -681,6 +681,31 @@ value|HDA_MODEL_CONSTRUCT(SAMSUNG, 0xffff)
 end_define
 
 begin_comment
+comment|/* Medion ? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEDION_VENDORID
+value|0x161f
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEDION_MD95257_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(MEDION, 0x203d)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEDION_ALL_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(MEDION, 0xffff)
+end_define
+
+begin_comment
 comment|/* Misc constants.. */
 end_comment
 
@@ -17312,6 +17337,16 @@ literal|0
 block|}
 block|,
 block|{
+name|MEDION_MD95257_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC880
+block|,
+name|HDA_QUIRK_GPIO2
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|ASUS_U5F_SUBVENDOR
 block|,
 name|HDA_CODEC_AD1986A
@@ -20668,13 +20703,9 @@ name|w
 decl_stmt|;
 name|nid_t
 name|cad
-decl_stmt|,
-name|nid
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|gpioval
 decl_stmt|;
 if|if
 condition|(
@@ -20701,12 +20732,6 @@ operator|&
 name|HDA_COMMIT_GPIO
 condition|)
 block|{
-name|nid
-operator|=
-name|devinfo
-operator|->
-name|nid
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -20741,16 +20766,6 @@ operator|)
 operator|)
 condition|)
 continue|continue;
-name|gpioval
-operator|=
-operator|(
-literal|1
-operator|<<
-name|i
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 name|hdac_command
 argument_list|(
 name|sc
@@ -20759,9 +20774,11 @@ name|HDA_CMD_SET_GPIO_ENABLE_MASK
 argument_list|(
 name|cad
 argument_list|,
+name|devinfo
+operator|->
 name|nid
 argument_list|,
-name|gpioval
+name|i
 argument_list|)
 argument_list|,
 name|cad
@@ -20775,9 +20792,11 @@ name|HDA_CMD_SET_GPIO_DIRECTION
 argument_list|(
 name|cad
 argument_list|,
+name|devinfo
+operator|->
 name|nid
 argument_list|,
-name|gpioval
+name|i
 argument_list|)
 argument_list|,
 name|cad
@@ -20791,9 +20810,11 @@ name|HDA_CMD_SET_GPIO_DATA
 argument_list|(
 name|cad
 argument_list|,
+name|devinfo
+operator|->
 name|nid
 argument_list|,
-name|gpioval
+name|i
 argument_list|)
 argument_list|,
 name|cad
