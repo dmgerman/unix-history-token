@@ -90,9 +90,24 @@ name|pcb_kstack
 decl_stmt|;
 comment|/* pcb's kernel stack */
 name|uint64_t
+name|pcb_tstate
+decl_stmt|;
+name|uint64_t
+name|pcb_tpc
+decl_stmt|;
+name|uint64_t
+name|pcb_tnpc
+decl_stmt|;
+name|uint64_t
+name|pcb_tt
+decl_stmt|;
+name|uint64_t
+name|pcb_sfar
+decl_stmt|;
+name|uint64_t
 name|pcb_pad
 index|[
-literal|4
+literal|7
 index|]
 decl_stmt|;
 block|}
