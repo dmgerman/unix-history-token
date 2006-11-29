@@ -1178,7 +1178,7 @@ name|PDC_TNCR
 argument_list|,
 name|cmd
 operator|->
-name|tx_cmd_sz
+name|tx_data_sz
 argument_list|)
 expr_stmt|;
 name|bus_dmamap_sync
@@ -1290,7 +1290,7 @@ if|if
 condition|(
 name|cmd
 operator|->
-name|tx_data_sz
+name|rx_data_sz
 operator|>
 literal|0
 condition|)
@@ -1348,7 +1348,7 @@ name|PDC_RNCR
 argument_list|,
 name|cmd
 operator|->
-name|tx_data_sz
+name|rx_data_sz
 argument_list|)
 expr_stmt|;
 name|bus_dmamap_sync
