@@ -947,13 +947,6 @@ index|]
 operator|=
 name|T_DATA_PROTECTION
 expr_stmt|;
-name|trap_conversion
-index|[
-name|TT_BREAKPOINT
-index|]
-operator|=
-name|T_BREAKPOINT
-expr_stmt|;
 block|}
 end_function
 
@@ -1231,6 +1224,19 @@ case|:
 case|case
 name|T_MEM_ADDRESS_NOT_ALIGNED
 case|:
+name|printf
+argument_list|(
+literal|"bad trap trapno=%ld data=0x%lx pc=0x%lx\n"
+argument_list|,
+name|trapno
+argument_list|,
+name|data
+argument_list|,
+name|tf
+operator|->
+name|tf_tpc
+argument_list|)
+expr_stmt|;
 name|addr
 operator|=
 name|data
@@ -1239,10 +1245,7 @@ name|sig
 operator|=
 name|trap_sig
 index|[
-name|trap_conversion
-index|[
 name|trapno
-index|]
 index|]
 expr_stmt|;
 break|break;
@@ -1274,10 +1277,7 @@ name|sig
 operator|=
 name|trap_sig
 index|[
-name|trap_conversion
-index|[
 name|trapno
-index|]
 index|]
 expr_stmt|;
 break|break;
@@ -1402,10 +1402,7 @@ operator|=
 operator|(
 name|int
 operator|)
-name|trap_conversion
-index|[
 name|trapno
-index|]
 expr_stmt|;
 comment|/* XXX not POSIX */
 name|ksi
@@ -1425,10 +1422,7 @@ operator|=
 operator|(
 name|int
 operator|)
-name|trap_conversion
-index|[
 name|trapno
-index|]
 expr_stmt|;
 name|trapsignal
 argument_list|(
