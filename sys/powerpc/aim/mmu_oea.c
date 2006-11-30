@@ -5710,6 +5710,10 @@ name|pte_lo
 operator||=
 name|PTE_BW
 expr_stmt|;
+if|if
+condition|(
+name|pmap_bootstrapped
+condition|)
 name|vm_page_flag_set
 argument_list|(
 name|m
