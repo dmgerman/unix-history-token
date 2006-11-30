@@ -406,6 +406,8 @@ decl_stmt|,
 name|rval
 decl_stmt|,
 name|flags
+decl_stmt|,
+name|pri
 decl_stmt|;
 name|WITNESS_SAVE_DECL
 argument_list|(
@@ -685,16 +687,24 @@ argument_list|,
 name|timo
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Adjust this thread's priority. 	 */
-if|if
-condition|(
-operator|(
+comment|/* 	 * Adjust this thread's priority, if necessary. 	 */
+name|pri
+operator|=
 name|priority
 operator|&
 name|PRIMASK
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|pri
 operator|!=
 literal|0
+operator|&&
+name|pri
+operator|!=
+name|td
+operator|->
+name|td_priority
 condition|)
 block|{
 name|mtx_lock_spin
@@ -707,9 +717,7 @@ name|sched_prio
 argument_list|(
 name|td
 argument_list|,
-name|priority
-operator|&
-name|PRIMASK
+name|pri
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
