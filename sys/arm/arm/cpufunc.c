@@ -6985,9 +6985,14 @@ modifier|*
 name|args
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|CPU_XSCALE_CORE3
 name|uint32_t
 name|auxctl
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|cpuctrl
 decl_stmt|,
@@ -7100,6 +7105,9 @@ argument_list|,
 name|cpuctrl
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|CPU_XSCALE_CORE3
 comment|/* Make sure write coalescing is turned on */
 asm|__asm __volatile("mrc p15, 0, %0, c1, c0, 1"
 block|:
@@ -7158,6 +7166,11 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 unit|}

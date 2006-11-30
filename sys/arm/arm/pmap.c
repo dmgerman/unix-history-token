@@ -1742,6 +1742,11 @@ name|ARM_NMMUS
 operator|>
 literal|1
 operator|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_CORE3
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -1819,6 +1824,9 @@ ifdef|#
 directive|ifdef
 name|XSCALE_CACHE_READ_WRITE_ALLOCATE
 comment|/* 	 * The XScale core has an enhanced mode where writes that 	 * miss the cache cause a cache line to be allocated.  This 	 * is significantly faster than the traditional, write-through 	 * behavior of this case. 	 */
+ifndef|#
+directive|ifndef
+name|CPU_XSCALE_CORE3
 name|pte_l1_s_cache_mode
 operator||=
 name|L1_S_XSCALE_TEX
@@ -1840,6 +1848,8 @@ argument_list|(
 name|TEX_XSCALE_X
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* XSCALE_CACHE_READ_WRITE_ALLOCATE */
@@ -1979,6 +1989,31 @@ name|pte_l2_s_proto
 operator|=
 name|L2_S_PROTO_xscale
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_CORE3
+name|pmap_copy_page_func
+operator|=
+name|pmap_copy_page_generic
+expr_stmt|;
+name|pmap_zero_page_func
+operator|=
+name|pmap_zero_page_generic
+expr_stmt|;
+name|xscale_use_minidata
+operator|=
+literal|0
+expr_stmt|;
+name|pte_l1_s_cache_mode_pt
+operator|=
+name|pte_l2_l_cache_mode_pt
+operator|=
+name|pte_l2_s_cache_mode_pt
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
 name|pmap_copy_page_func
 operator|=
 name|pmap_copy_page_xscale
@@ -1987,6 +2022,8 @@ name|pmap_zero_page_func
 operator|=
 name|pmap_zero_page_xscale
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Disable ECC protection of page table access, for now. 	 */
 asm|__asm __volatile("mrc p15, 0, %0, c1, c0, 1" : "=r" (auxctl));
 name|auxctl
@@ -11152,6 +11189,14 @@ name|pv_list
 argument_list|)
 condition|)
 return|return;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|curpm
 operator|=
 name|vmspace_pmap
@@ -14459,6 +14504,11 @@ name|ARM_MMU_SA1
 operator|)
 operator|!=
 literal|0
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_CORE3
+argument_list|)
 end_if
 
 begin_function
@@ -14883,6 +14933,11 @@ name|ARM_NMMUS
 operator|>
 literal|1
 operator|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_CORE3
+argument_list|)
 if|if
 condition|(
 name|xscale_use_minidata
@@ -15169,6 +15224,11 @@ name|ARM_MMU_SA1
 operator|)
 operator|!=
 literal|0
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_CORE3
+argument_list|)
 end_if
 
 begin_function
