@@ -80,17 +80,6 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/* Size of the per-cpu console buffer for printf(). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCPU_CONS_BUFR
-value|128
-end_define
-
-begin_comment
 comment|/*  * This structure maps out the global data that needs to be kept on a  * per-cpu basis.  The members are accessed via the PCPU_GET/SET/PTR  * macros defined in<machine/pcpu.h>.  Machine dependent fields are  * defined in the PCPU_MD_FIELDS macro defined in<machine/pcpu.h>.  */
 end_comment
 
@@ -170,13 +159,6 @@ name|pc_ktr_buf
 decl_stmt|;
 endif|#
 directive|endif
-name|char
-name|pc_cons_bufr
-index|[
-name|PCPU_CONS_BUFR
-index|]
-decl_stmt|;
-comment|/* Console buffer */
 name|PCPU_MD_FIELDS
 expr_stmt|;
 name|struct
