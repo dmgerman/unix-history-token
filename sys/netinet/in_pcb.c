@@ -1040,12 +1040,9 @@ goto|;
 endif|#
 directive|endif
 comment|/*IPSEC*/
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 if|if
 condition|(
 name|INP_SOCKAF
@@ -2004,12 +2001,9 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 if|if
 condition|(
 name|ntohl
@@ -2048,7 +2042,6 @@ argument_list|)
 condition|)
 endif|#
 directive|endif
-comment|/* defined(INET6) */
 return|return
 operator|(
 name|EADDRINUSE
@@ -4877,15 +4870,13 @@ name|inp_lport
 operator|==
 name|lport
 condition|)
-block|{
-comment|/* 			 * Found. 			 */
 return|return
 operator|(
 name|inp
 operator|)
 return|;
 block|}
-block|}
+comment|/* 	 * Then look for a wildcard match, if requested. 	 */
 if|if
 condition|(
 name|wildcard
@@ -4898,12 +4889,9 @@ name|local_wild
 init|=
 name|NULL
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 name|struct
 name|inpcb
 modifier|*
@@ -4913,7 +4901,6 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* defined(INET6) */
 name|head
 operator|=
 operator|&
@@ -5029,12 +5016,9 @@ operator|==
 name|INADDR_ANY
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 if|if
 condition|(
 name|INP_CHECK_SOCKAF
@@ -5053,7 +5037,6 @@ expr_stmt|;
 else|else
 endif|#
 directive|endif
-comment|/* defined(INET6) */
 name|local_wild
 operator|=
 name|inp
@@ -5061,12 +5044,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 if|if
 condition|(
 name|local_wild
@@ -5080,14 +5060,12 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* defined(INET6) */
 return|return
 operator|(
 name|local_wild
 operator|)
 return|;
 block|}
-comment|/* 	 * Not found. 	 */
 return|return
 operator|(
 name|NULL
