@@ -1349,6 +1349,9 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PRINTF_BUFR_SIZE
 comment|/* Write any buffered console output: */
 if|if
 condition|(
@@ -1366,6 +1369,8 @@ operator|.
 name|p_bufr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -1504,6 +1509,9 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PRINTF_BUFR_SIZE
 comment|/* Write any buffered console output: */
 if|if
 condition|(
@@ -1521,6 +1529,8 @@ operator|.
 name|p_bufr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
