@@ -12887,6 +12887,9 @@ name|int
 name|bge_link_evt
 decl_stmt|;
 comment|/* pending link event */
+name|int
+name|bge_timer
+decl_stmt|;
 name|struct
 name|callout
 name|bge_stat_ch
