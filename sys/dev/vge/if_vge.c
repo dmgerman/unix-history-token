@@ -6292,19 +6292,18 @@ operator|&
 name|VGE_RDSTS_VTAG
 condition|)
 block|{
+comment|/* 			 * The 32-bit rxctl register is stored in little-endian. 			 * However, the 16-bit vlan tag is stored in big-endian, 			 * so we have to byte swap it. 			 */
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|ether_vtag
 operator|=
-name|ntohs
+name|bswap16
 argument_list|(
-operator|(
 name|rxctl
 operator|&
 name|VGE_RDCTL_VLANID
-operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -7608,14 +7607,11 @@ name|vge_ctl
 operator||=
 name|htole32
 argument_list|(
-name|htons
-argument_list|(
 name|m_head
 operator|->
 name|m_pkthdr
 operator|.
 name|ether_vtag
-argument_list|)
 operator||
 name|VGE_TDCTL_VTAG
 argument_list|)
