@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|GPIO_I2C_SDA_BIT
-value|(1U<< 7)
+value|(1U<< GPIO_I2C_SDA)
 end_define
 
 begin_define
@@ -94,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|GPIO_I2C_SCL_BIT
-value|(1U<< 6)
+value|(1U<< GPIO_I2C_SCL)
 end_define
 
 begin_comment
