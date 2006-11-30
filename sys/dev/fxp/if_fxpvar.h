@@ -389,6 +389,10 @@ name|callout
 name|stat_ch
 decl_stmt|;
 comment|/* stat callout */
+name|int
+name|watchdog_timer
+decl_stmt|;
+comment|/* seconds until chip reset */
 name|struct
 name|fxp_cb_mcs
 modifier|*
