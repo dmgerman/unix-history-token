@@ -2703,6 +2703,21 @@ argument_list|,
 name|IFAN_ARRIVAL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_watchdog
+operator|!=
+name|NULL
+condition|)
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"using obsoleted if_watchdog interface\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
