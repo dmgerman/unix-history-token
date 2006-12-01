@@ -464,59 +464,59 @@ begin_struct
 struct|struct
 name|vmtotal
 block|{
-name|uint16_t
+name|int16_t
 name|t_rq
 decl_stmt|;
 comment|/* length of the run queue */
-name|uint16_t
+name|int16_t
 name|t_dw
 decl_stmt|;
 comment|/* jobs in ``disk wait'' (neg priority) */
-name|uint16_t
+name|int16_t
 name|t_pw
 decl_stmt|;
 comment|/* jobs in page wait */
-name|uint16_t
+name|int16_t
 name|t_sl
 decl_stmt|;
 comment|/* jobs sleeping in core */
-name|uint16_t
+name|int16_t
 name|t_sw
 decl_stmt|;
 comment|/* swapped out runnable/short block jobs */
-name|uint32_t
+name|int32_t
 name|t_vm
 decl_stmt|;
 comment|/* total virtual memory */
-name|uint32_t
+name|int32_t
 name|t_avm
 decl_stmt|;
 comment|/* active virtual memory */
-name|uint32_t
+name|int32_t
 name|t_rm
 decl_stmt|;
 comment|/* total real memory in use */
-name|uint32_t
+name|int32_t
 name|t_arm
 decl_stmt|;
 comment|/* active real memory */
-name|uint32_t
+name|int32_t
 name|t_vmshr
 decl_stmt|;
 comment|/* shared virtual memory */
-name|uint32_t
+name|int32_t
 name|t_avmshr
 decl_stmt|;
 comment|/* active shared virtual memory */
-name|uint32_t
+name|int32_t
 name|t_rmshr
 decl_stmt|;
 comment|/* shared real memory */
-name|uint32_t
+name|int32_t
 name|t_armshr
 decl_stmt|;
 comment|/* active shared real memory */
-name|uint32_t
+name|int32_t
 name|t_free
 decl_stmt|;
 comment|/* free memory pages */
