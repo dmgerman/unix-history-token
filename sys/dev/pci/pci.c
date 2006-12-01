@@ -2216,6 +2216,9 @@ block|{
 case|case
 literal|0
 case|:
+case|case
+literal|1
+case|:
 name|ptrptr
 operator|=
 name|PCIR_CAP_PTR
