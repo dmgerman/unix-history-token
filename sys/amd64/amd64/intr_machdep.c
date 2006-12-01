@@ -1907,31 +1907,6 @@ name|current_cpu
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"INTR: Assigning IRQ %d"
-argument_list|,
-name|pic
-operator|->
-name|pic_vector
-argument_list|(
-name|isrc
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" to local APIC %u\n"
-argument_list|,
-name|apic_id
-argument_list|)
-expr_stmt|;
-block|}
 name|pic
 operator|->
 name|pic_assign_cpu
@@ -2022,7 +1997,7 @@ operator|<=
 literal|1
 condition|)
 return|return;
-comment|/* Round-robin assign each enabled source a CPU. */
+comment|/* Round-robin assign a CPU to each enabled source. */
 name|mtx_lock_spin
 argument_list|(
 operator|&
