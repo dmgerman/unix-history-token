@@ -814,12 +814,7 @@ name|cbu_versionlen
 decl_stmt|;
 comment|/* version 1 length */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
 name|__packed__
-operator|)
-argument_list|)
 struct|;
 end_struct
 
@@ -878,12 +873,7 @@ name|tbu_bpdutype
 decl_stmt|;
 comment|/* message type */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
