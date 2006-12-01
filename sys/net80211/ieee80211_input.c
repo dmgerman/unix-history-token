@@ -3481,11 +3481,7 @@ name|m
 argument_list|,
 name|hdrlen
 operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|llc
-argument_list|)
+name|LLC_SNAPFRAMELEN
 operator|-
 sizeof|sizeof
 argument_list|(
