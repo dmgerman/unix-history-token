@@ -7985,7 +7985,7 @@ name|miibus
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check that chip hasn't hang. 	 */
+comment|/* 	 * Check that chip hasn't hung. 	 */
 name|fxp_watchdog
 argument_list|(
 name|sc
