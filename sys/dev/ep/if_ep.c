@@ -1297,13 +1297,31 @@ name|if_init
 operator|=
 name|epinit
 expr_stmt|;
+name|IFQ_SET_MAXLEN
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|,
+name|IFQ_MAXLEN
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_snd
 operator|.
-name|ifq_maxlen
+name|ifq_drv_maxlen
 operator|=
 name|IFQ_MAXLEN
+expr_stmt|;
+name|IFQ_SET_READY
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2164,7 +2182,7 @@ return|return;
 name|startagain
 label|:
 comment|/* Sneak a peek at the next packet */
-name|IF_DEQUEUE
+name|IFQ_DRV_DEQUEUE
 argument_list|(
 operator|&
 name|ifp
@@ -2299,7 +2317,7 @@ name|if_drv_flags
 operator||=
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-name|IF_PREPEND
+name|IFQ_DRV_PREPEND
 argument_list|(
 operator|&
 name|ifp
@@ -2583,11 +2601,14 @@ block|{
 comment|/* 		 * we check if we have packets left, in that case 		 * we prepare to come back later 		 */
 if|if
 condition|(
+operator|!
+name|IFQ_DRV_IS_EMPTY
+argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_snd
-operator|.
-name|ifq_head
+argument_list|)
 condition|)
 name|CSR_WRITE_2
 argument_list|(
@@ -3026,11 +3047,14 @@ expr_stmt|;
 comment|/* 				         * To have a tx_avail_int but giving 					 * the chance to the Reception 				         */
 if|if
 condition|(
+operator|!
+name|IFQ_DRV_IS_EMPTY
+argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_snd
-operator|.
-name|ifq_head
+argument_list|)
 condition|)
 name|CSR_WRITE_2
 argument_list|(
