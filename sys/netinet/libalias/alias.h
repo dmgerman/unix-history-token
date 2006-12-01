@@ -937,6 +937,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Mbuf helper function. */
+end_comment
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|m_megapullup
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Mode flags and other constants.  */
 end_comment
 
