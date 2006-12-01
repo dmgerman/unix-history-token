@@ -1983,7 +1983,7 @@ block|{
 define|#
 directive|define
 name|TO_BE_RECLAIMED
-value|(sizeof(struct ether_header) - LLC_SNAPFRAMELEN)
+value|(sizeof(struct ether_header) - sizeof(struct llc))
 name|int
 name|needed_space
 init|=
@@ -2061,7 +2061,7 @@ return|;
 block|}
 block|}
 block|}
-comment|/* 	 * We know we are called just before stripping an Ethernet 	 * header and prepending an LLC header.  This means we know 	 * there will be 	 *	sizeof(struct ether_header) - LLC_SNAPFRAMELEN 	 * bytes recovered to which we need additional space for the 	 * 802.11 header and any crypto header. 	 */
+comment|/* 	 * We know we are called just before stripping an Ethernet 	 * header and prepending an LLC header.  This means we know 	 * there will be 	 *	sizeof(struct ether_header) - sizeof(struct llc) 	 * bytes recovered to which we need additional space for the 	 * 802.11 header and any crypto header. 	 */
 comment|/* XXX check trailing space and copy instead? */
 if|if
 condition|(
@@ -2642,7 +2642,11 @@ expr|struct
 name|ether_header
 argument_list|)
 operator|-
-name|LLC_SNAPFRAMELEN
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|llc
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|llc
