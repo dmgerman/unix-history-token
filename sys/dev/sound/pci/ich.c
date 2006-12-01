@@ -4835,6 +4835,10 @@ literal|0x3089103c
 case|:
 comment|/* Compaq Presario B3800 */
 case|case
+literal|0x309a103c
+case|:
+comment|/* HP Compaq nx4300 */
+case|case
 literal|0x82131033
 case|:
 comment|/* NEC VersaPro VJ10F/BH */
