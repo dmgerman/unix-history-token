@@ -12443,6 +12443,16 @@ argument_list|(
 name|pve
 operator|!=
 name|NULL
+operator|||
+name|m
+operator|->
+name|flags
+operator|&
+operator|(
+name|PG_UNMANAGED
+operator||
+name|PG_FICTITIOUS
+operator|)
 argument_list|,
 operator|(
 literal|"No pv"
