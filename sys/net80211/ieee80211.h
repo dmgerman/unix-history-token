@@ -1749,11 +1749,11 @@ name|maxtxpwr
 decl_stmt|;
 comment|/* tx power cap */
 block|}
+name|__packed
 name|band
 index|[
 literal|4
 index|]
-name|__packed
 struct|;
 comment|/* up to 4 sub bands */
 block|}
