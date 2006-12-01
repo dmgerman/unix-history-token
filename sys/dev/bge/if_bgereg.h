@@ -3209,15 +3209,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_RX_STATS
+name|BGE_MAC_STATS
 value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_TX_STATS
-value|0x0880
 end_define
 
 begin_comment
@@ -12902,13 +12895,13 @@ name|char
 modifier|*
 name|bge_vpd_readonly
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|bge_rx_discards
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|bge_tx_discards
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|bge_tx_collisions
 decl_stmt|;
 ifdef|#
