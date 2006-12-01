@@ -50,8 +50,8 @@ name|u_int8_t
 name|window_x2
 decl_stmt|;
 block|}
-name|type_u
 name|__packed
+name|type_u
 struct|;
 struct|struct
 block|{
@@ -62,8 +62,8 @@ name|u_int8_t
 name|num_rcv_x2
 decl_stmt|;
 block|}
-name|type_i
 name|__packed
+name|type_i
 struct|;
 struct|struct
 block|{
@@ -74,8 +74,8 @@ name|u_int8_t
 name|num_rcv_x2
 decl_stmt|;
 block|}
-name|type_s
 name|__packed
+name|type_s
 struct|;
 struct|struct
 block|{
@@ -99,8 +99,8 @@ name|u_int8_t
 name|frmr_cause
 decl_stmt|;
 block|}
-name|type_frmr
 name|__packed
+name|type_frmr
 struct|;
 struct|struct
 block|{
@@ -117,8 +117,8 @@ name|u_int16_t
 name|ether_type
 decl_stmt|;
 block|}
-name|type_snap
 name|__packed
+name|type_snap
 struct|;
 struct|struct
 block|{
@@ -129,12 +129,12 @@ name|u_int8_t
 name|control_ext
 decl_stmt|;
 block|}
-name|type_raw
 name|__packed
+name|type_raw
 struct|;
 block|}
+name|__packed
 name|llc_un
-comment|/* XXX __packed ??? */
 union|;
 block|}
 name|__packed
@@ -280,6 +280,31 @@ directive|define
 name|LLC_SNAPFRAMELEN
 value|8
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CTASSERT
+end_ifdef
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|llc
+argument_list|)
+operator|==
+name|LLC_SNAPFRAMELEN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Unnumbered LLC format commands  */
