@@ -651,8 +651,9 @@ name|error
 operator|==
 literal|0
 condition|)
+comment|/* success */
 return|return
-name|error
+literal|0
 return|;
 name|ATH_LOCK_DESTROY
 argument_list|(
