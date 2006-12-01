@@ -814,7 +814,7 @@ name|cbu_versionlen
 decl_stmt|;
 comment|/* version 1 length */
 block|}
-name|__packed__
+name|__packed
 struct|;
 end_struct
 
