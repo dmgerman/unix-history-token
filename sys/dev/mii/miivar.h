@@ -922,6 +922,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|mii_phy_dev_probe
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|struct
+name|mii_phydesc
+modifier|*
+name|mpd
+parameter_list|,
+name|int
+name|mrv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ukphy_status
 parameter_list|(
