@@ -2720,6 +2720,21 @@ literal|"=ftp://ftp3.ie.freebsd.org"
 block|}
 block|,
 block|{
+literal|" IPv6 Israel"
+block|,
+literal|"ftp.il.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.il.freebsd.org"
+block|}
+block|,
+block|{
 literal|" IPv6 Japan"
 block|,
 literal|"ftp2.jp.freebsd.org"
