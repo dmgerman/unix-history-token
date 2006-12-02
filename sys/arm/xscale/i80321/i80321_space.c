@@ -254,6 +254,60 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+comment|/* read (single) stream */
+name|generic_bs_r_1
+block|,
+name|generic_armv4_bs_r_2
+block|,
+name|generic_bs_r_4
+block|,
+name|NULL
+block|,
+comment|/* read multiple stream */
+name|generic_bs_rm_1
+block|,
+name|generic_armv4_bs_rm_2
+block|,
+name|generic_bs_rm_4
+block|,
+name|NULL
+block|,
+comment|/* read region stream */
+name|generic_bs_rr_1
+block|,
+name|generic_armv4_bs_rr_2
+block|,
+name|generic_bs_rr_4
+block|,
+name|NULL
+block|,
+comment|/* write (single) stream */
+name|generic_bs_w_1
+block|,
+name|generic_armv4_bs_w_2
+block|,
+name|generic_bs_w_4
+block|,
+name|NULL
+block|,
+comment|/* write multiple stream */
+name|generic_bs_wm_1
+block|,
+name|generic_armv4_bs_wm_2
+block|,
+name|generic_bs_wm_4
+block|,
+name|NULL
+block|,
+comment|/* write region stream */
+name|NULL
+block|,
+name|generic_armv4_bs_wr_2
+block|,
+name|generic_bs_wr_4
+block|,
+name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt
