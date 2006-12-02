@@ -102,6 +102,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/unionfs/union.h>
 end_include
 
