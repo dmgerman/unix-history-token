@@ -965,8 +965,7 @@ name|sc
 operator|->
 name|mii_ticks
 operator|<=
-literal|5
-comment|/*10*/
+name|MII_ANEGTICKS
 condition|)
 break|break;
 name|sc
@@ -1225,7 +1224,6 @@ name|mii_media_active
 operator||=
 name|IFM_FDX
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1250,7 +1248,6 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1464,7 +1461,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 

@@ -641,9 +641,6 @@ name|mii_media
 operator|.
 name|ifm_cur
 decl_stmt|;
-name|int
-name|reg
-decl_stmt|;
 name|struct
 name|mii_softc
 modifier|*
@@ -686,6 +683,10 @@ name|int
 name|devs
 decl_stmt|,
 name|i
+decl_stmt|,
+name|other_inst
+decl_stmt|,
+name|reg
 decl_stmt|;
 comment|/* 	 * See if there's another PHY on this bus with us. 	 * If so, we may need it for 10Mbps modes. 	 */
 name|device_get_children
@@ -1171,7 +1172,7 @@ name|sc
 operator|->
 name|mii_ticks
 operator|<=
-literal|5
+name|MII_ANEGTICKS
 condition|)
 break|break;
 name|sc
@@ -1246,9 +1247,6 @@ operator|==
 name|ML_STATE_AUTO_OTHER
 condition|)
 block|{
-name|int
-name|other_inst
-decl_stmt|;
 name|other_inst
 operator|=
 name|other
@@ -1373,7 +1371,6 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1593,7 +1590,6 @@ name|other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
