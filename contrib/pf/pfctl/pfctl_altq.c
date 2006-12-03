@@ -4,6 +4,10 @@ comment|/*	$OpenBSD: pfctl_altq.c,v 1.86 2005/02/28 14:04:51 henning Exp $	*/
 end_comment
 
 begin_comment
+comment|/* add:	$OpenBSD: pfctl_altq.c,v 1.91 2006/11/28 00:08:50 henning Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 2002  *	Sony Computer Science Laboratories Inc.  * Copyright (c) 2002, 2003 Henning Brauer<henning@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
@@ -3831,15 +3835,15 @@ operator|||
 operator|(
 name|opts
 operator|->
-name|rtsc_m1
+name|lssc_m1
 operator|<
 name|opts
 operator|->
-name|rtsc_m2
+name|lssc_m2
 operator|&&
 name|opts
 operator|->
-name|rtsc_m1
+name|lssc_m1
 operator|!=
 literal|0
 operator|)
@@ -3847,15 +3851,15 @@ operator|||
 operator|(
 name|opts
 operator|->
-name|rtsc_m1
+name|ulsc_m1
 operator|<
 name|opts
 operator|->
-name|rtsc_m2
+name|ulsc_m2
 operator|&&
 name|opts
 operator|->
-name|rtsc_m1
+name|ulsc_m1
 operator|!=
 literal|0
 operator|)
