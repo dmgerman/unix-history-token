@@ -147,6 +147,30 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ucond
+block|{
+specifier|volatile
+name|uint32_t
+name|c_has_waiters
+decl_stmt|;
+comment|/* Has waiters in kernel */
+name|uint32_t
+name|c_flags
+decl_stmt|;
+comment|/* Flags of the condition variable */
+name|uint32_t
+name|c_spare
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Spare space */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* op code for _umtx_op */
 end_comment
@@ -210,8 +234,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|UMTX_OP_MAX
+name|UMTX_OP_CV_WAIT
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_OP_CV_SIGNAL
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_OP_CV_BROADCAST
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_OP_MAX
+value|11
 end_define
 
 begin_ifndef
