@@ -2454,10 +2454,6 @@ define|#
 directive|define
 name|CTS_SPI_FLAGS_DISC_ENB
 value|0x01
-define|#
-directive|define
-name|CTS_SPI_FLAGS_TAG_ENB
-value|0x02
 name|u_int
 name|sync_period
 decl_stmt|;
