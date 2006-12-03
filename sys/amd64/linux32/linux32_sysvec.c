@@ -5766,7 +5766,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-break|break;
+return|return
+name|EOPNOTSUPP
+return|;
 block|}
 return|return
 name|error
