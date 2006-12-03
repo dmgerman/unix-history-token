@@ -1833,17 +1833,21 @@ operator|*
 name|p
 operator|==
 literal|'%'
-operator|&&
-operator|*
-operator|(
+condition|)
+if|if
+condition|(
 name|p
-operator|+
+index|[
 literal|1
-operator|)
-operator|!=
+index|]
+operator|==
 literal|'%'
 condition|)
+name|p
+operator|++
+expr_stmt|;
 comment|/* leave %% alone */
+else|else
 break|break;
 name|sz
 operator|=
