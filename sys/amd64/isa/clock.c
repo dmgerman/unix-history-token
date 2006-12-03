@@ -444,6 +444,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|rtc_reg
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|u_char
 name|rtc_statusa
 init|=
@@ -1490,6 +1500,18 @@ name|val
 decl_stmt|;
 name|RTC_LOCK
 expr_stmt|;
+if|if
+condition|(
+name|rtc_reg
+operator|!=
+name|reg
+condition|)
+block|{
+name|inb
+argument_list|(
+literal|0x84
+argument_list|)
+expr_stmt|;
 name|outb
 argument_list|(
 name|IO_RTC
@@ -1497,11 +1519,16 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
+name|rtc_reg
+operator|=
+name|reg
+expr_stmt|;
 name|inb
 argument_list|(
 literal|0x84
 argument_list|)
 expr_stmt|;
+block|}
 name|val
 operator|=
 name|inb
@@ -1509,11 +1536,6 @@ argument_list|(
 name|IO_RTC
 operator|+
 literal|1
-argument_list|)
-expr_stmt|;
-name|inb
-argument_list|(
-literal|0x84
 argument_list|)
 expr_stmt|;
 name|RTC_UNLOCK
@@ -1528,11 +1550,10 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|writertc
 parameter_list|(
-name|u_char
+name|int
 name|reg
 parameter_list|,
 name|u_char
@@ -1541,6 +1562,13 @@ parameter_list|)
 block|{
 name|RTC_LOCK
 expr_stmt|;
+if|if
+condition|(
+name|rtc_reg
+operator|!=
+name|reg
+condition|)
+block|{
 name|inb
 argument_list|(
 literal|0x84
@@ -1553,11 +1581,16 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
+name|rtc_reg
+operator|=
+name|reg
+expr_stmt|;
 name|inb
 argument_list|(
 literal|0x84
 argument_list|)
 expr_stmt|;
+block|}
 name|outb
 argument_list|(
 name|IO_RTC
@@ -1572,7 +1605,6 @@ argument_list|(
 literal|0x84
 argument_list|)
 expr_stmt|;
-comment|/* XXX work around wrong order in rtcin() */
 name|RTC_UNLOCK
 expr_stmt|;
 block|}
