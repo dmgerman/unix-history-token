@@ -4445,6 +4445,7 @@ name|flags
 operator|&
 name|CTS_SCSI_FLAGS_TAG_ENB
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stdout
@@ -4452,14 +4453,7 @@ argument_list|,
 literal|", Command Queueing Enabled"
 argument_list|)
 expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|", Command Queueing Supported"
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 block|}
 name|fprintf
