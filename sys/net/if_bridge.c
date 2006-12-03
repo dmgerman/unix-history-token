@@ -2415,6 +2415,8 @@ expr|struct
 name|ifbpstpconf
 argument_list|)
 block|,
+name|BC_F_COPYIN
+operator||
 name|BC_F_COPYOUT
 block|}
 block|,
