@@ -5332,7 +5332,7 @@ name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"mpt_send_handshake_cmd timeout1\n"
+literal|"mpt_send_handshake_cmd: db ignored\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5365,7 +5365,7 @@ name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"mpt_send_handshake_cmd timeout2\n"
+literal|"mpt_send_handshake_cmd: db ack timed out\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5417,7 +5417,7 @@ name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"mpt_send_handshake_cmd timeout! index = %d\n"
+literal|"mpt_send_handshake_cmd: timeout @ index %d\n"
 argument_list|,
 name|i
 argument_list|)

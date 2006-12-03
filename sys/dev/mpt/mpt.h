@@ -1757,7 +1757,7 @@ decl_stmt|;
 name|uint16_t
 name|request_frame_size
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|mpt_max_devices
 decl_stmt|;
 name|uint8_t
@@ -1765,9 +1765,6 @@ name|mpt_max_buses
 decl_stmt|;
 name|uint8_t
 name|ioc_facts_flags
-decl_stmt|;
-name|uint8_t
-name|padding0
 decl_stmt|;
 comment|/* 	 * Port Facts 	 * XXX - Add multi-port support!. 	 */
 name|uint16_t
