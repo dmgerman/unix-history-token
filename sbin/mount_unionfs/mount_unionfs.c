@@ -361,7 +361,7 @@ end_function
 
 begin_function
 specifier|static
-name|uid_t
+name|void
 name|parse_uid
 parameter_list|(
 specifier|const
