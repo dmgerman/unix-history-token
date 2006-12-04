@@ -1116,13 +1116,23 @@ name|BGE_IS_JUMBO_CAPABLE
 parameter_list|(
 name|sc
 parameter_list|)
+value|((sc)->bge_flags& BGE_FLAG_JUMBO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_IS_5700_FAMILY
+parameter_list|(
+name|sc
+parameter_list|)
 value|((sc)->bge_flags& BGE_FLAG_5700_FAMILY)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 parameter_list|(
 name|sc
 parameter_list|)
@@ -5896,7 +5906,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -5965,7 +5975,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -6045,7 +6055,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -6254,7 +6264,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -6653,7 +6663,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -7121,7 +7131,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -7170,7 +7180,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -7339,7 +7349,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -7437,7 +7447,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -7511,7 +7521,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -10509,6 +10519,8 @@ operator|->
 name|bge_flags
 operator||=
 name|BGE_FLAG_5700_FAMILY
+operator||
+name|BGE_FLAG_JUMBO
 expr_stmt|;
 break|break;
 case|case
@@ -10525,6 +10537,7 @@ operator|->
 name|bge_flags
 operator||=
 name|BGE_FLAG_5714_FAMILY
+comment|/* | BGE_FLAG_JUMBO */
 expr_stmt|;
 comment|/* Fall through */
 case|case
@@ -10560,7 +10573,7 @@ block|}
 comment|/* 	 * XXX: Broadcom Linux driver.  Not in specs or eratta. 	 * PCI-Express? 	 */
 if|if
 condition|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -10981,7 +10994,7 @@ block|}
 comment|/* 5705 limits RX return ring to 512 entries. */
 if|if
 condition|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -14161,7 +14174,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -17394,7 +17407,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -17486,7 +17499,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -17533,7 +17546,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
@@ -17570,7 +17583,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
