@@ -216,6 +216,13 @@ name|BSTP_PORT_AUTOP2P
 value|0x0020
 end_define
 
+begin_define
+define|#
+directive|define
+name|BSTP_PORT_ADMEDGE
+value|0x0040
+end_define
+
 begin_comment
 comment|/* BPDU priority */
 end_comment

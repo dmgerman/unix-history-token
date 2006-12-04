@@ -524,6 +524,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFBIF_BSTP_ADMEDGE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* member stp admin edge enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFBIF_BSTP_ADMCOST
+value|0x0400
+end_define
+
+begin_comment
+comment|/* member stp admin path cost */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFBIFBITS
 value|"\020\001LEARNING\002DISCOVER\003STP\004SPAN" \ 			"\005STICKY\006EDGE\007AUTOEDGE\010P2P\011AUTOP2P"
 end_define
@@ -532,7 +554,7 @@ begin_define
 define|#
 directive|define
 name|IFBIFMASK
-value|~(IFBIF_BSTP_EDGE|IFBIF_BSTP_AUTOEDGE|IFBIF_BSTP_P2P| \ 			IFBIF_BSTP_AUTOP2P)
+value|~(IFBIF_BSTP_EDGE|IFBIF_BSTP_AUTOEDGE|IFBIF_BSTP_P2P| \ 			IFBIF_BSTP_AUTOP2P|IFBIF_BSTP_ADMEDGE| \ 			IFBIF_BSTP_ADMCOST)
 end_define
 
 begin_comment
