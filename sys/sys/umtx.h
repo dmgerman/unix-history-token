@@ -259,6 +259,17 @@ name|UMTX_OP_MAX
 value|11
 end_define
 
+begin_comment
+comment|/* flags for UMTX_OP_CV_WAIT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMTX_CHECK_UNPARKING
+value|0x01
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

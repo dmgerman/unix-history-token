@@ -1577,6 +1577,17 @@ begin_comment
 comment|/* Ignore runningbufspace check */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDP_WAKEUP
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Don't sleep in umtx cond_wait */
+end_comment
+
 begin_comment
 comment|/*  * Reasons that the current thread can not be run yet.  * More than one may apply.  */
 end_comment
