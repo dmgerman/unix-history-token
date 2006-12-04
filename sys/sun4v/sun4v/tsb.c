@@ -572,7 +572,10 @@ modifier|*
 name|tsb
 parameter_list|,
 name|vm_offset_t
-name|va
+name|index_va
+parameter_list|,
+name|vm_offset_t
+name|tag_va
 parameter_list|,
 name|uint64_t
 name|tte_data
@@ -595,7 +598,7 @@ name|DPRINTF
 argument_list|(
 literal|"tsb_set_tte va: 0x%lx idxpgsz: %x\n"
 argument_list|,
-name|va
+name|tag_va
 argument_list|,
 name|tsb
 operator|->
@@ -621,7 +624,7 @@ expr_stmt|;
 name|tsb_index
 operator|=
 operator|(
-name|va
+name|index_va
 operator|>>
 name|tsb_shift
 operator|)
@@ -636,7 +639,7 @@ argument_list|(
 literal|"tsb_index_absolute: 0x%lx tsb_index: 0x%lx\n"
 argument_list|,
 operator|(
-name|va
+name|index_va
 operator|>>
 name|tsb_shift
 operator|)
@@ -690,7 +693,7 @@ name|TTARGET_CTX_SHIFT
 operator|)
 operator||
 operator|(
-name|va
+name|tag_va
 operator|>>
 name|TTARGET_VA_SHIFT
 operator|)

@@ -179,7 +179,10 @@ modifier|*
 name|tsb
 parameter_list|,
 name|vm_offset_t
-name|va
+name|index_va
+parameter_list|,
+name|vm_offset_t
+name|tag_va
 parameter_list|,
 name|tte_t
 name|tte_data
