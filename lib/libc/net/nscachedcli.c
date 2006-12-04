@@ -228,7 +228,7 @@ do|do
 block|{
 name|nevents
 operator|=
-name|kevent
+name|_kevent
 argument_list|(
 name|connection
 operator|->
@@ -425,7 +425,7 @@ do|do
 block|{
 name|nevents
 operator|=
-name|kevent
+name|_kevent
 argument_list|(
 name|connection
 operator|->
@@ -744,7 +744,7 @@ argument_list|)
 expr_stmt|;
 name|res
 operator|=
-name|kevent
+name|_kevent
 argument_list|(
 name|connection
 operator|->
@@ -764,7 +764,7 @@ argument_list|)
 expr_stmt|;
 name|nevents
 operator|=
-name|kevent
+name|_kevent
 argument_list|(
 name|connection
 operator|->
@@ -839,7 +839,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|kevent
+name|_kevent
 argument_list|(
 name|connection
 operator|->
@@ -1092,7 +1092,7 @@ argument_list|)
 expr_stmt|;
 name|res
 operator|=
-name|kevent
+name|_kevent
 argument_list|(
 name|retval
 operator|->
@@ -1149,7 +1149,7 @@ argument_list|)
 expr_stmt|;
 name|res
 operator|=
-name|kevent
+name|_kevent
 argument_list|(
 name|retval
 operator|->
