@@ -1978,6 +1978,14 @@ value|0x40
 name|u_int8_t
 name|additional_length
 decl_stmt|;
+define|#
+directive|define
+name|SID_ADDITIONAL_LENGTH
+parameter_list|(
+name|iqd
+parameter_list|)
+define|\
+value|((iqd)->additional_length +					\ 	offsetof(struct scsi_inquiry_data, additional_length) + 1)
 name|u_int8_t
 name|reserved
 decl_stmt|;
