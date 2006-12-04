@@ -858,8 +858,8 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notdef
 name|num_aiops
 operator|=

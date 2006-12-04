@@ -296,11 +296,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|notdef
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -1216,8 +1216,8 @@ literal|8
 expr_stmt|;
 break|break;
 default|default:
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notdef
 name|CtlP
 operator|->

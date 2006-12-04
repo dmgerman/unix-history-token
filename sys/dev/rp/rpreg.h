@@ -9,48 +9,42 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|char
+name|uint8_t
 name|Byte_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
+name|uint8_t
 name|ByteIO_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
+name|uint16_t
 name|Word_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
+name|uint16_t
 name|WordIO_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|uint32_t
 name|DWord_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
+name|uint32_t
 name|DWordIO_t
 typedef|;
 end_typedef
@@ -69,7 +63,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|(bus_space_read_##size(rman_get_bustag(ctlp->io[rid]), rman_get_bushandle(ctlp->io[rid]), offset))
+value|(bus_read_##size(ctlp->io[rid], offset))
 end_define
 
 begin_define
@@ -90,7 +84,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|(bus_space_read_multi_##size(rman_get_bustag(ctlp->io[rid]), rman_get_bushandle(ctlp->io[rid]), offset, addr, count))
+value|(bus_read_multi_##size(ctlp->io[rid], offset, addr, count))
 end_define
 
 begin_define
@@ -109,7 +103,7 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|(bus_space_write_##size(rman_get_bustag(ctlp->io[rid]), rman_get_bushandle(ctlp->io[rid]), offset, data))
+value|(bus_write_##size(ctlp->io[rid], offset, data))
 end_define
 
 begin_define
@@ -130,7 +124,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|(bus_space_write_multi_##size(rman_get_bustag(ctlp->io[rid]), rman_get_bushandle(ctlp->io[rid]), offset, addr, count))
+value|(bus_write_multi_##size(ctlp->io[rid], offset, addr, count))
 end_define
 
 begin_define
@@ -2722,7 +2716,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3]&= ~SETBREAK; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3]&= ~SETBREAK; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -2737,7 +2731,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3]&= ~SET_DTR; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3]&= ~SET_DTR; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -2752,7 +2746,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3]&= ~SET_RTS; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3]&= ~SET_RTS; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -2782,7 +2776,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2]&= ~CTSFC_EN; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2]&= ~CTSFC_EN; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -2797,7 +2791,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2]&= ~PARITY_EN; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2]&= ~PARITY_EN; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -2812,7 +2806,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->R[0x32] = 0x0a; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->R[0x30]); \ }
+value|{ \    (ChP)->R[0x32] = 0x0a; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->R + 0x30)); \ }
 end_define
 
 begin_comment
@@ -2841,7 +2835,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3]&= ~TX_ENABLE; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3]&= ~TX_ENABLE; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -2856,7 +2850,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->R[0x06] = 0x8a; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->R[0x04]); \ }
+value|{ \    (ChP)->R[0x06] = 0x8a; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->R + 0x04)); \ }
 end_define
 
 begin_comment
@@ -2871,7 +2865,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2] |= CTSFC_EN; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2] |= CTSFC_EN; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -2886,7 +2880,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2] |= PARITY_EN; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2] |= PARITY_EN; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -2901,7 +2895,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \ 	(ChP)->TxControl[2]&= ~RTSTOG_EN; \ 	(ChP)->TxControl[3]&= ~SET_RTS; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ 	(ChP)->RxControl[2] |= RTSFC_EN; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->RxControl[0]); \ }
+value|{ \ 	(ChP)->TxControl[2]&= ~RTSTOG_EN; \ 	(ChP)->TxControl[3]&= ~SET_RTS; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ 	(ChP)->RxControl[2] |= RTSFC_EN; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->RxControl)); \ }
 end_define
 
 begin_comment
@@ -2916,7 +2910,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \ 	(ChP)->RxControl[2]&= ~RTSFC_EN; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->RxControl[0]); \ }
+value|{ \ 	(ChP)->RxControl[2]&= ~RTSFC_EN; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->RxControl)); \ }
 end_define
 
 begin_comment
@@ -2931,7 +2925,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->R[0x32] = 0x08; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->R[0x30]); \ }
+value|{ \    (ChP)->R[0x32] = 0x08; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->R + 0x30)); \ }
 end_define
 
 begin_comment
@@ -2946,7 +2940,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->RxControl[2] |= RXPROC_EN; \    rp_writech2(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->RxControl[0]); \ }
+value|{ \    (ChP)->RxControl[2] |= RXPROC_EN; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->RxControl)); \ }
 end_define
 
 begin_comment
@@ -2975,7 +2969,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3] |= TX_ENABLE; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3] |= TX_ENABLE; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -3152,7 +3146,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3] |= SETBREAK; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3] |= SETBREAK; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -3169,7 +3163,7 @@ parameter_list|,
 name|DIVISOR
 parameter_list|)
 define|\
-value|{ \    (ChP)->BaudDiv[2] = (Byte_t)(DIVISOR); \    (ChP)->BaudDiv[3] = (Byte_t)((DIVISOR)>> 8); \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->BaudDiv[0]); \ }
+value|{ \    (ChP)->BaudDiv[2] = (Byte_t)(DIVISOR); \    (ChP)->BaudDiv[3] = (Byte_t)((DIVISOR)>> 8); \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->BaudDiv)); \ }
 end_define
 
 begin_comment
@@ -3184,7 +3178,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2]&= ~DATA8BIT; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2]&= ~DATA8BIT; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -3199,7 +3193,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2] |= DATA8BIT; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2] |= DATA8BIT; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -3214,7 +3208,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3] |= SET_DTR; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3] |= SET_DTR; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -3229,7 +3223,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2] |= EVEN_PAR; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2] |= EVEN_PAR; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -3244,7 +3238,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2]&= ~EVEN_PAR; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2]&= ~EVEN_PAR; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -3259,7 +3253,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3] |= SET_RTS; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3] |= SET_RTS; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -3276,7 +3270,7 @@ parameter_list|,
 name|LEVEL
 parameter_list|)
 define|\
-value|{ \    (ChP)->RxControl[2]&= ~TRIG_MASK; \    (ChP)->RxControl[2] |= LEVEL; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->RxControl[0]); \ }
+value|{ \    (ChP)->RxControl[2]&= ~TRIG_MASK; \    (ChP)->RxControl[2] |= LEVEL; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->RxControl)); \ }
 end_define
 
 begin_comment
@@ -3291,7 +3285,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2]&= ~STOP2; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2]&= ~STOP2; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -3306,7 +3300,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2] |= STOP2; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2] |= STOP2; \    rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->TxControl)); \ }
 end_define
 
 begin_comment
@@ -3320,7 +3314,7 @@ name|sStartRxProcessor
 parameter_list|(
 name|ChP
 parameter_list|)
-value|rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->R[0])
+value|rp_writech4(ChP,_INDX_ADDR,le32dec((ChP)->R))
 end_define
 
 begin_comment
