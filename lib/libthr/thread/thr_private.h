@@ -424,22 +424,13 @@ begin_struct
 struct|struct
 name|pthread_cond
 block|{
-comment|/* 	 * Lock for accesses to this structure. 	 */
 name|struct
 name|umutex
 name|c_lock
 decl_stmt|;
-specifier|volatile
-name|umtx_t
-name|c_seqno
-decl_stmt|;
-specifier|volatile
-name|int
-name|c_waiters
-decl_stmt|;
-specifier|volatile
-name|int
-name|c_wakeups
+name|struct
+name|ucond
+name|c_kerncv
 decl_stmt|;
 name|int
 name|c_pshared
@@ -1014,6 +1005,10 @@ decl_stmt|;
 comment|/* Thread is at cancellation point */
 name|int
 name|cancel_point
+decl_stmt|;
+comment|/* Cancellation should be synchoronized */
+name|int
+name|cancel_defer
 decl_stmt|;
 comment|/* Asynchronouse cancellation is enabled */
 name|int
@@ -2045,6 +2040,32 @@ argument_list|(
 expr|struct
 name|pthread
 operator|*
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_thr_cancel_enter_defer
+argument_list|(
+expr|struct
+name|pthread
+operator|*
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_thr_cancel_leave_defer
+argument_list|(
+expr|struct
+name|pthread
+operator|*
+argument_list|,
+name|int
 argument_list|)
 name|__hidden
 decl_stmt|;
