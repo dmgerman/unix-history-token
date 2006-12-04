@@ -12779,7 +12779,7 @@ define|#
 directive|define
 name|BGE_FLAG_EXTRAM
 value|0x00000001
-comment|/* Has external SSRAM. */
+comment|/* Has external SSRAM (unused). */
 define|#
 directive|define
 name|BGE_FLAG_TBI
@@ -12800,6 +12800,22 @@ define|#
 directive|define
 name|BGE_FLAG_PCIE
 value|0x00000020
+define|#
+directive|define
+name|BGE_FLAG_5700_FAMILY
+value|0x00000100
+define|#
+directive|define
+name|BGE_FLAG_5705_PLUS
+value|0x00000200
+define|#
+directive|define
+name|BGE_FLAG_5714_FAMILY
+value|0x00000400
+define|#
+directive|define
+name|BGE_FLAG_575X_PLUS
+value|0x00000800
 name|uint32_t
 name|bge_chipid
 decl_stmt|;

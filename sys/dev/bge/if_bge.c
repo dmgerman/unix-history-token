@@ -1112,23 +1112,21 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|BGE_IS_5705_OR_BEYOND
+name|BGE_IS_JUMBO_CAPABLE
 parameter_list|(
 name|sc
 parameter_list|)
-define|\
-value|((sc)->bge_asicrev == BGE_ASICREV_BCM5705	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5750	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714_A0	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5780	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5752	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5755	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5787)
+value|((sc)->bge_flags& BGE_FLAG_5700_FAMILY)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_IS_575X_PLUS
+name|BGE_IS_5705_OR_BEYOND
 parameter_list|(
 name|sc
 parameter_list|)
-define|\
-value|((sc)->bge_asicrev == BGE_ASICREV_BCM5750	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714_A0	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5780	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5752	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5755	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5787)
+value|((sc)->bge_flags& BGE_FLAG_5705_PLUS)
 end_define
 
 begin_define
@@ -1138,19 +1136,17 @@ name|BGE_IS_5714_FAMILY
 parameter_list|(
 name|sc
 parameter_list|)
-define|\
-value|((sc)->bge_asicrev == BGE_ASICREV_BCM5714_A0	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5780	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714)
+value|((sc)->bge_flags& BGE_FLAG_5714_FAMILY)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_IS_JUMBO_CAPABLE
+name|BGE_IS_575X_PLUS
 parameter_list|(
 name|sc
 parameter_list|)
-define|\
-value|((sc)->bge_asicrev == BGE_ASICREV_BCM5700	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5701	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5703	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5704)
+value|((sc)->bge_flags& BGE_FLAG_575X_PLUS)
 end_define
 
 begin_function_decl
@@ -5908,54 +5904,6 @@ operator|)
 condition|)
 block|{
 comment|/* Configure mbuf memory pool */
-if|if
-condition|(
-name|sc
-operator|->
-name|bge_flags
-operator|&
-name|BGE_FLAG_EXTRAM
-condition|)
-block|{
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_BMAN_MBUFPOOL_BASEADDR
-argument_list|,
-name|BGE_EXT_SSRAM
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|bge_asicrev
-operator|==
-name|BGE_ASICREV_BCM5704
-condition|)
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_BMAN_MBUFPOOL_LEN
-argument_list|,
-literal|0x10000
-argument_list|)
-expr_stmt|;
-else|else
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_BMAN_MBUFPOOL_LEN
-argument_list|,
-literal|0x18000
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -5992,7 +5940,6 @@ argument_list|,
 literal|0x18000
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Configure DMA resource pool */
 name|CSR_WRITE_4
 argument_list|(
@@ -6335,21 +6282,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|bge_flags
-operator|&
-name|BGE_FLAG_EXTRAM
-condition|)
-name|rcb
-operator|->
-name|bge_nicaddr
-operator|=
-name|BGE_EXT_STD_RX_RINGS
-expr_stmt|;
-else|else
 name|rcb
 operator|->
 name|bge_nicaddr
@@ -6484,21 +6416,6 @@ operator||
 name|BGE_RCB_FLAG_RING_DISABLED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|bge_flags
-operator|&
-name|BGE_FLAG_EXTRAM
-condition|)
-name|rcb
-operator|->
-name|bge_nicaddr
-operator|=
-name|BGE_EXT_JUMBO_RX_RINGS
-expr_stmt|;
-else|else
 name|rcb
 operator|->
 name|bge_nicaddr
@@ -10567,6 +10484,79 @@ operator|->
 name|bge_chipid
 argument_list|)
 expr_stmt|;
+comment|/* Save chipset family. */
+switch|switch
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+condition|)
+block|{
+case|case
+name|BGE_ASICREV_BCM5700
+case|:
+case|case
+name|BGE_ASICREV_BCM5701
+case|:
+case|case
+name|BGE_ASICREV_BCM5703
+case|:
+case|case
+name|BGE_ASICREV_BCM5704
+case|:
+name|sc
+operator|->
+name|bge_flags
+operator||=
+name|BGE_FLAG_5700_FAMILY
+expr_stmt|;
+break|break;
+case|case
+name|BGE_ASICREV_BCM5714_A0
+case|:
+case|case
+name|BGE_ASICREV_BCM5780
+case|:
+case|case
+name|BGE_ASICREV_BCM5714
+case|:
+name|sc
+operator|->
+name|bge_flags
+operator||=
+name|BGE_FLAG_5714_FAMILY
+expr_stmt|;
+comment|/* Fall through */
+case|case
+name|BGE_ASICREV_BCM5750
+case|:
+case|case
+name|BGE_ASICREV_BCM5752
+case|:
+case|case
+name|BGE_ASICREV_BCM5755
+case|:
+case|case
+name|BGE_ASICREV_BCM5787
+case|:
+name|sc
+operator|->
+name|bge_flags
+operator||=
+name|BGE_FLAG_575X_PLUS
+expr_stmt|;
+comment|/* Fall through */
+case|case
+name|BGE_ASICREV_BCM5705
+case|:
+name|sc
+operator|->
+name|bge_flags
+operator||=
+name|BGE_FLAG_5705_PLUS
+expr_stmt|;
+break|break;
+block|}
 comment|/* 	 * XXX: Broadcom Linux driver.  Not in specs or eratta. 	 * PCI-Express? 	 */
 if|if
 condition|(
