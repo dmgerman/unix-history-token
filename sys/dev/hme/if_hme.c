@@ -6768,13 +6768,6 @@ block|{
 name|u_int32_t
 name|v
 decl_stmt|;
-name|HME_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Configure the MIF in frame mode, polling disabled, internal PHY 	 * selected. 	 */
 name|HME_MIF_WRITE_4
 argument_list|(
