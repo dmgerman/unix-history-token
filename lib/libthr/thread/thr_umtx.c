@@ -501,7 +501,7 @@ name|UMTX_OP_CV_WAIT
 argument_list|,
 name|check_unparking
 condition|?
-name|UMTX_CHECK_UNPAKING
+name|UMTX_CHECK_UNPARKING
 else|:
 literal|0
 argument_list|,
