@@ -17282,7 +17282,7 @@ operator|&=
 operator|~
 name|IFF_DRV_RUNNING
 expr_stmt|;
-name|bge_init
+name|bge_init_locked
 argument_list|(
 name|sc
 argument_list|)
