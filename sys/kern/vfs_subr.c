@@ -237,6 +237,23 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -11339,12 +11356,6 @@ directive|ifdef
 name|DDB
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
-end_include
-
 begin_comment
 comment|/*  * List all of the locked vnodes in the system.  * Called when debugging the kernel.  */
 end_comment
@@ -11452,10 +11463,59 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/*  * Show details about the given vnode.  */
+end_comment
+
+begin_macro
+name|DB_SHOW_COMMAND
+argument_list|(
+argument|vnode
+argument_list|,
+argument|db_show_vnode
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|have_addr
+condition|)
+return|return;
+name|vp
+operator|=
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+name|addr
+expr_stmt|;
+name|vn_printf
+argument_list|(
+name|vp
+argument_list|,
+literal|"vnode "
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* DDB */
+end_comment
 
 begin_comment
 comment|/*  * Fill in a struct xvfsconf based on a struct vfsconf.  */
