@@ -32,6 +32,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|Dflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* degraded mode - try hard to get stuff back */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|hflag
 decl_stmt|;
 end_decl_stmt
