@@ -65,6 +65,24 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1734,6 +1752,8 @@ literal|1
 index|]
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_BINARY
 argument_list|,
 literal|0
 argument_list|)
@@ -1907,6 +1927,8 @@ literal|2
 index|]
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_BINARY
 argument_list|,
 literal|0
 argument_list|)
@@ -2056,7 +2078,7 @@ index|[
 literal|3
 index|]
 argument_list|,
-literal|"w"
+literal|"wb"
 argument_list|)
 operator|)
 operator|==

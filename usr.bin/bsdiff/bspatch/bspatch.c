@@ -59,6 +59,24 @@ directive|include
 file|<fcntl.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|off_t
@@ -314,7 +332,7 @@ index|[
 literal|3
 index|]
 argument_list|,
-literal|"r"
+literal|"rb"
 argument_list|)
 operator|)
 operator|==
@@ -485,7 +503,7 @@ index|[
 literal|3
 index|]
 argument_list|,
-literal|"r"
+literal|"rb"
 argument_list|)
 operator|)
 operator|==
@@ -577,7 +595,7 @@ index|[
 literal|3
 index|]
 argument_list|,
-literal|"r"
+literal|"rb"
 argument_list|)
 operator|)
 operator|==
@@ -675,7 +693,7 @@ index|[
 literal|3
 index|]
 argument_list|,
-literal|"r"
+literal|"rb"
 argument_list|)
 operator|)
 operator|==
@@ -779,6 +797,8 @@ literal|1
 index|]
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_BINARY
 argument_list|,
 literal|0
 argument_list|)
@@ -1271,6 +1291,8 @@ operator||
 name|O_TRUNC
 operator||
 name|O_WRONLY
+operator||
+name|O_BINARY
 argument_list|,
 literal|0666
 argument_list|)
