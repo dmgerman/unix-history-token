@@ -197,6 +197,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/stdarg.h>
+end_include
+
+begin_comment
+comment|/* for xpt_print below */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"opt_cam.h"
 end_include
 
@@ -14169,19 +14179,15 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|crs
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"tagged openings "
-literal|"now %d\n"
+argument_list|,
+literal|"tagged openings now %d\n"
 argument_list|,
 name|crs
 operator|->
@@ -14610,13 +14616,10 @@ name|status
 operator|=
 name|CAM_REQ_CMP
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|cam_dpath
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"debugging flags now %x\n"
 argument_list|,
 name|cam_dflags
@@ -17389,6 +17392,53 @@ literal|"X): "
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|xpt_print
+parameter_list|(
+name|struct
+name|cam_path
+modifier|*
+name|path
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|xpt_print_path
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|vprintf
+argument_list|(
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -23376,15 +23426,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"xpt_scan_lun: can't allocate CCB, can't "
-literal|"continue\n"
+argument_list|,
+literal|"xpt_scan_lun: can't allocate CCB, "
+literal|"can't continue\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -23411,15 +23458,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"xpt_scan_lun: can't allocate path, can't "
-literal|"continue\n"
+argument_list|,
+literal|"xpt_scan_lun: can't allocate path, "
+literal|"can't continue\n"
 argument_list|)
 expr_stmt|;
 name|free
@@ -23465,15 +23509,12 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"xpt_scan_lun: can't compile path, can't "
-literal|"continue\n"
+argument_list|,
+literal|"xpt_scan_lun: can't compile path, "
+literal|"can't continue\n"
 argument_list|)
 expr_stmt|;
 name|free
@@ -23621,15 +23662,12 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"xpt_scan_lun: cam_alloc_periph returned an "
-literal|"error, can't continue probe\n"
+argument_list|,
+literal|"xpt_scan_lun: cam_alloc_periph "
+literal|"returned an error, can't continue probe\n"
 argument_list|)
 expr_stmt|;
 name|request_ccb
@@ -24395,16 +24433,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"malloc failure- skipping Basic Domain Validation\n"
+argument_list|,
+literal|"malloc failure- skipping Basic"
+literal|"Domain Validation\n"
 argument_list|)
 expr_stmt|;
 name|softc
@@ -24546,16 +24582,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Unable to mode sense control page - malloc failure\n"
+argument_list|,
+literal|"Unable to mode sense control page - "
+literal|"malloc failure\n"
 argument_list|)
 expr_stmt|;
 name|softc
@@ -24914,16 +24948,13 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"failed to get current settings\n"
+argument_list|,
+literal|"failed to get current device settings\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -24947,15 +24978,12 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"not SPI transport\n"
 argument_list|)
 expr_stmt|;
@@ -24994,15 +25022,12 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"no sync rate known\n"
 argument_list|)
 expr_stmt|;
@@ -25045,15 +25070,12 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"no sync rate available\n"
 argument_list|)
 expr_stmt|;
@@ -26633,14 +26655,11 @@ name|SHORT_INQUIRY_LENGTH
 argument_list|)
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"inquiry fails comparison at DV%d step\n"
+argument_list|,
+literal|"inquiry data fails comparison at DV%d step\n"
 argument_list|,
 name|softc
 operator|->
@@ -27625,17 +27644,14 @@ operator|->
 name|protocol
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|cts
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Uninitialized Protocol %x:%x?\n"
 argument_list|,
 name|cts
@@ -27672,18 +27688,16 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|cts
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Down reving Protocol Version from %d to %d?\n"
+argument_list|,
+literal|"Down reving Protocol "
+literal|"Version from %d to %d?\n"
 argument_list|,
 name|cts
 operator|->
@@ -27769,17 +27783,14 @@ operator|->
 name|transport
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|cts
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Uninitialized Transport %x:%x?\n"
 argument_list|,
 name|cts
@@ -27816,18 +27827,16 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|cts
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Down reving Transport Version from %d to %d?\n"
+argument_list|,
+literal|"Down reving Transport "
+literal|"Version from %d to %d?\n"
 argument_list|,
 name|cts
 operator|->

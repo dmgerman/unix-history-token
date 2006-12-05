@@ -1785,15 +1785,12 @@ operator|->
 name|disk
 argument_list|)
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"lost device\n"
 argument_list|)
 expr_stmt|;
@@ -1830,15 +1827,12 @@ name|periph
 operator|->
 name|softc
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"removing device entry\n"
 argument_list|)
 expr_stmt|;
@@ -1865,15 +1859,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"can't remove sysctl context\n"
 argument_list|)
 expr_stmt|;
@@ -2075,15 +2066,12 @@ argument_list|,
 name|changer_links
 argument_list|)
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"removing changer entry\n"
 argument_list|)
 expr_stmt|;
@@ -6255,15 +6243,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"cdstart: Couldn't malloc read_capacity data\n"
 argument_list|)
 expr_stmt|;
@@ -6496,15 +6481,12 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"cddone: got error %#x back\n"
 argument_list|,
 name|error
@@ -7114,15 +7096,12 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"got CAM status %#x\n"
 argument_list|,
 name|done_ccb
@@ -7133,17 +7112,14 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"fatal error, failed"
-literal|" to attach to device\n"
+argument_list|,
+literal|"fatal error, "
+literal|"failed to attach to device\n"
 argument_list|)
 expr_stmt|;
 comment|/* 					 * Invalidate this peripheral. 					 */
@@ -12639,15 +12615,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"mode buffer not found in mode queue!\n"
 argument_list|)
 expr_stmt|;
@@ -12669,17 +12642,14 @@ name|minimum_command_size
 operator|=
 literal|10
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"%s(6) failed, increasing minimum CDB size to 10 bytes\n"
 argument_list|,
 operator|(
@@ -14108,17 +14078,14 @@ operator|->
 name|alloc_len
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"allocated modepage %d length %d< returned "
-literal|"length %d\n"
+argument_list|,
+literal|"allocated modepage %d length "
+literal|"%d< returned length %d\n"
 argument_list|,
 name|page
 argument_list|,
@@ -15894,16 +15861,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"warning, residual for report key command is %d\n"
+argument_list|,
+literal|"warning, residual for report key "
+literal|"command is %d\n"
 argument_list|,
 name|ccb
 operator|->

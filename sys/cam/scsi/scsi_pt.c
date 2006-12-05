@@ -1549,15 +1549,12 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"lost device\n"
 argument_list|)
 expr_stmt|;
@@ -1605,15 +1602,12 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"removing device entry\n"
 argument_list|)
 expr_stmt|;
@@ -2300,15 +2294,12 @@ name|ENXIO
 condition|)
 block|{
 comment|/* 					 * Catastrophic error.  Mark our device 					 * as invalid. 					 */
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Invalidating device\n"
 argument_list|)
 expr_stmt|;

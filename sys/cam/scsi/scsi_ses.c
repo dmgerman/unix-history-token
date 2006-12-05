@@ -1160,15 +1160,12 @@ name|ses_flags
 operator||=
 name|SES_FLAG_INVALID
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"lost device\n"
 argument_list|)
 expr_stmt|;
@@ -1209,15 +1206,12 @@ operator|->
 name|ses_dev
 argument_list|)
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"removing device entry\n"
 argument_list|)
 expr_stmt|;

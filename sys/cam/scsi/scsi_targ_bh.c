@@ -1071,15 +1071,12 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"targbhenlun - Enable Lun Rejected with status 0x%x\n"
 argument_list|,
 name|status
@@ -1290,17 +1287,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"targbhenlun - Could not allocate accept tio CCBs: "
-literal|"status = 0x%x\n"
+argument_list|,
+literal|"targbhenlun - Could not allocate accept tio CCBs: status "
+literal|"= 0x%x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -1459,15 +1453,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"targbhenlun - Could not allocate immediate notify "
 literal|"CCBs: status = 0x%x\n"
 argument_list|,

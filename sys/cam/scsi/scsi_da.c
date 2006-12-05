@@ -2264,17 +2264,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Synchronize cache failed, status "
-literal|"== 0x%x, scsi status == 0x%x\n"
+argument_list|,
+literal|"Synchronize cache "
+literal|"failed, status == 0x%x, scsi status == "
+literal|"0x%x\n"
 argument_list|,
 name|ccb
 operator|->
@@ -2955,17 +2953,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Synchronize cache failed, status "
-literal|"== 0x%x, scsi status == 0x%x\n"
+argument_list|,
+literal|"Synchronize cache "
+literal|"failed, status == 0x%x, scsi status == "
+literal|"0x%x\n"
 argument_list|,
 name|csio
 operator|.
@@ -3305,15 +3301,12 @@ operator|->
 name|disk
 argument_list|)
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"lost device\n"
 argument_list|)
 expr_stmt|;
@@ -3347,15 +3340,12 @@ name|periph
 operator|->
 name|softc
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"removing device entry\n"
 argument_list|)
 expr_stmt|;
@@ -3383,15 +3373,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"can't remove sysctl context\n"
 argument_list|)
 expr_stmt|;
@@ -5397,17 +5384,14 @@ condition|)
 return|return
 literal|0
 return|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"READ(6)/WRITE(6) not supported, "
 literal|"increasing minimum_cmd_size to 10.\n"
 argument_list|)
@@ -5763,16 +5747,13 @@ name|ENXIO
 condition|)
 block|{
 comment|/* 					 * Catastrophic error.  Mark our pack as 					 * invalid. 					 */
-comment|/* XXX See if this is really a media 					 *     change first. 					 */
-name|xpt_print_path
+comment|/* 					 * XXX See if this is really a media 					 * XXX change first? 					 */
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Invalidating pack\n"
 argument_list|)
 expr_stmt|;
@@ -6167,15 +6148,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"unsupportable block size %ju\n"
 argument_list|,
 operator|(
@@ -6585,15 +6563,12 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"got CAM status %#x\n"
 argument_list|,
 name|done_ccb
@@ -6604,17 +6579,14 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"fatal error, failed"
-literal|" to attach to device\n"
+argument_list|,
+literal|"fatal error, "
+literal|"failed to attach to device\n"
 argument_list|)
 expr_stmt|;
 comment|/* 					 * Free up resources. 					 */
@@ -8075,17 +8047,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Synchronize cache failed, status "
-literal|"== 0x%x, scsi status == 0x%x\n"
+argument_list|,
+literal|"Synchronize "
+literal|"cache failed, status == 0x%x, scsi status "
+literal|"== 0x%x\n"
 argument_list|,
 name|ccb
 operator|.

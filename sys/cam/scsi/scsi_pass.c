@@ -656,15 +656,12 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"lost device\n"
 argument_list|)
 expr_stmt|;
@@ -718,15 +715,12 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"removing device entry\n"
 argument_list|)
 expr_stmt|;
@@ -1394,15 +1388,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"can't do nonblocking access\n"
 argument_list|)
 expr_stmt|;
@@ -1905,17 +1896,14 @@ operator|&
 name|XPT_FC_XPT_ONLY
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"CCB function code %#x is restricted to the "
-literal|"XPT device\n"
+argument_list|,
+literal|"CCB function code %#x is "
+literal|"restricted to the XPT device\n"
 argument_list|,
 name|inccb
 operator|->
@@ -2023,15 +2011,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"unable to allocate CCB\n"
 argument_list|)
 expr_stmt|;

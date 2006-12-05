@@ -1467,29 +1467,25 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
+argument_list|,
+literal|"Duplicate Wired "
+literal|"Device entry!\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Duplicate Wired Device entry!\n"
-argument_list|)
-expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Second device (%s device at scbus%d "
-literal|"target %d lun %d) will not be wired\n"
+argument_list|,
+literal|"Second device (%s "
+literal|"device at scbus%d target %d lun %d) will "
+literal|"not be wired\n"
 argument_list|,
 name|periph_name
 argument_list|,
@@ -4387,7 +4383,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|xpt_print_path(saved_ccb->ccb_h.path); 					printf("Recovered Sense\n"); 					scsi_sense_print(&saved_ccb->csio); 					cam_error_print(saved_ccb, CAM_ESF_ALL, 							CAM_EPF_ALL);
+block|xpt_print(saved_ccb->ccb_h.path, 					    "Recovered Sense\n"); 					scsi_sense_print(&saved_ccb->csio); 					cam_error_print(saved_ccb, CAM_ESF_ALL, 							CAM_EPF_ALL);
 endif|#
 directive|endif
 name|xpt_done_ccb
@@ -5313,17 +5309,14 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Queue Full\n"
 argument_list|)
 expr_stmt|;
@@ -5341,17 +5334,14 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Device Busy\n"
 argument_list|)
 expr_stmt|;
@@ -5402,17 +5392,14 @@ break|break;
 case|case
 name|SCSI_STATUS_RESERV_CONFLICT
 case|:
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Reservation Conflict\n"
 argument_list|)
 expr_stmt|;
@@ -5422,17 +5409,14 @@ name|EIO
 expr_stmt|;
 break|break;
 default|default:
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"SCSI Status 0x%x\n"
 argument_list|,
 name|ccb
@@ -6215,17 +6199,14 @@ break|break;
 case|case
 name|CAM_AUTOSENSE_FAIL
 case|:
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"AutoSense Failed\n"
 argument_list|)
 expr_stmt|;
@@ -6247,17 +6228,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Request completed with CAM_REQ_CMP_ERR\n"
 argument_list|)
 expr_stmt|;
@@ -6278,17 +6256,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Command timed out\n"
 argument_list|)
 expr_stmt|;
@@ -6309,17 +6284,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Unexpected Bus Free\n"
 argument_list|)
 expr_stmt|;
@@ -6340,17 +6312,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Uncorrected Parity Error\n"
 argument_list|)
 expr_stmt|;
@@ -6371,17 +6340,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Data Overrun\n"
 argument_list|)
 expr_stmt|;
@@ -6496,17 +6462,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Selection Timeout\n"
 argument_list|)
 expr_stmt|;
@@ -6681,17 +6644,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Request Requeued\n"
 argument_list|)
 expr_stmt|;
@@ -6763,17 +6723,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"CAM Status 0x%x\n"
 argument_list|,
 name|status
@@ -6908,34 +6865,28 @@ operator|!=
 name|ERESTART
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"error %d\n"
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
 block|}
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"%s\n"
 argument_list|,
 name|action_string

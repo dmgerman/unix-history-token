@@ -2515,15 +2515,12 @@ condition|(
 name|error
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"failed to write terminating filemark(s)\n"
 argument_list|)
 expr_stmt|;
@@ -2669,30 +2666,26 @@ condition|(
 name|tmp
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
+argument_list|,
+literal|"unable to backspace "
+literal|"over one of double filemarks at end of "
+literal|"tape\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"unable to backspace over one of double"
-literal|" filemarks at end of tape\n"
-argument_list|)
-expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"it is possible that this device"
-literal|" needs a SA_QUIRK_1FM quirk set for it\n"
+argument_list|,
+literal|"it is possible that "
+literal|"this device needs a SA_QUIRK_1FM quirk set"
+literal|"for it\n"
 argument_list|)
 expr_stmt|;
 name|softc
@@ -2705,16 +2698,13 @@ block|}
 block|}
 break|break;
 default|default:
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"unknown mode 0x%x in saclose"
+argument_list|,
+literal|"unknown mode 0x%x in saclose\n"
 argument_list|,
 name|mode
 argument_list|)
@@ -2754,17 +2744,14 @@ operator|&
 name|SA_FLAG_TAPE_FROZEN
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"tape is now frozen- use an OFFLINE, REWIND or MTEOM "
-literal|"command to clear this state.\n"
+argument_list|,
+literal|"tape is now frozen- use an OFFLINE, "
+literal|"REWIND or MTEOM command to clear this state.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3127,18 +3114,14 @@ operator|)
 operator|)
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Invalid request.  Fixed block device "
-literal|"requests must be a multiple "
-literal|"of %d bytes\n"
+argument_list|,
+literal|"Invalid request.  Fixed block "
+literal|"device requests must be a multiple of %d bytes\n"
 argument_list|,
 name|softc
 operator|->
@@ -3202,8 +3185,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Invalid request.  Variable block device "
-literal|"requests must be "
+literal|"Invalid request.  Variable block "
+literal|"device requests must be "
 argument_list|)
 expr_stmt|;
 if|if
@@ -4467,15 +4450,12 @@ condition|(
 name|error
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"EOD check prior to spacing failed\n"
 argument_list|)
 expr_stmt|;
@@ -5482,15 +5462,12 @@ operator|&=
 operator|~
 name|SA_FLAG_TAPE_FROZEN
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"tape state now unfrozen.\n"
 argument_list|)
 expr_stmt|;
@@ -5769,15 +5746,12 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"lost device\n"
 argument_list|)
 expr_stmt|;
@@ -5887,15 +5861,12 @@ name|er_dev
 argument_list|)
 expr_stmt|;
 block|}
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"removing device entry\n"
 argument_list|)
 expr_stmt|;
@@ -6309,15 +6280,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CAMDEBUG
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"found quirk entry %d\n"
 argument_list|,
 call|(
@@ -7274,17 +7242,14 @@ name|bio_error
 operator|=
 name|EIO
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"zero blocksize for "
-literal|"FIXED length writes?\n"
+argument_list|,
+literal|"zero blocksize"
+literal|" for FIXED length writes?\n"
 argument_list|)
 expr_stmt|;
 name|splx
@@ -8123,15 +8088,12 @@ name|CAM_DEBUG_INFO
 argument_list|)
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"error %d on TUR in samount\n"
 argument_list|,
 name|error
@@ -8406,15 +8368,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"no memory for test read\n"
 argument_list|)
 expr_stmt|;
@@ -8550,15 +8509,12 @@ condition|(
 name|error
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"unable to rewind after test read\n"
 argument_list|)
 expr_stmt|;
@@ -9077,15 +9033,12 @@ name|media_blksize
 operator|)
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"BLOCK LIMITS (%d..%d) could not match current "
 literal|"block settings (%d)- adjusting\n"
 argument_list|,
@@ -9218,15 +9171,12 @@ condition|(
 name|error
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"unable to set fixed blocksize to %d\n"
 argument_list|,
 name|softc
@@ -9331,15 +9281,12 @@ goto|goto
 name|tryagain
 goto|;
 block|}
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"unable to set variable blocksize\n"
 argument_list|)
 expr_stmt|;
@@ -9578,15 +9525,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"unable to set buffered mode\n"
 argument_list|)
 expr_stmt|;
@@ -10648,17 +10592,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|csio
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 name|toobig
 argument_list|,
 name|csio
@@ -12262,15 +12203,12 @@ operator|&=
 operator|~
 name|SA_PARAM_COMPRESSION
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"device does not seem to support compression\n"
 argument_list|)
 expr_stmt|;

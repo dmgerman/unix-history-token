@@ -932,15 +932,12 @@ name|flags
 operator||=
 name|CH_FLAG_INVALID
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"lost device\n"
 argument_list|)
 expr_stmt|;
@@ -988,15 +985,12 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"removing device entry\n"
 argument_list|)
 expr_stmt|;
@@ -2520,15 +2514,12 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"got CAM status %#x\n"
 argument_list|,
 name|done_ccb
@@ -2539,17 +2530,14 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"fatal error, failed to attach to"
-literal|" device\n"
+argument_list|,
+literal|"fatal error, failed "
+literal|"to attach to device\n"
 argument_list|)
 expr_stmt|;
 name|cam_periph_invalidate
@@ -4814,15 +4802,12 @@ operator|->
 name|cesr_element_count
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"warning, READ ELEMENT STATUS avail != count\n"
 argument_list|)
 expr_stmt|;
@@ -5762,15 +5747,12 @@ condition|(
 name|error
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"chgetparams: error getting element "
 literal|"address page\n"
 argument_list|)
@@ -6068,15 +6050,12 @@ condition|(
 name|error
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"chgetparams: error getting device "
 literal|"capabilities page\n"
 argument_list|)

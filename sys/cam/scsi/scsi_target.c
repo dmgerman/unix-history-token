@@ -1786,13 +1786,10 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"%sable lun CCB rejected, status %#x\n"
 argument_list|,
 name|enable
@@ -3085,15 +3082,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"targsendccb failed, err %d\n"
 argument_list|,
 name|error
@@ -4486,15 +4480,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|softc
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"targreturnccb - CCB copyout failed (%d)\n"
 argument_list|,
 name|error
@@ -5152,17 +5143,14 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|cab
 operator|.
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Unable to abort CCB, status %#x\n"
 argument_list|,
 name|cab
