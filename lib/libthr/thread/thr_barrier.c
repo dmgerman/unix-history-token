@@ -373,6 +373,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|THR_UMUTEX_LOCK
+argument_list|(
+name|curthread
+argument_list|,
+operator|&
+name|bar
+operator|->
+name|b_lock
+argument_list|)
+expr_stmt|;
 comment|/* test cycle to avoid bogus wakeup */
 block|}
 do|while
