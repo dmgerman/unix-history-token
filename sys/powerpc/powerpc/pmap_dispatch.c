@@ -1228,6 +1228,27 @@ return|;
 block|}
 end_function
 
+begin_function
+name|boolean_t
+name|pmap_page_executable
+parameter_list|(
+name|vm_page_t
+name|pg
+parameter_list|)
+block|{
+return|return
+operator|(
+name|MMU_PAGE_EXECUTABLE
+argument_list|(
+name|mmu_obj
+argument_list|,
+name|pg
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * MMU install routines. Highest priority wins, equal priority also  * overrides allowing last-set to win.  */
 end_comment
