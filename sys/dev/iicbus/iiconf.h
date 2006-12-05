@@ -507,6 +507,7 @@ name|iicbus_write
 parameter_list|(
 name|device_t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
