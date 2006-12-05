@@ -13260,17 +13260,14 @@ block|}
 case|case
 name|XPT_RESET_DEV
 case|:
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"reset %s\n"
 argument_list|,
 name|ccb
