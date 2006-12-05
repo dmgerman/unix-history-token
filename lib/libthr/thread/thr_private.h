@@ -464,8 +464,12 @@ name|struct
 name|umutex
 name|b_lock
 decl_stmt|;
+name|struct
+name|ucond
+name|b_cv
+decl_stmt|;
 specifier|volatile
-name|umtx_t
+name|int64_t
 name|b_cycle
 decl_stmt|;
 specifier|volatile
