@@ -1581,6 +1581,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*   * XXX This is lame.  We need to have a base iicbb_bridge class that all these  * XXX derive from.  */
+end_comment
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -1641,6 +1645,24 @@ argument_list|(
 name|iicbb
 argument_list|,
 name|viapm
+argument_list|,
+name|iicbb_driver
+argument_list|,
+name|iicbb_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|iicbb
+argument_list|,
+name|cxm_iic
 argument_list|,
 name|iicbb_driver
 argument_list|,
