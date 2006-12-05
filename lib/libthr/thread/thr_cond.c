@@ -489,32 +489,13 @@ operator|->
 name|c_lock
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* Lock the condition variable structure: */
-if|if
-condition|(
-name|cv
-operator|->
-name|c_kerncv
-operator|.
-name|c_has_waiters
-condition|)
-block|{
-name|THR_UMUTEX_UNLOCK
-argument_list|(
-name|curthread
-argument_list|,
-operator|&
-name|cv
-operator|->
-name|c_lock
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
-block|}
+block|if (cv->c_kerncv.c_has_waiters) { 			THR_UMUTEX_UNLOCK(curthread,&cv->c_lock); 			return (EBUSY); 		}
+endif|#
+directive|endif
 comment|/* 		 * NULL the caller's pointer now that the condition 		 * variable has been destroyed: 		 */
 operator|*
 name|cond
