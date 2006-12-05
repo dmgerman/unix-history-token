@@ -226,7 +226,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"the condition variable implemention does not\n"
+literal|"the condition variable implementation does not\n"
 literal|"conform to SUSv3, a thread unblocked from\n"
 literal|"condition variable still can be canceled.\n"
 argument_list|)
