@@ -220,6 +220,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PG_PS_FRAME
+value|(0x000fffffffe00000ul)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PG_PROT
 value|(PG_RW|PG_U)
 end_define

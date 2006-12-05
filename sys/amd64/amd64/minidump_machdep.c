@@ -1100,10 +1100,7 @@ index|[
 name|j
 index|]
 operator|&
-name|PG_FRAME
-operator|&
-operator|~
-name|PDRMASK
+name|PG_PS_FRAME
 expr_stmt|;
 for|for
 control|(
@@ -1832,10 +1829,7 @@ index|[
 name|j
 index|]
 operator|&
-name|PG_FRAME
-operator|&
-operator|~
-name|PDRMASK
+name|PG_PS_FRAME
 expr_stmt|;
 for|for
 control|(
