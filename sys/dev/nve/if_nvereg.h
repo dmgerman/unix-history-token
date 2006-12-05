@@ -390,8 +390,6 @@ name|bus_dma_segment_t
 name|frags
 index|[
 name|NV_MAX_FRAGS
-operator|+
-literal|1
 index|]
 decl_stmt|;
 block|}
