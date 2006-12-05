@@ -12376,6 +12376,19 @@ name|ni_vp
 operator|=
 name|newvp
 expr_stmt|;
+comment|/* Update n_ctime, so subsequent lookup doesn't purge entry */
+name|np
+operator|->
+name|n_ctime
+operator|=
+name|np
+operator|->
+name|n_vattr
+operator|.
+name|va_ctime
+operator|.
+name|tv_sec
+expr_stmt|;
 name|cache_enter
 argument_list|(
 name|ndp
