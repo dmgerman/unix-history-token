@@ -4819,17 +4819,14 @@ operator|>
 literal|1
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"illegal bus %d\n"
 argument_list|,
 name|bus
@@ -4866,13 +4863,24 @@ name|ccb_h
 operator|.
 name|target_lun
 expr_stmt|;
-name|isp_prt
-argument_list|(
+if|if
+condition|(
 name|isp
-argument_list|,
+operator|->
+name|isp_dblev
+operator|&
 name|ISP_LOGTDEBUG0
+condition|)
+block|{
+name|xpt_print
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
 argument_list|,
-literal|"isp_en_lun: %sabling lun 0x%x on channel %d"
+literal|"%sabling lun 0x%x on channel %d\n"
 argument_list|,
 name|cel
 operator|->
@@ -4887,6 +4895,7 @@ argument_list|,
 name|bus
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -4997,13 +5006,15 @@ operator|==
 literal|0
 condition|)
 block|{
-name|isp_prt
+name|xpt_print
 argument_list|(
-name|isp
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
 argument_list|,
-name|ISP_LOGERR
-argument_list|,
-literal|"firmware does not support target mode"
+literal|"firmware does not support target mode\n"
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -5021,7 +5032,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 		 * XXX: We *could* handle non-SCCLUN f/w, but we'd have to 		 * XXX: dorks with our already fragile enable/disable code. 		 */
+comment|/* 		 * XXX: We *could* handle non-SCCLUN f/w, but we'd have to 		 * XXX: dork with our already fragile enable/disable code. 		 */
 if|if
 condition|(
 name|FCPARAM
@@ -5034,13 +5045,15 @@ operator|==
 literal|0
 condition|)
 block|{
-name|isp_prt
+name|xpt_print
 argument_list|(
-name|isp
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
 argument_list|,
-name|ISP_LOGERR
-argument_list|,
-literal|"firmware not SCCLUN capable"
+literal|"firmware not SCCLUN capable\n"
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -5411,15 +5424,15 @@ index|]
 operator||=
 name|TM_TMODE_ENABLED
 expr_stmt|;
-name|isp_prt
+name|xpt_print
 argument_list|(
-name|isp
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
 argument_list|,
-name|ISP_LOGINFO
-argument_list|,
-literal|"Target Mode enabled on channel %d"
-argument_list|,
-name|bus
+literal|"Target Mode Enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5506,15 +5519,15 @@ operator|&=
 operator|~
 name|TM_TMODE_ENABLED
 expr_stmt|;
-name|isp_prt
+name|xpt_print
 argument_list|(
-name|isp
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
 argument_list|,
-name|ISP_LOGINFO
-argument_list|,
-literal|"Target Mode disabled on channel %d"
-argument_list|,
-name|bus
+literal|"Target Mode Disabled\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5901,17 +5914,14 @@ argument_list|,
 name|tptr
 argument_list|)
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"isp_lun_cmd failed\n"
 argument_list|)
 expr_stmt|;
@@ -5962,7 +5972,7 @@ name|char
 name|lfmt
 index|[]
 init|=
-literal|"lun %d now %sabled for target mode on channel %d"
+literal|"now %sabled for target mode"
 decl_stmt|;
 name|union
 name|ccb
@@ -6074,17 +6084,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"null tptr in isp_ledone\n"
 argument_list|)
 expr_stmt|;
@@ -6110,17 +6117,14 @@ operator|!=
 name|LUN_OK
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"ENABLE/MODIFY LUN returned 0x%x\n"
 argument_list|,
 name|lep
@@ -6137,15 +6141,6 @@ operator|.
 name|status
 operator|=
 name|CAM_REQ_CMP_ERR
-expr_stmt|;
-name|xpt_print_path
-argument_list|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
 expr_stmt|;
 name|rls_lun_statep
 argument_list|(
@@ -6209,25 +6204,17 @@ name|status
 operator|=
 name|CAM_REQ_CMP
 expr_stmt|;
-name|isp_prt
+name|xpt_print
 argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGINFO
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
 argument_list|,
 name|lfmt
 argument_list|,
-name|XS_LUN
-argument_list|(
-name|ccb
-argument_list|)
-argument_list|,
 literal|"en"
-argument_list|,
-name|XS_CHANNEL
-argument_list|(
-name|ccb
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|rls_lun_statep
@@ -6310,17 +6297,14 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"isp_ledone: isp_lun_cmd failed\n"
 argument_list|)
 expr_stmt|;
@@ -6337,25 +6321,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|isp_prt
+name|xpt_print
 argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGINFO
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
 argument_list|,
 name|lfmt
 argument_list|,
-name|XS_LUN
-argument_list|(
-name|ccb
-argument_list|)
-argument_list|,
 literal|"dis"
-argument_list|,
-name|XS_CHANNEL
-argument_list|(
-name|ccb
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|rls_lun_statep
@@ -6464,20 +6440,6 @@ name|bus
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGINFO
-argument_list|,
-literal|"Target Mode disabled on channel %d"
-argument_list|,
-name|bus
-argument_list|)
-expr_stmt|;
-block|}
 name|isp
 operator|->
 name|isp_osinfo
@@ -6540,13 +6502,15 @@ name|cab
 operator|.
 name|abort_ccb
 decl_stmt|;
-name|isp_prt
+name|xpt_print
 argument_list|(
-name|isp
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
 argument_list|,
-name|ISP_LOGTDEBUG0
-argument_list|,
-literal|"aborting ccb %p"
+literal|"aborting ccb %p\n"
 argument_list|,
 name|accb
 argument_list|)
@@ -6673,13 +6637,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|isp_prt
+name|xpt_print
 argument_list|(
-name|isp
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
 argument_list|,
-name|ISP_LOGTDEBUG0
-argument_list|,
-literal|"isp_abort_tgt_ccb: can't get statep"
+literal|"can't get statep\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6750,13 +6716,15 @@ argument_list|,
 name|tptr
 argument_list|)
 expr_stmt|;
-name|isp_prt
+name|xpt_print
 argument_list|(
-name|isp
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
 argument_list|,
-name|ISP_LOGTDEBUG0
-argument_list|,
-literal|"isp_abort_tgt_ccb: bad func %d\n"
+literal|"bad function code %d\n"
 argument_list|,
 name|accb
 operator|->
@@ -6908,15 +6876,17 @@ name|CAM_REQ_CMP
 operator|)
 return|;
 block|}
-name|isp_prt
+name|xpt_print
 argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGTDEBUG0
-argument_list|,
-literal|"isp_abort_tgt_ccb: CCB %p not found\n"
-argument_list|,
 name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+literal|"ccb %p not found\n"
+argument_list|,
+name|accb
 argument_list|)
 expr_stmt|;
 return|return
@@ -6986,17 +6956,14 @@ name|qe
 argument_list|)
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"Request Queue Overflow in isp_target_start_ctio\n"
 argument_list|)
 expr_stmt|;
@@ -7136,13 +7103,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|isp_prt
+name|xpt_print
 argument_list|(
-name|isp
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
 argument_list|,
-name|ISP_LOGERR
-argument_list|,
-literal|"cannot find private data adjunct for tag %x"
+literal|"cannot find private data adjunct for tag %x\n"
 argument_list|,
 name|cso
 operator|->
@@ -7829,17 +7798,14 @@ name|handle
 argument_list|)
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"No XFLIST pointers for isp_target_start_ctio\n"
 argument_list|)
 expr_stmt|;
@@ -8062,6 +8028,17 @@ name|qe
 argument_list|)
 condition|)
 block|{
+name|xpt_print
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+literal|"isp_target_putback_atio: Request Queue Overflow\n"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -8072,15 +8049,6 @@ argument_list|,
 name|ccb
 argument_list|,
 literal|10
-argument_list|)
-expr_stmt|;
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGWARN
-argument_list|,
-literal|"isp_target_putback_atio: Request Queue Overflow"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8643,20 +8611,13 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Because we can't autofeed sense data back with 		 * a command for parallel SCSI, we can't give back 		 * a CHECK CONDITION. We'll give back a QUEUE FULL status 		 * instead. This works out okay because the only time we 		 * should, in fact, get this, is in the case that we've 		 * run out of ATIOS. 		 */
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|tptr
 operator|->
 name|owner
-argument_list|)
-expr_stmt|;
-name|isp_prt
-argument_list|(
-name|isp
 argument_list|,
-name|ISP_LOGWARN
-argument_list|,
-literal|"no ATIOS for lun %d from initiator %d on channel %d"
+literal|"no ATIOS for lun %d from initiator %d on channel %d\n"
 argument_list|,
 name|aep
 operator|->
@@ -9251,20 +9212,13 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Because we can't autofeed sense data back with 		 * a command for parallel SCSI, we can't give back 		 * a CHECK CONDITION. We'll give back a QUEUE FULL status 		 * instead. This works out okay because the only time we 		 * should, in fact, get this, is in the case that we've 		 * run out of ATIOS. 		 */
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|tptr
 operator|->
 name|owner
-argument_list|)
-expr_stmt|;
-name|isp_prt
-argument_list|(
-name|isp
 argument_list|,
-name|ISP_LOGWARN
-argument_list|,
-literal|"no %s for lun %d from initiator %d"
+literal|"no %s for lun %d from initiator %d\n"
 argument_list|,
 operator|(
 name|atp
@@ -11060,22 +11014,15 @@ argument_list|,
 name|handle
 argument_list|)
 expr_stmt|;
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|xs
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|isp_prt
-argument_list|(
-name|isp
 argument_list|,
-name|ISP_LOGWARN
-argument_list|,
-literal|"watchdog timeout for handle 0x%x"
+literal|"watchdog timeout for handle 0x%x\n"
 argument_list|,
 name|handle
 argument_list|)
@@ -12647,6 +12594,17 @@ literal|1
 operator|)
 condition|)
 block|{
+name|xpt_print
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+literal|"invalid target\n"
+argument_list|)
+expr_stmt|;
 name|ccb
 operator|->
 name|ccb_h
@@ -12675,6 +12633,17 @@ literal|1
 operator|)
 condition|)
 block|{
+name|xpt_print
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+literal|"invalid lun\n"
+argument_list|)
+expr_stmt|;
 name|ccb
 operator|->
 name|ccb_h
@@ -12695,27 +12664,6 @@ operator|==
 name|CAM_PATH_INVALID
 condition|)
 block|{
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGERR
-argument_list|,
-literal|"invalid tgt/lun (%d.%d) in XPT_SCSI_IO"
-argument_list|,
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|target_id
-argument_list|,
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|target_lun
-argument_list|)
-expr_stmt|;
 name|xpt_done
 argument_list|(
 name|ccb
@@ -15567,22 +15515,15 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|sccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|isp_prt
-argument_list|(
-name|isp
 argument_list|,
-name|ISP_LOGINFO
-argument_list|,
-literal|"cam completion status 0x%x"
+literal|"cam completion status 0x%x\n"
 argument_list|,
 name|sccb
 operator|->

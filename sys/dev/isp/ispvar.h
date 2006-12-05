@@ -1006,7 +1006,7 @@ comment|/*  * Fibre Channel Specifics  */
 end_comment
 
 begin_comment
-comment|/* These are for 2100/2200/2300 cards */
+comment|/* These are for non-2K Login Firmware cards */
 end_comment
 
 begin_define
@@ -1039,7 +1039,7 @@ value|0xfe
 end_define
 
 begin_comment
-comment|/* These are for 24XX cards */
+comment|/* These are for 2K Login Firmware cards */
 end_comment
 
 begin_define
@@ -1089,8 +1089,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NPH_MAX_24XX
+name|NPH_MAX_2K
 value|0x800
+end_define
+
+begin_comment
+comment|/*  * "Unassigned" handle to be used internally  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NIL_HANDLE
+value|0xffff
 end_define
 
 begin_comment
