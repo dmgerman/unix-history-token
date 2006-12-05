@@ -2007,6 +2007,12 @@ operator|=
 name|lun
 expr_stmt|;
 block|}
+name|el
+operator|.
+name|le_timeout
+operator|=
+literal|30
+expr_stmt|;
 if|if
 condition|(
 name|isp_getrqentry
