@@ -3068,6 +3068,9 @@ name|callout
 name|xl_stat_callout
 decl_stmt|;
 name|int
+name|xl_wdog_timer
+decl_stmt|;
+name|int
 name|xl_flags
 decl_stmt|;
 name|struct
