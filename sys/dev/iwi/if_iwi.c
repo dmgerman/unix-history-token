@@ -7072,6 +7072,8 @@ name|error
 decl_stmt|,
 name|framelen
 decl_stmt|;
+name|IWI_LOCK_DECL
+expr_stmt|;
 name|framelen
 operator|=
 name|le16toh
@@ -7466,6 +7468,11 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|IWI_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ni
 operator|=
 name|ieee80211_find_rxnode
@@ -7504,6 +7511,11 @@ comment|/* node is no longer needed */
 name|ieee80211_free_node
 argument_list|(
 name|ni
+argument_list|)
+expr_stmt|;
+name|IWI_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
