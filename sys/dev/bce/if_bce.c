@@ -19826,9 +19826,7 @@ literal|"%s(): fragmented mbuf (%d pieces)\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-name|map_arg
-operator|.
-name|maxsegs
+name|nsegs
 argument_list|)
 expr_stmt|;
 name|m0
@@ -20036,7 +20034,6 @@ literal|"prod_bseq = 0x%08X\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-operator|*
 name|prod
 argument_list|,
 name|chain_prod
@@ -20203,7 +20200,7 @@ name|sc
 argument_list|,
 name|debug_prod
 argument_list|,
-name|nseg
+name|nsegs
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -26062,913 +26059,2645 @@ else|else
 comment|/* Normal tx_bd entry. */
 name|BCE_PRINTF
 argument_list|(
-argument|sc
+name|sc
 argument_list|,
 literal|"tx_bd[0x%04X]: haddr = 0x%08X:%08X, nbytes = 0x%08X, "
-literal|"vlan tag= 0x%4X, "
-argument|flags =
-literal|0x
-argument|%
-literal|04X
-argument|\n
-literal|", idx,  			txbd->tx_bd_haddr_hi, txbd->tx_bd_haddr_lo, 			txbd->tx_bd_mss_nbytes, txbd->tx_bd_vlan_tag, 			txbd->tx_bd_flags); }   static void bce_dump_rxbd(struct bce_softc *sc, int idx, struct rx_bd *rxbd) { 	if (idx> MAX_RX_BD) 		/* Index out of range. */ 		BCE_PRINTF(sc, "
-argument|rx_bd[
-literal|0x
-argument|%
-literal|04X
-argument|]: Invalid rx_bd index!\n
-literal|", idx); 	else if ((idx& USABLE_RX_BD_PER_PAGE) == USABLE_RX_BD_PER_PAGE) 		/* TX Chain page pointer. */ 		BCE_PRINTF(sc, "
-argument|rx_bd[
-literal|0x
-argument|%
-literal|04X
-argument|]: haddr =
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
+literal|"vlan tag= 0x%4X, flags = 0x%04X\n"
 argument_list|,
-argument|chain page pointer\n
-literal|",  			idx, rxbd->rx_bd_haddr_hi, rxbd->rx_bd_haddr_lo); 	else 		/* Normal tx_bd entry. */ 		BCE_PRINTF(sc, "
-argument|rx_bd[
-literal|0x
-argument|%
-literal|04X
-argument|]: haddr =
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
+name|idx
 argument_list|,
-argument|nbytes =
-literal|0x
-argument|%
-literal|08X
+name|txbd
+operator|->
+name|tx_bd_haddr_hi
 argument_list|,
-literal|" 			"
-argument|flags =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", idx,  			rxbd->rx_bd_haddr_hi, rxbd->rx_bd_haddr_lo, 			rxbd->rx_bd_len, rxbd->rx_bd_flags); }   static void bce_dump_l2fhdr(struct bce_softc *sc, int idx, struct l2_fhdr *l2fhdr) { 	BCE_PRINTF(sc, "
-argument|l2_fhdr[
-literal|0x
-argument|%
-literal|04X
-argument|]: status =
-literal|0x
-argument|%
-literal|08X
+name|txbd
+operator|->
+name|tx_bd_haddr_lo
 argument_list|,
-literal|" 		"
-argument|pkt_len =
-literal|0x
-argument|%
-literal|04X
+name|txbd
+operator|->
+name|tx_bd_mss_nbytes
 argument_list|,
-argument|vlan =
-literal|0x
-argument|%
-literal|04x
+name|txbd
+operator|->
+name|tx_bd_vlan_tag
 argument_list|,
-argument|ip_xsum =
-literal|0x
-argument|%
-literal|04X
-argument_list|,
-literal|" 		"
-argument|tcp_udp_xsum =
-literal|0x
-argument|%
-literal|04X
-argument|\n
-literal|", idx, 		l2fhdr->l2_fhdr_status, l2fhdr->l2_fhdr_pkt_len, 		l2fhdr->l2_fhdr_vlan_tag, l2fhdr->l2_fhdr_ip_xsum, 		l2fhdr->l2_fhdr_tcp_udp_xsum); }   /*  * This routine prints the TX chain.  */ static void bce_dump_tx_chain(struct bce_softc *sc, int tx_prod, int count) { 	struct tx_bd *txbd;  	/* First some info about the tx_bd chain structure. */ 	BCE_PRINTF(sc, 		"
-argument|----------------------------
-literal|" 		"
-argument|tx_bd  chain
-literal|" 		"
-argument|----------------------------\n
-literal|");  	BCE_PRINTF(sc, "
-argument|page size      =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|tx chain pages        =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 		(u32) BCM_PAGE_SIZE, (u32) TX_PAGES);  	BCE_PRINTF(sc, "
-argument|tx_bd per page =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|usable tx_bd per page =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 		(u32) TOTAL_TX_BD_PER_PAGE, (u32) USABLE_TX_BD_PER_PAGE);  	BCE_PRINTF(sc, "
-argument|total tx_bd    =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", (u32) TOTAL_TX_BD);  	BCE_PRINTF(sc, "
-literal|" 		"
-argument|-----------------------------
-literal|" 		"
-argument|tx_bd data
-literal|" 		"
-argument|-----------------------------\n
-literal|");  	/* Now print out the tx_bd's themselves. */ 	for (int i = 0; i< count; i++) { 	 	txbd =&sc->tx_bd_chain[TX_PAGE(tx_prod)][TX_IDX(tx_prod)]; 		bce_dump_txbd(sc, tx_prod, txbd); 		tx_prod = TX_CHAIN_IDX(NEXT_TX_BD(tx_prod)); 	}  	BCE_PRINTF(sc, 		"
-argument|-----------------------------
-literal|" 		"
-argument|--------------
-literal|" 		"
-argument|-----------------------------\n
-literal|"); }   /*  * This routine prints the RX chain.  */ static void bce_dump_rx_chain(struct bce_softc *sc, int rx_prod, int count) { 	struct rx_bd *rxbd;  	/* First some info about the tx_bd chain structure. */ 	BCE_PRINTF(sc, 		"
-argument|----------------------------
-literal|" 		"
-argument|rx_bd  chain
-literal|" 		"
-argument|----------------------------\n
-literal|");  	BCE_PRINTF(sc, "
-argument|----- RX_BD Chain -----\n
-literal|");  	BCE_PRINTF(sc, "
-argument|page size      =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|rx chain pages        =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 		(u32) BCM_PAGE_SIZE, (u32) RX_PAGES);  	BCE_PRINTF(sc, "
-argument|rx_bd per page =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|usable rx_bd per page =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 		(u32) TOTAL_RX_BD_PER_PAGE, (u32) USABLE_RX_BD_PER_PAGE);  	BCE_PRINTF(sc, "
-argument|total rx_bd    =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", (u32) TOTAL_RX_BD);  	BCE_PRINTF(sc, 		"
-argument|----------------------------
-literal|" 		"
-argument|rx_bd data
-literal|" 		"
-argument|----------------------------\n
-literal|");  	/* Now print out the rx_bd's themselves. */ 	for (int i = 0; i< count; i++) { 		rxbd =&sc->rx_bd_chain[RX_PAGE(rx_prod)][RX_IDX(rx_prod)]; 		bce_dump_rxbd(sc, rx_prod, rxbd); 		rx_prod = RX_CHAIN_IDX(NEXT_RX_BD(rx_prod)); 	}  	BCE_PRINTF(sc, 		"
-argument|----------------------------
-literal|" 		"
-argument|--------------
-literal|" 		"
-argument|----------------------------\n
-literal|"); }   /*  * This routine prints the status block.  */ static void bce_dump_status_block(struct bce_softc *sc) { 	struct status_block *sblk;  	sblk = sc->status_block;     	BCE_PRINTF(sc, "
-argument|----------------------------- Status Block
-literal|" 		"
-argument|-----------------------------\n
-literal|");  	BCE_PRINTF(sc, "
-argument|attn_bits  =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|attn_bits_ack =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|index =
-literal|0x
-argument|%
-literal|04X
-argument|\n
-literal|", 		sblk->status_attn_bits, sblk->status_attn_bits_ack, 		sblk->status_idx);  	BCE_PRINTF(sc, "
-argument|rx_cons0   =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|tx_cons0      =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 		sblk->status_rx_quick_consumer_index0, 		sblk->status_tx_quick_consumer_index0);  	BCE_PRINTF(sc, "
-argument|status_idx =
-literal|0x
-argument|%
-literal|04X
-argument|\n
-literal|", sblk->status_idx);  	/* Theses indices are not used for normal L2 drivers. */ 	if (sblk->status_rx_quick_consumer_index1 ||  		sblk->status_tx_quick_consumer_index1) 		BCE_PRINTF(sc, "
-argument|rx_cons1  =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|tx_cons1      =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 			sblk->status_rx_quick_consumer_index1, 			sblk->status_tx_quick_consumer_index1);  	if (sblk->status_rx_quick_consumer_index2 ||  		sblk->status_tx_quick_consumer_index2) 		BCE_PRINTF(sc, "
-argument|rx_cons2  =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|tx_cons2      =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 			sblk->status_rx_quick_consumer_index2, 			sblk->status_tx_quick_consumer_index2);  	if (sblk->status_rx_quick_consumer_index3 ||  		sblk->status_tx_quick_consumer_index3) 		BCE_PRINTF(sc, "
-argument|rx_cons3  =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|tx_cons3      =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 			sblk->status_rx_quick_consumer_index3, 			sblk->status_tx_quick_consumer_index3);  	if (sblk->status_rx_quick_consumer_index4 ||  		sblk->status_rx_quick_consumer_index5) 		BCE_PRINTF(sc, "
-argument|rx_cons4  =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|rx_cons5      =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 			sblk->status_rx_quick_consumer_index4, 			sblk->status_rx_quick_consumer_index5);  	if (sblk->status_rx_quick_consumer_index6 ||  		sblk->status_rx_quick_consumer_index7) 		BCE_PRINTF(sc, "
-argument|rx_cons6  =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|rx_cons7      =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 			sblk->status_rx_quick_consumer_index6, 			sblk->status_rx_quick_consumer_index7);  	if (sblk->status_rx_quick_consumer_index8 ||  		sblk->status_rx_quick_consumer_index9) 		BCE_PRINTF(sc, "
-argument|rx_cons8  =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|rx_cons9      =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 			sblk->status_rx_quick_consumer_index8, 			sblk->status_rx_quick_consumer_index9);  	if (sblk->status_rx_quick_consumer_index10 ||  		sblk->status_rx_quick_consumer_index11) 		BCE_PRINTF(sc, "
-argument|rx_cons10 =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|rx_cons11     =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 			sblk->status_rx_quick_consumer_index10, 			sblk->status_rx_quick_consumer_index11);  	if (sblk->status_rx_quick_consumer_index12 ||  		sblk->status_rx_quick_consumer_index13) 		BCE_PRINTF(sc, "
-argument|rx_cons12 =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|rx_cons13     =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 			sblk->status_rx_quick_consumer_index12, 			sblk->status_rx_quick_consumer_index13);  	if (sblk->status_rx_quick_consumer_index14 ||  		sblk->status_rx_quick_consumer_index15) 		BCE_PRINTF(sc, "
-argument|rx_cons14 =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|rx_cons15     =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 			sblk->status_rx_quick_consumer_index14, 			sblk->status_rx_quick_consumer_index15);  	if (sblk->status_completion_producer_index ||  		sblk->status_cmd_consumer_index) 		BCE_PRINTF(sc, "
-argument|com_prod  =
-literal|0x
-argument|%
-literal|08X
-argument_list|,
-argument|cmd_cons      =
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 			sblk->status_completion_producer_index, 			sblk->status_cmd_consumer_index);  	BCE_PRINTF(sc, "
-argument|-------------------------------------------
-literal|" 		"
-argument|-----------------------------\n
-literal|"); }   /*  * This routine prints the statistics block.  */ static void bce_dump_stats_block(struct bce_softc *sc) { 	struct statistics_block *sblk;  	sblk = sc->stats_block;  	BCE_PRINTF(sc, "
-literal|" 		"
-argument|-----------------------------
-literal|" 		"
-argument|Stats  Block
-literal|" 		"
-argument|-----------------------------\n
-literal|");  	BCE_PRINTF(sc, "
-argument|IfHcInOctets         =
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument_list|,
-literal|" 		"
-argument|IfHcInBadOctets      =
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument|\n
-literal|", 		sblk->stat_IfHCInOctets_hi, sblk->stat_IfHCInOctets_lo, 		sblk->stat_IfHCInBadOctets_hi, sblk->stat_IfHCInBadOctets_lo);  	BCE_PRINTF(sc, "
-argument|IfHcOutOctets        =
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument_list|,
-literal|" 		"
-argument|IfHcOutBadOctets     =
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument|\n
-literal|", 		sblk->stat_IfHCOutOctets_hi, sblk->stat_IfHCOutOctets_lo, 		sblk->stat_IfHCOutBadOctets_hi, sblk->stat_IfHCOutBadOctets_lo);  	BCE_PRINTF(sc, "
-argument|IfHcInUcastPkts      =
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument_list|,
-literal|" 		"
-argument|IfHcInMulticastPkts  =
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument|\n
-literal|", 		sblk->stat_IfHCInUcastPkts_hi, sblk->stat_IfHCInUcastPkts_lo, 		sblk->stat_IfHCInMulticastPkts_hi, sblk->stat_IfHCInMulticastPkts_lo);  	BCE_PRINTF(sc, "
-argument|IfHcInBroadcastPkts  =
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument_list|,
-literal|" 		"
-argument|IfHcOutUcastPkts     =
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument|\n
-literal|", 		sblk->stat_IfHCInBroadcastPkts_hi, sblk->stat_IfHCInBroadcastPkts_lo, 		sblk->stat_IfHCOutUcastPkts_hi, sblk->stat_IfHCOutUcastPkts_lo);  	BCE_PRINTF(sc, "
-argument|IfHcOutMulticastPkts =
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument_list|,
-argument|IfHcOutBroadcastPkts =
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument|\n
-literal|", 		sblk->stat_IfHCOutMulticastPkts_hi, sblk->stat_IfHCOutMulticastPkts_lo, 		sblk->stat_IfHCOutBroadcastPkts_hi, sblk->stat_IfHCOutBroadcastPkts_lo);  	if (sblk->stat_emac_tx_stat_dot3statsinternalmactransmiterrors) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|:
-literal|" 		"
-argument|emac_tx_stat_dot3statsinternalmactransmiterrors\n
-literal|",  		sblk->stat_emac_tx_stat_dot3statsinternalmactransmiterrors);  	if (sblk->stat_Dot3StatsCarrierSenseErrors) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: Dot3StatsCarrierSenseErrors\n
-literal|", 			sblk->stat_Dot3StatsCarrierSenseErrors);  	if (sblk->stat_Dot3StatsFCSErrors) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: Dot3StatsFCSErrors\n
-literal|", 			sblk->stat_Dot3StatsFCSErrors);  	if (sblk->stat_Dot3StatsAlignmentErrors) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: Dot3StatsAlignmentErrors\n
-literal|", 			sblk->stat_Dot3StatsAlignmentErrors);  	if (sblk->stat_Dot3StatsSingleCollisionFrames) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: Dot3StatsSingleCollisionFrames\n
-literal|", 			sblk->stat_Dot3StatsSingleCollisionFrames);  	if (sblk->stat_Dot3StatsMultipleCollisionFrames) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: Dot3StatsMultipleCollisionFrames\n
-literal|", 			sblk->stat_Dot3StatsMultipleCollisionFrames); 	 	if (sblk->stat_Dot3StatsDeferredTransmissions) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: Dot3StatsDeferredTransmissions\n
-literal|", 			sblk->stat_Dot3StatsDeferredTransmissions);  	if (sblk->stat_Dot3StatsExcessiveCollisions) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: Dot3StatsExcessiveCollisions\n
-literal|", 			sblk->stat_Dot3StatsExcessiveCollisions);  	if (sblk->stat_Dot3StatsLateCollisions) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: Dot3StatsLateCollisions\n
-literal|", 			sblk->stat_Dot3StatsLateCollisions);  	if (sblk->stat_EtherStatsCollisions) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsCollisions\n
-literal|", 			sblk->stat_EtherStatsCollisions);  	if (sblk->stat_EtherStatsFragments)  		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsFragments\n
-literal|", 			sblk->stat_EtherStatsFragments);  	if (sblk->stat_EtherStatsJabbers) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsJabbers\n
-literal|", 			sblk->stat_EtherStatsJabbers);  	if (sblk->stat_EtherStatsUndersizePkts) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsUndersizePkts\n
-literal|", 			sblk->stat_EtherStatsUndersizePkts);  	if (sblk->stat_EtherStatsOverrsizePkts) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsOverrsizePkts\n
-literal|", 			sblk->stat_EtherStatsOverrsizePkts);  	if (sblk->stat_EtherStatsPktsRx64Octets) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsPktsRx64Octets\n
-literal|", 			sblk->stat_EtherStatsPktsRx64Octets);  	if (sblk->stat_EtherStatsPktsRx65Octetsto127Octets) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsPktsRx65Octetsto127Octets\n
-literal|", 			sblk->stat_EtherStatsPktsRx65Octetsto127Octets);  	if (sblk->stat_EtherStatsPktsRx128Octetsto255Octets) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsPktsRx128Octetsto255Octets\n
-literal|", 			sblk->stat_EtherStatsPktsRx128Octetsto255Octets);  	if (sblk->stat_EtherStatsPktsRx256Octetsto511Octets) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsPktsRx256Octetsto511Octets\n
-literal|", 			sblk->stat_EtherStatsPktsRx256Octetsto511Octets);  	if (sblk->stat_EtherStatsPktsRx512Octetsto1023Octets) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsPktsRx512Octetsto1023Octets\n
-literal|", 			sblk->stat_EtherStatsPktsRx512Octetsto1023Octets);  	if (sblk->stat_EtherStatsPktsRx1024Octetsto1522Octets) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsPktsRx1024Octetsto1522Octets\n
-literal|", 			sblk->stat_EtherStatsPktsRx1024Octetsto1522Octets);  	if (sblk->stat_EtherStatsPktsRx1523Octetsto9022Octets) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsPktsRx1523Octetsto9022Octets\n
-literal|", 			sblk->stat_EtherStatsPktsRx1523Octetsto9022Octets);  	if (sblk->stat_EtherStatsPktsTx64Octets) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsPktsTx64Octets\n
-literal|", 			sblk->stat_EtherStatsPktsTx64Octets);  	if (sblk->stat_EtherStatsPktsTx65Octetsto127Octets) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsPktsTx65Octetsto127Octets\n
-literal|", 			sblk->stat_EtherStatsPktsTx65Octetsto127Octets);  	if (sblk->stat_EtherStatsPktsTx128Octetsto255Octets) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsPktsTx128Octetsto255Octets\n
-literal|", 			sblk->stat_EtherStatsPktsTx128Octetsto255Octets);  	if (sblk->stat_EtherStatsPktsTx256Octetsto511Octets) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsPktsTx256Octetsto511Octets\n
-literal|", 			sblk->stat_EtherStatsPktsTx256Octetsto511Octets);  	if (sblk->stat_EtherStatsPktsTx512Octetsto1023Octets) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsPktsTx512Octetsto1023Octets\n
-literal|", 			sblk->stat_EtherStatsPktsTx512Octetsto1023Octets);  	if (sblk->stat_EtherStatsPktsTx1024Octetsto1522Octets) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsPktsTx1024Octetsto1522Octets\n
-literal|", 			sblk->stat_EtherStatsPktsTx1024Octetsto1522Octets);  	if (sblk->stat_EtherStatsPktsTx1523Octetsto9022Octets) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: EtherStatsPktsTx1523Octetsto9022Octets\n
-literal|", 			sblk->stat_EtherStatsPktsTx1523Octetsto9022Octets);  	if (sblk->stat_XonPauseFramesReceived) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: XonPauseFramesReceived\n
-literal|", 			sblk->stat_XonPauseFramesReceived);  	if (sblk->stat_XoffPauseFramesReceived) 	   BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: XoffPauseFramesReceived\n
-literal|", 			sblk->stat_XoffPauseFramesReceived);  	if (sblk->stat_OutXonSent) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: OutXonSent\n
-literal|", 			sblk->stat_OutXonSent);  	if (sblk->stat_OutXoffSent) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: OutXoffSent\n
-literal|", 			sblk->stat_OutXoffSent);  	if (sblk->stat_FlowControlDone) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: FlowControlDone\n
-literal|", 			sblk->stat_FlowControlDone);  	if (sblk->stat_MacControlFramesReceived) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: MacControlFramesReceived\n
-literal|", 			sblk->stat_MacControlFramesReceived);  	if (sblk->stat_XoffStateEntered) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: XoffStateEntered\n
-literal|", 			sblk->stat_XoffStateEntered);  	if (sblk->stat_IfInFramesL2FilterDiscards) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: IfInFramesL2FilterDiscards\n
-literal|", 			sblk->stat_IfInFramesL2FilterDiscards);  	if (sblk->stat_IfInRuleCheckerDiscards) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: IfInRuleCheckerDiscards\n
-literal|", 			sblk->stat_IfInRuleCheckerDiscards);  	if (sblk->stat_IfInFTQDiscards) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: IfInFTQDiscards\n
-literal|", 			sblk->stat_IfInFTQDiscards);  	if (sblk->stat_IfInMBUFDiscards) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: IfInMBUFDiscards\n
-literal|", 			sblk->stat_IfInMBUFDiscards);  	if (sblk->stat_IfInRuleCheckerP4Hit) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: IfInRuleCheckerP4Hit\n
-literal|", 			sblk->stat_IfInRuleCheckerP4Hit);  	if (sblk->stat_CatchupInRuleCheckerDiscards) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: CatchupInRuleCheckerDiscards\n
-literal|", 			sblk->stat_CatchupInRuleCheckerDiscards);  	if (sblk->stat_CatchupInFTQDiscards) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: CatchupInFTQDiscards\n
-literal|", 			sblk->stat_CatchupInFTQDiscards);  	if (sblk->stat_CatchupInMBUFDiscards) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: CatchupInMBUFDiscards\n
-literal|", 			sblk->stat_CatchupInMBUFDiscards);  	if (sblk->stat_CatchupInRuleCheckerP4Hit) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: CatchupInRuleCheckerP4Hit\n
-literal|", 			sblk->stat_CatchupInRuleCheckerP4Hit);  	BCE_PRINTF(sc, 		"
-argument|-----------------------------
-literal|" 		"
-argument|--------------
-literal|" 		"
-argument|-----------------------------\n
-literal|"); }   static void bce_dump_driver_state(struct bce_softc *sc) { 	u32 val_hi, val_lo;  	BCE_PRINTF(sc, 		"
-argument|-----------------------------
-literal|" 		"
-argument|Driver State
-literal|" 		"
-argument|-----------------------------\n
-literal|");  	val_hi = BCE_ADDR_HI(sc); 	val_lo = BCE_ADDR_LO(sc); 	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument|- (sc) driver softc structure virtual address\n
-literal|", 		val_hi, val_lo);  	val_hi = BCE_ADDR_HI(sc->bce_vhandle); 	val_lo = BCE_ADDR_LO(sc->bce_vhandle); 	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument|- (sc->bce_vhandle) PCI BAR virtual address\n
-literal|", 		val_hi, val_lo);  	val_hi = BCE_ADDR_HI(sc->status_block); 	val_lo = BCE_ADDR_LO(sc->status_block); 	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument|- (sc->status_block) status block virtual address\n
-literal|", 		val_hi, val_lo);  	val_hi = BCE_ADDR_HI(sc->stats_block); 	val_lo = BCE_ADDR_LO(sc->stats_block); 	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument|- (sc->stats_block) statistics block virtual address\n
-literal|", 		val_hi, val_lo);  	val_hi = BCE_ADDR_HI(sc->tx_bd_chain); 	val_lo = BCE_ADDR_LO(sc->tx_bd_chain); 	BCE_PRINTF(sc, 		"
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument|- (sc->tx_bd_chain) tx_bd chain virtual adddress\n
-literal|", 		val_hi, val_lo);  	val_hi = BCE_ADDR_HI(sc->rx_bd_chain); 	val_lo = BCE_ADDR_LO(sc->rx_bd_chain); 	BCE_PRINTF(sc, 		"
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument|- (sc->rx_bd_chain) rx_bd chain virtual address\n
-literal|", 		val_hi, val_lo);  	val_hi = BCE_ADDR_HI(sc->tx_mbuf_ptr); 	val_lo = BCE_ADDR_LO(sc->tx_mbuf_ptr); 	BCE_PRINTF(sc, 		"
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument|- (sc->tx_mbuf_ptr) tx mbuf chain virtual address\n
-literal|", 		val_hi, val_lo);  	val_hi = BCE_ADDR_HI(sc->rx_mbuf_ptr); 	val_lo = BCE_ADDR_LO(sc->rx_mbuf_ptr); 	BCE_PRINTF(sc,  		"
-literal|0x
-argument|%
-literal|08X
-argument|:%
-literal|08X
-argument|- (sc->rx_mbuf_ptr) rx mbuf chain virtual address\n
-literal|", 		val_hi, val_lo);  	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|- (sc->interrupts_generated) h/w intrs\n
-literal|", 		sc->interrupts_generated); 	 	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|- (sc->rx_interrupts) rx interrupts handled\n
-literal|", 		sc->rx_interrupts);  	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|- (sc->tx_interrupts) tx interrupts handled\n
-literal|", 		sc->tx_interrupts);  	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|- (sc->last_status_idx) status block index\n
-literal|", 		sc->last_status_idx);  	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|- (sc->tx_prod) tx producer index\n
-literal|", 		sc->tx_prod);  	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|- (sc->tx_cons) tx consumer index\n
-literal|", 		sc->tx_cons);  	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|- (sc->tx_prod_bseq) tx producer bseq index\n
-literal|", 		sc->tx_prod_bseq);  	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|- (sc->rx_prod) rx producer index\n
-literal|", 		sc->rx_prod);  	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|- (sc->rx_cons) rx consumer index\n
-literal|", 		sc->rx_cons);  	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|- (sc->rx_prod_bseq) rx producer bseq index\n
-literal|", 		sc->rx_prod_bseq);  	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|- (sc->rx_mbuf_alloc) rx mbufs allocated\n
-literal|", 		sc->rx_mbuf_alloc);  	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|- (sc->free_rx_bd) free rx_bd
-literal|'s\n", 		sc->free_rx_bd);  	BCE_PRINTF(sc, "0x%08X/%08X - (sc->rx_low_watermark) rx low watermark\n", 		sc->rx_low_watermark, (u32) USABLE_RX_BD);  	BCE_PRINTF(sc, "         0x%08X - (sc->txmbuf_alloc) tx mbufs allocated\n", 		sc->tx_mbuf_alloc);  	BCE_PRINTF(sc, "         0x%08X - (sc->rx_mbuf_alloc) rx mbufs allocated\n", 		sc->rx_mbuf_alloc);  	BCE_PRINTF(sc, "         0x%08X - (sc->used_tx_bd) used tx_bd'
-argument|s\n
-literal|", 		sc->used_tx_bd);  	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|/%
-literal|08X
-argument|- (sc->tx_hi_watermark) tx hi watermark\n
-literal|", 		sc->tx_hi_watermark, (u32) USABLE_TX_BD);  	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|- (sc->mbuf_alloc_failed) failed mbuf alloc\n
-literal|", 		sc->mbuf_alloc_failed);  	BCE_PRINTF(sc, 		"
-argument|-----------------------------
-literal|" 		"
-argument|--------------
-literal|" 		"
-argument|-----------------------------\n
-literal|"); }   static void bce_dump_hw_state(struct bce_softc *sc) { 	u32 val1;  	BCE_PRINTF(sc, 		"
-argument|----------------------------
-literal|" 		"
-argument|Hardware State
-literal|" 		"
-argument|----------------------------\n
-literal|");  	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: bootcode version\n
-literal|", sc->bce_fw_ver);  	val1 = REG_RD(sc, BCE_MISC_ENABLE_STATUS_BITS); 	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: (
-literal|0x
-argument|%
-literal|04X
-argument|) misc_enable_status_bits\n
-literal|", 		val1, BCE_MISC_ENABLE_STATUS_BITS);  	val1 = REG_RD(sc, BCE_DMA_STATUS); 	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: (
-literal|0x
-argument|%
-literal|04X
-argument|) dma_status\n
-literal|", val1, BCE_DMA_STATUS);  	val1 = REG_RD(sc, BCE_CTX_STATUS); 	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: (
-literal|0x
-argument|%
-literal|04X
-argument|) ctx_status\n
-literal|", val1, BCE_CTX_STATUS);  	val1 = REG_RD(sc, BCE_EMAC_STATUS); 	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: (
-literal|0x
-argument|%
-literal|04X
-argument|) emac_status\n
-literal|", val1, BCE_EMAC_STATUS);  	val1 = REG_RD(sc, BCE_RPM_STATUS); 	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: (
-literal|0x
-argument|%
-literal|04X
-argument|) rpm_status\n
-literal|", val1, BCE_RPM_STATUS);  	val1 = REG_RD(sc, BCE_TBDR_STATUS); 	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: (
-literal|0x
-argument|%
-literal|04X
-argument|) tbdr_status\n
-literal|", val1, BCE_TBDR_STATUS);  	val1 = REG_RD(sc, BCE_TDMA_STATUS); 	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: (
-literal|0x
-argument|%
-literal|04X
-argument|) tdma_status\n
-literal|", val1, BCE_TDMA_STATUS);  	val1 = REG_RD(sc, BCE_HC_STATUS); 	BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|08X
-argument|: (
-literal|0x
-argument|%
-literal|04X
-argument|) hc_status\n
-literal|", val1, BCE_HC_STATUS);  	BCE_PRINTF(sc,  		"
-argument|----------------------------
-literal|" 		"
-argument|----------------
-literal|" 		"
-argument|----------------------------\n
-literal|");  	BCE_PRINTF(sc,  		"
-argument|----------------------------
-literal|" 		"
-argument|Register  Dump
-literal|" 		"
-argument|----------------------------\n
-literal|");  	for (int i = 0x400; i< 0x8000; i += 0x10) 		BCE_PRINTF(sc, "
-literal|0x
-argument|%
-literal|04X
-argument|:
-literal|0x
-argument|%
-literal|08X
-literal|0x
-argument|%
-literal|08X
-literal|0x
-argument|%
-literal|08X
-literal|0x
-argument|%
-literal|08X
-argument|\n
-literal|", 			i, REG_RD(sc, i), REG_RD(sc, i + 0x4), 			REG_RD(sc, i + 0x8), REG_RD(sc, i + 0xC));  	BCE_PRINTF(sc,  		"
-argument|----------------------------
-literal|" 		"
-argument|----------------
-literal|" 		"
-argument|----------------------------\n
-literal|"
+name|txbd
+operator|->
+name|tx_bd_flags
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
-unit|); }   static void bce_breakpoint(struct bce_softc *sc) {  	/* Unreachable code to shut the compiler up about unused functions. */ 	if (0) {    		bce_dump_txbd(sc, 0, NULL); 		bce_dump_rxbd(sc, 0, NULL); 		bce_dump_tx_mbuf_chain(sc, 0, USABLE_TX_BD); 		bce_dump_rx_mbuf_chain(sc, 0, USABLE_RX_BD); 		bce_dump_l2fhdr(sc, 0, NULL); 		bce_dump_tx_chain(sc, 0, USABLE_TX_BD); 		bce_dump_rx_chain(sc, 0, USABLE_RX_BD); 		bce_dump_status_block(sc); 		bce_dump_stats_block(sc); 		bce_dump_driver_state(sc); 		bce_dump_hw_state(sc); 	}  	bce_dump_driver_state(sc); 	/* Print the important status block fields. */ 	bce_dump_status_block(sc);  	/* Call the debugger. */ 	breakpoint();  	return; } #endif
+begin_function
+specifier|static
+name|void
+name|bce_dump_rxbd
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|idx
+parameter_list|,
+name|struct
+name|rx_bd
+modifier|*
+name|rxbd
+parameter_list|)
+block|{
+if|if
+condition|(
+name|idx
+operator|>
+name|MAX_RX_BD
+condition|)
+comment|/* Index out of range. */
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"rx_bd[0x%04X]: Invalid rx_bd index!\n"
+argument_list|,
+name|idx
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|idx
+operator|&
+name|USABLE_RX_BD_PER_PAGE
+operator|)
+operator|==
+name|USABLE_RX_BD_PER_PAGE
+condition|)
+comment|/* TX Chain page pointer. */
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"rx_bd[0x%04X]: haddr = 0x%08X:%08X, chain page pointer\n"
+argument_list|,
+name|idx
+argument_list|,
+name|rxbd
+operator|->
+name|rx_bd_haddr_hi
+argument_list|,
+name|rxbd
+operator|->
+name|rx_bd_haddr_lo
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* Normal tx_bd entry. */
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"rx_bd[0x%04X]: haddr = 0x%08X:%08X, nbytes = 0x%08X, "
+literal|"flags = 0x%08X\n"
+argument_list|,
+name|idx
+argument_list|,
+name|rxbd
+operator|->
+name|rx_bd_haddr_hi
+argument_list|,
+name|rxbd
+operator|->
+name|rx_bd_haddr_lo
+argument_list|,
+name|rxbd
+operator|->
+name|rx_bd_len
+argument_list|,
+name|rxbd
+operator|->
+name|rx_bd_flags
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|bce_dump_l2fhdr
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|idx
+parameter_list|,
+name|struct
+name|l2_fhdr
+modifier|*
+name|l2fhdr
+parameter_list|)
+block|{
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"l2_fhdr[0x%04X]: status = 0x%08X, "
+literal|"pkt_len = 0x%04X, vlan = 0x%04x, ip_xsum = 0x%04X, "
+literal|"tcp_udp_xsum = 0x%04X\n"
+argument_list|,
+name|idx
+argument_list|,
+name|l2fhdr
+operator|->
+name|l2_fhdr_status
+argument_list|,
+name|l2fhdr
+operator|->
+name|l2_fhdr_pkt_len
+argument_list|,
+name|l2fhdr
+operator|->
+name|l2_fhdr_vlan_tag
+argument_list|,
+name|l2fhdr
+operator|->
+name|l2_fhdr_ip_xsum
+argument_list|,
+name|l2fhdr
+operator|->
+name|l2_fhdr_tcp_udp_xsum
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * This routine prints the TX chain.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bce_dump_tx_chain
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|tx_prod
+parameter_list|,
+name|int
+name|count
+parameter_list|)
+block|{
+name|struct
+name|tx_bd
+modifier|*
+name|txbd
+decl_stmt|;
+comment|/* First some info about the tx_bd chain structure. */
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"----------------------------"
+literal|"  tx_bd  chain  "
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"page size      = 0x%08X, tx chain pages        = 0x%08X\n"
+argument_list|,
+operator|(
+name|u32
+operator|)
+name|BCM_PAGE_SIZE
+argument_list|,
+operator|(
+name|u32
+operator|)
+name|TX_PAGES
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"tx_bd per page = 0x%08X, usable tx_bd per page = 0x%08X\n"
+argument_list|,
+operator|(
+name|u32
+operator|)
+name|TOTAL_TX_BD_PER_PAGE
+argument_list|,
+operator|(
+name|u32
+operator|)
+name|USABLE_TX_BD_PER_PAGE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"total tx_bd    = 0x%08X\n"
+argument_list|,
+operator|(
+name|u32
+operator|)
+name|TOTAL_TX_BD
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|""
+literal|"-----------------------------"
+literal|"   tx_bd data   "
+literal|"-----------------------------\n"
+argument_list|)
+expr_stmt|;
+comment|/* Now print out the tx_bd's themselves. */
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|count
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|txbd
+operator|=
+operator|&
+name|sc
+operator|->
+name|tx_bd_chain
+index|[
+name|TX_PAGE
+argument_list|(
+name|tx_prod
+argument_list|)
+index|]
+index|[
+name|TX_IDX
+argument_list|(
+name|tx_prod
+argument_list|)
+index|]
+expr_stmt|;
+name|bce_dump_txbd
+argument_list|(
+name|sc
+argument_list|,
+name|tx_prod
+argument_list|,
+name|txbd
+argument_list|)
+expr_stmt|;
+name|tx_prod
+operator|=
+name|TX_CHAIN_IDX
+argument_list|(
+name|NEXT_TX_BD
+argument_list|(
+name|tx_prod
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"-----------------------------"
+literal|"--------------"
+literal|"-----------------------------\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * This routine prints the RX chain.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bce_dump_rx_chain
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|rx_prod
+parameter_list|,
+name|int
+name|count
+parameter_list|)
+block|{
+name|struct
+name|rx_bd
+modifier|*
+name|rxbd
+decl_stmt|;
+comment|/* First some info about the tx_bd chain structure. */
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"----------------------------"
+literal|"  rx_bd  chain  "
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"----- RX_BD Chain -----\n"
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"page size      = 0x%08X, rx chain pages        = 0x%08X\n"
+argument_list|,
+operator|(
+name|u32
+operator|)
+name|BCM_PAGE_SIZE
+argument_list|,
+operator|(
+name|u32
+operator|)
+name|RX_PAGES
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"rx_bd per page = 0x%08X, usable rx_bd per page = 0x%08X\n"
+argument_list|,
+operator|(
+name|u32
+operator|)
+name|TOTAL_RX_BD_PER_PAGE
+argument_list|,
+operator|(
+name|u32
+operator|)
+name|USABLE_RX_BD_PER_PAGE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"total rx_bd    = 0x%08X\n"
+argument_list|,
+operator|(
+name|u32
+operator|)
+name|TOTAL_RX_BD
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"----------------------------"
+literal|"   rx_bd data   "
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+comment|/* Now print out the rx_bd's themselves. */
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|count
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|rxbd
+operator|=
+operator|&
+name|sc
+operator|->
+name|rx_bd_chain
+index|[
+name|RX_PAGE
+argument_list|(
+name|rx_prod
+argument_list|)
+index|]
+index|[
+name|RX_IDX
+argument_list|(
+name|rx_prod
+argument_list|)
+index|]
+expr_stmt|;
+name|bce_dump_rxbd
+argument_list|(
+name|sc
+argument_list|,
+name|rx_prod
+argument_list|,
+name|rxbd
+argument_list|)
+expr_stmt|;
+name|rx_prod
+operator|=
+name|RX_CHAIN_IDX
+argument_list|(
+name|NEXT_RX_BD
+argument_list|(
+name|rx_prod
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"----------------------------"
+literal|"--------------"
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * This routine prints the status block.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bce_dump_status_block
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|struct
+name|status_block
+modifier|*
+name|sblk
+decl_stmt|;
+name|sblk
+operator|=
+name|sc
+operator|->
+name|status_block
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"----------------------------- Status Block "
+literal|"-----------------------------\n"
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"attn_bits  = 0x%08X, attn_bits_ack = 0x%08X, index = 0x%04X\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_attn_bits
+argument_list|,
+name|sblk
+operator|->
+name|status_attn_bits_ack
+argument_list|,
+name|sblk
+operator|->
+name|status_idx
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"rx_cons0   = 0x%08X, tx_cons0      = 0x%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index0
+argument_list|,
+name|sblk
+operator|->
+name|status_tx_quick_consumer_index0
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"status_idx = 0x%04X\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_idx
+argument_list|)
+expr_stmt|;
+comment|/* Theses indices are not used for normal L2 drivers. */
+if|if
+condition|(
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index1
+operator|||
+name|sblk
+operator|->
+name|status_tx_quick_consumer_index1
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"rx_cons1  = 0x%08X, tx_cons1      = 0x%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index1
+argument_list|,
+name|sblk
+operator|->
+name|status_tx_quick_consumer_index1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index2
+operator|||
+name|sblk
+operator|->
+name|status_tx_quick_consumer_index2
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"rx_cons2  = 0x%08X, tx_cons2      = 0x%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index2
+argument_list|,
+name|sblk
+operator|->
+name|status_tx_quick_consumer_index2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index3
+operator|||
+name|sblk
+operator|->
+name|status_tx_quick_consumer_index3
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"rx_cons3  = 0x%08X, tx_cons3      = 0x%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index3
+argument_list|,
+name|sblk
+operator|->
+name|status_tx_quick_consumer_index3
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index4
+operator|||
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index5
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"rx_cons4  = 0x%08X, rx_cons5      = 0x%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index4
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index5
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index6
+operator|||
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index7
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"rx_cons6  = 0x%08X, rx_cons7      = 0x%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index6
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index7
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index8
+operator|||
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index9
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"rx_cons8  = 0x%08X, rx_cons9      = 0x%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index8
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index9
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index10
+operator|||
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index11
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"rx_cons10 = 0x%08X, rx_cons11     = 0x%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index10
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index11
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index12
+operator|||
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index13
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"rx_cons12 = 0x%08X, rx_cons13     = 0x%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index12
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index13
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index14
+operator|||
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index15
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"rx_cons14 = 0x%08X, rx_cons15     = 0x%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index14
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index15
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|status_completion_producer_index
+operator|||
+name|sblk
+operator|->
+name|status_cmd_consumer_index
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"com_prod  = 0x%08X, cmd_cons      = 0x%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_completion_producer_index
+argument_list|,
+name|sblk
+operator|->
+name|status_cmd_consumer_index
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"-------------------------------------------"
+literal|"-----------------------------\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * This routine prints the statistics block.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bce_dump_stats_block
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|struct
+name|statistics_block
+modifier|*
+name|sblk
+decl_stmt|;
+name|sblk
+operator|=
+name|sc
+operator|->
+name|stats_block
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|""
+literal|"-----------------------------"
+literal|" Stats  Block "
+literal|"-----------------------------\n"
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"IfHcInOctets         = 0x%08X:%08X, "
+literal|"IfHcInBadOctets      = 0x%08X:%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCInOctets_hi
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCInOctets_lo
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCInBadOctets_hi
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCInBadOctets_lo
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"IfHcOutOctets        = 0x%08X:%08X, "
+literal|"IfHcOutBadOctets     = 0x%08X:%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCOutOctets_hi
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCOutOctets_lo
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCOutBadOctets_hi
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCOutBadOctets_lo
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"IfHcInUcastPkts      = 0x%08X:%08X, "
+literal|"IfHcInMulticastPkts  = 0x%08X:%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCInUcastPkts_hi
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCInUcastPkts_lo
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCInMulticastPkts_hi
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCInMulticastPkts_lo
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"IfHcInBroadcastPkts  = 0x%08X:%08X, "
+literal|"IfHcOutUcastPkts     = 0x%08X:%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCInBroadcastPkts_hi
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCInBroadcastPkts_lo
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCOutUcastPkts_hi
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCOutUcastPkts_lo
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"IfHcOutMulticastPkts = 0x%08X:%08X, IfHcOutBroadcastPkts = 0x%08X:%08X\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCOutMulticastPkts_hi
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCOutMulticastPkts_lo
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCOutBroadcastPkts_hi
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCOutBroadcastPkts_lo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_emac_tx_stat_dot3statsinternalmactransmiterrors
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : "
+literal|"emac_tx_stat_dot3statsinternalmactransmiterrors\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_emac_tx_stat_dot3statsinternalmactransmiterrors
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_Dot3StatsCarrierSenseErrors
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : Dot3StatsCarrierSenseErrors\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_Dot3StatsCarrierSenseErrors
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_Dot3StatsFCSErrors
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : Dot3StatsFCSErrors\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_Dot3StatsFCSErrors
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_Dot3StatsAlignmentErrors
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : Dot3StatsAlignmentErrors\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_Dot3StatsAlignmentErrors
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_Dot3StatsSingleCollisionFrames
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : Dot3StatsSingleCollisionFrames\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_Dot3StatsSingleCollisionFrames
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_Dot3StatsMultipleCollisionFrames
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : Dot3StatsMultipleCollisionFrames\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_Dot3StatsMultipleCollisionFrames
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_Dot3StatsDeferredTransmissions
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : Dot3StatsDeferredTransmissions\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_Dot3StatsDeferredTransmissions
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_Dot3StatsExcessiveCollisions
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : Dot3StatsExcessiveCollisions\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_Dot3StatsExcessiveCollisions
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_Dot3StatsLateCollisions
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : Dot3StatsLateCollisions\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_Dot3StatsLateCollisions
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsCollisions
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsCollisions\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsCollisions
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsFragments
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsFragments\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsFragments
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsJabbers
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsJabbers\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsJabbers
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsUndersizePkts
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsUndersizePkts\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsUndersizePkts
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsOverrsizePkts
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsOverrsizePkts\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsOverrsizePkts
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsPktsRx64Octets
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsPktsRx64Octets\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsPktsRx64Octets
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsPktsRx65Octetsto127Octets
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsPktsRx65Octetsto127Octets\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsPktsRx65Octetsto127Octets
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsPktsRx128Octetsto255Octets
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsPktsRx128Octetsto255Octets\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsPktsRx128Octetsto255Octets
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsPktsRx256Octetsto511Octets
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsPktsRx256Octetsto511Octets\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsPktsRx256Octetsto511Octets
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsPktsRx512Octetsto1023Octets
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsPktsRx512Octetsto1023Octets\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsPktsRx512Octetsto1023Octets
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsPktsRx1024Octetsto1522Octets
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsPktsRx1024Octetsto1522Octets\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsPktsRx1024Octetsto1522Octets
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsPktsRx1523Octetsto9022Octets
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsPktsRx1523Octetsto9022Octets\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsPktsRx1523Octetsto9022Octets
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsPktsTx64Octets
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsPktsTx64Octets\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsPktsTx64Octets
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsPktsTx65Octetsto127Octets
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsPktsTx65Octetsto127Octets\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsPktsTx65Octetsto127Octets
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsPktsTx128Octetsto255Octets
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsPktsTx128Octetsto255Octets\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsPktsTx128Octetsto255Octets
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsPktsTx256Octetsto511Octets
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsPktsTx256Octetsto511Octets\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsPktsTx256Octetsto511Octets
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsPktsTx512Octetsto1023Octets
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsPktsTx512Octetsto1023Octets\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsPktsTx512Octetsto1023Octets
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsPktsTx1024Octetsto1522Octets
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsPktsTx1024Octetsto1522Octets\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsPktsTx1024Octetsto1522Octets
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_EtherStatsPktsTx1523Octetsto9022Octets
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : EtherStatsPktsTx1523Octetsto9022Octets\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_EtherStatsPktsTx1523Octetsto9022Octets
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_XonPauseFramesReceived
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : XonPauseFramesReceived\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_XonPauseFramesReceived
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_XoffPauseFramesReceived
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : XoffPauseFramesReceived\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_XoffPauseFramesReceived
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_OutXonSent
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : OutXonSent\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_OutXonSent
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_OutXoffSent
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : OutXoffSent\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_OutXoffSent
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_FlowControlDone
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : FlowControlDone\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_FlowControlDone
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_MacControlFramesReceived
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : MacControlFramesReceived\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_MacControlFramesReceived
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_XoffStateEntered
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : XoffStateEntered\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_XoffStateEntered
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_IfInFramesL2FilterDiscards
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : IfInFramesL2FilterDiscards\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfInFramesL2FilterDiscards
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_IfInRuleCheckerDiscards
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : IfInRuleCheckerDiscards\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfInRuleCheckerDiscards
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_IfInFTQDiscards
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : IfInFTQDiscards\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfInFTQDiscards
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_IfInMBUFDiscards
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : IfInMBUFDiscards\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfInMBUFDiscards
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_IfInRuleCheckerP4Hit
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : IfInRuleCheckerP4Hit\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfInRuleCheckerP4Hit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_CatchupInRuleCheckerDiscards
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : CatchupInRuleCheckerDiscards\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_CatchupInRuleCheckerDiscards
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_CatchupInFTQDiscards
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : CatchupInFTQDiscards\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_CatchupInFTQDiscards
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_CatchupInMBUFDiscards
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : CatchupInMBUFDiscards\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_CatchupInMBUFDiscards
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_CatchupInRuleCheckerP4Hit
+condition|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : CatchupInRuleCheckerP4Hit\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_CatchupInRuleCheckerP4Hit
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"-----------------------------"
+literal|"--------------"
+literal|"-----------------------------\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|bce_dump_driver_state
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|u32
+name|val_hi
+decl_stmt|,
+name|val_lo
+decl_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"-----------------------------"
+literal|" Driver State "
+literal|"-----------------------------\n"
+argument_list|)
+expr_stmt|;
+name|val_hi
+operator|=
+name|BCE_ADDR_HI
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|val_lo
+operator|=
+name|BCE_ADDR_LO
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X:%08X - (sc) driver softc structure virtual address\n"
+argument_list|,
+name|val_hi
+argument_list|,
+name|val_lo
+argument_list|)
+expr_stmt|;
+name|val_hi
+operator|=
+name|BCE_ADDR_HI
+argument_list|(
+name|sc
+operator|->
+name|bce_vhandle
+argument_list|)
+expr_stmt|;
+name|val_lo
+operator|=
+name|BCE_ADDR_LO
+argument_list|(
+name|sc
+operator|->
+name|bce_vhandle
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X:%08X - (sc->bce_vhandle) PCI BAR virtual address\n"
+argument_list|,
+name|val_hi
+argument_list|,
+name|val_lo
+argument_list|)
+expr_stmt|;
+name|val_hi
+operator|=
+name|BCE_ADDR_HI
+argument_list|(
+name|sc
+operator|->
+name|status_block
+argument_list|)
+expr_stmt|;
+name|val_lo
+operator|=
+name|BCE_ADDR_LO
+argument_list|(
+name|sc
+operator|->
+name|status_block
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X:%08X - (sc->status_block) status block virtual address\n"
+argument_list|,
+name|val_hi
+argument_list|,
+name|val_lo
+argument_list|)
+expr_stmt|;
+name|val_hi
+operator|=
+name|BCE_ADDR_HI
+argument_list|(
+name|sc
+operator|->
+name|stats_block
+argument_list|)
+expr_stmt|;
+name|val_lo
+operator|=
+name|BCE_ADDR_LO
+argument_list|(
+name|sc
+operator|->
+name|stats_block
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X:%08X - (sc->stats_block) statistics block virtual address\n"
+argument_list|,
+name|val_hi
+argument_list|,
+name|val_lo
+argument_list|)
+expr_stmt|;
+name|val_hi
+operator|=
+name|BCE_ADDR_HI
+argument_list|(
+name|sc
+operator|->
+name|tx_bd_chain
+argument_list|)
+expr_stmt|;
+name|val_lo
+operator|=
+name|BCE_ADDR_LO
+argument_list|(
+name|sc
+operator|->
+name|tx_bd_chain
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X:%08X - (sc->tx_bd_chain) tx_bd chain virtual adddress\n"
+argument_list|,
+name|val_hi
+argument_list|,
+name|val_lo
+argument_list|)
+expr_stmt|;
+name|val_hi
+operator|=
+name|BCE_ADDR_HI
+argument_list|(
+name|sc
+operator|->
+name|rx_bd_chain
+argument_list|)
+expr_stmt|;
+name|val_lo
+operator|=
+name|BCE_ADDR_LO
+argument_list|(
+name|sc
+operator|->
+name|rx_bd_chain
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X:%08X - (sc->rx_bd_chain) rx_bd chain virtual address\n"
+argument_list|,
+name|val_hi
+argument_list|,
+name|val_lo
+argument_list|)
+expr_stmt|;
+name|val_hi
+operator|=
+name|BCE_ADDR_HI
+argument_list|(
+name|sc
+operator|->
+name|tx_mbuf_ptr
+argument_list|)
+expr_stmt|;
+name|val_lo
+operator|=
+name|BCE_ADDR_LO
+argument_list|(
+name|sc
+operator|->
+name|tx_mbuf_ptr
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X:%08X - (sc->tx_mbuf_ptr) tx mbuf chain virtual address\n"
+argument_list|,
+name|val_hi
+argument_list|,
+name|val_lo
+argument_list|)
+expr_stmt|;
+name|val_hi
+operator|=
+name|BCE_ADDR_HI
+argument_list|(
+name|sc
+operator|->
+name|rx_mbuf_ptr
+argument_list|)
+expr_stmt|;
+name|val_lo
+operator|=
+name|BCE_ADDR_LO
+argument_list|(
+name|sc
+operator|->
+name|rx_mbuf_ptr
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X:%08X - (sc->rx_mbuf_ptr) rx mbuf chain virtual address\n"
+argument_list|,
+name|val_hi
+argument_list|,
+name|val_lo
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->interrupts_generated) h/w intrs\n"
+argument_list|,
+name|sc
+operator|->
+name|interrupts_generated
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->rx_interrupts) rx interrupts handled\n"
+argument_list|,
+name|sc
+operator|->
+name|rx_interrupts
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->tx_interrupts) tx interrupts handled\n"
+argument_list|,
+name|sc
+operator|->
+name|tx_interrupts
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->last_status_idx) status block index\n"
+argument_list|,
+name|sc
+operator|->
+name|last_status_idx
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->tx_prod) tx producer index\n"
+argument_list|,
+name|sc
+operator|->
+name|tx_prod
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->tx_cons) tx consumer index\n"
+argument_list|,
+name|sc
+operator|->
+name|tx_cons
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->tx_prod_bseq) tx producer bseq index\n"
+argument_list|,
+name|sc
+operator|->
+name|tx_prod_bseq
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->rx_prod) rx producer index\n"
+argument_list|,
+name|sc
+operator|->
+name|rx_prod
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->rx_cons) rx consumer index\n"
+argument_list|,
+name|sc
+operator|->
+name|rx_cons
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->rx_prod_bseq) rx producer bseq index\n"
+argument_list|,
+name|sc
+operator|->
+name|rx_prod_bseq
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->rx_mbuf_alloc) rx mbufs allocated\n"
+argument_list|,
+name|sc
+operator|->
+name|rx_mbuf_alloc
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->free_rx_bd) free rx_bd's\n"
+argument_list|,
+name|sc
+operator|->
+name|free_rx_bd
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X/%08X - (sc->rx_low_watermark) rx low watermark\n"
+argument_list|,
+name|sc
+operator|->
+name|rx_low_watermark
+argument_list|,
+operator|(
+name|u32
+operator|)
+name|USABLE_RX_BD
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->txmbuf_alloc) tx mbufs allocated\n"
+argument_list|,
+name|sc
+operator|->
+name|tx_mbuf_alloc
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->rx_mbuf_alloc) rx mbufs allocated\n"
+argument_list|,
+name|sc
+operator|->
+name|rx_mbuf_alloc
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->used_tx_bd) used tx_bd's\n"
+argument_list|,
+name|sc
+operator|->
+name|used_tx_bd
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X/%08X - (sc->tx_hi_watermark) tx hi watermark\n"
+argument_list|,
+name|sc
+operator|->
+name|tx_hi_watermark
+argument_list|,
+operator|(
+name|u32
+operator|)
+name|USABLE_TX_BD
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"         0x%08X - (sc->mbuf_alloc_failed) failed mbuf alloc\n"
+argument_list|,
+name|sc
+operator|->
+name|mbuf_alloc_failed
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"-----------------------------"
+literal|"--------------"
+literal|"-----------------------------\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|bce_dump_hw_state
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|u32
+name|val1
+decl_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"----------------------------"
+literal|" Hardware State "
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : bootcode version\n"
+argument_list|,
+name|sc
+operator|->
+name|bce_fw_ver
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_MISC_ENABLE_STATUS_BITS
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : (0x%04X) misc_enable_status_bits\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_MISC_ENABLE_STATUS_BITS
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_DMA_STATUS
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : (0x%04X) dma_status\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_DMA_STATUS
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_CTX_STATUS
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : (0x%04X) ctx_status\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_CTX_STATUS
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_EMAC_STATUS
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : (0x%04X) emac_status\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_EMAC_STATUS
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_RPM_STATUS
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : (0x%04X) rpm_status\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_RPM_STATUS
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_TBDR_STATUS
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : (0x%04X) tbdr_status\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_TBDR_STATUS
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_TDMA_STATUS
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : (0x%04X) tdma_status\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_TDMA_STATUS
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_HC_STATUS
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%08X : (0x%04X) hc_status\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_HC_STATUS
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"----------------------------"
+literal|"----------------"
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"----------------------------"
+literal|" Register  Dump "
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0x400
+init|;
+name|i
+operator|<
+literal|0x8000
+condition|;
+name|i
+operator|+=
+literal|0x10
+control|)
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"0x%04X: 0x%08X 0x%08X 0x%08X 0x%08X\n"
+argument_list|,
+name|i
+argument_list|,
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|i
+argument_list|)
+argument_list|,
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|i
+operator|+
+literal|0x4
+argument_list|)
+argument_list|,
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|i
+operator|+
+literal|0x8
+argument_list|)
+argument_list|,
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|i
+operator|+
+literal|0xC
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"----------------------------"
+literal|"----------------"
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|bce_breakpoint
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+comment|/* Unreachable code to shut the compiler up about unused functions. */
+if|if
+condition|(
+literal|0
+condition|)
+block|{
+name|bce_dump_txbd
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|bce_dump_rxbd
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|bce_dump_tx_mbuf_chain
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|USABLE_TX_BD
+argument_list|)
+expr_stmt|;
+name|bce_dump_rx_mbuf_chain
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|USABLE_RX_BD
+argument_list|)
+expr_stmt|;
+name|bce_dump_l2fhdr
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|bce_dump_tx_chain
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|USABLE_TX_BD
+argument_list|)
+expr_stmt|;
+name|bce_dump_rx_chain
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|USABLE_RX_BD
+argument_list|)
+expr_stmt|;
+name|bce_dump_status_block
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|bce_dump_stats_block
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|bce_dump_driver_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|bce_dump_hw_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+name|bce_dump_driver_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Print the important status block fields. */
+name|bce_dump_status_block
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Call the debugger. */
+name|breakpoint
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 
