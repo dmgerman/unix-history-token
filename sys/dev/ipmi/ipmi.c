@@ -3742,6 +3742,11 @@ argument_list|,
 literal|"Timed out waiting for GET_DEVICE_ID\n"
 argument_list|)
 expr_stmt|;
+name|ipmi_free_request
+argument_list|(
+name|req
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 elseif|else
@@ -3757,6 +3762,11 @@ argument_list|,
 literal|"Failed GET_DEVICE_ID: %d\n"
 argument_list|,
 name|error
+argument_list|)
+expr_stmt|;
+name|ipmi_free_request
+argument_list|(
+name|req
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3782,6 +3792,11 @@ operator|->
 name|ir_compcode
 argument_list|)
 expr_stmt|;
+name|ipmi_free_request
+argument_list|(
+name|req
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 elseif|else
@@ -3803,6 +3818,11 @@ argument_list|,
 name|req
 operator|->
 name|ir_replylen
+argument_list|)
+expr_stmt|;
+name|ipmi_free_request
+argument_list|(
+name|req
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4417,6 +4437,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ipmi_clone_tag
+condition|)
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|dev_clone
@@ -4453,6 +4479,14 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ipmi_idev
+operator|.
+name|ipmi_cdev
+condition|)
 name|destroy_dev
 argument_list|(
 name|sc
