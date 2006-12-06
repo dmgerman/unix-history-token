@@ -769,7 +769,8 @@ literal|"\014<b11>"
 literal|"\015<b12>"
 literal|"\016CX16"
 comment|/* CMPXCHG16B Instruction */
-literal|"\017<b14>"
+literal|"\017XTPR"
+comment|/* Send Task Priority Messages*/
 literal|"\020<b15>"
 literal|"\021<b16>"
 literal|"\022<b17>"
@@ -866,9 +867,9 @@ literal|"\035<b28>"
 comment|/* Undefined */
 literal|"\036LM"
 comment|/* 64 bit long mode */
-literal|"\0373DNow+"
+literal|"\0373DNow!+"
 comment|/* AMD 3DNow! Extensions */
-literal|"\0403DNow"
+literal|"\0403DNow!"
 comment|/* AMD 3DNow! */
 argument_list|)
 expr_stmt|;
@@ -891,8 +892,10 @@ literal|"\001LAHF"
 comment|/* LAHF/SAHF in long mode */
 literal|"\002CMP"
 comment|/* CMP legacy */
-literal|"\003<b2>"
-literal|"\004<b3>"
+literal|"\003SVM"
+comment|/* Secure Virtual Mode */
+literal|"\004ExtAPIC"
+comment|/* Extended APIC register */
 literal|"\005CR8"
 comment|/* CR8 in legacy mode */
 literal|"\006<b5>"
@@ -952,7 +955,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"\n    HTT bit cleared - FreeBSD"
+literal|"\nHTT bit cleared - FreeBSD"
 literal|" does not have licensing issues"
 literal|" requiring it.\n"
 argument_list|)
@@ -1030,6 +1033,19 @@ argument_list|,
 name|regs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|regs
+index|[
+literal|0
+index|]
+operator|&
+literal|0x1f
+operator|)
+operator|!=
+literal|0
+condition|)
 name|cmp
 operator|=
 operator|(
@@ -1038,11 +1054,11 @@ name|regs
 index|[
 literal|0
 index|]
-operator|&
-literal|0xfc000000
-operator|)
 operator|>>
 literal|26
+operator|)
+operator|&
+literal|0x3f
 operator|)
 operator|+
 literal|1
