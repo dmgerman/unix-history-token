@@ -316,33 +316,11 @@ name|kaudit_record
 struct_decl|;
 end_struct_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_struct_decl
-struct_decl|struct
-name|kg_sched
-struct_decl|;
-end_struct_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_struct_decl
 struct_decl|struct
 name|td_sched
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct_decl
 struct_decl|struct
@@ -374,33 +352,11 @@ name|sleepqueue
 struct_decl|;
 end_struct_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_struct_decl
-struct_decl|struct
-name|td_sched
-struct_decl|;
-end_struct_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_struct_decl
 struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct_decl
 struct_decl|struct
@@ -420,74 +376,17 @@ name|mqueue_notifier
 struct_decl|;
 end_struct_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
 begin_comment
-comment|/*  * Here we define the three structures used for process information.  *  * The first is the thread. It might be thought of as a "Kernel  * Schedulable Entity Context".  * This structure contains all the information as to where a thread of  * execution is now, or was when it was suspended, why it was suspended,  * and anything else that will be needed to restart it when it is  * rescheduled. Always associated with a KSE when running, but can be  * reassigned to an equivalent KSE when being restarted for  * load balancing. Each of these is associated with a kernel stack  * and a pcb.  *  * It is important to remember that a particular thread structure may only  * exist as long as the system call or kernel entrance (e.g. by pagefault)  * which it is currently executing. It should therefore NEVER be referenced  * by pointers in long lived structures that live longer than a single  * request. If several threads complete their work at the same time,  * they will all rewind their stacks to the user boundary, report their  * completion state, and all but one will be freed. That last one will  * be kept to provide a kernel stack and pcb for the NEXT syscall or kernel  * entrance (basically to save freeing and then re-allocating it).  The existing  * thread keeps a cached spare thread available to allow it to quickly  * get one when it needs a new one. There is also a system  * cache of free threads. Threads have priority and partake in priority  * inheritance schemes.  */
+comment|/*  * Here we define the two structures used for process information.  *  * The first is the thread. It might be thought of as a "Kernel  * Schedulable Entity Context".  * This structure contains all the information as to where a thread of  * execution is now, or was when it was suspended, why it was suspended,  * and anything else that will be needed to restart it when it is  * rescheduled. It includesa sscheduler specific substructure that is differnt  * for each scheduler.  *  * M:N notes.  * It is important to remember that when using M:N threading,   * a particular thread structure may only exist as long as  * the system call or kernel entrance (e.g. by pagefault)  * which it is currently executing. It should therefore NEVER be referenced  * by pointers in long lived structures that live longer than a single  * request. If several threads complete their work at the same time,  * they will all rewind their stacks to the user boundary, report their  * completion state, and all but one will be freed. That last one will  * be kept to provide a kernel stack and pcb for the NEXT syscall or kernel  * entrance (basically to save freeing and then re-allocating it).  The existing  * thread keeps a cached spare thread available to allow it to quickly  * get one when it needs a new one. There is also a system  * cache of free threads. Threads have priority and partake in priority  * inheritance schemes.  *  * The second is the proc (process) which owns all the resources of a process  * other than CPU cycles. which are pqarelled out to the threads.  */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|thread
-struct_decl|;
-end_struct_decl
-
 begin_comment
-comment|/*  * The KSEGRP is allocated resources across a number of CPUs.  * (Including a number of CPUxQUANTA. It parcels these QUANTA up among  * its threads, each of which should be running in a different CPU.  * BASE priority and total available quanta are properties of a KSEGRP.  * Multiple KSEGRPs in a single process compete against each other  * for total quanta in the same way that a forked child competes against  * its parent process.  */
+comment|/***************  * Threads are the unit of execution  With a single run queue used by all processors:   RUNQ: --->THREAD---THREAD--...               SLEEPQ:[]---THREAD---THREAD---THREAD                                                      []---THREAD                                        	             []                                                      []---THREAD---THREAD  With PER-CPU run queues:  it gets more complicated.  *  *****************/
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|ksegrp
-struct_decl|;
-end_struct_decl
-
 begin_comment
-comment|/*  * A process is the owner of all system resources allocated to a task  * except CPU quanta.  * All KSEGs under one process see, and have the same access to, these  * resources (e.g. files, memory, sockets, credential, kqueues).  * A process may compete for CPU cycles on the same basis as a  * forked process cluster by spawning several KSEGRPs.  */
+comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * Thread context.  Processes may have multiple threads.  */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/***************  * In pictures:  With a single run queue used by all processors:   RUNQ: --->KSE---KSE--...               SLEEPQ:[]---THREAD---THREAD---THREAD 	     \      \                          []---THREAD       KSEG---THREAD--THREAD--THREAD            [] 					       []---THREAD---THREAD    (processors run THREADs from the KSEG until they are exhausted or   the KSEG exhausts its quantum)  With PER-CPU run queues: KSEs on the separate run queues directly They would be given priorities calculated from the KSEG.   *  *****************/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_comment
-comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * The first KSE available in the correct group will run this thread.  * If several are available, use the one on the same CPU as last time.  * When waiting to be run, threads are hung off the KSEGRP in priority order.  * With N runnable and queued KSEs in the KSEGRP, the first N threads  * are linked to them. Other threads are not yet assigned.  */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*  * Thread context.  Processes may have multiple threads.  */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -499,24 +398,6 @@ modifier|*
 name|td_proc
 decl_stmt|;
 comment|/* (*) Associated process. */
-ifdef|#
-directive|ifdef
-name|KSE
-name|struct
-name|ksegrp
-modifier|*
-name|td_ksegrp
-decl_stmt|;
-comment|/* (*) Associated KSEG. */
-else|#
-directive|else
-name|void
-modifier|*
-name|was_td_ksegrp
-decl_stmt|;
-comment|/* Temporary padding. */
-endif|#
-directive|endif
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
@@ -524,27 +405,6 @@ argument_list|)
 name|td_plist
 expr_stmt|;
 comment|/* (*) All threads in this proc. */
-ifdef|#
-directive|ifdef
-name|KSE
-name|TAILQ_ENTRY
-argument_list|(
-argument|thread
-argument_list|)
-name|td_kglist
-expr_stmt|;
-comment|/* (*) All threads in this ksegrp. */
-else|#
-directive|else
-name|TAILQ_ENTRY
-argument_list|(
-argument|thread
-argument_list|)
-name|was_td_kglist
-expr_stmt|;
-comment|/* Temporary padding. */
-endif|#
-directive|endif
 comment|/* The two queues below should someday be merged. */
 name|TAILQ_ENTRY
 argument_list|(
@@ -560,27 +420,6 @@ argument_list|)
 name|td_lockq
 expr_stmt|;
 comment|/* (j) Lock queue. */
-ifdef|#
-directive|ifdef
-name|KSE
-name|TAILQ_ENTRY
-argument_list|(
-argument|thread
-argument_list|)
-name|td_runq
-expr_stmt|;
-comment|/* (j/z) Run queue(s). XXXKSE */
-else|#
-directive|else
-name|TAILQ_ENTRY
-argument_list|(
-argument|thread
-argument_list|)
-name|td_runq
-expr_stmt|;
-comment|/* (j/z) Run queue(s). */
-endif|#
-directive|endif
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -706,33 +545,18 @@ name|int
 name|td_pinned
 decl_stmt|;
 comment|/* (k) Temporary cpu pin count. */
-ifdef|#
-directive|ifdef
-name|KSE
 name|struct
 name|kse_thr_mailbox
 modifier|*
 name|td_mailbox
 decl_stmt|;
 comment|/* (*) Userland mailbox address. */
-else|#
-directive|else
-name|void
-modifier|*
-name|was_td_mailbox
-decl_stmt|;
-comment|/* Temporary padding. */
-endif|#
-directive|endif
 name|struct
 name|ucred
 modifier|*
 name|td_ucred
 decl_stmt|;
 comment|/* (k) Reference to credentials. */
-ifdef|#
-directive|ifdef
-name|KSE
 name|struct
 name|thread
 modifier|*
@@ -746,26 +570,6 @@ name|td_upcall
 decl_stmt|;
 comment|/* (k + j) Upcall structure. */
 name|u_int
-name|new_td_estcpu
-decl_stmt|;
-comment|/*  Temporary padding. */
-name|u_int
-name|new_td_slptime
-decl_stmt|;
-comment|/*  Temporary padding. */
-else|#
-directive|else
-name|void
-modifier|*
-name|was_td_standin
-decl_stmt|;
-comment|/* Temporary padding. */
-name|void
-modifier|*
-name|was_td_upcall
-decl_stmt|;
-comment|/* Temporary padding. */
-name|u_int
 name|td_estcpu
 decl_stmt|;
 comment|/* (j) Sum of the same field in KSEs. */
@@ -773,8 +577,6 @@ name|u_int
 name|td_slptime
 decl_stmt|;
 comment|/* (j) How long completely blocked. */
-endif|#
-directive|endif
 name|u_int
 name|td_pticks
 decl_stmt|;
@@ -820,21 +622,10 @@ name|stack_t
 name|td_sigstk
 decl_stmt|;
 comment|/* (k) Stack ptr and on-stack flag. */
-ifdef|#
-directive|ifdef
-name|KSE
 name|int
 name|td_kflags
 decl_stmt|;
 comment|/* (c) Flags for KSE threading. */
-else|#
-directive|else
-name|int
-name|was_td_kflags
-decl_stmt|;
-comment|/* Temporary padding. */
-endif|#
-directive|endif
 name|int
 name|td_xsig
 decl_stmt|;
@@ -873,23 +664,6 @@ name|u_char
 name|td_priority
 decl_stmt|;
 comment|/* (j) Thread active priority. */
-ifdef|#
-directive|ifdef
-name|KSE
-name|u_char
-name|new_td_pri_class
-decl_stmt|;
-comment|/* Temporary padding. */
-name|u_char
-name|new_td_user_pri
-decl_stmt|;
-comment|/* Temporary padding. */
-name|u_char
-name|new_td_base_user_pri
-decl_stmt|;
-comment|/* Temporary padding. */
-else|#
-directive|else
 name|u_char
 name|td_pri_class
 decl_stmt|;
@@ -902,8 +676,6 @@ name|u_char
 name|td_base_user_pri
 decl_stmt|;
 comment|/* (j) Base user pri */
-endif|#
-directive|endif
 define|#
 directive|define
 name|td_endcopy
@@ -1341,12 +1113,6 @@ begin_comment
 comment|/* Thread is currently in KTRACE code. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -1357,20 +1123,6 @@ end_define
 begin_comment
 comment|/* This thread is doing an upcall. */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*			0x00000008 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1405,12 +1157,6 @@ begin_comment
 comment|/* Lock aquisition - deadlock treatment. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -1421,20 +1167,6 @@ end_define
 begin_comment
 comment|/* A scheduler activation based thread. */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*			0x00000080 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1469,12 +1201,6 @@ begin_comment
 comment|/* Thread is an interrupt thread. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -1485,20 +1211,6 @@ end_define
 begin_comment
 comment|/* Only temporarily bound. */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* 			0x00000800 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1647,12 +1359,6 @@ begin_comment
 comment|/* Awaiting interrupt. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
 begin_comment
 comment|/*  * flags (in kflags) related to M:N threading.  */
 end_comment
@@ -1665,7 +1371,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* Blocked in msleep on kg->kg_completed. */
+comment|/* Blocked in msleep on p->p_completed. */
 end_comment
 
 begin_define
@@ -1700,11 +1406,6 @@ parameter_list|)
 define|\
 value|(((td)->td_pflags& TDP_CAN_UNBIND)&&	\      ((td)->td_upcall != NULL))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1980,12 +1681,6 @@ parameter_list|)
 value|(td)->td_state = TDS_CAN_RUN
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
 begin_comment
 comment|/*  * An upcall is used when returning to userland.  If a thread does not have  * an upcall on return to userland the thread exports its context and exits.  */
 end_comment
@@ -2000,13 +1695,13 @@ argument|kse_upcall
 argument_list|)
 name|ku_link
 expr_stmt|;
-comment|/* List of upcalls in KSEG. */
+comment|/* List of upcalls in proc. */
 name|struct
-name|ksegrp
+name|proc
 modifier|*
-name|ku_ksegrp
+name|ku_proc
 decl_stmt|;
-comment|/* Associated KSEG. */
+comment|/* Associated proc. */
 name|struct
 name|thread
 modifier|*
@@ -2064,128 +1759,6 @@ comment|/* Upcall structure is exiting. */
 end_comment
 
 begin_comment
-comment|/*  * Kernel-scheduled entity group (KSEG).  The scheduler considers each KSEG to  * be an indivisible unit from a time-sharing perspective, though each KSEG may  * contain multiple KSEs.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ksegrp
-block|{
-name|struct
-name|proc
-modifier|*
-name|kg_proc
-decl_stmt|;
-comment|/* (*) Proc that contains this KSEG. */
-name|TAILQ_ENTRY
-argument_list|(
-argument|ksegrp
-argument_list|)
-name|kg_ksegrp
-expr_stmt|;
-comment|/* (*) Queue of KSEGs in kg_proc. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|thread
-argument_list|)
-name|kg_threads
-expr_stmt|;
-comment|/* (td_kglist) All threads. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|thread
-argument_list|)
-name|kg_runq
-expr_stmt|;
-comment|/* (td_runq) waiting RUNNABLE threads */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|kse_upcall
-argument_list|)
-name|kg_upcalls
-expr_stmt|;
-comment|/* All upcalls in the group. */
-define|#
-directive|define
-name|kg_startzero
-value|kg_estcpu
-name|u_int
-name|kg_estcpu
-decl_stmt|;
-comment|/* (j) Sum of the same field in KSEs. */
-name|u_int
-name|kg_slptime
-decl_stmt|;
-comment|/* (j) How long completely blocked. */
-name|int
-name|kg_numupcalls
-decl_stmt|;
-comment|/* (j) Num upcalls. */
-name|int
-name|kg_upsleeps
-decl_stmt|;
-comment|/* (c) Num threads in kse_release(). */
-name|struct
-name|kse_thr_mailbox
-modifier|*
-name|kg_completed
-decl_stmt|;
-comment|/* (c) Completed thread mboxes. */
-name|int
-name|kg_nextupcall
-decl_stmt|;
-comment|/* (n) Next upcall time. */
-name|int
-name|kg_upquantum
-decl_stmt|;
-comment|/* (n) Quantum to schedule an upcall. */
-define|#
-directive|define
-name|kg_endzero
-value|kg_pri_class
-define|#
-directive|define
-name|kg_startcopy
-value|kg_endzero
-name|u_char
-name|kg_pri_class
-decl_stmt|;
-comment|/* (j) Scheduling class. */
-name|u_char
-name|kg_user_pri
-decl_stmt|;
-comment|/* (j) User pri from estcpu and nice. */
-name|u_char
-name|kg_base_user_pri
-decl_stmt|;
-comment|/* (j) Base user pri */
-define|#
-directive|define
-name|kg_endcopy
-value|kg_numthreads
-name|int
-name|kg_numthreads
-decl_stmt|;
-comment|/* (j) Num threads in total. */
-name|struct
-name|kg_sched
-modifier|*
-name|kg_sched
-decl_stmt|;
-comment|/* (*) Scheduler-specific data. */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * XXX: Does this belong in resource.h or resourcevar.h instead?  * Resource usage extension.  The times in rusage structs in the kernel are  * never up to date.  The actual times are kept as runtimes and tick counts  * (with control info in the "previous" times), and are converted when  * userland asks for rusage info.  Backwards compatibility prevents putting  * this directly in the user-visible rusage struct.  *  * Locking: (cj) means (j) for p_rux and (c) for p_crux.  */
 end_comment
 
@@ -2226,7 +1799,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The old fashionned process. May have multiple threads, KSEGRPs  * and KSEs. Starts off with a single embedded KSEGRP and THREAD.  */
+comment|/*  * The old fashionned process. May have multiple threads.  *  Starts off with a single embedded THREAD.  */
 end_comment
 
 begin_struct
@@ -2240,29 +1813,6 @@ argument_list|)
 name|p_list
 expr_stmt|;
 comment|/* (d) List of all processes. */
-ifdef|#
-directive|ifdef
-name|KSE
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ksegrp
-argument_list|)
-name|p_ksegrps
-expr_stmt|;
-comment|/* (c)(kg_ksegrp) All KSEGs. */
-else|#
-directive|else
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|thread
-argument_list|)
-name|was_p_ksegrps
-expr_stmt|;
-comment|/* Temporary padding. */
-endif|#
-directive|endif
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -2271,14 +1821,6 @@ argument_list|)
 name|p_threads
 expr_stmt|;
 comment|/* (j)(td_plist) Threads. (shortcut) */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|thread
-argument_list|)
-name|p_suspended
-expr_stmt|;
-comment|/* (td_runq) Suspended threads. */
 name|struct
 name|ucred
 modifier|*
@@ -2316,6 +1858,14 @@ modifier|*
 name|p_sigacts
 decl_stmt|;
 comment|/* (x) Signal actions, state (CPU). */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|kse_upcall
+argument_list|)
+name|p_upcalls
+expr_stmt|;
+comment|/* All upcalls in the proc. */
 comment|/* 	 * The following don't make too much sense. 	 * See the td_ or ke_ versions of the same flags. 	 */
 name|int
 name|p_flag
@@ -2541,6 +2091,37 @@ modifier|*
 name|p_itimers
 decl_stmt|;
 comment|/* (c) POSIX interval timers. */
+comment|/* from ksegrp */
+name|u_int
+name|p_estcpu
+decl_stmt|;
+comment|/* (j) Sum of the field in threads. */
+name|u_int
+name|p_slptime
+decl_stmt|;
+comment|/* (j) How long completely blocked. */
+name|int
+name|p_numupcalls
+decl_stmt|;
+comment|/* (j) Num upcalls. */
+name|int
+name|p_upsleeps
+decl_stmt|;
+comment|/* (c) Num threads in kse_release(). */
+name|struct
+name|kse_thr_mailbox
+modifier|*
+name|p_completed
+decl_stmt|;
+comment|/* (c) Completed thread mboxes. */
+name|int
+name|p_nextupcall
+decl_stmt|;
+comment|/* (n) Next upcall time. */
+name|int
+name|p_upquantum
+decl_stmt|;
+comment|/* (n) Quantum to schedule an upcall. */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -2609,21 +2190,6 @@ name|int
 name|p_numthreads
 decl_stmt|;
 comment|/* (j) Number of threads. */
-ifdef|#
-directive|ifdef
-name|KSE
-name|int
-name|p_numksegrps
-decl_stmt|;
-comment|/* (c) Number of ksegrps. */
-else|#
-directive|else
-name|int
-name|was_p_numksegrps
-decl_stmt|;
-comment|/* Temporary padding. */
-endif|#
-directive|endif
 name|struct
 name|mdproc
 name|p_md
@@ -3415,56 +2981,6 @@ define|\
 value|LIST_FOREACH((p),&allproc, p_list)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FOREACH_KSEGRP_IN_PROC
-parameter_list|(
-name|p
-parameter_list|,
-name|kg
-parameter_list|)
-define|\
-value|TAILQ_FOREACH((kg),&(p)->p_ksegrps, kg_ksegrp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOREACH_THREAD_IN_GROUP
-parameter_list|(
-name|kg
-parameter_list|,
-name|td
-parameter_list|)
-define|\
-value|TAILQ_FOREACH((td),&(kg)->kg_threads, td_kglist)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOREACH_UPCALL_IN_GROUP
-parameter_list|(
-name|kg
-parameter_list|,
-name|ku
-parameter_list|)
-define|\
-value|TAILQ_FOREACH((ku),&(kg)->kg_upcalls, ku_link)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -3476,6 +2992,19 @@ name|td
 parameter_list|)
 define|\
 value|TAILQ_FOREACH((td),&(p)->p_threads, td_plist)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOREACH_UPCALL_IN_PROC
+parameter_list|(
+name|p
+parameter_list|,
+name|ku
+parameter_list|)
+define|\
+value|TAILQ_FOREACH((ku),&(p)->p_upcalls, ku_link)
 end_define
 
 begin_comment
@@ -3491,27 +3020,6 @@ name|p
 parameter_list|)
 value|TAILQ_FIRST(&(p)->p_threads)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FIRST_KSEGRP_IN_PROC
-parameter_list|(
-name|p
-parameter_list|)
-value|TAILQ_FIRST(&(p)->p_ksegrps)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * We use process IDs<= PID_MAX; PID_MAX + 1 must also fit in a pid_t,  * as it is used to represent "no process group".  */
@@ -3918,29 +3426,6 @@ name|mtx
 name|ppeers_lock
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ksegrp
-name|ksegrp0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Primary ksegrp in proc0. */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -4549,39 +4034,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_function_decl
-name|void
-name|proc_linkup
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|struct
-name|ksegrp
-modifier|*
-name|kg
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 name|void
 name|proc_linkup
@@ -4598,11 +4050,6 @@ name|td
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -4942,52 +4389,6 @@ begin_comment
 comment|/* New in KSE. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_function_decl
-name|struct
-name|ksegrp
-modifier|*
-name|ksegrp_alloc
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ksegrp_free
-parameter_list|(
-name|struct
-name|ksegrp
-modifier|*
-name|kg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ksegrp_stash
-parameter_list|(
-name|struct
-name|ksegrp
-modifier|*
-name|kg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|void
 name|kse_GC
@@ -5120,46 +4521,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_function_decl
-name|void
-name|ksegrp_link
-parameter_list|(
-name|struct
-name|ksegrp
-modifier|*
-name|kg
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ksegrp_unlink
-parameter_list|(
-name|struct
-name|ksegrp
-modifier|*
-name|kg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|struct
 name|thread
@@ -5220,34 +4581,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_function_decl
-name|void
-name|thread_link
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|ksegrp
-modifier|*
-name|kg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 name|void
 name|thread_link
@@ -5265,11 +4598,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|void
 name|thread_reap
@@ -5278,12 +4606,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
 
 begin_function_decl
 name|struct
@@ -5303,11 +4625,6 @@ name|ku
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -5508,12 +4825,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
 begin_function_decl
 name|int
 name|thread_userret
@@ -5542,11 +4853,6 @@ name|td
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -5586,12 +4892,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
 begin_function_decl
 name|struct
 name|kse_upcall
@@ -5625,9 +4925,9 @@ modifier|*
 name|ku
 parameter_list|,
 name|struct
-name|ksegrp
+name|proc
 modifier|*
-name|kg
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5667,11 +4967,6 @@ name|ke
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

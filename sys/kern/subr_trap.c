@@ -412,16 +412,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KSE
-name|struct
-name|ksegrp
-modifier|*
-name|kg
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|rlimit
 name|rlim
@@ -465,17 +455,6 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KSE
-name|kg
-operator|=
-name|td
-operator|->
-name|td_ksegrp
-expr_stmt|;
-endif|#
-directive|endif
 name|CTR3
 argument_list|(
 name|KTR_SYSC
@@ -662,7 +641,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXXKSE While the fact that we owe a user profiling 	 * tick is stored per KSE in this code, the statistics 	 * themselves are still stored per process. 	 * This should probably change, by which I mean that 	 * possibly the location of both might change. 	 */
+comment|/* 	 * XXXKSE While the fact that we owe a user profiling 	 * tick is stored per thread in this code, the statistics 	 * themselves are still stored per process. 	 * This should probably change, by which I mean that 	 * possibly the location of both might change. 	 */
 if|if
 condition|(
 name|td
@@ -996,20 +975,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KSE
-name|sched_prio
-argument_list|(
-name|td
-argument_list|,
-name|kg
-operator|->
-name|kg_user_pri
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|sched_prio
 argument_list|(
 name|td
@@ -1019,8 +984,6 @@ operator|->
 name|td_user_pri
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|mi_switch
 argument_list|(
 name|SW_INVOL

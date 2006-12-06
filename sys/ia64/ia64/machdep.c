@@ -3204,23 +3204,6 @@ argument_list|,
 name|MSGBUF_SIZE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KSE
-name|proc_linkup
-argument_list|(
-operator|&
-name|proc0
-argument_list|,
-operator|&
-name|ksegrp0
-argument_list|,
-operator|&
-name|thread0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|proc_linkup
 argument_list|(
 operator|&
@@ -3230,8 +3213,7 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+comment|/* 	 * Init mapping for kernel stack for proc 0 	 */
 name|proc0kstack
 operator|=
 operator|(

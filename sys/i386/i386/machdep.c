@@ -9131,23 +9131,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/*  	 * This may be done better later if it gets more high level  	 * components in it. If so just link td->td_proc here. 	 */
-ifdef|#
-directive|ifdef
-name|KSE
-name|proc_linkup
-argument_list|(
-operator|&
-name|proc0
-argument_list|,
-operator|&
-name|ksegrp0
-argument_list|,
-operator|&
-name|thread0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|proc_linkup
 argument_list|(
 operator|&
@@ -9157,8 +9140,6 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|metadata_missing
 operator|=
 literal|0
@@ -10649,7 +10630,6 @@ name|pcb_flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXXKSE */
 ifdef|#
 directive|ifdef
 name|PAE

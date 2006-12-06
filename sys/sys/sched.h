@@ -98,66 +98,6 @@ begin_comment
 comment|/*  * KSE Groups contain scheduling priority information.  They record the  * behavior of groups of KSEs and threads.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_function_decl
-name|void
-name|sched_class
-parameter_list|(
-name|struct
-name|ksegrp
-modifier|*
-name|kg
-parameter_list|,
-name|int
-name|class
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sched_exit_ksegrp
-parameter_list|(
-name|struct
-name|ksegrp
-modifier|*
-name|kg
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|childtd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sched_fork_ksegrp
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|ksegrp
-modifier|*
-name|child
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 name|void
 name|sched_class
@@ -172,11 +112,6 @@ name|class
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -194,14 +129,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Threads are switched in and out, block on resources, have temporary  * priorities inherited from their ksegs, and use up cpu time.  */
+comment|/*  * Threads are switched in and out, block on resources, have temporary  * priorities inherited from their procs, and use up cpu time.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
 
 begin_function_decl
 name|void
@@ -236,11 +165,6 @@ name|child
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -361,32 +285,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_function_decl
-name|void
-name|sched_user_prio
-parameter_list|(
-name|struct
-name|ksegrp
-modifier|*
-name|kg
-parameter_list|,
-name|u_char
-name|prio
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 name|void
 name|sched_user_prio
@@ -401,11 +299,6 @@ name|prio
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -564,26 +457,6 @@ begin_comment
 comment|/*  * These procedures tell the process data structure allocation code how  * many bytes to actually allocate.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_function_decl
-name|int
-name|sched_sizeof_ksegrp
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|int
 name|sched_sizeof_proc
@@ -649,20 +522,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
 begin_function_decl
 name|void
 name|sched_init_concurrency
 parameter_list|(
 name|struct
-name|ksegrp
+name|proc
 modifier|*
-name|kg
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -672,20 +539,15 @@ name|void
 name|sched_set_concurrency
 parameter_list|(
 name|struct
-name|ksegrp
+name|proc
 modifier|*
-name|kg
+name|p
 parameter_list|,
 name|int
 name|cuncurrency
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -696,12 +558,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
 begin_function_decl
 name|void
 name|sched_newproc
@@ -710,11 +566,6 @@ name|struct
 name|proc
 modifier|*
 name|p
-parameter_list|,
-name|struct
-name|ksegrp
-modifier|*
-name|kg
 parameter_list|,
 name|struct
 name|thread
@@ -735,11 +586,6 @@ name|td
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void

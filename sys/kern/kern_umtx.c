@@ -438,27 +438,6 @@ begin_comment
 comment|/*  * Don't propagate time-sharing priority, there is a security reason,  * a user can simply introduce PI-mutex, let thread A lock the mutex,  * and let another thread B block on the mutex, because B is  * sleeping, its priority will be boosted, this causes A's priority to  * be boosted via priority propagating too and will never be lowered even  * if it is using 100%CPU, this is unfair to other processes.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|UPRI
-parameter_list|(
-name|td
-parameter_list|)
-value|(((td)->td_ksegrp->kg_user_pri>= PRI_MIN_TIMESHARE&&\ 			  (td)->td_ksegrp->kg_user_pri<= PRI_MAX_TIMESHARE) ?\ 			 PRI_MAX_TIMESHARE : (td)->td_ksegrp->kg_user_pri)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -468,11 +447,6 @@ name|td
 parameter_list|)
 value|(((td)->td_user_pri>= PRI_MIN_TIMESHARE&&\ 			  (td)->td_user_pri<= PRI_MAX_TIMESHARE) ?\ 			 PRI_MAX_TIMESHARE : (td)->td_user_pri)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
