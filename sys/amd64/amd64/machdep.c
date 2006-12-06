@@ -2218,6 +2218,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.cpu_idle_hlt"
+argument_list|,
+operator|&
+name|cpu_idle_hlt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_machdep
