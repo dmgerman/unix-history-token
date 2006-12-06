@@ -356,8 +356,6 @@ name|struct
 name|thread
 name|mtd
 decl_stmt|;
-comment|/*struct kse mke;*/
-comment|/*struct ksegrp mkg;*/
 name|struct
 name|proc
 name|proc
@@ -520,12 +518,6 @@ literal|1
 operator|)
 return|;
 block|}
-if|#
-directive|if
-literal|0
-block|if ((proc.p_flag& P_SA) == 0) { 				if (KREAD(kd, 				    (u_long)TAILQ_FIRST(&proc.p_ksegrps),&mkg)) { 					_kvm_err(kd, kd->program, 					    "can't read ksegrp at %x", 					    TAILQ_FIRST(&proc.p_ksegrps)); 					return (-1); 				} 				if (KREAD(kd, 				    (u_long)TAILQ_FIRST(&mkg.kg_kseq),&mke)) { 					_kvm_err(kd, kd->program, 					    "can't read kse at %x", 					    TAILQ_FIRST(&mkg.kg_kseq)); 					return (-1); 				} 			}
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -2175,15 +2167,6 @@ name|P_SA
 operator|)
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* stuff from the ksegrp */
-block|kp->ki_slptime = mkg.kg_slptime; 				kp->ki_pri.pri_class = mkg.kg_pri_class; 				kp->ki_pri.pri_user = mkg.kg_user_pri; 				kp->ki_estcpu = mkg.kg_estcpu;
-comment|/* Stuff from the kse */
-block|kp->ki_pctcpu = mke.ke_pctcpu; 				kp->ki_rqindex = mke.ke_rqindex;
-else|#
-directive|else
 name|kp
 operator|->
 name|ki_pctcpu
@@ -2196,8 +2179,6 @@ name|ki_rqindex
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
