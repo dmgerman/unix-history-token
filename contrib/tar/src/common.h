@@ -387,6 +387,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Allow GNUTYPE_NAMES type? */
+end_comment
+
+begin_decl_stmt
+name|GLOBAL
+name|bool
+name|allow_name_mangling_option
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* This variable tells how to interpret newer_mtime_option, below.  If zero,    files get archived if their mtime is not less than newer_mtime_option.    If nonzero, files get archived if *either* their ctime or mtime is not less    than newer_mtime_option.  */
 end_comment
 
