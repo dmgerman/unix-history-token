@@ -415,6 +415,8 @@ name|CHAR_MAX
 operator|+
 literal|1
 block|,
+name|ALLOW_NAME_MANGLING_OPTION
+block|,
 name|BACKUP_OPTION
 block|,
 name|DELETE_OPTION
@@ -539,6 +541,16 @@ block|,
 literal|0
 block|,
 literal|'N'
+block|}
+block|,
+block|{
+literal|"allow-name-mangling"
+block|,
+name|no_argument
+block|,
+literal|0
+block|,
+name|ALLOW_NAME_MANGLING_OPTION
 block|}
 block|,
 block|{
@@ -1720,7 +1732,7 @@ name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"\ \n\ Archive format selection:\n\   -V, --label=NAME                   create archive with volume name NAME\n\               PATTERN                at list/extract time, a globbing PATTERN\n\   -o, --old-archive, --portability   write a V7 format archive\n\       --posix                        write a POSIX format archive\n\   -j, -y, --bzip, --bzip2, --bunzip2 filter the archive through bzip2\n\   -z, --gzip, --ungzip               filter the archive through gzip\n\   -Z, --compress, --uncompress       filter the archive through compress\n\       --use-compress-program=PROG    filter through PROG (must accept -d)\n"
+literal|"\ \n\ Archive format selection:\n\   -V, --label=NAME                   create archive with volume name NAME\n\               PATTERN                at list/extract time, a globbing PATTERN\n\   -o, --old-archive, --portability   write a V7 format archive\n\       --posix                        write a POSIX format archive\n\       --allow-name-mangling          allow GNUTYPE_NAMES mangling --\n\                                      considered dangerous\n\   -j, -y, --bzip, --bzip2, --bunzip2 filter the archive through bzip2\n\   -z, --gzip, --ungzip               filter the archive through gzip\n\   -Z, --compress, --uncompress       filter the archive through compress\n\       --use-compress-program=PROG    filter through PROG (must accept -d)\n"
 argument_list|)
 argument_list|,
 name|stdout
@@ -3178,6 +3190,14 @@ name|set_use_compress_program_option
 argument_list|(
 literal|"compress"
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ALLOW_NAME_MANGLING_OPTION
+case|:
+name|allow_name_mangling_option
+operator|=
+name|true
 expr_stmt|;
 break|break;
 case|case

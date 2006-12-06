@@ -4080,6 +4080,12 @@ operator|->
 name|len
 operator|<
 name|len
+operator|&&
+name|crom_buf
+operator|->
+name|len
+operator|>=
+literal|0
 condition|)
 name|len
 operator|=
