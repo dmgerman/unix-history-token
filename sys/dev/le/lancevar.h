@@ -47,6 +47,13 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
+name|struct
+name|callout
+name|sc_wdog_ch
+decl_stmt|;
+name|int
+name|sc_wdog_timer
+decl_stmt|;
 comment|/* 	 * Memory functions: 	 * 	 *	copy to/from descriptor 	 *	copy to/from buffer 	 *	zero bytes in buffer 	 */
 name|void
 function_decl|(
