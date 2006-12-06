@@ -482,6 +482,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|bus_dmamap_load_mbuf_sg
+parameter_list|(
+name|bus_dma_tag_t
+name|dmat
+parameter_list|,
+name|bus_dmamap_t
+name|map
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|mbuf
+parameter_list|,
+name|bus_dma_segment_t
+modifier|*
+name|segs
+parameter_list|,
+name|int
+modifier|*
+name|nsegs
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Like bus_dmamap_load but for uios.  Note the use of the  * bus_dmamap_callback2_t interface.  */
 end_comment
