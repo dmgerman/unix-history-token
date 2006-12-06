@@ -25,12 +25,16 @@ end_define
 begin_decl_stmt
 name|pthread_mutex_t
 name|m
+init|=
+name|PTHREAD_MUTEX_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|pthread_cond_t
 name|cv
+init|=
+name|PTHREAD_COND_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
