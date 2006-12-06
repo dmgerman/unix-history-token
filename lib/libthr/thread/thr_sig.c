@@ -227,6 +227,10 @@ condition|(
 name|curthread
 operator|->
 name|cancel_defer
+operator|&&
+name|curthread
+operator|->
+name|cancel_pending
 condition|)
 name|thr_wake
 argument_list|(
