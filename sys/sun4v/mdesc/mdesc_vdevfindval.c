@@ -345,6 +345,13 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
+name|free
+argument_list|(
+name|listp
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 name|md_put
 argument_list|(
 name|mdp
