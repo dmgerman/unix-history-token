@@ -1032,73 +1032,8 @@ if|#
 directive|if
 name|_BYTE_ORDER
 operator|==
-name|_LITTLE_ENDIAN
+name|_BIG_ENDIAN
 end_if
-
-begin_define
-define|#
-directive|define
-name|mpt2host_sge_simple_union
-parameter_list|(
-name|x
-parameter_list|)
-value|do { ; } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mpt2host_iocfacts_reply
-parameter_list|(
-name|x
-parameter_list|)
-value|do { ; } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mpt2host_portfacts_reply
-parameter_list|(
-name|x
-parameter_list|)
-value|do { ; } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mpt2host_config_page_ioc2
-parameter_list|(
-name|x
-parameter_list|)
-value|do { ; } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mpt2host_config_page_raid_vol_0
-parameter_list|(
-name|x
-parameter_list|)
-value|do { ; } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mpt2host_mpi_raid_vol_indicator
-parameter_list|(
-name|x
-parameter_list|)
-value|do { ; } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_function_decl
 name|void
@@ -1159,6 +1094,71 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|mpt2host_sge_simple_union
+parameter_list|(
+name|x
+parameter_list|)
+value|do { ; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mpt2host_iocfacts_reply
+parameter_list|(
+name|x
+parameter_list|)
+value|do { ; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mpt2host_portfacts_reply
+parameter_list|(
+name|x
+parameter_list|)
+value|do { ; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mpt2host_config_page_ioc2
+parameter_list|(
+name|x
+parameter_list|)
+value|do { ; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mpt2host_config_page_raid_vol_0
+parameter_list|(
+name|x
+parameter_list|)
+value|do { ; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mpt2host_mpi_raid_vol_indicator
+parameter_list|(
+name|x
+parameter_list|)
+value|do { ; } while (0)
+end_define
 
 begin_endif
 endif|#
