@@ -3738,8 +3738,11 @@ decl_stmt|;
 name|u32
 name|tx_bd_mss_nbytes
 decl_stmt|;
-name|u32
-name|tx_bd_vlan_tag_flags
+name|u16
+name|tx_bd_flags
+decl_stmt|;
+name|u16
+name|tx_bd_vlan_tag
 decl_stmt|;
 define|#
 directive|define
@@ -26425,12 +26428,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * XXX Checksum offload involving IP fragments seems to cause problems on  * transmit.  Disable it for now, hopefully there will be a more elegant  * solution later.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BCE_IP_CSUM
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|BCE_IF_HWASSIST
 value|(CSUM_IP | CSUM_TCP | CSUM_UDP)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BCE_IF_HWASSIST
+value|(CSUM_TCP | CSUM_UDP)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -26556,53 +26586,6 @@ directive|define
 name|BCE_RX_CHAIN_PAGE_SZ
 value|BCM_PAGE_SIZE
 end_define
-
-begin_comment
-comment|/*  * Mbuf pointers. We need these to keep track of the virtual addresses  * of our mbuf chains since we can only convert from physical to virtual,  * not the other way around.  */
-end_comment
-
-begin_struct
-struct|struct
-name|bce_dmamap_arg
-block|{
-name|struct
-name|bce_softc
-modifier|*
-name|sc
-decl_stmt|;
-comment|/* Pointer back to device context */
-name|bus_addr_t
-name|busaddr
-decl_stmt|;
-comment|/* Physical address of mapped memory */
-name|u32
-name|tx_flags
-decl_stmt|;
-comment|/* Flags for frame transmit */
-name|u16
-name|prod
-decl_stmt|;
-name|u16
-name|chain_prod
-decl_stmt|;
-name|int
-name|maxsegs
-decl_stmt|;
-comment|/* Max segments supported for this mapped memory */
-name|u32
-name|prod_bseq
-decl_stmt|;
-name|struct
-name|tx_bd
-modifier|*
-name|tx_chain
-index|[
-name|TX_PAGES
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
