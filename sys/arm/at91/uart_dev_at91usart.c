@@ -1200,11 +1200,17 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|SKYEYE_WORKAROUNDS
 name|int
 name|err
-decl_stmt|,
+decl_stmt|;
+name|int
 name|i
 decl_stmt|;
+endif|#
+directive|endif
 name|uint32_t
 name|cr
 decl_stmt|;
@@ -1297,6 +1303,9 @@ name|sc_hwiflow
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SKYEYE_WORKAROUNDS
 comment|/* 	 * Allocate DMA tags and maps 	 */
 name|err
 operator|=
@@ -1519,6 +1528,8 @@ literal|1
 index|]
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Prime the pump with the RX buffer.  We use two 64 byte bounce 	 * buffers here to avoid data overflow. 	 */
 comment|/* Turn on rx and tx */
 name|cr
@@ -1706,6 +1717,9 @@ argument_list|,
 name|USART_CSR_RXBRK
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SKYEYE_WORKAROUNDS
 name|errout
 label|:
 empty_stmt|;
@@ -1715,6 +1729,15 @@ operator|(
 name|err
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
