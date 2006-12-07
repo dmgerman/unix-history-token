@@ -472,11 +472,26 @@ name|ex_addrlen
 operator|>
 name|MLEN
 condition|)
+block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"ex_addrlen %d is greater than %d"
+argument_list|,
+name|argp
+operator|->
+name|ex_addrlen
+argument_list|,
+name|MLEN
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 name|i
@@ -743,6 +758,13 @@ name|error
 operator|=
 name|ENOBUFS
 expr_stmt|;
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"Unable to initialize radix node head"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -798,6 +820,17 @@ comment|/* already exists */
 name|error
 operator|=
 name|EPERM
+expr_stmt|;
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"Invalid radix node head, rn: %p %p"
+argument_list|,
+name|rn
+argument_list|,
+name|np
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
