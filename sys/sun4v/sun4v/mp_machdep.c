@@ -1152,6 +1152,8 @@ operator|=
 operator|&
 name|cpu_start_args
 expr_stmt|;
+name|clock
+operator|=
 name|cpuid
 operator|=
 name|bp_skipped
