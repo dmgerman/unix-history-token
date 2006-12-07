@@ -5140,7 +5140,6 @@ name|mpt
 argument_list|,
 name|MPI_CONFIG_PAGETYPE_RAID_VOLUME
 argument_list|,
-comment|/*PageNumber*/
 literal|0
 argument_list|,
 name|ioc_vol
@@ -5152,10 +5151,8 @@ name|vol_pg
 operator|->
 name|Header
 argument_list|,
-comment|/*sleep_ok*/
 name|TRUE
 argument_list|,
-comment|/*timeout_ms*/
 literal|5000
 argument_list|)
 expr_stmt|;
@@ -5172,8 +5169,7 @@ name|mpt
 argument_list|,
 name|mpt_vol
 argument_list|,
-literal|"mpt_refresh_raid_vol: "
-literal|"Failed to read RAID Vol Hdr(%d)\n"
+literal|"mpt_refresh_raid_vol: Failed to read RAID Vol Hdr(%d)\n"
 argument_list|,
 name|ioc_vol
 operator|->
@@ -5201,10 +5197,8 @@ name|mpt
 operator|->
 name|raid_page0_len
 argument_list|,
-comment|/*sleep_ok*/
 name|TRUE
 argument_list|,
-comment|/*timeout_ms*/
 literal|5000
 argument_list|)
 expr_stmt|;
@@ -5221,8 +5215,7 @@ name|mpt
 argument_list|,
 name|mpt_vol
 argument_list|,
-literal|"mpt_refresh_raid_vol: "
-literal|"Failed to read RAID Vol Page(%d)\n"
+literal|"mpt_refresh_raid_vol: Failed to read RAID Vol Page(%d)\n"
 argument_list|,
 name|ioc_vol
 operator|->
@@ -5231,6 +5224,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|mpt2host_config_page_raid_vol_0
+argument_list|(
+name|vol_pg
+argument_list|)
+expr_stmt|;
 name|mpt_vol
 operator|->
 name|flags
@@ -5330,7 +5328,6 @@ name|mpt_get_request
 argument_list|(
 name|mpt
 argument_list|,
-comment|/*sleep_ok*/
 name|TRUE
 argument_list|)
 expr_stmt|;
@@ -5360,26 +5357,20 @@ name|mpt
 argument_list|,
 name|mpt_vol
 argument_list|,
-comment|/*disk*/
 name|NULL
 argument_list|,
 name|req
 argument_list|,
 name|MPI_RAID_ACTION_INDICATOR_STRUCT
 argument_list|,
-comment|/*ActionWord*/
 literal|0
 argument_list|,
-comment|/*addr*/
 literal|0
 argument_list|,
-comment|/*len*/
 literal|0
 argument_list|,
-comment|/*write*/
 name|FALSE
 argument_list|,
-comment|/*wait*/
 name|TRUE
 argument_list|)
 expr_stmt|;
@@ -5396,8 +5387,14 @@ name|mpt
 argument_list|,
 name|mpt_vol
 argument_list|,
-literal|"mpt_refresh_raid_vol: "
-literal|"Progress indicator fetch timedout!\n"
+literal|"mpt_refresh_raid_vol: Progress Indicator fetch timeout\n"
+argument_list|)
+expr_stmt|;
+name|mpt_free_request
+argument_list|(
+name|mpt
+argument_list|,
+name|req
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5451,6 +5448,14 @@ name|sync_progress
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mpt2host_mpi_raid_vol_indicator
+argument_list|(
+operator|&
+name|mpt_vol
+operator|->
+name|sync_progress
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -5460,8 +5465,7 @@ name|mpt
 argument_list|,
 name|mpt_vol
 argument_list|,
-literal|"mpt_refresh_raid_vol: "
-literal|"Progress indicator fetch failed!\n"
+literal|"mpt_refresh_raid_vol: Progress indicator fetch failed!\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5995,7 +5999,9 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 continue|continue;
+block|}
 name|vol_pg
 operator|=
 name|mpt_vol
@@ -6131,7 +6137,9 @@ name|Flags
 operator|==
 literal|0
 condition|)
+block|{
 continue|continue;
+block|}
 name|mpt_vol_prt
 argument_list|(
 name|mpt
@@ -6246,7 +6254,7 @@ argument_list|)
 expr_stmt|;
 name|left
 operator|=
-name|u64toh
+name|MPT_U64_2_SCALAR
 argument_list|(
 name|mpt_vol
 operator|->
@@ -6257,7 +6265,7 @@ argument_list|)
 expr_stmt|;
 name|total
 operator|=
-name|u64toh
+name|MPT_U64_2_SCALAR
 argument_list|(
 name|mpt_vol
 operator|->
