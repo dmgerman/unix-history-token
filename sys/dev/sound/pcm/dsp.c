@@ -1722,7 +1722,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX: Maybe the right behaviour is to abort on non_block. 			 * It seems that mplayer flushes the audio queue by quickly 			 * closing and re-opening.  In FBSD, there's a long pause 			 * while the audio queue flushes that I presume isn't there in 			 * linux. 			 */
 name|chn_flush
 argument_list|(
 name|wrch
