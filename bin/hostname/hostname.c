@@ -147,7 +147,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"s"
+literal|"sf"
 argument_list|)
 operator|)
 operator|!=
@@ -159,6 +159,12 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'f'
+case|:
+comment|/* On Linux, "hostname -f" prints FQDN. */
+comment|/* BSD "hostname" always print FQDN by 			 * default, so we accept but ignore -f. */
+break|break;
 case|case
 literal|'s'
 case|:
