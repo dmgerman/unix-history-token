@@ -9633,7 +9633,6 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-comment|/* Clear the timeout timer. */
 name|sc
 operator|->
 name|xl_wdog_timer
@@ -9694,12 +9693,6 @@ name|XL_COMMAND
 argument_list|,
 name|XL_CMD_DOWN_UNSTALL
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|xl_wdog_timer
-operator|=
-literal|5
 expr_stmt|;
 block|}
 block|}
@@ -9873,10 +9866,8 @@ name|XL_TX_LIST_CNT
 argument_list|)
 expr_stmt|;
 block|}
-name|sc
-operator|->
-name|xl_wdog_timer
-operator|=
+if|if
+condition|(
 name|sc
 operator|->
 name|xl_cdata
@@ -9884,10 +9875,12 @@ operator|.
 name|xl_tx_cnt
 operator|==
 literal|0
-condition|?
+condition|)
+name|sc
+operator|->
+name|xl_wdog_timer
+operator|=
 literal|0
-else|:
-literal|5
 expr_stmt|;
 name|sc
 operator|->
