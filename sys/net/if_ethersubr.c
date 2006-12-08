@@ -1602,21 +1602,17 @@ name|mbuf
 modifier|*
 name|n
 decl_stmt|;
+comment|/* 			 * Because if_simloop() modifies the packet, we need a 			 * writable copy through m_dup() instead of a readonly 			 * one as m_copy[m] would give us. The alternative would 			 * be to modify if_simloop() to handle the readonly mbuf, 			 * but performancewise it is mostly equivalent (trading 			 * extra data copying vs. extra locking). 			 */
 if|if
 condition|(
 operator|(
 name|n
 operator|=
-name|m_copy
+name|m_dup
 argument_list|(
 name|m
 argument_list|,
-literal|0
-argument_list|,
-operator|(
-name|int
-operator|)
-name|M_COPYALL
+name|M_DONTWAIT
 argument_list|)
 operator|)
 operator|!=
