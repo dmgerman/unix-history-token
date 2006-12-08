@@ -147,7 +147,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"sf"
+literal|"fs"
 argument_list|)
 operator|)
 operator|!=
@@ -162,8 +162,7 @@ block|{
 case|case
 literal|'f'
 case|:
-comment|/* On Linux, "hostname -f" prints FQDN. */
-comment|/* BSD "hostname" always print FQDN by 			 * default, so we accept but ignore -f. */
+comment|/* 			 * On Linux, "hostname -f" prints FQDN. 			 * BSD "hostname" always prints FQDN by 			 * default, so we accept but ignore -f. 			 */
 break|break;
 case|case
 literal|'s'
@@ -312,7 +311,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: hostname [-s] [name-of-host]\n"
+literal|"usage: hostname [-fs] [name-of-host]\n"
 argument_list|)
 expr_stmt|;
 name|exit
