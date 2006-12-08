@@ -99,7 +99,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * EM_TADV - Transmit Absolute Interrupt Delay Value (Not valid for 82542/82543/82544)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   transmit interrupt is generated. Useful only if EM_TIDV is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is sent on the wire within the set amount of time.  Proper tuning,  *   along with EM_TIDV, may improve traffic throughput in specific  *   network conditions.  */
+comment|/*  * EM_TADV - Transmit Absolute Interrupt Delay Value  * (Not valid for 82542/82543/82544)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   transmit interrupt is generated. Useful only if EM_TIDV is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is sent on the wire within the set amount of time.  Proper tuning,  *   along with EM_TIDV, may improve traffic throughput in specific  *   network conditions.  */
 end_comment
 
 begin_define
@@ -110,7 +110,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * EM_RDTR - Receive Interrupt Delay Timer (Packet Timer)  * Valid Range: 0-65535 (0=off)  * Default Value: 0  *   This value delays the generation of receive interrupts in units of 1.024  *   microseconds.  Receive interrupt reduction can improve CPU efficiency if  *   properly tuned for specific network traffic. Increasing this value adds  *   extra latency to frame reception and can end up decreasing the throughput  *   of TCP traffic. If the system is reporting dropped receives, this value  *   may be set too high, causing the driver to run out of available receive  *   descriptors.  *  *   CAUTION: When setting EM_RDTR to a value other than 0, adapters  *            may hang (stop transmitting) under certain network conditions.  *            If this occurs a WATCHDOG message is logged in the system event log.  *            In addition, the controller is automatically reset, restoring the  *            network connection. To eliminate the potential for the hang  *            ensure that EM_RDTR is set to 0.  */
+comment|/*  * EM_RDTR - Receive Interrupt Delay Timer (Packet Timer)  * Valid Range: 0-65535 (0=off)  * Default Value: 0  *   This value delays the generation of receive interrupts in units of 1.024  *   microseconds.  Receive interrupt reduction can improve CPU efficiency if  *   properly tuned for specific network traffic. Increasing this value adds  *   extra latency to frame reception and can end up decreasing the throughput  *   of TCP traffic. If the system is reporting dropped receives, this value  *   may be set too high, causing the driver to run out of available receive  *   descriptors.  *  *   CAUTION: When setting EM_RDTR to a value other than 0, adapters  *            may hang (stop transmitting) under certain network conditions.  *            If this occurs a WATCHDOG message is logged in the system  *            event log. In addition, the controller is automatically reset,  *            restoring the network connection. To eliminate the potential  *            for the hang ensure that EM_RDTR is set to 0.  */
 end_comment
 
 begin_define
@@ -158,7 +158,7 @@ comment|/* set to 5 seconds */
 end_comment
 
 begin_comment
-comment|/*  * This parameter controls when the driver calls the routine to reclaim  * transmit descriptors.  */
+comment|/*  * These parameters controls when the driver calls the routine to reclaim  * transmit descriptors.  */
 end_comment
 
 begin_define
@@ -166,6 +166,13 @@ define|#
 directive|define
 name|EM_TX_CLEANUP_THRESHOLD
 value|(adapter->num_tx_desc / 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_TX_OP_THRESHOLD
+value|(adapter->num_tx_desc / 32)
 end_define
 
 begin_comment
@@ -191,7 +198,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * EM_MASTER_SLAVE is only defined to enable a workaround for a known compatibility issue  * with 82541/82547 devices and some switches.  See the "Known Limitations" section of  * the README file for a complete description and a list of affected switches.  *  *              0 = Hardware default  *              1 = Master mode  *              2 = Slave mode  *              3 = Auto master/slave  */
+comment|/*  * EM_MASTER_SLAVE is only defined to enable a workaround for a known  * compatibility issue with 82541/82547 devices and some switches.  * See the "Known Limitations" section of the README file for a complete  * description and a list of affected switches.  *  *              0 = Hardware default  *              1 = Master mode  *              2 = Slave mode  *              3 = Auto master/slave  */
 end_comment
 
 begin_comment
@@ -206,7 +213,7 @@ begin_define
 define|#
 directive|define
 name|AUTONEG_ADV_DEFAULT
-value|(ADVERTISE_10_HALF | ADVERTISE_10_FULL | \                                          ADVERTISE_100_HALF | ADVERTISE_100_FULL | \                                          ADVERTISE_1000_FULL)
+value|(ADVERTISE_10_HALF | ADVERTISE_10_FULL | \ 				ADVERTISE_100_HALF | ADVERTISE_100_FULL | \ 				ADVERTISE_1000_FULL)
 end_define
 
 begin_define
@@ -297,6 +304,98 @@ end_define
 begin_comment
 comment|/* On PCI-E MACs only */
 end_comment
+
+begin_comment
+comment|/* PCI Config defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_TYPE
+parameter_list|(
+name|v
+parameter_list|)
+value|((v)& EM_BAR_TYPE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_TYPE_MASK
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_TYPE_MMEM
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_TYPE_IO
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_MEM_TYPE
+parameter_list|(
+name|v
+parameter_list|)
+value|((v)& EM_BAR_MEM_TYPE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_MEM_TYPE_MASK
+value|0x00000006
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_MEM_TYPE_32BIT
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_MEM_TYPE_64BIT
+value|0x00000004
+end_define
+
+begin_comment
+comment|/*  * Backward compatibility workaround  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PCIR_CIS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PCIR_CIS
+value|PCIR_CARDBUSCIS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Defines for printing debug information */
@@ -470,55 +569,74 @@ name|EM_MAX_SCATTER
 value|64
 end_define
 
+begin_define
+define|#
+directive|define
+name|EM_TSO_SIZE
+value|65535
+end_define
+
+begin_comment
+comment|/* maxsize of a dma transfer */
+end_comment
+
+begin_comment
+comment|/* ******************************************************************************  * vendor_info_array  *  * This array contains the list of Subvendor/Subdevice IDs on which the driver  * should load.  *  * ******************************************************************************/
+end_comment
+
 begin_typedef
 typedef|typedef
-enum|enum
-name|_XSUM_CONTEXT_T
+struct|struct
+name|_em_vendor_info_t
 block|{
-name|OFFLOAD_NONE
-block|,
-name|OFFLOAD_TCP_IP
-block|,
-name|OFFLOAD_UDP_IP
+name|unsigned
+name|int
+name|vendor_id
+decl_stmt|;
+name|unsigned
+name|int
+name|device_id
+decl_stmt|;
+name|unsigned
+name|int
+name|subvendor_id
+decl_stmt|;
+name|unsigned
+name|int
+name|subdevice_id
+decl_stmt|;
+name|unsigned
+name|int
+name|index
+decl_stmt|;
 block|}
-name|XSUM_CONTEXT_T
+name|em_vendor_info_t
 typedef|;
 end_typedef
 
-begin_struct_decl
-struct_decl|struct
-name|adapter
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* XXX: ugly forward declaration */
-end_comment
-
 begin_struct
 struct|struct
-name|em_int_delay_info
+name|em_buffer
 block|{
+name|int
+name|next_eop
+decl_stmt|;
+comment|/* Index of the desc to watch */
 name|struct
-name|adapter
+name|mbuf
 modifier|*
-name|adapter
+name|m_head
 decl_stmt|;
-comment|/* XXX: ugly pointer */
-name|int
-name|offset
+name|bus_dmamap_t
+name|map
 decl_stmt|;
-comment|/* Register offset to read/write */
-name|int
-name|value
-decl_stmt|;
-comment|/* Current value in usecs */
+comment|/* bus_dma map for packet */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Bus dma allocation structure used by  * em_dma_malloc() and em_dma_free().  */
+comment|/*  * Bus dma allocation structure used by  * em_dma_malloc and em_dma_free.  */
 end_comment
 
 begin_struct
@@ -547,8 +665,96 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+enum|enum
+name|_XSUM_CONTEXT_T
+block|{
+name|OFFLOAD_NONE
+block|,
+name|OFFLOAD_TCP_IP
+block|,
+name|OFFLOAD_UDP_IP
+block|}
+name|XSUM_CONTEXT_T
+typedef|;
+end_typedef
+
+begin_struct_decl
+struct_decl|struct
+name|adapter
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|em_int_delay_info
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+decl_stmt|;
+comment|/* Back-pointer to the adapter struct */
+name|int
+name|offset
+decl_stmt|;
+comment|/* Register offset to read/write */
+name|int
+name|value
+decl_stmt|;
+comment|/* Current value in usecs */
+block|}
+struct|;
+end_struct
+
 begin_comment
-comment|/* Driver softc. */
+comment|/* For 82544 PCIX  Workaround */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ADDRESS_LENGTH_PAIR
+block|{
+name|uint64_t
+name|address
+decl_stmt|;
+name|uint32_t
+name|length
+decl_stmt|;
+block|}
+name|ADDRESS_LENGTH_PAIR
+operator|,
+typedef|*
+name|PADDRESS_LENGTH_PAIR
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_DESCRIPTOR_PAIR
+block|{
+name|ADDRESS_LENGTH_PAIR
+name|descriptor
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|uint32_t
+name|elements
+decl_stmt|;
+block|}
+name|DESC_ARRAY
+operator|,
+typedef|*
+name|PDESC_ARRAY
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Our adapter structure */
 end_comment
 
 begin_struct
@@ -665,7 +871,7 @@ name|uint32_t
 name|next_avail_tx_desc
 decl_stmt|;
 name|uint32_t
-name|oldest_used_tx_desc
+name|next_tx_to_clean
 decl_stmt|;
 specifier|volatile
 name|uint16_t
@@ -686,6 +892,10 @@ name|bus_dma_tag_t
 name|txtag
 decl_stmt|;
 comment|/* dma tag for tx */
+name|uint32_t
+name|tx_tso
+decl_stmt|;
+comment|/* last tx was tso */
 comment|/*  	 * Receive definitions 	 * 	 * we have an array of num_rx_desc rx_desc (handled by the 	 * controller), and paired with an array of rx_buffers 	 * (at rx_buffer_area). 	 * The next pair to check on receive is at offset next_rx_desc_to_check 	 */
 name|struct
 name|em_dma_alloc
@@ -706,6 +916,9 @@ decl_stmt|;
 name|uint16_t
 name|num_rx_desc
 decl_stmt|;
+name|int
+name|rx_process_limit
+decl_stmt|;
 name|struct
 name|em_buffer
 modifier|*
@@ -714,10 +927,7 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|rxtag
 decl_stmt|;
-name|bus_dmamap_t
-name|rx_sparemap
-decl_stmt|;
-comment|/* First/last mbuf pointers, for collecting multisegment RX packets. */
+comment|/* 	 * First/last mbuf pointers, for 	 * collecting multisegment RX packets. 	 */
 name|struct
 name|mbuf
 modifier|*
@@ -738,6 +948,10 @@ modifier|*
 name|sysctl_tree
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
+name|unsigned
+name|long
+name|dropped_pkts
+decl_stmt|;
 name|unsigned
 name|long
 name|mbuf_alloc_failed
@@ -823,102 +1037,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* ******************************************************************************  * vendor_info_array  *  * This array contains the list of Subvendor/Subdevice IDs on which the driver  * should load.  *  * ******************************************************************************/
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_em_vendor_info_t
-block|{
-name|unsigned
-name|int
-name|vendor_id
-decl_stmt|;
-name|unsigned
-name|int
-name|device_id
-decl_stmt|;
-name|unsigned
-name|int
-name|subvendor_id
-decl_stmt|;
-name|unsigned
-name|int
-name|subdevice_id
-decl_stmt|;
-name|unsigned
-name|int
-name|index
-decl_stmt|;
-block|}
-name|em_vendor_info_t
-typedef|;
-end_typedef
-
-begin_struct
-struct|struct
-name|em_buffer
-block|{
-name|struct
-name|mbuf
-modifier|*
-name|m_head
-decl_stmt|;
-name|bus_dmamap_t
-name|map
-decl_stmt|;
-comment|/* bus_dma map for packet */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* For 82544 PCIX  Workaround */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_ADDRESS_LENGTH_PAIR
-block|{
-name|u_int64_t
-name|address
-decl_stmt|;
-name|u_int32_t
-name|length
-decl_stmt|;
-block|}
-name|ADDRESS_LENGTH_PAIR
-operator|,
-typedef|*
-name|PADDRESS_LENGTH_PAIR
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_DESCRIPTOR_PAIR
-block|{
-name|ADDRESS_LENGTH_PAIR
-name|descriptor
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|u_int32_t
-name|elements
-decl_stmt|;
-block|}
-name|DESC_ARRAY
-operator|,
-typedef|*
-name|PDESC_ARRAY
-typedef|;
-end_typedef
 
 begin_endif
 endif|#

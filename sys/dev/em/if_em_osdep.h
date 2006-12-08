@@ -22,6 +22,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -34,13 +40,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
+file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -52,7 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -76,6 +94,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -90,6 +120,20 @@ include|#
 directive|include
 file|<pci/pcireg.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|ASSERT
+parameter_list|(
+name|x
+parameter_list|)
+value|if(!(x)) panic("EM: x")
+end_define
+
+begin_comment
+comment|/* The happy-fun DELAY macro is defined in /usr/src/sys/i386/include/clock.h */
+end_comment
 
 begin_define
 define|#
@@ -149,11 +193,11 @@ parameter_list|)
 value|DEBUGOUT(F);
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|DBG
-end_ifdef
+end_if
 
 begin_define
 define|#
@@ -366,7 +410,9 @@ decl_stmt|;
 name|bus_space_handle_t
 name|flash_bus_space_handle
 decl_stmt|;
-name|device_t
+name|struct
+name|device
+modifier|*
 name|dev
 decl_stmt|;
 block|}
@@ -378,9 +424,9 @@ define|#
 directive|define
 name|E1000_WRITE_FLUSH
 parameter_list|(
-name|hw
+name|a
 parameter_list|)
-value|E1000_READ_REG(hw, STATUS)
+value|E1000_READ_REG(a, STATUS)
 end_define
 
 begin_comment
@@ -397,7 +443,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|bus_space_read_4( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \     ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, offset)
+value|bus_space_read_4(((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \     ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, offset)
 end_define
 
 begin_comment
@@ -416,7 +462,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_4( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \     ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, offset, value)
+value|bus_space_write_4(((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \     ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, offset, value)
 end_define
 
 begin_comment
@@ -437,21 +483,8 @@ value|((hw)->mac_type>= em_82543 ? E1000_##reg : E1000_82542_##reg)
 end_define
 
 begin_comment
-comment|/*  * Register READ/WRITE macros.  *  * XXXGL: Due to define's namespace mangling in recent version of  * if_em_hw.*, we prepend "_" to the register name in all macros,  * to prevent reg from being substituted, and then, in E1000_REG_OFFSET()  * we prepend either "E1000" or "E1000_82542".  *  * P.S. The problematic defines are E1000_PHY_CTRL and PHY_CTRL.  *  * P.P.S. Intel has removed E1000_REG_OFFSET() and copy-pasted it to all  * macros.  */
+comment|/* Register READ/WRITE macros */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|_E1000_REG_OFFSET
-parameter_list|(
-name|hw
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|((hw)->mac_type>= em_82543 ? E1000##reg : E1000_82542##reg)
-end_define
 
 begin_define
 define|#
@@ -463,7 +496,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|E1000_READ_OFFSET(hw, _E1000_REG_OFFSET(hw, _##reg))
+value|bus_space_read_4(((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \         ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \         ((hw)->mac_type>= em_82543 ? E1000_##reg : E1000_82542_##reg))
 end_define
 
 begin_define
@@ -478,7 +511,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|E1000_WRITE_OFFSET(hw, _E1000_REG_OFFSET(hw, _##reg), value)
+value|bus_space_write_4(((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \         ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \         ((hw)->mac_type>= em_82543 ? E1000_##reg : E1000_82542_##reg), \         value)
 end_define
 
 begin_define
@@ -493,14 +526,7 @@ parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|E1000_READ_OFFSET(hw, _E1000_REG_OFFSET(hw, _##reg) + ((index)<< 2))
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_READ_REG_ARRAY_DWORD
-value|E1000_READ_REG_ARRAY
+value|bus_space_read_4(((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \         ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \         ((hw)->mac_type>= em_82543 ? E1000_##reg : E1000_82542_##reg) \         + ((index)<< 2))
 end_define
 
 begin_define
@@ -517,7 +543,21 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|E1000_WRITE_OFFSET(hw, _E1000_REG_OFFSET(hw, _##reg) + ((index)<< 2), value)
+value|bus_space_write_4(((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \         ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \         ((hw)->mac_type>= em_82543 ? E1000_##reg : E1000_82542_##reg) \         + ((index)<< 2), value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_READ_REG_ARRAY_DWORD
+value|E1000_READ_REG_ARRAY
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_WRITE_REG_ARRAY_DWORD
+value|E1000_WRITE_REG_ARRAY
 end_define
 
 begin_define
@@ -534,7 +574,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_1( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \                        ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \                        _E1000_REG_OFFSET(hw, _##reg) + (index), \                        value)
+value|bus_space_write_1( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \         ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \         ((hw)->mac_type>= em_82543 ? E1000_##reg : E1000_82542_##reg \         + index), value)
 end_define
 
 begin_define
@@ -551,30 +591,13 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_2( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \                        ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \                        _E1000_REG_OFFSET(hw, _##reg) + (index), \                        value)
+value|bus_space_write_2( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \         ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \         ((hw)->mac_type>= em_82543 ? E1000_##reg : E1000_82542_##reg \         + (index<< 1)), value)
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_WRITE_REG_ARRAY_DWORD
-parameter_list|(
-name|hw
-parameter_list|,
-name|reg
-parameter_list|,
-name|index
-parameter_list|,
-name|value
-parameter_list|)
-define|\
-value|E1000_WRITE_OFFSET(hw, _E1000_REG_OFFSET(hw, _##reg) + ((index)<< 2), value)
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_READ_ICH8_REG
+name|E1000_READ_ICH_FLASH_REG
 parameter_list|(
 name|hw
 parameter_list|,
@@ -587,7 +610,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_READ_ICH8_REG16
+name|E1000_READ_ICH_FLASH_REG16
 parameter_list|(
 name|hw
 parameter_list|,
@@ -600,7 +623,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_WRITE_ICH8_REG
+name|E1000_WRITE_ICH_FLASH_REG
 parameter_list|(
 name|hw
 parameter_list|,
@@ -615,7 +638,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_WRITE_ICH8_REG16
+name|E1000_WRITE_ICH_FLASH_REG16
 parameter_list|(
 name|hw
 parameter_list|,
@@ -625,34 +648,6 @@ name|value
 parameter_list|)
 define|\
 value|bus_space_write_2(((struct em_osdep *)(hw)->back)->flash_bus_space_tag, \         ((struct em_osdep *)(hw)->back)->flash_bus_space_handle, reg, value)
-end_define
-
-begin_define
-define|#
-directive|define
-name|em_io_read
-parameter_list|(
-name|hw
-parameter_list|,
-name|port
-parameter_list|)
-define|\
-value|bus_space_read_4(((struct em_osdep *)(hw)->back)->io_bus_space_tag, \ 	((struct em_osdep *)(hw)->back)->io_bus_space_handle, (port))
-end_define
-
-begin_define
-define|#
-directive|define
-name|em_io_write
-parameter_list|(
-name|hw
-parameter_list|,
-name|port
-parameter_list|,
-name|value
-parameter_list|)
-define|\
-value|bus_space_write_4(((struct em_osdep *)(hw)->back)->io_bus_space_tag, \ 	((struct em_osdep *)(hw)->back)->io_bus_space_handle, (port),	 \ 	(value))
 end_define
 
 begin_endif
