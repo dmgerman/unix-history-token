@@ -281,7 +281,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|":"
+literal|": "
 argument_list|,
 sizeof|sizeof
 argument_list|(
