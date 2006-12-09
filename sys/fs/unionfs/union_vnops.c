@@ -7021,6 +7021,21 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|lvp
+operator|==
+name|NULLVP
+condition|)
+block|{
+name|error
+operator|=
+name|EBADF
+expr_stmt|;
+goto|goto
+name|unionfs_readdir_exit
+goto|;
+block|}
 comment|/* read lower */
 name|error
 operator|=
