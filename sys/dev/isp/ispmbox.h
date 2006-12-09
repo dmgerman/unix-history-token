@@ -2909,7 +2909,7 @@ decl_stmt|;
 name|uint16_t
 name|ms_nphdl
 decl_stmt|;
-comment|/* XXX: Note, this is for 2K Logins only */
+comment|/* handle in high byte for !2k f/w */
 name|uint16_t
 name|ms_status
 decl_stmt|;
