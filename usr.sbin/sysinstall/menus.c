@@ -2690,7 +2690,22 @@ literal|"=ftp://snapshots.se.freebsd.org"
 block|}
 block|,
 block|{
-literal|"IPv6 Ireland"
+literal|"IPv6 Main Site"
+block|,
+literal|"ftp.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.freebsd.org"
+block|}
+block|,
+block|{
+literal|" IPv6 Ireland"
 block|,
 literal|"ftp3.ie.freebsd.org"
 block|,
@@ -2702,6 +2717,21 @@ name|NULL
 block|,
 name|VAR_FTP_PATH
 literal|"=ftp://ftp3.ie.freebsd.org"
+block|}
+block|,
+block|{
+literal|" IPv6 Israel"
+block|,
+literal|"ftp.il.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.il.freebsd.org"
 block|}
 block|,
 block|{
@@ -3602,6 +3632,21 @@ name|NULL
 block|,
 name|VAR_FTP_PATH
 literal|"=ftp://ftp3.ie.freebsd.org"
+block|}
+block|,
+block|{
+literal|"Isreal"
+block|,
+literal|"ftp.il.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.il.freebsd.org"
 block|}
 block|,
 block|{
