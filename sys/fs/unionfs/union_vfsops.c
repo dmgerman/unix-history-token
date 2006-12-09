@@ -1846,11 +1846,6 @@ modifier|*
 name|ump
 decl_stmt|;
 name|struct
-name|unionfs_node
-modifier|*
-name|unp
-decl_stmt|;
-name|struct
 name|vnode
 modifier|*
 name|vp
@@ -1867,13 +1862,6 @@ operator|=
 name|ump
 operator|->
 name|um_rootvp
-expr_stmt|;
-name|unp
-operator|=
-name|VTOUNIONFS
-argument_list|(
-name|vp
-argument_list|)
 expr_stmt|;
 name|UNIONFSDEBUG
 argument_list|(
