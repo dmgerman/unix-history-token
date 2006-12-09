@@ -448,11 +448,20 @@ name|mnt_flag
 operator|&
 name|MNT_ROOTFS
 condition|)
+block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"Cannot union mount root filesystem"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+block|}
 comment|/* 	 * Update is a no operation. 	 */
 if|if
 condition|(
@@ -462,11 +471,20 @@ name|mnt_flag
 operator|&
 name|MNT_UPDATE
 condition|)
+block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"unionfs does not support mount update"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+block|}
 comment|/* 	 * Get argument 	 */
 name|error
 operator|=
