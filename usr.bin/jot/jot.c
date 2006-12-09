@@ -1834,6 +1834,7 @@ name|p
 operator|==
 literal|'%'
 condition|)
+block|{
 if|if
 condition|(
 name|p
@@ -1849,6 +1850,7 @@ expr_stmt|;
 comment|/* leave %% alone */
 else|else
 break|break;
+block|}
 name|sz
 operator|=
 sizeof|sizeof
