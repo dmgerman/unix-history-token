@@ -1360,11 +1360,6 @@ operator|(
 name|SNMP_ERR_NOSUCHNAME
 operator|)
 return|;
-name|bp
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* Make the compiler happy. */
 switch|switch
 condition|(
 name|op
@@ -1532,6 +1527,7 @@ case|:
 case|case
 name|SNMP_OP_COMMIT
 case|:
+default|default:
 name|abort
 argument_list|()
 expr_stmt|;
@@ -1710,11 +1706,6 @@ operator|(
 name|SNMP_ERR_NOSUCHNAME
 operator|)
 return|;
-name|bp
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* Make the compiler happy. */
 switch|switch
 condition|(
 name|op
@@ -2199,6 +2190,10 @@ operator|(
 name|SNMP_ERR_NOERROR
 operator|)
 return|;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 name|ret
 operator|=
@@ -2457,11 +2452,6 @@ operator|(
 name|SNMP_ERR_NOSUCHNAME
 operator|)
 return|;
-name|bp
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* Make the compiler happy. */
 switch|switch
 condition|(
 name|op
@@ -2934,6 +2924,10 @@ operator|(
 name|SNMP_ERR_NOERROR
 operator|)
 return|;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 switch|switch
 condition|(
@@ -3121,11 +3115,6 @@ operator|(
 name|SNMP_ERR_NOSUCHNAME
 operator|)
 return|;
-name|bp
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* Make the compiler happy. */
 switch|switch
 condition|(
 name|op
@@ -3293,6 +3282,7 @@ case|:
 case|case
 name|SNMP_OP_COMMIT
 case|:
+default|default:
 name|abort
 argument_list|()
 expr_stmt|;
@@ -5299,8 +5289,6 @@ name|struct
 name|bridge_port
 modifier|*
 name|bp
-init|=
-name|NULL
 decl_stmt|;
 specifier|const
 name|char
@@ -5728,6 +5716,10 @@ operator|(
 name|SNMP_ERR_NOERROR
 operator|)
 return|;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 name|ret
 operator|=
@@ -5938,8 +5930,6 @@ name|struct
 name|bridge_port
 modifier|*
 name|bp
-init|=
-name|NULL
 decl_stmt|;
 specifier|const
 name|char
@@ -6357,6 +6347,10 @@ operator|(
 name|SNMP_ERR_NOERROR
 operator|)
 return|;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 switch|switch
 condition|(
@@ -6496,8 +6490,6 @@ name|struct
 name|bridge_port
 modifier|*
 name|bp
-init|=
-name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -6605,11 +6597,10 @@ case|:
 case|case
 name|SNMP_OP_COMMIT
 case|:
-return|return
-operator|(
-name|SNMP_ERR_NOERROR
-operator|)
-return|;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 switch|switch
 condition|(

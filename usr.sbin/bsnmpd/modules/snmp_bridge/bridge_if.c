@@ -4706,8 +4706,6 @@ name|struct
 name|bridge_if
 modifier|*
 name|bif
-init|=
-name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -4876,6 +4874,10 @@ name|sub
 argument_list|)
 operator|)
 return|;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 name|ret
 operator|=
@@ -5011,16 +5013,11 @@ parameter_list|)
 block|{
 name|int
 name|ret
-init|=
-name|SNMP_ERR_NOERROR
 decl_stmt|;
-comment|/* Make the compiler happy. */
 name|struct
 name|bridge_if
 modifier|*
 name|bif
-init|=
-name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -5345,6 +5342,12 @@ operator|(
 name|SNMP_ERR_NOT_WRITEABLE
 operator|)
 return|;
+default|default:
+return|return
+operator|(
+name|SNMP_ERR_NOSUCHNAME
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -5519,7 +5522,15 @@ operator|(
 name|SNMP_ERR_NOERROR
 operator|)
 return|;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
+name|ret
+operator|=
+name|SNMP_ERR_NOERROR
+expr_stmt|;
 switch|switch
 condition|(
 name|val
@@ -5813,8 +5824,6 @@ name|struct
 name|bridge_if
 modifier|*
 name|bif
-init|=
-name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -6114,6 +6123,10 @@ operator|(
 name|SNMP_ERR_NOERROR
 operator|)
 return|;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 switch|switch
 condition|(
