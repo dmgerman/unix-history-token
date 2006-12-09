@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2003, 2004, 2005  *	John Wehle<john@feith.com>.  All
 end_comment
 
 begin_comment
-comment|/*  * Set the channel of the tuner card.  */
+comment|/* Set the channel of the tuner card. */
 end_comment
 
 begin_include
@@ -111,7 +111,8 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"Usage: setchannel [-a {on|off}] [-c | -r | -s | -t] [-g geom] [-m chnl_set] [chnl | freq]\n"
+literal|"Usage: setchannel [-a {on|off}] [-c | -r | -s | -t] "
+literal|"[-g geom] [-m chnl_set] [chnl | freq]\n"
 literal|"  -a    Enable / disable AFC.\n"
 literal|"  -c    Select composite input.\n"
 literal|"  -r    Select radio input.\n"
@@ -468,7 +469,7 @@ operator|<
 name|argc
 condition|)
 block|{
-comment|/*      * A number containing a decimal point is the frequency in MHz.      */
+comment|/* 		 * A number containing a decimal point is the frequency in MHz. 		 */
 if|if
 condition|(
 operator|(
@@ -598,7 +599,7 @@ operator|+=
 name|fraction
 expr_stmt|;
 block|}
-comment|/*      * An integer is the channel.      */
+comment|/* An integer is the channel. */
 else|else
 name|channel
 operator|=
@@ -706,7 +707,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ioctl( tfd, TVTUNER_SETAFC ) failed."
+literal|"ioctl(tfd, TVTUNER_SETAFC) failed."
 argument_list|)
 expr_stmt|;
 name|status
@@ -735,7 +736,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ioctl( tfd, METEORSINPUT ) failed."
+literal|"ioctl(tfd, METEORSINPUT) failed."
 argument_list|)
 expr_stmt|;
 name|status
@@ -767,7 +768,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ioctl( tfd, BT848_SAUDIO ) failed."
+literal|"ioctl(tfd, BT848_SAUDIO) failed."
 argument_list|)
 expr_stmt|;
 name|status
@@ -792,7 +793,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ioctl( tfd, BT848_GAUDIO ) failed."
+literal|"ioctl(tfd, BT848_GAUDIO) failed."
 argument_list|)
 expr_stmt|;
 name|status
@@ -849,7 +850,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ioctl( tfd, BT848_SCAPAREA ) failed."
+literal|"ioctl(tfd, BT848_SCAPAREA) failed."
 argument_list|)
 expr_stmt|;
 name|status
@@ -882,7 +883,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ioctl( tfd, TVTUNER_SETTYPE ) failed."
+literal|"ioctl(tfd, TVTUNER_SETTYPE) failed."
 argument_list|)
 expr_stmt|;
 name|status
@@ -912,7 +913,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ioctl( tfd, TVTUNER_SETCHNL ) failed."
+literal|"ioctl(tfd, TVTUNER_SETCHNL) failed."
 argument_list|)
 expr_stmt|;
 name|status
@@ -958,7 +959,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ioctl( tfd, RADIO_SETFREQ ) failed."
+literal|"ioctl(tfd, RADIO_SETFREQ) failed."
 argument_list|)
 expr_stmt|;
 name|status
@@ -997,7 +998,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ioctl( tfd, TVTUNER_SETFREQ ) failed."
+literal|"ioctl(tfd, TVTUNER_SETFREQ) failed."
 argument_list|)
 expr_stmt|;
 name|status
