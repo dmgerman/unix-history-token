@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: heap.c,v 1.28.12.3 2004/03/08 09:04:48 marka Exp $ */
+comment|/* $Id: heap.c,v 1.28.12.4 2006/04/17 18:27:20 explorer Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Heap implementation of priority queues adapted from the following:  *  *	_Introduction to Algorithms_, Cormen, Leiserson, and Rivest,  *	MIT Press / McGraw Hill, 1990, ISBN 0-262-03141-8, chapter 7.  *  *	_Algorithms_, Second Edition, Sedgewick, Addison-Wesley, 1988,  *	ISBN 0-201-06673-4, chapter 11.  */
+comment|/*! \file  * Heap implementation of priority queues adapted from the following:  *  *	\li "Introduction to Algorithms," Cormen, Leiserson, and Rivest,  *	MIT Press / McGraw Hill, 1990, ISBN 0-262-03141-8, chapter 7.  *  *	\li "Algorithms," Second Edition, Sedgewick, Addison-Wesley, 1988,  *	ISBN 0-201-06673-4, chapter 11.  */
 end_comment
 
 begin_include
@@ -52,7 +52,11 @@ file|<isc/util.h>
 end_include
 
 begin_comment
-comment|/*  * Note: to make heap_parent and heap_left easy to compute, the first  * element of the heap array is not used; i.e. heap subscripts are 1-based,  * not 0-based.  */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*%  * Note: to make heap_parent and heap_left easy to compute, the first  * element of the heap array is not used; i.e. heap subscripts are 1-based,  * not 0-based.  The parent is index/2, and the left-child is index*2.  * The right child is index*2+1.  */
 end_comment
 
 begin_define
@@ -74,6 +78,10 @@ name|i
 parameter_list|)
 value|((i)<< 1)
 end_define
+
+begin_comment
+comment|/*@}*/
+end_comment
 
 begin_define
 define|#
@@ -100,7 +108,7 @@ value|ISC_MAGIC_VALID(h, HEAP_MAGIC)
 end_define
 
 begin_comment
-comment|/*  * When the heap is in a consistent state, the following invariant  * holds true: for every element i> 1, heap_parent(i) has a priority  * higher than or equal to that of i.  */
+comment|/*%  * When the heap is in a consistent state, the following invariant  * holds true: for every element i> 1, heap_parent(i) has a priority  * higher than or equal to that of i.  */
 end_comment
 
 begin_define
@@ -112,6 +120,10 @@ name|i
 parameter_list|)
 value|((i) == 1 || \ 			  ! heap->compare(heap->array[(i)], \ 					  heap->array[heap_parent(i)]))
 end_define
+
+begin_comment
+comment|/*% ISC heap structure. */
+end_comment
 
 begin_struct
 struct|struct
@@ -934,7 +946,7 @@ name|heap
 parameter_list|,
 name|unsigned
 name|int
-name|i
+name|index
 parameter_list|)
 block|{
 name|void
@@ -954,11 +966,11 @@ argument_list|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
-name|i
+name|index
 operator|>=
 literal|1
 operator|&&
-name|i
+name|index
 operator|<=
 name|heap
 operator|->
@@ -967,7 +979,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|index
 operator|==
 name|heap
 operator|->
@@ -1006,7 +1018,7 @@ name|heap
 operator|->
 name|array
 index|[
-name|i
+name|index
 index|]
 argument_list|)
 expr_stmt|;
@@ -1014,7 +1026,7 @@ name|heap
 operator|->
 name|array
 index|[
-name|i
+name|index
 index|]
 operator|=
 name|elt
@@ -1027,13 +1039,13 @@ name|float_up
 argument_list|(
 name|heap
 argument_list|,
-name|i
+name|index
 argument_list|,
 name|heap
 operator|->
 name|array
 index|[
-name|i
+name|index
 index|]
 argument_list|)
 expr_stmt|;
@@ -1042,13 +1054,13 @@ name|sink_down
 argument_list|(
 name|heap
 argument_list|,
-name|i
+name|index
 argument_list|,
 name|heap
 operator|->
 name|array
 index|[
-name|i
+name|index
 index|]
 argument_list|)
 expr_stmt|;
@@ -1066,7 +1078,7 @@ name|heap
 parameter_list|,
 name|unsigned
 name|int
-name|i
+name|index
 parameter_list|)
 block|{
 name|REQUIRE
@@ -1079,11 +1091,11 @@ argument_list|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
-name|i
+name|index
 operator|>=
 literal|1
 operator|&&
-name|i
+name|index
 operator|<=
 name|heap
 operator|->
@@ -1094,13 +1106,13 @@ name|float_up
 argument_list|(
 name|heap
 argument_list|,
-name|i
+name|index
 argument_list|,
 name|heap
 operator|->
 name|array
 index|[
-name|i
+name|index
 index|]
 argument_list|)
 expr_stmt|;
@@ -1117,7 +1129,7 @@ name|heap
 parameter_list|,
 name|unsigned
 name|int
-name|i
+name|index
 parameter_list|)
 block|{
 name|REQUIRE
@@ -1130,11 +1142,11 @@ argument_list|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
-name|i
+name|index
 operator|>=
 literal|1
 operator|&&
-name|i
+name|index
 operator|<=
 name|heap
 operator|->
@@ -1145,13 +1157,13 @@ name|sink_down
 argument_list|(
 name|heap
 argument_list|,
-name|i
+name|index
 argument_list|,
 name|heap
 operator|->
 name|array
 index|[
-name|i
+name|index
 index|]
 argument_list|)
 expr_stmt|;
@@ -1169,7 +1181,7 @@ name|heap
 parameter_list|,
 name|unsigned
 name|int
-name|i
+name|index
 parameter_list|)
 block|{
 name|REQUIRE
@@ -1182,11 +1194,11 @@ argument_list|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
-name|i
+name|index
 operator|>=
 literal|1
 operator|&&
-name|i
+name|index
 operator|<=
 name|heap
 operator|->
@@ -1199,7 +1211,7 @@ name|heap
 operator|->
 name|array
 index|[
-name|i
+name|index
 index|]
 operator|)
 return|;

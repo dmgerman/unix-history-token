@@ -165,16 +165,19 @@ operator|==
 literal|';'
 condition|)
 block|{
-while|while
-condition|(
-operator|(
+do|do
+block|{
 name|c
 operator|=
 name|fgetc
 argument_list|(
 name|fp
 argument_list|)
-operator|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|c
 operator|!=
 name|EOF
 operator|&&
@@ -182,7 +185,7 @@ name|c
 operator|!=
 literal|'\n'
 condition|)
-comment|/* empty */
+do|;
 if|if
 condition|(
 name|c

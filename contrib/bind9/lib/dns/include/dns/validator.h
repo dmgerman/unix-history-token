@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: validator.h,v 1.18.12.9 2005/09/06 02:12:41 marka Exp $ */
+comment|/* $Id: validator.h,v 1.18.12.11 2006/01/06 00:01:42 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * DNS Validator  *  * XXX<TBS> XXX  *  * MP:  *	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *  * Reliability:  *	No anticipated impact.  *  * Resources:  *<TBS>  *  * Security:  *	No anticipated impact.  *  * Standards:  *	RFCs:	1034, 1035, 2181, 2535,<TBS>  *	Drafts:<TBS>  */
+comment|/*! \file  *  * \brief  * DNS Validator  * This is the BIND 9 validator, the module responsible for validating the  * rdatasets and negative responses (messages).  It makes use of zones in  * the view and may fetch RRset to complete trust chains.  It implements  * DNSSEC as specified in RFC 4033, 4034 and 4035.  *  * It can also optionally implement ISC's DNSSEC look-aside validation.  *  * Correct operation is critical to preventing spoofed answers from secure  * zones being accepted.  *  * MP:  *\li	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	RFCs:	1034, 1035, 2181, 4033, 4034, 4035.  */
 end_comment
 
 begin_include
@@ -81,7 +81,7 @@ file|<dst/dst.h>
 end_include
 
 begin_comment
-comment|/*  * A dns_validatorevent_t is sent when a 'validation' completes.  *  * 'name', 'rdataset', 'sigrdataset', and 'message' are the values that were  * supplied when dns_validator_create() was called.  They are returned to the  * caller so that they may be freed.  */
+comment|/*%  * A dns_validatorevent_t is sent when a 'validation' completes.  * \brief  * 'name', 'rdataset', 'sigrdataset', and 'message' are the values that were  * supplied when dns_validator_create() was called.  They are returned to the  * caller so that they may be freed.  *  * If the RESULT is ISC_R_SUCCESS and the answer is secure then  * proofs[] will contain the the names of the NSEC records that hold the  * various proofs.  Note the same name may appear multiple times.  */
 end_comment
 
 begin_typedef
@@ -155,7 +155,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * A validator object represents a validation in procgress.  *  * Clients are strongly discouraged from using this type directly, with  * the exception of the 'link' field, which may be used directly for  * whatever purpose the client desires.  */
+comment|/*%  * A validator object represents a validation in progress.  * \brief  * Clients are strongly discouraged from using this type directly, with  * the exception of the 'link' field, which may be used directly for  * whatever purpose the client desires.  */
 end_comment
 
 begin_struct
@@ -299,11 +299,15 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*%  * dns_validator_create() options.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DNS_VALIDATOR_DLV
-value|1
+value|1U
 end_define
 
 begin_function_decl
@@ -358,7 +362,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Start a DNSSEC validation.  *  * This validates a response to the question given by  * 'name' and 'type'.  *  * To validate a positive response, the response data is  * given by 'rdataset' and 'sigrdataset'.  If 'sigrdataset'  * is NULL, the data is presumed insecure and an attempt  * is made to prove its insecurity by finding the appropriate  * null key.  *  * The complete response message may be given in 'message',  * to make available any authority section NSECs that may be  * needed for validation of a response resulting from a  * wildcard expansion (though no such wildcard validation  * is implemented yet).  If the complete response message  * is not available, 'message' is NULL.  *  * To validate a negative response, the complete negative response  * message is given in 'message'.  The 'rdataset', and  * 'sigrdataset' arguments must be NULL, but the 'name' and 'type'  * arguments must be provided.  *  * The validation is performed in the context of 'view'.  * 'options' must be zero.  *  * When the validation finishes, a dns_validatorevent_t with  * the given 'action' and 'arg' are sent to 'task'.  * Its 'result' field will be ISC_R_SUCCESS iff the  * response was successfully proven to be either secure or  * part of a known insecure domain.  */
+comment|/*%<  * Start a DNSSEC validation.  *  * This validates a response to the question given by  * 'name' and 'type'.  *  * To validate a positive response, the response data is  * given by 'rdataset' and 'sigrdataset'.  If 'sigrdataset'  * is NULL, the data is presumed insecure and an attempt  * is made to prove its insecurity by finding the appropriate  * null key.  *  * The complete response message may be given in 'message',  * to make available any authority section NSECs that may be  * needed for validation of a response resulting from a  * wildcard expansion (though no such wildcard validation  * is implemented yet).  If the complete response message  * is not available, 'message' is NULL.  *  * To validate a negative response, the complete negative response  * message is given in 'message'.  The 'rdataset', and  * 'sigrdataset' arguments must be NULL, but the 'name' and 'type'  * arguments must be provided.  *  * The validation is performed in the context of 'view'.  *  * When the validation finishes, a dns_validatorevent_t with  * the given 'action' and 'arg' are sent to 'task'.  * Its 'result' field will be ISC_R_SUCCESS iff the  * response was successfully proven to be either secure or  * part of a known insecure domain.  *  * options:  * If DNS_VALIDATOR_DLV is set the caller knows there is not a  * trusted key and the validator should immediately attempt to validate  * the answer by looking for a appopriate DLV RRset.  */
 end_comment
 
 begin_function_decl
@@ -373,7 +377,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Cancel a DNSSEC validation in progress.  *  * Requires:  *	'validator' points to a valid DNSSEC validator, which  *	may or may not already have completed.  *  * Ensures:  *	It the validator has not already sent its completion  *	event, it will send it with result code ISC_R_CANCELED.  */
+comment|/*%<  * Cancel a DNSSEC validation in progress.  *  * Requires:  *\li	'validator' points to a valid DNSSEC validator, which  *	may or may not already have completed.  *  * Ensures:  *\li	It the validator has not already sent its completion  *	event, it will send it with result code ISC_R_CANCELED.  */
 end_comment
 
 begin_function_decl
@@ -389,7 +393,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy a DNSSEC validator.  *  * Requires:  *	'*validatorp' points to a valid DNSSEC validator.  * 	The validator must have completed and sent its completion  * 	event.  *  * Ensures:  *	All resources used by the validator are freed.  */
+comment|/*%<  * Destroy a DNSSEC validator.  *  * Requires:  *\li	'*validatorp' points to a valid DNSSEC validator.  * \li	The validator must have completed and sent its completion  * 	event.  *  * Ensures:  *\li	All resources used by the validator are freed.  */
 end_comment
 
 begin_macro

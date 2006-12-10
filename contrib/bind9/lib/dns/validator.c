@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: validator.c,v 1.91.2.5.8.21 2005/11/02 02:07:47 marka Exp $ */
+comment|/* $Id: validator.c,v 1.91.2.5.8.27 2006/02/26 23:03:52 marka Exp $ */
 end_comment
 
 begin_include
@@ -145,6 +145,10 @@ directive|include
 file|<dns/view.h>
 end_include
 
+begin_comment
+comment|/*! \file  * \brief  * Basic processing sequences.  *  * \li When called with rdataset and sigrdataset:  * validator_start -> validate -> proveunsecure -> startfinddlvsep ->  *	dlv_validator_start -> validator_start -> validate -> proveunsecure  *  * validator_start -> validate -> nsecvalidate	(secure wildcard answer)  *   * \li When called with rdataset, sigrdataset and with DNS_VALIDATOR_DLV:  * validator_start -> startfinddlvsep -> dlv_validator_start ->  *	validator_start -> validate -> proveunsecure  *  * \li When called with rdataset:  * validator_start -> proveunsecure -> startfinddlvsep ->  *	dlv_validator_start -> validator_start -> proveunsecure  *  * \li When called with rdataset and with DNS_VALIDATOR_DLV:  * validator_start -> startfinddlvsep -> dlv_validator_start ->  *	validator_start -> proveunsecure  *  * \li When called without a rdataset:  * validator_start -> nsecvalidate -> proveunsecure -> startfinddlvsep ->  *	dlv_validator_start -> validator_start -> nsecvalidate -> proveunsecure  *  * \li When called without a rdataset and with DNS_VALIDATOR_DLV:  * validator_start -> startfinddlvsep -> dlv_validator_start ->  *	validator_start -> nsecvalidate -> proveunsecure  *  * validator_start: determines what type of validation to do.  * validate: attempts to perform a positive validation.  * proveunsecure: attempts to prove the answer comes from a unsecure zone.  * nsecvalidate: attempts to prove a negative response.  * startfinddlvsep: starts the DLV record lookup.  * dlv_validator_start: resets state and restarts the lookup using the  *	DLV RRset found by startfinddlvsep.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -169,12 +173,9 @@ name|VALATTR_SHUTDOWN
 value|0x0001
 end_define
 
-begin_define
-define|#
-directive|define
-name|VALATTR_FOUNDNONEXISTENCE
-value|0x0002
-end_define
+begin_comment
+comment|/*%< Shutting down. */
+end_comment
 
 begin_define
 define|#
@@ -183,12 +184,9 @@ name|VALATTR_TRIEDVERIFY
 value|0x0004
 end_define
 
-begin_define
-define|#
-directive|define
-name|VALATTR_NEGATIVE
-value|0x0008
-end_define
+begin_comment
+comment|/*%< We have found a key and 						 * have attempted a verify. */
+end_comment
 
 begin_define
 define|#
@@ -197,12 +195,35 @@ name|VALATTR_INSECURITY
 value|0x0010
 end_define
 
+begin_comment
+comment|/*%< Attempting proveunsecure. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|VALATTR_DLVTRIED
 value|0x0020
 end_define
+
+begin_comment
+comment|/*%< Looked for a DLV record. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VALATTR_AUTHNONPENDING
+value|0x0040
+end_define
+
+begin_comment
+comment|/*%< Tidy up pending auth. */
+end_comment
+
+begin_comment
+comment|/*!  * NSEC proofs to be looked for.  */
+end_comment
 
 begin_define
 define|#
@@ -224,6 +245,10 @@ directive|define
 name|VALATTR_NEEDNODATA
 value|0x0400
 end_define
+
+begin_comment
+comment|/*!  * NSEC proofs that have been found.  */
+end_comment
 
 begin_define
 define|#
@@ -499,7 +524,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|isc_result_t
+name|void
 name|dlv_validator_start
 parameter_list|(
 name|dns_validator_t
@@ -523,6 +548,38 @@ name|resume
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|auth_nonpending
+parameter_list|(
+name|dns_message_t
+modifier|*
+name|message
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|isc_result_t
+name|startfinddlvsep
+parameter_list|(
+name|dns_validator_t
+modifier|*
+name|val
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|unsecure
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Mark the RRsets as a answer.  *  * If VALATTR_AUTHNONPENDING is set then this is a negative answer  * in a insecure zone.  We need to mark any pending RRsets as  * dns_trust_authauthority answers (this is deferred from resolver.c).  */
+end_comment
 
 begin_function
 specifier|static
@@ -554,6 +611,8 @@ operator|->
 name|event
 operator|->
 name|rdataset
+operator|!=
+name|NULL
 condition|)
 name|val
 operator|->
@@ -572,6 +631,8 @@ operator|->
 name|event
 operator|->
 name|sigrdataset
+operator|!=
+name|NULL
 condition|)
 name|val
 operator|->
@@ -582,6 +643,35 @@ operator|->
 name|trust
 operator|=
 name|dns_trust_answer
+expr_stmt|;
+if|if
+condition|(
+name|val
+operator|->
+name|event
+operator|->
+name|message
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|val
+operator|->
+name|attributes
+operator|&
+name|VALATTR_AUTHNONPENDING
+operator|)
+operator|!=
+literal|0
+condition|)
+name|auth_nonpending
+argument_list|(
+name|val
+operator|->
+name|event
+operator|->
+name|message
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -745,6 +835,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*%  * Mark pending answers in the authority section as dns_trust_authauthority.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -848,6 +942,10 @@ block|}
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*%  * Look in the NSEC record returned from a DS query to see if there is  * a NS RRset at this name.  If it is found we are at a delegation point.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1000,6 +1098,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*%  * We have been asked to to look for a key.  * If found resume the validation process.  * If not found fail the validation process.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1327,6 +1429,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*%  * We were asked to look for a DS record as part of following a key chain  * upwards.  If found resume the validation process.  If not found fail the  * validation process.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1677,7 +1783,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX there's too much duplicated code here.  */
+comment|/*%  * We were asked to look for the DS record as part of proving that a  * name is unsecure.  *  * If the DS record doesn't exist and the query name corresponds to  * a delegation point we are transitioning from a secure zone to a  * unsecure zone.  *  * If the DS record exists it will be secure.  We can continue looking  * for the break point in the chain of trust.  */
 end_comment
 
 begin_function
@@ -1830,7 +1936,12 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"in dsfetched2"
+literal|"in dsfetched2: %s"
+argument_list|,
+name|dns_result_totext
+argument_list|(
+name|eresult
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|LOCK
@@ -1902,7 +2013,22 @@ name|DNS_R_MUSTBESECURE
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|val
+operator|->
+name|view
+operator|->
+name|dlv
+operator|==
+name|NULL
+operator|||
+name|DLVTRIED
+argument_list|(
+name|val
+argument_list|)
+condition|)
 block|{
 name|markanswer
 argument_list|(
@@ -1914,6 +2040,31 @@ argument_list|(
 name|val
 argument_list|,
 name|ISC_R_SUCCESS
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|result
+operator|=
+name|startfinddlvsep
+argument_list|(
+name|val
+argument_list|,
+name|tname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|DNS_R_WAIT
+condition|)
+name|validator_done
+argument_list|(
+name|val
+argument_list|,
+name|result
 argument_list|)
 expr_stmt|;
 block|}
@@ -1960,7 +2111,7 @@ operator|==
 name|DNS_R_NCACHENXDOMAIN
 condition|)
 block|{
-comment|/* 		 * Either there is a DS or this is not a zone cut.  Continue. 		 */
+comment|/* 		 * There is a DS which may or may not be a zone cut.  		 * In either case we are still in a secure zone resume 		 * validation. 		 */
 name|result
 operator|=
 name|proveunsecure
@@ -2040,6 +2191,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*%  * Callback from when a DNSKEY RRset has been validated.  *  * Resumes the stalled validation process.  */
+end_comment
 
 begin_function
 specifier|static
@@ -2279,6 +2434,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*%  * Callback when the DS record has been validated.  *  * Resumes validation of the zone key or the unsecure zone proof.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2510,7 +2669,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return ISC_R_SUCCESS if we can determine that the name doesn't exist  * or we can determine whether there is data or not at the name.  * If the name does not exist return the wildcard name.  */
+comment|/*%  * Return ISC_R_SUCCESS if we can determine that the name doesn't exist  * or we can determine whether there is data or not at the name.  * If the name does not exist return the wildcard name.  *  * Return ISC_R_IGNORE when the NSEC is not the appropriate one.  */
 end_comment
 
 begin_function
@@ -3137,7 +3296,7 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"failure generating wilcard name"
+literal|"failure generating wildcard name"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3177,6 +3336,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*%  * Callback for when NSEC records have been validated.  *  * Looks for NOQNAME and NODATA proofs.  *  * Resumes nsecvalidate.  */
+end_comment
 
 begin_function
 specifier|static
@@ -3590,206 +3753,9 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|negauthvalidated
-parameter_list|(
-name|isc_task_t
-modifier|*
-name|task
-parameter_list|,
-name|isc_event_t
-modifier|*
-name|event
-parameter_list|)
-block|{
-name|dns_validatorevent_t
-modifier|*
-name|devent
-decl_stmt|;
-name|dns_validator_t
-modifier|*
-name|val
-decl_stmt|;
-name|isc_boolean_t
-name|want_destroy
-decl_stmt|;
-name|isc_result_t
-name|eresult
-decl_stmt|;
-name|UNUSED
-argument_list|(
-name|task
-argument_list|)
-expr_stmt|;
-name|INSIST
-argument_list|(
-name|event
-operator|->
-name|ev_type
-operator|==
-name|DNS_EVENT_VALIDATORDONE
-argument_list|)
-expr_stmt|;
-name|devent
-operator|=
-operator|(
-name|dns_validatorevent_t
-operator|*
-operator|)
-name|event
-expr_stmt|;
-name|val
-operator|=
-name|devent
-operator|->
-name|ev_arg
-expr_stmt|;
-name|eresult
-operator|=
-name|devent
-operator|->
-name|result
-expr_stmt|;
-name|isc_event_free
-argument_list|(
-operator|&
-name|event
-argument_list|)
-expr_stmt|;
-name|dns_validator_destroy
-argument_list|(
-operator|&
-name|val
-operator|->
-name|subvalidator
-argument_list|)
-expr_stmt|;
-name|INSIST
-argument_list|(
-name|val
-operator|->
-name|event
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
-name|validator_log
-argument_list|(
-name|val
-argument_list|,
-name|ISC_LOG_DEBUG
-argument_list|(
-literal|3
-argument_list|)
-argument_list|,
-literal|"in negauthvalidated"
-argument_list|)
-expr_stmt|;
-name|LOCK
-argument_list|(
-operator|&
-name|val
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|eresult
-operator|==
-name|ISC_R_SUCCESS
-condition|)
-block|{
-name|val
-operator|->
-name|attributes
-operator||=
-name|VALATTR_FOUNDNONEXISTENCE
-expr_stmt|;
-name|validator_log
-argument_list|(
-name|val
-argument_list|,
-name|ISC_LOG_DEBUG
-argument_list|(
-literal|3
-argument_list|)
-argument_list|,
-literal|"nonexistence proof found"
-argument_list|)
-expr_stmt|;
-name|auth_nonpending
-argument_list|(
-name|val
-operator|->
-name|event
-operator|->
-name|message
-argument_list|)
-expr_stmt|;
-name|validator_done
-argument_list|(
-name|val
-argument_list|,
-name|ISC_R_SUCCESS
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|validator_log
-argument_list|(
-name|val
-argument_list|,
-name|ISC_LOG_DEBUG
-argument_list|(
-literal|3
-argument_list|)
-argument_list|,
-literal|"negauthvalidated: got %s"
-argument_list|,
-name|isc_result_totext
-argument_list|(
-name|eresult
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|validator_done
-argument_list|(
-name|val
-argument_list|,
-name|eresult
-argument_list|)
-expr_stmt|;
-block|}
-name|want_destroy
-operator|=
-name|exit_check
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-name|UNLOCK
-argument_list|(
-operator|&
-name|val
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|want_destroy
-condition|)
-name|destroy
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_comment
+comment|/*%  * Looks for the requested name and type in the view (zones and cache).  *  * When looking for a DLV record also checks to make sure the NSEC record  * returns covers the query name as part of aggressive negative caching.  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	ISC_R_NOTFOUND  * \li	DNS_R_NCACHENXDOMAIN  * \li	DNS_R_NCACHENXRRSET  * \li	DNS_R_NXRRSET  * \li	DNS_R_NXDOMAIN  */
+end_comment
 
 begin_function
 specifier|static
@@ -4382,14 +4348,6 @@ name|ISC_R_SUCCESS
 operator|&&
 name|result
 operator|!=
-name|DNS_R_GLUE
-operator|&&
-name|result
-operator|!=
-name|DNS_R_HINT
-operator|&&
-name|result
-operator|!=
 name|DNS_R_NCACHENXDOMAIN
 operator|&&
 name|result
@@ -4399,10 +4357,6 @@ operator|&&
 name|result
 operator|!=
 name|DNS_R_NXRRSET
-operator|&&
-name|result
-operator|!=
-name|DNS_R_HINTNXRRSET
 operator|&&
 name|result
 operator|!=
@@ -4464,6 +4418,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*%  * Checks to make sure we are not going to loop.  As we use a SHARED fetch  * the validation process will stall if looping was to occur.  */
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -4491,8 +4449,6 @@ control|(
 name|parent
 operator|=
 name|val
-operator|->
-name|parent
 init|;
 name|parent
 operator|!=
@@ -4560,6 +4516,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*%  * Start a fetch for the requested name and type.  */
+end_comment
 
 begin_function
 specifier|static
@@ -4704,6 +4664,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*%  * Start a subvalidation process.  */
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -4841,7 +4805,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try to find a key that could have signed 'siginfo' among those  * in 'rdataset'.  If found, build a dst_key_t for it and point  * val->key at it.  *  * If val->key is non-NULL, this returns the next matching key.  */
+comment|/*%  * Try to find a key that could have signed 'siginfo' among those  * in 'rdataset'.  If found, build a dst_key_t for it and point  * val->key at it.  *  * If val->key is non-NULL, this returns the next matching key.  */
 end_comment
 
 begin_function
@@ -5138,6 +5102,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*%  * Get the key that genertated this signature.  */
+end_comment
 
 begin_function
 specifier|static
@@ -5602,7 +5570,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Is this keyset self-signed?  */
+comment|/*%  * Is this keyset self-signed?  */
 end_comment
 
 begin_function
@@ -5809,6 +5777,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*%  * Attempt to verify the rdataset using the given key and rdata (RRSIG).  * The signature was good and from a wildcard record and the QNAME does  * not match the wildcard we need to look for a NOQNAME proof.  *  * Returns:  * \li	ISC_R_SUCCESS if the verification succeeds.  * \li	Others if the verification fails.  */
+end_comment
+
 begin_function
 specifier|static
 name|isc_result_t
@@ -5825,6 +5797,9 @@ parameter_list|,
 name|dns_rdata_t
 modifier|*
 name|rdata
+parameter_list|,
+name|isc_uint16_t
+name|keyid
 parameter_list|)
 block|{
 name|isc_result_t
@@ -5889,7 +5864,9 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"verify rdataset: %s"
+literal|"verify rdataset (keyid=%u): %s"
+argument_list|,
+name|keyid
 argument_list|,
 name|isc_result_totext
 argument_list|(
@@ -5942,7 +5919,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attempts positive response validation of a normal RRset.  *  * Returns:  *	ISC_R_SUCCESS	Validation completed successfully  *	DNS_R_WAIT	Validation has started but is waiting  *			for an event.  *	Other return codes are possible and all indicate failure.  */
+comment|/*%  * Attempts positive response validation of a normal RRset.  *  * Returns:  * \li	ISC_R_SUCCESS	Validation completed successfully  * \li	DNS_R_WAIT	Validation has started but is waiting  *			for an event.  * \li	Other return codes are possible and all indicate failure.  */
 end_comment
 
 begin_function
@@ -6232,6 +6209,12 @@ name|key
 argument_list|,
 operator|&
 name|rdata
+argument_list|,
+name|val
+operator|->
+name|siginfo
+operator|->
+name|keyid
 argument_list|)
 expr_stmt|;
 if|if
@@ -6679,6 +6662,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*%  * Validate the DNSKEY RRset by looking for a DNSKEY that matches a  * DLV record and that also verifies the DNSKEY RRset.  */
+end_comment
 
 begin_function
 specifier|static
@@ -7183,6 +7170,10 @@ name|dstkey
 argument_list|,
 operator|&
 name|sigrdata
+argument_list|,
+name|sig
+operator|.
+name|keyid
 argument_list|)
 expr_stmt|;
 name|dst_key_free
@@ -7336,7 +7327,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attempts positive response validation of an RRset containing zone keys.  *  * Returns:  *	ISC_R_SUCCESS	Validation completed successfully  *	DNS_R_WAIT	Validation has started but is waiting  *			for an event.  *	Other return codes are possible and all indicate failure.  */
+comment|/*%  * Attempts positive response validation of an RRset containing zone keys.  *  * Returns:  * \li	ISC_R_SUCCESS	Validation completed successfully  * \li	DNS_R_WAIT	Validation has started but is waiting  *			for an event.  * \li	Other return codes are possible and all indicate failure.  */
 end_comment
 
 begin_function
@@ -7386,6 +7377,12 @@ index|[
 name|DNS_DS_BUFFERSIZE
 index|]
 decl_stmt|;
+name|char
+name|namebuf
+index|[
+name|DNS_NAME_FORMATSIZE
+index|]
+decl_stmt|;
 name|dns_keytag_t
 name|keytag
 decl_stmt|;
@@ -7404,6 +7401,11 @@ name|dstkey
 decl_stmt|;
 name|isc_boolean_t
 name|supported_algorithm
+decl_stmt|;
+name|isc_boolean_t
+name|atsep
+init|=
+name|ISC_FALSE
 decl_stmt|;
 comment|/* 	 * Caller must be holding the validator lock. 	 */
 name|event
@@ -7557,6 +7559,20 @@ operator|&
 name|keynode
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|DNS_R_PARTIALMATCH
+operator|||
+name|result
+operator|==
+name|ISC_R_SUCCESS
+condition|)
+name|atsep
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 while|while
 condition|(
 name|result
@@ -7581,6 +7597,10 @@ name|dstkey
 argument_list|,
 operator|&
 name|sigrdata
+argument_list|,
+name|sig
+operator|.
+name|keyid
 argument_list|)
 expr_stmt|;
 if|if
@@ -7708,6 +7728,50 @@ else|else
 return|return
 operator|(
 name|DNS_R_NOVALIDDS
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|atsep
+condition|)
+block|{
+comment|/* 			 * We have not found a key to verify this DNSKEY 			 * RRset.  As this is a SEP we have to assume that 			 * the RRset is invalid. 			 */
+name|dns_name_format
+argument_list|(
+name|val
+operator|->
+name|event
+operator|->
+name|name
+argument_list|,
+name|namebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|namebuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|validator_log
+argument_list|(
+name|val
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|2
+argument_list|)
+argument_list|,
+literal|"unable to find a DNSKEY which verifies "
+literal|"the DNSKEY RRset and also matches one "
+literal|"of specified trusted-keys for '%s'"
+argument_list|,
+name|namebuf
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|DNS_R_NOVALIDKEY
 operator|)
 return|;
 block|}
@@ -8143,6 +8207,7 @@ operator|&
 name|trdataset
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Look for the KEY that matches the DS record. 		 */
 for|for
 control|(
 name|result
@@ -8365,7 +8430,7 @@ operator|!=
 name|sig
 operator|.
 name|keyid
-operator|&&
+operator|||
 name|ds
 operator|.
 name|algorithm
@@ -8420,6 +8485,10 @@ name|dstkey
 argument_list|,
 operator|&
 name|sigrdata
+argument_list|,
+name|sig
+operator|.
+name|keyid
 argument_list|)
 expr_stmt|;
 name|dst_key_free
@@ -8569,7 +8638,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Starts a positive response validation.  *  * Returns:  *	ISC_R_SUCCESS	Validation completed successfully  *	DNS_R_WAIT	Validation has started but is waiting  *			for an event.  *	Other return codes are possible and all indicate failure.  */
+comment|/*%  * Starts a positive response validation.  *  * Returns:  * \li	ISC_R_SUCCESS	Validation completed successfully  * \li	DNS_R_WAIT	Validation has started but is waiting  *			for an event.  * \li	Other return codes are possible and all indicate failure.  */
 end_comment
 
 begin_function
@@ -8619,6 +8688,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*%  * Look for NODATA at the wildcard and NOWILDCARD proofs in the  * previously validated NSEC records.  As these proofs are mutually  * exclusive we stop when one is found.  *  * Returns  * \li	ISC_R_SUCCESS   */
+end_comment
 
 begin_function
 specifier|static
@@ -9008,6 +9081,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*%  * Prove a negative answer is good or that there is a NOQNAME when the  * answer is from a wildcard.  *  * Loop through the authority section looking for NODATA, NOWILDCARD  * and NOQNAME proofs in the NSEC records by calling authvalidated().  *  * If the required proofs are found we are done.  *  * If the proofs are not found attempt to prove this is a unsecure  * response.  */
+end_comment
 
 begin_function
 specifier|static
@@ -9405,7 +9482,7 @@ operator|(
 name|result
 operator|)
 return|;
-comment|/* 	 * Do we only need to check for NOQNAME? 	 */
+comment|/* 	 * Do we only need to check for NOQNAME?  To get here we must have 	 * had a secure wildcard answer. 	 */
 if|if
 condition|(
 operator|(
@@ -9653,117 +9730,59 @@ operator|!=
 literal|0
 operator|)
 condition|)
+block|{
+name|validator_log
+argument_list|(
+name|val
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
+literal|"nonexistence proof(s) found"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ISC_R_SUCCESS
+operator|)
+return|;
+block|}
+name|validator_log
+argument_list|(
+name|val
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
+literal|"nonexistence proof(s) not found"
+argument_list|)
+expr_stmt|;
 name|val
 operator|->
 name|attributes
 operator||=
-name|VALATTR_FOUNDNONEXISTENCE
+name|VALATTR_AUTHNONPENDING
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|val
 operator|->
 name|attributes
-operator|&
-name|VALATTR_FOUNDNONEXISTENCE
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|val
-operator|->
-name|seensig
-operator|&&
-name|val
-operator|->
-name|soaset
-operator|!=
-name|NULL
-condition|)
-block|{
-name|result
-operator|=
-name|create_validator
-argument_list|(
-name|val
-argument_list|,
-name|val
-operator|->
-name|soaname
-argument_list|,
-name|dns_rdatatype_soa
-argument_list|,
-name|val
-operator|->
-name|soaset
-argument_list|,
-name|NULL
-argument_list|,
-name|negauthvalidated
-argument_list|,
-literal|"nsecvalidate"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|result
-operator|!=
-name|ISC_R_SUCCESS
-condition|)
-return|return
-operator|(
-name|result
-operator|)
-return|;
-return|return
-operator|(
-name|DNS_R_WAIT
-operator|)
-return|;
-block|}
-name|validator_log
-argument_list|(
-name|val
-argument_list|,
-name|ISC_LOG_DEBUG
-argument_list|(
-literal|3
-argument_list|)
-argument_list|,
-literal|"nonexistence proof not found"
-argument_list|)
+operator||=
+name|VALATTR_INSECURITY
 expr_stmt|;
 return|return
 operator|(
-name|DNS_R_NOVALIDNSEC
-operator|)
-return|;
-block|}
-else|else
-block|{
-name|validator_log
+name|proveunsecure
 argument_list|(
 name|val
 argument_list|,
-name|ISC_LOG_DEBUG
-argument_list|(
-literal|3
+name|ISC_FALSE
 argument_list|)
-argument_list|,
-literal|"nonexistence proof found"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ISC_R_SUCCESS
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -9889,6 +9908,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*%  * Callback from fetching a DLV record.  *   * Resumes the DLV lookup process.  */
+end_comment
 
 begin_function
 specifier|static
@@ -10122,24 +10145,9 @@ argument_list|,
 name|namebuf
 argument_list|)
 expr_stmt|;
-name|result
-operator|=
 name|dlv_validator_start
 argument_list|(
 name|val
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|result
-operator|!=
-name|DNS_R_WAIT
-condition|)
-name|validator_done
-argument_list|(
-name|val
-argument_list|,
-name|result
 argument_list|)
 expr_stmt|;
 block|}
@@ -10211,24 +10219,9 @@ argument_list|,
 name|namebuf
 argument_list|)
 expr_stmt|;
-name|result
-operator|=
 name|dlv_validator_start
 argument_list|(
 name|val
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|result
-operator|!=
-name|DNS_R_WAIT
-condition|)
-name|validator_done
-argument_list|(
-name|val
-argument_list|,
-name|result
 argument_list|)
 expr_stmt|;
 block|}
@@ -10318,6 +10311,13 @@ name|eresult
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|validator_done
+argument_list|(
+name|val
+argument_list|,
+name|eresult
+argument_list|)
+expr_stmt|;
 block|}
 name|want_destroy
 operator|=
@@ -10345,6 +10345,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*%  * Start the DLV lookup proccess.  *   * Returns  * \li	ISC_R_SUCCESS  * \li	DNS_R_WAIT  * \li	Others on validation failures.  */
+end_comment
 
 begin_function
 specifier|static
@@ -10555,16 +10559,22 @@ argument_list|,
 name|namebuf
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
 name|dlv_validator_start
 argument_list|(
 name|val
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|DNS_R_WAIT
 operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*%  * Continue the DLV lookup process.  *  * Returns  * \li	ISC_R_SUCCESS  * \li	ISC_R_NOTFOUND  * \li	DNS_R_WAIT  * \li	Others on validation failure.  */
+end_comment
 
 begin_function
 specifier|static
@@ -11146,7 +11156,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * proveunsecure walks down from the SEP looking for a break in the  * chain of trust.   That occurs when we can prove the DS record does  * not exist at a delegation point or the DS exists at a delegation  * but we don't support the algorithm/digest.  */
+comment|/*%  * proveunsecure walks down from the SEP looking for a break in the  * chain of trust.  That occurs when we can prove the DS record does  * not exist at a delegation point or the DS exists at a delegation  * but we don't support the algorithm/digest.  *  * If DLV is active and we look for a DLV record at or below the  * point we go insecure.  If found we restart the validation process.  * If not found or DLV isn't active we mark the response as a answer.  *  * Returns:  * \li	ISC_R_SUCCESS		val->event->name is in a unsecure zone  * \li	DNS_R_WAIT		validation is in progress.  * \li	DNS_R_MUSTBESECURE	val->event->name is supposed to be secure  *				(policy) but we proved that it is unsecure.  * \li	DNS_R_NOVALIDSIG  * \li	DNS_R_NOVALIDNSEC  * \li	DNS_R_NOTINSECURE  */
 end_comment
 
 begin_function
@@ -12078,9 +12088,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*%  * Reset state and revalidate the answer using DLV.  */
+end_comment
+
 begin_function
 specifier|static
-name|isc_result_t
+name|void
 name|dlv_validator_start
 parameter_list|(
 name|dns_validator_t
@@ -12138,13 +12152,12 @@ operator|&
 name|event
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|DNS_R_WAIT
-operator|)
-return|;
 block|}
 end_function
+
+begin_comment
+comment|/*%  * Start the validation process.  *  * Attempt to valididate the answer based on the category it appears to  * fall in.  * \li	1. secure positive answer.  * \li	2. unsecure positive answer.  * \li	3. a negative answer (secure or unsecure).  *  * Note a answer that appears to be a secure positive answer may actually  * be a unsecure positive answer.  */
+end_comment
 
 begin_function
 specifier|static
@@ -12503,12 +12516,6 @@ argument_list|)
 argument_list|,
 literal|"attempting negative response validation"
 argument_list|)
-expr_stmt|;
-name|val
-operator|->
-name|attributes
-operator||=
-name|VALATTR_NEGATIVE
 expr_stmt|;
 if|if
 condition|(
@@ -13131,15 +13138,11 @@ argument_list|)
 expr_stmt|;
 name|isc_event_free
 argument_list|(
-operator|(
-name|isc_event_t
-operator|*
-operator|*
-operator|)
+name|ISC_EVENT_PTR
+argument_list|(
 operator|&
-name|val
-operator|->
 name|event
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cleanup_val

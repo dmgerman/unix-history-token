@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/dst_api.c,v 1.4.2.6.8.3 2005/10/11 00:48:14 marka Exp $"
+literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/dst_api.c,v 1.4.2.6.8.4 2006/03/10 00:17:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -605,6 +605,26 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|new_key
+operator|->
+name|dk_key_name
+operator|==
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|new_key
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|new_key
 operator|->
 name|dk_alg
@@ -2633,6 +2653,17 @@ return|;
 block|}
 if|if
 condition|(
+name|in_name
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+if|if
+condition|(
 operator|(
 name|key_st
 operator|=
@@ -2649,17 +2680,6 @@ argument_list|,
 literal|0
 argument_list|)
 operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-if|if
-condition|(
-name|in_name
 operator|==
 name|NULL
 condition|)
@@ -3185,14 +3205,7 @@ condition|(
 name|dkey
 operator|==
 name|NULL
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-if|if
-condition|(
+operator|||
 name|dkey
 operator|->
 name|dk_func
@@ -3208,7 +3221,12 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|NULL
+operator|(
+name|dst_free_key
+argument_list|(
+name|dkey
+argument_list|)
+operator|)
 return|;
 if|if
 condition|(
@@ -4316,14 +4334,6 @@ name|dk_alg
 operator|)
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|f_key
-operator|->
-name|dk_KEY_struct
-argument_list|)
-expr_stmt|;
-comment|/* SHOULD NOT happen */
 block|}
 if|if
 condition|(

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: zoneconf.c,v 1.87.2.4.10.15 2005/09/06 02:12:39 marka Exp $ */
+comment|/* $Id: zoneconf.c,v 1.87.2.4.10.19 2006/02/28 06:32:53 marka Exp $ */
 end_comment
 
 begin_include
@@ -154,14 +154,17 @@ specifier|static
 name|isc_result_t
 name|configure_zone_acl
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|zconfig
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|vconfig
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|config
@@ -206,6 +209,7 @@ block|{
 name|isc_result_t
 name|result
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|maps
@@ -213,6 +217,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|aclobj
@@ -275,6 +280,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|options
@@ -412,6 +418,7 @@ specifier|static
 name|isc_result_t
 name|configure_zone_ssutable
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|zconfig
@@ -421,12 +428,14 @@ modifier|*
 name|zone
 parameter_list|)
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|updatepolicy
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|element
@@ -471,11 +480,20 @@ name|updatepolicy
 operator|==
 name|NULL
 condition|)
+block|{
+name|dns_zone_setssutable
+argument_list|(
+name|zone
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ISC_R_SUCCESS
 operator|)
 return|;
+block|}
 name|result
 operator|=
 name|dns_ssutable_create
@@ -518,6 +536,7 @@ name|element
 argument_list|)
 control|)
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|stmt
@@ -527,6 +546,7 @@ argument_list|(
 name|element
 argument_list|)
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|mode
@@ -538,6 +558,7 @@ argument_list|,
 literal|"mode"
 argument_list|)
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|identity
@@ -549,6 +570,7 @@ argument_list|,
 literal|"identity"
 argument_list|)
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|matchtype
@@ -560,6 +582,7 @@ argument_list|,
 literal|"matchtype"
 argument_list|)
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|dname
@@ -571,6 +594,7 @@ argument_list|,
 literal|"name"
 argument_list|)
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|typelist
@@ -582,6 +606,7 @@ argument_list|,
 literal|"types"
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|str
@@ -971,6 +996,7 @@ name|element2
 argument_list|)
 control|)
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|typeobj
@@ -999,11 +1025,14 @@ argument_list|(
 name|typeobj
 argument_list|)
 expr_stmt|;
+name|DE_CONST
+argument_list|(
+name|str
+argument_list|,
 name|r
 operator|.
 name|base
-operator|=
-name|str
+argument_list|)
 expr_stmt|;
 name|r
 operator|.
@@ -1171,11 +1200,13 @@ specifier|inline
 name|dns_zonetype_t
 name|zonetype_fromconfig
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|map
 parameter_list|)
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -1454,11 +1485,13 @@ parameter_list|(
 name|dns_zonetype_t
 name|ztype
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 modifier|*
 name|maps
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 modifier|*
@@ -1528,14 +1561,17 @@ begin_function
 name|isc_result_t
 name|ns_zone_configure
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|config
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|vconfig
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|zconfig
@@ -1552,6 +1588,7 @@ block|{
 name|isc_result_t
 name|result
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|zname
@@ -1562,6 +1599,7 @@ decl_stmt|;
 name|dns_rdataclass_t
 name|vclass
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|maps
@@ -1569,18 +1607,21 @@ index|[
 literal|5
 index|]
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|zoptions
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|options
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -2138,6 +2179,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+specifier|const
 name|char
 modifier|*
 name|dialupstr
@@ -2318,6 +2360,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+specifier|const
 name|char
 modifier|*
 name|notifystr
@@ -3149,6 +3192,10 @@ case|:
 case|case
 name|dns_zone_stub
 case|:
+name|count
+operator|=
+literal|0
+expr_stmt|;
 name|obj
 operator|=
 name|NULL
@@ -3758,17 +3805,20 @@ name|dns_zone_t
 modifier|*
 name|zone
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|zconfig
 parameter_list|)
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|zoptions
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj

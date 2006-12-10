@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_sign.c,v 1.1.2.2.4.1 2004/03/09 08:33:45 marka Exp $"
+literal|"$Id: ns_sign.c,v 1.1.2.2.4.2 2006/03/10 00:17:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -304,18 +304,9 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|cp
-init|=
-name|msg
-operator|+
-operator|*
-name|msglen
 decl_stmt|,
 modifier|*
 name|eob
-init|=
-name|msg
-operator|+
-name|msgsize
 decl_stmt|;
 name|u_char
 modifier|*
@@ -364,6 +355,19 @@ operator|-
 literal|1
 operator|)
 return|;
+name|cp
+operator|=
+name|msg
+operator|+
+operator|*
+name|msglen
+expr_stmt|;
+name|eob
+operator|=
+name|msg
+operator|+
+name|msgsize
+expr_stmt|;
 comment|/* Name. */
 if|if
 condition|(

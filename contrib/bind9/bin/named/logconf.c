@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: logconf.c,v 1.30.2.3.10.2 2004/03/06 10:21:18 marka Exp $ */
+comment|/* $Id: logconf.c,v 1.30.2.3.10.4 2006/03/02 00:37:20 marka Exp $ */
 end_comment
 
 begin_include
@@ -87,6 +87,7 @@ specifier|static
 name|isc_result_t
 name|category_fromconf
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|ccat
@@ -112,12 +113,14 @@ name|isc_logmodule_t
 modifier|*
 name|module
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|destinations
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|element
@@ -206,6 +209,7 @@ name|element
 argument_list|)
 control|)
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|channel
@@ -215,6 +219,7 @@ argument_list|(
 name|element
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|channelname
@@ -288,6 +293,7 @@ specifier|static
 name|isc_result_t
 name|channel_fromconf
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|channel
@@ -321,30 +327,35 @@ name|char
 modifier|*
 name|channelname
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|fileobj
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|syslogobj
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|nullobj
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|stderrobj
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|severity
@@ -494,6 +505,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|pathobj
@@ -505,6 +517,7 @@ argument_list|,
 literal|"file"
 argument_list|)
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|sizeobj
@@ -516,6 +529,7 @@ argument_list|,
 literal|"size"
 argument_list|)
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|versionsobj
@@ -675,6 +689,7 @@ name|syslogobj
 argument_list|)
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|facilitystr
@@ -750,18 +765,21 @@ expr_stmt|;
 block|}
 comment|/* 	 * Munge flags. 	 */
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|printcat
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|printsev
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|printtime
@@ -880,6 +898,7 @@ name|severity
 argument_list|)
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1108,6 +1127,7 @@ name|isc_logconfig_t
 modifier|*
 name|logconf
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|logstmt
@@ -1116,18 +1136,21 @@ block|{
 name|isc_result_t
 name|result
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|channels
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|categories
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|element
@@ -1141,6 +1164,11 @@ name|isc_boolean_t
 name|unmatched_set
 init|=
 name|ISC_FALSE
+decl_stmt|;
+specifier|const
+name|cfg_obj_t
+modifier|*
+name|catname
 decl_stmt|;
 name|CHECK
 argument_list|(
@@ -1184,6 +1212,7 @@ name|element
 argument_list|)
 control|)
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|channel
@@ -1238,6 +1267,7 @@ name|element
 argument_list|)
 control|)
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|category
@@ -1263,17 +1293,15 @@ operator|!
 name|default_set
 condition|)
 block|{
-name|cfg_obj_t
-modifier|*
 name|catname
-init|=
+operator|=
 name|cfg_tuple_get
 argument_list|(
 name|category
 argument_list|,
 literal|"name"
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -1299,17 +1327,15 @@ operator|!
 name|unmatched_set
 condition|)
 block|{
-name|cfg_obj_t
-modifier|*
 name|catname
-init|=
+operator|=
 name|cfg_tuple_get
 argument_list|(
 name|category
 argument_list|,
 literal|"name"
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|strcmp

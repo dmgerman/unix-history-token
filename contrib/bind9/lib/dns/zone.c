@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: zone.c,v 1.333.2.23.2.59 2005/07/29 00:38:33 marka Exp $ */
+comment|/* $Id: zone.c,v 1.333.2.23.2.65 2006/07/19 01:04:24 marka Exp $ */
 end_comment
 
 begin_include
@@ -1165,6 +1165,13 @@ define|#
 directive|define
 name|DNS_ZONEFLG_USEALTXFRSRC
 value|0x00800000U
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_ZONEFLG_SOABEFOREAXFR
+value|0x01000000U
 end_define
 
 begin_define
@@ -3968,12 +3975,9 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
-name|zone
-operator|->
-name|db_argv
+name|new
 index|[
 name|i
 index|]
@@ -4009,7 +4013,6 @@ name|new
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|result
 operator|=
@@ -4126,6 +4129,7 @@ name|dns_zone_t
 modifier|*
 name|zone
 parameter_list|,
+specifier|const
 name|dns_name_t
 modifier|*
 name|origin
@@ -4958,7 +4962,7 @@ name|zone
 operator|->
 name|loadtime
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
@@ -4994,6 +4998,45 @@ operator|>=
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Built in zones don't need to be reloaded. 	 */
+if|if
+condition|(
+name|zone
+operator|->
+name|type
+operator|==
+name|dns_zone_master
+operator|&&
+name|strcmp
+argument_list|(
+name|zone
+operator|->
+name|db_argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"_builtin"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|DNS_ZONE_FLAG
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_LOADED
+argument_list|)
+condition|)
+block|{
+name|result
+operator|=
+name|ISC_R_SUCCESS
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -6091,8 +6134,10 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
-name|tresult
-operator|=
+comment|/* 			 * We can't report multiple errors so ignore 			 * the result of dns_db_endload(). 			 */
+operator|(
+name|void
+operator|)
 name|dns_db_endload
 argument_list|(
 name|load
@@ -6106,16 +6151,6 @@ name|callbacks
 operator|.
 name|add_private
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|result
-operator|==
-name|ISC_R_SUCCESS
-condition|)
-name|result
-operator|=
-name|tresult
 expr_stmt|;
 goto|goto
 name|cleanup
@@ -6459,24 +6494,6 @@ name|db
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|zone
-operator|->
-name|loadtime
-operator|=
-name|loadtime
-expr_stmt|;
-name|dns_zone_log
-argument_list|(
-name|zone
-argument_list|,
-name|ISC_LOG_DEBUG
-argument_list|(
-literal|1
-argument_list|)
-argument_list|,
-literal|"loaded"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|result
@@ -6634,6 +6651,24 @@ operator|=
 name|ISC_TRUE
 expr_stmt|;
 block|}
+name|zone
+operator|->
+name|loadtime
+operator|=
+name|loadtime
+expr_stmt|;
+name|dns_zone_log
+argument_list|(
+name|zone
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|1
+argument_list|)
+argument_list|,
+literal|"loaded"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Obtain ns and soa counts for top of zone. 	 */
 name|nscount
 operator|=
@@ -8888,6 +8923,7 @@ name|dns_zone_t
 modifier|*
 name|zone
 parameter_list|,
+specifier|const
 name|isc_sockaddr_t
 modifier|*
 name|xfrsource
@@ -8963,6 +8999,7 @@ name|dns_zone_t
 modifier|*
 name|zone
 parameter_list|,
+specifier|const
 name|isc_sockaddr_t
 modifier|*
 name|xfrsource
@@ -9038,6 +9075,7 @@ name|dns_zone_t
 modifier|*
 name|zone
 parameter_list|,
+specifier|const
 name|isc_sockaddr_t
 modifier|*
 name|altxfrsource
@@ -9113,6 +9151,7 @@ name|dns_zone_t
 modifier|*
 name|zone
 parameter_list|,
+specifier|const
 name|isc_sockaddr_t
 modifier|*
 name|altxfrsource
@@ -9188,6 +9227,7 @@ name|dns_zone_t
 modifier|*
 name|zone
 parameter_list|,
+specifier|const
 name|isc_sockaddr_t
 modifier|*
 name|notifysrc
@@ -9263,6 +9303,7 @@ name|dns_zone_t
 modifier|*
 name|zone
 parameter_list|,
+specifier|const
 name|isc_sockaddr_t
 modifier|*
 name|notifysrc
@@ -9338,6 +9379,7 @@ name|dns_zone_t
 modifier|*
 name|zone
 parameter_list|,
+specifier|const
 name|isc_sockaddr_t
 modifier|*
 name|notify
@@ -9508,6 +9550,7 @@ name|dns_zone_t
 modifier|*
 name|zone
 parameter_list|,
+specifier|const
 name|isc_sockaddr_t
 modifier|*
 name|masters
@@ -9548,6 +9591,7 @@ name|dns_zone_t
 modifier|*
 name|zone
 parameter_list|,
+specifier|const
 name|isc_sockaddr_t
 modifier|*
 name|masters
@@ -10933,6 +10977,9 @@ name|unsigned
 name|int
 name|j
 decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|DNS_ZONE_VALID
@@ -11062,6 +11109,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
 name|isc_time_nowplusinterval
 argument_list|(
 operator|&
@@ -11071,6 +11120,26 @@ name|refreshtime
 argument_list|,
 operator|&
 name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator||=
+name|ISC_R_SUCCESS
+condition|)
+name|dns_zone_log
+argument_list|(
+name|zone
+argument_list|,
+name|ISC_LOG_WARNING
+argument_list|,
+literal|"isc_time_nowplusinterval() failed: %s"
+argument_list|,
+name|dns_result_totext
+argument_list|(
+name|result
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * When lacking user-specified timer values from the SOA, 	 * do exponential backoff of the retry time up to a 	 * maximum of six hours. 	 */
@@ -16996,9 +17065,28 @@ name|type
 operator|==
 name|dns_zone_slave
 condition|)
+block|{
+name|LOCK_ZONE
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
+name|DNS_ZONE_SETFLAG
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_SOABEFOREAXFR
+argument_list|)
+expr_stmt|;
+name|UNLOCK_ZONE
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
 goto|goto
 name|tcp_transfer
 goto|;
+block|}
 block|}
 else|else
 name|dns_zone_log
@@ -17296,6 +17384,23 @@ argument_list|,
 name|master
 argument_list|,
 name|source
+argument_list|)
+expr_stmt|;
+name|LOCK_ZONE
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
+name|DNS_ZONE_SETFLAG
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_SOABEFOREAXFR
+argument_list|)
+expr_stmt|;
+name|UNLOCK_ZONE
+argument_list|(
+name|zone
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -26533,6 +26638,13 @@ argument_list|,
 name|DNS_ZONEFLG_REFRESH
 argument_list|)
 expr_stmt|;
+name|DNS_ZONE_CLRFLAG
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_SOABEFOREAXFR
+argument_list|)
+expr_stmt|;
 name|TIME_NOW
 argument_list|(
 operator|&
@@ -28242,6 +28354,20 @@ argument_list|,
 name|mastertext
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DNS_ZONE_FLAG
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_SOABEFOREAXFR
+argument_list|)
+condition|)
+name|xfrtype
+operator|=
+name|dns_rdatatype_soa
+expr_stmt|;
+else|else
 name|xfrtype
 operator|=
 name|dns_rdatatype_axfr

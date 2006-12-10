@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rndc.c,v 1.77.2.5.2.15 2005/03/17 03:58:27 marka Exp $ */
+comment|/* $Id: rndc.c,v 1.77.2.5.2.19 2006/08/04 03:03:08 marka Exp $ */
 end_comment
 
 begin_comment
@@ -538,6 +538,37 @@ operator|&
 name|event
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sends
+operator|==
+literal|0
+operator|&&
+name|recvs
+operator|==
+literal|0
+condition|)
+block|{
+name|isc_socket_detach
+argument_list|(
+operator|&
+name|sock
+argument_list|)
+expr_stmt|;
+name|isc_task_shutdown
+argument_list|(
+name|task
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|isc_app_shutdown
+argument_list|()
+operator|==
+name|ISC_R_SUCCESS
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -800,6 +831,17 @@ operator|&
 name|response
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sends
+operator|==
+literal|0
+operator|&&
+name|recvs
+operator|==
+literal|0
+condition|)
+block|{
 name|isc_socket_detach
 argument_list|(
 operator|&
@@ -819,6 +861,7 @@ operator|==
 name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1276,6 +1319,12 @@ modifier|*
 name|event
 parameter_list|)
 block|{
+name|char
+name|socktext
+index|[
+name|ISC_SOCKADDR_FORMATSIZE
+index|]
+decl_stmt|;
 name|isc_socketevent_t
 modifier|*
 name|sevent
@@ -1326,6 +1375,22 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
+name|isc_sockaddr_format
+argument_list|(
+operator|&
+name|serveraddrs
+index|[
+name|currentaddr
+index|]
+argument_list|,
+name|socktext
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|socktext
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sevent
@@ -1334,6 +1399,7 @@ name|result
 operator|!=
 name|ISC_R_CANCELED
 operator|&&
+operator|++
 name|currentaddr
 operator|<
 name|nserveraddrs
@@ -1341,7 +1407,9 @@ condition|)
 block|{
 name|notify
 argument_list|(
-literal|"connection failed: %s"
+literal|"connection failed: %s: %s"
+argument_list|,
+name|socktext
 argument_list|,
 name|isc_result_totext
 argument_list|(
@@ -1369,7 +1437,6 @@ operator|&
 name|serveraddrs
 index|[
 name|currentaddr
-operator|++
 index|]
 argument_list|,
 name|task
@@ -1380,7 +1447,9 @@ block|}
 else|else
 name|fatal
 argument_list|(
-literal|"connect failed: %s"
+literal|"connect failed: %s: %s"
+argument_list|,
+name|socktext
 argument_list|,
 name|isc_result_totext
 argument_list|(
@@ -1737,7 +1806,6 @@ operator|&
 name|serveraddrs
 index|[
 name|currentaddr
-operator|++
 index|]
 argument_list|,
 name|task
@@ -1785,54 +1853,63 @@ name|conffile
 init|=
 name|admin_conffile
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|defkey
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|options
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|servers
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|server
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|keys
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|key
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|defport
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|secretobj
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|algorithmobj
@@ -1845,6 +1922,7 @@ name|config
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|elt
@@ -2002,6 +2080,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|defserverobj

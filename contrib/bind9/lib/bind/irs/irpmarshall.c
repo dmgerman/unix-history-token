@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irpmarshall.c,v 1.3.206.3 2004/03/17 01:13:34 marka Exp $"
+literal|"$Id: irpmarshall.c,v 1.3.206.4 2006/03/10 00:17:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4179,8 +4179,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
-init|=
-name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -4773,6 +4771,13 @@ condition|)
 name|free
 argument_list|(
 name|name
+argument_list|)
+expr_stmt|;
+name|free_array
+argument_list|(
+name|hohaddrlist
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|free_array
@@ -5463,17 +5468,6 @@ condition|)
 name|free
 argument_list|(
 name|user
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|domain
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|domain
 argument_list|)
 expr_stmt|;
 return|return
