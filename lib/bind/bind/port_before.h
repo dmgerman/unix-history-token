@@ -143,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|GETNETBYADDR_ADDR_T
-value|long
+value|unsigned long int
 end_define
 
 begin_define
@@ -163,14 +163,14 @@ begin_define
 define|#
 directive|define
 name|NET_R_ARGS
-value|char *buf, int buflen
+value|char *buf, size_t buflen, struct netent **answerp, int *h_errnop
 end_define
 
 begin_define
 define|#
 directive|define
 name|NET_R_BAD
-value|NULL
+value|ERANGE
 end_define
 
 begin_define
@@ -184,7 +184,7 @@ begin_define
 define|#
 directive|define
 name|NET_R_COPY_ARGS
-value|NET_R_ARGS
+value|char *buf, size_t buflen
 end_define
 
 begin_define
@@ -221,14 +221,14 @@ begin_define
 define|#
 directive|define
 name|NET_R_OK
-value|nptr
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|NET_R_RETURN
-value|struct netent *
+value|int
 end_define
 
 begin_undef
@@ -241,11 +241,12 @@ begin_comment
 comment|/*empty*/
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|NET_R_SETANSWER
-end_undef
+value|1
+end_define
 
 begin_define
 define|#
@@ -308,14 +309,14 @@ begin_define
 define|#
 directive|define
 name|HOST_R_ARGS
-value|char *buf, int buflen, int *h_errnop
+value|char *buf, size_t buflen, struct hostent **answerp, int *h_errnop
 end_define
 
 begin_define
 define|#
 directive|define
 name|HOST_R_BAD
-value|NULL
+value|ERANGE
 end_define
 
 begin_define
@@ -373,21 +374,22 @@ begin_define
 define|#
 directive|define
 name|HOST_R_OK
-value|hptr
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|HOST_R_RETURN
-value|struct hostent *
+value|int
 end_define
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|HOST_R_SETANSWER
-end_undef
+value|1
+end_define
 
 begin_undef
 undef|#
@@ -501,14 +503,14 @@ begin_define
 define|#
 directive|define
 name|PROTO_R_ARGS
-value|char *buf, int buflen
+value|char *buf, size_t buflen, struct protoent **answerp
 end_define
 
 begin_define
 define|#
 directive|define
 name|PROTO_R_BAD
-value|NULL
+value|ERANGE
 end_define
 
 begin_define
@@ -522,7 +524,7 @@ begin_define
 define|#
 directive|define
 name|PROTO_R_COPY_ARGS
-value|PROTO_R_ARGS
+value|char *buf, size_t buflen
 end_define
 
 begin_define
@@ -555,24 +557,31 @@ begin_comment
 comment|/*empty*/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PROTO_R_OK
-value|pptr
-end_define
-
 begin_undef
 undef|#
 directive|undef
-name|PROTO_R_SETANSWER
+name|PROTO_R_ENT_UNUSED
 end_undef
 
 begin_define
 define|#
 directive|define
+name|PROTO_R_OK
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_R_SETANSWER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|PROTO_R_RETURN
-value|struct protoent *
+value|int
 end_define
 
 begin_undef
@@ -587,6 +596,12 @@ directive|define
 name|PROTO_R_SET_RETURN
 value|void
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PROTOENT_DATA
+end_undef
 
 begin_define
 define|#
@@ -635,14 +650,14 @@ begin_define
 define|#
 directive|define
 name|SERV_R_ARGS
-value|char *buf, int buflen
+value|char *buf, size_t buflen, struct servent **answerp
 end_define
 
 begin_define
 define|#
 directive|define
 name|SERV_R_BAD
-value|NULL
+value|ERANGE
 end_define
 
 begin_define
@@ -656,7 +671,7 @@ begin_define
 define|#
 directive|define
 name|SERV_R_COPY_ARGS
-value|SERV_R_ARGS
+value|char *buf, size_t buflen
 end_define
 
 begin_define
@@ -689,24 +704,35 @@ begin_comment
 comment|/*empty*/
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|SERV_R_ENT_UNUSED
+end_undef
+
+begin_comment
+comment|/*empty*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SERV_R_OK
-value|sptr
+value|(0)
 end_define
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|SERV_R_SETANSWER
-end_undef
+value|1
+end_define
 
 begin_define
 define|#
 directive|define
 name|SERV_R_RETURN
-value|struct servent *
+value|int
 end_define
 
 begin_undef
