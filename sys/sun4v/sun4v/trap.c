@@ -1917,9 +1917,6 @@ argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|1
 if|if
 condition|(
 name|data
@@ -1941,33 +1938,10 @@ argument_list|,
 name|ctx
 argument_list|)
 expr_stmt|;
-name|CTR4
-argument_list|(
-name|KTR_TRAP
-argument_list|,
-literal|"trap_pfault: td=%p pm_ctx=%#lx va=%#lx ctx=%#lx"
-argument_list|,
-name|td
-argument_list|,
-name|p
-operator|->
-name|p_vmspace
-operator|->
-name|vm_pmap
-operator|.
-name|pm_context
-index|[
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-index|]
-argument_list|,
-name|va
-argument_list|,
-name|ctx
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|CTR4(KTR_TRAP, "trap_pfault: td=%p pm_ctx=%#lx va=%#lx ctx=%#lx", 	    td, p->p_vmspace->vm_pmap.pm_context[PCPU_GET(cpuid)], va, ctx);
 endif|#
 directive|endif
 name|KASSERT
