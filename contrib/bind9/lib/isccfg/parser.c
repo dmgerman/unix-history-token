@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: parser.c,v 1.70.2.20.2.18 2004/05/15 03:46:13 jinmei Exp $ */
+comment|/* $Id: parser.c,v 1.70.2.20.2.21 2006/02/28 06:32:54 marka Exp $ */
 end_comment
 
 begin_include
@@ -235,6 +235,7 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -605,6 +606,7 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -834,6 +836,7 @@ begin_function
 name|void
 name|cfg_print
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -1234,6 +1237,7 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -1287,6 +1291,7 @@ name|i
 operator|++
 control|)
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|fieldobj
@@ -1543,6 +1548,7 @@ begin_function
 name|isc_boolean_t
 name|cfg_obj_istuple
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -1574,10 +1580,12 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|cfg_tuple_get
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|tupleobj
@@ -2812,6 +2820,7 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -2861,6 +2870,7 @@ begin_function
 name|isc_boolean_t
 name|cfg_obj_isvoid
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -3110,6 +3120,7 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -3133,6 +3144,7 @@ begin_function
 name|isc_boolean_t
 name|cfg_obj_isuint32
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -3167,6 +3179,7 @@ begin_function
 name|isc_uint32_t
 name|cfg_obj_asuint32
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -3229,6 +3242,7 @@ begin_function
 name|isc_boolean_t
 name|cfg_obj_isuint64
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -3263,6 +3277,7 @@ begin_function
 name|isc_uint64_t
 name|cfg_obj_asuint64
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -3304,6 +3319,7 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -4089,6 +4105,7 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -4127,6 +4144,7 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -4206,6 +4224,7 @@ begin_function
 name|isc_boolean_t
 name|cfg_obj_isstring
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -4237,10 +4256,12 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|cfg_obj_asstring
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -4359,6 +4380,7 @@ begin_function
 name|isc_boolean_t
 name|cfg_obj_isboolean
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -4393,6 +4415,7 @@ begin_function
 name|isc_boolean_t
 name|cfg_obj_asboolean
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -4670,6 +4693,7 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -5254,11 +5278,13 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
 parameter_list|)
 block|{
+specifier|const
 name|cfg_list_t
 modifier|*
 name|list
@@ -5270,6 +5296,7 @@ name|value
 operator|.
 name|list
 decl_stmt|;
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|elt
@@ -5397,6 +5424,7 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -5623,11 +5651,13 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
 parameter_list|)
 block|{
+specifier|const
 name|cfg_list_t
 modifier|*
 name|list
@@ -5639,6 +5669,7 @@ name|value
 operator|.
 name|list
 decl_stmt|;
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|elt
@@ -5704,6 +5735,7 @@ begin_function
 name|isc_boolean_t
 name|cfg_obj_islist
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -5735,10 +5767,12 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|cfg_list_first
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -5787,10 +5821,12 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|cfg_list_next
 parameter_list|(
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|elt
@@ -5817,10 +5853,12 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|cfg_listelt_value
 parameter_list|(
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|elt
@@ -6971,6 +7009,7 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -7403,6 +7442,7 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -7761,6 +7801,7 @@ begin_function
 name|isc_boolean_t
 name|cfg_obj_ismap
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -7795,6 +7836,7 @@ begin_function
 name|isc_result_t
 name|cfg_map_get
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|mapobj
@@ -7804,6 +7846,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 modifier|*
@@ -7816,6 +7859,7 @@ decl_stmt|;
 name|isc_symvalue_t
 name|val
 decl_stmt|;
+specifier|const
 name|cfg_map_t
 modifier|*
 name|map
@@ -7907,10 +7951,12 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|cfg_map_getname
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|mapobj
@@ -8071,6 +8117,27 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|obj
+operator|->
+name|value
+operator|.
+name|string
+operator|.
+name|base
+operator|==
+name|NULL
+condition|)
+block|{
+name|result
+operator|=
+name|ISC_R_NOMEMORY
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
+block|}
 name|obj
 operator|->
 name|value
@@ -8122,8 +8189,34 @@ name|ret
 operator|=
 name|obj
 expr_stmt|;
+return|return
+operator|(
+name|result
+operator|)
+return|;
 name|cleanup
 label|:
+if|if
+condition|(
+name|obj
+operator|!=
+name|NULL
+condition|)
+name|isc_mem_put
+argument_list|(
+name|pctx
+operator|->
+name|mctx
+argument_list|,
+name|obj
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|obj
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|result
@@ -9100,6 +9193,7 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|isc_netaddr_t
 modifier|*
 name|na
@@ -9585,11 +9679,13 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
 parameter_list|)
 block|{
+specifier|const
 name|cfg_netprefix_t
 modifier|*
 name|p
@@ -9636,6 +9732,7 @@ begin_function
 name|isc_boolean_t
 name|cfg_obj_isnetprefix
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -9670,6 +9767,7 @@ begin_function
 name|void
 name|cfg_obj_asnetprefix
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -10000,6 +10098,7 @@ name|cfg_printer_t
 modifier|*
 name|pctx
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -10135,21 +10234,6 @@ operator|&
 name|CFG_ADDR_V4OK
 condition|)
 block|{
-if|if
-condition|(
-name|n
-operator|!=
-literal|0
-condition|)
-name|cfg_print_chars
-argument_list|(
-name|pctx
-argument_list|,
-literal|" | "
-argument_list|,
-literal|3
-argument_list|)
-expr_stmt|;
 name|cfg_print_cstr
 argument_list|(
 name|pctx
@@ -10273,6 +10357,7 @@ begin_function
 name|isc_boolean_t
 name|cfg_obj_issockaddr
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -10304,10 +10389,12 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|isc_sockaddr_t
 modifier|*
 name|cfg_obj_assockaddr
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -11313,6 +11400,7 @@ begin_function
 name|void
 name|cfg_obj_log
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -11418,6 +11506,7 @@ name|char
 modifier|*
 name|cfg_obj_file
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -11438,6 +11527,7 @@ name|unsigned
 name|int
 name|cfg_obj_line
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -11772,6 +11862,7 @@ begin_function
 name|isc_boolean_t
 name|cfg_obj_istype
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj

@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_ho.c,v 1.5.2.7.4.6 2005/10/11 00:48:14 marka Exp $"
+literal|"$Id: dns_ho.c,v 1.5.2.7.4.8 2006/03/10 00:17:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1081,10 +1081,6 @@ operator|->
 name|res
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pvt
-condition|)
 name|memput
 argument_list|(
 name|pvt
@@ -1338,6 +1334,7 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|q
 argument_list|)
 argument_list|)
@@ -1830,6 +1827,7 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|q
 argument_list|)
 argument_list|)
@@ -1842,6 +1840,7 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|q2
 argument_list|)
 argument_list|)
@@ -3168,6 +3167,7 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|q2
 argument_list|)
 argument_list|)
@@ -3180,6 +3180,7 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|q2
 argument_list|)
 argument_list|)
@@ -3550,8 +3551,6 @@ name|ai
 expr_stmt|;
 while|while
 condition|(
-name|cur
-operator|&&
 name|cur
 operator|->
 name|ai_next
@@ -5159,8 +5158,6 @@ block|{
 comment|/* need addrinfo. keep it. */
 while|while
 condition|(
-name|cur
-operator|&&
 name|cur
 operator|->
 name|ai_next

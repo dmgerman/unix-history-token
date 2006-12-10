@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostent.c,v 1.1.2.2.4.2 2004/03/17 01:49:40 marka Exp $"
+literal|"$Id: gethostent.c,v 1.1.2.2.4.3 2006/01/10 05:09:16 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3212,11 +3212,26 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__linux
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|LINUX
+argument_list|)
+operator|)
+end_if
 
 begin_ifndef
 ifndef|#

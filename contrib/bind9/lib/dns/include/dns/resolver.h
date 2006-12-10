@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: resolver.h,v 1.34.12.7 2004/04/15 23:56:31 marka Exp $ */
+comment|/* $Id: resolver.h,v 1.34.12.9 2006/02/01 23:48:51 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -242,7 +242,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a resolver.  *  * Notes:  *  *	Generally, applications should not create a resolver directly, but  *	should instead call dns_view_createresolver().  *  *	No options are currently defined.  *  * Requires:  *  *	'view' is a valid view.  *  *	'taskmgr' is a valid task manager.  *  *	'ntasks'> 0.  *  *	'socketmgr' is a valid socket manager.  *  *	'timermgr' is a valid timer manager.  *  *	'dispatchv4' is a valid dispatcher with an IPv4 UDP socket, or is NULL.  *  *	'dispatchv6' is a valid dispatcher with an IPv6 UDP socket, or is NULL.  *  *	*resp != NULL&& *resp == NULL.  *  * Returns:  *  *	ISC_R_SUCCESS				On success.  *  *	Anything else				Failure.  */
+comment|/*  * Create a resolver.  *  * Notes:  *  *	Generally, applications should not create a resolver directly, but  *	should instead call dns_view_createresolver().  *  *	No options are currently defined.  *  * Requires:  *  *	'view' is a valid view.  *  *	'taskmgr' is a valid task manager.  *  *	'ntasks'> 0.  *  *	'socketmgr' is a valid socket manager.  *  *	'timermgr' is a valid timer manager.  *  *	'dispatchv4' is a valid dispatcher with an IPv4 UDP socket, or is NULL.  *  *	'dispatchv6' is a valid dispatcher with an IPv6 UDP socket, or is NULL.  *  *	resp != NULL&& *resp == NULL.  *  * Returns:  *  *	ISC_R_SUCCESS				On success.  *  *	Anything else				Failure.  */
 end_comment
 
 begin_function_decl

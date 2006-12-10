@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp_nw.c,v 1.1.206.1 2004/03/09 08:33:37 marka Exp $"
+literal|"$Id: irp_nw.c,v 1.1.206.2 2006/03/10 00:17:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1327,6 +1327,19 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|body
+operator|!=
+name|NULL
+condition|)
+name|memput
+argument_list|(
+name|body
+argument_list|,
+name|bodylen
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|nw

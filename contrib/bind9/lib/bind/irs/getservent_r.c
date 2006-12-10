@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getservent_r.c,v 1.3.206.1 2004/03/09 08:33:36 marka Exp $"
+literal|"$Id: getservent_r.c,v 1.3.206.2 2006/08/01 01:19:28 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -483,6 +483,13 @@ parameter_list|)
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|SERV_R_ENT_UNUSED
+name|SERV_R_ENT_UNUSED
+expr_stmt|;
+endif|#
+directive|endif
 name|setservent
 argument_list|(
 name|stay_open
@@ -517,6 +524,13 @@ parameter_list|()
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|SERV_R_ENT_UNUSED
+name|SERV_R_ENT_UNUSED
+expr_stmt|;
+endif|#
+directive|endif
 name|endservent
 argument_list|()
 expr_stmt|;
@@ -906,19 +920,19 @@ expr_stmt|;
 comment|/* copy official name */
 name|cp
 operator|=
-name|ndptr
+name|sdptr
 operator|->
 name|line
 expr_stmt|;
 name|eob
 operator|=
-name|ndptr
+name|sdptr
 operator|->
 name|line
 operator|+
 sizeof|sizeof
 argument_list|(
-name|ndptr
+name|sdptr
 operator|->
 name|line
 argument_list|)
@@ -983,7 +997,7 @@ name|sptr
 operator|->
 name|s_aliases
 operator|=
-name|ndptr
+name|sdptr
 operator|->
 name|serv_aliases
 expr_stmt|;

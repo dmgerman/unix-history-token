@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1983, 1989  *    The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  *      from nameser.h	8.1 (Berkeley) 6/2/93  *	$Id: nameser_compat.h,v 1.1.2.3.4.2 2004/07/01 04:43:41 marka Exp $  */
+comment|/*  *      from nameser.h	8.1 (Berkeley) 6/2/93  *	$Id: nameser_compat.h,v 1.1.2.3.4.3 2006/05/19 02:38:15 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -133,6 +133,27 @@ operator|||
 expr|\
 name|defined
 argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|MIPSEL
 argument_list|)
 operator|||
@@ -141,12 +162,12 @@ argument_list|(
 name|_MIPSEL
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|BIT_ZERO_ON_RIGHT
 argument_list|)
 operator|||
-expr|\
 name|defined
 argument_list|(
 name|__alpha__

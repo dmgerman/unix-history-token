@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: heap.c,v 1.1.206.1 2004/03/09 08:33:43 marka Exp $"
+literal|"$Id: heap.c,v 1.1.206.2 2006/03/10 00:17:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,17 @@ block|{
 name|heap_context
 name|ctx
 decl_stmt|;
+if|if
+condition|(
+name|higher_priority
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|ctx
 operator|=
 operator|(
@@ -144,10 +155,6 @@ expr_stmt|;
 if|if
 condition|(
 name|ctx
-operator|==
-name|NULL
-operator|||
-name|higher_priority
 operator|==
 name|NULL
 condition|)

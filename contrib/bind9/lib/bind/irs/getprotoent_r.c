@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getprotoent_r.c,v 1.3.206.1 2004/03/09 08:33:36 marka Exp $"
+literal|"$Id: getprotoent_r.c,v 1.3.206.2 2006/08/01 01:19:28 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -463,6 +463,13 @@ parameter_list|)
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|PROTO_R_ENT_UNUSED
+name|PROTO_R_ENT_UNUSED
+expr_stmt|;
+endif|#
+directive|endif
 name|setprotoent
 argument_list|(
 name|stay_open
@@ -497,6 +504,13 @@ parameter_list|()
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|PROTO_R_ENT_UNUSED
+name|PROTO_R_ENT_UNUSED
+expr_stmt|;
+endif|#
+directive|endif
 name|endprotoent
 argument_list|()
 expr_stmt|;
