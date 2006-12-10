@@ -13321,7 +13321,8 @@ case|:
 default|default:
 name|printf
 argument_list|(
-literal|"%s: Unsupported ATAPI command 0x%02x\n"
+literal|"%s: Unsupported ATAPI command 0x%02x"
+literal|" - trying anyway\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -13336,10 +13337,19 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|memcpy
+argument_list|(
+operator|*
+name|rcmd
+argument_list|,
+name|cmd
+argument_list|,
+name|cmdlen
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
+literal|1
 return|;
-comment|/* failure */
 block|}
 block|}
 end_function
