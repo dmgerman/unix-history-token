@@ -3197,8 +3197,7 @@ literal|"%u"
 argument_list|,
 operator|*
 operator|(
-name|unsigned
-name|int
+name|u_int
 operator|*
 operator|)
 name|p
@@ -3385,8 +3384,7 @@ literal|"%lu"
 argument_list|,
 operator|*
 operator|(
-name|unsigned
-name|long
+name|u_long
 operator|*
 operator|)
 name|p
@@ -3410,8 +3408,7 @@ literal|"%#018lx"
 argument_list|,
 operator|*
 operator|(
-name|unsigned
-name|long
+name|u_long
 operator|*
 operator|)
 name|p
