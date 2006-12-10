@@ -791,7 +791,7 @@ name|parm
 operator|->
 name|support
 operator|.
-name|smart
+name|security
 condition|?
 literal|"yes"
 else|:
@@ -801,7 +801,7 @@ name|parm
 operator|->
 name|enabled
 operator|.
-name|smart
+name|security
 condition|?
 literal|"yes"
 else|:
