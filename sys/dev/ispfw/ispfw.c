@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|MODULE_NAME
-value|"isp"
+value|"ispfw"
 end_define
 
 begin_endif
