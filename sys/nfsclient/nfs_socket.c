@@ -255,6 +255,15 @@ literal|10
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_skip_wcc_data_onerr
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -364,6 +373,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"number of seconds to delay a retry after receiving EJUKEBOX"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_nfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|skip_wcc_data_onerr
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nfs_skip_wcc_data_onerr
+argument_list|,
+literal|0
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6181,13 +6211,19 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Skip wcc data on NFS errors for now. NetApp filers return corrupt 			 * postop attrs in the wcc data for NFS err EROFS. Not sure if they  			 * could return corrupt postop attrs for others errors. 			 */
 if|if
 condition|(
+operator|(
 name|nmp
 operator|->
 name|nm_flag
 operator|&
 name|NFSMNT_NFSV3
+operator|)
+operator|&&
+operator|!
+name|nfs_skip_wcc_data_onerr
 condition|)
 block|{
 operator|*
