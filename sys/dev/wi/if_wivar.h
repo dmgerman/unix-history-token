@@ -206,6 +206,10 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
+name|struct
+name|callout
+name|sc_watchdog
+decl_stmt|;
 name|int
 name|sc_unit
 decl_stmt|;
