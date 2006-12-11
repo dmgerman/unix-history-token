@@ -68,24 +68,11 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500033
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/endian.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -835,14 +822,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-end_if
-
 begin_comment
 comment|/* support to download firmware for symbol CF card */
 end_comment
@@ -884,11 +863,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -1575,11 +1549,6 @@ name|error
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|mtx_init
 argument_list|(
 operator|&
@@ -1599,8 +1568,6 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|sc_firmware_type
@@ -2866,9 +2833,6 @@ name|sc
 operator|->
 name|sc_ifp
 decl_stmt|;
-name|WI_LOCK_DECL
-argument_list|()
-expr_stmt|;
 name|WI_LOCK
 argument_list|(
 name|sc
@@ -2942,11 +2906,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -2955,8 +2914,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -3207,9 +3164,6 @@ decl_stmt|;
 name|u_int16_t
 name|status
 decl_stmt|;
-name|WI_LOCK_DECL
-argument_list|()
-expr_stmt|;
 name|WI_LOCK
 argument_list|(
 name|sc
@@ -3429,9 +3383,6 @@ literal|0
 decl_stmt|,
 name|wasenabled
 decl_stmt|;
-name|WI_LOCK_DECL
-argument_list|()
-expr_stmt|;
 name|WI_LOCK
 argument_list|(
 name|sc
@@ -4502,9 +4453,6 @@ name|sc
 operator|->
 name|sc_ic
 decl_stmt|;
-name|WI_LOCK_DECL
-argument_list|()
-expr_stmt|;
 name|WI_LOCK
 argument_list|(
 name|sc
@@ -4719,9 +4667,6 @@ decl_stmt|;
 name|int
 name|cur
 decl_stmt|;
-name|WI_LOCK_DECL
-argument_list|()
-expr_stmt|;
 name|WI_LOCK
 argument_list|(
 name|sc
@@ -5647,9 +5592,6 @@ name|rc
 init|=
 literal|0
 decl_stmt|;
-name|WI_LOCK_DECL
-argument_list|()
-expr_stmt|;
 name|WI_LOCK
 argument_list|(
 name|sc
@@ -6504,11 +6446,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|struct
 name|thread
 modifier|*
@@ -6516,25 +6453,10 @@ name|td
 init|=
 name|curthread
 decl_stmt|;
-else|#
-directive|else
-name|struct
-name|proc
-modifier|*
-name|td
-init|=
-name|curproc
-decl_stmt|;
-comment|/* Little white lie */
-endif|#
-directive|endif
 name|struct
 name|wi_req
 name|wreq
 decl_stmt|;
-name|WI_LOCK_DECL
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -9725,22 +9647,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-name|LIST_FOREACH
-argument_list|(
-argument|ifma
-argument_list|,
-argument|&ifp->if_multiaddrs
-argument_list|,
-argument|ifma_link
-argument_list|)
-block|{
-else|#
-directive|else
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -9750,8 +9656,6 @@ argument_list|,
 argument|ifma_link
 argument_list|)
 block|{
-endif|#
-directive|endif
 if|if
 condition|(
 name|ifma
@@ -9822,6 +9726,9 @@ name|n
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|wi_read_nicid
@@ -10398,6 +10305,9 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_write_ssid
@@ -10481,6 +10391,9 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_get_cfg
@@ -11824,6 +11737,9 @@ literal|2
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_set_cfg
@@ -11896,9 +11812,6 @@ name|ieee80211_rateset
 modifier|*
 name|rs
 decl_stmt|;
-name|WI_LOCK_DECL
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|copyin
@@ -12906,6 +12819,9 @@ return|return
 name|error
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_write_txrate
@@ -13070,6 +12986,9 @@ name|rate
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_key_alloc
@@ -13144,6 +13063,9 @@ name|rxkeyix
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_write_wep
@@ -13658,6 +13580,9 @@ return|return
 name|error
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_cmd
@@ -13936,6 +13861,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_seek_bap
@@ -14102,6 +14030,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_read_bap
@@ -14235,6 +14166,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_write_bap
@@ -14472,6 +14406,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_mwrite_bap
@@ -14648,6 +14585,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_alloc_fid
@@ -14774,6 +14714,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_read_rid
@@ -14961,6 +14904,9 @@ name|len
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_write_rid
@@ -15086,6 +15032,9 @@ literal|0
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_newstate
@@ -15474,6 +15423,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_scan_ap
@@ -15652,6 +15604,9 @@ return|return
 name|error
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|wi_scan_result
@@ -16119,6 +16074,9 @@ undef|#
 directive|undef
 name|N
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|wi_dump_pkt
@@ -16278,6 +16236,9 @@ name|ether_type
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|int
 name|wi_alloc
 parameter_list|(
@@ -16559,6 +16520,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|wi_free
 parameter_list|(
@@ -16671,6 +16635,9 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_get_debug
@@ -16984,6 +16951,9 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_set_debug
@@ -17400,17 +17370,24 @@ name|error
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
+end_function
+
+begin_comment
 comment|/*  * Special routines to download firmware for Symbol CF card.  * XXX: This should be modified generic into any PRISM-2 based card.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|WI_SBCF_PDIADDR
 value|0x3100
+end_define
+
+begin_comment
 comment|/* unaligned load little endian */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|GETLE32
@@ -17418,6 +17395,9 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((p)[0] | ((p)[1]<<8) | ((p)[2]<<16) | ((p)[3]<<24))
+end_define
+
+begin_define
 define|#
 directive|define
 name|GETLE16
@@ -17425,6 +17405,9 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((p)[0] | ((p)[1]<<8))
+end_define
+
+begin_function
 name|int
 name|wi_symbol_load_firm
 parameter_list|(
@@ -17735,6 +17718,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_symbol_write_firm
@@ -18149,6 +18135,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wi_symbol_set_hcr
@@ -18254,11 +18243,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
