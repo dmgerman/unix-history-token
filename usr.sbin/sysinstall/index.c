@@ -503,7 +503,7 @@ literal|"Ports to support the WindowMaker window manager."
 block|,
 literal|"www"
 block|,
-literal|"Web utilities (browers, HTTP servers, etc)."
+literal|"Web utilities (browsers, HTTP servers, etc)."
 block|,
 literal|"x11"
 block|,
