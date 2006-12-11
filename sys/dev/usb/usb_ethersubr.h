@@ -101,6 +101,9 @@ decl_stmt|;
 name|int
 name|ue_idx
 decl_stmt|;
+name|usbd_status
+name|ue_status
+decl_stmt|;
 block|}
 struct|;
 end_struct
