@@ -1058,9 +1058,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 break|break;
-block|}
 switch|switch
 condition|(
 name|IFM_SUBTYPE
