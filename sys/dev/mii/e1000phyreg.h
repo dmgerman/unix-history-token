@@ -1114,6 +1114,45 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_SCR_EN_DETECT_MASK
+value|0x0300
+end_define
+
+begin_comment
+comment|/* 88E1112 page 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_MODE_MASK
+value|0x0380
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_MODE_AUTO
+value|0x0180
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_MODE_COPPER
+value|0x0280
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_MODE_1000BX
+value|0x0380
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_SSR
 value|0x11
 end_define
@@ -1444,6 +1483,17 @@ end_define
 
 begin_comment
 comment|/* RX error counter reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EADR
+value|0x16
+end_define
+
+begin_comment
+comment|/* extended address reg */
 end_comment
 
 begin_define
