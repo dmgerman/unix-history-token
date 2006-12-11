@@ -918,7 +918,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|aha
 argument_list|,
-name|cam
+name|mca
 argument_list|,
 literal|1
 argument_list|,

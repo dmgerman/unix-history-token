@@ -1416,7 +1416,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|aha
 argument_list|,
-name|cam
+name|isa
 argument_list|,
 literal|1
 argument_list|,
