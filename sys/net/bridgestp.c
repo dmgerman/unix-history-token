@@ -3558,7 +3558,7 @@ name|cu_agree
 operator|&&
 name|bp
 operator|->
-name|bp_p2p_link
+name|bp_ptp_link
 condition|)
 block|{
 name|bp
@@ -5287,7 +5287,7 @@ argument_list|,
 operator|(
 name|bp
 operator|->
-name|bp_p2p_link
+name|bp_ptp_link
 condition|?
 name|BSTP_DEFAULT_MIGRATE_DELAY
 else|:
@@ -7937,7 +7937,7 @@ end_function
 
 begin_function
 name|int
-name|bstp_set_p2p
+name|bstp_set_ptp
 parameter_list|(
 name|struct
 name|bstp_port
@@ -7964,7 +7964,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|bp_p2p_link
+name|bp_ptp_link
 operator|=
 name|set
 expr_stmt|;
@@ -7983,7 +7983,7 @@ end_function
 
 begin_function
 name|int
-name|bstp_set_autop2p
+name|bstp_set_autoptp
 parameter_list|(
 name|struct
 name|bstp_port
@@ -8017,7 +8017,7 @@ name|bp
 operator|->
 name|bp_flags
 operator||=
-name|BSTP_PORT_AUTOP2P
+name|BSTP_PORT_AUTOPTP
 expr_stmt|;
 name|bstp_ifupdstatus
 argument_list|(
@@ -8033,7 +8033,7 @@ operator|->
 name|bp_flags
 operator|&=
 operator|~
-name|BSTP_PORT_AUTOP2P
+name|BSTP_PORT_AUTOPTP
 expr_stmt|;
 name|BSTP_UNLOCK
 argument_list|(
@@ -8564,12 +8564,12 @@ name|bp
 operator|->
 name|bp_flags
 operator|&
-name|BSTP_PORT_AUTOP2P
+name|BSTP_PORT_AUTOPTP
 condition|)
 block|{
 name|bp
 operator|->
-name|bp_p2p_link
+name|bp_ptp_link
 operator|=
 name|ifmr
 operator|.
@@ -10315,7 +10315,7 @@ name|bp_flags
 operator|=
 name|BSTP_PORT_AUTOEDGE
 operator||
-name|BSTP_PORT_AUTOP2P
+name|BSTP_PORT_AUTOPTP
 expr_stmt|;
 name|bstp_set_port_state
 argument_list|(

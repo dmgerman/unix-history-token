@@ -212,7 +212,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|BSTP_PORT_AUTOP2P
+name|BSTP_PORT_AUTOPTP
 value|0x0020
 end_define
 
@@ -1116,7 +1116,7 @@ name|uint8_t
 name|bp_priority
 decl_stmt|;
 name|uint8_t
-name|bp_p2p_link
+name|bp_ptp_link
 decl_stmt|;
 name|uint8_t
 name|bp_agree
@@ -1598,7 +1598,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|bstp_set_p2p
+name|bstp_set_ptp
 parameter_list|(
 name|struct
 name|bstp_port
@@ -1611,7 +1611,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|bstp_set_autop2p
+name|bstp_set_autoptp
 parameter_list|(
 name|struct
 name|bstp_port

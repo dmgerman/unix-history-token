@@ -502,23 +502,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFBIF_BSTP_P2P
+name|IFBIF_BSTP_PTP
 value|0x0080
 end_define
 
 begin_comment
-comment|/* member stp p2p */
+comment|/* member stp point to point */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IFBIF_BSTP_AUTOP2P
+name|IFBIF_BSTP_AUTOPTP
 value|0x0100
 end_define
 
 begin_comment
-comment|/* member stp autop2p enabled */
+comment|/* member stp autoptp enabled */
 end_comment
 
 begin_define
@@ -547,14 +547,14 @@ begin_define
 define|#
 directive|define
 name|IFBIFBITS
-value|"\020\001LEARNING\002DISCOVER\003STP\004SPAN" \ 			"\005STICKY\006EDGE\007AUTOEDGE\010P2P\011AUTOP2P"
+value|"\020\001LEARNING\002DISCOVER\003STP\004SPAN" \ 			"\005STICKY\006EDGE\007AUTOEDGE\010PTP\011AUTOPTP"
 end_define
 
 begin_define
 define|#
 directive|define
 name|IFBIFMASK
-value|~(IFBIF_BSTP_EDGE|IFBIF_BSTP_AUTOEDGE|IFBIF_BSTP_P2P| \ 			IFBIF_BSTP_AUTOP2P|IFBIF_BSTP_ADMEDGE| \ 			IFBIF_BSTP_ADMCOST)
+value|~(IFBIF_BSTP_EDGE|IFBIF_BSTP_AUTOEDGE|IFBIF_BSTP_PTP| \ 			IFBIF_BSTP_AUTOPTP|IFBIF_BSTP_ADMEDGE| \ 			IFBIF_BSTP_ADMCOST)
 end_define
 
 begin_comment
