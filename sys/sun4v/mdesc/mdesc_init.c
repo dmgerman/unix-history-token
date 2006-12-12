@@ -770,6 +770,10 @@ name|mdesc_size
 operator|=
 literal|0LL
 expr_stmt|;
+do|do
+block|{
+name|rv
+operator|=
 name|hv_mach_desc
 argument_list|(
 operator|(
@@ -781,6 +785,33 @@ operator|&
 name|mdesc_size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rv
+operator|!=
+name|H_EOK
+operator|&&
+name|rv
+operator|!=
+name|H_EINVAL
+condition|)
+name|printf
+argument_list|(
+literal|"retrying to fetch mdesc size\n"
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|rv
+operator|!=
+name|H_EOK
+operator|&&
+name|rv
+operator|!=
+name|H_EINVAL
+condition|)
+do|;
 name|mdesc_size
 operator|=
 name|mdesc_buf_size
@@ -813,8 +844,7 @@ condition|)
 block|{
 name|rv
 operator|=
-operator|-
-literal|1
+name|ENOMEM
 expr_stmt|;
 goto|goto
 name|done
@@ -844,11 +874,6 @@ operator|!=
 name|H_EINVAL
 condition|)
 block|{
-name|rv
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -950,7 +975,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|rv
+literal|0
 operator|)
 return|;
 name|done
@@ -993,6 +1018,9 @@ name|md_t
 modifier|*
 name|mdp
 decl_stmt|;
+name|int
+name|rc
+decl_stmt|;
 comment|/* 	 * XXX This should actually happen in init 	 */
 if|if
 condition|(
@@ -1019,12 +1047,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|rc
+operator|=
 name|mdesc_update
 argument_list|()
+operator|)
+operator|!=
+literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"machine description update failed"
+literal|"machine description update failed: %d"
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 block|}
