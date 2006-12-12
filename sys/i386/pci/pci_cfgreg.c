@@ -615,7 +615,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0x0
+name|PCIR_VENDOR
 argument_list|,
 literal|2
 argument_list|)
@@ -630,7 +630,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0x2
+name|PCIR_DEVICE
 argument_list|,
 literal|2
 argument_list|)
