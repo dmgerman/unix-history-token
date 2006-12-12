@@ -2470,6 +2470,185 @@ comment|/* Received a Split Comp w/Error msg */
 end_comment
 
 begin_comment
+comment|/* HT (HyperTransport) Capability definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIR_HT_COMMAND
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCMD_CAP_MASK
+value|0xf800
+end_define
+
+begin_comment
+comment|/* Capability type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_SLAVE
+value|0x0000
+end_define
+
+begin_comment
+comment|/* 000xx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_HOST
+value|0x2000
+end_define
+
+begin_comment
+comment|/* 001xx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_SWITCH
+value|0x4000
+end_define
+
+begin_comment
+comment|/* 01000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_INTERRUPT
+value|0x8000
+end_define
+
+begin_comment
+comment|/* 10000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_REVISION_ID
+value|0x8800
+end_define
+
+begin_comment
+comment|/* 10001 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_UNITID_CLUMPING
+value|0x9000
+end_define
+
+begin_comment
+comment|/* 10010 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_EXT_CONFIG_SPACE
+value|0x9800
+end_define
+
+begin_comment
+comment|/* 10011 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_ADDRESS_MAPPING
+value|0xa000
+end_define
+
+begin_comment
+comment|/* 10100 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_MSI_MAPPING
+value|0xa800
+end_define
+
+begin_comment
+comment|/* 10101 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_DIRECT_ROUTE
+value|0xb000
+end_define
+
+begin_comment
+comment|/* 10110 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_VCSET
+value|0xb800
+end_define
+
+begin_comment
+comment|/* 10111 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_RETRY_MODE
+value|0xc000
+end_define
+
+begin_comment
+comment|/* 11000 */
+end_comment
+
+begin_comment
+comment|/* HT MSI Mapping Capability definitions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCMD_MSI_ENABLE
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIR_HTMSI_ADDRESS_LO
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIR_HTMSI_ADDRESS_HI
+value|0x8
+end_define
+
+begin_comment
 comment|/* MSI-X definitions */
 end_comment
 
