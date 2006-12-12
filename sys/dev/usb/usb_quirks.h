@@ -94,6 +94,11 @@ directive|define
 name|UQ_HID_IGNORE
 value|0x8000
 comment|/* device should be ignored by hid class */
+define|#
+directive|define
+name|UQ_KBD_IGNORE
+value|0x18000
+comment|/* device should be ignored by both kbd and hid class */
 block|}
 struct|;
 end_struct

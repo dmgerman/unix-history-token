@@ -533,6 +533,19 @@ name|UQ_HID_IGNORE
 block|}
 block|}
 block|,
+comment|/* Devices which should be ignored by both ukbd and uhid */
+block|{
+name|USB_VENDOR_CYPRESS
+block|,
+name|USB_PRODUCT_CYPRESS_WISPY
+block|,
+name|ANY
+block|,
+block|{
+name|UQ_KBD_IGNORE
+block|}
+block|}
+block|,
 block|{
 literal|0
 block|,
