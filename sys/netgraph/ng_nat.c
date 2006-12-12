@@ -1059,9 +1059,18 @@ name|tcphdr
 operator|*
 operator|)
 operator|(
+operator|(
+name|caddr_t
+operator|)
 name|ip
 operator|+
-literal|1
+operator|(
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+operator|)
 operator|)
 decl_stmt|;
 comment|/* 		 * Here is our terrible HACK. 		 * 		 * Sometimes LibAlias edits contents of TCP packet. 		 * In this case it needs to recompute full TCP 		 * checksum. However, the problem is that LibAlias 		 * doesn't have any idea about checksum offloading 		 * in kernel. To workaround this, we do not do 		 * checksumming in LibAlias, but only mark the 		 * packets in th_x2 field. If we receive a marked 		 * packet, we calculate correct checksum for it 		 * aware of offloading. 		 * 		 * Why do I do such a terrible hack instead of 		 * recalculating checksum for each packet? 		 * Because the previous checksum was not checked! 		 * Recalculating checksums for EVERY packet will 		 * hide ALL transmission errors. Yes, marked packets 		 * still suffer from this problem. But, sigh, natd(8) 		 * has this problem, too. 		 */
