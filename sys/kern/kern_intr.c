@@ -446,6 +446,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Map an interrupt type to an ithread priority. */
+end_comment
+
 begin_function
 name|u_char
 name|intr_priority
