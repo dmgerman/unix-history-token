@@ -18294,6 +18294,12 @@ name|sockaddr_in6
 modifier|*
 name|sin6
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|sin6
 operator|=
 operator|(
@@ -18309,6 +18315,8 @@ literal|"IPv6 address: %s:%d scope:%u\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|sin6
 operator|->
