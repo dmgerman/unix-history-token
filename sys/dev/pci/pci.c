@@ -2345,6 +2345,17 @@ parameter_list|,
 name|w
 parameter_list|)
 value|PCIB_READ_CONFIG(pcib, cfg->bus, cfg->slot, cfg->func, n, w)
+define|#
+directive|define
+name|WREG
+parameter_list|(
+name|n
+parameter_list|,
+name|v
+parameter_list|,
+name|w
+parameter_list|)
+value|PCIB_WRITE_CONFIG(pcib, cfg->bus, cfg->slot, cfg->func, n, v, w)
 name|uint32_t
 name|val
 decl_stmt|;
@@ -2714,7 +2725,7 @@ default|default:
 break|break;
 block|}
 block|}
-comment|/* REG use carry through to next functions */
+comment|/* REG and WREG use carry through to next functions */
 block|}
 end_function
 
@@ -2738,17 +2749,6 @@ name|int
 name|reg
 parameter_list|)
 block|{
-define|#
-directive|define
-name|WREG
-parameter_list|(
-name|n
-parameter_list|,
-name|v
-parameter_list|,
-name|w
-parameter_list|)
-value|PCIB_WRITE_CONFIG(pcib, cfg->bus, cfg->slot, cfg->func, n, v, w)
 name|KASSERT
 argument_list|(
 operator|(
@@ -2839,12 +2839,6 @@ unit|return; }
 endif|#
 directive|endif
 end_endif
-
-begin_undef
-undef|#
-directive|undef
-name|WREG
-end_undef
 
 begin_struct
 struct|struct
@@ -4276,6 +4270,9 @@ block|}
 undef|#
 directive|undef
 name|REG
+undef|#
+directive|undef
+name|WREG
 block|}
 end_function
 
