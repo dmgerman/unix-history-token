@@ -773,9 +773,21 @@ modifier|*
 name|cookie
 parameter_list|)
 block|{
+name|struct
+name|intsrc
+modifier|*
+name|isrc
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|isrc
+operator|=
+name|intr_handler_source
+argument_list|(
+name|cookie
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|intr_event_remove_handler
@@ -783,9 +795,6 @@ argument_list|(
 name|cookie
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XXX
 if|if
 condition|(
 name|error
@@ -794,11 +803,9 @@ literal|0
 condition|)
 name|intrcnt_updatename
 argument_list|(
-comment|/* XXX */
+name|isrc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|error

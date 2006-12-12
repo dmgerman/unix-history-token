@@ -574,6 +574,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+modifier|*
+name|intr_handler_source
+parameter_list|(
+name|void
+modifier|*
+name|cookie
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|swi_add
 parameter_list|(
