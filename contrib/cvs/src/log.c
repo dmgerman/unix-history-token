@@ -950,7 +950,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"+bd:hlNSRr::s:tw::"
+literal|"+bd:hlNnSRr::s:tw::"
 argument_list|)
 operator|)
 operator|!=
@@ -1011,6 +1011,16 @@ operator|.
 name|notags
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|log_data
+operator|.
+name|notags
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
