@@ -596,15 +596,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|msi_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|msi_alloc
 parameter_list|(
@@ -628,6 +619,15 @@ parameter_list|,
 name|int
 modifier|*
 name|newcount
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|msi_init
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
