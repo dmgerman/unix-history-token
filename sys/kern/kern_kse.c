@@ -1716,14 +1716,15 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-literal|1
-return|return
-operator|(
 literal|0
-operator|)
-return|;
+block|return (0);
 else|#
 directive|else
+name|printf
+argument_list|(
+literal|"kse_exit: called on last thread. Calling exit1()"
+argument_list|)
+expr_stmt|;
 name|exit1
 argument_list|(
 name|td
@@ -1819,11 +1820,20 @@ argument_list|(
 name|td
 argument_list|)
 condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
+block|{
+name|printf
+argument_list|(
+literal|"kse_release: called outside of threading. exiting"
+argument_list|)
+expr_stmt|;
+name|exit1
+argument_list|(
+name|td
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|uap
