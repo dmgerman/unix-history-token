@@ -594,6 +594,17 @@ name|union
 name|nd_opts
 name|ndopts
 decl_stmt|;
+name|char
+name|ip6bufs
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|ip6bufd
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 comment|/* If I'm not a router, ignore it. */
 if|if
 condition|(
@@ -631,6 +642,8 @@ name|ip6_hlim
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -639,6 +652,8 @@ argument_list|)
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufd
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -838,6 +853,8 @@ literal|"(if %d, RS packet %d)\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|saddr6
 argument_list|)
@@ -982,6 +999,17 @@ name|nd_defrouter
 modifier|*
 name|dr
 decl_stmt|;
+name|char
+name|ip6bufs
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|ip6bufd
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 comment|/* 	 * We only accept RAs only when 	 * the system-wide variable allows the acceptance, and 	 * per-interface variable allows RAs on the receiving interface. 	 */
 if|if
 condition|(
@@ -1028,6 +1056,8 @@ name|ip6_hlim
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -1036,6 +1066,8 @@ argument_list|)
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufd
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -1072,6 +1104,8 @@ literal|"nd6_ra_input: src %s is not link-local\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|saddr6
 argument_list|)
@@ -1529,6 +1563,8 @@ literal|"%s, ignored\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|pi
 operator|->
@@ -1731,6 +1767,8 @@ name|mtu
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -1816,6 +1854,8 @@ name|mtu
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -1907,6 +1947,8 @@ literal|"(if %d, RA packet %d)\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|saddr6
 argument_list|)
@@ -3750,6 +3792,12 @@ name|i
 decl_stmt|,
 name|s
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|new
 operator|=
 operator|(
@@ -3995,6 +4043,8 @@ literal|"the prefix %s/%d on-link on %s (errno=%d)\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|pr
 operator|->
@@ -4063,6 +4113,12 @@ name|e
 decl_stmt|,
 name|s
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 comment|/* make sure to invalidate the prefix until it is really freed. */
 name|pr
 operator|->
@@ -4111,6 +4167,8 @@ literal|"on %s, errno=%d\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|pr
 operator|->
@@ -4296,6 +4354,12 @@ name|struct
 name|in6_addrlifetime
 name|lt6_tmp
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|auth
 operator|=
 literal|0
@@ -4468,6 +4532,8 @@ literal|"(errno=%d)\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|pr
 operator|->
@@ -4590,6 +4656,8 @@ literal|"errno=%d, returnpr=%p\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|new
 operator|->
@@ -5697,6 +5765,12 @@ block|{
 name|int
 name|e
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|IN6_IS_ADDR_LINKLOCAL
@@ -5766,6 +5840,8 @@ literal|"make %s/%d offlink, errno=%d\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|pr
 operator|->
@@ -5835,6 +5911,8 @@ literal|"make %s/%d onlink, errno=%d\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|pr
 operator|->
@@ -6126,6 +6204,12 @@ name|rt
 init|=
 name|NULL
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 comment|/* sanity check */
 if|if
 condition|(
@@ -6149,6 +6233,8 @@ literal|"nd6_prefix_onlink: %s/%d is already on-link\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|pr
 operator|->
@@ -6311,6 +6397,8 @@ literal|" to add route for a prefix(%s/%d) on %s\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|pr
 operator|->
@@ -6462,6 +6550,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|char
+name|ip6bufg
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|ip6bufm
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|nd6log
 argument_list|(
 operator|(
@@ -6473,6 +6572,8 @@ literal|"errno = %d\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|pr
 operator|->
@@ -6492,6 +6593,8 @@ argument_list|)
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufg
+argument_list|,
 operator|&
 operator|(
 operator|(
@@ -6509,6 +6612,8 @@ argument_list|)
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufm
+argument_list|,
 operator|&
 name|mask6
 operator|.
@@ -6597,6 +6702,12 @@ name|rt
 init|=
 name|NULL
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 comment|/* sanity check */
 if|if
 condition|(
@@ -6620,6 +6731,8 @@ literal|"nd6_prefix_offlink: %s/%d is already off-link\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|pr
 operator|->
@@ -6902,6 +7015,8 @@ literal|"to %s (errno = %d)\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|opr
 operator|->
@@ -6947,6 +7062,8 @@ literal|"%s/%d on %s (errno = %d)\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|sa6
 operator|.
@@ -7052,6 +7169,12 @@ name|ndpr_plen
 decl_stmt|;
 name|int
 name|updateflags
+decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
 decl_stmt|;
 name|in6_prefixlen2mask
 argument_list|(
@@ -7506,6 +7629,8 @@ literal|"in6_ifadd: %s is already configured\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|ifra
 operator|.
@@ -7564,6 +7689,8 @@ literal|"in6_ifadd: failed to make ifaddr %s on %s (errno=%d)\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|ifra
 operator|.

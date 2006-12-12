@@ -17958,6 +17958,12 @@ name|collision
 decl_stmt|,
 name|nohisaddr
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|len
 operator|-=
 literal|4
@@ -18514,6 +18520,8 @@ literal|" %s [%s]"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|desiredaddr
 argument_list|)
@@ -18611,6 +18619,8 @@ literal|" %s [%s]"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|desiredaddr
 argument_list|)
@@ -18736,6 +18746,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|suggestaddr
 argument_list|)
@@ -19056,6 +19068,12 @@ name|struct
 name|in6_addr
 name|suggestaddr
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|len
 operator|-=
 literal|4
@@ -19267,6 +19285,8 @@ literal|" [suggestaddr %s]"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|suggestaddr
 argument_list|)

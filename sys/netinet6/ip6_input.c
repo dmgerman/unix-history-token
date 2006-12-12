@@ -2086,6 +2086,18 @@ goto|;
 block|}
 else|else
 block|{
+name|char
+name|ip6bufs
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+name|char
+name|ip6bufd
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 comment|/* address is not ready, so discard the packet. */
 name|nd6log
 argument_list|(
@@ -2096,6 +2108,8 @@ literal|"ip6_input: packet to an unready address %s->%s\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -2104,6 +2118,8 @@ argument_list|)
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufd
+argument_list|,
 operator|&
 name|ip6
 operator|->

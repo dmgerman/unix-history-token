@@ -1107,6 +1107,12 @@ modifier|*
 name|sin6
 decl_stmt|;
 block|{
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|u_int32_t
 name|zoneid
 decl_stmt|;
@@ -1127,6 +1133,8 @@ literal|"sa6_recoverscope: assumption failure (non 0 ID): %s%%%d\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|sin6
 operator|->

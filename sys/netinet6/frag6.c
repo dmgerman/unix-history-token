@@ -508,6 +508,12 @@ name|ecn
 decl_stmt|,
 name|ecn0
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|char ip6buf[INET6_ADDRSTRLEN];
+endif|#
+directive|endif
 name|ip6
 operator|=
 name|mtod
@@ -1623,7 +1629,7 @@ if|#
 directive|if
 literal|0
 comment|/* suppress the noisy log */
-block|log(LOG_ERR, "%d bytes of a fragment from %s " 			    "overlaps the previous fragment\n", 			    i, ip6_sprintf(&q6->ip6q_src));
+block|log(LOG_ERR, "%d bytes of a fragment from %s " 			    "overlaps the previous fragment\n", 			    i, ip6_sprintf(ip6buf,&q6->ip6q_src));
 endif|#
 directive|endif
 name|free
@@ -1677,7 +1683,7 @@ if|#
 directive|if
 literal|0
 comment|/* suppress the noisy log */
-block|log(LOG_ERR, "%d bytes of a fragment from %s " 			    "overlaps the succeeding fragment", 			    i, ip6_sprintf(&q6->ip6q_src));
+block|log(LOG_ERR, "%d bytes of a fragment from %s " 			    "overlaps the succeeding fragment", 			    i, ip6_sprintf(ip6buf,&q6->ip6q_src));
 endif|#
 directive|endif
 name|free

@@ -2040,6 +2040,12 @@ name|INET6
 name|int
 name|isipv6
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 else|#
 directive|else
 specifier|const
@@ -3220,6 +3226,8 @@ name|dbuf
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -3233,6 +3241,8 @@ name|sbuf
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -4385,6 +4395,8 @@ name|isipv6
 condition|?
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|inp
 operator|->

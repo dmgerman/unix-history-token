@@ -2205,6 +2205,17 @@ name|hc_metrics
 modifier|*
 name|hc_entry
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|bufsize
 operator|=
 name|linesize
@@ -2326,6 +2337,8 @@ directive|ifdef
 name|INET6
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|hc_entry
 operator|->

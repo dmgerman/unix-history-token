@@ -1772,7 +1772,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|log(LOG_WARNING, "%s: packet from %s dropped " 			    "due to ingress filter\n", if_name(GIF2IFP(sc)), 			    ip6_sprintf(&sin6.sin6_addr));
+block|char ip6buf[INET6_ADDRSTRLEN]; 			log(LOG_WARNING, "%s: packet from %s dropped " 			    "due to ingress filter\n", if_name(GIF2IFP(sc)), 			    ip6_sprintf(ip6buf,&sin6.sin6_addr));
 endif|#
 directive|endif
 if|if

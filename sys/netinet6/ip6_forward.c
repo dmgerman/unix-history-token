@@ -388,6 +388,17 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+name|char
+name|ip6bufs
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|ip6bufd
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
 comment|/* XXX bz: ip6_forward_rt */
@@ -492,6 +503,8 @@ literal|"from %s to %s nxt %d received on %s\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -500,6 +513,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufd
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -1512,6 +1527,8 @@ literal|"src %s, dst %s, nxt %d, rcvif %s, outif %s\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -1520,6 +1537,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufd
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -1919,6 +1938,8 @@ literal|"src %s, dst %s, nxt %d, rcvif %s, outif %s\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -1927,6 +1948,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufd
+argument_list|,
 operator|&
 name|ip6
 operator|->

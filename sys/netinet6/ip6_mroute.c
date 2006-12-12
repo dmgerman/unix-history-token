@@ -2736,6 +2736,17 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|char
+name|ip6bufo
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|ip6bufg
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|MF6CFIND
 argument_list|(
 name|mfccp
@@ -2768,6 +2779,7 @@ name|mrt6debug
 operator|&
 name|DEBUG_MFC
 condition|)
+block|{
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -2776,6 +2788,8 @@ literal|"add_m6fc no upcall h %d o %s g %s p %x\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufo
+argument_list|,
 operator|&
 name|mfccp
 operator|->
@@ -2786,6 +2800,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufg
+argument_list|,
 operator|&
 name|mfccp
 operator|->
@@ -2799,6 +2815,7 @@ operator|->
 name|mf6cc_parent
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|s
@@ -2938,6 +2955,8 @@ literal|"multiple kernel entries"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufo
+argument_list|,
 operator|&
 name|mfccp
 operator|->
@@ -2948,6 +2967,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufg
+argument_list|,
 operator|&
 name|mfccp
 operator|->
@@ -2982,6 +3003,8 @@ literal|"add_m6fc o %s g %s p %x dbg %x\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufo
+argument_list|,
 operator|&
 name|mfccp
 operator|->
@@ -2992,6 +3015,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufg
+argument_list|,
 operator|&
 name|mfccp
 operator|->
@@ -3182,6 +3207,8 @@ name|hash
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufo
+argument_list|,
 operator|&
 name|mfccp
 operator|->
@@ -3192,6 +3219,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufg
+argument_list|,
 operator|&
 name|mfccp
 operator|->
@@ -3645,6 +3674,18 @@ name|mrt6debug
 operator|&
 name|DEBUG_MFC
 condition|)
+block|{
+name|char
+name|ip6bufo
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|ip6bufg
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -3653,6 +3694,8 @@ literal|"del_m6fc orig %s mcastgrp %s\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufo
+argument_list|,
 operator|&
 name|origin
 operator|.
@@ -3661,6 +3704,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufg
+argument_list|,
 operator|&
 name|mcastgrp
 operator|.
@@ -3668,6 +3713,7 @@ name|sin6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|s
@@ -3925,6 +3971,17 @@ decl_stmt|;
 name|mifi_t
 name|mifi
 decl_stmt|;
+name|char
+name|ip6bufs
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|ip6bufd
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MRT6DEBUG
@@ -3942,6 +3999,8 @@ literal|"ip6_mforward: src %s, dst %s, ifindex %d\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -3950,6 +4009,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufd
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -4037,6 +4098,8 @@ literal|"from %s to %s nxt %d received on %s\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -4045,6 +4108,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufd
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -4173,6 +4238,8 @@ literal|"ip6_mforward: no rte s %s g %s\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -4181,6 +4248,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufd
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -5117,6 +5186,19 @@ name|mrt6debug
 operator|&
 name|DEBUG_EXPIRE
 condition|)
+block|{
+name|char
+name|ip6bufo
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+name|char
+name|ip6bufg
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -5125,6 +5207,8 @@ literal|"expire_upcalls: expiring (%s %s)\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufo
+argument_list|,
 operator|&
 name|mfc
 operator|->
@@ -5135,6 +5219,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufg
+argument_list|,
 operator|&
 name|mfc
 operator|->
@@ -5144,6 +5230,7 @@ name|sin6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* 				 * drop all the packets 				 * free the mbuf with the pkt, if, timing info 				 */
@@ -6455,6 +6542,19 @@ name|mrt6debug
 operator|&
 name|DEBUG_XMIT
 condition|)
+block|{
+name|char
+name|ip6bufs
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+name|char
+name|ip6bufd
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -6469,6 +6569,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -6477,6 +6579,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufd
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -6490,6 +6594,7 @@ operator|.
 name|len
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* MRT6DEBUG */
@@ -6578,6 +6683,18 @@ if|if
 condition|(
 name|mrt6debug
 condition|)
+block|{
+name|char
+name|ip6bufs
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|ip6bufd
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -6586,6 +6703,8 @@ literal|"** IPv6 register_send **\n src %s dst %s\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -6594,6 +6713,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufd
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -6601,6 +6722,7 @@ name|ip6_dst
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 operator|++
@@ -7220,6 +7342,22 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MRT6DEBUG
+name|char
+name|ip6bufs
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|ip6bufd
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 operator|++
 name|pim6stat
 operator|.
@@ -7334,6 +7472,8 @@ name|pimlen
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -7385,6 +7525,8 @@ literal|"eip6 plen %d\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|eip6
 operator|->
@@ -7393,6 +7535,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufd
+argument_list|,
 operator|&
 name|eip6
 operator|->
@@ -7496,6 +7640,8 @@ literal|"is not multicast %s\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufd
+argument_list|,
 operator|&
 name|eip6
 operator|->
@@ -7590,6 +7736,8 @@ literal|"src %s, dst %s, mif %d\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|eip6
 operator|->
@@ -7598,6 +7746,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufd
+argument_list|,
 operator|&
 name|eip6
 operator|->

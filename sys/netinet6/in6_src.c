@@ -1850,7 +1850,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|if (dstsock->sin6_addr.s6_addr32[0] == 0&& 	    dstsock->sin6_addr.s6_addr32[1] == 0&& 	    !IN6_IS_ADDR_LOOPBACK(&dstsock->sin6_addr)) { 		printf("in6_selectroute: strange destination %s\n", 		       ip6_sprintf(&dstsock->sin6_addr)); 	} else { 		printf("in6_selectroute: destination = %s%%%d\n", 		       ip6_sprintf(&dstsock->sin6_addr), 		       dstsock->sin6_scope_id);
+block|char ip6buf[INET6_ADDRSTRLEN];  	if (dstsock->sin6_addr.s6_addr32[0] == 0&& 	    dstsock->sin6_addr.s6_addr32[1] == 0&& 	    !IN6_IS_ADDR_LOOPBACK(&dstsock->sin6_addr)) { 		printf("in6_selectroute: strange destination %s\n", 		       ip6_sprintf(ip6buf,&dstsock->sin6_addr)); 	} else { 		printf("in6_selectroute: destination = %s%%%d\n", 		       ip6_sprintf(ip6buf,&dstsock->sin6_addr), 		       dstsock->sin6_scope_id);
 comment|/* for debug */
 block|}
 endif|#

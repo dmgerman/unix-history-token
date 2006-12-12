@@ -3267,6 +3267,12 @@ name|struct
 name|sockaddr_in6
 name|sin6
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -3457,6 +3463,8 @@ literal|"neighbor(%s), errno=%d\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 name|addr6
 argument_list|)
 argument_list|,
@@ -3588,6 +3596,8 @@ literal|"nd6_lookup: failed to lookup %s (if = %s)\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 name|addr6
 argument_list|)
 operator|,
@@ -5197,6 +5207,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|nd6log
 argument_list|(
 operator|(
@@ -5212,6 +5228,8 @@ argument_list|)
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|llsol
 argument_list|)
@@ -7960,6 +7978,12 @@ name|ND6_IFF_PERFORMNUD
 operator|)
 condition|)
 block|{
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -7969,6 +7993,8 @@ literal|"(ln=%p, rt=%p)\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|dst
 operator|->
@@ -9195,6 +9221,12 @@ name|nd_prefix
 modifier|*
 name|pr
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|req
@@ -9329,6 +9361,8 @@ literal|"scope error in prefix list (%s)\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|p
 operator|->
@@ -9597,6 +9631,8 @@ literal|"prefix list (%s)\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|pfr
 operator|->

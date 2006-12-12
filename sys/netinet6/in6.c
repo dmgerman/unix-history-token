@@ -476,6 +476,12 @@ decl_stmt|;
 name|int
 name|e
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -567,6 +573,8 @@ literal|"DELETE"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 operator|(
 operator|(
@@ -3011,6 +3019,12 @@ decl_stmt|;
 name|int
 name|delay
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 comment|/* Validate parameters */
 if|if
 condition|(
@@ -3395,6 +3409,8 @@ literal|"in6_update_ifa: valid lifetime is 0 for %s\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|ifra
 operator|->
@@ -3708,6 +3724,8 @@ literal|" existing (%s) address should not be changed\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|ia
 operator|->
@@ -3810,6 +3828,8 @@ literal|"a route to the old destination: %s\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|ia
 operator|->
@@ -4206,6 +4226,8 @@ literal|"%s on %s (errno=%d)\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|llsol
 argument_list|)
@@ -4628,6 +4650,8 @@ literal|"%s on %s (errno=%d)\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|mltaddr
 operator|.
@@ -4732,6 +4756,8 @@ literal|"(errno=%d)\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|mltaddr
 operator|.
@@ -5074,6 +5100,8 @@ literal|"(errno=%d)\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|mltaddr
 operator|.
@@ -5294,6 +5322,12 @@ operator|*
 operator|)
 name|ifa
 decl_stmt|;
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 comment|/* stop DAD processing */
 name|nd6_dad_stop
 argument_list|(
@@ -5361,6 +5395,8 @@ literal|"errno=%d\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|ia
 operator|->
@@ -7817,7 +7853,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert IP6 address to printable (loggable) representation.  */
+comment|/*  * Convert IP6 address to printable (loggable) representation. Caller  * has to make sure that ip6buf is at least INET6_ADDRSTRLEN long.  */
 end_comment
 
 begin_decl_stmt
@@ -7830,39 +7866,22 @@ literal|"0123456789abcdef"
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|ip6round
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|char
 modifier|*
 name|ip6_sprintf
 parameter_list|(
-name|addr
-parameter_list|)
+name|char
+modifier|*
+name|ip6buf
+parameter_list|,
 specifier|const
 name|struct
 name|in6_addr
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|static
-name|char
-name|ip6buf
-index|[
-literal|8
-index|]
-index|[
-literal|48
-index|]
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -7892,22 +7911,9 @@ name|dcolon
 init|=
 literal|0
 decl_stmt|;
-name|ip6round
-operator|=
-operator|(
-name|ip6round
-operator|+
-literal|1
-operator|)
-operator|&
-literal|7
-expr_stmt|;
 name|cp
 operator|=
 name|ip6buf
-index|[
-name|ip6round
-index|]
 expr_stmt|;
 for|for
 control|(
@@ -8100,14 +8106,11 @@ operator|*
 operator|--
 name|cp
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
 name|ip6buf
-index|[
-name|ip6round
-index|]
 operator|)
 return|;
 block|}

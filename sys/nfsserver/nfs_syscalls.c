@@ -1911,32 +1911,34 @@ operator|!=
 name|NFSPROC_NULL
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|KLD_MODULE
-argument_list|)
-comment|/* do not use ip6_sprintf: the nfs module should work without INET6 */
 name|char
 name|b6
 index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+comment|/* Do not use ip6_sprintf: the nfs module should work without INET6. */
 define|#
 directive|define
 name|ip6_sprintf
 parameter_list|(
+name|buf
+parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|(sprintf(b6, "%x:%x:%x:%x:%x:%x:%x:%x", \ 		  (a)->s6_addr16[0], (a)->s6_addr16[1], \ 		  (a)->s6_addr16[2], (a)->s6_addr16[3], \ 		  (a)->s6_addr16[4], (a)->s6_addr16[5], \ 		  (a)->s6_addr16[6], (a)->s6_addr16[7]), \ 	  b6)
+value|(sprintf((buf), "%x:%x:%x:%x:%x:%x:%x:%x", \ 		  (a)->s6_addr16[0], (a)->s6_addr16[1], \ 		  (a)->s6_addr16[2], (a)->s6_addr16[3], \ 		  (a)->s6_addr16[4], (a)->s6_addr16[5], \ 		  (a)->s6_addr16[6], (a)->s6_addr16[7]), \ 	 (buf))
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|nd
@@ -1974,6 +1976,8 @@ name|AF_INET6
 condition|?
 name|ip6_sprintf
 argument_list|(
+name|b6
+argument_list|,
 operator|&
 name|satosin6
 argument_list|(
@@ -1983,9 +1987,17 @@ operator|->
 name|sin6_addr
 argument_list|)
 else|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
 undef|#
 directive|undef
 name|ip6_sprintf
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|inet_ntoa

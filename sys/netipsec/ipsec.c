@@ -8684,6 +8684,7 @@ name|i
 init|=
 literal|3
 decl_stmt|;
+comment|/* XXX-BZ returns static buffer. */
 name|i
 operator|=
 operator|(
@@ -8758,6 +8759,17 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
+if|#
+directive|if
+name|INET6
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|sa
@@ -8795,6 +8807,8 @@ case|:
 return|return
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|sa
 operator|->

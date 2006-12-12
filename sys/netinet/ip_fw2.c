@@ -4140,6 +4140,12 @@ operator|)
 argument_list|)
 condition|)
 block|{
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|snprintf
 argument_list|(
 name|src
@@ -4153,6 +4159,8 @@ literal|"[%s]"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|args
 operator|->
@@ -4175,6 +4183,8 @@ literal|"[%s]"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|args
 operator|->
@@ -7181,6 +7191,12 @@ operator|)
 argument_list|)
 condition|)
 block|{
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|snprintf
 argument_list|(
 name|src
@@ -7194,6 +7210,8 @@ literal|"[%s]"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|args
 operator|->
@@ -7216,6 +7234,8 @@ literal|"[%s]"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6buf
+argument_list|,
 operator|&
 name|args
 operator|->

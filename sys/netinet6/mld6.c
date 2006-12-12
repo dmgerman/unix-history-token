@@ -1119,6 +1119,17 @@ name|ip6_src
 argument_list|)
 condition|)
 block|{
+name|char
+name|ip6bufs
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|ip6bufg
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|log
 argument_list|(
 name|LOG_ERR
@@ -1127,6 +1138,8 @@ literal|"mld6_input: src %s is not link-local (grp=%s)\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufs
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -1135,6 +1148,8 @@ argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
+name|ip6bufg
+argument_list|,
 operator|&
 name|mldh
 operator|->

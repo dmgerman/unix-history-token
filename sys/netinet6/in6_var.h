@@ -2137,6 +2137,9 @@ name|ip6_sprintf
 name|__P
 argument_list|(
 operator|(
+name|char
+operator|*
+operator|,
 specifier|const
 expr|struct
 name|in6_addr
