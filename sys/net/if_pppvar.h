@@ -64,8 +64,8 @@ name|sc_flags
 decl_stmt|;
 comment|/* control/status bits; see if_ppp.h */
 name|struct
-name|callout_handle
-name|sc_ch
+name|callout
+name|sc_timo_ch
 decl_stmt|;
 comment|/* Used for scheduling timeouts */
 name|void

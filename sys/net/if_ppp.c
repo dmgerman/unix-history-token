@@ -757,6 +757,16 @@ name|ENOSPC
 operator|)
 return|;
 block|}
+name|callout_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_timo_ch
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_softc
