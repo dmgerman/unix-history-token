@@ -489,13 +489,6 @@ operator|->
 name|c_lock
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Lock the condition variable structure: */
-block|if (cv->c_kerncv.c_has_waiters) { 			THR_UMUTEX_UNLOCK(curthread,&cv->c_lock); 			return (EBUSY); 		}
-endif|#
-directive|endif
 comment|/* 		 * NULL the caller's pointer now that the condition 		 * variable has been destroyed: 		 */
 operator|*
 name|cond
@@ -580,6 +573,15 @@ decl_stmt|;
 name|pthread_cond_t
 name|cv
 decl_stmt|;
+if|if
+condition|(
+name|info
+operator|->
+name|cond
+operator|!=
+name|NULL
+condition|)
+block|{
 name|cv
 operator|=
 operator|*
@@ -589,24 +591,6 @@ operator|->
 name|cond
 operator|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|cv
-operator|->
-name|c_lock
-operator|.
-name|m_owner
-operator|&
-operator|~
-name|UMUTEX_CONTESTED
-operator|)
-operator|==
-name|TID
-argument_list|(
-name|curthread
-argument_list|)
-condition|)
 name|THR_UMUTEX_UNLOCK
 argument_list|(
 name|curthread
@@ -617,6 +601,7 @@ operator|->
 name|c_lock
 argument_list|)
 expr_stmt|;
+block|}
 name|_mutex_cv_lock
 argument_list|(
 name|info
@@ -849,6 +834,12 @@ name|tsp
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|info
+operator|.
+name|cond
+operator|=
+name|NULL
 expr_stmt|;
 name|_thr_cancel_leave_defer
 argument_list|(
@@ -1179,15 +1170,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cv
-operator|->
-name|c_kerncv
-operator|.
-name|c_has_waiters
-condition|)
-block|{
-if|if
-condition|(
 operator|!
 name|broadcast
 condition|)
@@ -1212,7 +1194,6 @@ operator|->
 name|c_kerncv
 argument_list|)
 expr_stmt|;
-block|}
 name|THR_UMUTEX_UNLOCK
 argument_list|(
 name|curthread
