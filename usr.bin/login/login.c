@@ -766,11 +766,16 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BSM_AUDIT
 name|char
 name|auditsuccess
 init|=
 literal|1
 decl_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -1323,6 +1328,9 @@ argument_list|(
 literal|"pam_start()"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BSM_AUDIT
 name|au_login_fail
 argument_list|(
 literal|"PAM Error"
@@ -1330,6 +1338,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bail
 argument_list|(
 name|NO_SLEEP_EXIT
@@ -1361,6 +1371,9 @@ argument_list|(
 literal|"pam_set_item(PAM_TTY)"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BSM_AUDIT
 name|au_login_fail
 argument_list|(
 literal|"PAM Error"
@@ -1368,6 +1381,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bail
 argument_list|(
 name|NO_SLEEP_EXIT
@@ -1399,6 +1414,9 @@ argument_list|(
 literal|"pam_set_item(PAM_RHOST)"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BSM_AUDIT
 name|au_login_fail
 argument_list|(
 literal|"PAM Error"
@@ -1406,6 +1424,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bail
 argument_list|(
 name|NO_SLEEP_EXIT
@@ -1470,11 +1490,16 @@ name|rval
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BSM_AUDIT
 name|auditsuccess
 operator|=
 literal|0
 expr_stmt|;
 comment|/* opened a terminal window only */
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -1526,6 +1551,9 @@ name|pam_cleanup
 argument_list|()
 expr_stmt|;
 comment|/* 		 * We are not exiting here, but this corresponds to a failed 		 * login event, so set exitstatus to 1. 		 */
+ifdef|#
+directive|ifdef
+name|USE_BSM_AUDIT
 name|au_login_fail
 argument_list|(
 literal|"Login incorrect"
@@ -1533,6 +1561,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -1620,6 +1650,9 @@ expr_stmt|;
 name|endpwent
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BSM_AUDIT
 comment|/* Audit successful login. */
 if|if
 condition|(
@@ -1628,6 +1661,8 @@ condition|)
 name|au_login_success
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Establish the login class. 	 */
 name|lc
 operator|=
@@ -4108,6 +4143,9 @@ block|{
 name|pam_cleanup
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BSM_AUDIT
 if|if
 condition|(
 name|pwd
@@ -4117,6 +4155,8 @@ condition|)
 name|audit_logout
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
