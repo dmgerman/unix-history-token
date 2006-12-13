@@ -181,9 +181,14 @@ modifier|*
 name|bshp
 parameter_list|)
 block|{
+operator|*
+name|bshp
+operator|=
+name|addr
+expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
 block|}
