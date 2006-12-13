@@ -2765,6 +2765,21 @@ literal|"=ftp://ftp4.us.freebsd.org"
 block|}
 block|,
 block|{
+literal|" IPv6 Turkey"
+block|,
+literal|"ftp2.tr.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp2.tr.freebsd.org"
+block|}
+block|,
+block|{
 literal|"Primary"
 block|,
 literal|"ftp1.freebsd.org"
@@ -4418,6 +4433,21 @@ block|{
 literal|"Turkey"
 block|,
 literal|"ftp.tr.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.tr.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Turkey #2"
+block|,
+literal|"ftp2.tr.freebsd.org"
 block|,
 name|NULL
 block|,
