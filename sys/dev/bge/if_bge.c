@@ -6673,11 +6673,10 @@ block|}
 comment|/* 	 * Set the BD ring replentish thresholds. The recommended 	 * values are 1/8th the number of descriptors allocated to 	 * each ring. 	 */
 if|if
 condition|(
+name|BGE_IS_5705_PLUS
+argument_list|(
 name|sc
-operator|->
-name|bge_flags
-operator|&
-name|BGE_FLAG_5705_PLUS
+argument_list|)
 condition|)
 name|val
 operator|=
@@ -10839,11 +10838,10 @@ else|#
 directive|else
 if|if
 condition|(
+name|BGE_IS_5705_PLUS
+argument_list|(
 name|sc
-operator|->
-name|bge_flags
-operator|&
-name|BGE_FLAG_5705_PLUS
+argument_list|)
 condition|)
 block|{
 name|reg
@@ -12493,11 +12491,10 @@ block|}
 comment|/*  	 * Set GPHY Power Down Override to leave GPHY 	 * powered up in D0 uninitialized. 	 */
 if|if
 condition|(
+name|BGE_IS_5705_PLUS
+argument_list|(
 name|sc
-operator|->
-name|bge_flags
-operator|&
-name|BGE_FLAG_5705_PLUS
+argument_list|)
 condition|)
 name|reset
 operator||=
@@ -19258,11 +19255,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|BGE_IS_575X_PLUS
+argument_list|(
 name|sc
-operator|->
-name|bge_flags
-operator|&
-name|BGE_FLAG_575X_PLUS
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -19271,15 +19267,38 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|BGE_IS_5705_PLUS
+argument_list|(
 name|sc
-operator|->
-name|bge_flags
-operator|&
-name|BGE_FLAG_5705_PLUS
+argument_list|)
 condition|)
 name|printf
 argument_list|(
 literal|" - 5705 Plus\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|BGE_IS_5714_FAMILY
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" - 5714 Family\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|BGE_IS_5700_FAMILY
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" - 5700 Family\n"
 argument_list|)
 expr_stmt|;
 if|if
