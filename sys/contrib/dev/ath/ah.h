@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2006 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: //depot/sw/branches/sam_hal/ah.h#10 $  */
+comment|/*-  * Copyright (c) 2002-2006 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: //depot/sw/branches/sam_hal/ah.h#19 $  */
 end_comment
 
 begin_ifndef
@@ -345,6 +345,16 @@ init|=
 literal|29
 block|,
 comment|/* interference mitigation */
+name|HAL_CAP_RXORN_FATAL
+init|=
+literal|30
+block|,
+comment|/* HAL_INT_RXORN treated as fatal */
+name|HAL_CAP_RXTSTAMP_PREC
+init|=
+literal|34
+block|,
+comment|/* rx desc tstamp precision (bits) */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -678,13 +688,6 @@ name|HAL_COMP_BUF_ALIGN_SIZE
 value|512
 end_define
 
-begin_define
-define|#
-directive|define
-name|HAL_DECOMP_MASK_SIZE
-value|128
-end_define
-
 begin_comment
 comment|/*  * Transmit packet types.  This belongs in ah_desc.h, but  * is here so we can give a proper type to various parameters  * (and not require everyone include the file).  *  * NB: These values are intentionally assigned for  *     direct use when setting up h/w descriptors.  */
 end_comment
@@ -908,10 +911,10 @@ init|=
 literal|0x40000000
 block|,
 comment|/* Non-common mapping */
+define|#
+directive|define
 name|HAL_INT_GLOBAL
-init|=
-literal|0x80000000
-block|,
+value|0x80000000
 comment|/* Set/clear IER */
 name|HAL_INT_BMISC
 init|=
@@ -949,12 +952,7 @@ operator||
 name|HAL_INT_BMISS
 operator||
 name|HAL_INT_GPIO
-block|,
-name|HAL_INT_NOCARD
-init|=
-literal|0xffffffff
-comment|/* To signal the card was removed */
-block|}
+block|, }
 name|HAL_INT
 typedef|;
 end_typedef
@@ -1631,6 +1629,13 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* TKIP MIC key */
+name|u_int8_t
+name|kv_txmic
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* TKIP TX MIC key (optional) */
 block|}
 name|HAL_KEYVAL
 typedef|;
@@ -1835,6 +1840,18 @@ name|ath_desc
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ath_tx_status
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ath_rx_status
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Hardware Access Layer (HAL) API.  *  * Clients of the HAL call ath_hal_attach to obtain a reference to an  * ath_hal structure for use with the device.  Hardware-related operations  * that follow must call back into the HAL through interface, supplying  * the reference as the first parameter.  Note that before using the  * reference returned by ath_hal_attach the caller should verify the  * ABI version number.  */
 end_comment
@@ -1854,7 +1871,7 @@ comment|/* HAL ABI version */
 define|#
 directive|define
 name|HAL_ABI_VERSION
-value|0x06052200
+value|0x06102600
 comment|/* YYMMDDnn */
 name|u_int16_t
 name|ah_devid
@@ -1899,13 +1916,6 @@ name|u_int16_t
 name|ah_analog2GhzRev
 decl_stmt|;
 comment|/* 2GHz radio revision */
-name|u_int8_t
-name|ah_decompMask
-index|[
-name|HAL_DECOMP_MASK_SIZE
-index|]
-decl_stmt|;
-comment|/* decomp mask array */
 specifier|const
 name|HAL_RATE_TABLE
 modifier|*
@@ -2028,86 +2038,7 @@ parameter_list|,
 name|u_int32_t
 parameter_list|)
 function_decl|;
-name|void
-name|__ahdecl
-function_decl|(
-modifier|*
-name|ah_arEnable
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-name|__ahdecl
-function_decl|(
-modifier|*
-name|ah_arDisable
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-name|__ahdecl
-function_decl|(
-modifier|*
-name|ah_arReset
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|)
-function_decl|;
-name|HAL_BOOL
-name|__ahdecl
-function_decl|(
-modifier|*
-name|ah_radarHaveEvent
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|)
-function_decl|;
-name|HAL_BOOL
-name|__ahdecl
-function_decl|(
-modifier|*
-name|ah_processDfs
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|HAL_CHANNEL
-modifier|*
-parameter_list|)
-function_decl|;
-name|u_int32_t
-name|__ahdecl
-function_decl|(
-modifier|*
-name|ah_dfsNolCheck
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|HAL_CHANNEL
-modifier|*
-parameter_list|,
-name|u_int32_t
-parameter_list|)
-function_decl|;
+comment|/* DFS support */
 name|HAL_BOOL
 name|__ahdecl
 function_decl|(
@@ -2439,6 +2370,10 @@ parameter_list|,
 name|struct
 name|ath_desc
 modifier|*
+parameter_list|,
+name|struct
+name|ath_tx_status
+modifier|*
 parameter_list|)
 function_decl|;
 name|void
@@ -2669,6 +2604,10 @@ name|next
 parameter_list|,
 name|u_int64_t
 name|tsf
+parameter_list|,
+name|struct
+name|ath_rx_status
+modifier|*
 parameter_list|)
 function_decl|;
 name|void
