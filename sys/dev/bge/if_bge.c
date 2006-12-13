@@ -12490,16 +12490,6 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Write the magic number to the firmware mailbox at 0xb50          * so that the driver can synchronize with the firmware. 	 */
-name|bge_writemem_ind
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_SOFTWARE_GENCOMM
-argument_list|,
-name|BGE_MAGIC_NUMBER
-argument_list|)
-expr_stmt|;
 comment|/*  	 * Set GPHY Power Down Override to leave GPHY 	 * powered up in D0 uninitialized. 	 */
 if|if
 condition|(
