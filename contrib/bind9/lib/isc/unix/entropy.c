@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: entropy.c,v 1.60.2.3.8.11 2005/07/12 05:47:43 marka Exp $ */
+comment|/* $Id: entropy.c,v 1.60.2.3.8.14 2006/03/02 23:29:17 marka Exp $ */
 end_comment
 
 begin_comment
@@ -505,13 +505,17 @@ condition|(
 operator|(
 name|n
 operator|=
-name|send
+name|sendto
 argument_list|(
 name|fd
 argument_list|,
 name|buf
 argument_list|,
 literal|1
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
@@ -586,13 +590,17 @@ condition|(
 operator|(
 name|n
 operator|=
-name|send
+name|sendto
 argument_list|(
 name|fd
 argument_list|,
 name|buf
 argument_list|,
 literal|2
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
@@ -666,7 +674,7 @@ name|isc_usocketsource_wrote
 case|:
 if|if
 condition|(
-name|recv
+name|recvfrom
 argument_list|(
 name|fd
 argument_list|,
@@ -675,6 +683,10 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 literal|1
@@ -687,7 +699,7 @@ operator|==
 name|EAGAIN
 condition|)
 block|{
-comment|/* 					 * The problem of EAGAIN (try again 					 * later) is a major issue on HP-UX. 					 * Solaris actually tries the recv 					 * call again, while HP-UX just dies.  					 * This code is an attempt to let the 					 * entropy pool fill back up (at least 					 * that's what I think the problem is.) 					 * We go to eagain_loop because if we  					 * just "break", then the "desired" 					 * amount gets borked. 					 */
+comment|/* 					 * The problem of EAGAIN (try again 					 * later) is a major issue on HP-UX. 					 * Solaris actually tries the recvfrom 					 * call again, while HP-UX just dies.  					 * This code is an attempt to let the 					 * entropy pool fill back up (at least 					 * that's what I think the problem is.) 					 * We go to eagain_loop because if we  					 * just "break", then the "desired" 					 * amount gets borked. 					 */
 name|usleep
 argument_list|(
 literal|1000
@@ -1928,6 +1940,11 @@ directive|if
 name|defined
 argument_list|(
 name|S_ISFIFO
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|sun
 argument_list|)
 if|if
 condition|(

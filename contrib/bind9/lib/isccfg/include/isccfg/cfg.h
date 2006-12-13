@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: cfg.h,v 1.30.12.4 2004/03/08 09:05:07 marka Exp $ */
+comment|/* $Id: cfg.h,v 1.30.12.6 2006/03/02 00:37:20 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -125,6 +125,7 @@ name|char
 modifier|*
 name|clausename
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -262,6 +263,7 @@ begin_function_decl
 name|isc_boolean_t
 name|cfg_obj_isvoid
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -277,6 +279,7 @@ begin_function_decl
 name|isc_boolean_t
 name|cfg_obj_ismap
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -292,6 +295,7 @@ begin_function_decl
 name|isc_result_t
 name|cfg_map_get
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|mapobj
@@ -301,6 +305,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 modifier|*
@@ -314,10 +319,12 @@ comment|/*  * Extract an element from a configuration object, which  * must be o
 end_comment
 
 begin_function_decl
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|cfg_map_getname
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|mapobj
@@ -333,6 +340,7 @@ begin_function_decl
 name|isc_boolean_t
 name|cfg_obj_istuple
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -345,10 +353,12 @@ comment|/*  * Return true iff 'obj' is of a map type.  */
 end_comment
 
 begin_function_decl
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|cfg_tuple_get
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|tupleobj
@@ -369,6 +379,7 @@ begin_function_decl
 name|isc_boolean_t
 name|cfg_obj_isuint32
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -384,6 +395,7 @@ begin_function_decl
 name|isc_uint32_t
 name|cfg_obj_asuint32
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -399,6 +411,7 @@ begin_function_decl
 name|isc_boolean_t
 name|cfg_obj_isuint64
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -414,6 +427,7 @@ begin_function_decl
 name|isc_uint64_t
 name|cfg_obj_asuint64
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -429,6 +443,7 @@ begin_function_decl
 name|isc_boolean_t
 name|cfg_obj_isstring
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -441,10 +456,12 @@ comment|/*  * Return true iff 'obj' is of string type.  */
 end_comment
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|cfg_obj_asstring
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -460,6 +477,7 @@ begin_function_decl
 name|isc_boolean_t
 name|cfg_obj_isboolean
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -475,6 +493,7 @@ begin_function_decl
 name|isc_boolean_t
 name|cfg_obj_asboolean
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -490,6 +509,7 @@ begin_function_decl
 name|isc_boolean_t
 name|cfg_obj_issockaddr
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -502,10 +522,12 @@ comment|/*  * Return true iff 'obj' is a socket address.  */
 end_comment
 
 begin_function_decl
+specifier|const
 name|isc_sockaddr_t
 modifier|*
 name|cfg_obj_assockaddr
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -521,6 +543,7 @@ begin_function_decl
 name|isc_boolean_t
 name|cfg_obj_isnetprefix
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -536,6 +559,7 @@ begin_function_decl
 name|void
 name|cfg_obj_asnetprefix
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -560,6 +584,7 @@ begin_function_decl
 name|isc_boolean_t
 name|cfg_obj_islist
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -572,10 +597,12 @@ comment|/*  * Return true iff 'obj' is of list type.  */
 end_comment
 
 begin_function_decl
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|cfg_list_first
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -588,10 +615,12 @@ comment|/*  * Returns the first list element in a configuration object of a list
 end_comment
 
 begin_function_decl
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|cfg_list_next
 parameter_list|(
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|elt
@@ -604,10 +633,12 @@ comment|/*  * Returns the next element of a list of configuration objects.  *  *
 end_comment
 
 begin_function_decl
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|cfg_listelt_value
 parameter_list|(
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|elt
@@ -623,6 +654,7 @@ begin_function_decl
 name|void
 name|cfg_print
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -700,6 +732,7 @@ begin_function_decl
 name|isc_boolean_t
 name|cfg_obj_istype
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -740,6 +773,7 @@ begin_function_decl
 name|void
 name|cfg_obj_log
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -780,6 +814,7 @@ name|char
 modifier|*
 name|cfg_obj_file
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj
@@ -796,6 +831,7 @@ name|unsigned
 name|int
 name|cfg_obj_line
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|obj

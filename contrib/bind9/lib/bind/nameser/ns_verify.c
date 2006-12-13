@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_verify.c,v 1.1.206.2 2005/10/11 00:48:16 marka Exp $"
+literal|"$Id: ns_verify.c,v 1.1.206.3 2006/03/10 00:17:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1672,11 +1672,6 @@ name|cp
 decl_stmt|,
 modifier|*
 name|eom
-init|=
-name|msg
-operator|+
-operator|*
-name|msglen
 decl_stmt|,
 modifier|*
 name|cp2
@@ -1732,6 +1727,13 @@ operator|-
 literal|1
 operator|)
 return|;
+name|eom
+operator|=
+name|msg
+operator|+
+operator|*
+name|msglen
+expr_stmt|;
 name|state
 operator|->
 name|counter

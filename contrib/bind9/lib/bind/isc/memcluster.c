@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: memcluster.c,v 1.3.206.7 2005/10/11 00:48:15 marka Exp $"
+literal|"$Id: memcluster.c,v 1.3.206.8 2006/08/30 23:35:06 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1864,7 +1864,7 @@ name|INSIST
 argument_list|(
 operator|(
 operator|(
-name|int
+name|u_long
 operator|)
 name|mem
 operator|%
@@ -2526,7 +2526,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"%s:%d %p:%d\n"
+literal|"%s:%d %p:%lu\n"
 argument_list|,
 name|e
 operator|->
@@ -2554,6 +2554,9 @@ sizeof|sizeof
 expr|*
 name|e
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|e
 operator|->
 name|size

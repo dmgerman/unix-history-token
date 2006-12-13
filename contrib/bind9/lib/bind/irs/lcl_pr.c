@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lcl_pr.c,v 1.1.206.1 2004/03/09 08:33:38 marka Exp $"
+literal|"$Id: lcl_pr.c,v 1.1.206.2 2006/03/10 00:17:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,6 +180,10 @@ name|BUFSIZ
 operator|+
 literal|1
 index|]
+decl_stmt|;
+name|char
+modifier|*
+name|dbuf
 decl_stmt|;
 name|struct
 name|protoent
@@ -507,6 +511,19 @@ argument_list|(
 name|pvt
 operator|->
 name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pvt
+operator|->
+name|dbuf
+condition|)
+name|free
+argument_list|(
+name|pvt
+operator|->
+name|dbuf
 argument_list|)
 expr_stmt|;
 name|memput
@@ -879,6 +896,27 @@ operator|(
 name|NULL
 operator|)
 return|;
+if|if
+condition|(
+name|pvt
+operator|->
+name|dbuf
+condition|)
+block|{
+name|free
+argument_list|(
+name|pvt
+operator|->
+name|dbuf
+argument_list|)
+expr_stmt|;
+name|pvt
+operator|->
+name|dbuf
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|bufp
 operator|=
 name|pvt
@@ -1283,6 +1321,12 @@ operator|*
 name|q
 operator|=
 name|NULL
+expr_stmt|;
+name|pvt
+operator|->
+name|dbuf
+operator|=
+name|dbuf
 expr_stmt|;
 return|return
 operator|(

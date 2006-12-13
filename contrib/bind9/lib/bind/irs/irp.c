@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp.c,v 1.3.2.1.10.2 2004/03/17 01:49:41 marka Exp $"
+literal|"$Id: irp.c,v 1.3.2.1.10.4 2006/03/10 00:17:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1619,6 +1619,17 @@ name|idx
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|buffer
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 for|for
 control|(
 init|;
@@ -1961,7 +1972,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int irs_irp_send_command(struct irp_p *pvt, const char *fmt, ...);  *  *	Sends command to remote connected via the PVT  *	struture. FMT and args after it are fprintf-like  *	arguments for formatting.  *  * Returns:  *  *	0 on success, -1 on failure.  */
+comment|/*  * int irs_irp_send_command(struct irp_p *pvt, const char *fmt, ...);  *  *	Sends command to remote connected via the PVT  *	structure. FMT and args after it are fprintf-like  *	arguments for formatting.  *  * Returns:  *  *	0 on success, -1 on failure.  */
 end_comment
 
 begin_function

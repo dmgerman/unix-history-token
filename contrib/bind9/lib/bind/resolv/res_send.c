@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.5.2.2.4.7 2005/08/15 02:04:41 marka Exp $"
+literal|"$Id: res_send.c,v 1.5.2.2.4.9 2006/10/16 23:00:50 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -371,6 +371,8 @@ name|int
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
@@ -1299,6 +1301,7 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* No name servers or res_init() failure */
 if|if
 condition|(
 name|statp
@@ -1306,6 +1309,15 @@ operator|->
 name|nscount
 operator|==
 literal|0
+operator|||
+name|EXT
+argument_list|(
+name|statp
+argument_list|)
+operator|.
+name|ext
+operator|==
+name|NULL
 condition|)
 block|{
 name|errno
@@ -2290,6 +2302,8 @@ operator|&
 name|terrno
 argument_list|,
 name|ns
+argument_list|,
+name|try
 argument_list|,
 operator|&
 name|v_circuit
@@ -3703,6 +3717,9 @@ name|int
 name|ns
 parameter_list|,
 name|int
+name|try
+parameter_list|,
+name|int
 modifier|*
 name|v_circuit
 parameter_list|,
@@ -4123,7 +4140,7 @@ name|statp
 operator|->
 name|retrans
 operator|<<
-name|ns
+name|try
 operator|)
 expr_stmt|;
 if|if
