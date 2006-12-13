@@ -601,6 +601,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"msk"
+argument_list|,
+literal|"Marvell/SysKonnect Yukon II gigabit Ethernet"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"mxge"
 argument_list|,
 literal|"Myricom Myri10GE 10Gb Ethernet card"
