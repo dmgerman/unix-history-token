@@ -933,8 +933,8 @@ name|ue_cdata
 name|aue_cdata
 decl_stmt|;
 name|struct
-name|callout_handle
-name|aue_stat_ch
+name|callout
+name|aue_tick_callout
 decl_stmt|;
 name|struct
 name|task
@@ -972,8 +972,12 @@ end_struct
 begin_if
 if|#
 directive|if
-literal|1
+literal|0
 end_if
+
+begin_comment
+comment|/*  * Some debug code to make sure we don't take a blocking lock in  * interrupt context.  */
+end_comment
 
 begin_include
 include|#
@@ -1003,77 +1007,25 @@ parameter_list|)
 value|aue_dumpstate(__func__, tag)
 end_define
 
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|aue_dumpstate
+begin_else
+unit|static inline void aue_dumpstate(const char *func, const char *tag) { 	if ((curthread->td_pflags& TDP_NOSLEEPING) || 	    (curthread->td_pflags& TDP_ITHREAD)) { 		kdb_backtrace(); 		printf("%s: %s sleep: %sok ithread: %s\n", func, tag, 			curthread->td_pflags& TDP_NOSLEEPING ? "not" : "", 			curthread->td_pflags& TDP_ITHREAD ?  "yes" : "no"); 	} }
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AUE_DUMPSTATE
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|func
-parameter_list|,
-specifier|const
-name|char
-modifier|*
 name|tag
 parameter_list|)
-block|{
-if|if
-condition|(
-operator|(
-name|curthread
-operator|->
-name|td_pflags
-operator|&
-name|TDP_NOSLEEPING
-operator|)
-operator|||
-operator|(
-name|curthread
-operator|->
-name|td_pflags
-operator|&
-name|TDP_ITHREAD
-operator|)
-condition|)
-block|{
-name|kdb_backtrace
-argument_list|()
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: %s sleep: %sok ithread: %s\n"
-argument_list|,
-name|func
-argument_list|,
-name|tag
-argument_list|,
-name|curthread
-operator|->
-name|td_pflags
-operator|&
-name|TDP_NOSLEEPING
-condition|?
-literal|"not"
-else|:
-literal|""
-argument_list|,
-name|curthread
-operator|->
-name|td_pflags
-operator|&
-name|TDP_ITHREAD
-condition|?
-literal|"yes"
-else|:
-literal|"no"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1095,34 +1047,6 @@ parameter_list|)
 value|mtx_unlock(&(_sc)->aue_mtx)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|AUE_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUE_UNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1130,7 +1054,8 @@ name|AUE_SXLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|do { AUE_DUMPSTATE("sxlock");sx_xlock(&(_sc)->aue_sx); }while(0)
+define|\
+value|do { AUE_DUMPSTATE("sxlock"); sx_xlock(&(_sc)->aue_sx); } while(0)
 end_define
 
 begin_define
@@ -1186,6 +1111,10 @@ end_define
 
 begin_comment
 comment|/* ms */
+end_comment
+
+begin_comment
+comment|/*  * These bits are used to notify the task about pending events.  * The names correspond to the interrupt context routines that would  * be normally called.  (example: AUE_TASK_WATCHDOG -> aue_watchdog())  */
 end_comment
 
 begin_define
