@@ -233,6 +233,12 @@ begin_comment
 comment|/*  * Update rate control state for a packet associated with the  * supplied transmit descriptor.  The routine is invoked both  * for packets that were successfully sent and for those that  * failed (consult the descriptor for details).  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|ath_buf
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|ath_rate_tx_complete
@@ -247,15 +253,8 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|ath_desc
+name|ath_buf
 modifier|*
-name|last
-parameter_list|,
-specifier|const
-name|struct
-name|ath_desc
-modifier|*
-name|first
 parameter_list|)
 function_decl|;
 end_function_decl
