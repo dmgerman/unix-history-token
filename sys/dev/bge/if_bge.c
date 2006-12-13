@@ -1793,7 +1793,7 @@ end_endif
 begin_function_decl
 specifier|static
 name|void
-name|bge_writereg_ind
+name|bge_writemem_direct
 parameter_list|(
 name|struct
 name|bge_softc
@@ -1806,22 +1806,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
-name|bge_writemem_direct
-argument_list|(
-expr|struct
+name|bge_writereg_ind
+parameter_list|(
+name|struct
 name|bge_softc
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|int
-argument_list|,
+parameter_list|,
 name|int
-argument_list|)
-name|__unused
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -6670,7 +6669,7 @@ name|bge_maxlen_flags
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Set the BD ring replentish thresholds. The recommended 	 * values are 1/8th the number of descriptors allocated to 	 * each ring. 	 */
+comment|/* 	 * Set the BD ring replentish thresholds. The recommended 	 * values are 1/8th the number of descriptors allocated to 	 * each ring. 	 * XXX The 5754 requires a lower threshold, so it might be a 	 * requirement of all 575x family chips.  The Linux driver sets 	 * the lower threshold for all 5705 family chips as well, but there 	 * are reports that it might not need to be so strict. 	 */
 if|if
 condition|(
 name|BGE_IS_5705_PLUS
@@ -10502,8 +10501,7 @@ init|=
 literal|0
 decl_stmt|,
 name|rid
-decl_stmt|;
-name|int
+decl_stmt|,
 name|trys
 decl_stmt|,
 name|reg
@@ -12284,6 +12282,7 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 name|sc
@@ -12301,6 +12300,7 @@ name|write_op
 operator|=
 name|bge_writemem_ind
 expr_stmt|;
+block|}
 else|else
 name|write_op
 operator|=
@@ -12389,9 +12389,7 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"%s: Disabling fastboot\n"
-argument_list|,
-name|__FUNCTION__
+literal|"Disabling fastboot\n"
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -12572,7 +12570,7 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Set PCIE max payload size to 128 bytes and clear error status. */
+comment|/* 		 * Set PCIE max payload size to 128 bytes and clear error 		 * status. 		 */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -12732,8 +12730,8 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"firmware handshake timed out! "
-literal|"found 0x%08X\n"
+literal|"firmware handshake timed out, "
+literal|"found 0x%08x\n"
 argument_list|,
 name|val
 argument_list|)
