@@ -39,6 +39,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -84,6 +90,27 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SELECT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SYS_SELECT_H */
+end_comment
 
 begin_undef
 undef|#

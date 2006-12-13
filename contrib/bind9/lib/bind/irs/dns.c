@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns.c,v 1.1.206.2 2004/03/17 00:29:47 marka Exp $"
+literal|"$Id: dns.c,v 1.1.206.3 2006/03/10 00:17:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -500,16 +500,12 @@ operator|)
 return|;
 name|memset
 argument_list|(
-name|dns
-operator|->
 name|res
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 expr|*
-name|dns
-operator|->
 name|res
 argument_list|)
 expr_stmt|;

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: resolver.c,v 1.218.2.18.4.56.4.2 2006/10/04 07:06:02 marka Exp $ */
+comment|/* $Id: resolver.c,v 1.218.2.18.4.64 2006/08/31 03:57:11 marka Exp $ */
 end_comment
 
 begin_include
@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dns/cache.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dns/db.h>
 end_include
 
@@ -65,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<dns/dispatch.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/ds.h>
 end_include
 
 begin_include
@@ -173,6 +185,12 @@ begin_include
 include|#
 directive|include
 file|<dns/result.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/rootns.h>
 end_include
 
 begin_include
@@ -4202,6 +4220,9 @@ condition|)
 goto|goto
 name|cleanup_query
 goto|;
+ifndef|#
+directive|ifndef
+name|BROKEN_TCP_BIND_BEFORE_CONNECT
 name|result
 operator|=
 name|isc_socket_bind
@@ -4223,6 +4244,8 @@ condition|)
 goto|goto
 name|cleanup_socket
 goto|;
+endif|#
+directive|endif
 comment|/* 		 * A dispatch will be created once the connect succeeds. 		 */
 block|}
 else|else
@@ -5266,6 +5289,28 @@ goto|goto
 name|cleanup_message
 goto|;
 block|}
+comment|/* 	 * Clear CD if EDNS is not in use. 	 */
+if|if
+condition|(
+operator|(
+name|query
+operator|->
+name|options
+operator|&
+name|DNS_FETCHOPT_NOEDNS0
+operator|)
+operator|!=
+literal|0
+condition|)
+name|fctx
+operator|->
+name|qmessage
+operator|->
+name|flags
+operator|&=
+operator|~
+name|DNS_MESSAGEFLAG_CD
+expr_stmt|;
 comment|/* 	 * Add TSIG record tailored to the current recipient. 	 */
 name|result
 operator|=
@@ -13448,10 +13493,28 @@ argument_list|(
 name|fctx
 argument_list|)
 expr_stmt|;
+comment|/* Locks bucket. */
 goto|goto
 name|cleanup_event
 goto|;
 block|}
+name|LOCK
+argument_list|(
+operator|&
+name|fctx
+operator|->
+name|res
+operator|->
+name|buckets
+index|[
+name|fctx
+operator|->
+name|bucketnum
+index|]
+operator|.
+name|lock
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If chaining, we need to make sure that the right result code is 	 * returned, and that the rdatasets are bound. 	 */
 if|if
 condition|(
@@ -13726,6 +13789,23 @@ operator|&
 name|event
 argument_list|)
 expr_stmt|;
+name|UNLOCK
+argument_list|(
+operator|&
+name|fctx
+operator|->
+name|res
+operator|->
+name|buckets
+index|[
+name|fctx
+operator|->
+name|bucketnum
+index|]
+operator|.
+name|lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sentresponse
@@ -13737,12 +13817,14 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
+comment|/* Locks bucket. */
 else|else
 name|fctx_try
 argument_list|(
 name|fctx
 argument_list|)
 expr_stmt|;
+comment|/* Locks bucket. */
 return|return;
 block|}
 name|isc_stdtime_get
@@ -13918,6 +14000,15 @@ operator|==
 name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
+name|INSIST
+argument_list|(
+name|vevent
+operator|->
+name|sigrdataset
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|vevent
 operator|->
 name|sigrdataset
@@ -14047,6 +14138,23 @@ name|sentresponse
 condition|)
 block|{
 comment|/* 		 * If we only deferred the destroy because we wanted to cache 		 * the data, destroy now. 		 */
+name|UNLOCK
+argument_list|(
+operator|&
+name|fctx
+operator|->
+name|res
+operator|->
+name|buckets
+index|[
+name|fctx
+operator|->
+name|bucketnum
+index|]
+operator|.
+name|lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SHUTTINGDOWN
@@ -14059,6 +14167,7 @@ argument_list|(
 name|fctx
 argument_list|)
 expr_stmt|;
+comment|/* Locks bucket. */
 goto|goto
 name|cleanup_event
 goto|;
@@ -14102,6 +14211,23 @@ name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Don't send a response yet - we have 		 * more rdatasets that still need to 		 * be validated. 		 */
+name|UNLOCK
+argument_list|(
+operator|&
+name|fctx
+operator|->
+name|res
+operator|->
+name|buckets
+index|[
+name|fctx
+operator|->
+name|bucketnum
+index|]
+operator|.
+name|lock
+argument_list|)
+expr_stmt|;
 goto|goto
 name|cleanup_event
 goto|;
@@ -14434,6 +14560,23 @@ operator|&
 name|node
 argument_list|)
 expr_stmt|;
+name|UNLOCK
+argument_list|(
+operator|&
+name|fctx
+operator|->
+name|res
+operator|->
+name|buckets
+index|[
+name|fctx
+operator|->
+name|bucketnum
+index|]
+operator|.
+name|lock
+argument_list|)
+expr_stmt|;
 name|fctx_done
 argument_list|(
 name|fctx
@@ -14441,6 +14584,7 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
+comment|/* Locks bucket. */
 name|cleanup_event
 label|:
 name|isc_event_free
@@ -20028,6 +20172,12 @@ name|unsigned
 name|int
 name|n
 decl_stmt|;
+name|dns_rdataset_t
+modifier|*
+name|nsrdataset
+init|=
+name|NULL
+decl_stmt|;
 comment|/* 		 * Retrieve state from fctx->nsfetch before we destroy it. 		 */
 name|dns_fixedname_init
 argument_list|(
@@ -20059,29 +20209,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|dns_rdataset_clone
-argument_list|(
-operator|&
-name|fctx
-operator|->
-name|nsfetch
-operator|->
-name|private
-operator|->
-name|nameservers
-argument_list|,
-operator|&
-name|nameservers
-argument_list|)
-expr_stmt|;
-name|dns_resolver_destroyfetch
-argument_list|(
-operator|&
-name|fctx
-operator|->
-name|nsfetch
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dns_name_equal
@@ -20102,10 +20229,67 @@ argument_list|,
 name|DNS_R_SERVFAIL
 argument_list|)
 expr_stmt|;
+name|dns_resolver_destroyfetch
+argument_list|(
+operator|&
+name|fctx
+operator|->
+name|nsfetch
+argument_list|)
+expr_stmt|;
 goto|goto
 name|cleanup
 goto|;
 block|}
+if|if
+condition|(
+name|dns_rdataset_isassociated
+argument_list|(
+operator|&
+name|fctx
+operator|->
+name|nsfetch
+operator|->
+name|private
+operator|->
+name|nameservers
+argument_list|)
+condition|)
+block|{
+name|dns_rdataset_clone
+argument_list|(
+operator|&
+name|fctx
+operator|->
+name|nsfetch
+operator|->
+name|private
+operator|->
+name|nameservers
+argument_list|,
+operator|&
+name|nameservers
+argument_list|)
+expr_stmt|;
+name|nsrdataset
+operator|=
+operator|&
+name|nameservers
+expr_stmt|;
+block|}
+else|else
+name|domain
+operator|=
+name|NULL
+expr_stmt|;
+name|dns_resolver_destroyfetch
+argument_list|(
+operator|&
+name|fctx
+operator|->
+name|nsfetch
+argument_list|)
+expr_stmt|;
 name|n
 operator|=
 name|dns_name_countlabels
@@ -20173,8 +20357,7 @@ name|dns_rdatatype_ns
 argument_list|,
 name|domain
 argument_list|,
-operator|&
-name|nameservers
+name|nsrdataset
 argument_list|,
 name|NULL
 argument_list|,

@@ -1086,7 +1086,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|ERR
+name|SETERROR
 parameter_list|(
 name|err
 parameter_list|)
@@ -1108,7 +1108,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|ERR
+name|SETERROR
 parameter_list|(
 name|err
 parameter_list|)
@@ -1514,7 +1514,7 @@ name|hints
 operator|->
 name|ai_next
 condition|)
-name|ERR
+name|SETERROR
 argument_list|(
 name|EAI_BADHINTS
 argument_list|)
@@ -1529,7 +1529,7 @@ operator|&
 operator|~
 name|AI_MASK
 condition|)
-name|ERR
+name|SETERROR
 argument_list|(
 name|EAI_BADFLAGS
 argument_list|)
@@ -1552,7 +1552,7 @@ name|PF_INET6
 case|:
 break|break;
 default|default:
-name|ERR
+name|SETERROR
 argument_list|(
 name|EAI_FAMILY
 argument_list|)
@@ -1676,7 +1676,7 @@ operator|->
 name|e_protocol
 condition|)
 block|{
-name|ERR
+name|SETERROR
 argument_list|(
 name|EAI_BADHINTS
 argument_list|)
@@ -1734,7 +1734,7 @@ if|#
 directive|if
 literal|1
 comment|/* illegal */
-name|ERR
+name|SETERROR
 argument_list|(
 name|EAI_BADFLAGS
 argument_list|)
@@ -1835,7 +1835,7 @@ if|if
 condition|(
 name|error
 condition|)
-name|ERR
+name|SETERROR
 argument_list|(
 name|error
 argument_list|)
@@ -2097,7 +2097,7 @@ name|ai_flags
 operator|&
 name|AI_NUMERICHOST
 condition|)
-name|ERR
+name|SETERROR
 argument_list|(
 name|EAI_NONAME
 argument_list|)
@@ -2108,7 +2108,7 @@ name|hostname
 operator|==
 name|NULL
 condition|)
-name|ERR
+name|SETERROR
 argument_list|(
 name|EAI_NONAME
 argument_list|)
@@ -2423,17 +2423,6 @@ name|afai
 argument_list|)
 expr_stmt|;
 comment|/* afai must not be NULL at this point. */
-comment|/* we must not have got any errors. */
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-comment|/* just for diagnosis */
-name|abort
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|sentinel
@@ -3276,7 +3265,7 @@ literal|0
 comment|/*X/Open spec*/
 block|case AF_INET: 		if (inet_aton(hostname, (struct in_addr *)pton) == 1) { 			if (pai->ai_family == afd->a_af || 			    pai->ai_family == PF_UNSPEC
 comment|/*?*/
-block|) { 				GET_AI(cur->ai_next, afd, pton); 				GET_PORT(cur->ai_next, servname); 				while (cur&& cur->ai_next) 					cur = cur->ai_next; 			} else 				ERR(EAI_FAMILY);
+block|) { 				GET_AI(cur->ai_next, afd, pton); 				GET_PORT(cur->ai_next, servname); 				while (cur->ai_next) 					cur = cur->ai_next; 			} else 				SETERROR(EAI_FAMILY);
 comment|/*xxx*/
 block|} 		break;
 endif|#
@@ -3339,8 +3328,6 @@ expr_stmt|;
 while|while
 condition|(
 name|cur
-operator|&&
-name|cur
 operator|->
 name|ai_next
 condition|)
@@ -3352,7 +3339,7 @@ name|ai_next
 expr_stmt|;
 block|}
 else|else
-name|ERR
+name|SETERROR
 argument_list|(
 name|EAI_FAMILY
 argument_list|)
@@ -5029,8 +5016,6 @@ expr_stmt|;
 block|}
 while|while
 condition|(
-name|cur
-operator|&&
 name|cur
 operator|->
 name|ai_next

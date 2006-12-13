@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acl.c,v 1.23.52.4 2004/03/09 05:21:08 marka Exp $ */
+comment|/* $Id: acl.c,v 1.23.52.6 2006/03/02 00:37:20 marka Exp $ */
 end_comment
 
 begin_include
@@ -239,6 +239,7 @@ name|dns_acl_t
 modifier|*
 name|acl
 parameter_list|,
+specifier|const
 name|dns_aclelement_t
 modifier|*
 name|elt
@@ -537,18 +538,22 @@ begin_function
 name|isc_result_t
 name|dns_acl_match
 parameter_list|(
+specifier|const
 name|isc_netaddr_t
 modifier|*
 name|reqaddr
 parameter_list|,
+specifier|const
 name|dns_name_t
 modifier|*
 name|reqsigner
 parameter_list|,
+specifier|const
 name|dns_acl_t
 modifier|*
 name|acl
 parameter_list|,
+specifier|const
 name|dns_aclenv_t
 modifier|*
 name|env
@@ -558,6 +563,7 @@ modifier|*
 name|match
 parameter_list|,
 name|dns_aclelement_t
+specifier|const
 modifier|*
 modifier|*
 name|matchelt
@@ -681,14 +687,17 @@ begin_function
 name|isc_result_t
 name|dns_acl_elementmatch
 parameter_list|(
+specifier|const
 name|dns_acl_t
 modifier|*
 name|acl
 parameter_list|,
+specifier|const
 name|dns_aclelement_t
 modifier|*
 name|elt
 parameter_list|,
+specifier|const
 name|dns_aclelement_t
 modifier|*
 modifier|*
@@ -788,22 +797,27 @@ begin_function
 name|isc_boolean_t
 name|dns_aclelement_match
 parameter_list|(
+specifier|const
 name|isc_netaddr_t
 modifier|*
 name|reqaddr
 parameter_list|,
+specifier|const
 name|dns_name_t
 modifier|*
 name|reqsigner
 parameter_list|,
+specifier|const
 name|dns_aclelement_t
 modifier|*
 name|e
 parameter_list|,
+specifier|const
 name|dns_aclenv_t
 modifier|*
 name|env
 parameter_list|,
+specifier|const
 name|dns_aclelement_t
 modifier|*
 modifier|*
@@ -816,6 +830,7 @@ name|inner
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|isc_netaddr_t
 modifier|*
 name|addr
@@ -1368,10 +1383,12 @@ begin_function
 name|isc_boolean_t
 name|dns_aclelement_equal
 parameter_list|(
+specifier|const
 name|dns_aclelement_t
 modifier|*
 name|ea
 parameter_list|,
+specifier|const
 name|dns_aclelement_t
 modifier|*
 name|eb
@@ -1534,10 +1551,12 @@ begin_function
 name|isc_boolean_t
 name|dns_acl_equal
 parameter_list|(
+specifier|const
 name|dns_acl_t
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|dns_acl_t
 modifier|*
 name|b
@@ -1630,6 +1649,7 @@ specifier|static
 name|isc_boolean_t
 name|is_loopback
 parameter_list|(
+specifier|const
 name|dns_aclipprefix_t
 modifier|*
 name|p
@@ -1720,6 +1740,7 @@ begin_function
 name|isc_boolean_t
 name|dns_acl_isinsecure
 parameter_list|(
+specifier|const
 name|dns_acl_t
 modifier|*
 name|a

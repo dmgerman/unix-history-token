@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: eventlib.c,v 1.2.2.1.4.5 2005/07/28 07:43:20 marka Exp $"
+literal|"$Id: eventlib.c,v 1.2.2.1.4.6 2006/03/10 00:17:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3829,7 +3829,6 @@ argument_list|,
 name|polltimeout
 argument_list|)
 expr_stmt|;
-comment|/* 	 * pselect() should return the total number of events on the file 	 * desriptors, not just the count of fd:s with activity. Hence, 	 * traverse the pollfds array and count the events. 	 */
 if|if
 condition|(
 name|n
@@ -3842,6 +3841,13 @@ name|i
 decl_stmt|,
 name|e
 decl_stmt|;
+name|INSIST
+argument_list|(
+name|ctx
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|e
