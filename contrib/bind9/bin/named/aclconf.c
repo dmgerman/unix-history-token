@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: aclconf.c,v 1.27.12.5 2005/03/17 03:58:25 marka Exp $ */
+comment|/* $Id: aclconf.c,v 1.27.12.7 2006/03/02 00:37:20 marka Exp $ */
 end_comment
 
 begin_include
@@ -155,14 +155,17 @@ specifier|static
 name|isc_result_t
 name|get_acl_def
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|cctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 modifier|*
@@ -172,12 +175,14 @@ block|{
 name|isc_result_t
 name|result
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|acls
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|elt
@@ -226,6 +231,7 @@ name|elt
 argument_list|)
 control|)
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|acl
@@ -292,10 +298,12 @@ specifier|static
 name|isc_result_t
 name|convert_named_acl
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|nameobj
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|cctx
@@ -317,6 +325,7 @@ block|{
 name|isc_result_t
 name|result
 decl_stmt|;
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|cacl
@@ -330,6 +339,7 @@ decl_stmt|;
 name|dns_acl_t
 name|loop
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|aclname
@@ -483,11 +493,14 @@ argument_list|,
 name|nextincache
 argument_list|)
 expr_stmt|;
+name|DE_CONST
+argument_list|(
+name|aclname
+argument_list|,
 name|loop
 operator|.
 name|name
-operator|=
-name|aclname
+argument_list|)
 expr_stmt|;
 name|loop
 operator|.
@@ -615,6 +628,7 @@ specifier|static
 name|isc_result_t
 name|convert_keyname
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|keyobj
@@ -751,10 +765,12 @@ begin_function
 name|isc_result_t
 name|ns_acl_fromconfig
 parameter_list|(
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|caml
 parameter_list|,
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|cctx
@@ -790,6 +806,7 @@ name|dns_aclelement_t
 modifier|*
 name|de
 decl_stmt|;
+specifier|const
 name|cfg_listelt_t
 modifier|*
 name|elt
@@ -883,6 +900,7 @@ name|elt
 argument_list|)
 control|)
 block|{
+specifier|const
 name|cfg_obj_t
 modifier|*
 name|ce
@@ -1078,6 +1096,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* ACL name */
+specifier|const
 name|char
 modifier|*
 name|name

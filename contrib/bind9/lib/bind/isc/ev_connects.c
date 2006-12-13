@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_connects.c,v 1.4.206.2 2005/07/08 04:52:54 marka Exp $"
+literal|"$Id: ev_connects.c,v 1.4.206.3 2006/03/10 00:17:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -224,7 +224,7 @@ name|flags
 operator|=
 name|EV_CONN_LISTEN
 expr_stmt|;
-name|OK
+name|OKFREE
 argument_list|(
 name|mode
 operator|=
@@ -236,6 +236,8 @@ name|F_GETFL
 argument_list|,
 name|NULL
 argument_list|)
+argument_list|,
+name|new
 argument_list|)
 expr_stmt|;
 comment|/* side effect: validate fd. */
@@ -259,7 +261,7 @@ name|on
 init|=
 literal|1
 decl_stmt|;
-name|OK
+name|OKFREE
 argument_list|(
 name|ioctl
 argument_list|(
@@ -274,11 +276,13 @@ operator|)
 operator|&
 name|on
 argument_list|)
+argument_list|,
+name|new
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|OK
+name|OKFREE
 argument_list|(
 name|fcntl
 argument_list|(
@@ -290,6 +294,8 @@ name|mode
 operator||
 name|PORT_NONBLOCK
 argument_list|)
+argument_list|,
+name|new
 argument_list|)
 expr_stmt|;
 endif|#
@@ -301,7 +307,7 @@ operator||=
 name|EV_CONN_BLOCK
 expr_stmt|;
 block|}
-name|OK
+name|OKFREE
 argument_list|(
 name|listen
 argument_list|(
@@ -309,6 +315,8 @@ name|fd
 argument_list|,
 name|maxconn
 argument_list|)
+argument_list|,
+name|new
 argument_list|)
 expr_stmt|;
 if|if

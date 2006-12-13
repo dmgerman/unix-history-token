@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: lex.c,v 1.66.2.6.2.8 2004/08/28 06:25:21 marka Exp $ */
+comment|/* $Id: lex.c,v 1.66.2.6.2.10 2006/01/04 23:50:21 marka Exp $ */
 end_comment
 
 begin_include
@@ -1699,22 +1699,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|lex
-operator|->
-name|saved_paren_count
-operator|=
-name|lex
-operator|->
-name|paren_count
-expr_stmt|;
-name|source
-operator|->
-name|saved_line
-operator|=
-name|source
-operator|->
-name|line
-expr_stmt|;
 if|if
 condition|(
 name|source
@@ -1766,6 +1750,22 @@ operator|->
 name|result
 operator|)
 return|;
+name|lex
+operator|->
+name|saved_paren_count
+operator|=
+name|lex
+operator|->
+name|paren_count
+expr_stmt|;
+name|source
+operator|->
+name|saved_line
+operator|=
+name|source
+operator|->
+name|line
+expr_stmt|;
 if|if
 condition|(
 name|isc_buffer_remaininglength
@@ -2996,8 +2996,21 @@ break|break;
 case|case
 name|lexstate_string
 case|:
+comment|/* 			 * EOF needs to be checked before lex->specials[c] 			 * as lex->specials[EOF] is not a good idea. 			 */
 if|if
 condition|(
+name|c
+operator|==
+literal|'\r'
+operator|||
+name|c
+operator|==
+literal|'\n'
+operator|||
+name|c
+operator|==
+name|EOF
+operator|||
 operator|(
 operator|!
 name|escaped
@@ -3019,18 +3032,6 @@ name|c
 index|]
 operator|)
 operator|)
-operator|||
-name|c
-operator|==
-literal|'\r'
-operator|||
-name|c
-operator|==
-literal|'\n'
-operator|||
-name|c
-operator|==
-name|EOF
 condition|)
 block|{
 name|pushback

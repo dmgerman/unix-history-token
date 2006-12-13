@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gen_ho.c,v 1.1.206.2 2004/03/17 01:49:39 marka Exp $"
+literal|"$Id: gen_ho.c,v 1.1.206.3 2006/03/10 00:17:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2142,15 +2142,6 @@ operator|->
 name|res
 argument_list|,
 name|therrno
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rval
-condition|)
-name|freeaddrinfo
-argument_list|(
-name|rval
 argument_list|)
 expr_stmt|;
 return|return

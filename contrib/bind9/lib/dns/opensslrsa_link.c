@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: opensslrsa_link.c,v 1.1.4.1.10.5 2006/10/11 03:58:50 marka Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: opensslrsa_link.c,v 1.1.4.9 2006/11/07 21:28:40 marka Exp $  */
 end_comment
 
 begin_ifdef
@@ -139,7 +139,7 @@ operator|&&
 expr|\
 name|OPENSSL_VERSION_NUMBER
 operator|<
-literal|0x009080000L
+literal|0x00908000L
 operator|)
 operator|||
 expr|\
@@ -237,6 +237,26 @@ name|rsa
 parameter_list|)
 define|\
 value|do { \ 	(rsa)->flags&= ~(RSA_FLAG_CACHE_PUBLIC | RSA_FLAG_CACHE_PRIVATE); \ 	(rsa)->flags&= ~RSA_FLAG_BLINDING; \ 	} while (0)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|RSA_FLAG_NO_BLINDING
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SET_FLAGS
+parameter_list|(
+name|rsa
+parameter_list|)
+define|\
+value|do { \ 		(rsa)->flags&= ~RSA_FLAG_BLINDING; \ 		(rsa)->flags |= RSA_FLAG_NO_BLINDING; \ 	} while (0)
 end_define
 
 begin_else
@@ -344,6 +364,17 @@ name|isc_md5_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|md5ctx
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ISC_R_NOMEMORY
+operator|)
+return|;
 name|isc_md5_init
 argument_list|(
 name|md5ctx
@@ -376,6 +407,17 @@ name|isc_sha1_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sha1ctx
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ISC_R_NOMEMORY
+operator|)
+return|;
 name|isc_sha1_init
 argument_list|(
 name|sha1ctx

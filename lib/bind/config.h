@@ -455,6 +455,44 @@ comment|/* #undef NEED_PTHREAD_SCOPE_SYSTEM */
 end_comment
 
 begin_comment
+comment|/* Define if recvmsg() does not meet all of the BSD socket API specifications.    */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_RECVMSG */
+end_comment
+
+begin_comment
+comment|/* Define if you cannot bind() before connect() for TCP sockets. */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_TCP_BIND_BEFORE_CONNECT */
+end_comment
+
+begin_comment
+comment|/* Define if libcrypto has DH_generate_parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DH_GENERATE_PARAMETERS
+value|1
+end_define
+
+begin_comment
+comment|/* Define if libcrypto has DSA_generate_parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DSA_GENERATE_PARAMETERS
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
 end_comment
 
@@ -525,6 +563,14 @@ comment|/* #undef HAVE_LIBSOCKET */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `thr' library (-lthr). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBTHR */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<linux/capability.h> header file. */
 end_comment
 
@@ -550,6 +596,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_NET_IF6_H */
 end_comment
+
+begin_comment
+comment|/* Define if libcrypto has RSA_generate_key */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RSA_GENERATE_KEY
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<stdint.h> header file. */
@@ -820,12 +877,23 @@ comment|/* #undef const */
 end_comment
 
 begin_comment
-comment|/* Define as `__inline' if that's what the C compiler calls it, or to nothing    if it is not supported. */
+comment|/* Define to `__inline__' or `__inline' if that's what the C compiler    calls it, or to nothing if 'inline' is not supported under any name.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
 
 begin_comment
 comment|/* #undef inline */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to `unsigned' if<sys/types.h> does not define. */

@@ -167,7 +167,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|do { \ 		INSIST(LINKED(elt, link));\ 		if ((elt)->link.next != NULL) \ 			(elt)->link.next->link.prev = (elt)->link.prev; \ 		else \ 			(list).tail = (elt)->link.prev; \ 		if ((elt)->link.prev != NULL) \ 			(elt)->link.prev->link.next = (elt)->link.next; \ 		else \ 			(list).head = (elt)->link.next; \ 		INIT_LINK_TYPE(elt, link, type); \ 	} while (0)
+value|do { \ 		INSIST(LINKED(elt, link));\ 		if ((elt)->link.next != NULL) \ 			(elt)->link.next->link.prev = (elt)->link.prev; \ 		else { \ 			INSIST((list).tail == (elt)); \ 			(list).tail = (elt)->link.prev; \ 		} \ 		if ((elt)->link.prev != NULL) \ 			(elt)->link.prev->link.next = (elt)->link.next; \ 		else { \ 			INSIST((list).head == (elt)); \ 			(list).head = (elt)->link.next; \ 		} \ 		INIT_LINK_TYPE(elt, link, type); \ 	} while (0)
 end_define
 
 begin_define

@@ -252,6 +252,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|free
+argument_list|(
+name|nstatp
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|ENOMEM
@@ -504,7 +509,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
+name|len
 operator|<
 literal|0
 condition|)
@@ -526,7 +531,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|len
 operator|)
 return|;
 block|}
