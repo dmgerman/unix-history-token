@@ -46,50 +46,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|SK_YUKON_XL
-value|0xB3
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_YUKON_EC_U
-value|0xB4
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_YUKON_EC
-value|0xB6
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_YUKON_FE
-value|0xB7
-end_define
-
-begin_define
-define|#
-directive|define
 name|SK_YUKON_FAMILY
 parameter_list|(
 name|x
 parameter_list|)
 value|((x)& 0xB0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_IS_YUKON2
-parameter_list|(
-name|sc
-parameter_list|)
-define|\
-value|((sc)->sk_type>= SK_YUKON_XL&& (sc)->sk_type<= SK_YUKON_FE)
 end_define
 
 begin_comment
@@ -119,27 +80,6 @@ define|#
 directive|define
 name|SK_YUKON_LITE_REV_A3
 value|0x7
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_YUKON_EC_REV_A1
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_YUKON_EC_REV_A2
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_YUKON_EC_REV_A3
-value|0x2
 end_define
 
 begin_comment
@@ -180,31 +120,6 @@ define|#
 directive|define
 name|DEVICEID_SK_V2
 value|0x4320
-end_define
-
-begin_comment
-comment|/*  * Marvell gigabit ethernet device IDs  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEVICEID_MRVL_4360
-value|0x4360
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVICEID_MRVL_4361
-value|0x4361
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVICEID_MRVL_4362
-value|0x4362
 end_define
 
 begin_comment
@@ -1505,34 +1420,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SK_Y2_CLKGATE
-value|0x011D
-end_define
-
-begin_comment
-comment|/* yukon 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SK_EPROM2
 value|0x011E
 end_define
 
 begin_comment
 comment|/* yukon/genesis */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SK_Y2_HWRES
-value|0x011E
-end_define
-
-begin_comment
-comment|/* yukon 2 */
 end_comment
 
 begin_define
@@ -1750,13 +1643,6 @@ define|#
 directive|define
 name|SK_IMTIMER_TICKS_YUKON
 value|78
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_IMTIMER_TICKS_YUKON_EC
-value|125
 end_define
 
 begin_define
@@ -2131,45 +2017,6 @@ define|#
 directive|define
 name|SK_GPIO_DIR9
 value|0x02000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_Y2_CLKGATE_LINK2_INACTIVE
-value|0x80
-end_define
-
-begin_comment
-comment|/* port 2 inactive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SK_Y2_HWRES_LINK_1
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_Y2_HWRES_LINK_2
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_Y2_HWRES_LINK_MASK
-value|(SK_Y2_HWRES_LINK_1 | SK_Y2_HWRES_LINK_2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_Y2_HWRES_LINK_DUAL
-value|(SK_Y2_HWRES_LINK_1 | SK_Y2_HWRES_LINK_2)
 end_define
 
 begin_comment
