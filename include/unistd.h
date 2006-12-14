@@ -1794,6 +1794,17 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Extensions found in Solaris and Linux. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_SC_PHYS_PAGES
+value|121
+end_define
+
+begin_comment
 comment|/* Keys for the confstr(3) function. */
 end_comment
 
