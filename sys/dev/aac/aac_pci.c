@@ -1099,6 +1099,22 @@ literal|"ICP ICP9087MA SATA RAID"
 block|}
 block|,
 block|{
+literal|0x9005
+block|,
+literal|0x0286
+block|,
+literal|0x1014
+block|,
+literal|0x9580
+block|,
+name|AAC_HWIF_RKT
+block|,
+literal|0
+block|,
+literal|"IBM ServeRAID-8k"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
