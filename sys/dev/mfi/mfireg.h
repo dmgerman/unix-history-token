@@ -937,11 +937,15 @@ name|MFI_MBOX_SIZE
 value|12
 end_define
 
+begin_comment
+comment|/* Firmware flashing can take 40s */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MFI_POLL_TIMEOUT_SECS
-value|10
+value|50
 end_define
 
 begin_comment

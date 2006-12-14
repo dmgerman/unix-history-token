@@ -8516,7 +8516,7 @@ name|tm
 init|=
 name|MFI_POLL_TIMEOUT_SECS
 operator|*
-literal|1000000
+literal|1000
 decl_stmt|;
 name|hdr
 operator|=
@@ -8635,7 +8635,7 @@ argument_list|)
 expr_stmt|;
 name|tm
 operator|-=
-literal|1000
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -8660,9 +8660,18 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Frame %p timed out\n"
+literal|"Frame %p timed out "
+literal|"command 0x%X\n"
 argument_list|,
 name|hdr
+argument_list|,
+name|cm
+operator|->
+name|cm_frame
+operator|->
+name|dcmd
+operator|.
+name|opcode
 argument_list|)
 expr_stmt|;
 return|return
@@ -8821,6 +8830,11 @@ name|mfi_abort_frame
 modifier|*
 name|abort
 decl_stmt|;
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -8936,6 +8950,10 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+name|i
+operator|<
+literal|5
+operator|&&
 name|sc
 operator|->
 name|mfi_aen_cm
@@ -8963,6 +8981,9 @@ literal|5
 operator|*
 name|hz
 argument_list|)
+expr_stmt|;
+name|i
+operator|++
 expr_stmt|;
 block|}
 return|return
@@ -9432,15 +9453,10 @@ name|cm
 init|=
 name|NULL
 decl_stmt|;
-name|struct
-name|mfi_dcmd_frame
-modifier|*
-name|dcmd
-decl_stmt|;
 name|uint32_t
 name|context
 decl_stmt|;
-name|uint32_t
+name|uint8_t
 modifier|*
 name|sense_ptr
 decl_stmt|;
@@ -9609,7 +9625,7 @@ name|bcopy
 argument_list|(
 name|ioc
 operator|->
-name|mi_frame
+name|mfi_frame
 operator|.
 name|raw
 argument_list|,
@@ -9619,7 +9635,7 @@ name|cm_frame
 argument_list|,
 name|ioc
 operator|->
-name|mi_sgl_off
+name|mfi_sgl_off
 argument_list|)
 expr_stmt|;
 comment|/* Linux can do 2 frames ? */
@@ -9629,7 +9645,7 @@ name|cm_total_frame_size
 operator|=
 name|ioc
 operator|->
-name|mi_sgl_off
+name|mfi_sgl_off
 expr_stmt|;
 name|cm
 operator|->
@@ -9649,7 +9665,7 @@ name|bytes
 index|[
 name|ioc
 operator|->
-name|mi_sgl_off
+name|mfi_sgl_off
 index|]
 expr_stmt|;
 name|cm
@@ -9693,6 +9709,28 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cm
+operator|->
+name|cm_data
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mfi_dev
+argument_list|,
+literal|"Malloc failed\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* restore header context */
 name|cm
 operator|->
@@ -9703,16 +9741,6 @@ operator|.
 name|context
 operator|=
 name|context
-expr_stmt|;
-comment|/* ioctl's are dcmd types */
-name|dcmd
-operator|=
-operator|&
-name|cm
-operator|->
-name|cm_frame
-operator|->
-name|dcmd
 expr_stmt|;
 name|temp
 operator|=
@@ -9728,7 +9756,7 @@ name|i
 operator|<
 name|ioc
 operator|->
-name|mi_sge_count
+name|mfi_sge_count
 condition|;
 name|i
 operator|++
@@ -9740,7 +9768,7 @@ name|copyin
 argument_list|(
 name|ioc
 operator|->
-name|mi_sgl
+name|mfi_sgl
 index|[
 name|i
 index|]
@@ -9751,7 +9779,7 @@ name|temp
 argument_list|,
 name|ioc
 operator|->
-name|mi_sgl
+name|mfi_sgl
 index|[
 name|i
 index|]
@@ -9772,7 +9800,7 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Copy in failed"
+literal|"Copy in failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -9786,46 +9814,13 @@ name|temp
 index|[
 name|ioc
 operator|->
-name|mi_sgl
+name|mfi_sgl
 index|[
 name|i
 index|]
 operator|.
 name|iov_len
 index|]
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ioc
-operator|->
-name|mi_sense_len
-condition|)
-block|{
-name|sense_ptr
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|cm
-operator|->
-name|cm_frame
-operator|->
-name|bytes
-index|[
-name|ioc
-operator|->
-name|mi_sense_off
-index|]
-expr_stmt|;
-operator|*
-name|sense_ptr
-operator|=
-name|cm
-operator|->
-name|cm_sense_busaddr
 expr_stmt|;
 block|}
 name|mtx_lock
@@ -9858,7 +9853,7 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Controller polled failed"
+literal|"Controller polled failed\n"
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -9919,7 +9914,7 @@ name|i
 operator|<
 name|ioc
 operator|->
-name|mi_sge_count
+name|mfi_sge_count
 condition|;
 name|i
 operator|++
@@ -9933,7 +9928,7 @@ name|temp
 argument_list|,
 name|ioc
 operator|->
-name|mi_sgl
+name|mfi_sgl
 index|[
 name|i
 index|]
@@ -9942,7 +9937,7 @@ name|iov_base
 argument_list|,
 name|ioc
 operator|->
-name|mi_sgl
+name|mfi_sgl
 index|[
 name|i
 index|]
@@ -9963,7 +9958,7 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Copy out failed"
+literal|"Copy out failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -9977,7 +9972,7 @@ name|temp
 index|[
 name|ioc
 operator|->
-name|mi_sgl
+name|mfi_sgl
 index|[
 name|i
 index|]
@@ -9990,49 +9985,42 @@ if|if
 condition|(
 name|ioc
 operator|->
-name|mi_sense_len
+name|mfi_sense_len
 condition|)
 block|{
 comment|/* copy out sense */
 name|sense_ptr
 operator|=
+operator|&
 operator|(
-name|void
+operator|(
+expr|struct
+name|mfi_ioc_packet
 operator|*
 operator|)
-operator|&
-name|ioc
+name|arg
+operator|)
 operator|->
-name|mi_frame
+name|mfi_frame
 operator|.
 name|raw
 index|[
-name|ioc
-operator|->
-name|mi_sense_off
-index|]
-expr_stmt|;
-name|temp
-operator|=
 literal|0
-expr_stmt|;
-name|temp
-operator|+=
-name|cm
-operator|->
-name|cm_sense_busaddr
+index|]
 expr_stmt|;
 name|error
 operator|=
 name|copyout
 argument_list|(
-name|temp
+name|cm
+operator|->
+name|cm_sense
 argument_list|,
 name|sense_ptr
 argument_list|,
 name|ioc
 operator|->
-name|mi_sense_len
+name|mfi_sense_len
 argument_list|)
 expr_stmt|;
 if|if
@@ -10048,7 +10036,7 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Copy out failed"
+literal|"Copy out failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10058,7 +10046,7 @@ block|}
 block|}
 name|ioc
 operator|->
-name|mi_frame
+name|mfi_frame
 operator|.
 name|hdr
 operator|.
@@ -10087,8 +10075,12 @@ condition|)
 block|{
 switch|switch
 condition|(
-name|dcmd
+name|cm
 operator|->
+name|cm_frame
+operator|->
+name|dcmd
+operator|.
 name|opcode
 condition|)
 block|{
@@ -10452,7 +10444,7 @@ name|mfi_aen
 modifier|*
 name|mfi_aen_entry
 decl_stmt|;
-name|uint32_t
+name|uint8_t
 modifier|*
 name|sense_ptr
 decl_stmt|;
@@ -10761,7 +10753,7 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Copy in failed"
+literal|"Copy in failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10782,39 +10774,6 @@ index|]
 operator|.
 name|iov_len
 index|]
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|l_ioc
-operator|.
-name|lioc_sense_len
-condition|)
-block|{
-name|sense_ptr
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|cm
-operator|->
-name|cm_frame
-operator|->
-name|bytes
-index|[
-name|l_ioc
-operator|.
-name|lioc_sense_off
-index|]
-expr_stmt|;
-operator|*
-name|sense_ptr
-operator|=
-name|cm
-operator|->
-name|cm_sense_busaddr
 expr_stmt|;
 block|}
 name|mtx_lock
@@ -10847,7 +10806,7 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Controller polled failed"
+literal|"Controller polled failed\n"
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -10963,7 +10922,7 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Copy out failed"
+literal|"Copy out failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10996,37 +10955,30 @@ block|{
 comment|/* copy out sense */
 name|sense_ptr
 operator|=
+operator|&
 operator|(
-name|void
+operator|(
+expr|struct
+name|mfi_linux_ioc_packet
 operator|*
 operator|)
-operator|&
-name|l_ioc
-operator|.
+name|arg
+operator|)
+operator|->
 name|lioc_frame
 operator|.
 name|raw
 index|[
-name|l_ioc
-operator|.
-name|lioc_sense_off
-index|]
-expr_stmt|;
-name|temp
-operator|=
 literal|0
-expr_stmt|;
-name|temp
-operator|+=
-name|cm
-operator|->
-name|cm_sense_busaddr
+index|]
 expr_stmt|;
 name|error
 operator|=
 name|copyout
 argument_list|(
-name|temp
+name|cm
+operator|->
+name|cm_sense
 argument_list|,
 name|sense_ptr
 argument_list|,
@@ -11048,7 +11000,7 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Copy out failed"
+literal|"Copy out failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -11101,7 +11053,7 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Copy out failed"
+literal|"Copy out failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
