@@ -8759,8 +8759,8 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|INET6
 name|char
 name|ip6buf

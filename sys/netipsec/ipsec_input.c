@@ -1235,8 +1235,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|INET6
 ifdef|#
 directive|ifdef
