@@ -12897,6 +12897,10 @@ define|#
 directive|define
 name|BGE_FLAG_575X_PLUS
 value|0x00000800
+define|#
+directive|define
+name|BGE_FLAG_MSI
+value|0x00001000
 name|uint32_t
 name|bge_chipid
 decl_stmt|;
