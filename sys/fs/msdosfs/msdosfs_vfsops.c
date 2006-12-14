@@ -1269,7 +1269,7 @@ literal|0
 argument_list|)
 condition|)
 block|{
-comment|/* Process export requests. */
+comment|/* 			 * Forbid export requests if filesystem has 			 * MSDOSFS_LARGEFS flag set. 			 */
 if|if
 condition|(
 operator|(
@@ -1285,12 +1285,6 @@ condition|)
 return|return
 operator|(
 name|EOPNOTSUPP
-operator|)
-return|;
-else|else
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
