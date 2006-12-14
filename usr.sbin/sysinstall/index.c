@@ -188,10 +188,6 @@ literal|"afterstep"
 block|,
 literal|"Ports to support the AfterStep window manager."
 block|,
-literal|"applications"
-block|,
-literal|"User application software."
-block|,
 literal|"arabic"
 block|,
 literal|"Ported software for Arab countries."
@@ -248,13 +244,9 @@ literal|"dns"
 block|,
 literal|"Domain Name Service tools."
 block|,
-literal|"documentation"
-block|,
-literal|"Document preparation utilities."
-block|,
 literal|"editors"
 block|,
-literal|"Common text editors."
+literal|"Editors."
 block|,
 literal|"elisp"
 block|,
@@ -262,7 +254,7 @@ literal|"Things related to Emacs Lisp."
 block|,
 literal|"emulators"
 block|,
-literal|"Utilities for emulating other OS types."
+literal|"Utilities for emulating other operating systems."
 block|,
 literal|"finance"
 block|,
@@ -295,6 +287,10 @@ block|,
 literal|"haskell"
 block|,
 literal|"Software related to the Haskell language."
+block|,
+literal|"hamradio"
+block|,
+literal|"Software for amateur radio."
 block|,
 literal|"hebrew"
 block|,
@@ -332,17 +328,13 @@ literal|"lang"
 block|,
 literal|"Computer languages."
 block|,
-literal|"languages"
-block|,
-literal|"Computer languages."
-block|,
-literal|"libraries"
-block|,
-literal|"Software development libraries."
-block|,
 literal|"linux"
 block|,
-literal|"Linux programs that can be run under binary compatibility."
+literal|"Linux programs that can run under binary compatibility."
+block|,
+literal|"lisp"
+block|,
+literal|"Software related to the Lisp language."
 block|,
 literal|"mail"
 block|,
@@ -368,25 +360,21 @@ literal|"net"
 block|,
 literal|"Networking utilities."
 block|,
+literal|"net-im"
+block|,
+literal|"Instant messaging software."
+block|,
 literal|"net-mgmt"
 block|,
-literal|"Network Management"
+literal|"Network management tools."
+block|,
+literal|"net-p2p"
+block|,
+literal|"Peer to peer network applications."
 block|,
 literal|"news"
 block|,
 literal|"USENET News support software."
-block|,
-literal|"numeric"
-block|,
-literal|"Mathematical computation software."
-block|,
-literal|"offix"
-block|,
-literal|"An office automation suite of sorts."
-block|,
-literal|"orphans"
-block|,
-literal|"Packages without a home elsewhere."
 block|,
 literal|"palm"
 block|,
@@ -396,17 +384,13 @@ literal|"parallel"
 block|,
 literal|"Applications dealing with parallelism in computing."
 block|,
+literal|"pear"
+block|,
+literal|"Software related to the Pear PHP framework."
+block|,
 literal|"perl5"
 block|,
 literal|"Utilities/modules for the PERL5 language."
-block|,
-literal|"picobsd"
-block|,
-literal|"Ports to support PicoBSD."
-block|,
-literal|"pilot"
-block|,
-literal|"Software support for the 3Com Palm Pilot(tm) series."
 block|,
 literal|"plan9"
 block|,
@@ -424,14 +408,6 @@ literal|"print"
 block|,
 literal|"Utilities for dealing with printing."
 block|,
-literal|"printing"
-block|,
-literal|"Utilities for dealing with printing."
-block|,
-literal|"programming"
-block|,
-literal|"Software development utilities and libraries."
-block|,
 literal|"python"
 block|,
 literal|"Software related to the Python language."
@@ -440,17 +416,21 @@ literal|"ruby"
 block|,
 literal|"Software related to the Ruby language."
 block|,
+literal|"rubygems"
+block|,
+literal|"Ports of RubyGems packages."
+block|,
 literal|"russian"
 block|,
 literal|"Ported software for the Russian market."
 block|,
-literal|"science"
-block|,
-literal|"Scientific software."
-block|,
 literal|"scheme"
 block|,
 literal|"Software related to the Scheme language."
+block|,
+literal|"science"
+block|,
+literal|"Scientific software."
 block|,
 literal|"security"
 block|,
@@ -463,14 +443,6 @@ block|,
 literal|"sysutils"
 block|,
 literal|"Various system utilities."
-block|,
-literal|"tcl75"
-block|,
-literal|"TCL v7.5 and packages that depend on it."
-block|,
-literal|"tcl76"
-block|,
-literal|"TCL v7.6 and packages that depend on it."
 block|,
 literal|"tcl80"
 block|,
@@ -496,21 +468,9 @@ literal|"textproc"
 block|,
 literal|"Text processing/search utilities."
 block|,
-literal|"tk41"
-block|,
-literal|"Tk4.1 and packages that depend on it."
-block|,
-literal|"tk42"
-block|,
-literal|"Tk4.2 and packages that depend on it."
-block|,
 literal|"tk80"
 block|,
 literal|"Tk8.0 and packages that depend on it."
-block|,
-literal|"tk81"
-block|,
-literal|"Tk8.1 and packages that depend on it."
 block|,
 literal|"tk82"
 block|,
@@ -520,13 +480,13 @@ literal|"tk83"
 block|,
 literal|"Tk8.3 and packages that depend on it."
 block|,
+literal|"tk84"
+block|,
+literal|"Tk8.4 and packages that depend on it."
+block|,
 literal|"tkstep80"
 block|,
-literal|"tkstep wm and packages that depend on it."
-block|,
-literal|"troff"
-block|,
-literal|"TROFF text formatting utilities."
+literal|"Ports to support the TkStep window manager."
 block|,
 literal|"ukrainian"
 block|,
@@ -542,7 +502,7 @@ literal|"Ports to support the WindowMaker window manager."
 block|,
 literal|"www"
 block|,
-literal|"WEB utilities (browers, HTTP servers, etc)."
+literal|"Web utilities (browsers, HTTP servers, etc)."
 block|,
 literal|"x11"
 block|,
@@ -575,6 +535,10 @@ block|,
 literal|"x11-wm"
 block|,
 literal|"X Window System window managers."
+block|,
+literal|"xfce"
+block|,
+literal|"Software relating to the Xfce Desktop Environment."
 block|,
 literal|"zope"
 block|,
