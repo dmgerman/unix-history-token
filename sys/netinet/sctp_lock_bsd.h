@@ -37,6 +37,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sctp_foo_stuff
+name|sctp_logoff
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sctp_logoff_stuff
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -344,6 +360,37 @@ parameter_list|)
 value|mtx_unlock(&(_tcb)->tcb_send_mtx)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SCTP_INP_INCR_REF
+parameter_list|(
+name|_inp
+parameter_list|)
+value|{ int x; \                                   atomic_add_int(&((_inp)->refcount), 1); \                                   x = atomic_fetchadd_int(&sctp_logoff_stuff, 1); \                                   if(x == 30000) \                                       sctp_logoff_stuff = x = 0; \                                   sctp_logoff[x].inp = _inp; \                                   sctp_logoff[x].ticks = ticks; \                                   sctp_logoff[x].lineno = __LINE__; \                                   sctp_logoff[x].updown = 1; \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_INP_DECR_REF
+parameter_list|(
+name|_inp
+parameter_list|)
+value|{ int x; \                                   if (atomic_fetchadd_int(&((_inp)->refcount), -1) == 0 ) panic("refcount goes negative"); \                                   x = atomic_fetchadd_int(&sctp_logoff_stuff, 1); \                                   if(x == 30000) \                                       sctp_logoff_stuff = x = 0; \                                   sctp_logoff[x].inp = _inp; \                                   sctp_logoff[x].ticks = ticks; \                                   sctp_logoff[x].lineno = __LINE__; \                                   sctp_logoff[x].updown = 0; \ }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -363,6 +410,11 @@ name|_inp
 parameter_list|)
 value|atomic_add_int(&((_inp)->refcount), -1)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

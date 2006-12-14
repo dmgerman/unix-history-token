@@ -1478,9 +1478,9 @@ name|stcb
 argument_list|,
 name|sa
 argument_list|,
-literal|0
+name|SCTP_DONOT_SETSCOPE
 argument_list|,
-literal|6
+name|SCTP_ADDR_DYNAMIC_ADDED
 argument_list|)
 operator|!=
 literal|0
@@ -1565,6 +1565,10 @@ argument_list|,
 name|stcb
 argument_list|,
 name|NULL
+argument_list|,
+name|SCTP_FROM_SCTP_ASCONF
+operator|+
+name|SCTP_LOC_1
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -4664,6 +4668,10 @@ argument_list|,
 name|stcb
 argument_list|,
 name|net
+argument_list|,
+name|SCTP_FROM_SCTP_ASCONF
+operator|+
+name|SCTP_LOC_2
 argument_list|)
 expr_stmt|;
 name|stcb
@@ -6720,6 +6728,10 @@ argument_list|,
 name|stcb
 argument_list|,
 name|net
+argument_list|,
+name|SCTP_FROM_SCTP_ASCONF
+operator|+
+name|SCTP_LOC_3
 argument_list|)
 expr_stmt|;
 comment|/* process the ASCONF-ACK contents */

@@ -52,6 +52,17 @@ name|sctp_mbuf_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|USER_ADDR_NULL
+value|(NULL)
+end_define
+
+begin_comment
+comment|/* FIX ME: temp */
+end_comment
+
 begin_comment
 comment|/*  * general memory allocation  */
 end_comment

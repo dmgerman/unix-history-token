@@ -124,6 +124,9 @@ decl_stmt|;
 name|uint32_t
 name|ticks
 decl_stmt|;
+name|uint32_t
+name|stopped_from
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -158,6 +161,28 @@ name|sinfo_cumtsn
 decl_stmt|;
 name|sctp_assoc_t
 name|sinfo_assoc_id
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sctp_foo_stuff
+block|{
+name|struct
+name|sctp_inpcb
+modifier|*
+name|inp
+decl_stmt|;
+name|uint32_t
+name|lineno
+decl_stmt|;
+name|uint32_t
+name|ticks
+decl_stmt|;
+name|int
+name|updown
 decl_stmt|;
 block|}
 struct|;
@@ -682,7 +707,7 @@ decl_stmt|;
 name|uint8_t
 name|rcv_flags
 decl_stmt|;
-comment|/* flags pulled from data chunk on inbound for 				 * outbound holds sending flags. */
+comment|/* flags pulled from data chunk on inbound for 				 * outbound holds sending flags for PR-SCTP. */
 name|uint8_t
 name|state_flags
 decl_stmt|;
@@ -1006,6 +1031,9 @@ decl_stmt|;
 name|uint16_t
 name|strseq
 decl_stmt|;
+name|uint16_t
+name|act_flags
+decl_stmt|;
 name|uint8_t
 name|msg_is_complete
 decl_stmt|;
@@ -1016,13 +1044,7 @@ name|uint8_t
 name|addr_over
 decl_stmt|;
 name|uint8_t
-name|act_flags
-decl_stmt|;
-name|uint8_t
 name|pr_sctp_on
-decl_stmt|;
-name|uint8_t
-name|resv
 decl_stmt|;
 block|}
 struct|;

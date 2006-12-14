@@ -4302,7 +4302,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|INVARIENTS
+name|INVARIANTS
 if|if
 condition|(
 name|req
@@ -7489,6 +7489,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|tmr
+operator|->
+name|stopped_from
+operator|=
+literal|0xa001
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7508,6 +7514,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|tmr
+operator|->
+name|stopped_from
+operator|=
+literal|0xa002
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7533,6 +7545,12 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* if this is an iterator timeout, get the struct and clear inp */
+name|tmr
+operator|->
+name|stopped_from
+operator|=
+literal|0xa003
+expr_stmt|;
 if|if
 condition|(
 name|tmr
@@ -7632,6 +7650,12 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+name|tmr
+operator|->
+name|stopped_from
+operator|=
+literal|0xa004
+expr_stmt|;
 if|if
 condition|(
 name|stcb
@@ -7667,6 +7691,12 @@ block|}
 return|return;
 block|}
 block|}
+name|tmr
+operator|->
+name|stopped_from
+operator|=
+literal|0xa005
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SCTP_DEBUG
@@ -7720,6 +7750,21 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+name|tmr
+operator|->
+name|stopped_from
+operator|=
+literal|0xa006
+expr_stmt|;
+comment|/* record in stopped what t-o occured */
+name|tmr
+operator|->
+name|stopped_from
+operator|=
+name|tmr
+operator|->
+name|type
+expr_stmt|;
 if|if
 condition|(
 name|stcb
@@ -8621,6 +8666,10 @@ argument_list|,
 name|stcb
 argument_list|,
 name|NULL
+argument_list|,
+name|SCTP_FROM_SCTPUTIL
+operator|+
+name|SCTP_LOC_1
 argument_list|)
 expr_stmt|;
 name|sctp_free_assoc
@@ -8629,7 +8678,11 @@ name|inp
 argument_list|,
 name|stcb
 argument_list|,
-literal|0
+name|SCTP_NORMAL_PROC
+argument_list|,
+name|SCTP_FROM_SCTPUTIL
+operator|+
+name|SCTP_LOC_2
 argument_list|)
 expr_stmt|;
 comment|/* 		 * free asoc, always unlocks (or destroy's) so prevent 		 * duplicate unlock or unlock of a free mtx :-0 		 */
@@ -8664,6 +8717,10 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|SCTP_FROM_SCTPUTIL
+operator|+
+name|SCTP_LOC_3
 argument_list|)
 expr_stmt|;
 name|sctp_inpcb_free
@@ -10291,6 +10348,12 @@ expr_stmt|;
 block|}
 name|tmr
 operator|->
+name|stopped_from
+operator|=
+literal|0
+expr_stmt|;
+name|tmr
+operator|->
 name|type
 operator|=
 name|t_type
@@ -10384,6 +10447,9 @@ name|struct
 name|sctp_nets
 modifier|*
 name|net
+parameter_list|,
+name|uint32_t
+name|from
 parameter_list|)
 block|{
 name|struct
@@ -11009,6 +11075,12 @@ operator|->
 name|self
 operator|=
 name|NULL
+expr_stmt|;
+name|tmr
+operator|->
+name|stopped_from
+operator|=
+name|from
 expr_stmt|;
 name|callout_stop
 argument_list|(
@@ -12111,6 +12183,30 @@ literal|1
 operator|)
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|u_long
+operator|)
+name|now
+operator|.
+name|tv_usec
+operator|==
+operator|(
+name|u_long
+operator|)
+name|old
+operator|->
+name|tv_usec
+condition|)
+block|{
+comment|/* 			 * We have to have 1 usec :-D this must be the 			 * loopback. 			 */
+name|calc_time
+operator|=
+literal|1
+expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* impossible .. garbage in nothing out */
@@ -12161,26 +12257,6 @@ block|}
 comment|/***************************/
 comment|/* 2. update RTTVAR& SRTT */
 comment|/***************************/
-if|#
-directive|if
-literal|0
-comment|/* if (net->lastsv || net->lastsa) { */
-comment|/* per Section 5.3.1 C3 in SCTP */
-comment|/* net->lastsv = (int) 	 */
-comment|/* RTTVAR */
-comment|/* 	 * (((double)(1.0 - 0.25) * (double)net->lastsv) + (double)(0.25 * 	 * (double)abs(net->lastsa - calc_time))); net->lastsa = (int) */
-comment|/* SRTT */
-comment|/* 	 * (((double)(1.0 - 0.125) * (double)net->lastsa) + (double)(0.125 * 	 * (double)calc_time)); } else { */
-comment|/* the first RTT calculation, per C2 Section 5.3.1 */
-comment|/* net->lastsa = calc_time;	 */
-comment|/* SRTT */
-comment|/* net->lastsv = calc_time / 2;	 */
-comment|/* RTTVAR */
-comment|/* } */
-comment|/* if RTTVAR goes to 0 you set to clock grainularity */
-comment|/* 	 * if (net->lastsv == 0) { net->lastsv = SCTP_CLOCK_GRANULARITY; } 	 * new_rto = net->lastsa + 4 * net->lastsv; 	 */
-endif|#
-directive|endif
 name|o_calctime
 operator|=
 name|calc_time
@@ -17253,7 +17329,11 @@ name|inp
 argument_list|,
 name|stcb
 argument_list|,
-literal|0
+name|SCTP_NORMAL_PROC
+argument_list|,
+name|SCTP_FROM_SCTPUTIL
+operator|+
+name|SCTP_LOC_4
 argument_list|)
 expr_stmt|;
 block|}
@@ -17446,7 +17526,11 @@ name|inp
 argument_list|,
 name|stcb
 argument_list|,
-literal|0
+name|SCTP_NORMAL_PROC
+argument_list|,
+name|SCTP_FROM_SCTPUTIL
+operator|+
+name|SCTP_LOC_5
 argument_list|)
 expr_stmt|;
 block|}
@@ -19232,7 +19316,7 @@ block|{
 comment|/* Gak, TSNH!! */
 ifdef|#
 directive|ifdef
-name|INVARIENTS
+name|INVARIANTS
 name|panic
 argument_list|(
 literal|"Gak, inp NULL on add_to_readq"
@@ -19245,6 +19329,26 @@ block|}
 name|SCTP_INP_READ_LOCK
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
+name|inp
+operator|->
+name|total_recvs
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
+name|stcb
+operator|->
+name|total_recvs
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|m
@@ -19788,7 +19892,7 @@ block|{
 comment|/* Huh nothing left? */
 ifdef|#
 directive|ifdef
-name|INVARIENTS
+name|INVARIANTS
 name|panic
 argument_list|(
 literal|"Nothing left to add?"
@@ -19890,7 +19994,7 @@ block|{
 comment|/* nothing there */
 ifdef|#
 directive|ifdef
-name|INVARIENTS
+name|INVARIANTS
 if|if
 condition|(
 name|control
@@ -21179,6 +21283,10 @@ argument_list|,
 name|stcb
 argument_list|,
 name|NULL
+argument_list|,
+name|SCTP_FROM_SCTPUTIL
+operator|+
+name|SCTP_LOC_6
 argument_list|)
 expr_stmt|;
 name|SCTP_TCB_UNLOCK
@@ -21236,11 +21344,6 @@ operator|&&
 name|hold_rlock
 condition|)
 block|{
-name|SCTP_STAT_INCR
-argument_list|(
-name|sctps_locks_in_rcv
-argument_list|)
-expr_stmt|;
 name|SCTP_INP_READ_LOCK
 argument_list|(
 name|stcb
@@ -22109,7 +22212,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|INVARIENTS
+name|INVARIANTS
 name|panic
 argument_list|(
 literal|"Huh, its non zero and nothing on control?"
@@ -22157,11 +22260,6 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * Clean up code for freeing assoc that left behind a 		 * pdapi.. maybe a peer in EEOR that just closed after 		 * sending and never indicated a EOR. 		 */
-name|SCTP_STAT_INCR
-argument_list|(
-name|sctps_locks_in_rcva
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|hold_rlock
@@ -23300,11 +23398,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|SCTP_STAT_INCR
-argument_list|(
-name|sctps_locks_in_rcvb
-argument_list|)
-expr_stmt|;
 name|SCTP_INP_READ_LOCK
 argument_list|(
 name|inp
@@ -23556,7 +23649,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|INVARIENTS
+name|INVARIANTS
 if|if
 condition|(
 operator|(
@@ -23610,7 +23703,7 @@ name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIENTS
+name|INVARIANTS
 if|if
 condition|(
 operator|(
@@ -23977,7 +24070,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|INVARIENTS
+name|INVARIANTS
 name|panic
 argument_list|(
 literal|"control->data not null at read eor?"
@@ -24050,11 +24143,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|SCTP_STAT_INCR
-argument_list|(
-name|sctps_locks_in_rcvc
-argument_list|)
-expr_stmt|;
 name|SCTP_INP_READ_LOCK
 argument_list|(
 name|inp
@@ -24163,7 +24251,7 @@ block|{
 comment|/* 				 * The user did not read all of this 				 * message, turn off the returned MSG_EOR 				 * since we are leaving more behind on the 				 * control to read. 				 */
 ifdef|#
 directive|ifdef
-name|INVARIENTS
+name|INVARIANTS
 if|if
 condition|(
 name|control
@@ -24548,11 +24636,6 @@ operator|>
 name|held_length
 condition|)
 block|{
-name|SCTP_STAT_INCR
-argument_list|(
-name|sctps_locks_in_rcvf
-argument_list|)
-expr_stmt|;
 name|control
 operator|->
 name|held_length

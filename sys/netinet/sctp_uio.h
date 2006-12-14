@@ -2875,33 +2875,24 @@ name|sctps_wu_sacks_sent
 decl_stmt|;
 comment|/* Window Update only sacks sent */
 name|u_long
-name|sctps_locks_in_rcv
+name|sctps_sends_with_flags
 decl_stmt|;
-comment|/* How man so_rcv buf locks we did */
+comment|/* number of sends with sinfo_flags 					 * !=0 */
 name|u_long
-name|sctps_locks_in_rcva
+name|sctps_sends_with_unord
 decl_stmt|;
-comment|/* How man so_rcv buf locks we did */
 name|u_long
-name|sctps_locks_in_rcvb
+name|sctps_sends_with_eof
 decl_stmt|;
-comment|/* How man so_rcv buf locks we did */
 name|u_long
-name|sctps_locks_in_rcvc
+name|sctps_sends_with_abort
 decl_stmt|;
-comment|/* How man so_rcv buf locks we did */
 name|u_long
-name|sctps_locks_in_rcvd
+name|sctps_protocol_drain_calls
 decl_stmt|;
-comment|/* How man so_rcv buf locks we did */
 name|u_long
-name|sctps_locks_in_rcve
+name|sctps_protocol_drains_done
 decl_stmt|;
-comment|/* How man so_rcv buf locks we did */
-name|u_long
-name|sctps_locks_in_rcvf
-decl_stmt|;
-comment|/* How man so_rcv buf locks we did */
 block|}
 struct|;
 end_struct
@@ -3043,6 +3034,122 @@ decl_stmt|;
 block|}
 union|;
 end_union
+
+begin_struct
+struct|struct
+name|xsctp_inpcb
+block|{
+name|uint32_t
+name|last
+decl_stmt|;
+name|uint16_t
+name|local_port
+decl_stmt|;
+name|uint16_t
+name|number_local_addresses
+decl_stmt|;
+name|uint32_t
+name|number_associations
+decl_stmt|;
+name|uint32_t
+name|flags
+decl_stmt|;
+name|uint32_t
+name|features
+decl_stmt|;
+name|uint32_t
+name|total_sends
+decl_stmt|;
+name|uint32_t
+name|total_recvs
+decl_stmt|;
+name|uint32_t
+name|total_nospaces
+decl_stmt|;
+comment|/* add more endpoint specific data here */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|xsctp_tcb
+block|{
+name|uint16_t
+name|remote_port
+decl_stmt|;
+name|uint16_t
+name|number_local_addresses
+decl_stmt|;
+name|uint16_t
+name|number_remote_addresses
+decl_stmt|;
+name|uint16_t
+name|number_incomming_streams
+decl_stmt|;
+name|uint16_t
+name|number_outgoing_streams
+decl_stmt|;
+name|uint32_t
+name|state
+decl_stmt|;
+name|uint32_t
+name|total_sends
+decl_stmt|;
+name|uint32_t
+name|total_recvs
+decl_stmt|;
+name|uint32_t
+name|local_tag
+decl_stmt|;
+name|uint32_t
+name|remote_tag
+decl_stmt|;
+name|uint32_t
+name|initial_tsn
+decl_stmt|;
+name|uint32_t
+name|highest_tsn
+decl_stmt|;
+name|uint32_t
+name|cumulative_tsn
+decl_stmt|;
+name|uint32_t
+name|cumulative_tsn_ack
+decl_stmt|;
+comment|/* add more association specific data here */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|xsctp_laddr
+block|{
+name|union
+name|sctp_sockstore
+name|address
+decl_stmt|;
+comment|/* add more local address specific data */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|xsctp_raddr
+block|{
+name|union
+name|sctp_sockstore
+name|address
+decl_stmt|;
+name|uint16_t
+name|state
+decl_stmt|;
+comment|/* add more remote address specific data */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Kernel defined for sctp_send  */

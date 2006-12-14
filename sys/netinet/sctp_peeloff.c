@@ -951,6 +951,10 @@ argument_list|,
 name|stcb
 argument_list|,
 name|NULL
+argument_list|,
+name|SCTP_FROM_SCTP_PEELOFF
+operator|+
+name|SCTP_LOC_1
 argument_list|)
 expr_stmt|;
 block|}
