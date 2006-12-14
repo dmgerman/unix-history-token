@@ -776,6 +776,17 @@ begin_comment
 comment|/* should be removed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VV_MD
+value|0x0800
+end_define
+
+begin_comment
+comment|/* vnode backs the md device */
+end_comment
+
 begin_comment
 comment|/*  * Vnode attributes.  A field value of VNOVAL represents a field whose value  * is unavailable (getattr) or which is not to be changed (setattr).  */
 end_comment
