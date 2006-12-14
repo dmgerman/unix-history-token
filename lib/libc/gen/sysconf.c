@@ -2291,6 +2291,9 @@ operator|=
 name|HW_NCPU
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|_SC_PHYS_PAGES
 case|case
 name|_SC_PHYS_PAGES
 case|:
@@ -2299,6 +2302,8 @@ operator|=
 literal|"hw.availpages"
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|errno
 operator|=
