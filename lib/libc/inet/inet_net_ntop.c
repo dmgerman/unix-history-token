@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_net_ntop.c,v 1.1.2.1.8.1 2004/03/09 08:33:32 marka Exp $"
+literal|"$Id: inet_net_ntop.c,v 1.1.2.1.8.2 2006/06/20 02:53:07 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1175,15 +1175,13 @@ block|}
 block|}
 block|}
 comment|/* Format CIDR /width. */
-name|SPRINTF
+name|sprintf
 argument_list|(
-operator|(
 name|cp
-operator|,
+argument_list|,
 literal|"/%u"
-operator|,
+argument_list|,
 name|bits
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
