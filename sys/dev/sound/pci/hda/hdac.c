@@ -1037,7 +1037,6 @@ value|0x00
 end_define
 
 begin_expr_stmt
-specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_HDAC
