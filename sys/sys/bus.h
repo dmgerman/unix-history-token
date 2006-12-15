@@ -1529,6 +1529,20 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/*  * Forward compatibility define.   bus_get_dma_tag is defined in current  * to get the parent's dma tag.  In RELENG_6 this is currently spelled NULL,  * so provide a stop-gap compatibilty hook until this functionality is  * merged from head (if ever)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bus_get_dma_tag
+parameter_list|(
+name|a
+parameter_list|)
+value|NULL
+end_define
+
+begin_comment
 comment|/*  * Access functions for device.  */
 end_comment
 
