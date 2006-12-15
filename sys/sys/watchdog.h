@@ -21,35 +21,12 @@ directive|include
 file|<sys/ioccom.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|I_HAVE_TOTALLY_LOST_MY_SENSE_OF_HUMOUR
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_PATH_WATCHDOG
-value|"watchdog"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|_PATH_WATCHDOG
 value|"fido"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

@@ -182,6 +182,18 @@ operator|)
 return|;
 if|if
 condition|(
+name|u
+operator|&
+name|WD_PASSIVE
+condition|)
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+comment|/* XXX Not implemented yet */
+if|if
+condition|(
 operator|(
 name|u
 operator|&
@@ -195,6 +207,7 @@ name|u
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Assume all is well; watchdog signals failure. */
 name|error
 operator|=
 literal|0
@@ -202,6 +215,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Assume no watchdog available; watchdog flags success */
 name|error
 operator|=
 name|EOPNOTSUPP
