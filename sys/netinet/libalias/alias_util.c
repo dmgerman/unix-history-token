@@ -152,6 +152,11 @@ name|sum
 decl_stmt|,
 name|oddbyte
 decl_stmt|;
+name|LIBALIAS_LOCK
+argument_list|(
+name|la
+argument_list|)
+expr_stmt|;
 name|sum
 operator|=
 literal|0
@@ -244,6 +249,11 @@ name|sum
 operator|>>
 literal|16
 operator|)
+expr_stmt|;
+name|LIBALIAS_UNLOCK
+argument_list|(
+name|la
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

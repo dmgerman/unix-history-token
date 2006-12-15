@@ -208,7 +208,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|LIBALIAS_LOCK_INIT
+name|LIBALIAS_RWLOCK_INIT
 parameter_list|()
 define|\
 value|rw_init(&handler_rw, "Libalias_modules_rwlock")
@@ -217,7 +217,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LIBALIAS_LOCK_DESTROY
+name|LIBALIAS_RWLOCK_DESTROY
 parameter_list|()
 value|rw_destroy(&handler_rw)
 end_define
@@ -320,7 +320,7 @@ operator|&
 name|handler_rw
 argument_list|)
 condition|)
-name|LIBALIAS_LOCK_INIT
+name|LIBALIAS_RWLOCK_INIT
 argument_list|()
 expr_stmt|;
 block|}
@@ -342,7 +342,7 @@ operator|&
 name|handler_rw
 argument_list|)
 condition|)
-name|LIBALIAS_LOCK_DESTROY
+name|LIBALIAS_RWLOCK_DESTROY
 argument_list|()
 expr_stmt|;
 block|}
@@ -356,7 +356,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|LIBALIAS_LOCK_INIT
+name|LIBALIAS_RWLOCK_INIT
 parameter_list|()
 value|;
 end_define
@@ -364,7 +364,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LIBALIAS_LOCK_DESTROY
+name|LIBALIAS_RWLOCK_DESTROY
 parameter_list|()
 value|;
 end_define
