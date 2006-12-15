@@ -248,6 +248,17 @@ begin_comment
 comment|/* i.e., 60 */
 end_comment
 
+begin_comment
+comment|/*  * Disable the use of MSI until we sort out on which chip revisions support  * it properly.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_DISABLE_MSI
+value|1
+end_define
+
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
@@ -10615,6 +10626,15 @@ name|msicount
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BGE_DISABLE_MSI
+name|msicount
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|msicount
