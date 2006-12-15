@@ -40,6 +40,13 @@ end_include
 begin_define
 define|#
 directive|define
+name|CPU_SPINWAIT
+value|__asm __volatile("pause")
+end_define
+
+begin_define
+define|#
+directive|define
 name|DTV_OFFSET
 value|offsetof(struct tcb, tcb_dtv)
 end_define

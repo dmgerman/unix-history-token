@@ -28,6 +28,12 @@ end_include
 begin_define
 define|#
 directive|define
+name|CPU_SPINWAIT
+end_define
+
+begin_define
+define|#
+directive|define
 name|DTV_OFFSET
 value|offsetof(struct tcb, tcb_dtv)
 end_define

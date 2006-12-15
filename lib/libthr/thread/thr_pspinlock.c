@@ -380,9 +380,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_thr_smp_cpus
-operator|<=
-literal|1
+name|_thr_is_smp
 condition|)
 block|{
 name|_pthread_yield
@@ -391,21 +389,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__x86_64__
-argument_list|)
-comment|/* tell cpu we are spinning */
-asm|__asm __volatile("pause");
-endif|#
-directive|endif
+name|CPU_SPINWAIT
+expr_stmt|;
 if|if
 condition|(
 operator|--

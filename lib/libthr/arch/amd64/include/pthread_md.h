@@ -37,11 +37,12 @@ directive|include
 file|<machine/sysarch.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<ucontext.h>
-end_include
+begin_define
+define|#
+directive|define
+name|CPU_SPINWAIT
+value|__asm __volatile("pause")
+end_define
 
 begin_define
 define|#

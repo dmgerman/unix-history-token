@@ -1459,14 +1459,6 @@ name|__hidden
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|_thr_scope_system
-name|__hidden
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* For debugger */
 end_comment
@@ -1601,7 +1593,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|_thr_smp_cpus
+name|_thr_is_smp
 name|__hidden
 decl_stmt|;
 end_decl_stmt
