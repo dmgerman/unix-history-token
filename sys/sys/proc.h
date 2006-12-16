@@ -479,6 +479,10 @@ name|int
 name|td_dupfd
 decl_stmt|;
 comment|/* (k) Ret value from fdopen. XXX */
+name|int
+name|td_sqqueue
+decl_stmt|;
+comment|/* (j) Sleepqueue queue blocked on. */
 name|void
 modifier|*
 name|td_wchan
