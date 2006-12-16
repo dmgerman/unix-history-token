@@ -4686,8 +4686,6 @@ name|source
 decl_stmt|;
 name|vm_pindex_t
 name|offidxstart
-decl_stmt|,
-name|offidxend
 decl_stmt|;
 name|vm_size_t
 name|idx
@@ -4740,11 +4738,9 @@ operator|->
 name|offset
 argument_list|)
 expr_stmt|;
-name|offidxend
+name|size
 operator|=
-name|offidxstart
-operator|+
-name|OFF_TO_IDX
+name|atop
 argument_list|(
 name|entry
 operator|->
@@ -4754,12 +4750,6 @@ name|entry
 operator|->
 name|start
 argument_list|)
-expr_stmt|;
-name|size
-operator|=
-name|offidxend
-operator|-
-name|offidxstart
 expr_stmt|;
 comment|/* 	 * If swap_pager_copy() is later called, it will convert new_object 	 * into a swap object. 	 */
 name|new_object
