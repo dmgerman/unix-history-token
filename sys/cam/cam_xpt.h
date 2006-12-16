@@ -176,6 +176,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|xpt_print
+parameter_list|(
+name|struct
+name|cam_path
+modifier|*
+name|path
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|xpt_path_string
 parameter_list|(
