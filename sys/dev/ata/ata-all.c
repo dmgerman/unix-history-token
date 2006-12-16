@@ -3191,9 +3191,6 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__ARMEB__
 name|int16_t
 modifier|*
 name|ptr
@@ -3238,8 +3235,6 @@ name|ptr
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
