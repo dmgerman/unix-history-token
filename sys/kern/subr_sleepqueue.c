@@ -1062,6 +1062,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
+block|{
 name|int
 name|i
 decl_stmt|;
@@ -1098,6 +1099,7 @@ name|i
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|KASSERT
 argument_list|(
 name|LIST_EMPTY
