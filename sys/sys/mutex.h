@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock_profile.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/atomic.h>
 end_include
 
@@ -740,7 +746,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	spinlock_enter();						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 	}								\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int contested = 0;                                            \ 									\ 	spinlock_enter();						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		lock_profile_obtain_lock_failed(&mp->mtx_object,&contested);\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 	}								\         lock_profile_update_contest_locking(&mp->mtx_object, contested);\ } while (0)
 end_define
 
 begin_else
