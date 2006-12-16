@@ -1889,6 +1889,9 @@ decl_stmt|,
 name|tte_tag
 decl_stmt|;
 comment|/* XXX - only handle 8K pages for now */
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|entry
 operator|=
 name|find_entry
@@ -1994,6 +1997,9 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+name|critical_exit
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|otte_data
@@ -2025,6 +2031,9 @@ decl_stmt|,
 name|tte_tag
 decl_stmt|;
 comment|/* XXX - only handle 8K pages for now */
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|entry
 operator|=
 name|find_entry
@@ -2212,6 +2221,9 @@ name|th
 operator|->
 name|th_entries
 operator|--
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -2422,6 +2434,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|entry
 operator|=
 name|find_entry
@@ -2533,6 +2548,9 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+name|critical_exit
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2823,6 +2841,9 @@ name|TTARGET_VA_SHIFT
 operator|)
 operator|)
 expr_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|s
 operator|=
 name|hash_bucket_lock
@@ -2896,6 +2917,9 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+name|critical_exit
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|otte_data
@@ -2987,6 +3011,9 @@ operator|(
 literal|"tte_hash_resize not supported for this pmap"
 operator|)
 argument_list|)
+expr_stmt|;
+name|critical_enter
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3248,6 +3275,9 @@ name|src_entry
 condition|)
 do|;
 block|}
+name|critical_exit
+argument_list|()
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|th

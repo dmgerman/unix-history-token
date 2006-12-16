@@ -10426,9 +10426,6 @@ name|pmap
 operator|->
 name|pm_hash
 decl_stmt|;
-name|spinlock_enter
-argument_list|()
-expr_stmt|;
 name|pmap
 operator|->
 name|pm_hash
@@ -10439,6 +10436,9 @@ name|pmap
 operator|->
 name|pm_hash
 argument_list|)
+expr_stmt|;
+name|spinlock_enter
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
