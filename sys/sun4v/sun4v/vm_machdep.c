@@ -433,6 +433,13 @@ name|pcb
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pcb
+operator|>
+name|VM_MIN_DIRECT_ADDRESS
+argument_list|)
+expr_stmt|;
 name|td
 operator|->
 name|td_pcb
