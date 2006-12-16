@@ -437,7 +437,16 @@ name|KASSERT
 argument_list|(
 name|pcb
 operator|>
+operator|(
+expr|struct
+name|pcb
+operator|*
+operator|)
 name|VM_MIN_DIRECT_ADDRESS
+argument_list|,
+operator|(
+literal|"pcb is NULL"
+operator|)
 argument_list|)
 expr_stmt|;
 name|td
