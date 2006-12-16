@@ -2285,6 +2285,11 @@ operator|&
 name|BIU2400_DMA_ACTIVE
 condition|)
 block|{
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 name|isp_prt
 argument_list|(
 name|isp
@@ -2394,6 +2399,11 @@ operator|&
 name|BIU2400_SOFT_RESET
 condition|)
 block|{
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 name|isp_prt
 argument_list|(
 name|isp
@@ -2557,6 +2567,11 @@ argument_list|,
 literal|"chip reset timed out"
 argument_list|)
 expr_stmt|;
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -2718,6 +2733,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 name|isp_prt
 argument_list|(
 name|isp
@@ -3035,6 +3055,11 @@ operator|<
 literal|0
 condition|)
 block|{
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 name|isp_prt
 argument_list|(
 name|isp
@@ -3096,6 +3121,11 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -3220,6 +3250,11 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -3270,6 +3305,11 @@ operator|!=
 literal|0xa5a5
 condition|)
 block|{
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 name|isp_prt
 argument_list|(
 name|isp
@@ -3702,6 +3742,11 @@ argument_list|,
 literal|"F/W Risc Ram Load Failed"
 argument_list|)
 expr_stmt|;
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|la
@@ -4062,6 +4107,11 @@ argument_list|,
 literal|"F/W Risc Ram Load Failed"
 argument_list|)
 expr_stmt|;
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|la
@@ -4141,6 +4191,11 @@ argument_list|,
 name|ISP_LOGERR
 argument_list|,
 name|dcrc
+argument_list|)
+expr_stmt|;
+name|ISP_RESET0
+argument_list|(
+name|isp
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4328,6 +4383,11 @@ operator|-
 name|code_org
 argument_list|)
 expr_stmt|;
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* 		 * Verify that it downloaded correctly. 		 */
@@ -4393,6 +4453,11 @@ argument_list|,
 name|ISP_LOGERR
 argument_list|,
 name|dcrc
+argument_list|)
+expr_stmt|;
+name|ISP_RESET0
+argument_list|(
+name|isp
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4606,6 +4671,11 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -4714,6 +4784,11 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -4740,6 +4815,11 @@ argument_list|,
 name|ISP_LOGERR
 argument_list|,
 literal|"f/w didn't *really* start"
+argument_list|)
+expr_stmt|;
+name|ISP_RESET0
+argument_list|(
+name|isp
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5258,6 +5338,11 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
+name|ISP_RESET0
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
