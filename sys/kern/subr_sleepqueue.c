@@ -1053,6 +1053,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|sq
+operator|=
+name|td
+operator|->
+name|td_sleepqueue
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -1166,12 +1172,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|sq
-operator|=
-name|td
-operator|->
-name|td_sleepqueue
-expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
