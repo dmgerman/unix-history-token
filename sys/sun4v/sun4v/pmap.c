@@ -3345,9 +3345,11 @@ name|j
 index|]
 operator|)
 operator|<
-name|PAGE_SIZE_4M
-operator|*
-literal|62
+operator|(
+name|PAGE_SIZE_256M
+operator|-
+name|nucleus_memory
+operator|)
 condition|)
 goto|goto
 name|skipshuffle
@@ -10435,6 +10437,9 @@ operator|->
 name|pm_hash
 argument_list|)
 expr_stmt|;
+name|spinlock_enter
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|curthread
@@ -10474,6 +10479,9 @@ name|pmap
 operator|->
 name|pm_context
 argument_list|)
+expr_stmt|;
+name|spinlock_exit
+argument_list|()
 expr_stmt|;
 name|tte_hash_destroy
 argument_list|(
