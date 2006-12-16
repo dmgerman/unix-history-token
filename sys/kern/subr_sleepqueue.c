@@ -1067,7 +1067,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NR_SLEEP_QUEUEUS
+name|NR_SLEEPQS
 condition|;
 name|i
 operator|++
