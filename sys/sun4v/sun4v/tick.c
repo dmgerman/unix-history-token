@@ -325,10 +325,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 operator|==
 literal|0
 condition|)
@@ -681,10 +678,7 @@ name|s
 decl_stmt|;
 if|if
 condition|(
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 operator|==
 literal|0
 condition|)

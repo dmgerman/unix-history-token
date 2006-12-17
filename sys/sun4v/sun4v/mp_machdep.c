@@ -1689,10 +1689,7 @@ operator|~
 operator|(
 literal|1
 operator|<<
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1700,10 +1697,7 @@ name|printf
 argument_list|(
 literal|"AP: #%d\n"
 argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 argument_list|)
 expr_stmt|;
 name|csa
@@ -1875,10 +1869,7 @@ name|KTR_SMP
 argument_list|,
 literal|"cpu_ipi_stop: stopped %d"
 argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 argument_list|)
 expr_stmt|;
 name|savectx
@@ -1886,10 +1877,7 @@ argument_list|(
 operator|&
 name|stoppcbs
 index|[
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 index|]
 argument_list|)
 expr_stmt|;
@@ -1973,10 +1961,7 @@ name|KTR_SMP
 argument_list|,
 literal|"cpu_ipi_stop: restarted %d"
 argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 argument_list|)
 expr_stmt|;
 block|}

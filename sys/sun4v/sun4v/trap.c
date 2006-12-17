@@ -823,10 +823,7 @@ operator|+
 operator|(
 name|MMFSA_SIZE
 operator|*
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 operator|)
 expr_stmt|;
 name|set_wstate
@@ -994,10 +991,7 @@ name|ksi
 decl_stmt|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 name|CTR4
 argument_list|(
@@ -2039,7 +2033,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|CTR4(KTR_TRAP, "trap_pfault: td=%p pm_ctx=%#lx va=%#lx ctx=%#lx", 	    td, p->p_vmspace->vm_pmap.pm_context[PCPU_GET(cpuid)], va, ctx);
+block|CTR4(KTR_TRAP, "trap_pfault: td=%p pm_ctx=%#lx va=%#lx ctx=%#lx", 	    td, p->p_vmspace->vm_pmap.pm_context, va, ctx);
 endif|#
 directive|endif
 name|KASSERT
@@ -2496,10 +2490,7 @@ name|error
 decl_stmt|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
