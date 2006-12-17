@@ -693,6 +693,13 @@ begin_comment
 comment|/*  * Kernel MMU interface  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|curthread_pmap
+value|vmspace_pmap(curthread->td_proc->p_vmspace)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -711,7 +718,7 @@ define|#
 directive|define
 name|DPRINTF
 define|\
-value|if (PCPU_GET(curpmap)&& (PCPU_GET(curpmap)->pm_context != 0)&& ((PCPU_GET(cpumask)& PCPU_GET(curpmap)->pm_active)) == 0) \    	panic("cpumask(0x%x)& active (0x%x) == 0 pid == %d\n",  \ 	      PCPU_GET(cpumask), PCPU_GET(curpmap)->pm_active, curthread->td_proc->p_pid); \ if (pmap_debug) printf
+value|if (curthread_pmap&& (curthread_pmap->pm_context != 0)&& ((PCPU_GET(cpumask)& curthread_pmap->pm_active) == 0)) \    	panic("cpumask(0x%x)& active (0x%x) == 0 pid == %d\n",  \ 	      PCPU_GET(cpumask), curthread_pmap->pm_active, curthread->td_proc->p_pid); \ if (pmap_debug) printf
 end_define
 
 begin_else
@@ -8301,12 +8308,18 @@ name|kernel_pmap
 operator|->
 name|pm_hash
 expr_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|PCPU_SET
 argument_list|(
 name|curpmap
 argument_list|,
 name|pmap
 argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
@@ -10136,10 +10149,7 @@ name|KASSERT
 argument_list|(
 name|pmap
 operator|==
-name|PCPU_GET
-argument_list|(
-name|curpmap
-argument_list|)
+name|curthread_pmap
 argument_list|,
 operator|(
 literal|"operating on non-current pmap"
