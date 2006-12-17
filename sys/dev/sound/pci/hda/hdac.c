@@ -1845,6 +1845,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC888
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0888)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALCXXXX
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0xffff)
 end_define
@@ -1955,6 +1962,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_STAC9227
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7618)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_STACXXXX
 value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0xffff)
 end_define
@@ -2043,6 +2057,12 @@ literal|"Realtek ALC883"
 block|}
 block|,
 block|{
+name|HDA_CODEC_ALC888
+block|,
+literal|"Realtek ALC888"
+block|}
+block|,
+block|{
 name|HDA_CODEC_AD1981HD
 block|,
 literal|"Analog Device AD1981HD"
@@ -2088,6 +2108,12 @@ block|{
 name|HDA_CODEC_STAC922XD
 block|,
 literal|"Sigmatel STAC9220D/9223D"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9227
+block|,
+literal|"Sigmatel STAC9227"
 block|}
 block|,
 block|{
