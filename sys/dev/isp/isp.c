@@ -31602,7 +31602,7 @@ argument_list|,
 literal|0x01
 argument_list|)
 block|,
-comment|/* 0x09: LOAD RAM */
+comment|/* 0x09: MBOX_LOAD_RISC_RAM_2100 */
 name|ISPOPMAP
 argument_list|(
 literal|0xdf

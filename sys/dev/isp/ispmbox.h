@@ -86,9 +86,12 @@ name|MBOX_ABOUT_FIRMWARE
 value|0x0008
 end_define
 
-begin_comment
-comment|/*   9 */
-end_comment
+begin_define
+define|#
+directive|define
+name|MBOX_LOAD_RISC_RAM_2100
+value|0x0009
+end_define
 
 begin_comment
 comment|/*   a */
