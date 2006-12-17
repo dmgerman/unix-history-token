@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2006 Konstantin Dimitrov<kosio.dimitrov@gmail.com>  * Copyright (c) 2001 Katsurajima Naoto<raven@katsurajima.seya.yokohama.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2006 Konstantin Dimitrov<kosio.dimitrov@gmail.com>  * Copyright (c) 2001 Katsurajima Naoto<raven@katsurajima.seya.yokohama.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -44,6 +44,14 @@ include|#
 directive|include
 file|"mixer_if.h"
 end_include
+
+begin_expr_stmt
+name|SND_DECLARE_FILE
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|MALLOC_DEFINE
@@ -1323,7 +1331,7 @@ name|spi_codec
 block|,         }
 block|,
 block|{
-literal|"Envy24HT audio (Terratec PHASE 22)"
+literal|"Envy24HT-S audio (Terratec PHASE 22)"
 block|,
 literal|0x153b
 block|,
@@ -1434,7 +1442,7 @@ name|spi_codec
 block|,         }
 block|,
 block|{
-literal|"Envy24HT audio (M-Audio Revolution 5.1)"
+literal|"Envy24GT audio (M-Audio Revolution 5.1)"
 block|,
 literal|0x1412
 block|,
@@ -6738,6 +6746,13 @@ index|[
 name|num
 index|]
 expr_stmt|;
+name|snd_mtxunlock
+argument_list|(
+name|sc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|sndbuf_setup
 argument_list|(
 name|ch
@@ -6751,6 +6766,13 @@ argument_list|,
 name|ch
 operator|->
 name|size
+argument_list|)
+expr_stmt|;
+name|snd_mtxlock
+argument_list|(
+name|sc
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* these 2 values are dummy */
@@ -6901,12 +6923,7 @@ name|envy24ht_emldma
 modifier|*
 name|emltab
 decl_stmt|;
-name|unsigned
-name|int
-name|bcnt
-decl_stmt|,
-name|bsize
-decl_stmt|;
+comment|/* unsigned int bcnt, bsize; */
 name|int
 name|i
 decl_stmt|;
@@ -7110,60 +7127,12 @@ name|unit
 operator|*
 name|ENVY24HT_SAMPLE_NUM
 expr_stmt|;
-if|if
-condition|(
-name|ch
-operator|->
-name|dir
-operator|==
-name|PCMDIR_PLAY
-condition|)
-name|bsize
-operator|=
-name|ch
-operator|->
-name|blk
-operator|*
-literal|4
-operator|/
-name|ENVY24HT_PLAY_BUFUNIT
-expr_stmt|;
-else|else
-name|bsize
-operator|=
-name|ch
-operator|->
-name|blk
-operator|*
-literal|4
-operator|/
-name|ENVY24HT_REC_BUFUNIT
-expr_stmt|;
-name|bsize
-operator|*=
-name|ch
-operator|->
-name|unit
-expr_stmt|;
-name|bcnt
-operator|=
-name|ch
-operator|->
-name|size
-operator|/
-name|bsize
-expr_stmt|;
-name|sndbuf_resize
-argument_list|(
-name|ch
-operator|->
-name|buffer
-argument_list|,
-name|bcnt
-argument_list|,
-name|bsize
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (ch->dir == PCMDIR_PLAY) 		bsize = ch->blk * 4 / ENVY24HT_PLAY_BUFUNIT; 	else 		bsize = ch->blk * 4 / ENVY24HT_REC_BUFUNIT; 	bsize *= ch->unit; 	bcnt = ch->size / bsize; 	sndbuf_resize(ch->buffer, bcnt, bsize);
+endif|#
+directive|endif
 name|snd_mtxunlock
 argument_list|(
 name|sc
@@ -7348,19 +7317,17 @@ name|ch
 init|=
 name|data
 decl_stmt|;
-name|struct
-name|sc_info
-modifier|*
-name|sc
-init|=
-name|ch
-operator|->
-name|parent
-decl_stmt|;
+comment|/* struct sc_info *sc = ch->parent; */
 name|u_int32_t
 name|size
 decl_stmt|,
 name|prev
+decl_stmt|;
+name|unsigned
+name|int
+name|bcnt
+decl_stmt|,
+name|bsize
 decl_stmt|;
 if|#
 directive|if
@@ -7384,13 +7351,7 @@ name|prev
 operator|=
 literal|0x7fffffff
 expr_stmt|;
-name|snd_mtxlock
-argument_list|(
-name|sc
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
+comment|/* snd_mtxlock(sc->lock); */
 for|for
 control|(
 name|size
@@ -7468,13 +7429,63 @@ name|ENVY24HT_REC_BUFUNIT
 operator|/
 literal|4
 expr_stmt|;
-name|snd_mtxunlock
-argument_list|(
-name|sc
+comment|/* set channel buffer information */
+comment|/* ch->size = ch->unit * ENVY24HT_SAMPLE_NUM; */
+if|if
+condition|(
+name|ch
 operator|->
-name|lock
+name|dir
+operator|==
+name|PCMDIR_PLAY
+condition|)
+name|bsize
+operator|=
+name|ch
+operator|->
+name|blk
+operator|*
+literal|4
+operator|/
+name|ENVY24HT_PLAY_BUFUNIT
+expr_stmt|;
+else|else
+name|bsize
+operator|=
+name|ch
+operator|->
+name|blk
+operator|*
+literal|4
+operator|/
+name|ENVY24HT_REC_BUFUNIT
+expr_stmt|;
+name|bsize
+operator|*=
+name|ch
+operator|->
+name|unit
+expr_stmt|;
+name|bcnt
+operator|=
+name|ch
+operator|->
+name|size
+operator|/
+name|bsize
+expr_stmt|;
+name|sndbuf_resize
+argument_list|(
+name|ch
+operator|->
+name|buffer
+argument_list|,
+name|bcnt
+argument_list|,
+name|bsize
 argument_list|)
 expr_stmt|;
+comment|/* snd_mtxunlock(sc->lock); */
 if|#
 directive|if
 operator|(
@@ -9184,6 +9195,14 @@ name|blk
 operator|<=
 name|feed
 condition|)
+block|{
+name|snd_mtxunlock
+argument_list|(
+name|sc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|chn_intr
 argument_list|(
 name|ch
@@ -9191,6 +9210,14 @@ operator|->
 name|channel
 argument_list|)
 expr_stmt|;
+name|snd_mtxlock
+argument_list|(
+name|sc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|sc
 operator|->
@@ -9322,6 +9349,14 @@ name|blk
 operator|<=
 name|feed
 condition|)
+block|{
+name|snd_mtxunlock
+argument_list|(
+name|sc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|chn_intr
 argument_list|(
 name|ch
@@ -9329,6 +9364,14 @@ operator|->
 name|channel
 argument_list|)
 expr_stmt|;
+name|snd_mtxlock
+argument_list|(
+name|sc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|sc
 operator|->
@@ -9534,18 +9577,7 @@ name|int
 name|error
 parameter_list|)
 block|{
-name|struct
-name|sc_info
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|sc_info
-operator|*
-operator|)
-name|arg
-decl_stmt|;
+comment|/* struct sc_info *sc = (struct sc_info *)arg; */
 if|#
 directive|if
 operator|(
@@ -9560,8 +9592,6 @@ argument_list|,
 literal|"envy24ht_dmapsetmap()\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|bootverbose
@@ -9609,6 +9639,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 specifier|static
 name|void
@@ -9629,18 +9661,7 @@ name|int
 name|error
 parameter_list|)
 block|{
-name|struct
-name|sc_info
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|sc_info
-operator|*
-operator|)
-name|arg
-decl_stmt|;
+comment|/* struct sc_info *sc = (struct sc_info *)arg; */
 if|#
 directive|if
 operator|(
@@ -9655,8 +9676,6 @@ argument_list|,
 literal|"envy24ht_dmarsetmap()\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|bootverbose
@@ -9704,6 +9723,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 specifier|static
 name|void
@@ -11107,7 +11128,7 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
-comment|//need to be fixed
+comment|/* need to be fixed */
 name|sc
 operator|->
 name|dacn
@@ -12065,6 +12086,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* set channel information */
+comment|/* err = pcm_register(dev, sc, 5, 2 + sc->adcn); */
 name|err
 operator|=
 name|pcm_register
@@ -12073,7 +12095,7 @@ name|dev
 argument_list|,
 name|sc
 argument_list|,
-literal|5
+literal|1
 argument_list|,
 literal|2
 operator|+
@@ -12095,20 +12117,7 @@ name|chnum
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|5
-condition|;
-name|i
-operator|++
-control|)
-block|{
+comment|/* for (i = 0; i< 5; i++) { */
 name|pcm_addchan
 argument_list|(
 name|dev
@@ -12126,7 +12135,7 @@ operator|->
 name|chnum
 operator|++
 expr_stmt|;
-block|}
+comment|/* } */
 for|for
 control|(
 name|i

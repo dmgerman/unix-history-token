@@ -951,7 +951,7 @@ begin_define
 define|#
 directive|define
 name|ENVY24HT_MIX_MASK
-value|0x3ff
+value|0x3fd
 end_define
 
 begin_define
