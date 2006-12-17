@@ -271,6 +271,7 @@ name|ia32_syscall
 parameter_list|(
 name|struct
 name|trapframe
+modifier|*
 name|frame
 parameter_list|)
 function_decl|;
@@ -286,6 +287,7 @@ name|ia32_syscall
 parameter_list|(
 name|struct
 name|trapframe
+modifier|*
 name|frame
 parameter_list|)
 block|{
@@ -361,7 +363,6 @@ name|td
 operator|->
 name|td_frame
 operator|=
-operator|&
 name|frame
 expr_stmt|;
 if|if
@@ -385,7 +386,7 @@ operator|(
 name|caddr_t
 operator|)
 name|frame
-operator|.
+operator|->
 name|tf_rsp
 operator|+
 sizeof|sizeof
@@ -396,13 +397,13 @@ expr_stmt|;
 name|code
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_rax
 expr_stmt|;
 name|orig_tf_rflags
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_rflags
 expr_stmt|;
 if|if
@@ -424,7 +425,6 @@ operator|->
 name|sv_prepsyscall
 call|)
 argument_list|(
-operator|&
 name|frame
 argument_list|,
 name|args
@@ -678,7 +678,7 @@ literal|1
 index|]
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_rdx
 expr_stmt|;
 name|STOPEVENT
@@ -737,7 +737,7 @@ case|case
 literal|0
 case|:
 name|frame
-operator|.
+operator|->
 name|tf_rax
 operator|=
 name|td
@@ -748,7 +748,7 @@ literal|0
 index|]
 expr_stmt|;
 name|frame
-operator|.
+operator|->
 name|tf_rdx
 operator|=
 name|td
@@ -759,7 +759,7 @@ literal|1
 index|]
 expr_stmt|;
 name|frame
-operator|.
+operator|->
 name|tf_rflags
 operator|&=
 operator|~
@@ -771,11 +771,11 @@ name|ERESTART
 case|:
 comment|/* 		 * Reconstruct pc, assuming lcall $X,y is 7 bytes, 		 * int 0x80 is 2 bytes. We saved this in tf_err. 		 */
 name|frame
-operator|.
+operator|->
 name|tf_rip
 operator|-=
 name|frame
-operator|.
+operator|->
 name|tf_err
 expr_stmt|;
 break|break;
@@ -823,13 +823,13 @@ index|]
 expr_stmt|;
 block|}
 name|frame
-operator|.
+operator|->
 name|tf_rax
 operator|=
 name|error
 expr_stmt|;
 name|frame
-operator|.
+operator|->
 name|tf_rflags
 operator||=
 name|PSL_C
@@ -845,7 +845,7 @@ name|PSL_T
 condition|)
 block|{
 name|frame
-operator|.
+operator|->
 name|tf_rflags
 operator|&=
 operator|~
@@ -878,7 +878,7 @@ name|void
 operator|*
 operator|)
 name|frame
-operator|.
+operator|->
 name|tf_rip
 expr_stmt|;
 name|trapsignal
@@ -986,7 +986,6 @@ name|userret
 argument_list|(
 name|td
 argument_list|,
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;

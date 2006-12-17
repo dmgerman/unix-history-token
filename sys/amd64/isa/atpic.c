@@ -2183,6 +2183,7 @@ name|vector
 parameter_list|,
 name|struct
 name|trapframe
+modifier|*
 name|frame
 parameter_list|)
 block|{
@@ -2313,7 +2314,6 @@ name|intr_execute_handlers
 argument_list|(
 name|isrc
 argument_list|,
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;

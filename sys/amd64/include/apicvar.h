@@ -792,6 +792,7 @@ name|vector
 parameter_list|,
 name|struct
 name|trapframe
+modifier|*
 name|frame
 parameter_list|)
 function_decl|;
@@ -803,6 +804,7 @@ name|lapic_handle_timer
 parameter_list|(
 name|struct
 name|trapframe
+modifier|*
 name|frame
 parameter_list|)
 function_decl|;

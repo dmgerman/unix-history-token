@@ -301,6 +301,7 @@ name|trap
 parameter_list|(
 name|struct
 name|trapframe
+modifier|*
 name|frame
 parameter_list|)
 function_decl|;
@@ -313,6 +314,7 @@ name|syscall
 parameter_list|(
 name|struct
 name|trapframe
+modifier|*
 name|frame
 parameter_list|)
 function_decl|;
@@ -555,12 +557,11 @@ begin_function
 name|void
 name|trap
 parameter_list|(
-name|frame
-parameter_list|)
 name|struct
 name|trapframe
+modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|thread
@@ -609,7 +610,7 @@ expr_stmt|;
 name|type
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_trapno
 expr_stmt|;
 ifdef|#
@@ -686,12 +687,11 @@ operator|(
 name|uintptr_t
 operator|)
 name|frame
-operator|.
+operator|->
 name|tf_rip
 argument_list|,
 name|TRAPF_USERMODE
 argument_list|(
-operator|&
 name|frame
 argument_list|)
 argument_list|)
@@ -705,7 +705,7 @@ if|if
 condition|(
 operator|(
 name|frame
-operator|.
+operator|->
 name|tf_rflags
 operator|&
 name|PSL_I
@@ -720,7 +720,7 @@ condition|(
 name|ISPL
 argument_list|(
 name|frame
-operator|.
+operator|->
 name|tf_cs
 argument_list|)
 operator|==
@@ -791,7 +791,7 @@ block|}
 name|code
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_err
 expr_stmt|;
 if|if
@@ -825,11 +825,10 @@ literal|0
 condition|)
 name|trap_fatal
 argument_list|(
-operator|&
 name|frame
 argument_list|,
 name|frame
-operator|.
+operator|->
 name|tf_addr
 argument_list|)
 expr_stmt|;
@@ -839,7 +838,7 @@ condition|(
 name|ISPL
 argument_list|(
 name|frame
-operator|.
+operator|->
 name|tf_cs
 argument_list|)
 operator|==
@@ -857,13 +856,12 @@ name|td
 operator|->
 name|td_frame
 operator|=
-operator|&
 name|frame
 expr_stmt|;
 name|addr
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_rip
 expr_stmt|;
 if|if
@@ -911,7 +909,7 @@ name|enable_intr
 argument_list|()
 expr_stmt|;
 name|frame
-operator|.
+operator|->
 name|tf_rflags
 operator|&=
 operator|~
@@ -1022,7 +1020,7 @@ comment|/* page fault */
 name|addr
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_addr
 expr_stmt|;
 ifdef|#
@@ -1047,7 +1045,6 @@ name|i
 operator|=
 name|trap_pfault
 argument_list|(
-operator|&
 name|frame
 argument_list|,
 name|TRUE
@@ -1146,7 +1143,6 @@ name|type
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;
@@ -1289,7 +1285,6 @@ name|void
 operator|)
 name|trap_pfault
 argument_list|(
-operator|&
 name|frame
 argument_list|,
 name|FALSE
@@ -1344,7 +1339,7 @@ comment|/* 			 * Invalid segment selectors and out of bounds 			 * %rip's and %r
 if|if
 condition|(
 name|frame
-operator|.
+operator|->
 name|tf_rip
 operator|==
 operator|(
@@ -1354,7 +1349,7 @@ name|doreti_iret
 condition|)
 block|{
 name|frame
-operator|.
+operator|->
 name|tf_rip
 operator|=
 operator|(
@@ -1379,7 +1374,7 @@ name|NULL
 condition|)
 block|{
 name|frame
-operator|.
+operator|->
 name|tf_rip
 operator|=
 operator|(
@@ -1404,14 +1399,14 @@ comment|/* 			 * PSL_NT can be set in user mode and isn't cleared 			 * automati
 if|if
 condition|(
 name|frame
-operator|.
+operator|->
 name|tf_rflags
 operator|&
 name|PSL_NT
 condition|)
 block|{
 name|frame
-operator|.
+operator|->
 name|tf_rflags
 operator|&=
 operator|~
@@ -1464,7 +1459,6 @@ name|type
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|frame
 argument_list|)
 condition|)
@@ -1512,7 +1506,6 @@ name|type
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;
@@ -1541,7 +1534,6 @@ comment|/* DEV_ISA */
 block|}
 name|trap_fatal
 argument_list|(
-operator|&
 name|frame
 argument_list|,
 literal|0
@@ -1658,7 +1650,7 @@ argument_list|(
 literal|", fault VA = 0x%lx"
 argument_list|,
 name|frame
-operator|.
+operator|->
 name|tf_addr
 argument_list|)
 expr_stmt|;
@@ -1676,7 +1668,6 @@ name|userret
 argument_list|(
 name|td
 argument_list|,
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;
@@ -2554,12 +2545,11 @@ begin_function
 name|void
 name|syscall
 parameter_list|(
-name|frame
-parameter_list|)
 name|struct
 name|trapframe
+modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|caddr_t
 name|params
@@ -2631,7 +2621,7 @@ condition|(
 name|ISPL
 argument_list|(
 name|frame
-operator|.
+operator|->
 name|tf_cs
 argument_list|)
 operator|!=
@@ -2678,7 +2668,6 @@ name|td
 operator|->
 name|td_frame
 operator|=
-operator|&
 name|frame
 expr_stmt|;
 if|if
@@ -2720,7 +2709,7 @@ operator|(
 name|caddr_t
 operator|)
 name|frame
-operator|.
+operator|->
 name|tf_rsp
 operator|+
 sizeof|sizeof
@@ -2731,13 +2720,13 @@ expr_stmt|;
 name|code
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_rax
 expr_stmt|;
 name|orig_tf_rflags
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_rflags
 expr_stmt|;
 if|if
@@ -2759,7 +2748,6 @@ operator|->
 name|sv_prepsyscall
 call|)
 argument_list|(
-operator|&
 name|frame
 argument_list|,
 operator|(
@@ -2792,7 +2780,7 @@ block|{
 name|code
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_rdi
 expr_stmt|;
 name|reg
@@ -2891,7 +2879,7 @@ name|argp
 operator|=
 operator|&
 name|frame
-operator|.
+operator|->
 name|tf_rdi
 expr_stmt|;
 name|argp
@@ -3039,7 +3027,7 @@ literal|1
 index|]
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_rdx
 expr_stmt|;
 name|STOPEVENT
@@ -3098,7 +3086,7 @@ case|case
 literal|0
 case|:
 name|frame
-operator|.
+operator|->
 name|tf_rax
 operator|=
 name|td
@@ -3109,7 +3097,7 @@ literal|0
 index|]
 expr_stmt|;
 name|frame
-operator|.
+operator|->
 name|tf_rdx
 operator|=
 name|td
@@ -3120,7 +3108,7 @@ literal|1
 index|]
 expr_stmt|;
 name|frame
-operator|.
+operator|->
 name|tf_rflags
 operator|&=
 operator|~
@@ -3132,19 +3120,19 @@ name|ERESTART
 case|:
 comment|/* 		 * Reconstruct pc, we know that 'syscall' is 2 bytes. 		 * We have to do a full context restore so that %r10 		 * (which was holding the value of %rcx) is restored for 		 * the next iteration. 		 */
 name|frame
-operator|.
+operator|->
 name|tf_rip
 operator|-=
 name|frame
-operator|.
+operator|->
 name|tf_err
 expr_stmt|;
 name|frame
-operator|.
+operator|->
 name|tf_r10
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_rcx
 expr_stmt|;
 name|td
@@ -3200,13 +3188,13 @@ index|]
 expr_stmt|;
 block|}
 name|frame
-operator|.
+operator|->
 name|tf_rax
 operator|=
 name|error
 expr_stmt|;
 name|frame
-operator|.
+operator|->
 name|tf_rflags
 operator||=
 name|PSL_C
@@ -3222,7 +3210,7 @@ name|PSL_T
 condition|)
 block|{
 name|frame
-operator|.
+operator|->
 name|tf_rflags
 operator|&=
 operator|~
@@ -3255,7 +3243,7 @@ name|void
 operator|*
 operator|)
 name|frame
-operator|.
+operator|->
 name|tf_rip
 expr_stmt|;
 name|trapsignal
@@ -3363,7 +3351,6 @@ name|userret
 argument_list|(
 name|td
 argument_list|,
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;
