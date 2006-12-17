@@ -2640,6 +2640,7 @@ name|vector
 parameter_list|,
 name|struct
 name|trapframe
+modifier|*
 name|frame
 parameter_list|)
 block|{
@@ -2674,7 +2675,6 @@ name|intr_execute_handlers
 argument_list|(
 name|isrc
 argument_list|,
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;
@@ -2687,6 +2687,7 @@ name|lapic_handle_timer
 parameter_list|(
 name|struct
 name|trapframe
+modifier|*
 name|frame
 parameter_list|)
 block|{
@@ -2790,13 +2791,11 @@ name|hardclock
 argument_list|(
 name|TRAPF_USERMODE
 argument_list|(
-operator|&
 name|frame
 argument_list|)
 argument_list|,
 name|TRAPF_PC
 argument_list|(
-operator|&
 name|frame
 argument_list|)
 argument_list|)
@@ -2806,7 +2805,6 @@ name|hardclock_cpu
 argument_list|(
 name|TRAPF_USERMODE
 argument_list|(
-operator|&
 name|frame
 argument_list|)
 argument_list|)
@@ -2838,7 +2836,6 @@ name|statclock
 argument_list|(
 name|TRAPF_USERMODE
 argument_list|(
-operator|&
 name|frame
 argument_list|)
 argument_list|)
@@ -2876,13 +2873,11 @@ name|profclock
 argument_list|(
 name|TRAPF_USERMODE
 argument_list|(
-operator|&
 name|frame
 argument_list|)
 argument_list|,
 name|TRAPF_PC
 argument_list|(
-operator|&
 name|frame
 argument_list|)
 argument_list|)

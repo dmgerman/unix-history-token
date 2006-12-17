@@ -342,6 +342,7 @@ name|trap
 parameter_list|(
 name|struct
 name|trapframe
+modifier|*
 name|frame
 parameter_list|)
 function_decl|;
@@ -354,6 +355,7 @@ name|syscall
 parameter_list|(
 name|struct
 name|trapframe
+modifier|*
 name|frame
 parameter_list|)
 function_decl|;
@@ -635,12 +637,11 @@ begin_function
 name|void
 name|trap
 parameter_list|(
-name|frame
-parameter_list|)
 name|struct
 name|trapframe
+modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|thread
@@ -703,7 +704,7 @@ expr_stmt|;
 name|type
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_trapno
 expr_stmt|;
 ifdef|#
@@ -780,12 +781,11 @@ operator|(
 name|uintptr_t
 operator|)
 name|frame
-operator|.
+operator|->
 name|tf_eip
 argument_list|,
 name|TRAPF_USERMODE
 argument_list|(
-operator|&
 name|frame
 argument_list|)
 argument_list|)
@@ -799,7 +799,7 @@ if|if
 condition|(
 operator|(
 name|frame
-operator|.
+operator|->
 name|tf_eflags
 operator|&
 name|PSL_I
@@ -814,7 +814,7 @@ condition|(
 name|ISPL
 argument_list|(
 name|frame
-operator|.
+operator|->
 name|tf_cs
 argument_list|)
 operator|==
@@ -822,7 +822,7 @@ name|SEL_UPL
 operator|||
 operator|(
 name|frame
-operator|.
+operator|->
 name|tf_eflags
 operator|&
 name|PSL_VM
@@ -858,7 +858,7 @@ operator|!=
 name|T_TRCTRAP
 operator|&&
 name|frame
-operator|.
+operator|->
 name|tf_eip
 operator|!=
 operator|(
@@ -906,7 +906,7 @@ expr_stmt|;
 name|code
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_err
 expr_stmt|;
 if|if
@@ -945,7 +945,6 @@ literal|0
 condition|)
 name|trap_fatal
 argument_list|(
-operator|&
 name|frame
 argument_list|,
 name|eva
@@ -962,7 +961,7 @@ operator|(
 name|ISPL
 argument_list|(
 name|frame
-operator|.
+operator|->
 name|tf_cs
 argument_list|)
 operator|==
@@ -972,7 +971,7 @@ operator|||
 operator|(
 operator|(
 name|frame
-operator|.
+operator|->
 name|tf_eflags
 operator|&
 name|PSL_VM
@@ -1003,13 +1002,12 @@ name|td
 operator|->
 name|td_frame
 operator|=
-operator|&
 name|frame
 expr_stmt|;
 name|addr
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_eip
 expr_stmt|;
 if|if
@@ -1057,7 +1055,7 @@ name|enable_intr
 argument_list|()
 expr_stmt|;
 name|frame
-operator|.
+operator|->
 name|tf_eflags
 operator|&=
 operator|~
@@ -1127,7 +1125,7 @@ comment|/* stack fault */
 if|if
 condition|(
 name|frame
-operator|.
+operator|->
 name|tf_eflags
 operator|&
 name|PSL_VM
@@ -1142,7 +1140,6 @@ expr|struct
 name|vm86frame
 operator|*
 operator|)
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;
@@ -1240,7 +1237,6 @@ name|i
 operator|=
 name|trap_pfault
 argument_list|(
-operator|&
 name|frame
 argument_list|,
 name|TRUE
@@ -1272,7 +1268,7 @@ comment|/* 				 * The f00f hack workaround has triggered, so 				 * treat the fa
 name|type
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_trapno
 operator|=
 name|T_PRIVINFLT
@@ -1447,7 +1443,6 @@ name|type
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;
@@ -1598,7 +1593,6 @@ name|void
 operator|)
 name|trap_pfault
 argument_list|(
-operator|&
 name|frame
 argument_list|,
 name|FALSE
@@ -1639,7 +1633,7 @@ comment|/* stack fault */
 if|if
 condition|(
 name|frame
-operator|.
+operator|->
 name|tf_eflags
 operator|&
 name|PSL_VM
@@ -1654,7 +1648,6 @@ expr|struct
 name|vm86frame
 operator|*
 operator|)
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;
@@ -1672,7 +1665,6 @@ expr|struct
 name|vm86frame
 operator|*
 operator|)
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;
@@ -1708,7 +1700,7 @@ comment|/* 			 * Invalid %fs's and %gs's can be created using 			 * procfs or PT
 if|if
 condition|(
 name|frame
-operator|.
+operator|->
 name|tf_eip
 operator|==
 operator|(
@@ -1749,7 +1741,7 @@ comment|/* 			 * Invalid segment selectors and out of bounds 			 * %eip's and %e
 if|if
 condition|(
 name|frame
-operator|.
+operator|->
 name|tf_eip
 operator|==
 operator|(
@@ -1759,7 +1751,7 @@ name|doreti_iret
 condition|)
 block|{
 name|frame
-operator|.
+operator|->
 name|tf_eip
 operator|=
 operator|(
@@ -1774,7 +1766,7 @@ block|}
 if|if
 condition|(
 name|frame
-operator|.
+operator|->
 name|tf_eip
 operator|==
 operator|(
@@ -1784,7 +1776,7 @@ name|doreti_popl_ds
 condition|)
 block|{
 name|frame
-operator|.
+operator|->
 name|tf_eip
 operator|=
 operator|(
@@ -1799,7 +1791,7 @@ block|}
 if|if
 condition|(
 name|frame
-operator|.
+operator|->
 name|tf_eip
 operator|==
 operator|(
@@ -1809,7 +1801,7 @@ name|doreti_popl_es
 condition|)
 block|{
 name|frame
-operator|.
+operator|->
 name|tf_eip
 operator|=
 operator|(
@@ -1824,7 +1816,7 @@ block|}
 if|if
 condition|(
 name|frame
-operator|.
+operator|->
 name|tf_eip
 operator|==
 operator|(
@@ -1834,7 +1826,7 @@ name|doreti_popl_fs
 condition|)
 block|{
 name|frame
-operator|.
+operator|->
 name|tf_eip
 operator|=
 operator|(
@@ -1859,7 +1851,7 @@ name|NULL
 condition|)
 block|{
 name|frame
-operator|.
+operator|->
 name|tf_eip
 operator|=
 operator|(
@@ -1884,14 +1876,14 @@ comment|/* 			 * PSL_NT can be set in user mode and isn't cleared 			 * automati
 if|if
 condition|(
 name|frame
-operator|.
+operator|->
 name|tf_eflags
 operator|&
 name|PSL_NT
 condition|)
 block|{
 name|frame
-operator|.
+operator|->
 name|tf_eflags
 operator|&=
 operator|~
@@ -1909,7 +1901,7 @@ comment|/* trace trap */
 if|if
 condition|(
 name|frame
-operator|.
+operator|->
 name|tf_eip
 operator|==
 operator|(
@@ -1929,7 +1921,7 @@ block|}
 if|if
 condition|(
 name|frame
-operator|.
+operator|->
 name|tf_eip
 operator|==
 operator|(
@@ -1945,7 +1937,7 @@ condition|)
 block|{
 comment|/* 				 * The syscall handler has now saved the 				 * flags.  Stop single stepping it. 				 */
 name|frame
-operator|.
+operator|->
 name|tf_eflags
 operator|&=
 operator|~
@@ -2005,7 +1997,6 @@ name|type
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|frame
 argument_list|)
 condition|)
@@ -2104,7 +2095,6 @@ name|type
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;
@@ -2136,7 +2126,6 @@ comment|/* DEV_ISA */
 block|}
 name|trap_fatal
 argument_list|(
-operator|&
 name|frame
 argument_list|,
 name|eva
@@ -2272,7 +2261,6 @@ name|userret
 argument_list|(
 name|td
 argument_list|,
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;
@@ -3252,12 +3240,11 @@ begin_function
 name|void
 name|syscall
 parameter_list|(
-name|frame
-parameter_list|)
 name|struct
 name|trapframe
+modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|caddr_t
 name|params
@@ -3320,7 +3307,7 @@ condition|(
 name|ISPL
 argument_list|(
 name|frame
-operator|.
+operator|->
 name|tf_cs
 argument_list|)
 operator|!=
@@ -3359,7 +3346,6 @@ name|td
 operator|->
 name|td_frame
 operator|=
-operator|&
 name|frame
 expr_stmt|;
 if|if
@@ -3401,7 +3387,7 @@ operator|(
 name|caddr_t
 operator|)
 name|frame
-operator|.
+operator|->
 name|tf_esp
 operator|+
 sizeof|sizeof
@@ -3412,13 +3398,13 @@ expr_stmt|;
 name|code
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_eax
 expr_stmt|;
 name|orig_tf_eflags
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_eflags
 expr_stmt|;
 if|if
@@ -3440,7 +3426,6 @@ operator|->
 name|sv_prepsyscall
 call|)
 argument_list|(
-operator|&
 name|frame
 argument_list|,
 name|args
@@ -3671,7 +3656,7 @@ literal|1
 index|]
 operator|=
 name|frame
-operator|.
+operator|->
 name|tf_edx
 expr_stmt|;
 name|STOPEVENT
@@ -3730,7 +3715,7 @@ case|case
 literal|0
 case|:
 name|frame
-operator|.
+operator|->
 name|tf_eax
 operator|=
 name|td
@@ -3741,7 +3726,7 @@ literal|0
 index|]
 expr_stmt|;
 name|frame
-operator|.
+operator|->
 name|tf_edx
 operator|=
 name|td
@@ -3752,7 +3737,7 @@ literal|1
 index|]
 expr_stmt|;
 name|frame
-operator|.
+operator|->
 name|tf_eflags
 operator|&=
 operator|~
@@ -3764,11 +3749,11 @@ name|ERESTART
 case|:
 comment|/* 		 * Reconstruct pc, assuming lcall $X,y is 7 bytes, 		 * int 0x80 is 2 bytes. We saved this in tf_err. 		 */
 name|frame
-operator|.
+operator|->
 name|tf_eip
 operator|-=
 name|frame
-operator|.
+operator|->
 name|tf_err
 expr_stmt|;
 break|break;
@@ -3816,13 +3801,13 @@ index|]
 expr_stmt|;
 block|}
 name|frame
-operator|.
+operator|->
 name|tf_eax
 operator|=
 name|error
 expr_stmt|;
 name|frame
-operator|.
+operator|->
 name|tf_eflags
 operator||=
 name|PSL_C
@@ -3847,7 +3832,7 @@ operator|)
 condition|)
 block|{
 name|frame
-operator|.
+operator|->
 name|tf_eflags
 operator|&=
 operator|~
@@ -3880,7 +3865,7 @@ name|void
 operator|*
 operator|)
 name|frame
-operator|.
+operator|->
 name|tf_eip
 expr_stmt|;
 name|trapsignal
@@ -3988,7 +3973,6 @@ name|userret
 argument_list|(
 name|td
 argument_list|,
-operator|&
 name|frame
 argument_list|)
 expr_stmt|;

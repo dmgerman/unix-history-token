@@ -58,6 +58,7 @@ name|vector
 parameter_list|,
 name|struct
 name|trapframe
+modifier|*
 name|frame
 parameter_list|)
 function_decl|;
