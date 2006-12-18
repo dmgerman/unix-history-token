@@ -12231,99 +12231,6 @@ value|(x) = (x + 1) % y
 end_define
 
 begin_comment
-comment|/*  * Vital product data and structures.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BGE_VPD_FLAG
-value|0x8000
-end_define
-
-begin_comment
-comment|/* VPD structures */
-end_comment
-
-begin_struct
-struct|struct
-name|vpd_res
-block|{
-name|uint8_t
-name|vr_id
-decl_stmt|;
-name|uint8_t
-name|vr_len
-decl_stmt|;
-name|uint8_t
-name|vr_pad
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|vpd_key
-block|{
-name|char
-name|vk_key
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|uint8_t
-name|vk_len
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|VPD_RES_ID
-value|0x82
-end_define
-
-begin_comment
-comment|/* ID string */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VPD_RES_READ
-value|0x90
-end_define
-
-begin_comment
-comment|/* start of read only area */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VPD_RES_WRITE
-value|0x81
-end_define
-
-begin_comment
-comment|/* start of read/write area */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VPD_RES_END
-value|0x78
-end_define
-
-begin_comment
-comment|/* end tag */
-end_comment
-
-begin_comment
 comment|/*  * Register access macros. The Tigon always uses memory mapped register  * accesses and all registers must be accessed with 32 bit operations.  */
 end_comment
 
@@ -12987,14 +12894,6 @@ decl_stmt|;
 name|struct
 name|callout
 name|bge_stat_ch
-decl_stmt|;
-name|char
-modifier|*
-name|bge_vpd_prodname
-decl_stmt|;
-name|char
-modifier|*
-name|bge_vpd_readonly
 decl_stmt|;
 name|uint32_t
 name|bge_rx_discards
