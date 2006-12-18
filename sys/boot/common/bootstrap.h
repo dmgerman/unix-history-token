@@ -1430,6 +1430,20 @@ name|int
 name|value
 parameter_list|)
 function_decl|;
+comment|/* Pass in initial kernel memory size */
+name|void
+function_decl|(
+modifier|*
+name|arch_maphint
+function_decl|)
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
