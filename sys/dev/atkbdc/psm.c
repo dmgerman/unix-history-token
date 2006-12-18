@@ -1648,7 +1648,7 @@ block|,
 block|{
 name|MOUSE_MODEL_THINK
 block|,
-comment|/* Kensignton ThinkingMouse */
+comment|/* Kensington ThinkingMouse */
 literal|0x80
 block|,
 name|MOUSE_PS2_PACKETSIZE

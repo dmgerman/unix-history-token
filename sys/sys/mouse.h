@@ -804,7 +804,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* Kensignton Thinking Mouse, 3/4 bytes */
+comment|/* Kensington Thinking Mouse, 3/4 bytes */
 end_comment
 
 begin_define
