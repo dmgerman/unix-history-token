@@ -501,6 +501,25 @@ operator|&=
 operator|~
 name|BMSR_ANEG
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|mii_capabilities
+operator|&
+name|BMSR_EXTSTAT
+condition|)
+name|sc
+operator|->
+name|mii_extcapabilities
+operator|=
+name|PHY_READ
+argument_list|(
+name|sc
+argument_list|,
+name|MII_EXTSR
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -531,6 +550,10 @@ argument_list|)
 argument_list|,
 name|MII_NMEDIA
 argument_list|)
+expr_stmt|;
+name|sep
+operator|=
+literal|", "
 expr_stmt|;
 name|PRINT
 argument_list|(
