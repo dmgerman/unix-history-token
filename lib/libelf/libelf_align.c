@@ -156,7 +156,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|700009
+literal|700025
 index|[
 name|ELF_T_CAP
 index|]
@@ -199,7 +199,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|700009
+literal|700025
 index|[
 name|ELF_T_LWORD
 index|]
@@ -231,7 +231,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|700009
+literal|700025
 index|[
 name|ELF_T_NOTE
 index|]
@@ -319,7 +319,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|700009
+literal|700025
 index|[
 name|ELF_T_SYMINFO
 index|]
@@ -478,7 +478,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|700009
+literal|700025
 index|[
 name|ELF_T_CAP
 index|]
@@ -529,7 +529,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|700009
+literal|700025
 index|[
 name|ELF_T_LWORD
 index|]
@@ -565,7 +565,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|700009
+literal|700025
 index|[
 name|ELF_T_NOTE
 index|]
@@ -671,7 +671,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|700009
+literal|700025
 index|[
 name|ELF_T_SYMINFO
 index|]

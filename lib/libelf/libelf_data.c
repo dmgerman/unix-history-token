@@ -171,8 +171,8 @@ return|;
 if|#
 directive|if
 name|__FreeBSD_version
-operator|>
-literal|700009
+operator|>=
+literal|700025
 case|case
 name|SHT_GNU_verdef
 case|:
