@@ -541,14 +541,14 @@ block|}
 end_function
 
 begin_function
-name|u_int
+name|unsigned
 name|g_gate_sectorsize
 parameter_list|(
 name|int
 name|fd
 parameter_list|)
 block|{
-name|u_int
+name|unsigned
 name|secsize
 decl_stmt|;
 name|struct
