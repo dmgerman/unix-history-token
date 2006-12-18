@@ -596,7 +596,9 @@ name|tte_tag
 decl_stmt|;
 name|DPRINTF
 argument_list|(
-literal|"tsb_set_tte va: 0x%lx idxpgsz: %x\n"
+literal|"tsb_set_tte index_va: 0x%lx tag_va: 0x%lx idxpgsz: %x "
+argument_list|,
+name|index_va
 argument_list|,
 name|tag_va
 argument_list|,
@@ -612,13 +614,6 @@ argument_list|(
 name|tsb
 operator|->
 name|hti_idxpgsz
-argument_list|)
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|"tsb_shift: 0x%lx\n"
-argument_list|,
-name|tsb_shift
 argument_list|)
 expr_stmt|;
 name|tsb_index
@@ -662,11 +657,6 @@ argument_list|(
 name|uint64_t
 argument_list|)
 expr_stmt|;
-name|tte_data
-operator|&=
-operator|~
-name|VTD_V
-expr_stmt|;
 comment|/* store new value with valid bit cleared  	 * to avoid invalid intermediate value; 	 */
 name|store_real
 argument_list|(
@@ -679,10 +669,6 @@ argument_list|)
 argument_list|,
 name|tte_data
 argument_list|)
-expr_stmt|;
-name|tte_data
-operator||=
-name|VTD_V
 expr_stmt|;
 name|tte_tag
 operator|=
@@ -703,18 +689,6 @@ argument_list|(
 name|tsb_store_pa
 argument_list|,
 name|tte_tag
-argument_list|)
-expr_stmt|;
-name|store_real
-argument_list|(
-name|tsb_store_pa
-operator|+
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-argument_list|,
-name|tte_data
 argument_list|)
 expr_stmt|;
 block|}
