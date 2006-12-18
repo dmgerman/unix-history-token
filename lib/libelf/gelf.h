@@ -191,8 +191,8 @@ begin_if
 if|#
 directive|if
 name|__FreeBSD_version
-operator|>
-literal|700009
+operator|>=
+literal|700025
 end_if
 
 begin_typedef
@@ -660,8 +660,8 @@ begin_if
 if|#
 directive|if
 name|__FreeBSD_version
-operator|>
-literal|700009
+operator|>=
+literal|700025
 end_if
 
 begin_function_decl

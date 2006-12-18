@@ -38,8 +38,22 @@ end_include
 begin_include
 include|#
 directive|include
+file|<osreldate.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"_libelf.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|700025
+end_if
 
 begin_function
 name|GElf_Cap
@@ -582,6 +596,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD_version>= 700025 */
+end_comment
 
 end_unit
 
