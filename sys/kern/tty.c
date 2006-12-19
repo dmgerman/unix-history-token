@@ -2113,6 +2113,12 @@ name|ostate
 argument_list|,
 name|TS_ISOPEN
 argument_list|)
+operator|&&
+name|tp
+operator|->
+name|t_refcnt
+operator|>
+literal|1
 condition|)
 name|ttyrel
 argument_list|(
