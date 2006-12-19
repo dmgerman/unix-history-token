@@ -136,10 +136,6 @@ name|thread_zone
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* DEBUG ONLY */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -154,36 +150,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"thread allocation"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|thread_debug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_kern_threads
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|debug
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|thread_debug
-argument_list|,
-literal|0
-argument_list|,
-literal|"thread debug"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -213,35 +179,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Limit on threads per proc"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|max_groups_per_proc
-init|=
-literal|1500
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_kern_threads
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|max_groups_per_proc
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|max_groups_per_proc
-argument_list|,
-literal|0
-argument_list|,
-literal|"Limit on thread groups per proc"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
