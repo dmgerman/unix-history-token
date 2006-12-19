@@ -4756,7 +4756,12 @@ name|PIPE_NODIRECT
 comment|/* 		 * If the transfer is large, we can gain performance if 		 * we do process-to-process copies directly. 		 * If the write is non-blocking, we don't use the 		 * direct write mechanism. 		 * 		 * The direct write mechanism will detect the reader going 		 * away on us. 		 */
 if|if
 condition|(
-operator|(
+name|uio
+operator|->
+name|uio_segflg
+operator|==
+name|UIO_USERSPACE
+operator|&&
 name|uio
 operator|->
 name|uio_iov
@@ -4764,9 +4769,7 @@ operator|->
 name|iov_len
 operator|>=
 name|PIPE_MINDIRECT
-operator|)
 operator|&&
-operator|(
 name|wpipe
 operator|->
 name|pipe_buffer
@@ -4774,7 +4777,6 @@ operator|.
 name|size
 operator|>=
 name|PIPE_MINDIRECT
-operator|)
 operator|&&
 operator|(
 name|fp
