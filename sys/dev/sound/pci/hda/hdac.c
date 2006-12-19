@@ -774,6 +774,31 @@ value|HDA_MODEL_CONSTRUCT(LG, 0xffff)
 end_define
 
 begin_comment
+comment|/* Fujitsu Siemens */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_VENDORID
+value|0x1734
+end_define
+
+begin_define
+define|#
+directive|define
+name|FS_PA1510_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(FS, 0x10b8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FS_ALL_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(FS, 0xffff)
+end_define
+
+begin_comment
 comment|/* Misc constants.. */
 end_comment
 
@@ -17983,6 +18008,10 @@ condition|(
 name|subvendor
 operator|==
 name|ASUS_P1AH2_SUBVENDOR
+operator|||
+name|subvendor
+operator|==
+name|FS_PA1510_SUBVENDOR
 condition|)
 block|{
 name|struct
