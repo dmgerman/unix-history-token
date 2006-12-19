@@ -277,6 +277,10 @@ name|sc_mtx
 decl_stmt|;
 name|struct
 name|callout
+name|watchdog_ch
+decl_stmt|;
+name|struct
+name|callout
 name|scan_ch
 decl_stmt|;
 name|struct
