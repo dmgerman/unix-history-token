@@ -313,7 +313,7 @@ name|getulong
 parameter_list|(
 name|x
 parameter_list|)
-value|(((u_int8_t *)(x))[0] + (((u_int8_t *)(x))[1]<< 8) \ 			 + (((u_int8_t *)(x))[2]<< 16)	\ 			 + (((u_int8_t *)(x))[3]<< 24))
+value|(u_int32_t)(((u_int8_t *)(x))[0] + (((u_int8_t *)(x))[1]<< 8) \ 			 + (((u_int8_t *)(x))[2]<< 16)	\ 			 + (((u_int8_t *)(x))[3]<< 24))
 end_define
 
 begin_define
