@@ -882,7 +882,20 @@ argument_list|(
 literal|"1000baseTX-FDX"
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|mii_anegticks
+operator|=
+name|MII_ANEGTICKS_GIGE
+expr_stmt|;
 block|}
+else|else
+name|sc
+operator|->
+name|mii_anegticks
+operator|=
+name|MII_ANEGTICKS
+expr_stmt|;
 name|ADD
 argument_list|(
 name|IFM_MAKEWORD
@@ -977,7 +990,7 @@ block|{
 case|case
 name|MII_POLLSTAT
 case|:
-comment|/* 		 * If we're not polling our PHY instance, just return. 		 */
+comment|/* If we're not polling our PHY instance, just return. */
 if|if
 condition|(
 name|IFM_INST
@@ -1041,7 +1054,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * If the interface is not up, don't do anything. 		 */
+comment|/* If the interface is not up, don't do anything. */
 if|if
 condition|(
 operator|(
@@ -1079,7 +1092,7 @@ case|:
 ifdef|#
 directive|ifdef
 name|foo
-comment|/* 			 * If we're already in auto mode, just return. 			 */
+comment|/* If we're already in auto mode, just return. */
 if|if
 condition|(
 name|PHY_READ
@@ -1315,7 +1328,7 @@ break|break;
 case|case
 name|MII_TICK
 case|:
-comment|/* 		 * If we're not currently selected, just return. 		 */
+comment|/* If we're not currently selected, just return. */
 if|if
 condition|(
 name|IFM_INST
@@ -1334,7 +1347,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * Is the interface even up? 		 */
+comment|/* Is the interface even up? */
 if|if
 condition|(
 operator|(
@@ -1354,7 +1367,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * Only used for autonegotiation. 		 */
+comment|/* Only used for autonegotiation. */
 if|if
 condition|(
 name|IFM_SUBTYPE
@@ -1366,35 +1379,65 @@ argument_list|)
 operator|!=
 name|IFM_AUTO
 condition|)
-break|break;
-comment|/* 		 * Check to see if we have link.  If we do, we don't 		 * need to restart the autonegotiation process.  Read 		 * the BMSR twice in case it's latched. 		 */
-name|reg
+block|{
+name|sc
+operator|->
+name|mii_ticks
 operator|=
+literal|0
+expr_stmt|;
+comment|/* Reset autoneg timer. */
+break|break;
+block|}
+comment|/* 		 * Check to see if we have link.  If we do, we don't 		 * need to restart the autonegotiation process. 		 */
+if|if
+condition|(
 name|PHY_READ
 argument_list|(
 name|sc
 argument_list|,
 name|BRGPHY_MII_AUXSTS
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|reg
 operator|&
 name|BRGPHY_AUXSTS_LINK
 condition|)
+block|{
+name|sc
+operator|->
+name|mii_ticks
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Reset autoneg timer. */
 break|break;
-comment|/* 		 * Only retry autonegotiation every 5 seconds. 		 */
+block|}
+comment|/* Announce link loss right after it happens. */
 if|if
 condition|(
+name|sc
+operator|->
+name|mii_ticks
 operator|++
+operator|==
+literal|0
+condition|)
+break|break;
+comment|/* Only retry autonegotiation every mii_anegticks seconds. */
+if|if
+condition|(
 name|sc
 operator|->
 name|mii_ticks
 operator|<=
-name|MII_ANEGTICKS
+name|sc
+operator|->
+name|mii_anegticks
 condition|)
-break|break;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|sc
 operator|->
 name|mii_ticks
@@ -1414,7 +1457,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Callback if something changed. Note that we need to poke 	 * the DSP on the Broadcom PHYs if the media changes. 	 * 	 */
+comment|/* 	 * Callback if something changed. Note that we need to poke 	 * the DSP on the Broadcom PHYs if the media changes. 	 */
 if|if
 condition|(
 name|sc
