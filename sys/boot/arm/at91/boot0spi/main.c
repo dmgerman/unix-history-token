@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|OFFSET
-value|LOADER_OFFSET
+value|FPGA_OFFSET
 end_define
 
 begin_function
@@ -63,6 +63,8 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|off
+decl_stmt|,
+name|sec
 decl_stmt|;
 name|char
 modifier|*
@@ -257,10 +259,28 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+name|sec
+operator|=
+name|GetSeconds
+argument_list|()
+operator|+
+literal|2
+expr_stmt|;
+while|while
+condition|(
+name|sec
+operator|<=
+name|GetSeconds
+argument_list|()
+condition|)
+continue|continue;
 name|printf
 argument_list|(
 literal|"Done\n"
 argument_list|)
+expr_stmt|;
+name|reset
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
