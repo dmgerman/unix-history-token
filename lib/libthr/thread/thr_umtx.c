@@ -37,6 +37,12 @@ name|mtx
 operator|=
 name|default_mtx
 expr_stmt|;
+name|mtx
+operator|->
+name|m_spincount
+operator|=
+name|_thr_adaptive_spin
+expr_stmt|;
 block|}
 end_function
 

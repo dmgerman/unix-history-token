@@ -563,6 +563,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|pmutex
+operator|->
+name|m_lock
+operator|.
+name|m_spincount
+operator|=
+name|_thr_adaptive_spin
+expr_stmt|;
 operator|*
 name|mutex
 operator|=

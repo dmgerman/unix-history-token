@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_UMUTEX
-value|{0, 0, {0, 0}, {0, 0, 0, 0}}
+value|{0}
 end_define
 
 begin_typedef
