@@ -336,7 +336,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|size_t
+name|unsigned
 name|g_gate_sectorsize
 parameter_list|(
 name|int

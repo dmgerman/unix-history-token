@@ -179,7 +179,7 @@ block|{
 name|off_t
 name|c_mediasize
 decl_stmt|;
-name|off_t
+name|unsigned
 name|c_sectorsize
 decl_stmt|;
 name|unsigned
