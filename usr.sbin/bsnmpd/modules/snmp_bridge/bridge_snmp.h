@@ -382,11 +382,11 @@ name|oper_edge
 decl_stmt|;
 name|enum
 name|TruthValue
-name|oper_p2p
+name|oper_ptp
 decl_stmt|;
 name|enum
 name|StpPortAdminPointToPointType
-name|admin_p2p
+name|admin_ptp
 decl_stmt|;
 comment|/* dot1dTp subtree objects. */
 name|int32_t
@@ -1422,7 +1422,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|bridge_port_set_admin_p2p
+name|bridge_port_set_admin_ptp
 parameter_list|(
 specifier|const
 name|char
@@ -1435,7 +1435,7 @@ modifier|*
 name|bp
 parameter_list|,
 name|uint32_t
-name|admin_p2p
+name|admin_ptp
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1038,13 +1038,13 @@ name|TruthValue_false
 expr_stmt|;
 name|bp
 operator|->
-name|oper_p2p
+name|oper_ptp
 operator|=
 name|TruthValue_false
 expr_stmt|;
 name|bp
 operator|->
-name|admin_p2p
+name|admin_ptp
 operator|=
 name|StpPortAdminPointToPointType_auto
 expr_stmt|;
@@ -2884,11 +2884,11 @@ name|int1
 operator|=
 name|bp
 operator|->
-name|admin_p2p
+name|admin_ptp
 expr_stmt|;
 if|if
 condition|(
-name|bridge_port_set_admin_p2p
+name|bridge_port_set_admin_ptp
 argument_list|(
 name|bif
 operator|->
@@ -3064,7 +3064,7 @@ break|break;
 case|case
 name|LEAF_dot1dStpPortAdminPointToPoint
 case|:
-name|bridge_port_set_admin_p2p
+name|bridge_port_set_admin_ptp
 argument_list|(
 name|bif
 operator|->
@@ -3198,7 +3198,7 @@ name|integer
 operator|=
 name|bp
 operator|->
-name|admin_p2p
+name|admin_ptp
 expr_stmt|;
 return|return
 operator|(
@@ -3216,7 +3216,7 @@ name|integer
 operator|=
 name|bp
 operator|->
-name|oper_p2p
+name|oper_ptp
 expr_stmt|;
 return|return
 operator|(
@@ -6549,11 +6549,11 @@ name|int1
 operator|=
 name|bp
 operator|->
-name|admin_p2p
+name|admin_ptp
 expr_stmt|;
 if|if
 condition|(
-name|bridge_port_set_admin_p2p
+name|bridge_port_set_admin_ptp
 argument_list|(
 name|b_name
 argument_list|,
@@ -6734,7 +6734,7 @@ break|break;
 case|case
 name|LEAF_begemotBridgeStpPortAdminPointToPoint
 case|:
-name|bridge_port_set_admin_p2p
+name|bridge_port_set_admin_ptp
 argument_list|(
 name|b_name
 argument_list|,
@@ -6864,7 +6864,7 @@ name|integer
 operator|=
 name|bp
 operator|->
-name|admin_p2p
+name|admin_ptp
 expr_stmt|;
 return|return
 operator|(
@@ -6882,7 +6882,7 @@ name|integer
 operator|=
 name|bp
 operator|->
-name|oper_p2p
+name|oper_ptp
 expr_stmt|;
 return|return
 operator|(
