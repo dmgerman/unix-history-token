@@ -65,7 +65,7 @@ comment|/*  from data_add for size bytes.				*/
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|ReadEEPROM
 parameter_list|(
 name|unsigned

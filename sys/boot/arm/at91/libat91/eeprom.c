@@ -171,7 +171,7 @@ comment|/*  * .KB_C_FN_DEFINITION_START  * void ReadEEPROM(unsigned ee_addr, cha
 end_comment
 
 begin_function
-name|void
+name|int
 name|ReadEEPROM
 parameter_list|(
 name|unsigned
@@ -194,6 +194,10 @@ decl_stmt|;
 name|unsigned
 name|int
 name|status
+decl_stmt|;
+name|unsigned
+name|int
+name|count
 decl_stmt|;
 name|status
 operator|=
@@ -251,6 +255,10 @@ literal|1
 condition|)
 block|{
 comment|// Wait RHR Holding register is full
+name|count
+operator|=
+literal|1000000
+expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -261,8 +269,23 @@ name|TWI_SR
 operator|&
 name|AT91C_TWI_RXRDY
 operator|)
+operator|&&
+operator|--
+name|count
+operator|>
+literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|count
+operator|<=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 comment|// Read byte
 operator|*
 operator|(
@@ -308,6 +331,9 @@ name|twiPtr
 operator|->
 name|TWI_RHR
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
