@@ -171,6 +171,9 @@ name|device
 modifier|*
 name|pc_device
 decl_stmt|;
+name|lwpid_t
+name|pc_curtid
+decl_stmt|;
 block|}
 struct|;
 end_struct

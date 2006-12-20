@@ -9464,6 +9464,15 @@ operator|.
 name|td_pcb
 argument_list|)
 expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|curtid
+argument_list|,
+name|thread0
+operator|.
+name|td_tid
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize mutexes. 	 * 	 * icu_lock: in order to allow an interrupt to occur in a critical 	 * 	     section, to set pcpu->ipending (etc...) properly, we 	 *	     must be able to get the icu lock, so it can't be 	 *	     under witness. 	 */
 name|mutex_init
 argument_list|()

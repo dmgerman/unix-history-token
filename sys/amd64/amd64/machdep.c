@@ -5034,6 +5034,15 @@ argument_list|)
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
+name|curtid
+argument_list|,
+name|thread0
+operator|.
+name|td_tid
+argument_list|)
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
 name|tssp
 argument_list|,
 operator|&
