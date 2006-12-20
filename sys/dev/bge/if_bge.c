@@ -4962,7 +4962,7 @@ name|sc
 operator|->
 name|bge_ifp
 expr_stmt|;
-comment|/* 	 * Enable or disable promiscuous mode as needed. 	 * Do not strip VLAN tag when promiscuous mode is enabled. 	 */
+comment|/* Enable or disable promiscuous mode as needed. */
 if|if
 condition|(
 name|ifp
@@ -4978,8 +4978,6 @@ argument_list|,
 name|BGE_RX_MODE
 argument_list|,
 name|BGE_RXMODE_RX_PROMISC
-operator||
-name|BGE_RXMODE_RX_KEEP_VLAN_DIAG
 argument_list|)
 expr_stmt|;
 else|else
@@ -4990,8 +4988,6 @@ argument_list|,
 name|BGE_RX_MODE
 argument_list|,
 name|BGE_RXMODE_RX_PROMISC
-operator||
-name|BGE_RXMODE_RX_KEEP_VLAN_DIAG
 argument_list|)
 expr_stmt|;
 block|}
@@ -13273,22 +13269,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_PROMISC
-operator|)
-operator|&&
-operator|(
 name|cur_rx
 operator|->
 name|bge_flags
 operator|&
 name|BGE_RXBDFLAG_VLAN_TAG
-operator|)
 condition|)
 block|{
 name|have_tag
@@ -15992,7 +15977,7 @@ operator|++
 name|count
 expr_stmt|;
 comment|/* 		 * If there's a BPF listener, bounce a copy of this frame 		 * to him. 		 */
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
