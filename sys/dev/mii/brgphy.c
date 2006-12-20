@@ -693,7 +693,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|ADD(IFM_MAKEWORD(IFM_ETHER, IFM_100_TX, IFM_LOOP, sc->mii_inst), 	    BMCR_LOOP|BMCR_S100);
+block|ADD(IFM_MAKEWORD(IFM_ETHER, IFM_100_TX, IFM_LOOP, sc->mii_inst), 	    BMCR_LOOP | BMCR_S100);
 endif|#
 directive|endif
 name|brgphy_mii_model
@@ -991,9 +991,6 @@ name|mii_media
 operator|.
 name|ifm_cur
 decl_stmt|;
-name|int
-name|reg
-decl_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -1040,22 +1037,18 @@ operator|->
 name|mii_inst
 condition|)
 block|{
-name|reg
-operator|=
-name|PHY_READ
-argument_list|(
-name|sc
-argument_list|,
-name|MII_BMCR
-argument_list|)
-expr_stmt|;
 name|PHY_WRITE
 argument_list|(
 name|sc
 argument_list|,
 name|MII_BMCR
 argument_list|,
-name|reg
+name|PHY_READ
+argument_list|(
+name|sc
+argument_list|,
+name|MII_BMCR
+argument_list|)
 operator||
 name|BMCR_ISO
 argument_list|)
@@ -1261,10 +1254,10 @@ name|PHY_READ
 argument_list|(
 name|sc
 argument_list|,
-name|BRGPHY_MII_AUXSTS
+name|BRGPHY_MII_BMSR
 argument_list|)
 operator|&
-name|BRGPHY_AUXSTS_LINK
+name|BRGPHY_BMSR_LINK
 condition|)
 block|{
 name|sc
