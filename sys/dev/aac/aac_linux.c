@@ -63,6 +63,29 @@ directive|include
 file|<sys/proc.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/../linux32/linux.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/../linux32/linux32_proto.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -74,6 +97,11 @@ include|#
 directive|include
 file|<machine/../linux/linux_proto.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
