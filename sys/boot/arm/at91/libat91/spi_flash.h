@@ -106,12 +106,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOT_BWCT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FLASH_PAGE_SIZE
+value|528
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|FLASH_PAGE_SIZE
 value|1056
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// Flash commands
