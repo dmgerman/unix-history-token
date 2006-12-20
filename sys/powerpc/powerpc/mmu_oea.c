@@ -10496,9 +10496,6 @@ name|ptegidx
 operator|^=
 name|moea_pteg_mask
 expr_stmt|;
-name|ptegidx
-operator|++
-expr_stmt|;
 for|for
 control|(
 name|pt
