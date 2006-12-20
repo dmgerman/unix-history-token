@@ -662,10 +662,10 @@ begin_struct
 struct|struct
 name|l_timespec
 block|{
-name|l_ulong
+name|l_time_t
 name|tv_sec
 decl_stmt|;
-name|l_ulong
+name|l_long
 name|tv_nsec
 decl_stmt|;
 block|}
