@@ -286,7 +286,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * MAC Framework per-object type functions.  It's not yet clear how  * the namespaces, etc, should work for these, so for now, sort by  * object type.  */
+comment|/*  * MAC Framework per-object type functions.  It's not yet clear how the  * namespaces, etc, should work for these, so for now, sort by object type.  */
 end_comment
 
 begin_function_decl
@@ -640,7 +640,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * MAC_CHECK performs the designated check by walking the policy module  * list and checking with each as to how it feels about the request.  * Note that it returns its value via 'error' in the scope of the caller.  */
+comment|/*  * MAC_CHECK performs the designated check by walking the policy module list  * and checking with each as to how it feels about the request.  Note that it  * returns its value via 'error' in the scope of the caller.  */
 end_comment
 
 begin_define
@@ -657,7 +657,7 @@ value|do {					\ 	struct mac_policy_conf *mpc;					\ 	int entrycount;							\ 		
 end_define
 
 begin_comment
-comment|/*  * MAC_GRANT performs the designated check by walking the policy module  * list and checking with each as to how it feels about the request.  Unlike  * MAC_CHECK, it grants if any policies return '0', and otherwise returns  * EPERM.  Note that it returns its value via 'error' in the scope of the  * caller.  */
+comment|/*  * MAC_GRANT performs the designated check by walking the policy module list  * and checking with each as to how it feels about the request.  Unlike  * MAC_CHECK, it grants if any policies return '0', and otherwise returns  * EPERM.  Note that it returns its value via 'error' in the scope of the  * caller.  */
 end_comment
 
 begin_define
@@ -674,7 +674,7 @@ value|do {					\ 	struct mac_policy_conf *mpc;					\ 	int entrycount;							\ 		
 end_define
 
 begin_comment
-comment|/*  * MAC_BOOLEAN performs the designated boolean composition by walking  * the module list, invoking each instance of the operation, and  * combining the results using the passed C operator.  Note that it  * returns its value via 'result' in the scope of the caller, which  * should be initialized by the caller in a meaningful way to get  * a meaningful result.  */
+comment|/*  * MAC_BOOLEAN performs the designated boolean composition by walking the  * module list, invoking each instance of the operation, and combining the  * results using the passed C operator.  Note that it returns its value via  * 'result' in the scope of the caller, which should be initialized by the  * caller in a meaningful way to get a meaningful result.  */
 end_comment
 
 begin_define
@@ -691,6 +691,10 @@ modifier|...
 parameter_list|)
 value|do {		\ 	struct mac_policy_conf *mpc;					\ 	int entrycount;							\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			result = result composition			\ 			    mpc->mpc_ops->mpo_ ## operation (args);	\ 	}								\ 	if ((entrycount = mac_policy_list_conditional_busy()) != 0) {	\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				result = result composition		\ 				    mpc->mpc_ops->mpo_ ## operation	\ 				    (args);				\ 		}							\ 		mac_policy_list_unbusy();				\ 	}								\ } while (0)
 end_define
+
+begin_comment
+comment|/*  * MAC_EXTERNALIZE queries each policy to see if it can generate an  * externalized version of a label element by name.  Policies declare whether  * they have matched a particular element name, parsed from the string by  * MAC_EXTERNALIZE, and an error is returned if any element is matched by no  * policy.  */
+end_comment
 
 begin_define
 define|#
@@ -716,6 +720,10 @@ comment|/* XXX: ENOLABEL? */
 value|\ 			break;						\ 		} else {						\ 			first = 0;					\ 		}							\ 	}								\ 	sbuf_finish(&sb);						\ } while (0)
 end_define
 
+begin_comment
+comment|/*  * MAC_INTERNALIZE presents parsed element names and data to each policy to  * see if any is willing to claim it and internalize the label data.  If no  * policies match, an error is returned.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -733,7 +741,7 @@ value|\ 			error = EINVAL;					\ 			break;						\ 		}							\ 	}								\ } whil
 end_define
 
 begin_comment
-comment|/*  * MAC_PERFORM performs the designated operation by walking the policy  * module list and invoking that operation for each policy.  */
+comment|/*  * MAC_PERFORM performs the designated operation by walking the policy module  * list and invoking that operation for each policy.  */
 end_comment
 
 begin_define
