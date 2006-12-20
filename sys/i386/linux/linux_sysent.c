@@ -3520,14 +3520,14 @@ comment|/* 161 = sched_rr_get_interval */
 block|{
 name|AS
 argument_list|(
-name|nanosleep_args
+name|linux_nanosleep_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nanosleep
+name|linux_nanosleep
 block|,
 name|AUE_NULL
 block|,
@@ -3538,7 +3538,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* 162 = nanosleep */
+comment|/* 162 = linux_nanosleep */
 block|{
 name|AS
 argument_list|(

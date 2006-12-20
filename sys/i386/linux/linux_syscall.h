@@ -1056,7 +1056,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_nanosleep
+name|LINUX_SYS_linux_nanosleep
 value|162
 end_define
 
