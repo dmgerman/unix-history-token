@@ -2676,9 +2676,6 @@ name|snmp_op
 name|op
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
 name|struct
 name|bridge_if
 modifier|*
