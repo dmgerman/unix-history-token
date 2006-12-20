@@ -738,7 +738,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Labeling event operations: file system objects, and things that  * look a lot like file system objects.  */
+comment|/*  * Labeling event operations: file system objects, and things that look a lot  * like file system objects.  */
 end_comment
 
 begin_function_decl
@@ -1673,7 +1673,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Label cleanup operation: This is the inverse complement for the  * mac_create and associate type of hooks. This hook lets the policy  * module(s) perform a cleanup/flushing operation on the label  * associated with the objects, without freeing up the space allocated.  * This hook is useful in cases where it is desirable to remove any  * labeling reference when recycling any object to a pool. This hook  * does not replace the mac_destroy hooks.  */
+comment|/*  * Label cleanup operation: This is the inverse complement for the mac_create  * and associate type of hooks. This hook lets the policy module(s) perform a  * cleanup/flushing operation on the label associated with the objects,  * without freeing up the space allocated.  This hook is useful in cases  * where it is desirable to remove any labeling reference when recycling any  * object to a pool. This hook does not replace the mac_destroy hooks.  *  * XXXRW: These object methods are inconsistent with the life cycles of other  * objects, and likely should be revised to be more consistent.  */
 end_comment
 
 begin_function_decl
@@ -1725,7 +1725,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Access control checks. */
+comment|/*  * Access control checks.  */
 end_comment
 
 begin_function_decl
@@ -3867,7 +3867,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Calls to help various file systems implement labeling functionality  * using their existing EA implementation.  */
+comment|/*  * Calls to help various file systems implement labeling functionality using  * their existing EA implementation.  */
 end_comment
 
 begin_function_decl
