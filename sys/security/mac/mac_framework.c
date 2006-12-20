@@ -281,6 +281,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Labels consist of a indexed set of "slots", which are allocated policies  * as required.  The MAC Framework maintains a bitmask of slots allocated so  * far to prevent reuse.  Slots cannot be reused, as the MAC Framework  * guarantees that newly allocated slots in labels will be NULL unless  * otherwise initialized, and because we do not have a mechanism to garbage  * collect slots on policy unload.  As labeled policies tend to be statically  * loaded during boot, and not frequently unloaded and reloaded, this is not  * generally an issue.  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -360,7 +364,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Flag to indicate whether or not we should allocate label storage for  * new mbufs.  Since most dynamic policies we currently work with don't  * rely on mbuf labeling, try to avoid paying the cost of mtag allocation  * unless specifically notified of interest.  One result of this is  * that if a dynamically loaded policy requests mbuf labels, it must  * be able to deal with a NULL label being returned on any mbufs that  * were already in flight when the policy was loaded.  Since the policy  * already has to deal with uninitialized labels, this probably won't  * be a problem.  Note: currently no locking.  Will this be a problem?  */
+comment|/*  * Flag to indicate whether or not we should allocate label storage for new  * mbufs.  Since most dynamic policies we currently work with don't rely on  * mbuf labeling, try to avoid paying the cost of mtag allocation unless  * specifically notified of interest.  One result of this is that if a  * dynamically loaded policy requests mbuf labels, it must be able to deal  * with a NULL label being returned on any mbufs that were already in flight  * when the policy was loaded.  Since the policy already has to deal with  * uninitialized labels, this probably won't be a problem.  Note: currently  * no locking.  Will this be a problem?  *  * In the future, we may want to allow objects to request labeling on a per-  * object type basis, rather than globally for all objects.  */
 end_comment
 
 begin_ifndef
@@ -421,7 +425,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * mac_static_policy_list holds a list of policy modules that are not  * loaded while the system is "live", and cannot be unloaded.  These  * policies can be invoked without holding the busy count.  *  * mac_policy_list stores the list of dynamic policies.  A busy count is  * maintained for the list, stored in mac_policy_busy.  The busy count  * is protected by mac_policy_mtx; the list may be modified only  * while the busy count is 0, requiring that the lock be held to  * prevent new references to the list from being acquired.  For almost  * all operations, incrementing the busy count is sufficient to  * guarantee consistency, as the list cannot be modified while the  * busy count is elevated.  For a few special operations involving a  * change to the list of active policies, the mtx itself must be held.  * A condition variable, mac_policy_cv, is used to signal potential  * exclusive consumers that they should try to acquire the lock if a  * first attempt at exclusive access fails.  */
+comment|/*  * mac_static_policy_list holds a list of policy modules that are not loaded  * while the system is "live", and cannot be unloaded.  These policies can be  * invoked without holding the busy count.  *  * mac_policy_list stores the list of dynamic policies.  A busy count is  * maintained for the list, stored in mac_policy_busy.  The busy count is  * protected by mac_policy_mtx; the list may be modified only while the busy  * count is 0, requiring that the lock be held to prevent new references to  * the list from being acquired.  For almost all operations, incrementing the  * busy count is sufficient to guarantee consistency, as the list cannot be  * modified while the busy count is elevated.  For a few special operations  * involving a change to the list of active policies, the mtx itself must be  * held.  A condition variable, mac_policy_cv, is used to signal potential  * exclusive consumers that they should try to acquire the lock if a first  * attempt at exclusive access fails.  *  * This design intentionally avoids fairness, and may starve attempts to  * acquire an exclusive lock on a busy system.  This is required because we  * do not ever want acquiring a read reference to perform an unbounded length  * sleep.  Read references are acquired in ithreads, network isrs, etc, and  * any unbounded blocking could lead quickly to deadlock.  *  * Another reason for never blocking on read references is that the MAC  * Framework may recurse: if a policy calls a VOP, for example, this might  * lead to vnode life cycle operations (such as init/destroy).  */
 end_comment
 
 begin_ifndef
@@ -473,7 +477,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * We manually invoke WITNESS_WARN() to allow Witness to generate  * warnings even if we don't end up ever triggering the wait at  * run-time.  The consumer of the exclusive interface must not hold  * any locks (other than potentially Giant) since we may sleep for  * long (potentially indefinite) periods of time waiting for the  * framework to become quiescent so that a policy list change may  * be made.  */
+comment|/*  * We manually invoke WITNESS_WARN() to allow Witness to generate warnings  * even if we don't end up ever triggering the wait at run-time.  The  * consumer of the exclusive interface must not hold any locks (other than  * potentially Giant) since we may sleep for long (potentially indefinite)  * periods of time waiting for the framework to become quiescent so that a  * policy list change may be made.  */
 end_comment
 
 begin_function
@@ -853,7 +857,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For the purposes of modules that want to know if they were loaded  * "early", set the mac_late flag once we've processed modules either  * linked into the kernel, or loaded before the kernel startup.  */
+comment|/*  * For the purposes of modules that want to know if they were loaded "early",  * set the mac_late flag once we've processed modules either linked into the  * kernel, or loaded before the kernel startup.  */
 end_comment
 
 begin_function
@@ -872,7 +876,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * After the policy list has changed, walk the list to update any global  * flags.  Currently, we support only one flag, and it's conditionally  * defined; as a result, the entire function is conditional.  Eventually,  * the #else case might also iterate across the policies.  */
+comment|/*  * After the policy list has changed, walk the list to update any global  * flags.  Currently, we support only one flag, and it's conditionally  * defined; as a result, the entire function is conditional.  Eventually, the  * #else case might also iterate across the policies.  */
 end_comment
 
 begin_function
@@ -1131,11 +1135,11 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * We don't technically need exclusive access while !mac_late, 	 * but hold it for assertion consistency. 	 */
+comment|/* 	 * We don't technically need exclusive access while !mac_late, but 	 * hold it for assertion consistency. 	 */
 name|mac_policy_grab_exclusive
 argument_list|()
 expr_stmt|;
-comment|/* 	 * If the module can potentially be unloaded, or we're loading 	 * late, we have to stick it in the non-static list and pay 	 * an extra performance overhead.  Otherwise, we can pay a 	 * light locking cost and stick it in the static list. 	 */
+comment|/* 	 * If the module can potentially be unloaded, or we're loading late, 	 * we have to stick it in the non-static list and pay an extra 	 * performance overhead.  Otherwise, we can pay a light locking cost 	 * and stick it in the static list. 	 */
 name|static_entry
 operator|=
 operator|(
@@ -1286,7 +1290,7 @@ name|mpc_runtime_flags
 operator||=
 name|MPC_RUNTIME_FLAG_REGISTERED
 expr_stmt|;
-comment|/* 	 * If we're loading a MAC module after the framework has 	 * initialized, it has to go into the dynamic list.  If 	 * we're loading it before we've finished initializing, 	 * it can go into the static list with weaker locker 	 * requirements. 	 */
+comment|/* 	 * If we're loading a MAC module after the framework has initialized, 	 * it has to go into the dynamic list.  If we're loading it before 	 * we've finished initializing, it can go into the static list with 	 * weaker locker requirements. 	 */
 if|if
 condition|(
 name|static_entry
@@ -1312,7 +1316,7 @@ argument_list|,
 name|mpc_list
 argument_list|)
 expr_stmt|;
-comment|/* Per-policy initialization. */
+comment|/* 	 * Per-policy initialization.  Currently, this takes place under the 	 * exclusive lock, so policies must not sleep in their init method. 	 * In the future, we may want to separate "init" from "start", with 	 * "init" occuring without the lock held.  Likewise, on tear-down, 	 * breaking out "stop" from "destroy". 	 */
 if|if
 condition|(
 name|mpc
@@ -1377,7 +1381,7 @@ modifier|*
 name|mpc
 parameter_list|)
 block|{
-comment|/* 	 * If we fail the load, we may get a request to unload.  Check 	 * to see if we did the run-time registration, and if not, 	 * silently succeed. 	 */
+comment|/* 	 * If we fail the load, we may get a request to unload.  Check to see 	 * if we did the run-time registration, and if not, silently succeed. 	 */
 name|mac_policy_grab_exclusive
 argument_list|()
 expr_stmt|;
@@ -1410,7 +1414,7 @@ comment|/* 	 * Don't allow unloading modules with private data. 	 */
 block|if (mpc->mpc_field_off != NULL) { 		MAC_POLICY_LIST_UNLOCK(); 		return (EBUSY); 	}
 endif|#
 directive|endif
-comment|/* 	 * Only allow the unload to proceed if the module is unloadable 	 * by its own definition. 	 */
+comment|/* 	 * Only allow the unload to proceed if the module is unloadable by 	 * its own definition. 	 */
 if|if
 condition|(
 operator|(
@@ -2464,7 +2468,7 @@ name|p_ucred
 operator|=
 name|newcred
 expr_stmt|;
-comment|/* 	 * Grab additional reference for use while revoking mmaps, prior 	 * to releasing the proc lock and sharing the cred. 	 */
+comment|/* 	 * Grab additional reference for use while revoking mmaps, prior to 	 * releasing the proc lock and sharing the cred. 	 */
 name|crhold
 argument_list|(
 name|newcred
