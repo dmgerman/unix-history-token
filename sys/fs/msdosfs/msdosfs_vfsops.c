@@ -1282,20 +1282,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|vfs_mount_error
-argument_list|(
-name|mp
-argument_list|,
-literal|"MSDOSFS_LARGEFS flag set, cannot export"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(
