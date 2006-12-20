@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2005 McAfee, Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by McAfee  * Research, the Security Research Division of McAfee, Inc. under  * DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA  * CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract   * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2005 McAfee, Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by McAfee  * Research, the Security Research Division of McAfee, Inc. under  * DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA  * CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -174,7 +174,7 @@ file|<security/mac/mac_internal.h>
 end_include
 
 begin_comment
-comment|/*  * Warn about EA transactions only the first time they happen.  * Weak coherency, no locking.  */
+comment|/*  * Warn about EA transactions only the first time they happen.  No locking on  * this variable.  */
 end_comment
 
 begin_decl_stmt
@@ -4016,7 +4016,7 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-comment|/* 	 * Multi-phase commit.  First check the policies to confirm the 	 * change is OK.  Then commit via the filesystem.  Finally, 	 * update the actual vnode label.  Question: maybe the filesystem 	 * should update the vnode at the end as part of VOP_SETLABEL()? 	 */
+comment|/* 	 * Multi-phase commit.  First check the policies to confirm the 	 * change is OK.  Then commit via the filesystem.  Finally, update 	 * the actual vnode label. 	 * 	 * Question: maybe the filesystem should update the vnode at the end 	 * as part of VOP_SETLABEL()? 	 */
 name|error
 operator|=
 name|mac_check_vnode_relabel
@@ -4037,7 +4037,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * VADMIN provides the opportunity for the filesystem to make 	 * decisions about who is and is not able to modify labels 	 * and protections on files.  This might not be right.  We can't 	 * assume VOP_SETLABEL() will do it, because we might implement 	 * that as part of vop_stdsetlabel_ea(). 	 */
+comment|/* 	 * VADMIN provides the opportunity for the filesystem to make 	 * decisions about who is and is not able to modify labels and 	 * protections on files.  This might not be right.  We can't assume 	 * VOP_SETLABEL() will do it, because we might implement that as 	 * part of vop_stdsetlabel_ea(). 	 */
 name|error
 operator|=
 name|VOP_ACCESS
@@ -4089,6 +4089,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * When a thread becomes an NFS server daemon, its credential may need to be  * updated to reflect this so that policies can recognize when file system  * operations originate from the network.  *  * At some point, it would be desirable if the credential used for each NFS  * RPC could be set based on the RPC context (i.e., source system, etc) to  * provide more fine-grained access control.  */
+end_comment
 
 begin_function
 name|void
