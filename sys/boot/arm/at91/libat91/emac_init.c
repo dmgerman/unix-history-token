@@ -222,9 +222,17 @@ name|AT91C_PA15_EMDC
 operator||
 name|AT91C_PA7_ETXCK_EREFCK
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|BOOT_KB920X
+argument_list|)
+operator||
+name|defined
+argument_list|(
+name|BOOT_BWCT
+argument_list|)
 comment|/* Really !RMII */
 name|AT91C_BASE_PIOB
 operator|->

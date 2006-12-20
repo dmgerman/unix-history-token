@@ -1533,6 +1533,12 @@ begin_comment
 comment|/*  * .KB_C_FN_DEFINITION_START  * unsigned short AT91F_MII_ReadPhy (AT91PS_EMAC pEmac, unsigned char addr)  *  This private function reads the PHY device.  * .KB_C_FN_DEFINITION_END  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BOOT_BWCT
+end_ifndef
+
 begin_function
 specifier|static
 name|unsigned
@@ -1603,8 +1609,13 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * .KB_C_FN_DEFINITION_START  * unsigned short AT91F_MII_ReadPhy (AT91PS_EMAC pEmac, unsigned char addr)  *  This private function reads the PHY device.  * .KB_C_FN_DEFINITION_END  */
+comment|/*  * .KB_C_FN_DEFINITION_START  * unsigned short AT91F_MII_WritePhy (AT91PS_EMAC pEmac, unsigned char addr, unsigned short s)  *  This private function writes the PHY device.  * .KB_C_FN_DEFINITION_END  */
 end_comment
 
 begin_ifdef
@@ -1707,10 +1718,23 @@ name|AT91PS_EMAC
 name|pEmac
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BOOT_TSC
+argument_list|)
+operator||
+name|defined
+argument_list|(
+name|BOOT_KB920X
+argument_list|)
 name|unsigned
 name|short
 name|stat2
 decl_stmt|;
+endif|#
+directive|endif
 name|unsigned
 name|update
 decl_stmt|;
@@ -1723,6 +1747,33 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|BOOT_BWCT
+comment|/* hardcoded link speed since we connect a switch via MII */
+name|update
+operator|=
+name|pEmac
+operator|->
+name|EMAC_CFG
+operator|&
+operator|~
+operator|(
+name|AT91C_EMAC_SPD
+operator||
+name|AT91C_EMAC_FD
+operator|)
+expr_stmt|;
+name|update
+operator||=
+name|AT91C_EMAC_SPD
+expr_stmt|;
+name|update
+operator||=
+name|AT91C_EMAC_FD
+expr_stmt|;
 endif|#
 directive|endif
 ifdef|#
