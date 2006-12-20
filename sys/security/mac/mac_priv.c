@@ -49,6 +49,14 @@ directive|include
 file|<security/mac/mac_internal.h>
 end_include
 
+begin_comment
+comment|/*  * The MAC Framework interacts with kernel privilege checks in two ways: it  * may restrict the granting of privilege to a subject, and it may grant  * additional privileges to the subject.  Policies may implement none, one,  * or both of these entry points.  Restriction of privilege by any policy  * always overrides granting of privilege by any policy or other privilege  * mechanism.  See kern_priv.c:priv_check_cred() for details of the  * composition.  */
+end_comment
+
+begin_comment
+comment|/*  * Restrict access to a privilege for a credential.  Return failure if any  * policy denies access.  */
+end_comment
+
 begin_function
 name|int
 name|mac_priv_check
@@ -81,6 +89,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Grant access to a privilege for a credential.  Return success if any  * policy grants access.  */
+end_comment
 
 begin_function
 name|int
