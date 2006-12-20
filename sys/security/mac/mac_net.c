@@ -1658,9 +1658,7 @@ name|error
 operator|=
 name|mac_externalize_ifnet_label
 argument_list|(
-name|ifnet
-operator|->
-name|if_label
+name|intlabel
 argument_list|,
 name|elements
 argument_list|,
