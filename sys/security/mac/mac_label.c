@@ -65,7 +65,12 @@ directive|include
 file|<security/mac/mac_internal.h>
 end_include
 
+begin_comment
+comment|/*  * zone_label is the UMA zone from which all labels are allocated.  Label  * structures are initialized to zero bytes so that policies see a NULL/0  * slot on first use, even if the policy is loaded after the label is  * allocated for an object.  */
+end_comment
+
 begin_decl_stmt
+specifier|static
 name|uma_zone_t
 name|zone_label
 decl_stmt|;
