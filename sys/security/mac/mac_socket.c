@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2005 Networks Associates Technology, Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by McAfee  * Research, the Technology Research Division of Network Associates, Inc.  * under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the  * DARPA CHATS research program.  *   * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2005 Networks Associates Technology, Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by McAfee  * Research, the Technology Research Division of Network Associates, Inc.  * under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the  * DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -210,6 +210,10 @@ name|mac_enforce_socket
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Currently, sockets hold two labels: the label of the socket itself, and a  * peer label, which may be used by policies to hold a copy of the label of  * any remote endpoint.  *  * Possibly, this peer label should be maintained at the protocol layer  * (inpcb, unpcb, etc), as this would allow protocol-aware code to maintain  * the label consistently.  For example, it might be copied live from a  * remote socket for UNIX domain sockets rather than keeping a local copy on  * this endpoint, but be cached and updated based on packets received for  * TCP/IP.  */
+end_comment
 
 begin_function
 name|struct
@@ -866,7 +870,7 @@ modifier|*
 name|newsocket
 parameter_list|)
 block|{
-comment|/* 	 * XXXRW: only hold the socket lock on one at a time, as one 	 * socket is the original, and one is the new.  However, it's 	 * called in both directions, so we can't assert the lock 	 * here currently. 	 */
+comment|/* 	 * XXXRW: only hold the socket lock on one at a time, as one socket 	 * is the original, and one is the new.  However, it's called in both 	 * directions, so we can't assert the lock here currently. 	 */
 name|MAC_PERFORM
 argument_list|(
 name|set_socket_peer_from_socket
@@ -1633,7 +1637,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * We acquire the socket lock when we perform the test and set, 	 * but have to release it as the pcb code needs to acquire the 	 * pcb lock, which will precede the socket lock in the lock 	 * order.  However, this is fine, as any race will simply 	 * result in the inpcb being refreshed twice, but still 	 * consistently, as the inpcb code will acquire the socket lock 	 * before refreshing, holding both locks. 	 */
+comment|/* 	 * We acquire the socket lock when we perform the test and set, but 	 * have to release it as the pcb code needs to acquire the pcb lock, 	 * which will precede the socket lock in the lock order.  However, 	 * this is fine, as any race will simply result in the inpcb being 	 * refreshed twice, but still consistently, as the inpcb code will 	 * acquire the socket lock before refreshing, holding both locks. 	 */
 name|SOCK_LOCK
 argument_list|(
 name|so
@@ -1680,7 +1684,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the protocol has expressed interest in socket layer changes, 	 * such as if it needs to propagate changes to a cached pcb 	 * label from the socket, notify it of the label change while 	 * holding the socket lock. 	 */
+comment|/* 	 * If the protocol has expressed interest in socket layer changes, 	 * such as if it needs to propagate changes to a cached pcb label 	 * from the socket, notify it of the label change while holding the 	 * socket lock. 	 */
 if|if
 condition|(
 name|so
