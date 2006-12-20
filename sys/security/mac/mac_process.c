@@ -663,7 +663,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize MAC label for the first kernel process, from which other  * kernel processes and threads are spawned.  */
+comment|/*  * Initialize MAC label for the first kernel process, from which other kernel  * processes and threads are spawned.  */
 end_comment
 
 begin_function
@@ -731,7 +731,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When a new process is created, its label must be initialized.  Generally,  * this involves inheritence from the parent process, modulo possible  * deltas.  This function allows that processing to take place.  */
+comment|/*  * When a new process is created, its label must be initialized.  Generally,  * this involves inheritence from the parent process, modulo possible deltas.  * This function allows that processing to take place.  */
 end_comment
 
 begin_function
@@ -984,7 +984,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When relabeling a process, call out to the policies for the maximum  * permission allowed for each object type we know about in its  * memory space, and revoke access (in the least surprising ways we  * know) when necessary.  The process lock is not held here.  */
+comment|/*  * When relabeling a process, call out to the policies for the maximum  * permission allowed for each object type we know about in its memory space,  * and revoke access (in the least surprising ways we know) when necessary.  * The process lock is not held here.  */
 end_comment
 
 begin_function
@@ -1314,7 +1314,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 		 * At the moment, vm_maps and objects aren't considered 		 * by the MAC system, so only things with backing by a 		 * normal object (read: vnodes) are checked. 		 */
+comment|/* 		 * At the moment, vm_maps and objects aren't considered by 		 * the MAC system, so only things with backing by a normal 		 * object (read: vnodes) are checked. 		 */
 if|if
 condition|(
 name|object
@@ -1380,7 +1380,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Find out what maximum protection we may be allowing 		 * now but a policy needs to get removed. 		 */
+comment|/* 		 * Find out what maximum protection we may be allowing now 		 * but a policy needs to get removed. 		 */
 name|revokeperms
 operator|=
 name|vme
@@ -1462,7 +1462,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-comment|/* 		 * This is the really simple case: if a map has more 		 * max_protection than is allowed, but it's not being 		 * actually used (that is, the current protection is 		 * still allowed), we can just wipe it out and do 		 * nothing more. 		 */
+comment|/* 		 * This is the really simple case: if a map has more 		 * max_protection than is allowed, but it's not being 		 * actually used (that is, the current protection is still 		 * allowed), we can just wipe it out and do nothing more. 		 */
 if|if
 condition|(
 operator|(
