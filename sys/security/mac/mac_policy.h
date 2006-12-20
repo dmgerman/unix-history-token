@@ -6890,6 +6890,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Policy interface to map a struct label pointer to per-policy data.  * Typically, policies wrap this in their own accessor macro that casts a  * void pointer to a policy-specific data type.  *  * XXXRW: It might be preferable to provide get/set methods via functions to  * avoid encoding the struct label layout in compiled modules.  */
+end_comment
+
 begin_define
 define|#
 directive|define
