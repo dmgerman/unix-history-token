@@ -527,6 +527,17 @@ define|\
 value|static int syscallname##_syscall = SYS_##syscallname;   \ static struct sysent syscallname##_sysent = {           \     (sizeof(struct syscallname ## _args )               \      / sizeof(register_t)),                             \     (sy_call_t *)& syscallname,                         \     SYS_AUE_##syscallname                               \ };                                                      \ SYSCALL_MODULE(syscallname,                             \& syscallname##_syscall,& syscallname##_sysent,    \     NULL, NULL);
 end_define
 
+begin_define
+define|#
+directive|define
+name|SYSCALL_MODULE_PRESENT
+parameter_list|(
+name|syscallname
+parameter_list|)
+define|\
+value|(sysent[SYS_##syscallname].sy_call !=		\ 			(sy_call_t *)lkmnosys&&	\ 	sysent[SYS_##syscallname].sy_call !=		\ 			(sy_call_t *)lkmressys)
+end_define
+
 begin_function_decl
 name|int
 name|syscall_register
