@@ -156,7 +156,7 @@ file|<security/mac/mac_internal.h>
 end_include
 
 begin_comment
-comment|/*  * mac_enforce_network is used by IPv4 and IPv6 checks, and so must  * be non-static for now.  */
+comment|/*  * mac_enforce_network is used by IPv4 and IPv6 checks, and so must be  * non-static for now.  */
 end_comment
 
 begin_decl_stmt
@@ -200,7 +200,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * XXXRW: struct ifnet locking is incomplete in the network code, so we  * use our own global mutex for struct ifnet.  Non-ideal, but should help  * in the SMP environment.  */
+comment|/*  * XXXRW: struct ifnet locking is incomplete in the network code, so we use  * our own global mutex for struct ifnet.  Non-ideal, but should help in the  * SMP environment.  */
 end_comment
 
 begin_decl_stmt
@@ -245,6 +245,14 @@ name|ifp
 parameter_list|)
 value|mtx_unlock(&mac_ifnet_mtx)
 end_define
+
+begin_comment
+comment|/*  * XXXRW: In order to use the MAC label UMA zone for all label allocations,  * we simply store a pointer to a UMA-allocated label in the mbuf tag.  This  * is inefficient and should likely change to using a label embedded in the  * tag.  */
+end_comment
+
+begin_comment
+comment|/*  * Retrieve the label associated with an mbuf by searching for the tag.  * Depending on the value of mac_labelmbufs, it's possible that a label will  * not be present, in which case NULL is returned.  Policies must handle the  * possibility of an mbuf not having label storage if they do not enforce  * early loading.  */
+end_comment
 
 begin_function
 name|struct
@@ -765,6 +773,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * mac_copy_mbuf_tag is called when an mbuf header is duplicated, in which  * case the labels must also be duplicated.  */
+end_comment
+
 begin_function
 name|void
 name|mac_copy_mbuf_tag
@@ -814,7 +826,7 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-comment|/* 	 * mac_init_mbuf_tag() is called on the target tag in 	 * m_tag_copy(), so we don't need to call it here. 	 */
+comment|/* 	 * mac_init_mbuf_tag() is called on the target tag in m_tag_copy(), 	 * so we don't need to call it here. 	 */
 name|MAC_PERFORM
 argument_list|(
 name|copy_mbuf_label
@@ -1886,7 +1898,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * XXX: Note that this is a redundant privilege check, since policies 	 * impose this check themselves if required by the policy. 	 * Eventually, this should go away. 	 */
+comment|/* 	 * XXX: Note that this is a redundant privilege check, since policies 	 * impose this check themselves if required by the policy 	 * Eventually, this should go away. 	 */
 name|error
 operator|=
 name|priv_check_cred
