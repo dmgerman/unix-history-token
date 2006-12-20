@@ -14394,6 +14394,16 @@ return|return;
 block|}
 endif|#
 directive|endif
+comment|/* 	 * Ack the interrupt by writing something to BGE_MBX_IRQ0_LO.  Don't 	 * disable interrupts by writing nonzero like we used to, since with 	 * our current organization this just gives complications and 	 * pessimizations for re-enabling interrupts.  We used to have races 	 * instead of the necessary complications.  Disabling interrupts 	 * would just reduce the chance of a status update while we are 	 * running (by switching to the interrupt-mode coalescence 	 * parameters), but this chance is already very low so it is more 	 * efficient to get another interrupt than prevent it. 	 * 	 * We do the ack first to ensure another interrupt if there is a 	 * status update after the ack.  We don't check for the status 	 * changing later because it is more efficient to get another 	 * interrupt than prevent it, not quite as above (not checking is 	 * a smaller optimization than not toggling the interrupt enable, 	 * since checking doesn't involve PCI accesses and toggling require 	 * the status check).  So toggling would probably be a pessimization 	 * even with MSI.  It would only be needed for using a task queue. 	 */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MBX_IRQ0_LO
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Do the mandatory PCI flush as well as get the link status. 	 */
 name|statusword
 operator|=
@@ -14405,16 +14415,6 @@ name|BGE_MAC_STS
 argument_list|)
 operator|&
 name|BGE_MACSTAT_LINK_CHANGED
-expr_stmt|;
-comment|/* Ack interrupt and stop others from occuring. */
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_MBX_IRQ0_LO
-argument_list|,
-literal|1
-argument_list|)
 expr_stmt|;
 comment|/* Make sure the descriptor ring indexes are coherent. */
 name|bus_dmamap_sync
@@ -14500,16 +14500,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Re-enable interrupts. */
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_MBX_IRQ0_LO
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ifp
