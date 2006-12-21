@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -11042,6 +11048,26 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+name|MODULE_VERSION
+argument_list|(
+name|bt
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|MODULE_DEPEND
+argument_list|(
+name|bt
+argument_list|,
+name|cam
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 end_function
 
 end_unit
