@@ -5716,12 +5716,11 @@ block|{
 name|printf
 argument_list|(
 literal|"xpt_init: xpt_bus_register failed with status %#x,"
-argument|;
 literal|" failing attach\n"
 argument_list|,
-argument|status
+name|status
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Looking at the XPT from the SIM layer, the XPT is 	 * the equivelent of a peripheral driver.  Allocate 	 * a peripheral driver entry for us. 	 */
