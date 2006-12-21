@@ -933,16 +933,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|mac_enforce_socket
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|label
 operator|=
 name|mac_mbuf_to_label

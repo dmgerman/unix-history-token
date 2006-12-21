@@ -156,50 +156,6 @@ file|<security/mac/mac_internal.h>
 end_include
 
 begin_comment
-comment|/*  * mac_enforce_network is used by IPv4 and IPv6 checks, and so must be  * non-static for now.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|mac_enforce_network
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_security_mac
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|enforce_network
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|mac_enforce_network
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enforce MAC policy on network packets"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"security.mac.enforce_network"
-argument_list|,
-operator|&
-name|mac_enforce_network
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * XXXRW: struct ifnet locking is incomplete in the network code, so we use  * our own global mutex for struct ifnet.  Non-ideal, but should help in the  * SMP environment.  */
 end_comment
 
@@ -1372,16 +1328,6 @@ argument_list|(
 name|bpf_d
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|mac_enforce_network
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|MAC_IFNET_LOCK
 argument_list|(
 name|ifnet
@@ -1445,16 +1391,6 @@ argument_list|(
 name|mbuf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|mac_enforce_network
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|label
 operator|=
 name|mac_mbuf_to_label

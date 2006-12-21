@@ -2479,11 +2479,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mac_enforce_vm
-condition|)
-block|{
 name|mac_cred_mmapped_drop_perms
 argument_list|(
 name|td
@@ -2491,7 +2486,6 @@ argument_list|,
 name|newcred
 argument_list|)
 expr_stmt|;
-block|}
 name|crfree
 argument_list|(
 name|newcred
