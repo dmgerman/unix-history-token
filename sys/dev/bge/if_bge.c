@@ -551,30 +551,6 @@ block|,
 block|{
 name|BCOM_VENDORID
 block|,
-name|BCOM_DEVICEID_BCM5754
-block|}
-block|,
-block|{
-name|BCOM_VENDORID
-block|,
-name|BCOM_DEVICEID_BCM5754M
-block|}
-block|,
-block|{
-name|BCOM_VENDORID
-block|,
-name|BCOM_DEVICEID_BCM5755
-block|}
-block|,
-block|{
-name|BCOM_VENDORID
-block|,
-name|BCOM_DEVICEID_BCM5755M
-block|}
-block|,
-block|{
-name|BCOM_VENDORID
-block|,
 name|BCOM_DEVICEID_BCM5780
 block|}
 block|,
@@ -594,24 +570,6 @@ block|{
 name|BCOM_VENDORID
 block|,
 name|BCOM_DEVICEID_BCM5782
-block|}
-block|,
-block|{
-name|BCOM_VENDORID
-block|,
-name|BCOM_DEVICEID_BCM5786
-block|}
-block|,
-block|{
-name|BCOM_VENDORID
-block|,
-name|BCOM_DEVICEID_BCM5787
-block|}
-block|,
-block|{
-name|BCOM_VENDORID
-block|,
-name|BCOM_DEVICEID_BCM5787M
 block|}
 block|,
 block|{
@@ -1083,18 +1041,6 @@ literal|"unknown BCM5714"
 block|}
 block|,
 block|{
-name|BGE_ASICREV_BCM5755
-block|,
-literal|"unknown BCM5755"
-block|}
-block|,
-block|{
-name|BGE_ASICREV_BCM5787
-block|,
-literal|"unknown BCM5787"
-block|}
-block|,
-block|{
 literal|0
 block|,
 name|NULL
@@ -1111,7 +1057,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|((sc)->bge_asicrev == BGE_ASICREV_BCM5705	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5750	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714_A0	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5780	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5752	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5755	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5787)
+value|((sc)->bge_asicrev == BGE_ASICREV_BCM5705	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5750	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714_A0	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5780	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5752)
 end_define
 
 begin_define
@@ -1122,7 +1068,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|((sc)->bge_asicrev == BGE_ASICREV_BCM5750	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714_A0	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5780	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5752	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5755	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5787)
+value|((sc)->bge_asicrev == BGE_ASICREV_BCM5750	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714_A0	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5780	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5714	|| \ 	 (sc)->bge_asicrev == BGE_ASICREV_BCM5752)
 end_define
 
 begin_define
