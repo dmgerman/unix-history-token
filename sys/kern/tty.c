@@ -8822,6 +8822,10 @@ condition|(
 name|tp
 operator|->
 name|t_session
+operator|&&
+name|tp
+operator|->
+name|t_session
 operator|->
 name|s_leader
 condition|)
