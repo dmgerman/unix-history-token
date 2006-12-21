@@ -947,6 +947,10 @@ condition|(
 name|rval
 operator|!=
 name|PKT_ALIAS_OK
+operator|&&
+name|rval
+operator|!=
+name|PKT_ALIAS_FOUND_HEADER_FRAGMENT
 condition|)
 block|{
 name|NG_FREE_ITEM
