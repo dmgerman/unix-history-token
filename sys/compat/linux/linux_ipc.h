@@ -427,6 +427,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|LINUX_MSG_INFO
+value|12
+end_define
+
 begin_endif
 endif|#
 directive|endif
