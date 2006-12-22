@@ -453,6 +453,17 @@ comment|/* OEM/subvendors */
 end_comment
 
 begin_comment
+comment|/* Intel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTEL_D101GGC_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(INTEL, 0xd600)
+end_define
+
+begin_comment
 comment|/* HP/Compaq */
 end_comment
 
@@ -17801,6 +17812,11 @@ name|hdac_widget
 modifier|*
 name|w
 decl_stmt|;
+name|struct
+name|hdac_audio_ctl
+modifier|*
+name|ctl
+decl_stmt|;
 name|uint32_t
 name|id
 decl_stmt|,
@@ -18003,22 +18019,6 @@ break|break;
 case|case
 name|HDA_CODEC_ALC861
 case|:
-if|if
-condition|(
-name|subvendor
-operator|==
-name|ASUS_P1AH2_SUBVENDOR
-operator|||
-name|subvendor
-operator|==
-name|FS_PA1510_SUBVENDOR
-condition|)
-block|{
-name|struct
-name|hdac_audio_ctl
-modifier|*
-name|ctl
-decl_stmt|;
 name|ctl
 operator|=
 name|hdac_audio_ctl_amp_get
@@ -18044,7 +18044,6 @@ name|muted
 operator|=
 name|HDA_AMP_MUTE_ALL
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|HDA_CODEC_ALC880
@@ -18220,11 +18219,6 @@ operator|==
 name|IBM_M52_SUBVENDOR
 condition|)
 block|{
-name|struct
-name|hdac_audio_ctl
-modifier|*
-name|ctl
-decl_stmt|;
 name|ctl
 operator|=
 name|hdac_audio_ctl_amp_get
