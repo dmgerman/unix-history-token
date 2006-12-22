@@ -1483,6 +1483,20 @@ name|BGE_CHIPREV_5701_AX
 value|0x00
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_CHIPREV_5750_AX
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPREV_5750_BX
+value|0x41
+end_define
+
 begin_comment
 comment|/* PCI DMA Read/Write Control register */
 end_comment
