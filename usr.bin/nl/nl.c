@@ -1301,6 +1301,8 @@ decl_stmt|;
 comment|/* intbuffer measurement */
 name|int
 name|donumber
+init|=
+literal|0
 decl_stmt|,
 name|idx
 decl_stmt|;
@@ -1316,18 +1318,6 @@ name|section
 operator|=
 name|BODY
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__GNUC__
-operator|(
-name|void
-operator|)
-operator|&
-name|donumber
-expr_stmt|;
-comment|/* avoid bogus `uninitialized' warning */
-endif|#
-directive|endif
 while|while
 condition|(
 name|fgets
