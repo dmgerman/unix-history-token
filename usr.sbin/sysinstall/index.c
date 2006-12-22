@@ -276,6 +276,10 @@ literal|"german"
 block|,
 literal|"Ported software for Germanic countries."
 block|,
+literal|"geography"
+block|,
+literal|"Geography-related software."
+block|,
 literal|"gnome"
 block|,
 literal|"Components of the Gnome Desktop environment."
@@ -440,6 +444,10 @@ literal|"shells"
 block|,
 literal|"Various shells (tcsh, bash, etc)."
 block|,
+literal|"spanish"
+block|,
+literal|"Ported software for the Spanish market."
+block|,
 literal|"sysutils"
 block|,
 literal|"Various system utilities."
@@ -538,7 +546,7 @@ literal|"X Window System window managers."
 block|,
 literal|"xfce"
 block|,
-literal|"Software relating to the Xfce Desktop Environment."
+literal|"Software related to the Xfce Desktop Environment."
 block|,
 literal|"zope"
 block|,
