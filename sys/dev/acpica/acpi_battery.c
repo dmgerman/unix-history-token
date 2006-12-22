@@ -1470,6 +1470,10 @@ operator|=
 name|acpi_battery_get_units
 argument_list|()
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 name|ACPIIO_BATT_GET_BATTINFO
