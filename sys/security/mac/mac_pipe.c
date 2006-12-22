@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mac_policy.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
@@ -111,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<security/mac/mac_internal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_policy.h>
 end_include
 
 begin_function
