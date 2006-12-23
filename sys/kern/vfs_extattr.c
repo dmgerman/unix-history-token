@@ -108,7 +108,7 @@ file|<security/mac/mac_framework.h>
 end_include
 
 begin_comment
-comment|/*  * Syscall to push extended attribute configuration information into the  * VFS.  Accepts a path, which it converts to a mountpoint, as well as  * a command (int cmd), and attribute name and misc data.  For now, the  * attribute name is left in userspace for consumption by the VFS_op.  * It will probably be changed to be copied into sysspace by the  * syscall in the future, once issues with various consumers of the  * attribute code have raised their hands.  *  * Currently this is used only by UFS Extended Attributes.  */
+comment|/*  * Syscall to push extended attribute configuration information into the VFS.  * Accepts a path, which it converts to a mountpoint, as well as a command  * (int cmd), and attribute name and misc data.  *  * Currently this is used only by UFS1 extended attributes.  */
 end_comment
 
 begin_function
@@ -452,7 +452,7 @@ argument_list|(
 name|mp_writable
 argument_list|)
 expr_stmt|;
-comment|/* 	 * VFS_EXTATTRCTL will have unlocked, but not de-ref'd, 	 * filename_vp, so vrele it if it is defined. 	 */
+comment|/* 	 * VFS_EXTATTRCTL will have unlocked, but not de-ref'd, filename_vp, 	 * so vrele it if it is defined. 	 */
 if|if
 condition|(
 name|filename_vp
@@ -1362,7 +1362,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Slightly unusual semantics: if the user provides a NULL data 	 * pointer, they don't want to receive the data, just the 	 * maximum read length. 	 */
+comment|/* 	 * Slightly unusual semantics: if the user provides a NULL data 	 * pointer, they don't want to receive the data, just the maximum 	 * read length. 	 */
 name|auiop
 operator|=
 name|NULL
