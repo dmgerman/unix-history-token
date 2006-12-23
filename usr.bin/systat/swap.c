@@ -265,6 +265,16 @@ name|okvnsw
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|calclens
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -528,6 +538,7 @@ name|void
 name|labelswap
 parameter_list|()
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
