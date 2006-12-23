@@ -2379,6 +2379,7 @@ argument_list|(
 name|bsdtar
 argument_list|,
 literal|"-U"
+argument_list|,
 literal|"x"
 argument_list|)
 expr_stmt|;
