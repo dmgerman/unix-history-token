@@ -105,7 +105,7 @@ comment|/* -P */
 name|char
 name|option_dont_traverse_mounts
 decl_stmt|;
-comment|/* -X */
+comment|/* --one-file-system */
 name|char
 name|option_fast_read
 decl_stmt|;
@@ -125,7 +125,7 @@ comment|/* -o */
 name|char
 name|option_no_subdirs
 decl_stmt|;
-comment|/* -d */
+comment|/* -n */
 name|char
 name|option_null
 decl_stmt|;
@@ -133,7 +133,7 @@ comment|/* --null */
 name|char
 name|option_stdout
 decl_stmt|;
-comment|/* -p */
+comment|/* -O */
 name|char
 name|option_totals
 decl_stmt|;
@@ -145,7 +145,7 @@ comment|/* -U */
 name|char
 name|option_warn_links
 decl_stmt|;
-comment|/* -l */
+comment|/* --check-links */
 name|char
 name|day_first
 decl_stmt|;

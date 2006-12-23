@@ -2246,7 +2246,7 @@ name|only_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-literal|"-X"
+literal|"--one-file-system"
 argument_list|,
 literal|"cru"
 argument_list|)
