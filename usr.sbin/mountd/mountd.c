@@ -1922,6 +1922,13 @@ argument_list|,
 name|terminate
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 name|pidfile_write
 argument_list|(
 name|pfh
