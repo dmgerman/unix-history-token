@@ -193,7 +193,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ESRCH
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
