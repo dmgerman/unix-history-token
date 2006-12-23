@@ -945,9 +945,28 @@ name|mtx
 name|aue_mtx
 decl_stmt|;
 name|struct
-name|sx
-name|aue_sx
+name|cv
+name|aue_cv
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|aue_locker
+decl_stmt|;
+comment|/* lock owner */
+name|int
+name|aue_lockflags
+decl_stmt|;
+define|#
+directive|define
+name|AUE_LOCKED
+value|0x01
+comment|/* locked */
+define|#
+directive|define
+name|AUE_LOCKDEAD
+value|0x02
+comment|/* lock draining */
 name|u_int16_t
 name|aue_flags
 decl_stmt|;
@@ -1055,7 +1074,7 @@ parameter_list|(
 name|_sc
 parameter_list|)
 define|\
-value|do { AUE_DUMPSTATE("sxlock"); sx_xlock(&(_sc)->aue_sx); } while(0)
+value|do { AUE_DUMPSTATE("sxlock"); aue_xlock((_sc), 0); } while(0)
 end_define
 
 begin_define
@@ -1065,7 +1084,7 @@ name|AUE_SXUNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|sx_xunlock(&(_sc)->aue_sx)
+value|aue_xunlock(_sc)
 end_define
 
 begin_define
@@ -1075,7 +1094,7 @@ name|AUE_SXASSERTLOCKED
 parameter_list|(
 name|_sc
 parameter_list|)
-value|sx_assert(&(_sc)->aue_sx, SX_XLOCKED)
+value|aue_xlockassert((_sc), 1, __FILE__, __func__, __LINE__)
 end_define
 
 begin_define
@@ -1085,7 +1104,7 @@ name|AUE_SXASSERTUNLOCKED
 parameter_list|(
 name|_sc
 parameter_list|)
-value|sx_assert(&(_sc)->aue_sx, SX_UNLOCKED)
+value|aue_xlockassert((_sc), 0, __FILE__, __func__, __LINE__)
 end_define
 
 begin_define
