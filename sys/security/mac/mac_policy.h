@@ -20,7 +20,7 @@ name|_SYS_MAC_POLICY_H_
 end_define
 
 begin_comment
-comment|/*-  * Pluggable access control policy definition structure.  *  * List of operations that are performed as part of the implementation  * of a MAC policy.  Policy implementors declare operations with a  * mac_policy_ops structure, and using the MAC_POLICY_SET() macro.  * If an entry point is not declared, then then the policy will be ignored  * during evaluation of that event or check.  *  * Operations are sorted first by general class of operation, then  * alphabetically.  */
+comment|/*-  * Pluggable access control policy definition structure.  *  * List of operations that are performed as part of the implementation of a  * MAC policy.  Policy implementors declare operations with a mac_policy_ops  * structure, and using the MAC_POLICY_SET() macro.  If an entry point is not  * declared, then then the policy will be ignored during evaluation of that  * event or check.  *  * Operations are sorted first by general class of operation, then  * alphabetically.  */
 end_comment
 
 begin_include
@@ -250,7 +250,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * General policy-directed security system call so that policies may  * implement new services without reserving explicit system call  * numbers.  */
+comment|/*  * General policy-directed security system call so that policies may  * implement new services without reserving explicit system call numbers.  */
 end_comment
 
 begin_typedef
@@ -294,7 +294,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Label operations.  Initialize label storage, destroy label  * storage, recycle for re-use without init/destroy, copy a label to  * initialized storage, and externalize/internalize from/to  * initialized storage.  */
+comment|/*  * Label operations.  Initialize label storage, destroy label storage,  * recycle for re-use without init/destroy, copy a label to initialized  * storage, and externalize/internalize from/to initialized storage.  */
 end_comment
 
 begin_typedef
@@ -1425,7 +1425,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Labeling event operations: file system objects, and things that  * look a lot like file system objects.  */
+comment|/*  * Labeling event operations: file system objects, and things that look a lot  * like file system objects.  */
 end_comment
 
 begin_typedef
