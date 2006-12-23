@@ -383,7 +383,7 @@ operator|++
 argument_list|,
 literal|0
 argument_list|,
-literal|"%-5s%*s%9s %55s"
+literal|"%-5s%*s%9s %s"
 argument_list|,
 literal|"Disk"
 argument_list|,
@@ -579,7 +579,7 @@ literal|1
 argument_list|,
 name|lcol
 argument_list|,
-literal|"%9d  "
+literal|"%9d "
 argument_list|,
 name|CONVERT
 argument_list|(
