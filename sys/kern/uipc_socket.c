@@ -6387,11 +6387,6 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|mbuf_removed
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|orig_resid
 init|=
 name|uio
@@ -7041,10 +7036,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|mbuf_removed
-operator|=
-literal|1
-expr_stmt|;
 name|so
 operator|->
 name|so_rcv
@@ -7168,10 +7159,6 @@ name|so_rcv
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
-name|mbuf_removed
-operator|=
-literal|1
 expr_stmt|;
 name|so
 operator|->
@@ -7837,21 +7824,28 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* 				 * If any part of the record has been removed 				 * (such as the MT_SONAME mbuf, which will 				 * happen when PR_ADDR, and thus also 				 * PR_ATOMIC, is set), then drop the entire 				 * record to maintain the atomicity of the 				 * receive operation. 				 */
+comment|/* 				 * The MT_SONAME mbuf has already been removed 				 * from the record, so it is necessary to 				 * remove the data mbufs, if any, to preserve 				 * the invariant in the case of PR_ADDR that 				 * requires MT_SONAME mbufs at the head of 				 * each record. 				 */
 if|if
 condition|(
 name|m
 operator|&&
-name|mbuf_removed
-operator|&&
-operator|(
 name|pr
 operator|->
 name|pr_flags
 operator|&
 name|PR_ATOMIC
+operator|&&
+operator|(
+operator|(
+name|flags
+operator|&
+name|MSG_PEEK
+operator|)
+operator|==
+literal|0
 operator|)
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -7863,6 +7857,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+block|}
 goto|goto
 name|release
 goto|;
