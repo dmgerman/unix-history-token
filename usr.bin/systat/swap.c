@@ -712,6 +712,11 @@ argument_list|,
 literal|'X'
 argument_list|)
 expr_stmt|;
+name|wclrtoeol
+argument_list|(
+name|wnd
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
