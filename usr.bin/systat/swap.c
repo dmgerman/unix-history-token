@@ -613,7 +613,11 @@ literal|1
 argument_list|,
 literal|5
 operator|+
-literal|5
+name|hlen
+operator|+
+name|ulen
+operator|+
+literal|1
 argument_list|,
 literal|"(swap not configured)"
 argument_list|)
