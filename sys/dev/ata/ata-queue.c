@@ -470,7 +470,7 @@ name|ATA_DEBUG_RQ
 argument_list|(
 name|request
 argument_list|,
-literal|"wait for completition"
+literal|"wait for completion"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1205,7 +1205,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* put request on the proper taskqueue for completition */
+comment|/* put request on the proper taskqueue for completion */
 if|if
 condition|(
 name|request
