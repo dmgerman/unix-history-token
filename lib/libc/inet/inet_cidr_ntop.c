@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_cidr_ntop.c,v 1.1.2.1.8.3 2005/11/03 23:08:40 marka Exp $"
+literal|"$Id: inet_cidr_ntop.c,v 1.1.2.1.8.4 2006/10/11 02:32:50 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,59 +152,53 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|inet_cidr_ntop_ipv4
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|u_char
-operator|*
+modifier|*
 name|src
-operator|,
+parameter_list|,
 name|int
 name|bits
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|dst
-operator|,
+parameter_list|,
 name|size_t
 name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|inet_cidr_ntop_ipv6
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|u_char
-operator|*
+modifier|*
 name|src
-operator|,
+parameter_list|,
 name|int
 name|bits
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|dst
-operator|,
+parameter_list|,
 name|size_t
 name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * char *  * inet_cidr_ntop(af, src, bits, dst, size)  *	convert network address from network to presentation format.  *	"src"'s size is determined from its "af".  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	192.5.5.1/28 has a nonzero host part, which means it isn't a network  *	as called for by inet_net_ntop() but it can be a host address with  *	an included netmask.  * author:  *	Paul Vixie (ISC), October 1998  */

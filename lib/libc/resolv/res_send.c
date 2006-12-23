@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.5.2.2.4.8 2006/03/08 04:13:31 marka Exp $"
+literal|"$Id: res_send.c,v 1.5.2.2.4.9 2006/10/16 23:00:50 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1376,6 +1376,7 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* No name servers or res_init() failure */
 if|if
 condition|(
 name|statp
@@ -1383,6 +1384,15 @@ operator|->
 name|nscount
 operator|==
 literal|0
+operator|||
+name|EXT
+argument_list|(
+name|statp
+argument_list|)
+operator|.
+name|ext
+operator|==
+name|NULL
 condition|)
 block|{
 name|errno

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2005 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/* eventlib_p.h - private interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.3.2.1.4.3 2005/07/28 07:43:20 marka Exp $  * $FreeBSD$  */
+comment|/* eventlib_p.h - private interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.3.2.1.4.4 2006/03/10 00:17:21 marka Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -140,6 +140,18 @@ parameter_list|(
 name|x
 parameter_list|)
 value|if ((x)< 0) EV_ERR(errno); else (void)NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|OKFREE
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|if ((x)< 0) { FREE((y)); EV_ERR(errno); } \ 			else (void)NULL
 end_define
 
 begin_define
