@@ -544,6 +544,9 @@ name|showswap
 parameter_list|()
 block|{
 name|int
+name|count
+decl_stmt|;
+name|int
 name|i
 decl_stmt|;
 if|if
@@ -573,9 +576,6 @@ operator|++
 name|i
 control|)
 block|{
-name|int
-name|count
-decl_stmt|;
 if|if
 condition|(
 name|i
@@ -658,7 +658,7 @@ name|wprintw
 argument_list|(
 name|wnd
 argument_list|,
-literal|"%*d "
+literal|"%*d"
 argument_list|,
 name|ulen
 argument_list|,
@@ -675,10 +675,6 @@ argument_list|)
 expr_stmt|;
 name|count
 operator|=
-call|(
-name|int
-call|)
-argument_list|(
 operator|(
 name|double
 operator|)
@@ -691,24 +687,25 @@ name|ksw_used
 operator|*
 literal|49.999
 operator|/
-operator|(
-name|double
-operator|)
 name|kvmsw
 index|[
 name|i
 index|]
 operator|.
 name|ksw_total
+expr_stmt|;
+name|waddch
+argument_list|(
+name|wnd
+argument_list|,
+literal|' '
 argument_list|)
 expr_stmt|;
 while|while
 condition|(
 name|count
-operator|>=
-literal|0
+operator|--
 condition|)
-block|{
 name|waddch
 argument_list|(
 name|wnd
@@ -716,10 +713,6 @@ argument_list|,
 literal|'X'
 argument_list|)
 expr_stmt|;
-operator|--
-name|count
-expr_stmt|;
-block|}
 block|}
 block|}
 end_function
