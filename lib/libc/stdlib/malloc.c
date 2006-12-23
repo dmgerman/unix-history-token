@@ -1428,6 +1428,11 @@ comment|/* 	 * Tree of chunks this arena manages. 	 */
 name|arena_chunk_tree_t
 name|chunks
 decl_stmt|;
+comment|/* 	 * In order to avoid rapid chunk allocation/deallocation when an arena 	 * oscillates right on the cusp of needing a new chunk, cache the most 	 * recently freed chunk.  This caching is disabled by opt_hint. 	 * 	 * There is one spare chunk per arena, rather than one spare total, in 	 * order to avoid interactions between multiple threads that could make 	 * a single spare inadequate. 	 */
+name|arena_chunk_t
+modifier|*
+name|spare
+decl_stmt|;
 comment|/* 	 * bins is used to store rings of free regions of the following sizes, 	 * assuming a 16-byte quantum, 4kB pagesize, and default MALLOC_OPTIONS. 	 * 	 *   bins[i] | size | 	 *   --------+------+ 	 *        0  |    2 | 	 *        1  |    4 | 	 *        2  |    8 | 	 *   --------+------+ 	 *        3  |   16 | 	 *        4  |   32 | 	 *        5  |   48 | 	 *        6  |   64 | 	 *           :      : 	 *           :      : 	 *       33  |  496 | 	 *       34  |  512 | 	 *   --------+------+ 	 *       35  | 1024 | 	 *       36  | 2048 | 	 *   --------+------+ 	 */
 name|arena_bin_t
 name|bins
@@ -2372,6 +2377,10 @@ specifier|static
 name|void
 name|arena_chunk_dealloc
 parameter_list|(
+name|arena_t
+modifier|*
+name|arena
+parameter_list|,
 name|arena_chunk_t
 modifier|*
 name|chunk
@@ -6942,6 +6951,42 @@ decl_stmt|;
 name|size_t
 name|header_size
 decl_stmt|;
+if|if
+condition|(
+name|arena
+operator|->
+name|spare
+operator|!=
+name|NULL
+condition|)
+block|{
+name|chunk
+operator|=
+name|arena
+operator|->
+name|spare
+expr_stmt|;
+name|arena
+operator|->
+name|spare
+operator|=
+name|NULL
+expr_stmt|;
+name|RB_INSERT
+argument_list|(
+name|arena_chunk_tree_s
+argument_list|,
+operator|&
+name|arena
+operator|->
+name|chunks
+argument_list|,
+name|chunk
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|chunk
 operator|=
 operator|(
@@ -6982,7 +7027,7 @@ argument_list|,
 name|chunk
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Claim that no pages are in use, since the header is merely overhead. 	 */
+comment|/* 		 * Claim that no pages are in use, since the header is merely 		 * overhead. 		 */
 name|chunk
 operator|->
 name|pages_used
@@ -7063,7 +7108,7 @@ argument_list|(
 name|header_npages
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Iteratively mark runs as in use, until we've spoken for the entire 	 * header. 	 */
+comment|/* 		 * Iteratively mark runs as in use, until we've spoken for the 		 * entire header. 		 */
 name|map_offset
 operator|=
 literal|0
@@ -7186,7 +7231,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Finish initializing map.  The chunk header takes up some space at 	 * the beginning of the chunk, which we just took care of by 	 * "allocating" the leading pages. 	 */
+comment|/* 		 * Finish initializing map.  The chunk header takes up some 		 * space at the beginning of the chunk, which we just took care 		 * of by "allocating" the leading pages. 		 */
 while|while
 condition|(
 name|map_offset
@@ -7261,6 +7306,7 @@ operator|+=
 name|run_pages
 expr_stmt|;
 block|}
+block|}
 return|return
 operator|(
 name|chunk
@@ -7274,11 +7320,16 @@ specifier|static
 name|void
 name|arena_chunk_dealloc
 parameter_list|(
+name|arena_t
+modifier|*
+name|arena
+parameter_list|,
 name|arena_chunk_t
 modifier|*
 name|chunk
 parameter_list|)
 block|{
+comment|/* 	 * Remove chunk from the chunk tree, regardless of whether this chunk 	 * will be cached, so that the arena does not use it. 	 */
 name|RB_REMOVE
 argument_list|(
 name|arena_chunk_tree_s
@@ -7293,6 +7344,52 @@ argument_list|,
 name|chunk
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|opt_hint
+operator|==
+name|false
+condition|)
+block|{
+if|if
+condition|(
+name|arena
+operator|->
+name|spare
+operator|!=
+name|NULL
+condition|)
+name|chunk_dealloc
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|arena
+operator|->
+name|spare
+argument_list|,
+name|chunk_size
+argument_list|)
+expr_stmt|;
+name|arena
+operator|->
+name|spare
+operator|=
+name|chunk
+expr_stmt|;
+block|}
+else|else
+block|{
+name|assert
+argument_list|(
+name|arena
+operator|->
+name|spare
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
 name|chunk_dealloc
 argument_list|(
 operator|(
@@ -7304,6 +7401,7 @@ argument_list|,
 name|chunk_size
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -8688,6 +8786,8 @@ block|{
 comment|/* This chunk is completely unused now, so deallocate it. */
 name|arena_chunk_dealloc
 argument_list|(
+name|arena
+argument_list|,
 name|chunk
 argument_list|)
 expr_stmt|;
@@ -10483,6 +10583,12 @@ name|arena
 operator|->
 name|chunks
 argument_list|)
+expr_stmt|;
+name|arena
+operator|->
+name|spare
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Initialize bins. */
 comment|/* (2^n)-spaced tiny bins. */
