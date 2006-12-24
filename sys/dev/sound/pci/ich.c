@@ -258,6 +258,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NVIDIA_NFORCE4_MCP
+value|0x003a
+end_define
+
+begin_define
+define|#
+directive|define
 name|AMD_768
 value|0x7445
 end_define
@@ -505,6 +512,16 @@ block|,
 literal|0
 block|,
 literal|"nVidia nForce 410 MCP"
+block|}
+block|,
+block|{
+name|NVIDIA_VENDORID
+block|,
+name|NVIDIA_NFORCE4_MCP
+block|,
+literal|0
+block|,
+literal|"nVidia nForce 4 MCP"
 block|}
 block|,
 block|{
@@ -4281,6 +4298,18 @@ case|case
 literal|0x3089103c
 case|:
 comment|/* Compaq Presario B3800 */
+case|case
+literal|0x309a103c
+case|:
+comment|/* HP Compaq nx4300 */
+case|case
+literal|0x82131033
+case|:
+comment|/* NEC VersaPro VJ10F/BH */
+case|case
+literal|0x82be1033
+case|:
+comment|/* NEC VersaPro VJ12F/CH */
 name|ac97_setflags
 argument_list|(
 name|sc
