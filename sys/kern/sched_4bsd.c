@@ -1592,9 +1592,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|p
+name|td
 operator|->
-name|p_slptime
+name|td_slptime
 operator|>
 literal|1
 condition|)
