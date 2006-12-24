@@ -333,6 +333,31 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* 	 * Determine the number of objects that need to be converted, and 	 * the space required for the converted objects in the destination 	 * buffer. 	 */
+if|if
+condition|(
+name|direction
+operator|==
+name|ELF_TOMEMORY
+condition|)
+block|{
+name|cnt
+operator|=
+name|src
+operator|->
+name|d_size
+operator|/
+name|fsz
+expr_stmt|;
+name|dsz
+operator|=
+name|cnt
+operator|*
+name|msz
+expr_stmt|;
+block|}
+else|else
+block|{
 name|cnt
 operator|=
 name|src
@@ -347,6 +372,7 @@ name|cnt
 operator|*
 name|fsz
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|dst
@@ -403,22 +429,9 @@ name|dst
 operator|->
 name|d_size
 expr_stmt|;
-comment|/* 	 * Check for overlapping buffers.  Note that db == sb is 	 * allowed, in which case the source buffer must also be large 	 * enough for `n' target objects.  For file to native 	 * conversions, an in-place conversion is not always possible. 	 */
+comment|/* 	 * Check for overlapping buffers.  Note that db == sb is 	 * allowed. 	 */
 if|if
 condition|(
-operator|(
-name|db
-operator|==
-name|sb
-operator|&&
-name|dsz
-operator|<
-name|src
-operator|->
-name|d_size
-operator|)
-operator|||
-operator|(
 name|db
 operator|!=
 name|sb
@@ -430,7 +443,6 @@ operator|&&
 name|se
 operator|>
 name|db
-operator|)
 condition|)
 block|{
 name|LIBELF_SET_ERROR
@@ -493,9 +505,7 @@ name|dst
 operator|->
 name|d_size
 operator|=
-name|cnt
-operator|*
-name|fsz
+name|dsz
 expr_stmt|;
 if|if
 condition|(
