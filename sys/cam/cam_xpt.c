@@ -5691,6 +5691,11 @@ name|xpt_max_ccbs
 operator|=
 literal|16
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|status
+operator|=
 name|xpt_bus_register
 argument_list|(
 name|xpt_sim
@@ -5698,7 +5703,21 @@ argument_list|,
 comment|/*bus #*/
 literal|0
 argument_list|)
+operator|)
+operator|!=
+name|CAM_SUCCESS
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"xpt_init: xpt_bus_register failed with status %#x,"
+literal|" failing attach\n"
+argument_list|,
+name|status
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Looking at the XPT from the SIM layer, the XPT is 	 * the equivelent of a peripheral driver.  Allocate 	 * a peripheral driver entry for us. 	 */
 if|if
 condition|(
