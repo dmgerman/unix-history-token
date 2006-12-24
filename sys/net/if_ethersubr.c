@@ -1602,7 +1602,7 @@ name|mbuf
 modifier|*
 name|n
 decl_stmt|;
-comment|/* 			 * Because if_simloop() modifies the packet, we need a 			 * writable copy through m_dup() instead of a readonly 			 * one as m_copy[m] would give us. The alternative would 			 * be to modify if_simloop() to handle the readonly mbuf, 			 * but performancewise it is mostly equivalent (trading 			 * extra data copying vs. extra locking). 			 */
+comment|/* 			 * Because if_simloop() modifies the packet, we need a 			 * writable copy through m_dup() instead of a readonly 			 * one as m_copy[m] would give us. The alternative would 			 * be to modify if_simloop() to handle the readonly mbuf, 			 * but performancewise it is mostly equivalent (trading 			 * extra data copying vs. extra locking). 			 * 			 * XXX This is a local workaround.  A number of less 			 * often used kernel parts suffer from the same bug. 			 * See PR kern/105943 for a proposed general solution. 			 */
 if|if
 condition|(
 operator|(
