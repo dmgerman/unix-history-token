@@ -164,6 +164,17 @@ begin_comment
 comment|/* whether e_rawfile was mmap'ed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LIBELF_F_SHDRS_LOADED
+value|0x040000
+end_define
+
+begin_comment
+comment|/* whether all shdrs were read in */
+end_comment
+
 begin_struct
 struct|struct
 name|_Elf
@@ -297,6 +308,18 @@ argument_list|)
 name|e_scn
 expr_stmt|;
 comment|/* section list */
+name|size_t
+name|e_nphdr
+decl_stmt|;
+comment|/* number of Phdr entries */
+name|size_t
+name|e_nscn
+decl_stmt|;
+comment|/* number of sections */
+name|size_t
+name|e_strndx
+decl_stmt|;
+comment|/* string table section index */
 block|}
 name|e_elf
 struct|;
@@ -635,50 +658,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|_libelf_getshnum
-parameter_list|(
-name|Elf
-modifier|*
-name|_e
-parameter_list|,
-name|void
-modifier|*
-name|_eh
-parameter_list|,
-name|int
-name|_elfclass
-parameter_list|,
-name|size_t
-modifier|*
-name|_shnum
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_libelf_getshstrndx
-parameter_list|(
-name|Elf
-modifier|*
-name|_e
-parameter_list|,
-name|void
-modifier|*
-name|_eh
-parameter_list|,
-name|int
-name|_elfclass
-parameter_list|,
-name|size_t
-modifier|*
-name|_shstrndx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|_libelf_init_elf
 parameter_list|(
@@ -772,6 +751,27 @@ parameter_list|(
 name|Elf_Scn
 modifier|*
 name|_s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_libelf_setphnum
+parameter_list|(
+name|Elf
+modifier|*
+name|_e
+parameter_list|,
+name|void
+modifier|*
+name|_eh
+parameter_list|,
+name|int
+name|_elfclass
+parameter_list|,
+name|size_t
+name|_phnum
 parameter_list|)
 function_decl|;
 end_function_decl

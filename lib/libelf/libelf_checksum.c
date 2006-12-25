@@ -189,9 +189,13 @@ literal|1
 init|;
 name|shn
 operator|<
-name|eh
+name|e
+operator|->
+name|e_u
 operator|.
-name|e_shnum
+name|e_elf
+operator|.
+name|e_nscn
 condition|;
 name|shn
 operator|++
