@@ -194,7 +194,7 @@ name|v
 operator|>=
 name|base
 condition|)
-comment|/* illegal digit */
+comment|/* Illegal digit. */
 break|break;
 name|r
 operator|*=
@@ -246,13 +246,10 @@ decl_stmt|,
 modifier|*
 name|r
 decl_stmt|;
-name|q
-operator|=
-name|buf
-operator|+
-name|bufsize
-expr_stmt|;
-comment|/* Skip trailing blanks. */
+name|size_t
+name|sz
+decl_stmt|;
+comment|/* Skip back over trailing blanks. */
 for|for
 control|(
 name|q
@@ -301,6 +298,15 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|sz
+operator|=
+name|q
+operator|-
+name|buf
+operator|+
+literal|2
+expr_stmt|;
+comment|/* Space for a trailing NUL. */
 if|if
 condition|(
 operator|(
@@ -308,11 +314,7 @@ name|r
 operator|=
 name|malloc
 argument_list|(
-name|q
-operator|-
-name|buf
-operator|+
-literal|2
+name|sz
 argument_list|)
 operator|)
 operator|==
@@ -335,18 +337,23 @@ block|}
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|strncpy
 argument_list|(
 name|r
 argument_list|,
 name|buf
 argument_list|,
-name|q
-operator|-
-name|buf
-operator|+
-literal|2
+name|sz
 argument_list|)
+expr_stmt|;
+name|r
+index|[
+name|sz
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
@@ -564,7 +571,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|strncpy
 argument_list|(
 name|s
 argument_list|,
@@ -572,6 +579,15 @@ name|q
 argument_list|,
 name|len
 argument_list|)
+expr_stmt|;
+name|s
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
