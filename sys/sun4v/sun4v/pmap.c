@@ -7524,12 +7524,19 @@ return|return;
 block|}
 name|KASSERT
 argument_list|(
-argument|sva>= eva
+name|sva
+operator|>=
+name|eva
 argument_list|,
-argument|(
+operator|(
 literal|"invalidating negative or zero range sva=0x%lx eva=0x%lx"
-argument|, sva, eva)
+operator|,
+name|sva
+operator|,
+name|eva
+operator|)
 argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cleartsb
