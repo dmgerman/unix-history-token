@@ -439,7 +439,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-name|tl_ipi_tlb_range_demap
+name|tl_invlrng
 index|[]
 decl_stmt|;
 end_decl_stmt
