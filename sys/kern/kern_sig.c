@@ -1503,9 +1503,14 @@ name|p_pendingcnt
 operator|--
 expr_stmt|;
 block|}
-name|count
+if|if
+condition|(
 operator|++
-expr_stmt|;
+name|count
+operator|>
+literal|1
+condition|)
+break|break;
 block|}
 block|}
 if|if
