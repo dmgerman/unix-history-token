@@ -313,6 +313,7 @@ name|exp
 parameter_list|,
 name|msg
 parameter_list|)
+value|do { \ } while (0)
 end_define
 
 begin_define
@@ -326,6 +327,7 @@ name|vp
 parameter_list|,
 name|msg
 parameter_list|)
+value|do { \ } while (0)
 end_define
 
 begin_endif
