@@ -884,18 +884,6 @@ block|,
 name|TYPE_PL2303
 block|}
 block|,
-comment|/* HAMLET exagerate XURS232 */
-block|{
-name|USB_VENDOR_PROLIFIC
-block|,
-name|USB_PRODUCT_PROLIFIC_PL2303
-block|,
-operator|-
-literal|1
-block|,
-name|TYPE_PL2303X
-block|}
-block|,
 comment|/* TDK USB-PHS Adapter UHA6400 */
 block|{
 name|USB_VENDOR_TDK
