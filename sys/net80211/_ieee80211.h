@@ -381,6 +381,28 @@ begin_comment
 comment|/* GFSK channel (FHSS PHY) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_HALF
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Half rate channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_QUARTER
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Quarter rate channel */
+end_comment
+
 begin_comment
 comment|/*  * Useful combinations of channel characteristics.  */
 end_comment
@@ -598,6 +620,28 @@ name|_c
 parameter_list|)
 define|\
 value|(((_c)->ic_flags& IEEE80211_CHAN_GFSK) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_HALF
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_HALF) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_QUARTER
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_QUARTER) != 0)
 end_define
 
 begin_comment
