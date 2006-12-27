@@ -227,29 +227,26 @@ name|u_int
 name|src
 parameter_list|)
 block|{
-name|int
+name|u_char
 name|res
-init|=
-name|exp
 decl_stmt|;
 asm|__asm __volatile(
 literal|"	pushfl ;		"
 literal|"	cli ;			"
-literal|"	cmpl	%0,%3 ;		"
+literal|"	cmpl	%3,%4 ;		"
 literal|"	jne	1f ;		"
 literal|"	movl	%2,%1 ;		"
 literal|"1:				"
-literal|"       sete	%%al;		"
-literal|"	movzbl	%%al,%0 ;	"
+literal|"       sete	%0 ;		"
 literal|"	popfl ;			"
 literal|"# atomic_cmpset_int"
 operator|:
-literal|"+a"
+literal|"=q"
 operator|(
 name|res
 operator|)
 operator|,
-comment|/* 0 (result) */
+comment|/* 0 */
 literal|"=m"
 operator|(
 operator|*
@@ -263,12 +260,18 @@ name|src
 operator|)
 operator|,
 comment|/* 2 */
+literal|"r"
+operator|(
+name|exp
+operator|)
+operator|,
+comment|/* 3 */
 literal|"m"
 operator|(
 operator|*
 name|dst
 operator|)
-comment|/* 3 */
+comment|/* 4 */
 operator|:
 literal|"memory"
 block|)
@@ -311,10 +314,8 @@ name|u_int
 name|src
 parameter_list|)
 block|{
-name|int
+name|u_char
 name|res
-init|=
-name|exp
 decl_stmt|;
 asm|__asm __volatile (
 literal|"	"
@@ -324,17 +325,16 @@ name|MPLOCKED
 argument_list|)
 literal|"	"
 literal|"	cmpxchgl %2,%1 ;	"
-literal|"       setz	%%al ;		"
-literal|"	movzbl	%%al,%0 ;	"
+literal|"       sete	%0 ;		"
 literal|"1:				"
 literal|"# atomic_cmpset_int"
 operator|:
-literal|"+a"
+literal|"=a"
 operator|(
 name|res
 operator|)
 operator|,
-comment|/* 0 (result) */
+comment|/* 0 */
 literal|"=m"
 operator|(
 operator|*
@@ -348,12 +348,18 @@ name|src
 operator|)
 operator|,
 comment|/* 2 */
+literal|"a"
+operator|(
+name|exp
+operator|)
+operator|,
+comment|/* 3 */
 literal|"m"
 operator|(
 operator|*
 name|dst
 operator|)
-comment|/* 3 */
+comment|/* 4 */
 operator|:
 literal|"memory"
 block|)
