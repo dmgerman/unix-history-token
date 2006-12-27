@@ -1216,7 +1216,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Usage:\n"
-literal|"%s [-afKksVx] [-M core] [-N system ] [-o outfile] [-X suffix]\n"
+literal|"%s [-afKksVx] [-M core] [-N system] [-o outfile] [-X suffix]\n"
 literal|"%*s [modules-path [outfile]]\n\n"
 literal|"\t-a\tappend to outfile\n"
 literal|"\t-f\tfind the module in any subdirectory of modules-path\n"
