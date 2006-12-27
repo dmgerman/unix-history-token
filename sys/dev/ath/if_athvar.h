@@ -599,10 +599,13 @@ name|sc_ic
 decl_stmt|;
 comment|/* IEEE 802.11 common */
 name|int
+name|sc_debug
+decl_stmt|;
+name|u_int32_t
 name|sc_countrycode
 decl_stmt|;
-name|int
-name|sc_debug
+name|u_int32_t
+name|sc_regdomain
 decl_stmt|;
 name|void
 function_decl|(
@@ -773,15 +776,35 @@ comment|/* sync/resync beacon timers */
 name|sc_hasclrkey
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* CLR key supported */
+name|sc_xchanmode
+range|:
+literal|1
+decl_stmt|,
+comment|/* extended channel mode */
+name|sc_outdoor
+range|:
+literal|1
+decl_stmt|;
+comment|/* outdoor operation */
 comment|/* rate tables */
+define|#
+directive|define
+name|IEEE80211_MODE_11A_HALF
+value|(IEEE80211_MODE_MAX+0)
+define|#
+directive|define
+name|IEEE80211_MODE_11A_QUARTER
+value|(IEEE80211_MODE_MAX+1)
 specifier|const
 name|HAL_RATE_TABLE
 modifier|*
 name|sc_rates
 index|[
 name|IEEE80211_MODE_MAX
+operator|+
+literal|2
 index|]
 decl_stmt|;
 specifier|const
@@ -2748,6 +2771,30 @@ define|#
 directive|define
 name|HAL_TXQ_TXURNINT_ENABLE
 value|TXQ_FLAG_TXURNINT_ENABLE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|HAL_ABI_VERSION
+operator|<
+literal|0x06102501
+end_if
+
+begin_define
+define|#
+directive|define
+name|ath_hal_ispublicsafetysku
+parameter_list|(
+name|ah
+parameter_list|)
+define|\
+value|(((ah)->ah_regdomain == 0&& (ah)->ah_countryCode == 842) || \ 	 (ah)->ah_regdomain == 0x12)
 end_define
 
 begin_endif
