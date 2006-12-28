@@ -6854,6 +6854,17 @@ name|MPC_RUNTIME_FLAG_REGISTERED
 value|0x00000001
 end_define
 
+begin_comment
+comment|/*-  * The TrustedBSD MAC Framework has a major version number, MAC_VERSION,  * which defines the ABI of the Framework present in the kernel (and depended  * on by policy modules compiled against that kernel).  Currently,  * MAC_POLICY_SET() requires that the kernel and module ABI version numbers  * exactly match.  The following major versions have been defined to date:  *  *   MAC version             FreeBSD versions  *   1                       5.x  *   2                       6.x  *   3                       7.x  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAC_VERSION
+value|3
+end_define
+
 begin_define
 define|#
 directive|define
@@ -6870,7 +6881,7 @@ parameter_list|,
 name|privdata_wanted
 parameter_list|)
 define|\
-value|static struct mac_policy_conf mpname##_mac_policy_conf = {	\ 		#mpname,						\ 		mpfullname,						\ 		mpops,							\ 		mpflags,						\ 		privdata_wanted,					\ 		0,							\ 	};								\ 	static moduledata_t mpname##_mod = {				\ 		#mpname,						\ 		mac_policy_modevent,					\&mpname##_mac_policy_conf				\ 	};								\ 	MODULE_DEPEND(mpname, kernel_mac_support, 3, 3, 3);		\ 	DECLARE_MODULE(mpname, mpname##_mod, SI_SUB_MAC_POLICY,		\ 	    SI_ORDER_MIDDLE)
+value|static struct mac_policy_conf mpname##_mac_policy_conf = {	\ 		#mpname,						\ 		mpfullname,						\ 		mpops,							\ 		mpflags,						\ 		privdata_wanted,					\ 		0,							\ 	};								\ 	static moduledata_t mpname##_mod = {				\ 		#mpname,						\ 		mac_policy_modevent,					\&mpname##_mac_policy_conf				\ 	};								\ 	MODULE_DEPEND(mpname, kernel_mac_support, MAC_VERSION,		\ 	    MAC_VERSION, MAC_VERSION);					\ 	DECLARE_MODULE(mpname, mpname##_mod, SI_SUB_MAC_POLICY,		\ 	    SI_ORDER_MIDDLE)
 end_define
 
 begin_function_decl

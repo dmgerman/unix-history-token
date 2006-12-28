@@ -119,12 +119,15 @@ begin_comment
 comment|/*  * Declare that the kernel provides MAC support, version 3 (FreeBSD 7.x).  * This permits modules to refuse to be loaded if the necessary support isn't  * present, even if it's pre-boot.  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|kernel_mac_support
+argument_list|,
 name|MAC_VERSION
-value|3
-end_define
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -135,16 +138,6 @@ init|=
 name|MAC_VERSION
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|MODULE_VERSION
-argument_list|(
-name|kernel_mac_support
-argument_list|,
-name|MAC_VERSION
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT
@@ -242,6 +235,7 @@ comment|/*  * Has the kernel started generating labeled objects yet?  All read/w
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mac_late
 init|=
