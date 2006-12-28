@@ -49,17 +49,10 @@ name|KLD_MODULE
 argument_list|)
 operator|||
 operator|!
-operator|(
 name|defined
 argument_list|(
 name|__GNUCLIKE_ASM
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__CC_SUPPORTS___INLINE
-argument_list|)
-operator|)
 end_if
 
 begin_define
@@ -153,7 +146,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !KLD_MODULE&& __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE */
+comment|/* !KLD_MODULE&& __GNUCLIKE_ASM */
 end_comment
 
 begin_comment
@@ -507,7 +500,7 @@ value|\ 	  "=m" (*p)
 comment|/* 1 */
 value|\ 	: "m" (*p)
 comment|/* 2 */
-value|\ 	: "memory");				 	\ 							\ 	return (res);					\ }							\ 							\
+value|\ 	: "memory");					\ 							\ 	return (res);					\ }							\ 							\
 comment|/*							\  * The XCHG instruction asserts LOCK automagically.	\  */
 value|\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(SOP				\ 	: "=m" (*p),
 comment|/* 0 */
@@ -533,7 +526,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KLD_MODULE || !(__GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE) */
+comment|/* KLD_MODULE || !__GNUCLIKE_ASM */
 end_comment
 
 begin_expr_stmt
@@ -870,19 +863,11 @@ begin_comment
 comment|/* Read the current value and store a zero in the destination. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__GNUCLIKE_ASM
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__CC_SUPPORTS___INLINE
-argument_list|)
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -997,7 +982,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !(__GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE) */
+comment|/* !__GNUCLIKE_ASM */
 end_comment
 
 begin_expr_stmt
@@ -1028,7 +1013,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE */
+comment|/* __GNUCLIKE_ASM */
 end_comment
 
 begin_comment
