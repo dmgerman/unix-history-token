@@ -45,7 +45,7 @@ begin_struct
 struct|struct
 name|archive
 block|{
-comment|/* 	 * The magic/state values are used to sanity-check the 	 * client's usage.  If an API function is called at a 	 * rediculous time, or the client passes us an invalid 	 * pointer, these values allow me to catch that. 	 */
+comment|/* 	 * The magic/state values are used to sanity-check the 	 * client's usage.  If an API function is called at a 	 * ridiculous time, or the client passes us an invalid 	 * pointer, these values allow me to catch that. 	 */
 name|unsigned
 name|magic
 decl_stmt|;
@@ -386,7 +386,7 @@ modifier|*
 name|format
 decl_stmt|;
 comment|/* Active format. */
-comment|/* 	 * Storage for format-specific data.  Note that there can be 	 * multiple format readers active at one time, so we need to 	 * allow for multiple format readers to have their data 	 * available.  The pformat_data slot here is the solution: on 	 * read, it is gauranteed to always point to a void* variable 	 * that the format can use. 	 */
+comment|/* 	 * Storage for format-specific data.  Note that there can be 	 * multiple format readers active at one time, so we need to 	 * allow for multiple format readers to have their data 	 * available.  The pformat_data slot here is the solution: on 	 * read, it is guaranteed to always point to a void* variable 	 * that the format can use. 	 */
 name|void
 modifier|*
 modifier|*
