@@ -203,10 +203,6 @@ value|mtx_unlock(&mac_ifnet_mtx)
 end_define
 
 begin_comment
-comment|/*  * XXXRW: In order to use the MAC label UMA zone for all label allocations,  * we simply store a pointer to a UMA-allocated label in the mbuf tag.  This  * is inefficient and should likely change to using a label embedded in the  * tag.  */
-end_comment
-
-begin_comment
 comment|/*  * Retrieve the label associated with an mbuf by searching for the tag.  * Depending on the value of mac_labelmbufs, it's possible that a label will  * not be present, in which case NULL is returned.  Policies must handle the  * possibility of an mbuf not having label storage if they do not enforce  * early loading.  */
 end_comment
 
