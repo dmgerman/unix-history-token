@@ -74,7 +74,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|700010
+literal|602102
 return|return
 operator|(
 name|pci_find_extcap
