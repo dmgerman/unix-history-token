@@ -436,6 +436,13 @@ argument_list|,
 name|ofw_pcibus_assign_interrupt
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|pci_find_extcap
+argument_list|,
+name|pci_find_extcap_method
+argument_list|)
+block|,
 comment|/* ofw_bus interface */
 name|DEVMETHOD
 argument_list|(

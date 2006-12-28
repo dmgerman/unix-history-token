@@ -556,6 +556,13 @@ argument_list|,
 name|pci_assign_interrupt_method
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|pci_find_extcap
+argument_list|,
+name|pci_find_extcap_method
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
