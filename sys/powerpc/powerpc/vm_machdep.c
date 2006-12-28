@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/powerpc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -650,7 +656,7 @@ name|void
 name|cpu_reset
 parameter_list|()
 block|{
-name|OF_exit
+name|OF_reboot
 argument_list|()
 expr_stmt|;
 block|}
