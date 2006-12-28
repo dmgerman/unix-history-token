@@ -661,21 +661,13 @@ parameter_list|)
 block|{
 define|#
 directive|define
-name|RATESDEFINED
-parameter_list|(
-name|m
-parameter_list|)
-define|\
-value|((ic->ic_modecaps& (1<<m))&& ic->ic_sup_rates[m].rs_nrates != 0)
-define|#
-directive|define
 name|DEFAULTRATES
 parameter_list|(
 name|m
 parameter_list|,
 name|def
 parameter_list|)
-value|do { \ 	if (!RATESDEFINED(m)) ic->ic_sup_rates[m] = def; \ } while (0)
+value|do { \ 	if ((ic->ic_modecaps& (1<<m))&& ic->ic_sup_rates[m].rs_nrates == 0) \ 		ic->ic_sup_rates[m] = def; \ } while (0)
 name|struct
 name|ifnet
 modifier|*
@@ -830,7 +822,7 @@ name|IEEE80211_MODE_11B
 expr_stmt|;
 if|if
 condition|(
-name|IEEE80211_IS_CHAN_PUREG
+name|IEEE80211_IS_CHAN_ANYG
 argument_list|(
 name|c
 argument_list|)
@@ -963,9 +955,6 @@ expr_stmt|;
 undef|#
 directive|undef
 name|DEFAULTRATES
-undef|#
-directive|undef
-name|RATESDEFINED
 block|}
 end_function
 
