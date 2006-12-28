@@ -896,6 +896,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Functions implementing extended-attribute backed labels for file systems  * that support it.  *  * Where possible, we use EA transactions to make writes to multiple  * attributes across difference policies mutually atomic.  We allow work to  * continue on file systems not supporting EA transactions, but generate a  * printf warning.  */
+end_comment
+
 begin_function
 name|int
 name|mac_create_vnode_extattr
@@ -961,7 +965,6 @@ operator|==
 name|EOPNOTSUPP
 condition|)
 block|{
-comment|/* XXX: Optionally abort if transactions not supported. */
 if|if
 condition|(
 name|ea_warn_once
@@ -1063,7 +1066,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 name|error
@@ -1121,7 +1123,6 @@ operator|==
 name|EOPNOTSUPP
 condition|)
 block|{
-comment|/* XXX: Optionally abort if transactions not supported. */
 if|if
 condition|(
 name|ea_warn_once
@@ -1211,7 +1212,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 name|error
