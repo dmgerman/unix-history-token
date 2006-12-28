@@ -16,15 +16,16 @@ name|_PCI_PRIVATE_H_
 end_define
 
 begin_comment
-comment|/*  * Export definitions of the pci bus so that we can more easily share  * it with "subclass" busses.  A more generic subclassing mechanism would  * be nice, but is not present in the tree at this time.  */
+comment|/*  * Export definitions of the pci bus so that we can more easily share  * it with "subclass" busses.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|devclass_t
-name|pci_devclass
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|DECLARE_CLASS
+argument_list|(
+name|pci_driver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|void

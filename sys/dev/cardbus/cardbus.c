@@ -3477,14 +3477,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DECLARE_CLASS
-argument_list|(
-name|pci_driver
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|DEFINE_CLASS_1
 argument_list|(
 name|cardbus
