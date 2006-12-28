@@ -978,10 +978,14 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-comment|/* XXX: assert socket lock. */
 name|INP_LOCK_ASSERT
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+name|SOCK_LOCK_ASSERT
+argument_list|(
+name|so
 argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
