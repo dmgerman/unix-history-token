@@ -23,14 +23,7 @@ begin_define
 define|#
 directive|define
 name|AGP_APBASE
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|AGP_CAPPTR
-value|0x34
+value|PCIR_BAR(0)
 end_define
 
 begin_comment
@@ -42,46 +35,6 @@ define|#
 directive|define
 name|AGP_CAPID
 value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|AGP_CAPID_GET_MAJOR
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x00f00000U)>> 20)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AGP_CAPID_GET_MINOR
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x000f0000U)>> 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AGP_CAPID_GET_NEXT_PTR
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x0000ff00U)>> 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AGP_CAPID_GET_CAP_ID
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x000000ffU)>> 0)
 end_define
 
 begin_define
