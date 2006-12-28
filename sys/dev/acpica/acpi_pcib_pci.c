@@ -370,22 +370,28 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|driver_t
+name|devclass_t
+name|pcib_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DEFINE_CLASS_0
+argument_list|(
+name|pcib
+argument_list|,
 name|acpi_pcib_pci_driver
-init|=
-block|{
-literal|"pcib"
-block|,
+argument_list|,
 name|acpi_pcib_pci_methods
-block|,
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|acpi_pcib_softc
 argument_list|)
-block|, }
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE

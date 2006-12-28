@@ -1238,18 +1238,24 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|driver_t
-name|legacy_pcib_driver
-init|=
-block|{
-literal|"pcib"
-block|,
-name|legacy_pcib_methods
-block|,
-literal|1
-block|, }
+name|devclass_t
+name|pcib_devclass
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|DEFINE_CLASS_0
+argument_list|(
+name|pcib
+argument_list|,
+name|legacy_pcib_driver
+argument_list|,
+name|legacy_pcib_methods
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
@@ -1603,27 +1609,24 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|driver_t
-name|pcibus_pnp_driver
-init|=
-block|{
-literal|"pcibus_pnp"
-block|,
-name|pcibus_pnp_methods
-block|,
-literal|1
-block|,
-comment|/* no softc */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|devclass_t
 name|pcibus_pnp_devclass
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|DEFINE_CLASS_0
+argument_list|(
+name|pcibus_pnp
+argument_list|,
+name|pcibus_pnp_driver
+argument_list|,
+name|pcibus_pnp_methods
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
