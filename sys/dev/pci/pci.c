@@ -988,6 +988,17 @@ block|,
 literal|0
 block|}
 block|,
+comment|/* 	 * MSI doesn't work with the Intel E7505 chipset, at least on 	 * the Tyan S2665ANF motherboard. 	 */
+block|{
+literal|0x25508086
+block|,
+name|PCI_QUIRK_DISABLE_MSI
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
 block|{
 literal|0
 block|}
