@@ -787,7 +787,7 @@ return|;
 case|case
 name|FPC_NUM
 case|:
-comment|/* 		 * If exp>= 2^64, overflow.  Otherwise shift value right 		 * into last mantissa word (this will not exceed 0xffffffffffffffff), 		 * shifting any guard and round bits out into the sticky 		 * bit.  Then ``round'' towards zero, i.e., just set an 		 * inexact exception if sticky is set (see round()). 		 * If the result is> 0x8000000000000000, or is positive and equals 		 * 0x8000000000000000, overflow; otherwise the last fraction word 		 * is the result. 		 */
+comment|/* 		 * If exp>= 2^64, overflow.  Otherwise shift value 		 * right into last mantissa word (this will not exceed 		 * 0xffffffffffffffff), shifting any guard and round 		 * bits out into the sticky bit.  Then ``round'' towards 		 * zero, i.e., just set an inexact exception if sticky 		 * is set (see round()). 		 * If the result is> 0x8000000000000000, or is positive 		 * and equals 0x8000000000000000, overflow; otherwise 		 * the last fraction word is the result. 		 */
 if|if
 condition|(
 operator|(
@@ -867,7 +867,7 @@ condition|)
 name|i
 operator|=
 operator|-
-literal|1
+name|i
 expr_stmt|;
 name|res
 index|[
