@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2005 Networks Associates Technology, Inc.  * Copyright (c) 2005-2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract   * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999-2002, 2006 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2005 Networks Associates Technology, Inc.  * Copyright (c) 2005-2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract   * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*-  * Framework for extensible kernel access control.  This file contains  * Kernel and userland interface to the framework, policy registration  * and composition.  Per-object interfaces, controls, and labeling may be  * found in src/sys/security/mac/.  Sample policies may be found in  * src/sys/security/mac_*.  */
+comment|/*-  * Framework for extensible kernel access control.  This file contains core  * kernel infrastructure for the TrustedBSD MAC Framework, including policy  * registration, versioning, locking, error composition operator, and system  * calls.  *  * The MAC Framework implements three programming interfaces:  *  * - The kernel MAC interface, defined in mac_framework.h, and invoked  *   throughout the kernel to request security decisions, notify of security  *   related events, etc.  *  * - The MAC policy module interface, defined in mac_policy.h, which is  *   implemented by MAC policy modules and invoked by the MAC Framework to  *   forward kernel security requests and notifications to policy modules.  *  * - The user MAC API, defined in mac.h, which allows user programs to query  *   and set label state on objects.  *  * The majority of the MAC Framework implementation may be found in  * src/sys/security/mac.  Sample policy modules may be found in  * src/sys/security/mac_*.  */
 end_comment
 
 begin_include
@@ -250,18 +250,8 @@ name|MAC
 end_ifdef
 
 begin_comment
-comment|/*  * Declare that the kernel provides MAC support, version 1.  This permits  * modules to refuse to be loaded if the necessary support isn't present,  * even if it's pre-boot.  */
+comment|/*  * Root sysctl node for all MAC and MAC policy controls.  */
 end_comment
-
-begin_expr_stmt
-name|MODULE_VERSION
-argument_list|(
-name|kernel_mac_support
-argument_list|,
-literal|3
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -277,6 +267,58 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"TrustedBSD MAC policy controls"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Declare that the kernel provides MAC support, version 3 (FreeBSD 7.x).  * This permits modules to refuse to be loaded if the necessary support isn't  * present, even if it's pre-boot.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAC_VERSION
+value|3
+end_define
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|mac_version
+init|=
+name|MAC_VERSION
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|kernel_mac_support
+argument_list|,
+name|MAC_VERSION
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_security_mac
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|version
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|mac_version
+argument_list|,
+literal|0
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -425,7 +467,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * mac_static_policy_list holds a list of policy modules that are not loaded  * while the system is "live", and cannot be unloaded.  These policies can be  * invoked without holding the busy count.  *  * mac_policy_list stores the list of dynamic policies.  A busy count is  * maintained for the list, stored in mac_policy_busy.  The busy count is  * protected by mac_policy_mtx; the list may be modified only while the busy  * count is 0, requiring that the lock be held to prevent new references to  * the list from being acquired.  For almost all operations, incrementing the  * busy count is sufficient to guarantee consistency, as the list cannot be  * modified while the busy count is elevated.  For a few special operations  * involving a change to the list of active policies, the mtx itself must be  * held.  A condition variable, mac_policy_cv, is used to signal potential  * exclusive consumers that they should try to acquire the lock if a first  * attempt at exclusive access fails.  *  * This design intentionally avoids fairness, and may starve attempts to  * acquire an exclusive lock on a busy system.  This is required because we  * do not ever want acquiring a read reference to perform an unbounded length  * sleep.  Read references are acquired in ithreads, network isrs, etc, and  * any unbounded blocking could lead quickly to deadlock.  *  * Another reason for never blocking on read references is that the MAC  * Framework may recurse: if a policy calls a VOP, for example, this might  * lead to vnode life cycle operations (such as init/destroy).  */
+comment|/*  * mac_static_policy_list holds a list of policy modules that are not loaded  * while the system is "live", and cannot be unloaded.  These policies can be  * invoked without holding the busy count.  *  * mac_policy_list stores the list of dynamic policies.  A busy count is  * maintained for the list, stored in mac_policy_busy.  The busy count is  * protected by mac_policy_mtx; the list may be modified only while the busy  * count is 0, requiring that the lock be held to prevent new references to  * the list from being acquired.  For almost all operations, incrementing the  * busy count is sufficient to guarantee consistency, as the list cannot be  * modified while the busy count is elevated.  For a few special operations  * involving a change to the list of active policies, the mtx itself must be  * held.  A condition variable, mac_policy_cv, is used to signal potential  * exclusive consumers that they should try to acquire the lock if a first  * attempt at exclusive access fails.  *  * This design intentionally avoids fairness, and may starve attempts to  * acquire an exclusive lock on a busy system.  This is required because we  * do not ever want acquiring a read reference to perform an unbounded length  * sleep.  Read references are acquired in ithreads, network isrs, etc, and  * any unbounded blocking could lead quickly to deadlock.  *  * Another reason for never blocking on read references is that the MAC  * Framework may recurse: if a policy calls a VOP, for example, this might  * lead to vnode life cycle operations (such as init/destroy).  *  * If the kernel option MAC_STATIC has been compiled in, all locking becomes  * a no-op, and the global list of policies is not allowed to change after  * early boot.  */
 end_comment
 
 begin_ifndef
