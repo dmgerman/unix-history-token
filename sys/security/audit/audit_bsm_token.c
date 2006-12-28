@@ -1160,7 +1160,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * token ID                1 byte  * ip header		   20 bytes  */
+comment|/*  * token ID                1 byte  * ip header		   20 bytes  *  * The IP header should be submitted in network byte order.  */
 end_comment
 
 begin_function
@@ -1209,7 +1209,6 @@ argument_list|,
 name|AUT_IP
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXXRW: Any byte order work needed on the IP header before writing? 	 */
 name|ADD_MEM
 argument_list|(
 name|dptr

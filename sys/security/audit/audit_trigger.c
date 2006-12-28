@@ -64,7 +64,7 @@ file|<security/audit/audit_private.h>
 end_include
 
 begin_comment
-comment|/*  * Structures and operations to support the basic character special device  * used to communicate with userland.  */
+comment|/*  * Structures and operations to support the basic character special device  * used to communicate with userland.  /dev/audit reliably delivers one-byte  * messages to a listening application (or discards them if there is no  * listening application).  *  * Currently, select/poll are not supported on the trigger device.  */
 end_comment
 
 begin_struct
@@ -479,7 +479,7 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-comment|/* 	 * XXXAUDIT: Use a condition variable instead of msleep/wakeup? 	 */
+comment|/* 	 * Note: Use a condition variable instead of msleep/wakeup? 	 */
 name|ti
 operator|=
 name|malloc

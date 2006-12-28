@@ -1158,7 +1158,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 	 * XXX: The number of outstanding uncommitted audit records is 	 * limited to the number of concurrent threads servicing system 	 * calls in the kernel. 	 */
+comment|/* 	 * Note: the number of outstanding uncommitted audit records is 	 * limited to the number of concurrent threads servicing system calls 	 * in the kernel. 	 */
 name|ar
 operator|=
 name|uma_zalloc_arg
@@ -1764,7 +1764,7 @@ name|AU_PRS_BOTH
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * If we're out of space and need to suspend unprivileged 		 * processes, do that here rather than trying to allocate 		 * another audit record. 		 * 		 * XXXRW: We might wish to be able to continue here in the 		 * future, if the system recovers.  That should be possible 		 * by means of checking the condition in a loop around 		 * cv_wait().  It might be desirable to reevaluate whether an 		 * audit record is still required for this event by 		 * re-calling au_preselect(). 		 */
+comment|/* 		 * If we're out of space and need to suspend unprivileged 		 * processes, do that here rather than trying to allocate 		 * another audit record. 		 * 		 * Note: we might wish to be able to continue here in the 		 * future, if the system recovers.  That should be possible 		 * by means of checking the condition in a loop around 		 * cv_wait().  It might be desirable to reevaluate whether an 		 * audit record is still required for this event by 		 * re-calling au_preselect(). 		 */
 if|if
 condition|(
 name|audit_in_failure
