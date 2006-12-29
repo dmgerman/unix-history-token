@@ -1444,7 +1444,7 @@ argument_list|)
 expr_stmt|;
 name|fmt
 operator|=
-literal|", %u"
+literal|",%u"
 expr_stmt|;
 if|if
 condition|(
