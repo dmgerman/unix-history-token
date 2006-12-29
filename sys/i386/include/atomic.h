@@ -154,7 +154,7 @@ begin_define
 define|#
 directive|define
 name|MPLOCKED
-value|lock ;
+value|"lock ; "
 end_define
 
 begin_else
@@ -193,7 +193,7 @@ parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(__XSTRING(MPLOCKED) OP		\ 			 : "=m" (*p)			\ 			 : CONS (V), "m" (*p));		\ }							\ struct __hack
+value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 			 : "=m" (*p)			\ 			 : CONS (V), "m" (*p));		\ }							\ struct __hack
 end_define
 
 begin_comment
@@ -319,11 +319,8 @@ name|res
 decl_stmt|;
 asm|__asm __volatile (
 literal|"	"
-name|__XSTRING
-argument_list|(
 name|MPLOCKED
-argument_list|)
-literal|"	"
+literal|"		"
 literal|"	cmpxchgl %2,%1 ;	"
 literal|"       sete	%0 ;		"
 literal|"1:				"
@@ -405,11 +402,8 @@ parameter_list|)
 block|{
 asm|__asm __volatile (
 literal|"	"
-name|__XSTRING
-argument_list|(
 name|MPLOCKED
-argument_list|)
-literal|"	"
+literal|"		"
 literal|"	xaddl	%0, %1 ;	"
 literal|"# atomic_fetchadd_int"
 operator|:
@@ -503,7 +497,7 @@ parameter_list|,
 name|SOP
 parameter_list|)
 define|\
-value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE res;					\ 							\ 	__asm __volatile(__XSTRING(MPLOCKED) LOP	\ 	: "=a" (res),
+value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE res;					\ 							\ 	__asm __volatile(MPLOCKED LOP			\ 	: "=a" (res),
 comment|/* 0 (result) */
 value|\ 	  "=m" (*p)
 comment|/* 1 */
