@@ -558,7 +558,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * XXX Need to implement these commands by accessing the global 	 * values associated with the commands. 	 * 	 * XXXAUDIT: Locking? 	 */
+comment|/* 	 * XXXAUDIT: Locking? 	 */
 switch|switch
 condition|(
 name|uap
@@ -2021,7 +2021,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MPSAFE  * Syscall to manage audit files.  *  * XXX: Should generate an audit event.  */
+comment|/*  * MPSAFE  * Syscall to manage audit files.  */
 end_comment
 
 begin_comment
