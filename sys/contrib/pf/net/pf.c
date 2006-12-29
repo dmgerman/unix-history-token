@@ -8887,7 +8887,22 @@ argument|; 	struct pf_tag		*pftag = NULL; 	int			 tag = -
 literal|1
 argument|; 	u_int16_t		 mss = tcp_mssdflt; 	int			 asd =
 literal|0
-argument|;  	if (pf_check_congestion(ifq)) { 		REASON_SET(&reason, PFRES_CONGEST); 		return (PF_DROP); 	}  	r = TAILQ_FIRST(pf_main_ruleset.rules[PF_RULESET_FILTER].active.ptr);  	if (direction == PF_OUT) { 		bport = nport = th->th_sport;
+argument|;  	if (pf_check_congestion(ifq)) { 		REASON_SET(&reason, PFRES_CONGEST); 		return (PF_DROP); 	}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|PF_MPSAFE_UGID
+argument_list|)
+argument|PF_UNLOCK(); 	lookup = pf_socket_lookup(&uid,&gid, direction, pd, inp); 	PF_LOCK();
+endif|#
+directive|endif
+argument|r = TAILQ_FIRST(pf_main_ruleset.rules[PF_RULESET_FILTER].active.ptr);  	if (direction == PF_OUT) { 		bport = nport = th->th_sport;
 comment|/* check outgoing packet for BINAT/NAT */
 argument|if ((nr = pf_get_translation(pd, m, off, PF_OUT, kif,&nsn, 		    saddr, th->th_sport, daddr, th->th_dport,&pd->naddr,&nport)) != NULL) { 			PF_ACPY(&pd->baddr, saddr, af); 			pf_change_ap(saddr,&th->th_sport, pd->ip_sum,&th->th_sum,&pd->naddr, nport,
 literal|0
@@ -9697,7 +9712,22 @@ argument|; 	struct pf_tag		*pftag = NULL; 	int			 tag = -
 literal|1
 argument|; 	int			 asd =
 literal|0
-argument|;  	if (pf_check_congestion(ifq)) { 		REASON_SET(&reason, PFRES_CONGEST); 		return (PF_DROP); 	}  	r = TAILQ_FIRST(pf_main_ruleset.rules[PF_RULESET_FILTER].active.ptr);  	if (direction == PF_OUT) { 		bport = nport = uh->uh_sport;
+argument|;  	if (pf_check_congestion(ifq)) { 		REASON_SET(&reason, PFRES_CONGEST); 		return (PF_DROP); 	}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|PF_MPSAFE_UGID
+argument_list|)
+argument|PF_UNLOCK(); 	lookup = pf_socket_lookup(&uid,&gid, direction, pd, inp); 	PF_LOCK();
+endif|#
+directive|endif
+argument|r = TAILQ_FIRST(pf_main_ruleset.rules[PF_RULESET_FILTER].active.ptr);  	if (direction == PF_OUT) { 		bport = nport = uh->uh_sport;
 comment|/* check outgoing packet for BINAT/NAT */
 argument|if ((nr = pf_get_translation(pd, m, off, PF_OUT, kif,&nsn, 		    saddr, uh->uh_sport, daddr, uh->uh_dport,&pd->naddr,&nport)) != NULL) { 			PF_ACPY(&pd->baddr, saddr, af); 			pf_change_ap(saddr,&uh->uh_sport, pd->ip_sum,&uh->uh_sum,&pd->naddr, nport,
 literal|1
