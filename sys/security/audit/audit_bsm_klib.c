@@ -1357,6 +1357,21 @@ name|error
 decl_stmt|,
 name|vfslocked
 decl_stmt|;
+name|WITNESS_WARN
+argument_list|(
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
+argument_list|,
+name|NULL
+argument_list|,
+literal|"canon_path() at %s:%d"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
 name|fdp
 operator|=
 name|td
