@@ -33,7 +33,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and multiple processors.  *  * atomic_set_char(P, V)	(*(u_char *)(P) |= (V))  * atomic_clear_char(P, V)	(*(u_char *)(P)&= ~(V))  * atomic_add_char(P, V)	(*(u_char *)(P) += (V))  * atomic_subtract_char(P, V)	(*(u_char *)(P) -= (V))  *  * atomic_set_short(P, V)	(*(u_short *)(P) |= (V))  * atomic_clear_short(P, V)	(*(u_short *)(P)&= ~(V))  * atomic_add_short(P, V)	(*(u_short *)(P) += (V))  * atomic_subtract_short(P, V)	(*(u_short *)(P) -= (V))  *  * atomic_set_int(P, V)		(*(u_int *)(P) |= (V))  * atomic_clear_int(P, V)	(*(u_int *)(P)&= ~(V))  * atomic_add_int(P, V)		(*(u_int *)(P) += (V))  * atomic_subtract_int(P, V)	(*(u_int *)(P) -= (V))  * atomic_readandclear_int(P)	(return *(u_int *)P; *(u_int *)P = 0;)  *  * atomic_set_long(P, V)	(*(u_long *)(P) |= (V))  * atomic_clear_long(P, V)	(*(u_long *)(P)&= ~(V))  * atomic_add_long(P, V)	(*(u_long *)(P) += (V))  * atomic_subtract_long(P, V)	(*(u_long *)(P) -= (V))  * atomic_readandclear_long(P)	(return *(u_long *)P; *(u_long *)P = 0;)  */
+comment|/*  * Various simple operations on memory, each of which is atomic in the  * presence of interrupts and multiple processors.  *  * atomic_set_char(P, V)	(*(u_char *)(P) |= (V))  * atomic_clear_char(P, V)	(*(u_char *)(P)&= ~(V))  * atomic_add_char(P, V)	(*(u_char *)(P) += (V))  * atomic_subtract_char(P, V)	(*(u_char *)(P) -= (V))  *  * atomic_set_short(P, V)	(*(u_short *)(P) |= (V))  * atomic_clear_short(P, V)	(*(u_short *)(P)&= ~(V))  * atomic_add_short(P, V)	(*(u_short *)(P) += (V))  * atomic_subtract_short(P, V)	(*(u_short *)(P) -= (V))  *  * atomic_set_int(P, V)		(*(u_int *)(P) |= (V))  * atomic_clear_int(P, V)	(*(u_int *)(P)&= ~(V))  * atomic_add_int(P, V)		(*(u_int *)(P) += (V))  * atomic_subtract_int(P, V)	(*(u_int *)(P) -= (V))  * atomic_readandclear_int(P)	(return (*(u_int *)(P)); *(u_int *)(P) = 0;)  *  * atomic_set_long(P, V)	(*(u_long *)(P) |= (V))  * atomic_clear_long(P, V)	(*(u_long *)(P)&= ~(V))  * atomic_add_long(P, V)	(*(u_long *)(P) += (V))  * atomic_subtract_long(P, V)	(*(u_long *)(P) -= (V))  * atomic_readandclear_long(P)	(return (*(u_long *)(P)); *(u_long *)(P) = 0;)  */
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ comment|/* !KLD_MODULE&& __GNUCLIKE_ASM */
 end_comment
 
 begin_comment
-comment|/*  * For userland, assume the SMP case and use lock prefixes so that  * the binaries will run on both types of systems.  */
+comment|/*  * For userland, always use lock prefixes so that the binaries will run  * on both SMP and !SMP systems.  */
 end_comment
 
 begin_if
@@ -200,14 +200,11 @@ begin_comment
 comment|/*  * Atomic compare and set, used by the mutex functions  *  * if (*dst == exp) *dst = src (all 32 bit words)  *  * Returns 0 on failure, non-zero on success  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|CPU_DISABLE_CMPXCHG
-argument_list|)
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -293,7 +290,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* defined(CPU_DISABLE_CMPXCHG) */
+comment|/* !CPU_DISABLE_CMPXCHG */
 end_comment
 
 begin_function
@@ -378,7 +375,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(CPU_DISABLE_CMPXCHG) */
+comment|/* CPU_DISABLE_CMPXCHG */
 end_comment
 
 begin_comment
@@ -482,7 +479,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* defined(SMP) */
+comment|/* !(_KERNEL&& !SMP) */
 end_comment
 
 begin_define
@@ -498,7 +495,7 @@ name|SOP
 parameter_list|)
 define|\
 value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE res;					\ 							\ 	__asm __volatile(MPLOCKED LOP			\ 	: "=a" (res),
-comment|/* 0 (result) */
+comment|/* 0 */
 value|\ 	  "=m" (*p)
 comment|/* 1 */
 value|\ 	: "m" (*p)
@@ -520,7 +517,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(SMP) */
+comment|/* _KERNEL&& !SMP */
 end_comment
 
 begin_endif
@@ -852,15 +849,11 @@ directive|undef
 name|ATOMIC_STORE_LOAD
 end_undef
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|WANT_FUNCTIONS
-argument_list|)
-end_if
+end_ifndef
 
 begin_function
 specifier|static
@@ -929,9 +922,9 @@ name|addr
 parameter_list|)
 block|{
 name|u_int
-name|result
+name|res
 decl_stmt|;
-name|result
+name|res
 operator|=
 literal|0
 expr_stmt|;
@@ -941,16 +934,16 @@ literal|"# atomic_readandclear_int"
 operator|:
 literal|"+r"
 operator|(
-name|result
+name|res
 operator|)
 operator|,
-comment|/* 0 (result) */
+comment|/* 0 */
 literal|"=m"
 operator|(
 operator|*
 name|addr
 operator|)
-comment|/* 1 (addr) */
+comment|/* 1 */
 operator|:
 literal|"m"
 operator|(
@@ -964,7 +957,7 @@ end_function
 begin_return
 return|return
 operator|(
-name|result
+name|res
 operator|)
 return|;
 end_return
@@ -982,9 +975,9 @@ name|addr
 parameter_list|)
 block|{
 name|u_long
-name|result
+name|res
 decl_stmt|;
-name|result
+name|res
 operator|=
 literal|0
 expr_stmt|;
@@ -997,13 +990,13 @@ operator|(
 name|result
 operator|)
 operator|,
-comment|/* 0 (result) */
+comment|/* 0 */
 literal|"=m"
 operator|(
 operator|*
 name|addr
 operator|)
-comment|/* 1 (addr) */
+comment|/* 1 */
 operator|:
 literal|"m"
 operator|(
@@ -1017,7 +1010,7 @@ end_function
 begin_return
 return|return
 operator|(
-name|result
+name|res
 operator|)
 return|;
 end_return
@@ -1039,6 +1032,7 @@ argument_list|(
 specifier|volatile
 name|u_int
 operator|*
+name|addr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1050,6 +1044,7 @@ parameter_list|(
 specifier|volatile
 name|u_long
 modifier|*
+name|addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1906,7 +1901,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(WANT_FUNCTIONS) */
+comment|/* !WANT_FUNCTIONS */
 end_comment
 
 begin_endif
