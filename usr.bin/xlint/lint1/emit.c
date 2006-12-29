@@ -733,7 +733,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * write the name of a symbol to the output buffer  * the name is preceeded by its length  */
+comment|/*  * write the name of a symbol to the output buffer  * the name is preceded by its length  */
 end_comment
 
 begin_function
