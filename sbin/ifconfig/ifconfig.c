@@ -1482,7 +1482,7 @@ sizeof|sizeof
 argument_list|(
 name|name
 argument_list|)
-operator|<
+operator|<=
 name|sdl
 operator|->
 name|sdl_nlen
@@ -1505,7 +1505,7 @@ sizeof|sizeof
 argument_list|(
 name|name
 argument_list|)
-operator|<
+operator|<=
 name|sdl
 operator|->
 name|sdl_nlen
