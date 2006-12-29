@@ -1853,6 +1853,8 @@ decl_stmt|;
 name|bpf_mtap2
 argument_list|(
 name|ifp
+operator|->
+name|if_bpf
 argument_list|,
 operator|&
 name|af

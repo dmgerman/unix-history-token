@@ -5567,6 +5567,8 @@ block|{
 name|bpf_mtap
 argument_list|(
 name|ifp
+operator|->
+name|if_bpf
 argument_list|,
 name|m
 argument_list|)

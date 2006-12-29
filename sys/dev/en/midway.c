@@ -3184,6 +3184,8 @@ argument_list|(
 name|sc
 operator|->
 name|ifp
+operator|->
+name|if_bpf
 argument_list|,
 name|tx
 operator|.

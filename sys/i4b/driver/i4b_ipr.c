@@ -3474,6 +3474,8 @@ argument_list|(
 name|sc
 operator|->
 name|sc_ifp
+operator|->
+name|if_bpf
 argument_list|,
 operator|&
 name|mm
@@ -3684,6 +3686,8 @@ argument_list|(
 name|sc
 operator|->
 name|sc_ifp
+operator|->
+name|if_bpf
 argument_list|,
 operator|&
 name|mm
