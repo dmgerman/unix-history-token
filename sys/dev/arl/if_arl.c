@@ -4286,9 +4286,12 @@ expr_stmt|;
 comment|/* 	 * Check if there's a bpf filter listening on this interface. 	 * If so, hand off the raw packet to bpf. 	 */
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ifp
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * Note that the interface cannot be in promiscuous mode if 		 * there are no bpf listeners.  And if el are in promiscuous 		 * mode, el have to check if this packet is really ours. 		 * 		 * This test does not support multicasts. 		 */

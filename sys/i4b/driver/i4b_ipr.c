@@ -3426,11 +3426,14 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|sc
 operator|->
 name|sc_ifp
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 comment|/* prepend the address family as a four byte field */
@@ -3466,7 +3469,7 @@ operator|)
 operator|&
 name|af
 expr_stmt|;
-name|BPF_MTAP
+name|bpf_mtap
 argument_list|(
 name|sc
 operator|->
@@ -3633,11 +3636,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|sc
 operator|->
 name|sc_ifp
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 comment|/* prepend the address family as a four byte field */
@@ -3673,7 +3679,7 @@ operator|)
 operator|&
 name|af
 expr_stmt|;
-name|BPF_MTAP
+name|bpf_mtap
 argument_list|(
 name|sc
 operator|->

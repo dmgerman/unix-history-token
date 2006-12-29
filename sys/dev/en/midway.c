@@ -3080,13 +3080,14 @@ directive|ifdef
 name|ENABLE_BPF
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|sc
 operator|->
 name|ifp
 operator|->
 name|if_bpf
-operator|!=
-name|NULL
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * adjust the top of the mbuf to skip the TBD if present 		 * before passing the packet to bpf. 		 * Also remove padding and the PDU trailer. Assume both of 		 * them to be in the same mbuf. pktlen, m_len and m_data 		 * are not needed anymore so we can change them. 		 */
@@ -3178,7 +3179,7 @@ operator|.
 name|datalen
 expr_stmt|;
 block|}
-name|BPF_MTAP
+name|bpf_mtap
 argument_list|(
 name|sc
 operator|->

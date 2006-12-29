@@ -4269,9 +4269,12 @@ literal|16
 expr_stmt|;
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ifp
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 name|mtag
@@ -4728,9 +4731,12 @@ return|return;
 block|}
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ifp
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * Record the sender ID for possible BPF usage. 		 */

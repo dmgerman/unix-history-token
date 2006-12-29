@@ -931,12 +931,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_bpf
-condition|)
 name|BPF_MTAP
 argument_list|(
 name|ifp
@@ -1629,15 +1623,6 @@ name|pp
 argument_list|)
 expr_stmt|;
 comment|/* Berkeley packet filter */
-if|if
-condition|(
-name|SP2IFP
-argument_list|(
-name|pp
-argument_list|)
-operator|->
-name|if_bpf
-condition|)
 name|BPF_MTAP
 argument_list|(
 name|SP2IFP
