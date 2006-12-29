@@ -2444,6 +2444,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_NAT_CFG
+value|56
+end_define
+
+begin_comment
+comment|/* add/config a nat rule */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT_DEL
+value|57
+end_define
+
+begin_comment
+comment|/* delete a nat rule */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT_GET_CONFIG
+value|58
+end_define
+
+begin_comment
+comment|/* get configuration of a nat rule */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT_GET_LOG
+value|59
+end_define
+
+begin_comment
+comment|/* get log of a nat rule */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_DUMMYNET_CONFIGURE
 value|60
 end_define

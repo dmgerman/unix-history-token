@@ -192,6 +192,9 @@ comment|/* fwd sockaddr			*/
 name|O_FORWARD_MAC
 block|,
 comment|/* fwd mac			*/
+name|O_NAT
+block|,
+comment|/* nope                         */
 comment|/* 	 * More opcodes. 	 */
 name|O_IPSEC
 block|,
@@ -630,6 +633,246 @@ decl_stmt|;
 comment|/* how many left to log 	*/
 block|}
 name|ipfw_insn_log
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Server pool support (LSNAT). */
+end_comment
+
+begin_struct
+struct|struct
+name|cfg_spool
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|cfg_spool
+argument_list|)
+name|_next
+expr_stmt|;
+comment|/* chain of spool instances */
+name|struct
+name|in_addr
+name|addr
+decl_stmt|;
+name|u_short
+name|port
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Redirect modes id. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REDIR_ADDR
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|REDIR_PORT
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|REDIR_PROTO
+value|0x04
+end_define
+
+begin_comment
+comment|/* Nat redirect configuration. */
+end_comment
+
+begin_struct
+struct|struct
+name|cfg_redir
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|cfg_redir
+argument_list|)
+name|_next
+expr_stmt|;
+comment|/* chain of redir instances */
+name|u_int16_t
+name|mode
+decl_stmt|;
+comment|/* type of redirect mode */
+name|struct
+name|in_addr
+name|laddr
+decl_stmt|;
+comment|/* local ip address */
+name|struct
+name|in_addr
+name|paddr
+decl_stmt|;
+comment|/* public ip address */
+name|struct
+name|in_addr
+name|raddr
+decl_stmt|;
+comment|/* remote ip address */
+name|u_short
+name|lport
+decl_stmt|;
+comment|/* local port */
+name|u_short
+name|pport
+decl_stmt|;
+comment|/* public port */
+name|u_short
+name|rport
+decl_stmt|;
+comment|/* remote port  */
+name|u_short
+name|pport_cnt
+decl_stmt|;
+comment|/* number of public ports */
+name|u_short
+name|rport_cnt
+decl_stmt|;
+comment|/* number of remote ports */
+name|int
+name|proto
+decl_stmt|;
+comment|/* protocol: tcp/udp */
+name|struct
+name|alias_link
+modifier|*
+modifier|*
+name|alink
+decl_stmt|;
+comment|/* num of entry in spool chain */
+name|u_int16_t
+name|spool_cnt
+decl_stmt|;
+comment|/* chain of spool instances */
+name|LIST_HEAD
+argument_list|(
+argument|spool_chain
+argument_list|,
+argument|cfg_spool
+argument_list|)
+name|spool_chain
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NAT_BUF_LEN
+value|1024
+end_define
+
+begin_comment
+comment|/* Nat configuration data struct. */
+end_comment
+
+begin_struct
+struct|struct
+name|cfg_nat
+block|{
+comment|/* chain of nat instances */
+name|LIST_ENTRY
+argument_list|(
+argument|cfg_nat
+argument_list|)
+name|_next
+expr_stmt|;
+name|int
+name|id
+decl_stmt|;
+comment|/* nat id */
+name|struct
+name|in_addr
+name|ip
+decl_stmt|;
+comment|/* nat ip address */
+name|char
+name|if_name
+index|[
+name|IF_NAMESIZE
+index|]
+decl_stmt|;
+comment|/* interface name */
+name|int
+name|mode
+decl_stmt|;
+comment|/* aliasing mode */
+name|struct
+name|libalias
+modifier|*
+name|lib
+decl_stmt|;
+comment|/* libalias instance */
+comment|/* number of entry in spool chain */
+name|int
+name|redir_cnt
+decl_stmt|;
+comment|/* chain of redir instances */
+name|LIST_HEAD
+argument_list|(
+argument|redir_chain
+argument_list|,
+argument|cfg_redir
+argument_list|)
+name|redir_chain
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SOF_NAT
+value|sizeof(struct cfg_nat)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOF_REDIR
+value|sizeof(struct cfg_redir)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOF_SPOOL
+value|sizeof(struct cfg_spool)
+end_define
+
+begin_comment
+comment|/* Nat command. */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_insn_nat
+block|{
+name|ipfw_insn
+name|o
+decl_stmt|;
+name|struct
+name|cfg_nat
+modifier|*
+name|nat
+decl_stmt|;
+block|}
+name|ipfw_insn_nat
 typedef|;
 end_typedef
 
@@ -1120,6 +1363,8 @@ block|,
 name|IP_FW_NETGRAPH
 block|,
 name|IP_FW_NGTEE
+block|,
+name|IP_FW_NAT
 block|, }
 enum|;
 end_enum

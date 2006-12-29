@@ -854,6 +854,13 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
+case|case
+name|IP_FW_NAT
+case|:
+goto|goto
+name|again
+goto|;
+comment|/* continue with packet */
 default|default:
 name|KASSERT
 argument_list|(
@@ -1473,6 +1480,13 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
+case|case
+name|IP_FW_NAT
+case|:
+goto|goto
+name|again
+goto|;
+comment|/* continue with packet */
 default|default:
 name|KASSERT
 argument_list|(

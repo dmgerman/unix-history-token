@@ -1811,6 +1811,12 @@ case|:
 case|case
 name|IP_FW_TABLE_LIST
 case|:
+case|case
+name|IP_FW_NAT_GET_CONFIG
+case|:
+case|case
+name|IP_FW_NAT_GET_LOG
+case|:
 comment|/* 			 * XXXRW: Isn't this checked one layer down?  Yes, it 			 * is. 			 */
 name|error
 operator|=
@@ -2052,6 +2058,12 @@ name|IP_FW_TABLE_DEL
 case|:
 case|case
 name|IP_FW_TABLE_FLUSH
+case|:
+case|case
+name|IP_FW_NAT_CFG
+case|:
+case|case
+name|IP_FW_NAT_DEL
 case|:
 comment|/* 			 * XXXRW: Isn't this checked one layer down? 			 */
 name|error
