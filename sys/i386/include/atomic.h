@@ -33,7 +33,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and multiple processors.  *  * atomic_set_char(P, V)	(*(u_char*)(P) |= (V))  * atomic_clear_char(P, V)	(*(u_char*)(P)&= ~(V))  * atomic_add_char(P, V)	(*(u_char*)(P) += (V))  * atomic_subtract_char(P, V)	(*(u_char*)(P) -= (V))  *  * atomic_set_short(P, V)	(*(u_short*)(P) |= (V))  * atomic_clear_short(P, V)	(*(u_short*)(P)&= ~(V))  * atomic_add_short(P, V)	(*(u_short*)(P) += (V))  * atomic_subtract_short(P, V)	(*(u_short*)(P) -= (V))  *  * atomic_set_int(P, V)		(*(u_int*)(P) |= (V))  * atomic_clear_int(P, V)	(*(u_int*)(P)&= ~(V))  * atomic_add_int(P, V)		(*(u_int*)(P) += (V))  * atomic_subtract_int(P, V)	(*(u_int*)(P) -= (V))  * atomic_readandclear_int(P)	(return  *(u_int*)P; *(u_int*)P = 0;)  *  * atomic_set_long(P, V)	(*(u_long*)(P) |= (V))  * atomic_clear_long(P, V)	(*(u_long*)(P)&= ~(V))  * atomic_add_long(P, V)	(*(u_long*)(P) += (V))  * atomic_subtract_long(P, V)	(*(u_long*)(P) -= (V))  * atomic_readandclear_long(P)	(return  *(u_long*)P; *(u_long*)P = 0;)  */
+comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and multiple processors.  *  * atomic_set_char(P, V)	(*(u_char *)(P) |= (V))  * atomic_clear_char(P, V)	(*(u_char *)(P)&= ~(V))  * atomic_add_char(P, V)	(*(u_char *)(P) += (V))  * atomic_subtract_char(P, V)	(*(u_char *)(P) -= (V))  *  * atomic_set_short(P, V)	(*(u_short *)(P) |= (V))  * atomic_clear_short(P, V)	(*(u_short *)(P)&= ~(V))  * atomic_add_short(P, V)	(*(u_short *)(P) += (V))  * atomic_subtract_short(P, V)	(*(u_short *)(P) -= (V))  *  * atomic_set_int(P, V)		(*(u_int *)(P) |= (V))  * atomic_clear_int(P, V)	(*(u_int *)(P)&= ~(V))  * atomic_add_int(P, V)		(*(u_int *)(P) += (V))  * atomic_subtract_int(P, V)	(*(u_int *)(P) -= (V))  * atomic_readandclear_int(P)	(return *(u_int *)P; *(u_int *)P = 0;)  *  * atomic_set_long(P, V)	(*(u_long *)(P) |= (V))  * atomic_clear_long(P, V)	(*(u_long *)(P)&= ~(V))  * atomic_add_long(P, V)	(*(u_long *)(P) += (V))  * atomic_subtract_long(P, V)	(*(u_long *)(P) -= (V))  * atomic_readandclear_long(P)	(return *(u_long *)P; *(u_long *)P = 0;)  */
 end_comment
 
 begin_comment
@@ -193,7 +193,7 @@ parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 			 : "=m" (*p)			\ 			 : CONS (V), "m" (*p));		\ }							\ struct __hack
+value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 	: "=m" (*p)					\ 	: CONS (V), "m" (*p));				\ }							\ struct __hack
 end_define
 
 begin_comment
@@ -317,7 +317,7 @@ block|{
 name|u_char
 name|res
 decl_stmt|;
-asm|__asm __volatile (
+asm|__asm __volatile(
 literal|"	"
 name|MPLOCKED
 literal|"		"
@@ -400,7 +400,7 @@ name|u_int
 name|v
 parameter_list|)
 block|{
-asm|__asm __volatile (
+asm|__asm __volatile(
 literal|"	"
 name|MPLOCKED
 literal|"		"
@@ -935,7 +935,7 @@ name|result
 operator|=
 literal|0
 expr_stmt|;
-asm|__asm __volatile (
+asm|__asm __volatile(
 literal|"	xchgl	%1,%0 ;		"
 literal|"# atomic_readandclear_int"
 operator|:
@@ -988,7 +988,7 @@ name|result
 operator|=
 literal|0
 expr_stmt|;
-asm|__asm __volatile (
+asm|__asm __volatile(
 literal|"	xchgl	%1,%0 ;		"
 literal|"# atomic_readandclear_long"
 operator|:
@@ -1871,7 +1871,7 @@ parameter_list|,
 name|new
 parameter_list|)
 define|\
-value|atomic_cmpset_acq_int((volatile u_int *)(dst), (u_int)(old), (u_int)(new))
+value|atomic_cmpset_acq_int((volatile u_int *)(dst), (u_int)(old), \ 	    (u_int)(new))
 end_define
 
 begin_define
@@ -1886,7 +1886,7 @@ parameter_list|,
 name|new
 parameter_list|)
 define|\
-value|atomic_cmpset_rel_int((volatile u_int *)(dst), (u_int)(old), (u_int)(new))
+value|atomic_cmpset_rel_int((volatile u_int *)(dst), (u_int)(old), \ 	    (u_int)(new))
 end_define
 
 begin_define
@@ -1915,7 +1915,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! _MACHINE_ATOMIC_H_ */
+comment|/* !_MACHINE_ATOMIC_H_ */
 end_comment
 
 end_unit
