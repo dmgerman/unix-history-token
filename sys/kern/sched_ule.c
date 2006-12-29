@@ -4181,9 +4181,9 @@ block|{
 name|struct
 name|tdq
 modifier|*
-name|ksq
+name|tdq
 decl_stmt|;
-name|ksq
+name|tdq
 operator|=
 operator|&
 name|tdq_cpu
@@ -4191,7 +4191,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|ksq
+name|tdq
 operator|->
 name|tdq_assigned
 operator|=
@@ -4222,7 +4222,7 @@ decl_stmt|;
 name|struct
 name|tdq
 modifier|*
-name|ksq
+name|tdq
 decl_stmt|;
 name|int
 name|cpus
@@ -4253,7 +4253,7 @@ name|i
 argument_list|)
 condition|)
 continue|continue;
-name|ksq
+name|tdq
 operator|=
 operator|&
 name|tdq_cpu
@@ -4270,13 +4270,13 @@ name|cpus
 index|]
 expr_stmt|;
 comment|/* 			 * Setup a tdq group with one member. 			 */
-name|ksq
+name|tdq
 operator|->
 name|tdq_transferable
 operator|=
 literal|0
 expr_stmt|;
-name|ksq
+name|tdq
 operator|->
 name|tdq_group
 operator|=
@@ -4333,7 +4333,7 @@ name|tdg
 operator|->
 name|tdg_members
 argument_list|,
-name|ksq
+name|tdq
 argument_list|,
 name|tdq_siblings
 argument_list|)
@@ -5927,7 +5927,7 @@ block|{
 name|struct
 name|tdq
 modifier|*
-name|ksq
+name|tdq
 decl_stmt|;
 name|struct
 name|td_sched
@@ -5948,7 +5948,7 @@ name|td
 operator|->
 name|td_sched
 expr_stmt|;
-name|ksq
+name|tdq
 operator|=
 name|TDQ_SELF
 argument_list|()
@@ -6014,7 +6014,7 @@ block|{
 comment|/* We are ending our run so make our slot available again */
 name|tdq_load_rem
 argument_list|(
-name|ksq
+name|tdq
 argument_list|,
 name|ts
 argument_list|)
@@ -6086,7 +6086,7 @@ name|td_sched
 operator|->
 name|ts_runq
 operator|=
-name|ksq
+name|tdq
 operator|->
 name|tdq_curr
 expr_stmt|;
