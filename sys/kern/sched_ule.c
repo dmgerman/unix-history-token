@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2005, Jeffrey Roberson<jeff@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002-2006, Jeffrey Roberson<jeff@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -403,11 +403,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The following datastructures are allocated within their parent structure  * but are scheduler specific.  */
-end_comment
-
-begin_comment
-comment|/*  * Thread scheduler specific section.  * fields int he thread structure that are specific to this scheduler.  */
+comment|/*  * Thread scheduler specific section.  */
 end_comment
 
 begin_struct
@@ -584,7 +580,7 @@ begin_define
 define|#
 directive|define
 name|TSF_DIDRUN
-value|0x02000
+value|0x2000
 end_define
 
 begin_comment
@@ -595,7 +591,7 @@ begin_define
 define|#
 directive|define
 name|TSF_EXIT
-value|0x04000
+value|0x4000
 end_define
 
 begin_comment
@@ -611,7 +607,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The priority is primarily determined by the interactivity score.  Thus, we  * give lower(better) priorities to kse groups that use less CPU.  The nice  * value is then directly added to this to allow nice to have some effect  * on latency.  *  * PRI_RANGE:	Total priority range for timeshare threads.  * PRI_NRESV:	Number of nice values.  * PRI_BASE:	The start of the dynamic range.  */
+comment|/*  * The priority is primarily determined by the interactivity score.  Thus, we  * give lower(better) priorities to threads that use less CPU.  The nice  * value is then directly added to this to allow nice to have some effect  * on latency.  *  * PRI_RANGE:	Total priority range for timeshare threads.  * PRI_NRESV:	Number of nice values.  * PRI_BASE:	The start of the dynamic range.  */
 end_comment
 
 begin_define
@@ -810,12 +806,12 @@ name|tdq
 block|{
 name|struct
 name|runq
-name|ksq_idle
+name|tdq_idle
 decl_stmt|;
 comment|/* Queue of IDLE threads. */
 name|struct
 name|runq
-name|ksq_timeshare
+name|tdq_timeshare
 index|[
 literal|2
 index|]
@@ -824,64 +820,64 @@ comment|/* Run queues for !IDLE. */
 name|struct
 name|runq
 modifier|*
-name|ksq_next
+name|tdq_next
 decl_stmt|;
 comment|/* Next timeshare queue. */
 name|struct
 name|runq
 modifier|*
-name|ksq_curr
+name|tdq_curr
 decl_stmt|;
 comment|/* Current queue. */
 name|int
-name|ksq_load_timeshare
+name|tdq_load_timeshare
 decl_stmt|;
 comment|/* Load for timeshare. */
 name|int
-name|ksq_load
+name|tdq_load
 decl_stmt|;
 comment|/* Aggregate load. */
 name|short
-name|ksq_nice
+name|tdq_nice
 index|[
 name|SCHED_PRI_NRESV
 index|]
 decl_stmt|;
 comment|/* threadss in each nice bin. */
 name|short
-name|ksq_nicemin
+name|tdq_nicemin
 decl_stmt|;
 comment|/* Least nice. */
 ifdef|#
 directive|ifdef
 name|SMP
 name|int
-name|ksq_transferable
+name|tdq_transferable
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|tdq
 argument_list|)
-name|ksq_siblings
+name|tdq_siblings
 expr_stmt|;
 comment|/* Next in tdq group. */
 name|struct
 name|tdq_group
 modifier|*
-name|ksq_group
+name|tdq_group
 decl_stmt|;
 comment|/* Our processor group. */
 specifier|volatile
 name|struct
 name|td_sched
 modifier|*
-name|ksq_assigned
+name|tdq_assigned
 decl_stmt|;
 comment|/* assigned by another CPU. */
 else|#
 directive|else
 name|int
-name|ksq_sysload
+name|tdq_sysload
 decl_stmt|;
 comment|/* For loadavg, !ITHD load. */
 endif|#
@@ -905,27 +901,27 @@ struct|struct
 name|tdq_group
 block|{
 name|int
-name|ksg_cpus
+name|tdg_cpus
 decl_stmt|;
 comment|/* Count of CPUs in this tdq group. */
 name|cpumask_t
-name|ksg_cpumask
+name|tdg_cpumask
 decl_stmt|;
 comment|/* Mask of cpus in this group. */
 name|cpumask_t
-name|ksg_idlemask
+name|tdg_idlemask
 decl_stmt|;
 comment|/* Idle cpus in this group. */
 name|cpumask_t
-name|ksg_mask
+name|tdg_mask
 decl_stmt|;
 comment|/* Bit mask for first cpu. */
 name|int
-name|ksg_load
+name|tdg_load
 decl_stmt|;
 comment|/* Total load of this group. */
 name|int
-name|ksg_transferable
+name|tdg_transferable
 decl_stmt|;
 comment|/* Transferable load of this group. */
 name|LIST_HEAD
@@ -933,7 +929,7 @@ argument_list|(
 argument_list|,
 argument|tdq
 argument_list|)
-name|ksg_members
+name|tdg_members
 expr_stmt|;
 comment|/* Linked list of all members. */
 block|}
@@ -946,7 +942,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * One kse queue per processor.  */
+comment|/*  * One thread queue per processor.  */
 end_comment
 
 begin_ifdef
@@ -965,7 +961,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|ksg_maxid
+name|tdg_maxid
 decl_stmt|;
 end_decl_stmt
 
@@ -1532,7 +1528,7 @@ literal|"\tload:           %d\n"
 argument_list|,
 name|tdq
 operator|->
-name|ksq_load
+name|tdq_load
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1541,7 +1537,7 @@ literal|"\tload TIMESHARE: %d\n"
 argument_list|,
 name|tdq
 operator|->
-name|ksq_load_timeshare
+name|tdq_load_timeshare
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1553,7 +1549,7 @@ literal|"\tload transferable: %d\n"
 argument_list|,
 name|tdq
 operator|->
-name|ksq_transferable
+name|tdq_transferable
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1564,7 +1560,7 @@ literal|"\tnicemin:\t%d\n"
 argument_list|,
 name|tdq
 operator|->
-name|ksq_nicemin
+name|tdq_nicemin
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1589,7 +1585,7 @@ if|if
 condition|(
 name|tdq
 operator|->
-name|ksq_nice
+name|tdq_nice
 index|[
 name|i
 index|]
@@ -1604,7 +1600,7 @@ name|SCHED_PRI_NHALF
 argument_list|,
 name|tdq
 operator|->
-name|ksq_nice
+name|tdq_nice
 index|[
 name|i
 index|]
@@ -1646,14 +1642,14 @@ condition|)
 block|{
 name|tdq
 operator|->
-name|ksq_transferable
+name|tdq_transferable
 operator|++
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_transferable
+name|tdg_transferable
 operator|++
 expr_stmt|;
 name|ts
@@ -1722,14 +1718,14 @@ condition|)
 block|{
 name|tdq
 operator|->
-name|ksq_transferable
+name|tdq_transferable
 operator|--
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_transferable
+name|tdg_transferable
 operator|--
 expr_stmt|;
 name|ts
@@ -1800,12 +1796,12 @@ name|PRI_TIMESHARE
 condition|)
 name|tdq
 operator|->
-name|ksq_load_timeshare
+name|tdq_load_timeshare
 operator|++
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_load
+name|tdq_load
 operator|++
 expr_stmt|;
 name|CTR1
@@ -1816,7 +1812,7 @@ literal|"load: %d"
 argument_list|,
 name|tdq
 operator|->
-name|ksq_load
+name|tdq_load
 argument_list|)
 expr_stmt|;
 if|if
@@ -1844,16 +1840,16 @@ directive|ifdef
 name|SMP
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_load
+name|tdg_load
 operator|++
 expr_stmt|;
 else|#
 directive|else
 name|tdq
 operator|->
-name|ksq_sysload
+name|tdq_sysload
 operator|++
 expr_stmt|;
 endif|#
@@ -1930,7 +1926,7 @@ name|PRI_TIMESHARE
 condition|)
 name|tdq
 operator|->
-name|ksq_load_timeshare
+name|tdq_load_timeshare
 operator|--
 expr_stmt|;
 if|if
@@ -1958,23 +1954,23 @@ directive|ifdef
 name|SMP
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_load
+name|tdg_load
 operator|--
 expr_stmt|;
 else|#
 directive|else
 name|tdq
 operator|->
-name|ksq_sysload
+name|tdq_sysload
 operator|--
 expr_stmt|;
 endif|#
 directive|endif
 name|tdq
 operator|->
-name|ksq_load
+name|tdq_load
 operator|--
 expr_stmt|;
 name|CTR1
@@ -1985,7 +1981,7 @@ literal|"load: %d"
 argument_list|,
 name|tdq
 operator|->
-name|ksq_load
+name|tdq_load
 argument_list|)
 expr_stmt|;
 name|ts
@@ -2045,7 +2041,7 @@ expr_stmt|;
 comment|/* Normalize to zero. */
 name|tdq
 operator|->
-name|ksq_nice
+name|tdq_nice
 index|[
 name|nice
 operator|+
@@ -2059,17 +2055,17 @@ name|nice
 operator|<
 name|tdq
 operator|->
-name|ksq_nicemin
+name|tdq_nicemin
 operator|||
 name|tdq
 operator|->
-name|ksq_load_timeshare
+name|tdq_load_timeshare
 operator|==
 literal|1
 condition|)
 name|tdq
 operator|->
-name|ksq_nicemin
+name|tdq_nicemin
 operator|=
 name|nice
 expr_stmt|;
@@ -2110,7 +2106,7 @@ name|SCHED_PRI_NHALF
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_nice
+name|tdq_nice
 index|[
 name|n
 index|]
@@ -2120,7 +2116,7 @@ name|KASSERT
 argument_list|(
 name|tdq
 operator|->
-name|ksq_nice
+name|tdq_nice
 index|[
 name|n
 index|]
@@ -2139,11 +2135,11 @@ name|nice
 operator|!=
 name|tdq
 operator|->
-name|ksq_nicemin
+name|tdq_nicemin
 operator|||
 name|tdq
 operator|->
-name|ksq_nice
+name|tdq_nice
 index|[
 name|n
 index|]
@@ -2152,7 +2148,7 @@ literal|0
 operator|||
 name|tdq
 operator|->
-name|ksq_load_timeshare
+name|tdq_load_timeshare
 operator|==
 literal|0
 condition|)
@@ -2171,7 +2167,7 @@ if|if
 condition|(
 name|tdq
 operator|->
-name|ksq_nice
+name|tdq_nice
 index|[
 name|n
 index|]
@@ -2179,7 +2175,7 @@ condition|)
 block|{
 name|tdq
 operator|->
-name|ksq_nicemin
+name|tdq_nicemin
 operator|=
 name|n
 operator|-
@@ -2221,7 +2217,7 @@ decl_stmt|;
 name|struct
 name|tdq_group
 modifier|*
-name|ksg
+name|tdg
 decl_stmt|;
 name|int
 name|cnt
@@ -2263,7 +2259,7 @@ name|random
 argument_list|()
 operator|%
 operator|(
-name|ksg_maxid
+name|tdg_maxid
 operator|+
 literal|1
 operator|)
@@ -2276,13 +2272,13 @@ literal|0
 init|;
 name|cnt
 operator|<=
-name|ksg_maxid
+name|tdg_maxid
 condition|;
 name|cnt
 operator|++
 control|)
 block|{
-name|ksg
+name|tdg
 operator|=
 name|TDQ_GROUP
 argument_list|(
@@ -2297,22 +2293,22 @@ name|high
 operator|==
 name|NULL
 operator|||
-name|ksg
+name|tdg
 operator|->
-name|ksg_load
+name|tdg_load
 operator|>
 name|high
 operator|->
-name|ksg_load
+name|tdg_load
 operator|)
 operator|&&
-name|ksg
+name|tdg
 operator|->
-name|ksg_transferable
+name|tdg_transferable
 condition|)
 name|high
 operator|=
-name|ksg
+name|tdg
 expr_stmt|;
 if|if
 condition|(
@@ -2320,24 +2316,24 @@ name|low
 operator|==
 name|NULL
 operator|||
-name|ksg
+name|tdg
 operator|->
-name|ksg_load
+name|tdg_load
 operator|<
 name|low
 operator|->
-name|ksg_load
+name|tdg_load
 condition|)
 name|low
 operator|=
-name|ksg
+name|tdg
 expr_stmt|;
 if|if
 condition|(
 operator|++
 name|i
 operator|>
-name|ksg_maxid
+name|tdg_maxid
 condition|)
 name|i
 operator|=
@@ -2365,7 +2361,7 @@ argument_list|(
 operator|&
 name|high
 operator|->
-name|ksg_members
+name|tdg_members
 argument_list|)
 argument_list|,
 name|LIST_FIRST
@@ -2373,7 +2369,7 @@ argument_list|(
 operator|&
 name|low
 operator|->
-name|ksg_members
+name|tdg_members
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2426,7 +2422,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|ksg_maxid
+name|tdg_maxid
 condition|;
 name|i
 operator|++
@@ -2450,7 +2446,7 @@ parameter_list|(
 name|struct
 name|tdq_group
 modifier|*
-name|ksg
+name|tdg
 parameter_list|)
 block|{
 name|struct
@@ -2473,9 +2469,9 @@ name|load
 decl_stmt|;
 if|if
 condition|(
-name|ksg
+name|tdg
 operator|->
-name|ksg_transferable
+name|tdg_transferable
 operator|==
 literal|0
 condition|)
@@ -2492,16 +2488,16 @@ name|LIST_FOREACH
 argument_list|(
 argument|tdq
 argument_list|,
-argument|&ksg->ksg_members
+argument|&tdg->tdg_members
 argument_list|,
-argument|ksq_siblings
+argument|tdq_siblings
 argument_list|)
 block|{
 name|load
 operator|=
 name|tdq
 operator|->
-name|ksq_load
+name|tdq_load
 expr_stmt|;
 if|if
 condition|(
@@ -2513,7 +2509,7 @@ name|load
 operator|>
 name|high
 operator|->
-name|ksq_load
+name|tdq_load
 condition|)
 name|high
 operator|=
@@ -2529,7 +2525,7 @@ name|load
 operator|<
 name|low
 operator|->
-name|ksq_load
+name|tdq_load
 condition|)
 name|low
 operator|=
@@ -2599,30 +2595,30 @@ if|if
 condition|(
 name|high
 operator|->
-name|ksq_group
+name|tdq_group
 operator|==
 name|low
 operator|->
-name|ksq_group
+name|tdq_group
 condition|)
 block|{
 name|transferable
 operator|=
 name|high
 operator|->
-name|ksq_transferable
+name|tdq_transferable
 expr_stmt|;
 name|high_load
 operator|=
 name|high
 operator|->
-name|ksq_load
+name|tdq_load
 expr_stmt|;
 name|low_load
 operator|=
 name|low
 operator|->
-name|ksq_load
+name|tdq_load
 expr_stmt|;
 block|}
 else|else
@@ -2631,25 +2627,25 @@ name|transferable
 operator|=
 name|high
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_transferable
+name|tdg_transferable
 expr_stmt|;
 name|high_load
 operator|=
 name|high
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_load
+name|tdg_load
 expr_stmt|;
 name|low_load
 operator|=
 name|low
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_load
+name|tdg_load
 expr_stmt|;
 block|}
 if|if
@@ -2659,7 +2655,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * Determine what the imbalance is and then adjust that to how many 	 * kses we actually have to give up (transferable). 	 */
+comment|/* 	 * Determine what the imbalance is and then adjust that to how many 	 * threads we actually have to give up (transferable). 	 */
 name|diff
 operator|=
 name|high_load
@@ -2776,21 +2772,21 @@ block|{
 name|struct
 name|tdq_group
 modifier|*
-name|ksg
+name|tdg
 decl_stmt|;
-name|ksg
+name|tdg
 operator|=
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|tdq
 argument_list|,
-argument|&ksg->ksg_members
+argument|&tdg->tdg_members
 argument_list|,
-argument|ksq_siblings
+argument|tdq_siblings
 argument_list|)
 block|{
 if|if
@@ -2801,7 +2797,7 @@ name|from
 operator|||
 name|tdq
 operator|->
-name|ksq_transferable
+name|tdq_transferable
 operator|==
 literal|0
 condition|)
@@ -2828,9 +2824,9 @@ argument_list|(
 literal|"tdq_move: No threads available with a "
 literal|"transferable count of %d\n"
 argument_list|,
-name|ksg
+name|tdg
 operator|->
-name|ksg_transferable
+name|tdg_transferable
 argument_list|)
 expr_stmt|;
 block|}
@@ -2885,7 +2881,7 @@ block|{
 name|struct
 name|tdq_group
 modifier|*
-name|ksg
+name|tdg
 decl_stmt|;
 name|struct
 name|tdq
@@ -2897,33 +2893,33 @@ name|td_sched
 modifier|*
 name|ts
 decl_stmt|;
-name|ksg
+name|tdg
 operator|=
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 expr_stmt|;
-comment|/* 	 * If we're in a cpu group, try and steal kses from another cpu in 	 * the group before idling. 	 */
+comment|/* 	 * If we're in a cpu group, try and steal threads from another cpu in 	 * the group before idling. 	 */
 if|if
 condition|(
-name|ksg
+name|tdg
 operator|->
-name|ksg_cpus
+name|tdg_cpus
 operator|>
 literal|1
 operator|&&
-name|ksg
+name|tdg
 operator|->
-name|ksg_transferable
+name|tdg_transferable
 condition|)
 block|{
 name|LIST_FOREACH
 argument_list|(
 argument|steal
 argument_list|,
-argument|&ksg->ksg_members
+argument|&tdg->tdg_members
 argument_list|,
-argument|ksq_siblings
+argument|tdq_siblings
 argument_list|)
 block|{
 if|if
@@ -2934,7 +2930,7 @@ name|tdq
 operator|||
 name|steal
 operator|->
-name|ksq_transferable
+name|tdq_transferable
 operator|==
 literal|0
 condition|)
@@ -3009,9 +3005,9 @@ return|;
 block|}
 block|}
 comment|/* 	 * We only set the idled bit when all of the cpus in the group are 	 * idle.  Otherwise we could get into a situation where a thread bounces 	 * back and forth between two idle cores on seperate physical CPUs. 	 */
-name|ksg
+name|tdg
 operator|->
-name|ksg_idlemask
+name|tdg_idlemask
 operator||=
 name|PCPU_GET
 argument_list|(
@@ -3020,13 +3016,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ksg
+name|tdg
 operator|->
-name|ksg_idlemask
+name|tdg_idlemask
 operator|!=
-name|ksg
+name|tdg
 operator|->
-name|ksg_cpumask
+name|tdg_cpumask
 condition|)
 return|return
 operator|(
@@ -3038,9 +3034,9 @@ argument_list|(
 operator|&
 name|tdq_idle
 argument_list|,
-name|ksg
+name|tdg
 operator|->
-name|ksg_mask
+name|tdg_mask
 argument_list|)
 expr_stmt|;
 return|return
@@ -3087,7 +3083,7 @@ name|ts
 operator|=
 name|tdq
 operator|->
-name|ksq_assigned
+name|tdq_assigned
 expr_stmt|;
 block|}
 do|while
@@ -3103,7 +3099,7 @@ operator|)
 operator|&
 name|tdq
 operator|->
-name|ksq_assigned
+name|tdq_assigned
 argument_list|,
 operator|(
 name|uintptr_t
@@ -3137,14 +3133,14 @@ name|ts_assign
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_load
+name|tdg_load
 operator|--
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_load
+name|tdq_load
 operator|--
 expr_stmt|;
 name|ts
@@ -3264,9 +3260,9 @@ name|tdq_idle
 operator|&
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_mask
+name|tdg_mask
 operator|)
 condition|)
 name|atomic_clear_int
@@ -3276,21 +3272,21 @@ name|tdq_idle
 argument_list|,
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_mask
+name|tdg_mask
 argument_list|)
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_load
+name|tdg_load
 operator|++
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_load
+name|tdq_load
 operator|++
 expr_stmt|;
 name|ts
@@ -3331,7 +3327,7 @@ name|ts_assign
 operator|=
 name|tdq
 operator|->
-name|ksq_assigned
+name|tdq_assigned
 expr_stmt|;
 block|}
 do|while
@@ -3347,7 +3343,7 @@ operator|)
 operator|&
 name|tdq
 operator|->
-name|ksq_assigned
+name|tdq_assigned
 argument_list|,
 operator|(
 name|uintptr_t
@@ -3603,7 +3599,7 @@ name|runq_steal
 argument_list|(
 name|tdq
 operator|->
-name|ksq_next
+name|tdq_next
 argument_list|)
 operator|)
 operator|!=
@@ -3623,7 +3619,7 @@ name|runq_steal
 argument_list|(
 name|tdq
 operator|->
-name|ksq_curr
+name|tdq_curr
 argument_list|)
 operator|)
 operator|!=
@@ -3645,7 +3641,7 @@ argument_list|(
 operator|&
 name|tdq
 operator|->
-name|ksq_idle
+name|tdq_idle
 argument_list|)
 operator|)
 return|;
@@ -3678,12 +3674,12 @@ block|{
 name|struct
 name|tdq_group
 modifier|*
-name|nksg
+name|ntdg
 decl_stmt|;
 name|struct
 name|tdq_group
 modifier|*
-name|ksg
+name|tdg
 decl_stmt|;
 name|struct
 name|tdq
@@ -3711,7 +3707,7 @@ name|cpu
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * If our load exceeds a certain threshold we should attempt to 	 * reassign this thread.  The first candidate is the cpu that 	 * originally ran the thread.  If it is idle, assign it there,  	 * otherwise, pick an idle cpu. 	 * 	 * The threshold at which we start to reassign kses has a large impact 	 * on the overall performance of the system.  Tuned too high and 	 * some CPUs may idle.  Too low and there will be excess migration 	 * and context switches. 	 */
+comment|/* 	 * If our load exceeds a certain threshold we should attempt to 	 * reassign this thread.  The first candidate is the cpu that 	 * originally ran the thread.  If it is idle, assign it there,  	 * otherwise, pick an idle cpu. 	 * 	 * The threshold at which we start to reassign has a large impact 	 * on the overall performance of the system.  Tuned too high and 	 * some CPUs may idle.  Too low and there will be excess migration 	 * and context switches. 	 */
 name|old
 operator|=
 name|TDQ_CPU
@@ -3721,17 +3717,17 @@ operator|->
 name|ts_cpu
 argument_list|)
 expr_stmt|;
-name|nksg
+name|ntdg
 operator|=
 name|old
 operator|->
-name|ksq_group
+name|tdq_group
 expr_stmt|;
-name|ksg
+name|tdg
 operator|=
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 expr_stmt|;
 if|if
 condition|(
@@ -3742,18 +3738,18 @@ if|if
 condition|(
 name|tdq_idle
 operator|&
-name|nksg
+name|ntdg
 operator|->
-name|ksg_mask
+name|tdg_mask
 condition|)
 block|{
 name|cpu
 operator|=
 name|ffs
 argument_list|(
-name|nksg
+name|ntdg
 operator|->
-name|ksg_idlemask
+name|tdg_idlemask
 argument_list|)
 expr_stmt|;
 if|if
@@ -3815,28 +3811,28 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (old->ksq_load< tdq->ksq_load) { 		cpu = ts->ts_cpu + 1; 		CTR2(KTR_SCHED, "tdq_transfer: %p old cpu %X "  		    "load less than ours.", ts, cpu); 		goto migrate; 	}
+block|if (old->tdq_load< tdq->tdq_load) { 		cpu = ts->ts_cpu + 1; 		CTR2(KTR_SCHED, "tdq_transfer: %p old cpu %X "  		    "load less than ours.", ts, cpu); 		goto migrate; 	}
 comment|/* 	 * No new CPU was found, look for one with less load. 	 */
-block|for (idx = 0; idx<= ksg_maxid; idx++) { 		nksg = TDQ_GROUP(idx); 		if (nksg->ksg_load
-comment|/*+ (nksg->ksg_cpus  * 2)*/
-block|< ksg->ksg_load) { 			cpu = ffs(nksg->ksg_cpumask); 			CTR2(KTR_SCHED, "tdq_transfer: %p cpu %X load less "  			    "than ours.", ts, cpu); 			goto migrate; 		} 	}
+block|for (idx = 0; idx<= tdg_maxid; idx++) { 		ntdg = TDQ_GROUP(idx); 		if (ntdg->tdg_load
+comment|/*+ (ntdg->tdg_cpus  * 2)*/
+block|< tdg->tdg_load) { 			cpu = ffs(ntdg->tdg_cpumask); 			CTR2(KTR_SCHED, "tdq_transfer: %p cpu %X load less "  			    "than ours.", ts, cpu); 			goto migrate; 		} 	}
 endif|#
 directive|endif
 comment|/* 	 * If another cpu in this group has idled, assign a thread over 	 * to them after checking to see if there are idled groups. 	 */
 if|if
 condition|(
-name|ksg
+name|tdg
 operator|->
-name|ksg_idlemask
+name|tdg_idlemask
 condition|)
 block|{
 name|cpu
 operator|=
 name|ffs
 argument_list|(
-name|ksg
+name|tdg
 operator|->
-name|ksg_idlemask
+name|tdg_idlemask
 argument_list|)
 expr_stmt|;
 if|if
@@ -3956,7 +3952,7 @@ name|runq_choose
 argument_list|(
 name|tdq
 operator|->
-name|ksq_curr
+name|tdq_curr
 argument_list|)
 expr_stmt|;
 if|if
@@ -3976,19 +3972,19 @@ name|swap
 operator|=
 name|tdq
 operator|->
-name|ksq_curr
+name|tdq_curr
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_curr
+name|tdq_curr
 operator|=
 name|tdq
 operator|->
-name|ksq_next
+name|tdq_next
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_next
+name|tdq_next
 operator|=
 name|swap
 expr_stmt|;
@@ -4010,13 +4006,13 @@ literal|0
 operator|-
 name|tdq
 operator|->
-name|ksq_nicemin
+name|tdq_nicemin
 operator|)
 expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (ts->ts_slice == 0 || (nice> SCHED_SLICE_NTHRESH&& 		    ts->ts_thread->td_proc->p_nice != 0)) { 			runq_remove(ts->ts_runq, ts); 			sched_slice(ts); 			ts->ts_runq = tdq->ksq_next; 			runq_add(ts->ts_runq, ts, 0); 			continue; 		}
+block|if (ts->ts_slice == 0 || (nice> SCHED_SLICE_NTHRESH&& 		    ts->ts_thread->td_proc->p_nice != 0)) { 			runq_remove(ts->ts_runq, ts); 			sched_slice(ts); 			ts->ts_runq = tdq->tdq_next; 			runq_add(ts->ts_runq, ts, 0); 			continue; 		}
 endif|#
 directive|endif
 return|return
@@ -4032,7 +4028,7 @@ argument_list|(
 operator|&
 name|tdq
 operator|->
-name|ksq_idle
+name|tdq_idle
 argument_list|)
 operator|)
 return|;
@@ -4055,7 +4051,7 @@ argument_list|(
 operator|&
 name|tdq
 operator|->
-name|ksq_timeshare
+name|tdq_timeshare
 index|[
 literal|0
 index|]
@@ -4066,7 +4062,7 @@ argument_list|(
 operator|&
 name|tdq
 operator|->
-name|ksq_timeshare
+name|tdq_timeshare
 index|[
 literal|1
 index|]
@@ -4077,42 +4073,42 @@ argument_list|(
 operator|&
 name|tdq
 operator|->
-name|ksq_idle
+name|tdq_idle
 argument_list|)
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_curr
+name|tdq_curr
 operator|=
 operator|&
 name|tdq
 operator|->
-name|ksq_timeshare
+name|tdq_timeshare
 index|[
 literal|0
 index|]
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_next
+name|tdq_next
 operator|=
 operator|&
 name|tdq
 operator|->
-name|ksq_timeshare
+name|tdq_timeshare
 index|[
 literal|1
 index|]
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_load
+name|tdq_load
 operator|=
 literal|0
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_load_timeshare
+name|tdq_load_timeshare
 operator|=
 literal|0
 expr_stmt|;
@@ -4197,7 +4193,7 @@ index|]
 expr_stmt|;
 name|ksq
 operator|->
-name|ksq_assigned
+name|tdq_assigned
 operator|=
 name|NULL
 expr_stmt|;
@@ -4221,7 +4217,7 @@ block|{
 name|struct
 name|tdq_group
 modifier|*
-name|ksg
+name|tdg
 decl_stmt|;
 name|struct
 name|tdq
@@ -4265,7 +4261,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|ksg
+name|tdg
 operator|=
 operator|&
 name|tdq_groups
@@ -4276,77 +4272,77 @@ expr_stmt|;
 comment|/* 			 * Setup a tdq group with one member. 			 */
 name|ksq
 operator|->
-name|ksq_transferable
+name|tdq_transferable
 operator|=
 literal|0
 expr_stmt|;
 name|ksq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|=
-name|ksg
+name|tdg
 expr_stmt|;
-name|ksg
+name|tdg
 operator|->
-name|ksg_cpus
+name|tdg_cpus
 operator|=
 literal|1
 expr_stmt|;
-name|ksg
+name|tdg
 operator|->
-name|ksg_idlemask
+name|tdg_idlemask
 operator|=
 literal|0
 expr_stmt|;
-name|ksg
+name|tdg
 operator|->
-name|ksg_cpumask
+name|tdg_cpumask
 operator|=
-name|ksg
+name|tdg
 operator|->
-name|ksg_mask
+name|tdg_mask
 operator|=
 literal|1
 operator|<<
 name|i
 expr_stmt|;
-name|ksg
+name|tdg
 operator|->
-name|ksg_load
+name|tdg_load
 operator|=
 literal|0
 expr_stmt|;
-name|ksg
+name|tdg
 operator|->
-name|ksg_transferable
+name|tdg_transferable
 operator|=
 literal|0
 expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
-name|ksg
+name|tdg
 operator|->
-name|ksg_members
+name|tdg_members
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|ksg
+name|tdg
 operator|->
-name|ksg_members
+name|tdg_members
 argument_list|,
 name|ksq
 argument_list|,
-name|ksq_siblings
+name|tdq_siblings
 argument_list|)
 expr_stmt|;
 name|cpus
 operator|++
 expr_stmt|;
 block|}
-name|ksg_maxid
+name|tdg_maxid
 operator|=
 name|cpus
 operator|-
@@ -4358,7 +4354,7 @@ block|{
 name|struct
 name|tdq_group
 modifier|*
-name|ksg
+name|tdg
 decl_stmt|;
 name|struct
 name|cpu_group
@@ -4394,7 +4390,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|ksg
+name|tdg
 operator|=
 operator|&
 name|tdq_groups
@@ -4403,35 +4399,35 @@ name|i
 index|]
 expr_stmt|;
 comment|/* 			 * Initialize the group. 			 */
-name|ksg
+name|tdg
 operator|->
-name|ksg_idlemask
+name|tdg_idlemask
 operator|=
 literal|0
 expr_stmt|;
-name|ksg
+name|tdg
 operator|->
-name|ksg_load
+name|tdg_load
 operator|=
 literal|0
 expr_stmt|;
-name|ksg
+name|tdg
 operator|->
-name|ksg_transferable
+name|tdg_transferable
 operator|=
 literal|0
 expr_stmt|;
-name|ksg
+name|tdg
 operator|->
-name|ksg_cpus
+name|tdg_cpus
 operator|=
 name|cg
 operator|->
 name|cg_count
 expr_stmt|;
-name|ksg
+name|tdg
 operator|->
-name|ksg_cpumask
+name|tdg_cpumask
 operator|=
 name|cg
 operator|->
@@ -4440,9 +4436,9 @@ expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
-name|ksg
+name|tdg
 operator|->
-name|ksg_members
+name|tdg_members
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Find all of the group members and add them. 			 */
@@ -4479,15 +4475,15 @@ condition|)
 block|{
 if|if
 condition|(
-name|ksg
+name|tdg
 operator|->
-name|ksg_mask
+name|tdg_mask
 operator|==
 literal|0
 condition|)
-name|ksg
+name|tdg
 operator|->
-name|ksg_mask
+name|tdg_mask
 operator|=
 literal|1
 operator|<<
@@ -4498,7 +4494,7 @@ index|[
 name|j
 index|]
 operator|.
-name|ksq_transferable
+name|tdq_transferable
 operator|=
 literal|0
 expr_stmt|;
@@ -4507,16 +4503,16 @@ index|[
 name|j
 index|]
 operator|.
-name|ksq_group
+name|tdq_group
 operator|=
-name|ksg
+name|tdg
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|ksg
+name|tdg
 operator|->
-name|ksg_members
+name|tdg_members
 argument_list|,
 operator|&
 name|tdq_cpu
@@ -4524,16 +4520,16 @@ index|[
 name|j
 index|]
 argument_list|,
-name|ksq_siblings
+name|tdq_siblings
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 if|if
 condition|(
-name|ksg
+name|tdg
 operator|->
-name|ksg_cpus
+name|tdg_cpus
 operator|>
 literal|1
 condition|)
@@ -4542,7 +4538,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|ksg_maxid
+name|tdg_maxid
 operator|=
 name|smp_topology
 operator|->
@@ -4846,14 +4842,14 @@ literal|0
 operator|-
 name|tdq
 operator|->
-name|ksq_nicemin
+name|tdq_nicemin
 operator|)
 expr_stmt|;
 if|if
 condition|(
 name|tdq
 operator|->
-name|ksq_load_timeshare
+name|tdq_load_timeshare
 operator|==
 literal|0
 operator|||
@@ -4865,7 +4861,7 @@ name|p_nice
 operator|<
 name|tdq
 operator|->
-name|ksq_nicemin
+name|tdq_nicemin
 condition|)
 name|ts
 operator|->
@@ -5473,7 +5469,7 @@ operator|->
 name|ts_cpu
 argument_list|)
 operator|->
-name|ksq_curr
+name|tdq_curr
 condition|)
 block|{
 name|runq_remove
@@ -5496,7 +5492,7 @@ operator|->
 name|ts_cpu
 argument_list|)
 operator|->
-name|ksq_curr
+name|tdq_curr
 expr_stmt|;
 name|runq_add
 argument_list|(
@@ -6092,7 +6088,7 @@ name|ts_runq
 operator|=
 name|ksq
 operator|->
-name|ksq_curr
+name|tdq_curr
 expr_stmt|;
 name|TD_SET_RUNNING
 argument_list|(
@@ -6781,14 +6777,14 @@ condition|)
 block|{
 name|tdq
 operator|->
-name|ksq_transferable
+name|tdq_transferable
 operator|--
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_transferable
+name|tdg_transferable
 operator|--
 expr_stmt|;
 block|}
@@ -6802,14 +6798,14 @@ condition|)
 block|{
 name|tdq
 operator|->
-name|ksq_transferable
+name|tdq_transferable
 operator|++
 expr_stmt|;
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_transferable
+name|tdg_transferable
 operator|++
 expr_stmt|;
 block|}
@@ -6825,7 +6821,7 @@ condition|)
 block|{
 name|tdq
 operator|->
-name|ksq_load_timeshare
+name|tdq_load_timeshare
 operator|--
 expr_stmt|;
 name|tdq_nice_rem
@@ -6849,7 +6845,7 @@ condition|)
 block|{
 name|tdq
 operator|->
-name|ksq_load_timeshare
+name|tdq_load_timeshare
 operator|++
 expr_stmt|;
 name|tdq_nice_add
@@ -7125,7 +7121,7 @@ if|if
 condition|(
 name|tdq
 operator|->
-name|ksq_assigned
+name|tdq_assigned
 condition|)
 name|tdq_assign
 argument_list|(
@@ -7250,7 +7246,7 @@ name|ts_runq
 operator|=
 name|tdq
 operator|->
-name|ksq_curr
+name|tdq_curr
 expr_stmt|;
 else|else
 name|ts
@@ -7259,7 +7255,7 @@ name|ts_runq
 operator|=
 name|tdq
 operator|->
-name|ksq_next
+name|tdq_next
 expr_stmt|;
 name|tdq_load_add
 argument_list|(
@@ -7308,7 +7304,7 @@ if|if
 condition|(
 name|tdq
 operator|->
-name|ksq_assigned
+name|tdq_assigned
 condition|)
 block|{
 name|mtx_lock_spin
@@ -7348,7 +7344,7 @@ if|if
 condition|(
 name|tdq
 operator|->
-name|ksq_load
+name|tdq_load
 operator|>
 literal|0
 condition|)
@@ -7361,7 +7357,7 @@ if|if
 condition|(
 name|tdq
 operator|->
-name|ksq_load
+name|tdq_load
 operator|-
 literal|1
 operator|>
@@ -7425,7 +7421,7 @@ if|if
 condition|(
 name|tdq
 operator|->
-name|ksq_assigned
+name|tdq_assigned
 condition|)
 name|tdq_assign
 argument_list|(
@@ -7771,7 +7767,7 @@ name|ts_runq
 operator|=
 name|tdq
 operator|->
-name|ksq_curr
+name|tdq_curr
 expr_stmt|;
 name|ts
 operator|->
@@ -7811,7 +7807,7 @@ name|ts_runq
 operator|=
 name|tdq
 operator|->
-name|ksq_curr
+name|tdq_curr
 expr_stmt|;
 else|else
 name|ts
@@ -7820,7 +7816,7 @@ name|ts_runq
 operator|=
 name|tdq
 operator|->
-name|ksq_next
+name|tdq_next
 expr_stmt|;
 break|break;
 case|case
@@ -7843,7 +7839,7 @@ name|ts_runq
 operator|=
 name|tdq
 operator|->
-name|ksq_curr
+name|tdq_curr
 expr_stmt|;
 else|else
 name|ts
@@ -7853,7 +7849,7 @@ operator|=
 operator|&
 name|tdq
 operator|->
-name|ksq_idle
+name|tdq_idle
 expr_stmt|;
 name|ts
 operator|->
@@ -7922,9 +7918,9 @@ operator|&&
 operator|(
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_idlemask
+name|tdg_idlemask
 operator|&
 name|PCPU_GET
 argument_list|(
@@ -7940,15 +7936,15 @@ if|if
 condition|(
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_idlemask
+name|tdg_idlemask
 operator|==
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_cpumask
+name|tdg_cpumask
 condition|)
 name|atomic_clear_int
 argument_list|(
@@ -7957,17 +7953,17 @@ name|tdq_idle
 argument_list|,
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_mask
+name|tdg_mask
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Now remove ourselves from the group specific idle mask. 		 */
 name|tdq
 operator|->
-name|ksq_group
+name|tdq_group
 operator|->
-name|ksg_idlemask
+name|tdg_idlemask
 operator|&=
 operator|~
 name|PCPU_GET
@@ -7983,7 +7979,7 @@ name|canmigrate
 operator|&&
 name|tdq
 operator|->
-name|ksq_load
+name|tdq_load
 operator|>
 literal|1
 operator|&&
@@ -8030,7 +8026,7 @@ name|ts_runq
 operator|==
 name|tdq
 operator|->
-name|ksq_curr
+name|tdq_curr
 condition|)
 name|curthread
 operator|->
@@ -8580,7 +8576,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|ksg_maxid
+name|tdg_maxid
 condition|;
 name|i
 operator|++
@@ -8592,7 +8588,7 @@ argument_list|(
 name|i
 argument_list|)
 operator|->
-name|ksg_load
+name|tdg_load
 expr_stmt|;
 return|return
 operator|(
@@ -8606,7 +8602,7 @@ operator|(
 name|TDQ_SELF
 argument_list|()
 operator|->
-name|ksq_sysload
+name|tdq_sysload
 operator|)
 return|;
 endif|#
