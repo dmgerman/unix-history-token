@@ -1333,9 +1333,10 @@ name|uint32_t
 modifier|*
 name|ippp
 decl_stmt|;
+name|SCTP_BUF_LEN
+argument_list|(
 name|oper
-operator|->
-name|m_len
+argument_list|)
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -1374,9 +1375,10 @@ name|param_length
 operator|=
 name|htons
 argument_list|(
+name|SCTP_BUF_LEN
+argument_list|(
 name|oper
-operator|->
-name|m_len
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ippp
@@ -2406,7 +2408,7 @@ name|net
 operator|->
 name|flight_size
 argument_list|,
-name|callout_pending
+name|SCTP_OS_TIMER_PENDING
 argument_list|(
 operator|&
 name|net
@@ -2416,7 +2418,7 @@ operator|.
 name|timer
 argument_list|)
 argument_list|,
-name|callout_active
+name|SCTP_OS_TIMER_ACTIVE
 argument_list|(
 operator|&
 name|net
@@ -5035,9 +5037,10 @@ name|uint32_t
 modifier|*
 name|ippp
 decl_stmt|;
+name|SCTP_BUF_LEN
+argument_list|(
 name|oper
-operator|->
-name|m_len
+argument_list|)
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -5076,9 +5079,10 @@ name|param_length
 operator|=
 name|htons
 argument_list|(
+name|SCTP_BUF_LEN
+argument_list|(
 name|oper
-operator|->
-name|m_len
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ippp
@@ -6758,7 +6762,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|callout_pending
+name|SCTP_OS_TIMER_PENDING
 argument_list|(
 operator|&
 name|stcb
@@ -6802,7 +6806,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|callout_pending
+name|SCTP_OS_TIMER_PENDING
 argument_list|(
 operator|&
 name|stcb
@@ -7381,7 +7385,7 @@ comment|/* stopping the callout is not needed, in theory */
 name|SCTP_INP_INFO_WUNLOCK
 argument_list|()
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|it

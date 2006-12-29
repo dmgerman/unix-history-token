@@ -424,6 +424,13 @@ name|SCTPCTL_ASOC_RESC
 value|49
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTPCTL_NAT_FRIENDLY
+value|50
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -434,14 +441,14 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_DEBUG
-value|50
+value|51
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_MAXID
-value|50
+value|51
 end_define
 
 begin_else
@@ -453,7 +460,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_MAXID
-value|49
+value|50
 end_define
 
 begin_endif
@@ -471,7 +478,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "autoasconf", CTLTYPE_INT }, \ 	{ "ecn_enable", CTLTYPE_INT }, \ 	{ "ecn_nonce", CTLTYPE_INT }, \ 	{ "strict_sack", CTLTYPE_INT }, \ 	{ "looback_nocsum", CTLTYPE_INT }, \ 	{ "strict_init", CTLTYPE_INT }, \ 	{ "peer_chkoh", CTLTYPE_INT }, \ 	{ "maxburst", CTLTYPE_INT }, \ 	{ "maxchunks", CTLTYPE_INT }, \ 	{ "delayed_sack_time", CTLTYPE_INT }, \ 	{ "heartbeat_interval", CTLTYPE_INT }, \ 	{ "pmtu_raise_time", CTLTYPE_INT }, \ 	{ "shutdown_guard_time", CTLTYPE_INT }, \ 	{ "secret_lifetime", CTLTYPE_INT }, \ 	{ "rto_max", CTLTYPE_INT }, \ 	{ "rto_min", CTLTYPE_INT }, \ 	{ "rto_initial", CTLTYPE_INT }, \ 	{ "init_rto_max", CTLTYPE_INT }, \ 	{ "valid_cookie_life", CTLTYPE_INT }, \ 	{ "init_rtx_max", CTLTYPE_INT }, \ 	{ "assoc_rtx_max", CTLTYPE_INT }, \ 	{ "path_rtx_max", CTLTYPE_INT }, \ 	{ "nr_outgoing_streams", CTLTYPE_INT }, \ 	{ "cmt_on_off", CTLTYPE_INT }, \ 	{ "cwnd_maxburst", CTLTYPE_INT }, \ 	{ "early_fast_retran", CTLTYPE_INT }, \ 	{ "use_rttvar_congctrl", CTLTYPE_INT }, \ 	{ "deadlock_detect", CTLTYPE_INT }, \ 	{ "early_fast_retran_msec", CTLTYPE_INT }, \ 	{ "asconf_auth_nochk", CTLTYPE_INT }, \ 	{ "auth_disable", CTLTYPE_INT }, \ 	{ "auth_random_len", CTLTYPE_INT }, \ 	{ "auth_hmac_id", CTLTYPE_INT }, \ 	{ "abc_l_var", CTLTYPE_INT }, \ 	{ "max_mbuf_chain", CTLTYPE_INT }, \ 	{ "cmt_use_dac", CTLTYPE_INT }, \ 	{ "do_sctp_drain", CTLTYPE_INT }, \ 	{ "warm_crc_table", CTLTYPE_INT }, \ 	{ "abort_at_limit", CTLTYPE_INT }, \ 	{ "strict_data_order", CTLTYPE_INT }, \ 	{ "tcbhashsize", CTLTYPE_INT }, \ 	{ "pcbhashsize", CTLTYPE_INT }, \ 	{ "chunkscale", CTLTYPE_INT }, \ 	{ "min_split_point", CTLTYPE_INT }, \ 	{ "add_more_on_output", CTLTYPE_INT }, \ 	{ "sys_resource", CTLTYPE_INT }, \ 	{ "asoc_resource", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "autoasconf", CTLTYPE_INT }, \ 	{ "ecn_enable", CTLTYPE_INT }, \ 	{ "ecn_nonce", CTLTYPE_INT }, \ 	{ "strict_sack", CTLTYPE_INT }, \ 	{ "looback_nocsum", CTLTYPE_INT }, \ 	{ "strict_init", CTLTYPE_INT }, \ 	{ "peer_chkoh", CTLTYPE_INT }, \ 	{ "maxburst", CTLTYPE_INT }, \ 	{ "maxchunks", CTLTYPE_INT }, \ 	{ "delayed_sack_time", CTLTYPE_INT }, \ 	{ "heartbeat_interval", CTLTYPE_INT }, \ 	{ "pmtu_raise_time", CTLTYPE_INT }, \ 	{ "shutdown_guard_time", CTLTYPE_INT }, \ 	{ "secret_lifetime", CTLTYPE_INT }, \ 	{ "rto_max", CTLTYPE_INT }, \ 	{ "rto_min", CTLTYPE_INT }, \ 	{ "rto_initial", CTLTYPE_INT }, \ 	{ "init_rto_max", CTLTYPE_INT }, \ 	{ "valid_cookie_life", CTLTYPE_INT }, \ 	{ "init_rtx_max", CTLTYPE_INT }, \ 	{ "assoc_rtx_max", CTLTYPE_INT }, \ 	{ "path_rtx_max", CTLTYPE_INT }, \ 	{ "nr_outgoing_streams", CTLTYPE_INT }, \ 	{ "cmt_on_off", CTLTYPE_INT }, \ 	{ "cwnd_maxburst", CTLTYPE_INT }, \ 	{ "early_fast_retran", CTLTYPE_INT }, \ 	{ "use_rttvar_congctrl", CTLTYPE_INT }, \ 	{ "deadlock_detect", CTLTYPE_INT }, \ 	{ "early_fast_retran_msec", CTLTYPE_INT }, \ 	{ "asconf_auth_nochk", CTLTYPE_INT }, \ 	{ "auth_disable", CTLTYPE_INT }, \ 	{ "auth_random_len", CTLTYPE_INT }, \ 	{ "auth_hmac_id", CTLTYPE_INT }, \ 	{ "abc_l_var", CTLTYPE_INT }, \ 	{ "max_mbuf_chain", CTLTYPE_INT }, \ 	{ "cmt_use_dac", CTLTYPE_INT }, \ 	{ "do_sctp_drain", CTLTYPE_INT }, \ 	{ "warm_crc_table", CTLTYPE_INT }, \ 	{ "abort_at_limit", CTLTYPE_INT }, \ 	{ "strict_data_order", CTLTYPE_INT }, \ 	{ "tcbhashsize", CTLTYPE_INT }, \ 	{ "pcbhashsize", CTLTYPE_INT }, \ 	{ "chunkscale", CTLTYPE_INT }, \ 	{ "min_split_point", CTLTYPE_INT }, \ 	{ "add_more_on_output", CTLTYPE_INT }, \ 	{ "sys_resource", CTLTYPE_INT }, \ 	{ "asoc_resource", CTLTYPE_INT }, \ 	{ "nat_friendly", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ }
 end_define
 
 begin_else
@@ -483,7 +490,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "autoasconf", CTLTYPE_INT }, \ 	{ "ecn_enable", CTLTYPE_INT }, \ 	{ "ecn_nonce", CTLTYPE_INT }, \ 	{ "strict_sack", CTLTYPE_INT }, \ 	{ "looback_nocsum", CTLTYPE_INT }, \ 	{ "strict_init", CTLTYPE_INT }, \ 	{ "peer_chkoh", CTLTYPE_INT }, \ 	{ "maxburst", CTLTYPE_INT }, \ 	{ "maxchunks", CTLTYPE_INT }, \ 	{ "delayed_sack_time", CTLTYPE_INT }, \ 	{ "heartbeat_interval", CTLTYPE_INT }, \ 	{ "pmtu_raise_time", CTLTYPE_INT }, \ 	{ "shutdown_guard_time", CTLTYPE_INT }, \ 	{ "secret_lifetime", CTLTYPE_INT }, \ 	{ "rto_max", CTLTYPE_INT }, \ 	{ "rto_min", CTLTYPE_INT }, \ 	{ "rto_initial", CTLTYPE_INT }, \ 	{ "init_rto_max", CTLTYPE_INT }, \ 	{ "valid_cookie_life", CTLTYPE_INT }, \ 	{ "init_rtx_max", CTLTYPE_INT }, \ 	{ "assoc_rtx_max", CTLTYPE_INT }, \ 	{ "path_rtx_max", CTLTYPE_INT }, \ 	{ "nr_outgoing_streams", CTLTYPE_INT }, \ 	{ "cmt_on_off", CTLTYPE_INT }, \ 	{ "cwnd_maxburst", CTLTYPE_INT }, \ 	{ "early_fast_retran", CTLTYPE_INT }, \ 	{ "use_rttvar_congctrl", CTLTYPE_INT }, \ 	{ "deadlock_detect", CTLTYPE_INT }, \ 	{ "early_fast_retran_msec", CTLTYPE_INT }, \ 	{ "asconf_auth_nochk", CTLTYPE_INT }, \ 	{ "auth_disable", CTLTYPE_INT }, \ 	{ "auth_random_len", CTLTYPE_INT }, \ 	{ "auth_hmac_id", CTLTYPE_INT }, \ 	{ "abc_l_var", CTLTYPE_INT }, \ 	{ "max_mbuf_chain", CTLTYPE_INT }, \ 	{ "cmt_use_dac", CTLTYPE_INT }, \ 	{ "do_sctp_drain", CTLTYPE_INT }, \ 	{ "warm_crc_table", CTLTYPE_INT }, \ 	{ "abort_at_limit", CTLTYPE_INT }, \ 	{ "strict_data_order", CTLTYPE_INT }, \ 	{ "tcbhashsize", CTLTYPE_INT }, \ 	{ "pcbhashsize", CTLTYPE_INT }, \ 	{ "chunkscale", CTLTYPE_INT }, \ 	{ "min_split_point", CTLTYPE_INT }, \ 	{ "add_more_on_output", CTLTYPE_INT }, \ 	{ "sys_resource", CTLTYPE_INT }, \ 	{ "asoc_resource", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "autoasconf", CTLTYPE_INT }, \ 	{ "ecn_enable", CTLTYPE_INT }, \ 	{ "ecn_nonce", CTLTYPE_INT }, \ 	{ "strict_sack", CTLTYPE_INT }, \ 	{ "looback_nocsum", CTLTYPE_INT }, \ 	{ "strict_init", CTLTYPE_INT }, \ 	{ "peer_chkoh", CTLTYPE_INT }, \ 	{ "maxburst", CTLTYPE_INT }, \ 	{ "maxchunks", CTLTYPE_INT }, \ 	{ "delayed_sack_time", CTLTYPE_INT }, \ 	{ "heartbeat_interval", CTLTYPE_INT }, \ 	{ "pmtu_raise_time", CTLTYPE_INT }, \ 	{ "shutdown_guard_time", CTLTYPE_INT }, \ 	{ "secret_lifetime", CTLTYPE_INT }, \ 	{ "rto_max", CTLTYPE_INT }, \ 	{ "rto_min", CTLTYPE_INT }, \ 	{ "rto_initial", CTLTYPE_INT }, \ 	{ "init_rto_max", CTLTYPE_INT }, \ 	{ "valid_cookie_life", CTLTYPE_INT }, \ 	{ "init_rtx_max", CTLTYPE_INT }, \ 	{ "assoc_rtx_max", CTLTYPE_INT }, \ 	{ "path_rtx_max", CTLTYPE_INT }, \ 	{ "nr_outgoing_streams", CTLTYPE_INT }, \ 	{ "cmt_on_off", CTLTYPE_INT }, \ 	{ "cwnd_maxburst", CTLTYPE_INT }, \ 	{ "early_fast_retran", CTLTYPE_INT }, \ 	{ "use_rttvar_congctrl", CTLTYPE_INT }, \ 	{ "deadlock_detect", CTLTYPE_INT }, \ 	{ "early_fast_retran_msec", CTLTYPE_INT }, \ 	{ "asconf_auth_nochk", CTLTYPE_INT }, \ 	{ "auth_disable", CTLTYPE_INT }, \ 	{ "auth_random_len", CTLTYPE_INT }, \ 	{ "auth_hmac_id", CTLTYPE_INT }, \ 	{ "abc_l_var", CTLTYPE_INT }, \ 	{ "max_mbuf_chain", CTLTYPE_INT }, \ 	{ "cmt_use_dac", CTLTYPE_INT }, \ 	{ "do_sctp_drain", CTLTYPE_INT }, \ 	{ "warm_crc_table", CTLTYPE_INT }, \ 	{ "abort_at_limit", CTLTYPE_INT }, \ 	{ "strict_data_order", CTLTYPE_INT }, \ 	{ "tcbhashsize", CTLTYPE_INT }, \ 	{ "pcbhashsize", CTLTYPE_INT }, \ 	{ "chunkscale", CTLTYPE_INT }, \ 	{ "min_split_point", CTLTYPE_INT }, \ 	{ "add_more_on_output", CTLTYPE_INT }, \ 	{ "sys_resource", CTLTYPE_INT }, \ 	{ "asoc_resource", CTLTYPE_INT }, \ 	{ "nat_friendly", CTLTYPE_INT }, \ }
 end_define
 
 begin_endif
@@ -706,7 +713,7 @@ name|sctp_free_remote_addr
 parameter_list|(
 name|__net
 parameter_list|)
-value|{ \ 	if ((__net)) { \                 if (atomic_fetchadd_int(&(__net)->ref_count, -1) == 1) { \ 			callout_stop(&(__net)->rxt_timer.timer); \ 			callout_stop(&(__net)->pmtu_timer.timer); \ 			callout_stop(&(__net)->fr_timer.timer); \ 			(__net)->dest_state = SCTP_ADDR_NOT_REACHABLE; \ 			SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_net, (__net)); \ 			SCTP_DECR_RADDR_COUNT(); \ 		} \ 	} \ }
+value|{ \ 	if ((__net)) { \                 if (atomic_fetchadd_int(&(__net)->ref_count, -1) == 1) { \ 			SCTP_OS_TIMER_STOP(&(__net)->rxt_timer.timer); \ 			SCTP_OS_TIMER_STOP(&(__net)->pmtu_timer.timer); \ 			SCTP_OS_TIMER_STOP(&(__net)->fr_timer.timer); \ 			(__net)->dest_state = SCTP_ADDR_NOT_REACHABLE; \ 			SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_net, (__net)); \ 			SCTP_DECR_RADDR_COUNT(); \ 		} \ 	} \ }
 end_define
 
 begin_define
@@ -722,7 +729,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \         uint32_t val; \         val = atomic_fetchadd_int(&(sb)->sb_cc,-((m)->m_len)); \         if(val< (m)->m_len) { \            panic("sb_cc goes negative"); \         } \         val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-(MSIZE)); \         if(val< MSIZE) { \             panic("sb_mbcnt goes negative"); \         } \         if ((m)->m_flags& M_EXT) { \                 val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-((m)->m_ext.ext_size)); \ 		if(val< (m)->m_ext.ext_size) { \                     panic("sb_mbcnt goes negative2"); \                 } \         } \         if (((ctl)->do_not_ref_stcb == 0)&& stcb) {\           val = atomic_fetchadd_int(&(stcb)->asoc.sb_cc,-((m)->m_len)); \           if(val< (m)->m_len) {\              panic("stcb->sb_cc goes negative"); \           } \           val = atomic_fetchadd_int(&(stcb)->asoc.sb_mbcnt,-(MSIZE)); \           if(val< MSIZE) { \              panic("asoc->mbcnt goes negative"); \           } \ 	  if ((m)->m_flags& M_EXT) { \                 val = atomic_fetchadd_int(&(stcb)->asoc.sb_mbcnt,-((m)->m_ext.ext_size)); \ 		if(val< (m)->m_ext.ext_size) { \ 		   panic("assoc stcb->mbcnt would go negative"); \                 } \           } \         } \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_HEADER&& \ 	    (m)->m_type != MT_OOBDATA) \ 		atomic_subtract_int(&(sb)->sb_ctl,(m)->m_len); \ }
+value|{ \         uint32_t val; \         val = atomic_fetchadd_int(&(sb)->sb_cc,-(SCTP_BUF_LEN((m)))); \         if(val< SCTP_BUF_LEN((m))) { \            panic("sb_cc goes negative"); \         } \         val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-(MSIZE)); \         if(val< MSIZE) { \             panic("sb_mbcnt goes negative"); \         } \         if (SCTP_BUF_IS_EXTENDED(m)) { \                 val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-(SCTP_BUF_EXTEND_SIZE(m))); \ 		if(val< SCTP_BUF_EXTEND_SIZE(m)) { \                     panic("sb_mbcnt goes negative2"); \                 } \         } \         if (((ctl)->do_not_ref_stcb == 0)&& stcb) {\           val = atomic_fetchadd_int(&(stcb)->asoc.sb_cc,-(SCTP_BUF_LEN((m)))); \           if(val< SCTP_BUF_LEN((m))) {\              panic("stcb->sb_cc goes negative"); \           } \           val = atomic_fetchadd_int(&(stcb)->asoc.sb_mbcnt,-(MSIZE)); \           if(val< MSIZE) { \              panic("asoc->mbcnt goes negative"); \           } \ 	  if (SCTP_BUF_IS_EXTENDED(m)) { \                 val = atomic_fetchadd_int(&(stcb)->asoc.sb_mbcnt,-(SCTP_BUF_EXTEND_SIZE(m))); \ 		if(val< SCTP_BUF_EXTEND_SIZE(m)) { \ 		   panic("assoc stcb->mbcnt would go negative"); \                 } \           } \         } \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_subtract_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
 end_define
 
 begin_define
@@ -736,7 +743,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	atomic_add_int(&(sb)->sb_cc,(m)->m_len); \ 	atomic_add_int(&(sb)->sb_mbcnt, MSIZE); \ 	if ((m)->m_flags& M_EXT) \ 		atomic_add_int(&(sb)->sb_mbcnt,(m)->m_ext.ext_size); \         if(stcb) { \   	  atomic_add_int(&(stcb)->asoc.sb_cc,(m)->m_len); \           atomic_add_int(&(stcb)->asoc.sb_mbcnt, MSIZE); \ 	  if ((m)->m_flags& M_EXT) \ 		atomic_add_int(&(stcb)->asoc.sb_mbcnt,(m)->m_ext.ext_size); \         } \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_HEADER&& \ 	    (m)->m_type != MT_OOBDATA) \ 		atomic_add_int(&(sb)->sb_ctl,(m)->m_len); \ }
+value|{ \ 	atomic_add_int(&(sb)->sb_cc,SCTP_BUF_LEN((m))); \ 	atomic_add_int(&(sb)->sb_mbcnt, MSIZE); \ 	if (SCTP_BUF_IS_EXTENDED(m)) \ 		atomic_add_int(&(sb)->sb_mbcnt,SCTP_BUF_EXTEND_SIZE(m)); \         if(stcb) { \   	  atomic_add_int(&(stcb)->asoc.sb_cc,SCTP_BUF_LEN((m))); \           atomic_add_int(&(stcb)->asoc.sb_mbcnt, MSIZE); \ 	  if (SCTP_BUF_IS_EXTENDED(m)) \ 		atomic_add_int(&(stcb)->asoc.sb_mbcnt,SCTP_BUF_EXTEND_SIZE(m)); \         } \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_add_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
 end_define
 
 begin_define
@@ -766,8 +773,12 @@ name|sctp_mbuf_crush
 parameter_list|(
 name|data
 parameter_list|)
-value|do { \                 struct mbuf *_m; \ 		_m = (data); \ 		while(_m&& (_m->m_len == 0)) { \ 			(data)  = _m->m_next; \ 			_m->m_next = NULL; \ 			sctp_m_free(_m); \ 			_m = (data); \ 		} \ } while (0)
+value|do { \                 struct mbuf *_m; \ 		_m = (data); \ 		while(_m&& (SCTP_BUF_LEN(_m) == 0)) { \ 			(data)  = SCTP_BUF_NEXT(_m); \ 			SCTP_BUF_NEXT(_m) = NULL; \ 			sctp_m_free(_m); \ 			_m = (data); \ 		} \ } while (0)
 end_define
+
+begin_comment
+comment|/*  * some sysctls  */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -825,6 +836,13 @@ specifier|extern
 name|unsigned
 name|int
 name|sctp_cmt_sockopt_on_off
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|sctp_nat_friendly
 decl_stmt|;
 end_decl_stmt
 

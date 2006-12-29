@@ -48,6 +48,10 @@ name|_KERNEL
 argument_list|)
 end_if
 
+begin_comment
+comment|/*  * function prototypes  */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|void
@@ -73,6 +77,9 @@ name|sctp_compose_asconf
 parameter_list|(
 name|struct
 name|sctp_tcb
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;

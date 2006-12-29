@@ -126,12 +126,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/callout.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/limits.h>
 end_include
 
@@ -6525,7 +6519,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Init the timer structure for signature change */
-name|callout_init
+name|SCTP_OS_TIMER_INIT
 argument_list|(
 operator|&
 name|inp
@@ -6535,8 +6529,6 @@ operator|.
 name|signature_change
 operator|.
 name|timer
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|inp
@@ -6738,7 +6730,7 @@ name|store_at
 operator|=
 name|SCTP_SIGNATURE_SIZE
 expr_stmt|;
-name|sctp_read_random
+name|SCTP_READ_RANDOM
 argument_list|(
 name|m
 operator|->
@@ -9445,9 +9437,10 @@ name|uint32_t
 modifier|*
 name|ippp
 decl_stmt|;
+name|SCTP_BUF_LEN
+argument_list|(
 name|op_err
-operator|->
-name|m_len
+argument_list|)
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -9486,9 +9479,10 @@ name|param_length
 operator|=
 name|htons
 argument_list|(
+name|SCTP_BUF_LEN
+argument_list|(
 name|op_err
-operator|->
-name|m_len
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ippp
@@ -9928,9 +9922,10 @@ name|uint32_t
 modifier|*
 name|ippp
 decl_stmt|;
+name|SCTP_BUF_LEN
+argument_list|(
 name|op_err
-operator|->
-name|m_len
+argument_list|)
 operator|=
 operator|(
 sizeof|sizeof
@@ -9971,9 +9966,10 @@ name|param_length
 operator|=
 name|htons
 argument_list|(
+name|SCTP_BUF_LEN
+argument_list|(
 name|op_err
-operator|->
-name|m_len
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ippp
@@ -10291,9 +10287,10 @@ name|sctp_paramhdr
 modifier|*
 name|ph
 decl_stmt|;
+name|SCTP_BUF_LEN
+argument_list|(
 name|op_err
-operator|->
-name|m_len
+argument_list|)
 operator|=
 operator|(
 sizeof|sizeof
@@ -10334,9 +10331,10 @@ name|param_length
 operator|=
 name|htons
 argument_list|(
+name|SCTP_BUF_LEN
+argument_list|(
 name|op_err
-operator|->
-name|m_len
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ippp
@@ -10460,7 +10458,7 @@ name|cnt
 condition|)
 block|{
 comment|/* Ok we have someone out there that will kill us */
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|inp
@@ -10521,7 +10519,7 @@ name|SCTP_PCB_FLAGS_CLOSE_IP
 operator|)
 condition|)
 block|{
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|inp
@@ -10576,7 +10574,7 @@ endif|#
 directive|endif
 return|return;
 block|}
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|inp
@@ -10618,7 +10616,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|inp
@@ -12281,7 +12279,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Init the timer structure */
-name|callout_init
+name|SCTP_OS_TIMER_INIT
 argument_list|(
 operator|&
 name|net
@@ -12289,11 +12287,9 @@ operator|->
 name|rxt_timer
 operator|.
 name|timer
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
-name|callout_init
+name|SCTP_OS_TIMER_INIT
 argument_list|(
 operator|&
 name|net
@@ -12301,11 +12297,9 @@ operator|->
 name|fr_timer
 operator|.
 name|timer
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
-name|callout_init
+name|SCTP_OS_TIMER_INIT
 argument_list|(
 operator|&
 name|net
@@ -12313,8 +12307,6 @@ operator|->
 name|pmtu_timer
 operator|.
 name|timer
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Now generate a route for this guy */
@@ -13735,7 +13727,7 @@ operator|)
 return|;
 block|}
 comment|/* Init all the timers */
-name|callout_init
+name|SCTP_OS_TIMER_INIT
 argument_list|(
 operator|&
 name|asoc
@@ -13743,11 +13735,9 @@ operator|->
 name|hb_timer
 operator|.
 name|timer
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
-name|callout_init
+name|SCTP_OS_TIMER_INIT
 argument_list|(
 operator|&
 name|asoc
@@ -13755,23 +13745,9 @@ operator|->
 name|dack_timer
 operator|.
 name|timer
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
-name|callout_init
-argument_list|(
-operator|&
-name|asoc
-operator|->
-name|asconf_timer
-operator|.
-name|timer
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|callout_init
+name|SCTP_OS_TIMER_INIT
 argument_list|(
 operator|&
 name|asoc
@@ -13779,11 +13755,19 @@ operator|->
 name|strreset_timer
 operator|.
 name|timer
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
-name|callout_init
+name|SCTP_OS_TIMER_INIT
+argument_list|(
+operator|&
+name|asoc
+operator|->
+name|asconf_timer
+operator|.
+name|timer
+argument_list|)
+expr_stmt|;
+name|SCTP_OS_TIMER_INIT
 argument_list|(
 operator|&
 name|asoc
@@ -13791,11 +13775,9 @@ operator|->
 name|shut_guard_timer
 operator|.
 name|timer
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
-name|callout_init
+name|SCTP_OS_TIMER_INIT
 argument_list|(
 operator|&
 name|asoc
@@ -13803,11 +13785,9 @@ operator|->
 name|autoclose_timer
 operator|.
 name|timer
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
-name|callout_init
+name|SCTP_OS_TIMER_INIT
 argument_list|(
 operator|&
 name|asoc
@@ -13815,8 +13795,6 @@ operator|->
 name|delayed_event_timer
 operator|.
 name|timer
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -14925,7 +14903,7 @@ return|;
 block|}
 block|}
 comment|/* now clean up any other timers */
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -14935,7 +14913,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -14945,7 +14923,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -14955,7 +14933,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -14965,7 +14943,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -14975,7 +14953,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -14985,7 +14963,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -15004,7 +14982,7 @@ argument_list|,
 argument|sctp_next
 argument_list|)
 block|{
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|net
@@ -15014,7 +14992,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|net
@@ -15024,7 +15002,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|net
@@ -15516,7 +15494,7 @@ block|}
 block|}
 block|}
 comment|/* Stop any timer someone may have started */
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -15565,7 +15543,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* now restop the timers to be sure - this is paranoia at is finest! */
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -15575,7 +15553,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -15585,7 +15563,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -15595,7 +15573,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -15605,7 +15583,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -15615,7 +15593,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -15625,7 +15603,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|asoc
@@ -15644,7 +15622,7 @@ argument_list|,
 argument|sctp_next
 argument_list|)
 block|{
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|net
@@ -15654,7 +15632,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|net
@@ -15664,7 +15642,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|net
@@ -19184,7 +19162,7 @@ name|ipi_free_chunks
 operator|=
 literal|0
 expr_stmt|;
-name|callout_init
+name|SCTP_OS_TIMER_INIT
 argument_list|(
 operator|&
 name|sctppcbinfo
@@ -19192,8 +19170,6 @@ operator|.
 name|addr_wq_timer
 operator|.
 name|timer
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* port stuff */
@@ -23606,7 +23582,7 @@ name|last_revoke_count
 operator|=
 name|cnt
 expr_stmt|;
-name|callout_stop
+name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
 name|stcb
@@ -23924,7 +23900,7 @@ name|SCTP_ITERATOR_DO_ALL_INP
 expr_stmt|;
 block|}
 comment|/* Init the timer */
-name|callout_init
+name|SCTP_OS_TIMER_INIT
 argument_list|(
 operator|&
 name|it
@@ -23932,8 +23908,6 @@ operator|->
 name|tmr
 operator|.
 name|timer
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* add to the list of all iterators */
@@ -23988,10 +23962,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Callout/Timer routines for OS that doesn't have them  */
-end_comment
 
 end_unit
 

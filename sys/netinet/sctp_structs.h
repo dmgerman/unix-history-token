@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/callout.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -77,6 +71,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<netinet/sctp_os.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/sctp_header.h>
 end_include
 
@@ -96,8 +96,7 @@ begin_struct
 struct|struct
 name|sctp_timer
 block|{
-name|struct
-name|callout
+name|sctp_os_timer_t
 name|timer
 decl_stmt|;
 name|int
@@ -964,6 +963,10 @@ expr_stmt|;
 name|uint16_t
 name|port_from
 decl_stmt|;
+name|uint16_t
+name|spec_flags
+decl_stmt|;
+comment|/* Flags to hold the notification field */
 name|uint8_t
 name|do_not_ref_stcb
 decl_stmt|;
@@ -972,6 +975,9 @@ name|end_added
 decl_stmt|;
 name|uint8_t
 name|pdapi_aborted
+decl_stmt|;
+name|uint8_t
+name|resv
 decl_stmt|;
 block|}
 struct|;

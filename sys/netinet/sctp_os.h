@@ -37,10 +37,6 @@ begin_comment
 comment|/*  * Zone(pool) allocation routines: MUST be defined for each OS.  *  zone = zone/pool pointer.  *  name = string name of the zone/pool.  *  size = size of each zone/pool element.  *  number = number of elements in zone/pool.  *  * sctp_zone_t  * SCTP_ZONE_INIT(zone, name, size, number)  * SCTP_ZONE_GET(zone)  * SCTP_ZONE_FREE(zone, element)  * SCTP_ZONE_DESTROY(zone)  */
 end_comment
 
-begin_comment
-comment|/*  * Functions:  * sctp_read_random(void *buffer, uint32_t bytes)  */
-end_comment
-
 begin_include
 include|#
 directive|include
