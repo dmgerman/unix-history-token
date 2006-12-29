@@ -987,7 +987,7 @@ literal|"# atomic_readandclear_long"
 operator|:
 literal|"+r"
 operator|(
-name|result
+name|res
 operator|)
 operator|,
 comment|/* 0 */
