@@ -5033,8 +5033,6 @@ name|so
 argument_list|,
 operator|&
 name|tcbinfo
-argument_list|,
-literal|"tcpinp"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5117,11 +5115,6 @@ operator|~
 name|SS_NOFDREF
 expr_stmt|;
 comment|/* don't free the socket yet */
-name|INP_LOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -5159,6 +5152,11 @@ operator|->
 name|t_state
 operator|=
 name|TCPS_CLOSED
+expr_stmt|;
+name|INP_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

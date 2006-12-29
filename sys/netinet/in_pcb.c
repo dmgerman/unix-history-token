@@ -864,7 +864,7 @@ comment|/*  * in_pcb.c: manage the Protocol Control Blocks.  *  * NOTE: It is as
 end_comment
 
 begin_comment
-comment|/*  * Allocate a PCB and associate it with the socket.  */
+comment|/*  * Allocate a PCB and associate it with the socket.  * On success return with the PCB locked.  */
 end_comment
 
 begin_function
@@ -880,11 +880,6 @@ name|struct
 name|inpcbinfo
 modifier|*
 name|pcbinfo
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|type
 parameter_list|)
 block|{
 name|struct
@@ -913,8 +908,6 @@ operator|->
 name|ipi_zone
 argument_list|,
 name|M_NOWAIT
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -928,14 +921,12 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
+name|bzero
+argument_list|(
 name|inp
-operator|->
-name|inp_gencnt
-operator|=
-operator|++
-name|pcbinfo
-operator|->
-name|ipi_gencnt
+argument_list|,
+name|inp_zero_size
+argument_list|)
 expr_stmt|;
 name|inp
 operator|->
@@ -1103,15 +1094,6 @@ name|caddr_t
 operator|)
 name|inp
 expr_stmt|;
-name|INP_LOCK_INIT
-argument_list|(
-name|inp
-argument_list|,
-literal|"inp"
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -1127,6 +1109,20 @@ name|IN6P_AUTOFLOWLABEL
 expr_stmt|;
 endif|#
 directive|endif
+name|INP_LOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+name|inp
+operator|->
+name|inp_gencnt
+operator|=
+operator|++
+name|pcbinfo
+operator|->
+name|ipi_gencnt
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -3657,11 +3653,6 @@ name|inp_vflag
 operator|=
 literal|0
 expr_stmt|;
-name|INP_LOCK_DESTROY
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -3672,6 +3663,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|INP_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|ipi

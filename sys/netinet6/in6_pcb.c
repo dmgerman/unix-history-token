@@ -1987,7 +1987,7 @@ name|inp_vflag
 operator|=
 literal|0
 expr_stmt|;
-name|INP_LOCK_DESTROY
+name|INP_UNLOCK
 argument_list|(
 name|inp
 argument_list|)

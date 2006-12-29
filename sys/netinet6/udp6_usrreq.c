@@ -2224,8 +2224,6 @@ name|so
 argument_list|,
 operator|&
 name|udbinfo
-argument_list|,
-literal|"udp6inp"
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2258,11 +2256,6 @@ operator|)
 name|so
 operator|->
 name|so_pcb
-expr_stmt|;
-name|INP_LOCK
-argument_list|(
-name|inp
-argument_list|)
 expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
