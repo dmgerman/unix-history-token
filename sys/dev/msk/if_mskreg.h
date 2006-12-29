@@ -16361,9 +16361,8 @@ name|struct
 name|callout
 name|msk_tick_ch
 decl_stmt|;
-name|struct
-name|callout
-name|msk_watchdog_ch
+name|int
+name|msk_watchdog_timer
 decl_stmt|;
 name|uint32_t
 name|msk_txq
