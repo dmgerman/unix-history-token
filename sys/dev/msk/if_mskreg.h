@@ -16090,18 +16090,35 @@ name|resource
 modifier|*
 name|msk_res
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
-comment|/* I/O and IRQ resources */
+comment|/* I/O resource */
 name|struct
 name|resource_spec
 modifier|*
 name|msk_res_spec
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|msk_irq
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* IRQ resources */
+name|struct
+name|resource_spec
+modifier|*
+name|msk_irq_spec
+decl_stmt|;
 name|void
 modifier|*
 name|msk_intrhand
+index|[
+literal|2
+index|]
 decl_stmt|;
 comment|/* irq handler handle */
 name|device_t
