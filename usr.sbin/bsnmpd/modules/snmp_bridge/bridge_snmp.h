@@ -1340,6 +1340,9 @@ parameter_list|,
 name|u_char
 modifier|*
 name|mac
+parameter_list|,
+name|size_t
+name|mlen
 parameter_list|)
 function_decl|;
 end_function_decl
