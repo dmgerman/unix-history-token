@@ -1399,11 +1399,6 @@ name|inpcb
 modifier|*
 name|inp
 init|=
-operator|(
-expr|struct
-name|inpcb
-operator|*
-operator|)
 name|mem
 decl_stmt|;
 name|INP_LOCK_INIT
