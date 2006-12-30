@@ -608,17 +608,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|ucom
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ucom_softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|ucom
 operator|->
 name|sc_dev
@@ -968,7 +957,7 @@ label|:
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"uftdi_attach: ATTACH ERROR\n"
+literal|"uark_attach: ATTACH ERROR\n"
 operator|)
 argument_list|)
 expr_stmt|;
