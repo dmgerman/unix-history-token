@@ -2392,7 +2392,7 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"too many dependant configs (%d)\n"
+literal|"too many dependent configs (%d)\n"
 argument_list|,
 name|MAXDEP
 argument_list|)
