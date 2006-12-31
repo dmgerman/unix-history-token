@@ -1371,7 +1371,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Don't allow sources to be upgraded unless if we have src already */
+comment|/* Don't allow sources to be upgraded if we have src already */
 if|if
 condition|(
 name|directory_exists
