@@ -4140,12 +4140,6 @@ decl_stmt|;
 name|int
 name|tty
 decl_stmt|;
-specifier|static
-name|int
-name|called
-init|=
-literal|0
-decl_stmt|;
 name|tty
 operator|=
 name|fileno

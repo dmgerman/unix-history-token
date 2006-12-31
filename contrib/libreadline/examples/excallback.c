@@ -3,6 +3,10 @@ begin_comment
 comment|/* From: Jeff Solomon<jsolomon@stanford.edu> Date: Fri,  9 Apr 1999 10:13:27 -0700 (PDT) To: chet@po.cwru.edu Subject: new readline example Message-ID:<14094.12094.527305.199695@mrclean.Stanford.EDU>  Chet,  I've been using readline 4.0. Specifically, I've been using the perl version Term::ReadLine::Gnu. It works great.  Anyway, I've been playing around the alternate interface and I wanted to contribute a little C program, callback.c, to you that you could use as an example of the alternate interface in the /examples directory of the readline distribution.  My example shows how, using the alternate interface, you can interactively change the prompt (which is very nice imo). Also, I point out that you must roll your own terminal setting when using the alternate interface because readline depreps (using your parlance) the terminal while in the user callback. I try to demostrate what I mean with an example. I've included the program below.  To compile, I just put the program in the examples directory and made the appropriate changes to the EXECUTABLES and OBJECTS line and added an additional target 'callback'.  I compiled on my Sun Solaris2.6 box using Sun's cc.  Let me know what you think.  Jeff */
 end_comment
 
+begin_comment
+comment|/* Copyright (C) 1999 Jeff Solomon */
+end_comment
+
 begin_if
 if|#
 directive|if

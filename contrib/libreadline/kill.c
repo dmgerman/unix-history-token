@@ -2068,6 +2068,11 @@ block|{
 name|rl_ding
 argument_list|()
 expr_stmt|;
+name|FREE
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1

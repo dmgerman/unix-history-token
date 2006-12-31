@@ -1765,6 +1765,40 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* undo.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|UNDO_LIST
+modifier|*
+name|_rl_copy_undo_entry
+name|PARAMS
+argument_list|(
+operator|(
+name|UNDO_LIST
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|UNDO_LIST
+modifier|*
+name|_rl_copy_undo_list
+name|PARAMS
+argument_list|(
+operator|(
+name|UNDO_LIST
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* util.c */
 end_comment
 
@@ -2423,6 +2457,14 @@ specifier|extern
 name|char
 modifier|*
 name|_rl_term_IC
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|_rl_term_forward_char
 decl_stmt|;
 end_decl_stmt
 

@@ -1775,11 +1775,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|free
-argument_list|(
-name|username
-argument_list|)
-expr_stmt|;
 comment|/* If we don't have a failure hook, or if the failure hook did not 	 expand the tilde, return a copy of what we were passed. */
 if|if
 condition|(
@@ -1795,13 +1790,13 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|free
+if|#
+directive|if
+name|defined
 argument_list|(
-name|username
+name|HAVE_GETPWENT
 argument_list|)
-expr_stmt|;
+else|else
 name|dirname
 operator|=
 name|glue_prefix_and_suffix
@@ -1815,7 +1810,13 @@ argument_list|,
 name|user_len
 argument_list|)
 expr_stmt|;
-block|}
+endif|#
+directive|endif
+name|free
+argument_list|(
+name|username
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
