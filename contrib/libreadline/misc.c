@@ -717,6 +717,9 @@ operator|)
 condition|)
 break|break;
 block|}
+return|return
+name|r
+return|;
 block|}
 end_function
 

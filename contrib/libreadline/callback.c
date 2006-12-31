@@ -110,6 +110,12 @@ directive|include
 file|"rlprivate.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
+
 begin_comment
 comment|/* Private data for callback registration functions.  See comments in    rl_callback_read_char for more details. */
 end_comment
@@ -378,6 +384,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+do|do
+block|{
 if|if
 condition|(
 name|RL_ISSTATE
@@ -569,7 +577,7 @@ condition|(
 name|_rl_callback_func
 condition|)
 block|{
-comment|/* This allows functions that simply need to read an additional character 	 (like quoted-insert) to register a function to be called when input is 	 available.  _rl_callback_data is simply a pointer to a struct that has 	 the argument count originally passed to the registering function and 	 space for any additional parameters.  */
+comment|/* This allows functions that simply need to read an additional 	     character (like quoted-insert) to register a function to be 	     called when input is available.  _rl_callback_data is simply a 	     pointer to a struct that has the argument count originally 	     passed to the registering function and space for any additional 	     parameters.  */
 name|eof
 operator|=
 call|(
@@ -580,7 +588,7 @@ argument_list|(
 name|_rl_callback_data
 argument_list|)
 expr_stmt|;
-comment|/* If the function `deregisters' itself, make sure the data is cleaned 	 up. */
+comment|/* If the function `deregisters' itself, make sure the data is 	     cleaned up. */
 if|if
 condition|(
 name|_rl_callback_func
@@ -634,13 +642,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* We loop in case some function has pushed input back with rl_execute_next. */
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
 if|if
 condition|(
 name|rl_done
@@ -710,7 +711,8 @@ name|_rl_callback_newline
 argument_list|()
 expr_stmt|;
 block|}
-if|if
+block|}
+do|while
 condition|(
 name|rl_pending_input
 operator|||
@@ -722,14 +724,7 @@ argument_list|(
 name|RL_STATE_MACROINPUT
 argument_list|)
 condition|)
-name|eof
-operator|=
-name|readline_internal_char
-argument_list|()
-expr_stmt|;
-else|else
-break|break;
-block|}
+do|;
 block|}
 end_function
 

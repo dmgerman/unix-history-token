@@ -246,16 +246,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Last line found by the current incremental search, so we don't `find'    identical lines many times in a row. */
+comment|/* Last line found by the current incremental search, so we don't `find'    identical lines many times in a row.  Now part of isearch context. */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|prev_line_found
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static char *prev_line_found; */
+end_comment
 
 begin_comment
 comment|/* Last search string and its length. */

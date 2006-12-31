@@ -710,6 +710,10 @@ name|timeout
 decl_stmt|;
 endif|#
 directive|endif
+name|chars_avail
+operator|=
+literal|0
+expr_stmt|;
 name|tty
 operator|=
 name|fileno
@@ -939,6 +943,31 @@ block|}
 endif|#
 directive|endif
 comment|/* O_NDELAY */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+comment|/* Use getch/_kbhit to check for available console input, in the same way      that we read it normally. */
+name|chars_avail
+operator|=
+name|isatty
+argument_list|(
+name|tty
+argument_list|)
+condition|?
+name|_kbhit
+argument_list|()
+else|:
+literal|0
+expr_stmt|;
+name|result
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* If there's nothing available, don't waste time trying to read      something. */
 if|if
 condition|(
@@ -1055,7 +1084,7 @@ expr_stmt|;
 if|if
 condition|(
 name|u
-operator|>
+operator|>=
 literal|0
 condition|)
 name|_keyboard_input_timeout
@@ -1225,6 +1254,27 @@ operator|)
 return|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+if|if
+condition|(
+name|isatty
+argument_list|(
+name|tty
+argument_list|)
+condition|)
+return|return
+operator|(
+name|_kbhit
+argument_list|()
+operator|)
+return|;
 endif|#
 directive|endif
 return|return
@@ -1851,6 +1901,13 @@ name|EINTR
 condition|)
 return|return
 operator|(
+name|RL_ISSTATE
+argument_list|(
+name|RL_STATE_READCMD
+argument_list|)
+condition|?
+name|READERR
+else|:
 name|EOF
 operator|)
 return|;
@@ -2048,7 +2105,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read a multibyte-character string whose first character is FIRST into    the buffer MB of length MBLEN.  Returns the last character read, which    may be FIRST.  Used by the search functions, among others.  Very similar    to _rl_read_mbchar. */
+comment|/* Read a multibyte-character string whose first character is FIRST into    the buffer MB of length MLEN.  Returns the last character read, which    may be FIRST.  Used by the search functions, among others.  Very similar    to _rl_read_mbchar. */
 end_comment
 
 begin_function
@@ -2059,7 +2116,7 @@ name|first
 parameter_list|,
 name|mb
 parameter_list|,
-name|mblen
+name|mlen
 parameter_list|)
 name|int
 name|first
@@ -2069,7 +2126,7 @@ modifier|*
 name|mb
 decl_stmt|;
 name|int
-name|mblen
+name|mlen
 decl_stmt|;
 block|{
 name|int
@@ -2090,7 +2147,7 @@ name|mb
 argument_list|,
 literal|0
 argument_list|,
-name|mblen
+name|mlen
 argument_list|)
 expr_stmt|;
 for|for
@@ -2101,7 +2158,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|mblen
+name|mlen
 condition|;
 name|i
 operator|++

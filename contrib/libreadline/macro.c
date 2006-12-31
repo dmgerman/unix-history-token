@@ -379,6 +379,8 @@ operator|&&
 name|RL_ISSTATE
 argument_list|(
 name|RL_STATE_READCMD
+operator||
+name|RL_STATE_MOREINPUT
 argument_list|)
 operator|&&
 name|rl_executing_macro

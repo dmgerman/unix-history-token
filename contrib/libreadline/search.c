@@ -260,14 +260,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|UNDO_LIST
-modifier|*
-name|noninc_saved_undo_list
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|void
 name|make_history_line_current
 name|PARAMS
@@ -857,9 +849,9 @@ argument_list|)
 expr_stmt|;
 name|rl_message
 argument_list|(
-name|p
+literal|"%s"
 argument_list|,
-literal|0
+name|p
 argument_list|,
 literal|0
 argument_list|)
