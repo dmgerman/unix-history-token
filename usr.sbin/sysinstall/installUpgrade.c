@@ -1520,7 +1520,7 @@ name|void
 operator|)
 name|vsystem
 argument_list|(
-literal|"chflags -R noschg /bin /sbin /usr/sbin /usr/bin /usr/lib /usr/libexec /var/empty /boot/kernel*"
+literal|"chflags -R noschg /bin /sbin /lib /libexec /usr/bin /usr/sbin /usr/lib /usr/libexec /var/empty /boot/kernel*"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1621,7 +1621,7 @@ return|;
 block|}
 name|msgNotify
 argument_list|(
-literal|"Beginning extraction of distributions.."
+literal|"Beginning extraction of distributions."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1866,7 +1866,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* Enable all the drives befor we start */
+comment|/* Enable all the drives before we start */
 for|for
 control|(
 name|i
@@ -2124,7 +2124,7 @@ block|}
 block|}
 name|msgNotify
 argument_list|(
-literal|"Beginning extraction of distributions.."
+literal|"Beginning extraction of distributions."
 argument_list|)
 expr_stmt|;
 if|if
