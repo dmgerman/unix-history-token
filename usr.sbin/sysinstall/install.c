@@ -3489,7 +3489,7 @@ argument_list|(
 literal|"ln -s usr/compat /compat"
 argument_list|)
 expr_stmt|;
-comment|/* BOGON #5: aliases database not build for bin */
+comment|/* BOGON #5: aliases database not built for bin */
 name|vsystem
 argument_list|(
 literal|"newaliases"
@@ -4143,8 +4143,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Warning:  Using existing root partition.  It will be assumed\n"
-literal|"that you have the appropriate device entries already in /dev."
+literal|"Warning:  Using existing root partition."
 argument_list|)
 expr_stmt|;
 block|}
