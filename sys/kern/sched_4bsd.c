@@ -3129,7 +3129,7 @@ literal|0
 operator|)
 argument_list|,
 operator|(
-literal|"trying to run inhibitted thread"
+literal|"trying to run inhibited thread"
 operator|)
 argument_list|)
 expr_stmt|;

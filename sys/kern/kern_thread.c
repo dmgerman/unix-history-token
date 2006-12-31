@@ -2306,7 +2306,7 @@ name|td2
 argument_list|)
 condition|)
 continue|continue;
-comment|/* 					 * maybe other inhibitted states too? 					 */
+comment|/* 					 * maybe other inhibited states too? 					 */
 if|if
 condition|(
 operator|(

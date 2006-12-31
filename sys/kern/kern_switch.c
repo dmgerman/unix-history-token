@@ -713,7 +713,7 @@ literal|0
 operator|)
 argument_list|,
 operator|(
-literal|"setrunqueue: trying to run inhibitted thread"
+literal|"setrunqueue: trying to run inhibited thread"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1019,7 +1019,7 @@ literal|0
 operator|)
 argument_list|,
 operator|(
-literal|"maybe_preempt: trying to run inhibitted thread"
+literal|"maybe_preempt: trying to run inhibited thread"
 operator|)
 argument_list|)
 expr_stmt|;
