@@ -38,7 +38,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * modeled after similar structure in NetBSD   * this will be extended as we need more functionality  */
+comment|/*  * modeled after similar structure in NetBSD  * this will be extended as we need more functionality  */
 end_comment
 
 begin_struct
