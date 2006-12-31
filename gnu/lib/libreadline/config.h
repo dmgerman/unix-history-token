@@ -136,6 +136,39 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the iswctype function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISWCTYPE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the iswlower function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISWLOWER
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the iswupper function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISWUPPER
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the isxdigit function. */
 end_comment
 
@@ -305,6 +338,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the towlower function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TOWLOWER
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the towupper function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TOWUPPER
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the vsnprintf function.  */
 end_comment
 
@@ -316,13 +371,35 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the wctomb function.  */
+comment|/* Define if you have the wcrtomb function.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_WCTOMB
+name|HAVE_WCRTOMB
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the wcscoll function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCSCOLL
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the wctype function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCTYPE
 value|1
 end_define
 
@@ -596,7 +673,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<varargs.h> header file.  */
+comment|/* Define if you have the<wctype.h> header file.  */
 end_comment
 
 begin_define
@@ -610,6 +687,39 @@ begin_define
 define|#
 directive|define
 name|HAVE_MBSTATE_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have wchar_t in<wctype.h>. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCHAR_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have wctype_t in<wctype.h>. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCTYPE_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have wint_t in<wctype.h>. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WINT_T
 value|1
 end_define
 
