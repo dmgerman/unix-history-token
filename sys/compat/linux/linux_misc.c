@@ -3789,7 +3789,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*  	 * this is necessary because the test in kern_wait doesnt 	 * work because we mess with the options here 	 */
+comment|/* 	 * this is necessary because the test in kern_wait doesnt work 	 * because we mess with the options here 	 */
 if|if
 condition|(
 name|args
@@ -4382,7 +4382,7 @@ name|mode
 operator||=
 name|S_IFREG
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|S_IFREG
 case|:
@@ -7666,6 +7666,7 @@ name|emul_lock
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * XXX: we should send a signal to the parent if 	 * SIGNAL_EXIT_GROUP is set. We ignore that (temporrarily?) 	 * as it doesnt occur often. 	 */
 name|exit1
 argument_list|(
 name|td

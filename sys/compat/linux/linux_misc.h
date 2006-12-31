@@ -27,7 +27,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Second arg is a signal */
+comment|/* Second arg is a signal. */
 end_comment
 
 begin_define
@@ -38,7 +38,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Second arg is a ptr to return the signal */
+comment|/* 					 * Second arg is a ptr to return the 					 * signal. 					 */
 end_comment
 
 begin_define
@@ -49,7 +49,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* Set process name */
+comment|/* Set process name. */
 end_comment
 
 begin_define
@@ -60,7 +60,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* Get process name */
+comment|/* Get process name. */
 end_comment
 
 begin_define
@@ -71,7 +71,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* max length of the proc name */
+comment|/* Maximum length of the process name. */
 end_comment
 
 begin_endif
