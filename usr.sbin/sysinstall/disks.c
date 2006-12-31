@@ -4008,6 +4008,11 @@ name|d
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|RunningAsInit
+condition|)
+block|{
 name|msgConfirm
 argument_list|(
 literal|"ERROR: Unable to write data to disk %s!"
@@ -4017,6 +4022,21 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|msgConfirm
+argument_list|(
+literal|"ERROR: Unable to write data to disk %s!\n\n"
+literal|"To edit the labels on a running system set\n"
+literal|"sysctl kern.geom.debugflags=16 and try again."
+argument_list|,
+name|d
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|DITEM_FAILURE
 return|;
