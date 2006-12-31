@@ -311,6 +311,10 @@ begin_comment
 comment|/*  * UDP protocol implementation.  * Per RFC 768, August, 1980.  */
 end_comment
 
+begin_comment
+comment|/*  * BSD 4.2 defaulted the udp checksum to be off.  Turning off udp  * checksums removes the only data integrety mechanism for packets and  * malformed packets that would otherwise be discarded by bad checksums  * may cause problems (espeically for NFS data blocks).  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -339,10 +343,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_endif
 endif|#
