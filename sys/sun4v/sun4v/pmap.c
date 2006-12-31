@@ -7525,7 +7525,7 @@ block|}
 name|KASSERT
 argument_list|(
 name|sva
-operator|>=
+operator|<
 name|eva
 argument_list|,
 operator|(
@@ -7701,7 +7701,7 @@ block|{
 name|KASSERT
 argument_list|(
 name|pmap
-operator|==
+operator|!=
 name|kernel_pmap
 argument_list|,
 operator|(
