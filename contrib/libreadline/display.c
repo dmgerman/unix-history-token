@@ -8,7 +8,7 @@ comment|/* display.c -- readline redisplay facility. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1987-2005 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1987-2006 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -206,28 +206,6 @@ begin_comment
 comment|/* !strchr&& !__STDC__ */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HACK_TERMCAP_MOTION
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|_rl_term_forward_char
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -391,7 +369,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Heuristic used to decide whether it is faster to move from CUR to NEW    by backing up or outputting a carriage return and moving forward. */
+comment|/* Heuristic used to decide whether it is faster to move from CUR to NEW    by backing up or outputting a carriage return and moving forward.  CUR    and NEW are either both buffer positions or absolute screen positions. */
 end_comment
 
 begin_define
@@ -404,6 +382,18 @@ parameter_list|,
 name|cur
 parameter_list|)
 value|(((new) + 1)< ((cur) - (new)))
+end_define
+
+begin_comment
+comment|/* _rl_last_c_pos is an absolute cursor position in multibyte locales and a    buffer index in others.  This macro is used when deciding whether the    current cursor position is in the middle of a prompt string containing    invisible characters. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROMPT_ENDING_INDEX
+define|\
+value|((MB_CUR_MAX> 1&& rl_byte_oriented == 0) ? prompt_physical_chars : prompt_last_invisible+1)
 end_define
 
 begin_comment
@@ -535,6 +525,13 @@ name|cpos_adjusted
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|cpos_buffer_position
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Number of lines currently on screen minus 1. */
 end_comment
@@ -644,6 +641,13 @@ name|local_prompt
 decl_stmt|,
 modifier|*
 name|local_prompt_prefix
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|local_prompt_len
 decl_stmt|;
 end_decl_stmt
 
@@ -773,6 +777,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|saved_local_length
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|saved_invis_chars_first_line
 decl_stmt|;
 end_decl_stmt
@@ -838,6 +849,9 @@ name|ret
 decl_stmt|,
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|igstart
 decl_stmt|;
 name|int
 name|l
@@ -971,6 +985,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* we only want to set invfl once */
+name|igstart
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|rl
@@ -1001,14 +1019,24 @@ block|{
 comment|/* This code strips the invisible character string markers 	 RL_PROMPT_START_IGNORE and RL_PROMPT_END_IGNORE */
 if|if
 condition|(
+name|ignoring
+operator|==
+literal|0
+operator|&&
 operator|*
 name|p
 operator|==
 name|RL_PROMPT_START_IGNORE
 condition|)
+comment|/* XXX - check ignoring? */
 block|{
 name|ignoring
-operator|++
+operator|=
+literal|1
+expr_stmt|;
+name|igstart
+operator|=
+name|p
 expr_stmt|;
 continue|continue;
 block|}
@@ -1030,12 +1058,12 @@ expr_stmt|;
 if|if
 condition|(
 name|p
-index|[
-operator|-
-literal|1
-index|]
 operator|!=
-name|RL_PROMPT_START_IGNORE
+operator|(
+name|igstart
+operator|+
+literal|1
+operator|)
 condition|)
 name|last
 operator|=
@@ -1353,6 +1381,10 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
+name|local_prompt_len
+operator|=
+literal|0
+expr_stmt|;
 name|prompt_last_invisible
 operator|=
 name|prompt_invis_chars_first_line
@@ -1422,6 +1454,17 @@ operator|(
 name|char
 operator|*
 operator|)
+literal|0
+expr_stmt|;
+name|local_prompt_len
+operator|=
+name|local_prompt
+condition|?
+name|strlen
+argument_list|(
+name|local_prompt
+argument_list|)
+else|:
 literal|0
 expr_stmt|;
 return|return
@@ -1500,6 +1543,17 @@ operator|*
 name|t
 operator|=
 name|c
+expr_stmt|;
+name|local_prompt_len
+operator|=
+name|local_prompt
+condition|?
+name|strlen
+argument_list|(
+name|local_prompt
+argument_list|)
+else|:
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -1762,8 +1816,6 @@ modifier|*
 name|line
 decl_stmt|;
 name|int
-name|c_pos
-decl_stmt|,
 name|inv_botlin
 decl_stmt|,
 name|lb_botlin
@@ -1850,7 +1902,7 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* Draw the line into the buffer. */
-name|c_pos
+name|cpos_buffer_position
 operator|=
 operator|-
 literal|1
@@ -1927,18 +1979,6 @@ operator|||
 name|local_prompt
 condition|)
 block|{
-name|int
-name|local_len
-init|=
-name|local_prompt
-condition|?
-name|strlen
-argument_list|(
-name|local_prompt
-argument_list|)
-else|:
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|local_prompt_prefix
@@ -1957,14 +1997,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|local_len
+name|local_prompt_len
 operator|>
 literal|0
 condition|)
 block|{
 name|temp
 operator|=
-name|local_len
+name|local_prompt_len
 operator|+
 name|out
 operator|+
@@ -2028,12 +2068,12 @@ name|out
 argument_list|,
 name|local_prompt
 argument_list|,
-name|local_len
+name|local_prompt_len
 argument_list|)
 expr_stmt|;
 name|out
 operator|+=
-name|local_len
+name|local_prompt_len
 expr_stmt|;
 block|}
 name|line
@@ -2045,7 +2085,7 @@ literal|'\0'
 expr_stmt|;
 name|wrap_offset
 operator|=
-name|local_len
+name|local_prompt_len
 operator|-
 name|prompt_visible_length
 expr_stmt|;
@@ -2295,6 +2335,9 @@ operator|>=
 name|_rl_screenwidth
 condition|)
 block|{
+name|int
+name|z
+decl_stmt|;
 comment|/* fix from Darin Johnson<darin@acuson.com> for prompt string with          invisible characters that is longer than the screen width.  The          prompt_invis_chars_first_line variable could be made into an array          saying how many invisible characters there are per line, but that's          probably too much work for the benefit gained.  How many people have          prompts that exceed two physical lines?          Additional logic fix from Edward Catmur<ed@catmur.co.uk> */
 if|#
 directive|if
@@ -2302,20 +2345,24 @@ name|defined
 argument_list|(
 name|HANDLE_MULTIBYTE
 argument_list|)
+if|if
+condition|(
+name|MB_CUR_MAX
+operator|>
+literal|1
+operator|&&
+name|rl_byte_oriented
+operator|==
+literal|0
+condition|)
+block|{
 name|n0
 operator|=
 name|num
 expr_stmt|;
 name|temp
 operator|=
-name|local_prompt
-condition|?
-name|strlen
-argument_list|(
-name|local_prompt
-argument_list|)
-else|:
-literal|0
+name|local_prompt_len
 expr_stmt|;
 while|while
 condition|(
@@ -2324,8 +2371,8 @@ operator|<
 name|temp
 condition|)
 block|{
-if|if
-condition|(
+name|z
+operator|=
 name|_rl_col_width
 argument_list|(
 name|local_prompt
@@ -2334,6 +2381,10 @@ name|n0
 argument_list|,
 name|num
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|z
 operator|>
 name|_rl_screenwidth
 condition|)
@@ -2351,6 +2402,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+elseif|else
+if|if
+condition|(
+name|z
+operator|==
+name|_rl_screenwidth
+condition|)
+break|break;
 name|num
 operator|++
 expr_stmt|;
@@ -2358,9 +2417,12 @@ block|}
 name|temp
 operator|=
 name|num
-operator|+
-else|#
-directive|else
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+comment|/* !HANDLE_MULTIBYTE */
 name|temp
 operator|=
 operator|(
@@ -2372,10 +2434,10 @@ operator|)
 operator|*
 name|_rl_screenwidth
 operator|)
-operator|+
-endif|#
-directive|endif
-comment|/* !HANDLE_MULTIBYTE */
+expr_stmt|;
+comment|/* Now account for invisible characters in the current line. */
+name|temp
+operator|+=
 operator|(
 operator|(
 name|local_prompt_prefix
@@ -2432,6 +2494,16 @@ name|defined
 argument_list|(
 name|HANDLE_MULTIBYTE
 argument_list|)
+if|if
+condition|(
+name|MB_CUR_MAX
+operator|>
+literal|1
+operator|&&
+name|rl_byte_oriented
+operator|==
+literal|0
+condition|)
 name|lpos
 operator|-=
 name|_rl_col_width
@@ -2443,20 +2515,19 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+else|else
+endif|#
+directive|endif
 name|lpos
 operator|-=
 name|_rl_screenwidth
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|prompt_last_screen_line
 operator|=
 name|newlines
 expr_stmt|;
-comment|/* Draw the rest of the line (after the prompt) into invisible_line, keeping      track of where the cursor is (c_pos), the number of the line containing      the cursor (lb_linenum), the last line number (lb_botlin and inv_botlin).      It maintains an array of line breaks for display (inv_lbreaks).      This handles expanding tabs for display and displaying meta characters. */
+comment|/* Draw the rest of the line (after the prompt) into invisible_line, keeping      track of where the cursor is (cpos_buffer_position), the number of the line containing      the cursor (lb_linenum), the last line number (lb_botlin and inv_botlin).      It maintains an array of line breaks for display (inv_lbreaks).      This handles expanding tabs for display and displaying meta characters. */
 name|lb_linenum
 operator|=
 literal|0
@@ -2687,7 +2758,7 @@ operator|==
 name|rl_point
 condition|)
 block|{
-name|c_pos
+name|cpos_buffer_position
 operator|=
 name|out
 expr_stmt|;
@@ -3083,7 +3154,7 @@ operator|==
 name|rl_point
 condition|)
 block|{
-name|c_pos
+name|cpos_buffer_position
 operator|=
 name|out
 expr_stmt|;
@@ -3222,12 +3293,12 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-name|c_pos
+name|cpos_buffer_position
 operator|<
 literal|0
 condition|)
 block|{
-name|c_pos
+name|cpos_buffer_position
 operator|=
 name|out
 expr_stmt|;
@@ -3258,7 +3329,7 @@ name|cursor_linenum
 operator|=
 name|lb_linenum
 expr_stmt|;
-comment|/* C_POS == position in buffer where cursor should be placed.      CURSOR_LINENUM == line number where the cursor should be placed. */
+comment|/* CPOS_BUFFER_POSITION == position in buffer where cursor should be placed.      CURSOR_LINENUM == line number where the cursor should be placed. */
 comment|/* PWP: now is when things get a bit hairy.  The visible and invisible      line buffers are really multiple lines, which would wrap every      (screenwidth - 1) characters.  Go through each in turn, finding      the changed region and updating it.  The line order is top to bottom. */
 comment|/* If we can move the cursor up and down, then use multiple lines,      otherwise, let long lines display in a single terminal line, and      horizontally scroll it. */
 if|if
@@ -3391,6 +3462,7 @@ name|linenum
 operator|++
 control|)
 block|{
+comment|/* This can lead us astray if we execute a program that changes 		 the locale from a non-multibyte to a multibyte one. */
 name|o_cpos
 operator|=
 name|_rl_last_c_pos
@@ -3426,7 +3498,7 @@ argument_list|,
 name|inv_botlin
 argument_list|)
 expr_stmt|;
-comment|/* update_line potentially changes _rl_last_c_pos, but doesn't 		 take invisible characters into account, since _rl_last_c_pos 		 is an absolute cursor position in a multibyte locale.  See 		 if compensating here is the right thing, or if we have to 		 change update_line itself.  There is one case in which 		 update_line adjusts _rl_last_c_pos itself (so it can pass 		 _rl_move_cursor_relative accurate values); it communicates 		 this back by setting cpos_adjusted */
+comment|/* update_line potentially changes _rl_last_c_pos, but doesn't 		 take invisible characters into account, since _rl_last_c_pos 		 is an absolute cursor position in a multibyte locale.  See 		 if compensating here is the right thing, or if we have to 		 change update_line itself.  There is one case in which 		 update_line adjusts _rl_last_c_pos itself (so it can pass 		 _rl_move_cursor_relative accurate values); it communicates 		 this back by setting cpos_adjusted.  If we assume that 		 _rl_last_c_pos is correct (an absolute cursor position) each 		 time update_line is called, then we can assume in our 		 calculations that o_cpos does not need to be adjusted by 		 wrap_offset. */
 if|if
 condition|(
 name|linenum
@@ -3675,12 +3747,20 @@ name|_rl_last_c_pos
 operator|>
 literal|0
 operator|&&
+if|#
+directive|if
+literal|0
+expr|_rl_last_c_pos<= PROMPT_ENDING_INDEX&& local_prompt)
+else|#
+directive|else
 name|_rl_last_c_pos
-operator|<=
-name|prompt_last_invisible
+operator|<
+name|PROMPT_ENDING_INDEX
 operator|&&
 name|local_prompt
 condition|)
+endif|#
+directive|endif
 block|{
 if|#
 directive|if
@@ -3756,10 +3836,10 @@ index|[
 name|cursor_linenum
 index|]
 expr_stmt|;
-comment|/* nleft == number of characters in the line buffer between the 	     start of the line and the cursor position. */
+comment|/* nleft == number of characters in the line buffer between the 	     start of the line and the desired cursor position. */
 name|nleft
 operator|=
-name|c_pos
+name|cpos_buffer_position
 operator|-
 name|pos
 expr_stmt|;
@@ -3778,6 +3858,7 @@ operator|<
 name|_rl_last_c_pos
 condition|)
 block|{
+comment|/* TX == new physical cursor position in multibyte locale. */
 if|if
 condition|(
 name|MB_CUR_MAX
@@ -3905,7 +3986,7 @@ comment|/* Compute where in the buffer the displayed line should start.  This 	 
 comment|/* The number of characters that will be displayed before the cursor. */
 name|ndisp
 operator|=
-name|c_pos
+name|cpos_buffer_position
 operator|-
 name|wrap_offset
 expr_stmt|;
@@ -3918,7 +3999,7 @@ expr_stmt|;
 comment|/* Where the new cursor position will be on the screen.  This can be 	 longer than SCREENWIDTH; if it is, lmargin will be adjusted. */
 name|phys_c_pos
 operator|=
-name|c_pos
+name|cpos_buffer_position
 operator|-
 operator|(
 name|last_lmargin
@@ -3947,7 +4028,7 @@ condition|)
 block|{
 name|lmargin
 operator|=
-name|c_pos
+name|cpos_buffer_position
 operator|-
 operator|(
 literal|2
@@ -4010,7 +4091,7 @@ name|lmargin
 operator|=
 operator|(
 operator|(
-name|c_pos
+name|cpos_buffer_position
 operator|-
 literal|1
 operator|)
@@ -4208,7 +4289,7 @@ name|_rl_screenwidth
 expr_stmt|;
 name|_rl_move_cursor_relative
 argument_list|(
-name|c_pos
+name|cpos_buffer_position
 operator|-
 name|lmargin
 argument_list|,
@@ -4395,8 +4476,6 @@ name|int
 name|new_offset
 decl_stmt|,
 name|old_offset
-decl_stmt|,
-name|tmp
 decl_stmt|;
 endif|#
 directive|endif
@@ -5522,14 +5601,7 @@ block|}
 comment|/* If this is the first line and there are invisible characters in the      prompt string, and the prompt string has not changed, and the current      cursor position is before the last invisible character in the prompt,      and the index of the character to move to is past the end of the prompt      string, then redraw the entire prompt string.  We can only do this      reliably if the terminal supports a `cr' capability.       This is not an efficiency hack -- there is a problem with redrawing      portions of the prompt string if they contain terminal escape      sequences (like drawing the `unbold' sequence without a corresponding      `bold') that manifests itself on certain terminals. */
 name|lendiff
 operator|=
-name|local_prompt
-condition|?
-name|strlen
-argument_list|(
-name|local_prompt
-argument_list|)
-else|:
-literal|0
+name|local_prompt_len
 expr_stmt|;
 name|od
 operator|=
@@ -5562,8 +5634,8 @@ operator|>=
 name|lendiff
 operator|&&
 name|_rl_last_c_pos
-operator|<=
-name|prompt_last_invisible
+operator|<
+name|PROMPT_ENDING_INDEX
 condition|)
 block|{
 if|#
@@ -5635,6 +5707,7 @@ operator|=
 name|lendiff
 expr_stmt|;
 block|}
+comment|/* When this function returns, _rl_last_c_pos is correct, and an absolute      cursor postion in multibyte mode, but a buffer index when not in a      multibyte locale. */
 name|_rl_move_cursor_relative
 argument_list|(
 name|od
@@ -5642,6 +5715,42 @@ argument_list|,
 name|old
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|1
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HANDLE_MULTIBYTE
+argument_list|)
+comment|/* We need to indicate that the cursor position is correct in the presence of      invisible characters in the prompt string.  Let's see if setting this when      we make sure we're at the end of the drawn prompt string works. */
+if|if
+condition|(
+name|current_line
+operator|==
+literal|0
+operator|&&
+name|MB_CUR_MAX
+operator|>
+literal|1
+operator|&&
+name|rl_byte_oriented
+operator|==
+literal|0
+operator|&&
+name|_rl_last_c_pos
+operator|==
+name|prompt_physical_chars
+condition|)
+name|cpos_adjusted
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/* if (len (new)> len (old))      lendiff == difference in buffer      col_lendiff == difference on screen      When not using multibyte characters, these are equal */
 name|lendiff
 operator|=
@@ -6484,18 +6593,20 @@ name|int
 name|rl_forced_update_display
 parameter_list|()
 block|{
+specifier|register
+name|char
+modifier|*
+name|temp
+decl_stmt|;
 if|if
 condition|(
 name|visible_line
 condition|)
 block|{
-specifier|register
-name|char
-modifier|*
 name|temp
-init|=
+operator|=
 name|visible_line
-decl_stmt|;
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -6607,12 +6718,20 @@ if|if
 condition|(
 name|dpos
 operator|>
-name|woff
+name|prompt_last_invisible
 condition|)
+comment|/* XXX - don't use woff here */
+block|{
 name|dpos
 operator|-=
 name|woff
 expr_stmt|;
+comment|/* Since this will be assigned to _rl_last_c_pos at the end (more 	     precisely, _rl_last_c_pos == dpos when this function returns), 	     let the caller know. */
+name|cpos_adjusted
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 else|else
 endif|#
@@ -6662,13 +6781,13 @@ name|woff
 expr_stmt|;
 if|if
 condition|(
-name|new
+name|dpos
 operator|==
 literal|0
 operator|||
 name|CR_FASTER
 argument_list|(
-name|new
+name|dpos
 argument_list|,
 name|_rl_last_c_pos
 argument_list|)
@@ -6725,12 +6844,18 @@ condition|)
 block|{
 comment|/* Move the cursor forward.  We do it by printing the command 	 to move the cursor forward if there is one, else print that 	 portion of the output buffer again.  Which is cheaper? */
 comment|/* The above comment is left here for posterity.  It is faster 	 to print one character (non-control) than to print a control 	 sequence telling the terminal to move forward one character. 	 That kind of control is for people who don't know what the 	 data is underneath the cursor. */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HACK_TERMCAP_MOTION
-argument_list|)
+comment|/* However, we need a handle on where the current display position is 	 in the buffer for the immediately preceding comment to be true. 	 In multibyte locales, we don't currently have that info available. 	 Without it, we don't know where the data we have to display begins 	 in the buffer and we have to go back to the beginning of the screen 	 line.  In this case, we can use the terminal sequence to move forward 	 if it's available. */
+if|if
+condition|(
+name|MB_CUR_MAX
+operator|>
+literal|1
+operator|&&
+name|rl_byte_oriented
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|_rl_term_forward_char
@@ -6759,20 +6884,7 @@ name|_rl_output_character_function
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-endif|#
-directive|endif
-comment|/* HACK_TERMCAP_MOTION */
-if|if
-condition|(
-name|MB_CUR_MAX
-operator|>
-literal|1
-operator|&&
-name|rl_byte_oriented
-operator|==
-literal|0
-condition|)
+else|else
 block|{
 name|tputs
 argument_list|(
@@ -6806,6 +6918,7 @@ argument_list|,
 name|rl_outstream
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 for|for
@@ -7449,6 +7562,17 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
+name|local_prompt_len
+operator|=
+name|local_prompt
+condition|?
+name|strlen
+argument_list|(
+name|local_prompt
+argument_list|)
+else|:
+literal|0
+expr_stmt|;
 call|(
 modifier|*
 name|rl_redisplay_function
@@ -7555,6 +7679,17 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
+name|local_prompt_len
+operator|=
+name|local_prompt
+condition|?
+name|strlen
+argument_list|(
+name|local_prompt
+argument_list|)
+else|:
+literal|0
+expr_stmt|;
 call|(
 modifier|*
 name|rl_redisplay_function
@@ -7657,6 +7792,10 @@ name|saved_prefix_length
 operator|=
 name|prompt_prefix_length
 expr_stmt|;
+name|saved_local_length
+operator|=
+name|local_prompt_len
+expr_stmt|;
 name|saved_last_invisible
 operator|=
 name|prompt_last_invisible
@@ -7681,6 +7820,10 @@ operator|(
 name|char
 operator|*
 operator|)
+literal|0
+expr_stmt|;
+name|local_prompt_len
+operator|=
 literal|0
 expr_stmt|;
 name|prompt_last_invisible
@@ -7723,6 +7866,10 @@ name|local_prompt_prefix
 operator|=
 name|saved_local_prefix
 expr_stmt|;
+name|local_prompt_len
+operator|=
+name|saved_local_length
+expr_stmt|;
 name|prompt_prefix_length
 operator|=
 name|saved_prefix_length
@@ -7752,6 +7899,10 @@ operator|(
 name|char
 operator|*
 operator|)
+literal|0
+expr_stmt|;
+name|saved_local_length
+operator|=
 literal|0
 expr_stmt|;
 name|saved_last_invisible
@@ -8494,6 +8645,12 @@ name|_rl_vis_botlin
 index|]
 index|]
 expr_stmt|;
+name|cpos_buffer_position
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* don't know where we are in buffer */
 name|_rl_move_cursor_relative
 argument_list|(
 name|_rl_screenwidth
@@ -8503,6 +8660,7 @@ argument_list|,
 name|last_line
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|_rl_clear_to_eol
 argument_list|(
 literal|0
@@ -8645,6 +8803,17 @@ name|char
 operator|*
 operator|)
 name|NULL
+expr_stmt|;
+name|local_prompt_len
+operator|=
+name|local_prompt
+condition|?
+name|strlen
+argument_list|(
+name|local_prompt
+argument_list|)
+else|:
+literal|0
 expr_stmt|;
 name|rl_forced_update_display
 argument_list|()
@@ -8963,10 +9132,6 @@ name|wc
 decl_stmt|;
 name|mbstate_t
 name|ps
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 name|int
 name|tmp
@@ -8986,6 +9151,19 @@ condition|)
 return|return
 literal|0
 return|;
+name|memset
+argument_list|(
+operator|&
+name|ps
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mbstate_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|point
 operator|=
 literal|0

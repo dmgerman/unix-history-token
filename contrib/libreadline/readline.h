@@ -77,8 +77,8 @@ comment|/* Hex-encoded Readline version number. */
 define|#
 directive|define
 name|RL_READLINE_VERSION
-value|0x0501
-comment|/* Readline 5.1 */
+value|0x0502
+comment|/* Readline 5.2 */
 define|#
 directive|define
 name|RL_VERSION_MAJOR
@@ -86,7 +86,7 @@ value|5
 define|#
 directive|define
 name|RL_VERSION_MINOR
-value|1
+value|2
 comment|/* Readline data structures. */
 comment|/* Maintaining the state of undo.  We remember individual deletes and inserts    on a chain of things to do. */
 comment|/* The actions that undo knows how to undo.  Notice that UNDO_DELETE means    to insert some text, and UNDO_INSERT means to delete some text.   I.e.,    the code tells undo what to undo, not how to undo it. */
@@ -4271,6 +4271,17 @@ name|int
 name|rl_inhibit_completion
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Input error; can be returned by (*rl_getc_function) if readline is reading    a top-level command (RL_ISSTATE (RL_STATE_READCMD)). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|READERR
+value|(-2)
+end_define
 
 begin_comment
 comment|/* Definitions available for use by readline clients. */
