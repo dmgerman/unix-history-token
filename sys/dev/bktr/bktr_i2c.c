@@ -112,16 +112,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_comment
-comment|/* for DELAY */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<pci/pcivar.h>
 end_include
 
@@ -204,13 +194,6 @@ include|#
 directive|include
 file|<dev/iicbus/iiconf.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|I2C_DELAY
-value|40
-end_define
 
 begin_comment
 comment|/* Compilation is void if BKTR_USE_FREEBSD_SMBUS is not  * defined. This allows bktr owners to have smbus active for there  * motherboard and still use their bktr without smbus.  */
@@ -776,11 +759,6 @@ argument_list|,
 name|clock
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-name|I2C_DELAY
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 end_function
@@ -848,11 +826,6 @@ argument_list|,
 name|BKTR_I2C_DATA_CTL
 argument_list|,
 name|data
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-name|I2C_DELAY
 argument_list|)
 expr_stmt|;
 return|return;
