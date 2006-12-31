@@ -285,7 +285,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * mac_static_policy_list holds a list of policy modules that are not loaded  * while the system is "live", and cannot be unloaded.  These policies can be  * invoked without holding the busy count.  *  * mac_policy_list stores the list of dynamic policies.  A busy count is  * maintained for the list, stored in mac_policy_busy.  The busy count is  * protected by mac_policy_mtx; the list may be modified only while the busy  * count is 0, requiring that the lock be held to prevent new references to  * the list from being acquired.  For almost all operations, incrementing the  * busy count is sufficient to guarantee consistency, as the list cannot be  * modified while the busy count is elevated.  For a few special operations  * involving a change to the list of active policies, the mtx itself must be  * held.  A condition variable, mac_policy_cv, is used to signal potential  * exclusive consumers that they should try to acquire the lock if a first  * attempt at exclusive access fails.  *  * This design intentionally avoids fairness, and may starve attempts to  * acquire an exclusive lock on a busy system.  This is required because we  * do not ever want acquiring a read reference to perform an unbounded length  * sleep.  Read references are acquired in ithreads, network isrs, etc, and  * any unbounded blocking could lead quickly to deadlock.  *  * Another reason for never blocking on read references is that the MAC  * Framework may recurse: if a policy calls a VOP, for example, this might  * lead to vnode life cycle operations (such as init/destroy).  *  * If the kernel option MAC_STATIC has been compiled in, all locking becomes  * a no-op, and the global list of policies is not allowed to change after  * early boot.  */
+comment|/*  * mac_static_policy_list holds a list of policy modules that are not loaded  * while the system is "live", and cannot be unloaded.  These policies can be  * invoked without holding the busy count.  *  * mac_policy_list stores the list of dynamic policies.  A busy count is  * maintained for the list, stored in mac_policy_busy.  The busy count is  * protected by mac_policy_mtx; the list may be modified only while the busy  * count is 0, requiring that the lock be held to prevent new references to  * the list from being acquired.  For almost all operations, incrementing the  * busy count is sufficient to guarantee consistency, as the list cannot be  * modified while the busy count is elevated.  For a few special operations  * involving a change to the list of active policies, the mtx itself must be  * held.  A condition variable, mac_policy_cv, is used to signal potential  * exclusive consumers that they should try to acquire the lock if a first  * attempt at exclusive access fails.  *  * This design intentionally avoids fairness, and may starve attempts to  * acquire an exclusive lock on a busy system.  This is required because we  * do not ever want acquiring a read reference to perform an unbounded length  * sleep.  Read references are acquired in ithreads, network isrs, etc, and  * any unbounded blocking could lead quickly to deadlock.  *  * Another reason for never blocking on read references is that the MAC  * Framework may recurse: if a policy calls a VOP, for example, this might  * lead to vnode life cycle operations (such as init/destroy).  *  * If the kernel option MAC_STATIC has been compiled in, all locking becomes  * a no-op, and the global list of policies is not allowed to change after  * early boot.  *  * XXXRW: Currently, we signal mac_policy_cv every time the framework becomes  * unbusy and there is a thread waiting to enter it exclusively.  Since it   * may take some time before the thread runs, we may issue a lot of signals.  * We should instead keep track of the fact that we've signalled, taking into   * account that the framework may be busy again by the time the thread runs,   * requiring us to re-signal.   */
 end_comment
 
 begin_ifndef
@@ -314,6 +314,13 @@ begin_decl_stmt
 specifier|static
 name|int
 name|mac_policy_count
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mac_policy_wait
 decl_stmt|;
 end_decl_stmt
 
@@ -383,6 +390,10 @@ name|mac_policy_count
 operator|!=
 literal|0
 condition|)
+block|{
+name|mac_policy_wait
+operator|++
+expr_stmt|;
 name|cv_wait
 argument_list|(
 operator|&
@@ -392,6 +403,10 @@ operator|&
 name|mac_policy_mtx
 argument_list|)
 expr_stmt|;
+name|mac_policy_wait
+operator|--
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -447,6 +462,9 @@ block|{
 ifndef|#
 directive|ifndef
 name|MAC_STATIC
+name|int
+name|dowakeup
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -464,12 +482,24 @@ literal|"mac_policy_release_exclusive(): not exclusive"
 operator|)
 argument_list|)
 expr_stmt|;
+name|dowakeup
+operator|=
+operator|(
+name|mac_policy_wait
+operator|!=
+literal|0
+operator|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
 name|mac_policy_mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dowakeup
+condition|)
 name|cv_signal
 argument_list|(
 operator|&
@@ -612,6 +642,9 @@ block|{
 ifndef|#
 directive|ifndef
 name|MAC_STATIC
+name|int
+name|dowakeup
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -638,22 +671,32 @@ literal|"MAC_POLICY_LIST_LOCK"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|dowakeup
+operator|=
+operator|(
 name|mac_policy_count
 operator|==
 literal|0
-condition|)
-name|cv_signal
-argument_list|(
-operator|&
-name|mac_policy_cv
-argument_list|)
+operator|&&
+name|mac_policy_wait
+operator|!=
+literal|0
+operator|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
 name|mac_policy_mtx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dowakeup
+condition|)
+name|cv_signal
+argument_list|(
+operator|&
+name|mac_policy_cv
 argument_list|)
 expr_stmt|;
 endif|#
