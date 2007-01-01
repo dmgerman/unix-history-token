@@ -2455,9 +2455,12 @@ name|printf
 argument_list|(
 name|LMSG
 argument_list|(
-literal|"linux_rt_sigtimedwait: converted timeout (%d/%ld)\n"
+literal|"linux_rt_sigtimedwait: converted timeout (%jd/%ld)\n"
 argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|tv
 operator|.
 name|tv_sec
