@@ -1538,6 +1538,37 @@ literal|"/boot/kernel"
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|directory_exists
+argument_list|(
+literal|"/boot/kernel.prev"
+argument_list|)
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"Removing /boot/kernel.prev"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|system
+argument_list|(
+literal|"rm -fr /boot/kernel.prev"
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"NOTICE: I'm trying to back up /boot/kernel to\n"
+literal|"/boot/kernel.prev, but /boot/kernel.prev exists and I\n"
+literal|"can't remove it.  This means that the backup will, in\n"
+literal|"all probability, fail."
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|msgNotify
 argument_list|(
 literal|"Moving old kernel to /boot/kernel.prev"
@@ -2108,6 +2139,37 @@ literal|"/boot/kernel"
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|directory_exists
+argument_list|(
+literal|"/boot/kernel.prev"
+argument_list|)
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"Removing /boot/kernel.prev"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|system
+argument_list|(
+literal|"rm -fr /boot/kernel.prev"
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"NOTICE: I'm trying to back up /boot/kernel to\n"
+literal|"/boot/kernel.prev, but /boot/kernel.prev exists and I\n"
+literal|"can't remove it.  This means that the backup will, in\n"
+literal|"all probability, fail."
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|msgNotify
 argument_list|(
 literal|"Copying old kernel to /boot/kernel.prev"
