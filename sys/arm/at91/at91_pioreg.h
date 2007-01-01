@@ -262,23 +262,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PIO_PUER
+name|PIO_PUDR
 value|0x60
 end_define
 
 begin_comment
-comment|/* PIO Pull-up Enable Register */
+comment|/* PIO Pull-up Disable Register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PIO_PUDR
+name|PIO_PUER
 value|0x64
 end_define
 
 begin_comment
-comment|/* PIO Pull-up Disable Register */
+comment|/* PIO Pull-up Enable Register */
 end_comment
 
 begin_define
