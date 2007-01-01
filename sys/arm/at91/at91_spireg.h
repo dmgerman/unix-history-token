@@ -210,7 +210,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SPI_SR_RXBUFE
+name|SPI_SR_RXBUFF
 value|0x00040
 end_define
 
