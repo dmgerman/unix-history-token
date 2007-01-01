@@ -1491,6 +1491,11 @@ argument_list|)
 expr_stmt|;
 name|UMA_DESTROY
 argument_list|(
+name|pfr_kentry_pl2
+argument_list|)
+expr_stmt|;
+name|UMA_DESTROY
+argument_list|(
 name|pfr_kentry_pl
 argument_list|)
 expr_stmt|;
