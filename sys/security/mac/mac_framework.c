@@ -612,16 +612,6 @@ operator|)
 return|;
 else|#
 directive|else
-if|if
-condition|(
-operator|!
-name|mac_late
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 return|return
 operator|(
 literal|1
