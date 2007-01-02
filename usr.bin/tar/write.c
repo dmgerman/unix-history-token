@@ -2489,6 +2489,11 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|archive_read_finish
+argument_list|(
+name|ina
+argument_list|)
+expr_stmt|;
 comment|/* Note: If we got here, we saw no write errors, so return success. */
 return|return
 operator|(
