@@ -2347,31 +2347,7 @@ name|uint32_t
 modifier|*
 name|hdr_data
 decl_stmt|;
-comment|/* 	 * Zero out the important fields of the frame, but make sure the 	 * context field is preserved 	 */
-name|hdr_data
-operator|=
-operator|(
-name|uint32_t
-operator|*
-operator|)
-name|cm
-operator|->
-name|cm_frame
-expr_stmt|;
-name|hdr_data
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|hdr_data
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
+comment|/* 	 * Zero out the important fields of the frame, but make sure the 	 * context field is preserved.  For efficiency, handle the fields 	 * as 32 bit words.  Clear out the first S/G entry too for safety. 	 */
 name|hdr
 operator|=
 operator|&
@@ -2415,6 +2391,48 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|hdr_data
+operator|=
+operator|(
+name|uint32_t
+operator|*
+operator|)
+name|cm
+operator|->
+name|cm_frame
+expr_stmt|;
+name|hdr_data
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* cmd, sense_len, cmd_status, scsi_status */
+name|hdr_data
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* target_id, lun_id, cdb_len, sg_count */
+name|hdr_data
+index|[
+literal|4
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* flags, timeout */
+name|hdr_data
+index|[
+literal|5
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* data_len */
 name|cm
 operator|->
 name|cm_extra_frames
