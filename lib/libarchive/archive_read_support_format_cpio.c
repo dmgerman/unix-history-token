@@ -1961,7 +1961,7 @@ operator|)
 operator|&
 literal|3
 expr_stmt|;
-comment|/* 	 * Note: entry_bytes_remaining is at least 64 bits and 	 * therefore gauranteed to be big enough for a 33-bit file 	 * size.  struct stat.st_size may only be 32 bits, so 	 * assigning there first could lose information. 	 */
+comment|/* 	 * Note: entry_bytes_remaining is at least 64 bits and 	 * therefore guaranteed to be big enough for a 33-bit file 	 * size.  struct stat.st_size may only be 32 bits, so 	 * assigning there first could lose information. 	 */
 name|cpio
 operator|->
 name|entry_bytes_remaining
@@ -2286,7 +2286,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* No padding of filename. */
-comment|/* 	 * Note: entry_bytes_remaining is at least 64 bits and 	 * therefore gauranteed to be big enough for a 33-bit file 	 * size.  struct stat.st_size may only be 32 bits, so 	 * assigning there first could lose information. 	 */
+comment|/* 	 * Note: entry_bytes_remaining is at least 64 bits and 	 * therefore guaranteed to be big enough for a 33-bit file 	 * size.  struct stat.st_size may only be 32 bits, so 	 * assigning there first could lose information. 	 */
 name|cpio
 operator|->
 name|entry_bytes_remaining

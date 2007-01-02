@@ -396,7 +396,7 @@ name|bits_checked
 operator|+=
 literal|5
 expr_stmt|;
-comment|/* 	 * Research Question: Can we do any more to verify that this 	 * really is BZip2 format??  For 99.9% of the time, the above 	 * test is sufficient, but it would be nice to do a more 	 * thorough check.  It's especially troubling that the BZip2 	 * signature begins with all ASCII characters; a tar archive 	 * whose first filename begins with 'BZh3' would potentially 	 * fool this logic.  (It may also be possible to gaurd against 	 * such anomalies in archive_read_support_compression_none.) 	 */
+comment|/* 	 * Research Question: Can we do any more to verify that this 	 * really is BZip2 format??  For 99.9% of the time, the above 	 * test is sufficient, but it would be nice to do a more 	 * thorough check.  It's especially troubling that the BZip2 	 * signature begins with all ASCII characters; a tar archive 	 * whose first filename begins with 'BZh3' would potentially 	 * fool this logic.  (It may also be possible to guard against 	 * such anomalies in archive_read_support_compression_none.) 	 */
 return|return
 operator|(
 name|bits_checked

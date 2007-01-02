@@ -1040,7 +1040,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-comment|/* 	 * EOF and FATAL are persistent at this layer.  By 	 * modifying the state, we gaurantee that future calls to 	 * read a header or read data will fail. 	 */
+comment|/* 	 * EOF and FATAL are persistent at this layer.  By 	 * modifying the state, we guarantee that future calls to 	 * read a header or read data will fail. 	 */
 switch|switch
 condition|(
 name|ret

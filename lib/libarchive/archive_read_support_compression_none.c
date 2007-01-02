@@ -1016,7 +1016,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Skip forward by exactly the requested bytes or else return  * ARCHIVE_FATAL.  Note that this differs from the contract for  * read_ahead, which does not gaurantee a minimum count.  */
+comment|/*  * Skip forward by exactly the requested bytes or else return  * ARCHIVE_FATAL.  Note that this differs from the contract for  * read_ahead, which does not guarantee a minimum count.  */
 end_comment
 
 begin_function
