@@ -4,7 +4,7 @@ comment|/****************************************************************  The a
 end_comment
 
 begin_comment
-comment|/* Please send bug reports to 	David M. Gay 	Bell Laboratories, Room 2C-463 	600 Mountain Avenue 	Murray Hill, NJ 07974-0636 	U.S.A. 	dmg@bell-labs.com  */
+comment|/* Please send bug reports to David M. Gay (dmg at acm dot org,  * with " at " changed at "@" and " dot " changed to ".").	*/
 end_comment
 
 begin_include
@@ -587,8 +587,6 @@ if|if
 condition|(
 operator|!
 name|x
-operator|&
-literal|1
 condition|)
 return|return
 literal|32
@@ -926,7 +924,7 @@ end_return
 
 begin_expr_stmt
 unit|}   int
-name|hi0bits
+name|hi0bits_D2A
 ifdef|#
 directive|ifdef
 name|KR_headers
@@ -3975,10 +3973,16 @@ name|Bigint
 operator|*
 name|b
 block|;
+ifndef|#
+directive|ifndef
+name|Sudden_Underflow
+name|int
+name|i
+block|;
+endif|#
+directive|endif
 name|int
 name|de
-block|,
-name|i
 block|,
 name|k
 block|;
@@ -4192,8 +4196,13 @@ index|]
 operator|=
 name|y
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|Sudden_Underflow
 name|i
 operator|=
+endif|#
+directive|endif
 name|b
 operator|->
 name|wds
@@ -4246,8 +4255,13 @@ index|]
 operator|=
 name|z
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|Sudden_Underflow
 name|i
 operator|=
+endif|#
+directive|endif
 name|b
 operator|->
 name|wds

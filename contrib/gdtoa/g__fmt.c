@@ -4,7 +4,7 @@ comment|/****************************************************************  The a
 end_comment
 
 begin_comment
-comment|/* Please send bug reports to 	David M. Gay 	dmg@acm.org  */
+comment|/* Please send bug reports to David M. Gay (dmg at acm dot org,  * with " at " changed at "@" and " dot " changed to ".").	*/
 end_comment
 
 begin_include

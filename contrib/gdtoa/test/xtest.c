@@ -4,7 +4,7 @@ comment|/****************************************************************  The a
 end_comment
 
 begin_comment
-comment|/* Please send bug reports to 	David M. Gay 	Bell Laboratories, Room 2C-463 	600 Mountain Avenue 	Murray Hill, NJ 07974-0636 	U.S.A. 	dmg@bell-labs.com  */
+comment|/* Please send bug reports to David M. Gay (dmg at acm dot org,  * with " at " changed at "@" and " dot " changed to ".").	*/
 end_comment
 
 begin_comment
@@ -326,7 +326,7 @@ name|s
 operator|+
 literal|1
 argument_list|,
-literal|"%hx %hx %hx %hx hx"
+literal|"%hx %hx %hx %hx %hx"
 argument_list|,
 operator|&
 name|u
@@ -412,7 +412,7 @@ name|u
 operator|.
 name|bits
 index|[
-literal|4
+name|_4
 index|]
 argument_list|)
 expr_stmt|;
@@ -904,7 +904,7 @@ index|]
 argument_list|,
 name|v
 index|[
-literal|0
+literal|1
 index|]
 operator|.
 name|bits
@@ -914,7 +914,7 @@ index|]
 argument_list|,
 name|v
 index|[
-literal|0
+literal|1
 index|]
 operator|.
 name|bits

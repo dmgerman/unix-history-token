@@ -4,7 +4,7 @@ comment|/****************************************************************  The a
 end_comment
 
 begin_comment
-comment|/* Please send bug reports to 	David M. Gay 	Bell Laboratories, Room 2C-463 	600 Mountain Avenue 	Murray Hill, NJ 07974-0636 	U.S.A. 	dmg@bell-labs.com  */
+comment|/* Please send bug reports to David M. Gay (dmg at acm dot org,  * with " at " changed at "@" and " dot " changed to ".").	*/
 end_comment
 
 begin_comment
@@ -74,10 +74,6 @@ parameter_list|(
 name|Void
 parameter_list|)
 block|{
-name|ULong
-modifier|*
-name|L
-decl_stmt|;
 name|char
 modifier|*
 name|s
@@ -89,8 +85,6 @@ modifier|*
 name|se1
 decl_stmt|;
 name|double
-name|f
-decl_stmt|,
 name|f1
 decl_stmt|,
 name|fI
@@ -117,15 +111,20 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|L
-operator|=
-operator|(
-name|ULong
-operator|*
-operator|)
-operator|&
+union|union
+block|{
+name|double
 name|f
-expr_stmt|;
+decl_stmt|;
+name|ULong
+name|L
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|u
+union|;
 while|while
 condition|(
 operator|(
@@ -227,6 +226,8 @@ index|[
 literal|0
 index|]
 operator|=
+name|u
+operator|.
 name|L
 index|[
 name|_0
@@ -237,6 +238,8 @@ index|[
 literal|1
 index|]
 operator|=
+name|u
+operator|.
 name|L
 index|[
 name|_1
@@ -263,6 +266,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|u
+operator|.
 name|L
 index|[
 name|_0
@@ -273,6 +278,8 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|u
+operator|.
 name|L
 index|[
 name|_1
@@ -297,6 +304,8 @@ argument_list|,
 operator|(
 name|long
 operator|)
+name|u
+operator|.
 name|L
 index|[
 name|_0
@@ -305,6 +314,8 @@ argument_list|,
 operator|(
 name|long
 operator|)
+name|u
+operator|.
 name|L
 index|[
 name|_1
@@ -334,6 +345,8 @@ argument_list|,
 name|r
 argument_list|,
 operator|&
+name|u
+operator|.
 name|f
 argument_list|)
 expr_stmt|;
@@ -347,6 +360,8 @@ block|{
 if|if
 condition|(
 operator|(
+name|u
+operator|.
 name|f
 operator|!=
 name|strtod
@@ -386,6 +401,8 @@ name|i
 operator|!=
 name|i1
 operator|||
+name|u
+operator|.
 name|f
 operator|!=
 name|f1
@@ -408,11 +425,11 @@ argument|(int)(se-ibuf)
 argument_list|,
 argument|i
 argument_list|,
-argument|f
+argument|u.f
 argument_list|,
-argument|U L[_0]
+argument|U u.L[_0]
 argument_list|,
-argument|U L[_1]
+argument|U u.L[_1]
 argument_list|)
 empty_stmt|;
 name|fmt_test
@@ -424,6 +441,8 @@ argument_list|(
 name|obuf
 argument_list|,
 operator|&
+name|u
+operator|.
 name|f
 argument_list|,
 name|ndig
@@ -519,6 +538,8 @@ index|[
 literal|0
 index|]
 operator|==
+name|u
+operator|.
 name|f
 condition|)
 name|printf
@@ -647,6 +668,8 @@ index|[
 literal|0
 index|]
 operator|==
+name|u
+operator|.
 name|f
 condition|)
 name|printf
@@ -662,6 +685,8 @@ index|[
 literal|1
 index|]
 operator|==
+name|u
+operator|.
 name|f
 condition|)
 name|printf

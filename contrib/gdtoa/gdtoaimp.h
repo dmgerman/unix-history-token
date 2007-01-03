@@ -4,7 +4,7 @@ comment|/****************************************************************  The a
 end_comment
 
 begin_comment
-comment|/* This is a variation on dtoa.c that converts arbitary binary    floating-point formats to and from decimal notation.  It uses    double-precision arithmetic internally, so there are still    various #ifdefs that adapt the calculations to the native    double-precision arithmetic (any of IEEE, VAX D_floating,    or IBM mainframe arithmetic).     Please send bug reports to 	David M. Gay 	Bell Laboratories, Room 2C-463 	600 Mountain Avenue 	Murray Hill, NJ 07974-0636 	U.S.A. 	dmg@bell-labs.com  */
+comment|/* This is a variation on dtoa.c that converts arbitary binary    floating-point formats to and from decimal notation.  It uses    double-precision arithmetic internally, so there are still    various #ifdefs that adapt the calculations to the native    double-precision arithmetic (any of IEEE, VAX D_floating,    or IBM mainframe arithmetic).     Please send bug reports to David M. Gay (dmg at acm dot org,    with " at " changed at "@" and " dot " changed to ".").  */
 end_comment
 
 begin_comment
@@ -12,11 +12,11 @@ comment|/* On a machine with IEEE extended-precision registers, it is  * necessa
 end_comment
 
 begin_comment
-comment|/* strtod for IEEE-, VAX-, and IBM-arithmetic machines.  *  * This strtod returns a nearest machine number to the input decimal  * string (or sets errno to ERANGE).  With IEEE arithmetic, ties are  * broken by the IEEE round-even rule.  Otherwise ties are broken by  * biased rounding (add half and chop).  *  * Inspired loosely by William D. Clinger's paper "How to Read Floating  * Point Numbers Accurately" [Proc. ACM SIGPLAN '90, pp. 92-101].  *  * Modifications:  *  *	1. We only require IEEE, IBM, or VAX double-precision  *		arithmetic (not IEEE double-extended).  *	2. We get by with floating-point arithmetic in a case that  *		Clinger missed -- when we're computing d * 10^n  *		for a small integer d and the integer n is not too  *		much larger than 22 (the maximum integer k for which  *		we can represent 10^k exactly), we may be able to  *		compute (d*10^k) * 10^(e-k) with just one roundoff.  *	3. Rather than a bit-at-a-time adjustment of the binary  *		result in the hard case, we use floating-point  *		arithmetic to determine the adjustment to within  *		one bit; only in really hard cases do we need to  *		compute a second residual.  *	4. Because of 3., we don't need a large table of powers of 10  *		for ten-to-e (just some small tables, e.g. of 10^k  *		for 0<= k<= 22).  */
+comment|/* strtod for IEEE-, VAX-, and IBM-arithmetic machines.  *  * This strtod returns a nearest machine number to the input decimal  * string (or sets errno to ERANGE).  With IEEE arithmetic, ties are  * broken by the IEEE round-even rule.  Otherwise ties are broken by  * biased rounding (add half and chop).  *  * Inspired loosely by William D. Clinger's paper "How to Read Floating  * Point Numbers Accurately" [Proc. ACM SIGPLAN '90, pp. 112-126].  *  * Modifications:  *  *	1. We only require IEEE, IBM, or VAX double-precision  *		arithmetic (not IEEE double-extended).  *	2. We get by with floating-point arithmetic in a case that  *		Clinger missed -- when we're computing d * 10^n  *		for a small integer d and the integer n is not too  *		much larger than 22 (the maximum integer k for which  *		we can represent 10^k exactly), we may be able to  *		compute (d*10^k) * 10^(e-k) with just one roundoff.  *	3. Rather than a bit-at-a-time adjustment of the binary  *		result in the hard case, we use floating-point  *		arithmetic to determine the adjustment to within  *		one bit; only in really hard cases do we need to  *		compute a second residual.  *	4. Because of 3., we don't need a large table of powers of 10  *		for ten-to-e (just some small tables, e.g. of 10^k  *		for 0<= k<= 22).  */
 end_comment
 
 begin_comment
-comment|/*  * #define IEEE_8087 for IEEE-arithmetic machines where the least  *	significant byte has the lowest address.  * #define IEEE_MC68k for IEEE-arithmetic machines where the most  *	significant byte has the lowest address.  * #define Long int on machines with 32-bit ints and 64-bit longs.  * #define Sudden_Underflow for IEEE-format machines without gradual  *	underflow (i.e., that flush to zero on underflow).  * #define IBM for IBM mainframe-style floating-point arithmetic.  * #define VAX for VAX-style floating-point arithmetic (D_floating).  * #define No_leftright to omit left-right logic in fast floating-point  *	computation of dtoa.  * #define Check_FLT_ROUNDS if FLT_ROUNDS can assume the values 2 or 3.  * #define RND_PRODQUOT to use rnd_prod and rnd_quot (assembly routines  *	that use extended-precision instructions to compute rounded  *	products and quotients) with IBM.  * #define ROUND_BIASED for IEEE-format with biased rounding.  * #define Inaccurate_Divide for IEEE-format with correctly rounded  *	products but inaccurate quotients, e.g., for Intel i860.  * #define NO_LONG_LONG on machines that do not have a "long long"  *	integer type (of>= 64 bits).  On such machines, you can  *	#define Just_16 to store 16 bits per 32-bit Long when doing  *	high-precision integer arithmetic.  Whether this speeds things  *	up or slows things down depends on the machine and the number  *	being converted.  If long long is available and the name is  *	something other than "long long", #define Llong to be the name,  *	and if "unsigned Llong" does not work as an unsigned version of  *	Llong, #define #ULLong to be the corresponding unsigned type.  * #define KR_headers for old-style C function headers.  * #define Bad_float_h if your system lacks a float.h or if it does not  *	define some or all of DBL_DIG, DBL_MAX_10_EXP, DBL_MAX_EXP,  *	FLT_RADIX, FLT_ROUNDS, and DBL_MAX.  * #define MALLOC your_malloc, where your_malloc(n) acts like malloc(n)  *	if memory is available and otherwise does something you deem  *	appropriate.  If MALLOC is undefined, malloc will be invoked  *	directly -- and assumed always to succeed.  * #define Omit_Private_Memory to omit logic (added Jan. 1998) for making  *	memory allocations from a private pool of memory when possible.  *	When used, the private pool is PRIVATE_MEM bytes long:  2304 bytes,  *	unless #defined to be a different length.  This default length  *	suffices to get rid of MALLOC calls except for unusual cases,  *	such as decimal-to-binary conversion of a very long string of  *	digits.  When converting IEEE double precision values, the  *	longest string gdtoa can return is about 751 bytes long.  For  *	conversions by strtod of strings of 800 digits and all gdtoa  *	conversions of IEEE doubles in single-threaded executions with  *	8-byte pointers, PRIVATE_MEM>= 7400 appears to suffice; with  *	4-byte pointers, PRIVATE_MEM>= 7112 appears adequate.  * #define INFNAN_CHECK on IEEE systems to cause strtod to check for  *	Infinity and NaN (case insensitively).  On some systems (e.g.,  *	some HP systems), it may be necessary to #define NAN_WORD0  *	appropriately -- to the most significant word of a quiet NaN.  *	(On HP Series 700/800 machines, -DNAN_WORD0=0x7ff40000 works.)  *	When INFNAN_CHECK is #defined and No_Hex_NaN is not #defined,  *	strtodg also accepts (case insensitively) strings of the form  *	NaN(x), where x is a string of hexadecimal digits and spaces;  *	if there is only one string of hexadecimal digits, it is taken  *	for the fraction bits of the resulting NaN; if there are two or  *	more strings of hexadecimal digits, each string is assigned  *	to the next available sequence of 32-bit words of fractions  *	bits (starting with the most significant), right-aligned in  *	each sequence.  * #define MULTIPLE_THREADS if the system offers preemptively scheduled  *	multiple threads.  In this case, you must provide (or suitably  *	#define) two locks, acquired by ACQUIRE_DTOA_LOCK(n) and freed  *	by FREE_DTOA_LOCK(n) for n = 0 or 1.  (The second lock, accessed  *	in pow5mult, ensures lazy evaluation of only one copy of high  *	powers of 5; omitting this lock would introduce a small  *	probability of wasting memory, but would otherwise be harmless.)  *	You must also invoke freedtoa(s) to free the value s returned by  *	dtoa.  You may do so whether or not MULTIPLE_THREADS is #defined.  * #define IMPRECISE_INEXACT if you do not care about the setting of  *	the STRTOG_Inexact bits in the special case of doing IEEE double  *	precision conversions (which could also be done by the strtog in  *	dtoa.c).  * #define NO_HEX_FP to disable recognition of C9x's hexadecimal  *	floating-point constants.  * #define -DNO_ERRNO to suppress setting errno (in strtod.c and  *	strtodg.c).  * #define NO_STRING_H to use private versions of memcpy.  *	On some K&R systems, it may also be necessary to  *	#define DECLARE_SIZE_T in this case.  * #define YES_ALIAS to permit aliasing certain double values with  *	arrays of ULongs.  This leads to slightly better code with  *	some compilers and was always used prior to 19990916, but it  *	is not strictly legal and can cause trouble with aggressively  *	optimizing compilers (e.g., gcc 2.95.1 under -O2).  * #define USE_LOCALE to use the current locale's decimal_point value.  */
+comment|/*  * #define IEEE_8087 for IEEE-arithmetic machines where the least  *	significant byte has the lowest address.  * #define IEEE_MC68k for IEEE-arithmetic machines where the most  *	significant byte has the lowest address.  * #define Long int on machines with 32-bit ints and 64-bit longs.  * #define Sudden_Underflow for IEEE-format machines without gradual  *	underflow (i.e., that flush to zero on underflow).  * #define IBM for IBM mainframe-style floating-point arithmetic.  * #define VAX for VAX-style floating-point arithmetic (D_floating).  * #define No_leftright to omit left-right logic in fast floating-point  *	computation of dtoa.  * #define Check_FLT_ROUNDS if FLT_ROUNDS can assume the values 2 or 3.  * #define RND_PRODQUOT to use rnd_prod and rnd_quot (assembly routines  *	that use extended-precision instructions to compute rounded  *	products and quotients) with IBM.  * #define ROUND_BIASED for IEEE-format with biased rounding.  * #define Inaccurate_Divide for IEEE-format with correctly rounded  *	products but inaccurate quotients, e.g., for Intel i860.  * #define NO_LONG_LONG on machines that do not have a "long long"  *	integer type (of>= 64 bits).  On such machines, you can  *	#define Just_16 to store 16 bits per 32-bit Long when doing  *	high-precision integer arithmetic.  Whether this speeds things  *	up or slows things down depends on the machine and the number  *	being converted.  If long long is available and the name is  *	something other than "long long", #define Llong to be the name,  *	and if "unsigned Llong" does not work as an unsigned version of  *	Llong, #define #ULLong to be the corresponding unsigned type.  * #define KR_headers for old-style C function headers.  * #define Bad_float_h if your system lacks a float.h or if it does not  *	define some or all of DBL_DIG, DBL_MAX_10_EXP, DBL_MAX_EXP,  *	FLT_RADIX, FLT_ROUNDS, and DBL_MAX.  * #define MALLOC your_malloc, where your_malloc(n) acts like malloc(n)  *	if memory is available and otherwise does something you deem  *	appropriate.  If MALLOC is undefined, malloc will be invoked  *	directly -- and assumed always to succeed.  * #define Omit_Private_Memory to omit logic (added Jan. 1998) for making  *	memory allocations from a private pool of memory when possible.  *	When used, the private pool is PRIVATE_MEM bytes long:  2304 bytes,  *	unless #defined to be a different length.  This default length  *	suffices to get rid of MALLOC calls except for unusual cases,  *	such as decimal-to-binary conversion of a very long string of  *	digits.  When converting IEEE double precision values, the  *	longest string gdtoa can return is about 751 bytes long.  For  *	conversions by strtod of strings of 800 digits and all gdtoa  *	conversions of IEEE doubles in single-threaded executions with  *	8-byte pointers, PRIVATE_MEM>= 7400 appears to suffice; with  *	4-byte pointers, PRIVATE_MEM>= 7112 appears adequate.  * #define INFNAN_CHECK on IEEE systems to cause strtod to check for  *	Infinity and NaN (case insensitively).  *	When INFNAN_CHECK is #defined and No_Hex_NaN is not #defined,  *	strtodg also accepts (case insensitively) strings of the form  *	NaN(x), where x is a string of hexadecimal digits and spaces;  *	if there is only one string of hexadecimal digits, it is taken  *	for the fraction bits of the resulting NaN; if there are two or  *	more strings of hexadecimal digits, each string is assigned  *	to the next available sequence of 32-bit words of fractions  *	bits (starting with the most significant), right-aligned in  *	each sequence.  * #define MULTIPLE_THREADS if the system offers preemptively scheduled  *	multiple threads.  In this case, you must provide (or suitably  *	#define) two locks, acquired by ACQUIRE_DTOA_LOCK(n) and freed  *	by FREE_DTOA_LOCK(n) for n = 0 or 1.  (The second lock, accessed  *	in pow5mult, ensures lazy evaluation of only one copy of high  *	powers of 5; omitting this lock would introduce a small  *	probability of wasting memory, but would otherwise be harmless.)  *	You must also invoke freedtoa(s) to free the value s returned by  *	dtoa.  You may do so whether or not MULTIPLE_THREADS is #defined.  * #define IMPRECISE_INEXACT if you do not care about the setting of  *	the STRTOG_Inexact bits in the special case of doing IEEE double  *	precision conversions (which could also be done by the strtog in  *	dtoa.c).  * #define NO_HEX_FP to disable recognition of C9x's hexadecimal  *	floating-point constants.  * #define -DNO_ERRNO to suppress setting errno (in strtod.c and  *	strtodg.c).  * #define NO_STRING_H to use private versions of memcpy.  *	On some K&R systems, it may also be necessary to  *	#define DECLARE_SIZE_T in this case.  * #define YES_ALIAS to permit aliasing certain double values with  *	arrays of ULongs.  This leads to slightly better code with  *	some compilers and was always used prior to 19990916, but it  *	is not strictly legal and can cause trouble with aggressively  *	optimizing compilers (e.g., gcc 2.95.1 under -O2).  * #define USE_LOCALE to use the current locale's decimal_point value.  */
 end_comment
 
 begin_ifndef
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"gdtoa.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gd_qnan.h"
 end_include
 
 begin_ifdef
@@ -1384,7 +1390,10 @@ value|hexnan_D2A
 define|#
 directive|define
 name|hi0bits
-value|hi0bits_D2A
+parameter_list|(
+name|x
+parameter_list|)
+value|hi0bits_D2A((ULong)(x))
 define|#
 directive|define
 name|i2b
@@ -1836,7 +1845,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|int
-name|hi0bits
+name|hi0bits_D2A
 name|ANSI
 argument_list|(
 operator|(
@@ -2166,6 +2175,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * NAN_WORD0 and NAN_WORD1 are only referenced in strtod.c.  Prior to  * 20050115, they used to be hard-wired here (to 0x7ff80000 and 0,  * respectively), but now are determined by compiling and running  * qnan.c to generate gd_qnan.h, which specifies d_QNAN0 and d_QNAN1.  * Formerly gdtoaimp.h recommended supplying suitable -DNAN_WORD0=...  * and -DNAN_WORD1=...  values if necessary.  This should still work.  * (On HP Series 700/800 machines, -DNAN_WORD0=0x7ff40000 works.)  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2192,6 +2205,42 @@ name|_1
 value|1
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NAN_WORD0
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NAN_WORD0
+value|d_QNAN0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NAN_WORD1
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NAN_WORD1
+value|d_QNAN1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -2210,6 +2259,42 @@ directive|define
 name|_1
 value|0
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NAN_WORD0
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NAN_WORD0
+value|d_QNAN1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NAN_WORD1
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NAN_WORD1
+value|d_QNAN0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2231,57 +2316,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INFNAN_CHECK
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NAN_WORD0
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NAN_WORD0
-value|0x7ff80000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NAN_WORD1
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NAN_WORD1
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INFNAN_CHECK */
-end_comment
 
 begin_undef
 undef|#

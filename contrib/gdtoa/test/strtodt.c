@@ -4,7 +4,7 @@ comment|/****************************************************************  The a
 end_comment
 
 begin_comment
-comment|/* Please send bug reports to 	David M. Gay 	Bell Laboratories, Room 2C-463 	600 Mountain Avenue 	Murray Hill, NJ 07974-0636 	U.S.A. 	dmg@bell-labs.com  */
+comment|/* Please send bug reports to David M. Gay (dmg at acm dot org,  * with " at " changed at "@" and " dot " changed to ".").	*/
 end_comment
 
 begin_comment
@@ -13,6 +13,16 @@ end_comment
 
 begin_comment
 comment|/* On stdin, read triples: d x y:  *	d = decimal string  *	x = high-order Hex value expected from strtod  *	y = low-order Hex value  * Complain about errors.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"gdtoa.h"
+end_include
+
+begin_comment
+comment|/* for ULong */
 end_comment
 
 begin_include
@@ -49,7 +59,7 @@ block|{
 name|double
 name|d
 decl_stmt|;
-name|long
+name|ULong
 name|L
 index|[
 literal|2
@@ -85,12 +95,15 @@ index|[
 literal|2048
 index|]
 decl_stmt|;
-name|double
-name|d
-decl_stmt|;
 name|char
 modifier|*
 name|s
+decl_stmt|,
+modifier|*
+name|s1
+decl_stmt|,
+modifier|*
+name|se
 decl_stmt|;
 name|int
 name|line
@@ -161,32 +174,60 @@ condition|)
 name|s
 operator|++
 expr_stmt|;
+comment|/* if (sscanf(s,"\t%lx\t%lx",&a.L[0],&a.L[1]) != 2) */
 if|if
 condition|(
-name|sscanf
-argument_list|(
-name|s
-argument_list|,
-literal|"\t%lx\t%lx"
-argument_list|,
-operator|&
+operator|(
 name|a
 operator|.
 name|L
 index|[
 literal|0
 index|]
+operator|=
+operator|(
+name|ULong
+operator|)
+name|strtoul
+argument_list|(
+name|s
 argument_list|,
 operator|&
+name|s1
+argument_list|,
+literal|16
+argument_list|)
+operator|,
+name|s1
+operator|<=
+name|s
+operator|)
+operator|||
+operator|(
 name|a
 operator|.
 name|L
 index|[
 literal|1
 index|]
+operator|=
+operator|(
+name|ULong
+operator|)
+name|strtoul
+argument_list|(
+name|s1
+argument_list|,
+operator|&
+name|se
+argument_list|,
+literal|16
 argument_list|)
-operator|!=
-literal|2
+operator|,
+name|se
+operator|<=
+name|s1
+operator|)
 condition|)
 block|{
 name|printf

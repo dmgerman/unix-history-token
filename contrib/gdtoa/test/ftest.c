@@ -4,7 +4,7 @@ comment|/****************************************************************  The a
 end_comment
 
 begin_comment
-comment|/* Please send bug reports to 	David M. Gay 	Bell Laboratories, Room 2C-463 	600 Mountain Avenue 	Murray Hill, NJ 07974-0636 	U.S.A. 	dmg@bell-labs.com  */
+comment|/* Please send bug reports to David M. Gay (dmg at acm dot org,  * with " at " changed at "@" and " dot " changed to ".").	*/
 end_comment
 
 begin_comment
@@ -74,10 +74,6 @@ parameter_list|(
 name|Void
 parameter_list|)
 block|{
-name|ULong
-modifier|*
-name|L
-decl_stmt|;
 name|char
 modifier|*
 name|s
@@ -104,8 +100,6 @@ init|=
 literal|1
 decl_stmt|;
 name|float
-name|f
-decl_stmt|,
 name|f1
 decl_stmt|,
 name|fI
@@ -113,15 +107,20 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|L
-operator|=
-operator|(
-name|ULong
-operator|*
-operator|)
-operator|&
+union|union
+block|{
+name|float
 name|f
-expr_stmt|;
+decl_stmt|;
+name|ULong
+name|L
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|u
+union|;
 while|while
 condition|(
 operator|(
@@ -222,19 +221,27 @@ comment|/* nan? */
 case|case
 literal|'#'
 case|:
-name|sscanf
+comment|/* sscanf(s+1, "%lx",&u.L[0]); */
+name|u
+operator|.
+name|L
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|ULong
+operator|)
+name|strtoul
 argument_list|(
 name|s
 operator|+
 literal|1
 argument_list|,
-literal|"%lx"
-argument_list|,
 operator|&
-name|L
-index|[
-literal|0
-index|]
+name|se
+argument_list|,
+literal|16
 argument_list|)
 expr_stmt|;
 name|printf
@@ -248,12 +255,11 @@ name|printf
 argument_list|(
 literal|" --> f = #%lx\n"
 argument_list|,
-name|L
-index|[
+argument|U u.L[
 literal|0
-index|]
+argument|]
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 goto|goto
 name|fmt_test
 goto|;
@@ -281,6 +287,8 @@ argument_list|,
 name|r
 argument_list|,
 operator|&
+name|u
+operator|.
 name|f
 argument_list|)
 expr_stmt|;
@@ -293,6 +301,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|u
+operator|.
 name|f
 operator|!=
 operator|(
@@ -328,6 +338,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|u
+operator|.
 name|f
 operator|!=
 name|f1
@@ -380,6 +392,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|u
+operator|.
 name|f
 operator|!=
 name|strtof
@@ -404,27 +418,15 @@ name|printf
 argument_list|(
 literal|"strtof consumes %d bytes and returns %.8g = #%lx\n"
 argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-name|se
-operator|-
-name|ibuf
-argument_list|)
+argument|(int)(se-ibuf)
 argument_list|,
-name|f
+argument|u.f
 argument_list|,
-name|U
-operator|*
-operator|(
-name|ULong
-operator|*
-operator|)
-operator|&
-name|f
+argument|U u.L[
+literal|0
+argument|]
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|fmt_test
 label|:
 name|se
@@ -434,6 +436,8 @@ argument_list|(
 name|obuf
 argument_list|,
 operator|&
+name|u
+operator|.
 name|f
 argument_list|,
 name|ndig
@@ -527,6 +531,8 @@ index|[
 literal|0
 index|]
 operator|==
+name|u
+operator|.
 name|f
 condition|)
 name|printf
@@ -598,6 +604,8 @@ index|[
 literal|0
 index|]
 operator|==
+name|u
+operator|.
 name|f
 condition|)
 name|printf
@@ -613,6 +621,8 @@ index|[
 literal|1
 index|]
 operator|==
+name|u
+operator|.
 name|f
 condition|)
 name|printf
