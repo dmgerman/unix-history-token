@@ -137,9 +137,10 @@ literal|1
 operator|)
 return|;
 block|}
-operator|++
 operator|*
 name|s
+operator|=
+literal|0
 expr_stmt|;
 block|}
 operator|++

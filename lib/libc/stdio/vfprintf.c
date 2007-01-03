@@ -2266,20 +2266,20 @@ specifier|const
 name|char
 name|xdigs_lower
 index|[
-literal|17
+literal|16
 index|]
 init|=
-literal|"0123456789abcdef?"
+literal|"0123456789abcdef"
 decl_stmt|;
 specifier|static
 specifier|const
 name|char
 name|xdigs_upper
 index|[
-literal|17
+literal|16
 index|]
 init|=
-literal|"0123456789ABCDEF?"
+literal|"0123456789ABCDEF"
 decl_stmt|;
 comment|/* 	 * BEWARE, these `goto error' on error, and PAD uses `n'. 	 */
 define|#
