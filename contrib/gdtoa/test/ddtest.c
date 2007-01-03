@@ -4,7 +4,7 @@ comment|/****************************************************************  The a
 end_comment
 
 begin_comment
-comment|/* Please send bug reports to 	David M. Gay 	Bell Laboratories, Room 2C-463 	600 Mountain Avenue 	Murray Hill, NJ 07974-0636 	U.S.A. 	dmg@bell-labs.com  */
+comment|/* Please send bug reports to David M. Gay (dmg at acm dot org,  * with " at " changed at "@" and " dot " changed to ".").	*/
 end_comment
 
 begin_comment
@@ -106,17 +106,26 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-name|ULong
-modifier|*
-name|L
-init|=
-operator|(
-name|ULong
-operator|*
-operator|)
-operator|&
+union|union
+block|{
+name|double
 name|d
 decl_stmt|;
+name|ULong
+name|L
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|u
+union|;
+name|u
+operator|.
+name|d
+operator|=
+name|d
+expr_stmt|;
 name|g_dfmt
 argument_list|(
 name|buf
@@ -140,9 +149,9 @@ argument|what
 argument_list|,
 argument|buf
 argument_list|,
-argument|U L[_0]
+argument|U u.L[_0]
 argument_list|,
-argument|U L[_1]
+argument|U u.L[_1]
 argument_list|)
 empty_stmt|;
 block|}
@@ -155,10 +164,6 @@ parameter_list|(
 name|Void
 parameter_list|)
 block|{
-name|ULong
-modifier|*
-name|L
-decl_stmt|;
 name|char
 modifier|*
 name|s
@@ -188,11 +193,6 @@ init|=
 literal|0
 decl_stmt|;
 name|double
-name|dd
-index|[
-literal|2
-index|]
-decl_stmt|,
 name|ddI
 index|[
 literal|4
@@ -204,18 +204,23 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|L
-operator|=
-operator|(
-name|ULong
-operator|*
-operator|)
-operator|&
+union|union
+block|{
+name|double
 name|dd
 index|[
-literal|0
+literal|2
 index|]
-expr_stmt|;
+decl_stmt|;
+name|ULong
+name|L
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+name|u
+union|;
 while|while
 condition|(
 operator|(
@@ -321,6 +326,8 @@ index|[
 literal|0
 index|]
 operator|=
+name|u
+operator|.
 name|L
 index|[
 name|_0
@@ -331,6 +338,8 @@ index|[
 literal|1
 index|]
 operator|=
+name|u
+operator|.
 name|L
 index|[
 name|_1
@@ -341,6 +350,8 @@ index|[
 literal|2
 index|]
 operator|=
+name|u
+operator|.
 name|L
 index|[
 literal|2
@@ -353,6 +364,8 @@ index|[
 literal|3
 index|]
 operator|=
+name|u
+operator|.
 name|L
 index|[
 literal|2
@@ -393,6 +406,8 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
+name|u
+operator|.
 name|L
 index|[
 name|_0
@@ -403,6 +418,8 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|u
+operator|.
 name|L
 index|[
 name|_1
@@ -413,6 +430,8 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+name|u
+operator|.
 name|L
 index|[
 literal|2
@@ -425,6 +444,8 @@ index|[
 literal|2
 index|]
 expr_stmt|;
+name|u
+operator|.
 name|L
 index|[
 literal|2
@@ -531,6 +552,8 @@ name|se
 argument_list|,
 name|r
 argument_list|,
+name|u
+operator|.
 name|dd
 argument_list|)
 expr_stmt|;
@@ -559,6 +582,8 @@ name|i
 operator|!=
 name|j
 operator|||
+name|u
+operator|.
 name|dd
 index|[
 literal|0
@@ -569,6 +594,8 @@ index|[
 literal|0
 index|]
 operator|||
+name|u
+operator|.
 name|dd
 index|[
 literal|1
@@ -608,6 +635,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|u
+operator|.
 name|dd
 index|[
 literal|0
@@ -621,6 +650,8 @@ operator|&
 name|se
 argument_list|)
 expr_stmt|;
+name|u
+operator|.
 name|dd
 index|[
 literal|1
@@ -641,6 +672,8 @@ name|dprint
 argument_list|(
 literal|"dd[0]"
 argument_list|,
+name|u
+operator|.
 name|dd
 index|[
 literal|0
@@ -651,6 +684,8 @@ name|dprint
 argument_list|(
 literal|"dd[1]"
 argument_list|,
+name|u
+operator|.
 name|dd
 index|[
 literal|1
@@ -663,6 +698,8 @@ name|g_ddfmt
 argument_list|(
 name|obuf
 argument_list|,
+name|u
+operator|.
 name|dd
 argument_list|,
 name|ndig
@@ -766,6 +803,8 @@ index|[
 literal|0
 index|]
 operator|==
+name|u
+operator|.
 name|dd
 index|[
 literal|0
@@ -776,6 +815,8 @@ index|[
 literal|1
 index|]
 operator|==
+name|u
+operator|.
 name|dd
 index|[
 literal|1
@@ -1002,6 +1043,8 @@ index|[
 literal|0
 index|]
 operator|==
+name|u
+operator|.
 name|dd
 index|[
 literal|0
@@ -1012,6 +1055,8 @@ index|[
 literal|1
 index|]
 operator|==
+name|u
+operator|.
 name|dd
 index|[
 literal|1
@@ -1030,6 +1075,8 @@ index|[
 literal|2
 index|]
 operator|==
+name|u
+operator|.
 name|dd
 index|[
 literal|0
@@ -1040,6 +1087,8 @@ index|[
 literal|3
 index|]
 operator|==
+name|u
+operator|.
 name|dd
 index|[
 literal|1

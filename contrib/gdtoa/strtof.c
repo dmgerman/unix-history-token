@@ -4,7 +4,7 @@ comment|/****************************************************************  The a
 end_comment
 
 begin_comment
-comment|/* Please send bug reports to 	David M. Gay 	Bell Laboratories, Room 2C-463 	600 Mountain Avenue 	Murray Hill, NJ 07974-0636 	U.S.A. 	dmg@bell-labs.com  */
+comment|/* Please send bug reports to David M. Gay (dmg at acm dot org,  * with " at " changed at "@" and " dot " changed to ".").	*/
 end_comment
 
 begin_include
@@ -51,9 +51,6 @@ parameter_list|)
 endif|#
 directive|endif
 block|{
-ifdef|#
-directive|ifdef
-name|Sudden_Underflow
 specifier|static
 name|FPI
 name|fpi
@@ -79,41 +76,9 @@ literal|1
 block|,
 literal|1
 block|,
-literal|1
+name|SI
 block|}
 decl_stmt|;
-else|#
-directive|else
-specifier|static
-name|FPI
-name|fpi
-init|=
-block|{
-literal|24
-block|,
-literal|1
-operator|-
-literal|127
-operator|-
-literal|24
-operator|+
-literal|1
-block|,
-literal|254
-operator|-
-literal|127
-operator|-
-literal|24
-operator|+
-literal|1
-block|,
-literal|1
-block|,
-literal|0
-block|}
-decl_stmt|;
-endif|#
-directive|endif
 name|ULong
 name|bits
 index|[
@@ -248,7 +213,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0x7fffffff
+name|f_QNAN
 expr_stmt|;
 block|}
 if|if

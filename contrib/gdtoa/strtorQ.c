@@ -4,7 +4,7 @@ comment|/****************************************************************  The a
 end_comment
 
 begin_comment
-comment|/* Please send bug reports to 	David M. Gay 	Bell Laboratories, Room 2C-463 	600 Mountain Avenue 	Murray Hill, NJ 07974-0636 	U.S.A. 	dmg@bell-labs.com  */
+comment|/* Please send bug reports to David M. Gay (dmg at acm dot org,  * with " at " changed at "@" and " dot " changed to ".").	*/
 end_comment
 
 begin_include
@@ -334,31 +334,31 @@ name|STRTOG_NaN
 case|:
 name|L
 index|[
-name|_0
+literal|0
 index|]
 operator|=
-literal|0x7fffffff
+name|ld_QNAN0
 expr_stmt|;
 name|L
 index|[
-name|_1
-index|]
-operator|=
-name|L
-index|[
-name|_2
-index|]
-operator|=
-name|L
-index|[
-name|_3
-index|]
-operator|=
-operator|(
-name|ULong
-operator|)
-operator|-
 literal|1
+index|]
+operator|=
+name|ld_QNAN1
+expr_stmt|;
+name|L
+index|[
+literal|2
+index|]
+operator|=
+name|ld_QNAN2
+expr_stmt|;
+name|L
+index|[
+literal|3
+index|]
+operator|=
+name|ld_QNAN3
 expr_stmt|;
 block|}
 if|if

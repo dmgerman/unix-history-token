@@ -4,7 +4,7 @@ comment|/****************************************************************  The a
 end_comment
 
 begin_comment
-comment|/* Please send bug reports to 	David M. Gay 	Bell Laboratories, Room 2C-463 	600 Mountain Avenue 	Murray Hill, NJ 07974-0636 	U.S.A. 	dmg@bell-labs.com  */
+comment|/* Please send bug reports to David M. Gay (dmg at acm dot org,  * with " at " changed at "@" and " dot " changed to ".").	*/
 end_comment
 
 begin_comment
@@ -727,13 +727,21 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s.%se%d"
+literal|"%s%s%se%d"
 argument_list|,
 name|sign
 condition|?
 literal|"-"
 else|:
 literal|""
+argument_list|,
+name|decpt
+operator|==
+literal|9999
+condition|?
+literal|""
+else|:
+literal|"."
 argument_list|,
 name|s
 argument_list|,
@@ -801,6 +809,7 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|Void
@@ -823,6 +832,9 @@ name|fmt
 decl_stmt|,
 modifier|*
 name|s
+decl_stmt|,
+modifier|*
+name|s1
 decl_stmt|,
 modifier|*
 name|se
@@ -920,19 +932,61 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|sscanf
+comment|/* sscanf(buf+1, "%lx %lx:%d %d",&x,&y,&mode,&ndigits); */
+name|x
+operator|=
+operator|(
+name|ULong
+operator|)
+name|strtoul
 argument_list|(
+name|s1
+operator|=
 name|buf
 operator|+
 literal|1
 argument_list|,
-literal|"%lx %lx:%d %d"
-argument_list|,
 operator|&
-name|x
+name|se
 argument_list|,
-operator|&
+literal|16
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|se
+operator|>
+name|s1
+condition|)
+block|{
 name|y
+operator|=
+operator|(
+name|ULong
+operator|)
+name|strtoul
+argument_list|(
+name|s1
+operator|=
+name|se
+argument_list|,
+operator|&
+name|se
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|se
+operator|>
+name|s1
+condition|)
+name|sscanf
+argument_list|(
+name|se
+argument_list|,
+literal|":%d %d"
 argument_list|,
 operator|&
 name|mode
@@ -941,6 +995,7 @@ operator|&
 name|ndigits
 argument_list|)
 expr_stmt|;
+block|}
 name|word0
 argument_list|(
 name|d
