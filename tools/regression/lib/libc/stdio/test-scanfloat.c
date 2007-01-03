@@ -1115,16 +1115,13 @@ operator|!=
 name|ld
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-name|fetestexcept
-argument_list|(
-name|FE_INVALID
-argument_list|)
-operator|==
+if|#
+directive|if
 literal|0
-argument_list|)
-expr_stmt|;
+comment|/* 	 * POSIX says we should only generate quiet NaNs, but the gdtoa 	 * author convincingly argues that if you ask for a NaN format 	 * based on some implementation-defined string, you should get 	 * what you asked for, even if it's a signaling NaN. 	 */
+block|assert(fetestexcept(FE_INVALID) == 0);
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"ok 2 - scanfloat\n"
