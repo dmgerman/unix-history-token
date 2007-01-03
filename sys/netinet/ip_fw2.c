@@ -338,6 +338,12 @@ directive|include
 file|<netinet/sctp.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_NAT
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -349,6 +355,11 @@ include|#
 directive|include
 file|<netinet/libalias/alias_local.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1418,6 +1429,12 @@ begin_comment
 comment|/* SYSCTL_NODE */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_NAT
+end_ifdef
+
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
@@ -1433,6 +1450,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -9802,6 +9824,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_NAT
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|eventhandler_tag
@@ -10789,6 +10817,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The main check routine for the firewall.  *  * All arguments are in args so we can modify them and return them  * back to the caller.  *  * Parameters:  *  *	args->m	(in/out) The packet; we set to NULL when/if we nuke it.  *		Starts with the IP header.  *	args->eh (in)	Mac header if present, or NULL for layer3 packet.  *	args->L3offset	Number of bytes bypassed if we came from L2.  *			e.g. often sizeof(eh)  ** NOTYET **  *	args->oif	Outgoing interface, or NULL if packet is incoming.  *		The incoming interface is in the mbuf. (in)  *	args->divert_rule (in/out)  *		Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *  *	args->rule	Pointer to the last matching rule (in/out)  *	args->next_hop	Socket we are forwarding to (out).  *	args->f_id	Addresses grabbed from the packet (out)  * 	args->cookie	a cookie depending on rule action  *  * Return value:  *  *	IP_FW_PASS	the packet must be accepted  *	IP_FW_DENY	the packet must be dropped  *	IP_FW_DIVERT	divert packet, port in m_tag  *	IP_FW_TEE	tee packet, port in m_tag  *	IP_FW_DUMMYNET	to dummynet, pipe in args->cookie  *	IP_FW_NETGRAPH	into netgraph, cookie args->cookie  *  */
@@ -15708,6 +15741,9 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_NAT
 case|case
 name|O_NAT
 case|:
@@ -16274,6 +16310,8 @@ goto|goto
 name|done
 goto|;
 block|}
+endif|#
+directive|endif
 default|default:
 name|panic
 argument_list|(
@@ -20005,6 +20043,9 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_NAT
 case|case
 name|IP_FW_NAT_CFG
 case|:
@@ -20874,6 +20915,8 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+endif|#
+directive|endif
 default|default:
 name|printf
 argument_list|(
@@ -21652,6 +21695,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_NAT
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -21673,6 +21719,8 @@ argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -21693,6 +21741,9 @@ name|ip_fw
 modifier|*
 name|reap
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_NAT
 name|struct
 name|cfg_nat
 modifier|*
@@ -21701,6 +21752,8 @@ decl_stmt|,
 modifier|*
 name|ptr_temp
 decl_stmt|;
+endif|#
+directive|endif
 name|ip_fw_chk_ptr
 operator|=
 name|NULL
@@ -21727,6 +21780,9 @@ operator|&
 name|layer3_chain
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_NAT
 name|LIST_FOREACH_SAFE
 argument_list|(
 argument|ptr
@@ -21777,6 +21833,8 @@ argument_list|,
 name|ifaddr_event_tag
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|layer3_chain
 operator|.
 name|reap
