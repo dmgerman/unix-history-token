@@ -1274,7 +1274,7 @@ argument_list|(
 name|d
 operator|==
 literal|0x1
-literal|.234568p
+literal|.234567p
 operator|-
 literal|1050
 argument_list|)
@@ -1470,7 +1470,7 @@ argument_list|(
 name|d
 operator|==
 literal|0x1
-literal|.234568p
+literal|.234567p
 operator|-
 literal|1050
 argument_list|)
