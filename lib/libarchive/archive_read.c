@@ -1590,6 +1590,9 @@ name|a
 operator|->
 name|read_data_output_offset
 operator|+
+operator|(
+name|off_t
+operator|)
 name|s
 operator|<
 name|a
