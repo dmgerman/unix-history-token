@@ -2916,7 +2916,7 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-name|ssize_t
+name|off_t
 name|bytes_skipped
 decl_stmt|;
 name|struct

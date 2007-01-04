@@ -4520,7 +4520,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ssize_t
+name|off_t
 name|step
 init|=
 name|offset
@@ -4529,7 +4529,7 @@ name|iso9660
 operator|->
 name|current_position
 decl_stmt|;
-name|ssize_t
+name|off_t
 name|bytes_read
 decl_stmt|;
 name|bytes_read

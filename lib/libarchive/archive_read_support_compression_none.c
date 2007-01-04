@@ -43,6 +43,23 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_LIMITS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_STDLIB_H
 end_ifdef
 
@@ -252,14 +269,14 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|ssize_t
+name|off_t
 name|archive_decompressor_none_skip
 parameter_list|(
 name|struct
 name|archive
 modifier|*
 parameter_list|,
-name|size_t
+name|off_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1084,7 +1101,7 @@ end_comment
 
 begin_function
 specifier|static
-name|ssize_t
+name|off_t
 name|archive_decompressor_none_skip
 parameter_list|(
 name|struct
@@ -1092,7 +1109,7 @@ name|archive
 modifier|*
 name|a
 parameter_list|,
-name|size_t
+name|off_t
 name|request
 parameter_list|)
 block|{
@@ -1101,7 +1118,7 @@ name|archive_decompress_none
 modifier|*
 name|state
 decl_stmt|;
-name|ssize_t
+name|off_t
 name|bytes_skipped
 decl_stmt|,
 name|total_bytes_skipped
@@ -1150,6 +1167,9 @@ name|minimum
 argument_list|(
 name|request
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|state
 operator|->
 name|avail
@@ -1188,6 +1208,9 @@ name|minimum
 argument_list|(
 name|request
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|state
 operator|->
 name|client_avail
@@ -1225,11 +1248,19 @@ return|;
 comment|/* 	 * If a client_skipper was provided, try that first. 	 */
 if|if
 condition|(
+operator|(
 name|a
 operator|->
 name|client_skipper
 operator|!=
 name|NULL
+operator|)
+operator|&&
+operator|(
+name|request
+operator|<
+name|SSIZE_MAX
+operator|)
 condition|)
 block|{
 name|bytes_skipped
@@ -1405,14 +1436,16 @@ expr_stmt|;
 comment|/* precondition for cast below */
 name|min
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|minimum
 argument_list|(
-operator|(
-name|size_t
-operator|)
 name|bytes_read
 argument_list|,
 name|request
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bytes_read

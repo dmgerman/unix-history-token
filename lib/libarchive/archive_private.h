@@ -274,7 +274,7 @@ parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
-name|ssize_t
+name|off_t
 function_decl|(
 modifier|*
 name|compression_skip
@@ -284,7 +284,7 @@ name|struct
 name|archive
 modifier|*
 parameter_list|,
-name|size_t
+name|off_t
 parameter_list|)
 function_decl|;
 comment|/* 	 * Format detection is mostly the same as compression 	 * detection, with two significant differences: The bidders 	 * use the read_ahead calls above to examine the stream rather 	 * than having the supervisor hand them a block of data to 	 * examine, and the auction is repeated for every header. 	 * Winning bidders should set the archive_format and 	 * archive_format_name appropriately.  Bid routines should 	 * check archive_format and decline to bid if the format of 	 * the last header was incompatible. 	 * 	 * Again, write support is considerably simpler because there's 	 * no need for an auction. 	 */
