@@ -973,7 +973,7 @@ name|spl
 init|=
 literal|0
 decl_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|driver_lock
@@ -993,7 +993,7 @@ name|intrmask_t
 name|spl
 parameter_list|)
 block|{
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|driver_lock
@@ -5677,7 +5677,7 @@ literal|"hptlock"
 argument_list|,
 name|NULL
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -5744,12 +5744,6 @@ name|rid
 decl_stmt|;
 name|PVDevice
 name|pVDev
-decl_stmt|;
-name|intrmask_t
-name|oldspl
-init|=
-name|lock_driver
-argument_list|()
 decl_stmt|;
 name|pAdapter
 operator|->
@@ -5901,11 +5895,6 @@ argument_list|(
 literal|"RR182x: Failed to allocate memory for EDMA queues\n"
 argument_list|)
 expr_stmt|;
-name|unlock_driver
-argument_list|(
-name|oldspl
-argument_list|)
-expr_stmt|;
 return|return
 name|ENOMEM
 return|;
@@ -5970,11 +5959,6 @@ expr_stmt|;
 name|hptmv_free_edma_queues
 argument_list|(
 name|pAdapter
-argument_list|)
-expr_stmt|;
-name|unlock_driver
-argument_list|(
-name|oldspl
 argument_list|)
 expr_stmt|;
 return|return
@@ -6129,11 +6113,6 @@ expr_stmt|;
 name|hptmv_free_edma_queues
 argument_list|(
 name|pAdapter
-argument_list|)
-expr_stmt|;
-name|unlock_driver
-argument_list|(
-name|oldspl
 argument_list|)
 expr_stmt|;
 return|return
@@ -6905,11 +6884,6 @@ directive|endif
 name|mvSataUnmaskAdapterInterrupt
 argument_list|(
 name|pMvSataAdapter
-argument_list|)
-expr_stmt|;
-name|unlock_driver
-argument_list|(
-name|oldspl
 argument_list|)
 expr_stmt|;
 return|return
