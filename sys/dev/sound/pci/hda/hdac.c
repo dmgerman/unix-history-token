@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20061210_0037"
+value|"20070105_0038"
 end_define
 
 begin_define
@@ -807,6 +807,31 @@ define|#
 directive|define
 name|FS_ALL_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(FS, 0xffff)
+end_define
+
+begin_comment
+comment|/* Toshiba */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TOSHIBA_VENDORID
+value|0x1179
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOSHIBA_U200_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(TOSHIBA, 0x0001)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOSHIBA_ALL_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(TOSHIBA, 0xffff)
 end_define
 
 begin_comment
@@ -2335,6 +2360,28 @@ literal|5
 block|}
 block|,
 block|{
+name|TOSHIBA_U200_SUBVENDOR
+block|,
+name|HDA_CODEC_AD1981HD
+block|,
+name|HDAC_HP_SWITCH_CTL
+block|,
+literal|0
+block|,
+literal|6
+block|,
+block|{
+literal|5
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
 name|DELL_D820_SUBVENDOR
 block|,
 name|HDA_CODEC_STAC9220
@@ -2485,6 +2532,28 @@ literal|1
 block|}
 block|,
 literal|5
+block|}
+block|,
+block|{
+name|TOSHIBA_ALL_SUBVENDOR
+block|,
+name|HDA_CODEC_AD1981HD
+block|,
+name|HDAC_HP_SWITCH_CTL
+block|,
+literal|0
+block|,
+literal|6
+block|,
+block|{
+literal|5
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
 block|}
 block|,
 block|{
