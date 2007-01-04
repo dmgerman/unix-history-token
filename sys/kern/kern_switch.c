@@ -2387,7 +2387,6 @@ modifier|*
 name|rq
 parameter_list|,
 name|int
-modifier|*
 name|idx
 parameter_list|)
 block|{
@@ -2421,7 +2420,6 @@ name|runq_findbit_from
 argument_list|(
 name|rq
 argument_list|,
-operator|*
 name|idx
 argument_list|)
 operator|)
@@ -2474,13 +2472,6 @@ name|ts_rqindex
 argument_list|,
 name|rqh
 argument_list|)
-expr_stmt|;
-operator|*
-name|idx
-operator|=
-name|ts
-operator|->
-name|ts_rqindex
 expr_stmt|;
 return|return
 operator|(
