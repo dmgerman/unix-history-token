@@ -2674,7 +2674,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * region_compare(): Examine lock regions and split appropriately  *  * XXX: Fix 64 bit overflow problems  * XXX: Check to make sure I got *ALL* the cases.   * XXX: This DESPERATELY needs a regression test.  */
+comment|/*  * region_compare(): Examine lock regions and split appropriately  *  * XXX: Fix 64 bit overflow problems  * XXX: Check to make sure I got *ALL* the cases.  * XXX: This DESPERATELY needs a regression test.  */
 end_comment
 
 begin_function
@@ -4104,7 +4104,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * lock_nfslock: attempt to create a lock in the NFS lock list  *  * This routine tests whether the lock will be granted and then adds  * the entry to the lock list if so.  *   * Argument fl gets modified as its list housekeeping entries get modified  * upon insertion into the NFS lock list  *  * This routine makes several assumptions:  *    1) It is perfectly happy to grant a duplicate lock from the same pid.  *       While this seems to be intuitively wrong, it is required for proper  *       Posix semantics during unlock.  It is absolutely imperative to not  *       unlock the main lock before the two child locks are established. Thus,  *       one has be be able to create duplicate locks over an existing lock  *    2) It currently accepts duplicate locks from the same id,pid  */
+comment|/*  * lock_nfslock: attempt to create a lock in the NFS lock list  *  * This routine tests whether the lock will be granted and then adds  * the entry to the lock list if so.  *  * Argument fl gets modified as its list housekeeping entries get modified  * upon insertion into the NFS lock list  *  * This routine makes several assumptions:  *    1) It is perfectly happy to grant a duplicate lock from the same pid.  *       While this seems to be intuitively wrong, it is required for proper  *       Posix semantics during unlock.  It is absolutely imperative to not  *       unlock the main lock before the two child locks are established. Thus,  *       one has be be able to create duplicate locks over an existing lock  *    2) It currently accepts duplicate locks from the same id,pid  */
 end_comment
 
 begin_function
@@ -5870,7 +5870,7 @@ argument_list|(
 literal|"HW GRANTED\n"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX: Fixme: Check hwstatus for duplicate when 			 * true partial file locking and accounting is 			 * done on the hardware  			 */
+comment|/* 			 * XXX: Fixme: Check hwstatus for duplicate when 			 * true partial file locking and accounting is 			 * done on the hardware. 			 */
 if|if
 condition|(
 name|lnlstatus
@@ -7514,7 +7514,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * getlock: try to aquire the lock.   * If file is already locked and we can sleep, put the lock in the list with  * status LKST_WAITING; it'll be processed later.  * Otherwise try to lock. If we're allowed to block, fork a child which  * will do the blocking lock.  */
+comment|/*  * getlock: try to aquire the lock.  * If file is already locked and we can sleep, put the lock in the list with  * status LKST_WAITING; it'll be processed later.  * Otherwise try to lock. If we're allowed to block, fork a child which  * will do the blocking lock.  */
 end_comment
 
 begin_function
@@ -7897,7 +7897,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX: The following monitor/unmonitor routines   * have not been extensively tested (ie. no regression  * script exists like for the locking sections  */
+comment|/*  * XXX: The following monitor/unmonitor routines  * have not been extensively tested (ie. no regression  * script exists like for the locking sections  */
 end_comment
 
 begin_comment
