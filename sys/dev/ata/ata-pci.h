@@ -941,6 +941,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_M88SX6101
+value|0x610111ab
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_M88SX6145
+value|0x614511ab
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_MICRON_ID
 value|0x1042
 end_define
@@ -2093,15 +2107,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|MV5XXX
-value|5
+name|MV50XX
+value|50
 end_define
 
 begin_define
 define|#
 directive|define
-name|MV6XXX
-value|6
+name|MV60XX
+value|60
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV61XX
+value|61
 end_define
 
 begin_define
