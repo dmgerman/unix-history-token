@@ -2894,6 +2894,17 @@ begin_comment
 comment|/* has been preempted.. be kind */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SRQ_BORROWING
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Priority updated due to prio_lend */
+end_comment
+
 begin_comment
 comment|/* How values for thread_single(). */
 end_comment
