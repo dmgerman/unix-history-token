@@ -228,7 +228,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The following structures represent how the bpb's look on disk.  shorts  * and longs are just character arrays of the appropriate length.  This is  * because the compiler forces shorts and longs to align on word or  * halfword boundaries.  *  * XXX The little-endian code here assumes that the processor can access  * 16-bit and 32-bit quantities on byte boundaries.  If this is not true,  * use the macros for the big-endian case.  */
+comment|/*  * The following structures represent how the bpb's look on disk.  shorts  * and longs are just character arrays of the appropriate length.  This is  * because the compiler forces shorts and longs to align on word or  * halfword boundaries.  */
 end_comment
 
 begin_include
