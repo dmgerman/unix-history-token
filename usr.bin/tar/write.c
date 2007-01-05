@@ -2349,7 +2349,7 @@ literal|"%s"
 argument_list|,
 name|archive_error_string
 argument_list|(
-name|ina
+name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
