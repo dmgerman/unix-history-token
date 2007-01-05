@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: pkill.c,v 1.8 2005/03/02 15:31:44 abs Exp $	*/
+comment|/*	$NetBSD: pkill.c,v 1.16 2005/10/10 22:13:20 kleink Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2002 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Andrew Doran.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002 The NetBSD Foundation, Inc.  * Copyright (c) 2005 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Andrew Doran.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -235,6 +235,8 @@ name|LT_TTY
 block|,
 name|LT_PGRP
 block|,
+name|LT_JID
+block|,
 name|LT_SID
 block|}
 enum|;
@@ -268,6 +270,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|kinfo_proc
 modifier|*
@@ -276,6 +279,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|selected
@@ -283,6 +287,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -293,18 +298,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nproc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pgrep
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|signum
 init|=
@@ -313,48 +321,63 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|newest
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|oldest
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|interactive
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|inverse
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|longfmt
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|matchargs
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fullmatch
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|kthreads
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|cflags
 init|=
@@ -363,6 +386,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|kvm_t
 modifier|*
 name|kd
@@ -370,12 +394,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|pid_t
 name|mypid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|euidlist
@@ -388,6 +414,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|ruidlist
@@ -400,6 +427,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|rgidlist
@@ -412,6 +440,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|pgrplist
@@ -424,6 +453,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|ppidlist
@@ -436,6 +466,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|tdevlist
@@ -448,6 +479,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|sidlist
@@ -460,6 +492,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|listhead
 name|jidlist
@@ -472,31 +505,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
-name|main
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__noreturn__
 end_function_decl
 
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|void
+specifier|static
+name|int
 name|killact
 parameter_list|(
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
@@ -505,9 +535,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+specifier|static
+name|int
 name|grepact
 parameter_list|(
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
@@ -516,6 +548,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|makelist
 parameter_list|(
@@ -533,6 +566,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|takepid
 parameter_list|(
@@ -558,15 +592,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -618,12 +643,13 @@ decl_stmt|;
 name|size_t
 name|jsz
 decl_stmt|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|action
 function_decl|)
 parameter_list|(
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
@@ -843,7 +869,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"DF:G:LM:N:P:SU:d:fg:ij:lnos:t:u:vx"
+literal|"DF:G:ILM:N:P:SU:d:fg:ij:lnos:t:u:vx"
 argument_list|)
 operator|)
 operator|!=
@@ -888,6 +914,21 @@ name|optarg
 argument_list|)
 expr_stmt|;
 name|criteria
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'I'
+case|:
+if|if
+condition|(
+name|pgrep
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|interactive
 operator|=
 literal|1
 expr_stmt|;
@@ -1026,7 +1067,7 @@ argument_list|(
 operator|&
 name|jidlist
 argument_list|,
-name|LT_GENERIC
+name|LT_JID
 argument_list|,
 name|optarg
 argument_list|)
@@ -1188,7 +1229,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"-n and -o are mutually exclusive"
+literal|"Options -n and -o are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1212,13 +1253,15 @@ if|if
 condition|(
 name|pidfilelock
 condition|)
+block|{
 name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"-L doesn't make sense without -F"
+literal|"Option -L doesn't make sense without -F"
 argument_list|)
 expr_stmt|;
+block|}
 name|pidfromfile
 operator|=
 operator|-
@@ -1256,7 +1299,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"kvm_openfiles(): %s"
+literal|"Cannot open kernel files (%s)"
 argument_list|,
 name|buf
 argument_list|)
@@ -1282,13 +1325,20 @@ name|plist
 operator|==
 name|NULL
 condition|)
+block|{
 name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"kvm_getprocs() failed"
+literal|"Cannot get process list (%s)"
+argument_list|,
+name|kvm_geterr
+argument_list|(
+name|kd
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Allocate memory which will be used to keep track of the 	 * selection. 	 */
 if|if
 condition|(
@@ -1303,13 +1353,17 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+block|{
+name|err
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"memory allocation failure"
+literal|"Cannot allocate memory for %d processes"
+argument_list|,
+name|nproc
 argument_list|)
 expr_stmt|;
+block|}
 name|memset
 argument_list|(
 name|selected
@@ -1371,7 +1425,10 @@ name|errx
 argument_list|(
 name|STATUS_BADUSAGE
 argument_list|,
-literal|"bad expression: %s"
+literal|"Cannot compile regular expression `%s' (%s)"
+argument_list|,
+operator|*
+name|argv
 argument_list|,
 name|buf
 argument_list|)
@@ -1613,7 +1670,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"regexec(): %s"
+literal|"Regular expression evaluation error (%s)"
 argument_list|,
 name|buf
 argument_list|)
@@ -2076,24 +2133,7 @@ argument_list|,
 argument|li_chain
 argument_list|)
 block|{
-if|if
-condition|(
-name|kp
-operator|->
-name|ki_jid
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|li
-operator|->
-name|li_number
-operator|==
-literal|0
-condition|)
-break|break;
+comment|/* A particular jail ID, including 0 (not in jail) */
 if|if
 condition|(
 name|kp
@@ -2108,7 +2148,23 @@ operator|->
 name|li_number
 condition|)
 break|break;
-block|}
+comment|/* Any jail */
+if|if
+condition|(
+name|kp
+operator|->
+name|ki_jid
+operator|>
+literal|0
+operator|&&
+name|li
+operator|->
+name|li_number
+operator|==
+operator|-
+literal|1
+condition|)
+break|break;
 block|}
 if|if
 condition|(
@@ -2354,9 +2410,7 @@ name|inverse
 condition|)
 continue|continue;
 name|rv
-operator|=
-literal|1
-expr_stmt|;
+operator||=
 call|(
 modifier|*
 name|action
@@ -2379,6 +2433,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -2401,7 +2456,7 @@ expr_stmt|;
 else|else
 name|ustr
 operator|=
-literal|"[-signal] [-Lfinovx]"
+literal|"[-signal] [-ILfinovx]"
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -2419,57 +2474,18 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|STATUS_ERROR
+name|STATUS_BADUSAGE
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|killact
+name|show_process
 parameter_list|(
-name|struct
-name|kinfo_proc
-modifier|*
-name|kp
-parameter_list|)
-block|{
-if|if
-condition|(
-name|kill
-argument_list|(
-name|kp
-operator|->
-name|ki_pid
-argument_list|,
-name|signum
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-name|STATUS_ERROR
-argument_list|,
-literal|"signalling pid %d"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|kp
-operator|->
-name|ki_pid
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|grepact
-parameter_list|(
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
@@ -2483,7 +2499,12 @@ name|argv
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|longfmt
+operator|||
+operator|!
+name|pgrep
+operator|)
 operator|&&
 name|matchargs
 operator|&&
@@ -2555,6 +2576,9 @@ elseif|else
 if|if
 condition|(
 name|longfmt
+operator|||
+operator|!
+name|pgrep
 condition|)
 name|printf
 argument_list|(
@@ -2585,6 +2609,156 @@ operator|->
 name|ki_pid
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|killact
+parameter_list|(
+specifier|const
+name|struct
+name|kinfo_proc
+modifier|*
+name|kp
+parameter_list|)
+block|{
+name|int
+name|ch
+decl_stmt|,
+name|first
+decl_stmt|;
+if|if
+condition|(
+name|interactive
+condition|)
+block|{
+comment|/* 		 * Be careful, ask before killing. 		 */
+name|printf
+argument_list|(
+literal|"kill "
+argument_list|)
+expr_stmt|;
+name|show_process
+argument_list|(
+name|kp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"? "
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|first
+operator|=
+name|ch
+operator|=
+name|getchar
+argument_list|()
+expr_stmt|;
+while|while
+condition|(
+name|ch
+operator|!=
+literal|'\n'
+operator|&&
+name|ch
+operator|!=
+name|EOF
+condition|)
+name|ch
+operator|=
+name|getchar
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|first
+operator|!=
+literal|'y'
+operator|&&
+name|first
+operator|!=
+literal|'Y'
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|kill
+argument_list|(
+name|kp
+operator|->
+name|ki_pid
+argument_list|,
+name|signum
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/*  		 * Check for ESRCH, which indicates that the process 		 * disappeared between us matching it and us 		 * signalling it; don't issue a warning about it. 		 */
+if|if
+condition|(
+name|errno
+operator|!=
+name|ESRCH
+condition|)
+name|warn
+argument_list|(
+literal|"signalling pid %d"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|kp
+operator|->
+name|ki_pid
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Return 0 to indicate that the process should not be 		 * considered a match, since we didn't actually get to 		 * signal it. 		 */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|grepact
+parameter_list|(
+specifier|const
+name|struct
+name|kinfo_proc
+modifier|*
+name|kp
+parameter_list|)
+block|{
+name|show_process
+argument_list|(
+name|kp
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s"
@@ -2592,10 +2766,16 @@ argument_list|,
 name|delim
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|makelist
 parameter_list|(
@@ -2636,13 +2816,16 @@ specifier|const
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|prefix
 decl_stmt|;
 name|char
 modifier|*
 name|sp
 decl_stmt|,
 modifier|*
-name|p
+name|ep
 decl_stmt|,
 name|buf
 index|[
@@ -2655,6 +2838,10 @@ decl_stmt|;
 name|empty
 operator|=
 literal|1
+expr_stmt|;
+name|prefix
+operator|=
+name|_PATH_DEV
 expr_stmt|;
 while|while
 condition|(
@@ -2700,13 +2887,21 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+block|{
+name|err
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"memory allocation failure"
+literal|"Cannot allocate %zu bytes"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|li
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|SLIST_INSERT_HEAD
 argument_list|(
 name|head
@@ -2732,7 +2927,7 @@ argument_list|(
 name|sp
 argument_list|,
 operator|&
-name|p
+name|ep
 argument_list|,
 literal|0
 argument_list|)
@@ -2740,7 +2935,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|p
+name|ep
 operator|==
 literal|'\0'
 condition|)
@@ -2791,11 +2986,50 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|LT_JID
+case|:
+if|if
+condition|(
+name|li
+operator|->
+name|li_number
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|STATUS_BADUSAGE
+argument_list|,
+literal|"Negative jail ID `%s'"
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
+comment|/* For compatibility with old -j */
+if|if
+condition|(
+name|li
+operator|->
+name|li_number
+operator|==
+literal|0
+condition|)
+name|li
+operator|->
+name|li_number
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* any jail */
+break|break;
+case|case
 name|LT_TTY
 case|:
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
 default|default:
 break|break;
 block|}
@@ -2826,7 +3060,7 @@ name|errx
 argument_list|(
 name|STATUS_BADUSAGE
 argument_list|,
-literal|"unknown user `%s'"
+literal|"Unknown user `%s'"
 argument_list|,
 name|sp
 argument_list|)
@@ -2860,7 +3094,7 @@ name|errx
 argument_list|(
 name|STATUS_BADUSAGE
 argument_list|,
-literal|"unknown group `%s'"
+literal|"Unknown group `%s'"
 argument_list|,
 name|sp
 argument_list|)
@@ -2910,11 +3144,18 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|cp
 operator|=
 literal|"console"
 expr_stmt|;
-elseif|else
+block|}
+else|else
+block|{
+name|cp
+operator|=
+name|sp
+expr_stmt|;
 if|if
 condition|(
 name|strncmp
@@ -2925,24 +3166,14 @@ literal|"tty"
 argument_list|,
 literal|3
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
-name|cp
+name|prefix
 operator|=
-name|sp
+name|_PATH_TTY
 expr_stmt|;
-else|else
-name|cp
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|==
-name|NULL
-condition|)
+block|}
 name|snprintf
 argument_list|(
 name|buf
@@ -2952,22 +3183,9 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"/dev/tty%s"
+literal|"%s%s"
 argument_list|,
-name|sp
-argument_list|)
-expr_stmt|;
-else|else
-name|snprintf
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-literal|"/dev/%s"
+name|prefix
 argument_list|,
 name|cp
 argument_list|)
@@ -2981,8 +3199,9 @@ argument_list|,
 operator|&
 name|st
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 if|if
@@ -2991,20 +3210,22 @@ name|errno
 operator|==
 name|ENOENT
 condition|)
+block|{
 name|errx
 argument_list|(
 name|STATUS_BADUSAGE
 argument_list|,
-literal|"no such tty: `%s'"
+literal|"No such tty: `%s'"
 argument_list|,
 name|sp
 argument_list|)
 expr_stmt|;
+block|}
 name|err
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"stat(%s)"
+literal|"Cannot access `%s'"
 argument_list|,
 name|sp
 argument_list|)
@@ -3026,7 +3247,7 @@ name|errx
 argument_list|(
 name|STATUS_BADUSAGE
 argument_list|,
-literal|"not a tty: `%s'"
+literal|"Not a tty: `%s'"
 argument_list|,
 name|sp
 argument_list|)
@@ -3040,12 +3261,68 @@ operator|.
 name|st_rdev
 expr_stmt|;
 break|break;
+case|case
+name|LT_JID
+case|:
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|sp
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|li
+operator|->
+name|li_number
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|sp
+argument_list|,
+literal|"any"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|li
+operator|->
+name|li_number
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|ep
+operator|!=
+literal|'\0'
+condition|)
+name|errx
+argument_list|(
+name|STATUS_BADUSAGE
+argument_list|,
+literal|"Invalid jail ID `%s'"
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|usage
 argument_list|()
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 if|if
 condition|(
@@ -3058,6 +3335,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|takepid
 parameter_list|(
@@ -3105,7 +3383,7 @@ name|err
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"can't open pid file `%s'"
+literal|"Cannot open pidfile `%s'"
 argument_list|,
 name|pidfile
 argument_list|)
@@ -3145,7 +3423,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"file '%s' can be locked"
+literal|"File '%s' can be locked"
 argument_list|,
 name|pidfile
 argument_list|)
@@ -3164,7 +3442,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"error while locking file '%s'"
+literal|"Error while locking file '%s'"
 argument_list|,
 name|pidfile
 argument_list|)
@@ -3209,7 +3487,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"pid file `%s' is empty"
+literal|"Pidfile `%s' is empty"
 argument_list|,
 name|pidfile
 argument_list|)
@@ -3227,7 +3505,7 @@ name|err
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"can't read from pid file `%s'"
+literal|"Cannot read from pid file `%s'"
 argument_list|,
 name|pidfile
 argument_list|)
@@ -3275,7 +3553,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"invalid pid in file `%s'"
+literal|"Invalid pid in file `%s'"
 argument_list|,
 name|pidfile
 argument_list|)
@@ -3295,7 +3573,7 @@ name|errx
 argument_list|(
 name|STATUS_ERROR
 argument_list|,
-literal|"invalid pid in file `%s'"
+literal|"Invalid pid in file `%s'"
 argument_list|,
 name|pidfile
 argument_list|)
