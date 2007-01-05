@@ -326,6 +326,10 @@ begin_comment
 comment|/****************************** Misc Definitions ******************************/
 end_comment
 
+begin_comment
+comment|/* #define MPT_TEST_MULTIPATH	1 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1868,6 +1872,7 @@ name|unit
 operator|:
 literal|8
 operator|,
+name|ready
 operator|:
 literal|1
 operator|,
@@ -1941,6 +1946,14 @@ comment|/* role: none, ini, target, both */
 name|u_int
 name|verbose
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MPT_TEST_MULTIPATH
+name|int
+name|failure_id
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * IOC Facts 	 */
 name|MSG_IOC_FACTS_REPLY
 name|ioc_facts

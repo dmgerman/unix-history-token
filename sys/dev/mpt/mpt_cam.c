@@ -3836,6 +3836,12 @@ name|mpt
 argument_list|)
 expr_stmt|;
 block|}
+name|mpt
+operator|->
+name|ready
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -3852,6 +3858,12 @@ block|{
 name|mpt_handler_t
 name|handler
 decl_stmt|;
+name|mpt
+operator|->
+name|ready
+operator|=
+literal|0
+expr_stmt|;
 name|mpt_terminate_recovery_thread
 argument_list|(
 name|mpt
