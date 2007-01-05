@@ -3010,7 +3010,6 @@ operator|)
 return|;
 block|}
 block|}
-block|}
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
@@ -3023,6 +3022,7 @@ argument_list|,
 name|m_qe
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
