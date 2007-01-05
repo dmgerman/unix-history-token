@@ -759,6 +759,22 @@ name|timer_softc
 operator|->
 name|sc_dev
 decl_stmt|;
+name|rel_value
+operator|=
+literal|32768
+operator|/
+name|hz
+expr_stmt|;
+if|if
+condition|(
+name|rel_value
+operator|<
+literal|1
+condition|)
+name|rel_value
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 literal|32768
@@ -768,22 +784,28 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Cannot get %d Hz clock; using 128Hz\n"
+literal|"Cannot get %d Hz clock; using %dHz\n"
 argument_list|,
 name|hz
+argument_list|,
+literal|32768
+operator|/
+name|rel_value
 argument_list|)
 expr_stmt|;
 name|hz
 operator|=
-literal|128
-expr_stmt|;
-block|}
-name|rel_value
-operator|=
 literal|32768
+operator|/
+name|rel_value
+expr_stmt|;
+name|tick
+operator|=
+literal|1000000
 operator|/
 name|hz
 expr_stmt|;
+block|}
 comment|/* Disable all interrupts. */
 name|WR4
 argument_list|(
