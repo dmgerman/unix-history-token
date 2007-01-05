@@ -722,6 +722,7 @@ name|u_char
 name|len
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
