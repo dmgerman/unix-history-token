@@ -9879,6 +9879,33 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * We might have just dropped the last reference to a file 	 * object that is for a UNIX domain socket whose message 	 * buffers are being examined in unp_gc().  If that is the 	 * case, FWAIT will be set in f_gcflag and we need to wait for 	 * unp_gc() to finish its scan. 	 */
+while|while
+condition|(
+name|fp
+operator|->
+name|f_gcflag
+operator|&
+name|FWAIT
+condition|)
+name|msleep
+argument_list|(
+operator|&
+name|fp
+operator|->
+name|f_gcflag
+argument_list|,
+name|fp
+operator|->
+name|f_mtxp
+argument_list|,
+literal|0
+argument_list|,
+literal|"fpdrop"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* We have the last ref so we can proceed without the file lock. */
 name|FILE_UNLOCK
 argument_list|(

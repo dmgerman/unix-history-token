@@ -120,6 +120,9 @@ name|xucred
 name|unp_peercred
 decl_stmt|;
 comment|/* peer credentials, if applicable */
+name|u_int
+name|unp_refcount
+decl_stmt|;
 block|}
 struct|;
 end_struct
