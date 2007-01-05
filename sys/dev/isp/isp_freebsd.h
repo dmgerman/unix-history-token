@@ -383,7 +383,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|uint16_t
+name|void
 modifier|*
 modifier|*
 parameter_list|)
