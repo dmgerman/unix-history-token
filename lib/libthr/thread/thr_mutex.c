@@ -3010,7 +3010,7 @@ operator|)
 return|;
 block|}
 block|}
-name|TAILQ_INSERT_HEAD
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|curthread
