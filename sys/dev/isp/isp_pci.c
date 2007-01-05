@@ -6520,7 +6520,7 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"RISC paused at interrupt (%x->%x\n"
+literal|"RISC paused at interrupt (%x->%x)"
 argument_list|,
 name|hccr
 argument_list|,
@@ -6530,6 +6530,15 @@ name|isp
 argument_list|,
 name|HCCR
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ISP_WRITE
+argument_list|(
+name|isp
+argument_list|,
+name|BIU_ICR
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
