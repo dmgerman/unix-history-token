@@ -228,47 +228,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The following structures represent how the bpb's look on disk.  shorts  * and longs are just character arrays of the appropriate length.  This is  * because the compiler forces shorts and longs to align on word or  * halfword boundaries.  *  * XXX The little-endian code here assumes that the processor can access  * 16-bit and 32-bit quantities on byte boundaries.  If this is not true,  * use the macros for the big-endian case.  */
+comment|/*  * The following structures represent how the bpb's look on disk.  shorts  * and longs are just character arrays of the appropriate length.  This is  * because the compiler forces shorts and longs to align on word or  * halfword boundaries.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<machine/endian.h>
+file|<sys/endian.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|UNLALIGNED_ACCESS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-operator|)
-operator|&&
-name|defined
-argument_list|(
-name|UNALIGNED_ACCESS
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -276,7 +244,7 @@ name|getushort
 parameter_list|(
 name|x
 parameter_list|)
-value|*((u_int16_t *)(x))
+value|le16dec(x)
 end_define
 
 begin_define
@@ -286,7 +254,7 @@ name|getulong
 parameter_list|(
 name|x
 parameter_list|)
-value|*((u_int32_t *)(x))
+value|le32dec(x)
 end_define
 
 begin_define
@@ -298,7 +266,7 @@ name|p
 parameter_list|,
 name|v
 parameter_list|)
-value|(*((u_int16_t *)(p)) = (v))
+value|le16enc(p, v)
 end_define
 
 begin_define
@@ -310,62 +278,8 @@ name|p
 parameter_list|,
 name|v
 parameter_list|)
-value|(*((u_int32_t *)(p)) = (v))
+value|le32enc(p, v)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|getushort
-parameter_list|(
-name|x
-parameter_list|)
-value|(((u_int8_t *)(x))[0] + (((u_int8_t *)(x))[1]<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|getulong
-parameter_list|(
-name|x
-parameter_list|)
-value|(((u_int8_t *)(x))[0] + (((u_int8_t *)(x))[1]<< 8) \ 			 + (((u_int8_t *)(x))[2]<< 16)	\ 			 + (((u_int8_t *)(x))[3]<< 24))
-end_define
-
-begin_define
-define|#
-directive|define
-name|putushort
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-value|(((u_int8_t *)(p))[0] = (v),	\ 			 ((u_int8_t *)(p))[1] = (v)>> 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|putulong
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-value|(((u_int8_t *)(p))[0] = (v),	\ 			 ((u_int8_t *)(p))[1] = (v)>> 8, \ 			 ((u_int8_t *)(p))[2] = (v)>> 16,\ 			 ((u_int8_t *)(p))[3] = (v)>> 24)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * BIOS Parameter Block (BPB) for DOS 3.3  */
