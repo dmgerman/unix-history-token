@@ -245,7 +245,7 @@ value|0xb8
 end_define
 
 begin_comment
-comment|/*  * Config offsets for Intel i820/i840/i845/i850/i860/i865 AGP chipsets.  */
+comment|/*  * Config offsets for Intel i8xx/E7xxx AGP chipsets.  */
 end_comment
 
 begin_define
@@ -265,7 +265,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AGP_INTEL_I845_MCHCFG
+name|AGP_INTEL_I845_AGPM
 value|0x51
 end_define
 

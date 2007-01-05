@@ -545,51 +545,12 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Enable things, clear errors etc. */
+comment|/* Enable aperture accesses. */
 switch|switch
 condition|(
 name|type
 condition|)
 block|{
-case|case
-literal|0x1a218086
-case|:
-comment|/* i840 */
-case|case
-literal|0x25308086
-case|:
-comment|/* i850 */
-case|case
-literal|0x25318086
-case|:
-comment|/* i860 */
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|AGP_INTEL_MCHCFG
-argument_list|,
-operator|(
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|AGP_INTEL_MCHCFG
-argument_list|,
-literal|2
-argument_list|)
-operator||
-operator|(
-literal|1
-operator|<<
-literal|9
-operator|)
-operator|)
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 literal|0x25008086
 case|:
@@ -630,6 +591,10 @@ literal|0x1a308086
 case|:
 comment|/* i845 */
 case|case
+literal|0x25608086
+case|:
+comment|/* i845G */
+case|case
 literal|0x33408086
 case|:
 comment|/* i855 */
@@ -638,14 +603,6 @@ literal|0x35808086
 case|:
 comment|/* i855GM */
 case|case
-literal|0x255d8086
-case|:
-comment|/* E7205 */
-case|case
-literal|0x25508086
-case|:
-comment|/* E7505 */
-case|case
 literal|0x25708086
 case|:
 comment|/* i865 */
@@ -653,22 +610,18 @@ case|case
 literal|0x25788086
 case|:
 comment|/* i875P */
-case|case
-literal|0x25608086
-case|:
-comment|/* i845G */
 name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
-name|AGP_INTEL_I845_MCHCFG
+name|AGP_INTEL_I845_AGPM
 argument_list|,
 operator|(
 name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
-name|AGP_INTEL_I845_MCHCFG
+name|AGP_INTEL_I845_AGPM
 argument_list|,
 literal|1
 argument_list|)
@@ -681,6 +634,53 @@ operator|)
 operator|)
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x1a218086
+case|:
+comment|/* i840 */
+case|case
+literal|0x25308086
+case|:
+comment|/* i850 */
+case|case
+literal|0x25318086
+case|:
+comment|/* i860 */
+case|case
+literal|0x255d8086
+case|:
+comment|/* E7205 */
+case|case
+literal|0x25508086
+case|:
+comment|/* E7505 */
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|AGP_INTEL_MCHCFG
+argument_list|,
+operator|(
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|AGP_INTEL_MCHCFG
+argument_list|,
+literal|2
+argument_list|)
+operator||
+operator|(
+literal|1
+operator|<<
+literal|9
+operator|)
+operator|)
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 break|break;
@@ -720,6 +720,7 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Clear errors. */
 switch|switch
 condition|(
 name|type
@@ -754,6 +755,10 @@ literal|0x1a308086
 case|:
 comment|/* i845 */
 case|case
+literal|0x25608086
+case|:
+comment|/* i845G */
+case|case
 literal|0x25308086
 case|:
 comment|/* i850 */
@@ -761,14 +766,6 @@ case|case
 literal|0x33408086
 case|:
 comment|/* i855 */
-case|case
-literal|0x255d8086
-case|:
-comment|/* E7205 */
-case|case
-literal|0x25508086
-case|:
-comment|/* E7505 */
 case|case
 literal|0x25318086
 case|:
@@ -782,9 +779,13 @@ literal|0x25788086
 case|:
 comment|/* i875P */
 case|case
-literal|0x25608086
+literal|0x255d8086
 case|:
-comment|/* i845G */
+comment|/* E7205 */
+case|case
+literal|0x25508086
+case|:
+comment|/* E7505 */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -1001,6 +1002,9 @@ name|agp_intel_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|u_int32_t
+name|reg
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1027,6 +1031,7 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* Disable aperture accesses. */
 switch|switch
 condition|(
 name|pci_get_devid
@@ -1036,74 +1041,6 @@ argument_list|)
 condition|)
 block|{
 case|case
-literal|0x1a218086
-case|:
-comment|/* i840 */
-case|case
-literal|0x25308086
-case|:
-comment|/* i850 */
-case|case
-literal|0x25318086
-case|:
-comment|/* i860 */
-name|printf
-argument_list|(
-literal|"%s: set MCHCFG to %x\n"
-argument_list|,
-name|__func__
-argument_list|,
-call|(
-name|unsigned
-call|)
-argument_list|(
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|AGP_INTEL_MCHCFG
-argument_list|,
-literal|2
-argument_list|)
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-literal|9
-operator|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|AGP_INTEL_MCHCFG
-argument_list|,
-operator|(
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|AGP_INTEL_MCHCFG
-argument_list|,
-literal|2
-argument_list|)
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-literal|9
-operator|)
-operator|)
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* FALLTHRU */
-case|case
 literal|0x25008086
 case|:
 comment|/* i820 */
@@ -1111,16 +1048,8 @@ case|case
 literal|0x25018086
 case|:
 comment|/* i820 */
-name|printf
-argument_list|(
-literal|"%s: set RDCR to %x\n"
-argument_list|,
-name|__func__
-argument_list|,
-call|(
-name|unsigned
-call|)
-argument_list|(
+name|reg
+operator|=
 name|pci_read_config
 argument_list|(
 name|dev
@@ -1136,7 +1065,16 @@ literal|1
 operator|<<
 literal|1
 operator|)
-argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s: set RDCR to %02x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|reg
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 name|pci_write_config
@@ -1145,28 +1083,12 @@ name|dev
 argument_list|,
 name|AGP_INTEL_I820_RDCR
 argument_list|,
-operator|(
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|AGP_INTEL_I820_RDCR
-argument_list|,
-literal|1
-argument_list|)
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-literal|1
-operator|)
-operator|)
+name|reg
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* FALLTHRU */
+break|break;
 case|case
 literal|0x1a308086
 case|:
@@ -1184,14 +1106,6 @@ literal|0x35808086
 case|:
 comment|/* i855GM */
 case|case
-literal|0x255d8086
-case|:
-comment|/* E7205 */
-case|case
-literal|0x25508086
-case|:
-comment|/* E7505 */
-case|case
 literal|0x25708086
 case|:
 comment|/* i865 */
@@ -1199,21 +1113,13 @@ case|case
 literal|0x25788086
 case|:
 comment|/* i875P */
-name|printf
-argument_list|(
-literal|"%s: set MCHCFG to %x\n"
-argument_list|,
-name|__func__
-argument_list|,
-call|(
-name|unsigned
-call|)
-argument_list|(
+name|reg
+operator|=
 name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
-name|AGP_INTEL_I845_MCHCFG
+name|AGP_INTEL_I845_AGPM
 argument_list|,
 literal|1
 argument_list|)
@@ -1224,7 +1130,77 @@ literal|1
 operator|<<
 literal|1
 operator|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s: set AGPM to %02x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|reg
+operator|&
+literal|0xff
 argument_list|)
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|AGP_INTEL_I845_AGPM
+argument_list|,
+name|reg
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x1a218086
+case|:
+comment|/* i840 */
+case|case
+literal|0x25308086
+case|:
+comment|/* i850 */
+case|case
+literal|0x25318086
+case|:
+comment|/* i860 */
+case|case
+literal|0x255d8086
+case|:
+comment|/* E7205 */
+case|case
+literal|0x25508086
+case|:
+comment|/* E7505 */
+name|reg
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|AGP_INTEL_MCHCFG
+argument_list|,
+literal|2
+argument_list|)
+operator|&
+operator|~
+operator|(
+literal|1
+operator|<<
+literal|9
+operator|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s: set MCHCFG to %x04\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|reg
+operator|&
+literal|0xffff
 argument_list|)
 expr_stmt|;
 name|pci_write_config
@@ -1233,37 +1209,16 @@ name|dev
 argument_list|,
 name|AGP_INTEL_MCHCFG
 argument_list|,
-operator|(
-name|pci_read_config
-argument_list|(
-name|dev
+name|reg
 argument_list|,
-name|AGP_INTEL_I845_MCHCFG
-argument_list|,
-literal|1
-argument_list|)
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-literal|1
-operator|)
-operator|)
-argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
-comment|/* FALLTHRU */
+break|break;
 default|default:
 comment|/* Intel Generic (maybe) */
-name|printf
-argument_list|(
-literal|"%s: set NBXCFG to %x\n"
-argument_list|,
-name|__func__
-argument_list|,
-operator|(
+name|reg
+operator|=
 name|pci_read_config
 argument_list|(
 name|dev
@@ -1279,7 +1234,14 @@ literal|1
 operator|<<
 literal|9
 operator|)
-operator|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s: set NBXCFG to %08x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|reg
 argument_list|)
 expr_stmt|;
 name|pci_write_config
@@ -1288,23 +1250,7 @@ name|dev
 argument_list|,
 name|AGP_INTEL_NBXCFG
 argument_list|,
-operator|(
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|AGP_INTEL_NBXCFG
-argument_list|,
-literal|4
-argument_list|)
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-literal|9
-operator|)
-operator|)
+name|reg
 argument_list|,
 literal|4
 argument_list|)
