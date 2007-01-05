@@ -213,16 +213,6 @@ modifier|*
 name|envp
 parameter_list|)
 block|{
-name|int
-name|control
-decl_stmt|;
-comment|/* 	 * fnstenv masks all exceptions, so we need to save and 	 * restore the control word to avoid this side effect. 	 */
-name|__fnstcw
-argument_list|(
-operator|&
-name|control
-argument_list|)
-expr_stmt|;
 name|__fnstenv
 argument_list|(
 operator|&
@@ -239,9 +229,14 @@ operator|->
 name|__mxcsr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * fnstenv masks all exceptions, so we need to restore the 	 * control word to avoid this side effect. 	 */
 name|__fldcw
 argument_list|(
-name|control
+name|envp
+operator|->
+name|__x87
+operator|.
+name|__control
 argument_list|)
 expr_stmt|;
 return|return
