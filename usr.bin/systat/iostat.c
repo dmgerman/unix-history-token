@@ -239,13 +239,13 @@ name|stdscr
 argument_list|,
 name|LINES
 operator|-
-literal|1
+literal|3
 operator|-
-literal|5
+literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|5
+name|MAINWIN_ROW
 argument_list|,
 literal|0
 argument_list|)
@@ -597,7 +597,7 @@ operator|++
 argument_list|,
 name|INSET
 argument_list|,
-literal|"/0   /10  /20  /30  /40  /50  /60  /70  /80  /90  /100"
+literal|"/0%  /10  /20  /30  /40  /50  /60  /70  /80  /90  /100"
 argument_list|)
 expr_stmt|;
 name|mvwaddstr
@@ -949,7 +949,7 @@ operator|++
 argument_list|,
 name|INSET
 argument_list|,
-literal|"/0   /10  /20  /30  /40  /50  /60  /70  /80  /90  /100"
+literal|"/0%  /10  /20  /30  /40  /50  /60  /70  /80  /90  /100"
 argument_list|)
 expr_stmt|;
 name|linesperregion

@@ -459,7 +459,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/*  		 * Try to actually read something, we may be in a jail, and 		 * have /dev/null opened as /dev/mem. 		 */
+comment|/* 		 * Try to actually read something, we may be in a jail, and 		 * have /dev/null opened as /dev/mem. 		 */
 if|if
 condition|(
 name|kvm_nlist
@@ -524,7 +524,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/*  		 * Maybe we are lacking permissions? Retry, this time with bogus 		 * devices. We can now use sysctl only. 		 */
+comment|/* 		 * Maybe we are lacking permissions? Retry, this time with bogus 		 * devices. We can now use sysctl only. 		 */
 name|use_kvm
 operator|=
 literal|0
@@ -632,7 +632,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|3
+literal|1
 argument_list|,
 literal|20
 argument_list|)
@@ -779,7 +779,7 @@ condition|)
 block|{
 name|mvaddstr
 argument_list|(
-literal|2
+literal|0
 argument_list|,
 literal|20
 argument_list|,
@@ -788,7 +788,7 @@ argument_list|)
 expr_stmt|;
 name|mvaddstr
 argument_list|(
-literal|3
+literal|1
 argument_list|,
 literal|5
 argument_list|,

@@ -201,13 +201,13 @@ name|stdscr
 argument_list|,
 name|LINES
 operator|-
-literal|5
+literal|3
 operator|-
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|5
+name|MAINWIN_ROW
 argument_list|,
 literal|0
 argument_list|)

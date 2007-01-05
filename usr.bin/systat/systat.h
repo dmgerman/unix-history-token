@@ -116,7 +116,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * If we are started with privileges, use a kmem interface for netstat handling,  * otherwise use sysctl.  * In case of many open sockets, the sysctl handling might become slow.  */
+comment|/*  * If we are started with privileges, use a kmem interface for netstat handling,  * otherwise use sysctl.  * In case of many open sockets, the sysctl handling might become slow.  */
 end_comment
 
 begin_decl_stmt
@@ -161,6 +161,17 @@ directive|define
 name|UDP
 value|0x2
 end_define
+
+begin_define
+define|#
+directive|define
+name|MAINWIN_ROW
+value|3
+end_define
+
+begin_comment
+comment|/* top row for the main/lower window */
+end_comment
 
 begin_define
 define|#

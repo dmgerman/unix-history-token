@@ -24,18 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -48,22 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_types.h>
-end_include
-
-begin_comment
-comment|/* For IFT_ETHER */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -71,18 +43,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<float.h>
 end_include
 
 begin_include
@@ -101,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|"extern.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mode.h"
 end_include
 
 begin_include
@@ -327,7 +281,6 @@ specifier|static
 name|void
 name|right_align_string
 parameter_list|(
-specifier|const
 name|struct
 name|if_stat
 modifier|*
@@ -386,22 +339,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|STARTING_ROW
-value|(8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ROW_SPACING
-value|(3)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TOPLINE
-value|5
+value|3
 end_define
 
 begin_define
@@ -410,6 +349,20 @@ directive|define
 name|TOPLABEL
 define|\
 value|"      Interface           Traffic               Peak                Total"
+end_define
+
+begin_define
+define|#
+directive|define
+name|STARTING_ROW
+value|(TOPLINE + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ROW_SPACING
+value|(3)
 end_define
 
 begin_define
@@ -563,13 +516,13 @@ name|stdscr
 argument_list|,
 name|LINES
 operator|-
-literal|1
+literal|3
 operator|-
-literal|5
+literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|5
+name|MAINWIN_ROW
 argument_list|,
 literal|0
 argument_list|)
@@ -897,7 +850,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Initially, we only display interfaces that have 		 * received some traffic. 		 */
+comment|/* 		 * Initially, we only display interfaces that have 		 * received some traffic. 		 */
 if|if
 condition|(
 name|p
@@ -978,7 +931,7 @@ argument_list|,
 argument|link
 argument_list|)
 block|{
-comment|/*  		 * Grab a copy of the old input/output values before we 		 * call getifmibdata(). 		 */
+comment|/* 		 * Grab a copy of the old input/output values before we 		 * call getifmibdata(). 		 */
 name|old_inb
 operator|=
 name|ifp
@@ -1223,7 +1176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * We want to right justify our interface names against the first column  * (first sixteen or so characters), so we need to do some alignment.  */
+comment|/*  * We want to right justify our interface names against the first column  * (first sixteen or so characters), so we need to do some alignment.  */
 end_comment
 
 begin_function
@@ -1231,7 +1184,6 @@ specifier|static
 name|void
 name|right_align_string
 parameter_list|(
-specifier|const
 name|struct
 name|if_stat
 modifier|*
@@ -1299,10 +1251,6 @@ operator|)
 expr_stmt|;
 name|newstr
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|ifp
 operator|->
 name|if_name

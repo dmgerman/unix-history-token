@@ -411,13 +411,13 @@ name|stdscr
 argument_list|,
 name|LINES
 operator|-
-literal|5
+literal|3
 operator|-
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|5
+name|MAINWIN_ROW
 argument_list|,
 literal|0
 argument_list|)
@@ -629,6 +629,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|char
+name|tcb
+index|[]
+init|=
+literal|"tcb"
+decl_stmt|,
+name|udb
+index|[]
+init|=
+literal|"udb"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|nlist
 name|namelist
@@ -640,7 +655,10 @@ directive|define
 name|X_TCB
 value|0
 block|{
-literal|"tcb"
+operator|.
+name|n_name
+operator|=
+name|tcb
 block|}
 block|,
 define|#
@@ -648,11 +666,17 @@ directive|define
 name|X_UDB
 value|1
 block|{
-literal|"udb"
+operator|.
+name|n_name
+operator|=
+name|udb
 block|}
 block|,
 block|{
-literal|""
+operator|.
+name|n_name
+operator|=
+name|NULL
 block|}
 block|, }
 decl_stmt|;
@@ -1109,11 +1133,15 @@ name|struct
 name|xinpcb
 modifier|*
 name|xip
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|xtcpcb
 modifier|*
 name|xtp
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|plen
@@ -1231,7 +1259,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/*  		 * We currently do no require a consistent pcb list. 		 * Try to be robust in case of struct size changes  		 */
+comment|/* 		 * We currently do no require a consistent pcb list. 		 * Try to be robust in case of struct size changes 		 */
 name|cur
 operator|=
 operator|(
@@ -2339,7 +2367,9 @@ name|proto
 index|[
 literal|6
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|family
 init|=

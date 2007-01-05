@@ -146,7 +146,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*- --0         1         2         3         4         5         6         7 --0123456789012345678901234567890123456789012345678901234567890123456789012345 01        IPv6 Input                         IPv6 Output 029999999 total packets received   999999999 total packets sent 039999999 - too short for header   999999999 - generated locally 049999999 - too short for data     999999999 - output drops 059999999 - with invalid version   999999999 output fragments generated 069999999 total fragments received 999999999 - fragmentation failed 079999999 - fragments dropped      999999999 destinations unreachable 089999999 - fragments timed out    999999999 packets output via raw IP 099999999 - fragments overflown              Input next-header histogram 109999999 - packets reassembled ok 999999999  - destination options 119999999 packets forwarded        999999999  - hop-by-hop options 129999999 - unreachable dests      999999999  - IPv4 139999999 - redirects generated    999999999  - TCP 149999999 option errors            999999999  - UDP 159999999 unwanted multicasts      999999999  - IPv6 169999999 delivered to upper layer 999999999  - routing header 17                                 999999999  - fragmentation header 189999999 bad scope packets        999999999  - ICMP6 199999999 address selection failed 999999999  - none --0123456789012345678901234567890123456789012345678901234567890123456789012345 --0         1         2         3         4         5         6         7 */
+comment|/*- --0         1         2         3         4         5         6         7 --0123456789012345678901234567890123456789012345678901234567890123456789012345 00        IPv6 Input                         IPv6 Output 019999999 total packets received   999999999 total packets sent 029999999 - too short for header   999999999 - generated locally 039999999 - too short for data     999999999 - output drops 049999999 - with invalid version   999999999 output fragments generated 059999999 total fragments received 999999999 - fragmentation failed 069999999 - fragments dropped      999999999 destinations unreachable 079999999 - fragments timed out    999999999 packets output via raw IP 089999999 - fragments overflown 099999999 - packets reassembled ok           Input next-header histogram 109999999 packets forwarded        999999999  - destination options 119999999 - unreachable dests      999999999  - hop-by-hop options 129999999 - redirects generated    999999999  - IPv4 139999999 option errors            999999999  - TCP 149999999 unwanted multicasts      999999999  - UDP 159999999 delivered to upper layer 999999999  - IPv6 169999999 bad scope packets        999999999  - routing header 179999999 address selection failed 999999999  - fragmentation header 18                                 999999999  - ICMP6 19                                 999999999  - none --0123456789012345678901234567890123456789012345678901234567890123456789012345 --0         1         2         3         4         5         6         7 */
 end_comment
 
 begin_function
@@ -165,13 +165,13 @@ name|stdscr
 argument_list|,
 name|LINES
 operator|-
-literal|4
+literal|3
 operator|-
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|4
+name|MAINWIN_ROW
 argument_list|,
 literal|0
 argument_list|)
@@ -257,121 +257,128 @@ parameter_list|)
 value|mvwprintw(wnd, row, 45, str);
 name|L
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|"IPv6 Input"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|"IPv6 Output"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 literal|"total packets received"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 literal|"total packets sent"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|3
+literal|2
 argument_list|,
 literal|"- too short for header"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|3
+literal|2
 argument_list|,
 literal|"- generated locally"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|4
+literal|3
 argument_list|,
 literal|"- too short for data"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|4
+literal|3
 argument_list|,
 literal|"- output drops"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|5
+literal|4
 argument_list|,
 literal|"- with invalid version"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|5
+literal|4
 argument_list|,
 literal|"output fragments generated"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|6
+literal|5
 argument_list|,
 literal|"total fragments received"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|6
+literal|5
 argument_list|,
 literal|"- fragmentation failed"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|7
+literal|6
 argument_list|,
 literal|"- fragments dropped"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|7
+literal|6
 argument_list|,
 literal|"destinations unreachable"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|8
+literal|7
 argument_list|,
 literal|"- fragments timed out"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|8
+literal|7
 argument_list|,
 literal|"packets output via raw IP"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"- fragments overflown"
+argument_list|)
+expr_stmt|;
+name|L
+argument_list|(
+literal|9
+argument_list|,
+literal|"- packets reassembled ok"
 argument_list|)
 expr_stmt|;
 name|R
@@ -385,7 +392,7 @@ name|L
 argument_list|(
 literal|10
 argument_list|,
-literal|"- packets reassembled ok"
+literal|"packets forwarded"
 argument_list|)
 expr_stmt|;
 name|R
@@ -399,7 +406,7 @@ name|L
 argument_list|(
 literal|11
 argument_list|,
-literal|"packets forwarded"
+literal|"- unreachable dests"
 argument_list|)
 expr_stmt|;
 name|R
@@ -413,7 +420,7 @@ name|L
 argument_list|(
 literal|12
 argument_list|,
-literal|"- unreachable dests"
+literal|"- redirects generated"
 argument_list|)
 expr_stmt|;
 name|R
@@ -427,7 +434,7 @@ name|L
 argument_list|(
 literal|13
 argument_list|,
-literal|"- redirects generated"
+literal|"option errors"
 argument_list|)
 expr_stmt|;
 name|R
@@ -441,7 +448,7 @@ name|L
 argument_list|(
 literal|14
 argument_list|,
-literal|"option errors"
+literal|"unwanted multicasts"
 argument_list|)
 expr_stmt|;
 name|R
@@ -455,7 +462,7 @@ name|L
 argument_list|(
 literal|15
 argument_list|,
-literal|"unwanted multicasts"
+literal|"delivered to upper layer"
 argument_list|)
 expr_stmt|;
 name|R
@@ -469,7 +476,7 @@ name|L
 argument_list|(
 literal|16
 argument_list|,
-literal|"delivered to upper layer"
+literal|"bad scope packets"
 argument_list|)
 expr_stmt|;
 name|R
@@ -479,6 +486,13 @@ argument_list|,
 literal|" - routing header"
 argument_list|)
 expr_stmt|;
+name|L
+argument_list|(
+literal|17
+argument_list|,
+literal|"address selection failed"
+argument_list|)
+expr_stmt|;
 name|R
 argument_list|(
 literal|17
@@ -486,25 +500,11 @@ argument_list|,
 literal|" - fragmentation header"
 argument_list|)
 expr_stmt|;
-name|L
-argument_list|(
-literal|18
-argument_list|,
-literal|"bad scope packets"
-argument_list|)
-expr_stmt|;
 name|R
 argument_list|(
 literal|18
 argument_list|,
 literal|" - ICMP6"
-argument_list|)
-expr_stmt|;
-name|L
-argument_list|(
-literal|19
-argument_list|,
-literal|"address selection failed"
 argument_list|)
 expr_stmt|;
 name|R
@@ -791,7 +791,7 @@ name|DO
 argument_list|(
 name|ip6s_total
 argument_list|,
-literal|2
+literal|1
 argument_list|,
 literal|0
 argument_list|)
@@ -800,7 +800,7 @@ name|mvwprintw
 argument_list|(
 name|wnd
 argument_list|,
-literal|2
+literal|1
 argument_list|,
 literal|35
 argument_list|,
@@ -811,16 +811,25 @@ argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
+name|ip6s_tooshort
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|DO
+argument_list|(
 name|ip6s_localout
 argument_list|,
-literal|3
+literal|2
 argument_list|,
 literal|35
 argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_tooshort
+name|ip6s_toosmall
 argument_list|,
 literal|3
 argument_list|,
@@ -831,14 +840,14 @@ name|DO
 argument_list|(
 name|ip6s_odropped
 argument_list|,
-literal|4
+literal|3
 argument_list|,
 literal|35
 argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_toosmall
+name|ip6s_badvers
 argument_list|,
 literal|4
 argument_list|,
@@ -849,14 +858,14 @@ name|DO
 argument_list|(
 name|ip6s_ofragments
 argument_list|,
-literal|5
+literal|4
 argument_list|,
 literal|35
 argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_badvers
+name|ip6s_fragments
 argument_list|,
 literal|5
 argument_list|,
@@ -867,14 +876,14 @@ name|DO
 argument_list|(
 name|ip6s_cantfrag
 argument_list|,
-literal|6
+literal|5
 argument_list|,
 literal|35
 argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_fragments
+name|ip6s_fragdropped
 argument_list|,
 literal|6
 argument_list|,
@@ -885,14 +894,14 @@ name|DO
 argument_list|(
 name|ip6s_noroute
 argument_list|,
-literal|7
+literal|6
 argument_list|,
 literal|35
 argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_fragdropped
+name|ip6s_fragtimeout
 argument_list|,
 literal|7
 argument_list|,
@@ -903,14 +912,14 @@ name|DO
 argument_list|(
 name|ip6s_rawout
 argument_list|,
-literal|8
+literal|7
 argument_list|,
 literal|35
 argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_fragtimeout
+name|ip6s_fragoverflow
 argument_list|,
 literal|8
 argument_list|,
@@ -919,9 +928,18 @@ argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_fragoverflow
+name|ip6s_reassembled
 argument_list|,
 literal|9
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|DO
+argument_list|(
+name|ip6s_forward
+argument_list|,
+literal|10
 argument_list|,
 literal|0
 argument_list|)
@@ -940,9 +958,9 @@ argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_reassembled
+name|ip6s_cantforward
 argument_list|,
-literal|10
+literal|11
 argument_list|,
 literal|0
 argument_list|)
@@ -961,9 +979,9 @@ argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_forward
+name|ip6s_redirectsent
 argument_list|,
-literal|11
+literal|12
 argument_list|,
 literal|0
 argument_list|)
@@ -982,9 +1000,9 @@ argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_cantforward
+name|ip6s_badoptions
 argument_list|,
-literal|12
+literal|13
 argument_list|,
 literal|0
 argument_list|)
@@ -1003,9 +1021,9 @@ argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_redirectsent
+name|ip6s_notmember
 argument_list|,
-literal|13
+literal|14
 argument_list|,
 literal|0
 argument_list|)
@@ -1024,9 +1042,9 @@ argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_badoptions
+name|ip6s_delivered
 argument_list|,
-literal|14
+literal|15
 argument_list|,
 literal|0
 argument_list|)
@@ -1045,9 +1063,9 @@ argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_notmember
+name|ip6s_badscope
 argument_list|,
-literal|15
+literal|16
 argument_list|,
 literal|0
 argument_list|)
@@ -1066,9 +1084,9 @@ argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_delivered
+name|ip6s_sources_none
 argument_list|,
-literal|16
+literal|17
 argument_list|,
 literal|0
 argument_list|)
@@ -1099,15 +1117,6 @@ argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|ip6s_badscope
-argument_list|,
-literal|18
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|DO
-argument_list|(
 name|ip6s_nxthist
 index|[
 name|IPPROTO_NONE
@@ -1116,15 +1125,6 @@ argument_list|,
 literal|19
 argument_list|,
 literal|35
-argument_list|)
-expr_stmt|;
-name|DO
-argument_list|(
-name|ip6s_sources_none
-argument_list|,
-literal|19
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 undef|#
