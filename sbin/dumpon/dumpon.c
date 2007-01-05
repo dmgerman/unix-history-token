@@ -194,11 +194,15 @@ name|size_t
 name|namelen
 init|=
 sizeof|sizeof
+argument_list|(
 name|name
+argument_list|)
 operator|/
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|name
+argument_list|)
 decl_stmt|;
 name|unsigned
 name|long
@@ -216,7 +220,9 @@ decl_stmt|;
 name|len
 operator|=
 sizeof|sizeof
+argument_list|(
 name|minidump
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -245,7 +251,9 @@ return|return;
 name|len
 operator|=
 sizeof|sizeof
+argument_list|(
 name|physmem
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
