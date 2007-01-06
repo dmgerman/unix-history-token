@@ -51,7 +51,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Also merged:  *  $NetBSD: uaudio.c,v 1.94 2005/01/15 15:19:53 kent Exp $  *  $NetBSD: uaudio.c,v 1.95 2005/01/16 06:02:19 dsainty Exp $  *  $NetBSD: uaudio.c,v 1.96 2005/01/16 12:46:00 kent Exp $  *  $NetBSD: uaudio.c,v 1.97 2005/02/24 08:19:38 martin Exp $  */
+comment|/*  * Also merged:  *  $NetBSD: uaudio.c,v 1.94 2005/01/15 15:19:53 kent Exp $  *  $NetBSD: uaudio.c,v 1.95 2005/01/16 06:02:19 dsainty Exp $  *  $NetBSD: uaudio.c,v 1.96 2005/01/16 12:46:00 kent Exp $  *  $NetBSD: uaudio.c,v 1.97 2005/02/24 08:19:38 martin Exp $  *  $NetBSD: uaudio.c,v 1.102 2006/04/14 17:00:55 christos Exp $  *  $NetBSD: uaudio.c,v 1.103 2006/05/11 19:09:25 mrg Exp $  *  $NetBSD: uaudio.c,v 1.105 2006/10/04 16:00:15 christos Exp $  */
 end_comment
 
 begin_include
@@ -11217,6 +11217,9 @@ condition|)
 return|return
 name|USBD_INVAL
 return|;
+ifdef|#
+directive|ifdef
+name|UAUDIO_MULTIPLE_ENDPOINTS
 if|if
 condition|(
 name|sync
@@ -11244,6 +11247,8 @@ return|return
 name|USBD_INVAL
 return|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -12007,6 +12012,12 @@ operator|.
 name|sc_busy
 operator|=
 literal|0
+expr_stmt|;
+name|ai
+operator|.
+name|ifaceh
+operator|=
+name|NULL
 expr_stmt|;
 name|uaudio_add_alt
 argument_list|(
@@ -17220,6 +17231,7 @@ if|if
 condition|(
 name|err
 condition|)
+block|{
 name|DPRINTF
 argument_list|(
 operator|(
@@ -17232,6 +17244,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|ch
 operator|->
