@@ -391,7 +391,7 @@ name|SCHED_TICK_TOTAL
 parameter_list|(
 name|ts
 parameter_list|)
-value|((ts)->ts_ltick - (ts)->ts_ftick)
+value|(max((ts)->ts_ltick - (ts)->ts_ftick, hz))
 end_define
 
 begin_comment
