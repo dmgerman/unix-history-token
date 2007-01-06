@@ -228,6 +228,25 @@ comment|/* no fraction part */
 name|u_int32_t
 name|high
 decl_stmt|;
+if|if
+condition|(
+name|j0
+operator|==
+literal|0x400
+condition|)
+block|{
+comment|/* inf/NaN */
+operator|*
+name|iptr
+operator|=
+name|x
+expr_stmt|;
+return|return
+literal|0.0
+operator|/
+name|x
+return|;
+block|}
 operator|*
 name|iptr
 operator|=
