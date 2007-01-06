@@ -1776,6 +1776,7 @@ name|struct
 name|ieee80211com
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|ieee80211_channel
 modifier|*
