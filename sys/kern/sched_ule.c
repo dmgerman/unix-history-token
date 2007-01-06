@@ -3353,8 +3353,8 @@ operator|->
 name|ts_thread
 operator|->
 name|td_priority
-operator|>=
-name|PRI_MIN_TIMESHARE
+operator|>
+name|PRI_MIN_KERN
 condition|)
 return|return;
 comment|/* 	 * Without sched_lock we could lose a race where we set NEEDRESCHED 	 * on a thread that is switched out before the IPI is delivered.  This 	 * would lead us to miss the resched.  This will be a problem once 	 * sched_lock is pushed down. 	 */
