@@ -2341,7 +2341,14 @@ name|so_pcb
 operator|==
 name|NULL
 condition|)
+block|{
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|ar
 operator|->
 name|k_ar
