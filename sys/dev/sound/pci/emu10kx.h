@@ -56,20 +56,16 @@ name|NUM_G
 value|64
 end_define
 
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_comment
-comment|/*    * There are some problems when EMU_PLAY_BUFSZ is larger then EMU_PAGESIZE   *  1) there is a sound lag, because first round of playback is silence   *  2) the end of large file (equal to the lag duration) is lost   *  3) as a result of 1) and 2) no sound at all, when file size is less than    *    EMU_PLAY_BUFSZ (it plays silence and then stops)   */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|EMU_PLAY_BUFSZ
-value|EMUPAGESIZE
+value|EMUPAGESIZE*16
 end_define
+
+begin_comment
+comment|/* Recording is limited by EMUPAGESIZE*16=64K buffer */
+end_comment
 
 begin_define
 define|#
@@ -146,6 +142,20 @@ define|#
 directive|define
 name|RT_SIDE
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_MCHRECORD
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_COUNT
+value|6
 end_define
 
 begin_comment
