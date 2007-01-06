@@ -1490,6 +1490,7 @@ name|ieee80211com
 modifier|*
 name|ic
 parameter_list|,
+specifier|const
 name|struct
 name|ieee80211_channel
 modifier|*
