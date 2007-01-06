@@ -88,9 +88,10 @@ name|struct
 name|mq_attr
 name|attr
 decl_stmt|;
-name|int
+name|mqd_t
 name|mq
-decl_stmt|,
+decl_stmt|;
+name|int
 name|status
 decl_stmt|,
 name|pid
@@ -134,6 +135,9 @@ if|if
 condition|(
 name|mq
 operator|==
+operator|(
+name|mqd_t
+operator|)
 operator|-
 literal|1
 condition|)
@@ -214,6 +218,9 @@ if|if
 condition|(
 name|mq
 operator|==
+operator|(
+name|mqd_t
+operator|)
 operator|-
 literal|1
 condition|)

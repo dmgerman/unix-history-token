@@ -90,9 +90,10 @@ name|int
 name|main
 parameter_list|()
 block|{
-name|int
+name|mqd_t
 name|mq
-decl_stmt|,
+decl_stmt|;
+name|int
 name|status
 decl_stmt|;
 name|struct
@@ -144,6 +145,9 @@ if|if
 condition|(
 name|mq
 operator|==
+operator|(
+name|mqd_t
+operator|)
 operator|-
 literal|1
 condition|)
@@ -224,6 +228,9 @@ if|if
 condition|(
 name|mq
 operator|==
+operator|(
+name|mqd_t
+operator|)
 operator|-
 literal|1
 condition|)
@@ -265,7 +272,10 @@ argument_list|)
 expr_stmt|;
 name|FD_SET
 argument_list|(
+name|__mq_oshandle
+argument_list|(
 name|mq
+argument_list|)
 argument_list|,
 operator|&
 name|set
@@ -280,7 +290,10 @@ name|status
 operator|=
 name|select
 argument_list|(
+name|__mq_oshandle
+argument_list|(
 name|mq
+argument_list|)
 operator|+
 literal|1
 argument_list|,
@@ -502,7 +515,10 @@ argument_list|)
 expr_stmt|;
 name|FD_SET
 argument_list|(
+name|__mq_oshandle
+argument_list|(
 name|mq
+argument_list|)
 argument_list|,
 operator|&
 name|set
@@ -512,7 +528,10 @@ name|status
 operator|=
 name|select
 argument_list|(
+name|__mq_oshandle
+argument_list|(
 name|mq
+argument_list|)
 operator|+
 literal|1
 argument_list|,

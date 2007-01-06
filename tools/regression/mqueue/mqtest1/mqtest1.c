@@ -55,7 +55,7 @@ name|struct
 name|sigevent
 name|sigev
 decl_stmt|;
-name|int
+name|mqd_t
 name|mq
 decl_stmt|;
 name|int
@@ -95,6 +95,9 @@ if|if
 condition|(
 name|mq
 operator|==
+operator|(
+name|mqd_t
+operator|)
 operator|-
 literal|1
 condition|)
