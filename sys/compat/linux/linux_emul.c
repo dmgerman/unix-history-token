@@ -433,6 +433,12 @@ name|CLONE_THREAD
 condition|)
 block|{
 comment|/* lookup the parent */
+name|EMUL_SHARED_WLOCK
+argument_list|(
+operator|&
+name|emul_shared_lock
+argument_list|)
+expr_stmt|;
 name|p_em
 operator|=
 name|em_find
@@ -469,6 +475,12 @@ name|shared
 operator|->
 name|refs
 operator|++
+expr_stmt|;
+name|EMUL_SHARED_WUNLOCK
+argument_list|(
+operator|&
+name|emul_shared_lock
+argument_list|)
 expr_stmt|;
 block|}
 else|else
