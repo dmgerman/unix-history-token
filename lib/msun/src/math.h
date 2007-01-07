@@ -2809,16 +2809,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|long
+name|double
+name|modfl
+parameter_list|(
+name|long
+name|double
+parameter_list|,
+name|long
+name|double
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* fundamentally !__pure2 */
+end_comment
+
 begin_if
 if|#
 directive|if
 literal|0
 end_if
-
-begin_comment
-unit|long double	modfl(long double, long double *);
-comment|/* fundamentally !__pure2 */
-end_comment
 
 begin_endif
 unit|long double	nanl(const char *) __pure2; long double	nearbyintl(long double);
