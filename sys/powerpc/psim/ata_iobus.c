@@ -919,7 +919,7 @@ operator|)
 expr_stmt|;
 name|ata_generic_hw
 argument_list|(
-name|ch
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
