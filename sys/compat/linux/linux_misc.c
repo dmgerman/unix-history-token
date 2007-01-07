@@ -391,8 +391,7 @@ name|RLIMIT_NOFILE
 block|,
 name|RLIMIT_MEMLOCK
 block|,
-operator|-
-literal|1
+name|RLIMIT_AS
 block|}
 decl_stmt|;
 end_decl_stmt
