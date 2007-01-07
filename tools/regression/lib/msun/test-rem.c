@@ -448,6 +448,9 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|STRICT
 name|assert
 argument_list|(
 name|q
@@ -455,6 +458,8 @@ operator|==
 literal|0xdeadbeef
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assert
 argument_list|(
 name|isnan
@@ -484,6 +489,9 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|STRICT
 name|assert
 argument_list|(
 name|q
@@ -491,6 +499,8 @@ operator|==
 literal|0xdeadbeef
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -597,6 +607,13 @@ literal|0x7
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|q
+operator|!=
+literal|0
+condition|)
+block|{
 name|assert
 argument_list|(
 operator|(
@@ -622,14 +639,7 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-operator|(
 name|q
-operator|&
-name|mask
-argument_list|(
-name|q
-argument_list|)
-operator|)
 operator|==
 operator|(
 name|abs
@@ -644,6 +654,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -715,6 +726,13 @@ literal|0x7
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|q
+operator|!=
+literal|0
+condition|)
+block|{
 name|assert
 argument_list|(
 operator|(
@@ -762,6 +780,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
