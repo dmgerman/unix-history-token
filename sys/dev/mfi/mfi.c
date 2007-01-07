@@ -602,7 +602,7 @@ specifier|static
 name|int
 name|mfi_event_class
 init|=
-literal|10
+name|MFI_EVT_CLASS_INFO
 decl_stmt|;
 end_decl_stmt
 
