@@ -1453,7 +1453,7 @@ name|VM_PROT_ALL
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
-literal|0
+name|MAP_NOFAULT
 argument_list|)
 expr_stmt|;
 comment|/* ... and ending with the completion of the above `insert' */
