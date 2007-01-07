@@ -57,6 +57,25 @@ directive|include
 file|"config_freebsd.h"
 end_include
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* Win32 can't run the 'configure' script. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"config_windows.h"
+end_include
+
 begin_else
 else|#
 directive|else
