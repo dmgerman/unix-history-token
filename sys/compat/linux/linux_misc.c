@@ -6877,7 +6877,7 @@ name|td
 operator|->
 name|td_proc
 argument_list|,
-name|EMUL_DOLOCK
+name|EMUL_DONTLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -6903,12 +6903,6 @@ operator|->
 name|shared
 operator|->
 name|group_pid
-expr_stmt|;
-name|EMUL_UNLOCK
-argument_list|(
-operator|&
-name|emul_lock
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -7095,7 +7089,7 @@ name|td
 operator|->
 name|td_proc
 argument_list|,
-name|EMUL_DOLOCK
+name|EMUL_DONTLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -7220,12 +7214,6 @@ operator|=
 name|pp
 operator|->
 name|p_pid
-expr_stmt|;
-name|EMUL_UNLOCK
-argument_list|(
-operator|&
-name|emul_lock
-argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(

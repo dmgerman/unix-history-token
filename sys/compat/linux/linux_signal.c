@@ -2907,7 +2907,7 @@ name|em_find
 argument_list|(
 name|p
 argument_list|,
-name|EMUL_DOLOCK
+name|EMUL_DONTLOCK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2946,12 +2946,6 @@ condition|)
 return|return
 name|ESRCH
 return|;
-name|EMUL_UNLOCK
-argument_list|(
-operator|&
-name|emul_lock
-argument_list|)
-expr_stmt|;
 return|return
 name|linux_kill
 argument_list|(
