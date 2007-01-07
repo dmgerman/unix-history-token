@@ -1893,7 +1893,7 @@ name|em_find
 argument_list|(
 name|p2
 argument_list|,
-name|EMUL_UNLOCKED
+name|EMUL_DOLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT

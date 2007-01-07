@@ -183,7 +183,7 @@ if|if
 condition|(
 name|locked
 operator|==
-name|EMUL_UNLOCKED
+name|EMUL_DOLOCK
 condition|)
 name|EMUL_LOCK
 argument_list|(
@@ -205,7 +205,7 @@ name|NULL
 operator|&&
 name|locked
 operator|==
-name|EMUL_UNLOCKED
+name|EMUL_DOLOCK
 condition|)
 name|EMUL_UNLOCK
 argument_list|(
@@ -390,7 +390,7 @@ name|td
 operator|->
 name|td_proc
 argument_list|,
-name|EMUL_UNLOCKED
+name|EMUL_DOLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -441,7 +441,7 @@ name|td
 operator|->
 name|td_proc
 argument_list|,
-name|EMUL_LOCKED
+name|EMUL_DONTLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -617,7 +617,7 @@ name|em_find
 argument_list|(
 name|p
 argument_list|,
-name|EMUL_UNLOCKED
+name|EMUL_DOLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -888,7 +888,7 @@ name|em_find
 argument_list|(
 name|q
 argument_list|,
-name|EMUL_UNLOCKED
+name|EMUL_DOLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1039,7 +1039,7 @@ name|em_find
 argument_list|(
 name|p
 argument_list|,
-name|EMUL_UNLOCKED
+name|EMUL_DOLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1193,7 +1193,7 @@ name|em_find
 argument_list|(
 name|p
 argument_list|,
-name|EMUL_UNLOCKED
+name|EMUL_DOLOCK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1335,7 +1335,7 @@ name|td
 operator|->
 name|td_proc
 argument_list|,
-name|EMUL_UNLOCKED
+name|EMUL_DOLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT

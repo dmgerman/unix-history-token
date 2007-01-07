@@ -161,14 +161,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EMUL_LOCKED
+name|EMUL_DOLOCK
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|EMUL_UNLOCKED
+name|EMUL_DONTLOCK
 value|0
 end_define
 

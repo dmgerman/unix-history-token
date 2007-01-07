@@ -6877,7 +6877,7 @@ name|td
 operator|->
 name|td_proc
 argument_list|,
-name|EMUL_UNLOCKED
+name|EMUL_DOLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -7095,7 +7095,7 @@ name|td
 operator|->
 name|td_proc
 argument_list|,
-name|EMUL_UNLOCKED
+name|EMUL_DOLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -7181,7 +7181,7 @@ name|em_find
 argument_list|(
 name|pp
 argument_list|,
-name|EMUL_LOCKED
+name|EMUL_DONTLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -7711,7 +7711,7 @@ name|td
 operator|->
 name|td_proc
 argument_list|,
-name|EMUL_UNLOCKED
+name|EMUL_DOLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -7943,7 +7943,7 @@ name|em_find
 argument_list|(
 name|p
 argument_list|,
-name|EMUL_UNLOCKED
+name|EMUL_DOLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -7981,7 +7981,7 @@ name|em_find
 argument_list|(
 name|p
 argument_list|,
-name|EMUL_UNLOCKED
+name|EMUL_DOLOCK
 argument_list|)
 expr_stmt|;
 name|KASSERT
