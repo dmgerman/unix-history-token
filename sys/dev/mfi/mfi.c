@@ -618,7 +618,7 @@ specifier|static
 name|int
 name|mfi_event_class
 init|=
-name|MFI_EVT_CLASS_DEBUG
+name|MFI_EVT_CLASS_INFO
 decl_stmt|;
 end_decl_stmt
 
