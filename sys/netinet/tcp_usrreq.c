@@ -726,9 +726,11 @@ begin_define
 define|#
 directive|define
 name|COMMON_START
-parameter_list|()
+parameter_list|(
+name|_errno
+parameter_list|)
 define|\
-value|TCPDEBUG0;						\ 	do {							\ 		if (inirw == INI_READ)				\ 			INP_INFO_RLOCK(&tcbinfo);		\ 		else if (inirw == INI_WRITE)			\ 			INP_INFO_WLOCK(&tcbinfo);		\ 		inp = sotoinpcb(so);				\ 		if (inp == 0) {					\ 			if (inirw == INI_READ)			\ 				INP_INFO_RUNLOCK(&tcbinfo);	\ 			else if (inirw == INI_WRITE)		\ 				INP_INFO_WUNLOCK(&tcbinfo);	\ 			return EINVAL;				\ 		}						\ 		INP_LOCK(inp);					\ 		if (inirw == INI_READ)				\ 			INP_INFO_RUNLOCK(&tcbinfo);		\ 		tp = intotcpcb(inp);				\ 		TCPDEBUG1();					\ } while(0)
+value|TCPDEBUG0;						\ 	do {							\ 		if (inirw == INI_READ)				\ 			INP_INFO_RLOCK(&tcbinfo);		\ 		else if (inirw == INI_WRITE)			\ 			INP_INFO_WLOCK(&tcbinfo);		\ 		inp = sotoinpcb(so);				\ 		if (inp == 0) {					\ 			if (inirw == INI_READ)			\ 				INP_INFO_RUNLOCK(&tcbinfo);	\ 			else if (inirw == INI_WRITE)		\ 				INP_INFO_WUNLOCK(&tcbinfo);	\ 			return _errno;				\ 		}						\ 		INP_LOCK(inp);					\ 		if (inirw == INI_READ)				\ 			INP_INFO_RUNLOCK(&tcbinfo);		\ 		tp = intotcpcb(inp);				\ 		TCPDEBUG1();					\ } while(0)
 end_define
 
 begin_define
@@ -846,7 +848,9 @@ name|EAFNOSUPPORT
 operator|)
 return|;
 name|COMMON_START
-argument_list|()
+argument_list|(
+name|EINVAL
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -978,7 +982,9 @@ name|EAFNOSUPPORT
 operator|)
 return|;
 name|COMMON_START
-argument_list|()
+argument_list|(
+name|EINVAL
+argument_list|)
 expr_stmt|;
 name|inp
 operator|->
@@ -1162,7 +1168,9 @@ init|=
 name|INI_WRITE
 decl_stmt|;
 name|COMMON_START
-argument_list|()
+argument_list|(
+name|EINVAL
+argument_list|)
 expr_stmt|;
 name|SOCK_LOCK
 argument_list|(
@@ -1282,7 +1290,9 @@ init|=
 name|INI_WRITE
 decl_stmt|;
 name|COMMON_START
-argument_list|()
+argument_list|(
+name|EINVAL
+argument_list|)
 expr_stmt|;
 name|SOCK_LOCK
 argument_list|(
@@ -1523,7 +1533,9 @@ name|s_addr
 argument_list|)
 expr_stmt|;
 name|COMMON_START
-argument_list|()
+argument_list|(
+name|EINVAL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1662,7 +1674,9 @@ name|EAFNOSUPPORT
 operator|)
 return|;
 name|COMMON_START
-argument_list|()
+argument_list|(
+name|EINVAL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1860,7 +1874,9 @@ init|=
 name|INI_WRITE
 decl_stmt|;
 name|COMMON_START
-argument_list|()
+argument_list|(
+name|ECONNRESET
+argument_list|)
 expr_stmt|;
 name|tp
 operator|=
@@ -1972,7 +1988,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+name|ECONNABORTED
 operator|)
 return|;
 block|}
@@ -2156,7 +2172,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+name|ECONNABORTED
 operator|)
 return|;
 block|}
@@ -2400,7 +2416,9 @@ init|=
 name|INI_WRITE
 decl_stmt|;
 name|COMMON_START
-argument_list|()
+argument_list|(
+name|ECONNRESET
+argument_list|)
 expr_stmt|;
 name|socantsendmore
 argument_list|(
@@ -2473,7 +2491,9 @@ init|=
 name|INI_READ
 decl_stmt|;
 name|COMMON_START
-argument_list|()
+argument_list|(
+name|ECONNRESET
+argument_list|)
 expr_stmt|;
 name|tcp_output
 argument_list|(
@@ -3110,7 +3130,9 @@ init|=
 name|INI_WRITE
 decl_stmt|;
 name|COMMON_START
-argument_list|()
+argument_list|(
+name|EINVAL
+argument_list|)
 expr_stmt|;
 name|tp
 operator|=
@@ -3174,7 +3196,9 @@ init|=
 name|INI_READ
 decl_stmt|;
 name|COMMON_START
-argument_list|()
+argument_list|(
+name|ECONNRESET
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
