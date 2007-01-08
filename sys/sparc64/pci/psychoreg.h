@@ -1197,12 +1197,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCICTL_MRLM
-value|0x0000001000000000
+name|PCICTL_SBHERR
+value|0x0000000800000000
 end_define
 
 begin_comment
-comment|/* Memory Read Line/Multiple */
+comment|/* strm. byte hole error; W1C */
 end_comment
 
 begin_define
@@ -1219,6 +1219,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCICTL_PCISPEED
+value|0x0000000200000000
+end_define
+
+begin_comment
+comment|/* 0:half 1:full bus speed */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCICTL_ARB_PARK
 value|0x0000000000200000
 end_define
@@ -1230,23 +1241,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCICTL_CPU_PRIO
-value|0x0000000000100000
+name|PCICTL_SBHINTEN
+value|0x0000000000000400
 end_define
 
 begin_comment
-comment|/* PCI arbitration parking */
+comment|/* strm. byte hole int. en. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PCICTL_ARB_PRIO
-value|0x00000000000f0000
+name|PCICTL_WAKEUPEN
+value|0x0000000000000200
 end_define
 
 begin_comment
-comment|/* PCI arbitration parking */
+comment|/* power mgmt. wakeup enable */
 end_comment
 
 begin_define
@@ -1263,38 +1274,75 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCICTL_ARB_4
+value|0x000000000000000f
+end_define
+
+begin_comment
+comment|/* DVMA arb. 4 PCI slots mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCICTL_ARB_6
+value|0x000000000000003f
+end_define
+
+begin_comment
+comment|/* DVMA arb. 6 PCI slots mask */
+end_comment
+
+begin_comment
+comment|/* The following are Hummingbird/Sabre only. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCICTL_MRLM
+value|0x0000001000000000
+end_define
+
+begin_comment
+comment|/* Memory Read Line/Multiple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCICTL_CPU_PRIO
+value|0x0000000000100000
+end_define
+
+begin_comment
+comment|/* CPU extra arb. prio. en. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCICTL_ARB_PRIO
+value|0x00000000000f0000
+end_define
+
+begin_comment
+comment|/* PCI extra arb. prio. en. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCICTL_RTRYWAIT
 value|0x0000000000000080
 end_define
 
 begin_comment
-comment|/* PCI error interrupt enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCICTL_4ENABLE
-value|0x000000000000000f
-end_define
-
-begin_comment
-comment|/* enable 4 PCI slots */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCICTL_6ENABLE
-value|0x000000000000003f
-end_define
-
-begin_comment
-comment|/* enable 6 PCI slots */
+comment|/* 0:wait 1:retry DMA write */
 end_comment
 
 begin_comment
-comment|/* Uncorrectable error asynchronous fault status registers */
+comment|/* Uncorrectable error asynchronous fault status register */
 end_comment
 
 begin_define
@@ -1397,7 +1445,7 @@ comment|/* Pri. error during PIO access */
 end_comment
 
 begin_comment
-comment|/* Correctable error asynchronous fault status registers */
+comment|/* Correctable error asynchronous fault status register */
 end_comment
 
 begin_define
@@ -1482,8 +1530,178 @@ define|#
 directive|define
 name|CEAFSR_ERRMASK
 define|\
-value|(CEAFSR_P_PIO | CEAFSR_P_DRD | CEAFSR_P_DWR |			\ 	 CEAFSR_S_PIO | CEAFSR_S_DRD | CEAFSR_S_DWR)
+value|(CEAFSR_P_PIO | CEAFSR_P_DRD | CEAFSR_P_DWR |			\ 	CEAFSR_S_PIO | CEAFSR_S_DRD | CEAFSR_S_DWR)
 end_define
+
+begin_comment
+comment|/* PCI asynchronous fault status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIAFSR_P_MA
+value|(1UL<< 63)
+end_define
+
+begin_comment
+comment|/* Pri. master abort */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIAFSR_P_TA
+value|(1UL<< 62)
+end_define
+
+begin_comment
+comment|/* Pri. target abort */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIAFSR_P_RTRY
+value|(1UL<< 61)
+end_define
+
+begin_comment
+comment|/* Pri. excessive retries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIAFSR_P_RERR
+value|(1UL<< 60)
+end_define
+
+begin_comment
+comment|/* Pri. parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIAFSR_S_MA
+value|(1UL<< 59)
+end_define
+
+begin_comment
+comment|/* Sec. master abort */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIAFSR_S_TA
+value|(1UL<< 58)
+end_define
+
+begin_comment
+comment|/* Sec. target abort */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIAFSR_S_RTRY
+value|(1UL<< 57)
+end_define
+
+begin_comment
+comment|/* Sec. excessive retries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIAFSR_S_RERR
+value|(1UL<< 56)
+end_define
+
+begin_comment
+comment|/* Sec. parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIAFSR_BMASK
+value|(0xffffUL<< 32)
+end_define
+
+begin_comment
+comment|/* Bytemask of failed pri. transfer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIAFSR_BLK
+value|(1UL<< 31)
+end_define
+
+begin_comment
+comment|/* failed pri. transfer was block r/w */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIAFSR_MID
+value|(0x3eUL<< 25)
+end_define
+
+begin_comment
+comment|/* UPA MID causing error transaction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIAFSR_ERRMASK
+define|\
+value|(PCIAFSR_P_MA | PCIAFSR_P_TA | PCIAFSR_P_RTRY |	PCIAFSR_P_RERR |\ 	PCIAFSR_S_MA | PCIAFSR_S_TA | PCIAFSR_S_RTRY | PCIAFSR_S_RERR)
+end_define
+
+begin_comment
+comment|/* PCI diagnostic register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIAG_RTRY_DIS
+value|0x0000000000000040
+end_define
+
+begin_comment
+comment|/* dis. retry limit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIAG_ISYNC_DIS
+value|0x0000000000000020
+end_define
+
+begin_comment
+comment|/* dis. DMA write / int sync */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIAG_DWSYNC_DIS
+value|0x0000000000000010
+end_define
+
+begin_comment
+comment|/* dis. DMA write / PIO sync */
+end_comment
 
 begin_comment
 comment|/* Definitions for the target address space register */
