@@ -7572,8 +7572,6 @@ operator|->
 name|if_hwassist
 operator|=
 name|MSK_CSUM_FEATURES
-operator||
-name|CSUM_TSO
 expr_stmt|;
 if|if
 condition|(
