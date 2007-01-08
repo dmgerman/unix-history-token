@@ -4224,14 +4224,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"acpi_cpu%d: no BM control, using flush cache method\n"
-operator|,
-name|device_get_unit
-argument_list|(
-name|sc
-operator|->
-name|cpu_dev
-argument_list|)
+literal|"acpi_cpu: no BM control, using flush cache method\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4247,14 +4240,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"acpi_cpu%d: no BM control, C3 not available\n"
-operator|,
-name|device_get_unit
-argument_list|(
-name|sc
-operator|->
-name|cpu_dev
-argument_list|)
+literal|"acpi_cpu: no BM control, C3 not available\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4269,10 +4255,21 @@ name|mp_ncpus
 operator|>
 literal|1
 condition|)
+block|{
 name|cpu_quirks
 operator||=
 name|CPU_QUIRK_NO_BM_CTRL
 expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"acpi_cpu: SMP, using flush cache mode for C3\n"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Look for various quirks of the PIIX4 part. */
 name|acpi_dev
 operator|=
@@ -4308,6 +4305,15 @@ case|:
 name|cpu_quirks
 operator||=
 name|CPU_QUIRK_NO_C3
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"acpi_cpu: working around PIIX4 bug, disabling C3\n"
+operator|)
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
