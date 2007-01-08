@@ -8015,6 +8015,12 @@ name|msk_res_spec_mem
 expr_stmt|;
 endif|#
 directive|endif
+name|sc
+operator|->
+name|msk_irq_spec
+operator|=
+name|msk_irq_spec_legacy
+expr_stmt|;
 name|error
 operator|=
 name|bus_alloc_resources
