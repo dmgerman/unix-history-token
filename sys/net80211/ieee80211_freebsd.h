@@ -477,6 +477,17 @@ value|(_ni)->ni_refcnt
 end_define
 
 begin_function_decl
+name|void
+name|ieee80211_drain_ifq
+parameter_list|(
+name|struct
+name|ifqueue
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|mbuf
 modifier|*
