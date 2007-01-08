@@ -926,6 +926,9 @@ name|u_int8_t
 name|aue_link
 decl_stmt|;
 name|int
+name|aue_timer
+decl_stmt|;
+name|int
 name|aue_if_flags
 decl_stmt|;
 name|struct
@@ -937,6 +940,10 @@ name|callout
 name|aue_tick_callout
 decl_stmt|;
 name|struct
+name|usb_taskqueue
+name|aue_taskqueue
+decl_stmt|;
+name|struct
 name|task
 name|aue_task
 decl_stmt|;
@@ -945,28 +952,9 @@ name|mtx
 name|aue_mtx
 decl_stmt|;
 name|struct
-name|cv
-name|aue_cv
+name|sx
+name|aue_sx
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|aue_locker
-decl_stmt|;
-comment|/* lock owner */
-name|int
-name|aue_lockflags
-decl_stmt|;
-define|#
-directive|define
-name|AUE_LOCKED
-value|0x01
-comment|/* locked */
-define|#
-directive|define
-name|AUE_LOCKDEAD
-value|0x02
-comment|/* lock draining */
 name|u_int16_t
 name|aue_flags
 decl_stmt|;
@@ -1074,7 +1062,7 @@ parameter_list|(
 name|_sc
 parameter_list|)
 define|\
-value|do { AUE_DUMPSTATE("sxlock"); aue_xlock((_sc), 0); } while(0)
+value|do { AUE_DUMPSTATE("sxlock"); sx_xlock(&(_sc)->aue_sx); } while(0)
 end_define
 
 begin_define
@@ -1084,7 +1072,7 @@ name|AUE_SXUNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|aue_xunlock(_sc)
+value|sx_xunlock(&(_sc)->aue_sx)
 end_define
 
 begin_define
@@ -1094,7 +1082,7 @@ name|AUE_SXASSERTLOCKED
 parameter_list|(
 name|_sc
 parameter_list|)
-value|aue_xlockassert((_sc), 1, __FILE__, __func__, __LINE__)
+value|sx_assert(&(_sc)->aue_sx, SX_XLOCKED)
 end_define
 
 begin_define
@@ -1104,7 +1092,7 @@ name|AUE_SXASSERTUNLOCKED
 parameter_list|(
 name|_sc
 parameter_list|)
-value|aue_xlockassert((_sc), 0, __FILE__, __func__, __LINE__)
+value|sx_assert(&(_sc)->aue_sx, SX_UNLOCKED)
 end_define
 
 begin_define
