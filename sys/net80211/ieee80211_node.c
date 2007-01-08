@@ -2285,6 +2285,8 @@ name|ieee80211_fix_rate
 argument_list|(
 name|ni
 argument_list|,
+name|IEEE80211_F_JOIN
+operator||
 name|IEEE80211_F_DONEGO
 operator||
 name|IEEE80211_F_DOFRATE
@@ -3562,14 +3564,6 @@ name|ieee80211_node_table
 modifier|*
 name|nt
 decl_stmt|;
-comment|/* 		 * Delete unusable rates; we've already checked 		 * that the negotiated rate set is acceptable. 		 */
-name|ieee80211_fix_rate
-argument_list|(
-name|selbs
-argument_list|,
-name|IEEE80211_F_DODEL
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Fillin the neighbor table; it will already 		 * exist if we are simply switching mastership. 		 * XXX ic_sta always setup so this is unnecessary? 		 */
 name|nt
 operator|=
@@ -3637,6 +3631,18 @@ name|obss
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Delete unusable rates; we've already checked 	 * that the negotiated rate set is acceptable. 	 */
+name|ieee80211_fix_rate
+argument_list|(
+name|ic
+operator|->
+name|ic_bss
+argument_list|,
+name|IEEE80211_F_DODEL
+operator||
+name|IEEE80211_F_JOIN
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set the erp state (mostly the slot time) to deal with 	 * the auto-select case; this should be redundant if the 	 * mode is locked. 	 */
 name|ic
 operator|->
@@ -5980,6 +5986,12 @@ operator|->
 name|xrates
 argument_list|,
 name|IEEE80211_F_DOSORT
+operator||
+name|IEEE80211_F_DOFRATE
+operator||
+name|IEEE80211_F_DONEGO
+operator||
+name|IEEE80211_F_DODEL
 argument_list|)
 expr_stmt|;
 block|}
