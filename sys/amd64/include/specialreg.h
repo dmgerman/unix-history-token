@@ -586,7 +586,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|CPUID2_CNTXID
+name|CPUID2_SSSE3
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_CNXTID
 value|0x00000400
 end_define
 

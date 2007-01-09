@@ -811,8 +811,9 @@ literal|"\010EST"
 comment|/* Enhanced SpeedStep */
 literal|"\011TM2"
 comment|/* Thermal Monitor 2 */
-literal|"\012<b9>"
-literal|"\013CNTX-ID"
+literal|"\012SSSE3"
+comment|/* SSSE3 */
+literal|"\013CNXT-ID"
 comment|/* L1 context ID available */
 literal|"\014<b11>"
 literal|"\015<b12>"
