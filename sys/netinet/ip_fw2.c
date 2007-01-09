@@ -4096,14 +4096,6 @@ name|udphdr
 modifier|*
 name|udp
 decl_stmt|;
-comment|/* Initialize to make compiler happy. */
-name|struct
-name|ip
-modifier|*
-name|ip
-init|=
-name|NULL
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
