@@ -476,6 +476,12 @@ parameter_list|)
 value|(_ni)->ni_refcnt
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|ifqueue
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|ieee80211_drain_ifq
