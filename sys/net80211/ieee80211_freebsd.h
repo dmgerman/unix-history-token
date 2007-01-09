@@ -15,6 +15,12 @@ directive|define
 name|_NET80211_IEEE80211_FREEBSD_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Beacon locking definitions.  */
 end_comment
@@ -676,6 +682,15 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/* XXX this stuff belongs elsewhere */
