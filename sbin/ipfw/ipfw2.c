@@ -13612,6 +13612,11 @@ block|{
 comment|/* 	 * After the address we can have '/' or ':' indicating a mask, 	 * ',' indicating another address follows, '{' indicating a 	 * set of addresses of unspecified size. 	 */
 name|char
 modifier|*
+name|t
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
 name|p
 init|=
 name|strpbrk
@@ -13626,6 +13631,8 @@ name|masklen
 decl_stmt|;
 name|char
 name|md
+decl_stmt|,
+name|nd
 decl_stmt|;
 if|if
 condition|(
@@ -13643,6 +13650,33 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|t
+operator|=
+name|strpbrk
+argument_list|(
+name|p
+argument_list|,
+literal|",{"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|nd
+operator|=
+operator|*
+name|t
+expr_stmt|;
+operator|*
+name|t
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 block|}
 else|else
 name|md
@@ -13850,6 +13884,15 @@ literal|1
 index|]
 expr_stmt|;
 comment|/* mask base address with mask */
+if|if
+condition|(
+name|t
+condition|)
+operator|*
+name|t
+operator|=
+name|nd
+expr_stmt|;
 comment|/* find next separator */
 if|if
 condition|(
