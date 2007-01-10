@@ -40,7 +40,7 @@ define|#
 directive|define
 name|COPYRIGHT_PC98
 define|\
-value|"Copyright (c) 1994-2005 FreeBSD(98) porting team.\nCopyright (c) 1992  A.Kojima F.Ukai M.Ishii (KMC).\n"
+value|"Copyright (c) 1994-2003 FreeBSD(98) porting team.\nCopyright (c) 1992  A.Kojima F.Ukai M.Ishii (KMC).\n"
 end_define
 
 begin_if
