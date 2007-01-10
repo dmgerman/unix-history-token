@@ -2307,6 +2307,14 @@ operator|=
 literal|2
 expr_stmt|;
 block|}
+name|priv
+operator|->
+name|stats
+operator|.
+name|InOctets
+operator|+=
+name|inlen
+expr_stmt|;
 comment|/* Packet is compressed, so decompress. */
 if|if
 condition|(
@@ -2321,14 +2329,6 @@ name|stats
 operator|.
 name|FramesComp
 operator|++
-expr_stmt|;
-name|priv
-operator|->
-name|stats
-operator|.
-name|InOctets
-operator|+=
-name|inlen
 expr_stmt|;
 comment|/* Check sequence number. */
 name|rseqnum
