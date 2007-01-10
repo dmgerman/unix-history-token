@@ -553,7 +553,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SC_NO_MODE_CHANGE */
+comment|/* VGA_NO_MODE_CHANGE */
 end_comment
 
 end_unit
