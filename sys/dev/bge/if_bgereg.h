@@ -1748,7 +1748,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* 1 = 33/66, 0 = 66/133 */
+comment|/* 1 = 66/133, 0 = 33/66 */
 end_comment
 
 begin_define
