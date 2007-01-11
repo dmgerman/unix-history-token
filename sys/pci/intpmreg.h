@@ -49,7 +49,7 @@ value|0xd2
 end_define
 
 begin_comment
-comment|/*Host Configuration*/
+comment|/* Host Configuration */
 end_comment
 
 begin_define

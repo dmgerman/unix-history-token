@@ -146,7 +146,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do { log(LOG_DEBUG, "%s: " fmt, __func__ , ## args); } while (0)
+value|do { printf("%s: " fmt, __func__ , ## args); } while (0)
 end_define
 
 begin_else
@@ -246,6 +246,24 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* Create mutex */
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mutex
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"ichsmb"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* Add child: an instance of the "smbus" device */
 if|if
 condition|(
@@ -268,25 +286,22 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"%s: no \"%s\" child found\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+literal|"no \"%s\" child found\n"
 argument_list|,
 name|DRIVER_SMBUS
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|ENXIO
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 comment|/* Clear interrupt conditions */
 name|bus_space_write_1
@@ -304,7 +319,48 @@ argument_list|,
 literal|0xff
 argument_list|)
 expr_stmt|;
-comment|/* Add "smbus" child */
+comment|/* Set up interrupt handler */
+name|error
+operator|=
+name|bus_setup_intr
+argument_list|(
+name|dev
+argument_list|,
+name|sc
+operator|->
+name|irq_res
+argument_list|,
+name|INTR_TYPE_MISC
+argument_list|,
+name|ichsmb_device_intr
+argument_list|,
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|irq_handle
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"can't setup irq\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+comment|/* Attach "smbus" child */
 if|if
 condition|(
 operator|(
@@ -319,47 +375,37 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"%s: failed to attach child: %d\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+literal|"failed to attach child: %d\n"
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
-block|}
-comment|/* Create mutex */
-name|mtx_init
+name|fail
+label|:
+name|mtx_destroy
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|mutex
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|"ichsmb"
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -3114,16 +3160,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"%s: irq 0x%02x during %d\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+literal|"irq 0x%02x during %d\n"
 argument_list|,
 name|status
 argument_list|,
@@ -3173,16 +3214,11 @@ operator|>
 literal|0
 condition|)
 block|{
-name|log
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"%s: SMBALERT# rec'd\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+literal|"SMBALERT# rec'd\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3193,16 +3229,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"%s: not logging anymore\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+literal|"not logging anymore\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3481,16 +3512,11 @@ operator|==
 name|maxloops
 condition|)
 block|{
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"%s: interrupt loop, status=0x%02x\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+literal|"interrupt loop, status=0x%02x\n"
 argument_list|,
 name|bus_space_read_1
 argument_list|(
@@ -3611,16 +3637,11 @@ break|break;
 case|case
 name|EWOULDBLOCK
 case|:
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"%s: device timeout, status=0x%02x\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+literal|"device timeout, status=0x%02x\n"
 argument_list|,
 name|bus_space_read_1
 argument_list|(
