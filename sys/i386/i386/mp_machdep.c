@@ -647,12 +647,6 @@ begin_comment
 comment|/* Interrupt counts. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPI_PREEMPTION
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|u_long
@@ -663,11 +657,6 @@ name|MAXCPU
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -4869,14 +4858,15 @@ name|cpu
 index|]
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPI_PREEMPTION
 if|if
 condition|(
 name|ipi_bitmap
 operator|&
+operator|(
+literal|1
+operator|<<
 name|IPI_PREEMPT
+operator|)
 condition|)
 block|{
 ifdef|#
@@ -4901,10 +4891,11 @@ comment|/* Don't preempt the idle thread */
 if|if
 condition|(
 name|curthread
-operator|->
-name|td_priority
-operator|<
-name|PRI_MIN_IDLE
+operator|!=
+name|PCPU_GET
+argument_list|(
+name|idlethread
+argument_list|)
 condition|)
 block|{
 name|struct
@@ -4946,13 +4937,15 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|ipi_bitmap
 operator|&
+operator|(
+literal|1
+operator|<<
 name|IPI_AST
+operator|)
 condition|)
 block|{
 ifdef|#
@@ -6388,9 +6381,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPI_PREEMPTION
 name|snprintf
 argument_list|(
 name|buf
@@ -6416,8 +6406,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|snprintf
 argument_list|(
 name|buf
