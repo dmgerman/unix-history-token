@@ -179,6 +179,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_631xESB
+value|0x269b8086
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIS_SERIALBUS_SMBUS_PROGIF
 value|0x00
 end_define
@@ -489,6 +496,17 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Intel 6300ESB (ICH) SMBus controller"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ID_631xESB
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel 631xESB/6321ESB (ESB2) SMBus controller"
 argument_list|)
 expr_stmt|;
 break|break;
