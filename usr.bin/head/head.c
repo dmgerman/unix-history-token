@@ -602,6 +602,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|uintmax_t
+operator|)
 name|cnt
 operator|<
 sizeof|sizeof
