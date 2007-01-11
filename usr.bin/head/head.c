@@ -91,6 +91,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -137,7 +143,7 @@ parameter_list|(
 name|FILE
 modifier|*
 parameter_list|,
-name|size_t
+name|off_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -192,14 +198,15 @@ init|=
 operator|-
 literal|1
 decl_stmt|,
+name|eval
+init|=
+literal|0
+decl_stmt|;
+name|off_t
 name|bytecnt
 init|=
 operator|-
 literal|1
-decl_stmt|,
-name|eval
-init|=
-literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -238,7 +245,7 @@ literal|'c'
 case|:
 name|bytecnt
 operator|=
-name|strtol
+name|strtoimax
 argument_list|(
 name|optarg
 argument_list|,
@@ -575,7 +582,7 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
-name|size_t
+name|off_t
 name|cnt
 parameter_list|)
 block|{
