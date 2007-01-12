@@ -146,8 +146,8 @@ name|u_int8_t
 name|ph_nxt
 decl_stmt|;
 block|}
-name|ph
 name|__packed
+name|ph
 struct|;
 block|}
 name|uph

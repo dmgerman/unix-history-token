@@ -127,13 +127,8 @@ name|u_int32_t
 name|ctr
 decl_stmt|;
 block|}
+name|__packed
 name|v
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
 struct|;
 name|u_int8_t
 name|cblock
