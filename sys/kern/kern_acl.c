@@ -214,7 +214,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * These calls wrap the real vnode operations, and are called by the   * syscall code once the syscall has converted the path or file  * descriptor to a vnode (unlocked).  The aclp pointer is assumed  * still to point to userland, so this should not be consumed within  * the kernel except by syscall code.  Other code should directly  * invoke VOP_{SET,GET}ACL.  */
+comment|/*  * These calls wrap the real vnode operations, and are called by the syscall  * code once the syscall has converted the path or file descriptor to a vnode  * (unlocked).  The aclp pointer is assumed still to point to userland, so  * this should not be consumed within the kernel except by syscall code.  * Other code should directly invoke VOP_{SET,GET}ACL.  */
 end_comment
 
 begin_comment
@@ -794,7 +794,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * syscalls -- convert the path/fd to a vnode, and call vacl_whatever.  * Don't need to lock, as the vacl_ code will get/release any locks  * required.  */
+comment|/*  * syscalls -- convert the path/fd to a vnode, and call vacl_whatever.  Don't  * need to lock, as the vacl_ code will get/release any locks required.  */
 end_comment
 
 begin_comment
