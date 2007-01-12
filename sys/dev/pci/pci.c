@@ -977,6 +977,27 @@ block|,
 literal|0
 block|}
 block|,
+comment|/* 	 * MSI doesn't work with the ServerWorks CNB20-HE Host Bridge 	 * or the CMIC-SL (AKA ServerWorks GC_LE). 	 */
+block|{
+literal|0x00141166
+block|,
+name|PCI_QUIRK_DISABLE_MSI
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x00171166
+block|,
+name|PCI_QUIRK_DISABLE_MSI
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
 comment|/* 	 * MSI doesn't work on earlier Intel chipsets including 	 * E7500, E7501, E7505, E7210, and 855. 	 */
 block|{
 literal|0x25408086
