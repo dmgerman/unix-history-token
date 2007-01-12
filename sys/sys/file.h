@@ -513,6 +513,11 @@ directive|define
 name|FDEFER
 value|0x2
 comment|/* defer for next gc pass */
+define|#
+directive|define
+name|FWAIT
+value|0x4
+comment|/* gc is scanning message buffers */
 name|int
 name|f_msgcount
 decl_stmt|;

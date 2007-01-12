@@ -7688,7 +7688,7 @@ name|unp_defer
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * before going through all this, set all FDs to 	 * be NOT defered and NOT externally accessible 	 */
+comment|/* 	 * before going through all this, set all FDs to 	 * be NOT deferred and NOT externally accessible 	 */
 name|sx_slock
 argument_list|(
 operator|&
@@ -7769,7 +7769,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * If we already marked it as 'defer'  in a 			 * previous pass, then try process it this time 			 * and un-mark it 			 */
+comment|/* 			 * If we already marked it as 'defer' in a 			 * previous pass, then try to process it this 			 * time and un-mark it 			 */
 if|if
 condition|(
 name|fp
@@ -7792,7 +7792,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * if it's not defered, then check if it's 				 * already marked.. if so skip it 				 */
+comment|/* 				 * if it's not deferred, then check if it's 				 * already marked.. if so skip it 				 */
 if|if
 condition|(
 name|fp
@@ -7836,7 +7836,7 @@ operator||=
 name|FMARK
 expr_stmt|;
 block|}
-comment|/* 			 * either it was defered, or it is externally 			 * accessible and not already marked so. 			 * Now check if it is possibly one of OUR sockets. 			 */
+comment|/* 			 * either it was deferred, or it is externally 			 * accessible and not already marked so. 			 * Now check if it is possibly one of OUR sockets. 			 */
 if|if
 condition|(
 name|fp
@@ -7863,11 +7863,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|FILE_UNLOCK
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|so
@@ -7891,8 +7886,27 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|FILE_UNLOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 continue|continue;
-comment|/* 			 * So, Ok, it's one of our sockets and it IS externally 			 * accessible (or was defered). Now we look 			 * to see if we hold any file descriptors in its 			 * message buffers. Follow those links and mark them 			 * as accessible too. 			 */
+block|}
+comment|/* 			 * Tell any other threads that do a subsequent 			 * fdrop() that we are scanning the message 			 * buffers. 			 */
+name|fp
+operator|->
+name|f_gcflag
+operator||=
+name|FWAIT
+expr_stmt|;
+name|FILE_UNLOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+comment|/* 			 * So, Ok, it's one of our sockets and it IS externally 			 * accessible (or was deferred). Now we look 			 * to see if we hold any file descriptors in its 			 * message buffers. Follow those links and mark them 			 * as accessible too. 			 */
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
@@ -7918,6 +7932,32 @@ operator|&
 name|so
 operator|->
 name|so_rcv
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Wake up any threads waiting in fdrop(). 			 */
+name|FILE_LOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|fp
+operator|->
+name|f_gcflag
+operator|&=
+operator|~
+name|FWAIT
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|fp
+operator|->
+name|f_gcflag
+argument_list|)
+expr_stmt|;
+name|FILE_UNLOCK
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
