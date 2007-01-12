@@ -209,7 +209,6 @@ name|AARPTAB_HASH
 parameter_list|(
 name|a
 parameter_list|)
-define|\
 value|((((a).s_net<< 8) + (a).s_node) % AARPTAB_NB)
 end_define
 
@@ -222,7 +221,7 @@ name|aat
 parameter_list|,
 name|addr
 parameter_list|)
-value|{ \     int		n; \     AARPTAB_LOCK_ASSERT(); \     aat =&aarptab[ AARPTAB_HASH(addr) * AARPTAB_BSIZ ]; \     for (n = 0; n< AARPTAB_BSIZ; n++, aat++) \ 	if (aat->aat_ataddr.s_net == (addr).s_net&& \ 	     aat->aat_ataddr.s_node == (addr).s_node) \ 	    break; \ 	if (n>= AARPTAB_BSIZ) \ 	    aat = NULL; \ }
+value|do {					\ 	int n;								\ 									\ 	AARPTAB_LOCK_ASSERT();						\ 	aat =&aarptab[ AARPTAB_HASH(addr) * AARPTAB_BSIZ ];		\ 	for (n = 0; n< AARPTAB_BSIZ; n++, aat++) {			\ 		if (aat->aat_ataddr.s_net == (addr).s_net&&		\ 		    aat->aat_ataddr.s_node == (addr).s_node)		\ 			break;						\ 	}								\ 	if (n>= AARPTAB_BSIZ)						\ 		aat = NULL;						\ } while (0)
 end_define
 
 begin_define
@@ -245,35 +244,6 @@ directive|define
 name|AARPT_KILLI
 value|3
 end_define
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|u_char
-name|etherbroadcastaddr
-index|[
-literal|6
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -373,10 +343,7 @@ name|timeout
 argument_list|(
 name|aarptimer
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|AARPT_AGE
 operator|*
@@ -459,7 +426,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * search through the network addresses to find one that includes  * the given network.. remember to take netranges into  * consideration.  */
+comment|/*   * Search through the network addresses to find one that includes the given  * network.  Remember to take netranges into consideration.  */
 end_comment
 
 begin_function
@@ -524,9 +491,7 @@ name|sat_addr
 operator|.
 name|s_net
 condition|)
-block|{
 break|break;
-block|}
 if|if
 condition|(
 operator|(
@@ -573,9 +538,7 @@ name|s_net
 argument_list|)
 operator|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 return|return
 operator|(
@@ -633,9 +596,6 @@ decl_stmt|;
 name|AARPTAB_UNLOCK_ASSERT
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|m
 operator|=
 name|m_gethdr
@@ -644,13 +604,14 @@ name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|m
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 ifdef|#
 directive|ifdef
 name|MAC
@@ -792,7 +753,7 @@ name|aarp_sha
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * We need to check whether the output ethernet type should      * be phase 1 or 2. We have the interface that we'll be sending      * the aarp out. We need to find an AppleTalk network on that      * interface with the same address as we're looking for. If the      * net is phase 2, generate an 802.2 and SNAP header.      */
+comment|/* 	 * We need to check whether the output ethernet type should be phase 	 * 1 or 2.  We have the interface that we'll be sending the aarp out. 	 * We need to find an AppleTalk network on that interface with the 	 * same address as we're looking for.  If the net is phase 2, 	 * generate an 802.2 and SNAP header. 	 */
 if|if
 condition|(
 operator|(
@@ -888,9 +849,7 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|llc
 operator|=
 name|mtod
@@ -1126,7 +1085,6 @@ operator|&
 name|sa
 argument_list|,
 name|NULL
-comment|/* route */
 argument_list|)
 expr_stmt|;
 block|}
@@ -1136,33 +1094,25 @@ begin_function
 name|int
 name|aarpresolve
 parameter_list|(
-name|ifp
-parameter_list|,
-name|m
-parameter_list|,
-name|destsat
-parameter_list|,
-name|desten
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr_at
 modifier|*
 name|destsat
-decl_stmt|;
+parameter_list|,
 name|u_char
 modifier|*
 name|desten
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|at_ifaddr
@@ -1221,7 +1171,6 @@ name|aa_flags
 operator|&
 name|AFA_PHASE2
 condition|)
-block|{
 name|bcopy
 argument_list|(
 name|atmulticastaddr
@@ -1237,9 +1186,7 @@ name|atmulticastaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|bcopy
 argument_list|(
 name|ifp
@@ -1259,7 +1206,6 @@ name|if_addrlen
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|1
@@ -1285,7 +1231,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* No entry */
+comment|/* No entry. */
 name|aat
 operator|=
 name|aarptnew
@@ -1296,25 +1242,23 @@ operator|->
 name|sat_addr
 argument_list|)
 expr_stmt|;
+comment|/* We should fail more gracefully. */
 if|if
 condition|(
 name|aat
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* we should fail more gracefully! */
 name|panic
 argument_list|(
 literal|"aarpresolve: no free entry"
 argument_list|)
 expr_stmt|;
-block|}
 goto|goto
 name|done
 goto|;
 block|}
-comment|/* found an entry */
+comment|/* Found an entry. */
 name|aat
 operator|->
 name|aat_timer
@@ -1330,7 +1274,7 @@ operator|&
 name|ATF_COM
 condition|)
 block|{
-comment|/* entry is COMplete */
+comment|/* Entry is COMplete. */
 name|bcopy
 argument_list|(
 operator|(
@@ -1362,14 +1306,13 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* entry has not completed */
+comment|/* Entry has not completed. */
 if|if
 condition|(
 name|aat
 operator|->
 name|aat_hold
 condition|)
-block|{
 name|m_freem
 argument_list|(
 name|aat
@@ -1377,7 +1320,6 @@ operator|->
 name|aat_hold
 argument_list|)
 expr_stmt|;
-block|}
 name|done
 label|:
 name|aat
@@ -1408,13 +1350,11 @@ begin_function
 name|void
 name|aarpintr
 parameter_list|(
-name|m
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|arphdr
@@ -1457,11 +1397,9 @@ expr|struct
 name|arphdr
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 name|ar
 operator|=
 name|mtod
@@ -1484,11 +1422,9 @@ argument_list|)
 operator|!=
 name|AARPHRD_ETHER
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 if|if
 condition|(
 name|m
@@ -1513,11 +1449,9 @@ name|ar
 operator|->
 name|ar_pln
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 switch|switch
 condition|(
 name|ntohs
@@ -1626,7 +1560,7 @@ name|ether_aarp
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* Check to see if from my hardware address */
+comment|/* Check to see if from my hardware address. */
 if|if
 condition|(
 operator|!
@@ -1686,7 +1620,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* should be ATADDR_ANYNET? */
+comment|/* Should be ATADDR_ANYNET? */
 name|sat
 operator|.
 name|sat_len
@@ -1774,7 +1708,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * Since we don't know the net, we just look for the first 	 * phase 1 address on the interface. 	 */
+comment|/* 		 * Since we don't know the net, we just look for the first 		 * phase 1 address on the interface. 		 */
 for|for
 control|(
 name|aa
@@ -1909,7 +1843,7 @@ name|sat_addr
 operator|.
 name|s_node
 expr_stmt|;
-comment|/*      * This looks like it's from us.      */
+comment|/* 	 * This looks like it's from us. 	 */
 if|if
 condition|(
 name|spa
@@ -1938,7 +1872,7 @@ operator|&
 name|AFA_PROBING
 condition|)
 block|{
-comment|/* 	     * We're probing, someone either responded to our probe, or 	     * probed for the same address we'd like to use. Change the 	     * address we're probing for. 	     */
+comment|/* 			 * We're probing, someone either responded to our 			 * probe, or probed for the same address we'd like to 			 * use. Change the address we're probing for. 	    		 */
 name|callout_stop
 argument_list|(
 operator|&
@@ -1967,7 +1901,7 @@ operator|!=
 name|AARPOP_PROBE
 condition|)
 block|{
-comment|/* 	     * This is not a probe, and we're not probing. This means 	     * that someone's saying they have the same source address 	     * as the one we're using. Get upset... 	     */
+comment|/* 			 * This is not a probe, and we're not probing.  This 			 * means that someone's saying they have the same 			 * source address as the one we're using.  Get upset. 			 */
 name|log
 argument_list|(
 name|LOG_ERR
@@ -2049,7 +1983,7 @@ operator|==
 name|AARPOP_PROBE
 condition|)
 block|{
-comment|/* 	     * Someone's probing for spa, dealocate the one we've got, 	     * so that if the prober keeps the address, we'll be able 	     * to arp for him. 	     */
+comment|/* 			 * Someone's probing for spa, dealocate the one we've 			 * got, so that if the prober keeps the address, 			 * we'll be able to arp for him. 			 */
 name|aarptfree
 argument_list|(
 name|aat
@@ -2253,7 +2187,7 @@ else|else
 name|AARPTAB_UNLOCK
 argument_list|()
 expr_stmt|;
-comment|/*      * Don't respond to responses, and never respond if we're      * still probing.      */
+comment|/* 	 * Don't respond to responses, and never respond if we're still 	 * probing. 	 */
 if|if
 condition|(
 name|tpa
@@ -2421,9 +2355,7 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|llc
 operator|=
 name|mtod
@@ -2513,7 +2445,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|eh
 operator|->
 name|ether_type
@@ -2523,7 +2454,6 @@ argument_list|(
 name|ETHERTYPE_AARP
 argument_list|)
 expr_stmt|;
-block|}
 name|ea
 operator|->
 name|aarp_tpnode
@@ -2655,13 +2585,11 @@ name|aarptab
 modifier|*
 name|aarptnew
 parameter_list|(
-name|addr
-parameter_list|)
 name|struct
 name|at_addr
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|n
@@ -2878,7 +2806,7 @@ name|struct
 name|sockaddr
 name|sa
 decl_stmt|;
-comment|/*      * We need to check whether the output ethernet type should      * be phase 1 or 2. We have the interface that we'll be sending      * the aarp out. We need to find an AppleTalk network on that      * interface with the same address as we're looking for. If the      * net is phase 2, generate an 802.2 and SNAP header.      */
+comment|/* 	 * We need to check whether the output ethernet type should be phase 	 * 1 or 2.  We have the interface that we'll be sending the aarp out. 	 * We need to find an AppleTalk network on that interface with the 	 * same address as we're looking for.  If the net is phase 2, 	 * generate an 802.2 and SNAP header. 	 */
 name|AARPTAB_LOCK
 argument_list|()
 expr_stmt|;
@@ -2936,9 +2864,7 @@ operator|&
 name|AFA_PROBING
 operator|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -2947,7 +2873,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* serious error XXX */
+comment|/* Serious error XXX. */
 name|AARPTAB_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -2985,7 +2911,6 @@ expr_stmt|;
 return|return;
 block|}
 else|else
-block|{
 name|callout_reset
 argument_list|(
 operator|&
@@ -3002,13 +2927,9 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-block|}
 name|AARPTAB_UNLOCK
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|m
 operator|=
 name|m_gethdr
@@ -3017,13 +2938,14 @@ name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|m
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 ifdef|#
 directive|ifdef
 name|MAC
@@ -3239,9 +3161,7 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|llc
 operator|=
 name|mtod

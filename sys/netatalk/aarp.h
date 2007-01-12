@@ -9,6 +9,12 @@ directive|ifndef
 name|_NETATALK_AARP_H_
 end_ifndef
 
+begin_define
+define|#
+directive|define
+name|_NETATALK_AARP_H_
+end_define
+
 begin_comment
 comment|/*  * This structure is used for both phase 1 and 2. Under phase 1  * the net is not filled in. It is in phase 2. In both cases, the  * hardware address length is (for some unknown reason) 4. If  * anyone at Apple could program their way out of paper bag, it  * would be 1 and 3 respectively for phase 1 and 2.  */
 end_comment
