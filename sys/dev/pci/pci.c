@@ -977,7 +977,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* 	 * MSI doesn't work with the Intel E7501 chipset, at least on 	 * the Tyan 2721 motherboard. 	 */
+comment|/* 	 * MSI doesn't work on earlier Intel chipsets including the 	 * E7501, E7505, and the E7210. 	 */
 block|{
 literal|0x254c8086
 block|,
@@ -988,9 +988,18 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* 	 * MSI doesn't work with the Intel E7505 chipset, at least on 	 * the Tyan S2665ANF motherboard. 	 */
 block|{
 literal|0x25508086
+block|,
+name|PCI_QUIRK_DISABLE_MSI
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x25788086
 block|,
 name|PCI_QUIRK_DISABLE_MSI
 block|,
