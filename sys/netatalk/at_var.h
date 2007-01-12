@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990,1991 Regents of The University of Michigan.  * All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation, and that the name of The University  * of Michigan not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission. This software is supplied as is without expressed or  * implied warranties of any kind.  *  *	Research Systems Unix Group  *	The University of Michigan  *	c/o Mike Clark  *	535 W. William Street  *	Ann Arbor, Michigan  *	+1-313-763-0525  *	netatalk@itd.umich.edu  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1990, 1991 Regents of The University of Michigan.  * All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation, and that the name of The University  * of Michigan not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission. This software is supplied as is without expressed or  * implied warranties of any kind.  *  *	Research Systems Unix Group  *	The University of Michigan  *	c/o Mike Clark  *	535 W. William Street  *	Ann Arbor, Michigan  *	+1-313-763-0525  *	netatalk@itd.umich.edu  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -13,11 +13,10 @@ begin_define
 define|#
 directive|define
 name|_NETATALK_AT_VAR_H_
-value|1
 end_define
 
 begin_comment
-comment|/*  * For phase2, we need to keep not only our address on an interface,  * but also the legal networks on the interface.  */
+comment|/*  * For phase2, we need to keep not only our address on an interface, but also  * the legal networks on the interface.  */
 end_comment
 
 begin_struct
@@ -28,10 +27,6 @@ name|struct
 name|ifaddr
 name|aa_ifa
 decl_stmt|;
-define|#
-directive|define
-name|aa_ifp
-value|aa_ifa.ifa_ifp
 name|struct
 name|sockaddr_at
 name|aa_addr
@@ -40,10 +35,6 @@ name|struct
 name|sockaddr_at
 name|aa_broadaddr
 decl_stmt|;
-define|#
-directive|define
-name|aa_dstaddr
-value|aa_broadaddr;
 name|struct
 name|sockaddr_at
 name|aa_netmask
@@ -53,7 +44,8 @@ name|aa_flags
 decl_stmt|;
 name|u_short
 name|aa_firstnet
-decl_stmt|,
+decl_stmt|;
+name|u_short
 name|aa_lastnet
 decl_stmt|;
 name|int
@@ -72,6 +64,20 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|aa_ifp
+value|aa_ifa.ifa_ifp
+end_define
+
+begin_define
+define|#
+directive|define
+name|aa_dstaddr
+value|aa_broadaddr;
+end_define
+
 begin_struct
 struct|struct
 name|at_aliasreq
@@ -82,7 +88,6 @@ index|[
 name|IFNAMSIZ
 index|]
 decl_stmt|;
-comment|/* if name, e.g. "en0" */
 name|struct
 name|sockaddr_at
 name|ifra_addr
@@ -91,10 +96,6 @@ name|struct
 name|sockaddr_at
 name|ifra_broadaddr
 decl_stmt|;
-define|#
-directive|define
-name|ifra_dstaddr
-value|ifra_broadaddr
 name|struct
 name|sockaddr_at
 name|ifra_mask
@@ -106,11 +107,17 @@ end_struct
 begin_define
 define|#
 directive|define
+name|ifra_dstaddr
+value|ifra_broadaddr
+end_define
+
+begin_define
+define|#
+directive|define
 name|AA_SAT
 parameter_list|(
 name|aa
 parameter_list|)
-define|\
 value|(&(aa->aa_addr))
 end_define
 

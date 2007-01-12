@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__AT_HEADER__
+name|_NETATALK_AT_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__AT_HEADER__
+name|_NETATALK_AT_H_
 end_define
 
 begin_comment
@@ -41,7 +41,7 @@ value|587
 end_define
 
 begin_comment
-comment|/*  * If ATPORT_FIRST<= Port< ATPORT_RESERVED,  * Port was created by a privileged process.  * If ATPORT_RESERVED<= Port< ATPORT_LAST,  * Port was not necessarily created by a  * privileged process.  */
+comment|/*  * If ATPORT_FIRST<= Port< ATPORT_RESERVED, the port was created by a  * privileged process.  *  * If ATPORT_RESERVED<= Port< ATPORT_LAST, the port was not necessarily  * created by a privileged process.  */
 end_comment
 
 begin_define
@@ -112,7 +112,7 @@ value|(u_char)0xff
 end_define
 
 begin_comment
-comment|/* There is no BCAST for NET */
+comment|/* There is no BCAST for NET. */
 end_comment
 
 begin_struct
@@ -133,7 +133,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Socket address, AppleTalk style.  We keep magic information in the   * zero bytes.  There are three types, NONE, CONFIG which has the phase  * and a net range, and IFACE which has the network address of an  * interface.  IFACE may be filled in by the client, and is filled in  * by the kernel.  */
+comment|/*  * Socket address, AppleTalk style.  We keep magic information in the zero  * bytes.  There are three types, NONE, CONFIG which has the phase and a net  * range, and IFACE which has the network address of an interface.  IFACE may  * be filled in by the client, and is filled in by the kernel.  */
 end_comment
 
 begin_struct
@@ -165,7 +165,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* Hide a struct netrange in here */
+comment|/* Hide struct netrange here. */
 block|}
 name|sat_range
 union|;
@@ -186,7 +186,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__AT_HEADER__ */
+comment|/* !_NETATALK_AT_H_ */
 end_comment
 
 end_unit

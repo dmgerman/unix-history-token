@@ -4,7 +4,7 @@ comment|/*-  * Copyright 1994, 1995 Massachusetts Institute of Technology  *  * 
 end_comment
 
 begin_comment
-comment|/* This code generates debugging traces to the radix code */
+comment|/* This code generates debugging traces to the radix code. */
 end_comment
 
 begin_include
@@ -168,7 +168,6 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 name|bp
 operator|+=
 name|sprintf
@@ -178,7 +177,6 @@ argument_list|,
 literal|"null"
 argument_list|)
 expr_stmt|;
-block|}
 operator|*
 name|bp
 operator|=
@@ -295,7 +293,9 @@ name|rn
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rn
+operator|)
 return|;
 block|}
 end_function
@@ -372,7 +372,9 @@ name|rn
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rn
+operator|)
 return|;
 block|}
 end_function
@@ -467,7 +469,9 @@ name|rn
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rn
+operator|)
 return|;
 block|}
 end_function
@@ -562,7 +566,9 @@ name|rn
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rn
+operator|)
 return|;
 block|}
 end_function
@@ -600,7 +606,9 @@ name|off
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|rnh
 operator|=
@@ -632,7 +640,9 @@ operator|=
 name|at_lookup
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
