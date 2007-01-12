@@ -560,9 +560,7 @@ operator|->
 name|mii_inst
 argument_list|)
 argument_list|,
-name|BMCR_LOOP
-operator||
-name|BMCR_S100
+name|MII_MEDIA_100_TX
 argument_list|)
 expr_stmt|;
 name|mii_phy_reset

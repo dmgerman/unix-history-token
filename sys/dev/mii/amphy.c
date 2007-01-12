@@ -410,7 +410,7 @@ value|ifmedia_add(&mii->mii_media, (m), (c), NULL)
 if|#
 directive|if
 literal|0
-block|ADD(IFM_MAKEWORD(IFM_ETHER, IFM_100_TX, IFM_LOOP, sc->mii_inst), 	    BMCR_LOOP|BMCR_S100);
+block|ADD(IFM_MAKEWORD(IFM_ETHER, IFM_100_TX, IFM_LOOP, sc->mii_inst), 	    MII_MEDIA_100_TX);
 endif|#
 directive|endif
 name|mii_phy_reset
