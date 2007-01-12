@@ -929,6 +929,17 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+name|td
+operator|->
+name|td_retval
+index|[
+literal|0
+index|]
+operator|=
+name|ntv
+operator|.
+name|time_state
+expr_stmt|;
 return|return
 operator|(
 name|copyout
