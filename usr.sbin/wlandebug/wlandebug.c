@@ -437,7 +437,7 @@ name|IEEE80211_MSG_POWER
 block|}
 block|,
 block|{
-literal|"dotx1"
+literal|"dot1x"
 block|,
 name|IEEE80211_MSG_DOT1X
 block|}
