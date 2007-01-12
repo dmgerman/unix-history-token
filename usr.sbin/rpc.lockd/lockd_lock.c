@@ -4104,7 +4104,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * lock_nfslock: attempt to create a lock in the NFS lock list  *  * This routine tests whether the lock will be granted and then adds  * the entry to the lock list if so.  *   * Argument fl gets modified as its list housekeeping entries get modified  * upon insertion into the NFS lock list  *  * This routine makes several assumptions:  *    1) It is perfectly happy to grant a duplicate lock from the same pid.  *       While this seems to be intuitively wrong, it is required for proper  *       Posix semantics during unlock.  It is absolutely imperative to not  *       unlock the main lock before the two child locks are established. Thus,  *       one has be be able to create duplicate locks over an existing lock  *    2) It currently accepts duplicate locks from the same id,pid  */
+comment|/*  * lock_nfslock: attempt to create a lock in the NFS lock list  *  * This routine tests whether the lock will be granted and then adds  * the entry to the lock list if so.  *  * Argument fl gets modified as its list housekeeping entries get modified  * upon insertion into the NFS lock list  *  * This routine makes several assumptions:  *    1) It is perfectly happy to grant a duplicate lock from the same pid.  *       While this seems to be intuitively wrong, it is required for proper  *       Posix semantics during unlock.  It is absolutely imperative to not  *       unlock the main lock before the two child locks are established. Thus,  *       one has be be able to create duplicate locks over an existing lock  *    2) It currently accepts duplicate locks from the same id,pid  */
 end_comment
 
 begin_function
@@ -5374,6 +5374,133 @@ comment|/*  * Below here are routines for manipulating blocked lock requests  * 
 end_comment
 
 begin_function
+name|int
+name|duplicate_block
+parameter_list|(
+name|struct
+name|file_lock
+modifier|*
+name|fl
+parameter_list|)
+block|{
+name|struct
+name|file_lock
+modifier|*
+name|ifl
+decl_stmt|,
+modifier|*
+name|nfl
+decl_stmt|;
+name|int
+name|retval
+init|=
+literal|0
+decl_stmt|;
+name|debuglog
+argument_list|(
+literal|"Entering duplicate_block"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Is this lock request already on the blocking list? 	 * Condider it a dupe if the file handles, offset, length, 	 * exclusivity and client match. 	 */
+name|LIST_FOREACH
+argument_list|(
+argument|ifl
+argument_list|,
+argument|&blockedlocklist_head
+argument_list|,
+argument|nfslocklist
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|bcmp
+argument_list|(
+operator|&
+name|fl
+operator|->
+name|filehandle
+argument_list|,
+operator|&
+name|ifl
+operator|->
+name|filehandle
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fhandle_t
+argument_list|)
+argument_list|)
+operator|&&
+name|fl
+operator|->
+name|client
+operator|.
+name|exclusive
+operator|==
+name|ifl
+operator|->
+name|client
+operator|.
+name|exclusive
+operator|&&
+name|fl
+operator|->
+name|client
+operator|.
+name|l_offset
+operator|==
+name|ifl
+operator|->
+name|client
+operator|.
+name|l_offset
+operator|&&
+name|fl
+operator|->
+name|client
+operator|.
+name|l_len
+operator|==
+name|ifl
+operator|->
+name|client
+operator|.
+name|l_len
+operator|&&
+name|same_filelock_identity
+argument_list|(
+name|fl
+argument_list|,
+name|ifl
+argument_list|)
+condition|)
+block|{
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+block|}
+name|debuglog
+argument_list|(
+literal|"Exiting duplicate_block: %s\n"
+argument_list|,
+name|retval
+condition|?
+literal|"already blocked"
+else|:
+literal|"not already blocked"
+argument_list|)
+expr_stmt|;
+return|return
+name|retval
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|add_blockingfilelock
 parameter_list|(
@@ -5388,6 +5515,22 @@ argument_list|(
 literal|"Entering add_blockingfilelock\n"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * A blocking lock request _should_ never be duplicated as a client 	 * that is already blocked shouldn't be able to request another 	 * lock. Alas, there are some buggy clients that do request the same 	 * lock repeatedly. Make sure only unique locks are on the blocked 	 * lock list. 	 */
+if|if
+condition|(
+name|duplicate_block
+argument_list|(
+name|fl
+argument_list|)
+condition|)
+block|{
+name|debuglog
+argument_list|(
+literal|"Exiting add_blockingfilelock: already blocked\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Clear the blocking flag so that it can be reused without 	 * adding it to the blocking queue a second time 	 */
 name|fl
 operator|->
@@ -5407,7 +5550,7 @@ argument_list|)
 expr_stmt|;
 name|debuglog
 argument_list|(
-literal|"Exiting add_blockingfilelock\n"
+literal|"Exiting add_blockingfilelock: added blocked lock\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5727,7 +5870,7 @@ argument_list|(
 literal|"HW GRANTED\n"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX: Fixme: Check hwstatus for duplicate when 			 * true partial file locking and accounting is 			 * done on the hardware  			 */
+comment|/* 			 * XXX: Fixme: Check hwstatus for duplicate when 			 * true partial file locking and accounting is 			 * done on the hardware. 			 */
 if|if
 condition|(
 name|lnlstatus
