@@ -133,6 +133,10 @@ decl_stmt|;
 comment|/* source and dest address */
 block|}
 name|__packed
+name|__aligned
+argument_list|(
+literal|4
+argument_list|)
 struct|;
 end_struct
 
