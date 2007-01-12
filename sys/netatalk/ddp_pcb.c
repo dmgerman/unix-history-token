@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004-2005 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Copyright (c) 1990,1994 Regents of The University of Michigan.  * All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation, and that the name of The University  * of Michigan not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission. This software is supplied as is without expressed or  * implied warranties of any kind.  *  * This product includes software developed by the University of  * California, Berkeley and its contributors.  *  *	Research Systems Unix Group  *	The University of Michigan  *	c/o Wesley Craig  *	535 W. William Street  *	Ann Arbor, Michigan  *	+1-313-764-2278  *	netatalk@umich.edu  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2004-2005 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Copyright (c) 1990, 1994 Regents of The University of Michigan.  * All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation, and that the name of The University  * of Michigan not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission. This software is supplied as is without expressed or  * implied warranties of any kind.  *  * This product includes software developed by the University of  * California, Berkeley and its contributors.  *  *	Research Systems Unix Group  *	The University of Michigan  *	c/o Wesley Craig  *	535 W. William Street  *	Ann Arbor, Michigan  *	+1-313-764-2278  *	netatalk@umich.edu  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -144,7 +144,7 @@ modifier|*
 name|addr
 parameter_list|)
 block|{
-comment|/*      * Prevent modification of ddp during copy of addr.      */
+comment|/* 	 * Prevent modification of ddp during copy of addr. 	 */
 name|DDP_LOCK_ASSERT
 argument_list|(
 name|ddp
@@ -208,7 +208,7 @@ name|ddpcb
 modifier|*
 name|ddpp
 decl_stmt|;
-comment|/*      * We read and write both the ddp passed in, and also ddp_ports.      */
+comment|/* 	 * We read and write both the ddp passed in, and also ddp_ports. 	 */
 name|DDP_LIST_XLOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -217,6 +217,7 @@ argument_list|(
 name|ddp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Shouldn't be bound. 	 */
 if|if
 condition|(
 name|ddp
@@ -227,14 +228,12 @@ name|sat_port
 operator|!=
 name|ATADDR_ANYPORT
 condition|)
-block|{
-comment|/* shouldn't be bound */
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
+comment|/* 	 * Validate passed address. 	 */
 if|if
 condition|(
 name|addr
@@ -242,7 +241,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* validate passed address */
 name|sat
 operator|=
 operator|(
@@ -260,13 +258,11 @@ name|sat_family
 operator|!=
 name|AF_APPLETALK
 condition|)
-block|{
 return|return
 operator|(
 name|EAFNOSUPPORT
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|sat
@@ -339,22 +335,19 @@ operator|.
 name|s_node
 operator|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 if|if
 condition|(
-operator|!
 name|aa
+operator|==
+name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(
@@ -379,13 +372,11 @@ name|sat_port
 operator|>=
 name|ATPORT_LAST
 condition|)
-block|{
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|sat
@@ -401,13 +392,11 @@ argument_list|,
 name|PRIV_NETATALK_RESERVEDPORT
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|EACCES
 operator|)
 return|;
-block|}
 block|}
 block|}
 else|else
@@ -490,13 +479,11 @@ name|at_ifaddr_list
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
-block|}
 name|sat
 operator|->
 name|sat_addr
@@ -516,7 +503,7 @@ operator|=
 operator|*
 name|sat
 expr_stmt|;
-comment|/*      * Choose port.      */
+comment|/* 	 * Choose port. 	 */
 if|if
 condition|(
 name|sat
@@ -559,9 +546,7 @@ index|]
 operator|==
 name|NULL
 condition|)
-block|{
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -571,13 +556,11 @@ name|sat_port
 operator|==
 name|ATPORT_LAST
 condition|)
-block|{
 return|return
 operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
-block|}
 name|ddp
 operator|->
 name|ddp_lsat
@@ -654,9 +637,7 @@ name|sat_addr
 operator|.
 name|s_node
 condition|)
-block|{
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -664,13 +645,11 @@ name|ddpp
 operator|!=
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|EADDRINUSE
 operator|)
 return|;
-block|}
 name|ddp
 operator|->
 name|ddp_pnext
@@ -700,8 +679,9 @@ condition|(
 name|ddp
 operator|->
 name|ddp_pnext
+operator|!=
+name|NULL
 condition|)
-block|{
 name|ddp
 operator|->
 name|ddp_pnext
@@ -710,7 +690,6 @@ name|ddp_pprev
 operator|=
 name|ddp
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -792,14 +771,12 @@ name|sat_family
 operator|!=
 name|AF_APPLETALK
 condition|)
-block|{
 return|return
 operator|(
 name|EAFNOSUPPORT
 operator|)
 return|;
-block|}
-comment|/*      * Under phase 2, network 0 means "the network".  We take "the      * network" to mean the network the control block is bound to.      * If the control block is not bound, there is an error.      */
+comment|/* 	 * Under phase 2, network 0 means "the network".  We take "the 	 * network" to mean the network the control block is bound to.  If 	 * the control block is not bound, there is an error. 	 */
 if|if
 condition|(
 name|sat
@@ -829,13 +806,11 @@ name|sat_port
 operator|==
 name|ATADDR_ANYPORT
 condition|)
-block|{
 return|return
 operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
-block|}
 name|hintnet
 operator|=
 name|ddp
@@ -854,7 +829,7 @@ name|ddp
 operator|->
 name|ddp_route
 expr_stmt|;
-comment|/*      * If we've got an old route for this pcb, check that it is valid.      * If we've changed our address, we may have an old "good looking"      * route here.  Attempt to detect it.      */
+comment|/* 	 * If we've got an old route for this pcb, check that it is valid. 	 * If we've changed our address, we may have an old "good looking" 	 * route here.  Attempt to detect it. 	 */
 if|if
 condition|(
 name|ro
@@ -866,14 +841,11 @@ if|if
 condition|(
 name|hintnet
 condition|)
-block|{
 name|net
 operator|=
 name|hintnet
 expr_stmt|;
-block|}
 else|else
-block|{
 name|net
 operator|=
 name|sat
@@ -882,7 +854,6 @@ name|sat_addr
 operator|.
 name|s_net
 expr_stmt|;
-block|}
 name|aa
 operator|=
 name|NULL
@@ -951,9 +922,7 @@ operator|->
 name|aa_lastnet
 argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 block|}
 if|if
@@ -1022,7 +991,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-comment|/*      * If we've got no route for this interface, try to find one.      */
+comment|/* 	 * If we've got no route for this interface, try to find one. 	 */
 if|if
 condition|(
 name|ro
@@ -1064,7 +1033,6 @@ if|if
 condition|(
 name|hintnet
 condition|)
-block|{
 name|satosat
 argument_list|(
 operator|&
@@ -1079,9 +1047,7 @@ name|s_net
 operator|=
 name|hintnet
 expr_stmt|;
-block|}
 else|else
-block|{
 name|satosat
 argument_list|(
 operator|&
@@ -1100,7 +1066,6 @@ name|sat_addr
 operator|.
 name|s_net
 expr_stmt|;
-block|}
 name|satosat
 argument_list|(
 operator|&
@@ -1125,7 +1090,7 @@ name|ro
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Make sure any route that we have has a valid interface.      */
+comment|/* 	 * Make sure any route that we have has a valid interface. 	 */
 name|aa
 operator|=
 name|NULL
@@ -1172,9 +1137,7 @@ name|aa_ifp
 operator|==
 name|ifp
 condition|)
-block|{
 break|break;
-block|}
 block|}
 block|}
 if|if
@@ -1183,13 +1146,11 @@ name|aa
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|ENETUNREACH
 operator|)
 return|;
-block|}
 name|ddp
 operator|->
 name|ddp_fsat
@@ -1207,7 +1168,6 @@ name|sat_port
 operator|==
 name|ATADDR_ANYPORT
 condition|)
-block|{
 return|return
 operator|(
 name|at_pcbsetaddr
@@ -1220,7 +1180,6 @@ name|td
 argument_list|)
 operator|)
 return|;
-block|}
 return|return
 operator|(
 literal|0
@@ -1381,14 +1340,12 @@ name|ddpcb_list
 operator|!=
 name|NULL
 condition|)
-block|{
 name|ddpcb_list
 operator|->
 name|ddp_prev
 operator|=
 name|ddp
 expr_stmt|;
-block|}
 name|ddpcb_list
 operator|=
 name|ddp
@@ -1416,7 +1373,7 @@ modifier|*
 name|ddp
 parameter_list|)
 block|{
-comment|/*      * We modify ddp, ddp_ports, and the global list.      */
+comment|/* 	 * We modify ddp, ddp_ports, and the global list. 	 */
 name|DDP_LIST_XLOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -1444,7 +1401,7 @@ name|so_pcb
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* remove ddp from ddp_ports list */
+comment|/* Remove ddp from ddp_ports list. */
 if|if
 condition|(
 name|ddp
@@ -1477,7 +1434,6 @@ name|ddp_pprev
 operator|!=
 name|NULL
 condition|)
-block|{
 name|ddp
 operator|->
 name|ddp_pprev
@@ -1488,9 +1444,7 @@ name|ddp
 operator|->
 name|ddp_pnext
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ddp_ports
 index|[
 name|ddp
@@ -1506,7 +1460,6 @@ name|ddp
 operator|->
 name|ddp_pnext
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ddp
@@ -1515,7 +1468,6 @@ name|ddp_pnext
 operator|!=
 name|NULL
 condition|)
-block|{
 name|ddp
 operator|->
 name|ddp_pnext
@@ -1527,7 +1479,6 @@ operator|->
 name|ddp_pprev
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 name|ddp
@@ -1536,7 +1487,6 @@ name|ddp_route
 operator|.
 name|ro_rt
 condition|)
-block|{
 name|RTFREE
 argument_list|(
 name|ddp
@@ -1546,14 +1496,12 @@ operator|.
 name|ro_rt
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ddp
 operator|->
 name|ddp_prev
 condition|)
-block|{
 name|ddp
 operator|->
 name|ddp_prev
@@ -1564,23 +1512,19 @@ name|ddp
 operator|->
 name|ddp_next
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ddpcb_list
 operator|=
 name|ddp
 operator|->
 name|ddp_next
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ddp
 operator|->
 name|ddp_next
 condition|)
-block|{
 name|ddp
 operator|->
 name|ddp_next
@@ -1591,7 +1535,6 @@ name|ddp
 operator|->
 name|ddp_prev
 expr_stmt|;
-block|}
 name|DDP_UNLOCK
 argument_list|(
 name|ddp
@@ -1613,7 +1556,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For the moment, this just find the pcb with the correct local address.  * In the future, this will actually do some real searching, so we can use  * the sender's address to do de-multiplexing on a single port to many  * sockets (pcbs).  */
+comment|/*  * For the moment, this just find the pcb with the correct local address.  In  * the future, this will actually do some real searching, so we can use the  * sender's address to do de-multiplexing on a single port to many sockets  * (pcbs).  */
 end_comment
 
 begin_function
@@ -1646,7 +1589,7 @@ decl_stmt|;
 name|DDP_LIST_SLOCK_ASSERT
 argument_list|()
 expr_stmt|;
-comment|/*      * Check for bad ports.      */
+comment|/* 	 * Check for bad ports. 	 */
 if|if
 condition|(
 name|to
@@ -1661,14 +1604,12 @@ name|sat_port
 operator|>=
 name|ATPORT_LAST
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
-comment|/*      * Make sure the local address matches the sent address.  What about      * the interface?      */
+comment|/* 	 * Make sure the local address matches the sent address.  What about 	 * the interface? 	 */
 for|for
 control|(
 name|ddp

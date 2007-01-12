@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990,1991 Regents of The University of Michigan.  * All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation, and that the name of The University  * of Michigan not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission. This software is supplied as is without expressed or  * implied warranties of any kind.  *  *	Research Systems Unix Group  *	The University of Michigan  *	c/o Mike Clark  *	535 W. William Street  *	Ann Arbor, Michigan  *	+1-313-763-0525  *	netatalk@itd.umich.edu  */
+comment|/*-  * Copyright (c) 1990, 1991 Regents of The University of Michigan.  * All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation, and that the name of The University  * of Michigan not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission. This software is supplied as is without expressed or  * implied warranties of any kind.  *  *	Research Systems Unix Group  *	The University of Michigan  *	c/o Mike Clark  *	535 W. William Street  *	Ann Arbor, Michigan  *	+1-313-763-0525  *	netatalk@itd.umich.edu  */
 end_comment
 
 begin_comment
@@ -282,12 +282,11 @@ name|ddp_lsat
 operator|.
 name|sat_port
 expr_stmt|;
-comment|/*      * The checksum calculation is done after all of the other bytes have      * been filled in.      */
+comment|/* 	 * The checksum calculation is done after all of the other bytes have 	 * been filled in. 	 */
 if|if
 condition|(
 name|ddp_cksum
 condition|)
-block|{
 name|deh
 operator|->
 name|deh_sum
@@ -302,16 +301,13 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|deh
 operator|->
 name|deh_sum
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|deh
 operator|->
 name|deh_bytes
@@ -471,11 +467,9 @@ name|cksum
 operator|&
 literal|0x00010000
 condition|)
-block|{
 name|cksum
 operator|++
 expr_stmt|;
-block|}
 name|cksum
 operator|&=
 literal|0x0000ffff
@@ -488,12 +482,10 @@ name|cksum
 operator|==
 literal|0
 condition|)
-block|{
 name|cksum
 operator|=
 literal|0x0000ffff
 expr_stmt|;
-block|}
 return|return
 operator|(
 operator|(
@@ -560,7 +552,7 @@ comment|/* Find the loopback interface */
 block|}
 endif|#
 directive|endif
-comment|/*      * if we have a route, find the ifa that refers to this route.      * I.e The ifa used to get to the gateway.      */
+comment|/* 	 * If we have a route, find the ifa that refers to this route.  I.e 	 * the ifa used to get to the gateway. 	 */
 if|if
 condition|(
 operator|(
@@ -597,13 +589,11 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
 name|rtalloc
 argument_list|(
 name|ro
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -706,9 +696,7 @@ operator|->
 name|aa_lastnet
 argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 block|}
 else|else
@@ -796,7 +784,7 @@ name|ENETUNREACH
 operator|)
 return|;
 block|}
-comment|/*      * if the destination address is on a directly attached node use that,      * else use the official gateway.      */
+comment|/* 	 * If the destination address is on a directly attached node use 	 * that, else use the official gateway. 	 */
 if|if
 condition|(
 name|ntohs
@@ -843,7 +831,6 @@ operator|->
 name|aa_lastnet
 argument_list|)
 condition|)
-block|{
 name|gate
 operator|=
 operator|*
@@ -855,9 +842,7 @@ operator|->
 name|ro_dst
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|gate
 operator|=
 operator|*
@@ -870,8 +855,7 @@ operator|->
 name|rt_gateway
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*      * There are several places in the kernel where data is added to      * an mbuf without ensuring that the mbuf pointer is aligned.      * This is bad for transition routing, since phase 1 and phase 2      * packets end up poorly aligned due to the three byte elap header.      */
+comment|/* 	 * There are several places in the kernel where data is added to an 	 * mbuf without ensuring that the mbuf pointer is aligned.  This is 	 * bad for transition routing, since phase 1 and phase 2 packets end 	 * up poorly aligned due to the three byte elap header. 	 */
 if|if
 condition|(
 operator|!
@@ -1079,7 +1063,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* short-circuit the output if we're sending this to ourself */
+comment|/* Short-circuit the output if we're sending this to ourself. */
 if|if
 condition|(
 operator|(
@@ -1134,7 +1118,6 @@ operator|.
 name|s_node
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|if_simloop
@@ -1151,7 +1134,7 @@ literal|0
 argument_list|)
 operator|)
 return|;
-block|}
+comment|/* XXX */
 return|return
 operator|(
 call|(
@@ -1177,7 +1160,6 @@ name|NULL
 argument_list|)
 operator|)
 return|;
-comment|/* XXX */
 block|}
 end_function
 

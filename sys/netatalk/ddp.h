@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990,1991 Regents of The University of Michigan.  * All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation, and that the name of The University  * of Michigan not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission. This software is supplied as is without expressed or  * implied warranties of any kind.  *  *	Research Systems Unix Group  *	The University of Michigan  *	c/o Mike Clark  *	535 W. William Street  *	Ann Arbor, Michigan  *	+1-313-763-0525  *	netatalk@itd.umich.edu  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1990, 1991 Regents of The University of Michigan.  * All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation, and that the name of The University  * of Michigan not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission. This software is supplied as is without expressed or  * implied warranties of any kind.  *  *	Research Systems Unix Group  *	The University of Michigan  *	c/o Mike Clark  *	535 W. William Street  *	Ann Arbor, Michigan  *	+1-313-763-0525  *	netatalk@itd.umich.edu  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -13,11 +13,10 @@ begin_define
 define|#
 directive|define
 name|_NETATALK_DDP_H_
-value|1
 end_define
 
 begin_comment
-comment|/*  *<-1byte(8bits) ->  * +---------------+  * | 0 | hopc  |len|  * +---------------+  * | len (cont)    |  * +---------------+  * |               |  * +- DDP csum    -+  * |               |  * +---------------+  * |               |  * +- Dest NET    -+  * |               |  * +---------------+  * |               |  * +- Src NET     -+  * |               |  * +---------------+  * | Dest NODE     |  * +---------------+  * | Src NODE      |  * +---------------+  * | Dest PORT     |  * +---------------+  * | Src PORT      |  * +---------------+  *  * On Apples, there is also a ddp_type field, after src_port. However,  * under this unix implementation, user level processes need to be able  * to set the ddp_type. In later revisions, the ddp_type may only be  * available in a raw_appletalk interface.  */
+comment|/*-  *<-1byte(8bits) ->  * +---------------+  * | 0 | hopc  |len|  * +---------------+  * | len (cont)    |  * +---------------+  * |               |  * +- DDP csum    -+  * |               |  * +---------------+  * |               |  * +- Dest NET    -+  * |               |  * +---------------+  * |               |  * +- Src NET     -+  * |               |  * +---------------+  * | Dest NODE     |  * +---------------+  * | Src NODE      |  * +---------------+  * | Dest PORT     |  * +---------------+  * | Src PORT      |  * +---------------+  *  * On Apples, there is also a ddp_type field, after src_port.  However, under  * this unix implementation, user level processes need to be able to set the  * ddp_type.  In later revisions, the ddp_type may only be available in a  * raw_appletalk interface.  */
 end_comment
 
 begin_struct
@@ -133,26 +132,6 @@ decl_stmt|;
 block|}
 name|deh_u
 union|;
-define|#
-directive|define
-name|deh_pad
-value|deh_u.du_bits.dub_pad
-define|#
-directive|define
-name|deh_hops
-value|deh_u.du_bits.dub_hops
-define|#
-directive|define
-name|deh_len
-value|deh_u.du_bits.dub_len
-define|#
-directive|define
-name|deh_sum
-value|deh_u.du_bits.dub_sum
-define|#
-directive|define
-name|deh_bytes
-value|deh_u.du_bytes
 name|u_short
 name|deh_dnet
 decl_stmt|;
@@ -174,6 +153,41 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|deh_pad
+value|deh_u.du_bits.dub_pad
+end_define
+
+begin_define
+define|#
+directive|define
+name|deh_hops
+value|deh_u.du_bits.dub_hops
+end_define
+
+begin_define
+define|#
+directive|define
+name|deh_len
+value|deh_u.du_bits.dub_len
+end_define
+
+begin_define
+define|#
+directive|define
+name|deh_sum
+value|deh_u.du_bits.dub_sum
+end_define
+
+begin_define
+define|#
+directive|define
+name|deh_bytes
+value|deh_u.du_bytes
+end_define
 
 begin_define
 define|#
@@ -253,29 +267,44 @@ decl_stmt|;
 block|}
 name|dsh_u
 union|;
+block|}
+struct|;
+end_struct
+
+begin_define
 define|#
 directive|define
 name|dsh_pad
 value|dsh_u.du_bits.dub_pad
+end_define
+
+begin_define
 define|#
 directive|define
 name|dsh_len
 value|dsh_u.du_bits.dub_len
+end_define
+
+begin_define
 define|#
 directive|define
 name|dsh_dport
 value|dsh_u.du_bits.dub_dport
+end_define
+
+begin_define
 define|#
 directive|define
 name|dsh_sport
 value|dsh_u.du_bits.dub_sport
+end_define
+
+begin_define
 define|#
 directive|define
 name|dsh_bytes
 value|dsh_u.du_bytes
-block|}
-struct|;
-end_struct
+end_define
 
 begin_endif
 endif|#

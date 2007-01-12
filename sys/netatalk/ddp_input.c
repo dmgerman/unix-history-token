@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Copyright (c) 1990,1994 Regents of The University of Michigan.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation, and that the name of The University  * of Michigan not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission. This software is supplied as is without expressed or  * implied warranties of any kind.  *  * This product includes software developed by the University of  * California, Berkeley and its contributors.  *  *	Research Systems Unix Group  *	The University of Michigan  *	c/o Wesley Craig  *	535 W. William Street  *	Ann Arbor, Michigan  *	+1-313-764-2278  *	netatalk@umich.edu  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2004 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Copyright (c) 1990, 1994 Regents of The University of Michigan.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation, and that the name of The University  * of Michigan not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission. This software is supplied as is without expressed or  * implied warranties of any kind.  *  * This product includes software developed by the University of  * California, Berkeley and its contributors.  *  *	Research Systems Unix Group  *	The University of Michigan  *	c/o Wesley Craig  *	535 W. William Street  *	Ann Arbor, Michigan  *	+1-313-764-2278  *	netatalk@umich.edu  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -189,7 +189,7 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-comment|/* 	 * Phase 2 packet handling  	 */
+comment|/* 	 * Phase 2 packet handling . 	 */
 name|ddp_input
 argument_list|(
 name|m
@@ -205,7 +205,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -282,27 +281,9 @@ condition|(
 name|elhp
 operator|->
 name|el_type
-operator|==
+operator|!=
 name|ELAP_DDPEXTEND
 condition|)
-block|{
-name|ddp_input
-argument_list|(
-name|m
-argument_list|,
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-argument_list|,
-name|NULL
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|bcopy
 argument_list|(
@@ -337,7 +318,22 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+else|else
+name|ddp_input
+argument_list|(
+name|m
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+argument_list|,
+name|NULL
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -346,32 +342,24 @@ specifier|static
 name|void
 name|ddp_input
 parameter_list|(
-name|m
-parameter_list|,
-name|ifp
-parameter_list|,
-name|elh
-parameter_list|,
-name|phase
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|elaphdr
 modifier|*
 name|elh
-decl_stmt|;
+parameter_list|,
 name|int
 name|phase
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sockaddr_at
@@ -452,7 +440,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	 * Extract the information in the short header. 	 * netowrk information is defaulted to ATADDR_ANYNET 	 * and node information comes from the elh info. 	 * We must be phase 1. 	 */
+comment|/* 		 * Extract the information in the short header.  Network 		 * information is defaulted to ATADDR_ANYNET and node 		 * information comes from the elh info.  We must be phase 1. 		 */
 name|ddpstat
 operator|.
 name|ddps_short
@@ -597,7 +585,7 @@ name|ddps
 operator|.
 name|dsh_sport
 expr_stmt|;
-comment|/*  	 * Make sure that we point to the phase1 ifaddr info  	 * and that it's valid for this packet. 	 */
+comment|/*  		 * Make sure that we point to the phase1 ifaddr info and that 		 * it's valid for this packet. 		 */
 for|for
 control|(
 name|aa
@@ -666,11 +654,9 @@ name|ATADDR_BCAST
 operator|)
 operator|)
 condition|)
-block|{
 break|break;
 block|}
-block|}
-comment|/*  	 * maybe we got a broadcast not meant for us.. ditch it. 	 */
+comment|/*  		 * maybe we got a broadcast not meant for us.. ditch it. 		 */
 if|if
 condition|(
 name|aa
@@ -688,7 +674,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	 * There was no 'elh' passed on. This could still be 	 * either phase1 or phase2. 	 * We have a long header, but we may be running on a phase 1 net. 	 * Extract out all the info regarding this packet's src& dst. 	 */
+comment|/* 		 * There was no 'elh' passed on. This could still be either 		 * phase1 or phase2.  We have a long header, but we may be 		 * running on a phase 1 net.  Extract out all the info 		 * regarding this packet's src& dst. 		 */
 name|ddpstat
 operator|.
 name|ddps_long
@@ -793,13 +779,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|ddpstat
 operator|.
 name|ddps_nosum
 operator|++
 expr_stmt|;
-block|}
 name|from
 operator|.
 name|sat_addr
@@ -867,7 +851,7 @@ operator|==
 name|ATADDR_ANYNET
 condition|)
 block|{
-comment|/* 	     * The TO address doesn't specify a net, 	     * So by definition it's for this net. 	     * Try find ifaddr info with the right phase,  	     * the right interface, and either to our node, a broadcast, 	     * or looped back (though that SHOULD be covered in the other 	     * cases). 	     * 	     * XXX If we have multiple interfaces, then the first with 	     * this node number will match (which may NOT be what we want, 	     * but it's probably safe in 99.999% of cases. 	     */
+comment|/* 			 * The TO address doesn't specify a net, so by 			 * definition it's for this net.  Try find ifaddr 			 * info with the right phase, the right interface, 			 * and either to our node, a broadcast, or looped 			 * back (though that SHOULD be covered in the other 			 * cases). 			 * 			 * XXX If we have multiple interfaces, then the first 			 * with this node number will match (which may NOT be 			 * what we want, but it's probably safe in 99.999% of 			 * cases. 			 */
 for|for
 control|(
 name|aa
@@ -899,9 +883,7 @@ operator|&
 name|AFA_PHASE2
 operator|)
 condition|)
-block|{
 continue|continue;
-block|}
 if|if
 condition|(
 name|phase
@@ -918,9 +900,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 continue|continue;
-block|}
 if|if
 condition|(
 operator|(
@@ -968,14 +948,12 @@ name|IFF_LOOPBACK
 operator|)
 operator|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 block|}
 else|else
 block|{
-comment|/*  	     * A destination network was given. We just try to find  	     * which ifaddr info matches it. 	     */
+comment|/*  			 * A destination network was given.  We just try to 			 * find which ifaddr info matches it. 	    		 */
 for|for
 control|(
 name|aa
@@ -993,7 +971,7 @@ operator|->
 name|aa_next
 control|)
 block|{
-comment|/* 		 * This is a kludge. Accept packets that are 		 * for any router on a local netrange. 		 */
+comment|/* 				 * This is a kludge. Accept packets that are 				 * for any router on a local netrange. 				 */
 if|if
 condition|(
 name|to
@@ -1014,10 +992,8 @@ name|s_node
 operator|==
 literal|0
 condition|)
-block|{
 break|break;
-block|}
-comment|/* 		 * Don't use ifaddr info for which we are totally outside the 		 * netrange, and it's not a startup packet. 		 * Startup packets are always implicitly allowed on to 		 * the next test. 		 */
+comment|/* 				 * Don't use ifaddr info for which we are 				 * totally outside the netrange, and it's not 				 * a startup packet.  Startup packets are 				 * always implicitly allowed on to the next 				 * test. 				 */
 if|if
 condition|(
 operator|(
@@ -1086,10 +1062,8 @@ literal|0xfffe
 operator|)
 operator|)
 condition|)
-block|{
 continue|continue;
-block|}
-comment|/* 		 * Don't record a match either if we just don't have a match 		 * in the node address. This can have if the interface 		 * is in promiscuous mode for example. 		 */
+comment|/* 				 * Don't record a match either if we just 				 * don't have a match in the node address. 				 * This can have if the interface is in 				 * promiscuous mode for example. 				 */
 if|if
 condition|(
 operator|(
@@ -1119,14 +1093,12 @@ operator|!=
 name|ATADDR_BCAST
 operator|)
 condition|)
-block|{
 continue|continue;
-block|}
 break|break;
 block|}
 block|}
 block|}
-comment|/*      * Adjust the length, removing any padding that may have been added      * at a link layer.  We do this before we attempt to forward a packet,      * possibly on a different media.      */
+comment|/* 	 * Adjust the length, removing any padding that may have been added 	 * at a link layer.  We do this before we attempt to forward a 	 * packet, possibly on a different media. 	 */
 name|mlen
 operator|=
 name|m
@@ -1160,7 +1132,6 @@ name|mlen
 operator|>
 name|dlen
 condition|)
-block|{
 name|m_adj
 argument_list|(
 name|m
@@ -1170,8 +1141,7 @@ operator|-
 name|mlen
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*      * If it aint for a net on any of our interfaces,      * or it IS for a net on a different interface than it came in on,      * (and it is not looped back) then consider if we should forward it.      * As we are not really a router this is a bit cheeky, but it may be      * useful some day.      */
+comment|/* 	 * If it isn't for a net on any of our interfaces, or it IS for a net 	 * on a different interface than it came in on, (and it is not looped 	 * back) then consider if we should forward it.  As we are not really 	 * a router this is a bit cheeky, but it may be useful some day. 	 */
 if|if
 condition|(
 operator|(
@@ -1213,7 +1183,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/*  	 * If we've explicitly disabled it, don't route anything 	 */
+comment|/*  		 * If we've explicitly disabled it, don't route anything. 		 */
 if|if
 condition|(
 name|ddp_forward
@@ -1228,7 +1198,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*  	 * If the cached forwarding route is still valid, use it. 	 */
+comment|/*  		 * If the cached forwarding route is still valid, use it. 		 * 		 * XXXRW: Access to the cached route may not be properly 		 * synchronized for parallel input handling. 		 */
 if|if
 condition|(
 name|forwro
@@ -1288,7 +1258,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * If we don't have a cached one (any more) or it's useless, 	 * Then get a new route. 	 * XXX this could cause a 'route leak'. check this! 	 */
+comment|/* 		 * If we don't have a cached one (any more) or it's useless, 		 * then get a new route. 		 * 		 * XXX this could cause a 'route leak'.  Check this! 		 */
 if|if
 condition|(
 name|forwro
@@ -1369,7 +1339,7 @@ name|forwro
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * If it's not going to get there on this hop, and it's 	 * already done too many hops, then throw it away. 	 */
+comment|/*  		 * If it's not going to get there on this hop, and it's 		 * already done too many hops, then throw it away. 		 */
 if|if
 condition|(
 operator|(
@@ -1408,7 +1378,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * A ddp router might use the same interface 	 * to forward the packet, which this would not effect. 	 * Don't allow packets to cross from one interface to another however. 	 */
+comment|/* 		 * A ddp router might use the same interface to forward the 		 * packet, which this would not effect.  Don't allow packets 		 * to cross from one interface to another however. 		 */
 if|if
 condition|(
 name|ddp_firewall
@@ -1441,7 +1411,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Adjust the header. 	 * If it was a short header then it would have not gotten here, 	 * so we can assume there is room to drop the header in. 	 * XXX what about promiscuous mode, etc... 	 */
+comment|/* 		 * Adjust the header.  If it was a short header then it would 		 * have not gotten here, so we can assume there is room to 		 * drop the header in. 		 * 		 * XXX what about promiscuous mode, etc... 		 */
 name|ddpe
 operator|.
 name|deh_hops
@@ -1458,6 +1428,7 @@ operator|.
 name|deh_bytes
 argument_list|)
 expr_stmt|;
+comment|/* XXX deh? */
 name|bcopy
 argument_list|(
 operator|(
@@ -1477,7 +1448,6 @@ name|u_short
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX deh? */
 if|if
 condition|(
 name|ddp_route
@@ -1488,24 +1458,20 @@ operator|&
 name|forwro
 argument_list|)
 condition|)
-block|{
 name|ddpstat
 operator|.
 name|ddps_cantforward
 operator|++
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ddpstat
 operator|.
 name|ddps_forward
 operator|++
 expr_stmt|;
-block|}
 return|return;
 block|}
-comment|/*      * It was for us, and we have an ifaddr to use with it.      */
+comment|/* 	 * It was for us, and we have an ifaddr to use with it. 	 */
 name|from
 operator|.
 name|sat_len
@@ -1522,27 +1488,13 @@ name|sat_family
 operator|=
 name|AF_APPLETALK
 expr_stmt|;
-comment|/*       * We are no longer interested in the link layer.      * so cut it off.      */
+comment|/*  	 * We are no longer interested in the link layer so cut it off. 	 */
 if|if
 condition|(
 name|elh
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
-name|m_adj
-argument_list|(
-name|m
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ddpshdr
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 if|if
 condition|(
@@ -1587,7 +1539,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       * Search for ddp protocol control blocks that match these      * addresses.       */
+else|else
+name|m_adj
+argument_list|(
+name|m
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ddpshdr
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/*  	 * Search for ddp protocol control blocks that match these addresses.  	 */
 name|DDP_LIST_SLOCK
 argument_list|()
 expr_stmt|;
@@ -1610,11 +1574,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 ifdef|#
 directive|ifdef
 name|MAC
@@ -1659,7 +1621,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*       * If we found one, deliver the packet to the socket      */
+comment|/*  	 * If we found one, deliver the packet to the socket 	 */
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
@@ -1707,7 +1669,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-comment|/*  	 * If the socket is full (or similar error) dump the packet. 	 */
+comment|/*  		 * If the socket is full (or similar error) dump the packet. 		 */
 name|ddpstat
 operator|.
 name|ddps_nosockspace
@@ -1717,7 +1679,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * And wake up whatever might be waiting for it      */
+comment|/* 	 * And wake up whatever might be waiting for it 	 */
 name|sorwakeup_locked
 argument_list|(
 name|ddp
@@ -1747,42 +1709,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* As if we haven't got enough of this sort of think floating around the kernel :) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BPXLEN
-value|48
-end_define
-
-begin_define
-define|#
-directive|define
-name|BPALEN
-value|16
-end_define
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_endif
-unit|char	hexdig[] = "0123456789ABCDEF";  static void bprint(char *data, int len) {     char	xout[ BPXLEN ], aout[ BPALEN ];     int		i = 0;      bzero(xout, BPXLEN);     bzero(aout, BPALEN);      for (;;) { 	if (len< 1) { 	    if (i != 0) { 		printf("%s\t%s\n", xout, aout); 	    } 	    printf("%s\n", "(end)"); 	    break; 	}  	xout[ (i*3) ] = hexdig[ (*data& 0xf0)>> 4 ]; 	xout[ (i*3) + 1 ] = hexdig[ *data& 0x0f ];  	if ((u_char)*data< 0x7f&& (u_char)*data> 0x20) { 	    aout[ i ] = *data; 	} else { 	    aout[ i ] = '.'; 	}  	xout[ (i*3) + 2 ] = ' ';  	i++; 	len--; 	data++;  	if (i> BPALEN - 2) { 	    printf("%s\t%s\n", xout, aout); 	    bzero(xout, BPXLEN); 	    bzero(aout, BPALEN); 	    i = 0; 	    continue; 	}     } }  static void m_printm(struct mbuf *m) {     for (; m; m = m->m_next) { 	bprint(mtod(m, char *), m->m_len);     } }
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
