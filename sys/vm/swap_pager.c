@@ -5324,6 +5324,18 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|uma_zone_exhausted
+argument_list|(
+name|swap_zone
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"swap zone exhausted, increase kern.maxswzone\n"
+argument_list|)
+expr_stmt|;
 name|VM_WAIT
 expr_stmt|;
 name|VM_OBJECT_LOCK
