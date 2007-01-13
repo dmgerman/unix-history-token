@@ -411,7 +411,7 @@ name|char
 modifier|*
 name|digits
 init|=
-literal|"0123457890abcdef"
+literal|"0123456789abcdef"
 decl_stmt|;
 if|if
 condition|(
