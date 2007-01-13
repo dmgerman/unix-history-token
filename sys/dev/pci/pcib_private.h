@@ -38,6 +38,10 @@ define|#
 directive|define
 name|PCIB_SUBTRACTIVE
 value|0x1
+define|#
+directive|define
+name|PCIB_DISABLE_MSI
+value|0x2
 name|uint16_t
 name|command
 decl_stmt|;
