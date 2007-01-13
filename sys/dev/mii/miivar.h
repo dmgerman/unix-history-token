@@ -788,15 +788,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mii_media_from_bmcr
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|mii_phy_auto
 parameter_list|(
 name|struct

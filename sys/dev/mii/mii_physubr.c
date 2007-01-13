@@ -1175,56 +1175,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a BMCR value, return the corresponding ifmedia word.  */
-end_comment
-
-begin_function
-name|int
-name|mii_media_from_bmcr
-parameter_list|(
-name|int
-name|bmcr
-parameter_list|)
-block|{
-name|int
-name|rv
-init|=
-name|IFM_ETHER
-decl_stmt|;
-if|if
-condition|(
-name|bmcr
-operator|&
-name|BMCR_S100
-condition|)
-name|rv
-operator||=
-name|IFM_100_TX
-expr_stmt|;
-else|else
-name|rv
-operator||=
-name|IFM_10_T
-expr_stmt|;
-if|if
-condition|(
-name|bmcr
-operator|&
-name|BMCR_FDX
-condition|)
-name|rv
-operator||=
-name|IFM_FDX
-expr_stmt|;
-return|return
-operator|(
-name|rv
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Initialize generic PHY media based on BMSR, called when a PHY is  * attached.  We expect to be set up to print a comma-separated list  * of media names.  Does not print a newline.  */
 end_comment
 
