@@ -1054,9 +1054,8 @@ decl_stmt|;
 name|int
 name|use26
 init|=
-literal|0
+name|linux_use_linux26
 decl_stmt|;
-comment|/* defaults to off */
 name|pr
 operator|=
 name|td
@@ -1100,11 +1099,6 @@ name|pr_use_linux26
 expr_stmt|;
 block|}
 block|}
-else|else
-name|use26
-operator|=
-name|linux_use_linux26
-expr_stmt|;
 return|return
 operator|(
 name|use26
