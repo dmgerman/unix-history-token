@@ -2384,7 +2384,6 @@ condition|(
 name|la
 operator|->
 name|la_asked
-operator|++
 operator|==
 literal|0
 operator|||
@@ -2415,6 +2414,11 @@ operator|->
 name|rt_expire
 operator|=
 name|time_uptime
+expr_stmt|;
+name|la
+operator|->
+name|la_asked
+operator|++
 expr_stmt|;
 name|RT_UNLOCK
 argument_list|(
