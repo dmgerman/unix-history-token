@@ -8296,7 +8296,7 @@ name|sc
 operator|->
 name|bge_flags
 operator||=
-name|BGE_FLAG_NO3LED
+name|BGE_FLAG_NO_3LED
 expr_stmt|;
 return|return
 operator|(
@@ -10889,7 +10889,7 @@ operator||=
 name|BGE_FLAG_5714_FAMILY
 comment|/* | BGE_FLAG_JUMBO */
 expr_stmt|;
-comment|/* Fall through */
+comment|/* FALLTHRU */
 case|case
 name|BGE_ASICREV_BCM5750
 case|:
@@ -10908,7 +10908,7 @@ name|bge_flags
 operator||=
 name|BGE_FLAG_575X_PLUS
 expr_stmt|;
-comment|/* Fall through */
+comment|/* FALLTHRU */
 case|case
 name|BGE_ASICREV_BCM5705
 case|:
@@ -10919,6 +10919,77 @@ operator||=
 name|BGE_FLAG_5705_PLUS
 expr_stmt|;
 break|break;
+block|}
+comment|/* Set various bug flags. */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_chiprev
+operator|==
+name|BGE_CHIPREV_5703_AX
+operator|||
+name|sc
+operator|->
+name|bge_chiprev
+operator|==
+name|BGE_CHIPREV_5704_AX
+condition|)
+name|sc
+operator|->
+name|bge_flags
+operator||=
+name|BGE_FLAG_ADC_BUG
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_chipid
+operator|==
+name|BGE_CHIPID_BCM5704_A0
+condition|)
+name|sc
+operator|->
+name|bge_flags
+operator||=
+name|BGE_FLAG_5704_A0_BUG
+expr_stmt|;
+if|if
+condition|(
+name|BGE_IS_5705_PLUS
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5755
+operator|||
+name|sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5787
+condition|)
+name|sc
+operator|->
+name|bge_flags
+operator||=
+name|BGE_FLAG_JITTER_BUG
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|bge_flags
+operator||=
+name|BGE_FLAG_BER_BUG
+expr_stmt|;
 block|}
 comment|/* 	 * Check if this is a PCI-X or PCI Express device.   	 */
 if|#
@@ -19603,7 +19674,7 @@ name|sc
 operator|->
 name|bge_flags
 operator|&
-name|BGE_FLAG_NO3LED
+name|BGE_FLAG_NO_3LED
 condition|)
 name|printf
 argument_list|(
