@@ -791,11 +791,11 @@ comment|/* outdoor operation */
 comment|/* rate tables */
 define|#
 directive|define
-name|IEEE80211_MODE_11A_HALF
+name|IEEE80211_MODE_HALF
 value|(IEEE80211_MODE_MAX+0)
 define|#
 directive|define
-name|IEEE80211_MODE_11A_QUARTER
+name|IEEE80211_MODE_QUARTER
 value|(IEEE80211_MODE_MAX+1)
 specifier|const
 name|HAL_RATE_TABLE
