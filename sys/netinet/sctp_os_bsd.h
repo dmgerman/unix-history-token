@@ -197,6 +197,37 @@ define|\
 value|uma_zfree(zone, element);
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_HASH_INIT
+parameter_list|(
+name|size
+parameter_list|,
+name|hashmark
+parameter_list|)
+value|hashinit_flags(size, M_PCB, hashmark, HASH_NOWAIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_HASH_FREE
+parameter_list|(
+name|table
+parameter_list|,
+name|hashmark
+parameter_list|)
+value|hashdestroy(table, M_PCB, hashmark)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_M_COPYM
+value|m_copym
+end_define
+
 begin_comment
 comment|/*  * timers  */
 end_comment
@@ -237,6 +268,13 @@ define|#
 directive|define
 name|SCTP_OS_TIMER_STOP
 value|callout_stop
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_OS_TIMER_STOP_DRAIN
+value|callout_drain
 end_define
 
 begin_define
@@ -549,6 +587,20 @@ parameter_list|(
 name|ip6
 parameter_list|)
 value|(ntohs(ip6->ip6_plen))
+end_define
+
+begin_comment
+comment|/* is the endpoint v6only? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_IPV6_V6ONLY
+parameter_list|(
+name|inp
+parameter_list|)
+value|(((struct inpcb *)inp)->inp_flags& IN6P_IPV6_V6ONLY)
 end_define
 
 begin_endif

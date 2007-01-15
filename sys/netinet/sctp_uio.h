@@ -396,6 +396,16 @@ begin_comment
 comment|/* end of message signal */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|INVALID_SINFO_FLAG
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0xffffff00 \& ~(SCTP_EOF | SCTP_ABORT | SCTP_UNORDERED |\ 				        SCTP_ADDR_OVER | SCTP_SENDALL | SCTP_EOR)) != 0)
+end_define
+
 begin_comment
 comment|/* for the endpoint */
 end_comment
@@ -485,6 +495,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(PR_SCTP_POLICY(x) == SCTP_PR_SCTP_RTX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_SCTP_INVALID_POLICY
+parameter_list|(
+name|x
+parameter_list|)
+value|(PR_SCTP_POLICY(x)> SCTP_PR_SCTP_RTX)
 end_define
 
 begin_comment

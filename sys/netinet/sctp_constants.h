@@ -3971,6 +3971,17 @@ value|480
 end_define
 
 begin_comment
+comment|/* This time wait is the same as the default cookie life  * since we now enter a tag in every time we send a cookie.  * We want this shorter to avoid vtag depletion.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_TIME_WAIT_SHORT
+value|60
+end_define
+
+begin_comment
 comment|/* The system retains a cache of free chunks such to  * cut down on calls the memory allocation system. There  * is a per association limit of free items and a overall  * system limit. If either one gets hit then the resource  * stops being cached.  */
 end_comment
 

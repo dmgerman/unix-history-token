@@ -8126,7 +8126,7 @@ condition|)
 block|{
 name|dmbuf
 operator|=
-name|sctp_m_copym
+name|SCTP_M_COPYM
 argument_list|(
 operator|*
 name|m
@@ -12554,7 +12554,7 @@ operator|<
 operator|(
 name|long
 operator|)
-name|MHLEN
+name|MLEN
 operator|&&
 name|SCTP_BUF_NEXT
 argument_list|(
@@ -13261,7 +13261,7 @@ argument_list|(
 name|mm
 argument_list|)
 operator|=
-name|sctp_m_copym
+name|SCTP_M_COPYM
 argument_list|(
 name|m
 argument_list|,

@@ -1978,6 +1978,12 @@ decl_stmt|;
 name|uint8_t
 name|iam_blocking
 decl_stmt|;
+name|uint8_t
+name|cookie_how
+index|[
+literal|8
+index|]
+decl_stmt|;
 comment|/* 	 * The mapping array is used to track out of order sequences above 	 * last_acked_seq. 0 indicates packet missing 1 indicates packet 	 * rec'd. We slide it up every time we raise last_acked_seq and 0 	 * trailing locactions out.  If I get a TSN above the array 	 * mappingArraySz, I discard the datagram and let retransmit happen. 	 */
 block|}
 struct|;

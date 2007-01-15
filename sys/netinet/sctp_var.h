@@ -947,6 +947,15 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|sctp_pcbinfo_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
 name|sctp_shutdown

@@ -101,13 +101,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|sctp_m_copym
-value|m_copym
-end_define
-
-begin_define
-define|#
-directive|define
 name|sctp_get_associd
 parameter_list|(
 name|stcb
@@ -257,7 +250,7 @@ name|struct
 name|sctp_association
 modifier|*
 parameter_list|,
-name|u_long
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl

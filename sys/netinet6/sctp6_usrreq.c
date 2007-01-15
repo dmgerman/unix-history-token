@@ -3017,19 +3017,20 @@ name|INP_IPV6
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|addr
 operator|!=
 name|NULL
+operator|)
 operator|&&
 operator|(
+name|SCTP_IPV6_V6ONLY
+argument_list|(
 name|inp6
-operator|->
-name|inp_flags
-operator|&
-name|IN6P_IPV6_V6ONLY
-operator|)
+argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 if|if
@@ -4300,13 +4301,10 @@ name|addr
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|SCTP_IPV6_V6ONLY
+argument_list|(
 name|inp6
-operator|->
-name|inp_flags
-operator|&
-name|IN6P_IPV6_V6ONLY
-operator|)
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * if IPV6_V6ONLY flag, we discard datagrams destined to a 		 * v4 addr or v4-mapped addr 		 */
@@ -4774,13 +4772,10 @@ name|addr
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|SCTP_IPV6_V6ONLY
+argument_list|(
 name|inp6
-operator|->
-name|inp_flags
-operator|&
-name|IN6P_IPV6_V6ONLY
-operator|)
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * if IPV6_V6ONLY flag, ignore connections destined to a v4 		 * addr or v4-mapped addr 		 */
@@ -5987,13 +5982,10 @@ expr_stmt|;
 comment|/* if I'm V6ONLY, convert it to v4-mapped */
 if|if
 condition|(
-operator|(
+name|SCTP_IPV6_V6ONLY
+argument_list|(
 name|inp6
-operator|->
-name|inp_flags
-operator|&
-name|IN6P_IPV6_V6ONLY
-operator|)
+argument_list|)
 condition|)
 block|{
 name|struct
@@ -6140,13 +6132,10 @@ block|}
 comment|/* if I'm V6ONLY, convert it to v4-mapped */
 if|if
 condition|(
-operator|(
+name|SCTP_IPV6_V6ONLY
+argument_list|(
 name|inp6
-operator|->
-name|inp_flags
-operator|&
-name|IN6P_IPV6_V6ONLY
-operator|)
+argument_list|)
 condition|)
 block|{
 name|struct
