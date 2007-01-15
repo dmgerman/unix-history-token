@@ -2747,6 +2747,14 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_io_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|CAM_REQ_ABORTED
