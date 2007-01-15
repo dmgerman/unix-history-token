@@ -1951,9 +1951,6 @@ argument_list|(
 name|mr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|sc
 operator|->
 name|sc_ot_ires
@@ -1975,17 +1972,15 @@ literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_ot_ires
 operator|==
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"%s: failed to get temperature interrupt"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
+operator|||
 name|bus_setup_intr
 argument_list|(
 name|dev
@@ -2006,6 +2001,15 @@ operator|&
 name|sc
 operator|->
 name|sc_ot_ihand
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"%s: failed to set up temperature interrupt"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|SYSIO_WRITE8
@@ -2045,9 +2049,6 @@ argument_list|(
 name|mr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|sc
 operator|->
 name|sc_pf_ires
@@ -2069,17 +2070,15 @@ literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_pf_ires
 operator|==
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"%s: failed to get power fail interrupt"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
+operator|||
 name|bus_setup_intr
 argument_list|(
 name|dev
@@ -2100,6 +2099,15 @@ operator|&
 name|sc
 operator|->
 name|sc_pf_ihand
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"%s: failed to set up power fail interrupt"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|SYSIO_WRITE8
