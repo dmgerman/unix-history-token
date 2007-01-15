@@ -2802,6 +2802,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|HAL_ABI_VERSION
+operator|<
+literal|0x06122400
+end_if
+
+begin_comment
+comment|/* XXX yech, can't get to regdomain so just hack a compat shim */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ath_hal_isgsmsku
+parameter_list|(
+name|ah
+parameter_list|)
+define|\
+value|((ah)->ah_countryCode == 843)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
