@@ -2255,13 +2255,17 @@ name|cpu_cx_generic
 operator|=
 name|TRUE
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cpu_dev
 argument_list|,
-literal|"Switching to generic Cx mode\n"
+literal|"switching to generic Cx mode\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2634,22 +2638,11 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|cpu_dev
-argument_list|,
-literal|"Unable to find _CST method\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 comment|/* _CST is a package with a count and at least one Cx package. */
 name|top
 operator|=
@@ -2690,7 +2683,7 @@ name|sc
 operator|->
 name|cpu_dev
 argument_list|,
-literal|"Invalid _CST package\n"
+literal|"invalid _CST package\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsFree
@@ -2725,7 +2718,7 @@ name|sc
 operator|->
 name|cpu_dev
 argument_list|,
-literal|"Invalid _CST state count (%d != %d)\n"
+literal|"invalid _CST state count (%d != %d)\n"
 argument_list|,
 name|count
 argument_list|,
