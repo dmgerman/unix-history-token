@@ -409,7 +409,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Allocate a block in the filesystem.  *  * The size of the requested block is given, which must be some  * multiple of fs_fsize and<= fs_bsize.  * A preference may be optionally specified. If a preference is given  * the following hierarchy is used to allocate a block:  *   1) allocate the requested block.  *   2) allocate a rotationally optimal block in the same cylinder.  *   3) allocate a block in the same cylinder group.  *   4) quadradically rehash into other cylinder groups, until an  *      available block is located.  * If no block preference is given the following heirarchy is used  * to allocate a block:  *   1) allocate a block in the cylinder group that contains the  *      inode for the file.  *   2) quadradically rehash into other cylinder groups, until an  *      available block is located.  */
+comment|/*  * Allocate a block in the filesystem.  *  * The size of the requested block is given, which must be some  * multiple of fs_fsize and<= fs_bsize.  * A preference may be optionally specified. If a preference is given  * the following hierarchy is used to allocate a block:  *   1) allocate the requested block.  *   2) allocate a rotationally optimal block in the same cylinder.  *   3) allocate a block in the same cylinder group.  *   4) quadradically rehash into other cylinder groups, until an  *      available block is located.  * If no block preference is given the following hierarchy is used  * to allocate a block:  *   1) allocate a block in the cylinder group that contains the  *      inode for the file.  *   2) quadradically rehash into other cylinder groups, until an  *      available block is located.  */
 end_comment
 
 begin_function
@@ -4524,7 +4524,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate an inode in the filesystem.  *  * If allocating a directory, use ffs_dirpref to select the inode.  * If allocating in a directory, the following hierarchy is followed:  *   1) allocate the preferred inode.  *   2) allocate an inode in the same cylinder group.  *   3) quadradically rehash into other cylinder groups, until an  *      available inode is located.  * If no inode preference is given the following heirarchy is used  * to allocate an inode:  *   1) allocate an inode in cylinder group 0.  *   2) quadradically rehash into other cylinder groups, until an  *      available inode is located.  */
+comment|/*  * Allocate an inode in the filesystem.  *  * If allocating a directory, use ffs_dirpref to select the inode.  * If allocating in a directory, the following hierarchy is followed:  *   1) allocate the preferred inode.  *   2) allocate an inode in the same cylinder group.  *   3) quadradically rehash into other cylinder groups, until an  *      available inode is located.  * If no inode preference is given the following hierarchy is used  * to allocate an inode:  *   1) allocate an inode in cylinder group 0.  *   2) quadradically rehash into other cylinder groups, until an  *      available inode is located.  */
 end_comment
 
 begin_function
