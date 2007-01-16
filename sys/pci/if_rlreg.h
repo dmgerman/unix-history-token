@@ -3390,6 +3390,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_TX_DESC_THLD
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|RL_RX_DESC_CNT
 value|RL_TX_DESC_CNT
 end_define
@@ -3556,11 +3563,6 @@ begin_struct
 struct|struct
 name|rl_dmaload_arg
 block|{
-name|struct
-name|rl_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|int
 name|rl_idx
 decl_stmt|;
