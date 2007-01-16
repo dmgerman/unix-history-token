@@ -1587,12 +1587,14 @@ expr_stmt|;
 comment|/* Check for valid flags. */
 name|KASSERT
 argument_list|(
+operator|(
 name|flags
 operator||
 operator|(
 name|HASH_WAITOK
 operator||
 name|HASH_NOWAIT
+operator|)
 operator|)
 operator|==
 operator|(
