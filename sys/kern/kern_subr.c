@@ -1584,32 +1584,6 @@ argument_list|(
 literal|"hashinit: bad elements"
 argument_list|)
 expr_stmt|;
-comment|/* Check for valid flags. */
-name|KASSERT
-argument_list|(
-operator|(
-name|flags
-operator||
-operator|(
-name|HASH_WAITOK
-operator||
-name|HASH_NOWAIT
-operator|)
-operator|)
-operator|==
-operator|(
-name|HASH_WAITOK
-operator||
-name|HASH_NOWAIT
-operator|)
-argument_list|,
-operator|(
-literal|"Bad flags (0x%x) passed to hashinit_flags"
-operator|,
-name|flags
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* Exactly one of HASH_WAITOK and HASH_NOWAIT must be set. */
 name|KASSERT
 argument_list|(
@@ -1626,7 +1600,9 @@ name|HASH_NOWAIT
 operator|)
 argument_list|,
 operator|(
-literal|"Both WAITOK and NOWAIT passed to hashinit_flags"
+literal|"Bad flags (0x%x) passed to hashinit_flags"
+operator|,
+name|flags
 operator|)
 argument_list|)
 expr_stmt|;
