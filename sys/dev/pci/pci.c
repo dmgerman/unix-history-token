@@ -998,7 +998,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* 	 * MSI doesn't work on earlier Intel chipsets including 	 * E7500, E7501, E7505, E7210, and 855. 	 */
+comment|/* 	 * MSI doesn't work on earlier Intel chipsets including 	 * E7500, E7501, E7505, 845, 865, 875/E7210, and 855. 	 */
 block|{
 literal|0x25408086
 block|,
@@ -1021,6 +1021,26 @@ block|}
 block|,
 block|{
 literal|0x25508086
+block|,
+name|PCI_QUIRK_DISABLE_MSI
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x25608086
+block|,
+name|PCI_QUIRK_DISABLE_MSI
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x25708086
 block|,
 name|PCI_QUIRK_DISABLE_MSI
 block|,
