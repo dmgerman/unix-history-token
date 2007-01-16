@@ -244,7 +244,7 @@ block|,
 expr|sizeof
 operator|(
 expr|struct
-name|mii_softc
+name|brgphy_softc
 operator|)
 block|}
 decl_stmt|;
