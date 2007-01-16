@@ -622,13 +622,6 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
