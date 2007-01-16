@@ -5401,7 +5401,7 @@ argument_list|(
 literal|"Entering duplicate_block"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Is this lock request already on the blocking list? 	 * Condider it a dupe if the file handles, offset, length, 	 * exclusivity and client match. 	 */
+comment|/* 	 * Is this lock request already on the blocking list? 	 * Consider it a dupe if the file handles, offset, length, 	 * exclusivity and client match. 	 */
 name|LIST_FOREACH
 argument_list|(
 argument|ifl
