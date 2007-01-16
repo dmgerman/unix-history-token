@@ -58,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|FC_SIZE
-value|2
+value|3
 end_define
 
 begin_comment
@@ -85,6 +85,17 @@ end_define
 
 begin_comment
 comment|/* entry for the last cluster in the file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_NEXTTOLASTFC
+value|2
+end_define
+
+begin_comment
+comment|/* entry for a close to the last cluster in 				 * the file */
 end_comment
 
 begin_define
@@ -117,6 +128,16 @@ name|fsrcn
 parameter_list|)
 define|\
 value|(dep)->de_fc[(slot)].fc_frcn = (frcn); \ 	(dep)->de_fc[(slot)].fc_fsrcn = (fsrcn);
+end_define
+
+begin_define
+define|#
+directive|define
+name|fc_last_to_nexttolast
+parameter_list|(
+name|dep
+parameter_list|)
+value|do {		 \ 	(dep)->de_fc[FC_NEXTTOLASTFC].fc_frcn =  \ 	(dep)->de_fc[FC_LASTFC].fc_frcn;	 \ 	(dep)->de_fc[FC_NEXTTOLASTFC].fc_fsrcn = \ 	(dep)->de_fc[FC_LASTFC].fc_fsrcn;	 \ } while (0)
 end_define
 
 begin_comment
