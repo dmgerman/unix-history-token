@@ -905,7 +905,7 @@ name|nsw_wcount_async_max
 operator|=
 name|nsw_wcount_async
 expr_stmt|;
-comment|/* 	 * Initialize our zone.  Right now I'm just guessing on the number 	 * we need based on the number of pages in the system.  Each swblock 	 * can hold 16 pages, so this is probably overkill.  This reservation 	 * is typically limited to around 32MB by default. 	 */
+comment|/* 	 * Initialize our zone.  Right now I'm just guessing on the number 	 * we need based on the number of pages in the system.  Each swblock 	 * can hold 16 pages, so this is probably overkill.  This reservation 	 * is typically limited to around 32MB by default.  The initial 	 * guess caps the swap space at 8 times the size of RAM. 	 */
 name|n
 operator|=
 name|cnt
@@ -4747,6 +4747,21 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|swap_zone
+operator|->
+name|zpagecount
+operator|>=
+name|swap_zone
+operator|->
+name|zpagemax
+condition|)
+name|printf
+argument_list|(
+literal|"swap zone exhausted, increase kern.maxswzone\n"
+argument_list|)
+expr_stmt|;
 name|VM_WAIT
 expr_stmt|;
 goto|goto
