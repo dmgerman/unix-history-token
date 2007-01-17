@@ -342,13 +342,9 @@ operator|&
 name|allproc_lock
 argument_list|)
 expr_stmt|;
-name|LIST_FOREACH
+name|FOREACH_PROC_IN_SYSTEM
 argument_list|(
 argument|p
-argument_list|,
-argument|&allproc
-argument_list|,
-argument|p_list
 argument_list|)
 block|{
 if|if

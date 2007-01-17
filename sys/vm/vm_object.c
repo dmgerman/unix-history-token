@@ -7008,13 +7008,9 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* sx_slock(&allproc_lock); */
-name|LIST_FOREACH
+name|FOREACH_PROC_IN_SYSTEM
 argument_list|(
 argument|p
-argument_list|,
-argument|&allproc
-argument_list|,
-argument|p_list
 argument_list|)
 block|{
 if|if

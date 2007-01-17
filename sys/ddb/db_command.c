@@ -2514,13 +2514,9 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Find the process in question.  allproc_lock is not needed 	 * since we're in DDB. 	 */
 comment|/* sx_slock(&allproc_lock); */
-name|LIST_FOREACH
+name|FOREACH_PROC_IN_SYSTEM
 argument_list|(
 argument|p
-argument_list|,
-argument|&allproc
-argument_list|,
-argument|p_list
 argument_list|)
 if|if
 condition|(
@@ -2961,13 +2957,9 @@ name|void
 modifier|*
 name|prev_jb
 decl_stmt|;
-name|LIST_FOREACH
+name|FOREACH_PROC_IN_SYSTEM
 argument_list|(
 argument|p
-argument_list|,
-argument|&allproc
-argument_list|,
-argument|p_list
 argument_list|)
 block|{
 name|prev_jb
