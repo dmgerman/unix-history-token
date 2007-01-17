@@ -2330,7 +2330,7 @@ begin_define
 define|#
 directive|define
 name|ARM_NOCACHE_KVA_SIZE
-value|0x600000
+value|0x1000000
 end_define
 
 begin_decl_stmt

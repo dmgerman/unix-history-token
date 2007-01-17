@@ -104,6 +104,22 @@ name|IS_PHYSICAL
 value|0x4
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|busdma_swi_pending
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|busdma_swi
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

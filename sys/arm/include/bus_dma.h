@@ -132,6 +132,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|bus_dma_tag_t
+name|arm_root_dma_tag
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
