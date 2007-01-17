@@ -4631,13 +4631,9 @@ name|i
 operator|=
 literal|1
 expr_stmt|;
-name|LIST_FOREACH
+name|FOREACH_PROC_IN_SYSTEM
 argument_list|(
 argument|p
-argument_list|,
-argument|&allproc
-argument_list|,
-argument|p_list
 argument_list|)
 block|{
 name|FOREACH_THREAD_IN_PROC
