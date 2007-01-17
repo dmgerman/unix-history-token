@@ -253,6 +253,19 @@ directive|include
 file|"miibus_if.h"
 end_include
 
+begin_comment
+comment|/*   * XXX: For the main bus dma tag. Can go away if the new method to get the   * dma tag from the parent got MFC'd into RELENG_6.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ixp425_softc
+modifier|*
+name|ixp425_softc
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|npebuf
@@ -2288,7 +2301,9 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|ixp425_softc
+operator|->
+name|sc_dmat
 argument_list|,
 literal|1
 argument_list|,
@@ -2355,7 +2370,9 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|ixp425_softc
+operator|->
+name|sc_dmat
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3175,7 +3192,9 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|ixp425_softc
+operator|->
+name|sc_dmat
 argument_list|,
 sizeof|sizeof
 argument_list|(

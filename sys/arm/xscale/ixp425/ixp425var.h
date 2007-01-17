@@ -76,6 +76,9 @@ name|struct
 name|rman
 name|sc_mem_rman
 decl_stmt|;
+name|bus_dma_tag_t
+name|sc_dmat
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -119,6 +122,9 @@ decl_stmt|;
 name|struct
 name|bus_space
 name|sc_pci_iot
+decl_stmt|;
+name|bus_dma_tag_t
+name|sc_dmat
 decl_stmt|;
 block|}
 struct|;
