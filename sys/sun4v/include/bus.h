@@ -55,13 +55,13 @@ file|<machine/upa.h>
 end_include
 
 begin_comment
-comment|/*  * UPA and SBUS spaces are non-cached and big endian  * (except for RAM and PROM)  *  * PCI spaces are non-cached and little endian  */
+comment|/*  * Nexus and SBus spaces are non-cached and big endian  * (except for RAM and PROM)  *  * PCI spaces are non-cached and little endian  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UPA_BUS_SPACE
+name|NEXUS_BUS_SPACE
 value|0
 end_define
 

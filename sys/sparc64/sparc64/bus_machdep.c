@@ -8,8 +8,22 @@ comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of Cali
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  * Copyright 2001 by Thomas Moestl<tmm@FreeBSD.org>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	8.6 (Berkeley) 1/14/94  *	from: NetBSD: machdep.c,v 1.111 2001/09/15 07:13:40 eeh Exp  *	and  * 	from: FreeBSD: src/sys/i386/i386/busdma_machdep.c,v 1.24 2001/08/15  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  * Copyright 2001 by Thomas Moestl<tmm@FreeBSD.org>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	8.6 (Berkeley) 1/14/94  *	from: NetBSD: machdep.c,v 1.111 2001/09/15 07:13:40 eeh Exp  *	and  * 	from: FreeBSD: src/sys/i386/i386/busdma_machdep.c,v 1.24 2001/08/15  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -179,10 +193,10 @@ init|=
 block|{
 name|ASI_PHYS_BYPASS_EC_WITH_EBIT
 block|,
-comment|/* UPA */
+comment|/* nexus */
 name|ASI_PHYS_BYPASS_EC_WITH_EBIT
 block|,
-comment|/* SBUS */
+comment|/* SBus */
 name|ASI_PHYS_BYPASS_EC_WITH_EBIT_L
 block|,
 comment|/* PCI configuration space */
@@ -205,10 +219,10 @@ init|=
 block|{
 name|ASI_PHYS_BYPASS_EC_WITH_EBIT
 block|,
-comment|/* UPA */
+comment|/* nexus */
 name|ASI_PHYS_BYPASS_EC_WITH_EBIT
 block|,
-comment|/* SBUS */
+comment|/* SBus */
 name|ASI_PHYS_BYPASS_EC_WITH_EBIT
 block|,
 comment|/* PCI configuration space */
@@ -2239,7 +2253,7 @@ name|BUS_DMASYNC_PREWRITE
 operator|)
 condition|)
 block|{
-comment|/*  		 * Don't really need to do anything, but flush any pending 		 * writes anyway.  		 */
+comment|/* 		 * Don't really need to do anything, but flush any pending 		 * writes anyway. 		 */
 name|membar
 argument_list|(
 name|Sync
@@ -2605,7 +2619,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sparc64_bus_map: zero size\n"
+literal|"%s: zero size\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -2687,8 +2703,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"sparc64_bus_map: cannot allocate virtual "
-literal|"memory"
+literal|"%s: cannot allocate virtual memory"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -2960,7 +2977,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
-comment|/*  	 * We have lots of alternatives depending on whether we're 	 * synchronizing loads with loads, loads with stores, stores 	 * with loads, or stores with stores.  The only ones that seem 	 * generic are #Sync and #MemIssue.  I'll use #Sync for safety. 	 */
+comment|/* 	 * We have lots of alternatives depending on whether we're 	 * synchronizing loads with loads, loads with stores, stores 	 * with loads, or stores with stores.  The only ones that seem 	 * generic are #Sync and #MemIssue.  I'll use #Sync for safety. 	 */
 switch|switch
 condition|(
 name|flags
@@ -2986,7 +3003,9 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"sparc64_bus_barrier: unknown flags"
+literal|"%s: unknown flags"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -3006,7 +3025,7 @@ comment|/* cookie */
 name|NULL
 block|,
 comment|/* parent bus tag */
-name|UPA_BUS_SPACE
+name|NEXUS_BUS_SPACE
 block|,
 comment|/* type */
 name|nexus_bus_barrier

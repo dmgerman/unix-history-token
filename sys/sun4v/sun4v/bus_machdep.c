@@ -8,8 +8,22 @@ comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of Cali
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  * Copyright 2001 by Thomas Moestl<tmm@FreeBSD.org>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	8.6 (Berkeley) 1/14/94  *	from: NetBSD: machdep.c,v 1.111 2001/09/15 07:13:40 eeh Exp  *	and  * 	from: FreeBSD: src/sys/i386/i386/busdma_machdep.c,v 1.24 2001/08/15  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  * Copyright 2001 by Thomas Moestl<tmm@FreeBSD.org>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	8.6 (Berkeley) 1/14/94  *	from: NetBSD: machdep.c,v 1.111 2001/09/15 07:13:40 eeh Exp  *	and  * 	from: FreeBSD: src/sys/i386/i386/busdma_machdep.c,v 1.24 2001/08/15  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -179,10 +193,10 @@ init|=
 block|{
 name|ASI_REAL_IO
 block|,
-comment|/* UPA */
+comment|/* nexus */
 name|ASI_REAL_IO
 block|,
-comment|/* SBUS */
+comment|/* SBus */
 name|ASI_REAL_IO_L
 block|,
 comment|/* PCI configuration space */
@@ -205,10 +219,10 @@ init|=
 block|{
 name|ASI_REAL_IO
 block|,
-comment|/* UPA */
+comment|/* nexus */
 name|ASI_REAL_IO
 block|,
-comment|/* SBUS */
+comment|/* SBus */
 name|ASI_REAL_IO
 block|,
 comment|/* PCI configuration space */
@@ -2239,7 +2253,7 @@ name|BUS_DMASYNC_PREWRITE
 operator|)
 condition|)
 block|{
-comment|/*  		 * Don't really need to do anything, but flush any pending 		 * writes anyway.  		 */
+comment|/* 		 * Don't really need to do anything, but flush any pending 		 * writes anyway. 		 */
 name|membar
 argument_list|(
 name|Sync
@@ -2567,7 +2581,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|vm_offset_t addr; 	vm_offset_t sva; 	vm_offset_t va; 	vm_paddr_t pa; 	vm_size_t vsz; 	u_long pm_flags;  	addr = (vm_offset_t)handle; 	size = round_page(size); 	if (size == 0) { 		printf("sparc64_bus_map: zero size\n"); 		return (EINVAL); 	} 	switch (tag->bst_type) { 	case PCI_CONFIG_BUS_SPACE: 	case PCI_IO_BUS_SPACE: 	case PCI_MEMORY_BUS_SPACE: 		pm_flags = TD_IE; 		break; 	default: 		pm_flags = 0; 		break; 	}  	if (!(flags& BUS_SPACE_MAP_CACHEABLE)) 		pm_flags |= TD_E;  	if (vaddr != 0L) 		sva = trunc_page(vaddr); 	else { 		if ((sva = kmem_alloc_nofault(kernel_map, size)) == 0) 			panic("sparc64_bus_map: cannot allocate virtual " 			    "memory"); 	}
+block|vm_offset_t addr; 	vm_offset_t sva; 	vm_offset_t va; 	vm_paddr_t pa; 	vm_size_t vsz; 	u_long pm_flags;  	addr = (vm_offset_t)handle; 	size = round_page(size); 	if (size == 0) { 		printf("%s: zero size\n", __func__); 		return (EINVAL); 	} 	switch (tag->bst_type) { 	case PCI_CONFIG_BUS_SPACE: 	case PCI_IO_BUS_SPACE: 	case PCI_MEMORY_BUS_SPACE: 		pm_flags = TD_IE; 		break; 	default: 		pm_flags = 0; 		break; 	}  	if (!(flags& BUS_SPACE_MAP_CACHEABLE)) 		pm_flags |= TD_E;  	if (vaddr != 0L) 		sva = trunc_page(vaddr); 	else { 		if ((sva = kmem_alloc_nofault(kernel_map, size)) == 0) 			panic("%s: cannot allocate virtual memory", __func__); 	}
 comment|/* Preserve page offset. */
 block|*hp = (void *)(sva | ((u_long)addr& PAGE_MASK));  	pa = trunc_page(addr); 	if ((flags& BUS_SPACE_MAP_READONLY) == 0) 		pm_flags |= TD_W;  	va = sva; 	vsz = size; 	do { 		pmap_kenter_flags(va, pa, pm_flags); 		va += PAGE_SIZE; 		pa += PAGE_SIZE; 	} while ((vsz -= PAGE_SIZE)> 0); 	tlb_range_demap(kernel_pmap, sva, sva + size - 1);
 endif|#
@@ -2683,7 +2697,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
-comment|/*  	 * We have lots of alternatives depending on whether we're 	 * synchronizing loads with loads, loads with stores, stores 	 * with loads, or stores with stores.  The only ones that seem 	 * generic are #Sync and #MemIssue.  I'll use #Sync for safety. 	 */
+comment|/* 	 * We have lots of alternatives depending on whether we're 	 * synchronizing loads with loads, loads with stores, stores 	 * with loads, or stores with stores.  The only ones that seem 	 * generic are #Sync and #MemIssue.  I'll use #Sync for safety. 	 */
 switch|switch
 condition|(
 name|flags
@@ -2709,7 +2723,9 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"sparc64_bus_barrier: unknown flags"
+literal|"%s: unknown flags"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -2729,7 +2745,7 @@ comment|/* cookie */
 name|NULL
 block|,
 comment|/* parent bus tag */
-name|UPA_BUS_SPACE
+name|NEXUS_BUS_SPACE
 block|,
 comment|/* type */
 name|nexus_bus_barrier

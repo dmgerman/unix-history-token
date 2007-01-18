@@ -1335,7 +1335,7 @@ block|{
 operator|*
 name|space
 operator|=
-name|UPA_BUS_SPACE
+name|NEXUS_BUS_SPACE
 expr_stmt|;
 return|return
 operator|(
@@ -1403,7 +1403,7 @@ block|{
 operator|*
 name|space
 operator|=
-name|UPA_BUS_SPACE
+name|NEXUS_BUS_SPACE
 expr_stmt|;
 return|return
 operator|(
