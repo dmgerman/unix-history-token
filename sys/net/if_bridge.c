@@ -760,7 +760,7 @@ name|uint8_t
 modifier|*
 parameter_list|,
 name|struct
-name|ifnet
+name|bridge_iflist
 modifier|*
 parameter_list|,
 name|int
@@ -5432,8 +5432,6 @@ operator|->
 name|ifba_dst
 argument_list|,
 name|bif
-operator|->
-name|bif_ifp
 argument_list|,
 literal|1
 argument_list|,
@@ -8275,7 +8273,7 @@ name|eh
 operator|->
 name|ether_shost
 argument_list|,
-name|src_if
+name|bif
 argument_list|,
 literal|0
 argument_list|,
@@ -8672,6 +8670,9 @@ name|struct
 name|bridge_iflist
 modifier|*
 name|bif
+decl_stmt|,
+modifier|*
+name|bif2
 decl_stmt|;
 name|struct
 name|ifnet
@@ -8854,7 +8855,7 @@ name|eh
 operator|->
 name|ether_shost
 argument_list|,
-name|ifp
+name|bif
 argument_list|,
 literal|0
 argument_list|,
@@ -9191,7 +9192,7 @@ block|}
 comment|/* 	 * Unicast.  Make sure it's not for us. 	 */
 name|LIST_FOREACH
 argument_list|(
-argument|bif
+argument|bif2
 argument_list|,
 argument|&sc->sc_iflist
 argument_list|,
@@ -9200,7 +9201,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|bif
+name|bif2
 operator|->
 name|bif_ifp
 operator|->
@@ -9216,7 +9217,7 @@ name|memcmp
 argument_list|(
 name|IF_LLADDR
 argument_list|(
-name|bif
+name|bif2
 operator|->
 name|bif_ifp
 argument_list|)
@@ -9234,7 +9235,7 @@ directive|ifdef
 name|DEV_CARP
 operator|||
 operator|(
-name|bif
+name|bif2
 operator|->
 name|bif_ifp
 operator|->
@@ -9242,7 +9243,7 @@ name|if_carp
 operator|&&
 name|carp_forus
 argument_list|(
-name|bif
+name|bif2
 operator|->
 name|bif_ifp
 operator|->
@@ -9276,7 +9277,7 @@ name|eh
 operator|->
 name|ether_shost
 argument_list|,
-name|ifp
+name|bif
 argument_list|,
 literal|0
 argument_list|,
@@ -9289,7 +9290,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|=
-name|bif
+name|bif2
 operator|->
 name|bif_ifp
 expr_stmt|;
@@ -9311,7 +9312,7 @@ name|memcmp
 argument_list|(
 name|IF_LLADDR
 argument_list|(
-name|bif
+name|bif2
 operator|->
 name|bif_ifp
 argument_list|)
@@ -9329,7 +9330,7 @@ directive|ifdef
 name|DEV_CARP
 operator|||
 operator|(
-name|bif
+name|bif2
 operator|->
 name|bif_ifp
 operator|->
@@ -9337,7 +9338,7 @@ name|if_carp
 operator|&&
 name|carp_forus
 argument_list|(
-name|bif
+name|bif2
 operator|->
 name|bif_ifp
 operator|->
@@ -9912,9 +9913,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|ifnet
+name|bridge_iflist
 modifier|*
-name|dst_if
+name|bif
 parameter_list|,
 name|int
 name|setflags
@@ -9927,6 +9928,15 @@ name|struct
 name|bridge_rtnode
 modifier|*
 name|brt
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|dst_if
+init|=
+name|bif
+operator|->
+name|bif_ifp
 decl_stmt|;
 name|int
 name|error
@@ -9998,11 +10008,32 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+if|if
+condition|(
+name|bif
+operator|->
+name|bif_flags
+operator|&
+name|IFBIF_STICKY
+condition|)
+name|brt
+operator|->
+name|brt_flags
+operator|=
+name|IFBAF_STICKY
+expr_stmt|;
+else|else
 name|brt
 operator|->
 name|brt_flags
 operator|=
 name|IFBAF_DYNAMIC
+expr_stmt|;
+name|brt
+operator|->
+name|brt_ifp
+operator|=
+name|dst_if
 expr_stmt|;
 name|memcpy
 argument_list|(

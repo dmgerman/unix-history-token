@@ -435,8 +435,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFBIF_STICKY
+value|0x10
+end_define
+
+begin_comment
+comment|/* if learned addresses stick */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFBIFBITS
-value|"\020\1LEARNING\2DISCOVER\3STP\4SPAN"
+value|"\020\1LEARNING\2DISCOVER\3STP\4SPAN\5STICKY"
 end_define
 
 begin_comment
@@ -612,8 +623,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFBAF_STICKY
+value|0x02
+end_define
+
+begin_comment
+comment|/* sticky address */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFBAFBITS
-value|"\020\1STATIC"
+value|"\020\1STATIC\2STICKY"
 end_define
 
 begin_comment
