@@ -313,7 +313,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|at91_usart_poll
+name|at91_usart_rxready
 parameter_list|(
 name|struct
 name|uart_bas
@@ -610,9 +610,9 @@ operator|=
 name|at91_usart_putc
 block|,
 operator|.
-name|poll
+name|rxready
 operator|=
-name|at91_usart_poll
+name|at91_usart_rxready
 block|,
 operator|.
 name|getc
@@ -784,13 +784,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Poll for a character available  */
+comment|/*  * Check for a character available.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|at91_usart_poll
+name|at91_usart_rxready
 parameter_list|(
 name|struct
 name|uart_bas
@@ -798,9 +798,8 @@ modifier|*
 name|bas
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
+return|return
+operator|(
 operator|(
 name|RD4
 argument_list|(
@@ -811,23 +810,12 @@ argument_list|)
 operator|&
 name|USART_CSR_RXRDY
 operator|)
-condition|)
-return|return
-operator|(
-operator|-
+operator|!=
+literal|0
+condition|?
 literal|1
-operator|)
-return|;
-return|return
-operator|(
-name|RD4
-argument_list|(
-name|bas
-argument_list|,
-name|USART_RHR
-argument_list|)
-operator|&
-literal|0xff
+else|:
+literal|0
 operator|)
 return|;
 block|}
