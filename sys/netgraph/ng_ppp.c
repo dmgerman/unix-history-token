@@ -5854,25 +5854,7 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|linkNum
-operator|>=
-literal|0
-operator|&&
-name|linkNum
-operator|<
-name|NG_PPP_MAX_LINKS
-argument_list|,
-operator|(
-literal|"%s: bogus index 0x%x"
-operator|,
-name|__func__
-operator|,
-name|index
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* 	KASSERT(linkNum>= 0&& linkNum< NG_PPP_MAX_LINKS, 	    ("%s: bogus index 0x%x", __func__, index)); */
 name|NGI_GET_M
 argument_list|(
 name|item
