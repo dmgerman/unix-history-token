@@ -255,7 +255,21 @@ name|defined
 argument_list|(
 name|__ia64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
 end_elif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -406,6 +420,15 @@ name|v
 parameter_list|)
 value|bus_space_write_4(IA64_BUS_SPACE_MEM, a, 0, v)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __ia64__ */
+end_comment
 
 begin_function
 specifier|static
@@ -632,7 +655,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__i386__&& !__ia64__&& !__amd64__&& !__powerpc__ */
+comment|/* !__i386__&& !__amd64__&& !__ia64__&& !__sparc64__&& !__powerpc__ */
 end_comment
 
 begin_define
