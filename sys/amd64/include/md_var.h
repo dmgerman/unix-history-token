@@ -167,8 +167,8 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|pcpu
-modifier|*
 name|__pcpu
+index|[]
 decl_stmt|;
 end_decl_stmt
 
