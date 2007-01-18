@@ -27038,6 +27038,10 @@ name|struct
 name|callout
 name|bce_stat_ch
 decl_stmt|;
+name|int
+name|watchdog_timer
+decl_stmt|;
+comment|/* ticks until chip reset */
 comment|/* Frame size and mbuf allocation size for RX frames. */
 name|u32
 name|max_frame_size
