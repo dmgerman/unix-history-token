@@ -3448,7 +3448,7 @@ else|else
 block|{
 if|if
 condition|(
-name|access
+name|eaccess
 argument_list|(
 name|argv
 index|[
