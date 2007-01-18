@@ -5536,6 +5536,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_EISA
+end_ifdef
+
 begin_function_decl
 name|dpt_conf_t
 modifier|*
@@ -5545,6 +5551,11 @@ name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

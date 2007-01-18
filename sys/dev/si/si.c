@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_eisa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_tty.h"
 end_include
 
@@ -1278,6 +1284,9 @@ operator|->
 name|sc_type
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEV_EISA
 case|case
 name|SIEISA
 case|:
@@ -1296,6 +1305,8 @@ operator|<<
 literal|4
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|SIPCI
@@ -1470,6 +1481,9 @@ operator|->
 name|sc_type
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEV_EISA
 case|case
 name|SIEISA
 case|:
@@ -1516,6 +1530,8 @@ argument_list|)
 expr_stmt|;
 comment|/* reset interrupt */
 break|break;
+endif|#
+directive|endif
 case|case
 name|SIPCI
 case|:
@@ -5081,6 +5097,9 @@ operator|=
 literal|0x0
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|DEV_EISA
 case|case
 name|SIEISA
 case|:
@@ -5117,6 +5136,8 @@ literal|3
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|SIEMPTY
 case|:
@@ -7038,9 +7059,14 @@ name|host_type
 condition|)
 block|{
 comment|/* Z280 based cards */
+ifdef|#
+directive|ifdef
+name|DEV_EISA
 case|case
 name|SIEISA
 case|:
+endif|#
+directive|endif
 case|case
 name|SIHOST2
 case|:

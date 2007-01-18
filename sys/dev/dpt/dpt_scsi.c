@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_eisa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -296,6 +302,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_EISA
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|__inline
@@ -312,6 +324,11 @@ name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -804,6 +821,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_EISA
+end_ifdef
+
 begin_function
 specifier|static
 name|__inline
@@ -884,6 +907,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1885,6 +1913,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_EISA
+end_ifdef
+
 begin_function
 name|dpt_conf_t
 modifier|*
@@ -2199,6 +2233,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Read a configuration page into the supplied dpt_cont_t buffer.  */
