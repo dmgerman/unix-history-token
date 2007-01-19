@@ -7589,11 +7589,11 @@ if|if
 condition|(
 name|bits
 operator|>
-literal|56
+literal|48
 condition|)
 name|bits
 operator|=
-literal|56
+literal|48
 expr_stmt|;
 comment|/* 	** If time_t is signed, then 0 is just above the median, 	** assuming two's complement arithmetic. 	** If time_t is unsigned, then (1<< bits) is just above the median. 	*/
 name|t
