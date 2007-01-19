@@ -15,11 +15,22 @@ directive|define
 name|_MACHINE_CACHE_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<dev/ofw/openfirm.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -146,6 +157,12 @@ directive|define
 name|IC_VALID_MASK
 value|((1<< IC_VALID_BITS) - 1)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_comment
 comment|/*  * Cache control information.  */
@@ -358,6 +375,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !LOCORE */
+end_comment
 
 begin_endif
 endif|#

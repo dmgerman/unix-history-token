@@ -15,11 +15,22 @@ directive|define
 name|_MACHINE_PCB_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<machine/frame.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -34,6 +45,12 @@ directive|define
 name|PCB_FEF
 value|(1<< 0)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_comment
 comment|/* NOTE: pcb_ufp must be aligned on a 64 byte boundary. */
@@ -107,10 +124,12 @@ parameter_list|(
 name|struct
 name|trapframe
 modifier|*
+name|tf
 parameter_list|,
 name|struct
 name|pcb
 modifier|*
+name|pcb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -131,6 +150,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !LOCORE */
+end_comment
 
 begin_endif
 endif|#

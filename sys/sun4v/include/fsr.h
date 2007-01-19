@@ -36,6 +36,12 @@ name|FPRS_FEF
 value|(1<< 2)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -615,6 +621,15 @@ end_define
 
 begin_comment
 comment|/* unordered */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !LOCORE */
 end_comment
 
 begin_endif

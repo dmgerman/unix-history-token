@@ -40,14 +40,7 @@ begin_define
 define|#
 directive|define
 name|TSB_BSIZE
-value|(1UL<< TSB_BSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSB_SIZE
-value|(TSB_BSIZE / sizeof(struct tte))
+value|(1<< TSB_BSHIFT)
 end_define
 
 begin_define
@@ -77,6 +70,19 @@ define|#
 directive|define
 name|TSB_BUCKET_MASK
 value|((1<< TSB_BUCKET_ADDRESS_BITS) - 1)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TSB_SIZE
+value|(TSB_BSIZE / sizeof(struct tte))
 end_define
 
 begin_decl_stmt
@@ -333,6 +339,15 @@ name|callback
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !LOCORE */
+end_comment
 
 begin_endif
 endif|#

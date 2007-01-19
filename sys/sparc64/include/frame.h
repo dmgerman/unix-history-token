@@ -40,6 +40,12 @@ begin_comment
 comment|/* XXX - open/netbsd compat */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
 begin_comment
 comment|/*  * NOTE: keep this structure in sync with struct reg and struct mcontext.  */
 end_comment
@@ -247,6 +253,15 @@ name|n
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !LOCORE */
+end_comment
 
 begin_endif
 endif|#

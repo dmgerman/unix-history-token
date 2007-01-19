@@ -144,6 +144,12 @@ name|PIL_TICK
 value|14
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
 begin_struct_decl
 struct_decl|struct
 name|trapframe
@@ -352,13 +358,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|INTR_REPORT_SIZE
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
 name|INTR_CPU_Q_SIZE
 value|(cpu_q_entries * INTR_REPORT_SIZE)
 end_define
@@ -368,6 +367,22 @@ define|#
 directive|define
 name|INTR_DEV_Q_SIZE
 value|(dev_q_entries * INTR_REPORT_SIZE)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !LOCORE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTR_REPORT_SIZE
+value|64
 end_define
 
 begin_define
@@ -409,6 +424,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_MACHINE_INTR_MACHDEP_H_ */
+end_comment
 
 end_unit
 

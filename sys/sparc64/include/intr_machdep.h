@@ -144,6 +144,12 @@ name|PIL_TICK
 value|14
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
 begin_struct_decl
 struct_decl|struct
 name|trapframe
@@ -355,6 +361,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !LOCORE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_MACHINE_INTR_MACHDEP_H_ */
+end_comment
 
 end_unit
 
