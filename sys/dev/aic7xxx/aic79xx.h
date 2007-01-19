@@ -3455,6 +3455,10 @@ comment|/* PCI cacheline size. */
 name|u_int
 name|pci_cachesize
 decl_stmt|;
+comment|/* PCI-X capability offset. */
+name|int
+name|pcix_ptr
+decl_stmt|;
 comment|/* IO Cell Parameters */
 name|uint8_t
 name|iocell_opts
