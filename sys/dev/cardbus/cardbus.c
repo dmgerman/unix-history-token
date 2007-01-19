@@ -1157,6 +1157,8 @@ name|err
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
 name|device_get_children
 argument_list|(
 name|cbdev
@@ -1167,7 +1169,14 @@ argument_list|,
 operator|&
 name|numdevs
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
 if|if
 condition|(
 name|numdevs
@@ -1357,6 +1366,8 @@ argument_list|,
 name|cbdev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|device_get_children
 argument_list|(
 name|cbdev
@@ -1367,7 +1378,10 @@ argument_list|,
 operator|&
 name|numdevs
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return;
 comment|/* 	 * If there are no drivers attached, but there are children, 	 * then power the card up. 	 */
 for|for
 control|(
