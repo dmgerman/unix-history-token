@@ -5530,14 +5530,19 @@ literal|0
 comment|/* 		 * Handle BPF listeners. Let the BPF user see the packet, but 		 * don't pass it up to the ether_input() layer unless it's a 		 * broadcast packet, multicast packet, matches our ethernet 		 * address or the interface is in promiscuous mode. 		 */
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ifp
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
-name|BPF_MTAP
+name|bpf_mtap
 argument_list|(
 name|ifp
+operator|->
+name|if_bpf
 argument_list|,
 name|m
 argument_list|)

@@ -3599,12 +3599,15 @@ name|len
 expr_stmt|;
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|SC2IFP
 argument_list|(
 name|sc
 argument_list|)
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 name|struct

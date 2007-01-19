@@ -303,59 +303,6 @@ value|((bd)->bd_hlen != 0 ||					 \ 	 (((bd)->bd_immediate || (bd)->bd_state == 
 end_define
 
 begin_comment
-comment|/*  * Descriptor associated with each attached hardware interface.  */
-end_comment
-
-begin_struct
-struct|struct
-name|bpf_if
-block|{
-name|LIST_ENTRY
-argument_list|(
-argument|bpf_if
-argument_list|)
-name|bif_next
-expr_stmt|;
-comment|/* list of all interfaces */
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|bpf_d
-argument_list|)
-name|bif_dlist
-expr_stmt|;
-comment|/* descriptor list */
-name|struct
-name|bpf_if
-modifier|*
-modifier|*
-name|bif_driverp
-decl_stmt|;
-comment|/* pointer into softc */
-name|u_int
-name|bif_dlt
-decl_stmt|;
-comment|/* link layer type */
-name|u_int
-name|bif_hdrlen
-decl_stmt|;
-comment|/* length of header (with padding) */
-name|struct
-name|ifnet
-modifier|*
-name|bif_ifp
-decl_stmt|;
-comment|/* corresponding interface */
-name|struct
-name|mtx
-name|bif_mtx
-decl_stmt|;
-comment|/* mutex for interface */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * External representation of the bpf descriptor  */
 end_comment
 

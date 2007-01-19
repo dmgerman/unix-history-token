@@ -4600,14 +4600,6 @@ return|return;
 ifndef|#
 directive|ifndef
 name|NETGRAPH
-if|if
-condition|(
-name|d
-operator|->
-name|ifp
-operator|->
-name|if_bpf
-condition|)
 name|BPF_MTAP
 argument_list|(
 name|d
@@ -5163,14 +5155,6 @@ operator|->
 name|ifp
 expr_stmt|;
 comment|/* Check if there's a BPF listener on this interface. 	 * If so, hand off the raw packet to bpf. */
-if|if
-condition|(
-name|d
-operator|->
-name|ifp
-operator|->
-name|if_bpf
-condition|)
 name|BPF_TAP
 argument_list|(
 name|d

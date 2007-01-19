@@ -14089,11 +14089,12 @@ expr_stmt|;
 comment|/* 			 * When a tap is present pass error frames 			 * that have been requested.  By default we 			 * pass decrypt+mic errors but others may be 			 * interesting (e.g. crc). 			 */
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|sc
 operator|->
 name|sc_drvbpf
-operator|!=
-name|NULL
+argument_list|)
 operator|&&
 operator|(
 name|ds
@@ -14241,11 +14242,12 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|sc
 operator|->
 name|sc_drvbpf
-operator|!=
-name|NULL
+argument_list|)
 operator|&&
 operator|!
 name|ath_rx_tap
@@ -17377,9 +17379,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ic
 operator|->
 name|ic_rawbpf
+argument_list|)
 condition|)
 name|bpf_mtap
 argument_list|(
@@ -17392,9 +17397,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|sc
 operator|->
 name|sc_drvbpf
+argument_list|)
 condition|)
 block|{
 name|u_int64_t

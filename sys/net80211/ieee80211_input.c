@@ -1910,9 +1910,12 @@ block|}
 comment|/* copy to listener after decrypt */
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ic
 operator|->
 name|ic_rawbpf
+argument_list|)
 condition|)
 name|bpf_mtap
 argument_list|(
@@ -2425,9 +2428,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ic
 operator|->
 name|ic_rawbpf
+argument_list|)
 condition|)
 name|bpf_mtap
 argument_list|(
@@ -2552,9 +2558,12 @@ condition|)
 block|{
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ic
 operator|->
 name|ic_rawbpf
+argument_list|)
 condition|)
 name|bpf_mtap
 argument_list|(
@@ -3318,9 +3327,12 @@ condition|)
 block|{
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ic
 operator|->
 name|ic_rawbpf
+argument_list|)
 condition|)
 name|bpf_mtap
 argument_list|(

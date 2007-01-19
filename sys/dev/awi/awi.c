@@ -4309,9 +4309,12 @@ operator|>
 literal|0
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ifp
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 name|bpf_mtap
 argument_list|(
@@ -4585,9 +4588,12 @@ operator|>
 literal|0
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ic
 operator|->
 name|ic_rawbpf
+argument_list|)
 condition|)
 name|bpf_mtap
 argument_list|(

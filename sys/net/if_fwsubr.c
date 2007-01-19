@@ -697,9 +697,12 @@ block|}
 comment|/* 	 * Let BPF tap off a copy before we encapsulate. 	 */
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ifp
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 name|struct
@@ -2396,9 +2399,12 @@ directive|endif
 comment|/* 	 * Give bpf a chance at the packet. The link-level driver 	 * should have left us a tag with the EUID of the sender. 	 */
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ifp
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 name|struct

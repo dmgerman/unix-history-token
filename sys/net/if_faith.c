@@ -985,9 +985,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ifp
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 name|af

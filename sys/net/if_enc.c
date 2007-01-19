@@ -1188,9 +1188,12 @@ condition|)
 return|return;
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|encif
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 name|flags

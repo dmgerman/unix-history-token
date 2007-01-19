@@ -2147,9 +2147,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ifp
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * We need to prepend the address family as 		 * a four byte field.  Cons up a dummy header 		 * to pacify bpf.  This is safe because bpf 		 * will only read from the mbuf (i.e., it won't 		 * try to free it or keep a pointer a to it). 		 */
@@ -3361,9 +3364,12 @@ name|ifp
 expr_stmt|;
 if|if
 condition|(
+name|bpf_peers_present
+argument_list|(
 name|ifp
 operator|->
 name|if_bpf
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * We need to prepend the address family as 		 * a four byte field.  Cons up a dummy header 		 * to pacify bpf.  This is safe because bpf 		 * will only read from the mbuf (i.e., it won't 		 * try to free it or keep a pointer a to it). 		 */

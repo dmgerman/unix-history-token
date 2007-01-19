@@ -9325,6 +9325,18 @@ directive|if
 name|NBPFILTER
 operator|>
 literal|0
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|BPF_MTAP
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|ifp
@@ -9340,6 +9352,8 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|if
