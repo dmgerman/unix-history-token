@@ -190,6 +190,10 @@ file|<machine/smp.h>
 end_include
 
 begin_comment
+comment|/*  * TODO:  *	Pick idle from affinity group or self group first.  *	Implement pick_score.  */
+end_comment
+
+begin_comment
 comment|/*  * Thread scheduler specific section.  */
 end_comment
 
@@ -3356,6 +3360,23 @@ name|pcpu
 operator|->
 name|pc_curthread
 expr_stmt|;
+comment|/* 	 * If our priority is not better than the current priority there is 	 * nothing to do. 	 */
+if|if
+condition|(
+name|prio
+operator|>
+name|td
+operator|->
+name|td_priority
+condition|)
+return|return;
+comment|/* Always set NEEDRESCHED. */
+name|td
+operator|->
+name|td_flags
+operator||=
+name|TDF_NEEDRESCHED
+expr_stmt|;
 comment|/* 	 * IPI if we exceed the threshold or if the target cpu is running an 	 * idle thread. 	 */
 if|if
 condition|(
@@ -3370,7 +3391,7 @@ operator|<
 name|PRI_MIN_IDLE
 condition|)
 return|return;
-comment|/*  	 * IPI only if our priority is better than the running thread and 	 * the running thread is not the per cpu idle thread.  The 	 * idlethread finds new work via sched_runnable(). 	 */
+comment|/* 	 * The idlethread finds new work via sched_runnable(), don't IPI 	 * here. 	 */
 if|if
 condition|(
 name|td
@@ -3382,24 +3403,8 @@ condition|)
 return|return;
 if|if
 condition|(
-name|prio
-operator|>
-name|td
-operator|->
-name|td_priority
-condition|)
-return|return;
-if|if
-condition|(
 name|ipi_ast
 condition|)
-block|{
-name|td
-operator|->
-name|td_flags
-operator||=
-name|TDF_NEEDRESCHED
-expr_stmt|;
 name|ipi_selected
 argument_list|(
 literal|1
@@ -3409,7 +3414,6 @@ argument_list|,
 name|IPI_AST
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -8342,25 +8346,15 @@ name|td
 operator|->
 name|td_sched
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
+if|if
+condition|(
 name|ts
 operator|->
 name|ts_flags
 operator|&
 name|TSF_BOUND
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"sched_bind: thread %p already bound."
-operator|,
-name|td
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 name|ts
 operator|->
 name|ts_flags
@@ -8370,6 +8364,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
+name|sched_pin
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|PCPU_GET
@@ -8380,7 +8377,12 @@ operator|==
 name|cpu
 condition|)
 return|return;
-comment|/* sched_rem without the runq_remove */
+name|ts
+operator|->
+name|ts_cpu
+operator|=
+name|cpu
+expr_stmt|;
 name|ts
 operator|->
 name|ts_state
@@ -8394,9 +8396,6 @@ name|SW_VOL
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|sched_pin
-argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -8432,29 +8431,19 @@ name|td
 operator|->
 name|td_sched
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
+operator|(
 name|ts
 operator|->
 name|ts_flags
 operator|&
 name|TSF_BOUND
-argument_list|,
-operator|(
-literal|"sched_unbind: thread %p not bound."
-operator|,
-name|td
 operator|)
-argument_list|)
-expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+return|return;
 name|ts
 operator|->
 name|ts_flags
