@@ -157,6 +157,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MC_REGA_DV0
+value|0x10
+end_define
+
+begin_comment
+comment|/* Divisor 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_REGA_DV1
+value|0x20
+end_define
+
+begin_comment
+comment|/* Divisor 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_REGA_DV2
+value|0x40
+end_define
+
+begin_comment
+comment|/* Divisor 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MC_REGA_UIP
 value|0x80
 end_define
@@ -592,7 +625,7 @@ begin_define
 define|#
 directive|define
 name|MC_BASE_1_MHz
-value|0x10
+value|MC_REGA_DV0
 end_define
 
 begin_comment
@@ -603,7 +636,7 @@ begin_define
 define|#
 directive|define
 name|MC_BASE_32_KHz
-value|0x20
+value|MC_REGA_DV1
 end_define
 
 begin_comment
@@ -614,18 +647,18 @@ begin_define
 define|#
 directive|define
 name|MC_BASE_NONE
-value|0x60
+value|(MC_REGA_DV2 | MC_REGA_DV1)
 end_define
 
 begin_comment
-comment|/* actually, both of these reset */
+comment|/* actually also resets */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MC_BASE_RESET
-value|0x70
+value|(MC_REGA_DV2 | MC_REGA_DV1 | MC_REGA_DV0)
 end_define
 
 end_unit
