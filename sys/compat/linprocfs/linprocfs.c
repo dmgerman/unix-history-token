@@ -2052,6 +2052,7 @@ name|ratelimit
 operator|==
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"linprocfs: don't know how to handle unknown FreeBSD state %d/%d, mapping to R\n"
@@ -2066,6 +2067,10 @@ name|linux_state
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|++
+name|ratelimit
+expr_stmt|;
+block|}
 block|}
 else|else
 name|state
