@@ -2055,12 +2055,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"linprocfs: don't know how to handle unknown FreeBSD state %d/%d, mapping to R\n"
+literal|"linprocfs: don't know how to handle unknown FreeBSD state %d/%jd, mapping to R\n"
 argument_list|,
 name|kp
 operator|.
 name|ki_stat
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|linux_state
