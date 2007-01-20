@@ -1559,7 +1559,7 @@ comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_WAITOK
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL
@@ -1636,7 +1636,7 @@ operator|->
 name|sc_memsize
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_WAITOK
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL
