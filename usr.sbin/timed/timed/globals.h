@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
