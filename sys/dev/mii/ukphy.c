@@ -390,12 +390,6 @@ operator|->
 name|mii_instance
 operator|++
 expr_stmt|;
-name|sc
-operator|->
-name|mii_flags
-operator||=
-name|MIIF_NOISOLATE
-expr_stmt|;
 name|mii_phy_reset
 argument_list|(
 name|sc
