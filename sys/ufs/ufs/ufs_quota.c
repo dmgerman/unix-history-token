@@ -2015,11 +2015,7 @@ name|i_gid
 operator|<
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 for|for
 control|(
 name|i
