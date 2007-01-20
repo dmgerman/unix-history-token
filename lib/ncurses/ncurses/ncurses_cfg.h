@@ -4,7 +4,7 @@ comment|/* include/ncurses_cfg.h.  Generated automatically by configure.  */
 end_comment
 
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $Id: ncurses_cfg.hin,v 1.3 2000/09/02 17:13:32 tom Exp $  *  * This is a template-file used to generate the "ncurses_cfg.h" file.  *  * Rather than list every definition, the configuration script substitutes the  * definitions that it finds using 'sed'.  You need a patch (original date  * 971222) to autoconf 2.12 or 2.13 to do this.  *  * See:  *	http://dickey.his.com/autoconf/  *	ftp://dickey.his.com/autoconf/  */
+comment|/*  * $Id: ncurses_cfg.hin,v 1.7 2005/01/02 01:26:58 tom Exp $  *  * This is a template-file used to generate the "ncurses_cfg.h" file.  *  * Rather than list every definition, the configuration script substitutes the  * definitions that it finds using 'sed'.  You need a patch (original date  * 971222) to autoconf 2.12 or 2.13 to do this.  *  * See:  *	http://invisible-island.net/autoconf/  *	ftp://invisible-island.net/autoconf/  */
 end_comment
 
 begin_comment
@@ -30,6 +30,23 @@ define|#
 directive|define
 name|NC_CONFIG_H
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -55,8 +72,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPP_HAS_STATIC_CAST
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPP_HAS_VSCAN_FUNC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETIP_NEEDS_MATH_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|GCC_NORETURN
-value|__dead2
+value|__attribute__((noreturn))
 end_define
 
 begin_define
@@ -77,7 +115,7 @@ begin_define
 define|#
 directive|define
 name|GCC_UNUSED
-value|__unused
+value|__attribute__((unused))
 end_define
 
 begin_define
@@ -132,6 +170,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_FSEEKO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_GETCWD
 value|1
 end_define
@@ -147,6 +192,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_GETEUID
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETOPT_H
 value|1
 end_define
 
@@ -174,6 +226,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_INTTYPES_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_ISASCII
 value|1
 end_define
@@ -182,6 +241,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_ISSETUGID
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_LANGINFO_CODESET
 value|1
 end_define
 
@@ -237,7 +303,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_MEMCCPY
+name|HAVE_MEMORY_H
 value|1
 end_define
 
@@ -321,6 +387,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_RESIZE_TERM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_SELECT
 value|1
 end_define
@@ -370,7 +443,42 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_SLK_COLOR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDINT_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDLIB_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_STRDUP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRINGS_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRING_H
 value|1
 end_define
 
@@ -419,6 +527,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_SYS_STAT_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_SYS_TIMES_H
 value|1
 end_define
@@ -434,6 +549,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_TIME_SELECT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_TYPES_H
 value|1
 end_define
 
@@ -469,6 +591,20 @@ begin_define
 define|#
 directive|define
 name|HAVE_TTYENT_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_TYPEINFO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_UNISTD_H
 value|1
 end_define
 
@@ -517,6 +653,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_WCTYPE_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_WORKING_POLL
 value|1
 end_define
@@ -525,6 +668,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_WRESIZE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIXEDCASE_FILENAMES
 value|1
 end_define
 
@@ -559,6 +709,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NCURSES_VERSION_STRING
+value|"5.6.20061217"
+end_define
+
+begin_define
+define|#
+directive|define
 name|NDEBUG
 value|1
 end_define
@@ -568,6 +725,13 @@ define|#
 directive|define
 name|RETSIGTYPE
 value|void
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_SIGNED_CHAR
+value|1
 end_define
 
 begin_define
@@ -587,15 +751,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|TERMINFO
-value|"/usr/share/misc/terminfo"
-end_define
-
-begin_define
-define|#
-directive|define
-name|TERMINFO_DIRS
-value|"/usr/share/misc/terminfo"
+name|TERMPATH
+value|"/etc/termcap:/usr/share/misc/termcap"
 end_define
 
 begin_define
@@ -609,7 +766,7 @@ begin_define
 define|#
 directive|define
 name|TYPEOF_CHTYPE
-value|long
+value|int
 end_define
 
 begin_define
@@ -623,13 +780,6 @@ begin_define
 define|#
 directive|define
 name|USE_COLORFGBG
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|USE_DATABASE
 value|1
 end_define
 
@@ -650,7 +800,35 @@ end_define
 begin_define
 define|#
 directive|define
+name|USE_LINKS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|USE_SIGWINCH
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_STDIO_VSCAN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_SYSMOUSE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_TERMCAP
 value|1
 end_define
 
@@ -716,6 +894,39 @@ end_define
 begin_comment
 comment|/* nothing */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* On HP-UX, the C compiler doesn't grok mbstate_t without 	   -D_XOPEN_SOURCE=500. However, this causes problems on 	   IRIX. So, we #define mbstate_t to int in configure.in 	   only for the C compiler if needed. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_MBSTATE_T_DEF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|mbstate_t
+value|int
+end_define
 
 begin_endif
 endif|#

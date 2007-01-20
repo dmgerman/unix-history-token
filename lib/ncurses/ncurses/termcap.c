@@ -735,8 +735,11 @@ operator|||
 operator|!
 name|isgraph
 argument_list|(
+name|UChar
+argument_list|(
 operator|*
 name|tok
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -880,7 +883,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|ERR
+name|TGETENT_ERR
 operator|)
 return|;
 name|_nc_set_source
@@ -917,13 +920,15 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|ERR
+name|TGETENT_ERR
 operator|)
 return|;
 comment|/* resolve all use references */
-name|_nc_resolve_uses
+name|_nc_resolve_uses2
 argument_list|(
 name|TRUE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|for_entry_list
@@ -946,7 +951,7 @@ literal|"|:"
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Make a local copy of the terminal capabilities. free 			 * all entry storage except the string table for the 			 * loaded type (which we disconnected from the list by 			 * NULLing out ep->tterm.str_table above). 			 */
+comment|/* 			 * Make a local copy of the terminal capabilities, delinked 			 * from the list. 			 */
 name|memcpy
 argument_list|(
 name|tp
@@ -962,17 +967,22 @@ name|TERMTYPE
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|_nc_delink_entry
+argument_list|(
+name|_nc_head
+argument_list|,
+operator|&
+operator|(
 name|ep
 operator|->
 name|tterm
-operator|.
-name|str_table
-operator|=
-operator|(
-name|char
-operator|*
 operator|)
-name|NULL
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ep
+argument_list|)
 expr_stmt|;
 name|_nc_free_entries
 argument_list|(
@@ -987,7 +997,7 @@ name|NULL
 expr_stmt|;
 comment|/* do not reuse! */
 return|return
-literal|1
+name|TGETENT_YES
 return|;
 comment|/* OK */
 block|}
@@ -1005,7 +1015,7 @@ expr_stmt|;
 comment|/* do not reuse! */
 return|return
 operator|(
-literal|0
+name|TGETENT_NO
 operator|)
 return|;
 comment|/* not found */
