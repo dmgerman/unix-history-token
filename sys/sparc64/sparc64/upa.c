@@ -2184,13 +2184,21 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"invalid interrupt vector (0x%lx != 0x%lx)\n"
+literal|"invalid interrupt vector (0x%x != 0x%x)\n"
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|INTVEC
 argument_list|(
 name|intrmap
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|INTVEC
 argument_list|(
 name|rman_get_start
