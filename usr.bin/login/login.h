@@ -17,6 +17,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BSM_AUDIT
+end_ifdef
+
 begin_function_decl
 name|void
 name|au_login_success
@@ -39,6 +45,20 @@ name|na
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|audit_logout
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
