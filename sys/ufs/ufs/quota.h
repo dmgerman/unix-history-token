@@ -572,7 +572,7 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|ino_t
+name|int
 parameter_list|,
 name|struct
 name|ucred

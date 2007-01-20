@@ -778,6 +778,8 @@ literal|0
 operator|)
 return|;
 block|}
+name|nospace
+label|:
 ifdef|#
 directive|ifdef
 name|QUOTA
@@ -812,8 +814,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|nospace
-label|:
 if|if
 condition|(
 name|fs
