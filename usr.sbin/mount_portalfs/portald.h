@@ -62,6 +62,7 @@ begin_struct
 struct|struct
 name|provider
 block|{
+specifier|const
 name|char
 modifier|*
 name|pr_match
