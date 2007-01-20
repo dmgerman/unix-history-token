@@ -3391,16 +3391,6 @@ operator|<
 name|PRI_MIN_IDLE
 condition|)
 return|return;
-comment|/* 	 * The idlethread finds new work via sched_runnable(), don't IPI 	 * here. 	 */
-if|if
-condition|(
-name|td
-operator|==
-name|pcpu
-operator|->
-name|pc_idlethread
-condition|)
-return|return;
 if|if
 condition|(
 name|ipi_ast
@@ -8354,7 +8344,11 @@ name|ts_flags
 operator|&
 name|TSF_BOUND
 condition|)
-return|return;
+name|sched_unbind
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|ts
 operator|->
 name|ts_flags
