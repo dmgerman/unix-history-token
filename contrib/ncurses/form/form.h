@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *   Author: Juergen Pfeifer<juergen.pfeifer@gmx.net> 1995,1997            *  ****************************************************************************/
+comment|/****************************************************************************  *   Author:  Juergen Pfeifer, 1995,1997                                    *  ****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* $Id: form.h,v 0.20 2004/12/04 22:22:10 tom Exp $ */
 end_comment
 
 begin_ifndef
@@ -43,6 +47,25 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|FORM_PRIV_H
+typedef|typedef
+name|void
+modifier|*
+name|FIELD_CELL
+typedef|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|NCURSES_FIELD_INTERNALS
+define|#
+directive|define
+name|NCURSES_FIELD_INTERNALS
+comment|/* nothing */
+endif|#
+directive|endif
 typedef|typedef
 name|int
 name|Form_Options
@@ -58,19 +81,19 @@ block|{
 name|short
 name|pmin
 decl_stmt|;
-comment|/* index of first field on page            */
+comment|/* index of first field on page			*/
 name|short
 name|pmax
 decl_stmt|;
-comment|/* index of last field on page             */
+comment|/* index of last field on page			*/
 name|short
 name|smin
 decl_stmt|;
-comment|/* index of top leftmost field on page     */
+comment|/* index of top leftmost field on page		*/
 name|short
 name|smax
 decl_stmt|;
-comment|/* index of bottom rightmost field on page */
+comment|/* index of bottom rightmost field on page	*/
 block|}
 name|_PAGE
 typedef|;
@@ -83,116 +106,118 @@ name|unsigned
 name|short
 name|status
 decl_stmt|;
-comment|/* flags		        */
+comment|/* flags			*/
 name|short
 name|rows
 decl_stmt|;
-comment|/* size in rows		*/
+comment|/* size in rows			*/
 name|short
 name|cols
 decl_stmt|;
-comment|/* size in cols		*/
+comment|/* size in cols			*/
 name|short
 name|frow
 decl_stmt|;
-comment|/* first row		        */
+comment|/* first row			*/
 name|short
 name|fcol
 decl_stmt|;
-comment|/* first col		        */
+comment|/* first col			*/
 name|int
 name|drows
 decl_stmt|;
-comment|/* dynamic rows               */
+comment|/* dynamic rows			*/
 name|int
 name|dcols
 decl_stmt|;
-comment|/* dynamic cols               */
+comment|/* dynamic cols			*/
 name|int
 name|maxgrow
 decl_stmt|;
-comment|/* maximum field growth       */
+comment|/* maximum field growth		*/
 name|int
 name|nrow
 decl_stmt|;
-comment|/* offscreen rows	        */
+comment|/* off-screen rows		*/
 name|short
 name|nbuf
 decl_stmt|;
-comment|/* additional buffers	        */
+comment|/* additional buffers		*/
 name|short
 name|just
 decl_stmt|;
-comment|/* justification	        */
+comment|/* justification		*/
 name|short
 name|page
 decl_stmt|;
-comment|/* page on form		*/
+comment|/* page on form			*/
 name|short
 name|index
 decl_stmt|;
-comment|/* into form -> field	        */
+comment|/* into form -> field		*/
 name|int
 name|pad
 decl_stmt|;
-comment|/* pad character	        */
+comment|/* pad character		*/
 name|chtype
 name|fore
 decl_stmt|;
-comment|/* foreground attribute	*/
+comment|/* foreground attribute		*/
 name|chtype
 name|back
 decl_stmt|;
-comment|/* background attribute	*/
+comment|/* background attribute		*/
 name|Field_Options
 name|opts
 decl_stmt|;
-comment|/* options		        */
+comment|/* options			*/
 name|struct
 name|fieldnode
 modifier|*
 name|snext
 decl_stmt|;
-comment|/* sorted order pointer	*/
+comment|/* sorted order pointer		*/
 name|struct
 name|fieldnode
 modifier|*
 name|sprev
 decl_stmt|;
-comment|/* sorted order pointer	*/
+comment|/* sorted order pointer		*/
 name|struct
 name|fieldnode
 modifier|*
 name|link
 decl_stmt|;
-comment|/* linked field chain	        */
+comment|/* linked field chain		*/
 name|struct
 name|formnode
 modifier|*
 name|form
 decl_stmt|;
-comment|/* containing form	        */
+comment|/* containing form		*/
 name|struct
 name|typenode
 modifier|*
 name|type
 decl_stmt|;
-comment|/* field type		        */
+comment|/* field type			*/
 name|void
 modifier|*
 name|arg
 decl_stmt|;
-comment|/* argument for type	        */
-name|char
+comment|/* argument for type		*/
+name|FIELD_CELL
 modifier|*
 name|buf
 decl_stmt|;
-comment|/* field buffers	        */
+comment|/* field buffers		*/
 name|void
 modifier|*
 name|usrptr
 decl_stmt|;
-comment|/* user pointer		*/
+comment|/* user pointer			*/
+comment|/*    * The wide-character configuration requires extra information.  Because    * there are existing applications that manipulate the members of FIELD    * directly, we cannot make the struct opaque.  Offsets of members up to    * this point are the same in the narrow- and wide-character configuration.    * But note that the type of buf depends on the configuration, and is made    * opaque for that reason.    */
+name|NCURSES_FIELD_INTERNALS
 block|}
 name|FIELD
 typedef|;
@@ -205,11 +230,11 @@ name|unsigned
 name|short
 name|status
 decl_stmt|;
-comment|/* flags		       */
+comment|/* flags		*/
 name|long
 name|ref
 decl_stmt|;
-comment|/* reference count      */
+comment|/* reference count	*/
 name|struct
 name|typenode
 modifier|*
@@ -233,7 +258,7 @@ name|va_list
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* make fieldtype arg   */
+comment|/* make fieldtype arg	*/
 name|void
 modifier|*
 function_decl|(
@@ -246,7 +271,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* copy fieldtype arg   */
+comment|/* copy fieldtype arg	*/
 name|void
 function_decl|(
 modifier|*
@@ -257,7 +282,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* free fieldtype arg   */
+comment|/* free fieldtype arg	*/
 name|bool
 function_decl|(
 modifier|*
@@ -272,7 +297,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* field validation     */
+comment|/* field validation	*/
 name|bool
 function_decl|(
 modifier|*
@@ -329,23 +354,23 @@ name|unsigned
 name|short
 name|status
 decl_stmt|;
-comment|/* flags		        */
+comment|/* flags			*/
 name|short
 name|rows
 decl_stmt|;
-comment|/* size in rows		*/
+comment|/* size in rows			*/
 name|short
 name|cols
 decl_stmt|;
-comment|/* size in cols		*/
+comment|/* size in cols			*/
 name|int
 name|currow
 decl_stmt|;
-comment|/* current row in field window*/
+comment|/* current row in field window	*/
 name|int
 name|curcol
 decl_stmt|;
-comment|/* current col in field window*/
+comment|/* current col in field window	*/
 name|int
 name|toprow
 decl_stmt|;
@@ -353,33 +378,33 @@ comment|/* in scrollable field window	*/
 name|int
 name|begincol
 decl_stmt|;
-comment|/* in horiz. scrollable field */
+comment|/* in horiz. scrollable field	*/
 name|short
 name|maxfield
 decl_stmt|;
-comment|/* number of fields	        */
+comment|/* number of fields		*/
 name|short
 name|maxpage
 decl_stmt|;
-comment|/* number of pages	        */
+comment|/* number of pages		*/
 name|short
 name|curpage
 decl_stmt|;
-comment|/* index into page	        */
+comment|/* index into page		*/
 name|Form_Options
 name|opts
 decl_stmt|;
-comment|/* options		        */
+comment|/* options			*/
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-comment|/* window		        */
+comment|/* window			*/
 name|WINDOW
 modifier|*
 name|sub
 decl_stmt|;
-comment|/* subwindow		        */
+comment|/* subwindow			*/
 name|WINDOW
 modifier|*
 name|w
@@ -390,22 +415,22 @@ modifier|*
 modifier|*
 name|field
 decl_stmt|;
-comment|/* field [maxfield]	        */
+comment|/* field [maxfield]		*/
 name|FIELD
 modifier|*
 name|current
 decl_stmt|;
-comment|/* current field	        */
+comment|/* current field		*/
 name|_PAGE
 modifier|*
 name|page
 decl_stmt|;
-comment|/* page [maxpage]	        */
+comment|/* page [maxpage]		*/
 name|void
 modifier|*
 name|usrptr
 decl_stmt|;
-comment|/* user pointer		*/
+comment|/* user pointer			*/
 name|void
 function_decl|(
 modifier|*
@@ -486,52 +511,52 @@ comment|/* field options */
 define|#
 directive|define
 name|O_VISIBLE
-value|(0x0001)
+value|(0x0001U)
 define|#
 directive|define
 name|O_ACTIVE
-value|(0x0002)
+value|(0x0002U)
 define|#
 directive|define
 name|O_PUBLIC
-value|(0x0004)
+value|(0x0004U)
 define|#
 directive|define
 name|O_EDIT
-value|(0x0008)
+value|(0x0008U)
 define|#
 directive|define
 name|O_WRAP
-value|(0x0010)
+value|(0x0010U)
 define|#
 directive|define
 name|O_BLANK
-value|(0x0020)
+value|(0x0020U)
 define|#
 directive|define
 name|O_AUTOSKIP
-value|(0x0040)
+value|(0x0040U)
 define|#
 directive|define
 name|O_NULLOK
-value|(0x0080)
+value|(0x0080U)
 define|#
 directive|define
 name|O_PASSOK
-value|(0x0100)
+value|(0x0100U)
 define|#
 directive|define
 name|O_STATIC
-value|(0x0200)
+value|(0x0200U)
 comment|/* form options */
 define|#
 directive|define
 name|O_NL_OVERLOAD
-value|(0x0001)
+value|(0x0001U)
 define|#
 directive|define
 name|O_BS_OVERLOAD
-value|(0x0002)
+value|(0x0002U)
 comment|/* form driver commands */
 define|#
 directive|define
@@ -717,7 +742,7 @@ define|#
 directive|define
 name|REQ_DEL_WORD
 value|(KEY_MAX + 37)
-comment|/* delete line at cursor	*/
+comment|/* delete word at cursor	*/
 define|#
 directive|define
 name|REQ_CLR_EOL
@@ -767,7 +792,7 @@ define|#
 directive|define
 name|REQ_SCR_FHPAGE
 value|(KEY_MAX + 47)
-comment|/* scroll field forward  half page */
+comment|/* scroll field forward	 half page */
 define|#
 directive|define
 name|REQ_SCR_BHPAGE
@@ -777,32 +802,32 @@ define|#
 directive|define
 name|REQ_SCR_FCHAR
 value|(KEY_MAX + 49)
-comment|/* horizontal scroll char          */
+comment|/* horizontal scroll char	*/
 define|#
 directive|define
 name|REQ_SCR_BCHAR
 value|(KEY_MAX + 50)
-comment|/* horizontal scroll char          */
+comment|/* horizontal scroll char	*/
 define|#
 directive|define
 name|REQ_SCR_HFLINE
 value|(KEY_MAX + 51)
-comment|/* horizontal scroll line          */
+comment|/* horizontal scroll line	*/
 define|#
 directive|define
 name|REQ_SCR_HBLINE
 value|(KEY_MAX + 52)
-comment|/* horizontal scroll line          */
+comment|/* horizontal scroll line	*/
 define|#
 directive|define
 name|REQ_SCR_HFHALF
 value|(KEY_MAX + 53)
-comment|/* horizontal scroll half line     */
+comment|/* horizontal scroll half line	*/
 define|#
 directive|define
 name|REQ_SCR_HBHALF
 value|(KEY_MAX + 54)
-comment|/* horizontal scroll half line     */
+comment|/* horizontal scroll half line	*/
 define|#
 directive|define
 name|REQ_VALIDATION
@@ -926,7 +951,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/************************************ 	*  built-in additional field types  *         *  They are not defined in SVr4     * 	************************************/
+comment|/************************************ 	*  built-in additional field types  * 	*  They are not defined in SVr4     * 	************************************/
 end_comment
 
 begin_extern
@@ -944,7 +969,7 @@ comment|/* Internet IP Version 4 address */
 end_comment
 
 begin_comment
-comment|/***********************          *   Default objects    *         ***********************/
+comment|/*********************** 	*   Default objects    * 	***********************/
 end_comment
 
 begin_extern
@@ -1008,8 +1033,15 @@ name|void
 operator|*
 argument_list|)
 argument_list|)
-operator|,
-operator|*
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(FIELDTYPE *
+end_extern
+
+begin_expr_stmt
+unit|)
 name|link_fieldtype
 argument_list|(
 name|FIELDTYPE

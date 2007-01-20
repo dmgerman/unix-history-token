@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Thomas E. Dickey 1996-2001                                      *  *     and: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Thomas E. Dickey 1996-2003                                      *  *     and: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_scroll.c,v 1.23 2001/12/19 01:06:55 tom Exp $"
+literal|"$Id: lib_scroll.c,v 1.26 2006/10/14 20:46:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -83,14 +83,20 @@ argument_list|(
 name|TRACE_MOVE
 argument_list|,
 operator|(
-literal|"_nc_scroll_window(%p, %d, %d, %d)"
+literal|"_nc_scroll_window(%p, %d, %ld, %ld)"
 operator|,
 name|win
 operator|,
 name|n
 operator|,
+operator|(
+name|long
+operator|)
 name|top
 operator|,
+operator|(
+name|long
+operator|)
 name|bottom
 operator|)
 argument_list|)
@@ -138,20 +144,6 @@ name|top
 operator|-
 name|n
 expr_stmt|;
-if|if
-condition|(
-name|limit
-operator|>
-name|win
-operator|->
-name|_maxy
-condition|)
-name|limit
-operator|=
-name|win
-operator|->
-name|_maxy
-expr_stmt|;
 for|for
 control|(
 name|line
@@ -161,19 +153,14 @@ init|;
 name|line
 operator|>=
 name|limit
+operator|&&
+name|line
+operator|>=
+literal|0
 condition|;
 name|line
 operator|--
 control|)
-block|{
-if|if
-condition|(
-name|line
-operator|+
-name|n
-operator|>=
-literal|0
-condition|)
 block|{
 name|TR
 argument_list|(
@@ -239,64 +226,6 @@ name|oldindex
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|TR
-argument_list|(
-name|TRACE_MOVE
-argument_list|,
-operator|(
-literal|"...filling %d"
-operator|,
-name|line
-operator|)
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<=
-name|win
-operator|->
-name|_maxx
-condition|;
-name|j
-operator|++
-control|)
-name|win
-operator|->
-name|_line
-index|[
-name|line
-index|]
-operator|.
-name|text
-index|[
-name|j
-index|]
-operator|=
-name|blank
-expr_stmt|;
-name|if_USE_SCROLL_HINTS
-argument_list|(
-name|win
-operator|->
-name|_line
-index|[
-name|line
-index|]
-operator|.
-name|oldindex
-operator|=
-name|_NEWINDEX
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 for|for
 control|(
 name|line
@@ -306,6 +235,12 @@ init|;
 name|line
 operator|<
 name|limit
+operator|&&
+name|line
+operator|<=
+name|win
+operator|->
+name|_maxy
 condition|;
 name|line
 operator|++
@@ -381,16 +316,6 @@ name|bottom
 operator|-
 name|n
 expr_stmt|;
-if|if
-condition|(
-name|limit
-operator|<
-literal|0
-condition|)
-name|limit
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|line
@@ -400,37 +325,17 @@ init|;
 name|line
 operator|<=
 name|limit
+operator|&&
+name|line
+operator|<=
+name|win
+operator|->
+name|_maxy
 condition|;
 name|line
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|line
-operator|+
-name|n
-operator|<=
-name|win
-operator|->
-name|_maxy
-condition|)
-block|{
-name|TR
-argument_list|(
-name|TRACE_MOVE
-argument_list|,
-operator|(
-literal|"...copying %d to %d"
-operator|,
-name|line
-operator|+
-name|n
-operator|,
-name|line
-operator|)
-argument_list|)
-expr_stmt|;
 name|memcpy
 argument_list|(
 name|win
@@ -480,64 +385,6 @@ name|oldindex
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|TR
-argument_list|(
-name|TRACE_MOVE
-argument_list|,
-operator|(
-literal|"...filling %d"
-operator|,
-name|line
-operator|)
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<=
-name|win
-operator|->
-name|_maxx
-condition|;
-name|j
-operator|++
-control|)
-name|win
-operator|->
-name|_line
-index|[
-name|line
-index|]
-operator|.
-name|text
-index|[
-name|j
-index|]
-operator|=
-name|blank
-expr_stmt|;
-name|if_USE_SCROLL_HINTS
-argument_list|(
-name|win
-operator|->
-name|_line
-index|[
-name|line
-index|]
-operator|.
-name|oldindex
-operator|=
-name|_NEWINDEX
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 for|for
 control|(
 name|line
@@ -547,22 +394,15 @@ init|;
 name|line
 operator|>
 name|limit
+operator|&&
+name|line
+operator|>=
+literal|0
 condition|;
 name|line
 operator|--
 control|)
 block|{
-name|TR
-argument_list|(
-name|TRACE_MOVE
-argument_list|,
-operator|(
-literal|"...filling %d"
-operator|,
-name|line
-operator|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|j
@@ -621,6 +461,20 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+name|if_WIDEC
+argument_list|(
+argument|{ 	if (WINDOW_EXT(win, addch_used) !=
+literal|0
+argument|) { 	    int next = WINDOW_EXT(win, addch_y) + n; 	    if (next<
+literal|0
+argument||| next> win->_maxy) { 		TR(TRACE_VIRTPUT, 		   (
+literal|"Alert discarded multibyte on scroll"
+argument|)); 		WINDOW_EXT(win, addch_y) =
+literal|0
+argument|; 	    } else { 		TR(TRACE_VIRTPUT, (
+literal|"scrolled working position to %d,%d"
+argument|, 				   WINDOW_EXT(win, addch_y), 				   WINDOW_EXT(win, addch_x))); 		WINDOW_EXT(win, addch_y) = next; 	    } 	}     }
+argument_list|)
 block|}
 end_block
 
@@ -685,14 +539,10 @@ block|}
 if|if
 condition|(
 name|n
-operator|==
+operator|!=
 literal|0
 condition|)
-name|returnCode
-argument_list|(
-name|OK
-argument_list|)
-expr_stmt|;
+block|{
 name|_nc_scroll_window
 argument_list|(
 name|win
@@ -717,6 +567,7 @@ argument_list|(
 name|win
 argument_list|)
 expr_stmt|;
+block|}
 name|returnCode
 argument_list|(
 name|OK

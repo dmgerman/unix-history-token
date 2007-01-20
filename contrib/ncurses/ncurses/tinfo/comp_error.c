@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2002,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: comp_error.c,v 1.23 2001/09/23 00:58:30 tom Exp $"
+literal|"$Id: comp_error.c,v 1.30 2005/11/26 15:28:47 tom Exp $"
 argument_list|)
 end_macro
 
@@ -100,6 +100,28 @@ end_decl_stmt
 begin_macro
 name|NCURSES_EXPORT
 argument_list|(
+argument|const char *
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_get_source
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|sourcename
+return|;
+block|}
+end_block
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
 argument|void
 argument_list|)
 end_macro
@@ -144,15 +166,22 @@ literal|0
 condition|)
 name|termtype
 operator|=
-name|_nc_doalloc
+name|typeMalloc
 argument_list|(
-name|termtype
+name|char
 argument_list|,
 name|MAX_NAME_SIZE
 operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|termtype
+operator|!=
+literal|0
+condition|)
+block|{
 name|termtype
 index|[
 literal|0
@@ -174,6 +203,7 @@ name|MAX_NAME_SIZE
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_block
 
 begin_macro
@@ -192,6 +222,35 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|NO_LEAKS
+if|if
+condition|(
+name|name
+operator|==
+literal|0
+operator|&&
+name|termtype
+operator|!=
+literal|0
+condition|)
+block|{
+name|FreeAndNull
+argument_list|(
+name|termtype
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|name
+operator|!=
+literal|0
+condition|)
 name|strcpy
 argument_list|(
 name|name
@@ -210,7 +269,7 @@ end_block
 
 begin_function
 specifier|static
-specifier|inline
+name|NCURSES_INLINE
 name|void
 name|where_is_problem
 parameter_list|(

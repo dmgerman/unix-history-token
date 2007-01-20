@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author:  Juergen Pfeifer, 1997                                          *  *     and:  Thomas E. Dickey 2005                                          *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_slkattr.c,v 1.5 2000/12/10 02:43:27 tom Exp $"
+literal|"$Id: lib_slkattr.c,v 1.6 2005/01/08 21:44:28 tom Exp $"
 argument_list|)
 end_macro
 
@@ -63,13 +63,42 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|returnAttr
+name|attr_t
+name|result
+init|=
+name|AttrOf
 argument_list|(
 name|SP
 operator|->
 name|_slk
 operator|->
 name|attr
+argument_list|)
+operator|&
+name|ALL_BUT_COLOR
+decl_stmt|;
+name|int
+name|pair
+init|=
+name|GetPair
+argument_list|(
+name|SP
+operator|->
+name|_slk
+operator|->
+name|attr
+argument_list|)
+decl_stmt|;
+name|result
+operator||=
+name|COLOR_PAIR
+argument_list|(
+name|pair
+argument_list|)
+expr_stmt|;
+name|returnAttr
+argument_list|(
+name|result
 argument_list|)
 expr_stmt|;
 block|}

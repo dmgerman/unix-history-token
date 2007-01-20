@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_erase.c,v 1.15 2001/12/19 01:06:13 tom Exp $"
+literal|"$Id: lib_erase.c,v 1.16 2005/10/30 00:36:36 tom Exp $"
 argument_list|)
 end_macro
 
@@ -121,6 +121,22 @@ operator|->
 name|_maxx
 index|]
 expr_stmt|;
+comment|/* 	     * If this is a derived window, we have to handle the case where 	     * a multicolumn character extends into the window that we are 	     * erasing. 	     */
+name|if_WIDEC
+argument_list|(
+argument|{ 		if (isWidecExt(start[
+literal|0
+argument|])) { 		    int x = (win->_parent !=
+literal|0
+argument|) ? (win->_begx) :
+literal|0
+argument|; 		    while (x-->
+literal|0
+argument|) { 			if (isWidecBase(start[-
+literal|1
+argument|])) { 			    --start; 			    break; 			} 			--start; 		    } 		} 	    }
+argument_list|)
+empty_stmt|;
 for|for
 control|(
 name|sp

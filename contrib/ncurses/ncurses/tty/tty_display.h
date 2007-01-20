@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ************************************************************************** */
+comment|/****************************************************************************  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ************************************************************************** */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,10 @@ directive|define
 name|TTY_DISPLAY_H
 value|1
 end_define
+
+begin_comment
+comment|/*  * $Id: tty_display.h,v 1.6 2005/01/01 23:41:12 tom Exp $  */
+end_comment
 
 begin_extern
 extern|extern NCURSES_EXPORT(bool
@@ -417,7 +421,7 @@ parameter_list|(
 name|count
 parameter_list|)
 define|\
-value|((parm_ich != 0) \ 		? D->_ich_cost \ 		: ((enter_insert_mode&& exit_insert_mode) \ 		  ? D->_smir_cost + D->_rmir_cost + (D->_ip_cost * count) \ 		  : ((insert_character != 0) \ 		    ? (D->_ich1_cost * count) \ 		    : INFINITY)))
+value|((parm_ich != 0) \ 		? D->_ich_cost \ 		: ((enter_insert_mode&& exit_insert_mode) \ 		  ? D->_smir_cost + D->_rmir_cost + (D->_ip_cost * count) \ 		  : ((insert_character != 0) \ 		    ? ((D->_ich1_cost + D->_ip_cost) * count) \ 		    : INFINITY)))
 end_define
 
 begin_if
@@ -433,7 +437,7 @@ name|UpdateAttrs
 parameter_list|(
 name|c
 parameter_list|)
-value|if (D->_current_attr != AttrOf(c)) { \ 				attr_t chg = D->_current_attr; \ 				vidattr(AttrOf(c)); \ 				if (magic_cookie_glitch> 0 \&& XMC_CHANGES((chg ^ D->_current_attr))) { \ 					T(("%s @%d before glitch %d,%d", \ 						__FILE__, __LINE__, \ 						D->_cursrow, \ 						D->_curscol)); \ 					_nc_do_xmc_glitch(chg); \ 				} \ 			}
+value|if (!SameAttrOf(D->_current_attr, AttrOf(c))) { \ 				attr_t chg = D->_current_attr; \ 				vidattr(AttrOf(c)); \ 				if (magic_cookie_glitch> 0 \&& XMC_CHANGES((chg ^ D->_current_attr))) { \ 					T(("%s @%d before glitch %d,%d", \ 						__FILE__, __LINE__, \ 						D->_cursrow, \ 						D->_curscol)); \ 					_nc_do_xmc_glitch(chg); \ 				} \ 			}
 end_define
 
 begin_else
@@ -448,7 +452,7 @@ name|UpdateAttrs
 parameter_list|(
 name|c
 parameter_list|)
-value|if (D->_current_attr != AttrOf(c)) \ 				vidattr(AttrOf(c));
+value|if (!SameAttrOf(D->_current_attr, AttrOf(c))) \ 				vidattr(AttrOf(c));
 end_define
 
 begin_endif

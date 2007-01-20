@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* $Id: nc_alloc.h,v 1.10 2001/12/08 23:49:44 tom Exp $ */
+comment|/* $Id: nc_alloc.h,v 1.13 2005/01/16 00:27:35 tom Exp $ */
 end_comment
 
 begin_ifndef
@@ -24,103 +24,81 @@ name|NC_ALLOC_included
 value|1
 end_define
 
-begin_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 if|#
 directive|if
 name|HAVE_LIBDMALLOC
-end_if
-
-begin_include
 include|#
 directive|include
 file|<dmalloc.h>
-end_include
-
-begin_comment
 comment|/* Gray Watson's library */
-end_comment
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_undef
 undef|#
 directive|undef
 name|HAVE_LIBDMALLOC
-end_undef
-
-begin_define
 define|#
 directive|define
 name|HAVE_LIBDMALLOC
 value|0
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
 if|#
 directive|if
 name|HAVE_LIBDBMALLOC
-end_if
-
-begin_include
 include|#
 directive|include
 file|<dbmalloc.h>
-end_include
-
-begin_comment
 comment|/* Conor Cahill's library */
-end_comment
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_undef
 undef|#
 directive|undef
 name|HAVE_LIBDBMALLOC
-end_undef
-
-begin_define
 define|#
 directive|define
 name|HAVE_LIBDBMALLOC
 value|0
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifndef
+if|#
+directive|if
+name|HAVE_LIBMPATROL
+include|#
+directive|include
+file|<mpatrol.h>
+comment|/* Memory-Patrol library */
+else|#
+directive|else
+undef|#
+directive|undef
+name|HAVE_LIBMPATROL
+define|#
+directive|define
+name|HAVE_LIBMPATROL
+value|0
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|NO_LEAKS
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|NO_LEAKS
 value|0
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
 if|#
 directive|if
 name|HAVE_LIBDBMALLOC
@@ -128,51 +106,48 @@ operator|||
 name|HAVE_LIBDMALLOC
 operator|||
 name|NO_LEAKS
-end_if
-
-begin_define
 define|#
 directive|define
 name|HAVE_NC_FREEALL
 value|1
-end_define
-
-begin_struct_decl
 struct_decl|struct
 name|termtype
 struct_decl|;
-end_struct_decl
-
-begin_decl_stmt
-specifier|extern
-name|void
+extern|extern NCURSES_EXPORT(void
+block|)
 name|_nc_free_and_exit
 argument_list|(
-name|int
+argument|int
 argument_list|)
 name|GCC_NORETURN
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_extern
 
-begin_function_decl
-specifier|extern
-name|void
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_free_tparm
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|void
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_leaks_dump_entry
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -319,6 +294,18 @@ name|ptr
 parameter_list|)
 value|(type *)_nc_doalloc(ptr, (elts)*sizeof(type))
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

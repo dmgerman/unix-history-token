@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 59 Temple Place - Suite 330, ** Boston, MA 02111-1307, USA. */
+comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, ** Boston, MA 02110-1301, USA */
 end_comment
 
 begin_include
@@ -29,7 +29,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: control.c,v 1.3 2000/03/04 21:10:59 tom Exp $"
+literal|"$Id: control.c,v 1.9 2006/06/24 21:27:53 tom Exp $"
 argument_list|)
 end_macro
 
@@ -108,6 +108,7 @@ comment|/* -) use shorter time */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pad_test_duration
 init|=
@@ -140,7 +141,8 @@ comment|/* TRUE if the alarm has not gone off yet */
 end_comment
 
 begin_decl_stmt
-name|int
+name|unsigned
+name|long
 name|usec_run_time
 decl_stmt|;
 end_decl_stmt
@@ -150,6 +152,7 @@ comment|/* length of last test in microseconds */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|MY_TIMER
 name|stop_watch
 index|[
@@ -368,7 +371,8 @@ comment|/* printing characters sent by test */
 end_comment
 
 begin_decl_stmt
-name|int
+name|unsigned
+name|long
 name|tx_cps
 decl_stmt|;
 end_decl_stmt
@@ -378,6 +382,7 @@ comment|/* characters per second */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|test_list
 modifier|*
@@ -388,27 +393,6 @@ end_decl_stmt
 begin_comment
 comment|/* The test that generated this data */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|test_menu
-name|pad_menu
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Pad menu structure */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|test_list
-name|pad_test_list
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -442,19 +426,57 @@ comment|/* pointer to next available */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|test_results
 modifier|*
+modifier|*
 name|pads
-index|[
-name|STRCOUNT
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* save pad results here */
 end_comment
+
+begin_function
+specifier|static
+name|void
+name|alloc_arrays
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|pads
+operator|==
+literal|0
+condition|)
+block|{
+name|pads
+operator|=
+operator|(
+expr|struct
+name|test_results
+operator|*
+operator|*
+operator|)
+name|calloc
+argument_list|(
+name|MAX_STRINGS
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|test_results
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/* **	event_start(number) ** **	Begin the stopwatch at the current time-of-day. */
@@ -1527,7 +1549,8 @@ parameter_list|,
 name|int
 name|factor
 parameter_list|,
-name|int
+name|unsigned
+name|long
 name|divisor
 parameter_list|)
 block|{
@@ -1731,6 +1754,9 @@ name|TT_MAX
 index|]
 decl_stmt|;
 comment|/* String index */
+name|alloc_arrays
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|tty_can_sync
@@ -2058,6 +2084,9 @@ comment|/* a result */
 name|int
 name|delay
 decl_stmt|;
+name|alloc_arrays
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2109,6 +2138,9 @@ name|put_columns
 argument_list|(
 name|temp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|temp
@@ -2178,6 +2210,9 @@ name|put_columns
 argument_list|(
 name|temp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|temp
@@ -2322,7 +2357,7 @@ name|sprintf
 argument_list|(
 name|tbuf
 argument_list|,
-literal|"%011u"
+literal|"%011lu"
 argument_list|,
 name|usec_run_time
 argument_list|)
@@ -2331,11 +2366,11 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
-literal|"Test time: %d.%s, characters per second %d, characters %d"
+literal|"Test time: %lu.%s, characters per second %lu, characters %d"
 argument_list|,
 name|usec_run_time
 operator|/
-literal|1000000
+literal|1000000UL
 argument_list|,
 operator|&
 name|tbuf

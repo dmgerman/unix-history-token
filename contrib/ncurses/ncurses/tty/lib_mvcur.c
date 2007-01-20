@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -58,7 +58,7 @@ name|ty
 parameter_list|,
 name|tx
 parameter_list|)
-value|((tx> LONG_DIST)&& (tx< screen_lines - 1 - LONG_DIST)&& (abs(ty-fy) + abs(tx-fx)> LONG_DIST))
+value|((tx> LONG_DIST) \&& (tx< screen_columns - 1 - LONG_DIST) \&& (abs(ty-fy) + abs(tx-fx)> LONG_DIST))
 end_define
 
 begin_comment
@@ -90,53 +90,9 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_mvcur.c,v 1.85 2001/06/03 01:48:29 skimo Exp $"
+literal|"$Id: lib_mvcur.c,v 1.107 2006/11/25 22:31:59 tom Exp $"
 argument_list|)
 end_macro
-
-begin_define
-define|#
-directive|define
-name|CURRENT_ROW
-value|SP->_cursrow
-end_define
-
-begin_comment
-comment|/* phys cursor row */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CURRENT_COLUMN
-value|SP->_curscol
-end_define
-
-begin_comment
-comment|/* phys cursor column */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CURRENT_ATTR
-value|SP->_current_attr
-end_define
-
-begin_comment
-comment|/* current phys attribute */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REAL_ATTR
-value|SP->_current_attr
-end_define
-
-begin_comment
-comment|/* phys current attribute */
-end_comment
 
 begin_define
 define|#
@@ -704,7 +660,7 @@ argument_list|)
 expr_stmt|;
 name|putp
 argument_list|(
-name|tparm
+name|TPARM_2
 argument_list|(
 name|change_scroll_region
 argument_list|,
@@ -826,13 +782,25 @@ end_comment
 
 begin_block
 block|{
-comment|/*      * 9 = 7 bits + 1 parity + 1 stop.      */
+if|if
+condition|(
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|SP
+operator|->
+name|_ofp
+argument_list|)
+argument_list|)
+condition|)
 name|SP
 operator|->
 name|_char_padding
 operator|=
 operator|(
-literal|9
+operator|(
+name|BAUDBYTE
 operator|*
 literal|1000
 operator|*
@@ -848,7 +816,16 @@ name|BAUDRATE
 else|:
 literal|9600
 operator|)
+operator|)
 expr_stmt|;
+else|else
+name|SP
+operator|->
+name|_char_padding
+operator|=
+literal|1
+expr_stmt|;
+comment|/* must be nonzero */
 if|if
 condition|(
 name|SP
@@ -916,6 +893,16 @@ expr_stmt|;
 if|#
 directive|if
 name|USE_HARD_TABS
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"NCURSES_NO_HARD_TABS"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|SP
 operator|->
 name|_ht_cost
@@ -938,6 +925,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|SP
+operator|->
+name|_ht_cost
+operator|=
+name|INFINITY
+expr_stmt|;
+name|SP
+operator|->
+name|_cbt_cost
+operator|=
+name|INFINITY
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* USE_HARD_TABS */
@@ -1048,7 +1051,7 @@ name|_cup_cost
 operator|=
 name|CostOf
 argument_list|(
-name|tparm
+name|TPARM_2
 argument_list|(
 name|SP
 operator|->
@@ -1068,7 +1071,7 @@ name|_cub_cost
 operator|=
 name|CostOf
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|parm_left_cursor
 argument_list|,
@@ -1084,7 +1087,7 @@ name|_cuf_cost
 operator|=
 name|CostOf
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|parm_right_cursor
 argument_list|,
@@ -1100,7 +1103,7 @@ name|_cud_cost
 operator|=
 name|CostOf
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|parm_down_cursor
 argument_list|,
@@ -1116,7 +1119,7 @@ name|_cuu_cost
 operator|=
 name|CostOf
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|parm_up_cursor
 argument_list|,
@@ -1132,7 +1135,7 @@ name|_hpa_cost
 operator|=
 name|CostOf
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|column_address
 argument_list|,
@@ -1148,7 +1151,7 @@ name|_vpa_cost
 operator|=
 name|CostOf
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|row_address
 argument_list|,
@@ -1214,6 +1217,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/*      * If this is a bce-terminal, we want to bias the choice so we use clr_eol      * rather than spaces at the end of a line.      */
+if|if
+condition|(
+name|back_color_erase
+condition|)
+name|SP
+operator|->
+name|_el_cost
+operator|=
+literal|0
+expr_stmt|;
 comment|/* parameterized screen-update strings */
 name|SP
 operator|->
@@ -1221,7 +1235,7 @@ name|_dch_cost
 operator|=
 name|NormalizedCost
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|parm_dch
 argument_list|,
@@ -1237,7 +1251,7 @@ name|_ich_cost
 operator|=
 name|NormalizedCost
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|parm_ich
 argument_list|,
@@ -1253,7 +1267,7 @@ name|_ech_cost
 operator|=
 name|NormalizedCost
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|erase_chars
 argument_list|,
@@ -1269,7 +1283,7 @@ name|_rep_cost
 operator|=
 name|NormalizedCost
 argument_list|(
-name|tparm
+name|TPARM_2
 argument_list|(
 name|repeat_char
 argument_list|,
@@ -1287,7 +1301,7 @@ name|_cup_ch_cost
 operator|=
 name|NormalizedCost
 argument_list|(
-name|tparm
+name|TPARM_2
 argument_list|(
 name|SP
 operator|->
@@ -1307,7 +1321,7 @@ name|_hpa_ch_cost
 operator|=
 name|NormalizedCost
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|column_address
 argument_list|,
@@ -1323,7 +1337,7 @@ name|_cuf_ch_cost
 operator|=
 name|NormalizedCost
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|parm_right_cursor
 argument_list|,
@@ -1485,7 +1499,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|NCURSES_INLINE
 name|int
 name|repeated_append
 parameter_list|(
@@ -1675,7 +1689,7 @@ name|_nc_safe_strcat
 argument_list|(
 name|target
 argument_list|,
-name|tparm
+name|TPARM_1
 argument_list|(
 name|row_address
 argument_list|,
@@ -1726,7 +1740,7 @@ operator|&
 name|save
 argument_list|)
 argument_list|,
-name|tparm
+name|TPARM_1
 argument_list|(
 name|parm_down_cursor
 argument_list|,
@@ -1810,7 +1824,7 @@ name|parm_up_cursor
 operator|&&
 name|SP
 operator|->
-name|_cup_cost
+name|_cuu_cost
 operator|<
 name|vcost
 operator|&&
@@ -1824,7 +1838,7 @@ operator|&
 name|save
 argument_list|)
 argument_list|,
-name|tparm
+name|TPARM_1
 argument_list|(
 name|parm_up_cursor
 argument_list|,
@@ -1837,7 +1851,7 @@ name|vcost
 operator|=
 name|SP
 operator|->
-name|_cup_cost
+name|_cuu_cost
 expr_stmt|;
 block|}
 if|if
@@ -1931,7 +1945,7 @@ operator|&
 name|save
 argument_list|)
 argument_list|,
-name|tparm
+name|TPARM_1
 argument_list|(
 name|column_address
 argument_list|,
@@ -1980,7 +1994,7 @@ operator|&
 name|save
 argument_list|)
 argument_list|,
-name|tparm
+name|TPARM_1
 argument_list|(
 name|parm_right_cursor
 argument_list|,
@@ -2102,17 +2116,6 @@ block|}
 endif|#
 directive|endif
 comment|/* USE_HARD_TABS */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|REAL_ATTR
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|WANT_CHAR
-argument_list|)
 if|if
 condition|(
 name|n
@@ -2163,9 +2166,11 @@ literal|0
 index|]
 operator|==
 literal|'\0'
-operator|&&
-name|isdigit
-argument_list|(
+condition|)
+block|{
+name|int
+name|wanted
+init|=
 name|CharOf
 argument_list|(
 name|WANT_CHAR
@@ -2175,12 +2180,24 @@ argument_list|,
 name|from_x
 argument_list|)
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|is8bits
+argument_list|(
+name|wanted
+argument_list|)
+operator|&&
+name|isdigit
+argument_list|(
+name|wanted
 argument_list|)
 condition|)
 name|ovw
 operator|=
 name|FALSE
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* 		 * If we have no attribute changes, overwrite is cheaper. 		 * Note: must suppress this by passing in ovw = FALSE whenever 		 * WANT_CHAR would return invalid data.  In particular, this 		 * is true between the time a hardware scroll has been done 		 * and the time the structure WANT_CHAR would access has been 		 * updated. 		 */
@@ -2220,12 +2237,16 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|AttrOf
+operator|!
+name|SameAttrOf
 argument_list|(
 name|ch
+argument_list|,
+name|SCREEN_ATTRS
+argument_list|(
+name|SP
 argument_list|)
-operator|!=
-name|CURRENT_ATTR
+argument_list|)
 if|#
 directive|if
 name|USE_WIDEC_SUPPORT
@@ -2309,9 +2330,6 @@ name|_char_padding
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
-comment|/* defined(REAL_ATTR)&& defined(WANT_CHAR) */
 block|{
 name|lhcost
 operator|=
@@ -2388,7 +2406,7 @@ operator|&
 name|save
 argument_list|)
 argument_list|,
-name|tparm
+name|TPARM_1
 argument_list|(
 name|parm_left_cursor
 argument_list|,
@@ -2587,7 +2605,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|NCURSES_INLINE
 name|int
 name|onscreen_mvcur
 parameter_list|(
@@ -2674,7 +2692,7 @@ name|_nc_safe_strcpy
 argument_list|(
 name|InitResult
 argument_list|,
-name|tparm
+name|TPARM_2
 argument_list|(
 name|SP
 operator|->
@@ -3279,6 +3297,8 @@ block|}
 endif|#
 directive|endif
 comment|/* !NO_OPTIMIZE */
+name|nonlocal
+label|:
 if|#
 directive|if
 name|defined
@@ -3332,7 +3352,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"onscreen: %d msec, %f 28.8Kbps char-equivalents\n"
+literal|"onscreen: %d microsec, %f 28.8Kbps char-equivalents\n"
 argument_list|,
 operator|(
 name|int
@@ -3347,8 +3367,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MAIN */
-name|nonlocal
-label|:
 if|if
 condition|(
 name|usecost
@@ -3369,6 +3387,18 @@ literal|1
 argument_list|,
 name|_nc_outch
 argument_list|)
+expr_stmt|;
+name|SP
+operator|->
+name|_cursrow
+operator|=
+name|ynew
+expr_stmt|;
+name|SP
+operator|->
+name|_curscol
+operator|=
+name|xnew
 expr_stmt|;
 return|return
 operator|(
@@ -3411,6 +3441,12 @@ end_comment
 
 begin_block
 block|{
+name|NCURSES_CH_T
+name|oldattr
+decl_stmt|;
+name|int
+name|code
+decl_stmt|;
 name|TR
 argument_list|(
 name|TRACE_CALLS
@@ -3439,11 +3475,13 @@ name|SP
 operator|==
 literal|0
 condition|)
-name|returnCode
-argument_list|(
+block|{
+name|code
+operator|=
 name|ERR
-argument_list|)
 expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|yold
@@ -3454,12 +3492,15 @@ name|xold
 operator|==
 name|xnew
 condition|)
-name|returnCode
-argument_list|(
+block|{
+name|code
+operator|=
 name|OK
-argument_list|)
 expr_stmt|;
-comment|/*      * Most work here is rounding for terminal boundaries getting the      * column position implied by wraparound or the lack thereof and      * rolling up the screen to get ynew on the screen.      */
+block|}
+else|else
+block|{
+comment|/* 	 * Most work here is rounding for terminal boundaries getting the 	 * column position implied by wraparound or the lack thereof and 	 * rolling up the screen to get ynew on the screen. 	 */
 if|if
 condition|(
 name|xnew
@@ -3476,6 +3517,73 @@ expr_stmt|;
 name|xnew
 operator|%=
 name|screen_columns
+expr_stmt|;
+block|}
+comment|/* 	 * Force restore even if msgr is on when we're in an alternate 	 * character set -- these have a strong tendency to screw up the CR& 	 * LF used for local character motions! 	 */
+name|oldattr
+operator|=
+name|SCREEN_ATTRS
+argument_list|(
+name|SP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|AttrOf
+argument_list|(
+name|oldattr
+argument_list|)
+operator|&
+name|A_ALTCHARSET
+operator|)
+operator|||
+operator|(
+name|AttrOf
+argument_list|(
+name|oldattr
+argument_list|)
+operator|&&
+operator|!
+name|move_standout_mode
+operator|)
+condition|)
+block|{
+name|TR
+argument_list|(
+name|TRACE_CHARPUT
+argument_list|,
+operator|(
+literal|"turning off (%#lx) %s before move"
+operator|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|AttrOf
+argument_list|(
+name|oldattr
+argument_list|)
+operator|,
+name|_traceattr
+argument_list|(
+name|AttrOf
+argument_list|(
+name|oldattr
+argument_list|)
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|VIDATTR
+argument_list|(
+name|A_NORMAL
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -3525,6 +3633,39 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|l
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|carriage_return
+condition|)
+block|{
+name|TPUTS_TRACE
+argument_list|(
+literal|"carriage_return"
+argument_list|)
+expr_stmt|;
+name|putp
+argument_list|(
+name|carriage_return
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|_nc_outch
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+name|xold
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|l
@@ -3542,18 +3683,14 @@ argument_list|(
 literal|"newline"
 argument_list|)
 expr_stmt|;
-name|tputs
+name|putp
 argument_list|(
 name|newline
-argument_list|,
-literal|0
-argument_list|,
-name|_nc_outch
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|putchar
+name|_nc_outch
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -3561,49 +3698,12 @@ expr_stmt|;
 name|l
 operator|--
 expr_stmt|;
-if|if
-condition|(
-name|xold
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|carriage_return
-condition|)
-block|{
-name|TPUTS_TRACE
-argument_list|(
-literal|"carriage_return"
-argument_list|)
-expr_stmt|;
-name|tputs
-argument_list|(
-name|carriage_return
-argument_list|,
-literal|0
-argument_list|,
-name|_nc_outch
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|putchar
-argument_list|(
-literal|'\r'
-argument_list|)
-expr_stmt|;
-name|xold
-operator|=
-literal|0
-expr_stmt|;
 block|}
 block|}
 block|}
 else|else
 block|{
-comment|/* 	     * If caller set nonl(), we cannot really use newlines to position 	     * to the next row. 	     */
+comment|/* 		 * If caller set nonl(), we cannot really use newlines to 		 * position to the next row. 		 */
 name|xold
 operator|=
 operator|-
@@ -3645,8 +3745,8 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* destination location is on screen now */
-name|returnCode
-argument_list|(
+name|code
+operator|=
 name|onscreen_mvcur
 argument_list|(
 name|yold
@@ -3659,6 +3759,69 @@ name|xnew
 argument_list|,
 name|TRUE
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Restore attributes if we disabled them before moving. 	 */
+if|if
+condition|(
+operator|!
+name|SameAttrOf
+argument_list|(
+name|oldattr
+argument_list|,
+name|SCREEN_ATTRS
+argument_list|(
+name|SP
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|TR
+argument_list|(
+name|TRACE_CHARPUT
+argument_list|,
+operator|(
+literal|"turning on (%#lx) %s after move"
+operator|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|AttrOf
+argument_list|(
+name|oldattr
+argument_list|)
+operator|,
+name|_traceattr
+argument_list|(
+name|AttrOf
+argument_list|(
+name|oldattr
+argument_list|)
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|VIDATTR
+argument_list|(
+name|AttrOf
+argument_list|(
+name|oldattr
+argument_list|)
+argument_list|,
+name|GetPair
+argument_list|(
+name|oldattr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|returnCode
+argument_list|(
+name|code
 argument_list|)
 expr_stmt|;
 block|}
@@ -3871,60 +4034,6 @@ block|}
 end_block
 
 begin_macro
-name|NCURSES_EXPORT_VAR
-argument_list|(
-argument|char
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|PC
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* used by termcap library */
-end_comment
-
-begin_macro
-name|NCURSES_EXPORT_VAR
-argument_list|(
-argument|NCURSES_OSPEED
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|ospeed
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* used by termcap library */
-end_comment
-
-begin_macro
-name|NCURSES_EXPORT_VAR
-argument_list|(
-argument|int
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|_nc_nulls_sent
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* used by 'tack' program */
-end_comment
-
-begin_macro
 name|NCURSES_EXPORT
 argument_list|(
 argument|int
@@ -3951,7 +4060,7 @@ specifier|static
 name|char
 name|tname
 index|[
-name|MAX_ALIAS
+name|PATH_MAX
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -4061,6 +4170,10 @@ argument_list|,
 name|columns
 argument_list|,
 name|stdout
+argument_list|,
+name|FALSE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|baudrate
@@ -4679,6 +4792,10 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|TRUE
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)

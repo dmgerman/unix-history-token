@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tries.c,v 1.15 2001/12/16 00:50:40 tom Exp $"
+literal|"$Id: tries.c,v 1.22 2005/11/26 20:09:18 tom Exp $"
 argument_list|)
 end_macro
 
@@ -40,7 +40,7 @@ name|_nc_expand_try
 argument_list|(
 argument|struct tries *tree
 argument_list|,
-argument|unsigned short code
+argument|unsigned code
 argument_list|,
 argument|int *count
 argument_list|,
@@ -194,6 +194,10 @@ condition|(
 name|len
 operator|==
 literal|0
+operator|&&
+name|_nc_tracing
+operator|!=
+literal|0
 condition|)
 name|_tracef
 argument_list|(
@@ -235,7 +239,7 @@ name|_nc_remove_key
 argument_list|(
 argument|struct tries **tree
 argument_list|,
-argument|unsigned short code
+argument|unsigned code
 argument_list|)
 end_macro
 
@@ -396,7 +400,7 @@ name|_nc_remove_string
 argument_list|(
 argument|struct tries **tree
 argument_list|,
-argument|char *string
+argument|const char *string
 argument_list|)
 end_macro
 
@@ -445,23 +449,21 @@ condition|)
 block|{
 if|if
 condition|(
-call|(
-name|unsigned
-name|char
-call|)
+name|UChar
 argument_list|(
+operator|(
 operator|*
 name|tree
-argument_list|)
+operator|)
 operator|->
 name|ch
+argument_list|)
 operator|==
-operator|(
-name|unsigned
-name|char
-operator|)
+name|UChar
+argument_list|(
 operator|*
 name|string
+argument_list|)
 condition|)
 block|{
 if|if
@@ -499,20 +501,9 @@ name|tree
 operator|)
 operator|->
 name|child
-condition|)
-block|{
-comment|/* don't cut the whole sub-tree */
-operator|(
-operator|*
-name|tree
-operator|)
-operator|->
-name|value
-operator|=
+operator|==
 literal|0
-expr_stmt|;
-block|}
-else|else
+condition|)
 block|{
 name|struct
 name|tries
@@ -537,12 +528,20 @@ argument_list|(
 name|to_free
 argument_list|)
 expr_stmt|;
-block|}
 name|returnCode
 argument_list|(
 name|TRUE
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|returnCode
+argument_list|(
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|tree
 operator|=

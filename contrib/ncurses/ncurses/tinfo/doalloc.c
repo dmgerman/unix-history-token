@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: doalloc.c,v 1.7 2000/12/10 02:55:07 tom Exp $"
+literal|"$Id: doalloc.c,v 1.8 2002/08/31 21:48:11 Philippe.Blain Exp $"
 argument_list|)
 end_macro
 
@@ -85,10 +85,8 @@ else|else
 block|{
 name|newp
 operator|=
-name|typeMalloc
+name|malloc
 argument_list|(
-name|char
-argument_list|,
 name|amount
 argument_list|)
 expr_stmt|;

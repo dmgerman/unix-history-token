@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2001,2002 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2001-2004,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,12 +16,12 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_cchar.c,v 1.5 2002/04/27 22:35:46 tom Exp $"
+literal|"$Id: lib_cchar.c,v 1.11 2005/01/29 21:29:16 tom Exp $"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*   * The SuSv2 description leaves some room for interpretation.  We'll assume wch  * is L'\0' terminated, contains at most one character with strictly positive  * width, which must be the first, and contains no characters of negative  * width.  */
+comment|/*   * The SuSv2 description leaves some room for interpretation.  We'll assume wch  * points to a string which is L'\0' terminated, contains at least one  * character with strictly positive width, which must be the first, and  * contains no characters of negative width.  */
 end_comment
 
 begin_macro
@@ -34,9 +34,9 @@ end_macro
 begin_macro
 name|setcchar
 argument_list|(
-argument|cchar_t * wcval
+argument|cchar_t *wcval
 argument_list|,
-argument|const wchar_t * wch
+argument|const wchar_t *wch
 argument_list|,
 argument|const attr_t attrs
 argument_list|,
@@ -84,6 +84,13 @@ name|opts
 operator|)
 argument_list|)
 expr_stmt|;
+name|len
+operator|=
+name|wcslen
+argument_list|(
+name|wch
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|opts
@@ -92,19 +99,8 @@ name|NULL
 operator|||
 operator|(
 name|len
-operator|=
-name|wcslen
-argument_list|(
-name|wch
-argument_list|)
-operator|)
 operator|>
-name|CCHARW_MAX
-operator|||
-operator|(
-name|len
-operator|>
-literal|0
+literal|1
 operator|&&
 name|wcwidth
 argument_list|(
@@ -125,6 +121,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|len
+operator|>
+name|CCHARW_MAX
+condition|)
+name|len
+operator|=
+name|CCHARW_MAX
+expr_stmt|;
+comment|/* 	 * If we have a following spacing-character, stop at that point.  We 	 * are only interested in adding non-spacing characters. 	 */
 for|for
 control|(
 name|i
@@ -152,20 +159,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|code
+name|len
 operator|=
-name|ERR
+name|i
 expr_stmt|;
 break|break;
 block|}
 block|}
-if|if
-condition|(
-name|code
-operator|!=
-name|ERR
-condition|)
-block|{
 name|memset
 argument_list|(
 name|wcval
@@ -193,6 +193,19 @@ name|wcval
 argument_list|,
 name|attrs
 operator||
+name|COLOR_PAIR
+argument_list|(
+name|color_pair
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|SetPair
+argument_list|(
+name|CHDEREF
+argument_list|(
+name|wcval
+argument_list|)
+argument_list|,
 name|color_pair
 argument_list|)
 expr_stmt|;
@@ -231,7 +244,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 name|TR
 argument_list|(
 name|TRACE_CCALLS
@@ -264,11 +276,11 @@ end_macro
 begin_macro
 name|getcchar
 argument_list|(
-argument|const cchar_t * wcval
+argument|const cchar_t *wcval
 argument_list|,
-argument|wchar_t * wch
+argument|wchar_t *wch
 argument_list|,
-argument|attr_t * attrs
+argument|attr_t *attrs
 argument_list|,
 argument|short *color_pair
 argument_list|,
@@ -360,6 +372,23 @@ block|}
 elseif|else
 if|if
 condition|(
+name|attrs
+operator|==
+literal|0
+operator|||
+name|color_pair
+operator|==
+literal|0
+condition|)
+block|{
+name|code
+operator|=
+name|ERR
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|len
 operator|>=
 literal|0
@@ -379,13 +408,11 @@ expr_stmt|;
 operator|*
 name|color_pair
 operator|=
-name|AttrOf
+name|GetPair
 argument_list|(
 operator|*
 name|wcval
 argument_list|)
-operator|&
-name|A_COLOR
 expr_stmt|;
 name|wmemcpy
 argument_list|(

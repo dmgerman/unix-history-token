@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  *	lib_trace.c - Tracing/Debugging routines  */
+comment|/*  *	lib_trace.c - Tracing/Debugging routines  *  * The _tracef() function is originally from pcurses (by Pavel Curtis) in 1982.   * pcurses allowed one to enable/disable tracing using traceon() and traceoff()  * functions.  ncurses provides a trace() function which allows one to  * selectively enable or disable several tracing features.  */
 end_comment
 
 begin_include
@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_trace.c,v 1.48 2001/10/20 20:35:25 tom Exp $"
+literal|"$Id: lib_trace.c,v 1.59 2006/08/19 12:05:25 tom Exp $"
 argument_list|)
 end_macro
 
@@ -93,6 +93,8 @@ specifier|static
 name|FILE
 modifier|*
 name|tracefp
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -110,7 +112,7 @@ end_macro
 begin_macro
 name|trace
 argument_list|(
-argument|const unsigned int tracelevel GCC_UNUSED
+argument|const unsigned int tracelevel
 argument_list|)
 end_macro
 
@@ -125,18 +127,76 @@ decl_stmt|;
 specifier|static
 name|char
 name|my_name
-index|[]
-init|=
-literal|"trace"
+index|[
+name|PATH_MAX
+index|]
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|been_here
+operator|(
+name|tracefp
+operator|==
+literal|0
+operator|)
 operator|&&
 name|tracelevel
 condition|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|mode
+init|=
+name|been_here
+condition|?
+literal|"ab"
+else|:
+literal|"wb"
+decl_stmt|;
+if|if
+condition|(
+operator|*
+name|my_name
+operator|==
+literal|'\0'
+condition|)
+block|{
+if|if
+condition|(
+name|getcwd
+argument_list|(
+name|my_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|my_name
+argument_list|)
+operator|-
+literal|10
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"curses: Can't get working directory"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+name|strcat
+argument_list|(
+name|my_name
+argument_list|,
+literal|"/trace"
+argument_list|)
+expr_stmt|;
+block|}
 name|been_here
 operator|=
 name|TRUE
@@ -163,7 +223,7 @@ name|fopen
 argument_list|(
 name|my_name
 argument_list|,
-literal|"wb"
+name|mode
 argument_list|)
 operator|)
 operator|==
@@ -172,7 +232,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"curses: Can't open 'trace' file: "
+literal|"curses: Can't open 'trace' file"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -226,13 +286,44 @@ endif|#
 directive|endif
 name|_tracef
 argument_list|(
-literal|"TRACING NCURSES version %s (tracelevel=%#x)"
+literal|"TRACING NCURSES version %s.%d (tracelevel=%#x)"
 argument_list|,
-name|curses_version
-argument_list|()
+name|NCURSES_VERSION
+argument_list|,
+name|NCURSES_VERSION_PATCH
 argument_list|,
 name|tracelevel
 argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|tracelevel
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|tracefp
+operator|!=
+literal|0
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|tracefp
+argument_list|)
+expr_stmt|;
+name|tracefp
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|_nc_tracing
+operator|=
+name|tracelevel
 expr_stmt|;
 block|}
 elseif|else
@@ -315,7 +406,7 @@ name|after
 init|=
 name|FALSE
 decl_stmt|;
-name|int
+name|unsigned
 name|doit
 init|=
 name|_nc_tracing
@@ -527,6 +618,48 @@ block|}
 end_block
 
 begin_comment
+comment|/* Trace 'bool' return-values */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|NCURSES_BOOL
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_retrace_bool
+argument_list|(
+argument|NCURSES_BOOL code
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|T
+argument_list|(
+operator|(
+name|T_RETURN
+argument_list|(
+literal|"%s"
+argument_list|)
+operator|,
+name|code
+condition|?
+literal|"TRUE"
+else|:
+literal|"FALSE"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|code
+return|;
+block|}
+end_block
+
+begin_comment
 comment|/* Trace 'int' return-values */
 end_comment
 
@@ -552,6 +685,44 @@ operator|(
 name|T_RETURN
 argument_list|(
 literal|"%d"
+argument_list|)
+operator|,
+name|code
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|code
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/* Trace 'unsigned' return-values */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|unsigned
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_retrace_unsigned
+argument_list|(
+argument|unsigned code
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|T
+argument_list|(
+operator|(
+name|T_RETURN
+argument_list|(
+literal|"%#x"
 argument_list|)
 operator|,
 name|code
@@ -606,6 +777,123 @@ block|}
 end_block
 
 begin_comment
+comment|/* Trace 'const char*' return-values */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|const char *
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_retrace_cptr
+argument_list|(
+argument|const char *code
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|T
+argument_list|(
+operator|(
+name|T_RETURN
+argument_list|(
+literal|"%s"
+argument_list|)
+operator|,
+name|_nc_visbuf
+argument_list|(
+name|code
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|code
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/* Trace 'NCURSES_CONST void*' return-values */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|NCURSES_CONST void *
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_retrace_cvoid_ptr
+argument_list|(
+argument|NCURSES_CONST void *code
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|T
+argument_list|(
+operator|(
+name|T_RETURN
+argument_list|(
+literal|"%p"
+argument_list|)
+operator|,
+name|code
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|code
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/* Trace 'void*' return-values */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_retrace_void_ptr
+argument_list|(
+argument|void *code
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|T
+argument_list|(
+operator|(
+name|T_RETURN
+argument_list|(
+literal|"%p"
+argument_list|)
+operator|,
+name|code
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|code
+return|;
+block|}
+end_block
+
+begin_comment
 comment|/* Trace 'SCREEN *' return-values */
 end_comment
 
@@ -619,7 +907,7 @@ end_macro
 begin_macro
 name|_nc_retrace_sp
 argument_list|(
-argument|SCREEN * code
+argument|SCREEN *code
 argument_list|)
 end_macro
 

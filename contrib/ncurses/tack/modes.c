@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 59 Temple Place - Suite 330, ** Boston, MA 02111-1307, USA. */
+comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, ** Boston, MA 02110-1301, USA */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: modes.c,v 1.1 1998/01/10 00:29:53 tom Exp $"
+literal|"$Id: modes.c,v 1.3 2006/11/26 00:16:21 tom Exp $"
 argument_list|)
 end_macro
 
@@ -3400,7 +3400,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|tparm
+name|TPARM_2
 argument_list|(
 name|cursor_address
 argument_list|,
@@ -3427,7 +3427,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|tparm
+name|TPARM_2
 argument_list|(
 name|cursor_address
 argument_list|,
@@ -3454,7 +3454,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|tparm
+name|TPARM_2
 argument_list|(
 name|cursor_address
 argument_list|,
@@ -3481,7 +3481,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|tparm
+name|TPARM_2
 argument_list|(
 name|cursor_address
 argument_list|,
@@ -3657,7 +3657,7 @@ literal|1
 expr_stmt|;
 name|tputs
 argument_list|(
-name|tparm
+name|TPARM_2
 argument_list|(
 name|cursor_address
 argument_list|,
@@ -3707,7 +3707,7 @@ argument_list|)
 expr_stmt|;
 name|tputs
 argument_list|(
-name|tparm
+name|TPARM_2
 argument_list|(
 name|cursor_address
 argument_list|,
@@ -3730,7 +3730,7 @@ argument_list|)
 expr_stmt|;
 name|tputs
 argument_list|(
-name|tparm
+name|TPARM_2
 argument_list|(
 name|cursor_address
 argument_list|,
@@ -3753,7 +3753,7 @@ argument_list|)
 expr_stmt|;
 name|tputs
 argument_list|(
-name|tparm
+name|TPARM_2
 argument_list|(
 name|cursor_address
 argument_list|,

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * THIS CODE IS SPECIFICALLY EXEMPTED FROM THE NCURSES PACKAGE COPYRIGHT.  * You may freely copy it for use as a template for your own field types.  * If you develop a field type that might be of general use, please send  * it back to the ncurses maintainers for inclusion in the next version.  */
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*************************************************************************** *                                                                          * *  Author : Juergen Pfeifer, juergen.pfeifer@gmx.net                       * *                                                                          * ***************************************************************************/
+comment|/*************************************************************************** *                                                                          * *  Author : Juergen Pfeifer                                                * *                                                                          * ***************************************************************************/
 end_comment
 
 begin_include
@@ -16,9 +16,52 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fty_int.c,v 1.11 2000/12/09 23:46:12 tom Exp $"
+literal|"$Id: fty_int.c,v 1.20 2006/04/22 21:33:05 tom Exp $"
 argument_list|)
 end_macro
+
+begin_if
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+end_if
+
+begin_define
+define|#
+directive|define
+name|isDigit
+parameter_list|(
+name|c
+parameter_list|)
+value|(iswdigit((wint_t)(c)) || isdigit(UChar(c)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|isDigit
+parameter_list|(
+name|c
+parameter_list|)
+value|isdigit(UChar(c))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|thisARG
+value|integerARG
+end_define
 
 begin_typedef
 typedef|typedef
@@ -34,38 +77,38 @@ name|long
 name|high
 decl_stmt|;
 block|}
-name|integerARG
+name|thisARG
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void *Make_Integer_Type( va_list * ap ) |    |   Description   :  Allocate structure for integer type argument. | |   Return Values :  Pointer to argument structure or NULL on error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void *Make_This_Type( va_list * ap ) |    |   Description   :  Allocate structure for integer type argument. | |   Return Values :  Pointer to argument structure or NULL on error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
 modifier|*
-name|Make_Integer_Type
+name|Make_This_Type
 parameter_list|(
 name|va_list
 modifier|*
 name|ap
 parameter_list|)
 block|{
-name|integerARG
+name|thisARG
 modifier|*
 name|argp
 init|=
 operator|(
-name|integerARG
+name|thisARG
 operator|*
 operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|integerARG
+name|thisARG
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -122,14 +165,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void *Copy_Integer_Type(const void * argp) |    |   Description   :  Copy structure for integer type argument.   | |   Return Values :  Pointer to argument structure or NULL on error. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void *Copy_This_Type(const void * argp) |    |   Description   :  Copy structure for integer type argument.   | |   Return Values :  Pointer to argument structure or NULL on error. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
 modifier|*
-name|Copy_Integer_Type
+name|Copy_This_Type
 parameter_list|(
 specifier|const
 name|void
@@ -138,23 +181,23 @@ name|argp
 parameter_list|)
 block|{
 specifier|const
-name|integerARG
+name|thisARG
 modifier|*
 name|ap
 init|=
 operator|(
 specifier|const
-name|integerARG
+name|thisARG
 operator|*
 operator|)
 name|argp
 decl_stmt|;
-name|integerARG
+name|thisARG
 modifier|*
 name|result
 init|=
 operator|(
-name|integerARG
+name|thisARG
 operator|*
 operator|)
 literal|0
@@ -167,14 +210,14 @@ block|{
 name|result
 operator|=
 operator|(
-name|integerARG
+name|thisARG
 operator|*
 operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|integerARG
+name|thisARG
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -200,13 +243,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void Free_Integer_Type(void * argp) |    |   Description   :  Free structure for integer type argument. | |   Return Values :  - +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void Free_This_Type(void * argp) |    |   Description   :  Free structure for integer type argument. | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|Free_Integer_Type
+name|Free_This_Type
 parameter_list|(
 name|void
 modifier|*
@@ -226,13 +269,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static bool Check_Integer_Field( |                                                    FIELD * field, |                                                    const void * argp) |    |   Description   :  Validate buffer content to be a valid integer value | |   Return Values :  TRUE  - field is valid |                    FALSE - field is invalid +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static bool Check_This_Field( |                                                 FIELD * field, |                                                 const void * argp) |    |   Description   :  Validate buffer content to be a valid integer value | |   Return Values :  TRUE  - field is valid |                    FALSE - field is invalid +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|bool
-name|Check_Integer_Field
+name|Check_This_Field
 parameter_list|(
 name|FIELD
 modifier|*
@@ -245,13 +288,13 @@ name|argp
 parameter_list|)
 block|{
 specifier|const
-name|integerARG
+name|thisARG
 modifier|*
 name|argi
 init|=
 operator|(
 specifier|const
-name|integerARG
+name|thisARG
 operator|*
 operator|)
 name|argp
@@ -313,6 +356,11 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+name|bool
+name|result
+init|=
+name|FALSE
+decl_stmt|;
 while|while
 condition|(
 operator|*
@@ -342,6 +390,134 @@ condition|)
 name|bp
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+if|if
+condition|(
+operator|*
+name|bp
+condition|)
+block|{
+name|bool
+name|blank
+init|=
+name|FALSE
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+name|wchar_t
+modifier|*
+name|list
+init|=
+name|_nc_Widen_String
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|bp
+argument_list|,
+operator|&
+name|len
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|list
+operator|!=
+literal|0
+condition|)
+block|{
+name|result
+operator|=
+name|TRUE
+expr_stmt|;
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|len
+condition|;
+operator|++
+name|n
+control|)
+block|{
+if|if
+condition|(
+name|blank
+condition|)
+block|{
+if|if
+condition|(
+name|list
+index|[
+name|n
+index|]
+operator|!=
+literal|' '
+condition|)
+block|{
+name|result
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|list
+index|[
+name|n
+index|]
+operator|==
+literal|' '
+condition|)
+block|{
+name|blank
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|isDigit
+argument_list|(
+name|list
+index|[
+name|n
+index|]
+argument_list|)
+condition|)
+block|{
+name|result
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+block|}
+block|}
+name|free
+argument_list|(
+name|list
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|#
+directive|else
 while|while
 condition|(
 operator|*
@@ -353,8 +529,11 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+name|UChar
+argument_list|(
 operator|*
 name|bp
+argument_list|)
 argument_list|)
 condition|)
 break|break;
@@ -375,12 +554,20 @@ condition|)
 name|bp
 operator|++
 expr_stmt|;
-if|if
-condition|(
+name|result
+operator|=
+operator|(
 operator|*
 name|bp
 operator|==
 literal|'\0'
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|result
 condition|)
 block|{
 name|val
@@ -407,10 +594,16 @@ name|val
 operator|>
 name|high
 condition|)
-return|return
+name|result
+operator|=
 name|FALSE
-return|;
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|result
+condition|)
+block|{
 name|sprintf
 argument_list|(
 name|buf
@@ -439,25 +632,25 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return
-name|TRUE
-return|;
+block|}
 block|}
 block|}
 return|return
-name|FALSE
+operator|(
+name|result
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static bool Check_Integer_Character( |                                      int c, |                                      const void * argp) |    |   Description   :  Check a character for the integer type. | |   Return Values :  TRUE  - character is valid |                    FALSE - character is invalid +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static bool Check_This_Character( |                                      int c, |                                      const void * argp) |    |   Description   :  Check a character for the integer type. | |   Return Values :  TRUE  - character is valid |                    FALSE - character is invalid +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|bool
-name|Check_Integer_Character
+name|Check_This_Character
 parameter_list|(
 name|int
 name|c
@@ -472,9 +665,12 @@ block|{
 return|return
 operator|(
 operator|(
-name|isdigit
+name|isDigit
+argument_list|(
+name|UChar
 argument_list|(
 name|c
+argument_list|)
 argument_list|)
 operator|||
 operator|(
@@ -495,7 +691,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|FIELDTYPE
-name|typeINTEGER
+name|typeTHIS
 init|=
 block|{
 name|_HAS_ARGS
@@ -517,15 +713,15 @@ operator|*
 operator|)
 literal|0
 block|,
-name|Make_Integer_Type
+name|Make_This_Type
 block|,
-name|Copy_Integer_Type
+name|Copy_This_Type
 block|,
-name|Free_Integer_Type
+name|Free_This_Type
 block|,
-name|Check_Integer_Field
+name|Check_This_Field
 block|,
-name|Check_Integer_Character
+name|Check_This_Character
 block|,
 name|NULL
 block|,
@@ -545,7 +741,7 @@ begin_expr_stmt
 name|TYPE_INTEGER
 operator|=
 operator|&
-name|typeINTEGER
+name|typeTHIS
 expr_stmt|;
 end_expr_stmt
 

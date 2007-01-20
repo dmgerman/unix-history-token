@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 59 Temple Place - Suite 330, ** Boston, MA 02111-1307, USA. */
+comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. ** ** This file is part of TACK. ** ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. ** ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. ** ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, ** Boston, MA 02110-1301, USA */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fun.c,v 1.3 2000/03/04 20:29:21 tom Exp $"
+literal|"$Id: fun.c,v 1.9 2006/11/26 00:15:53 tom Exp $"
 argument_list|)
 end_macro
 
@@ -368,56 +368,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|MAX_STRINGS
-value|STRCOUNT
-end_define
-
-begin_comment
-comment|/* scan code externals */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|scan_max
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* length of longest scan code */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|scan_up
-decl_stmt|,
-modifier|*
-modifier|*
-name|scan_down
-decl_stmt|,
-modifier|*
-modifier|*
-name|scan_name
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-modifier|*
-name|scan_tested
-decl_stmt|,
-modifier|*
-name|scan_length
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* local definitions */
 end_comment
@@ -427,21 +377,17 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+modifier|*
 name|fk_name
-index|[
-name|MAX_STRINGS
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 modifier|*
 name|fkval
-index|[
-name|MAX_STRINGS
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -449,10 +395,8 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
+modifier|*
 name|fk_label
-index|[
-name|MAX_STRINGS
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -463,10 +407,17 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+modifier|*
 name|fk_tested
-index|[
-name|MAX_STRINGS
-index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|num_strings
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -552,6 +503,105 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Initialize arrays that depend on the actual number of strings.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|alloc_strings
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|num_strings
+operator|!=
+name|MAX_STRINGS
+condition|)
+block|{
+name|num_strings
+operator|=
+name|MAX_STRINGS
+expr_stmt|;
+name|fk_name
+operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|*
+operator|)
+name|calloc
+argument_list|(
+name|num_strings
+argument_list|,
+sizeof|sizeof
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fkval
+operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|calloc
+argument_list|(
+name|num_strings
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fk_label
+operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|calloc
+argument_list|(
+name|num_strings
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fk_tested
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+name|calloc
+argument_list|(
+name|num_strings
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/* **	keys_tested(first-time, show-help, hex-output) ** **	Display a list of the keys not tested. */
 end_comment
 
@@ -581,6 +631,9 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|alloc_strings
+argument_list|()
+expr_stmt|;
 name|put_clear
 argument_list|()
 expr_stmt|;
@@ -650,6 +703,9 @@ name|put_columns
 argument_list|(
 name|outbuf
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|outbuf
@@ -1142,6 +1198,9 @@ block|{
 name|int
 name|j
 decl_stmt|;
+name|alloc_strings
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|value
@@ -1432,6 +1491,9 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|alloc_strings
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2835,7 +2897,7 @@ literal|'\0'
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_2
 argument_list|(
 name|plab_norm
 argument_list|,
@@ -2942,7 +3004,7 @@ argument_list|)
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_2
 argument_list|(
 name|pkey_xmit
 argument_list|,
@@ -3059,7 +3121,7 @@ condition|)
 block|{
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_2
 argument_list|(
 name|pkey_xmit
 argument_list|,
@@ -3155,7 +3217,7 @@ argument_list|)
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_2
 argument_list|(
 name|pkey_local
 argument_list|,
@@ -3197,7 +3259,7 @@ condition|)
 block|{
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_2
 argument_list|(
 name|pkey_xmit
 argument_list|,
@@ -3793,17 +3855,17 @@ name|crx
 argument_list|)
 expr_stmt|;
 block|}
+name|memset
+argument_list|(
 name|txt
-index|[
+argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|txt
 argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
+argument_list|)
 expr_stmt|;
 name|save_scan_mode
 operator|=

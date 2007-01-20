@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -147,16 +147,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<curses.h>
-end_include
-
-begin_comment
-comment|/* for bool typedef */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<dump_entry.h>
 end_include
 
@@ -169,7 +159,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tset.c,v 0.52 2001/09/29 21:13:56 tom Exp $"
+literal|"$Id: tset.c,v 1.67 2006/09/16 17:51:10 tom Exp $"
 argument_list|)
 end_macro
 
@@ -218,6 +208,28 @@ decl_stmt|,
 name|original
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|opt_c
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set control-chars */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|opt_w
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set window-size */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -412,7 +424,7 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -451,7 +463,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tset: "
+literal|"%s: "
+argument_list|,
+name|_nc_progname
 argument_list|)
 expr_stmt|;
 operator|(
@@ -495,16 +509,58 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|perror
+name|unsigned
+name|len
+init|=
+name|strlen
 argument_list|(
-name|strncat
+name|_nc_progname
+argument_list|)
+operator|+
+literal|2
+decl_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+sizeof|sizeof
 argument_list|(
+name|temp
+argument_list|)
+operator|-
+literal|12
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|temp
+argument_list|,
+name|_nc_progname
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|temp
+argument_list|,
+literal|": "
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|strcpy
 argument_list|(
 name|temp
 argument_list|,
 literal|"tset: "
 argument_list|)
+expr_stmt|;
+block|}
+name|perror
+argument_list|(
+name|strncat
+argument_list|(
+name|temp
 argument_list|,
 name|msg
 argument_list|,
@@ -513,7 +569,12 @@ argument_list|(
 name|temp
 argument_list|)
 operator|-
-literal|10
+name|strlen
+argument_list|(
+name|temp
+argument_list|)
+operator|-
+literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -672,6 +733,11 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* We can get recalled; if so, don't continue uselessly. */
+name|clearerr
+argument_list|(
+name|stdin
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|feof
@@ -1323,6 +1389,10 @@ argument_list|)
 expr_stmt|;
 name|mapp
 operator|=
+operator|(
+name|MAP
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -2322,10 +2392,11 @@ operator|)
 operator|!=
 literal|0
 operator|&&
-operator|*
+operator|!
+name|_nc_is_abs_path
+argument_list|(
 name|p
-operator|!=
-literal|'/'
+argument_list|)
 condition|)
 block|{
 comment|/* 'unsetenv("TERMCAP")' is not portable. 	 * The 'environ' array is better. 	 */
@@ -2465,7 +2536,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tset: unknown terminal type %s\n"
+literal|"%s: unknown terminal type %s\n"
+argument_list|,
+name|_nc_progname
 argument_list|,
 name|ttype
 argument_list|)
@@ -2484,7 +2557,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tset: can't initialize terminal type %s (error %d)\n"
+literal|"%s: can't initialize terminal type %s (error %d)\n"
+argument_list|,
+name|_nc_progname
 argument_list|,
 name|ttype
 argument_list|,
@@ -2528,8 +2603,35 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* some BSD systems have these built in, some systems are missing  * one or more definitions. The safest solution is to override.  */
+comment|/* some BSD systems have these built in, some systems are missing  * one or more definitions. The safest solution is to override unless the  * commonly-altered ones are defined.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
+name|CERASE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CINTR
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CKILL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CQUIT
+argument_list|)
+operator|)
+end_if
 
 begin_undef
 undef|#
@@ -2591,9 +2693,20 @@ directive|undef
 name|CSUSP
 end_undef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* control-character defaults */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CEOF
+end_ifndef
 
 begin_define
 define|#
@@ -2602,12 +2715,34 @@ name|CEOF
 value|CTRL('D')
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CERASE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|CERASE
 value|CTRL('H')
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CINTR
+end_ifndef
 
 begin_define
 define|#
@@ -2620,12 +2755,34 @@ begin_comment
 comment|/* ^? */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CKILL
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|CKILL
 value|CTRL('U')
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CLNEXT
+end_ifndef
 
 begin_define
 define|#
@@ -2634,12 +2791,34 @@ name|CLNEXT
 value|CTRL('v')
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CRPRNT
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|CRPRNT
 value|CTRL('r')
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CQUIT
+end_ifndef
 
 begin_define
 define|#
@@ -2648,12 +2827,34 @@ name|CQUIT
 value|CTRL('\\')
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CSTART
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|CSTART
 value|CTRL('Q')
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CSTOP
+end_ifndef
 
 begin_define
 define|#
@@ -2662,12 +2863,67 @@ name|CSTOP
 value|CTRL('S')
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CSUSP
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|CSUSP
 value|CTRL('Z')
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_POSIX_VDISABLE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|DISABLED
+parameter_list|(
+name|val
+parameter_list|)
+value|(((_POSIX_VDISABLE != -1) \&& ((val) == _POSIX_VDISABLE)) \ 		      || ((val)<= 0))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DISABLED
+parameter_list|(
+name|val
+parameter_list|)
+value|((int)(val)<= 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2678,7 +2934,7 @@ name|val
 parameter_list|,
 name|dft
 parameter_list|)
-value|((int)val<= 0 ? dft : val)
+value|(DISABLED(val) ? dft : val)
 end_define
 
 begin_function_decl
@@ -3397,14 +3653,15 @@ directive|ifdef
 name|TERMIOS
 if|if
 condition|(
+name|DISABLED
+argument_list|(
 name|mode
 operator|.
 name|c_cc
 index|[
 name|VERASE
 index|]
-operator|==
-literal|0
+argument_list|)
 operator|||
 name|terasechar
 operator|>=
@@ -3428,14 +3685,15 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|DISABLED
+argument_list|(
 name|mode
 operator|.
 name|c_cc
 index|[
 name|VINTR
 index|]
-operator|==
-literal|0
+argument_list|)
 operator|||
 name|intrchar
 operator|>=
@@ -3458,14 +3716,15 @@ name|CINTR
 expr_stmt|;
 if|if
 condition|(
+name|DISABLED
+argument_list|(
 name|mode
 operator|.
 name|c_cc
 index|[
 name|VKILL
 index|]
-operator|==
-literal|0
+argument_list|)
 operator|||
 name|tkillchar
 operator|>=
@@ -3988,7 +4247,9 @@ begin_function
 specifier|static
 name|bool
 name|set_tabs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4035,7 +4296,7 @@ operator|+=
 literal|8
 control|)
 block|{
-comment|/* Get to the right column.  In BSD tset, this 	     * used to try a bunch of half-clever things 	     * with cup and hpa, for an average saving of 	     * somewhat less than two character times per 	     * tab stop, less that .01 sec at 2400cps. We 	     * lost all this cruft because it seemed to be 	     * introducing some odd bugs. 	     * ----------12345678----------- */
+comment|/* Get to the right column.  In BSD tset, this 	     * used to try a bunch of half-clever things 	     * with cup and hpa, for an average saving of 	     * somewhat less than two character times per 	     * tab stop, less than .01 sec at 2400cps. We 	     * lost all this cruft because it seemed to be 	     * introducing some odd bugs. 	     * -----------12345678----------- */
 operator|(
 name|void
 operator|)
@@ -4166,7 +4427,25 @@ else|:
 literal|"set to"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DISABLED
+argument_list|(
+name|newer
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"undef.\n"
+argument_list|)
+expr_stmt|;
 comment|/*      * Check 'delete' before 'backspace', since the key_backspace value      * is ambiguous.      */
+elseif|else
 if|if
 condition|(
 name|newer
@@ -4243,9 +4522,15 @@ name|stderr
 argument_list|,
 literal|"control-%c (^%c).\n"
 argument_list|,
+name|UChar
+argument_list|(
 name|newer
+argument_list|)
 argument_list|,
+name|UChar
+argument_list|(
 name|newer
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4259,7 +4544,10 @@ name|stderr
 argument_list|,
 literal|"%c.\n"
 argument_list|,
+name|UChar
+argument_list|(
 name|newer
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4457,12 +4745,47 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|static
 specifier|const
 name|char
 modifier|*
-name|pname
-parameter_list|)
+name|tbl
+index|[]
+init|=
 block|{
+literal|""
+block|,
+literal|"Options:"
+block|,
+literal|"  -c          set control characters"
+block|,
+literal|"  -e ch       erase character"
+block|,
+literal|"  -I          no initialization strings"
+block|,
+literal|"  -i ch       interrupt character"
+block|,
+literal|"  -k ch       kill character"
+block|,
+literal|"  -m mapping  map identifier to type"
+block|,
+literal|"  -Q          do not output control key settings"
+block|,
+literal|"  -r          display term on stderr"
+block|,
+literal|"  -s          output TERM set command"
+block|,
+literal|"  -V          print curses-version"
+block|,
+literal|"  -w          set window-size"
+block|}
+decl_stmt|;
+name|unsigned
+name|n
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -4470,9 +4793,45 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-IQVrs] [-] [-e ch] [-i ch] [-k ch] [-m mapping] [terminal]"
+literal|"Usage: %s [options] [terminal]\n"
 argument_list|,
-name|pname
+name|_nc_progname
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+sizeof|sizeof
+argument_list|(
+name|tbl
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|tbl
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+operator|++
+name|n
+control|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n"
+argument_list|,
+name|tbl
+index|[
+name|n
+index|]
 argument_list|)
 expr_stmt|;
 name|exit_error
@@ -4591,81 +4950,6 @@ name|char
 modifier|*
 name|ttype
 decl_stmt|;
-if|if
-condition|(
-name|GET_TTY
-argument_list|(
-name|STDERR_FILENO
-argument_list|,
-operator|&
-name|mode
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|failed
-argument_list|(
-literal|"standard error"
-argument_list|)
-expr_stmt|;
-name|can_restore
-operator|=
-name|TRUE
-expr_stmt|;
-name|original
-operator|=
-name|oldmode
-operator|=
-name|mode
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TERMIOS
-name|ospeed
-operator|=
-name|cfgetospeed
-argument_list|(
-operator|&
-name|mode
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|ospeed
-operator|=
-name|mode
-operator|.
-name|sg_ospeed
-expr_stmt|;
-endif|#
-directive|endif
-name|p
-operator|=
-name|_nc_rootname
-argument_list|(
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|p
-argument_list|,
-name|PROG_RESET
-argument_list|)
-condition|)
-block|{
-name|isreset
-operator|=
-name|TRUE
-expr_stmt|;
-name|reset_mode
-argument_list|()
-expr_stmt|;
-block|}
 name|obsolete
 argument_list|(
 name|argv
@@ -4696,7 +4980,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:d:e:Ii:k:m:np:qQSrsV"
+literal|"a:cd:e:Ii:k:m:np:qQSrsVw"
 argument_list|)
 operator|)
 operator|!=
@@ -4709,12 +4993,12 @@ name|ch
 condition|)
 block|{
 case|case
-literal|'q'
+literal|'c'
 case|:
-comment|/* display term only */
-name|noset
+comment|/* set control-chars */
+name|opt_c
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -4819,10 +5103,10 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'S'
+literal|'q'
 case|:
-comment|/* OBSOLETE: output TERM& TERMCAP */
-name|Sflag
+comment|/* display term only */
+name|noset
 operator|=
 literal|1
 expr_stmt|;
@@ -4832,6 +5116,15 @@ literal|'r'
 case|:
 comment|/* display term on stderr */
 name|showterm
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+comment|/* OBSOLETE: output TERM& TERMCAP */
+name|Sflag
 operator|=
 literal|1
 expr_stmt|;
@@ -4848,27 +5141,44 @@ break|break;
 case|case
 literal|'V'
 case|:
+comment|/* print curses-version */
 name|puts
 argument_list|(
 name|curses_version
 argument_list|()
 argument_list|)
 expr_stmt|;
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
+case|case
+literal|'w'
+case|:
+comment|/* set window-size */
+name|opt_w
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
 case|case
 literal|'?'
 case|:
 default|default:
 name|usage
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+name|_nc_progname
+operator|=
+name|_nc_rootname
 argument_list|(
 operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 name|argc
 operator|-=
 name|optind
@@ -4884,11 +5194,89 @@ operator|>
 literal|1
 condition|)
 name|usage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|opt_c
+operator|&&
+operator|!
+name|opt_w
+condition|)
+name|opt_c
+operator|=
+name|opt_w
+operator|=
+name|TRUE
+expr_stmt|;
+if|if
+condition|(
+name|GET_TTY
 argument_list|(
-operator|*
-name|argv
+name|STDERR_FILENO
+argument_list|,
+operator|&
+name|mode
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|failed
+argument_list|(
+literal|"standard error"
 argument_list|)
 expr_stmt|;
+name|can_restore
+operator|=
+name|TRUE
+expr_stmt|;
+name|original
+operator|=
+name|oldmode
+operator|=
+name|mode
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TERMIOS
+name|ospeed
+operator|=
+name|cfgetospeed
+argument_list|(
+operator|&
+name|mode
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|ospeed
+operator|=
+name|mode
+operator|.
+name|sg_ospeed
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|_nc_progname
+argument_list|,
+name|PROG_RESET
+argument_list|)
+condition|)
+block|{
+name|isreset
+operator|=
+name|TRUE
+expr_stmt|;
+name|reset_mode
+argument_list|()
+expr_stmt|;
+block|}
 name|ttype
 operator|=
 name|get_termcap_entry
@@ -4922,6 +5310,11 @@ name|defined
 argument_list|(
 name|TIOCSWINSZ
 argument_list|)
+if|if
+condition|(
+name|opt_w
+condition|)
+block|{
 comment|/* Set window size */
 operator|(
 name|void
@@ -4985,8 +5378,14 @@ name|win
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|opt_c
+condition|)
+block|{
 name|set_control_chars
 argument_list|()
 expr_stmt|;
@@ -5027,6 +5426,7 @@ operator|&
 name|mode
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Get the terminal name from the entry. */
@@ -5098,7 +5498,7 @@ literal|"Kill"
 argument_list|,
 name|VKILL
 argument_list|,
-name|CINTR
+name|CKILL
 argument_list|)
 expr_stmt|;
 name|report
@@ -5107,7 +5507,7 @@ literal|"Interrupt"
 argument_list|,
 name|VINTR
 argument_list|,
-name|CKILL
+name|CINTR
 argument_list|)
 expr_stmt|;
 block|}
@@ -5128,11 +5528,22 @@ condition|(
 name|sflag
 condition|)
 block|{
+name|int
+name|len
+decl_stmt|;
+name|char
+modifier|*
+name|var
+decl_stmt|;
+name|char
+modifier|*
+name|leaf
+decl_stmt|;
 comment|/* 	 * Figure out what shell we're using.  A hack, we look for an 	 * environmental variable SHELL ending in "csh". 	 */
 if|if
 condition|(
 operator|(
-name|p
+name|var
 operator|=
 name|getenv
 argument_list|(
@@ -5142,15 +5553,30 @@ operator|)
 operator|!=
 literal|0
 operator|&&
+operator|(
+operator|(
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|leaf
+operator|=
+name|_nc_basename
+argument_list|(
+name|var
+argument_list|)
+argument_list|)
+operator|)
+operator|>=
+literal|3
+operator|)
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
-name|p
+name|leaf
 operator|+
-name|strlen
-argument_list|(
-name|p
-argument_list|)
+name|len
 operator|-
 literal|3
 argument_list|,
@@ -5177,15 +5603,13 @@ name|ttype
 argument_list|)
 expr_stmt|;
 block|}
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* tset.c ends here */
-end_comment
 
 end_unit
 

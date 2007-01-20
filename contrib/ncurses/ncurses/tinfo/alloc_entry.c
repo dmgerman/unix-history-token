@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: alloc_entry.c,v 1.36 2001/09/22 21:10:26 tom Exp $"
+literal|"$Id: alloc_entry.c,v 1.47 2006/12/16 19:06:58 tom Exp $"
 argument_list|)
 end_macro
 
@@ -94,7 +94,7 @@ end_macro
 begin_macro
 name|_nc_init_entry
 argument_list|(
-argument|TERMTYPE * const tp
+argument|TERMTYPE *const tp
 argument_list|)
 end_macro
 
@@ -104,9 +104,32 @@ end_comment
 
 begin_block
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
+if|#
+directive|if
+name|NO_LEAKS
+if|if
+condition|(
+name|tp
+operator|==
+literal|0
+operator|&&
+name|stringbuf
+operator|!=
+literal|0
+condition|)
+block|{
+name|FreeAndNull
+argument_list|(
+name|stringbuf
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|stringbuf
@@ -115,6 +138,10 @@ literal|0
 condition|)
 name|stringbuf
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|MAX_STRTAB
@@ -175,7 +202,7 @@ name|Booleans
 operator|=
 name|typeMalloc
 argument_list|(
-name|char
+name|NCURSES_SBOOL
 argument_list|,
 name|BOOLCOUNT
 argument_list|)
@@ -335,6 +362,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/* save a copy of string in the string buffer */
+end_comment
+
 begin_macro
 name|NCURSES_EXPORT
 argument_list|(
@@ -349,12 +380,14 @@ argument|const char *const string
 argument_list|)
 end_macro
 
-begin_comment
-comment|/* save a copy of string in the string buffer */
-end_comment
-
 begin_block
 block|{
+name|char
+modifier|*
+name|result
+init|=
+literal|0
+decl_stmt|;
 name|size_t
 name|old_next_free
 init|=
@@ -370,6 +403,38 @@ argument_list|)
 operator|+
 literal|1
 decl_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|1
+operator|&&
+name|next_free
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 	 * Cheat a little by making an empty string point to the end of the 	 * previous string. 	 */
+if|if
+condition|(
+name|next_free
+operator|<
+name|MAX_STRTAB
+condition|)
+block|{
+name|result
+operator|=
+operator|(
+name|stringbuf
+operator|+
+name|next_free
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
 if|if
 condition|(
 name|next_free
@@ -422,13 +487,25 @@ name|next_free
 operator|+=
 name|len
 expr_stmt|;
-block|}
-return|return
+name|result
+operator|=
 operator|(
 name|stringbuf
 operator|+
 name|old_next_free
 operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|_nc_warning
+argument_list|(
+literal|"Too much data, some is lost"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|result
 return|;
 block|}
 end_block
@@ -468,10 +545,17 @@ index|[
 name|MAX_USES
 index|]
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|,
 name|n
+decl_stmt|;
+name|unsigned
+name|nuses
+init|=
+name|ep
+operator|->
+name|nuses
 decl_stmt|;
 name|TERMTYPE
 modifier|*
@@ -561,8 +645,6 @@ literal|0
 init|;
 name|i
 operator|<
-name|ep
-operator|->
 name|nuses
 condition|;
 name|i
@@ -690,8 +772,6 @@ literal|0
 init|;
 name|i
 operator|<
-name|ep
-operator|->
 name|nuses
 condition|;
 name|i
@@ -759,7 +839,7 @@ literal|0
 condition|)
 name|_nc_err_abort
 argument_list|(
-literal|"Out of memory"
+name|MSG_NO_MEMORY
 argument_list|)
 expr_stmt|;
 operator|(
@@ -938,7 +1018,7 @@ literal|0
 condition|)
 name|_nc_err_abort
 argument_list|(
-literal|"Out of memory"
+name|MSG_NO_MEMORY
 argument_list|)
 expr_stmt|;
 for|for
@@ -1016,8 +1096,6 @@ literal|0
 init|;
 name|i
 operator|<
-name|ep
-operator|->
 name|nuses
 condition|;
 name|i
@@ -1079,9 +1157,9 @@ end_macro
 begin_macro
 name|_nc_merge_entry
 argument_list|(
-argument|TERMTYPE * const to
+argument|TERMTYPE *const to
 argument_list|,
-argument|TERMTYPE * const from
+argument|TERMTYPE *const from
 argument_list|)
 end_macro
 
@@ -1091,7 +1169,7 @@ end_comment
 
 begin_block
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 if|#
@@ -1112,6 +1190,21 @@ argument|i
 argument_list|,
 argument|from
 argument_list|)
+block|{
+if|if
+condition|(
+name|to
+operator|->
+name|Booleans
+index|[
+name|i
+index|]
+operator|!=
+operator|(
+name|char
+operator|)
+name|CANCELLED_BOOLEAN
+condition|)
 block|{
 name|int
 name|mergebool
@@ -1155,12 +1248,25 @@ operator|=
 name|mergebool
 expr_stmt|;
 block|}
+block|}
 name|for_each_number
 argument_list|(
 argument|i
 argument_list|,
 argument|from
 argument_list|)
+block|{
+if|if
+condition|(
+name|to
+operator|->
+name|Numbers
+index|[
+name|i
+index|]
+operator|!=
+name|CANCELLED_NUMERIC
+condition|)
 block|{
 name|int
 name|mergenum
@@ -1204,6 +1310,7 @@ operator|=
 name|mergenum
 expr_stmt|;
 block|}
+block|}
 comment|/*      * Note: the copies of strings this makes don't have their own      * storage.  This is OK right now, but will be a problem if we      * we ever want to deallocate entries.      */
 name|for_each_string
 argument_list|(
@@ -1211,6 +1318,18 @@ argument|i
 argument_list|,
 argument|from
 argument_list|)
+block|{
+if|if
+condition|(
+name|to
+operator|->
+name|Strings
+index|[
+name|i
+index|]
+operator|!=
+name|CANCELLED_STRING
+condition|)
 block|{
 name|char
 modifier|*
@@ -1256,7 +1375,55 @@ name|mergestring
 expr_stmt|;
 block|}
 block|}
+block|}
 end_block
+
+begin_if
+if|#
+directive|if
+name|NO_LEAKS
+end_if
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_alloc_entry_leaks
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|stringbuf
+operator|!=
+literal|0
+condition|)
+block|{
+name|FreeAndNull
+argument_list|(
+name|stringbuf
+argument_list|)
+expr_stmt|;
+block|}
+name|next_free
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

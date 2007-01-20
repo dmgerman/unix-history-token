@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $Id: SigAction.h,v 1.6 2000/12/10 02:36:10 tom Exp $  *  * This file exists to handle non-POSIX systems which don't have<unistd.h>,  * and usually no sigaction() nor<termios.h>  */
+comment|/*  * $Id: SigAction.h,v 1.8 2005/08/06 20:05:32 tom Exp $  *  * This file exists to handle non-POSIX systems which don't have<unistd.h>,  * and usually no sigaction() nor<termios.h>  */
 end_comment
 
 begin_ifndef
@@ -99,23 +99,6 @@ if|#
 directive|if
 name|HAVE_SIGVEC
 end_if
-
-begin_if
-if|#
-directive|if
-name|HAVE_LIBC_H
-end_if
-
-begin_include
-include|#
-directive|include
-file|<libc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
@@ -317,111 +300,15 @@ name|sigaddset
 value|_nc_sigaddset
 end_define
 
-begin_extern
-extern|extern NCURSES_EXPORT(int
-end_extern
+begin_comment
+comment|/* tty/lib_tstp.c is the only user */
+end_comment
 
-begin_macro
-unit|)
-name|sigaction
-argument_list|(
-argument|int sig
-argument_list|,
-argument|sigaction_t * sigact
-argument_list|,
-argument|sigaction_t *  osigact
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_extern
-extern|extern NCURSES_EXPORT(int
-end_extern
-
-begin_macro
-unit|)
-name|sigprocmask
-argument_list|(
-argument|int how
-argument_list|,
-argument|sigset_t *mask
-argument_list|,
-argument|sigset_t *omask
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_extern
-extern|extern NCURSES_EXPORT(int
-end_extern
-
-begin_expr_stmt
-unit|)
-name|sigemptyset
-argument_list|(
-name|sigset_t
-operator|*
-name|mask
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_extern
-extern|extern NCURSES_EXPORT(int
-end_extern
-
-begin_expr_stmt
-unit|)
-name|sigsuspend
-argument_list|(
-name|sigset_t
-operator|*
-name|mask
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_extern
-extern|extern NCURSES_EXPORT(int
-end_extern
-
-begin_macro
-unit|)
-name|sigdelset
-argument_list|(
-argument|sigset_t *mask
-argument_list|,
-argument|int sig
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_extern
-extern|extern NCURSES_EXPORT(int
-end_extern
-
-begin_macro
-unit|)
-name|sigaddset
-argument_list|(
-argument|sigset_t *mask
-argument_list|,
-argument|int sig
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_include
+include|#
+directive|include
+file|<base/sigaction.c>
+end_include
 
 begin_endif
 endif|#

@@ -1,11 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 59 Temple Place - Suite 330, ** Boston, MA 02111-1307, USA. */
+comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, ** Boston, MA 02110-1301, USA */
 end_comment
 
 begin_comment
 comment|/*  * Operating system dependent functions.  We assume the POSIX API.  * Note: on strict-POSIX systems (including BSD/OS) the select_delay_type  * global has no effect.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ncurses_cfg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -117,7 +134,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: sysdep.c,v 1.11 2002/04/21 19:40:43 tom Exp $"
+literal|"$Id: sysdep.c,v 1.15 2005/09/17 19:49:16 tom Exp $"
 argument_list|)
 end_macro
 
@@ -195,7 +212,6 @@ end_comment
 
 begin_decl_stmt
 name|unsigned
-name|long
 name|tty_baud_rate
 decl_stmt|;
 end_decl_stmt
@@ -869,6 +885,10 @@ name|new_modes
 operator|.
 name|c_oflag
 operator|&
+operator|(
+name|unsigned
+name|long
+operator|)
 operator|~
 name|OPOST
 operator|)
@@ -877,6 +897,10 @@ name|new_modes
 operator|.
 name|c_oflag
 operator|&=
+operator|(
+name|unsigned
+name|long
+operator|)
 operator|~
 name|OPOST
 expr_stmt|;
@@ -1777,6 +1801,9 @@ argument_list|)
 argument_list|,
 name|s
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|ask
 argument_list|)
 operator|)
@@ -2079,6 +2106,9 @@ name|void
 operator|)
 name|alarm
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|seconds
 argument_list|)
 expr_stmt|;

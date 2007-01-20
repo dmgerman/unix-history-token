@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *   Author: Juergen Pfeifer<juergen.pfeifer@gmx.net> 1995,1997            *  ****************************************************************************/
+comment|/****************************************************************************  *   Author:  Juergen Pfeifer, 1995,1997                                    *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,12 +20,12 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_item_top.c,v 1.5 2000/12/10 02:16:48 tom Exp $"
+literal|"$Id: m_item_top.c,v 1.10 2004/12/11 23:29:34 tom Exp $"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int set_top_row(MENU *menu, int row) |    |   Description   :  Makes the speified row the top row in the menu | |   Return Values :  E_OK             - success |                    E_BAD_ARGUMENT   - not a menu pointer or invalid row |                    E_NOT_CONNECTED  - there are no items for the menu +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int set_top_row(MENU *menu, int row) |    |   Description   :  Makes the specified row the top row in the menu | |   Return Values :  E_OK             - success |                    E_BAD_ARGUMENT   - not a menu pointer or invalid row |                    E_NOT_CONNECTED  - there are no items for the menu +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -50,6 +50,20 @@ name|ITEM
 modifier|*
 name|item
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"set_top_row(%p,%d)"
+argument_list|)
+operator|,
+name|menu
+operator|,
+name|row
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|menu
@@ -217,6 +231,18 @@ end_macro
 
 begin_block
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"top_row(%p)"
+argument_list|)
+operator|,
+name|menu
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|menu
@@ -254,18 +280,20 @@ name|rows
 operator|)
 argument_list|)
 expr_stmt|;
-return|return
+name|returnCode
+argument_list|(
 name|menu
 operator|->
 name|toprow
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 else|else
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|ERR
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

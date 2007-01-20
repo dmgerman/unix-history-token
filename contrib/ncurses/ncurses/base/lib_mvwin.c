@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2001,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_mvwin.c,v 1.12 2001/12/19 01:06:22 tom Exp $"
+literal|"$Id: lib_mvwin.c,v 1.14 2006/02/25 22:53:46 tom Exp $"
 argument_list|)
 end_macro
 
@@ -78,195 +78,25 @@ argument_list|(
 name|ERR
 argument_list|)
 expr_stmt|;
+comment|/*      * mvwin() should only modify the indices.  See test/demo_menus.c and      * test/movewindow.c for examples.      */
+if|#
+directive|if
+literal|0
 comment|/* Copying subwindows is allowed, but it is expensive... */
-if|if
-condition|(
-name|win
-operator|->
-name|_flags
-operator|&
-name|_SUBWIN
-condition|)
-block|{
-name|int
-name|err
-init|=
-name|ERR
-decl_stmt|;
-name|WINDOW
-modifier|*
-name|parent
-init|=
-name|win
-operator|->
-name|_parent
-decl_stmt|;
-if|if
-condition|(
-name|parent
-condition|)
-block|{
+block|if (win->_flags& _SUBWIN) { 	int err = ERR; 	WINDOW *parent = win->_parent; 	if (parent) {
 comment|/* Now comes the complicated and costly part, you should really 				 * try to avoid to move subwindows. Because a subwindow shares 				 * the text buffers with its parent, one can't do a simple 				 * memmove of the text buffers. One has to create a copy, then 				 * to relocate the subwindow and then to do a copy. 				 */
-if|if
-condition|(
-operator|(
-name|by
-operator|-
-name|parent
-operator|->
-name|_begy
-operator|==
-name|win
-operator|->
-name|_pary
-operator|)
-operator|&&
-operator|(
-name|bx
-operator|-
-name|parent
-operator|->
-name|_begx
-operator|==
-name|win
-operator|->
-name|_parx
-operator|)
-condition|)
-name|err
-operator|=
-name|OK
-expr_stmt|;
+block|if ((by - parent->_begy == win->_pary)&& 		(bx - parent->_begx == win->_parx)) 		err = OK;
 comment|/* we don't actually move */
-else|else
-block|{
-name|WINDOW
-modifier|*
-name|clone
-init|=
-name|dupwin
-argument_list|(
-name|win
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|clone
-condition|)
-block|{
+block|else { 		WINDOW *clone = dupwin(win); 		if (clone) {
 comment|/* now we have the clone, so relocate win */
-name|werase
-argument_list|(
-name|win
-argument_list|)
-expr_stmt|;
+block|werase(win);
 comment|/* Erase the original place     */
 comment|/* fill with parents background */
-name|wbkgrnd
-argument_list|(
-name|win
-argument_list|,
-name|CHREF
-argument_list|(
-name|parent
-operator|->
-name|_nc_bkgd
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|wsyncup
-argument_list|(
-name|win
-argument_list|)
-expr_stmt|;
+block|wbkgrnd(win, CHREF(parent->_nc_bkgd)); 		    wsyncup(win);
 comment|/* Tell the parent(s)           */
-name|err
-operator|=
-name|mvderwin
-argument_list|(
-name|win
-argument_list|,
-name|by
-operator|-
-name|parent
-operator|->
-name|_begy
-argument_list|,
-name|bx
-operator|-
-name|parent
-operator|->
-name|_begx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|!=
-name|ERR
-condition|)
-block|{
-name|err
-operator|=
-name|copywin
-argument_list|(
-name|clone
-argument_list|,
-name|win
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|win
-operator|->
-name|_maxy
-argument_list|,
-name|win
-operator|->
-name|_maxx
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ERR
-operator|!=
-name|err
-condition|)
-name|wsyncup
-argument_list|(
-name|win
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ERR
-operator|==
-name|delwin
-argument_list|(
-name|clone
-argument_list|)
-condition|)
-name|err
-operator|=
-name|ERR
-expr_stmt|;
-block|}
-block|}
-block|}
-name|returnCode
-argument_list|(
-name|err
-argument_list|)
-expr_stmt|;
-block|}
+block|err = mvderwin(win, 				   by - parent->_begy, 				   bx - parent->_begx); 		    if (err != ERR) { 			err = copywin(clone, win, 				      0, 0, 0, 0, win->_maxy, win->_maxx, 0); 			if (ERR != err) 			    wsyncup(win); 		    } 		    if (ERR == delwin(clone)) 			err = ERR; 		} 	    } 	} 	returnCode(err);     }
+endif|#
+directive|endif
 if|if
 condition|(
 name|by

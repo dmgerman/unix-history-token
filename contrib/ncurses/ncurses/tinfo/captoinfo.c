@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  *	captoinfo.c --- conversion between termcap and terminfo formats  *  *	The captoinfo() code was swiped from Ross Ridge's mytinfo package,  *	adapted to fit ncurses by Eric S. Raymond<esr@snark.thyrsus.com>.  *  *	There is just one entry point:  *  *	char *_nc_captoinfo(n, s, parametrized)  *  *	Convert value s for termcap string capability named n into terminfo  *	format.  *  *	This code recognizes all the standard 4.4BSD %-escapes:  *  *	%%       output `%'  *	%d       output value as in printf %d  *	%2       output value as in printf %2d  *	%3       output value as in printf %3d  *	%.       output value as in printf %c  *	%+x      add x to value, then do %.  *	%>xy     if value> x then add y, no output  *	%r       reverse order of two parameters, no output  *	%i       increment by one, no output  *	%n       exclusive-or all parameters with 0140 (Datamedia 2500)  *	%B       BCD (16*(value/10)) + (value%10), no output  *	%D       Reverse coding (value - 2*(value%16)), no output (Delta Data).  *  *	Also, %02 and %03 are accepted as synonyms for %2 and %3.  *  *	Besides all the standard termcap escapes, this translator understands  *	the following extended escapes:  *  *	used by GNU Emacs termcap libraries  *		%a[+*-/=][cp]x	GNU arithmetic.  *		%m		xor the first two parameters by 0177  *		%b		backup to previous parameter  *		%f		skip this parameter  *  *	used by the University of Waterloo (MFCF) termcap libraries  *		%-x	 subtract parameter FROM char x and output it as a char  *		%ax	 add the character x to parameter  *  *	If #define WATERLOO is on, also enable these translations:  *  *		%sx	 subtract parameter FROM the character x  *  *	By default, this Waterloo translations are not compiled in, because  *	the Waterloo %s conflicts with the way terminfo uses %s in strings for  *	function programming.  *  *	Note the two definitions of %a: the GNU definition is translated if the  *	characters after the 'a' are valid for it, otherwise the UW definition  *	is translated.  */
+comment|/*  *	captoinfo.c --- conversion between termcap and terminfo formats  *  *	The captoinfo() code was swiped from Ross Ridge's mytinfo package,  *	adapted to fit ncurses by Eric S. Raymond<esr@snark.thyrsus.com>.  *  *	There is just one entry point:  *  *	char *_nc_captoinfo(n, s, parameterized)  *  *	Convert value s for termcap string capability named n into terminfo  *	format.  *  *	This code recognizes all the standard 4.4BSD %-escapes:  *  *	%%       output `%'  *	%d       output value as in printf %d  *	%2       output value as in printf %2d  *	%3       output value as in printf %3d  *	%.       output value as in printf %c  *	%+x      add x to value, then do %.  *	%>xy     if value> x then add y, no output  *	%r       reverse order of two parameters, no output  *	%i       increment by one, no output  *	%n       exclusive-or all parameters with 0140 (Datamedia 2500)  *	%B       BCD (16*(value/10)) + (value%10), no output  *	%D       Reverse coding (value - 2*(value%16)), no output (Delta Data).  *  *	Also, %02 and %03 are accepted as synonyms for %2 and %3.  *  *	Besides all the standard termcap escapes, this translator understands  *	the following extended escapes:  *  *	used by GNU Emacs termcap libraries  *		%a[+*-/=][cp]x	GNU arithmetic.  *		%m		xor the first two parameters by 0177  *		%b		backup to previous parameter  *		%f		skip this parameter  *  *	used by the University of Waterloo (MFCF) termcap libraries  *		%-x	 subtract parameter FROM char x and output it as a char  *		%ax	 add the character x to parameter  *  *	If #define WATERLOO is on, also enable these translations:  *  *		%sx	 subtract parameter FROM the character x  *  *	By default, this Waterloo translations are not compiled in, because  *	the Waterloo %s conflicts with the way terminfo uses %s in strings for  *	function programming.  *  *	Note the two definitions of %a: the GNU definition is translated if the  *	characters after the 'a' are valid for it, otherwise the UW definition  *	is translated.  */
 end_comment
 
 begin_include
@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: captoinfo.c,v 1.41 2001/06/02 22:50:31 skimo Exp $"
+literal|"$Id: captoinfo.c,v 1.49 2006/12/16 19:16:53 tom Exp $"
 argument_list|)
 end_macro
 
@@ -189,7 +189,7 @@ literal|0
 condition|)
 name|_nc_err_abort
 argument_list|(
-literal|"Out of memory"
+name|MSG_NO_MEMORY
 argument_list|)
 expr_stmt|;
 operator|*
@@ -275,7 +275,7 @@ literal|0
 condition|)
 name|_nc_err_abort
 argument_list|(
-literal|"Out of memory"
+name|MSG_NO_MEMORY
 argument_list|)
 expr_stmt|;
 name|d
@@ -308,7 +308,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|NCURSES_INLINE
 name|char
 modifier|*
 name|save_char
@@ -317,7 +317,7 @@ name|char
 modifier|*
 name|s
 parameter_list|,
-name|char
+name|int
 name|c
 parameter_list|)
 block|{
@@ -333,6 +333,9 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|c
 expr_stmt|;
 return|return
@@ -895,28 +898,28 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a termcap string to terminfo format.  * 'cap' is the relevant terminfo capability index.  * 's' is the string value of the capability.  * 'parametrized' tells what type of translations to do:  *	% translations if 1  *	pad translations if>=0  */
+comment|/*  * Convert a termcap string to terminfo format.  * 'cap' is the relevant terminfo capability index.  * 's' is the string value of the capability.  * 'parameterized' tells what type of translations to do:  *	% translations if 1  *	pad translations if>=0  */
 end_comment
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_captoinfo
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|cap
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|s
-parameter_list|,
-name|int
-specifier|const
-name|parametrized
-parameter_list|)
+argument_list|(
+argument|const char *cap
+argument_list|,
+argument|const char *s
+argument_list|,
+argument|int const parameterized
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|const
 name|char
@@ -969,7 +972,7 @@ literal|""
 expr_stmt|;
 if|if
 condition|(
-name|parametrized
+name|parameterized
 operator|>=
 literal|0
 operator|&&
@@ -1039,7 +1042,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|parametrized
+name|parameterized
 operator|<
 literal|1
 condition|)
@@ -2272,7 +2275,7 @@ name|my_string
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Check for an expression that corresponds to "%B" (BCD):  *	(parameter / 10) * 16 + (parameter % 10)  */
@@ -2579,26 +2582,25 @@ begin_comment
 comment|/*  * Convert a terminfo string to termcap format.  Parameters are as in  * _nc_captoinfo().  */
 end_comment
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_infotocap
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|cap
-name|GCC_UNUSED
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|str
-parameter_list|,
-name|int
-specifier|const
-name|parametrized
-parameter_list|)
+argument_list|(
+argument|const char *cap GCC_UNUSED
+argument_list|,
+argument|const char *str
+argument_list|,
+argument|int const parameterized
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|seenone
@@ -2667,6 +2669,10 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|padding
+operator|>
+name|str
+operator|&&
 operator|*
 name|padding
 operator|==
@@ -2708,6 +2714,10 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
+name|padding
+operator|>
+name|str
+operator|&&
 operator|*
 name|padding
 operator|==
@@ -2912,6 +2922,9 @@ argument_list|,
 literal|"%%"
 argument_list|)
 expr_stmt|;
+operator|++
+name|str
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -2922,7 +2935,7 @@ operator|!=
 literal|'%'
 operator|||
 operator|(
-name|parametrized
+name|parameterized
 operator|<
 literal|1
 operator|)
@@ -3574,7 +3587,7 @@ name|my_string
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
@@ -3769,9 +3782,52 @@ begin_comment
 comment|/* MAIN */
 end_comment
 
-begin_comment
-comment|/* captoinfo.c ends here */
-end_comment
+begin_if
+if|#
+directive|if
+name|NO_LEAKS
+end_if
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_captoinfo_leaks
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|my_string
+operator|!=
+literal|0
+condition|)
+block|{
+name|FreeAndNull
+argument_list|(
+name|my_string
+argument_list|)
+expr_stmt|;
+block|}
+name|my_length
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

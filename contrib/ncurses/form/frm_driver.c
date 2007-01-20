@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *   Author: Juergen Pfeifer<juergen.pfeifer@gmx.net> 1995,1997            *  ****************************************************************************/
+comment|/****************************************************************************  *   Author:  Juergen Pfeifer, 1995,1997                                    *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -16,12 +16,12 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: frm_driver.c,v 1.38 2001/03/25 02:07:50 juergen Exp $"
+literal|"$Id: frm_driver.c,v 1.76 2006/11/04 18:45:35 tom Exp $"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*----------------------------------------------------------------------------   This is the core module of the form library. It contains the majority   of the driver routines as well as the form_driver function.     Essentially this module is nearly the whole library. This is because   all the functions in this module depends on some others in the module,   so it makes no sense to split them into separate files because they   will always be linked together. The only acceptable concern is turnaround   time for this module, but now we have all Pentiums or Riscs, so what!    The driver routines are grouped into nine generic categories:     a)   Page Navigation            ( all functions prefixed by PN_ )         The current page of the form is left and some new page is         entered.    b)   Inter-Field Navigation     ( all functions prefixed by FN_ )         The current field of the form is left and some new field is         entered.    c)   Intra-Field Navigation     ( all functions prefixed by IFN_ )         The current position in the current field is changed.     d)   Vertical Scrolling         ( all functions prefixed by VSC_ )         Esseantially this is a specialization of Intra-Field navigation.         It has to check for a multi-line field.    e)   Horizontal Scrolling       ( all functions prefixed by HSC_ )         Esseantially this is a specialization of Intra-Field navigation.         It has to check for a single-line field.    f)   Field Editing              ( all functions prefixed by FE_ )         The content of the current field is changed    g)   Edit Mode requests         ( all functions prefixed by EM_ )         Switching between insert and overlay mode    h)   Field-Validation requests  ( all functions prefixed by FV_ )         Perform verifications of the field.    i)   Choice requests            ( all functions prefixed by CR_ )         Requests to enumerate possible field values   --------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------   This is the core module of the form library. It contains the majority   of the driver routines as well as the form_driver function.    Essentially this module is nearly the whole library. This is because   all the functions in this module depends on some others in the module,   so it makes no sense to split them into separate files because they   will always be linked together. The only acceptable concern is turnaround   time for this module, but now we have all Pentiums or RISCs, so what!    The driver routines are grouped into nine generic categories:     a)   Page Navigation            ( all functions prefixed by PN_ )         The current page of the form is left and some new page is         entered.    b)   Inter-Field Navigation     ( all functions prefixed by FN_ )         The current field of the form is left and some new field is         entered.    c)   Intra-Field Navigation     ( all functions prefixed by IFN_ )         The current position in the current field is changed.    d)   Vertical Scrolling         ( all functions prefixed by VSC_ )         Essentially this is a specialization of Intra-Field navigation.         It has to check for a multi-line field.    e)   Horizontal Scrolling       ( all functions prefixed by HSC_ )         Essentially this is a specialization of Intra-Field navigation.         It has to check for a single-line field.    f)   Field Editing              ( all functions prefixed by FE_ )         The content of the current field is changed    g)   Edit Mode requests         ( all functions prefixed by EM_ )         Switching between insert and overlay mode    h)   Field-Validation requests  ( all functions prefixed by FV_ )         Perform verifications of the field.    i)   Choice requests            ( all functions prefixed by CR_ )         Requests to enumerate possible field values   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
@@ -29,11 +29,11 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* Some options that may effect compatibility in behavior to SVr4 forms, but they are here to allow a more intuitive and user friendly behaviour of our form implementation. This doesn't affect the API, so we feel it is uncritical.  The initial implementation tries to stay very close with the behaviour of the original SVr4 implementation, although in some areas it is quite clear that this isn't the most appropriate way. As far as possible this sources will allow you to build a forms lib that behaves quite similar to SVr4, but now and in the future we will give you better options.  Perhaps at some time we will make this configurable at runtime. */
+comment|/* Some options that may effect compatibility in behavior to SVr4 forms, but they are here to allow a more intuitive and user friendly behavior of our form implementation. This doesn't affect the API, so we feel it is uncritical.  The initial implementation tries to stay very close with the behavior of the original SVr4 implementation, although in some areas it is quite clear that this isn't the most appropriate way. As far as possible this sources will allow you to build a forms lib that behaves quite similar to SVr4, but now and in the future we will give you better options. Perhaps at some time we will make this configurable at runtime. */
 end_comment
 
 begin_comment
-comment|/* Implement a more user-friendly previous/next word behaviour */
+comment|/* Implement a more user-friendly previous/next word behavior */
 end_comment
 
 begin_define
@@ -44,7 +44,7 @@ value|(1)
 end_define
 
 begin_comment
-comment|/* Fix the wrong behaviour for forms with all fields inactive */
+comment|/* Fix the wrong behavior for forms with all fields inactive */
 end_comment
 
 begin_define
@@ -64,6 +64,134 @@ directive|define
 name|GROW_IF_NAVIGATE
 value|(1)
 end_define
+
+begin_if
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+end_if
+
+begin_define
+define|#
+directive|define
+name|myADDNSTR
+parameter_list|(
+name|w
+parameter_list|,
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|wadd_wchnstr(w, s, n)
+end_define
+
+begin_define
+define|#
+directive|define
+name|myINSNSTR
+parameter_list|(
+name|w
+parameter_list|,
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|wins_wchnstr(w, s, n)
+end_define
+
+begin_define
+define|#
+directive|define
+name|myINNSTR
+parameter_list|(
+name|w
+parameter_list|,
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|fix_wchnstr(w, s, n)
+end_define
+
+begin_define
+define|#
+directive|define
+name|myWCWIDTH
+parameter_list|(
+name|w
+parameter_list|,
+name|y
+parameter_list|,
+name|x
+parameter_list|)
+value|cell_width(w, y, x)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|myADDNSTR
+parameter_list|(
+name|w
+parameter_list|,
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|waddnstr(w, s, n)
+end_define
+
+begin_define
+define|#
+directive|define
+name|myINSNSTR
+parameter_list|(
+name|w
+parameter_list|,
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|winsnstr(w, s, n)
+end_define
+
+begin_define
+define|#
+directive|define
+name|myINNSTR
+parameter_list|(
+name|w
+parameter_list|,
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|winnstr(w, s, n)
+end_define
+
+begin_define
+define|#
+directive|define
+name|myWCWIDTH
+parameter_list|(
+name|w
+parameter_list|,
+name|y
+parameter_list|,
+name|x
+parameter_list|)
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*----------------------------------------------------------------------------   Forward references to some internally used static functions   --------------------------------------------------------------------------*/
@@ -137,9 +265,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*----------------------------------------------------------------------------   Macro Definitions.    Some Remarks on that: I use the convention to use UPPERCASE for constants   defined by Macros. If I provide a macro as a kind of inline routine to   provide some logic, I use my Upper_Lower case style.   --------------------------------------------------------------------------*/
@@ -279,7 +404,7 @@ value|Address_Of_Current_Position_In_Nth_Buffer(form,0)
 end_define
 
 begin_comment
-comment|/* Logic to decide wether or not a field is actually a field with    vertical or horizontal scrolling */
+comment|/* Logic to decide whether or not a field is actually a field with    vertical or horizontal scrolling */
 end_comment
 
 begin_define
@@ -408,21 +533,609 @@ parameter_list|)
 value|(((a)>=(b)) ? (a) : (b))
 end_define
 
-begin_escape
-end_escape
+begin_comment
+comment|/*----------------------------------------------------------------------------   Useful constants   --------------------------------------------------------------------------*/
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|FIELD_CELL
+name|myBLANK
+init|=
+name|BLANK
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|FIELD_CELL
+name|myZEROS
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TRACE
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|check_pos
+parameter_list|(
+name|FORM
+modifier|*
+name|form
+parameter_list|,
+name|int
+name|lineno
+parameter_list|)
+block|{
+name|int
+name|y
+decl_stmt|,
+name|x
+decl_stmt|;
+if|if
+condition|(
+name|form
+operator|&&
+name|form
+operator|->
+name|w
+condition|)
+block|{
+name|getyx
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|y
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|y
+operator|!=
+name|form
+operator|->
+name|currow
+operator|||
+name|x
+operator|!=
+name|form
+operator|->
+name|curcol
+condition|)
+block|{
+name|T
+argument_list|(
+operator|(
+literal|"CHECKPOS %s@%d have position %d,%d vs want %d,%d"
+operator|,
+name|__FILE__
+operator|,
+name|lineno
+operator|,
+name|y
+operator|,
+name|x
+operator|,
+name|form
+operator|->
+name|currow
+operator|,
+name|form
+operator|->
+name|curcol
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|CHECKPOS
+parameter_list|(
+name|form
+parameter_list|)
+value|check_pos(form, __LINE__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CHECKPOS
+parameter_list|(
+name|form
+parameter_list|)
+end_define
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static char *Get_Start_Of_Data(char * buf, int blen) |    |   Description   :  Return pointer to first non-blank position in buffer. |                    If buffer is empty return pointer to buffer itself. | |   Return Values :  Pointer to first non-blank position in buffer +--------------------------------------------------------------------------*/
+comment|/* nothing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*----------------------------------------------------------------------------   Wide-character special functions   --------------------------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+end_if
+
+begin_comment
+comment|/* like winsnstr */
 end_comment
 
 begin_function
-name|INLINE
 specifier|static
-name|char
+name|int
+name|wins_wchnstr
+parameter_list|(
+name|WINDOW
+modifier|*
+name|w
+parameter_list|,
+name|cchar_t
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+block|{
+name|int
+name|code
+init|=
+name|ERR
+decl_stmt|;
+name|int
+name|y
+decl_stmt|,
+name|x
+decl_stmt|;
+while|while
+condition|(
+name|n
+operator|--
+operator|>
+literal|0
+condition|)
+block|{
+name|getyx
+argument_list|(
+name|w
+argument_list|,
+name|y
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|code
+operator|=
+name|wins_wch
+argument_list|(
+name|w
+argument_list|,
+name|s
+operator|++
+argument_list|)
+operator|)
+operator|!=
+name|OK
+condition|)
+break|break;
+if|if
+condition|(
+operator|(
+name|code
+operator|=
+name|wmove
+argument_list|(
+name|w
+argument_list|,
+name|y
+argument_list|,
+name|x
+operator|+
+literal|1
+argument_list|)
+operator|)
+operator|!=
+name|OK
+condition|)
+break|break;
+block|}
+return|return
+name|code
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* win_wchnstr is inconsistent with winnstr, since it returns OK rather than  * the number of items transferred.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|fix_wchnstr
+parameter_list|(
+name|WINDOW
+modifier|*
+name|w
+parameter_list|,
+name|cchar_t
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+block|{
+name|win_wchnstr
+argument_list|(
+name|w
+argument_list|,
+name|s
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+return|return
+name|n
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Returns the column of the base of the given cell.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|cell_base
+parameter_list|(
+name|WINDOW
+modifier|*
+name|win
+parameter_list|,
+name|int
+name|y
+parameter_list|,
+name|int
+name|x
+parameter_list|)
+block|{
+name|int
+name|result
+init|=
+name|x
+decl_stmt|;
+while|while
+condition|(
+name|LEGALYX
+argument_list|(
+name|win
+argument_list|,
+name|y
+argument_list|,
+name|x
+argument_list|)
+condition|)
+block|{
+name|cchar_t
+modifier|*
+name|data
+init|=
+operator|&
+operator|(
+name|win
+operator|->
+name|_line
+index|[
+name|y
+index|]
+operator|.
+name|text
+index|[
+name|x
+index|]
+operator|)
+decl_stmt|;
+if|if
+condition|(
+name|isWidecBase
+argument_list|(
+name|CHDEREF
+argument_list|(
+name|data
+argument_list|)
+argument_list|)
+operator|||
+operator|!
+name|isWidecExt
+argument_list|(
+name|CHDEREF
+argument_list|(
+name|data
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|result
+operator|=
+name|x
+expr_stmt|;
+break|break;
+block|}
+operator|--
+name|x
+expr_stmt|;
+block|}
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Returns the number of columns needed for the given cell in a window.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|cell_width
+parameter_list|(
+name|WINDOW
+modifier|*
+name|win
+parameter_list|,
+name|int
+name|y
+parameter_list|,
+name|int
+name|x
+parameter_list|)
+block|{
+name|int
+name|result
+init|=
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|LEGALYX
+argument_list|(
+name|win
+argument_list|,
+name|y
+argument_list|,
+name|x
+argument_list|)
+condition|)
+block|{
+name|cchar_t
+modifier|*
+name|data
+init|=
+operator|&
+operator|(
+name|win
+operator|->
+name|_line
+index|[
+name|y
+index|]
+operator|.
+name|text
+index|[
+name|x
+index|]
+operator|)
+decl_stmt|;
+if|if
+condition|(
+name|isWidecExt
+argument_list|(
+name|CHDEREF
+argument_list|(
+name|data
+argument_list|)
+argument_list|)
+condition|)
+block|{
+comment|/* recur, providing the number of columns to the next character */
+name|result
+operator|=
+name|cell_width
+argument_list|(
+name|win
+argument_list|,
+name|y
+argument_list|,
+name|x
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|result
+operator|=
+name|wcwidth
+argument_list|(
+name|CharOf
+argument_list|(
+name|CHDEREF
+argument_list|(
+name|data
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * There is no wide-character function such as wdel_wch(), so we must find  * all of the cells that comprise a multi-column character and delete them  * one-by-one.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|delete_char
+parameter_list|(
+name|FORM
+modifier|*
+name|form
+parameter_list|)
+block|{
+name|int
+name|cells
+init|=
+name|cell_width
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|form
+operator|->
+name|currow
+argument_list|,
+name|form
+operator|->
+name|curcol
+argument_list|)
+decl_stmt|;
+name|form
+operator|->
+name|curcol
+operator|=
+name|cell_base
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|form
+operator|->
+name|currow
+argument_list|,
+name|form
+operator|->
+name|curcol
+argument_list|)
+expr_stmt|;
+name|wmove
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|form
+operator|->
+name|currow
+argument_list|,
+name|form
+operator|->
+name|curcol
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|cells
+operator|--
+operator|>
+literal|0
+condition|)
+block|{
+name|wdelch
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|DeleteChar
+parameter_list|(
+name|form
+parameter_list|)
+value|delete_char(form)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DeleteChar
+parameter_list|(
+name|form
+parameter_list|)
+define|\
+value|wmove((form)->w, (form)->currow, (form)->curcol), \ 	  wdelch((form)->w)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static char *Get_Start_Of_Data(char * buf, int blen) | |   Description   :  Return pointer to first non-blank position in buffer. |                    If buffer is empty return pointer to buffer itself. | |   Return Values :  Pointer to first non-blank position in buffer +--------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|NCURSES_INLINE
+specifier|static
+name|FIELD_CELL
 modifier|*
 name|Get_Start_Of_Data
 parameter_list|(
-name|char
+name|FIELD_CELL
 modifier|*
 name|buf
 parameter_list|,
@@ -430,13 +1143,13 @@ name|int
 name|blen
 parameter_list|)
 block|{
-name|char
+name|FIELD_CELL
 modifier|*
 name|p
 init|=
 name|buf
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|end
 init|=
@@ -463,7 +1176,7 @@ operator|<
 name|end
 operator|)
 operator|&&
-name|is_blank
+name|ISBLANK
 argument_list|(
 operator|*
 name|p
@@ -489,17 +1202,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static char *After_End_Of_Data(char * buf, int blen) |    |   Description   :  Return pointer after last non-blank position in buffer. |                    If buffer is empty, return pointer to buffer itself. | |   Return Values :  Pointer to position after last non-blank position in  |                    buffer. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static char *After_End_Of_Data(char * buf, int blen) | |   Description   :  Return pointer after last non-blank position in buffer. |                    If buffer is empty, return pointer to buffer itself. | |   Return Values :  Pointer to position after last non-blank position in |                    buffer. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
-name|char
+name|FIELD_CELL
 modifier|*
 name|After_End_Of_Data
 parameter_list|(
-name|char
+name|FIELD_CELL
 modifier|*
 name|buf
 parameter_list|,
@@ -507,7 +1220,7 @@ name|int
 name|blen
 parameter_list|)
 block|{
-name|char
+name|FIELD_CELL
 modifier|*
 name|p
 init|=
@@ -534,7 +1247,7 @@ operator|>
 name|buf
 operator|)
 operator|&&
-name|is_blank
+name|ISBLANK
 argument_list|(
 name|p
 index|[
@@ -555,17 +1268,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static char *Get_First_Whitespace_Character( |                                     char * buf, int   blen) |    |   Description   :  Position to the first whitespace character. | |   Return Values :  Pointer to first whitespace character in buffer. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static char *Get_First_Whitespace_Character( |                                     char * buf, int   blen) | |   Description   :  Position to the first whitespace character. | |   Return Values :  Pointer to first whitespace character in buffer. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
-name|char
+name|FIELD_CELL
 modifier|*
 name|Get_First_Whitespace_Character
 parameter_list|(
-name|char
+name|FIELD_CELL
 modifier|*
 name|buf
 parameter_list|,
@@ -573,13 +1286,13 @@ name|int
 name|blen
 parameter_list|)
 block|{
-name|char
+name|FIELD_CELL
 modifier|*
 name|p
 init|=
 name|buf
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|end
 init|=
@@ -607,7 +1320,7 @@ name|end
 operator|)
 operator|&&
 operator|!
-name|is_blank
+name|ISBLANK
 argument_list|(
 operator|*
 name|p
@@ -633,17 +1346,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static char *After_Last_Whitespace_Character( |                                     char * buf, int blen) |    |   Description   :  Get the position after the last whitespace character. | |   Return Values :  Pointer to position after last whitespace character in  |                    buffer. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static char *After_Last_Whitespace_Character( |                                     char * buf, int blen) | |   Description   :  Get the position after the last whitespace character. | |   Return Values :  Pointer to position after last whitespace character in |                    buffer. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
-name|char
+name|FIELD_CELL
 modifier|*
 name|After_Last_Whitespace_Character
 parameter_list|(
-name|char
+name|FIELD_CELL
 modifier|*
 name|buf
 parameter_list|,
@@ -651,7 +1364,7 @@ name|int
 name|blen
 parameter_list|)
 block|{
-name|char
+name|FIELD_CELL
 modifier|*
 name|p
 init|=
@@ -679,7 +1392,7 @@ name|buf
 operator|)
 operator|&&
 operator|!
-name|is_blank
+name|ISBLANK
 argument_list|(
 name|p
 index|[
@@ -700,7 +1413,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set this to 1 to use the div_t version. This is a good idea if your    compiler has an intrinsic div() support. Unfortunately GNU-C has it    not yet.     N.B.: This only works if form->curcol follows immediately form->currow          and both are of type int.  */
+comment|/* Set this to 1 to use the div_t version. This is a good idea if your    compiler has an intrinsic div() support. Unfortunately GNU-C has it    not yet.    N.B.: This only works if form->curcol follows immediately form->currow          and both are of type int. */
 end_comment
 
 begin_define
@@ -711,11 +1424,11 @@ value|(0)
 end_define
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void Adjust_Cursor_Position( |                                       FORM * form, const char * pos) |    |   Description   :  Set current row and column of the form to values  |                    corresponding to the buffer position. | |   Return Values :  - +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static void Adjust_Cursor_Position( |                                       FORM * form, const char * pos) | |   Description   :  Set current row and column of the form to values |                    corresponding to the buffer position. | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
 name|void
 name|Adjust_Cursor_Position
@@ -725,7 +1438,7 @@ modifier|*
 name|form
 parameter_list|,
 specifier|const
-name|char
+name|FIELD_CELL
 modifier|*
 name|pos
 parameter_list|)
@@ -845,7 +1558,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void Buffer_To_Window( |                                      const FIELD  * field, |                                      WINDOW * win) |    |   Description   :  Copy the buffer to the window. If its a multiline |                    field, the buffer is split to the lines of the |                    window without any editing. | |   Return Values :  - +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static void Buffer_To_Window( |                                      const FIELD  * field, |                                      WINDOW * win) | |   Description   :  Copy the buffer to the window. If it is a multi-line |                    field, the buffer is split to the lines of the |                    window without any editing. | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -869,12 +1582,17 @@ decl_stmt|,
 name|height
 decl_stmt|;
 name|int
+name|y
+decl_stmt|,
+name|x
+decl_stmt|;
+name|int
 name|len
 decl_stmt|;
 name|int
 name|row
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|pBuffer
 decl_stmt|;
@@ -883,6 +1601,15 @@ argument_list|(
 name|win
 operator|&&
 name|field
+argument_list|)
+expr_stmt|;
+name|getyx
+argument_list|(
+name|win
+argument_list|,
+name|y
+argument_list|,
+name|x
 argument_list|)
 expr_stmt|;
 name|width
@@ -955,7 +1682,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|waddnstr
+name|myADDNSTR
 argument_list|(
 name|win
 argument_list|,
@@ -966,11 +1693,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|wmove
+argument_list|(
+name|win
+argument_list|,
+name|y
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void Window_To_Buffer( |                                          WINDOW * win, |                                          FIELD  * field) |    |   Description   :  Copy the content of the window into the buffer. |                    The multiple lines of a window are simply |                    concatenated into the buffer. Pad characters in |                    the window will be replaced by blanks in the buffer. | |   Return Values :  - +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static void Window_To_Buffer( |                                          WINDOW * win, |                                          FIELD  * field) | |   Description   :  Copy the content of the window into the buffer. |                    The multiple lines of a window are simply |                    concatenated into the buffer. Pad characters in |                    the window will be replaced by blanks in the buffer. | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -995,7 +1731,7 @@ name|len
 init|=
 literal|0
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|p
 decl_stmt|;
@@ -1069,7 +1805,7 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|+=
-name|winnstr
+name|myINNSTR
 argument_list|(
 name|win
 argument_list|,
@@ -1088,7 +1824,7 @@ index|[
 name|len
 index|]
 operator|=
-literal|'\0'
+name|myZEROS
 expr_stmt|;
 comment|/* replace visual padding character by blanks in buffer */
 if|if
@@ -1120,15 +1856,39 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|unsigned
+name|long
+operator|)
+name|CharOf
+argument_list|(
 operator|*
 name|p
+argument_list|)
 operator|==
+name|ChCharOf
+argument_list|(
 name|pad
+argument_list|)
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+operator|&&
+name|p
+operator|->
+name|chars
+index|[
+literal|1
+index|]
+operator|==
+literal|0
+endif|#
+directive|endif
 condition|)
 operator|*
 name|p
 operator|=
-name|C_BLANK
+name|myBLANK
 expr_stmt|;
 block|}
 block|}
@@ -1136,11 +1896,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void Synchronize_Buffer(FORM * form) |    |   Description   :  If there was a change, copy the content of the |                    window into the buffer, so the buffer is synchronized |                    with the windows content. We have to indicate that the |                    buffer needs validation due to the change. | |   Return Values :  - +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static void Synchronize_Buffer(FORM * form) | |   Description   :  If there was a change, copy the content of the |                    window into the buffer, so the buffer is synchronized |                    with the windows content. We have to indicate that the |                    buffer needs validation due to the change. | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
 name|void
 name|Synchronize_Buffer
@@ -1203,7 +1963,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static bool Field_Grown( FIELD *field, int amount) |    |   Description   :  This function is called for growable dynamic fields |                    only. It has to increase the buffers and to allocate |                    a new window for this field. |                    This function has the side effect to set a new |                    field-buffer pointer, the dcols and drows values |                    as well as a new current Window for the field. | |   Return Values :  TRUE     - field successfully increased |                    FALSE    - there was some error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static bool Field_Grown( FIELD *field, int amount) | |   Description   :  This function is called for growable dynamic fields |                    only. It has to increase the buffers and to allocate |                    a new window for this field. |                    This function has the side effect to set a new |                    field-buffer pointer, the dcols and drows values |                    as well as a new current Window for the field. | |   Return Values :  TRUE     - field successfully increased |                    FALSE    - there was some error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -1267,7 +2027,7 @@ name|field
 operator|->
 name|drows
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|oldbuf
 init|=
@@ -1275,7 +2035,7 @@ name|field
 operator|->
 name|buf
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|newbuf
 decl_stmt|;
@@ -1460,14 +2220,11 @@ expr_stmt|;
 name|newbuf
 operator|=
 operator|(
-name|char
+name|FIELD_CELL
 operator|*
 operator|)
 name|malloc
 argument_list|(
-operator|(
-name|size_t
-operator|)
 name|Total_Buffer_Size
 argument_list|(
 name|field
@@ -1530,24 +2287,28 @@ name|status
 operator||=
 name|_MAY_GROW
 expr_stmt|;
-return|return
-name|FALSE
-return|;
 block|}
 else|else
 block|{
-comment|/* Copy all the buffers. This is the reason why we can't 	     just use realloc(). 	     */
+comment|/* Copy all the buffers.  This is the reason why we can't just use 	   * realloc(). 	   */
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|old_bp
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|new_bp
 decl_stmt|;
+name|result
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* allow sharing of recovery on failure */
 name|field
 operator|->
 name|buf
@@ -1591,55 +2352,85 @@ operator|+
 name|old_buflen
 operator|)
 expr_stmt|;
-name|memcpy
-argument_list|(
-name|new_bp
-argument_list|,
-name|old_bp
-argument_list|,
-operator|(
-name|size_t
-operator|)
-name|old_buflen
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|new_buflen
-operator|>
-name|old_buflen
-condition|)
-name|memset
-argument_list|(
-name|new_bp
-operator|+
-name|old_buflen
-argument_list|,
-name|C_BLANK
-argument_list|,
-call|(
-name|size_t
-call|)
-argument_list|(
-name|new_buflen
-operator|-
-name|old_buflen
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|*
-operator|(
-name|new_bp
-operator|+
-name|new_buflen
-operator|)
+for|for
+control|(
+name|j
 operator|=
-literal|'\0'
+literal|0
+init|;
+name|j
+operator|<
+name|old_buflen
+condition|;
+operator|++
+name|j
+control|)
+name|new_bp
+index|[
+name|j
+index|]
+operator|=
+name|old_bp
+index|[
+name|j
+index|]
+expr_stmt|;
+while|while
+condition|(
+name|j
+operator|<
+name|new_buflen
+condition|)
+name|new_bp
+index|[
+name|j
+operator|++
+index|]
+operator|=
+name|myBLANK
+expr_stmt|;
+name|new_bp
+index|[
+name|new_buflen
+index|]
+operator|=
+name|myZEROS
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+if|if
+condition|(
+name|wresize
+argument_list|(
+name|field
+operator|->
+name|working
+argument_list|,
+literal|1
+argument_list|,
+name|Buffer_Length
+argument_list|(
+name|field
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+operator|==
+name|ERR
+condition|)
+name|result
+operator|=
+name|FALSE
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|need_visual_update
+operator|&&
+name|result
 condition|)
 block|{
 name|WINDOW
@@ -1659,75 +2450,11 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|new_window
+operator|!=
+literal|0
 condition|)
 block|{
-comment|/* restore old state */
-name|field
-operator|->
-name|dcols
-operator|=
-name|old_dcols
-expr_stmt|;
-name|field
-operator|->
-name|drows
-operator|=
-name|old_drows
-expr_stmt|;
-name|field
-operator|->
-name|buf
-operator|=
-name|oldbuf
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|single_line_field
-operator|&&
-operator|(
-name|field
-operator|->
-name|dcols
-operator|!=
-name|field
-operator|->
-name|maxgrow
-operator|)
-operator|)
-operator|||
-operator|(
-operator|!
-name|single_line_field
-operator|&&
-operator|(
-name|field
-operator|->
-name|drows
-operator|!=
-name|field
-operator|->
-name|maxgrow
-operator|)
-operator|)
-condition|)
-name|field
-operator|->
-name|status
-operator||=
-name|_MAY_GROW
-expr_stmt|;
-name|free
-argument_list|(
-name|newbuf
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
 name|assert
 argument_list|(
 name|form
@@ -1806,6 +2533,17 @@ name|curcol
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|result
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|result
+condition|)
+block|{
 name|free
 argument_list|(
 name|oldbuf
@@ -1870,10 +2608,71 @@ name|dcols
 expr_stmt|;
 block|}
 block|}
-name|result
+block|}
+else|else
+block|{
+comment|/* restore old state */
+name|field
+operator|->
+name|dcols
 operator|=
-name|TRUE
+name|old_dcols
 expr_stmt|;
+name|field
+operator|->
+name|drows
+operator|=
+name|old_drows
+expr_stmt|;
+name|field
+operator|->
+name|buf
+operator|=
+name|oldbuf
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|single_line_field
+operator|&&
+operator|(
+name|field
+operator|->
+name|dcols
+operator|!=
+name|field
+operator|->
+name|maxgrow
+operator|)
+operator|)
+operator|||
+operator|(
+operator|!
+name|single_line_field
+operator|&&
+operator|(
+name|field
+operator|->
+name|drows
+operator|!=
+name|field
+operator|->
+name|maxgrow
+operator|)
+operator|)
+condition|)
+name|field
+operator|->
+name|status
+operator||=
+name|_MAY_GROW
+expr_stmt|;
+name|free
+argument_list|(
+name|newbuf
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 return|return
@@ -1885,7 +2684,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int _nc_Position_Form_Cursor(FORM * form) |    |   Description   :  Position the cursor in the window for the current |                    field to be in sync. with the currow and curcol  |                    values. | |   Return Values :  E_OK              - success |                    E_BAD_ARGUMENT    - invalid form pointer |                    E_SYSTEM_ERROR    - form has no current field or |                                        field-window +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  int _nc_Position_Form_Cursor(FORM * form) | |   Description   :  Position the cursor in the window for the current |                    field to be in sync. with the currow and curcol |                    values. | |   Return Values :  E_OK              - success |                    E_BAD_ARGUMENT    - invalid form pointer |                    E_SYSTEM_ERROR    - form has no current field or |                                        field-window +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -1898,7 +2697,7 @@ end_macro
 begin_macro
 name|_nc_Position_Form_Cursor
 argument_list|(
-argument|FORM * form
+argument|FORM *form
 argument_list|)
 end_macro
 
@@ -1975,7 +2774,7 @@ name|field
 argument_list|)
 condition|)
 block|{
-comment|/* in this case fieldwin isn't derived from formwin, so we have 	 to move the cursor in formwin by hand... */
+comment|/* in this case fieldwin isn't derived from formwin, so we have          to move the cursor in formwin by hand... */
 name|wmove
 argument_list|(
 name|formwin
@@ -2028,7 +2827,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int _nc_Refresh_Current_Field(FORM * form) |    |   Description   :  Propagate the changes in the fields window to the |                    window of the form. | |   Return Values :  E_OK              - on success |                    E_BAD_ARGUMENT    - invalid form pointer |                    E_SYSTEM_ERROR    - general error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  int _nc_Refresh_Current_Field(FORM * form) | |   Description   :  Propagate the changes in the fields window to the |                    window of the form. | |   Return Values :  E_OK              - on success |                    E_BAD_ARGUMENT    - invalid form pointer |                    E_SYSTEM_ERROR    - general error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -2041,7 +2840,7 @@ end_macro
 begin_macro
 name|_nc_Refresh_Current_Field
 argument_list|(
-argument|FORM * form
+argument|FORM *form
 argument_list|)
 end_macro
 
@@ -2055,6 +2854,18 @@ name|FIELD
 modifier|*
 name|field
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"_nc_Refresh_Current_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2215,7 +3026,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* A multiline, i.e. vertical scrolling field */
+comment|/* A multi-line, i.e. vertical scrolling field */
 name|int
 name|row_after_bottom
 decl_stmt|,
@@ -2334,7 +3145,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* we try to optimize : finding the range of touched                          lines */
+comment|/* we try to optimize : finding the range of touched 		         lines */
 name|first_modified_row
 operator|=
 name|form
@@ -2477,7 +3288,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* if the field-window is simply a derived window, i.e. contains 	     no invisible parts, the whole thing is trivial  	  */
+comment|/* if the field-window is simply a derived window, i.e. contains no 	   * invisible parts, the whole thing is trivial 	   */
 name|wsyncup
 argument_list|(
 name|form
@@ -2494,17 +3305,19 @@ operator|->
 name|w
 argument_list|)
 expr_stmt|;
-return|return
+name|returnCode
+argument_list|(
 name|_nc_Position_Form_Cursor
 argument_list|(
 name|form
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void Perform_Justification( |                                        FIELD  * field, |                                        WINDOW * win) |    |   Description   :  Output field with requested justification  | |   Return Values :  - +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static void Perform_Justification( |                                        FIELD  * field, |                                        WINDOW * win) | |   Description   :  Output field with requested justification | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -2521,7 +3334,7 @@ modifier|*
 name|win
 parameter_list|)
 block|{
-name|char
+name|FIELD_CELL
 modifier|*
 name|bp
 decl_stmt|;
@@ -2649,7 +3462,7 @@ argument_list|,
 name|col
 argument_list|)
 expr_stmt|;
-name|waddnstr
+name|myADDNSTR
 argument_list|(
 name|win
 argument_list|,
@@ -2663,7 +3476,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void Undo_Justification( |                                     FIELD  * field, |                                     WINDOW * win) |    |   Description   :  Display field without any justification, i.e. |                    left justified | |   Return Values :  - +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static void Undo_Justification( |                                     FIELD  * field, |                                     WINDOW * win) | |   Description   :  Display field without any justification, i.e. |                    left justified | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -2680,7 +3493,7 @@ modifier|*
 name|win
 parameter_list|)
 block|{
-name|char
+name|FIELD_CELL
 modifier|*
 name|bp
 decl_stmt|;
@@ -2743,7 +3556,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|waddnstr
+name|myADDNSTR
 argument_list|(
 name|win
 argument_list|,
@@ -2757,7 +3570,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static bool Check_Char( |                                           FIELDTYPE * typ, |                                           int ch, |                                           TypeArgument *argp) |    |   Description   :  Perform a single character check for character ch |                    according to the fieldtype instance.   | |   Return Values :  TRUE             - Character is valid |                    FALSE            - Character is invalid +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static bool Check_Char( |                                           FIELDTYPE * typ, |                                           int ch, |                                           TypeArgument *argp) | |   Description   :  Perform a single character check for character ch |                    according to the fieldtype instance. | |   Return Values :  TRUE             - Character is valid |                    FALSE            - Character is invalid +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -2852,13 +3665,13 @@ block|}
 block|}
 return|return
 operator|(
-name|isprint
+operator|!
+name|iscntrl
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
+name|UChar
+argument_list|(
 name|ch
+argument_list|)
 argument_list|)
 condition|?
 name|TRUE
@@ -2870,7 +3683,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Display_Or_Erase_Field( |                                           FIELD * field, |                                           bool bEraseFlag) |    |   Description   :  Create a subwindow for the field and display the |                    buffer contents (apply justification if required) |                    or simply erase the field. | |   Return Values :  E_OK           - on success |                    E_SYSTEM_ERROR - some error (typical no memory) +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int Display_Or_Erase_Field( |                                           FIELD * field, |                                           bool bEraseFlag) | |   Description   :  Create a subwindow for the field and display the |                    buffer contents (apply justification if required) |                    or simply erase the field. | |   Return Values :  E_OK           - on success |                    E_SYSTEM_ERROR - some error (typical no memory) +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -2964,7 +3777,7 @@ name|wattrset
 argument_list|(
 name|win
 argument_list|,
-name|getattrs
+name|WINDOW_ATTRS
 argument_list|(
 name|fwin
 argument_list|)
@@ -3063,7 +3876,7 @@ value|Display_Or_Erase_Field(field,TRUE)
 end_define
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Synchronize_Field(FIELD * field) |    |   Description   :  Synchronize the windows content with the value in |                    the buffer. | |   Return Values :  E_OK                - success |                    E_BAD_ARGUMENT      - invalid field pointer  |                    E_SYSTEM_ERROR      - some severe basic error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int Synchronize_Field(FIELD * field) | |   Description   :  Synchronize the windows content with the value in |                    the buffer. | |   Return Values :  E_OK                - success |                    E_BAD_ARGUMENT      - invalid field pointer |                    E_SYSTEM_ERROR      - some severe basic error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -3225,7 +4038,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Synchronize_Linked_Fields(FIELD * field) |    |   Description   :  Propagate the Synchronize_Field function to all linked |                    fields. The first error that occurs in the sequence |                    of updates is the returnvalue. | |   Return Values :  E_OK                - success |                    E_BAD_ARGUMENT      - invalid field pointer  |                    E_SYSTEM_ERROR      - some severe basic error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int Synchronize_Linked_Fields(FIELD * field) | |   Description   :  Propagate the Synchronize_Field function to all linked |                    fields. The first error that occurs in the sequence |                    of updates is the return value. | |   Return Values :  E_OK                - success |                    E_BAD_ARGUMENT      - invalid field pointer |                    E_SYSTEM_ERROR      - some severe basic error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -3326,7 +4139,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int _nc_Synchronize_Attributes(FIELD * field) |    |   Description   :  If a fields visual attributes have changed, this |                    routine is called to propagate those changes to the |                    screen.   | |   Return Values :  E_OK             - success |                    E_BAD_ARGUMENT   - invalid field pointer |                    E_SYSTEM_ERROR   - some severe basic error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  int _nc_Synchronize_Attributes(FIELD * field) | |   Description   :  If a fields visual attributes have changed, this |                    routine is called to propagate those changes to the |                    screen. | |   Return Values :  E_OK             - success |                    E_BAD_ARGUMENT   - invalid field pointer |                    E_SYSTEM_ERROR   - some severe basic error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -3339,7 +4152,7 @@ end_macro
 begin_macro
 name|_nc_Synchronize_Attributes
 argument_list|(
-argument|FIELD * field
+argument|FIELD *field
 argument_list|)
 end_macro
 
@@ -3358,16 +4171,35 @@ name|WINDOW
 modifier|*
 name|formwin
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"_nc_Synchronize_Attributes(%p)"
+argument_list|)
+operator|,
+name|field
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|field
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_BAD_ARGUMENT
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
+name|CHECKPOS
+argument_list|(
+name|field
+operator|->
+name|form
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3420,6 +4252,21 @@ argument_list|(
 name|form
 operator|->
 name|w
+argument_list|)
+expr_stmt|;
+name|wmove
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|form
+operator|->
+name|currow
+argument_list|,
+name|form
+operator|->
+name|curcol
 argument_list|)
 expr_stmt|;
 if|if
@@ -3541,16 +4388,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return
-operator|(
+name|CHECKPOS
+argument_list|(
+name|form
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|res
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int _nc_Synchronize_Options(FIELD * field, |                                                Field_Options newopts) |    |   Description   :  If a fields options have changed, this routine is |                    called to propagate these changes to the screen and |                    to really change the behaviour of the field. | |   Return Values :  E_OK                - success |                    E_BAD_ARGUMENT      - invalid field pointer  |                    E_SYSTEM_ERROR      - some severe basic error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  int _nc_Synchronize_Options(FIELD * field, |                                                Field_Options newopts) | |   Description   :  If a fields options have changed, this routine is |                    called to propagate these changes to the screen and |                    to really change the behavior of the field. | |   Return Values :  E_OK                - success |                    E_BAD_ARGUMENT      - invalid field pointer |                    E_CURRENT           - field is the current one |                    E_SYSTEM_ERROR      - some severe basic error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -3586,16 +4438,30 @@ name|res
 init|=
 name|E_OK
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"_nc_Synchronize_Options(%p,%#x)"
+argument_list|)
+operator|,
+name|field
+operator|,
+name|newopts
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|field
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_BAD_ARGUMENT
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|oldopts
 operator|=
 name|field
@@ -3640,11 +4506,11 @@ name|opts
 operator|=
 name|oldopts
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_CURRENT
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3846,7 +4712,7 @@ name|status
 operator||=
 name|_MAY_GROW
 expr_stmt|;
-comment|/* a field with justification now changes its behaviour, 		 so we must redisplay it */
+comment|/* a field with justification now changes its behavior, 	         so we must redisplay it */
 if|if
 condition|(
 name|single_line_field
@@ -3886,16 +4752,16 @@ operator|=
 name|res2
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|res
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int _nc_Set_Current_Field(FORM  * form, |                                              FIELD * newfield) |    |   Description   :  Make the newfield the new current field. | |   Return Values :  E_OK                - success |                    E_BAD_ARGUMENT      - invalid form or field pointer  |                    E_SYSTEM_ERROR      - some severe basic error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  int _nc_Set_Current_Field(FORM  * form, |                                              FIELD * newfield) | |   Description   :  Make the newfield the new current field. | |   Return Values :  E_OK              - success |                    E_BAD_ARGUMENT    - invalid form or field pointer |                    E_SYSTEM_ERROR    - some severe basic error |                    E_NOT_CONNECTED   - no fields are connected to the form +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -3908,7 +4774,7 @@ end_macro
 begin_macro
 name|_nc_Set_Current_Field
 argument_list|(
-argument|FORM  *form
+argument|FORM *form
 argument_list|,
 argument|FIELD *newfield
 argument_list|)
@@ -3924,6 +4790,20 @@ name|WINDOW
 modifier|*
 name|new_window
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"_nc_Set_Current_Field(%p,%p)"
+argument_list|)
+operator|,
+name|form
+operator|,
+name|newfield
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3945,11 +4825,11 @@ operator|!=
 name|form
 operator|)
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_BAD_ARGUMENT
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3960,11 +4840,11 @@ operator|&
 name|_IN_DRIVER
 operator|)
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_BAD_STATE
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3974,11 +4854,11 @@ operator|->
 name|field
 operator|)
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_NOT_CONNECTED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|field
 operator|=
 name|form
@@ -4199,11 +5079,11 @@ condition|(
 operator|!
 name|new_window
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_SYSTEM_ERROR
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|form
 operator|->
 name|current
@@ -4331,23 +5211,20 @@ name|begincol
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*----------------------------------------------------------------------------   Intra-Field Navigation routines   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int IFN_Next_Character(FORM * form) |    |   Description   :  Move to the next character in the field. In a multiline |                    field this wraps at the end of the line. | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - at the rightmost position +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int IFN_Next_Character(FORM * form) | |   Description   :  Move to the next character in the field. In a multi-line |                    field this wraps at the end of the line. | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - at the rightmost position +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4368,15 +5245,44 @@ name|form
 operator|->
 name|current
 decl_stmt|;
+name|int
+name|step
+init|=
+name|myWCWIDTH
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|form
+operator|->
+name|currow
+argument_list|,
+name|form
+operator|->
+name|curcol
+argument_list|)
+decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"IFN_Next_Character(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|++
 operator|(
 name|form
 operator|->
 name|curcol
-operator|)
+operator|+=
+name|step
 operator|)
 operator|==
 name|field
@@ -4425,11 +5331,11 @@ name|curcol
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -4455,23 +5361,24 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|form
 operator|->
 name|curcol
-operator|--
+operator|-=
+name|step
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|form
 operator|->
@@ -4480,16 +5387,16 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int IFN_Previous_Character(FORM * form) |    |   Description   :  Move to the previous character in the field. In a  |                    multiline field this wraps and the beginning of the  |                    line. | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - at the leftmost position +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int IFN_Previous_Character(FORM * form) | |   Description   :  Move to the previous character in the field. In a |                    multi-line field this wraps and the beginning of the |                    line. | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - at the leftmost position +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4502,15 +5409,53 @@ modifier|*
 name|form
 parameter_list|)
 block|{
+name|int
+name|amount
+init|=
+name|myWCWIDTH
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|form
+operator|->
+name|currow
+argument_list|,
+name|form
+operator|->
+name|curcol
+operator|-
+literal|1
+argument_list|)
+decl_stmt|;
+name|int
+name|oldcol
+init|=
+name|form
+operator|->
+name|curcol
+decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"IFN_Previous_Character(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|--
 operator|(
 name|form
 operator|->
 name|curcol
-operator|)
+operator|-=
+name|amount
 operator|)
 operator|<
 literal|0
@@ -4538,13 +5483,14 @@ expr_stmt|;
 name|form
 operator|->
 name|curcol
-operator|++
+operator|=
+name|oldcol
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|form
 operator|->
@@ -4559,16 +5505,16 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int IFN_Next_Line(FORM * form) |    |   Description   :  Move to the beginning of the next line in the field | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - at the last line +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int IFN_Next_Line(FORM * form) | |   Description   :  Move to the beginning of the next line in the field | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - at the last line +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4589,6 +5535,18 @@ name|form
 operator|->
 name|current
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"IFN_Next_Line(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4623,11 +5581,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|form
@@ -4635,11 +5593,11 @@ operator|->
 name|currow
 operator|--
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|form
 operator|->
@@ -4647,16 +5605,16 @@ name|curcol
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int IFN_Previous_Line(FORM * form) |    |   Description   :  Move to the beginning of the previous line in the field | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - at the first line +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int IFN_Previous_Line(FORM * form) | |   Description   :  Move to the beginning of the previous line in the field | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - at the first line +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4669,6 +5627,18 @@ modifier|*
 name|form
 parameter_list|)
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"IFN_Previous_Line(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4688,11 +5658,11 @@ operator|->
 name|currow
 operator|++
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|form
 operator|->
@@ -4700,16 +5670,16 @@ name|curcol
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int IFN_Next_Word(FORM * form) |    |   Description   :  Move to the beginning of the next word in the field. | |   Return Values :  E_OK             - success |                    E_REQUEST_DENIED - there is no next word +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int IFN_Next_Word(FORM * form) | |   Description   :  Move to the beginning of the next word in the field. | |   Return Values :  E_OK             - success |                    E_REQUEST_DENIED - there is no next word +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4730,7 +5700,7 @@ name|form
 operator|->
 name|current
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|bp
 init|=
@@ -4739,21 +5709,33 @@ argument_list|(
 name|form
 argument_list|)
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|s
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|t
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"IFN_Next_Word(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* We really need access to the data, so we have to synchronize */
 name|Synchronize_Buffer
 argument_list|(
 name|form
 argument_list|)
 expr_stmt|;
-comment|/* Go to the first whitespace after the current position (including      current position). This is then the startpoint to look for the     next non-blank data */
+comment|/* Go to the first whitespace after the current position (including      current position). This is then the starting point to look for the      next non-blank data */
 name|s
 operator|=
 name|Get_First_Whitespace_Character
@@ -4811,11 +5793,11 @@ name|s
 operator|==
 name|t
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 else|else
 endif|#
 directive|endif
@@ -4827,17 +5809,17 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int IFN_Previous_Word(FORM * form) |    |   Description   :  Move to the beginning of the previous word in the field. | |   Return Values :  E_OK             - success |                    E_REQUEST_DENIED - there is no previous word +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int IFN_Previous_Word(FORM * form) | |   Description   :  Move to the beginning of the previous word in the field. | |   Return Values :  E_OK             - success |                    E_REQUEST_DENIED - there is no previous word +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4858,7 +5840,7 @@ name|form
 operator|->
 name|current
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|bp
 init|=
@@ -4867,11 +5849,11 @@ argument_list|(
 name|form
 argument_list|)
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|s
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|t
 decl_stmt|;
@@ -4880,6 +5862,18 @@ name|again
 init|=
 name|FALSE
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"IFN_Previous_Word(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* We really need access to the data, so we have to synchronize */
 name|Synchronize_Buffer
 argument_list|(
@@ -4948,11 +5942,11 @@ name|s
 operator|==
 name|t
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -5011,11 +6005,11 @@ name|s
 operator|==
 name|t
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
@@ -5026,16 +6020,16 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int IFN_Beginning_Of_Field(FORM * form) |    |   Description   :  Place the cursor at the first non-pad character in |                    the field.  | |   Return Values :  E_OK             - success             +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int IFN_Beginning_Of_Field(FORM * form) | |   Description   :  Place the cursor at the first non-pad character in |                    the field. | |   Return Values :  E_OK             - success +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5056,6 +6050,18 @@ name|form
 operator|->
 name|current
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"IFN_Beginning_Of_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 name|Synchronize_Buffer
 argument_list|(
 name|form
@@ -5078,16 +6084,16 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int IFN_End_Of_Field(FORM * form) |    |   Description   :  Place the cursor after the last non-pad character in |                    the field. If the field occupies the last position in |                    the buffer, the cursos is positioned on the last  |                    character. | |   Return Values :  E_OK              - success +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int IFN_End_Of_Field(FORM * form) | |   Description   :  Place the cursor after the last non-pad character in |                    the field. If the field occupies the last position in |                    the buffer, the cursor is positioned on the last |                    character. | |   Return Values :  E_OK              - success +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5108,10 +6114,22 @@ name|form
 operator|->
 name|current
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|pos
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"IFN_End_Of_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 name|Synchronize_Buffer
 argument_list|(
 name|form
@@ -5156,16 +6174,16 @@ argument_list|,
 name|pos
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int IFN_Beginning_Of_Line(FORM * form) |    |   Description   :  Place the cursor on the first non-pad character in |                    the current line of the field. | |   Return Values :  E_OK         - success +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int IFN_Beginning_Of_Line(FORM * form) | |   Description   :  Place the cursor on the first non-pad character in |                    the current line of the field. | |   Return Values :  E_OK         - success +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5186,6 +6204,18 @@ name|form
 operator|->
 name|current
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"IFN_Beginning_Of_Line(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 name|Synchronize_Buffer
 argument_list|(
 name|form
@@ -5208,16 +6238,16 @@ name|dcols
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int IFN_End_Of_Line(FORM * form) |    |   Description   :  Place the cursor after the last non-pad character in the |                    current line of the field. If the field occupies the  |                    last column in the line, the cursor is positioned on the |                    last character of the line. | |   Return Values :  E_OK        - success +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int IFN_End_Of_Line(FORM * form) | |   Description   :  Place the cursor after the last non-pad character in the |                    current line of the field. If the field occupies the |                    last column in the line, the cursor is positioned on the |                    last character of the line. | |   Return Values :  E_OK        - success +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5238,14 +6268,26 @@ name|form
 operator|->
 name|current
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|pos
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|bp
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"IFN_End_Of_Line(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 name|Synchronize_Buffer
 argument_list|(
 name|form
@@ -5291,16 +6333,16 @@ argument_list|,
 name|pos
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int IFN_Left_Character(FORM * form) |    |   Description   :  Move one character to the left in the current line. |                    This doesn't cycle.   | |   Return Values :  E_OK             - success |                    E_REQUEST_DENIED - already in first column +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int IFN_Left_Character(FORM * form) | |   Description   :  Move one character to the left in the current line. |                    This doesn't cycle. | |   Return Values :  E_OK             - success |                    E_REQUEST_DENIED - already in first column +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5313,15 +6355,53 @@ modifier|*
 name|form
 parameter_list|)
 block|{
+name|int
+name|amount
+init|=
+name|myWCWIDTH
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|form
+operator|->
+name|currow
+argument_list|,
+name|form
+operator|->
+name|curcol
+operator|-
+literal|1
+argument_list|)
+decl_stmt|;
+name|int
+name|oldcol
+init|=
+name|form
+operator|->
+name|curcol
+decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"IFN_Left_Character(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|--
 operator|(
 name|form
 operator|->
 name|curcol
-operator|)
+operator|-=
+name|amount
 operator|)
 operator|<
 literal|0
@@ -5330,24 +6410,25 @@ block|{
 name|form
 operator|->
 name|curcol
-operator|++
+operator|=
+name|oldcol
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int IFN_Right_Character(FORM * form) |    |   Description   :  Move one character to the right in the current line. |                    This doesn't cycle. | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - already in last column +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int IFN_Right_Character(FORM * form) | |   Description   :  Move one character to the right in the current line. |                    This doesn't cycle. | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - already in last column +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5360,17 +6441,53 @@ modifier|*
 name|form
 parameter_list|)
 block|{
+name|int
+name|amount
+init|=
+name|myWCWIDTH
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|form
+operator|->
+name|currow
+argument_list|,
+name|form
+operator|->
+name|curcol
+argument_list|)
+decl_stmt|;
+name|int
+name|oldcol
+init|=
+name|form
+operator|->
+name|curcol
+decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"IFN_Right_Character(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|++
 operator|(
 name|form
 operator|->
 name|curcol
+operator|+=
+name|amount
 operator|)
-operator|)
-operator|==
+operator|>=
 name|form
 operator|->
 name|current
@@ -5403,36 +6520,35 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-operator|--
-operator|(
 name|form
 operator|->
 name|curcol
-operator|)
+operator|=
+name|oldcol
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int IFN_Up_Character(FORM * form) |    |   Description   :  Move one line up. This doesn't cycle through the lines |                    of the field. | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - already in last column +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int IFN_Up_Character(FORM * form) | |   Description   :  Move one line up. This doesn't cycle through the lines |                    of the field. | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - already in last column +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5445,6 +6561,18 @@ modifier|*
 name|form
 parameter_list|)
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"IFN_Up_Character(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5464,22 +6592,22 @@ operator|->
 name|currow
 operator|++
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int IFN_Down_Character(FORM * form) |    |   Description   :  Move one line down. This doesn't cycle through the |                    lines of the field. | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - already in last column +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int IFN_Down_Character(FORM * form) | |   Description   :  Move one line down. This doesn't cycle through the |                    lines of the field. | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - already in last column +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5500,6 +6628,18 @@ name|form
 operator|->
 name|current
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"IFN_Down_Character(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5534,11 +6674,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 operator|--
@@ -5548,33 +6688,30 @@ operator|->
 name|currow
 operator|)
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*----------------------------------------------------------------------------   END of Intra-Field Navigation routines    --------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------   END of Intra-Field Navigation routines   --------------------------------------------------------------------------*/
 end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*----------------------------------------------------------------------------   Vertical scrolling helper routines   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int VSC_Generic(FORM *form, int lines) | |   Description   :  Scroll multi-line field forward (lines>0) or |                    backward (lines<0) this many lines. | |   Return Values :  E_OK              - success  |                    E_REQUEST_DENIED  - can't scroll +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int VSC_Generic(FORM *form, int nlines) | |   Description   :  Scroll multi-line field forward (nlines>0) or |                    backward (nlines<0) this many lines. | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - can't scroll +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5587,7 +6724,7 @@ modifier|*
 name|form
 parameter_list|,
 name|int
-name|lines
+name|nlines
 parameter_list|)
 block|{
 name|FIELD
@@ -5607,19 +6744,19 @@ name|int
 name|rows_to_go
 init|=
 operator|(
-name|lines
+name|nlines
 operator|>
 literal|0
 condition|?
-name|lines
+name|nlines
 else|:
 operator|-
-name|lines
+name|nlines
 operator|)
 decl_stmt|;
 if|if
 condition|(
-name|lines
+name|nlines
 operator|>
 literal|0
 condition|)
@@ -5738,15 +6875,12 @@ begin_comment
 comment|/*----------------------------------------------------------------------------   End of Vertical scrolling helper routines   --------------------------------------------------------------------------*/
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*----------------------------------------------------------------------------   Vertical scrolling routines   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Vertical_Scrolling( |                                           int (* const fct) (FORM *), |                                           FORM * form) |    |   Description   :  Performs the generic vertical scrolling routines.  |                    This has to check for a multi-line field and to set |                    the _NEWTOP flag if scrolling really occured. | |   Return Values :  Propagated error code from low-level driver calls +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int Vertical_Scrolling( |                                           int (* const fct) (FORM *), |                                           FORM * form) | |   Description   :  Performs the generic vertical scrolling routines. |                    This has to check for a multi-line field and to set |                    the _NEWTOP flag if scrolling really occurred. | |   Return Values :  Propagated error code from low-level driver calls +--------------------------------------------------------------------------*/
 end_comment
 
 begin_decl_stmt
@@ -5817,7 +6951,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int VSC_Scroll_Line_Forward(FORM * form) |    |   Description   :  Scroll multi-line field forward a line | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - no data ahead +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int VSC_Scroll_Line_Forward(FORM * form) | |   Description   :  Scroll multi-line field forward a line | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - no data ahead +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5830,19 +6964,33 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"VSC_Scroll_Line_Forward(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|VSC_Generic
 argument_list|(
 name|form
 argument_list|,
 literal|1
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int VSC_Scroll_Line_Backward(FORM * form) |    |   Description   :  Scroll multi-line field backward a line | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - no data behind +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int VSC_Scroll_Line_Backward(FORM * form) | |   Description   :  Scroll multi-line field backward a line | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - no data behind +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5855,7 +7003,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"VSC_Scroll_Line_Backward(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|VSC_Generic
 argument_list|(
 name|form
@@ -5863,12 +7024,13 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int VSC_Scroll_Page_Forward(FORM * form) |    |   Description   :  Scroll a multi-line field forward a page | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - no data ahead +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int VSC_Scroll_Page_Forward(FORM * form) | |   Description   :  Scroll a multi-line field forward a page | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - no data ahead +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5881,7 +7043,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"VSC_Scroll_Page_Forward(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|VSC_Generic
 argument_list|(
 name|form
@@ -5892,12 +7067,13 @@ name|current
 operator|->
 name|rows
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int VSC_Scroll_Half_Page_Forward(FORM * form) |    |   Description   :  Scroll a multi-line field forward half a page | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - no data ahead +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int VSC_Scroll_Half_Page_Forward(FORM * form) | |   Description   :  Scroll a multi-line field forward half a page | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - no data ahead +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5910,7 +7086,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"VSC_Scroll_Half_Page_Forward(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|VSC_Generic
 argument_list|(
 name|form
@@ -5927,12 +7116,13 @@ operator|)
 operator|/
 literal|2
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int VSC_Scroll_Page_Backward(FORM * form) |    |   Description   :  Scroll a multi-line field backward a page | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - no data behind +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int VSC_Scroll_Page_Backward(FORM * form) | |   Description   :  Scroll a multi-line field backward a page | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - no data behind +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5945,7 +7135,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"VSC_Scroll_Page_Backward(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|VSC_Generic
 argument_list|(
 name|form
@@ -5959,12 +7162,13 @@ operator|->
 name|rows
 operator|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int VSC_Scroll_Half_Page_Backward(FORM * form) |    |   Description   :  Scroll a multi-line field backward half a page | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - no data behind +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int VSC_Scroll_Half_Page_Backward(FORM * form) | |   Description   :  Scroll a multi-line field backward half a page | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - no data behind +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5977,7 +7181,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"VSC_Scroll_Half_Page_Backward(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|VSC_Generic
 argument_list|(
 name|form
@@ -5997,7 +7214,8 @@ operator|/
 literal|2
 operator|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6005,15 +7223,12 @@ begin_comment
 comment|/*----------------------------------------------------------------------------   End of Vertical scrolling routines   --------------------------------------------------------------------------*/
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*----------------------------------------------------------------------------   Horizontal scrolling helper routines   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int HSC_Generic(FORM *form, int columns) | |   Description   :  Scroll single-line field forward (columns>0) or |                    backward (columns<0) this many columns. | |   Return Values :  E_OK              - success  |                    E_REQUEST_DENIED  - can't scroll +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int HSC_Generic(FORM *form, int ncolumns) | |   Description   :  Scroll single-line field forward (ncolumns>0) or |                    backward (ncolumns<0) this many columns. | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - can't scroll +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -6026,7 +7241,7 @@ modifier|*
 name|form
 parameter_list|,
 name|int
-name|columns
+name|ncolumns
 parameter_list|)
 block|{
 name|FIELD
@@ -6046,19 +7261,19 @@ name|int
 name|cols_to_go
 init|=
 operator|(
-name|columns
+name|ncolumns
 operator|>
 literal|0
 condition|?
-name|columns
+name|ncolumns
 else|:
 operator|-
-name|columns
+name|ncolumns
 operator|)
 decl_stmt|;
 if|if
 condition|(
-name|columns
+name|ncolumns
 operator|>
 literal|0
 condition|)
@@ -6175,15 +7390,12 @@ begin_comment
 comment|/*----------------------------------------------------------------------------   End of Horizontal scrolling helper routines   --------------------------------------------------------------------------*/
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*----------------------------------------------------------------------------   Horizontal scrolling routines   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Horizontal_Scrolling( |                                          int (* const fct) (FORM *), |                                          FORM * form) |    |   Description   :  Performs the generic horizontal scrolling routines.  |                    This has to check for a single-line field. | |   Return Values :  Propagated error code from low-level driver calls +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int Horizontal_Scrolling( |                                          int (* const fct) (FORM *), |                                          FORM * form) | |   Description   :  Performs the generic horizontal scrolling routines. |                    This has to check for a single-line field. | |   Return Values :  Propagated error code from low-level driver calls +--------------------------------------------------------------------------*/
 end_comment
 
 begin_decl_stmt
@@ -6232,7 +7444,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int HSC_Scroll_Char_Forward(FORM * form) |    |   Description   :  Scroll single-line field forward a character | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - no data ahead +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int HSC_Scroll_Char_Forward(FORM * form) | |   Description   :  Scroll single-line field forward a character | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - no data ahead +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -6245,19 +7457,33 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"HSC_Scroll_Char_Forward(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|HSC_Generic
 argument_list|(
 name|form
 argument_list|,
 literal|1
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int HSC_Scroll_Char_Backward(FORM * form) |    |   Description   :  Scroll single-line field backward a character | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - no data behind +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int HSC_Scroll_Char_Backward(FORM * form) | |   Description   :  Scroll single-line field backward a character | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - no data behind +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -6270,7 +7496,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"HSC_Scroll_Char_Backward(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|HSC_Generic
 argument_list|(
 name|form
@@ -6278,12 +7517,13 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int HSC_Horizontal_Line_Forward(FORM* form) |    |   Description   :  Scroll single-line field forward a line | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - no data ahead +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int HSC_Horizontal_Line_Forward(FORM* form) | |   Description   :  Scroll single-line field forward a line | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - no data ahead +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -6296,7 +7536,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"HSC_Horizontal_Line_Forward(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|HSC_Generic
 argument_list|(
 name|form
@@ -6307,12 +7560,13 @@ name|current
 operator|->
 name|cols
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int HSC_Horizontal_Half_Line_Forward(FORM* form) |    |   Description   :  Scroll single-line field forward half a line | |   Return Values :  E_OK               - success |                    E_REQUEST_DENIED   - no data ahead +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int HSC_Horizontal_Half_Line_Forward(FORM* form) | |   Description   :  Scroll single-line field forward half a line | |   Return Values :  E_OK               - success |                    E_REQUEST_DENIED   - no data ahead +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -6325,7 +7579,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"HSC_Horizontal_Half_Line_Forward(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|HSC_Generic
 argument_list|(
 name|form
@@ -6342,12 +7609,13 @@ operator|)
 operator|/
 literal|2
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int HSC_Horizontal_Line_Backward(FORM* form) |    |   Description   :  Scroll single-line field backward a line | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - no data behind +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int HSC_Horizontal_Line_Backward(FORM* form) | |   Description   :  Scroll single-line field backward a line | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - no data behind +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -6360,7 +7628,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"HSC_Horizontal_Line_Backward(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|HSC_Generic
 argument_list|(
 name|form
@@ -6374,12 +7655,13 @@ operator|->
 name|cols
 operator|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int HSC_Horizontal_Half_Line_Backward(FORM* form) |    |   Description   :  Scroll single-line field backward half a line | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - no data behind +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int HSC_Horizontal_Half_Line_Backward(FORM* form) | |   Description   :  Scroll single-line field backward half a line | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - no data behind +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -6392,7 +7674,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"HSC_Horizontal_Half_Line_Backward(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|HSC_Generic
 argument_list|(
 name|form
@@ -6412,7 +7707,8 @@ operator|/
 literal|2
 operator|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6420,19 +7716,16 @@ begin_comment
 comment|/*----------------------------------------------------------------------------   End of Horizontal scrolling routines   --------------------------------------------------------------------------*/
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*----------------------------------------------------------------------------   Helper routines for Field Editing   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static bool Is_There_Room_For_A_Line(FORM * form) |    |   Description   :  Check whether or not there is enough room in the |                    buffer to enter a whole line. | |   Return Values :  TRUE   - there is enough space |                    FALSE  - there is not enough space +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static bool Is_There_Room_For_A_Line(FORM * form) | |   Description   :  Check whether or not there is enough room in the |                    buffer to enter a whole line. | |   Return Values :  TRUE   - there is enough space |                    FALSE  - there is not enough space +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
 name|bool
 name|Is_There_Room_For_A_Line
@@ -6450,7 +7743,7 @@ name|form
 operator|->
 name|current
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|begin_of_last_line
 decl_stmt|,
@@ -6505,11 +7798,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static bool Is_There_Room_For_A_Char_In_Line(FORM * form) |    |   Description   :  Checks whether or not there is room for a new character |                    in the current line. | |   Return Values :  TRUE    - there is room |                    FALSE   - there is not enough room (line full) +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static bool Is_There_Room_For_A_Char_In_Line(FORM * form) | |   Description   :  Checks whether or not there is room for a new character |                    in the current line. | |   Return Values :  TRUE    - there is room |                    FALSE   - there is not enough room (line full) +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
 name|bool
 name|Is_There_Room_For_A_Char_In_Line
@@ -6611,7 +7904,7 @@ value|!Is_There_Room_For_A_Char_In_Line(f)
 end_define
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Insert_String( |                                             FORM * form, |                                             int row, |                                             char *txt, |                                             int  len ) |    |   Description   :  Insert the 'len' characters beginning at pointer 'txt' |                    into the 'row' of the 'form'. The insertion occurs |                    on the beginning of the row, all other characters are |                    moved to the right. After the text a pad character will  |                    be inserted to separate the text from the rest. If |                    necessary the insertion moves characters on the next |                    line to make place for the requested insertion string. | |   Return Values :  E_OK              - success  |                    E_REQUEST_DENIED  - |                    E_SYSTEM_ERROR    - system error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int Insert_String( |                                             FORM * form, |                                             int row, |                                             char *txt, |                                             int  len ) | |   Description   :  Insert the 'len' characters beginning at pointer 'txt' |                    into the 'row' of the 'form'. The insertion occurs |                    on the beginning of the row, all other characters are |                    moved to the right. After the text a pad character will |                    be inserted to separate the text from the rest. If |                    necessary the insertion moves characters on the next |                    line to make place for the requested insertion string. | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - |                    E_SYSTEM_ERROR    - system error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -6626,7 +7919,7 @@ parameter_list|,
 name|int
 name|row
 parameter_list|,
-name|char
+name|FIELD_CELL
 modifier|*
 name|txt
 parameter_list|,
@@ -6642,7 +7935,7 @@ name|form
 operator|->
 name|current
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|bp
 init|=
@@ -6688,7 +7981,7 @@ name|len
 operator|+
 literal|1
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|split
 decl_stmt|;
@@ -6696,13 +7989,6 @@ name|int
 name|result
 init|=
 name|E_REQUEST_DENIED
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|Space
-init|=
-literal|" "
 decl_stmt|;
 if|if
 condition|(
@@ -6722,7 +8008,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|winsnstr
+name|myINSNSTR
 argument_list|(
 name|form
 operator|->
@@ -6744,13 +8030,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|winsnstr
+name|myINSNSTR
 argument_list|(
 name|form
 operator|->
 name|w
 argument_list|,
-name|Space
+operator|&
+name|myBLANK
 argument_list|,
 literal|1
 argument_list|)
@@ -6761,7 +8048,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* we have to move characters on the next line. If we are on the 	 last line this may work, if the field is growable */
+comment|/* we have to move characters on the next line. If we are on the          last line this may work, if the field is growable */
 if|if
 condition|(
 operator|(
@@ -6925,7 +8212,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|winsnstr
+name|myINSNSTR
 argument_list|(
 name|form
 operator|->
@@ -6947,13 +8234,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|winsnstr
+name|myINSNSTR
 argument_list|(
 name|form
 operator|->
 name|w
 argument_list|,
-name|Space
+operator|&
+name|myBLANK
 argument_list|,
 literal|1
 argument_list|)
@@ -6973,7 +8261,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Wrapping_Not_Necessary_Or_Wrapping_Ok( |                                             FORM * form) |    |   Description   :  If a character has been entered into a field, it may |                    be that wrapping has to occur. This routine checks |                    whether or not wrapping is required and if so, performs |                    the wrapping. | |   Return Values :  E_OK              - no wrapping required or wrapping |                                        was successfull |                    E_REQUEST_DENIED  - |                    E_SYSTEM_ERROR    - some system error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int Wrapping_Not_Necessary_Or_Wrapping_Ok( |                                             FORM * form) | |   Description   :  If a character has been entered into a field, it may |                    be that wrapping has to occur. This routine checks |                    whether or not wrapping is required and if so, performs |                    the wrapping. | |   Return Values :  E_OK              - no wrapping required or wrapping |                                        was successful |                    E_REQUEST_DENIED  - |                    E_SYSTEM_ERROR    - some system error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -7054,13 +8342,13 @@ name|field
 argument_list|)
 operator|)
 condition|)
-comment|/* there are more lines*/
+comment|/* there are more lines */
 block|{
-name|char
+name|FIELD_CELL
 modifier|*
 name|bp
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|split
 decl_stmt|;
@@ -7225,26 +8513,9 @@ operator|!=
 name|E_OK
 condition|)
 block|{
-name|wmove
+name|DeleteChar
 argument_list|(
 name|form
-operator|->
-name|w
-argument_list|,
-name|form
-operator|->
-name|currow
-argument_list|,
-name|form
-operator|->
-name|curcol
-argument_list|)
-expr_stmt|;
-name|wdelch
-argument_list|(
-name|form
-operator|->
-name|w
 argument_list|)
 expr_stmt|;
 name|Window_To_Buffer
@@ -7276,15 +8547,12 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*----------------------------------------------------------------------------   Field Editing routines   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Field_Editing( |                                    int (* const fct) (FORM *), |                                    FORM * form) |    |   Description   :  Generic routine for field editing requests. The driver |                    routines are only called for editable fields, the |                    _WINDOW_MODIFIED flag is set if editing occured. |                    This is somewhat special due to the overload semantics |                    of the NEW_LINE and DEL_PREV requests. | |   Return Values :  Error code from low level drivers. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int Field_Editing( |                                    int (* const fct) (FORM *), |                                    FORM * form) | |   Description   :  Generic routine for field editing requests. The driver |                    routines are only called for editable fields, the |                    _WINDOW_MODIFIED flag is set if editing occurred. |                    This is somewhat special due to the overload semantics |                    of the NEW_LINE and DEL_PREV requests. | |   Return Values :  Error code from low level drivers. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_decl_stmt
@@ -7313,7 +8581,7 @@ name|res
 init|=
 name|E_REQUEST_DENIED
 decl_stmt|;
-comment|/* We have to deal here with the specific case of the overloaded       behaviour of New_Line and Delete_Previous requests.      They may end up in navigational requests if we are on the first      character in a field. But navigation is also allowed on non-      editable fields.   */
+comment|/* We have to deal here with the specific case of the overloaded      behavior of New_Line and Delete_Previous requests.      They may end up in navigational requests if we are on the first      character in a field. But navigation is also allowed on non-      editable fields.    */
 if|if
 condition|(
 operator|(
@@ -7434,7 +8702,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FE_New_Line(FORM * form) |    |   Description   :  Perform a new line request. This is rather complex |                    compared to other routines in this code due to the  |                    rather difficult to understand description in the |                    manuals. | |   Return Values :  E_OK               - success |                    E_REQUEST_DENIED   - new line not allowed |                    E_SYSTEM_ERROR     - system error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FE_New_Line(FORM * form) | |   Description   :  Perform a new line request. This is rather complex |                    compared to other routines in this code due to the |                    rather difficult to understand description in the |                    manuals. | |   Return Values :  E_OK               - success |                    E_REQUEST_DENIED   - new line not allowed |                    E_SYSTEM_ERROR     - system error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -7455,7 +8723,7 @@ name|form
 operator|->
 name|current
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|bp
 decl_stmt|,
@@ -7479,6 +8747,18 @@ operator|->
 name|currow
 operator|)
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FE_New_Line(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|form
@@ -7520,11 +8800,26 @@ operator|&
 name|O_NL_OVERLOAD
 operator|)
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
+name|wmove
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|form
+operator|->
+name|currow
+argument_list|,
+name|form
+operator|->
+name|curcol
+argument_list|)
+expr_stmt|;
 name|wclrtoeol
 argument_list|(
 name|form
@@ -7539,14 +8834,16 @@ name|status
 operator||=
 name|_WINDOW_MODIFIED
 expr_stmt|;
-return|return
+name|returnCode
+argument_list|(
 name|Inter_Field_Navigation
 argument_list|(
 name|FN_Next_Field
 argument_list|,
 name|form
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -7563,13 +8860,28 @@ literal|1
 argument_list|)
 condition|)
 block|{
-comment|/* N.B.: due to the logic in the 'if', LastRow==TRUE 		 means here that the field is growable and not 		 a single-line field */
-return|return
-operator|(
+comment|/* N.B.: due to the logic in the 'if', LastRow==TRUE 	         means here that the field is growable and not 	         a single-line field */
+name|returnCode
+argument_list|(
 name|E_SYSTEM_ERROR
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
+name|wmove
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|form
+operator|->
+name|currow
+argument_list|,
+name|form
+operator|->
+name|curcol
+argument_list|)
+expr_stmt|;
 name|wclrtoeol
 argument_list|(
 name|form
@@ -7594,11 +8906,11 @@ name|status
 operator||=
 name|_WINDOW_MODIFIED
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -7634,19 +8946,21 @@ operator|&
 name|O_NL_OVERLOAD
 operator|)
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-operator|)
-return|;
-return|return
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|Inter_Field_Navigation
 argument_list|(
 name|FN_Next_Field
 argument_list|,
 name|form
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -7673,11 +8987,11 @@ name|field
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7691,11 +9005,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|E_SYSTEM_ERROR
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|bp
 operator|=
 name|Address_Of_Current_Position_In_Buffer
@@ -7713,6 +9027,21 @@ name|field
 operator|->
 name|dcols
 operator|-
+name|form
+operator|->
+name|curcol
+argument_list|)
+expr_stmt|;
+name|wmove
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|form
+operator|->
+name|currow
+argument_list|,
 name|form
 operator|->
 name|curcol
@@ -7758,7 +9087,7 @@ operator|->
 name|w
 argument_list|)
 expr_stmt|;
-name|waddnstr
+name|myADDNSTR
 argument_list|(
 name|form
 operator|->
@@ -7782,16 +9111,18 @@ name|status
 operator||=
 name|_WINDOW_MODIFIED
 expr_stmt|;
-return|return
+name|returnCode
+argument_list|(
 name|E_OK
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FE_Insert_Character(FORM * form) |    |   Description   :  Insert blank character at the cursor position | |   Return Values :  E_OK |                    E_REQUEST_DENIED +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FE_Insert_Character(FORM * form) | |   Description   :  Insert blank character at the cursor position | |   Return Values :  E_OK |                    E_REQUEST_DENIED +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -7817,6 +9148,18 @@ name|result
 init|=
 name|E_REQUEST_DENIED
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FE_Insert_Character(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Check_Char
@@ -7910,14 +9253,16 @@ expr_stmt|;
 block|}
 block|}
 block|}
-return|return
+name|returnCode
+argument_list|(
 name|result
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FE_Insert_Line(FORM * form) |    |   Description   :  Insert a blank line at the cursor position | |   Return Values :  E_OK               - success |                    E_REQUEST_DENIED   - line can not be inserted +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FE_Insert_Line(FORM * form) | |   Description   :  Insert a blank line at the cursor position | |   Return Values :  E_OK               - success |                    E_REQUEST_DENIED   - line can not be inserted +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -7943,6 +9288,18 @@ name|result
 init|=
 name|E_REQUEST_DENIED
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FE_Insert_Line(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Check_Char
@@ -8047,14 +9404,16 @@ expr_stmt|;
 block|}
 block|}
 block|}
-return|return
+name|returnCode
+argument_list|(
 name|result
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FE_Delete_Character(FORM * form) |    |   Description   :  Delete character at the cursor position | |   Return Values :  E_OK    - success +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FE_Delete_Character(FORM * form) | |   Description   :  Delete character at the cursor position | |   Return Values :  E_OK    - success +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8067,21 +9426,33 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-name|wdelch
+name|T
 argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FE_Delete_Character(%p)"
+argument_list|)
+operator|,
 name|form
-operator|->
-name|w
+operator|)
 argument_list|)
 expr_stmt|;
-return|return
+name|DeleteChar
+argument_list|(
+name|form
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|E_OK
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FE_Delete_Previous(FORM * form) |    |   Description   :  Delete character before cursor. Again this is a rather |                    difficult piece compared to others due to the overloading |                    semantics of backspace. |                    N.B.: The case of overloaded BS on first field position |                          is already handled in the generic routine. | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - Character can't be deleted +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FE_Delete_Previous(FORM * form) | |   Description   :  Delete character before cursor. Again this is a rather |                    difficult piece compared to others due to the overloading |                    semantics of backspace. |                    N.B.: The case of overloaded BS on first field position |                          is already handled in the generic routine. | |   Return Values :  E_OK                - success |                    E_REQUEST_DENIED    - Character can't be deleted +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8102,6 +9473,18 @@ name|form
 operator|->
 name|current
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FE_Delete_Previous(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|First_Position_In_Current_Field
@@ -8109,9 +9492,11 @@ argument_list|(
 name|form
 argument_list|)
 condition|)
-return|return
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-return|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8126,7 +9511,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|char
+name|FIELD_CELL
 modifier|*
 name|this_line
 decl_stmt|,
@@ -8138,6 +9523,13 @@ name|prev_end
 decl_stmt|,
 modifier|*
 name|this_end
+decl_stmt|;
+name|int
+name|this_row
+init|=
+name|form
+operator|->
+name|currow
 decl_stmt|;
 name|form
 operator|->
@@ -8152,9 +9544,11 @@ name|status
 operator|&
 name|_OVLMODE
 condition|)
-return|return
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-return|;
+argument_list|)
+expr_stmt|;
 name|prev_line
 operator|=
 name|Address_Of_Row_In_Buffer
@@ -8236,21 +9630,9 @@ name|prev_line
 argument_list|)
 operator|)
 condition|)
-return|return
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-return|;
-name|wdeleteln
-argument_list|(
-name|form
-operator|->
-name|w
-argument_list|)
-expr_stmt|;
-name|Adjust_Cursor_Position
-argument_list|(
-name|form
-argument_list|,
-name|prev_end
 argument_list|)
 expr_stmt|;
 name|wmove
@@ -8268,22 +9650,53 @@ operator|->
 name|curcol
 argument_list|)
 expr_stmt|;
-name|waddnstr
+name|wdeleteln
 argument_list|(
 name|form
 operator|->
 name|w
-argument_list|,
-name|this_line
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-name|this_end
-operator|-
-name|this_line
 argument_list|)
+expr_stmt|;
+name|Adjust_Cursor_Position
+argument_list|(
+name|form
+argument_list|,
+name|prev_end
+argument_list|)
+expr_stmt|;
+comment|/*        * If we did not really move to the previous line, help the user a        * little.  It is however a little inconsistent.  Normally, when        * backspacing around the point where text wraps to a new line in a        * multi-line form, we absorb one keystroke for the wrapping point.  That        * is consistent with SVr4 forms.  However, SVr4 does not allow typing        * into the last column of the field, and requires the user to enter a        * newline to move to the next line.  Therefore it can consistently eat        * that keystroke.  Since ncurses allows the last column, it wraps        * automatically (given the proper options).  But we cannot eat the        * keystroke to back over the wrapping point, since that would put the        * cursor past the end of the form field.  In this case, just delete the        * character at the end of the field.        */
+if|if
+condition|(
+name|form
+operator|->
+name|currow
+operator|==
+name|this_row
+operator|&&
+name|this_row
+operator|>
+literal|0
+condition|)
+block|{
+name|form
+operator|->
+name|currow
+operator|-=
+literal|1
+expr_stmt|;
+name|form
+operator|->
+name|curcol
+operator|=
+name|field
+operator|->
+name|dcols
+operator|-
+literal|1
+expr_stmt|;
+name|DeleteChar
+argument_list|(
+name|form
 argument_list|)
 expr_stmt|;
 block|}
@@ -8304,22 +9717,44 @@ operator|->
 name|curcol
 argument_list|)
 expr_stmt|;
-name|wdelch
+name|myADDNSTR
 argument_list|(
 name|form
 operator|->
 name|w
+argument_list|,
+name|this_line
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|this_end
+operator|-
+name|this_line
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-return|return
+block|}
+else|else
+block|{
+name|DeleteChar
+argument_list|(
+name|form
+argument_list|)
+expr_stmt|;
+block|}
+name|returnCode
+argument_list|(
 name|E_OK
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FE_Delete_Line(FORM * form) |    |   Description   :  Delete line at cursor position. | |   Return Values :  E_OK  - success +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FE_Delete_Line(FORM * form) | |   Description   :  Delete line at cursor position. | |   Return Values :  E_OK  - success +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8332,6 +9767,18 @@ modifier|*
 name|form
 parameter_list|)
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FE_Delete_Line(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 name|form
 operator|->
 name|curcol
@@ -8345,14 +9792,16 @@ operator|->
 name|w
 argument_list|)
 expr_stmt|;
-return|return
+name|returnCode
+argument_list|(
 name|E_OK
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FE_Delete_Word(FORM * form) |    |   Description   :  Delete word at cursor position | |   Return Values :  E_OK               - success |                    E_REQUEST_DENIED   - failure +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FE_Delete_Word(FORM * form) | |   Description   :  Delete word at cursor position | |   Return Values :  E_OK               - success |                    E_REQUEST_DENIED   - failure +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8373,7 +9822,7 @@ name|form
 operator|->
 name|current
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|bp
 init|=
@@ -8382,7 +9831,7 @@ argument_list|(
 name|form
 argument_list|)
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|ep
 init|=
@@ -8392,7 +9841,7 @@ name|field
 operator|->
 name|dcols
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|cp
 init|=
@@ -8402,10 +9851,22 @@ name|form
 operator|->
 name|curcol
 decl_stmt|;
-name|char
+name|FIELD_CELL
 modifier|*
 name|s
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FE_Delete_Word(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 name|Synchronize_Buffer
 argument_list|(
 name|form
@@ -8413,15 +9874,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|is_blank
+name|ISBLANK
 argument_list|(
 operator|*
 name|cp
 argument_list|)
 condition|)
-return|return
+name|returnCode
+argument_list|(
 name|E_REQUEST_DENIED
-return|;
+argument_list|)
+expr_stmt|;
 comment|/* not in word */
 comment|/* move cursor to begin of word and erase to end of screen-line */
 name|Adjust_Cursor_Position
@@ -8503,7 +9966,7 @@ name|cp
 operator|)
 operator|&&
 operator|!
-name|is_blank
+name|ISBLANK
 argument_list|(
 operator|*
 name|s
@@ -8511,7 +9974,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* copy remaining line to window */
-name|waddnstr
+name|myADDNSTR
 argument_list|(
 name|form
 operator|->
@@ -8542,14 +10005,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-return|return
+name|returnCode
+argument_list|(
 name|E_OK
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FE_Clear_To_End_Of_Line(FORM * form) |    |   Description   :  Clear to end of current line. | |   Return Values :  E_OK   - success +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FE_Clear_To_End_Of_Line(FORM * form) | |   Description   :  Clear to end of current line. | |   Return Values :  E_OK   - success +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8562,6 +10027,33 @@ modifier|*
 name|form
 parameter_list|)
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FE_Clear_To_End_Of_Line(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|wmove
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|form
+operator|->
+name|currow
+argument_list|,
+name|form
+operator|->
+name|curcol
+argument_list|)
+expr_stmt|;
 name|wclrtoeol
 argument_list|(
 name|form
@@ -8569,26 +10061,55 @@ operator|->
 name|w
 argument_list|)
 expr_stmt|;
-return|return
+name|returnCode
+argument_list|(
 name|E_OK
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FE_Clear_To_End_Of_Form(FORM * form) |    |   Description   :  Clear to end of form. | |   Return Values :  E_OK   - success +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FE_Clear_To_End_Of_Field(FORM * form) | |   Description   :  Clear to end of field. | |   Return Values :  E_OK   - success +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|FE_Clear_To_End_Of_Form
+name|FE_Clear_To_End_Of_Field
 parameter_list|(
 name|FORM
 modifier|*
 name|form
 parameter_list|)
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FE_Clear_To_End_Of_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|wmove
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|form
+operator|->
+name|currow
+argument_list|,
+name|form
+operator|->
+name|curcol
+argument_list|)
+expr_stmt|;
 name|wclrtobot
 argument_list|(
 name|form
@@ -8596,14 +10117,16 @@ operator|->
 name|w
 argument_list|)
 expr_stmt|;
-return|return
+name|returnCode
+argument_list|(
 name|E_OK
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FE_Clear_Field(FORM * form) |    |   Description   :  Clear entire field. | |   Return Values :  E_OK   - success +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FE_Clear_Field(FORM * form) | |   Description   :  Clear entire field. | |   Return Values :  E_OK   - success +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8616,6 +10139,18 @@ modifier|*
 name|form
 parameter_list|)
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FE_Clear_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 name|form
 operator|->
 name|currow
@@ -8633,25 +10168,24 @@ operator|->
 name|w
 argument_list|)
 expr_stmt|;
-return|return
+name|returnCode
+argument_list|(
 name|E_OK
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*----------------------------------------------------------------------------   END of Field Editing routines    --------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------   END of Field Editing routines   --------------------------------------------------------------------------*/
 end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*----------------------------------------------------------------------------   Edit Mode routines   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int EM_Overlay_Mode(FORM * form) |    |   Description   :  Switch to overlay mode. | |   Return Values :  E_OK   - success +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int EM_Overlay_Mode(FORM * form) | |   Description   :  Switch to overlay mode. | |   Return Values :  E_OK   - success +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8664,20 +10198,34 @@ modifier|*
 name|form
 parameter_list|)
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"EM_Overlay_Mode(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 name|form
 operator|->
 name|status
 operator||=
 name|_OVLMODE
 expr_stmt|;
-return|return
+name|returnCode
+argument_list|(
 name|E_OK
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int EM_Insert_Mode(FORM * form) |    |   Description   :  Switch to insert mode | |   Return Values :  E_OK   - success +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int EM_Insert_Mode(FORM * form) | |   Description   :  Switch to insert mode | |   Return Values :  E_OK   - success +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8690,6 +10238,18 @@ modifier|*
 name|form
 parameter_list|)
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"EM_Insert_Mode(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 name|form
 operator|->
 name|status
@@ -8697,25 +10257,24 @@ operator|&=
 operator|~
 name|_OVLMODE
 expr_stmt|;
-return|return
+name|returnCode
+argument_list|(
 name|E_OK
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*----------------------------------------------------------------------------   END of Edit Mode routines    --------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------   END of Edit Mode routines   --------------------------------------------------------------------------*/
 end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*----------------------------------------------------------------------------   Helper routines for Choice Requests   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static bool Next_Choice( |                                            FIELDTYPE * typ, |                                            FIELD * field, |                                            TypeArgument *argp) |    |   Description   :  Get the next field choice. For linked types this is |                    done recursively. | |   Return Values :  TRUE    - next choice successfully retrieved |                    FALSE   - couldn't retrieve next choice +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static bool Next_Choice( |                                            FIELDTYPE * typ, |                                            FIELD * field, |                                            TypeArgument *argp) | |   Description   :  Get the next field choice. For linked types this is |                    done recursively. | |   Return Values :  TRUE    - next choice successfully retrieved |                    FALSE   - couldn't retrieve next choice +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8825,7 +10384,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static bool Previous_Choice( |                                                FIELDTYPE * typ, |                                                FIELD * field, |                                                TypeArgument *argp) |    |   Description   :  Get the previous field choice. For linked types this |                    is done recursively. | |   Return Values :  TRUE    - previous choice successfully retrieved |                    FALSE   - couldn't retrieve previous choice +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static bool Previous_Choice( |                                                FIELDTYPE * typ, |                                                FIELD * field, |                                                TypeArgument *argp) | |   Description   :  Get the previous field choice. For linked types this |                    is done recursively. | |   Return Values :  TRUE    - previous choice successfully retrieved |                    FALSE   - couldn't retrieve previous choice +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8938,15 +10497,12 @@ begin_comment
 comment|/*----------------------------------------------------------------------------   End of Helper routines for Choice Requests   --------------------------------------------------------------------------*/
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*----------------------------------------------------------------------------   Routines for Choice Requests   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int CR_Next_Choice(FORM * form) |    |   Description   :  Get the next field choice. | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - next choice couldn't be retrieved +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int CR_Next_Choice(FORM * form) | |   Description   :  Get the next field choice. | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - next choice couldn't be retrieved +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8967,13 +10523,25 @@ name|form
 operator|->
 name|current
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"CR_Next_Choice(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 name|Synchronize_Buffer
 argument_list|(
 name|form
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 operator|(
 name|Next_Choice
 argument_list|(
@@ -8998,13 +10566,13 @@ condition|?
 name|E_OK
 else|:
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int CR_Previous_Choice(FORM * form) |    |   Description   :  Get the previous field choice. | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - prev. choice couldn't be retrieved +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int CR_Previous_Choice(FORM * form) | |   Description   :  Get the previous field choice. | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - prev. choice couldn't be retrieved +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -9025,13 +10593,25 @@ name|form
 operator|->
 name|current
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"CR_Previous_Choice(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 name|Synchronize_Buffer
 argument_list|(
 name|form
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|returnCode
+argument_list|(
 operator|(
 name|Previous_Choice
 argument_list|(
@@ -9056,8 +10636,8 @@ condition|?
 name|E_OK
 else|:
 name|E_REQUEST_DENIED
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -9065,15 +10645,12 @@ begin_comment
 comment|/*----------------------------------------------------------------------------   End of Routines for Choice Requests   --------------------------------------------------------------------------*/
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*----------------------------------------------------------------------------   Helper routines for Field Validations.   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static bool Check_Field( |                                            FIELDTYPE * typ, |                                            FIELD * field, |                                            TypeArgument * argp) |    |   Description   :  Check the field according to its fieldtype and its |                    actual arguments. For linked fieldtypes this is done |                    recursively. | |   Return Values :  TRUE       - field is valid |                    FALSE      - field is invalid. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static bool Check_Field( |                                            FIELDTYPE * typ, |                                            FIELD * field, |                                            TypeArgument * argp) | |   Description   :  Check the field according to its fieldtype and its |                    actual arguments. For linked fieldtypes this is done |                    recursively. | |   Return Values :  TRUE       - field is valid |                    FALSE      - field is invalid. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -9108,7 +10685,7 @@ operator|&
 name|O_NULLOK
 condition|)
 block|{
-name|char
+name|FIELD_CELL
 modifier|*
 name|bp
 init|=
@@ -9123,7 +10700,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|is_blank
+name|ISBLANK
 argument_list|(
 operator|*
 name|bp
@@ -9136,10 +10713,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|CharOf
+argument_list|(
 operator|*
 name|bp
+argument_list|)
 operator|==
-literal|'\0'
+literal|0
 condition|)
 return|return
 name|TRUE
@@ -9220,7 +10800,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  bool _nc_Internal_Validation(FORM * form ) |    |   Description   :  Validate the current field of the form.   | |   Return Values :  TRUE  - field is valid |                    FALSE - field is invalid +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  bool _nc_Internal_Validation(FORM * form ) | |   Description   :  Validate the current field of the form. | |   Return Values :  TRUE  - field is valid |                    FALSE - field is invalid +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -9330,15 +10910,12 @@ begin_comment
 comment|/*----------------------------------------------------------------------------   End of Helper routines for Field Validations.   --------------------------------------------------------------------------*/
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*----------------------------------------------------------------------------   Routines for Field Validation.   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FV_Validation(FORM * form) |    |   Description   :  Validate the current field of the form. | |   Return Values :  E_OK             - field valid |                    E_INVALID_FIELD  - field not valid +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FV_Validation(FORM * form) | |   Description   :  Validate the current field of the form. | |   Return Values :  E_OK             - field valid |                    E_INVALID_FIELD  - field not valid +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -9351,6 +10928,18 @@ modifier|*
 name|form
 parameter_list|)
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FV_Validation(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|_nc_Internal_Validation
@@ -9358,13 +10947,17 @@ argument_list|(
 name|form
 argument_list|)
 condition|)
-return|return
+name|returnCode
+argument_list|(
 name|E_OK
-return|;
+argument_list|)
+expr_stmt|;
 else|else
-return|return
+name|returnCode
+argument_list|(
 name|E_INVALID_FIELD
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -9372,19 +10965,16 @@ begin_comment
 comment|/*----------------------------------------------------------------------------   End of routines for Field Validation.   --------------------------------------------------------------------------*/
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*----------------------------------------------------------------------------   Helper routines for Inter-Field Navigation   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static FIELD *Next_Field_On_Page(FIELD * field) |    |   Description   :  Get the next field after the given field on the current  |                    page. The order of fields is the one defined by the |                    fields array. Only visible and active fields are |                    counted. | |   Return Values :  Pointer to the next field. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static FIELD *Next_Field_On_Page(FIELD * field) | |   Description   :  Get the next field after the given field on the current |                    page. The order of fields is the one defined by the |                    fields array. Only visible and active fields are |                    counted. | |   Return Values :  Pointer to the next field. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
 name|FIELD
 modifier|*
@@ -9508,20 +11098,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  FIELD* _nc_First_Active_Field(FORM * form) |    |   Description   :  Get the first active field on the current page, |                    if there are such. If there are none, get the first |                    visible field on the page. If there are also none, |                    we return the first field on page and hope the best. | |   Return Values :  Pointer to calculated field. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  FIELD* _nc_First_Active_Field(FORM * form) | |   Description   :  Get the first active field on the current page, |                    if there are such. If there are none, get the first |                    visible field on the page. If there are also none, |                    we return the first field on page and hope the best. | |   Return Values :  Pointer to calculated field. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
 name|NCURSES_EXPORT
 argument_list|(
-argument|FIELD*
+argument|FIELD *
 argument_list|)
 end_macro
 
 begin_macro
 name|_nc_First_Active_Field
 argument_list|(
-argument|FORM * form
+argument|FORM *form
 argument_list|)
 end_macro
 
@@ -9567,7 +11157,7 @@ operator|*
 name|last_on_page
 condition|)
 block|{
-comment|/* there might be the special situation, where there is no  	 active and visible field on the current page. We then select 	 the first visible field on this readonly page       */
+comment|/* there might be the special situation, where there is no          active and visible field on the current page. We then select          the first visible field on this readonly page        */
 if|if
 condition|(
 name|Field_Is_Not_Selectable
@@ -9678,7 +11268,7 @@ name|O_VISIBLE
 operator|)
 condition|)
 block|{
-comment|/* This means, there is also no visible field on the page. 		 So we propose the first one and hope the very best...  		 Some very clever user has designed a readonly and invisible 		 page on this form. 	       */
+comment|/* This means, there is also no visible field on the page. 	         So we propose the first one and hope the very best... 	         Some very clever user has designed a readonly and invisible 	         page on this form. 	       */
 name|proposed
 operator|=
 operator|*
@@ -9696,11 +11286,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static FIELD *Previous_Field_On_Page(FIELD * field) |    |   Description   :  Get the previous field before the given field on the  |                    current page. The order of fields is the one defined by  |                    the fields array. Only visible and active fields are |                    counted. | |   Return Values :  Pointer to the previous field. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static FIELD *Previous_Field_On_Page(FIELD * field) | |   Description   :  Get the previous field before the given field on the |                    current page. The order of fields is the one defined by |                    the fields array. Only visible and active fields are |                    counted. | |   Return Values :  Pointer to the previous field. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
 name|FIELD
 modifier|*
@@ -9824,11 +11414,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static FIELD *Sorted_Next_Field(FIELD * field) |    |   Description   :  Get the next field after the given field on the current  |                    page. The order of fields is the one defined by the |                    (row,column) geometry, rows are major. | |   Return Values :  Pointer to the next field. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static FIELD *Sorted_Next_Field(FIELD * field) | |   Description   :  Get the next field after the given field on the current |                    page. The order of fields is the one defined by the |                    (row,column) geometry, rows are major. | |   Return Values :  Pointer to the next field. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
 name|FIELD
 modifier|*
@@ -9878,11 +11468,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static FIELD *Sorted_Previous_Field(FIELD * field) |    |   Description   :  Get the previous field before the given field on the  |                    current page. The order of fields is the one defined  |                    by the (row,column) geometry, rows are major. | |   Return Values :  Pointer to the previous field. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static FIELD *Sorted_Previous_Field(FIELD * field) | |   Description   :  Get the previous field before the given field on the |                    current page. The order of fields is the one defined |                    by the (row,column) geometry, rows are major. | |   Return Values :  Pointer to the previous field. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
 name|FIELD
 modifier|*
@@ -9932,15 +11522,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static FIELD *Left_Neighbour_Field(FIELD * field) |    |   Description   :  Get the left neighbour of the field on the same line |                    and the same page. Cycles through the line. | |   Return Values :  Pointer to left neighbour field. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static FIELD *Left_Neighbor_Field(FIELD * field) | |   Description   :  Get the left neighbor of the field on the same line |                    and the same page. Cycles through the line. | |   Return Values :  Pointer to left neighbor field. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
 name|FIELD
 modifier|*
-name|Left_Neighbour_Field
+name|Left_Neighbor_Field
 parameter_list|(
 name|FIELD
 modifier|*
@@ -9953,7 +11543,7 @@ name|field_on_page
 init|=
 name|field
 decl_stmt|;
-comment|/* For a field that has really a left neighbour, the while clause      immediately fails and the loop is left, positioned at the right      neighbour. Otherwise we cycle backwards through the sorted fieldlist      until we enter the same line (from the right end).   */
+comment|/* For a field that has really a left neighbor, the while clause      immediately fails and the loop is left, positioned at the right      neighbor. Otherwise we cycle backwards through the sorted field list      until we enter the same line (from the right end).    */
 do|do
 block|{
 name|field_on_page
@@ -9984,15 +11574,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static FIELD *Right_Neighbour_Field(FIELD * field) |    |   Description   :  Get the right neighbour of the field on the same line |                    and the same page. | |   Return Values :  Pointer to right neighbour field. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static FIELD *Right_Neighbor_Field(FIELD * field) | |   Description   :  Get the right neighbor of the field on the same line |                    and the same page. | |   Return Values :  Pointer to right neighbor field. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
 name|FIELD
 modifier|*
-name|Right_Neighbour_Field
+name|Right_Neighbor_Field
 parameter_list|(
 name|FIELD
 modifier|*
@@ -10005,7 +11595,7 @@ name|field_on_page
 init|=
 name|field
 decl_stmt|;
-comment|/* See the comments on Left_Neighbour_Field to understand how it works */
+comment|/* See the comments on Left_Neighbor_Field to understand how it works */
 do|do
 block|{
 name|field_on_page
@@ -10036,14 +11626,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static FIELD *Upper_Neighbour_Field(FIELD * field) |    |   Description   :  Because of the row-major nature of sorting the fields, |                    its more difficult to define whats the upper neighbour |                    field really means. We define that it must be on a |                    'previous' line (cyclic order!) and is the rightmost |                    field laying on the left side of the given field. If |                    this set is empty, we take the first field on the line. | |   Return Values :  Pointer to the upper neighbour field. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static FIELD *Upper_Neighbor_Field(FIELD * field) | |   Description   :  Because of the row-major nature of sorting the fields, |                    it is more difficult to define whats the upper neighbor |                    field really means. We define that it must be on a |                    'previous' line (cyclic order!) and is the rightmost |                    field laying on the left side of the given field. If |                    this set is empty, we take the first field on the line. | |   Return Values :  Pointer to the upper neighbor field. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|FIELD
 modifier|*
-name|Upper_Neighbour_Field
+name|Upper_Neighbor_Field
 parameter_list|(
 name|FIELD
 modifier|*
@@ -10070,7 +11660,7 @@ name|field
 operator|->
 name|fcol
 decl_stmt|;
-comment|/* Walk back to the 'previous' line. The second term in the while clause      just guarantees that we stop if we cycled through the line because      there might be no 'previous' line if the page has just one line.   */
+comment|/* Walk back to the 'previous' line. The second term in the while clause      just guarantees that we stop if we cycled through the line because      there might be no 'previous' line if the page has just one line.    */
 do|do
 block|{
 name|field_on_page
@@ -10112,7 +11702,7 @@ name|field_on_page
 operator|->
 name|frow
 expr_stmt|;
-comment|/* We walk to the left as long as we are really right of the  	 field. */
+comment|/* We walk to the left as long as we are really right of the          field. */
 while|while
 condition|(
 name|field_on_page
@@ -10134,7 +11724,7 @@ argument_list|(
 name|field_on_page
 argument_list|)
 expr_stmt|;
-comment|/* If we wrapped, just go to the right which is the first field on  	 the row */
+comment|/* If we wrapped, just go to the right which is the first field on          the row */
 if|if
 condition|(
 name|field_on_page
@@ -10160,14 +11750,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static FIELD *Down_Neighbour_Field(FIELD * field) |    |   Description   :  Because of the row-major nature of sorting the fields, |                    its more difficult to define whats the down neighbour |                    field really means. We define that it must be on a |                    'next' line (cyclic order!) and is the leftmost |                    field laying on the right side of the given field. If |                    this set is empty, we take the last field on the line. | |   Return Values :  Pointer to the upper neighbour field. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static FIELD *Down_Neighbor_Field(FIELD * field) | |   Description   :  Because of the row-major nature of sorting the fields, |                    its more difficult to define whats the down neighbor |                    field really means. We define that it must be on a |                    'next' line (cyclic order!) and is the leftmost |                    field laying on the right side of the given field. If |                    this set is empty, we take the last field on the line. | |   Return Values :  Pointer to the upper neighbor field. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|FIELD
 modifier|*
-name|Down_Neighbour_Field
+name|Down_Neighbor_Field
 parameter_list|(
 name|FIELD
 modifier|*
@@ -10194,7 +11784,7 @@ name|field
 operator|->
 name|fcol
 decl_stmt|;
-comment|/* Walk forward to the 'next' line. The second term in the while clause      just guarantees that we stop if we cycled through the line because      there might be no 'next' line if the page has just one line.   */
+comment|/* Walk forward to the 'next' line. The second term in the while clause      just guarantees that we stop if we cycled through the line because      there might be no 'next' line if the page has just one line.    */
 do|do
 block|{
 name|field_on_page
@@ -10236,7 +11826,7 @@ name|field_on_page
 operator|->
 name|frow
 expr_stmt|;
-comment|/* We walk to the right as long as we are really left of the  	 field. */
+comment|/* We walk to the right as long as we are really left of the          field. */
 while|while
 condition|(
 name|field_on_page
@@ -10258,7 +11848,7 @@ argument_list|(
 name|field_on_page
 argument_list|)
 expr_stmt|;
-comment|/* If we wrapped, just go to the left which is the last field on  	 the row */
+comment|/* If we wrapped, just go to the left which is the last field on          the row */
 if|if
 condition|(
 name|field_on_page
@@ -10283,15 +11873,12 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*----------------------------------------------------------------------------   Inter-Field Navigation routines   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Inter_Field_Navigation( |                                           int (* const fct) (FORM *), |                                           FORM * form) |    |   Description   :  Generic behaviour for changing the current field, the |                    field is left and a new field is entered. So the field |                    must be validated and the field init/term hooks must |                    be called. | |   Return Values :  E_OK                - success |                    E_INVALID_FIELD     - field is invalid |                    some other          - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int Inter_Field_Navigation( |                                           int (* const fct) (FORM *), |                                           FORM * form) | |   Description   :  Generic behavior for changing the current field, the |                    field is left and a new field is entered. So the field |                    must be validated and the field init/term hooks must |                    be called. | |   Return Values :  E_OK                - success |                    E_INVALID_FIELD     - field is invalid |                    some other          - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_decl_stmt
@@ -10361,7 +11948,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FN_Next_Field(FORM * form) |    |   Description   :  Move to the next field on the current page of the form | |   Return Values :  E_OK                 - success |                    != E_OK              - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FN_Next_Field(FORM * form) | |   Description   :  Move to the next field on the current page of the form | |   Return Values :  E_OK                 - success |                    != E_OK              - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -10374,7 +11961,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FN_Next_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Current_Field
 argument_list|(
 name|form
@@ -10386,12 +11986,13 @@ operator|->
 name|current
 argument_list|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FN_Previous_Field(FORM * form) |    |   Description   :  Move to the previous field on the current page of the  |                    form | |   Return Values :  E_OK                 - success |                    != E_OK              - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FN_Previous_Field(FORM * form) | |   Description   :  Move to the previous field on the current page of the |                    form | |   Return Values :  E_OK                 - success |                    != E_OK              - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -10404,7 +12005,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FN_Previous_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Current_Field
 argument_list|(
 name|form
@@ -10416,12 +12030,13 @@ operator|->
 name|current
 argument_list|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FN_First_Field(FORM * form) |    |   Description   :  Move to the first field on the current page of the form | |   Return Values :  E_OK                 - success |                    != E_OK              - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FN_First_Field(FORM * form) | |   Description   :  Move to the first field on the current page of the form | |   Return Values :  E_OK                 - success |                    != E_OK              - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -10434,7 +12049,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FN_First_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Current_Field
 argument_list|(
 name|form
@@ -10458,12 +12086,13 @@ name|pmax
 index|]
 argument_list|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FN_Last_Field(FORM * form) |    |   Description   :  Move to the last field on the current page of the form | |   Return Values :  E_OK                 - success |                    != E_OK              - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FN_Last_Field(FORM * form) | |   Description   :  Move to the last field on the current page of the form | |   Return Values :  E_OK                 - success |                    != E_OK              - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -10476,7 +12105,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FN_Last_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Current_Field
 argument_list|(
 name|form
@@ -10500,12 +12142,13 @@ name|pmin
 index|]
 argument_list|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FN_Sorted_Next_Field(FORM * form) |    |   Description   :  Move to the sorted next field on the current page |                    of the form. | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FN_Sorted_Next_Field(FORM * form) | |   Description   :  Move to the sorted next field on the current page |                    of the form. | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -10518,7 +12161,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FN_Sorted_Next_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Current_Field
 argument_list|(
 name|form
@@ -10530,12 +12186,13 @@ operator|->
 name|current
 argument_list|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FN_Sorted_Previous_Field(FORM * form) |    |   Description   :  Move to the sorted previous field on the current page |                    of the form. | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FN_Sorted_Previous_Field(FORM * form) | |   Description   :  Move to the sorted previous field on the current page |                    of the form. | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -10548,7 +12205,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FN_Sorted_Previous_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Current_Field
 argument_list|(
 name|form
@@ -10560,12 +12230,13 @@ operator|->
 name|current
 argument_list|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FN_Sorted_First_Field(FORM * form) |    |   Description   :  Move to the sorted first field on the current page |                    of the form. | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FN_Sorted_First_Field(FORM * form) | |   Description   :  Move to the sorted first field on the current page |                    of the form. | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -10578,7 +12249,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FN_Sorted_First_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Current_Field
 argument_list|(
 name|form
@@ -10602,12 +12286,13 @@ name|smax
 index|]
 argument_list|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FN_Sorted_Last_Field(FORM * form) |    |   Description   :  Move to the sorted last field on the current page |                    of the form. | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FN_Sorted_Last_Field(FORM * form) | |   Description   :  Move to the sorted last field on the current page |                    of the form. | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -10620,7 +12305,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FN_Sorted_Last_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Current_Field
 argument_list|(
 name|form
@@ -10644,12 +12342,13 @@ name|smin
 index|]
 argument_list|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FN_Left_Field(FORM * form) |    |   Description   :  Get the field on the left of the current field on the |                    same line and the same page. Cycles through the line. | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FN_Left_Field(FORM * form) | |   Description   :  Get the field on the left of the current field on the |                    same line and the same page. Cycles through the line. | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -10662,24 +12361,38 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FN_Left_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Current_Field
 argument_list|(
 name|form
 argument_list|,
-name|Left_Neighbour_Field
+name|Left_Neighbor_Field
 argument_list|(
 name|form
 operator|->
 name|current
 argument_list|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FN_Right_Field(FORM * form) |    |   Description   :  Get the field on the right of the current field on the |                    same line and the same page. Cycles through the line. | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FN_Right_Field(FORM * form) | |   Description   :  Get the field on the right of the current field on the |                    same line and the same page. Cycles through the line. | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -10692,24 +12405,38 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FN_Right_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Current_Field
 argument_list|(
 name|form
 argument_list|,
-name|Right_Neighbour_Field
+name|Right_Neighbor_Field
 argument_list|(
 name|form
 operator|->
 name|current
 argument_list|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FN_Up_Field(FORM * form) |    |   Description   :  Get the upper neighbour of the current field. This |                    cycles through the page. See the comments of the |                    Upper_Neighbour_Field function to understand how |                    'upper' is defined.  | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FN_Up_Field(FORM * form) | |   Description   :  Get the upper neighbor of the current field. This |                    cycles through the page. See the comments of the |                    Upper_Neighbor_Field function to understand how |                    'upper' is defined. | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -10722,24 +12449,38 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FN_Up_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Current_Field
 argument_list|(
 name|form
 argument_list|,
-name|Upper_Neighbour_Field
+name|Upper_Neighbor_Field
 argument_list|(
 name|form
 operator|->
 name|current
 argument_list|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int FN_Down_Field(FORM * form) |    |   Description   :  Get the down neighbour of the current field. This |                    cycles through the page. See the comments of the |                    Down_Neighbour_Field function to understand how |                    'down' is defined.  | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int FN_Down_Field(FORM * form) | |   Description   :  Get the down neighbor of the current field. This |                    cycles through the page. See the comments of the |                    Down_Neighbor_Field function to understand how |                    'down' is defined. | |   Return Values :  E_OK            - success |                    != E_OK         - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -10752,35 +12493,46 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"FN_Down_Field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Current_Field
 argument_list|(
 name|form
 argument_list|,
-name|Down_Neighbour_Field
+name|Down_Neighbor_Field
 argument_list|(
 name|form
 operator|->
 name|current
 argument_list|)
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*----------------------------------------------------------------------------   END of Field Navigation routines    --------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------   END of Field Navigation routines   --------------------------------------------------------------------------*/
 end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*----------------------------------------------------------------------------   Helper routines for Page Navigation   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int _nc_Set_Form_Page(FORM * form, |                                          int page, |                                          FIELD * field) |    |   Description   :  Make the given page nr. the current page and make |                    the given field the current field on the page. If |                    for the field NULL is given, make the first field on |                    the page the current field. The routine acts only |                    if the requested page is not the current page. | |   Return Values :  E_OK                - success |                    != E_OK             - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  int _nc_Set_Form_Page(FORM * form, |                                          int page, |                                          FIELD * field) | |   Description   :  Make the given page number the current page and make |                    the given field the current field on the page. If |                    for the field NULL is given, make the first field on |                    the page the current field. The routine acts only |                    if the requested page is not the current page. | |   Return Values :  E_OK                - success |                    != E_OK             - error from subordinate call |                    E_BAD_ARGUMENT      - invalid field pointer |                    E_SYSTEM_ERROR      - some severe basic error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -10793,11 +12545,11 @@ end_macro
 begin_macro
 name|_nc_Set_Form_Page
 argument_list|(
-argument|FORM * form
+argument|FORM *form
 argument_list|,
 argument|int page
 argument_list|,
-argument|FIELD * field
+argument|FIELD *field
 argument_list|)
 end_macro
 
@@ -10914,7 +12666,7 @@ name|field
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* N.B.: we don't encapsulate this by Inter_Field_Navigation(), 	   because this is already executed in a page navigation 	   context that contains field navigation  	 */
+comment|/* N.B.: we don't encapsulate this by Inter_Field_Navigation(), 	   because this is already executed in a page navigation 	   context that contains field navigation 	 */
 name|res
 operator|=
 name|FN_First_Field
@@ -10932,11 +12684,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Next_Page_Number(const FORM * form) |    |   Description   :  Calculate the page number following the current page |                    number. This cycles if the highest page number is |                    reached.   | |   Return Values :  The next page number +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int Next_Page_Number(const FORM * form) | |   Description   :  Calculate the page number following the current page |                    number. This cycles if the highest page number is |                    reached. | |   Return Values :  The next page number +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
 name|int
 name|Next_Page_Number
@@ -10964,11 +12716,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Previous_Page_Number(const FORM * form) |    |   Description   :  Calculate the page number before the current page |                    number. This cycles if the first page number is |                    reached.   | |   Return Values :  The previous page number +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int Previous_Page_Number(const FORM * form) | |   Description   :  Calculate the page number before the current page |                    number. This cycles if the first page number is |                    reached. | |   Return Values :  The previous page number +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
 name|int
 name|Previous_Page_Number
@@ -11003,15 +12755,12 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/*----------------------------------------------------------------------------   Page Navigation routines    --------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------   Page Navigation routines   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Page_Navigation( |                                               int (* const fct) (FORM *), |                                               FORM * form) |    |   Description   :  Generic behaviour for changing a page. This means |                    that the field is left and a new field is entered. |                    So the field must be validated and the field init/term |                    hooks must be called. Because also the page is changed, |                    the forms init/term hooks must be called also. | |   Return Values :  E_OK                - success |                    E_INVALID_FIELD     - field is invalid |                    some other          - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int Page_Navigation( |                                               int (* const fct) (FORM *), |                                               FORM * form) | |   Description   :  Generic behavior for changing a page. This means |                    that the field is left and a new field is entered. |                    So the field must be validated and the field init/term |                    hooks must be called. Because also the page is changed, |                    the forms init/term hooks must be called also. | |   Return Values :  E_OK                - success |                    E_INVALID_FIELD     - field is invalid |                    some other          - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_decl_stmt
@@ -11095,7 +12844,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int PN_Next_Page(FORM * form) |    |   Description   :  Move to the next page of the form | |   Return Values :  E_OK                - success |                    != E_OK             - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int PN_Next_Page(FORM * form) | |   Description   :  Move to the next page of the form | |   Return Values :  E_OK                - success |                    != E_OK             - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -11108,7 +12857,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"PN_Next_Page(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Form_Page
 argument_list|(
 name|form
@@ -11124,12 +12886,13 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int PN_Previous_Page(FORM * form) |    |   Description   :  Move to the previous page of the form | |   Return Values :  E_OK              - success |                    != E_OK           - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int PN_Previous_Page(FORM * form) | |   Description   :  Move to the previous page of the form | |   Return Values :  E_OK              - success |                    != E_OK           - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -11142,7 +12905,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"PN_Previous_Page(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Form_Page
 argument_list|(
 name|form
@@ -11158,12 +12934,13 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int PN_First_Page(FORM * form) |    |   Description   :  Move to the first page of the form | |   Return Values :  E_OK              - success |                    != E_OK           - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int PN_First_Page(FORM * form) | |   Description   :  Move to the first page of the form | |   Return Values :  E_OK              - success |                    != E_OK           - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -11176,7 +12953,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"PN_First_Page(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Form_Page
 argument_list|(
 name|form
@@ -11189,12 +12979,13 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int PN_Last_Page(FORM * form) |    |   Description   :  Move to the last page of the form | |   Return Values :  E_OK              - success |                    != E_OK           - error from subordinate call +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int PN_Last_Page(FORM * form) | |   Description   :  Move to the last page of the form | |   Return Values :  E_OK              - success |                    != E_OK           - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -11207,7 +12998,20 @@ modifier|*
 name|form
 parameter_list|)
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"PN_Last_Page(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|_nc_Set_Form_Page
 argument_list|(
 name|form
@@ -11224,23 +13028,21 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*----------------------------------------------------------------------------   END of Field Navigation routines    --------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------   END of Field Navigation routines   --------------------------------------------------------------------------*/
 end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*----------------------------------------------------------------------------   Helper routines for the core form driver.   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Data_Entry(FORM * form,int c) |    |   Description   :  Enter character c into at the current position of the |                    current field of the form. | |   Return Values :  E_OK              - |                    E_REQUEST_DENIED  - |                    E_SYSTEM_ERROR    - +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static int Data_Entry(FORM * form,int c) | |   Description   :  Enter character c into at the current position of the |                    current field of the form. | |   Return Values :  E_OK              - success |                    E_REQUEST_DENIED  - driver could not process the request |                    E_SYSTEM_ERROR    - +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -11269,6 +13071,26 @@ name|result
 init|=
 name|E_REQUEST_DENIED
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"Data_Entry(%p,%s)"
+argument_list|)
+operator|,
+name|form
+operator|,
+name|_tracechtype
+argument_list|(
+operator|(
+name|chtype
+operator|)
+name|c
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -11387,9 +13209,11 @@ operator|)
 operator|)
 operator|)
 condition|)
-return|return
+name|RETURN
+argument_list|(
 name|E_REQUEST_DENIED
-return|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -11403,9 +13227,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-return|return
+name|RETURN
+argument_list|(
 name|E_SYSTEM_ERROR
-return|;
+argument_list|)
+expr_stmt|;
 name|winsch
 argument_list|(
 name|form
@@ -11524,11 +13350,37 @@ name|E_SYSTEM_ERROR
 expr_stmt|;
 else|else
 block|{
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+comment|/* 		   * We have just added a byte to the form field.  It may have 		   * been part of a multibyte character.  If it was, the 		   * addch_used field is nonzero and we should not try to move 		   * to a new column. 		   */
+if|if
+condition|(
+name|WINDOW_EXT
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|,
+name|addch_used
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|IFN_Next_Character
 argument_list|(
 name|form
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|IFN_Next_Character
+argument_list|(
+name|form
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|result
 operator|=
 name|E_OK
@@ -11537,17 +13389,16 @@ block|}
 block|}
 block|}
 block|}
-return|return
+name|RETURN
+argument_list|(
 name|result
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* Structure to describe the binding of a request code to a function.    The member keycode codes the request value as well as the generic    routine to use for the request. The code for the generic routine    is coded in the upper 16 Bits while the request code is coded in    the lower 16 bits.      In terms of C++ you might think of a request as a class with a    virtual method "perform". The different types of request are    derived from this base class and overload (or not) the base class    implementation of perform. */
+comment|/* Structure to describe the binding of a request code to a function.    The member keycode codes the request value as well as the generic    routine to use for the request. The code for the generic routine    is coded in the upper 16 Bits while the request code is coded in    the lower 16 bits.     In terms of C++ you might think of a request as a class with a    virtual method "perform". The different types of request are    derived from this base class and overload (or not) the base class    implementation of perform. */
 end_comment
 
 begin_typedef
@@ -11700,6 +13551,10 @@ end_define
 
 begin_comment
 comment|/* This array holds all the Binding Infos */
+end_comment
+
+begin_comment
+comment|/* *INDENT-OFF* */
 end_comment
 
 begin_decl_stmt
@@ -12025,7 +13880,7 @@ name|REQ_CLR_EOF
 operator||
 name|ID_FE
 block|,
-name|FE_Clear_To_End_Of_Form
+name|FE_Clear_To_End_Of_Field
 block|}
 block|,
 block|{
@@ -12176,7 +14031,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int form_driver(FORM * form,int  c) |    |   Description   :  This is the workhorse of the forms system. It checks |                    to determine whether the character c is a request or |                    data. If it is a request, the form driver executes |                    the request and returns the result. If it is data |                    (printable character), it enters the data into the |                    current position in the current field. If it is not |                    recognized, the form driver assumes it is an application |                    defined command and returns E_UNKNOWN_COMMAND. |                    Application defined command should be defined relative |                    to MAX_FORM_COMMAND, the maximum value of a request. | |   Return Values :  E_OK              - success |                    E_SYSTEM_ERROR    - system error |                    E_BAD_ARGUMENT    - an argument is incorrect |                    E_NOT_POSTED      - form is not posted |                    E_INVALID_FIELD   - field contents are invalid |                    E_BAD_STATE       - called from inside a hook routine |                    E_REQUEST_DENIED  - request failed |                    E_UNKNOWN_COMMAND - command not known +--------------------------------------------------------------------------*/
+comment|/* *INDENT-ON* */
+end_comment
+
+begin_comment
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  int form_driver(FORM * form,int  c) | |   Description   :  This is the workhorse of the forms system. It checks |                    to determine whether the character c is a request or |                    data. If it is a request, the form driver executes |                    the request and returns the result. If it is data |                    (printable character), it enters the data into the |                    current position in the current field. If it is not |                    recognized, the form driver assumes it is an application |                    defined command and returns E_UNKNOWN_COMMAND. |                    Application defined command should be defined relative |                    to MAX_FORM_COMMAND, the maximum value of a request. | |   Return Values :  E_OK              - success |                    E_SYSTEM_ERROR    - system error |                    E_BAD_ARGUMENT    - an argument is incorrect |                    E_NOT_POSTED      - form is not posted |                    E_INVALID_FIELD   - field contents are invalid |                    E_BAD_STATE       - called from inside a hook routine |                    E_REQUEST_DENIED  - request failed |                    E_NOT_CONNECTED   - no fields are connected to the form |                    E_UNKNOWN_COMMAND - command not known +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -12189,9 +14048,9 @@ end_macro
 begin_macro
 name|form_driver
 argument_list|(
-argument|FORM * form
+argument|FORM *form
 argument_list|,
-argument|int  c
+argument|int c
 argument_list|)
 end_macro
 
@@ -12213,6 +14072,20 @@ name|res
 init|=
 name|E_UNKNOWN_COMMAND
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"form_driver(%p,%d)"
+argument_list|)
+operator|,
+name|form
+operator|,
+name|c
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -12260,9 +14133,11 @@ argument_list|(
 name|form
 argument_list|)
 expr_stmt|;
-return|return
+name|RETURN
+argument_list|(
 name|E_OK
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|assert
 argument_list|(
@@ -12511,8 +14386,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 operator|!
@@ -12527,14 +14401,33 @@ operator|)
 name|MAX_REGULAR_CHARACTER
 operator|)
 operator|)
-operator|&&
+condition|)
+block|{
+comment|/*        * If we're using 8-bit characters, iscntrl+isprint cover the whole set.        * But with multibyte characters, there is a third possibility, i.e.,        * parts of characters that build up into printable characters which are        * not considered printable.        *        * FIXME: the wide-character branch should also use Check_Char().        */
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+if|if
+condition|(
+operator|!
+name|iscntrl
+argument_list|(
+name|UChar
+argument_list|(
+name|c
+argument_list|)
+argument_list|)
+condition|)
+else|#
+directive|else
+if|if
+condition|(
 name|isprint
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
+name|UChar
+argument_list|(
 name|c
+argument_list|)
 argument_list|)
 operator|&&
 name|Check_Char
@@ -12560,6 +14453,8 @@ name|arg
 operator|)
 argument_list|)
 condition|)
+endif|#
+directive|endif
 name|res
 operator|=
 name|Data_Entry
@@ -12583,15 +14478,12 @@ expr_stmt|;
 block|}
 end_block
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/*----------------------------------------------------------------------------   Field-Buffer manipulation routines.   The effects of setting a buffer is tightly coupled to the core of the form   driver logic. This is especially true in the case of growable fields.   So I don't separate this into an own module.    --------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------   Field-Buffer manipulation routines.   The effects of setting a buffer are tightly coupled to the core of the form   driver logic. This is especially true in the case of growable fields.   So I don't separate this into a separate module.   --------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int set_field_buffer(FIELD *field, |                                         int buffer, char *value) |    |   Description   :  Set the given buffer of the field to the given value. |                    Buffer 0 stores the displayed content of the field. |                    For dynamic fields this may grow the fieldbuffers if |                    the length of the value exceeds the current buffer |                    length. For buffer 0 only printable values are allowed. |                    For static fields, the value needs not to be zero ter- |                    minated. It is copied up to the length of the buffer.    | |   Return Values :  E_OK            - success |                    E_BAD_ARGUMENT  - invalid argument |                    E_SYSTEM_ERROR  - system error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  int set_field_buffer(FIELD *field, |                                         int buffer, char *value) | |   Description   :  Set the given buffer of the field to the given value. |                    Buffer 0 stores the displayed content of the field. |                    For dynamic fields this may grow the fieldbuffers if |                    the length of the value exceeds the current buffer |                    length. For buffer 0 only printable values are allowed. |                    For static fields, the value needs not to be zero ter- |                    minated. It is copied up to the length of the buffer. | |   Return Values :  E_OK            - success |                    E_BAD_ARGUMENT  - invalid argument |                    E_SYSTEM_ERROR  - system error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -12604,20 +14496,17 @@ end_macro
 begin_macro
 name|set_field_buffer
 argument_list|(
-argument|FIELD * field
+argument|FIELD *field
 argument_list|,
 argument|int buffer
 argument_list|,
-argument|const char * value
+argument|const char *value
 argument_list|)
 end_macro
 
 begin_block
 block|{
-name|char
-modifier|*
-name|s
-decl_stmt|,
+name|FIELD_CELL
 modifier|*
 name|p
 decl_stmt|;
@@ -12628,8 +14517,42 @@ name|E_OK
 decl_stmt|;
 name|unsigned
 name|int
+name|i
+decl_stmt|;
+name|unsigned
+name|int
 name|len
 decl_stmt|;
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+name|FIELD_CELL
+modifier|*
+name|widevalue
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"set_field_buffer(%p,%d,%s)"
+argument_list|)
+operator|,
+name|field
+operator|,
+name|buffer
+operator|,
+name|_nc_visbuf
+argument_list|(
+name|value
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -12673,25 +14596,20 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|v
-decl_stmt|;
-name|unsigned
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
 for|for
 control|(
-name|v
+name|i
 operator|=
-name|value
+literal|0
 init|;
-operator|*
-name|v
+operator|(
+name|value
+index|[
+name|i
+index|]
+operator|!=
+literal|'\0'
+operator|)
 operator|&&
 operator|(
 name|i
@@ -12699,24 +14617,21 @@ operator|<
 name|len
 operator|)
 condition|;
-name|v
 operator|++
-operator|,
 name|i
-operator|++
 control|)
 block|{
 if|if
 condition|(
-operator|!
-name|isprint
+name|iscntrl
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|v
+name|UChar
+argument_list|(
+name|value
+index|[
+name|i
+index|]
+argument_list|)
 argument_list|)
 condition|)
 name|RETURN
@@ -12734,7 +14649,7 @@ name|field
 argument_list|)
 condition|)
 block|{
-comment|/* for a growable field we must assume zero terminated strings, because 	 somehow we have to detect the length of what should be copied.       */
+comment|/* for a growable field we must assume zero terminated strings, because          somehow we have to detect the length of what should be copied.        */
 name|unsigned
 name|int
 name|vlen
@@ -12793,7 +14708,7 @@ argument_list|(
 name|E_SYSTEM_ERROR
 argument_list|)
 expr_stmt|;
-comment|/* in this case we also have to check, wether or not the remaining 	     characters in value are also printable for buffer 0. */
+comment|/* in this case we also have to check, whether or not the remaining 	     characters in value are also printable for buffer 0. */
 if|if
 condition|(
 name|buffer
@@ -12801,10 +14716,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|unsigned
-name|int
-name|i
-decl_stmt|;
 for|for
 control|(
 name|i
@@ -12820,17 +14731,15 @@ operator|++
 control|)
 if|if
 condition|(
-operator|!
-name|isprint
+name|iscntrl
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
+name|UChar
+argument_list|(
 name|value
 index|[
 name|i
 index|]
+argument_list|)
 argument_list|)
 condition|)
 name|RETURN
@@ -12856,161 +14765,192 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|HAVE_MEMCCPY
-name|s
-operator|=
-name|memccpy
+name|USE_WIDEC_SUPPORT
+comment|/*    * Use addstr's logic for converting a string to an array of cchar_t's.    * There should be a better way, but this handles nonspacing characters    * and other special cases that we really do not want to handle here.    */
+name|wclear
 argument_list|(
-name|p
-argument_list|,
-name|value
+name|field
+operator|->
+name|working
+argument_list|)
+expr_stmt|;
+name|mvwaddstr
+argument_list|(
+name|field
+operator|->
+name|working
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|widevalue
+operator|=
+operator|(
+name|FIELD_CELL
+operator|*
+operator|)
+name|calloc
+argument_list|(
+name|len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|FIELD_CELL
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|RETURN
+argument_list|(
+name|E_SYSTEM_ERROR
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|mvwin_wchnstr
+argument_list|(
+name|field
+operator|->
+name|working
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|widevalue
+argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|len
+condition|;
+operator|++
+name|i
+control|)
+block|{
+if|if
+condition|(
+name|CharEq
+argument_list|(
+name|myZEROS
+argument_list|,
+name|widevalue
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+block|{
+while|while
+condition|(
+name|i
+operator|<
+name|len
+condition|)
+name|p
+index|[
+name|i
+operator|++
+index|]
+operator|=
+name|myBLANK
+expr_stmt|;
+break|break;
+block|}
+name|p
+index|[
+name|i
+index|]
+operator|=
+name|widevalue
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
+name|free
+argument_list|(
+name|widevalue
+argument_list|)
+expr_stmt|;
+block|}
 else|#
 directive|else
 for|for
 control|(
-name|s
+name|i
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|value
+literal|0
 init|;
-operator|*
-name|s
-operator|&&
-operator|(
-name|s
+name|i
 operator|<
-operator|(
-name|value
-operator|+
 name|len
-operator|)
-operator|)
 condition|;
-name|s
 operator|++
+name|i
 control|)
-name|p
-index|[
-name|s
-operator|-
-name|value
-index|]
-operator|=
-operator|*
-name|s
-expr_stmt|;
+block|{
 if|if
 condition|(
-name|s
-operator|<
-operator|(
 name|value
-operator|+
-name|len
-operator|)
+index|[
+name|i
+index|]
+operator|==
+literal|'\0'
 condition|)
 block|{
+while|while
+condition|(
+name|i
+operator|<
+name|len
+condition|)
 name|p
 index|[
-name|s
-operator|-
-name|value
+name|i
+operator|++
 index|]
 operator|=
-operator|*
-name|s
-operator|++
+name|myBLANK
 expr_stmt|;
-name|s
-operator|=
+break|break;
+block|}
 name|p
-operator|+
-operator|(
-name|s
-operator|-
+index|[
+name|i
+index|]
+operator|=
 name|value
-operator|)
+index|[
+name|i
+index|]
 expr_stmt|;
 block|}
-else|else
-name|s
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|s
-condition|)
-block|{
-comment|/* this means, value was null terminated and not greater than the 	 buffer. We have to pad with blanks. Please note that due to memccpy 	 logic s points after the terminating null. */
-name|s
-operator|--
-expr_stmt|;
-comment|/* now we point to the terminator. */
-name|assert
-argument_list|(
-name|len
-operator|>=
-call|(
-name|unsigned
-name|int
-call|)
-argument_list|(
-name|s
-operator|-
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|>
-call|(
-name|unsigned
-name|int
-call|)
-argument_list|(
-name|s
-operator|-
-name|p
-argument_list|)
-condition|)
-name|memset
-argument_list|(
-name|s
-argument_list|,
-name|C_BLANK
-argument_list|,
-name|len
-operator|-
-call|(
-name|unsigned
-name|int
-call|)
-argument_list|(
-name|s
-operator|-
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|buffer
@@ -13081,7 +15021,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  char *field_buffer(const FIELD *field,int buffer) |    |   Description   :  Return the address of the buffer for the field. | |   Return Values :  Pointer to buffer or NULL if arguments were invalid. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  char *field_buffer(const FIELD *field,int buffer) | |   Description   :  Return the address of the buffer for the field. | |   Return Values :  Pointer to buffer or NULL if arguments were invalid. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -13094,14 +15034,34 @@ end_macro
 begin_macro
 name|field_buffer
 argument_list|(
-argument|const FIELD * field
+argument|const FIELD *field
 argument_list|,
-argument|int  buffer
+argument|int buffer
 argument_list|)
 end_macro
 
 begin_block
 block|{
+name|char
+modifier|*
+name|result
+init|=
+literal|0
+decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"field_buffer(%p,%d)"
+argument_list|)
+operator|,
+name|field
+operator|,
+name|buffer
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|field
@@ -13120,24 +15080,630 @@ operator|->
 name|nbuf
 operator|)
 condition|)
-return|return
+block|{
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+name|FIELD_CELL
+modifier|*
+name|data
+init|=
 name|Address_Of_Nth_Buffer
 argument_list|(
 name|field
 argument_list|,
 name|buffer
 argument_list|)
-return|;
-else|else
-return|return
-operator|(
-name|char
-operator|*
-operator|)
+decl_stmt|;
+name|unsigned
+name|need
+init|=
 literal|0
-return|;
+decl_stmt|;
+name|int
+name|size
+init|=
+name|Buffer_Length
+argument_list|(
+name|field
+argument_list|)
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+comment|/* determine the number of bytes needed to store the expanded string */
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|size
+condition|;
+operator|++
+name|n
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|isWidecExt
+argument_list|(
+name|data
+index|[
+name|n
+index|]
+argument_list|)
+condition|)
+block|{
+name|mbstate_t
+name|state
+decl_stmt|;
+name|size_t
+name|next
+decl_stmt|;
+name|init_mb
+argument_list|(
+name|state
+argument_list|)
+expr_stmt|;
+name|next
+operator|=
+name|_nc_wcrtomb
+argument_list|(
+literal|0
+argument_list|,
+name|data
+index|[
+name|n
+index|]
+operator|.
+name|chars
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|state
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isEILSEQ
+argument_list|(
+name|next
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|next
+operator|!=
+literal|0
+condition|)
+name|need
+operator|+=
+name|next
+expr_stmt|;
+block|}
+block|}
+block|}
+comment|/* allocate a place to store the expanded string */
+if|if
+condition|(
+name|field
+operator|->
+name|expanded
+index|[
+name|buffer
+index|]
+operator|!=
+literal|0
+condition|)
+name|free
+argument_list|(
+name|field
+operator|->
+name|expanded
+index|[
+name|buffer
+index|]
+argument_list|)
+expr_stmt|;
+name|field
+operator|->
+name|expanded
+index|[
+name|buffer
+index|]
+operator|=
+name|typeMalloc
+argument_list|(
+name|char
+argument_list|,
+name|need
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* expand the multibyte data */
+if|if
+condition|(
+operator|(
+name|result
+operator|=
+name|field
+operator|->
+name|expanded
+index|[
+name|buffer
+index|]
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|wclear
+argument_list|(
+name|field
+operator|->
+name|working
+argument_list|)
+expr_stmt|;
+name|mvwadd_wchnstr
+argument_list|(
+name|field
+operator|->
+name|working
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|data
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+name|mvwinnstr
+argument_list|(
+name|field
+operator|->
+name|working
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|result
+argument_list|,
+operator|(
+name|int
+operator|)
+name|need
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+name|result
+operator|=
+name|Address_Of_Nth_Buffer
+argument_list|(
+name|field
+argument_list|,
+name|buffer
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+name|returnPtr
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 block|}
 end_block
+
+begin_if
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+end_if
+
+begin_comment
+comment|/* FIXME: see lib_get_wch.c */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_MBTOWC
+operator|&&
+name|HAVE_MBLEN
+end_if
+
+begin_define
+define|#
+directive|define
+name|reset_mbytes
+parameter_list|(
+name|state
+parameter_list|)
+value|mblen(NULL, 0), mbtowc(NULL, NULL, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|count_mbytes
+parameter_list|(
+name|buffer
+parameter_list|,
+name|length
+parameter_list|,
+name|state
+parameter_list|)
+value|mblen(buffer,length)
+end_define
+
+begin_define
+define|#
+directive|define
+name|trans_mbytes
+parameter_list|(
+name|wch
+parameter_list|,
+name|buffer
+parameter_list|,
+name|length
+parameter_list|,
+name|state
+parameter_list|)
+define|\
+value|(int) mbtowc(&wch, buffer, length)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|HAVE_MBRTOWC
+operator|&&
+name|HAVE_MBRLEN
+end_elif
+
+begin_define
+define|#
+directive|define
+name|NEED_STATE
+end_define
+
+begin_define
+define|#
+directive|define
+name|reset_mbytes
+parameter_list|(
+name|state
+parameter_list|)
+value|init_mb(state)
+end_define
+
+begin_define
+define|#
+directive|define
+name|count_mbytes
+parameter_list|(
+name|buffer
+parameter_list|,
+name|length
+parameter_list|,
+name|state
+parameter_list|)
+value|mbrlen(buffer,length,&state)
+end_define
+
+begin_define
+define|#
+directive|define
+name|trans_mbytes
+parameter_list|(
+name|wch
+parameter_list|,
+name|buffer
+parameter_list|,
+name|length
+parameter_list|,
+name|state
+parameter_list|)
+define|\
+value|(int) mbrtowc(&wch, buffer, length,&state)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+name|make
+name|an
+name|error
+endif|#
+directive|endif
+comment|/*--------------------------------------------------------------------------- | Convert a multibyte string to a wide-character string.  The result must be | freed by the caller. +--------------------------------------------------------------------------*/
+name|NCURSES_EXPORT
+parameter_list|(
+name|wchar_t
+modifier|*
+parameter_list|)
+function|_nc_Widen_String
+parameter_list|(
+name|char
+modifier|*
+name|source
+parameter_list|,
+name|int
+modifier|*
+name|lengthp
+parameter_list|)
+block|{
+name|wchar_t
+modifier|*
+name|result
+init|=
+literal|0
+decl_stmt|;
+name|wchar_t
+name|wch
+decl_stmt|;
+name|size_t
+name|given
+init|=
+name|strlen
+argument_list|(
+name|source
+argument_list|)
+decl_stmt|;
+name|size_t
+name|tries
+decl_stmt|;
+name|int
+name|pass
+decl_stmt|;
+name|int
+name|status
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NEED_STATE
+name|mbstate_t
+name|state
+decl_stmt|;
+endif|#
+directive|endif
+for|for
+control|(
+name|pass
+operator|=
+literal|0
+init|;
+name|pass
+operator|<
+literal|2
+condition|;
+operator|++
+name|pass
+control|)
+block|{
+name|unsigned
+name|need
+init|=
+literal|0
+decl_stmt|;
+name|size_t
+name|passed
+init|=
+literal|0
+decl_stmt|;
+while|while
+condition|(
+name|passed
+operator|<
+name|given
+condition|)
+block|{
+name|bool
+name|found
+init|=
+name|FALSE
+decl_stmt|;
+for|for
+control|(
+name|tries
+operator|=
+literal|1
+operator|,
+name|status
+operator|=
+literal|0
+init|;
+name|tries
+operator|<=
+operator|(
+name|given
+operator|-
+name|passed
+operator|)
+condition|;
+operator|++
+name|tries
+control|)
+block|{
+name|int
+name|save
+init|=
+name|source
+index|[
+name|passed
+operator|+
+name|tries
+index|]
+decl_stmt|;
+name|source
+index|[
+name|passed
+operator|+
+name|tries
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|reset_mbytes
+argument_list|(
+name|state
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+name|trans_mbytes
+argument_list|(
+name|wch
+argument_list|,
+name|source
+operator|+
+name|passed
+argument_list|,
+name|tries
+argument_list|,
+name|state
+argument_list|)
+expr_stmt|;
+name|source
+index|[
+name|passed
+operator|+
+name|tries
+index|]
+operator|=
+name|save
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|>
+literal|0
+condition|)
+block|{
+name|found
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
+block|}
+if|if
+condition|(
+name|found
+condition|)
+block|{
+if|if
+condition|(
+name|pass
+condition|)
+block|{
+name|result
+index|[
+name|need
+index|]
+operator|=
+name|wch
+expr_stmt|;
+block|}
+name|passed
+operator|+=
+name|status
+expr_stmt|;
+operator|++
+name|need
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|pass
+condition|)
+block|{
+name|result
+index|[
+name|need
+index|]
+operator|=
+name|source
+index|[
+name|passed
+index|]
+expr_stmt|;
+block|}
+operator|++
+name|need
+expr_stmt|;
+operator|++
+name|passed
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|pass
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|need
+condition|)
+break|break;
+name|result
+operator|=
+name|typeCalloc
+argument_list|(
+name|wchar_t
+argument_list|,
+name|need
+argument_list|)
+expr_stmt|;
+operator|*
+name|lengthp
+operator|=
+name|need
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
+block|}
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* frm_driver.c ends here */

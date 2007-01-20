@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2000,2001 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey 1996 on                                        *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * $Id: tic.h,v 1.41 2002/06/01 19:07:02 tom Exp $  *	tic.h - Global variables and structures for the terminfo  *			compiler.  */
+comment|/*  * $Id: tic.h,v 1.55 2006/08/19 14:17:49 tom Exp $  *	tic.h - Global variables and structures for the terminfo  *			compiler.  */
 end_comment
 
 begin_ifndef
@@ -45,6 +45,46 @@ directive|define
 name|MAGIC
 value|0432
 comment|/* first two bytes of a compiled entry */
+undef|#
+directive|undef
+name|BYTE
+define|#
+directive|define
+name|BYTE
+parameter_list|(
+name|p
+parameter_list|,
+name|n
+parameter_list|)
+value|(unsigned char)((p)[n])
+define|#
+directive|define
+name|IS_NEG1
+parameter_list|(
+name|p
+parameter_list|)
+value|((BYTE(p,0) == 0377)&& (BYTE(p,1) == 0377))
+define|#
+directive|define
+name|IS_NEG2
+parameter_list|(
+name|p
+parameter_list|)
+value|((BYTE(p,0) == 0376)&& (BYTE(p,1) == 0377))
+define|#
+directive|define
+name|LOW_MSB
+parameter_list|(
+name|p
+parameter_list|)
+value|(BYTE(p,0) + 256*BYTE(p,1))
+define|#
+directive|define
+name|IS_TIC_MAGIC
+parameter_list|(
+name|p
+parameter_list|)
+value|(LOW_MSB(p) == MAGIC)
 comment|/*  * The "maximum" here is misleading; XSI guarantees minimum values, which a  * given implementation may exceed.  */
 define|#
 directive|define
@@ -56,7 +96,7 @@ directive|define
 name|MAX_ENTRY_SIZE
 value|4096
 comment|/* maximum legal entry size */
-comment|/* The maximum size of individual name or alias is guaranteed in XSI to  * be 14, since that corresponds to the older filename lengths.  Newer  * systems allow longer aliases, though not many terminal descriptions  * are written to use them.  */
+comment|/*  * The maximum size of individual name or alias is guaranteed in XSI to be at  * least 14, since that corresponds to the older filename lengths.  Newer  * systems allow longer aliases, though not many terminal descriptions are  * written to use them.  The MAX_ALIAS symbol is used for warnings.  */
 if|#
 directive|if
 name|HAVE_LONG_FILE_NAMES
@@ -64,7 +104,7 @@ define|#
 directive|define
 name|MAX_ALIAS
 value|32
-comment|/* POSIX minimum for PATH_MAX */
+comment|/* smaller than POSIX minimum for PATH_MAX */
 else|#
 directive|else
 define|#
@@ -91,8 +131,7 @@ name|DEBUG_LEVEL
 parameter_list|(
 name|n
 parameter_list|)
-value|((n)<< 12)
-comment|/* see TRACE_MAXIMUM */
+value|((n)<< TRACE_SHIFT)
 define|#
 directive|define
 name|set_trace_level
@@ -455,16 +494,6 @@ struct|;
 end_struct
 
 begin_extern
-extern|extern NCURSES_EXPORT_VAR(int
-end_extern
-
-begin_expr_stmt
-unit|)
-name|_nc_tparm_err
-expr_stmt|;
-end_expr_stmt
-
-begin_extern
 extern|extern NCURSES_EXPORT_VAR(const struct name_table_entry * const
 end_extern
 
@@ -549,7 +578,7 @@ begin_define
 define|#
 directive|define
 name|ABSENT_BOOLEAN
-value|(-1)
+value|((signed char)-1)
 end_define
 
 begin_comment
@@ -578,7 +607,7 @@ begin_define
 define|#
 directive|define
 name|CANCELLED_BOOLEAN
-value|(char)(-2)
+value|((signed char)-2)
 end_define
 
 begin_comment
@@ -676,6 +705,66 @@ end_endif
 begin_comment
 comment|/* access.c */
 end_comment
+
+begin_extern
+extern|extern NCURSES_EXPORT(unsigned
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_pathlast
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(bool
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_is_abs_path
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(bool
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_is_dir_path
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(bool
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_is_file_path
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_extern
 extern|extern NCURSES_EXPORT(char *
@@ -902,50 +991,14 @@ comment|/* comp_error.c: warning& abort messages */
 end_comment
 
 begin_extern
-extern|extern NCURSES_EXPORT(void
+extern|extern NCURSES_EXPORT(const char *
 end_extern
 
 begin_expr_stmt
 unit|)
-name|_nc_set_source
+name|_nc_get_source
 argument_list|(
-specifier|const
-name|char
-operator|*
-specifier|const
-name|name
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_extern
-extern|extern NCURSES_EXPORT(void
-end_extern
-
-begin_expr_stmt
-unit|)
-name|_nc_get_type
-argument_list|(
-name|char
-operator|*
-name|name
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_extern
-extern|extern NCURSES_EXPORT(void
-end_extern
-
-begin_expr_stmt
-unit|)
-name|_nc_set_type
-argument_list|(
-specifier|const
-name|char
-operator|*
-specifier|const
-name|name
+name|void
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -956,7 +1009,7 @@ end_extern
 
 begin_macro
 unit|)
-name|_nc_syserr_abort
+name|_nc_err_abort
 argument_list|(
 argument|const char *const
 argument_list|,
@@ -982,9 +1035,56 @@ begin_extern
 extern|extern NCURSES_EXPORT(void
 end_extern
 
+begin_expr_stmt
+unit|)
+name|_nc_get_type
+argument_list|(
+name|char
+operator|*
+name|name
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_set_source
+argument_list|(
+specifier|const
+name|char
+operator|*
+specifier|const
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_set_type
+argument_list|(
+specifier|const
+name|char
+operator|*
+specifier|const
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
 begin_macro
 unit|)
-name|_nc_err_abort
+name|_nc_syserr_abort
 argument_list|(
 argument|const char *const
 argument_list|,
@@ -1068,7 +1168,7 @@ comment|/* comp_scan.c: decode string from readable form */
 end_comment
 
 begin_extern
-extern|extern NCURSES_EXPORT(char
+extern|extern NCURSES_EXPORT(int
 end_extern
 
 begin_expr_stmt
@@ -1133,6 +1233,66 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* home_terminfo.c */
+end_comment
+
+begin_extern
+extern|extern NCURSES_EXPORT(char *
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_home_terminfo
+argument_list|(
+name|void
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* lib_tparm.c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUM_PARM
+value|9
+end_define
+
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(int
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_tparm_err
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(int
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_tparm_analyze
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|char
+operator|*
+operator|*
+argument_list|,
+name|int
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* lib_tputs.c */
 end_comment
 
@@ -1164,8 +1324,65 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* read_entry.c */
+comment|/* db_iterator.c */
 end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|dbdTIC
+init|=
+literal|0
+block|,
+if|#
+directive|if
+name|USE_DATABASE
+name|dbdEnvOnce
+block|,
+name|dbdHome
+block|,
+name|dbdEnvList
+block|,
+name|dbdCfgList
+block|,
+name|dbdCfgOnce
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|USE_TERMCAP
+name|dbdEnvOnce2
+block|,
+name|dbdEnvList2
+block|,
+name|dbdCfgList2
+block|,
+endif|#
+directive|endif
+name|dbdLAST
+block|}
+name|DBDIRS
+typedef|;
+end_typedef
+
+begin_extern
+extern|extern NCURSES_EXPORT(const char *
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_next_db
+argument_list|(
+name|DBDIRS
+operator|*
+argument_list|,
+name|int
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_extern
 extern|extern NCURSES_EXPORT(const char *
@@ -1178,6 +1395,36 @@ argument_list|(
 specifier|const
 name|char
 operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_first_db
+argument_list|(
+name|DBDIRS
+operator|*
+argument_list|,
+name|int
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_last_db
+argument_list|(
+name|void
 argument_list|)
 expr_stmt|;
 end_expr_stmt
