@@ -4141,7 +4141,8 @@ name|char
 name|f2
 index|[]
 init|=
-literal|"unknown %s 0x%x lun %d N-Port handle 0x%x task flags 0x%x seq 0x%x\n"
+literal|"unknown %s 0x%x lun %d N-Port handle 0x%x "
+literal|"task flags 0x%x seq 0x%x\n"
 decl_stmt|;
 name|uint16_t
 name|seqid
@@ -4585,6 +4586,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|HILO
+parameter_list|(
+name|x
+parameter_list|)
+value|(uint32_t) (x>> 32),  (uint32_t) x
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -4608,7 +4619,7 @@ name|char
 name|f1
 index|[]
 init|=
-literal|"%s from PortID 0x%06x lun %d seq 0x%llx"
+literal|"%s from PortID 0x%06x lun %d seq 0x%08x%08x"
 decl_stmt|;
 specifier|static
 specifier|const
@@ -4616,7 +4627,7 @@ name|char
 name|f2
 index|[]
 init|=
-literal|"unknown Task Flag 0x%x lun %d PortID 0x%x tag 0x%llx\n"
+literal|"unknown Task Flag 0x%x lun %d PortID 0x%x tag 0x%08x%08x"
 decl_stmt|;
 name|uint32_t
 name|sid
@@ -4753,9 +4764,12 @@ name|nt
 operator|.
 name|nt_lun
 argument_list|,
+name|HILO
+argument_list|(
 name|nt
 operator|.
 name|nt_tagval
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nt
@@ -4793,9 +4807,12 @@ name|nt
 operator|.
 name|nt_lun
 argument_list|,
+name|HILO
+argument_list|(
 name|nt
 operator|.
 name|nt_tagval
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nt
@@ -4833,9 +4850,12 @@ name|nt
 operator|.
 name|nt_lun
 argument_list|,
+name|HILO
+argument_list|(
 name|nt
 operator|.
 name|nt_tagval
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nt
@@ -4873,9 +4893,12 @@ name|nt
 operator|.
 name|nt_lun
 argument_list|,
+name|HILO
+argument_list|(
 name|nt
 operator|.
 name|nt_tagval
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nt
@@ -4919,9 +4942,12 @@ name|nt
 operator|.
 name|nt_lun
 argument_list|,
+name|HILO
+argument_list|(
 name|nt
 operator|.
 name|nt_tagval
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nt
@@ -4953,9 +4979,12 @@ name|nt_lun
 argument_list|,
 name|sid
 argument_list|,
+name|HILO
+argument_list|(
 name|nt
 operator|.
 name|nt_tagval
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|isp_endcmd
