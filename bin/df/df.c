@@ -380,6 +380,8 @@ name|hflag
 decl_stmt|,
 name|iflag
 decl_stmt|,
+name|kflag
+decl_stmt|,
 name|nflag
 decl_stmt|;
 end_decl_stmt
@@ -528,6 +530,12 @@ comment|/* FALLTHROUGH */
 case|case
 literal|'P'
 case|:
+comment|/* 			 * POSIX specifically discusses the the behavior of 			 * both -k and -P. It states that the blocksize should 			 * be set to 1024. Thus, if this occurs, simply break 			 * rather than clobbering the old blocksize. 			 */
+if|if
+condition|(
+name|kflag
+condition|)
+break|break;
 name|putenv
 argument_list|(
 literal|"BLOCKSIZE=512"
@@ -586,9 +594,12 @@ break|break;
 case|case
 literal|'k'
 case|:
+name|kflag
+operator|++
+expr_stmt|;
 name|putenv
 argument_list|(
-literal|"BLOCKSIZE=1k"
+literal|"BLOCKSIZE=1024"
 argument_list|)
 expr_stmt|;
 name|hflag
