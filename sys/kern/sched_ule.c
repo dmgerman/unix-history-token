@@ -668,7 +668,7 @@ specifier|static
 name|int
 name|rebalance
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
