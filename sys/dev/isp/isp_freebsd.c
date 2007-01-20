@@ -98,6 +98,12 @@ directive|include
 file|<cam/cam_periph.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cam/cam_xpt_periph.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -2489,7 +2495,7 @@ argument_list|(
 name|isp
 argument_list|)
 operator|->
-name|isp_nodewwn
+name|isp_wwnn_nvram
 expr_stmt|;
 name|hba
 operator|->
@@ -2500,7 +2506,7 @@ argument_list|(
 name|isp
 argument_list|)
 operator|->
-name|isp_portwwn
+name|isp_wwpn_nvram
 expr_stmt|;
 name|hba
 operator|->
@@ -8894,6 +8900,8 @@ argument_list|(
 name|atiop
 operator|->
 name|tag_id
+argument_list|,
+name|bus
 argument_list|,
 name|device_get_unit
 argument_list|(

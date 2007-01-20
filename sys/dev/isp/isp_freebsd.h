@@ -1536,7 +1536,7 @@ name|ISP_NODEWWN
 parameter_list|(
 name|isp
 parameter_list|)
-value|FCPARAM(isp)->isp_nodewwn
+value|FCPARAM(isp)->isp_wwnn_nvram
 end_define
 
 begin_define
@@ -1546,7 +1546,7 @@ name|ISP_PORTWWN
 parameter_list|(
 name|isp
 parameter_list|)
-value|FCPARAM(isp)->isp_portwwn
+value|FCPARAM(isp)->isp_wwpn_nvram
 end_define
 
 begin_if

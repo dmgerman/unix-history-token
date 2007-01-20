@@ -1254,12 +1254,14 @@ name|AT_MAKE_TAGID
 parameter_list|(
 name|tid
 parameter_list|,
+name|bus
+parameter_list|,
 name|inst
 parameter_list|,
 name|aep
 parameter_list|)
 define|\
-value|tid = aep->at_handle;						\ 	if (aep->at_flags& AT_TQAE) {					\ 		tid |= (aep->at_tag_val<< 16);				\ 		tid |= (1<< 24);					\ 	}								\ 	tid |= (GET_BUS_VAL(aep->at_iid)<< 25);			\ 	tid |= (inst<< 26)
+value|tid = aep->at_handle;						\ 	if (aep->at_flags& AT_TQAE) {					\ 		tid |= (aep->at_tag_val<< 16);				\ 		tid |= (1<< 24);					\ 	}								\ 	tid |= (bus<< 25);						\ 	tid |= (inst<< 26)
 end_define
 
 begin_define
@@ -1336,12 +1338,14 @@ name|IN_MAKE_TAGID
 parameter_list|(
 name|tid
 parameter_list|,
+name|bus
+parameter_list|,
 name|inst
 parameter_list|,
 name|inp
 parameter_list|)
 define|\
-value|tid = inp->in_seqid;						\ 	tid |= (inp->in_tag_val<< 16);					\ 	tid |= (1<< 24);						\ 	tid |= (GET_BUS_VAL(inp->in_iid)<< 25);			\ 	tid |= (inst<< 26)
+value|tid = inp->in_seqid;						\ 	tid |= (inp->in_tag_val<< 16);					\ 	tid |= (1<< 24);						\ 	tid |= (bus<< 25);						\ 	tid |= (inst<< 26)
 end_define
 
 begin_define
@@ -1614,12 +1618,14 @@ name|AT2_MAKE_TAGID
 parameter_list|(
 name|tid
 parameter_list|,
+name|bus
+parameter_list|,
 name|inst
 parameter_list|,
 name|aep
 parameter_list|)
 define|\
-value|tid = aep->at_rxid;						\ 	tid |= (inst<< 16)
+value|tid = aep->at_rxid;						\ 	tid |= (((uint64_t)inst)<< 32);				\ 	tid |= (((uint64_t)bus)<< 48)
 end_define
 
 begin_define
@@ -1629,12 +1635,14 @@ name|CT2_MAKE_TAGID
 parameter_list|(
 name|tid
 parameter_list|,
+name|bus
+parameter_list|,
 name|inst
 parameter_list|,
 name|ct
 parameter_list|)
 define|\
-value|tid = ct->ct_rxid;						\ 	tid |= (inst<< 16)
+value|tid = ct->ct_rxid;						\ 	tid |= (((uint64_t)inst)<< 32);				\ 	tid |= (((uint64_t)(bus& 0xff))<< 48)
 end_define
 
 begin_define
@@ -1654,7 +1662,7 @@ name|AT2_GET_TAG
 parameter_list|(
 name|val
 parameter_list|)
-value|((val)& 0xffff)
+value|((val)& 0xffffffff)
 end_define
 
 begin_define
@@ -1664,7 +1672,7 @@ name|AT2_GET_INST
 parameter_list|(
 name|val
 parameter_list|)
-value|((val)>> 16)
+value|((val)>> 32)
 end_define
 
 begin_define
@@ -1672,6 +1680,16 @@ define|#
 directive|define
 name|AT2_GET_HANDLE
 value|AT2_GET_TAG
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT2_GET_BUS
+parameter_list|(
+name|val
+parameter_list|)
+value|(((val)>> 48)& 0xff)
 end_define
 
 begin_define
@@ -1709,12 +1727,14 @@ name|IN_FC_MAKE_TAGID
 parameter_list|(
 name|tid
 parameter_list|,
+name|bus
+parameter_list|,
 name|inst
 parameter_list|,
 name|seqid
 parameter_list|)
 define|\
-value|tid = seqid;							\ 	tid |= (inst<< 16)
+value|tid = seqid;							\ 	tid |= (((uint64_t)inst)<< 32);				\ 	tid |= (((uint64_t)(bus& 0xff))<< 48)
 end_define
 
 begin_define
@@ -1727,7 +1747,7 @@ parameter_list|,
 name|inst
 parameter_list|)
 define|\
-value|tid&= ~0xffff;							\ 	tid |= (inst<< 16)
+value|tid&= ~0xffff00000000ull;					\ 	tid |= (((uint64_t)inst)<< 32)
 end_define
 
 begin_comment

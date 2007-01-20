@@ -3931,6 +3931,13 @@ name|nt
 operator|.
 name|nt_tagval
 argument_list|,
+name|GET_BUS_VAL
+argument_list|(
+name|inp
+operator|->
+name|in_iid
+argument_list|)
+argument_list|,
 literal|0
 argument_list|,
 name|inp
@@ -4269,6 +4276,8 @@ name|nt_tagval
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 name|seqid
 argument_list|)
 expr_stmt|;
@@ -4599,7 +4608,7 @@ name|char
 name|f1
 index|[]
 init|=
-literal|"%s from PortID 0x%06x lun %d seq 0x%x"
+literal|"%s from PortID 0x%06x lun %d seq 0x%llx"
 decl_stmt|;
 specifier|static
 specifier|const
@@ -4607,7 +4616,7 @@ name|char
 name|f2
 index|[]
 init|=
-literal|"unknown Task Flag 0x%x lun %d PortID 0x%x tag 0x%x\n"
+literal|"unknown Task Flag 0x%x lun %d PortID 0x%x tag 0x%llx\n"
 decl_stmt|;
 name|uint32_t
 name|sid
@@ -4663,6 +4672,7 @@ literal|1
 index|]
 operator|)
 expr_stmt|;
+comment|/* 	 * XXX: VPIDX HAS TO BE DERIVED FROM DESTINATION PORT 	 */
 name|nt
 operator|.
 name|nt_tagval
