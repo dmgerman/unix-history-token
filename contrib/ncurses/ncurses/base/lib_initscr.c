@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-2003               *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,16 +16,6 @@ include|#
 directive|include
 file|<curses.priv.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<tic.h>
-end_include
-
-begin_comment
-comment|/* for MAX_ALIAS */
-end_comment
 
 begin_if
 if|#
@@ -51,7 +41,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_initscr.c,v 1.29 2001/08/26 01:05:05 tom Exp $"
+literal|"$Id: lib_initscr.c,v 1.34 2005/10/22 20:30:38 tom Exp $"
 argument_list|)
 end_macro
 
@@ -82,33 +72,9 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|int
-name|value
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TRACE
-name|int
-name|t
-init|=
-name|_nc_getenv_num
-argument_list|(
-literal|"NCURSES_TRACE"
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|t
-operator|>=
-literal|0
-condition|)
-name|trace
-argument_list|(
-name|t
-argument_list|)
+name|START_TRACE
+argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|T
 argument_list|(
 operator|(
@@ -152,6 +118,75 @@ name|name
 operator|=
 literal|"unknown"
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__CYGWIN__
+comment|/* 	 * 2002/9/21 	 * Work around a bug in Cygwin.  Full-screen subprocesses run from 	 * bash, in turn spawned from another full-screen process, will dump 	 * core when attempting to write to stdout.  Opening /dev/tty 	 * explicitly seems to fix the problem. 	 */
+if|if
+condition|(
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|FILE
+modifier|*
+name|fp
+init|=
+name|fopen
+argument_list|(
+literal|"/dev/tty"
+argument_list|,
+literal|"w"
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|fp
+operator|!=
+literal|0
+operator|&&
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+argument_list|,
+name|STDOUT_FILENO
+argument_list|)
+expr_stmt|;
+name|stdout
+operator|=
+name|fdopen
+argument_list|(
+name|STDOUT_FILENO
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|newterm
@@ -179,26 +214,6 @@ name|exit
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
-expr_stmt|;
-block|}
-comment|/* allow user to set maximum escape delay from the environment */
-if|if
-condition|(
-operator|(
-name|value
-operator|=
-name|_nc_getenv_num
-argument_list|(
-literal|"ESCDELAY"
-argument_list|)
-operator|)
-operator|>=
-literal|0
-condition|)
-block|{
-name|ESCDELAY
-operator|=
-name|value
 expr_stmt|;
 block|}
 comment|/* def_shell_mode - done in newterm/_nc_setupscreen */

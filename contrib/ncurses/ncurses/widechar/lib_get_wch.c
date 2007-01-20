@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2002 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2002-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Thomas E. Dickey 2002                                           *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Thomas E. Dickey 2002-on                                        *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -17,30 +17,148 @@ directive|include
 file|<curses.priv.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_get_wch.c,v 1.3 2002/03/17 16:14:45 tom Exp $"
+literal|"$Id: lib_get_wch.c,v 1.13 2006/06/03 17:27:57 tom Exp $"
 argument_list|)
 end_macro
 
-begin_macro
+begin_if
+if|#
+directive|if
+name|HAVE_MBTOWC
+operator|&&
+name|HAVE_MBLEN
+end_if
+
+begin_define
+define|#
+directive|define
+name|reset_mbytes
+parameter_list|(
+name|state
+parameter_list|)
+value|mblen(NULL, 0), mbtowc(NULL, NULL, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|count_mbytes
+parameter_list|(
+name|buffer
+parameter_list|,
+name|length
+parameter_list|,
+name|state
+parameter_list|)
+value|mblen(buffer,length)
+end_define
+
+begin_define
+define|#
+directive|define
+name|check_mbytes
+parameter_list|(
+name|wch
+parameter_list|,
+name|buffer
+parameter_list|,
+name|length
+parameter_list|,
+name|state
+parameter_list|)
+define|\
+value|(int) mbtowc(&wch, buffer, length)
+end_define
+
+begin_define
+define|#
+directive|define
+name|state_unused
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|HAVE_MBRTOWC
+operator|&&
+name|HAVE_MBRLEN
+end_elif
+
+begin_define
+define|#
+directive|define
+name|reset_mbytes
+parameter_list|(
+name|state
+parameter_list|)
+value|init_mb(state)
+end_define
+
+begin_define
+define|#
+directive|define
+name|count_mbytes
+parameter_list|(
+name|buffer
+parameter_list|,
+name|length
+parameter_list|,
+name|state
+parameter_list|)
+value|mbrlen(buffer,length,&state)
+end_define
+
+begin_define
+define|#
+directive|define
+name|check_mbytes
+parameter_list|(
+name|wch
+parameter_list|,
+name|buffer
+parameter_list|,
+name|length
+parameter_list|,
+name|state
+parameter_list|)
+define|\
+value|(int) mbrtowc(&wch, buffer, length,&state)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+name|make
+name|an
+name|error
+endif|#
+directive|endif
 name|NCURSES_EXPORT
-argument_list|(
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|wget_wch
-argument_list|(
-argument|WINDOW *win
-argument_list|,
-argument|wint_t * result
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+parameter_list|)
+function|wget_wch
+parameter_list|(
+name|WINDOW
+modifier|*
+name|win
+parameter_list|,
+name|wint_t
+modifier|*
+name|result
+parameter_list|)
 block|{
 name|int
 name|code
@@ -49,7 +167,7 @@ name|char
 name|buffer
 index|[
 operator|(
-name|MB_CUR_MAX
+name|MB_LEN_MAX
 operator|*
 literal|9
 operator|)
@@ -60,9 +178,6 @@ decl_stmt|;
 comment|/* allow some redundant shifts */
 name|int
 name|status
-decl_stmt|;
-name|mbstate_t
-name|state
 decl_stmt|;
 name|size_t
 name|count
@@ -76,6 +191,14 @@ decl_stmt|;
 name|wchar_t
 name|wch
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|state_unused
+name|mbstate_t
+name|state
+decl_stmt|;
+endif|#
+directive|endif
 name|T
 argument_list|(
 operator|(
@@ -115,12 +238,13 @@ name|code
 operator|=
 name|_nc_wgetch
 argument_list|(
-name|win
+argument|win
 argument_list|,
-operator|&
-name|value
+argument|&value
 argument_list|,
-name|TRUE
+argument|TRUE EVENTLIST_2nd((_nc_eventlist *)
+literal|0
+argument|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -150,6 +274,9 @@ condition|)
 block|{
 name|ungetch
 argument_list|(
+operator|(
+name|int
+operator|)
 name|value
 argument_list|)
 expr_stmt|;
@@ -175,6 +302,9 @@ condition|)
 block|{
 name|ungetch
 argument_list|(
+operator|(
+name|int
+operator|)
 name|value
 argument_list|)
 expr_stmt|;
@@ -197,28 +327,19 @@ argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|state
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
+name|reset_mbytes
 argument_list|(
 name|state
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|mbrlen
+name|count_mbytes
 argument_list|(
 name|buffer
 argument_list|,
 name|count
 argument_list|,
-operator|&
 name|state
 argument_list|)
 expr_stmt|;
@@ -229,34 +350,21 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|memset
-argument_list|(
-operator|&
-name|state
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
+name|reset_mbytes
 argument_list|(
 name|state
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
-name|mbrtowc
+name|check_mbytes
 argument_list|(
-operator|&
 name|wch
 argument_list|,
 name|buffer
 argument_list|,
 name|count
 argument_list|,
-operator|&
 name|state
 argument_list|)
 operator|!=
@@ -268,6 +376,14 @@ operator|=
 name|ERR
 expr_stmt|;
 comment|/* the two calls should match */
+name|ungetch
+argument_list|(
+operator|(
+name|int
+operator|)
+name|value
+argument_list|)
+expr_stmt|;
 block|}
 name|value
 operator|=
@@ -285,7 +401,7 @@ expr_stmt|;
 name|T
 argument_list|(
 operator|(
-literal|"result %#o"
+literal|"result %#lo"
 operator|,
 name|value
 operator|)
@@ -297,7 +413,7 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

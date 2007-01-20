@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_getstr.c,v 1.23 2000/12/10 02:43:27 tom Exp $"
+literal|"$Id: lib_getstr.c,v 1.25 2006/01/12 00:33:52 tom Exp $"
 argument_list|)
 end_macro
 
@@ -176,13 +176,15 @@ argument_list|)
 end_macro
 
 begin_macro
-name|wgetnstr
+name|wgetnstr_events
 argument_list|(
 argument|WINDOW *win
 argument_list|,
 argument|char *str
 argument_list|,
 argument|int maxlen
+argument_list|,
+argument|EVENTLIST_1st(_nc_eventlist * evl)
 argument_list|)
 end_macro
 
@@ -334,9 +336,11 @@ condition|(
 operator|(
 name|ch
 operator|=
-name|wgetch
+name|wgetch_events
 argument_list|(
 name|win
+argument_list|,
+name|evl
 argument_list|)
 operator|)
 operator|!=
@@ -393,6 +397,30 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|KEY_EVENT
+if|if
+condition|(
+name|ch
+operator|==
+name|KEY_EVENT
+condition|)
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|KEY_RESIZE
+if|if
+condition|(
+name|ch
+operator|==
+name|KEY_RESIZE
+condition|)
+break|break;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ch
@@ -705,7 +733,7 @@ name|ERR
 condition|)
 name|returnCode
 argument_list|(
-name|ERR
+name|ch
 argument_list|)
 expr_stmt|;
 name|T
@@ -720,6 +748,38 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KEY_EVENT
+if|if
+condition|(
+name|ch
+operator|==
+name|KEY_EVENT
+condition|)
+name|returnCode
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|KEY_RESIZE
+if|if
+condition|(
+name|ch
+operator|==
+name|KEY_RESIZE
+condition|)
+name|returnCode
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|returnCode
 argument_list|(
 name|OK
@@ -727,6 +787,61 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NCURSES_WGETCH_EVENTS
+end_ifdef
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|wgetnstr
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|char *str
+argument_list|,
+argument|int maxlen
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|returnCode
+argument_list|(
+name|wgetnstr_events
+argument_list|(
+name|win
+argument_list|,
+name|str
+argument_list|,
+name|maxlen
+argument_list|,
+name|EVENTLIST_1st
+argument_list|(
+operator|(
+name|_nc_eventlist
+operator|*
+operator|)
+literal|0
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

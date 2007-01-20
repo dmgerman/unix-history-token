@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -59,7 +59,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_newterm.c,v 1.52 2001/08/04 16:47:48 tom Exp $"
+literal|"$Id: lib_newterm.c,v 1.64 2006/01/14 15:36:24 tom Exp $"
 argument_list|)
 end_macro
 
@@ -91,24 +91,41 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|NCURSES_INLINE
 name|int
 name|_nc_initscr
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|result
+init|=
+name|ERR
+decl_stmt|;
 comment|/* for extended XPG4 conformance requires cbreak() at this point */
 comment|/* (SVr4 curses does this anyway) */
+if|if
+condition|(
 name|cbreak
 argument_list|()
+operator|==
+name|OK
+condition|)
+block|{
+name|TTY
+name|buf
+decl_stmt|;
+name|buf
+operator|=
+name|cur_term
+operator|->
+name|Nttyb
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TERMIOS
-name|cur_term
-operator|->
-name|Nttyb
+name|buf
 operator|.
 name|c_lflag
 operator|&=
@@ -119,9 +136,7 @@ operator||
 name|ECHONL
 operator|)
 expr_stmt|;
-name|cur_term
-operator|->
-name|Nttyb
+name|buf
 operator|.
 name|c_iflag
 operator|&=
@@ -134,9 +149,7 @@ operator||
 name|IGNCR
 operator|)
 expr_stmt|;
-name|cur_term
-operator|->
-name|Nttyb
+name|buf
 operator|.
 name|c_oflag
 operator|&=
@@ -145,11 +158,10 @@ operator|(
 name|ONLCR
 operator|)
 expr_stmt|;
-else|#
-directive|else
-name|cur_term
-operator|->
-name|Nttyb
+elif|#
+directive|elif
+name|HAVE_SGTTY_H
+name|buf
 operator|.
 name|sg_flags
 operator|&=
@@ -160,16 +172,46 @@ operator||
 name|CRMOD
 operator|)
 expr_stmt|;
+else|#
+directive|else
+name|memset
+argument_list|(
+operator|&
+name|buf
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-return|return
+if|if
+condition|(
+operator|(
+name|result
+operator|=
 name|_nc_set_tty_mode
 argument_list|(
 operator|&
+name|buf
+argument_list|)
+operator|)
+operator|==
+name|OK
+condition|)
 name|cur_term
 operator|->
 name|Nttyb
-argument_list|)
+operator|=
+name|buf
+expr_stmt|;
+block|}
+return|return
+name|result
 return|;
 block|}
 end_function
@@ -180,7 +222,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|bool
 name|filter_mode
 init|=
 name|FALSE
@@ -203,6 +245,9 @@ end_macro
 
 begin_block
 block|{
+name|START_TRACE
+argument_list|()
+expr_stmt|;
 name|T
 argument_list|(
 operator|(
@@ -222,6 +267,59 @@ expr_stmt|;
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+name|NCURSES_EXT_FUNCS
+end_if
+
+begin_comment
+comment|/*  * An extension, allowing the application to open a new screen without  * requiring it to also be filtered.  */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
+name|nofilter
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|START_TRACE
+argument_list|()
+expr_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"nofilter"
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|filter_mode
+operator|=
+name|FALSE
+expr_stmt|;
+name|returnVoid
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|NCURSES_EXPORT
 argument_list|(
@@ -234,14 +332,17 @@ name|newterm
 argument_list|(
 argument|NCURSES_CONST char *name
 argument_list|,
-argument|FILE * ofp
+argument|FILE *ofp
 argument_list|,
-argument|FILE * ifp
+argument|FILE *ifp
 argument_list|)
 end_macro
 
 begin_block
 block|{
+name|int
+name|value
+decl_stmt|;
 name|int
 name|errret
 decl_stmt|;
@@ -254,30 +355,15 @@ name|SCREEN
 modifier|*
 name|current
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TRACE
-name|int
-name|t
+name|SCREEN
+modifier|*
+name|result
 init|=
-name|_nc_getenv_num
-argument_list|(
-literal|"NCURSES_TRACE"
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|t
-operator|>=
 literal|0
-condition|)
-name|trace
-argument_list|(
-name|t
-argument_list|)
+decl_stmt|;
+name|START_TRACE
+argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|T
 argument_list|(
 operator|(
@@ -294,6 +380,31 @@ name|ifp
 operator|)
 argument_list|)
 expr_stmt|;
+name|_nc_handle_sigwinch
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* allow user to set maximum escape delay from the environment */
+if|if
+condition|(
+operator|(
+name|value
+operator|=
+name|_nc_getenv_num
+argument_list|(
+literal|"ESCDELAY"
+argument_list|)
+operator|)
+operator|>=
+literal|0
+condition|)
+block|{
+name|ESCDELAY
+operator|=
+name|value
+expr_stmt|;
+block|}
 comment|/* this loads the capability entry, then sets LINES and COLS */
 if|if
 condition|(
@@ -312,115 +423,15 @@ argument_list|)
 operator|==
 name|ERR
 condition|)
-name|returnSP
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* implement filter mode */
-if|if
-condition|(
-name|filter_mode
-condition|)
 block|{
-name|LINES
+name|result
 operator|=
-literal|1
+literal|0
 expr_stmt|;
-if|if
-condition|(
-name|VALID_NUMERIC
-argument_list|(
-name|init_tabs
-argument_list|)
-condition|)
-name|TABSIZE
-operator|=
-name|init_tabs
-expr_stmt|;
+block|}
 else|else
-name|TABSIZE
-operator|=
-literal|8
-expr_stmt|;
-name|T
-argument_list|(
-operator|(
-literal|"TABSIZE = %d"
-operator|,
-name|TABSIZE
-operator|)
-argument_list|)
-expr_stmt|;
-name|clear_screen
-operator|=
-literal|0
-expr_stmt|;
-name|cursor_down
-operator|=
-name|parm_down_cursor
-operator|=
-literal|0
-expr_stmt|;
-name|cursor_address
-operator|=
-literal|0
-expr_stmt|;
-name|cursor_up
-operator|=
-name|parm_up_cursor
-operator|=
-literal|0
-expr_stmt|;
-name|row_address
-operator|=
-literal|0
-expr_stmt|;
-name|cursor_home
-operator|=
-name|carriage_return
-expr_stmt|;
-block|}
-comment|/* If we must simulate soft labels, grab off the line to be used.        We assume that we must simulate, if it is none of the standard        formats (4-4  or 3-2-3) for which there may be some hardware        support. */
-if|if
-condition|(
-name|num_labels
-operator|<=
-literal|0
-operator|||
-operator|!
-name|SLK_STDFMT
-argument_list|(
-name|slk_format
-argument_list|)
-condition|)
-if|if
-condition|(
-name|slk_format
-condition|)
 block|{
-if|if
-condition|(
-name|ERR
-operator|==
-name|_nc_ripoffline
-argument_list|(
-operator|-
-name|SLK_LINES
-argument_list|(
-name|slk_format
-argument_list|)
-argument_list|,
-name|_nc_slk_initialize
-argument_list|)
-condition|)
-name|returnSP
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* this actually allocates the screen structure, and saves the      * original terminal settings.      */
+comment|/* 	 * This actually allocates the screen structure, and saves the original 	 * terminal settings. 	 */
 name|current
 operator|=
 name|SP
@@ -439,6 +450,10 @@ argument_list|,
 name|COLS
 argument_list|,
 name|ofp
+argument_list|,
+name|filter_mode
+argument_list|,
+name|slk_format
 argument_list|)
 operator|==
 name|ERR
@@ -449,12 +464,13 @@ argument_list|(
 name|current
 argument_list|)
 expr_stmt|;
-name|returnSP
-argument_list|(
+name|result
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 comment|/* if the terminal type has real soft labels, set those up */
 if|if
 condition|(
@@ -479,15 +495,6 @@ expr_stmt|;
 name|SP
 operator|->
 name|_ifd
-operator|=
-name|fileno
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|SP
-operator|->
-name|_checkfd
 operator|=
 name|fileno
 argument_list|(
@@ -550,7 +557,7 @@ name|_endwin
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* Check whether we can optimize scrolling under dumb terminals in case      * we do not have any of these capabilities, scrolling optimization      * will be useless.      */
+comment|/* 	     * Check whether we can optimize scrolling under dumb terminals in 	     * case we do not have any of these capabilities, scrolling 	     * optimization will be useless. 	     */
 name|SP
 operator|->
 name|_scrolling
@@ -591,7 +598,7 @@ name|_keytry
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Check for mismatched graphic-rendition capabilities.  Most SVr4      * terminfo trees contain entries that have rmul or rmso equated to      * sgr0 (Solaris curses copes with those entries).  We do this only for      * curses, since many termcap applications assume that smso/rmso and      * smul/rmul are paired, and will not function properly if we remove      * rmso or rmul.  Curses applications shouldn't be looking at this      * detail.      */
+comment|/* 	     * Check for mismatched graphic-rendition capabilities.  Most SVr4 	     * terminfo trees contain entries that have rmul or rmso equated to 	     * sgr0 (Solaris curses copes with those entries).  We do this only 	     * for curses, since many termcap applications assume that 	     * smso/rmso and smul/rmul are paired, and will not function 	     * properly if we remove rmso or rmul.  Curses applications 	     * shouldn't be looking at this detail. 	     */
 define|#
 directive|define
 name|SGR0_TEST
@@ -634,9 +641,20 @@ argument_list|(
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
+name|SP
+expr_stmt|;
+block|}
+block|}
+name|_nc_handle_sigwinch
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|returnSP
 argument_list|(
-name|SP
+name|result
 argument_list|)
 expr_stmt|;
 block|}

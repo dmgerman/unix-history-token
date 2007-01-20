@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *   Author: Juergen Pfeifer<juergen.pfeifer@gmx.net> 1995,1997            *  ****************************************************************************/
+comment|/****************************************************************************  *   Author:  Juergen Pfeifer, 1995,1997                                    *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_driver.c,v 1.18 2000/12/10 02:16:48 tom Exp $"
+literal|"$Id: m_driver.c,v 1.25 2005/11/26 20:46:59 tom Exp $"
 argument_list|)
 end_macro
 
@@ -178,11 +178,11 @@ end_macro
 begin_macro
 name|_nc_Match_Next_Character_In_Item_Name
 argument_list|(
-argument|MENU *menu
+argument|MENU * menu
 argument_list|,
 argument|int ch
 argument_list|,
-argument|ITEM **item
+argument|ITEM ** item
 argument_list|)
 end_macro
 
@@ -202,6 +202,22 @@ name|idx
 decl_stmt|,
 name|last
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"_nc_Match_Next_Character(%p,%d,%p)"
+argument_list|)
+operator|,
+name|menu
+operator|,
+name|ch
+operator|,
+name|item
+operator|)
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 name|menu
@@ -230,7 +246,7 @@ operator|!=
 name|BS
 condition|)
 block|{
-comment|/* if we become to long, we need no further checking : there can't be 	 a match ! */
+comment|/* if we become to long, we need no further checking : there can't be          a match ! */
 if|if
 condition|(
 operator|(
@@ -257,7 +273,7 @@ argument_list|,
 name|ch
 argument_list|)
 expr_stmt|;
-comment|/* we artificially position one item back, because in the do...while 	 loop we start with the next item. This means, that with a new 	 pattern search we always start the scan with the actual item. If 	 we do a NEXT_PATTERN oder PREV_PATTERN search, we start with the 	 one after or before the actual item. */
+comment|/* we artificially position one item back, because in the do...while          loop we start with the next item. This means, that with a new          pattern search we always start the scan with the actual item. If          we do a NEXT_PATTERN oder PREV_PATTERN search, we start with the          one after or before the actual item. */
 if|if
 condition|(
 operator|--
@@ -326,6 +342,10 @@ if|if
 condition|(
 name|Is_Sub_String
 argument_list|(
+call|(
+name|bool
+call|)
+argument_list|(
 operator|(
 name|menu
 operator|->
@@ -335,6 +355,7 @@ name|O_IGNORECASE
 operator|)
 operator|!=
 literal|0
+argument_list|)
 argument_list|,
 name|menu
 operator|->
@@ -414,7 +435,7 @@ name|E_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* This point is reached, if we fully cycled through the item list 	 and the only match we found is the starting item. With a NEXT_PATTERN 	 or PREV_PATTERN scan this means, that there was no additional match. 	 If we searched with an expanded new pattern, we should never reach 	 this point, because if the expanded pattern matches also the actual 	 item we will find it in the first attempt (passed==FALSE) and we 	 will never cycle through the whole item array. 	 */
+comment|/* This point is reached, if we fully cycled through the item list          and the only match we found is the starting item. With a NEXT_PATTERN          or PREV_PATTERN scan this means, that there was no additional match.          If we searched with an expanded new pattern, we should never reach          this point, because if the expanded pattern matches also the actual          item we will find it in the first attempt (passed==FALSE) and we          will never cycle through the whole item array.        */
 name|assert
 argument_list|(
 name|ch
@@ -476,7 +497,7 @@ name|menu_driver
 argument_list|(
 argument|MENU * menu
 argument_list|,
-argument|int   c
+argument|int c
 argument_list|)
 end_macro
 
@@ -504,6 +525,20 @@ name|my_top_row
 decl_stmt|,
 name|rdiff
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"menu_driver(%p,%d)"
+argument_list|)
+operator|,
+name|menu
+operator|,
+name|c
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -717,7 +752,7 @@ name|down
 operator|)
 condition|)
 block|{
-comment|/* only if the menu has less items than rows, we can deny the 		   request. Otherwise the epilogue of this routine adjusts the 		   top row if necessary */
+comment|/* only if the menu has less items than rows, we can deny the 	         request. Otherwise the epilogue of this routine adjusts the 	         top row if necessary */
 name|result
 operator|=
 name|E_REQUEST_DENIED
@@ -1318,7 +1353,10 @@ operator|)
 operator|&&
 name|isprint
 argument_list|(
+name|UChar
+argument_list|(
 name|c
+argument_list|)
 argument_list|)
 condition|)
 name|result
@@ -1392,7 +1430,7 @@ name|x
 argument_list|)
 condition|)
 block|{
-comment|/* we react only if the click was in the userwin, that means 		 * inside the menu display area or at the decoration window. 		 */
+comment|/* we react only if the click was in the userwin, that means 				 * inside the menu display area or at the decoration window. 				 */
 name|WINDOW
 modifier|*
 name|sub
@@ -1444,7 +1482,7 @@ operator|->
 name|_begy
 condition|)
 block|{
-comment|/* we clicked above the display region; this is 			 * interpreted as "scroll up" request 			 */
+comment|/* we clicked above the display region; this is 				 * interpreted as "scroll up" request 				 */
 if|if
 condition|(
 name|event
@@ -1508,7 +1546,7 @@ elseif|else
 if|if
 condition|(
 name|ry
-operator|>=
+operator|>
 name|sub
 operator|->
 name|_begy
@@ -1518,7 +1556,7 @@ operator|->
 name|_maxy
 condition|)
 block|{
-comment|/* we clicked below the display region; this is 			 * interpreted as "scroll down" request 			 */
+comment|/* we clicked below the display region; this is 				 * interpreted as "scroll down" request 				 */
 if|if
 condition|(
 name|event
@@ -1783,7 +1821,7 @@ operator|==
 name|result
 condition|)
 block|{
-comment|/* Adjust the top row if it turns out that the current item unfortunately        doesn't appear in the menu window */
+comment|/* Adjust the top row if it turns out that the current item unfortunately          doesn't appear in the menu window */
 if|if
 condition|(
 name|item

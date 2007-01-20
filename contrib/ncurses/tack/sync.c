@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 59 Temple Place - Suite 330, ** Boston, MA 02111-1307, USA. */
+comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, ** Boston, MA 02110-1301, USA */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: sync.c,v 1.3 2001/06/16 17:55:48 tom Exp $"
+literal|"$Id: sync.c,v 1.9 2006/05/06 20:45:48 tom Exp $"
 argument_list|)
 end_macro
 
@@ -99,6 +99,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|test_list
 name|sync_test_list
@@ -262,6 +263,7 @@ comment|/* TRUE if tty_sync_error() returned FALSE */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|tty_newline_rate
 decl_stmt|;
@@ -272,6 +274,7 @@ comment|/* The number of newlines per second */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|tty_clear_rate
 decl_stmt|;
@@ -282,7 +285,8 @@ comment|/* The number of clear-screens per second */
 end_comment
 
 begin_decl_stmt
-name|int
+name|unsigned
+name|long
 name|tty_cps
 decl_stmt|;
 end_decl_stmt
@@ -299,6 +303,7 @@ value|64
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ACK_terminator
 decl_stmt|;
@@ -309,6 +314,7 @@ comment|/* terminating ACK character */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ACK_length
 decl_stmt|;
@@ -319,6 +325,7 @@ comment|/* length of ACK string */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -331,6 +338,7 @@ comment|/* enquire string */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|tty_ACK
 index|[
@@ -995,6 +1003,7 @@ comment|/* **	sync_home(test_list, status, ch) ** **	Baudrate test */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sync_home
 parameter_list|(
@@ -1185,7 +1194,7 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
-literal|"%d characters per second.  Baudrate %d  "
+literal|"%lu characters per second.  Baudrate %d  "
 argument_list|,
 name|tx_cps
 argument_list|,
@@ -1572,7 +1581,7 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
-literal|"%-10s%-11s%11d   %11d %11d"
+literal|"%-10s%-11s%11lu   %11d %11d"
 argument_list|,
 name|tty_basename
 argument_list|,

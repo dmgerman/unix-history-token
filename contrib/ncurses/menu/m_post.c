@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *   Author: Juergen Pfeifer<juergen.pfeifer@gmx.net> 1995,1997            *  ****************************************************************************/
+comment|/****************************************************************************  *   Author:  Juergen Pfeifer, 1995,1997                                    *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,12 +20,12 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_post.c,v 1.17 2000/12/10 02:16:48 tom Exp $"
+literal|"$Id: m_post.c,v 1.26 2004/12/25 23:57:04 tom Exp $"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  void _nc_Post_Item(MENU *menu, ITEM *item)   |    |   Description   :  Draw the item in the menus window at the current |                    window position  | |   Return Values :  - +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu |   Function      :  void _nc_Post_Item(MENU *menu, ITEM *item) | |   Description   :  Draw the item in the menus window at the current |                    window position | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -75,6 +75,12 @@ name|isgrey
 init|=
 name|FALSE
 decl_stmt|;
+name|int
+name|name_len
+decl_stmt|;
+name|int
+name|desc_len
+decl_stmt|;
 name|assert
 argument_list|(
 name|menu
@@ -93,7 +99,7 @@ argument_list|,
 name|item_x
 argument_list|)
 expr_stmt|;
-comment|/* We need a marker iff      - it is a onevalued menu and it is the current item      - or it has a selection value      */
+comment|/* We need a marker iff      - it is a onevalued menu and it is the current item      - or it has a selection value    */
 name|wattron
 argument_list|(
 name|menu
@@ -247,7 +253,7 @@ name|menu
 operator|->
 name|marklen
 expr_stmt|;
-comment|/* First we have to calculate the attribute depending on selectability      and selection status      */
+comment|/* First we have to calculate the attribute depending on selectability      and selection status    */
 if|if
 condition|(
 operator|!
@@ -345,6 +351,18 @@ operator|.
 name|length
 argument_list|)
 expr_stmt|;
+name|name_len
+operator|=
+name|_nc_Calculate_Text_Width
+argument_list|(
+operator|&
+operator|(
+name|item
+operator|->
+name|name
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|ch
@@ -357,11 +375,7 @@ name|menu
 operator|->
 name|namelen
 operator|-
-name|item
-operator|->
-name|name
-operator|.
-name|length
+name|name_len
 init|;
 name|i
 operator|>
@@ -513,6 +527,18 @@ operator|.
 name|length
 argument_list|)
 expr_stmt|;
+name|desc_len
+operator|=
+name|_nc_Calculate_Text_Width
+argument_list|(
+operator|&
+operator|(
+name|item
+operator|->
+name|description
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|ch
@@ -525,11 +551,7 @@ name|menu
 operator|->
 name|desclen
 operator|-
-name|item
-operator|->
-name|description
-operator|.
-name|length
+name|desc_len
 init|;
 name|i
 operator|>
@@ -823,7 +845,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  void _nc_Draw_Menu(const MENU *) |    |   Description   :  Display the menu in its windows | |   Return Values :  - +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu |   Function      :  void _nc_Draw_Menu(const MENU *) | |   Description   :  Display the menu in its windows | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -1155,7 +1177,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int post_menu(MENU *) |    |   Description   :  Post a menu to the screen. This makes it visible. | |   Return Values :  E_OK                - success |                    E_BAD_ARGUMENT      - not a valid menu pointer |                    E_SYSTEM_ERROR      - error in lower layers |                    E_NO_ROOM           - Menu to large for screen |                    E_NOT_CONNECTED     - No items connected to menu |                    E_BAD_STATE         - Menu in userexit routine |                    E_POSTED            - Menu already posted +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu |   Function      :  int post_menu(MENU *) | |   Description   :  Post a menu to the screen. This makes it visible. | |   Return Values :  E_OK                - success |                    E_BAD_ARGUMENT      - not a valid menu pointer |                    E_SYSTEM_ERROR      - error in lower layers |                    E_NOT_CONNECTED     - No items connected to menu |                    E_BAD_STATE         - Menu in userexit routine |                    E_POSTED            - Menu already posted +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -1174,6 +1196,18 @@ end_macro
 
 begin_block
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"post_menu(%p)"
+argument_list|)
+operator|,
+name|menu
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1261,33 +1295,6 @@ argument_list|(
 name|win
 argument_list|)
 decl_stmt|;
-name|int
-name|maxx
-init|=
-name|getmaxx
-argument_list|(
-name|win
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|maxx
-operator|<
-name|menu
-operator|->
-name|width
-operator|||
-name|maxy
-operator|<
-name|menu
-operator|->
-name|height
-condition|)
-name|RETURN
-argument_list|(
-name|E_NO_ROOM
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1472,7 +1479,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int unpost_menu(MENU *) |    |   Description   :  Detach menu from screen | |   Return Values :  E_OK              - success |                    E_BAD_ARGUMENT    - not a valid menu pointer |                    E_BAD_STATE       - menu in userexit routine |                    E_NOT_POSTED      - menu is not posted +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu |   Function      :  int unpost_menu(MENU *) | |   Description   :  Detach menu from screen | |   Return Values :  E_OK              - success |                    E_BAD_ARGUMENT    - not a valid menu pointer |                    E_BAD_STATE       - menu in userexit routine |                    E_NOT_POSTED      - menu is not posted +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -1495,6 +1502,18 @@ name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"unpost_menu(%p)"
+argument_list|)
+operator|,
+name|menu
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

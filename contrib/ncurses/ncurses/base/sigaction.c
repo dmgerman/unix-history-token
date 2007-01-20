@@ -1,23 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-2003               *  ****************************************************************************/
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<curses.priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<SigAction.h>
-end_include
 
 begin_comment
 comment|/* This file provides sigaction() emulation using sigvec() */
@@ -27,41 +15,29 @@ begin_comment
 comment|/* Use only if this is non POSIX system */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|HAVE_SIGACTION
-operator|&&
-name|HAVE_SIGVEC
-end_if
-
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: sigaction.c,v 1.13 2002/05/18 19:56:26 tom Exp $"
+literal|"$Id: sigaction.c,v 1.14 2003/12/07 01:06:52 tom Exp $"
 argument_list|)
 end_macro
 
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|sigaction
-argument_list|(
-argument|int sig
-argument_list|,
-argument|sigaction_t * sigact
-argument_list|,
-argument|sigaction_t * osigact
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|_nc_sigaction
+parameter_list|(
+name|int
+name|sig
+parameter_list|,
+name|sigaction_t
+modifier|*
+name|sigact
+parameter_list|,
+name|sigaction_t
+modifier|*
+name|osigact
+parameter_list|)
 block|{
 return|return
 name|sigvec
@@ -74,23 +50,17 @@ name|osigact
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|sigemptyset
-argument_list|(
-argument|sigset_t * mask
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|_nc_sigemptyset
+parameter_list|(
+name|sigset_t
+modifier|*
+name|mask
+parameter_list|)
 block|{
 operator|*
 name|mask
@@ -101,27 +71,24 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|sigprocmask
-argument_list|(
-argument|int mode
-argument_list|,
-argument|sigset_t * mask
-argument_list|,
-argument|sigset_t * omask
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|_nc_sigprocmask
+parameter_list|(
+name|int
+name|mode
+parameter_list|,
+name|sigset_t
+modifier|*
+name|mask
+parameter_list|,
+name|sigset_t
+modifier|*
+name|omask
+parameter_list|)
 block|{
 name|sigset_t
 name|current
@@ -185,84 +152,20 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|sigsuspend
-argument_list|(
-argument|sigset_t * mask
-argument_list|)
-end_macro
-
-begin_block
-block|{
-return|return
-name|sigpause
-argument_list|(
-operator|*
+begin_function
+specifier|static
+name|int
+name|_nc_sigaddset
+parameter_list|(
+name|sigset_t
+modifier|*
 name|mask
-argument_list|)
-return|;
-block|}
-end_block
-
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|sigdelset
-argument_list|(
-argument|sigset_t * mask
-argument_list|,
-argument|int sig
-argument_list|)
-end_macro
-
-begin_block
-block|{
-operator|*
-name|mask
-operator|&=
-operator|~
-name|sigmask
-argument_list|(
+parameter_list|,
+name|int
 name|sig
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_block
-
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|sigaddset
-argument_list|(
-argument|sigset_t * mask
-argument_list|,
-argument|int sig
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|)
 block|{
 operator|*
 name|mask
@@ -276,87 +179,20 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|int
-argument_list|)
-end_macro
+begin_comment
+comment|/* not used in lib_tstp.c */
+end_comment
 
-begin_macro
-name|sigismember
-argument_list|(
-argument|sigset_t * mask
-argument_list|,
-argument|int sig
-argument_list|)
-end_macro
-
-begin_block
-block|{
-return|return
-operator|(
-operator|*
-name|mask
-operator|&
-name|sigmask
-argument_list|(
-name|sig
-argument_list|)
-operator|)
-operator|!=
+begin_if
+if|#
+directive|if
 literal|0
-return|;
-block|}
-end_block
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_extern
-extern|extern NCURSES_EXPORT(void
-end_extern
-
-begin_expr_stmt
-unit|)
-name|_nc_sigaction
-argument_list|(
-name|void
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* quiet's gcc warning */
-end_comment
-
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_macro
-name|_nc_sigaction
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_block
-block|{ }
-end_block
-
-begin_comment
-comment|/* nonempty for strict ANSI compilers */
-end_comment
+end_if
 
 begin_endif
+unit|static int _nc_sigsuspend(sigset_t * mask) {     return sigpause(*mask); }  static int _nc_sigdelset(sigset_t * mask, int sig) {     *mask&= ~sigmask(sig);     return 0; }  static int _nc_sigismember(sigset_t * mask, int sig) {     return (*mask& sigmask(sig)) != 0; }
 endif|#
 directive|endif
 end_endif

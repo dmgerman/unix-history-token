@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001,2002 Free Software Foundation, Inc.    *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_options.c,v 1.46 2002/02/02 19:40:54 tom Exp $"
+literal|"$Id: lib_options.c,v 1.49 2006/03/04 19:28:25 tom Exp $"
 argument_list|)
 end_macro
 
@@ -190,6 +190,10 @@ operator|||
 name|t
 operator|>
 literal|255
+operator|||
+name|SP
+operator|==
+literal|0
 condition|)
 name|returnCode
 argument_list|(
@@ -310,7 +314,7 @@ argument_list|(
 operator|(
 name|T_CALLED
 argument_list|(
-literal|"notimout(%p,%d)"
+literal|"notimeout(%p,%d)"
 argument_list|)
 operator|,
 name|win
@@ -473,6 +477,11 @@ end_macro
 
 begin_block
 block|{
+name|int
+name|result
+init|=
+name|ERR
+decl_stmt|;
 comment|/* Ok, we stay relaxed and don't signal an error if win is NULL */
 name|T
 argument_list|(
@@ -488,6 +497,13 @@ name|flag
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SP
+operator|!=
+literal|0
+condition|)
+block|{
 name|SP
 operator|->
 name|_use_meta
@@ -532,9 +548,14 @@ name|meta_off
 argument_list|)
 expr_stmt|;
 block|}
+name|result
+operator|=
+name|OK
+expr_stmt|;
+block|}
 name|returnCode
 argument_list|(
-name|OK
+name|result
 argument_list|)
 expr_stmt|;
 block|}
@@ -561,11 +582,9 @@ end_macro
 begin_block
 block|{
 name|int
-name|cursor
+name|result
 init|=
-name|SP
-operator|->
-name|_cursor
+name|ERR
 decl_stmt|;
 name|T
 argument_list|(
@@ -581,29 +600,52 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vis
-operator|<
+name|SP
+operator|!=
 literal|0
-operator|||
+operator|&&
 name|vis
-operator|>
+operator|>=
+literal|0
+operator|&&
+name|vis
+operator|<=
 literal|2
 condition|)
-name|returnCode
-argument_list|(
-name|ERR
-argument_list|)
-expr_stmt|;
+block|{
+name|int
+name|cursor
+init|=
+name|SP
+operator|->
+name|_cursor
+decl_stmt|;
 if|if
 condition|(
 name|vis
 operator|==
 name|cursor
 condition|)
-name|returnCode
-argument_list|(
+block|{
+name|result
+operator|=
 name|cursor
-argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|result
+operator|=
+operator|(
+name|cursor
+operator|==
+operator|-
+literal|1
+condition|?
+literal|1
+else|:
+name|cursor
+operator|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -630,10 +672,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|returnCode
-argument_list|(
+name|result
+operator|=
 name|ERR
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -656,10 +697,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|returnCode
-argument_list|(
+name|result
+operator|=
 name|ERR
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -682,10 +722,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|returnCode
-argument_list|(
+name|result
+operator|=
 name|ERR
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -698,16 +737,11 @@ expr_stmt|;
 name|_nc_flush
 argument_list|()
 expr_stmt|;
+block|}
+block|}
 name|returnCode
 argument_list|(
-name|cursor
-operator|==
-operator|-
-literal|1
-condition|?
-literal|1
-else|:
-name|cursor
+name|result
 argument_list|)
 expr_stmt|;
 block|}
@@ -741,6 +775,13 @@ name|fd
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SP
+operator|!=
+literal|0
+condition|)
+block|{
 name|SP
 operator|->
 name|_checkfd
@@ -752,6 +793,15 @@ argument_list|(
 name|OK
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|returnCode
+argument_list|(
+name|ERR
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -859,6 +909,10 @@ argument_list|)
 expr_stmt|;
 name|returnCode
 argument_list|(
+name|SP
+operator|!=
+literal|0
+condition|?
 name|has_key_internal
 argument_list|(
 name|keycode
@@ -867,6 +921,8 @@ name|SP
 operator|->
 name|_keytry
 argument_list|)
+else|:
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -947,6 +1003,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SP
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|flag
 operator|&&
 operator|!
@@ -971,6 +1034,7 @@ name|_keypad_on
 operator|=
 name|flag
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|OK

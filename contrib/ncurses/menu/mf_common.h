@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *   Author: Juergen Pfeifer<juergen.pfeifer@gmx.net> 1995,1997            *  ****************************************************************************/
+comment|/****************************************************************************  *   Author:  Juergen Pfeifer, 1995,1997                                    *  ****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* $Id: mf_common.h,v 0.22 2005/11/26 15:26:52 tom Exp $ */
 end_comment
 
 begin_comment
@@ -196,6 +200,27 @@ parameter_list|()
 value|(errno)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TRACE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RETURN
+parameter_list|(
+name|code
+parameter_list|)
+value|returnCode( SET_ERROR(code) )
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -206,6 +231,11 @@ parameter_list|)
 value|return( SET_ERROR(code) )
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* The few common values in the status fields for menus and forms */
 end_comment
@@ -214,7 +244,7 @@ begin_define
 define|#
 directive|define
 name|_POSTED
-value|(0x01)
+value|(0x01U)
 end_define
 
 begin_comment
@@ -225,7 +255,7 @@ begin_define
 define|#
 directive|define
 name|_IN_DRIVER
-value|(0x02)
+value|(0x02U)
 end_define
 
 begin_comment
@@ -246,49 +276,8 @@ parameter_list|,
 name|handler
 parameter_list|)
 define|\
-value|if ( (object)&& ((object)->handler) )\    {\ 	(object)->status |= _IN_DRIVER;\ 	(object)->handler(object);\ 	(object)->status&= ~_IN_DRIVER;\    }
+value|if ( (object) != 0&& ((object)->handler) != (void *) 0 )\    {\ 	(object)->status |= _IN_DRIVER;\ 	(object)->handler(object);\ 	(object)->status&= ~_IN_DRIVER;\    }
 end_define
-
-begin_define
-define|#
-directive|define
-name|INLINE
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TRACE
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|CC_HAS_INLINE_FUNCS
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|INLINE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|INLINE
-value|inline
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

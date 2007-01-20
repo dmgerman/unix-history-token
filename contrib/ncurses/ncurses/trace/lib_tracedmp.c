@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Thomas E. Dickey 1996-2001                                      *  *     and: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Thomas E. Dickey 1996-on                                        *  *     and: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tracedmp.c,v 1.22 2001/11/03 15:45:35 tom Exp $"
+literal|"$Id: lib_tracedmp.c,v 1.27 2006/10/14 20:43:31 tom Exp $"
 argument_list|)
 end_macro
 
@@ -114,6 +114,7 @@ condition|;
 operator|++
 name|j
 control|)
+block|{
 if|if
 condition|(
 name|CharOf
@@ -135,11 +136,48 @@ name|L
 argument_list|(
 literal|' '
 argument_list|)
+operator|||
+name|AttrOf
+argument_list|(
+name|win
+operator|->
+name|_line
+index|[
+name|i
+index|]
+operator|.
+name|text
+index|[
+name|j
+index|]
+argument_list|)
+operator|!=
+name|A_NORMAL
+operator|||
+name|GetPair
+argument_list|(
+name|win
+operator|->
+name|_line
+index|[
+name|i
+index|]
+operator|.
+name|text
+index|[
+name|j
+index|]
+argument_list|)
+operator|!=
+literal|0
 condition|)
+block|{
 name|n
 operator|=
 name|j
 expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|n
@@ -187,11 +225,13 @@ operator|)
 expr_stmt|;
 name|buf
 operator|=
-name|_nc_doalloc
+name|typeRealloc
 argument_list|(
-name|buf
+name|char
 argument_list|,
 name|used
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
@@ -324,12 +364,15 @@ literal|'\0'
 expr_stmt|;
 name|_tracef
 argument_list|(
-literal|"%s[%2d] %3d%3d ='%s'"
+literal|"%s[%2d] %3ld%3ld ='%s'"
 argument_list|,
 name|name
 argument_list|,
 name|n
 argument_list|,
+operator|(
+name|long
+operator|)
 name|win
 operator|->
 name|_line
@@ -339,6 +382,9 @@ index|]
 operator|.
 name|firstchar
 argument_list|,
+operator|(
+name|long
+operator|)
 name|win
 operator|->
 name|_line
@@ -371,7 +417,7 @@ name|j
 control|)
 if|if
 condition|(
-name|AttrOf
+name|GetPair
 argument_list|(
 name|win
 operator|->
@@ -385,8 +431,8 @@ index|[
 name|j
 index|]
 argument_list|)
-operator|&
-name|A_COLOR
+operator|!=
+literal|0
 condition|)
 block|{
 name|havecolors
@@ -417,14 +463,11 @@ condition|;
 operator|++
 name|j
 control|)
-name|ep
-index|[
-name|j
-index|]
-operator|=
-name|UChar
-argument_list|(
-name|CharOf
+block|{
+name|int
+name|pair
+init|=
+name|GetPair
 argument_list|(
 name|win
 operator|->
@@ -438,12 +481,77 @@ index|[
 name|j
 index|]
 argument_list|)
-operator|>>
-name|NCURSES_ATTR_SHIFT
-argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|pair
+operator|>=
+literal|52
+condition|)
+name|ep
+index|[
+name|j
+index|]
+operator|=
+literal|'?'
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pair
+operator|>=
+literal|36
+condition|)
+name|ep
+index|[
+name|j
+index|]
+operator|=
+name|pair
 operator|+
+literal|'A'
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pair
+operator|>=
+literal|10
+condition|)
+name|ep
+index|[
+name|j
+index|]
+operator|=
+name|pair
+operator|+
+literal|'a'
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pair
+operator|>=
+literal|1
+condition|)
+name|ep
+index|[
+name|j
+index|]
+operator|=
+name|pair
+operator|+
+literal|'0'
+expr_stmt|;
+else|else
+name|ep
+index|[
+name|j
+index|]
+operator|=
 literal|' '
 expr_stmt|;
+block|}
 name|ep
 index|[
 name|j
@@ -659,6 +767,10 @@ name|free
 argument_list|(
 name|buf
 argument_list|)
+expr_stmt|;
+name|buf
+operator|=
+literal|0
 expr_stmt|;
 name|used
 operator|=

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: parse_entry.c,v 1.56 2002/05/25 12:23:51 tom Exp $"
+literal|"$Id: parse_entry.c,v 1.63 2006/06/17 17:57:50 tom Exp $"
 argument_list|)
 end_macro
 
@@ -532,7 +532,7 @@ name|Booleans
 operator|=
 name|typeRealloc
 argument_list|(
-name|char
+name|NCURSES_SBOOL
 argument_list|,
 name|tp
 operator|->
@@ -817,8 +817,15 @@ comment|/* NCURSES_XNAMES */
 end_comment
 
 begin_comment
-comment|/*  *	int  *	_nc_parse_entry(entry, literal, silent)  *  *	Compile one entry.  Doesn't try to resolve use or tc capabilities.  *  *	found-forward-use = FALSE  *	re-initialise internal arrays  *	get_token();  *	if the token was not a name in column 1, complain and die  *	save names in entry's string table  *	while (get_token() is not EOF and not NAMES)  *	        check for existance and type-correctness  *	        enter cap into structure  *	        if STRING  *	            save string in entry's string table  *	push back token  */
+comment|/*  *	int  *	_nc_parse_entry(entry, literal, silent)  *  *	Compile one entry.  Doesn't try to resolve use or tc capabilities.  *  *	found-forward-use = FALSE  *	re-initialise internal arrays  *	get_token();  *	if the token was not a name in column 1, complain and die  *	save names in entry's string table  *	while (get_token() is not EOF and not NAMES)  *	        check for existence and type-correctness  *	        enter cap into structure  *	        if STRING  *	            save string in entry's string table  *	push back token  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BAD_TC_USAGE
+value|if (!bad_tc_usage) \  	{ bad_tc_usage = TRUE; \ 	 _nc_warning("Legacy termcap allows only a trailing tc= clause"); }
+end_define
 
 begin_macro
 name|NCURSES_EXPORT
@@ -855,6 +862,11 @@ name|ptr
 decl_stmt|,
 modifier|*
 name|base
+decl_stmt|;
+name|bool
+name|bad_tc_usage
+init|=
+name|FALSE
 decl_stmt|;
 name|token_type
 operator|=
@@ -928,13 +940,28 @@ name|cend
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* junk the 2-character termcap name, if present */
+comment|/*      * Strip off the 2-character termcap name, if present.  Originally termcap      * used that as an indexing aid.  We can retain 2-character terminfo names,      * but note that they would be lost if we translate to/from termcap.  This      * feature is supposedly obsolete since "newer" BSD implementations do not      * use it; however our reference for this feature is SunOS 4.x, which      * implemented it.  Note that the resulting terminal type was never the      * 2-character name, but was instead the first alias after that.      */
 name|ptr
 operator|=
 name|_nc_curr_token
 operator|.
 name|tk_name
 expr_stmt|;
+if|if
+condition|(
+name|_nc_syntax
+operator|==
+name|SYN_TERMCAP
+if|#
+directive|if
+name|NCURSES_XNAMES
+operator|&&
+operator|!
+name|_nc_user_definable
+endif|#
+directive|endif
+condition|)
+block|{
 if|if
 condition|(
 name|ptr
@@ -946,11 +973,7 @@ literal|'|'
 condition|)
 block|{
 name|ptr
-operator|=
-name|_nc_curr_token
-operator|.
-name|tk_name
-operator|+
+operator|+=
 literal|3
 expr_stmt|;
 name|_nc_curr_token
@@ -962,6 +985,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 block|}
 name|entryp
 operator|->
@@ -1107,8 +1131,10 @@ name|silent
 argument_list|)
 control|)
 block|{
-if|if
-condition|(
+name|bool
+name|is_use
+init|=
+operator|(
 name|strcmp
 argument_list|(
 name|_nc_curr_token
@@ -1119,7 +1145,15 @@ literal|"use"
 argument_list|)
 operator|==
 literal|0
-operator|||
+operator|)
+decl_stmt|;
+name|bool
+name|is_tc
+init|=
+operator|!
+name|is_use
+operator|&&
+operator|(
 name|strcmp
 argument_list|(
 name|_nc_curr_token
@@ -1130,6 +1164,13 @@ literal|"tc"
 argument_list|)
 operator|==
 literal|0
+operator|)
+decl_stmt|;
+if|if
+condition|(
+name|is_use
+operator|||
+name|is_tc
 condition|)
 block|{
 name|entryp
@@ -1168,6 +1209,19 @@ operator|->
 name|nuses
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|entryp
+operator|->
+name|nuses
+operator|>
+literal|1
+operator|&&
+name|is_tc
+condition|)
+block|{
+name|BAD_TC_USAGE
+block|}
 block|}
 else|else
 block|{
@@ -1208,6 +1262,17 @@ operator|==
 name|SYN_TERMCAP
 condition|)
 block|{
+if|if
+condition|(
+name|entryp
+operator|->
+name|nuses
+operator|!=
+literal|0
+condition|)
+block|{
+name|BAD_TC_USAGE
+block|}
 for|for
 control|(
 name|ap
@@ -1531,6 +1596,7 @@ operator|.
 name|tk_name
 argument_list|)
 condition|)
+block|{
 name|entry_ptr
 operator|=
 name|_nc_find_type_entry
@@ -1548,6 +1614,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* map terminfo's string MT to MT */
+block|}
 elseif|else
 if|if
 condition|(
@@ -1565,6 +1632,7 @@ operator|.
 name|tk_name
 argument_list|)
 condition|)
+block|{
 name|entry_ptr
 operator|=
 name|_nc_find_type_entry
@@ -1582,6 +1650,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* treat strings without following "=" as empty strings */
+block|}
 elseif|else
 if|if
 condition|(
@@ -1595,11 +1664,13 @@ name|nte_type
 operator|==
 name|STRING
 condition|)
+block|{
 name|token_type
 operator|=
 name|STRING
 expr_stmt|;
 comment|/* we couldn't recover; skip this token */
+block|}
 else|else
 block|{
 if|if
@@ -3934,7 +4005,7 @@ name|acs_chars
 operator|=
 name|_nc_save_str
 argument_list|(
-literal|"``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~"
+name|VT_ACSC
 argument_list|)
 expr_stmt|;
 block|}

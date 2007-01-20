@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 59 Temple Place - Suite 330, ** Boston, MA 02111-1307, USA. */
+comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, ** Boston, MA 02110-1301, USA */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tack.c,v 1.2 2001/10/28 01:05:35 tom Exp $"
+literal|"$Id: tack.c,v 1.4 2005/09/17 19:49:16 tom Exp $"
 argument_list|)
 end_macro
 
@@ -123,14 +123,6 @@ begin_comment
 comment|/*****************************************************************************  *  * Menu definitions  *  *****************************************************************************/
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|test_menu
-name|sync_menu
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -178,6 +170,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|test_list
 name|tools_test_list
@@ -365,6 +358,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|test_menu
 name|tools_menu
@@ -667,15 +661,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|test_list
-name|edit_test_list
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|test_menu
 name|edit_menu
@@ -707,15 +692,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|test_list
-name|mode_test_list
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|struct
 name|test_menu
 name|mode_menu
@@ -743,15 +720,6 @@ literal|0
 block|,
 literal|0
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|test_list
-name|acs_test_list
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -788,15 +756,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|test_list
-name|color_test_list
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|struct
 name|test_menu
 name|color_menu
@@ -824,15 +784,6 @@ literal|0
 block|,
 literal|0
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|test_list
-name|crum_test_list
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -869,15 +820,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|test_list
-name|funkey_test_list
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|test_menu
@@ -906,15 +848,6 @@ literal|0
 block|,
 literal|0
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|test_list
-name|printer_test_list
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -967,15 +900,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|test_list
-name|pad_test_list
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1238,6 +1162,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|test_menu
 name|normal_menu
@@ -1353,6 +1278,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|test_list
 name|start_test_list
@@ -1460,6 +1386,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|test_menu
 name|start_menu
@@ -1770,7 +1697,7 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
-literal|"Accepting %d bits, UNIX delays %d, XON/XOFF %sabled, speed %ld, translate %s, scan-code mode %s."
+literal|"Accepting %d bits, UNIX delays %d, XON/XOFF %sabled, speed %u, translate %s, scan-code mode %s."
 argument_list|,
 operator|(
 name|char_mask
