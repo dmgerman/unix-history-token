@@ -359,7 +359,7 @@ literal|"rl"
 argument_list|)
 operator|==
 literal|0
-operator|&&
+operator|||
 name|strcmp
 argument_list|(
 name|nic
