@@ -33477,10 +33477,12 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|bus_dmat
 decl_stmt|;
-comment|/* 	 *  I expected to be told about a parent  	 *  DMA tag, but didn't find any. 	 */
 name|bus_dmat
 operator|=
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 comment|/* 	 *  Only probed devices should be attached. 	 *  We just enjoy being paranoid. :) 	 */
 name|chip
