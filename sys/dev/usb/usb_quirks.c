@@ -375,6 +375,18 @@ name|UQ_BROKEN_BIDIR
 block|}
 block|}
 block|,
+block|{
+name|USB_VENDOR_XEROX
+block|,
+name|USB_PRODUCT_XEROX_WCM15
+block|,
+name|ANY
+block|,
+block|{
+name|UQ_BROKEN_BIDIR
+block|}
+block|}
+block|,
 comment|/* YAMAHA router's ucdDevice is the version of farmware and often changes. */
 block|{
 name|USB_VENDOR_YAMAHA
