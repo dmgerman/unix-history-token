@@ -3409,6 +3409,13 @@ expr_stmt|;
 if|if
 condition|(
 name|print_toptype
+operator|&&
+name|IFM_INST
+argument_list|(
+name|ifmw
+argument_list|)
+operator|!=
+literal|0
 condition|)
 name|printf
 argument_list|(
@@ -3612,6 +3619,15 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|IFM_INST
+argument_list|(
+name|ifmw
+argument_list|)
+operator|!=
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|" instance %d"
