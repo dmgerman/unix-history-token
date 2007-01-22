@@ -1214,6 +1214,24 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
 block|}
+block|,
+block|{
+comment|/* 		 * EasyMP3 EM732X USB 2.0 Flash MP3 Player 		 * PR: usb/96546 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"*"
+block|,
+literal|"MP3 Player*"
+block|,
+literal|"1.0"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
