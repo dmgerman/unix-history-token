@@ -4705,6 +4705,7 @@ name|out
 goto|;
 else|#
 directive|else
+comment|/* 		 * Copy the data from userland into a mbuf chain. 		 * If no data is to be copied in, a single empty mbuf 		 * is returned. 		 */
 name|top
 operator|=
 name|m_uiotombuf
@@ -5523,6 +5524,7 @@ goto|;
 block|}
 else|#
 directive|else
+comment|/* 				 * Copy the data from userland into a mbuf 				 * chain.  If no data is to be copied in, 				 * a single empty mbuf is returned. 				 */
 name|top
 operator|=
 name|m_uiotombuf

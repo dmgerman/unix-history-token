@@ -8244,16 +8244,21 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* Give us all or nothing. */
+comment|/* 	 * Give us the full allocation or nothing. 	 * If len is zero return the smallest empty mbuf. 	 */
 name|m
 operator|=
 name|m_getm2
 argument_list|(
 name|NULL
 argument_list|,
+name|max
+argument_list|(
 name|total
 operator|+
 name|align
+argument_list|,
+literal|1
+argument_list|)
 argument_list|,
 name|how
 argument_list|,
