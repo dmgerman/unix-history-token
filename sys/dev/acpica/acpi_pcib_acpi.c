@@ -533,6 +533,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|pcib_remap_msix
+argument_list|,
+name|pcib_remap_msix
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|pcib_release_msix
 argument_list|,
 name|pcib_release_msix

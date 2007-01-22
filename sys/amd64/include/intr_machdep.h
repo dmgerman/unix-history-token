@@ -669,6 +669,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|msix_remap
+parameter_list|(
+name|int
+name|index
+parameter_list|,
+name|int
+name|irq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|msix_release
 parameter_list|(
 name|int
