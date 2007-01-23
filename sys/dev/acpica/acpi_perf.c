@@ -848,6 +848,8 @@ name|rid
 argument_list|,
 operator|&
 name|res
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1505,6 +1507,8 @@ operator|&
 name|sc
 operator|->
 name|perf_ctrl
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1574,6 +1578,8 @@ operator|&
 name|sc
 operator|->
 name|perf_status
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

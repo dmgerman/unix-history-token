@@ -5384,6 +5384,9 @@ name|resource
 modifier|*
 modifier|*
 name|res
+parameter_list|,
+name|u_int
+name|flags
 parameter_list|)
 block|{
 name|int
@@ -5522,6 +5525,8 @@ argument_list|,
 name|rid
 argument_list|,
 name|RF_ACTIVE
+operator||
+name|flags
 argument_list|)
 expr_stmt|;
 if|if

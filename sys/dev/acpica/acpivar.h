@@ -1291,6 +1291,9 @@ name|resource
 modifier|*
 modifier|*
 name|res
+parameter_list|,
+name|u_int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2094,6 +2097,9 @@ name|resource
 modifier|*
 modifier|*
 name|dst
+parameter_list|,
+name|u_int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

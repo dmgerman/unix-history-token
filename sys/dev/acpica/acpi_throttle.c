@@ -1210,6 +1210,8 @@ operator|&
 name|sc
 operator|->
 name|cpu_p_cnt
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1303,6 +1305,8 @@ operator|&
 name|sc
 operator|->
 name|cpu_p_cnt
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

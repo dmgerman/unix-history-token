@@ -371,6 +371,9 @@ name|resource
 modifier|*
 modifier|*
 name|dst
+parameter_list|,
+name|u_int
+name|flags
 parameter_list|)
 block|{
 name|ACPI_GENERIC_ADDRESS
@@ -455,6 +458,8 @@ operator|&
 name|gas
 argument_list|,
 name|dst
+argument_list|,
+name|flags
 argument_list|)
 operator|)
 return|;
