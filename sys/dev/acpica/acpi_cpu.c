@@ -4179,6 +4179,18 @@ block|{
 name|device_t
 name|acpi_dev
 decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/*      * Bus mastering arbitration control is needed to keep caches coherent      * while sleeping in C3.  If it's not present but a working flush cache      * instruction is present, flush the caches before entering C3 instead.      * Otherwise, just disable C3 completely.      */
 if|if
 condition|(
