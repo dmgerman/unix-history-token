@@ -1222,7 +1222,7 @@ name|T_DIRECT
 block|,
 name|SIP_MEDIA_REMOVABLE
 block|,
-literal|"*"
+literal|"EM732X"
 block|,
 literal|"MP3 Player*"
 block|,
