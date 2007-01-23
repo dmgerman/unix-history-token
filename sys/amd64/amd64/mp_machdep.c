@@ -3687,23 +3687,6 @@ name|IPI_PREEMPT
 operator|)
 condition|)
 block|{
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
-comment|/* Don't preempt the idle thread */
-if|if
-condition|(
-name|curthread
-operator|!=
-name|PCPU_GET
-argument_list|(
-name|idlethread
-argument_list|)
-condition|)
-block|{
 name|struct
 name|thread
 modifier|*
@@ -3711,6 +3694,12 @@ name|running_thread
 init|=
 name|curthread
 decl_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|running_thread
@@ -3735,7 +3724,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
