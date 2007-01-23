@@ -1942,11 +1942,35 @@ argument_list|(
 name|bsdtar
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|archive_write_close
 argument_list|(
 name|a
 argument_list|)
+condition|)
+block|{
+name|bsdtar_warnc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|,
+literal|"%s"
+argument_list|,
+name|archive_error_string
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|bsdtar
+operator|->
+name|return_value
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2325,7 +2349,7 @@ literal|"%s"
 argument_list|,
 name|archive_error_string
 argument_list|(
-name|ina
+name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2465,6 +2489,11 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|archive_read_finish
+argument_list|(
+name|ina
+argument_list|)
+expr_stmt|;
 comment|/* Note: If we got here, we saw no write errors, so return success. */
 return|return
 operator|(
@@ -3576,6 +3605,8 @@ argument_list|)
 operator|>
 literal|0
 condition|)
+if|if
+condition|(
 name|write_file_data
 argument_list|(
 name|bsdtar
@@ -3583,6 +3614,11 @@ argument_list|,
 name|a
 argument_list|,
 name|fd
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -3665,11 +3701,6 @@ name|ssize_t
 name|bytes_written
 decl_stmt|;
 comment|/* XXX TODO: Allocate buffer on heap and store pointer to 	 * it in bsdtar structure; arrange cleanup as well. XXX */
-operator|(
-name|void
-operator|)
-name|bsdtar
-expr_stmt|;
 name|bytes_read
 operator|=
 name|read
@@ -3708,13 +3739,29 @@ name|bytes_written
 operator|<=
 literal|0
 condition|)
+block|{
+comment|/* Write failed; this is bad */
+name|bsdtar_warnc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|,
+literal|"%s"
+argument_list|,
+name|archive_error_string
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-comment|/* Write failed; this is bad */
+block|}
 name|bytes_read
 operator|=
 name|read
