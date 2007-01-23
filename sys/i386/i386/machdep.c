@@ -9480,20 +9480,6 @@ expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
-name|clock_lock
-argument_list|,
-literal|"clk"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_SPIN
-operator||
-name|MTX_NOPROFILE
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
 name|icu_lock
 argument_list|,
 literal|"icu"
@@ -10149,6 +10135,10 @@ block|}
 endif|#
 directive|endif
 comment|/* XBOX */
+comment|/* 	 * Initialize the i8254 before the console so that console 	 * initialization can use DELAY(). 	 */
+name|i8254_init
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */
 name|cninit
 argument_list|()

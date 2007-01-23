@@ -356,13 +356,6 @@ name|timer0_real_max_count
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|mtx
-name|clock_lock
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -383,6 +376,14 @@ name|int
 name|beeping
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|clock_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -1155,20 +1156,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Guard against the timer being uninitialized if we are called 	 * early for console i/o. 	 */
-if|if
-condition|(
-name|timer0_max_count
-operator|==
-literal|0
-condition|)
-name|set_timer_freq
-argument_list|(
-name|timer_freq
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Read the counter first, so that the rest of the setup overhead is 	 * counted.  Guess the initial overhead is 20 usec (on most systems it 	 * takes about 1.5 usec for each of the i/o's in getit().  The loop 	 * takes about 6 usec on a 486/33 and 13 usec on a 386/20.  The 	 * multiplications and divisions to scale the count take a while). 	 * 	 * However, if ddb is active then use a fake counter since reading 	 * the i8254 counter involves acquiring a lock.  ddb must not do 	 * locking for many reasons, but it calls here for at least atkbd 	 * input. 	 */
 ifdef|#
 directive|ifdef
@@ -2173,8 +2160,39 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize 8254 timer 0 early so that it can be used in DELAY().  * XXX initialization of other timers is unintentionally left blank.  */
+comment|/* This is separate from startrtclock() so that it can be called early. */
 end_comment
+
+begin_function
+name|void
+name|i8254_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|mtx_init
+argument_list|(
+operator|&
+name|clock_lock
+argument_list|,
+literal|"clk"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_SPIN
+operator||
+name|MTX_NOPROFILE
+argument_list|)
+expr_stmt|;
+name|set_timer_freq
+argument_list|(
+name|timer_freq
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -2198,13 +2216,6 @@ argument_list|(
 name|RTC_STATUSB
 argument_list|,
 name|RTCSB_24HR
-argument_list|)
-expr_stmt|;
-name|set_timer_freq
-argument_list|(
-name|timer_freq
-argument_list|,
-name|hz
 argument_list|)
 expr_stmt|;
 name|freq

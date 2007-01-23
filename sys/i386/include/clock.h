@@ -81,13 +81,14 @@ name|tsc_is_broken
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|clock_lock
-decl_stmt|;
-end_decl_stmt
+begin_function_decl
+name|void
+name|i8254_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Driver to clock driver interface.  */
