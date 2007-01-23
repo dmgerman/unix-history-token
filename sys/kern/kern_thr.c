@@ -1104,7 +1104,7 @@ name|newtd
 argument_list|)
 expr_stmt|;
 comment|/* if ((flags& THR_SUSPENDED) == 0) */
-name|setrunqueue
+name|sched_add
 argument_list|(
 name|newtd
 argument_list|,

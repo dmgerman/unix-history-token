@@ -1661,7 +1661,7 @@ argument_list|,
 name|pri
 argument_list|)
 expr_stmt|;
-name|setrunqueue
+name|sched_add
 argument_list|(
 name|td
 argument_list|,

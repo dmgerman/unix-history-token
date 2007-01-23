@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -1506,7 +1512,7 @@ argument_list|(
 name|td2
 argument_list|)
 expr_stmt|;
-name|setrunqueue
+name|sched_add
 argument_list|(
 name|td2
 argument_list|,
@@ -1718,7 +1724,7 @@ argument_list|(
 name|td2
 argument_list|)
 expr_stmt|;
-name|setrunqueue
+name|sched_add
 argument_list|(
 name|td2
 argument_list|,
@@ -2606,7 +2612,7 @@ argument_list|(
 name|td2
 argument_list|)
 expr_stmt|;
-name|setrunqueue
+name|sched_add
 argument_list|(
 name|td2
 argument_list|,

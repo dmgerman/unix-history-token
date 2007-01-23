@@ -1513,7 +1513,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|setrunqueue
+name|sched_add
 argument_list|(
 name|td
 argument_list|,
@@ -2596,7 +2596,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|setrunqueue
+name|sched_add
 argument_list|(
 name|td
 argument_list|,

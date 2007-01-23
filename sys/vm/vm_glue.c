@@ -2804,7 +2804,7 @@ name|CTR2
 argument_list|(
 name|KTR_INTR
 argument_list|,
-literal|"%s: setrunqueue %d"
+literal|"%s: sched_add %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2816,7 +2816,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|setrunqueue
+name|sched_add
 argument_list|(
 name|td
 argument_list|,

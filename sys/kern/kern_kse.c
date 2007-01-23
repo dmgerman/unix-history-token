@@ -3116,7 +3116,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|setrunqueue
+name|sched_add
 argument_list|(
 name|newtd
 argument_list|,
@@ -3216,7 +3216,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|setrunqueue
+name|sched_add
 argument_list|(
 name|newtd
 argument_list|,
@@ -4717,7 +4717,7 @@ operator|||
 name|nextthread
 condition|)
 block|{
-name|setrunqueue
+name|sched_add
 argument_list|(
 name|td2
 argument_list|,

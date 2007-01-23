@@ -2836,76 +2836,6 @@ comment|/* The invol switch is a preemption */
 end_comment
 
 begin_comment
-comment|/* Flags for setrunqueue().  Why are we setting this thread on the run queue? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SRQ_BORING
-value|0x0000
-end_define
-
-begin_comment
-comment|/* No special circumstances. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SRQ_YIELDING
-value|0x0001
-end_define
-
-begin_comment
-comment|/* We are yielding (from mi_switch). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SRQ_OURSELF
-value|0x0002
-end_define
-
-begin_comment
-comment|/* It is ourself (from mi_switch). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SRQ_INTR
-value|0x0004
-end_define
-
-begin_comment
-comment|/* It is probably urgent. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SRQ_PREEMPTED
-value|0x0008
-end_define
-
-begin_comment
-comment|/* has been preempted.. be kind */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SRQ_BORROWING
-value|0x0010
-end_define
-
-begin_comment
-comment|/* Priority updated due to prio_lend */
-end_comment
-
-begin_comment
 comment|/* How values for thread_single(). */
 end_comment
 
@@ -3653,20 +3583,6 @@ end_comment
 
 begin_function_decl
 name|void
-name|adjustrunqueue
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|int
-name|newpri
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ast
 parameter_list|(
 name|struct
@@ -4171,20 +4087,6 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|setrunqueue
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
