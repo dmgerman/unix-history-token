@@ -304,6 +304,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ffs_bdflush
+parameter_list|(
+name|struct
+name|bufobj
+modifier|*
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ffs_copyonwrite
 parameter_list|(

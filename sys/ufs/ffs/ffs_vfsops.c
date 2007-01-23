@@ -515,7 +515,25 @@ operator|.
 name|bop_sync
 operator|=
 name|bufsync
-block|, }
+block|,
+ifdef|#
+directive|ifdef
+name|NO_FFS_SNAPSHOT
+operator|.
+name|bop_bdflush
+operator|=
+name|bufbdflush
+block|,
+else|#
+directive|else
+operator|.
+name|bop_bdflush
+operator|=
+name|ffs_bdflush
+block|,
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 

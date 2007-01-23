@@ -17165,6 +17165,11 @@ operator|.
 name|bop_sync
 operator|=
 name|bufsync
+block|,
+operator|.
+name|bop_bdflush
+operator|=
+name|bufbdflush
 block|, }
 decl_stmt|;
 end_decl_stmt

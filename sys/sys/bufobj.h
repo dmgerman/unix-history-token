@@ -144,6 +144,22 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+name|b_bdflush_t
+parameter_list|(
+name|struct
+name|bufobj
+modifier|*
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|buf_ops
@@ -163,6 +179,10 @@ decl_stmt|;
 name|b_sync_t
 modifier|*
 name|bop_sync
+decl_stmt|;
+name|b_bdflush_t
+modifier|*
+name|bop_bdflush
 decl_stmt|;
 block|}
 struct|;
@@ -204,6 +224,18 @@ parameter_list|,
 name|bp
 parameter_list|)
 value|((bo)->bo_ops->bop_write((bp)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BO_BDFLUSH
+parameter_list|(
+name|bo
+parameter_list|,
+name|bp
+parameter_list|)
+value|((bo)->bo_ops->bop_bdflush((bo), (bp)))
 end_define
 
 begin_struct
@@ -457,6 +489,23 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bufbdflush
+parameter_list|(
+name|struct
+name|bufobj
+modifier|*
+name|bo
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+name|bp
 parameter_list|)
 function_decl|;
 end_function_decl

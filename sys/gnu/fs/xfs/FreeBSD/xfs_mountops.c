@@ -2309,6 +2309,32 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|xfs_geom_bufbdflush
+parameter_list|(
+name|struct
+name|bufobj
+modifier|*
+name|bo
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+name|bp
+parameter_list|)
+block|{
+name|bufbdflush
+argument_list|(
+name|bo
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_decl_stmt
 name|struct
 name|buf_ops
@@ -2334,6 +2360,11 @@ operator|.
 name|bop_sync
 operator|=
 name|xfs_geom_bufsync
+block|,
+operator|.
+name|bop_bdflush
+operator|=
+name|xfs_geom_bufbdflush
 block|, }
 decl_stmt|;
 end_decl_stmt
