@@ -2831,7 +2831,7 @@ name|fu_curblocks
 expr_stmt|;
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|qfo
 argument_list|,
@@ -3047,7 +3047,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|qfo
 argument_list|,
