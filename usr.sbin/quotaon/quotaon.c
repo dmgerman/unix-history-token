@@ -893,7 +893,7 @@ name|vflag
 condition|)
 name|printf
 argument_list|(
-literal|"%s: %s quotas turned on\n"
+literal|"%s: %s quotas turned on with data file %s\n"
 argument_list|,
 name|fs
 operator|->
@@ -903,6 +903,8 @@ name|qfextension
 index|[
 name|type
 index|]
+argument_list|,
+name|qfpathname
 argument_list|)
 expr_stmt|;
 return|return
