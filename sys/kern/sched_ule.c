@@ -277,11 +277,11 @@ comment|/* Real last tick, for affinity. */
 endif|#
 directive|endif
 comment|/* originally from kg_sched */
-name|int
+name|u_int
 name|skg_slptime
 decl_stmt|;
 comment|/* Number of ticks we vol. slept */
-name|int
+name|u_int
 name|skg_runtime
 decl_stmt|;
 comment|/* Number of ticks we were running */
@@ -5047,9 +5047,11 @@ operator|<=
 name|PRI_MAX_REALTIME
 argument_list|,
 operator|(
-literal|"sched_priority: invalid interactive priority %d"
+literal|"sched_priority: invalid interactive priority %d score %d"
 operator|,
 name|pri
+operator|,
+name|score
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5208,7 +5210,7 @@ name|td_sched
 modifier|*
 name|ts
 decl_stmt|;
-name|int
+name|u_int
 name|sum
 decl_stmt|;
 name|ts
@@ -6590,7 +6592,7 @@ operator|!=
 name|ticks
 condition|)
 block|{
-name|int
+name|u_int
 name|hzticks
 decl_stmt|;
 name|hzticks
