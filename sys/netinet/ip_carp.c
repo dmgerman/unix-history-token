@@ -942,6 +942,8 @@ parameter_list|(
 name|struct
 name|carp_softc
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2413,19 +2415,11 @@ expr_stmt|;
 name|carpdetach
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_carpdev
-condition|)
-name|CARP_SCUNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+comment|/* Returns unlocked. */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2492,6 +2486,9 @@ name|struct
 name|carp_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|unlock
 parameter_list|)
 block|{
 name|struct
@@ -2662,13 +2659,23 @@ name|M_IFADDR
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+elseif|else
+if|if
+condition|(
+name|unlock
+condition|)
+name|CARP_UNLOCK
+argument_list|(
+name|cif
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_carpdev
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2758,6 +2765,8 @@ expr_stmt|;
 name|carpdetach
 argument_list|(
 name|sc
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
