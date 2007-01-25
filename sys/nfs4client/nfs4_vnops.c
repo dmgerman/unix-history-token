@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* $Id: nfs_vnops.c,v 1.45 2003/11/05 14:59:02 rees Exp $ */
 end_comment
 
@@ -955,7 +951,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|nfsaccess_cache_timeout
+name|nfs4_access_cache_timeout
 init|=
 name|NFS_MAXATTRTIMO
 decl_stmt|;
@@ -973,41 +969,11 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|nfsaccess_cache_timeout
+name|nfs4_access_cache_timeout
 argument_list|,
 literal|0
 argument_list|,
 literal|"NFS ACCESS cache timeout"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|nfsv3_commit_on_close
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vfs_nfs4
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|nfsv3_commit_on_close
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|nfsv3_commit_on_close
-argument_list|,
-literal|0
-argument_list|,
-literal|"write+commit on close, else only write"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1019,7 +985,7 @@ literal|0
 end_if
 
 begin_endif
-unit|SYSCTL_INT(_vfs_nfs4, OID_AUTO, access_cache_hits, CTLFLAG_RD,&nfsstats.accesscache_hits, 0, "NFS ACCESS cache hit count");  SYSCTL_INT(_vfs_nfs4, OID_AUTO, access_cache_misses, CTLFLAG_RD,&nfsstats.accesscache_misses, 0, "NFS ACCESS cache miss count");
+unit|static int	nfsv3_commit_on_close = 0; SYSCTL_INT(_vfs_nfs4, OID_AUTO, nfsv3_commit_on_close, CTLFLAG_RW,&nfsv3_commit_on_close, 0, "write+commit on close, else only write");  SYSCTL_INT(_vfs_nfs4, OID_AUTO, access_cache_hits, CTLFLAG_RD,&nfsstats.accesscache_hits, 0, "NFS ACCESS cache hit count");  SYSCTL_INT(_vfs_nfs4, OID_AUTO, access_cache_misses, CTLFLAG_RD,&nfsstats.accesscache_misses, 0, "NFS ACCESS cache miss count");
 endif|#
 directive|endif
 end_endif
@@ -1034,7 +1000,7 @@ end_define
 begin_function
 specifier|static
 name|int
-name|nfs3_access_otw
+name|nfs4_v3_access_otw
 parameter_list|(
 name|struct
 name|vnode
@@ -1498,7 +1464,7 @@ block|}
 comment|/* XXX safety belt, only make blanket request if caching */
 if|if
 condition|(
-name|nfsaccess_cache_timeout
+name|nfs4_access_cache_timeout
 operator|>
 literal|0
 condition|)
@@ -1528,19 +1494,14 @@ block|}
 comment|/* 		 * Does our cached result allow us to give a definite yes to 		 * this request? 		 */
 if|if
 condition|(
-operator|(
 name|time_second
 operator|<
-operator|(
 name|np
 operator|->
 name|n_modestamp
 operator|+
-name|nfsaccess_cache_timeout
-operator|)
-operator|)
+name|nfs4_access_cache_timeout
 operator|&&
-operator|(
 name|ap
 operator|->
 name|a_cred
@@ -1550,9 +1511,7 @@ operator|==
 name|np
 operator|->
 name|n_modeuid
-operator|)
 operator|&&
-operator|(
 operator|(
 name|np
 operator|->
@@ -1562,7 +1521,6 @@ name|mode
 operator|)
 operator|==
 name|mode
-operator|)
 condition|)
 block|{
 name|nfsstats
@@ -1581,7 +1539,7 @@ operator|++
 expr_stmt|;
 name|error
 operator|=
-name|nfs3_access_otw
+name|nfs4_v3_access_otw
 argument_list|(
 name|vp
 argument_list|,
@@ -1598,8 +1556,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|error
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -1614,12 +1573,10 @@ operator|)
 operator|!=
 name|mode
 condition|)
-block|{
 name|error
 operator|=
 name|EACCES
 expr_stmt|;
-block|}
 block|}
 block|}
 return|return
