@@ -140,7 +140,7 @@ comment|/* must be power of 2 */
 end_comment
 
 begin_comment
-comment|/* This hash is for TCP or UDP packets */
+comment|/* This hash is for TCP or UDP packets. */
 end_comment
 
 begin_define
@@ -157,11 +157,11 @@ parameter_list|,
 name|port2
 parameter_list|)
 define|\
-value|(((addr1>> 16) ^		\ 	  (addr2& 0x00FF) ^		\ 	  ((port1 ^ port2)<< 8) )&	\ 	 (NBUCKETS - 1))
+value|(((addr1 ^ (addr1>> 16) ^ 		\ 	htons(addr2 ^ (addr2>> 16))) ^ 	\ 	port1 ^ htons(port2))&			\ 	(NBUCKETS - 1))
 end_define
 
 begin_comment
-comment|/* This hash is for all other IP packets */
+comment|/* This hash is for all other IP packets. */
 end_comment
 
 begin_define
@@ -174,7 +174,7 @@ parameter_list|,
 name|addr2
 parameter_list|)
 define|\
-value|(((addr1>> 16) ^		\ 	  (addr2& 0x00FF) )&		\ 	 (NBUCKETS - 1))
+value|((addr1 ^ (addr1>> 16) ^ 		\ 	htons(addr2 ^ (addr2>> 16)))&		\ 	(NBUCKETS - 1))
 end_define
 
 begin_comment
@@ -888,131 +888,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Calculate number of bits in netmask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|g21
-value|0x55555555ul
-end_define
-
-begin_comment
-comment|/* = 0101_0101_0101_0101_0101_0101_0101_0101 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|g22
-value|0x33333333ul
-end_define
-
-begin_comment
-comment|/* = 0011_0011_0011_0011_0011_0011_0011_0011 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|g23
-value|0x0f0f0f0ful
-end_define
-
-begin_comment
-comment|/* = 0000_1111_0000_1111_0000_1111_0000_1111 */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|u_char
-name|bit_count
-parameter_list|(
-name|uint32_t
-name|v
-parameter_list|)
-block|{
-name|v
-operator|=
-operator|(
-name|v
-operator|&
-name|g21
-operator|)
-operator|+
-operator|(
-operator|(
-name|v
-operator|>>
-literal|1
-operator|)
-operator|&
-name|g21
-operator|)
-expr_stmt|;
-name|v
-operator|=
-operator|(
-name|v
-operator|&
-name|g22
-operator|)
-operator|+
-operator|(
-operator|(
-name|v
-operator|>>
-literal|2
-operator|)
-operator|&
-name|g22
-operator|)
-expr_stmt|;
-name|v
-operator|=
-operator|(
-name|v
-operator|+
-operator|(
-name|v
-operator|>>
-literal|4
-operator|)
-operator|)
-operator|&
-name|g23
-expr_stmt|;
-return|return
-operator|(
-name|v
-operator|+
-operator|(
-name|v
-operator|>>
-literal|8
-operator|)
-operator|+
-operator|(
-name|v
-operator|>>
-literal|16
-operator|)
-operator|+
-operator|(
-name|v
-operator|>>
-literal|24
-operator|)
-operator|)
-operator|&
-literal|0x3f
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Insert a record into defined slot.  *  * First we get for us a free flow entry, then fill in all  * possible fields in it.  *  * TODO: consider dropping hash mutex while filling in datagram,  * as this was done in previous version. Need to test& profile  * to be sure.  */
 end_comment
 
@@ -1304,7 +1179,7 @@ name|f
 operator|.
 name|dst_mask
 operator|=
-name|bit_count
+name|bitcount32
 argument_list|(
 operator|(
 operator|(
@@ -1443,7 +1318,7 @@ name|f
 operator|.
 name|src_mask
 operator|=
-name|bit_count
+name|bitcount32
 argument_list|(
 operator|(
 operator|(
