@@ -210,6 +210,17 @@ begin_comment
 comment|/*  * TODO:  *	Pick idle from affinity group or self group first.  *	Implement pick_score.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KTR_ULE
+value|0x0
+end_define
+
+begin_comment
+comment|/* Enable for pickpri debugging. */
+end_comment
+
 begin_comment
 comment|/*  * Thread scheduler specific section.  */
 end_comment
@@ -313,17 +324,6 @@ end_define
 
 begin_comment
 comment|/* Thread was added as transferable. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TSF_DIDRUN
-value|0x2000
-end_define
-
-begin_comment
-comment|/* Thread actually ran. */
 end_comment
 
 begin_decl_stmt
@@ -3182,7 +3182,7 @@ condition|)
 continue|continue;
 name|CTR5
 argument_list|(
-name|KTR_SCHED
+name|KTR_ULE
 argument_list|,
 literal|"tdq_idled: stealing td %p(%s) pri %d from %d busy 0x%X"
 argument_list|,
@@ -3385,6 +3385,15 @@ condition|)
 return|return;
 if|if
 condition|(
+name|td
+operator|->
+name|td_priority
+operator|<
+name|PRI_MIN_IDLE
+condition|)
+block|{
+if|if
+condition|(
 name|ipi_ast
 condition|)
 name|ipi_selected
@@ -3401,6 +3410,17 @@ if|if
 condition|(
 name|ipi_preempt
 condition|)
+name|ipi_selected
+argument_list|(
+literal|1
+operator|<<
+name|cpu
+argument_list|,
+name|IPI_PREEMPT
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|ipi_selected
 argument_list|(
 literal|1
@@ -3881,7 +3901,7 @@ condition|)
 block|{
 name|CTR5
 argument_list|(
-name|KTR_SCHED
+name|KTR_ULE
 argument_list|,
 literal|"ts_cpu %d idle, ltick %d ticks %d pri %d curthread %d"
 argument_list|,
@@ -3931,7 +3951,7 @@ condition|)
 block|{
 name|CTR5
 argument_list|(
-name|KTR_SCHED
+name|KTR_ULE
 argument_list|,
 literal|"affinity for %d, ltick %d ticks %d pri %d curthread %d"
 argument_list|,
@@ -3995,7 +4015,7 @@ condition|)
 block|{
 name|CTR2
 argument_list|(
-name|KTR_SCHED
+name|KTR_ULE
 argument_list|,
 literal|"tryself load %d flags %d"
 argument_list|,
@@ -4017,7 +4037,7 @@ block|}
 comment|/* 	 * Look for an idle group. 	 */
 name|CTR1
 argument_list|(
-name|KTR_SCHED
+name|KTR_ULE
 argument_list|,
 literal|"tdq_idle %X"
 argument_list|,
@@ -4055,7 +4075,7 @@ condition|)
 block|{
 name|CTR1
 argument_list|(
-name|KTR_SCHED
+name|KTR_ULE
 argument_list|,
 literal|"tryself %d"
 argument_list|,
@@ -4120,7 +4140,7 @@ name|td_priority
 expr_stmt|;
 name|CTR4
 argument_list|(
-name|KTR_SCHED
+name|KTR_ULE
 argument_list|,
 literal|"cpu %d pri %d lowcpu %d lowpri %d"
 argument_list|,
@@ -4446,10 +4466,10 @@ operator|=
 operator|(
 name|realstathz
 operator|/
-literal|7
+literal|10
 operator|)
 expr_stmt|;
-comment|/* 140ms */
+comment|/* ~100ms */
 name|tickincr
 operator|=
 literal|1
@@ -4929,10 +4949,10 @@ operator|=
 operator|(
 name|realstathz
 operator|/
-literal|7
+literal|10
 operator|)
 expr_stmt|;
-comment|/* ~140ms */
+comment|/* ~100ms */
 comment|/* 	 * tickincr is shifted out by 10 to avoid rounding errors due to 	 * hz not being evenly divisible by stathz on all platforms. 	 */
 name|tickincr
 operator|=
@@ -6344,14 +6364,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * If we bring in a thread account for it as if it had been 		 * added to the run queue and then chosen. 		 */
-name|newtd
-operator|->
-name|td_sched
-operator|->
-name|ts_flags
-operator||=
-name|TSF_DIDRUN
-expr_stmt|;
 name|TD_SET_RUNNING
 argument_list|(
 name|newtd
@@ -6555,6 +6567,11 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|struct
+name|td_sched
+modifier|*
+name|ts
+decl_stmt|;
 name|int
 name|slptime
 decl_stmt|;
@@ -6566,18 +6583,20 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we slept for more than a tick update our interactivity and 	 * priority. 	 */
-name|slptime
+name|ts
 operator|=
 name|td
 operator|->
 name|td_sched
+expr_stmt|;
+comment|/* 	 * If we slept for more than a tick update our interactivity and 	 * priority. 	 */
+name|slptime
+operator|=
+name|ts
 operator|->
 name|ts_slptime
 expr_stmt|;
-name|td
-operator|->
-name|td_sched
+name|ts
 operator|->
 name|ts_slptime
 operator|=
@@ -6605,9 +6624,7 @@ operator|)
 operator|<<
 name|SCHED_TICK_SHIFT
 expr_stmt|;
-name|td
-operator|->
-name|td_sched
+name|ts
 operator|->
 name|skg_slptime
 operator|+=
@@ -6620,9 +6637,7 @@ argument_list|)
 expr_stmt|;
 name|sched_pctcpu_update
 argument_list|(
-name|td
-operator|->
-name|td_sched
+name|ts
 argument_list|)
 expr_stmt|;
 name|sched_priority
@@ -6631,6 +6646,13 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Reset the slice value after we sleep. */
+name|ts
+operator|->
+name|ts_slice
+operator|=
+name|sched_slice
+expr_stmt|;
 name|sched_add
 argument_list|(
 name|td
@@ -7932,7 +7954,7 @@ condition|)
 block|{
 name|CTR2
 argument_list|(
-name|KTR_SCHED
+name|KTR_ULE
 argument_list|,
 literal|"ithd %d< %d"
 argument_list|,
@@ -7983,7 +8005,7 @@ block|}
 else|else
 name|CTR1
 argument_list|(
-name|KTR_SCHED
+name|KTR_ULE
 argument_list|,
 literal|"pinned %d"
 argument_list|,
