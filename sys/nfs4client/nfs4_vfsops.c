@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* $Id: nfs_vfsops.c,v 1.38 2003/11/05 14:59:01 rees Exp $ */
 end_comment
 
@@ -317,7 +313,7 @@ end_expr_stmt
 begin_function_decl
 specifier|static
 name|void
-name|nfs_decode_args
+name|nfs4_decode_args
 parameter_list|(
 name|struct
 name|nfsmount
@@ -398,42 +394,42 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|vfs_mount_t
-name|nfs_mount
+name|nfs4_mount
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|vfs_cmount_t
-name|nfs_cmount
+name|nfs4_cmount
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|vfs_unmount_t
-name|nfs_unmount
+name|nfs4_unmount
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|vfs_root_t
-name|nfs_root
+name|nfs4_root
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|vfs_statfs_t
-name|nfs_statfs
+name|nfs4_statfs
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|vfs_sync_t
-name|nfs_sync
+name|nfs4_sync
 decl_stmt|;
 end_decl_stmt
 
@@ -445,7 +441,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|vfsops
-name|nfs_vfsops
+name|nfs4_vfsops
 init|=
 block|{
 operator|.
@@ -456,27 +452,27 @@ block|,
 operator|.
 name|vfs_mount
 operator|=
-name|nfs_mount
+name|nfs4_mount
 block|,
 operator|.
 name|vfs_cmount
 operator|=
-name|nfs_cmount
+name|nfs4_cmount
 block|,
 operator|.
 name|vfs_root
 operator|=
-name|nfs_root
+name|nfs4_root
 block|,
 operator|.
 name|vfs_statfs
 operator|=
-name|nfs_statfs
+name|nfs4_statfs
 block|,
 operator|.
 name|vfs_sync
 operator|=
-name|nfs_sync
+name|nfs4_sync
 block|,
 operator|.
 name|vfs_uninit
@@ -486,7 +482,7 @@ block|,
 operator|.
 name|vfs_unmount
 operator|=
-name|nfs_unmount
+name|nfs4_unmount
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -494,7 +490,7 @@ end_decl_stmt
 begin_expr_stmt
 name|VFS_SET
 argument_list|(
-name|nfs_vfsops
+name|nfs4_vfsops
 argument_list|,
 name|nfs4
 argument_list|,
@@ -614,7 +610,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|nfs_statfs
+name|nfs4_statfs
 parameter_list|(
 name|struct
 name|mount
@@ -920,7 +916,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|nfs_decode_args
+name|nfs4_decode_args
 parameter_list|(
 name|struct
 name|nfsmount
@@ -1760,7 +1756,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"nfs_args: retrying connect\n"
+literal|"nfs4_decode_args: retrying connect\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1768,9 +1764,6 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|lbolt
 argument_list|,
@@ -1798,7 +1791,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|nfs_cmount
+name|nfs4_cmount
 parameter_list|(
 name|struct
 name|mntarg
@@ -1831,9 +1824,6 @@ name|copyin
 argument_list|(
 name|data
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|args
 argument_list|,
@@ -1888,7 +1878,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|nfs_mount
+name|nfs4_mount
 parameter_list|(
 name|struct
 name|mount
@@ -1938,11 +1928,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"NFSv4: nfs_mountroot not supported\n"
+literal|"nfs4_mountroot not supported\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|error
@@ -2048,7 +2040,7 @@ name|NFSMNT_NOLOCKD
 operator|)
 operator|)
 expr_stmt|;
-name|nfs_decode_args
+name|nfs4_decode_args
 argument_list|(
 name|nmp
 argument_list|,
@@ -2843,7 +2835,7 @@ operator||
 name|NFSMNT_NFSV4
 operator|)
 expr_stmt|;
-name|nfs_decode_args
+name|nfs4_decode_args
 argument_list|(
 name|nmp
 argument_list|,
@@ -3262,7 +3254,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|nfs_unmount
+name|nfs4_unmount
 parameter_list|(
 name|struct
 name|mount
@@ -3410,7 +3402,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|nfs_root
+name|nfs4_root
 parameter_list|(
 name|struct
 name|mount
@@ -3534,14 +3526,10 @@ begin_comment
 comment|/*  * Flush out the buffer cache  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
-name|nfs_sync
+name|nfs4_sync
 parameter_list|(
 name|struct
 name|mount
