@@ -330,6 +330,17 @@ begin_comment
 comment|/* sta-mode roaming */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_MSG_RATECTL
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* tx rate control */
+end_comment
+
 begin_struct
 specifier|static
 struct|struct
@@ -495,6 +506,12 @@ block|{
 literal|"roam"
 block|,
 name|IEEE80211_MSG_ROAM
+block|}
+block|,
+block|{
+literal|"rate"
+block|,
+name|IEEE80211_MSG_RATECTL
 block|}
 block|, }
 struct|;
