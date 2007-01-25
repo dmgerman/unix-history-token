@@ -14729,7 +14729,7 @@ expr_stmt|;
 comment|/* 		 * The base speed is the speed of the underlying connection. 		 */
 ifdef|#
 directive|ifdef
-name|CAM_NEW_TRAN
+name|CAM_NEW_TRAN_CODE
 name|cpi
 operator|->
 name|protocol
