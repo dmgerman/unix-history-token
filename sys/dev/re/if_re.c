@@ -8719,12 +8719,21 @@ operator|*
 name|idx
 index|]
 expr_stmt|;
-comment|/* 	 * With some of the RealTek chips, using the checksum offload 	 * support in conjunction with the autopadding feature results 	 * in the transmission of corrupt frames. For example, if we 	 * need to send a really small IP fragment that's less than 60 	 * bytes in size, and IP header checksumming is enabled, the 	 * resulting ethernet frame that appears on the wire will 	 * have garbled payload. To work around this, if TX checksum 	 * offload is enabled, we always manually pad short frames out 	 * to the minimum ethernet frame size. We do this by pretending 	 * the mbuf chain has too many fragments so the coalescing code 	 * below can assemble the packet into a single buffer that's 	 * padded out to the mininum frame size. 	 */
+comment|/* 	 * With some of the RealTek chips, using the checksum offload 	 * support in conjunction with the autopadding feature results 	 * in the transmission of corrupt frames. For example, if we 	 * need to send a really small IP fragment that's less than 60 	 * bytes in size, and IP header checksumming is enabled, the 	 * resulting ethernet frame that appears on the wire will 	 * have garbled payload. To work around this, if TX checksum 	 * offload is enabled, we always manually pad short frames out 	 * to the minimum ethernet frame size. We do this by pretending 	 * the mbuf chain has too many fragments so the coalescing code 	 * below can assemble the packet into a single buffer that's 	 * padded out to the mininum frame size. 	 * 	 * Note: this appears unnecessary for TCP, and doing it for TCP 	 * with PCIe adapters seems to result in bad checksums. 	 */
 if|if
 condition|(
 name|arg
 operator|.
 name|rl_flags
+operator|&&
+operator|!
+operator|(
+name|arg
+operator|.
+name|rl_flags
+operator|&
+name|RL_TDESC_CMD_TCPCSUM
+operator|)
 operator|&&
 operator|(
 operator|*
