@@ -473,19 +473,6 @@ end_expr_stmt
 
 begin_function_decl
 specifier|static
-name|int
-name|nfs_iosize
-parameter_list|(
-name|struct
-name|nfsmount
-modifier|*
-name|nmp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|nfs_decode_args
 parameter_list|(
@@ -883,7 +870,6 @@ function_decl|;
 end_function_decl
 
 begin_function
-specifier|static
 name|int
 name|nfs_iosize
 parameter_list|(
@@ -899,7 +885,7 @@ decl_stmt|;
 comment|/* 	 * Calculate the size used for io buffers.  Use the larger 	 * of the two sizes to minimise nfs requests but make sure 	 * that it is at least one VM page to avoid wasting buffer 	 * space. 	 */
 name|iosize
 operator|=
-name|max
+name|imax
 argument_list|(
 name|nmp
 operator|->
@@ -910,18 +896,19 @@ operator|->
 name|nm_wsize
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|iosize
-operator|<
-name|PAGE_SIZE
-condition|)
 name|iosize
 operator|=
+name|imax
+argument_list|(
+name|iosize
+argument_list|,
 name|PAGE_SIZE
+argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|iosize
+operator|)
 return|;
 block|}
 end_function
