@@ -424,6 +424,7 @@ argument_list|(
 name|p
 argument_list|)
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"kvm_read: %s"
@@ -434,6 +435,8 @@ name|kvm
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|addr
 operator|=
 operator|(
@@ -476,6 +479,7 @@ argument_list|(
 name|td
 argument_list|)
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"kvm_read: %s"
@@ -486,6 +490,8 @@ name|kvm
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|kt
 operator|=
 name|malloc
