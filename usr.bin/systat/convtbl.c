@@ -37,14 +37,42 @@ end_define
 begin_define
 define|#
 directive|define
-name|BYTE
+name|BITS
 value|(1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BITS
+name|KILOBIT
+value|(1000LL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEGABIT
+value|(KILOBIT * 1000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIGABIT
+value|(MEGABIT * 1000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TERABIT
+value|(GIGABIT * 1000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BYTE
 value|(1)
 end_define
 
@@ -58,29 +86,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|KILO
+name|KILOBYTE
 value|(1024LL)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MEGA
-value|(KILO * 1024)
+name|MEGABYTE
+value|(KILOBYTE * 1024)
 end_define
 
 begin_define
 define|#
 directive|define
-name|GIGA
-value|(MEGA * 1024)
+name|GIGABYTE
+value|(MEGABYTE * 1024)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TERA
-value|(GIGA * 1024)
+name|TERABYTE
+value|(GIGABYTE * 1024)
 end_define
 
 begin_struct
@@ -137,7 +165,7 @@ operator|=
 block|{
 name|BYTE
 block|,
-name|KILO
+name|KILOBYTE
 block|,
 literal|"KB"
 block|,
@@ -151,7 +179,7 @@ operator|=
 block|{
 name|BYTE
 block|,
-name|MEGA
+name|MEGABYTE
 block|,
 literal|"MB"
 block|,
@@ -165,7 +193,7 @@ operator|=
 block|{
 name|BYTE
 block|,
-name|GIGA
+name|GIGABYTE
 block|,
 literal|"GB"
 block|,
@@ -179,7 +207,7 @@ operator|=
 block|{
 name|BYTE
 block|,
-name|TERA
+name|TERABYTE
 block|,
 literal|"TB"
 block|,
@@ -207,7 +235,7 @@ operator|=
 block|{
 name|BIT
 block|,
-name|KILO
+name|KILOBIT
 block|,
 literal|"Kb"
 block|,
@@ -221,7 +249,7 @@ operator|=
 block|{
 name|BIT
 block|,
-name|MEGA
+name|MEGABIT
 block|,
 literal|"Mb"
 block|,
@@ -235,7 +263,7 @@ operator|=
 block|{
 name|BIT
 block|,
-name|GIGA
+name|GIGABIT
 block|,
 literal|"Gb"
 block|,
@@ -249,7 +277,7 @@ operator|=
 block|{
 name|BIT
 block|,
-name|TERA
+name|TERABIT
 block|,
 literal|"Tb"
 block|,
@@ -325,7 +353,7 @@ name|SC_KILOBYTE
 init|;
 name|tmp
 operator|>=
-name|MEGA
+name|MEGABYTE
 operator|&&
 name|idx
 operator|<
