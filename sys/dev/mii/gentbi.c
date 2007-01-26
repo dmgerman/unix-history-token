@@ -587,6 +587,13 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|MIIBUS_MEDIAINIT
+argument_list|(
+name|sc
+operator|->
+name|mii_dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
