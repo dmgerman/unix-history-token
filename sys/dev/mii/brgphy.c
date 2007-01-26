@@ -517,13 +517,6 @@ name|MII_PHY_DESC
 argument_list|(
 name|xxBROADCOM
 argument_list|,
-name|BCM5708C
-argument_list|)
-block|,
-name|MII_PHY_DESC
-argument_list|(
-name|xxBROADCOM
-argument_list|,
 name|BCM5714
 argument_list|)
 block|,
