@@ -10249,9 +10249,11 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"can't export %s"
+literal|"can't export %s %s"
 argument_list|,
 name|dirp
+argument_list|,
+name|errmsg
 argument_list|)
 expr_stmt|;
 name|ret
@@ -10317,9 +10319,11 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"can't export %s"
+literal|"can't export %s %s"
 argument_list|,
 name|dirp
+argument_list|,
+name|errmsg
 argument_list|)
 expr_stmt|;
 name|ret
