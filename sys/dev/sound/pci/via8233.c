@@ -6436,6 +6436,8 @@ operator|(
 name|via_dxs_chnum
 operator|+
 name|via_sgd_chnum
+operator|+
+name|NWRCHANS
 operator|)
 operator|*
 name|via
