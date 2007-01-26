@@ -4862,14 +4862,6 @@ condition|(
 name|req
 operator|==
 name|RTM_ADD
-operator|&&
-operator|(
-name|rt
-operator|->
-name|rt_flags
-operator|&
-name|RTF_STATIC
-operator|)
 condition|)
 block|{
 comment|/* 			 * gate should have some valid AF_LINK entry, 			 * and ln->ln_expire should have some lifetime 			 * which is specified by ndp command. 			 */
