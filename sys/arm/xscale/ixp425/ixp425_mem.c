@@ -60,10 +60,10 @@ block|,
 comment|/* 16M: Two 2M x 32 chips */
 literal|0x01000000
 block|,
-comment|/* 16M: One 4M x 32 chip */
+comment|/* 16M: Two 4M x 16 chips */
 literal|0x02000000
 block|,
-comment|/* 32M: Two 4M x 32 chips */
+comment|/* 32M: Four 4M x 32 chips */
 literal|0
 block|,
 literal|0
