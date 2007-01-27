@@ -956,6 +956,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFM_IEEE80211_OFDM3
+value|21
+end_define
+
+begin_comment
+comment|/* OFDM 3Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_OFDM4
+value|22
+end_define
+
+begin_comment
+comment|/* OFDM 4.5Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_OFDM27
+value|23
+end_define
+
+begin_comment
+comment|/* OFDM 27Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFM_IEEE80211_ADHOC
 value|0x00000100
 end_define
@@ -1638,14 +1671,14 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_IEEE80211_DESCRIPTIONS
-value|{				\ 	{ IFM_IEEE80211_FH1, "FH/1Mbps" },				\ 	{ IFM_IEEE80211_FH2, "FH/2Mbps" },				\ 	{ IFM_IEEE80211_DS1, "DS/1Mbps" },				\ 	{ IFM_IEEE80211_DS2, "DS/2Mbps" },				\ 	{ IFM_IEEE80211_DS5, "DS/5.5Mbps" },				\ 	{ IFM_IEEE80211_DS11, "DS/11Mbps" },				\ 	{ IFM_IEEE80211_DS22, "DS/22Mbps" },				\ 	{ IFM_IEEE80211_OFDM6, "OFDM/6Mbps" },				\ 	{ IFM_IEEE80211_OFDM9, "OFDM/9Mbps" },				\ 	{ IFM_IEEE80211_OFDM12, "OFDM/12Mbps" },			\ 	{ IFM_IEEE80211_OFDM18, "OFDM/18Mbps" },			\ 	{ IFM_IEEE80211_OFDM24, "OFDM/24Mbps" },			\ 	{ IFM_IEEE80211_OFDM36, "OFDM/36Mbps" },			\ 	{ IFM_IEEE80211_OFDM48, "OFDM/48Mbps" },			\ 	{ IFM_IEEE80211_OFDM54, "OFDM/54Mbps" },			\ 	{ IFM_IEEE80211_OFDM72, "OFDM/72Mbps" },			\ 	{ IFM_IEEE80211_DS354k, "DS/354Kbps" },				\ 	{ IFM_IEEE80211_DS512k, "DS/512Kbps" },				\ 	{ 0, NULL },							\ }
+value|{				\ 	{ IFM_IEEE80211_FH1, "FH/1Mbps" },				\ 	{ IFM_IEEE80211_FH2, "FH/2Mbps" },				\ 	{ IFM_IEEE80211_DS1, "DS/1Mbps" },				\ 	{ IFM_IEEE80211_DS2, "DS/2Mbps" },				\ 	{ IFM_IEEE80211_DS5, "DS/5.5Mbps" },				\ 	{ IFM_IEEE80211_DS11, "DS/11Mbps" },				\ 	{ IFM_IEEE80211_DS22, "DS/22Mbps" },				\ 	{ IFM_IEEE80211_OFDM6, "OFDM/6Mbps" },				\ 	{ IFM_IEEE80211_OFDM9, "OFDM/9Mbps" },				\ 	{ IFM_IEEE80211_OFDM12, "OFDM/12Mbps" },			\ 	{ IFM_IEEE80211_OFDM18, "OFDM/18Mbps" },			\ 	{ IFM_IEEE80211_OFDM24, "OFDM/24Mbps" },			\ 	{ IFM_IEEE80211_OFDM36, "OFDM/36Mbps" },			\ 	{ IFM_IEEE80211_OFDM48, "OFDM/48Mbps" },			\ 	{ IFM_IEEE80211_OFDM54, "OFDM/54Mbps" },			\ 	{ IFM_IEEE80211_OFDM72, "OFDM/72Mbps" },			\ 	{ IFM_IEEE80211_DS354k, "DS/354Kbps" },				\ 	{ IFM_IEEE80211_DS512k, "DS/512Kbps" },				\ 	{ IFM_IEEE80211_OFDM3, "OFDM/3Mbps" },				\ 	{ IFM_IEEE80211_OFDM4, "OFDM/4.5Mbps" },			\ 	{ IFM_IEEE80211_OFDM27, "OFDM/27Mbps" },			\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_IEEE80211_ALIASES
-value|{					\ 	{ IFM_IEEE80211_FH1, "FH1" },					\ 	{ IFM_IEEE80211_FH2, "FH2" },					\ 	{ IFM_IEEE80211_FH1, "FrequencyHopping/1Mbps" },		\ 	{ IFM_IEEE80211_FH2, "FrequencyHopping/2Mbps" },		\ 	{ IFM_IEEE80211_DS1, "DS1" },					\ 	{ IFM_IEEE80211_DS2, "DS2" },					\ 	{ IFM_IEEE80211_DS5, "DS5.5" },					\ 	{ IFM_IEEE80211_DS11, "DS11" },					\ 	{ IFM_IEEE80211_DS22, "DS22" },					\ 	{ IFM_IEEE80211_DS1, "DirectSequence/1Mbps" },			\ 	{ IFM_IEEE80211_DS2, "DirectSequence/2Mbps" },			\ 	{ IFM_IEEE80211_DS5, "DirectSequence/5.5Mbps" },		\ 	{ IFM_IEEE80211_DS11, "DirectSequence/11Mbps" },		\ 	{ IFM_IEEE80211_DS22, "DirectSequence/22Mbps" },		\ 	{ IFM_IEEE80211_OFDM6, "OFDM6" },				\ 	{ IFM_IEEE80211_OFDM9, "OFDM9" },				\ 	{ IFM_IEEE80211_OFDM12, "OFDM12" },				\ 	{ IFM_IEEE80211_OFDM18, "OFDM18" },				\ 	{ IFM_IEEE80211_OFDM24, "OFDM24" },				\ 	{ IFM_IEEE80211_OFDM36, "OFDM36" },				\ 	{ IFM_IEEE80211_OFDM48, "OFDM48" },				\ 	{ IFM_IEEE80211_OFDM54, "OFDM54" },				\ 	{ IFM_IEEE80211_OFDM72, "OFDM72" },				\ 	{ IFM_IEEE80211_DS1, "CCK1" },					\ 	{ IFM_IEEE80211_DS2, "CCK2" },					\ 	{ IFM_IEEE80211_DS5, "CCK5.5" },				\ 	{ IFM_IEEE80211_DS11, "CCK11" },				\ 	{ IFM_IEEE80211_DS354k, "DS354K" },				\ 	{ IFM_IEEE80211_DS354k, "DirectSequence/354Kbps" },		\ 	{ IFM_IEEE80211_DS512k, "DS512K" },				\ 	{ IFM_IEEE80211_DS512k, "DirectSequence/512Kbps" },		\ 	{ 0, NULL },							\ }
+value|{					\ 	{ IFM_IEEE80211_FH1, "FH1" },					\ 	{ IFM_IEEE80211_FH2, "FH2" },					\ 	{ IFM_IEEE80211_FH1, "FrequencyHopping/1Mbps" },		\ 	{ IFM_IEEE80211_FH2, "FrequencyHopping/2Mbps" },		\ 	{ IFM_IEEE80211_DS1, "DS1" },					\ 	{ IFM_IEEE80211_DS2, "DS2" },					\ 	{ IFM_IEEE80211_DS5, "DS5.5" },					\ 	{ IFM_IEEE80211_DS11, "DS11" },					\ 	{ IFM_IEEE80211_DS22, "DS22" },					\ 	{ IFM_IEEE80211_DS1, "DirectSequence/1Mbps" },			\ 	{ IFM_IEEE80211_DS2, "DirectSequence/2Mbps" },			\ 	{ IFM_IEEE80211_DS5, "DirectSequence/5.5Mbps" },		\ 	{ IFM_IEEE80211_DS11, "DirectSequence/11Mbps" },		\ 	{ IFM_IEEE80211_DS22, "DirectSequence/22Mbps" },		\ 	{ IFM_IEEE80211_OFDM6, "OFDM6" },				\ 	{ IFM_IEEE80211_OFDM9, "OFDM9" },				\ 	{ IFM_IEEE80211_OFDM12, "OFDM12" },				\ 	{ IFM_IEEE80211_OFDM18, "OFDM18" },				\ 	{ IFM_IEEE80211_OFDM24, "OFDM24" },				\ 	{ IFM_IEEE80211_OFDM36, "OFDM36" },				\ 	{ IFM_IEEE80211_OFDM48, "OFDM48" },				\ 	{ IFM_IEEE80211_OFDM54, "OFDM54" },				\ 	{ IFM_IEEE80211_OFDM72, "OFDM72" },				\ 	{ IFM_IEEE80211_DS1, "CCK1" },					\ 	{ IFM_IEEE80211_DS2, "CCK2" },					\ 	{ IFM_IEEE80211_DS5, "CCK5.5" },				\ 	{ IFM_IEEE80211_DS11, "CCK11" },				\ 	{ IFM_IEEE80211_DS354k, "DS354K" },				\ 	{ IFM_IEEE80211_DS354k, "DirectSequence/354Kbps" },		\ 	{ IFM_IEEE80211_DS512k, "DS512K" },				\ 	{ IFM_IEEE80211_DS512k, "DirectSequence/512Kbps" },		\ 	{ IFM_IEEE80211_OFDM3, "OFDM3" },				\ 	{ IFM_IEEE80211_OFDM4, "OFDM4.5" },				\ 	{ IFM_IEEE80211_OFDM27, "OFDM27" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
