@@ -180,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|VIA_SEGS_MAX
-value|128
+value|64
 end_define
 
 begin_define
