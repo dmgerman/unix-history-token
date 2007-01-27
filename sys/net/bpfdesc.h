@@ -159,37 +159,11 @@ modifier|*
 name|bd_sigio
 decl_stmt|;
 comment|/* information for async I/O */
-if|#
-directive|if
-name|BSD
-operator|<
-literal|199103
-name|u_char
-name|bd_selcoll
-decl_stmt|;
-comment|/* true if selects collide */
-name|int
-name|bd_timedout
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|bd_selthread
-decl_stmt|;
-comment|/* process that last selected us */
-else|#
-directive|else
-name|u_char
-name|bd_pad
-decl_stmt|;
-comment|/* explicit alignment */
 name|struct
 name|selinfo
 name|bd_sel
 decl_stmt|;
 comment|/* bsd select info */
-endif|#
-directive|endif
 name|struct
 name|mtx
 name|bd_mtx
