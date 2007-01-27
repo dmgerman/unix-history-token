@@ -8010,6 +8010,11 @@ operator|->
 name|i_addr3
 argument_list|)
 expr_stmt|;
+name|WI_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Locate the node for sender, track state, and 	 * then pass this node (referenced) up to the 802.11 	 * layer for its use. 	 */
 name|ni
 operator|=
@@ -8043,6 +8048,11 @@ comment|/* 	 * The frame may have caused the node to be marked for 	 * reclamati
 name|ieee80211_free_node
 argument_list|(
 name|ni
+argument_list|)
+expr_stmt|;
+name|WI_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
