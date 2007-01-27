@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2004 Tim Kientzle  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003-2007 Tim Kientzle  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -21,11 +21,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -33,11 +44,28 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
 
 begin_include
 include|#
@@ -45,11 +73,27 @@ directive|include
 file|<string.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -124,6 +168,11 @@ name|nulls
 decl_stmt|;
 name|a
 operator|=
+operator|(
+expr|struct
+name|archive
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -195,6 +244,11 @@ literal|1024
 expr_stmt|;
 name|nulls
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|a
@@ -279,12 +333,50 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the block size.  */
+comment|/*  * Record the do-not-extract-to file. This belongs in archive_read_extract.c.  */
 end_comment
 
-begin_comment
-comment|/* int archive_read_set_bytes_per_block(struct archive *a, int bytes_per_block) { 	__archive_check_magic(a, ARCHIVE_READ_MAGIC, ARCHIVE_STATE_NEW, "archive_read_set_bytes_per_block"); 	if (bytes_per_block< 1) 		bytes_per_block = 1; 	a->bytes_per_block = bytes_per_block; 	return (0); } */
-end_comment
+begin_function
+name|void
+name|archive_read_extract_set_skip_file
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|a
+parameter_list|,
+name|dev_t
+name|d
+parameter_list|,
+name|ino_t
+name|i
+parameter_list|)
+block|{
+name|__archive_check_magic
+argument_list|(
+name|a
+argument_list|,
+name|ARCHIVE_READ_MAGIC
+argument_list|,
+name|ARCHIVE_STATE_ANY
+argument_list|,
+literal|"archive_read_extract_set_skip_file"
+argument_list|)
+expr_stmt|;
+name|a
+operator|->
+name|skip_file_dev
+operator|=
+name|d
+expr_stmt|;
+name|a
+operator|->
+name|skip_file_ino
+operator|=
+name|i
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Open the archive  */
@@ -1391,6 +1483,10 @@ literal|0
 expr_stmt|;
 name|dest
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|buff
 expr_stmt|;
 while|while
@@ -1487,7 +1583,91 @@ name|ARCHIVE_RETRY
 operator|)
 return|;
 block|}
+comment|/* Compute the amount of zero padding needed. */
+if|if
+condition|(
+name|a
+operator|->
+name|read_data_output_offset
+operator|+
+operator|(
+name|off_t
+operator|)
+name|s
+operator|<
+name|a
+operator|->
+name|read_data_offset
+condition|)
+block|{
+name|len
+operator|=
+name|s
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|a
+operator|->
+name|read_data_output_offset
+operator|<
+name|a
+operator|->
+name|read_data_offset
+condition|)
+block|{
+name|len
+operator|=
+name|a
+operator|->
+name|read_data_offset
+operator|-
+name|a
+operator|->
+name|read_data_output_offset
+expr_stmt|;
+block|}
 else|else
+name|len
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Add zeroes. */
+name|memset
+argument_list|(
+name|dest
+argument_list|,
+literal|0
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|s
+operator|-=
+name|len
+expr_stmt|;
+name|a
+operator|->
+name|read_data_output_offset
+operator|+=
+name|len
+expr_stmt|;
+name|dest
+operator|+=
+name|len
+expr_stmt|;
+name|bytes_read
+operator|+=
+name|len
+expr_stmt|;
+comment|/* Copy data if there is any space left. */
+if|if
+condition|(
+name|s
+operator|>
+literal|0
+condition|)
 block|{
 name|len
 operator|=
@@ -1775,6 +1955,15 @@ modifier|*
 name|a
 parameter_list|)
 block|{
+name|int
+name|r
+init|=
+name|ARCHIVE_OK
+decl_stmt|,
+name|r1
+init|=
+name|ARCHIVE_OK
+decl_stmt|;
 name|__archive_check_magic
 argument_list|(
 name|a
@@ -1801,6 +1990,8 @@ name|cleanup_archive_extract
 operator|!=
 name|NULL
 condition|)
+name|r
+operator|=
 call|(
 name|a
 operator|->
@@ -1820,6 +2011,9 @@ name|compression_finish
 operator|!=
 name|NULL
 condition|)
+block|{
+name|r1
+operator|=
 call|(
 name|a
 operator|->
@@ -1829,9 +2023,20 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r1
+operator|<
+name|r
+condition|)
+name|r
+operator|=
+name|r1
+expr_stmt|;
+block|}
 return|return
 operator|(
-name|ARCHIVE_OK
+name|r
 operator|)
 return|;
 block|}

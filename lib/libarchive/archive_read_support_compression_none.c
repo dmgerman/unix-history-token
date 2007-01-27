@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2004 Tim Kientzle  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003-2007 Tim Kientzle  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -23,11 +23,45 @@ directive|include
 file|<assert.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIMITS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
 
 begin_include
 include|#
@@ -35,17 +69,44 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -208,14 +269,14 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|ssize_t
+name|off_t
 name|archive_decompressor_none_skip
 parameter_list|(
 name|struct
 name|archive
 modifier|*
 parameter_list|,
-name|size_t
+name|off_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -378,6 +439,10 @@ name|state
 operator|->
 name|buffer
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|state
@@ -427,6 +492,11 @@ name|state
 operator|->
 name|client_buff
 operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|buff
 expr_stmt|;
 name|state
@@ -523,6 +593,11 @@ name|bytes_read
 decl_stmt|;
 name|state
 operator|=
+operator|(
+expr|struct
+name|archive_decompress_none
+operator|*
+operator|)
 name|a
 operator|->
 name|compression_data
@@ -958,6 +1033,11 @@ name|state
 decl_stmt|;
 name|state
 operator|=
+operator|(
+expr|struct
+name|archive_decompress_none
+operator|*
+operator|)
 name|a
 operator|->
 name|compression_data
@@ -1021,7 +1101,7 @@ end_comment
 
 begin_function
 specifier|static
-name|ssize_t
+name|off_t
 name|archive_decompressor_none_skip
 parameter_list|(
 name|struct
@@ -1029,7 +1109,7 @@ name|archive
 modifier|*
 name|a
 parameter_list|,
-name|size_t
+name|off_t
 name|request
 parameter_list|)
 block|{
@@ -1038,7 +1118,7 @@ name|archive_decompress_none
 modifier|*
 name|state
 decl_stmt|;
-name|ssize_t
+name|off_t
 name|bytes_skipped
 decl_stmt|,
 name|total_bytes_skipped
@@ -1050,6 +1130,11 @@ name|min
 decl_stmt|;
 name|state
 operator|=
+operator|(
+expr|struct
+name|archive_decompress_none
+operator|*
+operator|)
 name|a
 operator|->
 name|compression_data
@@ -1082,6 +1167,9 @@ name|minimum
 argument_list|(
 name|request
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|state
 operator|->
 name|avail
@@ -1120,6 +1208,9 @@ name|minimum
 argument_list|(
 name|request
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|state
 operator|->
 name|client_avail
@@ -1157,11 +1248,19 @@ return|;
 comment|/* 	 * If a client_skipper was provided, try that first. 	 */
 if|if
 condition|(
+operator|(
 name|a
 operator|->
 name|client_skipper
 operator|!=
 name|NULL
+operator|)
+operator|&&
+operator|(
+name|request
+operator|<
+name|SSIZE_MAX
+operator|)
 condition|)
 block|{
 name|bytes_skipped
@@ -1337,14 +1436,16 @@ expr_stmt|;
 comment|/* precondition for cast below */
 name|min
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|minimum
 argument_list|(
-operator|(
-name|size_t
-operator|)
 name|bytes_read
 argument_list|,
 name|request
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bytes_read
@@ -1398,6 +1499,11 @@ name|state
 decl_stmt|;
 name|state
 operator|=
+operator|(
+expr|struct
+name|archive_decompress_none
+operator|*
+operator|)
 name|a
 operator|->
 name|compression_data
