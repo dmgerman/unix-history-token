@@ -1070,6 +1070,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_SMART_CMD
+value|0xb0
+end_define
+
+begin_comment
+comment|/* SMART command */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_CFA_ERASE
 value|0xc0
 end_define

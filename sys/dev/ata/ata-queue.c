@@ -3924,6 +3924,14 @@ literal|"SERVICE"
 operator|)
 return|;
 case|case
+literal|0xb0
+case|:
+return|return
+operator|(
+literal|"SMART"
+operator|)
+return|;
+case|case
 literal|0xc0
 case|:
 return|return
