@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<contrib/dev/ath/ah_desc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211_radiotap.h>
 end_include
 
@@ -331,6 +337,11 @@ modifier|*
 name|bf_desc
 decl_stmt|;
 comment|/* virtual addr of desc */
+name|struct
+name|ath_desc_status
+name|bf_status
+decl_stmt|;
+comment|/* tx/rx status */
 name|bus_addr_t
 name|bf_daddr
 decl_stmt|;
@@ -2778,9 +2789,11 @@ parameter_list|,
 name|_dspa
 parameter_list|,
 name|_dsnext
+parameter_list|,
+name|_rs
 parameter_list|)
 define|\
-value|((*(_ah)->ah_procRxDesc)((_ah), (_ds), (_dspa), (_dsnext), 0))
+value|((*(_ah)->ah_procRxDesc)((_ah), (_ds), (_dspa), (_dsnext), 0, (_rs)))
 end_define
 
 begin_define
@@ -2872,9 +2885,11 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|_ds
+parameter_list|,
+name|_ts
 parameter_list|)
 define|\
-value|((*(_ah)->ah_procTxDesc)((_ah), (_ds)))
+value|((*(_ah)->ah_procTxDesc)((_ah), (_ds), (_ts)))
 end_define
 
 begin_define
