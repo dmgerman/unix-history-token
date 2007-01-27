@@ -45,13 +45,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|inline
-value|__inline
-end_define
-
 begin_comment
 comment|/*  * PCI IDs of supported chips:  *  * MAESTRO-1	0x01001285  * MAESTRO-2	0x1968125d  * MAESTRO-2E	0x1978125d  */
 end_comment
@@ -607,33 +600,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-specifier|inline
-name|void
-name|agg_lock
-parameter_list|(
-name|struct
-name|agg_info
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-specifier|inline
-name|void
-name|agg_unlock
-parameter_list|(
-name|struct
-name|agg_info
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-specifier|inline
 name|void
 name|agg_sleep
 parameter_list|(
@@ -654,7 +620,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
+name|__inline
 name|u_int32_t
 name|agg_rd
 parameter_list|(
@@ -672,7 +638,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|agg_wr
 parameter_list|(
@@ -693,7 +659,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|int
 name|agg_rdcodec
 parameter_list|(
@@ -708,7 +673,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|int
 name|agg_wrcodec
 parameter_list|(
@@ -725,7 +689,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|ringbus_setdest
 parameter_list|(
@@ -742,7 +705,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|u_int16_t
 name|wp_rdreg
 parameter_list|(
@@ -757,7 +719,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|wp_wrreg
 parameter_list|(
@@ -774,7 +735,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|u_int16_t
 name|wp_rdapu
 parameter_list|(
@@ -791,7 +751,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|wp_wrapu
 parameter_list|(
@@ -810,7 +769,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|wp_settimer
 parameter_list|(
@@ -825,7 +783,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|wp_starttimer
 parameter_list|(
@@ -838,7 +795,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|wp_stoptimer
 parameter_list|(
@@ -849,24 +805,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-specifier|inline
-name|u_int16_t
-name|wc_rdreg
-parameter_list|(
-name|struct
-name|agg_info
-modifier|*
-parameter_list|,
-name|u_int16_t
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static u_int16_t	wc_rdreg(struct agg_info*, u_int16_t);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|wc_wrreg
 parameter_list|(
@@ -881,24 +833,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-specifier|inline
-name|u_int16_t
-name|wc_rdchctl
-parameter_list|(
-name|struct
-name|agg_info
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static u_int16_t	wc_rdchctl(struct agg_info*, int);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|wc_wrchctl
 parameter_list|(
@@ -915,7 +863,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|agg_stopclock
 parameter_list|(
@@ -934,7 +881,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|agg_initcodec
 parameter_list|(
@@ -1043,9 +989,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AGG_JITTER_CORRECTION
+end_ifdef
+
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|suppress_jitter
 parameter_list|(
@@ -1058,7 +1009,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|suppress_rec_jitter
 parameter_list|(
@@ -1068,6 +1018,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1189,65 +1144,28 @@ begin_comment
 comment|/* locking */
 end_comment
 
-begin_function
-specifier|static
-specifier|inline
-name|void
+begin_define
+define|#
+directive|define
 name|agg_lock
 parameter_list|(
-name|struct
-name|agg_info
-modifier|*
 name|sc
 parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|USING_MUTEX
-name|mtx_lock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
+value|snd_mtxlock(&((sc)->lock))
+end_define
 
-begin_function
-specifier|static
-specifier|inline
-name|void
+begin_define
+define|#
+directive|define
 name|agg_unlock
 parameter_list|(
-name|struct
-name|agg_info
-modifier|*
 name|sc
 parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|USING_MUTEX
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
+value|snd_mtxunlock(&((sc)->lock))
+end_define
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|agg_sleep
 parameter_list|(
@@ -1329,7 +1247,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_int32_t
 name|agg_rd
 parameter_list|(
@@ -1430,7 +1348,7 @@ end_define
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|agg_wr
 parameter_list|(
@@ -1542,7 +1460,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|int
 name|agg_codec_wait4idle
 parameter_list|(
@@ -1596,7 +1513,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|int
 name|agg_rdcodec
 parameter_list|(
@@ -1698,7 +1614,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|int
 name|agg_wrcodec
 parameter_list|(
@@ -1794,7 +1709,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|ringbus_setdest
 parameter_list|(
@@ -1867,7 +1781,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|u_int16_t
 name|wp_rdreg
 parameter_list|(
@@ -1906,7 +1819,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|wp_wrreg
 parameter_list|(
@@ -1949,7 +1861,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|int
 name|wp_wait_data
 parameter_list|(
@@ -2013,7 +1924,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|u_int16_t
 name|wp_rdapu
 parameter_list|(
@@ -2083,7 +1993,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|wp_wrapu
 parameter_list|(
@@ -2354,7 +2263,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|wp_settimer
 parameter_list|(
@@ -2471,7 +2379,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|wp_starttimer
 parameter_list|(
@@ -2526,7 +2433,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|wp_stoptimer
 parameter_list|(
@@ -2588,48 +2494,20 @@ begin_comment
 comment|/* WaveCache */
 end_comment
 
-begin_function
-specifier|static
-specifier|inline
-name|u_int16_t
-name|wc_rdreg
-parameter_list|(
-name|struct
-name|agg_info
-modifier|*
-name|ess
-parameter_list|,
-name|u_int16_t
-name|reg
-parameter_list|)
-block|{
-name|AGG_WR
-argument_list|(
-name|ess
-argument_list|,
-name|PORT_WAVCACHE_INDEX
-argument_list|,
-name|reg
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-return|return
-name|AGG_RD
-argument_list|(
-name|ess
-argument_list|,
-name|PORT_WAVCACHE_DATA
-argument_list|,
-literal|2
-argument_list|)
-return|;
-block|}
-end_function
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static u_int16_t wc_rdreg(struct agg_info *ess, u_int16_t reg) { 	AGG_WR(ess, PORT_WAVCACHE_INDEX, reg, 2); 	return AGG_RD(ess, PORT_WAVCACHE_DATA, 2); }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|wc_wrreg
 parameter_list|(
@@ -2670,37 +2548,20 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|u_int16_t
-name|wc_rdchctl
-parameter_list|(
-name|struct
-name|agg_info
-modifier|*
-name|ess
-parameter_list|,
-name|int
-name|ch
-parameter_list|)
-block|{
-return|return
-name|wc_rdreg
-argument_list|(
-name|ess
-argument_list|,
-name|ch
-operator|<<
-literal|3
-argument_list|)
-return|;
-block|}
-end_function
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static u_int16_t wc_rdchctl(struct agg_info *ess, int ch) { 	return wc_rdreg(ess, ch<< 3); }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|wc_wrchctl
 parameter_list|(
@@ -2740,7 +2601,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|agg_stopclock
 parameter_list|(
@@ -2854,7 +2714,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|agg_initcodec
 parameter_list|(
@@ -3854,7 +3713,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if ((agg_rdcodec(ess, AC97_REG_POWER)& 3) != 3) 				device_printf(ess->dev, "warning: codec not ready.\n");
+block|if ((agg_rdcodec(ess, AC97_REG_POWER)& 3) != 3) 				device_printf(ess->dev, 				    "warning: codec not ready.\n");
 endif|#
 directive|endif
 name|AGG_WR
@@ -5561,7 +5420,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|interleave
 parameter_list|(
@@ -5803,7 +5661,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|mixdown
 parameter_list|(
@@ -6010,13 +5867,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AGG_JITTER_CORRECTION
+end_ifdef
+
 begin_comment
 comment|/*  * Stereo jitter suppressor.  * Sometimes playback pointers differ in stereo-paired channels.  * Calling this routine within intr fixes the problem.  */
 end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|suppress_jitter
 parameter_list|(
@@ -6134,7 +5996,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|suppress_rec_jitter
 parameter_list|(
@@ -6248,9 +6109,13 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
-specifier|inline
 name|u_int
 name|calc_timer_div
 parameter_list|(
@@ -6329,7 +6194,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|u_int
 name|calc_timer_div_rch
 parameter_list|(
