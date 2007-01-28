@@ -1443,8 +1443,6 @@ name|BIO_READ
 operator||
 name|BIO_WRITE
 operator||
-name|BIO_DELETE
-operator||
 name|BIO_GETATTR
 operator|)
 condition|)
@@ -1458,7 +1456,42 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"NULL bp->data in g_io_request"
+literal|"NULL bp->data in g_io_request(cmd=%hhu)"
+operator|,
+name|bp
+operator|->
+name|bio_cmd
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bp
+operator|->
+name|bio_cmd
+operator|&
+operator|(
+name|BIO_DELETE
+operator||
+name|BIO_FLUSH
+operator|)
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|bio_data
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"non-NULL bp->data in g_io_request(cmd=%hhu)"
+operator|,
+name|bp
+operator|->
+name|bio_cmd
 operator|)
 argument_list|)
 expr_stmt|;
