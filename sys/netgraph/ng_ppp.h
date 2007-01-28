@@ -244,6 +244,50 @@ comment|/* append decimal link number */
 end_comment
 
 begin_comment
+comment|/* Compress hook operation modes */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|NG_PPP_COMPRESS_NONE
+init|=
+literal|0
+block|,
+comment|/* compression disabled */
+name|NG_PPP_COMPRESS_SIMPLE
+block|,
+comment|/* original operation mode */
+name|NG_PPP_COMPRESS_FULL
+block|,
+comment|/* compressor returns proto */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Decompress hook operation modes */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|NG_PPP_DECOMPRESS_NONE
+init|=
+literal|0
+block|,
+comment|/* decompression disabled */
+name|NG_PPP_DECOMPRESS_SIMPLE
+block|,
+comment|/* original operation mode */
+name|NG_PPP_DECOMPRESS_FULL
+block|,
+comment|/* forward any packet to decompressor */
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/* Netgraph commands */
 end_comment
 
