@@ -593,10 +593,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * The default read buffer size is patchable.  */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -640,7 +636,7 @@ name|bpf_bufsize
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Default bpf buffer size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -670,7 +666,7 @@ name|bpf_maxbufsize
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum bpf buffer size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
