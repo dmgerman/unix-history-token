@@ -4973,7 +4973,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"error opening tranport layer device %s"
+literal|"error opening transport layer device %s"
 argument_list|,
 name|XPT_DEVICE
 argument_list|)
@@ -5890,7 +5890,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"error opening tranport layer device %s\n"
+literal|"error opening transport layer device %s\n"
 argument_list|,
 name|XPT_DEVICE
 argument_list|)
