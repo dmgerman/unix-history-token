@@ -314,5 +314,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|build_iovec_argf
+parameter_list|(
+name|struct
+name|iovec
+modifier|*
+modifier|*
+name|iov
+parameter_list|,
+name|int
+modifier|*
+name|iovlen
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
