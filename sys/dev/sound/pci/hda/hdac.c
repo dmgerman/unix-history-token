@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20070105_0038"
+value|"20070128_0039"
 end_define
 
 begin_define
@@ -500,6 +500,13 @@ define|#
 directive|define
 name|HP_NX6325_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(HP, 0x30b0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HP_XW4300_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(HP, 0x3013)
 end_define
 
 begin_define
@@ -2676,28 +2683,13 @@ operator|-
 literal|1
 block|}
 block|,
-block|{
-name|ACER_ALL_SUBVENDOR
-block|,
-name|HDA_CODEC_ALC883
-block|,
-name|HDAC_HP_SWITCH_CTL
-block|,
+if|#
+directive|if
 literal|0
-block|,
-literal|20
-block|,
-block|{
-literal|21
-block|,
-operator|-
-literal|1
+block|{ ACER_ALL_SUBVENDOR, HDA_CODEC_ALC883, HDAC_HP_SWITCH_CTL, 0, 	    20, { 21, -1 }, -1 },
+endif|#
+directive|endif
 block|}
-block|,
-operator|-
-literal|1
-block|}
-block|, }
 struct|;
 end_struct
 
@@ -18282,6 +18274,96 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|subvendor
+operator|==
+name|HP_XW4300_SUBVENDOR
+condition|)
+block|{
+name|ctl
+operator|=
+name|hdac_audio_ctl_amp_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|16
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ctl
+operator|!=
+name|NULL
+operator|&&
+name|ctl
+operator|->
+name|widget
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ctl
+operator|->
+name|ossmask
+operator|=
+name|SOUND_MASK_SPEAKER
+expr_stmt|;
+name|ctl
+operator|->
+name|widget
+operator|->
+name|ctlflags
+operator||=
+name|SOUND_MASK_SPEAKER
+expr_stmt|;
+block|}
+name|ctl
+operator|=
+name|hdac_audio_ctl_amp_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|17
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ctl
+operator|!=
+name|NULL
+operator|&&
+name|ctl
+operator|->
+name|widget
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ctl
+operator|->
+name|ossmask
+operator|=
+name|SOUND_MASK_SPEAKER
+expr_stmt|;
+name|ctl
+operator|->
+name|widget
+operator|->
+name|ctlflags
+operator||=
+name|SOUND_MASK_SPEAKER
+expr_stmt|;
+block|}
+block|}
 break|break;
 case|case
 name|HDA_CODEC_ALC861
@@ -22194,7 +22276,7 @@ argument|, 				    i, ctl->widget->nid); 				if (ctl->childwidget != NULL) 					
 literal|" childnid=%d"
 argument|, 					ctl->childwidget->nid); 				printf(
 literal|" Bind to NONE\n"
-argument|); 		}
+argument|); 			}
 argument_list|)
 empty_stmt|;
 if|if
