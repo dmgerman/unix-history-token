@@ -942,11 +942,20 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|PHYSMAP_SIZE
+value|(2 * 16)
+end_define
+
 begin_decl_stmt
 name|vm_paddr_t
 name|phys_avail
 index|[
-literal|10
+name|PHYSMAP_SIZE
+operator|+
+literal|2
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -955,7 +964,9 @@ begin_decl_stmt
 name|vm_paddr_t
 name|dump_avail
 index|[
-literal|10
+name|PHYSMAP_SIZE
+operator|+
+literal|2
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -7466,13 +7477,6 @@ name|sd_gran
 expr_stmt|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|PHYSMAP_SIZE
-value|(2 * 8)
-end_define
 
 begin_comment
 comment|/*  * Populate the (physmap) array with base/bound pairs describing the  * available physical memory in the system, then test this memory and  * build the phys_avail array describing the actually-available memory.  *  * If we cannot accurately determine the physical memory map, then use  * value from the 0xE801 call, and failing that, the RTC.  *  * Total memory size may be set by the kernel environment variable  * hw.physmem or the compile-time define MAXMEM.  *  * XXX first should be vm_paddr_t.  */
