@@ -2519,7 +2519,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get an sf_buf from the freelist. Will block if none are available.  */
+comment|/*  * Get an sf_buf from the freelist.  May block if none are available.  */
 end_comment
 
 begin_function
