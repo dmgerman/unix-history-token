@@ -1581,6 +1581,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|struct
+name|ieee80211_rateset
+modifier|*
+name|ieee80211_get_suprates
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ieee80211_announce
 parameter_list|(
@@ -1730,7 +1749,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
+name|int
 name|ieee80211_mhz2ieee
 parameter_list|(
 name|u_int
@@ -1741,13 +1760,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
+name|int
 name|ieee80211_chan2ieee
 parameter_list|(
 name|struct
 name|ieee80211com
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|ieee80211_channel
 modifier|*
@@ -1789,6 +1809,7 @@ name|struct
 name|ieee80211com
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|ieee80211_channel
 modifier|*

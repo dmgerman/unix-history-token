@@ -1493,11 +1493,14 @@ name|badrate
 decl_stmt|,
 name|fixedrate
 decl_stmt|;
+specifier|const
 name|struct
 name|ieee80211_rateset
 modifier|*
 name|srs
-decl_stmt|,
+decl_stmt|;
+name|struct
+name|ieee80211_rateset
 modifier|*
 name|nrs
 decl_stmt|;
@@ -1538,12 +1541,7 @@ literal|0
 expr_stmt|;
 name|srs
 operator|=
-operator|&
-name|ic
-operator|->
-name|ic_sup_rates
-index|[
-name|ieee80211_chan2mode
+name|ieee80211_get_suprates
 argument_list|(
 name|ic
 argument_list|,
@@ -1551,7 +1549,6 @@ name|ni
 operator|->
 name|ni_chan
 argument_list|)
-index|]
 expr_stmt|;
 name|nrs
 operator|=
