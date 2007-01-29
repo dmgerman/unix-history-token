@@ -60,7 +60,7 @@ argument_list|)
 name|bd_next
 expr_stmt|;
 comment|/* Linked list of descriptors */
-comment|/* 	 * Buffer slots: two mbuf clusters buffer the incoming packets. 	 *   The model has three slots.  Sbuf is always occupied. 	 *   sbuf (store) - Receive interrupt puts packets here. 	 *   hbuf (hold) - When sbuf is full, put cluster here and 	 *                 wakeup read (replace sbuf with fbuf). 	 *   fbuf (free) - When read is done, put cluster here. 	 * On receiving, if sbuf is full and fbuf is 0, packet is dropped. 	 */
+comment|/* 	 * Buffer slots: two malloc buffers store the incoming packets. 	 *   The model has three slots.  Sbuf is always occupied. 	 *   sbuf (store) - Receive interrupt puts packets here. 	 *   hbuf (hold) - When sbuf is full, put buffer here and 	 *                 wakeup read (replace sbuf with fbuf). 	 *   fbuf (free) - When read is done, put buffer here. 	 * On receiving, if sbuf is full and fbuf is 0, packet is dropped. 	 */
 name|caddr_t
 name|bd_sbuf
 decl_stmt|;
