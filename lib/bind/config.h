@@ -886,9 +886,11 @@ directive|ifndef
 name|__cplusplus
 end_ifndef
 
-begin_comment
-comment|/* #undef inline */
-end_comment
+begin_define
+define|#
+directive|define
+name|inline
+end_define
 
 begin_endif
 endif|#
