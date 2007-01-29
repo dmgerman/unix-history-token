@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: validator.h,v 1.18.12.11 2006/01/06 00:01:42 marka Exp $ */
+comment|/* $Id: validator.h,v 1.18.12.11.6.1 2007/01/11 04:51:39 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -310,6 +310,13 @@ name|DNS_VALIDATOR_DLV
 value|1U
 end_define
 
+begin_define
+define|#
+directive|define
+name|DNS_VALIDATOR_DEFER
+value|2U
+end_define
+
 begin_function_decl
 name|ISC_LANG_BEGINDECLS
 name|isc_result_t
@@ -363,6 +370,21 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Start a DNSSEC validation.  *  * This validates a response to the question given by  * 'name' and 'type'.  *  * To validate a positive response, the response data is  * given by 'rdataset' and 'sigrdataset'.  If 'sigrdataset'  * is NULL, the data is presumed insecure and an attempt  * is made to prove its insecurity by finding the appropriate  * null key.  *  * The complete response message may be given in 'message',  * to make available any authority section NSECs that may be  * needed for validation of a response resulting from a  * wildcard expansion (though no such wildcard validation  * is implemented yet).  If the complete response message  * is not available, 'message' is NULL.  *  * To validate a negative response, the complete negative response  * message is given in 'message'.  The 'rdataset', and  * 'sigrdataset' arguments must be NULL, but the 'name' and 'type'  * arguments must be provided.  *  * The validation is performed in the context of 'view'.  *  * When the validation finishes, a dns_validatorevent_t with  * the given 'action' and 'arg' are sent to 'task'.  * Its 'result' field will be ISC_R_SUCCESS iff the  * response was successfully proven to be either secure or  * part of a known insecure domain.  *  * options:  * If DNS_VALIDATOR_DLV is set the caller knows there is not a  * trusted key and the validator should immediately attempt to validate  * the answer by looking for a appopriate DLV RRset.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_validator_send
+parameter_list|(
+name|dns_validator_t
+modifier|*
+name|validator
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Send a deferred validation request  *  * Requires:  *	'validator' to points to a valid DNSSEC validator.  */
 end_comment
 
 begin_function_decl
