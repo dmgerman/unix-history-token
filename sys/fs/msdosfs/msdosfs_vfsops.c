@@ -218,6 +218,8 @@ literal|"cs_dos"
 block|,
 literal|"cs_local"
 block|,
+literal|"large"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -2378,6 +2380,23 @@ name|pm_bo
 operator|=
 name|bo
 expr_stmt|;
+comment|/* 	 * Experimental support for large MS-DOS filesystems. 	 * WARNING: This uses at least 32 bytes of kernel memory (which is not 	 * reclaimed until the FS is unmounted) for each file on disk to map 	 * between the 32-bit inode numbers used by VFS and the 64-bit 	 * pseudo-inode numbers used internally by msdosfs. This is only 	 * safe to use in certain controlled situations (e.g. read-only FS 	 * with less than 1 million files). 	 * Since the mappings do not persist across unmounts (or reboots), these 	 * filesystems are not suitable for exporting through NFS, or any other 	 * application that requires fixed inode numbers. 	 */
+name|vfs_flagopt
+argument_list|(
+name|mp
+operator|->
+name|mnt_optnew
+argument_list|,
+literal|"large"
+argument_list|,
+operator|&
+name|pmp
+operator|->
+name|pm_flags
+argument_list|,
+name|MSDOSFS_LARGEFS
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Compute several useful quantities from the bpb in the 	 * bootsector.  Copy in the dos 5 variant of the bpb then fix up 	 * the fields that are different between dos 5 and dos 3.3. 	 */
 name|SecPerClust
 operator|=
@@ -2616,9 +2635,18 @@ operator|->
 name|pm_Sectors
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|MSDOSFS_LARGE
+if|if
+condition|(
+operator|!
+operator|(
+name|pmp
+operator|->
+name|pm_flags
+operator|&
+name|MSDOSFS_LARGEFS
+operator|)
+condition|)
+block|{
 if|if
 condition|(
 name|pmp
@@ -2642,23 +2670,23 @@ operator|+
 literal|1
 condition|)
 block|{
-comment|/* 		 * We cannot deal currently with this size of disk 		 * due to fileid limitations (see msdosfs_getattr and 		 * msdosfs_readdir) 		 */
+comment|/* 			 * We cannot deal currently with this size of disk 			 * due to fileid limitations (see msdosfs_getattr and 			 * msdosfs_readdir) 			 */
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"mountmsdosfs(): disk too big, sorry\n"
+name|mp
+argument_list|,
+literal|"Disk too big, try '-o large' mount option"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|error_exit
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/* !MSDOSFS_LARGE */
+block|}
 if|if
 condition|(
 name|pmp
@@ -3593,16 +3621,19 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MSDOSFS_LARGE
+if|if
+condition|(
+name|pmp
+operator|->
+name|pm_flags
+operator|&
+name|MSDOSFS_LARGEFS
+condition|)
 name|msdosfs_fileno_init
 argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -4013,16 +4044,21 @@ argument_list|,
 name|M_MSDOSFSFAT
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MSDOSFS_LARGE
+if|if
+condition|(
+name|pmp
+operator|->
+name|pm_flags
+operator|&
+name|MSDOSFS_LARGEFS
+condition|)
+block|{
 name|msdosfs_fileno_free
 argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|free
 argument_list|(
 name|pmp
