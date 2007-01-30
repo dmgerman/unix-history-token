@@ -187,12 +187,6 @@ directive|include
 file|<fs/msdosfs/fat.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_msdosfs.h"
-end_include
-
 begin_define
 define|#
 directive|define
