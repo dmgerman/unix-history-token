@@ -271,6 +271,14 @@ name|int
 name|boundary
 decl_stmt|;
 comment|/* boundary transmits cannot cross*/
+name|int
+name|stall
+decl_stmt|;
+comment|/* #times hw queue exhausted */
+name|int
+name|wake
+decl_stmt|;
+comment|/* #times irq re-enabled xmit */
 block|}
 name|mxge_tx_buf_t
 typedef|;
