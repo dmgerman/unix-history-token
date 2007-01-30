@@ -2417,7 +2417,11 @@ argument_list|,
 operator|&
 name|so
 argument_list|,
-name|SOCK_DGRAM
+name|nd
+operator|->
+name|root_args
+operator|.
+name|sotype
 argument_list|,
 literal|0
 argument_list|,
