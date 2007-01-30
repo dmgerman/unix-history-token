@@ -340,7 +340,7 @@ name|RT_DEVICEID_8168
 block|,
 name|RL_HWREV_8168_SPIN1
 block|,
-literal|"RealTek 8168B/8111B PCIe Gigabit Ethernet"
+literal|"RealTek 8168/8111B PCIe Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -350,7 +350,7 @@ name|RT_DEVICEID_8168
 block|,
 name|RL_HWREV_8168_SPIN2
 block|,
-literal|"RealTek 8168B/8111B PCIe Gigabit Ethernet"
+literal|"RealTek 8168/8111B PCIe Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -1927,11 +1927,11 @@ operator|==
 name|RL_TIMEOUT
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|rl_ifp
+name|rl_dev
 argument_list|,
 literal|"PHY read failed\n"
 argument_list|)
@@ -2066,11 +2066,11 @@ operator|==
 name|RL_TIMEOUT
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|rl_ifp
+name|rl_dev
 argument_list|,
 literal|"PHY write failed\n"
 argument_list|)
@@ -2244,11 +2244,11 @@ name|rval
 operator|)
 return|;
 default|default:
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|rl_ifp
+name|rl_dev
 argument_list|,
 literal|"bad phy register\n"
 argument_list|)
@@ -2462,11 +2462,11 @@ operator|)
 return|;
 break|break;
 default|default:
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|rl_ifp
+name|rl_dev
 argument_list|,
 literal|"bad phy register\n"
 argument_list|)
@@ -2857,11 +2857,11 @@ name|i
 operator|==
 name|RL_TIMEOUT
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|rl_ifp
+name|rl_dev
 argument_list|,
 literal|"reset never completed!\n"
 argument_list|)
@@ -3302,12 +3302,14 @@ operator|==
 name|RL_TIMEOUT
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|rl_dev
 argument_list|,
-literal|"diagnostic failed, failed to receive packet "
-literal|"in loopback mode\n"
+literal|"diagnostic failed, failed to receive packet in"
+literal|" loopback mode\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3442,9 +3444,11 @@ operator|!=
 name|ETHER_MIN_LEN
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|rl_dev
 argument_list|,
 literal|"diagnostic failed, received short packet\n"
 argument_list|)
@@ -3512,16 +3516,20 @@ operator|!=
 name|ETHERTYPE_IP
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|rl_dev
 argument_list|,
 literal|"WARNING, DMA FAILURE!\n"
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|rl_dev
 argument_list|,
 literal|"expected TX data: %6D/%6D/0x%x\n"
 argument_list|,
@@ -3536,9 +3544,11 @@ argument_list|,
 name|ETHERTYPE_IP
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|rl_dev
 argument_list|,
 literal|"received RX data: %6D/%6D/0x%x\n"
 argument_list|,
@@ -3562,27 +3572,34 @@ name|ether_type
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|rl_dev
 argument_list|,
-literal|"You may have a defective 32-bit NIC plugged "
-literal|"into a 64-bit PCI slot.\n"
+literal|"You may have a defective 32-bit "
+literal|"NIC plugged into a 64-bit PCI slot.\n"
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|rl_dev
 argument_list|,
-literal|"Please re-install the NIC in a 32-bit slot "
-literal|"for proper operation.\n"
+literal|"Please re-install the NIC in a "
+literal|"32-bit slot for proper operation.\n"
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|rl_dev
 argument_list|,
-literal|"Read the re(4) man page for more details.\n"
+literal|"Read the re(4) man page for more "
+literal|"details.\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -8631,11 +8648,11 @@ operator|!=
 name|EFBIG
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|rl_ifp
+name|rl_dev
 argument_list|,
 literal|"can't map mbuf (error %d)\n"
 argument_list|,
@@ -8810,11 +8827,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|rl_ifp
+name|rl_dev
 argument_list|,
 literal|"can't map mbuf (error %d)\n"
 argument_list|,
