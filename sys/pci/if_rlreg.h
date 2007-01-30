@@ -3745,6 +3745,9 @@ name|struct
 name|callout
 name|rl_stat_callout
 decl_stmt|;
+name|int
+name|rl_watchdog_timer
+decl_stmt|;
 name|struct
 name|mtx
 name|rl_mtx
