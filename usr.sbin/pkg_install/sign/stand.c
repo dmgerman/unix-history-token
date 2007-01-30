@@ -19,11 +19,11 @@ directive|include
 file|"stand.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|BSD4_4
-end_ifdef
+end_ifndef
 
 begin_include
 include|#
