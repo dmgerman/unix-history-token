@@ -7762,6 +7762,15 @@ operator|->
 name|cn_thread
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|vput
+argument_list|(
+name|newvp
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
