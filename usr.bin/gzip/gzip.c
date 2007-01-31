@@ -5320,7 +5320,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tnot overwritting\n"
+literal|"\tnot overwriting\n"
 argument_list|)
 expr_stmt|;
 name|ok
