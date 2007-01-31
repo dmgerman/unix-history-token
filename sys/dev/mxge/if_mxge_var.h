@@ -279,6 +279,14 @@ name|int
 name|wake
 decl_stmt|;
 comment|/* #times irq re-enabled xmit */
+name|int
+name|watchdog_req
+decl_stmt|;
+comment|/* cache of req */
+name|int
+name|watchdog_done
+decl_stmt|;
+comment|/* cache of done */
 block|}
 name|mxge_tx_buf_t
 typedef|;
@@ -468,6 +476,10 @@ name|link_width
 decl_stmt|;
 name|mxge_dma_t
 name|dmabench_dma
+decl_stmt|;
+name|struct
+name|callout
+name|co_hdl
 decl_stmt|;
 name|char
 modifier|*
