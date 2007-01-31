@@ -1934,6 +1934,46 @@ end_define
 begin_define
 define|#
 directive|define
+name|IN_LINKLOCAL
+parameter_list|(
+name|i
+parameter_list|)
+value|(((u_int32_t)(i)& 0xffff0000) == 0xa9fe0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_PRIVATE
+parameter_list|(
+name|i
+parameter_list|)
+value|((((u_int32_t)(i)& 0xff000000) == 0x0a000000) || \ 			 (((u_int32_t)(i)& 0xfff00000) == 0xac100000) || \ 			 (((u_int32_t)(i)& 0xffff0000) == 0xc0a80000))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_LOCAL_GROUP
+parameter_list|(
+name|i
+parameter_list|)
+value|(((u_int32_t)(i)& 0xffffff00) == 0xe0000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_ANY_LOCAL
+parameter_list|(
+name|i
+parameter_list|)
+value|(IN_LINKLOCAL(i) || IN_LOCAL_GROUP(i))
+end_define
+
+begin_define
+define|#
+directive|define
 name|INADDR_LOOPBACK
 value|(u_int32_t)0x7f000001
 end_define
