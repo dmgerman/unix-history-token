@@ -4898,7 +4898,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* Compute window scaling to request.  */
+comment|/* 	 * Compute window scaling to request: 	 * Scale to fit into sweet spot.  See tcp_syncache.c. 	 * XXX: This should move to tcp_output(). 	 * XXX: This should be based on the actual MSS. 	 */
 while|while
 condition|(
 name|tp
@@ -4908,18 +4908,14 @@ operator|<
 name|TCP_MAX_WINSHIFT
 operator|&&
 operator|(
-name|TCP_MAXWIN
+literal|0x1
 operator|<<
 name|tp
 operator|->
 name|request_r_scale
 operator|)
 operator|<
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_hiwat
+name|tcp_minmss
 condition|)
 name|tp
 operator|->

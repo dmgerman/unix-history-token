@@ -4215,7 +4215,7 @@ name|wscale
 init|=
 literal|0
 decl_stmt|;
-comment|/* Compute proper scaling value from buffer space */
+comment|/* 			 * Compute proper scaling value from buffer space. 			 * Leave enough room for the socket buffer to grow 			 * with auto sizing.  This allows us to scale the 			 * receive buffer over a wide range while not losing 			 * any efficiency or fine granularity. 			 */
 while|while
 condition|(
 name|wscale
@@ -4223,12 +4223,12 @@ operator|<
 name|TCP_MAX_WINSHIFT
 operator|&&
 operator|(
-name|TCP_MAXWIN
+literal|0x1
 operator|<<
 name|wscale
 operator|)
 operator|<
-name|sb_hiwat
+name|tcp_minmss
 condition|)
 name|wscale
 operator|++
