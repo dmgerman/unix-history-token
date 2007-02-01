@@ -625,6 +625,14 @@ name|int
 name|t_rttlow
 decl_stmt|;
 comment|/* smallest observerved RTT */
+name|u_int32_t
+name|rfbuf_ts
+decl_stmt|;
+comment|/* recv buffer autoscaling timestamp */
+name|int
+name|rfbuf_cnt
+decl_stmt|;
+comment|/* recv buffer autoscaling byte count */
 block|}
 struct|;
 end_struct
