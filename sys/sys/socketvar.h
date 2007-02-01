@@ -298,6 +298,11 @@ directive|define
 name|SB_KNOTE
 value|0x100
 comment|/* kernel note attached */
+define|#
+directive|define
+name|SB_AUTOSIZE
+value|0x800
+comment|/* automatically size socket buffer */
 name|void
 function_decl|(
 modifier|*
