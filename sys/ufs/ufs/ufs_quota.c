@@ -4463,6 +4463,21 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* XXX: Disallow negative id values to prevent the 	* creation of 100GB+ quota data files. 	*/
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|id
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|dqvp
 operator|=
 name|ump
