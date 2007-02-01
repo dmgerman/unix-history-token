@@ -285,7 +285,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|showuid
 parameter_list|(
 name|u_long
@@ -296,7 +296,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|showgid
 parameter_list|(
 name|u_long
@@ -307,7 +307,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|showusrname
 parameter_list|(
 name|char
@@ -319,7 +319,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|showgrpname
 parameter_list|(
 name|char
@@ -331,7 +331,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|showquotas
 parameter_list|(
 name|int
@@ -548,6 +548,10 @@ decl_stmt|,
 name|uflag
 init|=
 literal|0
+decl_stmt|,
+name|errflag
+init|=
+literal|0
 decl_stmt|;
 while|while
 condition|(
@@ -651,6 +655,8 @@ if|if
 condition|(
 name|uflag
 condition|)
+name|errflag
+operator|+=
 name|showuid
 argument_list|(
 name|getuid
@@ -689,6 +695,8 @@ argument_list|,
 literal|"getgroups"
 argument_list|)
 expr_stmt|;
+name|errflag
+operator|+=
 name|showgid
 argument_list|(
 name|mygid
@@ -716,6 +724,8 @@ index|]
 operator|!=
 name|mygid
 condition|)
+name|errflag
+operator|+=
 name|showgid
 argument_list|(
 name|gidset
@@ -727,7 +737,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|errflag
 operator|)
 return|;
 block|}
@@ -767,6 +777,8 @@ operator|*
 name|argv
 argument_list|)
 condition|)
+name|errflag
+operator|+=
 name|showuid
 argument_list|(
 name|atoi
@@ -777,6 +789,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+name|errflag
+operator|+=
 name|showusrname
 argument_list|(
 operator|*
@@ -786,7 +800,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|errflag
 operator|)
 return|;
 block|}
@@ -817,6 +831,8 @@ operator|*
 name|argv
 argument_list|)
 condition|)
+name|errflag
+operator|+=
 name|showgid
 argument_list|(
 name|atoi
@@ -827,6 +843,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+name|errflag
+operator|+=
 name|showgrpname
 argument_list|(
 operator|*
@@ -837,7 +855,7 @@ block|}
 block|}
 return|return
 operator|(
-literal|0
+name|errflag
 operator|)
 return|;
 block|}
@@ -878,7 +896,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|showuid
 parameter_list|(
 name|u_long
@@ -917,6 +935,8 @@ name|pwd
 operator|->
 name|pw_name
 expr_stmt|;
+return|return
+operator|(
 name|showquotas
 argument_list|(
 name|USRQUOTA
@@ -925,7 +945,8 @@ name|uid
 argument_list|,
 name|name
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -935,7 +956,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|showusrname
 parameter_list|(
 name|char
@@ -967,8 +988,14 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
+return|return
+operator|(
 name|showquotas
 argument_list|(
 name|USRQUOTA
@@ -979,7 +1006,8 @@ name|pw_uid
 argument_list|,
 name|name
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -989,7 +1017,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|showgid
 parameter_list|(
 name|u_long
@@ -1028,6 +1056,8 @@ name|grp
 operator|->
 name|gr_name
 expr_stmt|;
+return|return
+operator|(
 name|showquotas
 argument_list|(
 name|GRPQUOTA
@@ -1036,7 +1066,8 @@ name|gid
 argument_list|,
 name|name
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -1046,7 +1077,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|showgrpname
 parameter_list|(
 name|char
@@ -1078,8 +1109,14 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
+return|return
+operator|(
 name|showquotas
 argument_list|(
 name|GRPQUOTA
@@ -1090,7 +1127,8 @@ name|gr_gid
 argument_list|,
 name|name
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -1153,7 +1191,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|showquotas
 parameter_list|(
 name|int
@@ -1193,6 +1231,10 @@ name|nam
 decl_stmt|;
 name|int
 name|lines
+init|=
+literal|0
+decl_stmt|,
+name|overquota
 init|=
 literal|0
 decl_stmt|;
@@ -1302,10 +1344,15 @@ name|dqblk
 operator|.
 name|dqb_ihardlimit
 condition|)
+block|{
+name|overquota
+operator|++
+expr_stmt|;
 name|msgi
 operator|=
 literal|"File limit reached on"
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1328,6 +1375,9 @@ operator|.
 name|dqb_isoftlimit
 condition|)
 block|{
+name|overquota
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|qup
@@ -1376,10 +1426,15 @@ name|dqblk
 operator|.
 name|dqb_bhardlimit
 condition|)
+block|{
+name|overquota
+operator|++
+expr_stmt|;
 name|msgb
 operator|=
 literal|"Block limit reached on"
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1402,6 +1457,9 @@ operator|.
 name|dqb_bsoftlimit
 condition|)
 block|{
+name|overquota
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|qup
@@ -1829,6 +1887,11 @@ argument_list|,
 literal|"none"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|overquota
+operator|)
+return|;
 block|}
 end_function
 
