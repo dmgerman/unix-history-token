@@ -617,43 +617,6 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
-comment|/* An empty archive is a serious error. */
-if|if
-condition|(
-name|bytes_read
-operator|==
-literal|0
-condition|)
-block|{
-name|archive_set_error
-argument_list|(
-name|a
-argument_list|,
-name|ARCHIVE_ERRNO_FILE_FORMAT
-argument_list|,
-literal|"Empty input file"
-argument_list|)
-expr_stmt|;
-comment|/* Close the empty file. */
-if|if
-condition|(
-name|client_closer
-condition|)
-call|(
-name|client_closer
-call|)
-argument_list|(
-name|a
-argument_list|,
-name|client_data
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ARCHIVE_FATAL
-operator|)
-return|;
-block|}
 comment|/* Now that the client callbacks have worked, remember them. */
 name|a
 operator|->
