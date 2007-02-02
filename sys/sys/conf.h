@@ -978,7 +978,7 @@ modifier|*
 modifier|*
 name|dev
 parameter_list|,
-name|u_int
+name|int
 name|extra
 parameter_list|)
 function_decl|;

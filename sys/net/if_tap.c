@@ -1139,7 +1139,7 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-name|u_int
+name|int
 name|extra
 decl_stmt|;
 name|int
