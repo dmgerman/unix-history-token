@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -1144,17 +1150,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|hz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* in subr_param.c */
-end_comment
 
 begin_function
 name|void
