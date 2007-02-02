@@ -286,8 +286,9 @@ comment|/* PIL_AST */
 literal|"stop"
 block|,
 comment|/* PIL_STOP */
-literal|"stray"
+literal|"preempt"
 block|,
+comment|/* PIL_PREEMPT */
 literal|"stray"
 block|,
 literal|"stray"
@@ -1095,6 +1096,13 @@ name|PIL_STOP
 index|]
 operator|=
 name|cpu_ipi_stop
+expr_stmt|;
+name|intr_handlers
+index|[
+name|PIL_PREEMPT
+index|]
+operator|=
+name|cpu_ipi_preempt
 expr_stmt|;
 endif|#
 directive|endif
