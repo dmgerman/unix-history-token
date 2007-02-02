@@ -410,7 +410,7 @@ name|PPTP_ACK_ALPHA
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)>> 3)
+value|(((x) + 4)>> 3)
 end_define
 
 begin_comment
@@ -424,7 +424,7 @@ name|PPTP_ACK_BETA
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)>> 2)
+value|(((x) + 2)>> 2)
 end_define
 
 begin_comment
@@ -3160,6 +3160,7 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* +2 to compensate low precision of int math */
 name|a
 operator|->
 name|ato
@@ -3173,6 +3174,8 @@ argument_list|(
 name|a
 operator|->
 name|dev
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
@@ -3852,7 +3855,10 @@ name|a
 operator|->
 name|rtt
 argument_list|)
+operator|+
+literal|1
 expr_stmt|;
+comment|/* +1 to avoid delta*0 case */
 name|a
 operator|->
 name|ato
