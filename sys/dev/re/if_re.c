@@ -9943,9 +9943,14 @@ name|sc
 argument_list|,
 name|RL_CFG1
 argument_list|,
-name|RL_CFG1_DRVLOAD
+name|CSR_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|RL_CFG1
+argument_list|)
 operator||
-name|RL_CFG1_FULLDUPLEX
+name|RL_CFG1_DRVLOAD
 argument_list|)
 expr_stmt|;
 name|ifp
