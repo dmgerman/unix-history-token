@@ -115,7 +115,7 @@ parameter_list|,
 name|e3
 parameter_list|)
 define|\
-value|(__tg_type3(e1, e2, e3, float _Complex) ||			\ 	    __tg_type3(e1, e2, e3, double _Complex) ||			\ 	    __tg_type3(e1, e2, e3, long double _Complex)) ||		\ 	    __tg_type3(e1, e2, e3, __typeof__(_Complex_I))
+value|(__tg_type3(e1, e2, e3, float _Complex) ||			\ 	    __tg_type3(e1, e2, e3, double _Complex) ||			\ 	    __tg_type3(e1, e2, e3, long double _Complex) ||		\ 	    __tg_type3(e1, e2, e3, __typeof__(_Complex_I)))
 end_define
 
 begin_define
