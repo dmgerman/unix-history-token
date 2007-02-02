@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<getopt.h>
 end_include
 
 begin_include
@@ -68,6 +80,33 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dorandom
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nmcastgroups
+init|=
+name|IP_MAX_MEMBERSHIPS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|verbose
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * The test tool exercises IP-level socket options by interrogating the  * getsockopt()/setsockopt() APIs.  It does not currently test that the  * intended semantics of each option are implemented (i.e., that setting IP  * options on the socket results in packets with the desired IP options in  * it).  */
@@ -2578,6 +2617,12 @@ modifier|*
 name|socktypename
 parameter_list|)
 block|{
+name|char
+name|addrbuf
+index|[
+literal|16
+index|]
+decl_stmt|;
 name|struct
 name|ip_mreq
 name|mreq
@@ -2638,12 +2683,21 @@ operator|==
 name|SOCK_STREAM
 condition|)
 return|return;
-comment|/*      * For SOCK_DGRAM and SOCK_RAW sockets, pick a multicast group ID      * in subnet 224/5 with 11 random bits in the middle, and the groups      * themselves joined in sequential order up to IP_MAX_MEMBERSHIPS.      * The 224/8 range has special meaning, so don't use it.      */
+comment|/*      * The 224/8 range is administratively scoped and has special meaning,      * therefore it is not used for this test.      * If we were not told to be non-deterministic:      * Join multicast groups from 238.1.1.0 up to nmcastgroups.      * Otherwise, pick a multicast group ID in subnet 238/5 with 11 random      * bits in the middle, and join groups in linear order up to nmcastgroups.      */
+if|if
+condition|(
+name|dorandom
+condition|)
+block|{
+comment|/* be non-deterministic (for interactive operation; a fuller test) */
+name|srandomdev
+argument_list|()
+expr_stmt|;
 name|basegroup
 operator|=
 literal|0xEE000000
 expr_stmt|;
-comment|/* 224.0.0.0/5 i.e. 5 bits. */
+comment|/* 238.0.0.0 */
 name|basegroup
 operator||=
 operator|(
@@ -2665,7 +2719,17 @@ operator|<<
 literal|16
 operator|)
 expr_stmt|;
-comment|/* Mid 11 bits. */
+comment|/* 11 bits */
+block|}
+else|else
+block|{
+comment|/* be deterministic (for automated operation) */
+name|basegroup
+operator|=
+literal|0xEE010100
+expr_stmt|;
+comment|/* 238.1.1.0 */
+block|}
 comment|/*      * Join the multicast group(s) on the default multicast interface;      * this usually maps to the interface to which the default      * route is pointing.      */
 for|for
 control|(
@@ -2675,7 +2739,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|IP_MAX_MEMBERSHIPS
+name|nmcastgroups
 condition|;
 name|i
 operator|++
@@ -2703,6 +2767,36 @@ operator|.
 name|s_addr
 operator|=
 name|INADDR_ANY
+expr_stmt|;
+name|inet_ntop
+argument_list|(
+name|AF_INET
+argument_list|,
+operator|&
+name|mreq
+operator|.
+name|imr_multiaddr
+argument_list|,
+name|addrbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addrbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"IP_ADD_MEMBERSHIP %s INADDR_ANY\n"
+argument_list|,
+name|addrbuf
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2737,12 +2831,7 @@ name|sock
 argument_list|,
 name|socktypename
 argument_list|,
-name|inet_ntoa
-argument_list|(
-name|mreq
-operator|.
-name|imr_multiaddr
-argument_list|)
+name|addrbuf
 argument_list|,
 literal|"INADDR_ANY"
 argument_list|)
@@ -2757,7 +2846,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|IP_MAX_MEMBERSHIPS
+name|nmcastgroups
 condition|;
 name|i
 operator|++
@@ -2785,6 +2874,36 @@ operator|.
 name|s_addr
 operator|=
 name|INADDR_ANY
+expr_stmt|;
+name|inet_ntop
+argument_list|(
+name|AF_INET
+argument_list|,
+operator|&
+name|mreq
+operator|.
+name|imr_multiaddr
+argument_list|,
+name|addrbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addrbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"IP_DROP_MEMBERSHIP %s INADDR_ANY\n"
+argument_list|,
+name|addrbuf
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2819,12 +2938,7 @@ name|sock
 argument_list|,
 name|socktypename
 argument_list|,
-name|inet_ntoa
-argument_list|(
-name|mreq
-operator|.
-name|imr_multiaddr
-argument_list|)
+name|addrbuf
 argument_list|,
 literal|"INADDR_ANY"
 argument_list|)
@@ -3617,6 +3731,27 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: ipsockopt [-M ngroups] [-r] [-v]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Very simply exercise that we can get and set each option.  If we're running  * as root, run it also as nobody.  If not as root, complain about that.  */
 end_comment
@@ -3634,6 +3769,67 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|int
+name|ch
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|ch
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"M:rv"
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+switch|switch
+condition|(
+name|ch
+condition|)
+block|{
+case|case
+literal|'M'
+case|:
+name|nmcastgroups
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|dorandom
+operator|=
+literal|1
+expr_stmt|;
+comment|/* introduce non-determinism */
+break|break;
+case|case
+literal|'v'
+case|:
+name|verbose
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+default|default:
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+block|}
 name|printf
 argument_list|(
 literal|"1..1\n"
