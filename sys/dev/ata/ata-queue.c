@@ -409,7 +409,7 @@ name|ATA_DEBUG_RQ
 argument_list|(
 name|request
 argument_list|,
-literal|"wait for completition"
+literal|"wait for completion"
 argument_list|)
 expr_stmt|;
 name|sema_wait
@@ -1073,7 +1073,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* reset timeout and put on the proper taskqueue for completition */
+comment|/* reset timeout and put on the proper taskqueue for completion */
 if|if
 condition|(
 operator|!
@@ -3367,6 +3367,14 @@ case|:
 return|return
 operator|(
 literal|"SERVICE"
+operator|)
+return|;
+case|case
+literal|0xb0
+case|:
+return|return
+operator|(
+literal|"SMART"
 operator|)
 return|;
 case|case

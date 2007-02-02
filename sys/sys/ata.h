@@ -972,6 +972,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_SMART_CMD
+value|0xb0
+end_define
+
+begin_comment
+comment|/* SMART command */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_READ_MUL
 value|0xc4
 end_define
