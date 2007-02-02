@@ -120,12 +120,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vfs_vptofh_t
-name|coda_vptofh
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vfs_init_t
 name|coda_init
 decl_stmt|;
