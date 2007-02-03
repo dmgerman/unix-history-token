@@ -49,41 +49,6 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_elif
-
 begin_include
 include|#
 directive|include
@@ -107,11 +72,6 @@ include|#
 directive|include
 file|<sys/mutex.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -173,7 +133,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (uhubdebug) logprintf x
+value|if (uhubdebug) printf x
 end_define
 
 begin_define
@@ -185,7 +145,29 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (uhubdebug>(n)) logprintf x
+value|if (uhubdebug> (n)) printf x
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+value|if (uhubdebug) device_printf x
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVPRINTFN
+parameter_list|(
+name|n
+parameter_list|,
+name|x
+parameter_list|)
+value|if (uhubdebug> (n)) device_printf x
 end_define
 
 begin_decl_stmt
@@ -253,6 +235,26 @@ begin_define
 define|#
 directive|define
 name|DPRINTFN
+parameter_list|(
+name|n
+parameter_list|,
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVPRINTFN
 parameter_list|(
 name|n
 parameter_list|,
@@ -350,15 +352,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
 begin_decl_stmt
 specifier|static
 name|bus_child_location_str_t
@@ -373,71 +366,9 @@ name|uhub_child_pnpinfo_str
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * We need two attachment points:  * hub to usb and hub to hub  * Every other driver only connects to hubs  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-end_if
-
-begin_expr_stmt
-name|USB_DECLARE_DRIVER
-argument_list|(
-name|uhub
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Create the driver instance for the hub connected to hub case */
-end_comment
-
-begin_expr_stmt
-name|CFATTACH_DECL
-argument_list|(
-name|uhub_uhub
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|uhub_softc
-argument_list|)
-argument_list|,
-name|uhub_match
-argument_list|,
-name|uhub_attach
-argument_list|,
-name|uhub_detach
-argument_list|,
-name|uhub_activate
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_elif
 
 begin_expr_stmt
 name|USB_DECLARE_DRIVER_INIT
@@ -597,11 +528,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_macro
 name|USB_MATCH
 argument_list|(
@@ -668,24 +594,34 @@ return|;
 block|}
 end_block
 
-begin_macro
-name|USB_ATTACH
-argument_list|(
-argument|uhub
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+name|int
+name|uhub_attach
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
-name|USB_ATTACH_START
-argument_list|(
-name|uhub
-argument_list|,
+name|struct
+name|uhub_softc
+modifier|*
 name|sc
-argument_list|,
-name|uaa
+init|=
+name|device_get_softc
+argument_list|(
+name|self
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|struct
+name|usb_attach_arg
+modifier|*
+name|uaa
+init|=
+name|device_get_ivars
+argument_list|(
+name|self
+argument_list|)
+decl_stmt|;
 name|usbd_device_handle
 name|dev
 init|=
@@ -755,10 +691,11 @@ name|devinfo
 operator|==
 name|NULL
 condition|)
-block|{
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
-block|}
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|DPRINTFN
 argument_list|(
 literal|1
@@ -783,7 +720,25 @@ argument_list|,
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_SETUP
+name|sc
+operator|->
+name|sc_dev
+operator|=
+name|self
+expr_stmt|;
+name|device_set_desc_copy
+argument_list|(
+name|self
+argument_list|,
+name|devinfo
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|devinfo
+argument_list|,
+name|M_TEMP
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -799,16 +754,13 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: %s transaction translator%s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"%s transaction translator%s\n"
 argument_list|,
 name|UHUB_IS_SINGLE_TT
 argument_list|(
@@ -846,17 +798,14 @@ condition|(
 name|err
 condition|)
 block|{
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"%s: configuration failed, error=%s\n"
-operator|,
-name|device_get_nameunit
-argument_list|(
 name|sc
 operator|->
-name|sc_dev
-argument_list|)
+name|dev
+operator|,
+literal|"configuration failed, error=%s\n"
 operator|,
 name|usbd_errstr
 argument_list|(
@@ -865,15 +814,11 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|devinfo
-argument_list|,
-name|M_TEMP
-argument_list|)
-expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -884,29 +829,22 @@ operator|>
 name|USB_HUB_MAX_DEPTH
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: hub depth (%d) exceeded, hub ignored\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"hub depth (%d) exceeded, hub ignored\n"
 argument_list|,
 name|USB_HUB_MAX_DEPTH
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|devinfo
-argument_list|,
-name|M_TEMP
-argument_list|)
-expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
 comment|/* Get hub descriptor. */
 name|req
@@ -1034,17 +972,14 @@ condition|(
 name|err
 condition|)
 block|{
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"%s: getting hub descriptor failed, error=%s\n"
-operator|,
-name|device_get_nameunit
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+operator|,
+literal|"getting hub descriptor failed: %s\n"
 operator|,
 name|usbd_errstr
 argument_list|(
@@ -1053,15 +988,11 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|devinfo
-argument_list|,
-name|M_TEMP
-argument_list|)
-expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
 for|for
 control|(
@@ -1094,16 +1025,13 @@ condition|)
 name|nremov
 operator|++
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: %d port%s with %d removable, %s powered\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"%d port%s with %d removable, %s powered\n"
 argument_list|,
 name|nports
 argument_list|,
@@ -1133,16 +1061,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: no ports, hub ignored\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"no ports, hub ignored\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1183,15 +1108,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
-argument_list|(
-name|devinfo
-argument_list|,
-name|M_TEMP
-argument_list|)
-expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
 name|dev
 operator|->
@@ -1280,17 +1201,14 @@ operator|->
 name|self_powered
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: bus powered hub connected to bus powered hub, "
-literal|"ignored\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"bus powered hub connected to bus "
+literal|"powered hub, ignored\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1315,16 +1233,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: no interface handle\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"no interface handle\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1347,16 +1262,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: no endpoint descriptor\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"no endpoint descriptor\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1376,16 +1288,13 @@ operator|!=
 name|UE_INTERRUPT
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: bad interrupt endpoint\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"bad interrupt endpoint\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1432,16 +1341,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: cannot open interrupt pipe\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"cannot open interrupt pipe\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1677,16 +1583,13 @@ if|if
 condition|(
 name|err
 condition|)
-name|printf
-argument_list|(
-literal|"%s: port %d power on failed, %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"port %d power on failed, %s\n"
 argument_list|,
 name|port
 argument_list|,
@@ -1721,8 +1624,11 @@ name|sc_running
 operator|=
 literal|1
 expr_stmt|;
-name|USB_ATTACH_SUCCESS_RETURN
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|bad
 label|:
 if|if
@@ -1736,23 +1642,19 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|devinfo
-argument_list|,
-name|M_TEMP
-argument_list|)
-expr_stmt|;
 name|dev
 operator|->
 name|hub
 operator|=
 name|NULL
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|usbd_status
@@ -1930,19 +1832,16 @@ operator|.
 name|wPortChange
 argument_list|)
 expr_stmt|;
-name|DPRINTFN
+name|DEVPRINTFN
 argument_list|(
 literal|3
 argument_list|,
 operator|(
-literal|"uhub_explore: %s port %d status 0x%04x 0x%04x\n"
-operator|,
-name|device_get_nameunit
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+operator|,
+literal|"uhub_explore: port %d status 0x%04x 0x%04x\n"
 operator|,
 name|port
 operator|,
@@ -1994,16 +1893,13 @@ operator|&
 name|UPS_PORT_ENABLED
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: illegal enable change, port %d\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"illegal enable change, port %d\n"
 argument_list|,
 name|port
 argument_list|)
@@ -2019,17 +1915,13 @@ operator|->
 name|restartcnt
 condition|)
 comment|/* no message first time */
-name|printf
-argument_list|(
-literal|"%s: port error, restarting "
-literal|"port %d\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"port error, restarting port %d\n"
 argument_list|,
 name|port
 argument_list|)
@@ -2047,17 +1939,13 @@ goto|goto
 name|disco
 goto|;
 else|else
-name|printf
-argument_list|(
-literal|"%s: port error, giving up "
-literal|"port %d\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"port error, giving up port %d\n"
 argument_list|,
 name|port
 argument_list|)
@@ -2124,7 +2012,7 @@ name|defined
 argument_list|(
 name|DIAGNOSTIC
 argument_list|)
-block|if (up->device == NULL&& 			    (status& UPS_CURRENT_CONNECT_STATUS)) 				printf("%s: connected, no device\n", 				       device_get_nameunit(sc->sc_dev));
+block|if (up->device == NULL&& 			    (status& UPS_CURRENT_CONNECT_STATUS)) 				deivce_printf(sc->sc_dev, 				    "connected, no device\n");
 endif|#
 directive|endif
 continue|continue;
@@ -2239,16 +2127,13 @@ operator|&
 name|UPS_PORT_POWER
 operator|)
 condition|)
-name|printf
-argument_list|(
-literal|"%s: strange, connected port %d has no power\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"strange, connected port %d has no power\n"
 argument_list|,
 name|port
 argument_list|)
@@ -2277,16 +2162,13 @@ name|status
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: port %d reset failed\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"port %d reset failed\n"
 argument_list|,
 name|port
 argument_list|)
@@ -2364,16 +2246,13 @@ comment|/* Nothing connected, just ignore it. */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"%s: port %d, device disappeared after reset\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"port %d, device disappeared after reset\n"
 argument_list|,
 name|port
 argument_list|)
@@ -2385,7 +2264,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (UHUB_IS_HIGH_SPEED(sc)&& !(status& UPS_HIGH_SPEED)) { 			printf("%s: port %d, transaction translation not " 			    "implemented, low/full speed device ignored\n", 			    device_get_nameunit(sc->sc_dev), port); 			continue; 		}
+block|if (UHUB_IS_HIGH_SPEED(sc)&& !(status& UPS_HIGH_SPEED)) { 			device_printf(sc->sc_dev, 			    "port %d, transaction translation not implemented," 			    " low/full speed device ignored\n", port); 			continue; 		}
 endif|#
 directive|endif
 comment|/* Figure out device speed */
@@ -2469,16 +2348,13 @@ expr_stmt|;
 comment|/* Avoid addressing problems by disabling. */
 comment|/* usbd_reset_port(dev, port,&up->status); */
 comment|/* 			 * The unit refused to accept a new address, or had 			 * some other serious problem.  Since we cannot leave 			 * at 0 we have to disable the port instead. 			 */
-name|printf
-argument_list|(
-literal|"%s: device problem (%s), disabling port %d\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"device problem (%s), disabling port %d\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2538,180 +2414,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-end_if
-
-begin_function
-name|int
-name|uhub_activate
-parameter_list|(
-name|device_t
-name|self
-parameter_list|,
-name|enum
-name|devact
-name|act
-parameter_list|)
-block|{
-name|struct
-name|uhub_softc
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|uhub_softc
-operator|*
-operator|)
-name|self
-decl_stmt|;
-name|struct
-name|usbd_hub
-modifier|*
-name|hub
-init|=
-name|sc
-operator|->
-name|sc_hub
-operator|->
-name|hub
-decl_stmt|;
-name|usbd_device_handle
-name|dev
-decl_stmt|;
-name|int
-name|nports
-decl_stmt|,
-name|port
-decl_stmt|,
-name|i
-decl_stmt|;
-switch|switch
-condition|(
-name|act
-condition|)
-block|{
-case|case
-name|DVACT_ACTIVATE
-case|:
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-case|case
-name|DVACT_DEACTIVATE
-case|:
-if|if
-condition|(
-name|hub
-operator|==
-name|NULL
-condition|)
-comment|/* malfunctioning hub */
-break|break;
-name|nports
-operator|=
-name|hub
-operator|->
-name|hubdesc
-operator|.
-name|bNbrPorts
-expr_stmt|;
-for|for
-control|(
-name|port
-operator|=
-literal|0
-init|;
-name|port
-operator|<
-name|nports
-condition|;
-name|port
-operator|++
-control|)
-block|{
-name|dev
-operator|=
-name|hub
-operator|->
-name|ports
-index|[
-name|port
-index|]
-operator|.
-name|device
-expr_stmt|;
-if|if
-condition|(
-name|dev
-operator|!=
-name|NULL
-operator|&&
-name|dev
-operator|->
-name|subdevs
-operator|!=
-name|NULL
-condition|)
-block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|dev
-operator|->
-name|subdevs
-index|[
-name|i
-index|]
-operator|!=
-name|NULL
-condition|;
-name|i
-operator|++
-control|)
-name|config_deactivate
-argument_list|(
-name|dev
-operator|->
-name|subdevs
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-break|break;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Called from process context when the hub is gone.  * Detach all devices on active ports.  */
 end_comment
@@ -2753,34 +2455,6 @@ name|port
 decl_stmt|,
 name|nports
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"uhub_detach: sc=%p flags=%d\n"
-operator|,
-name|sc
-operator|,
-name|flags
-operator|)
-argument_list|)
-expr_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|DPRINTF
 argument_list|(
 operator|(
@@ -2790,8 +2464,6 @@ name|sc
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|hub
@@ -2927,15 +2599,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
 
 begin_function
 name|int
@@ -3501,11 +3164,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Hub interrupt.  * This an indication that some port has changed status.  * Notify the bus event handler thread that we need  * to be explored again.  */
 end_comment
@@ -3572,15 +3230,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -3616,11 +3265,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
