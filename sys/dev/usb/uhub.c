@@ -803,7 +803,7 @@ argument_list|(
 operator|(
 name|sc
 operator|->
-name|dev
+name|sc_dev
 operator|,
 literal|"configuration failed, error=%s\n"
 operator|,
