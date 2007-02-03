@@ -2763,6 +2763,10 @@ name|dqbuf
 operator|.
 name|dqb_bsoftlimit
 operator|&&
+name|id
+operator|!=
+literal|0
+operator|&&
 name|dqbuf
 operator|.
 name|dqb_curblocks
@@ -2790,6 +2794,10 @@ condition|(
 name|dqbuf
 operator|.
 name|dqb_isoftlimit
+operator|&&
+name|id
+operator|!=
+literal|0
 operator|&&
 name|dqbuf
 operator|.
