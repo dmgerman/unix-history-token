@@ -7876,7 +7876,6 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -7888,7 +7887,6 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-block|}
 goto|goto
 name|release
 goto|;
