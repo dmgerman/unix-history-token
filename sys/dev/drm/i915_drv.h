@@ -66,7 +66,7 @@ value|"20060119"
 end_define
 
 begin_comment
-comment|/* Interface history:  *  * 1.1: Original.  * 1.2: Add Power Management  * 1.3: Add vblank support  * 1.4: Fix cmdbuffer path, add heap destroy  */
+comment|/* Interface history:  *  * 1.1: Original.  * 1.2: Add Power Management  * 1.3: Add vblank support  * 1.4: Fix cmdbuffer path, add heap destroy  * 1.5: Add vblank pipe configuration  */
 end_comment
 
 begin_define
@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|DRIVER_MINOR
-value|4
+value|5
 end_define
 
 begin_define
@@ -242,6 +242,9 @@ decl_stmt|,
 name|dvoc
 decl_stmt|,
 name|lvds
+decl_stmt|;
+name|int
+name|vblank_pipe
 decl_stmt|;
 block|}
 name|drm_i915_private_t
@@ -442,6 +445,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|i915_vblank_pipe_set
+parameter_list|(
+name|DRM_IOCTL_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|i915_vblank_pipe_get
+parameter_list|(
+name|DRM_IOCTL_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* i915_mem.c */
 end_comment
@@ -575,7 +598,7 @@ begin_define
 define|#
 directive|define
 name|RING_LOCALS
-value|unsigned int outring, ringmask, outcount; \                         volatile char *virt;
+value|unsigned int outring, ringmask, outcount; \ 			volatile char *virt;
 end_define
 
 begin_define
@@ -585,7 +608,7 @@ name|BEGIN_LP_RING
 parameter_list|(
 name|n
 parameter_list|)
-value|do {				\ 	if (I915_VERBOSE)				\ 		DRM_DEBUG("BEGIN_LP_RING(%d) in %s\n",	\ 			  n, __FUNCTION__);		\ 	if (dev_priv->ring.space< n*4)			\ 		i915_wait_ring(dev, n*4, __FUNCTION__);		\ 	outcount = 0;					\ 	outring = dev_priv->ring.tail;			\ 	ringmask = dev_priv->ring.tail_mask;		\ 	virt = dev_priv->ring.virtual_start;		\ } while (0)
+value|do {				\ 	if (I915_VERBOSE)				\ 		DRM_DEBUG("BEGIN_LP_RING(%d) in %s\n",	\ 	                         (n), __FUNCTION__);           \ 	if (dev_priv->ring.space< (n)*4)                      \ 		i915_wait_ring(dev, (n)*4, __FUNCTION__);      \ 	outcount = 0;					\ 	outring = dev_priv->ring.tail;			\ 	ringmask = dev_priv->ring.tail_mask;		\ 	virt = dev_priv->ring.virtual_start;		\ } while (0)
 end_define
 
 begin_define
@@ -595,7 +618,7 @@ name|OUT_RING
 parameter_list|(
 name|n
 parameter_list|)
-value|do {					\ 	if (I915_VERBOSE) DRM_DEBUG("   OUT_RING %x\n", (int)(n));	\ 	*(volatile unsigned int *)(virt + outring) = n;		\         outcount++;						\ 	outring += 4;						\ 	outring&= ringmask;					\ } while (0)
+value|do {					\ 	if (I915_VERBOSE) DRM_DEBUG("   OUT_RING %x\n", (int)(n));	\ 	*(volatile unsigned int *)(virt + outring) = (n);		\ 	outcount++;						\ 	outring += 4;						\ 	outring&= ringmask;					\ } while (0)
 end_define
 
 begin_define
@@ -1114,6 +1137,13 @@ define|#
 directive|define
 name|GFX_OP_DRAWRECT_INFO
 value|((0x3<<29)|(0x1d<<24)|(0x80<<16)|(0x3))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GFX_OP_DRAWRECT_INFO_I965
+value|((0x7900<<16)|0x2)
 end_define
 
 begin_define

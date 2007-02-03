@@ -1106,8 +1106,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|RADEON_MAX_STATE_PACKETS
+name|R200_EMIT_VAP_PVS_CNTL
 value|94
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_MAX_STATE_PACKETS
+value|95
 end_define
 
 begin_comment
@@ -1202,6 +1209,17 @@ begin_comment
 comment|/* emit hw wait commands -- note: 					 *  doesn't make the cpu wait, just 					 *  the graphics hardware */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RADEON_CMD_VECLINEAR
+value|9
+end_define
+
+begin_comment
+comment|/* another r200 stopgap */
+end_comment
+
 begin_typedef
 typedef|typedef
 union|union
@@ -1268,6 +1286,21 @@ name|count
 decl_stmt|;
 block|}
 name|vectors
+struct|;
+struct|struct
+block|{
+name|unsigned
+name|char
+name|cmd_type
+decl_stmt|,
+name|addr_lo
+decl_stmt|,
+name|addr_hi
+decl_stmt|,
+name|count
+decl_stmt|;
+block|}
+name|veclinear
 struct|;
 struct|struct
 block|{

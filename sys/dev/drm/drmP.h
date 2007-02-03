@@ -870,7 +870,7 @@ name|DRM_INIT_WAITQUEUE
 parameter_list|(
 name|queue
 parameter_list|)
-value|do {} while (0)
+value|do {(void)(queue);} while (0)
 end_define
 
 begin_if
@@ -1462,6 +1462,13 @@ typedef|typedef
 name|unsigned
 name|long
 name|dma_addr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int64_t
+name|u64
 typedef|;
 end_typedef
 
@@ -3321,6 +3328,14 @@ modifier|*
 name|id_entry
 decl_stmt|;
 comment|/* PCI ID, name, and chipset private */
+name|u_int16_t
+name|pci_device
+decl_stmt|;
+comment|/* PCI device id */
+name|u_int16_t
+name|pci_vendor
+decl_stmt|;
+comment|/* PCI vendor id */
 name|char
 modifier|*
 name|unique

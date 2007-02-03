@@ -60,7 +60,7 @@ define|#
 directive|define
 name|viadrv_PCI_IDS
 define|\
-value|{0x1106, 0x3022, 0, "VIA CLE266 3022"}, \ 	{0x1106, 0x3118, VIA_PRO_GROUP_A, "VIA CN400 / PM8X0"}, \ 	{0x1106, 0x3122, 0, "VIA CLE266"}, \ 	{0x1106, 0x7205, 0, "VIA KM400"}, \ 	{0x1106, 0x3108, 0, "VIA K8M800"}, \ 	{0, 0, 0, NULL}
+value|{0x1106, 0x3022, 0, "VIA CLE266 3022"}, \ 	{0x1106, 0x3118, VIA_PRO_GROUP_A, "VIA CN400 / PM8X0"}, \ 	{0x1106, 0x3122, 0, "VIA CLE266"}, \ 	{0x1106, 0x7205, 0, "VIA KM400"}, \ 	{0x1106, 0x3108, 0, "VIA K8M800"}, \ 	{0x1106, 0x3344, 0, "VIA P4VM800PRO"}, \ 	{0, 0, 0, NULL}
 end_define
 
 begin_define
@@ -108,7 +108,7 @@ define|#
 directive|define
 name|i915_PCI_IDS
 define|\
-value|{0x8086, 0x3577, 0, "Intel i830M GMCH"}, \ 	{0x8086, 0x2562, 0, "Intel i845G GMCH"}, \ 	{0x8086, 0x3582, 0, "Intel i852GM/i855GM GMCH"}, \ 	{0x8086, 0x2572, 0, "Intel i865G GMCH"}, \ 	{0x8086, 0x2582, 0, "Intel i915G"}, \ 	{0x8086, 0x2592, 0, "Intel i915GM"}, \ 	{0x8086, 0x2772, 0, "Intel i945G"}, \ 	{0x8086, 0x27A2, 0, "Intel i945GM"}, \ 	{0, 0, 0, NULL}
+value|{0x8086, 0x3577, 0, "Intel i830M GMCH"}, \ 	{0x8086, 0x2562, 0, "Intel i845G GMCH"}, \ 	{0x8086, 0x3582, 0, "Intel i852GM/i855GM GMCH"}, \ 	{0x8086, 0x2572, 0, "Intel i865G GMCH"}, \ 	{0x8086, 0x2582, 0, "Intel i915G"}, \ 	{0x8086, 0x2592, 0, "Intel i915GM"}, \ 	{0x8086, 0x2772, 0, "Intel i945G"}, \ 	{0x8086, 0x27A2, 0, "Intel i945GM"}, \ 	{0x8086, 0x2972, 0, "Intel i946GZ"}, \ 	{0x8086, 0x2982, 0, "Intel i965G"}, \ 	{0x8086, 0x2992, 0, "Intel i965Q"}, \ 	{0x8086, 0x29A2, 0, "Intel i965G"}, \ 	{0, 0, 0, NULL}
 end_define
 
 begin_define
