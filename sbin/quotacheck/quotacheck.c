@@ -2793,7 +2793,7 @@ name|dqb_isoftlimit
 operator|&&
 name|dqbuf
 operator|.
-name|dqb_curblocks
+name|dqb_curinodes
 operator|<
 name|dqbuf
 operator|.
@@ -2801,7 +2801,7 @@ name|dqb_isoftlimit
 operator|&&
 name|fup
 operator|->
-name|fu_curblocks
+name|fu_curinodes
 operator|>=
 name|dqbuf
 operator|.
