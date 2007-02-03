@@ -4112,12 +4112,6 @@ name|char
 modifier|*
 name|devinfo
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 comment|/* XXX FreeBSD may leak resources on failure cases -- fixme */
 name|device_t
 name|bdev
@@ -4237,8 +4231,6 @@ argument_list|,
 name|uaap
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|uaa
 operator|.
 name|device
@@ -4925,6 +4917,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|free
+argument_list|(
+name|devinfo
+argument_list|,
+name|M_USB
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|USBD_NOMEM
@@ -5150,6 +5149,13 @@ argument_list|(
 name|bdev
 argument_list|,
 name|devinfo
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|devinfo
+argument_list|,
+name|M_USB
 argument_list|)
 expr_stmt|;
 name|dv
