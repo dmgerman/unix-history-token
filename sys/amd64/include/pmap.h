@@ -254,6 +254,28 @@ begin_comment
 comment|/* access from User mode (UPL) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PGEX_RSV
+value|0x08
+end_define
+
+begin_comment
+comment|/* reserved PTE field is non-zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGEX_I
+value|0x10
+end_define
+
+begin_comment
+comment|/* during an instruction fetch */
+end_comment
+
 begin_comment
 comment|/*  * Pte related macros.  This is complicated by having to deal with  * the sign extension of the 48th bit.  */
 end_comment
