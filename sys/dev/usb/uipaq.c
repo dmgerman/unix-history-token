@@ -502,24 +502,35 @@ return|;
 block|}
 end_block
 
-begin_macro
-name|USB_ATTACH
-argument_list|(
-argument|uipaq
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|uipaq_attach
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
-name|USB_ATTACH_START
-argument_list|(
-name|uipaq
-argument_list|,
+name|struct
+name|uipaq_softc
+modifier|*
 name|sc
-argument_list|,
-name|uaa
+init|=
+name|device_get_softc
+argument_list|(
+name|self
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|struct
+name|usb_attach_arg
+modifier|*
+name|uaa
+init|=
+name|device_get_ivars
+argument_list|(
+name|self
+argument_list|)
+decl_stmt|;
 name|usbd_device_handle
 name|dev
 init|=
@@ -541,11 +552,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|devinfop
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|devname
 decl_stmt|;
 name|int
 name|i
@@ -574,15 +580,6 @@ operator|->
 name|sc_udev
 operator|=
 name|dev
-expr_stmt|;
-name|devname
-operator|=
-name|device_get_nameunit
-argument_list|(
-name|ucom
-operator|->
-name|sc_dev
-argument_list|)
 expr_stmt|;
 name|devinfop
 operator|=
@@ -623,11 +620,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"\n%s: failed to set configuration, err=%s\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"failed to set configuration: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -656,11 +655,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"\n%s: failed to get interface, err=%s\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"failed to get interface: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -681,11 +682,26 @@ argument_list|,
 name|devinfop
 argument_list|)
 expr_stmt|;
-name|printf
+name|ucom
+operator|->
+name|sc_dev
+operator|=
+name|self
+expr_stmt|;
+name|device_set_desc_copy
 argument_list|(
-literal|"%s: %s\n"
+name|self
 argument_list|,
-name|devname
+name|devinfop
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|ucom
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s\n"
 argument_list|,
 name|devinfop
 argument_list|)
@@ -807,11 +823,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: no endpoint descriptor for %d\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"no endpoint descriptor for %d\n"
 argument_list|,
 name|i
 argument_list|)
@@ -901,11 +919,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: no proper endpoints found (%d,%d) \n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"no proper endpoints found (%d,%d)\n"
 argument_list|,
 name|ucom
 operator|->
@@ -916,8 +936,11 @@ operator|->
 name|sc_bulkout_no
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
 name|ucom_attach
 argument_list|(
@@ -927,8 +950,11 @@ operator|->
 name|sc_ucom
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_SUCCESS_RETURN
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|bad
 label|:
 name|DPRINTF
@@ -944,10 +970,13 @@ name|sc_dying
 operator|=
 literal|1
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
