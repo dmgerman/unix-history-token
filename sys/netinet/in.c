@@ -535,6 +535,11 @@ name|IN_MULTICAST
 argument_list|(
 name|i
 argument_list|)
+operator|||
+name|IN_LINKLOCAL
+argument_list|(
+name|i
+argument_list|)
 condition|)
 return|return
 operator|(
