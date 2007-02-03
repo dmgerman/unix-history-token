@@ -1140,6 +1140,13 @@ argument_list|,
 name|devinfo
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|devinfo
+argument_list|,
+name|M_USBDEV
+argument_list|)
+expr_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|10
