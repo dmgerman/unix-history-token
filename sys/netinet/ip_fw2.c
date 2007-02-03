@@ -45,6 +45,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ipdivert.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ipdn.h"
 end_include
 
