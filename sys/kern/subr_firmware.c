@@ -368,6 +368,23 @@ operator|&
 name|firmware_mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"firmware: '%s' version %u: %zu bytes loaded at %p\n"
+argument_list|,
+name|imagename
+argument_list|,
+name|version
+argument_list|,
+name|datasize
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
 return|return
 name|frp
 return|;
