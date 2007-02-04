@@ -5333,6 +5333,28 @@ name|ENXIO
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * Synaptics TouchPad seems to go back to Relative Mode after      * the previous set_controller_command_byte() call; by issueing      * a Read Mode Byte command, the touchpad is in Absolute Mode      * again.      */
+if|if
+condition|(
+name|sc
+operator|->
+name|hw
+operator|.
+name|model
+operator|==
+name|MOUSE_MODEL_SYNAPTICS
+condition|)
+block|{
+name|mouse_ext_command
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* done */
 name|kbdc_set_device_mask
 argument_list|(
