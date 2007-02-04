@@ -46,6 +46,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SNDBUF_F_MANAGED
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
 name|SNDBUF_NAMELEN
 value|48
 end_define
