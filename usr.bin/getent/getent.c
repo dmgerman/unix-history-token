@@ -315,7 +315,7 @@ block|,
 name|RV_NOENUM
 init|=
 literal|3
-block|, }
+block|}
 enum|;
 end_enum
 
@@ -490,7 +490,6 @@ name|argv
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 block|}
 name|fprintf
@@ -793,6 +792,11 @@ block|}
 name|printf
 argument_list|(
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 block|}
