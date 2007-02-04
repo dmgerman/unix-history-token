@@ -3448,7 +3448,7 @@ else|else
 block|{
 if|if
 condition|(
-name|access
+name|eaccess
 argument_list|(
 name|argv
 index|[
@@ -3490,6 +3490,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|cmd
+operator|!=
+name|TYPECMD_SMALLV
+condition|)
 name|out1fmt
 argument_list|(
 literal|": %s\n"
@@ -3500,6 +3507,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|error
+operator||=
+literal|127
+expr_stmt|;
+block|}
 block|}
 break|break;
 block|}
