@@ -643,6 +643,13 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+name|free
+argument_list|(
+name|data
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
