@@ -538,6 +538,10 @@ modifier|*
 name|node
 parameter_list|)
 block|{
+name|NODE
+modifier|*
+name|node_next
+decl_stmt|;
 while|while
 condition|(
 name|node
@@ -556,6 +560,12 @@ operator|->
 name|right
 argument_list|)
 expr_stmt|;
+name|node_next
+operator|=
+name|node
+operator|->
+name|left
+expr_stmt|;
 name|free
 argument_list|(
 name|node
@@ -563,9 +573,7 @@ argument_list|)
 expr_stmt|;
 name|node
 operator|=
-name|node
-operator|->
-name|left
+name|node_next
 expr_stmt|;
 block|}
 block|}
