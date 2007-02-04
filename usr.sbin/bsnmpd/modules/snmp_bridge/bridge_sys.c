@@ -39,24 +39,11 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|700018
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bridgestp.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -978,11 +965,6 @@ name|b_req
 operator|.
 name|ifbop_fwddelay
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|700024
 name|bif
 operator|->
 name|stp_version
@@ -999,8 +981,6 @@ name|b_req
 operator|.
 name|ifbop_holdcount
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|b_req
@@ -1880,11 +1860,6 @@ name|tx_hc
 name|__unused
 parameter_list|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|700024
 name|struct
 name|ifdrv
 name|ifd
@@ -1998,16 +1973,6 @@ operator|(
 literal|0
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2026,11 +1991,6 @@ name|stp_proto
 name|__unused
 parameter_list|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|700024
 name|struct
 name|ifdrv
 name|ifd
@@ -2128,16 +2088,6 @@ operator|(
 literal|0
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2845,16 +2795,9 @@ return|;
 case|case
 name|BSTP_IFSTATE_BLOCKING
 case|:
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|700024
 case|case
 name|BSTP_IFSTATE_DISCARDING
 case|:
-endif|#
-directive|endif
 return|return
 operator|(
 name|StpPortState_blocking
@@ -2909,11 +2852,6 @@ operator|->
 name|ifbr_priority
 expr_stmt|;
 comment|/* 	 * RFC 4188: 	 * "New implementations should support dot1dStpPortPathCost32. 	 * If the port path costs exceeds the maximum value of this 	 * object then this object should report the maximum value, 	 * namely 65535.  Applications should try to read the 	 * dot1dStpPortPathCost32 object if this object reports 	 * the maximum value." 	 */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|700024
 if|if
 condition|(
 name|k_info
@@ -2937,8 +2875,6 @@ name|admin_path_cost
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|bp
 operator|->
 name|path_cost
@@ -2990,11 +2926,6 @@ name|span_enable
 operator|=
 name|begemotBridgeBaseSpanEnabled_disabled
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|700024
 if|if
 condition|(
 name|k_info
@@ -3112,8 +3043,6 @@ operator|=
 name|TruthValue_false
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -3703,11 +3632,6 @@ name|struct
 name|ifbreq
 name|b_req
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|700025
 if|if
 condition|(
 name|path_cost
@@ -3724,8 +3648,6 @@ operator|-
 literal|2
 operator|)
 return|;
-endif|#
-directive|endif
 name|strlcpy
 argument_list|(
 name|ifd
@@ -3827,27 +3749,12 @@ literal|1
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|700024
 name|bp
 operator|->
 name|admin_path_cost
 operator|=
 name|path_cost
 expr_stmt|;
-else|#
-directive|else
-name|bp
-operator|->
-name|path_cost
-operator|=
-name|path_cost
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -3881,11 +3788,6 @@ name|admin_ptp
 name|__unused
 parameter_list|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|700024
 name|struct
 name|ifdrv
 name|ifd
@@ -4120,16 +4022,6 @@ operator|(
 literal|0
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -4158,11 +4050,6 @@ name|enable
 name|__unused
 parameter_list|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|700024
 name|struct
 name|ifdrv
 name|ifd
@@ -4375,16 +4262,6 @@ operator|(
 literal|0
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
