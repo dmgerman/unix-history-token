@@ -284,6 +284,10 @@ literal|"gnome"
 block|,
 literal|"Components of the Gnome Desktop environment."
 block|,
+literal|"gnustep"
+block|,
+literal|"Software for GNUstep desktop environment."
+block|,
 literal|"graphics"
 block|,
 literal|"Graphics libraries and utilities."
@@ -403,6 +407,10 @@ block|,
 literal|"polish"
 block|,
 literal|"Ported software for the Polish market."
+block|,
+literal|"ports-mgmt"
+block|,
+literal|"Utilities for managing ports and packages."
 block|,
 literal|"portuguese"
 block|,
