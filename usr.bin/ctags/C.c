@@ -262,9 +262,6 @@ case|:
 case|case
 literal|'\''
 case|:
-operator|(
-name|void
-operator|)
 name|skip_string
 argument_list|(
 name|c
