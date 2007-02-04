@@ -4261,6 +4261,32 @@ operator|==
 name|IEEE80211_M_HOSTAP
 condition|)
 block|{
+comment|/* 			 * Clear any challenge text that may be there if 			 * a previous shared key auth failed and then an 			 * open auth is attempted. 			 */
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_challenge
+operator|!=
+name|NULL
+condition|)
+block|{
+name|FREE
+argument_list|(
+name|ni
+operator|->
+name|ni_challenge
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|ni
+operator|->
+name|ni_challenge
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* XXX hack to workaround calling convention */
 name|ieee80211_send_error
 argument_list|(
