@@ -285,6 +285,14 @@ literal|"ATI RS200 AGP bridge"
 operator|)
 return|;
 case|case
+literal|0xcbb21002
+case|:
+return|return
+operator|(
+literal|"ATI RS200M AGP bridge"
+operator|)
+return|;
+case|case
 literal|0xcab31002
 case|:
 return|return
@@ -679,7 +687,11 @@ comment|/* ATI RS100 AGP bridge */
 case|case
 literal|0xcab21002
 case|:
-comment|/*ATI RS200 AGP bridge  */
+comment|/* ATI RS200 AGP bridge */
+case|case
+literal|0xcbb21002
+case|:
+comment|/* ATI RS200M AGP bridge */
 case|case
 literal|0xcab31002
 case|:
