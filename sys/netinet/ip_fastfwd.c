@@ -1370,16 +1370,24 @@ name|ro_rt
 operator|->
 name|rt_ifp
 expr_stmt|;
-comment|/* 	 * Immediately drop blackholed traffic. 	 */
+comment|/* 	 * Immediately drop blackholed traffic, and directed broadcasts 	 * for either the all-ones or all-zero subnet addresses on 	 * locally attached networks. 	 */
 if|if
 condition|(
+operator|(
 name|ro
 operator|.
 name|ro_rt
 operator|->
 name|rt_flags
 operator|&
+operator|(
 name|RTF_BLACKHOLE
+operator||
+name|RTF_BROADCAST
+operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|drop
