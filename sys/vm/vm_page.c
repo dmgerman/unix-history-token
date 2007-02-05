@@ -680,7 +680,7 @@ literal|"vm page queue free mutex"
 argument_list|,
 name|NULL
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the queue headers for the free queue, the active queue 	 * and the inactive queue. 	 */
@@ -2821,7 +2821,7 @@ block|}
 empty_stmt|;
 name|loop
 label|:
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -2897,7 +2897,7 @@ operator|!=
 name|VM_ALLOC_INTERRUPT
 condition|)
 block|{
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -2963,7 +2963,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -2980,7 +2980,7 @@ operator|.
 name|v_interrupt_free_min
 condition|)
 block|{
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -3023,7 +3023,7 @@ block|}
 else|else
 block|{
 comment|/* 		 * Not allocatable from cache from interrupt, give up. 		 */
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -3191,7 +3191,7 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -3799,7 +3799,7 @@ name|m
 argument_list|)
 index|]
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -3859,7 +3859,7 @@ name|pageq
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx

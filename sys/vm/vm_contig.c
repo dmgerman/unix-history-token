@@ -717,7 +717,7 @@ argument_list|()
 expr_stmt|;
 name|again0
 label|:
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -867,7 +867,7 @@ name|high
 operator|)
 condition|)
 block|{
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -1045,7 +1045,7 @@ name|again
 goto|;
 block|}
 block|}
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -1169,7 +1169,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -1320,7 +1320,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -1589,7 +1589,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -1619,7 +1619,7 @@ name|error
 operator|=
 name|EAGAIN
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx

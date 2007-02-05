@@ -900,7 +900,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -917,7 +917,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
