@@ -1142,11 +1142,11 @@ name|ah_sumsiz_1216
 block|,
 name|ah_none_mature
 block|,
-literal|1
+literal|8
 block|,
-literal|80
+literal|640
 block|,
-comment|/* TCP_KEYLEN_MIN/MAX */
+comment|/* bits (RFC 2385) */
 literal|"TCP-MD5"
 block|,
 name|ah_none_init
