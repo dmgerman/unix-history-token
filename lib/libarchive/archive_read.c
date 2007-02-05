@@ -188,22 +188,11 @@ name|a
 operator|==
 name|NULL
 condition|)
-block|{
-name|archive_set_error
-argument_list|(
-name|a
-argument_list|,
-name|ENOMEM
-argument_list|,
-literal|"Can't allocate archive object"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 name|memset
 argument_list|(
 name|a
