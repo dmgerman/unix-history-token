@@ -1590,12 +1590,15 @@ operator|!=
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * If tap cloning is enabled, only the superuser can create 	 * an interface. 	 */
 if|if
 condition|(
 operator|!
 name|tapdclone
 operator|||
+operator|(
+operator|!
+name|tapuopen
+operator|&&
 name|priv_check_cred
 argument_list|(
 name|cred
@@ -1606,6 +1609,7 @@ literal|0
 argument_list|)
 operator|!=
 literal|0
+operator|)
 condition|)
 return|return;
 name|unit
