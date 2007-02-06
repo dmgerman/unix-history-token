@@ -378,8 +378,11 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%d"
+literal|"%jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|SLOT
 argument_list|(
 name|label
