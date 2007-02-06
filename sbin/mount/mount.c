@@ -2648,10 +2648,17 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"Using \"-t msdosfs\", since \"-t msdos\" is deprecated."
+argument_list|)
+expr_stmt|;
 name|vfstype
 operator|=
 literal|"msdosfs"
 expr_stmt|;
+block|}
 comment|/* Construct the name of the appropriate mount command */
 operator|(
 name|void
