@@ -550,7 +550,7 @@ name|SLOT
 parameter_list|(
 name|l
 parameter_list|)
-value|((struct mac_lomac *)LABEL_TO_SLOT((l), mac_lomac_slot).l_ptr)
+value|((struct mac_lomac *)mac_label_get((l), mac_lomac_slot))
 end_define
 
 begin_define
@@ -562,7 +562,7 @@ name|l
 parameter_list|,
 name|val
 parameter_list|)
-value|(LABEL_TO_SLOT((l), mac_lomac_slot).l_ptr = (val))
+value|mac_label_set((l), mac_lomac_slot, (uintptr_t)(val))
 end_define
 
 begin_define
@@ -572,7 +572,7 @@ name|PSLOT
 parameter_list|(
 name|l
 parameter_list|)
-value|((struct mac_lomac_proc *)				\     LABEL_TO_SLOT((l), mac_lomac_slot).l_ptr)
+value|((struct mac_lomac_proc *)				\     mac_label_get((l), mac_lomac_slot))
 end_define
 
 begin_define
@@ -584,7 +584,7 @@ name|l
 parameter_list|,
 name|val
 parameter_list|)
-value|(LABEL_TO_SLOT((l), mac_lomac_slot).l_ptr = (val))
+value|mac_label_set((l), mac_lomac_slot, (uintptr_t)(val))
 end_define
 
 begin_expr_stmt

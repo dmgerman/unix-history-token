@@ -36,12 +36,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<sys/_label.h>
-end_include
-
 begin_struct_decl
 struct_decl|struct
 name|bpf_d
@@ -99,6 +93,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|ksem
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|label
 struct_decl|;
 end_struct_decl
 

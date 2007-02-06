@@ -490,7 +490,7 @@ name|SLOT
 parameter_list|(
 name|l
 parameter_list|)
-value|((struct mac_mls *)LABEL_TO_SLOT((l), mac_mls_slot).l_ptr)
+value|((struct mac_mls *)mac_label_get((l), mac_mls_slot))
 end_define
 
 begin_define
@@ -502,7 +502,7 @@ name|l
 parameter_list|,
 name|val
 parameter_list|)
-value|(LABEL_TO_SLOT((l), mac_mls_slot).l_ptr = (val))
+value|mac_label_set((l), mac_mls_slot, (uintptr_t)(val))
 end_define
 
 begin_decl_stmt

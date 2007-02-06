@@ -36,12 +36,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<sys/_label.h>
-end_include
-
 begin_comment
 comment|/*-  * Pluggable access control policy definition structure.  *  * List of operations that are performed as part of the implementation of a  * MAC policy.  Policy implementors declare operations with a mac_policy_ops  * structure, and using the MAC_POLICY_SET() macro.  If an entry point is not  * declared, then then the policy will be ignored during evaluation of that  * event or check.  *  * Operations are sorted first by general class of operation, then  * alphabetically.  */
 end_comment
@@ -6925,20 +6919,41 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Policy interface to map a struct label pointer to per-policy data.  * Typically, policies wrap this in their own accessor macro that casts a  * void pointer to a policy-specific data type.  *  * XXXRW: It might be preferable to provide get/set methods via functions to  * avoid encoding the struct label layout in compiled modules.  */
+comment|/*  * Policy interface to map a struct label pointer to per-policy data.  * Typically, policies wrap this in their own accessor macro that casts a  * uintptr_t to a policy-specific data type.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LABEL_TO_SLOT
+begin_function_decl
+name|intptr_t
+name|mac_label_get
 parameter_list|(
+name|struct
+name|label
+modifier|*
 name|l
 parameter_list|,
-name|s
+name|int
+name|slot
 parameter_list|)
-value|(l)->l_perpolicy[s]
-end_define
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mac_label_set
+parameter_list|(
+name|struct
+name|label
+modifier|*
+name|l
+parameter_list|,
+name|int
+name|slot
+parameter_list|,
+name|intptr_t
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
