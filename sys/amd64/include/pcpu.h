@@ -24,7 +24,7 @@ end_ifndef
 begin_error
 error|#
 directive|error
-error|this file needs sys/cdefs.h as a prerequisite
+literal|"sys/cdefs.h is a prerequisite for this file"
 end_error
 
 begin_endif
@@ -58,14 +58,11 @@ begin_comment
 comment|/* ACPI CPU id */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|lint
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -103,9 +100,9 @@ name|PCPU_SET
 parameter_list|(
 name|member
 parameter_list|,
-name|value
+name|val
 parameter_list|)
-value|(pcpup->pc_ ## member = (value))
+value|(pcpup->pc_ ## member = (val))
 end_define
 
 begin_elif
@@ -119,12 +116,6 @@ operator|&&
 name|defined
 argument_list|(
 name|__GNUCLIKE___TYPEOF
-argument_list|)
-expr|\
-operator|&&
-name|defined
-argument_list|(
-name|__GNUCLIKE___OFFSETOF
 argument_list|)
 end_elif
 
@@ -183,7 +174,7 @@ name|__PCPU_GET
 parameter_list|(
 name|name
 parameter_list|)
-value|__extension__ ({				\ 	__pcpu_type(name) __result;					\ 									\ 	if (sizeof(__result) == 1 || sizeof(__result) == 2 ||		\ 	    sizeof(__result) == 4 || sizeof(__result) == 8) {		\ 		struct __s {						\ 			u_char	__b[MIN(sizeof(__pcpu_type(name)), 8)];	\ 		} __s;							\ 		__asm __volatile("mov %%gs:%1,%0"			\ 		    : "=r" (__s)					\ 		    : "m" (*(struct __s *)(__pcpu_offset(name))));	\ 		*(struct __s *)(void *)&__result = __s;			\ 	} else {							\ 		__result = *__PCPU_PTR(name);				\ 	}								\ 									\ 	__result;							\ })
+value|__extension__ ({				\ 	__pcpu_type(name) __res;					\ 	struct __s {							\ 		u_char	__b[MIN(sizeof(__pcpu_type(name)), 8)];		\ 	} __s;								\ 									\ 	if (sizeof(__res) == 1 || sizeof(__res) == 2 ||			\ 	    sizeof(__res) == 4 || sizeof(__res) == 8) {			\ 		__asm __volatile("mov %%gs:%1,%0"			\ 		    : "=r" (__s)					\ 		    : "m" (*(struct __s *)(__pcpu_offset(name))));	\ 		*(struct __s *)(void *)&__res = __s;			\ 	} else {							\ 		__res = *__PCPU_PTR(name);				\ 	}								\ 	__res;								\ })
 end_define
 
 begin_comment
@@ -199,7 +190,7 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|{						\ 	__pcpu_type(name) __val = (val);				\ 									\ 	if (sizeof(__val) == 1 || sizeof(__val) == 2 ||			\ 	    sizeof(__val) == 4 || sizeof(__val) == 8) {			\ 		struct __s {						\ 			u_char	__b[MIN(sizeof(__pcpu_type(name)), 8)];	\ 		} __s;							\ 		__s = *(struct __s *)(void *)&__val;			\ 		__asm __volatile("mov %1,%%gs:%0"			\ 		    : "=m" (*(struct __s *)(__pcpu_offset(name)))	\ 		    : "r" (__s));					\ 	} else {							\ 		*__PCPU_PTR(name) = __val;				\ 	}								\ }
+value|{						\ 	__pcpu_type(name) __val;					\ 	struct __s {							\ 		u_char	__b[MIN(sizeof(__pcpu_type(name)), 8)];		\ 	} __s;								\ 									\ 	__val = (val);							\ 	if (sizeof(__val) == 1 || sizeof(__val) == 2 ||			\ 	    sizeof(__val) == 4 || sizeof(__val) == 8) {			\ 		__s = *(struct __s *)(void *)&__val;			\ 		__asm __volatile("mov %1,%%gs:%0"			\ 		    : "=m" (*(struct __s *)(__pcpu_offset(name)))	\ 		    : "r" (__s));					\ 	} else {							\ 		*__PCPU_PTR(name) = __val;				\ 	}								\ }
 end_define
 
 begin_define
@@ -270,16 +261,24 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !lint || defined(__GNUCLIKE_ASM)&& defined(__GNUCLIKE___TYPEOF) */
+end_comment
+
 begin_error
 error|#
 directive|error
-error|this file needs to be ported to your compiler
+literal|"this file needs to be ported to your compiler"
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* lint, etc. */
+end_comment
 
 begin_endif
 endif|#
@@ -296,7 +295,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! _MACHINE_PCPU_H_ */
+comment|/* !_MACHINE_PCPU_H_ */
 end_comment
 
 end_unit
