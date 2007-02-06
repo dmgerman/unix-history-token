@@ -3962,9 +3962,6 @@ literal|"uipc_ctloutput: unp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|UNP_LOCK
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -3989,6 +3986,9 @@ block|{
 case|case
 name|LOCAL_PEERCRED
 case|:
+name|UNP_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|unp
@@ -4023,6 +4023,9 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
+name|UNP_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -4048,6 +4051,7 @@ break|break;
 case|case
 name|LOCAL_CREDS
 case|:
+comment|/* Unocked read. */
 name|optval
 operator|=
 name|unp
@@ -4079,6 +4083,7 @@ break|break;
 case|case
 name|LOCAL_CONNWAIT
 case|:
+comment|/* Unocked read. */
 name|optval
 operator|=
 name|unp
@@ -4164,6 +4169,9 @@ name|bit
 parameter_list|)
 define|\
 value|if (optval) \ 		unp->unp_flags |= bit; \ 	else \ 		unp->unp_flags&= ~bit;
+name|UNP_LOCK
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|sopt
@@ -4192,6 +4200,9 @@ break|break;
 default|default:
 break|break;
 block|}
+name|UNP_UNLOCK
+argument_list|()
+expr_stmt|;
 break|break;
 undef|#
 directive|undef
@@ -4211,9 +4222,6 @@ name|EOPNOTSUPP
 expr_stmt|;
 break|break;
 block|}
-name|UNP_UNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|error
