@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001
 end_comment
 
 begin_comment
-comment|/*  * Userland interface for Mandatory Access Control.  *  * The POSIX.1e implementation page may be reached at:  * http://www.trustedbsd.org/  */
+comment|/*  * Userland interface for Mandatory Access Control.  Loosely based on the  * POSIX.1e API.  More information may be found at:  *  * http://www.TrustedBSD.org/  */
 end_comment
 
 begin_ifndef
@@ -68,6 +68,10 @@ name|MAC_MAX_LABEL_BUF_LEN
 value|8192
 end_define
 
+begin_comment
+comment|/*  * struct mac is the data structure used to carry MAC labels in system calls  * and ioctls between userspace and the kernel.  */
+end_comment
+
 begin_struct
 struct|struct
 name|mac
@@ -99,7 +103,7 @@ name|_KERNEL
 end_ifndef
 
 begin_comment
-comment|/*  * Location of the userland MAC framework configuration file.  mac.conf  * binds policy names to shared libraries that understand those policies,  * as well as setting defaults for MAC-aware applications.  */
+comment|/*  * Location of the userland MAC framework configuration file.  mac.conf  * set defaults for MAC-aware applications.  */
 end_comment
 
 begin_define
@@ -110,7 +114,7 @@ value|"/etc/mac.conf"
 end_define
 
 begin_comment
-comment|/*  * Extended non-POSIX.1e interfaces that offer additional services  * available from the userland and kernel MAC frameworks.  */
+comment|/*  * Extended non-POSIX.1e interfaces that offer additional services available  * from the userland and kernel MAC frameworks.  */
 end_comment
 
 begin_function_decl
