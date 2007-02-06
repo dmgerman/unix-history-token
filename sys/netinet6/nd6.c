@@ -8465,6 +8465,9 @@ case|:
 case|case
 name|IFT_BRIDGE
 case|:
+case|case
+name|IFT_PROPVIRTUAL
+case|:
 return|return
 operator|(
 literal|1
