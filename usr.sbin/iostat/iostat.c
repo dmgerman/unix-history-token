@@ -3217,7 +3217,12 @@ name|kvm_read
 argument_list|(
 name|kd
 argument_list|,
+name|namelist
+index|[
 name|nlid
+index|]
+operator|.
+name|n_value
 argument_list|,
 name|ptr
 argument_list|,
@@ -3227,7 +3232,7 @@ expr_stmt|;
 if|if
 condition|(
 name|nbytes
-operator|==
+operator|<
 literal|0
 condition|)
 block|{
@@ -3235,7 +3240,12 @@ name|warnx
 argument_list|(
 literal|"kvm_read(%s): %s"
 argument_list|,
-name|name
+name|namelist
+index|[
+name|nlid
+index|]
+operator|.
+name|n_name
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -3258,19 +3268,17 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"kvm_read(%s): expected %lu bytes, got %ld bytes"
+literal|"kvm_read(%s): expected %zu bytes, got %zd bytes"
 argument_list|,
-name|name
+name|namelist
+index|[
+name|nlid
+index|]
+operator|.
+name|n_name
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|len
 argument_list|,
-operator|(
-name|long
-operator|)
 name|nbytes
 argument_list|)
 expr_stmt|;
