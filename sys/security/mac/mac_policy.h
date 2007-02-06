@@ -19,6 +19,29 @@ directive|define
 name|_SYS_SECURITY_MAC_MAC_POLICY_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"no user-serviceable parts inside"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/_label.h>
+end_include
+
 begin_comment
 comment|/*-  * Pluggable access control policy definition structure.  *  * List of operations that are performed as part of the implementation of a  * MAC policy.  Policy implementors declare operations with a mac_policy_ops  * structure, and using the MAC_POLICY_SET() macro.  If an entry point is not  * declared, then then the policy will be ignored during evaluation of that  * event or check.  *  * Operations are sorted first by general class of operation, then  * alphabetically.  */
 end_comment

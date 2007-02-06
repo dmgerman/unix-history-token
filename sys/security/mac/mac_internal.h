@@ -15,6 +15,23 @@ directive|define
 name|_SYS_SECURITY_MAC_MAC_INTERNAL_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"no user-serviceable parts inside"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * MAC Framework sysctl namespace.  */
 end_comment

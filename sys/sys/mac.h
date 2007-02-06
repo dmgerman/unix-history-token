@@ -19,12 +19,6 @@ directive|define
 name|_SYS_MAC_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/_label.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef

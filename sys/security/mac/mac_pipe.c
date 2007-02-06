@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sbuf.h>
 end_include
 
