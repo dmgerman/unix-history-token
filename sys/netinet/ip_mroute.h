@@ -328,7 +328,7 @@ value|0x1
 end_define
 
 begin_comment
-comment|/* vif represents a tunnel end-point */
+comment|/* no-op; retained for old source */
 end_comment
 
 begin_define
@@ -339,7 +339,7 @@ value|0x2
 end_define
 
 begin_comment
-comment|/* tunnel uses IP source routing */
+comment|/* no-op; retained for old source */
 end_comment
 
 begin_define
