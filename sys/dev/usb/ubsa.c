@@ -1020,11 +1020,25 @@ block|,
 name|USB_PRODUCT_PERACOM_SERIAL1
 block|}
 block|,
-comment|/* Vodafone */
+comment|/* Option Vodafone MC3G */
 block|{
-name|USB_VENDOR_VODAFONE
+name|USB_VENDOR_OPTION
 block|,
-name|USB_PRODUCT_VODAFONE_MC3G
+name|USB_PRODUCT_OPTION_VODAFONEMC3G
+block|}
+block|,
+comment|/* Option GlobeTrotter 3G */
+block|{
+name|USB_VENDOR_OPTION
+block|,
+name|USB_PRODUCT_OPTION_GT3G
+block|}
+block|,
+comment|/* Option GlobeTrotter 3G QUAD */
+block|{
+name|USB_VENDOR_OPTION
+block|,
+name|USB_PRODUCT_OPTION_GT3GQUAD
 block|}
 block|,
 block|{
