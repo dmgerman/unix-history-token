@@ -5343,10 +5343,13 @@ condition|(
 name|TRUE
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 comment|/* 		 * If we have enough free memory, wakeup waiters.  Do 		 * not clear vm_pages_needed until we reach our target, 		 * otherwise we may be woken up over and over again and 		 * waste a lot of cpu. 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vm_pages_needed
@@ -5396,7 +5399,7 @@ operator|&
 name|vm_pages_needed
 argument_list|,
 operator|&
-name|vm_page_queue_mtx
+name|vm_page_queue_free_mtx
 argument_list|,
 name|PVM
 argument_list|,
@@ -5434,7 +5437,7 @@ operator|&
 name|vm_pages_needed
 argument_list|,
 operator|&
-name|vm_page_queue_mtx
+name|vm_page_queue_free_mtx
 argument_list|,
 name|PVM
 argument_list|,
@@ -5453,9 +5456,18 @@ operator|!
 name|vm_pages_needed
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
 name|pass
 operator|=
 literal|0
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 name|vm_pageout_page_stats
 argument_list|()
@@ -5475,8 +5487,11 @@ operator|.
 name|v_pdwakeups
 operator|++
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
 expr_stmt|;
 name|vm_pageout_scan
 argument_list|(
@@ -5488,7 +5503,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unless the page queue lock is held by the caller, this function  * should be regarded as advisory.  Specifically, the caller should  * not msleep() on&cnt.v_free_count following this function unless  * the page queue lock is held until the msleep() is performed.  */
+comment|/*  * Unless the free page queue lock is held by the caller, this function  * should be regarded as advisory.  Specifically, the caller should  * not msleep() on&cnt.v_free_count following this function unless  * the free page queue lock is held until the msleep() is performed.  */
 end_comment
 
 begin_function
