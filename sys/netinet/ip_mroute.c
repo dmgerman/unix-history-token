@@ -7152,18 +7152,6 @@ decl_stmt|;
 name|VIF_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
-comment|/*  * Macro to send packet on vif.  Since RSVP packets don't get counted on  * input, they shouldn't get counted on output, so statistics keeping is  * separate.  */
-define|#
-directive|define
-name|MC_SEND
-parameter_list|(
-name|ip
-parameter_list|,
-name|vifp
-parameter_list|,
-name|m
-parameter_list|)
-value|{				\ 		if (((vifp)->v_flags& VIFF_TUNNEL) == 0)	\ 		    phyint_send((ip), (vifp), (m));	\ }
 comment|/*      * If xmt_vif is not -1, send on only the requested vif.      *      * (since vifi_t is u_short, -1 becomes MAXUSHORT, which> numvifs.)      */
 if|if
 condition|(
@@ -7202,7 +7190,7 @@ expr_stmt|;
 else|else
 endif|#
 directive|endif
-name|MC_SEND
+name|phyint_send
 argument_list|(
 name|ip
 argument_list|,
@@ -7717,7 +7705,7 @@ expr_stmt|;
 else|else
 endif|#
 directive|endif
-name|MC_SEND
+name|phyint_send
 argument_list|(
 name|ip
 argument_list|,
