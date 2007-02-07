@@ -1683,13 +1683,6 @@ name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"vm page queue free mutex"
-block|,
-operator|&
-name|lock_class_mtx_sleep
-block|}
-block|,
-block|{
 literal|"vnode interlock"
 block|,
 operator|&
