@@ -542,22 +542,22 @@ name|runq
 name|tdq_realtime
 decl_stmt|;
 comment|/* real-time run queue. */
-name|int
+name|u_char
 name|tdq_idx
 decl_stmt|;
 comment|/* Current insert index. */
-name|int
+name|u_char
 name|tdq_ridx
 decl_stmt|;
 comment|/* Current removal index. */
+name|short
+name|tdq_flags
+decl_stmt|;
+comment|/* Thread queue flags */
 name|int
 name|tdq_load
 decl_stmt|;
 comment|/* Aggregate load. */
-name|int
-name|tdq_flags
-decl_stmt|;
-comment|/* Thread queue flags */
 ifdef|#
 directive|ifdef
 name|SMP
@@ -1784,7 +1784,7 @@ operator|->
 name|tdq_timeshare
 condition|)
 block|{
-name|int
+name|u_char
 name|pri
 decl_stmt|;
 name|pri

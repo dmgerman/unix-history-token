@@ -1150,7 +1150,7 @@ name|runq
 modifier|*
 name|rq
 parameter_list|,
-name|int
+name|u_char
 name|start
 parameter_list|)
 block|{
@@ -1597,7 +1597,7 @@ name|td_sched
 modifier|*
 name|ts
 parameter_list|,
-name|int
+name|u_char
 name|pri
 parameter_list|,
 name|int
@@ -2050,7 +2050,7 @@ name|runq
 modifier|*
 name|rq
 parameter_list|,
-name|int
+name|u_char
 name|idx
 parameter_list|)
 block|{
@@ -2205,7 +2205,7 @@ name|td_sched
 modifier|*
 name|ts
 parameter_list|,
-name|int
+name|u_char
 modifier|*
 name|idx
 parameter_list|)
@@ -2215,7 +2215,7 @@ name|rqhead
 modifier|*
 name|rqh
 decl_stmt|;
-name|int
+name|u_char
 name|pri
 decl_stmt|;
 name|KASSERT

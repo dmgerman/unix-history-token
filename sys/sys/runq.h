@@ -137,7 +137,7 @@ name|struct
 name|td_sched
 modifier|*
 parameter_list|,
-name|int
+name|u_char
 parameter_list|,
 name|int
 parameter_list|)
@@ -178,7 +178,7 @@ name|struct
 name|runq
 modifier|*
 parameter_list|,
-name|int
+name|u_char
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -221,7 +221,7 @@ name|struct
 name|td_sched
 modifier|*
 parameter_list|,
-name|int
+name|u_char
 modifier|*
 parameter_list|)
 function_decl|;
