@@ -111,6 +111,23 @@ directive|include
 file|"miibus_if.h"
 end_include
 
+begin_struct
+struct|struct
+name|rlphy_softc
+block|{
+name|struct
+name|mii_softc
+name|sc_mii
+decl_stmt|;
+comment|/* generic PHY */
+name|int
+name|sc_is_RTL8201L
+decl_stmt|;
+comment|/* is an external RTL8201L PHY */
+block|}
+struct|;
+end_struct
+
 begin_function_decl
 specifier|static
 name|int
@@ -196,7 +213,7 @@ block|,
 expr|sizeof
 operator|(
 expr|struct
-name|mii_softc
+name|rlphy_softc
 operator|)
 block|}
 decl_stmt|;
@@ -413,6 +430,11 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
+name|struct
+name|rlphy_softc
+modifier|*
+name|rsc
+decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -444,6 +466,34 @@ name|sc
 operator|->
 name|mii_dev
 argument_list|)
+expr_stmt|;
+comment|/*          * Check whether we're the RTL8201L PHY and remember so the status          * routine can query the proper register for speed detection.          */
+name|rsc
+operator|=
+operator|(
+expr|struct
+name|rlphy_softc
+operator|*
+operator|)
+name|sc
+expr_stmt|;
+if|if
+condition|(
+name|mii_phy_dev_probe
+argument_list|(
+name|dev
+argument_list|,
+name|rlphys
+argument_list|,
+name|BUS_PROBE_DEFAULT
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|rsc
+operator|->
+name|sc_is_RTL8201L
+operator|++
 expr_stmt|;
 comment|/* 	 * The RealTek PHY can never be isolated, so never allow non-zero 	 * instances! 	 */
 if|if
@@ -744,6 +794,18 @@ name|phy
 parameter_list|)
 block|{
 name|struct
+name|rlphy_softc
+modifier|*
+name|rsc
+init|=
+operator|(
+expr|struct
+name|rlphy_softc
+operator|*
+operator|)
+name|phy
+decl_stmt|;
+name|struct
 name|mii_data
 modifier|*
 name|mii
@@ -982,18 +1044,9 @@ comment|/* 		 * If the other side doesn't support NWAY, then the 		 * best we ca
 comment|/* 		 * The RealTek PHY supports non-NWAY link speed 		 * detection, however it does not report the link 		 * detection results via the ANLPAR or BMSR registers. 		 * (What? RealTek doesn't do things the way everyone 		 * else does? I'm just shocked, shocked I tell you.) 		 * To determine the link speed, we have to do one 		 * of two things: 		 * 		 * - If this is a standalone RealTek RTL8201(L) PHY, 		 *   we can determine the link speed by testing bit 0 		 *   in the magic, vendor-specific register at offset 		 *   0x19. 		 * 		 * - If this is a RealTek MAC with integrated PHY, we 		 *   can test the 'SPEED10' bit of the MAC's media status 		 *   register. 		 */
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|mii
+name|rsc
 operator|->
-name|mii_ifp
-operator|->
-name|if_dname
-argument_list|,
-literal|"rl"
-argument_list|)
-operator|!=
-literal|0
+name|sc_is_RTL8201L
 condition|)
 block|{
 if|if
