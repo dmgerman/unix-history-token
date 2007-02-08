@@ -651,7 +651,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ate_get_mac
 parameter_list|(
 name|struct
@@ -859,13 +859,33 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|err
+operator|=
 name|ate_get_mac
 argument_list|(
 name|sc
 argument_list|,
 name|eaddr
 argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"No MAC address set"
+argument_list|)
 expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|ate_set_mac
 argument_list|(
 name|sc
@@ -2807,7 +2827,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ate_get_mac
 parameter_list|(
 name|struct
@@ -2825,7 +2845,7 @@ name|low
 decl_stmt|,
 name|high
 decl_stmt|;
-comment|/*      * The boot loader setup the MAC with an address, if one is set in      * the loader.  The TSC loader will also set the MAC address in a      * similar way.  Grab the MAC address from the SA1[HL] registers.      */
+comment|/* 	 * The boot loader setup the MAC with an address, if one is set in 	 * the loader.  The TSC loader will also set the MAC address in a 	 * similar way.  Grab the MAC address from the SA1[HL] registers. 	 */
 name|low
 operator|=
 name|RD4
@@ -2844,6 +2864,25 @@ argument_list|,
 name|ETH_SA1H
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|low
+operator||
+operator|(
+name|high
+operator|&
+literal|0xffff
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|eaddr
 index|[
 literal|0
@@ -2914,6 +2953,11 @@ name|low
 operator|&
 literal|0xff
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
