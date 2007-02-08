@@ -178,6 +178,8 @@ init|=
 block|{
 literal|"from"
 block|,
+literal|"atime"
+block|,
 literal|"export"
 block|,
 literal|"force"
