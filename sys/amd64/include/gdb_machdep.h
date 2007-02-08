@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|GDB_BUFSZ
-value|500
+value|(GDB_NREGS * 16)
 end_define
 
 begin_define
