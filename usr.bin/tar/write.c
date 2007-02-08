@@ -989,7 +989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Same as 'c', except we only support tar formats in uncompressed  * files on disk.  */
+comment|/*  * Same as 'c', except we only support tar or empty formats in  * uncompressed files on disk.  */
 end_comment
 
 begin_function
@@ -1018,6 +1018,9 @@ name|archive_entry
 modifier|*
 name|entry
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 comment|/* Sanity-test some arguments and the file. */
 name|test_for_append
 argument_list|(
@@ -1039,6 +1042,10 @@ operator|->
 name|filename
 argument_list|,
 name|O_RDWR
+operator||
+name|O_CREAT
+argument_list|,
+literal|0666
 argument_list|)
 expr_stmt|;
 if|if
@@ -1084,6 +1091,8 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+name|r
+operator|=
 name|archive_read_open_fd
 argument_list|(
 name|a
@@ -1093,6 +1102,35 @@ operator|->
 name|fd
 argument_list|,
 literal|10240
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|!=
+name|ARCHIVE_OK
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+name|archive_errno
+argument_list|(
+name|a
+argument_list|)
+argument_list|,
+literal|"Can't read archive %s: %s"
+argument_list|,
+name|bsdtar
+operator|->
+name|filename
+argument_list|,
+name|archive_error_string
+argument_list|(
+name|a
+argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -1174,16 +1212,96 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set format to same one auto-detected above, except use 	 * ustar for appending to GNU tar, since the library doesn't 	 * write GNU tar format. 	 */
+comment|/* 	 * Set the format to be used for writing.  To allow people to 	 * extend empty files, we need to allow them to specify the format, 	 * which opens the possibility that they will specify a format that 	 * doesn't match the existing format.  Hence, the following bit 	 * of arcane ugliness. 	 */
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|create_format
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* If the user requested a format, use that, but ... */
+name|archive_write_set_format_by_name
+argument_list|(
+name|a
+argument_list|,
+name|bsdtar
+operator|->
+name|create_format
+argument_list|)
+expr_stmt|;
+comment|/* ... complain if it's not compatible. */
+name|format
+operator|&=
+name|ARCHIVE_FORMAT_BASE_MASK
+expr_stmt|;
+if|if
+condition|(
+name|format
+operator|!=
+call|(
+name|int
+call|)
+argument_list|(
+name|archive_format
+argument_list|(
+name|a
+argument_list|)
+operator|&
+name|ARCHIVE_FORMAT_BASE_MASK
+argument_list|)
+operator|&&
+name|format
+operator|!=
+name|ARCHIVE_FORMAT_EMPTY
+condition|)
+block|{
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Format %s is incompatible with the archive %s."
+argument_list|,
+name|bsdtar
+operator|->
+name|create_format
+argument_list|,
+name|bsdtar
+operator|->
+name|filename
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* 		 * Just preserve the current format, with a little care 		 * for formats that libarchive can't write. 		 */
 if|if
 condition|(
 name|format
 operator|==
 name|ARCHIVE_FORMAT_TAR_GNUTAR
 condition|)
+comment|/* TODO: When gtar supports pax, use pax restricted. */
 name|format
 operator|=
 name|ARCHIVE_FORMAT_TAR_USTAR
+expr_stmt|;
+if|if
+condition|(
+name|format
+operator|==
+name|ARCHIVE_FORMAT_EMPTY
+condition|)
+name|format
+operator|=
+name|ARCHIVE_FORMAT_TAR_PAX_RESTRICTED
 expr_stmt|;
 name|archive_write_set_format
 argument_list|(
@@ -1192,6 +1310,7 @@ argument_list|,
 name|format
 argument_list|)
 expr_stmt|;
+block|}
 name|lseek
 argument_list|(
 name|bsdtar
@@ -7008,21 +7127,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|bsdtar_errc
-argument_list|(
-name|bsdtar
-argument_list|,
-literal|1
-argument_list|,
-name|errno
-argument_list|,
-literal|"Cannot stat %s"
-argument_list|,
-name|bsdtar
-operator|->
-name|filename
-argument_list|)
-expr_stmt|;
+return|return;
 if|if
 condition|(
 operator|!
