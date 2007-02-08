@@ -790,7 +790,7 @@ name|struct
 name|route
 name|v_route
 decl_stmt|;
-comment|/* cached route if this is a tunnel */
+comment|/* cached route */
 name|u_int
 name|v_rsvp_on
 decl_stmt|;

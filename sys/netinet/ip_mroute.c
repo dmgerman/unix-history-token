@@ -7685,12 +7685,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-specifier|static
-name|struct
-name|route
-name|ro
-decl_stmt|;
-comment|/* XXX */
 name|VIF_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -7764,7 +7758,9 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|ro
+name|vifp
+operator|->
+name|v_route
 argument_list|,
 name|IP_FORWARDING
 argument_list|,
