@@ -1189,7 +1189,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"Sending packet of payload size %ld every %jd.%09ld for %ld "
+literal|"Sending packet of payload size %ld every %jd.%09lds for %ld "
 literal|"seconds\n"
 argument_list|,
 name|payloadsize
