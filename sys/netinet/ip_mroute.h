@@ -747,13 +747,13 @@ comment|/* min ttl required to forward on vif*/
 name|u_int
 name|v_rate_limit
 decl_stmt|;
-comment|/* max rate			     */
+comment|/* ignored; kept for compatibility */
 name|struct
 name|tbf
 modifier|*
 name|v_tbf
 decl_stmt|;
-comment|/* token bucket structure at intf.   */
+comment|/* ignored; kept for compatibility */
 name|struct
 name|in_addr
 name|v_lcl_addr
@@ -1049,73 +1049,6 @@ end_define
 begin_comment
 comment|/* max. no of pkts in upcall Q */
 end_comment
-
-begin_comment
-comment|/*  * Token Bucket filter code  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_BKT_SIZE
-value|10000
-end_define
-
-begin_comment
-comment|/* 10K bytes size		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXQSIZE
-value|10
-end_define
-
-begin_comment
-comment|/* max # of pkts in queue	*/
-end_comment
-
-begin_comment
-comment|/*  * the token bucket filter at each vif  */
-end_comment
-
-begin_struct
-struct|struct
-name|tbf
-block|{
-name|struct
-name|timeval
-name|tbf_last_pkt_t
-decl_stmt|;
-comment|/* arr. time of last pkt	*/
-name|u_long
-name|tbf_n_tok
-decl_stmt|;
-comment|/* no of tokens in bucket	*/
-name|u_long
-name|tbf_q_len
-decl_stmt|;
-comment|/* length of queue at this vif	*/
-name|u_long
-name|tbf_max_q_len
-decl_stmt|;
-comment|/* max. queue length		*/
-name|struct
-name|mbuf
-modifier|*
-name|tbf_q
-decl_stmt|;
-comment|/* Packet queue			*/
-name|struct
-name|mbuf
-modifier|*
-name|tbf_t
-decl_stmt|;
-comment|/* tail-insertion pointer	*/
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Structure for measuring the bandwidth and sending an upcall if the  * measured bandwidth is above or below a threshold.  */
