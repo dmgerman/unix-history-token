@@ -1383,9 +1383,9 @@ literal|120
 block|}
 block|,
 block|{
-literal|"option-121"
+literal|"classless-routes"
 block|,
-literal|"X"
+literal|"BA"
 block|,
 operator|&
 name|dhcp_universe
@@ -2899,6 +2899,8 @@ name|DHO_SUBNET_MASK
 block|,
 name|DHO_TIME_OFFSET
 block|,
+name|DHO_CLASSLESS_ROUTES
+block|,
 name|DHO_ROUTERS
 block|,
 name|DHO_TIME_SERVERS
@@ -3113,8 +3115,6 @@ block|,
 literal|119
 block|,
 literal|120
-block|,
-literal|121
 block|,
 literal|122
 block|,
