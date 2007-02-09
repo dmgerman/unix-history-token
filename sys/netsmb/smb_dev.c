@@ -747,6 +747,12 @@ argument_list|,
 name|M_NSMBDEV
 argument_list|)
 expr_stmt|;
+name|dev_relthread
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* XXX dealing with si_threadcount */
 name|destroy_dev
 argument_list|(
 name|dev
