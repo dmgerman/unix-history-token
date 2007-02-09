@@ -1313,7 +1313,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bc:dl:nqu"
+literal|"bc:dl:qu"
 argument_list|)
 operator|)
 operator|!=
@@ -1980,7 +1980,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-dqu] "
+literal|"usage: %s [-bdqu] "
 argument_list|,
 name|__progname
 argument_list|)
@@ -7160,9 +7160,6 @@ literal|0xFFFFFFFF
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|SEND_CLIENT_IDENTIFIER
 comment|/* set unique client identifier */
 name|char
 name|client_ident
@@ -7294,8 +7291,6 @@ operator|=
 literal|0xFFFFFFFF
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* Set up the option buffer... */
 name|ip
 operator|->
@@ -8185,9 +8180,6 @@ literal|0xFFFFFFFF
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|SEND_CLIENT_IDENTIFIER
 comment|/* set unique client identifier */
 name|char
 name|client_ident
@@ -8319,8 +8311,6 @@ operator|=
 literal|0xFFFFFFFF
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* Set up the option buffer... */
 name|ip
 operator|->
@@ -12783,11 +12773,6 @@ operator|.
 name|data
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 return|return
 operator|(
