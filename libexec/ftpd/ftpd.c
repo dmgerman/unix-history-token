@@ -9068,7 +9068,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|TCP_NOPUSH
-comment|/* 	 * Turn off push flag to keep sender TCP from sending short packets 	 * at the boundaries of each write().  Should probably do a SO_SNDBUF 	 * to set the send buffer size as well, but that may not be desirable 	 * in heavy-load situations. 	 */
+comment|/* 	 * Turn off push flag to keep sender TCP from sending short packets 	 * at the boundaries of each write(). 	 */
 name|on
 operator|=
 literal|1
@@ -9097,41 +9097,6 @@ argument_list|(
 name|LOG_WARNING
 argument_list|,
 literal|"data setsockopt (TCP_NOPUSH): %m"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SO_SNDBUF
-name|on
-operator|=
-literal|65536
-expr_stmt|;
-if|if
-condition|(
-name|setsockopt
-argument_list|(
-name|s
-argument_list|,
-name|SOL_SOCKET
-argument_list|,
-name|SO_SNDBUF
-argument_list|,
-operator|&
-name|on
-argument_list|,
-sizeof|sizeof
-name|on
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|syslog
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"data setsockopt (SO_SNDBUF): %m"
 argument_list|)
 expr_stmt|;
 endif|#
