@@ -10676,14 +10676,18 @@ directive|ifdef
 name|KSE
 name|panic
 argument_list|(
-literal|"do_tdsignal(): invalid signal"
+literal|"do_tdsignal(): invalid signal %d"
+argument_list|,
+name|sig
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
 name|panic
 argument_list|(
-literal|"tdsignal(): invalid signal"
+literal|"tdsignal(): invalid signal %d"
+argument_list|,
+name|sig
 argument_list|)
 expr_stmt|;
 endif|#
