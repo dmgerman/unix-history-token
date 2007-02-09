@@ -1193,17 +1193,9 @@ argument_list|,
 name|hlen
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
+ifndef|#
+directive|ifndef
+name|__NO_STRICT_ALIGNMENT
 comment|/* 		 * Some archs do not like unaligned data, so 		 * we move data down in the first mbuf. 		 */
 if|if
 condition|(
