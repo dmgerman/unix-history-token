@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -93,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"pathnames.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pciconf.h"
 end_include
 
 begin_struct
@@ -163,7 +175,10 @@ name|void
 name|list_devs
 parameter_list|(
 name|int
-name|vendors
+name|verbose
+parameter_list|,
+name|int
+name|caps
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -183,6 +198,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|guess_class
@@ -197,6 +213,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|guess_subclass
@@ -286,7 +303,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -294,7 +313,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pciconf -l [-v]"
+literal|"usage: pciconf -l [-cv]"
 argument_list|,
 literal|"       pciconf -a selector"
 argument_list|,
@@ -336,6 +355,8 @@ name|writemode
 decl_stmt|,
 name|attachedmode
 decl_stmt|,
+name|caps
+decl_stmt|,
 name|verbose
 decl_stmt|;
 name|int
@@ -350,6 +371,8 @@ operator|=
 name|writemode
 operator|=
 name|attachedmode
+operator|=
+name|caps
 operator|=
 name|verbose
 operator|=
@@ -370,7 +393,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"alrwbhv"
+literal|"aclrwbhv"
 argument_list|)
 operator|)
 operator|!=
@@ -387,6 +410,14 @@ case|case
 literal|'a'
 case|:
 name|attachedmode
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+name|caps
 operator|=
 literal|1
 expr_stmt|;
@@ -496,6 +527,8 @@ block|{
 name|list_devs
 argument_list|(
 name|verbose
+argument_list|,
+name|caps
 argument_list|)
 expr_stmt|;
 block|}
@@ -614,6 +647,9 @@ name|list_devs
 parameter_list|(
 name|int
 name|verbose
+parameter_list|,
+name|int
+name|caps
 parameter_list|)
 block|{
 name|int
@@ -651,6 +687,10 @@ name|open
 argument_list|(
 name|_PATH_DEVPCI
 argument_list|,
+name|caps
+condition|?
+name|O_RDWR
+else|:
 name|O_RDONLY
 argument_list|,
 literal|0
@@ -917,6 +957,17 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|caps
+condition|)
+name|list_caps
+argument_list|(
+name|fd
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 do|while
@@ -957,6 +1008,7 @@ name|pci_device_info
 modifier|*
 name|di
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dp
@@ -983,7 +1035,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"    vendor   = '%s'\n"
+literal|"    vendor     = '%s'\n"
 argument_list|,
 name|vi
 operator|->
@@ -1029,7 +1081,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"    device   = '%s'\n"
+literal|"    device     = '%s'\n"
 argument_list|,
 name|di
 operator|->
@@ -1055,7 +1107,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"    class    = %s\n"
+literal|"    class      = %s\n"
 argument_list|,
 name|dp
 argument_list|)
@@ -1075,7 +1127,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"    subclass = %s\n"
+literal|"    subclass   = %s\n"
 argument_list|,
 name|dp
 argument_list|)
@@ -1097,6 +1149,7 @@ decl_stmt|;
 name|int
 name|subclass
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|desc
@@ -1762,6 +1815,7 @@ end_struct
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|guess_class
@@ -1828,6 +1882,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|guess_subclass
@@ -1915,6 +1970,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|dbf
@@ -2404,6 +2460,79 @@ block|}
 end_function
 
 begin_function
+name|uint32_t
+name|read_config
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|struct
+name|pcisel
+modifier|*
+name|sel
+parameter_list|,
+name|long
+name|reg
+parameter_list|,
+name|int
+name|width
+parameter_list|)
+block|{
+name|struct
+name|pci_io
+name|pi
+decl_stmt|;
+name|pi
+operator|.
+name|pi_sel
+operator|=
+operator|*
+name|sel
+expr_stmt|;
+name|pi
+operator|.
+name|pi_reg
+operator|=
+name|reg
+expr_stmt|;
+name|pi
+operator|.
+name|pi_width
+operator|=
+name|width
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|PCIOCREAD
+argument_list|,
+operator|&
+name|pi
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"ioctl(PCIOCREAD)"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|pi
+operator|.
+name|pi_data
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|struct
 name|pcisel
@@ -2617,50 +2746,6 @@ name|int
 name|width
 parameter_list|)
 block|{
-name|struct
-name|pci_io
-name|pi
-decl_stmt|;
-name|pi
-operator|.
-name|pi_sel
-operator|=
-operator|*
-name|sel
-expr_stmt|;
-name|pi
-operator|.
-name|pi_reg
-operator|=
-name|reg
-expr_stmt|;
-name|pi
-operator|.
-name|pi_width
-operator|=
-name|width
-expr_stmt|;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|PCIOCREAD
-argument_list|,
-operator|&
-name|pi
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"ioctl(PCIOCREAD)"
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%0*x"
@@ -2669,9 +2754,16 @@ name|width
 operator|*
 literal|2
 argument_list|,
-name|pi
-operator|.
-name|pi_data
+name|read_config
+argument_list|(
+name|fd
+argument_list|,
+name|sel
+argument_list|,
+name|reg
+argument_list|,
+name|width
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
