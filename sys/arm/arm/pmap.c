@@ -10037,6 +10037,15 @@ argument_list|(
 name|pv
 argument_list|)
 expr_stmt|;
+name|pmap_free_l2_bucket
+argument_list|(
+name|pmap
+argument_list|,
+name|l2b
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|vm_page_unlock_queues
 argument_list|()
