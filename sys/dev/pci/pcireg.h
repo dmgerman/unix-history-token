@@ -480,6 +480,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIY_SUBVENDOR
+value|0x0d
+end_define
+
+begin_comment
+comment|/* PCI-PCI bridge subvendor ID */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIY_AGP8X
 value|0x0e
 end_define
@@ -841,20 +852,6 @@ define|#
 directive|define
 name|PCIR_BRIDGECTL_1
 value|0x3e
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCIR_SUBVEND_1
-value|0x34
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCIR_SUBDEV_1
-value|0x36
 end_define
 
 begin_comment
@@ -2646,6 +2643,17 @@ define|#
 directive|define
 name|PCIR_HTMSI_ADDRESS_HI
 value|0x8
+end_define
+
+begin_comment
+comment|/* PCI-PCI Bridge Subvendor definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIR_SUBVENDCAP_ID
+value|0x4
 end_define
 
 begin_comment
