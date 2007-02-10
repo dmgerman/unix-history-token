@@ -4789,6 +4789,9 @@ break|break;
 case|case
 name|PCI_PRODUCT_QLOGIC_ISP2422
 case|:
+case|case
+name|PCI_PRODUCT_QLOGIC_ISP2432
+case|:
 name|did
 operator|=
 literal|0x2400
