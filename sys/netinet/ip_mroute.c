@@ -5672,7 +5672,7 @@ name|ip
 operator|->
 name|ip_ttl
 operator|<
-literal|255
+name|MAXTTL
 condition|)
 name|ip
 operator|->
