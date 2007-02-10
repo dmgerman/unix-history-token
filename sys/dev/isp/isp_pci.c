@@ -1029,6 +1029,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|PCI_PRODUCT_QLOGIC_ISP2432
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_QLOGIC_ISP2432
+value|0x2432
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|PCI_PRODUCT_QLOGIC_ISP6312
 end_ifndef
 
@@ -1156,6 +1174,14 @@ directive|define
 name|PCI_QLOGIC_ISP2422
 define|\
 value|((PCI_PRODUCT_QLOGIC_ISP2422<< 16) | PCI_VENDOR_QLOGIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_QLOGIC_ISP2432
+define|\
+value|((PCI_PRODUCT_QLOGIC_ISP2432<< 16) | PCI_VENDOR_QLOGIC)
 end_define
 
 begin_define
@@ -1572,6 +1598,17 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Qlogic ISP 2422 PCI FC-AL Adapter"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PCI_QLOGIC_ISP2432
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Qlogic ISP 2432 PCI FC-AL Adapter"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4569,6 +4606,13 @@ name|dev
 argument_list|)
 operator|==
 name|PCI_QLOGIC_ISP2422
+operator|||
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCI_QLOGIC_ISP2432
 condition|)
 block|{
 name|mdvp
