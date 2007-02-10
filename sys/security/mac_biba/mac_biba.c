@@ -10413,9 +10413,6 @@ name|struct
 name|mac_biba
 modifier|*
 name|subj
-decl_stmt|,
-modifier|*
-name|obj
 decl_stmt|;
 name|int
 name|error
@@ -10437,13 +10434,6 @@ argument_list|(
 name|cred
 operator|->
 name|cr_label
-argument_list|)
-expr_stmt|;
-name|obj
-operator|=
-name|SLOT
-argument_list|(
-name|label
 argument_list|)
 expr_stmt|;
 name|error
