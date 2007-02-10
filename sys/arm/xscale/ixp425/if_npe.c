@@ -1606,7 +1606,7 @@ name|ifp
 operator|->
 name|if_snd
 operator|.
-name|ifq_maxlen
+name|ifq_drv_maxlen
 operator|=
 name|IFQ_MAXLEN
 expr_stmt|;
