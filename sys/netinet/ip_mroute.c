@@ -19,23 +19,12 @@ directive|include
 file|"opt_mrouting.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PIM
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|_PIM_VT
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -211,12 +200,6 @@ directive|include
 file|<netinet/ip_options.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PIM
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -228,11 +211,6 @@ include|#
 directive|include
 file|<netinet/pim_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -707,12 +685,6 @@ begin_comment
 comment|/* periodical flush of bw upcalls */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PIM
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -720,6 +692,24 @@ name|pimstat
 name|pimstat
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_inet
+argument_list|,
+name|IPPROTO_PIM
+argument_list|,
+name|pim
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"PIM"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_STRUCT
@@ -741,6 +731,103 @@ literal|"PIM Statistics (struct pimstat, netinet/pim_var.h)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|domain
+name|inetdomain
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|protosw
+name|in_pim_protosw
+init|=
+block|{
+operator|.
+name|pr_type
+operator|=
+name|SOCK_RAW
+block|,
+operator|.
+name|pr_domain
+operator|=
+operator|&
+name|inetdomain
+block|,
+operator|.
+name|pr_protocol
+operator|=
+name|IPPROTO_PIM
+block|,
+operator|.
+name|pr_flags
+operator|=
+name|PR_ATOMIC
+operator||
+name|PR_ADDR
+operator||
+name|PR_LASTHDR
+block|,
+operator|.
+name|pr_input
+operator|=
+name|pim_input
+block|,
+operator|.
+name|pr_output
+operator|=
+operator|(
+name|pr_output_t
+operator|*
+operator|)
+name|rip_output
+block|,
+operator|.
+name|pr_ctloutput
+operator|=
+name|rip_ctloutput
+block|,
+operator|.
+name|pr_usrreqs
+operator|=
+operator|&
+name|rip_usrreqs
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|encaptab
+modifier|*
+name|pim_encap_cookie
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|int
+name|pim_encapcheck
+parameter_list|(
+specifier|const
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Note: the PIM Register encapsulation adds the following in front of a  * data packet:  *  * struct pim_encap_hdr {  *    struct ip ip;  *    struct pim_encap_pimhdr  pim;  * }  *  */
@@ -870,15 +957,6 @@ init|=
 name|VIFI_INVALID
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PIM */
-end_comment
 
 begin_comment
 comment|/*  * Private variables.  */
@@ -1379,12 +1457,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PIM
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
@@ -1474,11 +1546,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * whether or not special PIM assert processing is enabled.  */
@@ -2614,10 +2681,6 @@ name|mrouter_mtx
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* used to synch init/done work */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -3417,15 +3480,10 @@ expr_stmt|;
 name|MFC_UNLOCK
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PIM
 name|reg_vif_num
 operator|=
 name|VIFI_INVALID
 expr_stmt|;
-endif|#
-directive|endif
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -3718,9 +3776,6 @@ name|EADDRNOTAVAIL
 return|;
 block|}
 comment|/* Find the interface with an address in AF_INET family */
-ifdef|#
-directive|ifdef
-name|PIM
 if|if
 condition|(
 name|vifcp
@@ -3737,8 +3792,6 @@ name|NULL
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 name|sin
 operator|.
@@ -3808,9 +3861,6 @@ expr_stmt|;
 return|return
 name|EOPNOTSUPP
 return|;
-ifdef|#
-directive|ifdef
-name|PIM
 block|}
 elseif|else
 if|if
@@ -3875,8 +3925,6 @@ operator|->
 name|vifc_vifi
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -4174,9 +4222,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PIM
 if|if
 condition|(
 name|vifp
@@ -4189,8 +4234,6 @@ name|reg_vif_num
 operator|=
 name|VIFI_INVALID
 expr_stmt|;
-endif|#
-directive|endif
 name|bzero
 argument_list|(
 operator|(
@@ -6875,9 +6918,6 @@ operator|<
 name|numvifs
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PIM
 if|if
 condition|(
 name|viftable
@@ -6903,8 +6943,6 @@ name|rt
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|phyint_send
 argument_list|(
 name|ip
@@ -7016,9 +7054,6 @@ decl_stmt|;
 name|u_long
 name|delta
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PIM
 if|if
 condition|(
 name|ifp
@@ -7031,8 +7066,6 @@ operator|.
 name|pims_rcv_registers_wrongiif
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Get vifi for the incoming packet */
 for|for
 control|(
@@ -7390,9 +7423,6 @@ name|v_bytes_out
 operator|+=
 name|plen
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PIM
 if|if
 condition|(
 name|viftable
@@ -7418,8 +7448,6 @@ name|rt
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|phyint_send
 argument_list|(
 name|ip
@@ -10778,12 +10806,6 @@ begin_comment
 comment|/*  * End of bandwidth monitoring code  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PIM
-end_ifdef
-
 begin_comment
 comment|/*  * Send the packet up to the user daemon, or eventually do kernel encapsulation  *  */
 end_comment
@@ -11782,6 +11804,65 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * pim_encapcheck() is called by the encap4_input() path at runtime to  * determine if a packet is for PIM; allowing PIM to be dynamically loaded  * into the kernel.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|pim_encapcheck
+parameter_list|(
+specifier|const
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|off
+parameter_list|,
+name|int
+name|proto
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|KASSERT
+argument_list|(
+name|proto
+operator|==
+name|IPPROTO_PIM
+argument_list|,
+operator|(
+literal|"not for IPPROTO_PIM"
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|proto
+operator|!=
+name|IPPROTO_PIM
+condition|)
+return|return
+literal|0
+return|;
+comment|/* not for us; reject the datagram. */
+return|return
+literal|64
+return|;
+comment|/* claim the datagram. */
+block|}
+end_function
+
+begin_comment
 comment|/*  * PIM-SMv2 and PIM-DM messages processing.  * Receives and verifies the PIM control messages, and passes them  * up to the listening socket, using rip_input().  * The only message with special processing is the PIM_REGISTER message  * (used by PIM-SM): the PIM header is stripped off, and the inner packet  * is passed to if_simloop().  */
 end_comment
 
@@ -12645,15 +12726,6 @@ return|return;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PIM */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -12699,6 +12771,52 @@ expr_stmt|;
 name|ip_mrouter_reset
 argument_list|()
 expr_stmt|;
+name|pim_encap_cookie
+operator|=
+name|encap_attach_func
+argument_list|(
+name|AF_INET
+argument_list|,
+name|IPPROTO_PIM
+argument_list|,
+name|pim_encapcheck
+argument_list|,
+operator|&
+name|in_pim_protosw
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pim_encap_cookie
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ip_mroute: unable to attach pim encap\n"
+argument_list|)
+expr_stmt|;
+name|VIF_LOCK_DESTROY
+argument_list|()
+expr_stmt|;
+name|MFC_LOCK_DESTROY
+argument_list|()
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|mrouter_mtx
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|ip_mcast_src
 operator|=
 name|X_ip_mcast_src
@@ -12751,6 +12869,21 @@ condition|)
 return|return
 name|EINVAL
 return|;
+if|if
+condition|(
+name|pim_encap_cookie
+condition|)
+block|{
+name|encap_detach
+argument_list|(
+name|pim_encap_cookie
+argument_list|)
+expr_stmt|;
+name|pim_encap_cookie
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|X_ip_mrouter_done
 argument_list|()
 expr_stmt|;
