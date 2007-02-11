@@ -2981,16 +2981,6 @@ decl_stmt|;
 name|vm_page_t
 name|nkpg
 decl_stmt|;
-if|if
-condition|(
-name|kernel_vm_end
-operator|>=
-name|addr
-condition|)
-return|return;
-name|critical_enter
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 name|kernel_vm_end
@@ -3077,9 +3067,6 @@ operator|*
 name|NKPTEPG
 expr_stmt|;
 block|}
-name|critical_exit
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
