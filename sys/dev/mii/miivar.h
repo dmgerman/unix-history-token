@@ -396,6 +396,17 @@ begin_comment
 comment|/* is a HomePNA device */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MIIF_FORCEANEG
+value|0x0400
+end_define
+
+begin_comment
+comment|/* force auto-negotiation */
+end_comment
+
 begin_comment
 comment|/* Default mii_anegticks values */
 end_comment
