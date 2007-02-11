@@ -1284,6 +1284,17 @@ begin_comment
 comment|/* Don't send KNOTEs from VOP hooks */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MNTK_LOOKUP_SHARED
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* FS supports shared lock lookups */
+end_comment
+
 begin_comment
 comment|/*  * Sysctl CTL_VFS definitions.  *  * Second level identifier specifies which filesystem. Second level  * identifier VFS_VFSCONF returns information about all filesystems.  * Second level identifier VFS_GENERIC is non-terminal.  */
 end_comment

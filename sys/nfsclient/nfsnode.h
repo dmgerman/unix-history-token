@@ -784,6 +784,9 @@ name|struct
 name|nfsnode
 modifier|*
 modifier|*
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

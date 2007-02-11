@@ -2337,6 +2337,8 @@ name|fh_len
 argument_list|,
 operator|&
 name|np
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5139,6 +5141,8 @@ name|fhsize
 argument_list|,
 operator|&
 name|np
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5216,6 +5220,8 @@ name|fhsize
 argument_list|,
 operator|&
 name|np
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 name|vn_lock
@@ -5297,6 +5303,8 @@ name|fhsize
 argument_list|,
 operator|&
 name|np
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -7327,6 +7335,8 @@ name|fh_len
 argument_list|,
 operator|&
 name|np
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -11755,6 +11765,8 @@ name|fhlen
 argument_list|,
 operator|&
 name|np
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if
