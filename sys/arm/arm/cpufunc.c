@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/uma.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpuconf.h>
 end_include
 
@@ -2452,9 +2458,9 @@ expr_stmt|;
 name|pmap_pte_init_generic
 argument_list|()
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 endif|#
 directive|endif
@@ -2495,9 +2501,9 @@ expr_stmt|;
 name|pmap_pte_init_arm8
 argument_list|()
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 endif|#
 directive|endif
@@ -2595,9 +2601,9 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 endif|#
 directive|endif
@@ -2665,9 +2671,9 @@ expr_stmt|;
 name|pmap_pte_init_generic
 argument_list|()
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 endif|#
 directive|endif
@@ -2697,9 +2703,9 @@ expr_stmt|;
 name|pmap_pte_init_sa1
 argument_list|()
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 endif|#
 directive|endif
@@ -2734,9 +2740,9 @@ name|cpu_do_powersave
 operator|=
 literal|1
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 endif|#
 directive|endif
@@ -2771,9 +2777,9 @@ name|cpu_do_powersave
 operator|=
 literal|1
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 endif|#
 directive|endif
@@ -2802,9 +2808,9 @@ expr_stmt|;
 name|pmap_pte_init_sa1
 argument_list|()
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 endif|#
 directive|endif
@@ -2967,11 +2973,11 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_return
-return|return
-literal|0
-return|;
-end_return
+begin_goto
+goto|goto
+name|out
+goto|;
+end_goto
 
 begin_endif
 unit|}
@@ -3095,11 +3101,11 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_return
-return|return
-literal|0
-return|;
-end_return
+begin_goto
+goto|goto
+name|out
+goto|;
+end_goto
 
 begin_endif
 unit|}
@@ -3154,9 +3160,9 @@ block|;
 name|pmap_pte_init_xscale
 argument_list|()
 block|;
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 end_expr_stmt
 
@@ -3232,9 +3238,9 @@ name|cpu_do_powersave
 operator|=
 literal|1
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 end_if
 
@@ -3295,9 +3301,9 @@ expr_stmt|;
 name|pmap_pte_init_xscale
 argument_list|()
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 end_if
 
@@ -3328,6 +3334,27 @@ begin_return
 return|return
 operator|(
 name|ARCHITECTURE_NOT_PRESENT
+operator|)
+return|;
+end_return
+
+begin_label
+name|out
+label|:
+end_label
+
+begin_expr_stmt
+name|uma_set_align
+argument_list|(
+name|arm_dcache_align_mask
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 end_return
