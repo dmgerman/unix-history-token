@@ -340,10 +340,12 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
-name|mtx_lock
+name|mtx_assert
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|zero_state
@@ -449,12 +451,6 @@ operator|)
 operator|&
 name|PQ_COLORMASK
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_page_queue_free_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -472,7 +468,7 @@ block|{
 name|mtx_assert
 argument_list|(
 operator|&
-name|vm_page_queue_mtx
+name|vm_page_queue_free_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -513,6 +509,12 @@ block|{
 name|idlezero_enable
 operator|=
 name|idlezero_enable_default
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -563,9 +565,6 @@ directive|endif
 block|}
 else|else
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|wakeup_needed
 operator|=
 name|TRUE
@@ -576,9 +575,9 @@ operator|&
 name|zero_state
 argument_list|,
 operator|&
-name|vm_page_queue_mtx
+name|vm_page_queue_free_mtx
 argument_list|,
-name|PDROP
+literal|0
 argument_list|,
 literal|"pgzero"
 argument_list|,
