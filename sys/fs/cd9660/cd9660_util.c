@@ -50,13 +50,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isofs/cd9660/iso.h>
+file|<fs/cd9660/iso.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<isofs/cd9660/cd9660_mount.h>
+file|<fs/cd9660/cd9660_mount.h>
 end_include
 
 begin_decl_stmt
