@@ -5112,6 +5112,13 @@ modifier|*
 name|xidp
 decl_stmt|;
 comment|/* Reject requests while attempting a forced unmount. */
+name|MNT_ILOCK
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -5123,6 +5130,13 @@ operator|&
 name|MNTK_UNMOUNTF
 condition|)
 block|{
+name|MNT_IUNLOCK
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|mrest
@@ -5134,6 +5148,13 @@ name|ESTALE
 operator|)
 return|;
 block|}
+name|MNT_IUNLOCK
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+argument_list|)
+expr_stmt|;
 name|nmp
 operator|=
 name|VFSTONFS
@@ -8093,6 +8114,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Terminate all requests while attempting a forced unmount. */
+name|MNT_ILOCK
+argument_list|(
+name|nmp
+operator|->
+name|nm_mountp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nmp
@@ -8104,6 +8132,13 @@ operator|&
 name|MNTK_UNMOUNTF
 condition|)
 block|{
+name|MNT_IUNLOCK
+argument_list|(
+name|nmp
+operator|->
+name|nm_mountp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EIO
@@ -8112,6 +8147,13 @@ goto|goto
 name|out
 goto|;
 block|}
+name|MNT_IUNLOCK
+argument_list|(
+name|nmp
+operator|->
+name|nm_mountp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
