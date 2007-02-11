@@ -9938,8 +9938,8 @@ operator|&=
 operator|~
 name|UMA_ZFLAG_FULL
 expr_stmt|;
-comment|/* We can handle one more allocation */
-name|wakeup_one
+comment|/*  		 * We can handle one more allocation. Since we're clearing ZFLAG_FULL, 		 * wake up all procs blocked on pages. This should be uncommon, so  		 * keeping this simple for now (rather than adding count of blocked  		 * threads etc). 		 */
+name|wakeup
 argument_list|(
 name|keg
 argument_list|)
