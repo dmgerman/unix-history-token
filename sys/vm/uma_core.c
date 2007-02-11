@@ -1083,16 +1083,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|zone_drain
-parameter_list|(
-name|uma_zone_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|uma_zone_t
 name|uma_kcreate
 parameter_list|(
@@ -2671,7 +2661,6 @@ comment|/*  * Frees pages from a zone back to the system.  This is done on deman
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|zone_drain
 parameter_list|(
@@ -10783,6 +10772,28 @@ expr_stmt|;
 return|return
 operator|(
 name|full
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|uma_zone_exhausted_nolock
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|)
+block|{
+return|return
+operator|(
+name|zone
+operator|->
+name|uz_keg
+operator|->
+name|uk_flags
+operator|&
+name|UMA_ZFLAG_FULL
 operator|)
 return|;
 block|}

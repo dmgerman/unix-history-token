@@ -77,6 +77,15 @@ name|uma_zone_t
 typedef|;
 end_typedef
 
+begin_function_decl
+name|void
+name|zone_drain
+parameter_list|(
+name|uma_zone_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*   * Item constructor  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	arg   The arg field passed to uma_zalloc_arg  *	size  The size of the allocated item  *	flags See zalloc flags  *   * Returns:  *	0      on success  *      errno  on failure  *  * Discussion:  *	The constructor is called just before the memory is returned  *	to the user. It may block if necessary.  */
 end_comment
@@ -957,6 +966,16 @@ end_comment
 begin_function_decl
 name|int
 name|uma_zone_exhausted
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|uma_zone_exhausted_nolock
 parameter_list|(
 name|uma_zone_t
 name|zone

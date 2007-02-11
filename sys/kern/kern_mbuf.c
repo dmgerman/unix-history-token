@@ -1526,6 +1526,19 @@ operator|-=
 literal|1
 expr_stmt|;
 comment|/* XXX */
+comment|/* 	 * If there are processes blocked on zone_clust, waiting for pages to be freed up, 	 * cause them to be woken up by draining the packet zone. Draining the cluster zone 	 * is unnecessary here (as freeing clusters would have caused these blocked processes 	 * to be woken up). We are exposed to a race here (in the check for the UMA_ZFLAG_FULL) 	 * where we might miss the flag set, but that is deliberate. We don't want to acquire  	 * the zone lock for every mbuf free. 	 */
+if|if
+condition|(
+name|uma_zone_exhausted_nolock
+argument_list|(
+name|zone_clust
+argument_list|)
+condition|)
+name|zone_drain
+argument_list|(
+name|zone_pack
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
