@@ -282,6 +282,21 @@ name|hashzone
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* The boot-time adjusted value for cache line alignment. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|uma_align_cache
+init|=
+literal|16
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -6815,6 +6830,14 @@ name|args
 operator|.
 name|align
 operator|=
+operator|(
+name|align
+operator|==
+name|UMA_ALIGN_CACHE
+operator|)
+condition|?
+name|uma_align_cache
+else|:
 name|align
 expr_stmt|;
 name|args
@@ -6842,6 +6865,31 @@ name|M_WAITOK
 argument_list|)
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/* See uma.h */
+end_comment
+
+begin_function
+name|void
+name|uma_set_align
+parameter_list|(
+name|int
+name|align
+parameter_list|)
+block|{
+if|if
+condition|(
+name|align
+operator|!=
+name|UMA_ALIGN_CACHE
+condition|)
+name|uma_align_cache
+operator|=
+name|align
+expr_stmt|;
 block|}
 end_function
 

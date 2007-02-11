@@ -461,7 +461,7 @@ begin_define
 define|#
 directive|define
 name|UMA_ALIGN_CACHE
-value|(16 - 1)
+value|(0 - 1)
 end_define
 
 begin_comment
@@ -717,6 +717,20 @@ name|void
 name|uma_reclaim
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Sets the alignment mask to be used for all zones requesting cache  * alignment.  Should be called by MD boot code prior to starting VM/UMA.  *  * Arguments:  *	align The alignment mask  *  * Returns:  *	Nothing  */
+end_comment
+
+begin_function_decl
+name|void
+name|uma_set_align
+parameter_list|(
+name|int
+name|align
 parameter_list|)
 function_decl|;
 end_function_decl
