@@ -377,7 +377,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|brgphy_fixup_adc_bug
+name|brgphy_fixup_5704_a0_bug
 parameter_list|(
 name|struct
 name|mii_softc
@@ -389,7 +389,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|brgphy_fixup_5704_a0_bug
+name|brgphy_fixup_adc_bug
 parameter_list|(
 name|struct
 name|mii_softc
@@ -2410,7 +2410,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|brgphy_fixup_adc_bug
+name|brgphy_fixup_5704_a0_bug
 parameter_list|(
 name|struct
 name|mii_softc
@@ -2434,21 +2434,15 @@ index|[]
 init|=
 block|{
 block|{
-name|BRGPHY_MII_AUXCTL
+literal|0x1c
 block|,
-literal|0x0c00
+literal|0x8d68
 block|}
 block|,
 block|{
-name|BRGPHY_MII_DSP_ADDR_REG
+literal|0x1c
 block|,
-literal|0x201f
-block|}
-block|,
-block|{
-name|BRGPHY_MII_DSP_RW_PORT
-block|,
-literal|0x2aaa
+literal|0x8d68
 block|}
 block|,
 block|{
@@ -2504,7 +2498,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|brgphy_fixup_5704_a0_bug
+name|brgphy_fixup_adc_bug
 parameter_list|(
 name|struct
 name|mii_softc
@@ -2519,7 +2513,7 @@ block|{
 name|int
 name|reg
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|val
 decl_stmt|;
 block|}
@@ -2528,15 +2522,21 @@ index|[]
 init|=
 block|{
 block|{
-literal|0x1c
+name|BRGPHY_MII_AUXCTL
 block|,
-literal|0x8d68
+literal|0x0c00
 block|}
 block|,
 block|{
-literal|0x1c
+name|BRGPHY_MII_DSP_ADDR_REG
 block|,
-literal|0x8d68
+literal|0x201f
+block|}
+block|,
+block|{
+name|BRGPHY_MII_DSP_RW_PORT
+block|,
+literal|0x2aaa
 block|}
 block|,
 block|{
@@ -2713,7 +2713,7 @@ block|{
 name|int
 name|reg
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|val
 decl_stmt|;
 block|}
@@ -2930,7 +2930,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|val
 decl_stmt|;
 comment|/* Enable Ethernet@WireSpeed. */
@@ -3002,7 +3002,7 @@ operator|*
 operator|)
 name|sc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|val
 decl_stmt|;
 comment|/* Set or clear jumbo frame settings in the PHY. */
@@ -3305,9 +3305,9 @@ name|bge_sc
 operator|->
 name|bge_flags
 operator|&
-name|BGE_FLAG_ADC_BUG
+name|BGE_FLAG_5704_A0_BUG
 condition|)
-name|brgphy_fixup_adc_bug
+name|brgphy_fixup_5704_a0_bug
 argument_list|(
 name|sc
 argument_list|)
@@ -3318,9 +3318,9 @@ name|bge_sc
 operator|->
 name|bge_flags
 operator|&
-name|BGE_FLAG_5704_A0_BUG
+name|BGE_FLAG_ADC_BUG
 condition|)
-name|brgphy_fixup_5704_a0_bug
+name|brgphy_fixup_adc_bug
 argument_list|(
 name|sc
 argument_list|)

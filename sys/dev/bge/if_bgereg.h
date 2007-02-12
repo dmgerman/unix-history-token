@@ -108,20 +108,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_FW_DRV_ALIVE
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_FW_PAUSE
-value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
 name|BGE_SOFTWARE_GENNCOMM_FW_LEN
 value|0x00000B7C
 end_define
@@ -180,6 +166,24 @@ define|#
 directive|define
 name|BGE_SEND_RING_1_TO_4_END
 value|0x00005FFF
+end_define
+
+begin_comment
+comment|/* Firmware interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_DRV_ALIVE
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_PAUSE
+value|0x00000002
 end_define
 
 begin_comment
@@ -1560,22 +1564,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_PCIDMARWCTL_RD_WAT_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
 name|BGE_PCIDMARWCTL_WR_WAT
 value|0x00380000
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_PCIDMARWCTL_WR_WAT_SHIFT
-value|19
 end_define
 
 begin_define
@@ -1602,13 +1592,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_PCIDMA_RWCTL_PCI_RD_CMD_SHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
 name|BGE_PCIDMARWCTL_DFLT_PCI_WR_CMD
 value|0xF0000000
 end_define
@@ -1616,8 +1599,41 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_PCIDMA_RWCTL_PCI_WR_CMD_SHIFT
-value|28
+name|BGE_PCIDMARWCTL_RD_WAT_SHIFT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_PCIDMARWCTL_WR_WAT_SHIFT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_PCIDMARWCTL_RD_CMD_SHIFT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_PCIDMARWCTL_WR_CMD_SHIFT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 28)
 end_define
 
 begin_define
