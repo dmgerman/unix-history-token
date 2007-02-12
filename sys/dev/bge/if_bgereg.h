@@ -12854,6 +12854,10 @@ define|#
 directive|define
 name|BGE_FLAG_BER_BUG
 value|0x02000000
+define|#
+directive|define
+name|BGE_FLAG_ADJUST_TRIM
+value|0x04000000
 name|uint32_t
 name|bge_chipid
 decl_stmt|;
