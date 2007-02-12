@@ -2299,6 +2299,16 @@ operator|.
 name|cpu_bsp
 condition|)
 continue|continue;
+if|if
+condition|(
+name|cpu_info
+index|[
+name|apic_id
+index|]
+operator|.
+name|cpu_disabled
+condition|)
+continue|continue;
 comment|/* Don't let hyperthreads service interrupts. */
 if|if
 condition|(
