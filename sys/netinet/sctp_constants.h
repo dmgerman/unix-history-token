@@ -33,26 +33,6 @@ directive|define
 name|__sctp_constants_h__
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -2434,7 +2414,7 @@ name|TICKS_TO_MSEC
 parameter_list|(
 name|x
 parameter_list|)
-value|((hz == 1000) ? x : (((x) * 1000) / hz));
+value|((hz == 1000) ? x : (((x) * 1000) / hz))
 end_define
 
 begin_define
@@ -3058,14 +3038,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEFAULT_CHUNK_BUFFER
+name|SCTP_CHUNK_BUFFER_SIZE
 value|2048
 end_define
 
 begin_define
 define|#
 directive|define
-name|DEFAULT_PARAM_BUFFER
+name|SCTP_PARAM_BUFFER_SIZE
 value|512
 end_define
 
@@ -4007,7 +3987,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((((u_char *)&(a)->s_addr)[0] == 10) || \     ((((u_char *)&(a)->s_addr)[0] == 172)&& \      (((u_char *)&(a)->s_addr)[1]>= 16)&& \      (((u_char *)&(a)->s_addr)[1]<= 32)) || \     ((((u_char *)&(a)->s_addr)[0] == 192)&& \      (((u_char *)&(a)->s_addr)[1] == 168)))
+value|((((uint8_t *)&(a)->s_addr)[0] == 10) || \     ((((uint8_t *)&(a)->s_addr)[0] == 172)&& \      (((uint8_t *)&(a)->s_addr)[1]>= 16)&& \      (((uint8_t *)&(a)->s_addr)[1]<= 32)) || \     ((((uint8_t *)&(a)->s_addr)[0] == 192)&& \      (((uint8_t *)&(a)->s_addr)[1] == 168)))
 end_define
 
 begin_define
@@ -4018,7 +3998,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((((u_char *)&(a)->s_addr)[0] == 127)&& \      (((u_char *)&(a)->s_addr)[1] == 0)&& \      (((u_char *)&(a)->s_addr)[2] == 0)&& \      (((u_char *)&(a)->s_addr)[3] == 1))
+value|((((uint8_t *)&(a)->s_addr)[0] == 127)&& \      (((uint8_t *)&(a)->s_addr)[1] == 0)&& \      (((uint8_t *)&(a)->s_addr)[2] == 0)&& \      (((uint8_t *)&(a)->s_addr)[3] == 1))
 end_define
 
 begin_if
@@ -4120,10 +4100,6 @@ parameter_list|)
 define|\
 value|do { \ 	if (inp->sctp_flags& SCTP_PCB_FLAGS_DONT_WAKE) { \ 		inp->sctp_flags |= SCTP_PCB_FLAGS_WAKEINPUT; \ 	} else { \ 		sorwakeup(so); \ 	} \ } while (0)
 end_define
-
-begin_comment
-comment|/* FIXME */
-end_comment
 
 begin_define
 define|#

@@ -36,12 +36,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/socketvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/sctp_uio.h>
 end_include
 
@@ -643,7 +637,7 @@ name|_stcb
 parameter_list|,
 name|_readq
 parameter_list|)
-value|{ \ 		SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_readq, (_readq)); \ 		SCTP_DECR_READQ_COUNT(); \ }
+value|{ \ 	SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_readq, (_readq)); \ 	SCTP_DECR_READQ_COUNT(); \ }
 end_define
 
 begin_define
@@ -655,7 +649,7 @@ name|_stcb
 parameter_list|,
 name|_readq
 parameter_list|)
-value|{ \ 	(_readq) = (struct sctp_queued_to_read  *)SCTP_ZONE_GET(sctppcbinfo.ipi_zone_readq); \ 	if ((_readq)) { \  	     SCTP_INCR_READQ_COUNT(); \ 	} \ }
+value|{ \ 	(_readq) = SCTP_ZONE_GET(sctppcbinfo.ipi_zone_readq, struct sctp_queued_to_read); \ 	if ((_readq)) { \  	     SCTP_INCR_READQ_COUNT(); \ 	} \ }
 end_define
 
 begin_define
@@ -667,7 +661,7 @@ name|_stcb
 parameter_list|,
 name|_strmoq
 parameter_list|)
-value|{ \        if (((_stcb)->asoc.free_strmoq_cnt> sctp_asoc_free_resc_limit) || \ 	   (sctppcbinfo.ipi_free_strmoq> sctp_system_free_resc_limit)) { \ 		SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_strmoq, (_strmoq)); \ 		SCTP_DECR_STRMOQ_COUNT(); \ 	   } else { \ 		TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_strmoq, (_strmoq), next); \                 (_stcb)->asoc.free_strmoq_cnt++; \                 atomic_add_int(&sctppcbinfo.ipi_free_strmoq, 1); \ 	   } \ }
+value|{ \ 	if (((_stcb)->asoc.free_strmoq_cnt> sctp_asoc_free_resc_limit) || \ 	    (sctppcbinfo.ipi_free_strmoq> sctp_system_free_resc_limit)) { \ 		SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_strmoq, (_strmoq)); \ 		SCTP_DECR_STRMOQ_COUNT(); \ 	} else { \ 		TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_strmoq, (_strmoq), next); \ 		(_stcb)->asoc.free_strmoq_cnt++; \ 		atomic_add_int(&sctppcbinfo.ipi_free_strmoq, 1); \ 	} \ }
 end_define
 
 begin_define
@@ -679,7 +673,7 @@ name|_stcb
 parameter_list|,
 name|_strmoq
 parameter_list|)
-value|{ \       if(TAILQ_EMPTY(&(_stcb)->asoc.free_strmoq))  { \ 	(_strmoq) = (struct sctp_stream_queue_pending  *)SCTP_ZONE_GET(sctppcbinfo.ipi_zone_strmoq); \ 	if ((_strmoq)) { \  	     SCTP_INCR_STRMOQ_COUNT(); \ 	} \       } else { \         (_strmoq) = TAILQ_FIRST(&(_stcb)->asoc.free_strmoq); \          TAILQ_REMOVE(&(_stcb)->asoc.free_strmoq, (_strmoq), next); \          atomic_subtract_int(&sctppcbinfo.ipi_free_strmoq, 1); \          (_stcb)->asoc.free_strmoq_cnt--; \       } \ }
+value|{ \ 	if (TAILQ_EMPTY(&(_stcb)->asoc.free_strmoq))  { \ 		(_strmoq) = SCTP_ZONE_GET(sctppcbinfo.ipi_zone_strmoq, struct sctp_stream_queue_pending); \ 		if ((_strmoq)) { \ 			SCTP_INCR_STRMOQ_COUNT(); \ 		} \ 	} else { \ 		(_strmoq) = TAILQ_FIRST(&(_stcb)->asoc.free_strmoq); \ 		TAILQ_REMOVE(&(_stcb)->asoc.free_strmoq, (_strmoq), next); \ 		atomic_subtract_int(&sctppcbinfo.ipi_free_strmoq, 1); \ 		(_stcb)->asoc.free_strmoq_cnt--; \ 	} \ }
 end_define
 
 begin_define
@@ -691,7 +685,7 @@ name|_stcb
 parameter_list|,
 name|_chk
 parameter_list|)
-value|{ \        if (((_stcb)->asoc.free_chunk_cnt> sctp_asoc_free_resc_limit) || \ 	   (sctppcbinfo.ipi_free_chunks> sctp_system_free_resc_limit)) { \ 		SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_chunk, (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	   } else { \ 		TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \                 (_stcb)->asoc.free_chunk_cnt++; \                 atomic_add_int(&sctppcbinfo.ipi_free_chunks, 1); \ 	   } \ }
+value|{ \ 	if (((_stcb)->asoc.free_chunk_cnt> sctp_asoc_free_resc_limit) || \ 	    (sctppcbinfo.ipi_free_chunks> sctp_system_free_resc_limit)) { \ 		SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_chunk, (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} else { \ 		TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 		(_stcb)->asoc.free_chunk_cnt++; \ 		atomic_add_int(&sctppcbinfo.ipi_free_chunks, 1); \ 	} \ }
 end_define
 
 begin_define
@@ -703,7 +697,7 @@ name|_stcb
 parameter_list|,
 name|_chk
 parameter_list|)
-value|{ \       if(TAILQ_EMPTY(&(_stcb)->asoc.free_chunks))  { \ 	(_chk) = (struct sctp_tmit_chunk *)SCTP_ZONE_GET(sctppcbinfo.ipi_zone_chunk); \ 	if ((_chk)) { \  	     SCTP_INCR_CHK_COUNT(); \ 	} \       } else { \         (_chk) = TAILQ_FIRST(&(_stcb)->asoc.free_chunks); \          TAILQ_REMOVE(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \          atomic_subtract_int(&sctppcbinfo.ipi_free_chunks, 1); \          (_stcb)->asoc.free_chunk_cnt--; \       } \ }
+value|{ \ 	if (TAILQ_EMPTY(&(_stcb)->asoc.free_chunks))  { \ 		(_chk) = SCTP_ZONE_GET(sctppcbinfo.ipi_zone_chunk, struct sctp_tmit_chunk); \ 		if ((_chk)) { \ 			SCTP_INCR_CHK_COUNT(); \ 		} \ 	} else { \ 		(_chk) = TAILQ_FIRST(&(_stcb)->asoc.free_chunks); \ 		TAILQ_REMOVE(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 		atomic_subtract_int(&sctppcbinfo.ipi_free_chunks, 1); \ 		(_stcb)->asoc.free_chunk_cnt--; \ 	} \ }
 end_define
 
 begin_define
@@ -713,7 +707,7 @@ name|sctp_free_remote_addr
 parameter_list|(
 name|__net
 parameter_list|)
-value|{ \ 	if ((__net)) { \                 if (atomic_fetchadd_int(&(__net)->ref_count, -1) == 1) { \ 			SCTP_OS_TIMER_STOP(&(__net)->rxt_timer.timer); \ 			SCTP_OS_TIMER_STOP(&(__net)->pmtu_timer.timer); \ 			SCTP_OS_TIMER_STOP(&(__net)->fr_timer.timer); \ 			(__net)->dest_state = SCTP_ADDR_NOT_REACHABLE; \ 			SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_net, (__net)); \ 			SCTP_DECR_RADDR_COUNT(); \ 		} \ 	} \ }
+value|{ \ 	if ((__net)) { \ 		if (atomic_fetchadd_int(&(__net)->ref_count, -1) == 1) { \ 			SCTP_OS_TIMER_STOP(&(__net)->rxt_timer.timer); \ 			SCTP_OS_TIMER_STOP(&(__net)->pmtu_timer.timer); \ 			SCTP_OS_TIMER_STOP(&(__net)->fr_timer.timer); \ 			(__net)->dest_state = SCTP_ADDR_NOT_REACHABLE; \ 			SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_net, (__net)); \ 			SCTP_DECR_RADDR_COUNT(); \ 		} \ 	} \ }
 end_define
 
 begin_define
@@ -729,7 +723,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \         uint32_t val; \         val = atomic_fetchadd_int(&(sb)->sb_cc,-(SCTP_BUF_LEN((m)))); \         if(val< SCTP_BUF_LEN((m))) { \            panic("sb_cc goes negative"); \         } \         val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-(MSIZE)); \         if(val< MSIZE) { \             panic("sb_mbcnt goes negative"); \         } \         if (SCTP_BUF_IS_EXTENDED(m)) { \                 val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-(SCTP_BUF_EXTEND_SIZE(m))); \ 		if(val< SCTP_BUF_EXTEND_SIZE(m)) { \                     panic("sb_mbcnt goes negative2"); \                 } \         } \         if (((ctl)->do_not_ref_stcb == 0)&& stcb) {\           val = atomic_fetchadd_int(&(stcb)->asoc.sb_cc,-(SCTP_BUF_LEN((m)))); \           if(val< SCTP_BUF_LEN((m))) {\              panic("stcb->sb_cc goes negative"); \           } \           val = atomic_fetchadd_int(&(stcb)->asoc.sb_mbcnt,-(MSIZE)); \           if(val< MSIZE) { \              panic("asoc->mbcnt goes negative"); \           } \ 	  if (SCTP_BUF_IS_EXTENDED(m)) { \                 val = atomic_fetchadd_int(&(stcb)->asoc.sb_mbcnt,-(SCTP_BUF_EXTEND_SIZE(m))); \ 		if(val< SCTP_BUF_EXTEND_SIZE(m)) { \ 		   panic("assoc stcb->mbcnt would go negative"); \                 } \           } \         } \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_subtract_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
+value|{ \ 	uint32_t val; \ 	val = atomic_fetchadd_int(&(sb)->sb_cc,-(SCTP_BUF_LEN((m)))); \ 	if (val< SCTP_BUF_LEN((m))) { \ 	   panic("sb_cc goes negative"); \ 	} \ 	val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-(MSIZE)); \ 	if (val< MSIZE) { \ 	    panic("sb_mbcnt goes negative"); \ 	} \ 	if (SCTP_BUF_IS_EXTENDED(m)) { \ 		val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-(SCTP_BUF_EXTEND_SIZE(m))); \ 		if (val< SCTP_BUF_EXTEND_SIZE(m)) { \ 		    panic("sb_mbcnt goes negative2"); \ 		} \ 	} \ 	if (((ctl)->do_not_ref_stcb == 0)&& stcb) {\ 	  val = atomic_fetchadd_int(&(stcb)->asoc.sb_cc,-(SCTP_BUF_LEN((m)))); \ 	  if (val< SCTP_BUF_LEN((m))) {\ 	     panic("stcb->sb_cc goes negative"); \ 	  } \ 	  val = atomic_fetchadd_int(&(stcb)->asoc.sb_mbcnt,-(MSIZE)); \ 	  if (val< MSIZE) { \ 	     panic("asoc->mbcnt goes negative"); \ 	  } \ 	  if (SCTP_BUF_IS_EXTENDED(m)) { \ 		val = atomic_fetchadd_int(&(stcb)->asoc.sb_mbcnt,-(SCTP_BUF_EXTEND_SIZE(m))); \ 		if (val< SCTP_BUF_EXTEND_SIZE(m)) { \ 		   panic("assoc stcb->mbcnt would go negative"); \ 		} \ 	  } \ 	} \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_subtract_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
 end_define
 
 begin_define
@@ -743,7 +737,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	atomic_add_int(&(sb)->sb_cc,SCTP_BUF_LEN((m))); \ 	atomic_add_int(&(sb)->sb_mbcnt, MSIZE); \ 	if (SCTP_BUF_IS_EXTENDED(m)) \ 		atomic_add_int(&(sb)->sb_mbcnt,SCTP_BUF_EXTEND_SIZE(m)); \         if(stcb) { \   	  atomic_add_int(&(stcb)->asoc.sb_cc,SCTP_BUF_LEN((m))); \           atomic_add_int(&(stcb)->asoc.sb_mbcnt, MSIZE); \ 	  if (SCTP_BUF_IS_EXTENDED(m)) \ 		atomic_add_int(&(stcb)->asoc.sb_mbcnt,SCTP_BUF_EXTEND_SIZE(m)); \         } \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_add_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
+value|{ \ 	atomic_add_int(&(sb)->sb_cc,SCTP_BUF_LEN((m))); \ 	atomic_add_int(&(sb)->sb_mbcnt, MSIZE); \ 	if (SCTP_BUF_IS_EXTENDED(m)) \ 		atomic_add_int(&(sb)->sb_mbcnt,SCTP_BUF_EXTEND_SIZE(m)); \ 	if (stcb) { \ 		atomic_add_int(&(stcb)->asoc.sb_cc,SCTP_BUF_LEN((m))); \ 		atomic_add_int(&(stcb)->asoc.sb_mbcnt, MSIZE); \ 		if (SCTP_BUF_IS_EXTENDED(m)) \ 			atomic_add_int(&(stcb)->asoc.sb_mbcnt,SCTP_BUF_EXTEND_SIZE(m)); \ 	} \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_add_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
 end_define
 
 begin_define
@@ -773,7 +767,7 @@ name|sctp_mbuf_crush
 parameter_list|(
 name|data
 parameter_list|)
-value|do { \                 struct mbuf *_m; \ 		_m = (data); \ 		while(_m&& (SCTP_BUF_LEN(_m) == 0)) { \ 			(data)  = SCTP_BUF_NEXT(_m); \ 			SCTP_BUF_NEXT(_m) = NULL; \ 			sctp_m_free(_m); \ 			_m = (data); \ 		} \ } while (0)
+value|do { \ 	struct mbuf *_m; \ 	_m = (data); \ 	while(_m&& (SCTP_BUF_LEN(_m) == 0)) { \ 		(data)  = SCTP_BUF_NEXT(_m); \ 		SCTP_BUF_NEXT(_m) = NULL; \ 		sctp_m_free(_m); \ 		_m = (data); \ 	} \ } while (0)
 end_define
 
 begin_comment

@@ -69,6 +69,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -174,11 +180,22 @@ begin_comment
 comment|/* We add 96 bytes to the size of sctp_sndrcvinfo.  * This makes the current structure 128 bytes long  * which is nicely 64 bit aligned but also has room  * for us to add more and keep ABI compatability.  * For example, already we have the sctp_extrcvinfo  * when enabled which is 48 bytes.  */
 end_comment
 
+begin_comment
+comment|/*  * The assoc up needs a verfid  * all sendrcvinfo's need a verfid for SENDING only.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SCTP_ALIGN_RESV_PAD
 value|96
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ALIGN_RESV_PAD_SHORT
+value|80
 end_define
 
 begin_struct
@@ -268,6 +285,12 @@ decl_stmt|;
 name|uint32_t
 name|next_ppid
 decl_stmt|;
+name|uint8_t
+name|__reserve_pad
+index|[
+name|SCTP_ALIGN_RESV_PAD_SHORT
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -298,6 +321,13 @@ define|#
 directive|define
 name|SCTP_NEXT_MSG_IS_UNORDERED
 value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_NEXT_MSG_IS_NOTIFICATION
+value|0x0008
 end_define
 
 begin_struct
@@ -2471,6 +2501,12 @@ name|sctps_activeestab
 decl_stmt|;
 comment|/* sctpStats  2 (Counter32) */
 name|u_long
+name|sctps_restartestab
+decl_stmt|;
+name|u_long
+name|sctps_collisionestab
+decl_stmt|;
+name|u_long
 name|sctps_passiveestab
 decl_stmt|;
 comment|/* sctpStats  3 (Counter32) */
@@ -2530,7 +2566,8 @@ name|u_long
 name|sctps_inpackets
 decl_stmt|;
 comment|/* sctpStats 17 (Counter64) */
-name|u_long
+name|struct
+name|timeval
 name|sctps_discontinuitytime
 decl_stmt|;
 comment|/* sctpStats 18 (TimeStamp) */
@@ -3096,23 +3133,64 @@ struct|struct
 name|xsctp_tcb
 block|{
 name|uint16_t
-name|remote_port
+name|LocalPort
 decl_stmt|;
+comment|/* sctpAssocEntry 3   */
 name|uint16_t
-name|number_local_addresses
+name|RemPort
 decl_stmt|;
-name|uint16_t
-name|number_remote_addresses
+comment|/* sctpAssocEntry 4   */
+name|union
+name|sctp_sockstore
+name|RemPrimAddr
 decl_stmt|;
-name|uint16_t
-name|number_incomming_streams
-decl_stmt|;
-name|uint16_t
-name|number_outgoing_streams
-decl_stmt|;
+comment|/* sctpAssocEntry 5/6 */
 name|uint32_t
-name|state
+name|HeartBeatInterval
 decl_stmt|;
+comment|/* sctpAssocEntry 7   */
+name|uint32_t
+name|State
+decl_stmt|;
+comment|/* sctpAssocEntry 8   */
+name|uint32_t
+name|InStreams
+decl_stmt|;
+comment|/* sctpAssocEntry 9   */
+name|uint32_t
+name|OutStreams
+decl_stmt|;
+comment|/* sctpAssocEntry 10  */
+name|uint32_t
+name|MaxRetr
+decl_stmt|;
+comment|/* sctpAssocEntry 11  */
+name|uint32_t
+name|PrimProcess
+decl_stmt|;
+comment|/* sctpAssocEntry 12  */
+name|uint32_t
+name|T1expireds
+decl_stmt|;
+comment|/* sctpAssocEntry 13  */
+name|uint32_t
+name|T2expireds
+decl_stmt|;
+comment|/* sctpAssocEntry 14  */
+name|uint32_t
+name|RtxChunks
+decl_stmt|;
+comment|/* sctpAssocEntry 15  */
+name|struct
+name|timeval
+name|StartTime
+decl_stmt|;
+comment|/* sctpAssocEntry 16  */
+name|struct
+name|timeval
+name|DiscontinuityTime
+decl_stmt|;
+comment|/* sctpAssocEntry 17  */
 name|uint32_t
 name|total_sends
 decl_stmt|;
@@ -3138,6 +3216,12 @@ name|uint32_t
 name|cumulative_tsn_ack
 decl_stmt|;
 comment|/* add more association specific data here */
+name|uint16_t
+name|number_local_addresses
+decl_stmt|;
+name|uint16_t
+name|number_remote_addresses
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3148,8 +3232,14 @@ name|xsctp_laddr
 block|{
 name|union
 name|sctp_sockstore
-name|address
+name|LocalAddr
 decl_stmt|;
+comment|/* sctpAssocLocalAddrEntry 1/2 */
+name|struct
+name|timeval
+name|LocalStartTime
+decl_stmt|;
+comment|/* sctpAssocLocalAddrEntry 3   */
 comment|/* add more local address specific data */
 block|}
 struct|;
@@ -3161,11 +3251,50 @@ name|xsctp_raddr
 block|{
 name|union
 name|sctp_sockstore
-name|address
+name|RemAddr
 decl_stmt|;
-name|uint16_t
-name|state
+comment|/* sctpAssocLocalRemEntry 1/2 */
+name|uint8_t
+name|RemAddrActive
 decl_stmt|;
+comment|/* sctpAssocLocalRemEntry 3   */
+name|uint8_t
+name|RemAddrConfirmed
+decl_stmt|;
+comment|/* */
+name|uint8_t
+name|RemAddrHBActive
+decl_stmt|;
+comment|/* sctpAssocLocalRemEntry 4   */
+name|uint32_t
+name|RemAddrRTO
+decl_stmt|;
+comment|/* sctpAssocLocalRemEntry 5   */
+name|uint32_t
+name|RemAddrMaxPathRtx
+decl_stmt|;
+comment|/* sctpAssocLocalRemEntry 6   */
+name|uint32_t
+name|RemAddrRtx
+decl_stmt|;
+comment|/* sctpAssocLocalRemEntry 7   */
+name|uint32_t
+name|RemAddrErrorCounter
+decl_stmt|;
+comment|/* */
+name|uint32_t
+name|RemAddrCwnd
+decl_stmt|;
+comment|/* */
+name|uint32_t
+name|RemAddrFlightSize
+decl_stmt|;
+comment|/* */
+name|struct
+name|timeval
+name|RemAddrStartTime
+decl_stmt|;
+comment|/* sctpAssocLocalRemEntry 8   */
 comment|/* add more remote address specific data */
 block|}
 struct|;

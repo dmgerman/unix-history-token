@@ -624,6 +624,18 @@ decl_stmt|;
 comment|/* index into the last HS table entry we used */
 endif|#
 directive|endif
+name|struct
+name|timeval
+name|start_time
+decl_stmt|;
+comment|/* time when this net was created */
+name|uint32_t
+name|marked_retrans
+decl_stmt|;
+comment|/* number or DATA chunks marked for timer 				 * based retransmissions */
+name|uint32_t
+name|marked_fastretrans
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1171,6 +1183,30 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|SCTP_TSN_LOG_SIZE
+value|40
+end_define
+
+begin_struct
+struct|struct
+name|sctp_tsn_log
+block|{
+name|uint32_t
+name|tsn
+decl_stmt|;
+name|uint16_t
+name|strm
+decl_stmt|;
+name|uint16_t
+name|seq
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Here we have information about each individual association that we track.  * We probably in production would be more dynamic. But for ease of  * implementation we will have a fixed array that we hunt for in a linear  * fashion.  */
 end_comment
@@ -1499,6 +1535,33 @@ index|[
 name|SCTP_MAX_RESET_PARAMS
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SCTP_ASOCLOG_OF_TSNS
+comment|/* 	 * special log  - This adds considerable size to the asoc, but 	 * provides a log that you can use to detect problems via kgdb. 	 */
+name|struct
+name|sctp_tsn_log
+name|in_tsnlog
+index|[
+name|SCTP_TSN_LOG_SIZE
+index|]
+decl_stmt|;
+name|struct
+name|sctp_tsn_log
+name|out_tsnlog
+index|[
+name|SCTP_TSN_LOG_SIZE
+index|]
+decl_stmt|;
+name|uint16_t
+name|tsn_in_at
+decl_stmt|;
+name|uint16_t
+name|tsn_out_at
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* SCTP_ASOCLOG_OF_TSNS */
 comment|/* 	 * window state information and smallest MTU that I use to bound 	 * segmentation 	 */
 name|uint32_t
 name|peers_rwnd
@@ -1950,6 +2013,38 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* 	 * The mapping array is used to track out of order sequences above 	 * last_acked_seq. 0 indicates packet missing 1 indicates packet 	 * rec'd. We slide it up every time we raise last_acked_seq and 0 	 * trailing locactions out.  If I get a TSN above the array 	 * mappingArraySz, I discard the datagram and let retransmit happen. 	 */
+name|uint32_t
+name|marked_retrans
+decl_stmt|;
+name|uint32_t
+name|timoinit
+decl_stmt|;
+name|uint32_t
+name|timodata
+decl_stmt|;
+name|uint32_t
+name|timosack
+decl_stmt|;
+name|uint32_t
+name|timoshutdown
+decl_stmt|;
+name|uint32_t
+name|timoheartbeat
+decl_stmt|;
+name|uint32_t
+name|timocookie
+decl_stmt|;
+name|uint32_t
+name|timoshutdownack
+decl_stmt|;
+name|struct
+name|timeval
+name|start_time
+decl_stmt|;
+name|struct
+name|timeval
+name|discontinuity_time
+decl_stmt|;
 block|}
 struct|;
 end_struct

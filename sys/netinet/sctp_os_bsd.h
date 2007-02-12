@@ -383,6 +383,16 @@ begin_comment
 comment|/* FIX ME: temp */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SCTP_LIST_EMPTY
+parameter_list|(
+name|list
+parameter_list|)
+value|LIST_EMPTY(list)
+end_define
+
 begin_comment
 comment|/*  * general memory allocation  */
 end_comment
@@ -495,9 +505,11 @@ directive|define
 name|SCTP_ZONE_GET
 parameter_list|(
 name|zone
+parameter_list|,
+name|type
 parameter_list|)
 define|\
-value|uma_zalloc(zone, M_NOWAIT);
+value|(type *)uma_zalloc(zone, M_NOWAIT);
 end_define
 
 begin_comment
@@ -621,18 +633,6 @@ end_define
 begin_comment
 comment|/*  * Functions  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_READ_RANDOM
-parameter_list|(
-name|buf
-parameter_list|,
-name|len
-parameter_list|)
-value|read_random(buf, len)
-end_define
 
 begin_comment
 comment|/* Mbuf manipulation and access macros  */
@@ -921,6 +921,137 @@ parameter_list|(
 name|inp
 parameter_list|)
 value|(((struct inpcb *)inp)->inp_flags& IN6P_IPV6_V6ONLY)
+end_define
+
+begin_comment
+comment|/*  * SCTP AUTH  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SHA2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_READ_RANDOM
+parameter_list|(
+name|buf
+parameter_list|,
+name|len
+parameter_list|)
+value|read_random(buf, len)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_SCTP_SHA1
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/sctp_sha1.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<crypto/sha1.h>
+end_include
+
+begin_comment
+comment|/* map standard crypto API names */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHA1_Init
+value|SHA1Init
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA1_Update
+value|SHA1Update
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA1_Final
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|SHA1Final((caddr_t)x, y)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SHA2
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<crypto/sha2/sha2.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/md5.h>
+end_include
+
+begin_comment
+comment|/* map standard crypto API names */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD5_Init
+value|MD5Init
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD5_Update
+value|MD5Update
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD5_Final
+value|MD5Final
 end_define
 
 begin_endif
