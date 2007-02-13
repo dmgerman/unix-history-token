@@ -514,6 +514,12 @@ literal|20
 index|]
 decl_stmt|;
 name|char
+name|fstype
+index|[]
+init|=
+literal|"unionfs"
+decl_stmt|;
+name|char
 modifier|*
 name|p
 decl_stmt|,
@@ -807,7 +813,7 @@ name|iovlen
 argument_list|,
 literal|"fstype"
 argument_list|,
-literal|"unionfs"
+name|fstype
 argument_list|,
 operator|(
 name|size_t
