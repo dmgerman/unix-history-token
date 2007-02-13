@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Driver for the Broadcom BCR5400 1000baseTX PHY.  */
+comment|/*  * Driver for the Broadcom BCM54xx/57xx 1000baseTX PHY.  */
 end_comment
 
 begin_include
@@ -3133,6 +3133,8 @@ name|mii_model
 operator|==
 name|MII_MODEL_xxBROADCOM_BCM5401
 condition|)
+block|{
+comment|/* BCM5401 PHY cannot read-modify-write. */
 name|PHY_WRITE
 argument_list|(
 name|sc
@@ -3142,6 +3144,7 @@ argument_list|,
 literal|0x4c20
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|PHY_WRITE
