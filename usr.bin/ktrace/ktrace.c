@@ -427,6 +427,10 @@ operator|(
 operator|!
 name|pidset
 operator|&&
+name|clear
+operator|==
+name|NOTSET
+operator|&&
 operator|!
 operator|*
 name|argv
