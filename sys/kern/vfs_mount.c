@@ -8605,6 +8605,11 @@ name|value
 operator|)
 return|;
 block|}
+operator|*
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
 return|return
 operator|(
 name|NULL
