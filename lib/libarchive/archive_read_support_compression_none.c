@@ -1246,6 +1246,11 @@ name|total_bytes_skipped
 operator|)
 return|;
 comment|/* 	 * If a client_skipper was provided, try that first. 	 */
+if|#
+directive|if
+name|ARCHIVE_API_VERSION
+operator|<
+literal|2
 if|if
 condition|(
 operator|(
@@ -1263,6 +1268,19 @@ name|SSIZE_MAX
 operator|)
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|a
+operator|->
+name|client_skipper
+operator|!=
+name|NULL
+condition|)
+block|{
+endif|#
+directive|endif
 name|bytes_skipped
 operator|=
 call|(
@@ -1412,10 +1430,10 @@ name|a
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"Truncated input file (need to skip %d bytes)"
+literal|"Truncated input file (need to skip %jd bytes)"
 argument_list|,
 operator|(
-name|int
+name|intmax_t
 operator|)
 name|request
 argument_list|)
@@ -1479,9 +1497,6 @@ name|total_bytes_skipped
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|archive_decompressor_none_finish
