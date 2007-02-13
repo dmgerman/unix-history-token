@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * MacPPC bus dma support routines  */
+comment|/*  * ARM bus dma support routines  */
 end_comment
 
 begin_define
