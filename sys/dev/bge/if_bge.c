@@ -12637,7 +12637,7 @@ name|bge_dev
 expr_stmt|;
 if|if
 condition|(
-name|BGE_IS_5705_PLUS
+name|BGE_IS_575X_PLUS
 argument_list|(
 name|sc
 argument_list|)
