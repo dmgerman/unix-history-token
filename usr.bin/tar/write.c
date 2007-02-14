@@ -3855,7 +3855,7 @@ expr_stmt|;
 if|if
 condition|(
 name|bytes_written
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -3878,6 +3878,36 @@ return|return
 operator|(
 operator|-
 literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|bytes_written
+operator|<
+name|bytes_read
+condition|)
+block|{
+comment|/* Write was truncated; warn but continue. */
+name|bsdtar_warnc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|,
+literal|"Truncated write; file may have grown while being archived."
+argument_list|)
+expr_stmt|;
+comment|/* Make bsdtar return a final error because of this. */
+name|bsdtar
+operator|->
+name|return_value
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
