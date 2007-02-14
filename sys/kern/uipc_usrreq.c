@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the 
 end_comment
 
 begin_comment
-comment|/*  * UNIX Domain (Local) Sockets  *  * This is an implementation of UNIX (local) domain sockets.  Each socket has  * an associated struct unpcb (UNIX protocol control block).  Stream sockets  * may be connected to 0 or 1 other socket.  Datagram sockets may be  * connected to 0, 1, or many other sockets.  Sockets may be created and  * connected in pairs (socketpair(2)), or bound/connected to using the file  * system name space.  For most purposes, only the receive socket buffer is  * used, as sending on one socket delivers directly to the receive socket  * buffer of a second socket.  The implementation is substantially  * complicated by the fact that "ancillary data", such as file descriptors or  * credentials, may be passed across UNIX domain sockets.  The potential for  * passing UNIX domain sockets over other UNIX domain sockets requires the  * implementation of a simple garbage collector to find and tear down cycles  * of disconnected sockets.  */
+comment|/*  * UNIX Domain (Local) Sockets  *  * This is an implementation of UNIX (local) domain sockets.  Each socket has  * an associated struct unpcb (UNIX protocol control block).  Stream sockets  * may be connected to 0 or 1 other socket.  Datagram sockets may be  * connected to 0, 1, or many other sockets.  Sockets may be created and  * connected in pairs (socketpair(2)), or bound/connected to using the file  * system name space.  For most purposes, only the receive socket buffer is  * used, as sending on one socket delivers directly to the receive socket  * buffer of a second socket.  The implementation is substantially  * complicated by the fact that "ancillary data", such as file descriptors or  * credentials, may be passed across UNIX domain sockets.  The potential for  * passing UNIX domain sockets over other UNIX domain sockets requires the  * implementation of a simple garbage collector to find and tear down cycles  * of disconnected sockets.  *  * TODO:  *	SEQPACKET, RDM  *	rethink name space problems  *	need a proper out-of-band  *	lock pushdown  */
 end_comment
 
 begin_include
@@ -232,18 +232,54 @@ name|unp_count
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Count of local sockets. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|ino_t
+name|unp_ino
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Prototype for fake inode numbers. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|unp_rights
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* File descriptors in flight. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
 name|unp_head
 name|unp_shead
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* List of local stream sockets. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|unp_head
 name|unp_dhead
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Unix communications domain.  *  * TODO:  *	SEQPACKET, RDM  *	rethink name space problems  *	need a proper out-of-band  *	lock pushdown  */
+comment|/* List of local datagram sockets. */
 end_comment
 
 begin_decl_stmt
@@ -264,33 +300,17 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|ino_t
-name|unp_ino
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* prototype for fake inode numbers */
+comment|/*  * Garbage collection of cyclic file descriptor/socket references occurs  * asynchronously in a taskqueue context in order to avoid recursion and  * reentrance in the UNIX domain socket, file descriptor, and socket layer  * code.  See unp_gc() for a full description.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
 name|struct
-name|mbuf
-modifier|*
-name|unp_addsockcred
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+name|task
+name|unp_gc_task
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Both send and receive buffers are allocated PIPSIZ bytes of buffering for  * stream sockets, although the total for sender and receiver is actually  * only PIPSIZ.  *  * Datagram sockets really use the sendspace as the maximum datagram size,  * and don't really want to reserve the sendspace.  Their recvspace should be  * large enough for at least one max-size datagram plus address.  */
@@ -357,17 +377,6 @@ operator|*
 literal|1024
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|unp_rights
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* file descriptors in flight */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -581,18 +590,6 @@ parameter_list|()
 value|mtx_assert(&unp_mtx, MA_NOTOWNED)
 end_define
 
-begin_comment
-comment|/*  * Garbage collection of cyclic file descriptor/socket references occurs  * asynchronously in a taskqueue context in order to avoid recursion and  * reentrance in the UNIX domain socket, file descriptor, and socket layer  * code.  See unp_gc() for a full description.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|task
-name|unp_gc_task
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -780,6 +777,23 @@ name|int
 parameter_list|,
 name|struct
 name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|unp_addsockcred
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
