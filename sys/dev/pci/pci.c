@@ -2430,6 +2430,7 @@ operator|>>
 literal|1
 operator|)
 expr_stmt|;
+break|break;
 case|case
 name|PCIY_SUBVENDOR
 case|:
@@ -2475,6 +2476,7 @@ operator|>>
 literal|16
 expr_stmt|;
 block|}
+break|break;
 default|default:
 break|break;
 block|}
