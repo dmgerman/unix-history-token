@@ -1048,6 +1048,13 @@ block|,
 name|USB_PRODUCT_OPTION_GT3GQUAD
 block|}
 block|,
+comment|/* Huawei Mobile */
+block|{
+name|USB_VENDOR_HUAWEI
+block|,
+name|USB_PRODUCT_HUAWEI_MOBILE
+block|}
+block|,
 block|{
 literal|0
 block|,
