@@ -13639,8 +13639,6 @@ operator|*
 operator|)
 name|arg
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|aac_add_event
