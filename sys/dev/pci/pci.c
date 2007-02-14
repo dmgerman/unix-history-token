@@ -6026,7 +6026,7 @@ name|run
 condition|)
 name|printf
 argument_list|(
-literal|"%d"
+literal|"-%d"
 argument_list|,
 name|irq
 argument_list|)
@@ -6463,6 +6463,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 		 * The indices in the backend code (PCIB_* methods and the 		 * MI helper routines for MD code such as pci_enable_msix()) 		 * are all zero-based.  However, the indices passed to this 		 * function are 1-based so that the correspond 1:1 with the 		 * SYS_RES_IRQ resource IDs. 		 */
 name|error
 operator|=
 name|PCIB_REMAP_MSIX
@@ -6478,6 +6479,8 @@ name|indices
 index|[
 name|i
 index|]
+operator|-
+literal|1
 argument_list|,
 name|irqs
 index|[
