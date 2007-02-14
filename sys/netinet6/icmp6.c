@@ -2798,6 +2798,8 @@ block|}
 block|}
 if|if
 condition|(
+name|n
+operator|&&
 operator|!
 name|m_dup_pkthdr
 argument_list|(
