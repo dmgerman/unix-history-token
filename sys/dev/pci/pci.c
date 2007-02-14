@@ -1176,6 +1176,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|pcie_chipset
+decl_stmt|,
+name|pcix_chipset
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* sysctl vars */
 end_comment
@@ -3128,6 +3137,59 @@ operator|>>
 literal|16
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|PCIY_PCIX
+case|:
+comment|/* PCI-X */
+comment|/* 			 * Assume we have a PCI-X chipset if we have 			 * at least one PCI-PCI bridge with a PCI-X 			 * capability.  Note that some systems with 			 * PCI-express or HT chipsets might match on 			 * this check as well. 			 */
+if|if
+condition|(
+operator|(
+name|cfg
+operator|->
+name|hdrtype
+operator|&
+name|PCIM_HDRTYPE
+operator|)
+operator|==
+literal|1
+condition|)
+name|pcix_chipset
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|PCIY_EXPRESS
+case|:
+comment|/* PCI-express */
+comment|/* 			 * Assume we have a PCI-express chipset if we have 			 * at least one PCI-express root port. 			 */
+name|val
+operator|=
+name|REG
+argument_list|(
+name|ptr
+operator|+
+name|PCIR_EXPRESS_FLAGS
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|val
+operator|&
+name|PCIM_EXP_FLAGS_TYPE
+operator|)
+operator|==
+name|PCIM_EXP_TYPE_ROOT_PORT
+condition|)
+name|pcie_chipset
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 default|default:
 break|break;
@@ -7347,6 +7409,21 @@ condition|)
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+comment|/* Blacklist all non-PCI-express and non-PCI-X chipsets. */
+if|if
+condition|(
+operator|!
+operator|(
+name|pcie_chipset
+operator|||
+name|pcix_chipset
+operator|)
+condition|)
+return|return
+operator|(
+literal|1
 operator|)
 return|;
 name|dev
