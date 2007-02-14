@@ -1006,7 +1006,7 @@ block|,
 literal|"BCM5715 A1"
 block|}
 block|,
-comment|/* 5784 and 5787 share the same ASIC ID */
+comment|/* 5754 and 5787 share the same ASIC ID */
 block|{
 name|BGE_CHIPID_BCM5787_A0
 block|,
@@ -1113,7 +1113,7 @@ block|,
 literal|"unknown BCM5755"
 block|}
 block|,
-comment|/* 5784 and 5787 share the same ASIC ID */
+comment|/* 5754 and 5787 share the same ASIC ID */
 block|{
 name|BGE_ASICREV_BCM5787
 block|,
