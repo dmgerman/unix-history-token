@@ -410,7 +410,8 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
-name|void
+name|struct
+name|mtx
 modifier|*
 name|lock
 decl_stmt|;
