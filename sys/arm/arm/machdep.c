@@ -835,6 +835,23 @@ name|sv_szsigcode
 operator|)
 argument_list|)
 expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_SIG
+argument_list|,
+literal|"sendsig: return td=%p pc=%#x sp=%#x"
+argument_list|,
+name|td
+argument_list|,
+name|tf
+operator|->
+name|tf_usr_lr
+argument_list|,
+name|tf
+operator|->
+name|tf_usr_sp
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
