@@ -3128,6 +3128,7 @@ operator|>>
 literal|16
 expr_stmt|;
 block|}
+break|break;
 default|default:
 break|break;
 block|}
