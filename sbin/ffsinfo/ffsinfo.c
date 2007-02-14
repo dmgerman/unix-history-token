@@ -1156,6 +1156,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|cfg_lv
+operator|&
+literal|0xf8
+condition|)
+block|{
 comment|/* for each requested cylinder group ... */
 for|for
 control|(
@@ -1247,7 +1254,7 @@ name|dbg_line
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Read the cylinder group and dump whatever was 		 * requested. 		 */
+comment|/* 			 * Read the cylinder group and dump whatever was 			 * requested. 			 */
 if|if
 condition|(
 name|bread
@@ -1382,7 +1389,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|NOT_CURRENTLY
-comment|/* 		 * See the comment in sbin/growfs/debug.c for why this 		 * is currently disabled, and what needs to be done to 		 * re-enable it. 		 */
+comment|/* 			 * See the comment in sbin/growfs/debug.c for why this 			 * is currently disabled, and what needs to be done to 			 * re-enable it. 			 */
 if|if
 condition|(
 name|disk
@@ -1409,6 +1416,14 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+block|}
+if|if
+condition|(
+name|cfg_lv
+operator|&
+literal|0x300
+condition|)
+block|{
 comment|/* Dump the requested inode(s) */
 if|if
 condition|(
@@ -1460,6 +1475,7 @@ argument_list|,
 name|cfg_lv
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|DBG_CLOSE
 expr_stmt|;
