@@ -2858,7 +2858,7 @@ index|[]
 init|=
 block|{
 block|{
-name|BRGPHY_MII_DSP_ADDR_REG
+name|BRGPHY_MII_DSP_RW_PORT
 block|,
 literal|0x0a75
 block|}
