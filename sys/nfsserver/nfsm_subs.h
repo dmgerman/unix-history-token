@@ -121,6 +121,30 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|nfsm_srvnamesiz0_xx
+parameter_list|(
+name|int
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|m
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|md
+parameter_list|,
+name|caddr_t
+modifier|*
+name|dpos
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|nfsm_srvmtofh_xx
 parameter_list|(
 name|fhandle_t
@@ -199,7 +223,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_srvnamesiz_xx(&(s), NFS_MAXPATHLEN,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		nfsm_reply(0); \ 	} \ } while (0)
+value|do { \ 	int t1; \ 	t1 = nfsm_srvnamesiz0_xx(&(s), NFS_MAXPATHLEN,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		nfsm_reply(0); \ 	} \ } while (0)
 end_define
 
 begin_define
