@@ -379,6 +379,30 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Release a reference to a module, unloading it if there are no more  * references.  Note that one should either provide a module name and  * optional version info or a linker file, but not both.  */
+end_comment
+
+begin_function_decl
+name|int
+name|linker_release_module
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|_modname
+parameter_list|,
+name|struct
+name|mod_depend
+modifier|*
+name|_verinfo
+parameter_list|,
+name|linker_file_t
+name|_file
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Find a currently loaded file given its filename.  */
 end_comment
 
