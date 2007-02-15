@@ -20344,7 +20344,7 @@ name|f_fsid
 expr_stmt|;
 name|error
 operator|=
-name|VFS_VPTOFH
+name|VOP_VPTOFH
 argument_list|(
 name|vp
 argument_list|,
@@ -20570,7 +20570,7 @@ name|f_fsid
 expr_stmt|;
 name|error
 operator|=
-name|VFS_VPTOFH
+name|VOP_VPTOFH
 argument_list|(
 name|vp
 argument_list|,

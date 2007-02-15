@@ -2383,6 +2383,14 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800000
+end_if
+
 begin_typedef
 typedef|typedef
 name|int
@@ -2400,6 +2408,22 @@ name|fhp
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+error|Remove this code, vfs_vptofh was replaced with vop_vptofh.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -2542,10 +2566,22 @@ name|vfs_checkexp_t
 modifier|*
 name|vfs_checkexp
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800000
 name|vfs_vptofh_t
 modifier|*
 name|vfs_vptofh
 decl_stmt|;
+else|#
+directive|else
+error|#
+directive|error
+error|Remove this code, vfs_vptofh was replaced with vop_vptofh.
+endif|#
+directive|endif
 name|vfs_init_t
 modifier|*
 name|vfs_init
@@ -2693,6 +2729,14 @@ define|\
 value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, VPP)
 end_define
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800000
+end_if
+
 begin_define
 define|#
 directive|define
@@ -2704,6 +2748,22 @@ name|FIDP
 parameter_list|)
 value|(*(VP)->v_mount->mnt_op->vfs_vptofh)(VP, FIDP)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+error|Remove this code, vfs_vptofh was replaced with vop_vptofh.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3545,11 +3605,35 @@ name|vfs_stdcheckexp
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800000
+end_if
+
 begin_decl_stmt
 name|vfs_vptofh_t
 name|vfs_stdvptofh
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+error|Remove this code, vfs_vptofh was replaced with vop_vptofh.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|vfs_init_t

@@ -1605,7 +1605,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VFS_VPTOFH
+name|VOP_VPTOFH
 argument_list|(
 name|rvp
 argument_list|,

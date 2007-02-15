@@ -2160,6 +2160,44 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|null_vptofh
+parameter_list|(
+name|struct
+name|vop_vptofh_args
+modifier|*
+name|ap
+parameter_list|)
+block|{
+name|struct
+name|vnode
+modifier|*
+name|lvp
+decl_stmt|;
+name|lvp
+operator|=
+name|NULLVPTOLOWERVP
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
+expr_stmt|;
+return|return
+name|VOP_VPTOFH
+argument_list|(
+name|lvp
+argument_list|,
+name|ap
+operator|->
+name|a_fhp
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Global vfs data structures  */
 end_comment
@@ -2249,6 +2287,11 @@ operator|.
 name|vop_unlock
 operator|=
 name|null_unlock
+block|,
+operator|.
+name|vop_vptofh
+operator|=
+name|null_vptofh
 block|, }
 decl_stmt|;
 end_decl_stmt

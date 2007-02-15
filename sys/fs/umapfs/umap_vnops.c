@@ -163,6 +163,13 @@ name|umap_unlock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|vop_vptofh_t
+name|umap_vptofh
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This is the 10-Apr-92 bypass routine.  * See null_vnops.c:null_bypass for more details.  */
 end_comment
@@ -1839,6 +1846,49 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|umap_vptofh
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_vptofh_args
+comment|/* { 		struct vnode *a_vp; 		struct fid *a_fhp; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+name|struct
+name|vnode
+modifier|*
+name|lvp
+decl_stmt|;
+name|lvp
+operator|=
+name|UMAPVPTOLOWERVP
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|VOP_VPTOFH
+argument_list|(
+name|lvp
+argument_list|,
+name|ap
+operator|->
+name|a_fhp
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Global vfs data structures  */
 end_comment
@@ -1893,6 +1943,11 @@ operator|.
 name|vop_unlock
 operator|=
 name|umap_unlock
+block|,
+operator|.
+name|vop_vptofh
+operator|=
+name|umap_vptofh
 block|, }
 decl_stmt|;
 end_decl_stmt

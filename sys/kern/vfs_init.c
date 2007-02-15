@@ -656,6 +656,11 @@ name|vfs_checkexp
 operator|=
 name|vfs_stdcheckexp
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800000
 if|if
 condition|(
 name|vfsops
@@ -671,6 +676,13 @@ name|vfs_vptofh
 operator|=
 name|vfs_stdvptofh
 expr_stmt|;
+else|#
+directive|else
+error|#
+directive|error
+error|Remove this code, vfs_vptofh was replaced with vop_vptofh.
+endif|#
+directive|endif
 if|if
 condition|(
 name|vfsops

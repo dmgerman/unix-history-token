@@ -529,6 +529,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|vop_vptofh_t
+name|_xfs_vptofh
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|vop_vector
 name|xfs_vnops
@@ -689,6 +696,11 @@ operator|.
 name|vop_write
 operator|=
 name|_xfs_write
+block|,
+operator|.
+name|vop_vptofh
+operator|=
+name|_xfs_vptofh
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -786,6 +798,11 @@ operator|.
 name|vop_write
 operator|=
 name|_xfsfifo_write
+block|,
+operator|.
+name|vop_vptofh
+operator|=
+name|_xfs_vptofh
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -6881,6 +6898,29 @@ return|return
 operator|(
 name|error
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|_xfs_vptofh
+parameter_list|(
+name|struct
+name|vop_vptofh_args
+modifier|*
+name|ap
+parameter_list|)
+comment|/* vop_vptofh { 	IN struct vnode *a_vp; 	IN struct fid *a_fhp; }; */
+block|{
+name|printf
+argument_list|(
+literal|"xfs_vptofh"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOSYS
 return|;
 block|}
 end_function

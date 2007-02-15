@@ -153,13 +153,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vfs_vptofh_t
-name|unionfs_vptofh
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|vfs_extattrctl_t
 name|unionfs_extattrctl
 decl_stmt|;
@@ -2360,30 +2353,6 @@ end_function
 begin_function
 specifier|static
 name|int
-name|unionfs_vptofh
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-name|struct
-name|fid
-modifier|*
-name|fhp
-parameter_list|)
-block|{
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
 name|unionfs_extattrctl
 parameter_list|(
 name|struct
@@ -2567,11 +2536,6 @@ operator|.
 name|vfs_vget
 operator|=
 name|unionfs_vget
-block|,
-operator|.
-name|vfs_vptofh
-operator|=
-name|unionfs_vptofh
 block|, }
 decl_stmt|;
 end_decl_stmt

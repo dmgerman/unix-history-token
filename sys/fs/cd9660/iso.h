@@ -1852,6 +1852,26 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ifid
+block|{
+name|u_short
+name|ifid_len
+decl_stmt|;
+name|u_short
+name|ifid_pad
+decl_stmt|;
+name|int
+name|ifid_ino
+decl_stmt|;
+name|long
+name|ifid_start
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define

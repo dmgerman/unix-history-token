@@ -373,6 +373,13 @@ name|ffs_setextattr
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|vop_vptofh_t
+name|ffs_vptofh
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Global vfs data structures for ufs. */
 end_comment
@@ -418,6 +425,11 @@ operator|.
 name|vop_write
 operator|=
 name|ffs_write
+block|,
+operator|.
+name|vop_vptofh
+operator|=
+name|ffs_vptofh
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -445,7 +457,11 @@ operator|=
 name|ffs_reallocblks
 block|,
 comment|/* XXX: really ??? */
-block|}
+operator|.
+name|vop_vptofh
+operator|=
+name|ffs_vptofh
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -524,6 +540,11 @@ operator|.
 name|vop_setextattr
 operator|=
 name|ffs_setextattr
+block|,
+operator|.
+name|vop_vptofh
+operator|=
+name|ffs_vptofh
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -589,6 +610,11 @@ operator|.
 name|vop_setextattr
 operator|=
 name|ffs_setextattr
+block|,
+operator|.
+name|vop_vptofh
+operator|=
+name|ffs_vptofh
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -7548,6 +7574,86 @@ expr_stmt|;
 return|return
 operator|(
 name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Vnode pointer to File handle  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ffs_vptofh
+parameter_list|(
+name|struct
+name|vop_vptofh_args
+modifier|*
+name|ap
+parameter_list|)
+comment|/* vop_vptofh { 	IN struct vnode *a_vp; 	IN struct fid *a_fhp; }; */
+block|{
+name|struct
+name|inode
+modifier|*
+name|ip
+decl_stmt|;
+name|struct
+name|ufid
+modifier|*
+name|ufhp
+decl_stmt|;
+name|ip
+operator|=
+name|VTOI
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
+expr_stmt|;
+name|ufhp
+operator|=
+operator|(
+expr|struct
+name|ufid
+operator|*
+operator|)
+name|ap
+operator|->
+name|a_fhp
+expr_stmt|;
+name|ufhp
+operator|->
+name|ufid_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ufid
+argument_list|)
+expr_stmt|;
+name|ufhp
+operator|->
+name|ufid_ino
+operator|=
+name|ip
+operator|->
+name|i_number
+expr_stmt|;
+name|ufhp
+operator|->
+name|ufid_gen
+operator|=
+name|ip
+operator|->
+name|i_gen
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}

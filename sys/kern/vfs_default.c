@@ -303,6 +303,11 @@ operator|.
 name|vop_unlock
 operator|=
 name|vop_stdunlock
+block|,
+operator|.
+name|vop_vptofh
+operator|=
+name|vop_stdvptofh
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1569,6 +1574,31 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|vop_stdvptofh
+parameter_list|(
+name|struct
+name|vop_vptofh_args
+modifier|*
+name|ap
+parameter_list|)
+block|{
+return|return
+name|VFS_VPTOFH
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|,
+name|ap
+operator|->
+name|a_fhp
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * vfs default ops  * used to fill the vfs function table to get reasonable default return values.  */
 end_comment
@@ -1647,6 +1677,14 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800000
+end_if
+
 begin_function
 name|int
 name|vfs_stdvptofh
@@ -1673,6 +1711,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+error|Remove this code, vfs_vptofh was replaced with vop_vptofh.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int

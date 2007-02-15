@@ -253,6 +253,13 @@ name|cd9660_strategy
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|vop_vptofh_t
+name|cd9660_vptofh
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Setattr call. Only allowed for block and character special devices.  */
 end_comment
@@ -3721,6 +3728,102 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Vnode pointer to File handle  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|cd9660_vptofh
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_vptofh_args
+comment|/* { 		struct vnode *a_vp; 		struct fid *a_fhp; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+name|struct
+name|iso_node
+modifier|*
+name|ip
+init|=
+name|VTOI
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
+decl_stmt|;
+name|struct
+name|ifid
+modifier|*
+name|ifhp
+decl_stmt|;
+name|ifhp
+operator|=
+operator|(
+expr|struct
+name|ifid
+operator|*
+operator|)
+name|ap
+operator|->
+name|a_fhp
+expr_stmt|;
+name|ifhp
+operator|->
+name|ifid_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ifid
+argument_list|)
+expr_stmt|;
+name|ifhp
+operator|->
+name|ifid_ino
+operator|=
+name|ip
+operator|->
+name|i_number
+expr_stmt|;
+name|ifhp
+operator|->
+name|ifid_start
+operator|=
+name|ip
+operator|->
+name|iso_start
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISOFS_DBG
+name|printf
+argument_list|(
+literal|"vptofh: ino %d, start %ld\n"
+argument_list|,
+name|ifhp
+operator|->
+name|ifid_ino
+argument_list|,
+name|ifhp
+operator|->
+name|ifid_start
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Global vfs data structures for cd9660  */
 end_comment
 
@@ -3810,6 +3913,11 @@ operator|.
 name|vop_strategy
 operator|=
 name|cd9660_strategy
+block|,
+operator|.
+name|vop_vptofh
+operator|=
+name|cd9660_vptofh
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -3854,6 +3962,11 @@ operator|.
 name|vop_setattr
 operator|=
 name|cd9660_setattr
+block|,
+operator|.
+name|vop_vptofh
+operator|=
+name|cd9660_vptofh
 block|, }
 decl_stmt|;
 end_decl_stmt

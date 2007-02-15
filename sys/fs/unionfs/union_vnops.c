@@ -10777,6 +10777,25 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|unionfs_vptofh
+parameter_list|(
+name|struct
+name|vop_vptofh_args
+modifier|*
+name|ap
+parameter_list|)
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 name|struct
 name|vop_vector
@@ -11003,6 +11022,11 @@ operator|.
 name|vop_write
 operator|=
 name|unionfs_write
+block|,
+operator|.
+name|vop_vptofh
+operator|=
+name|unionfs_vptofh
 block|, }
 decl_stmt|;
 end_decl_stmt

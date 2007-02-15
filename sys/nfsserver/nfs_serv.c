@@ -2967,7 +2967,7 @@ name|f_fsid
 expr_stmt|;
 name|error
 operator|=
-name|VFS_VPTOFH
+name|VOP_VPTOFH
 argument_list|(
 name|vp
 argument_list|,
@@ -10085,7 +10085,7 @@ name|f_fsid
 expr_stmt|;
 name|error
 operator|=
-name|VFS_VPTOFH
+name|VOP_VPTOFH
 argument_list|(
 name|nd
 operator|.
@@ -11353,7 +11353,7 @@ name|f_fsid
 expr_stmt|;
 name|error
 operator|=
-name|VFS_VPTOFH
+name|VOP_VPTOFH
 argument_list|(
 name|vp
 argument_list|,
@@ -15470,7 +15470,7 @@ name|f_fsid
 expr_stmt|;
 name|error
 operator|=
-name|VFS_VPTOFH
+name|VOP_VPTOFH
 argument_list|(
 name|nd
 operator|.
@@ -16392,7 +16392,7 @@ name|f_fsid
 expr_stmt|;
 name|error
 operator|=
-name|VFS_VPTOFH
+name|VOP_VPTOFH
 argument_list|(
 name|nd
 operator|.
@@ -20565,7 +20565,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|VFS_VPTOFH
+name|VOP_VPTOFH
 argument_list|(
 name|nvp
 argument_list|,
