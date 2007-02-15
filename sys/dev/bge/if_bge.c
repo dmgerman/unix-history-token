@@ -4946,13 +4946,22 @@ name|bge_tx_saved_considx
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Initialize transmit producer index for host-memory send ring. */
+name|sc
+operator|->
+name|bge_tx_prodidx
+operator|=
+literal|0
+expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
 name|BGE_MBX_TX_HOST_PROD0_LO
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|bge_tx_prodidx
 argument_list|)
 expr_stmt|;
 comment|/* 5700 b2 errata */
@@ -4970,9 +4979,12 @@ name|sc
 argument_list|,
 name|BGE_MBX_TX_HOST_PROD0_LO
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|bge_tx_prodidx
 argument_list|)
 expr_stmt|;
+comment|/* NIC-memory send ring not used; initialize to zero. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -12542,8 +12554,6 @@ name|NULL
 decl_stmt|;
 name|u_int32_t
 name|prodidx
-init|=
-literal|0
 decl_stmt|;
 name|sc
 operator|=
@@ -12569,12 +12579,9 @@ condition|)
 return|return;
 name|prodidx
 operator|=
-name|CSR_READ_4
-argument_list|(
 name|sc
-argument_list|,
-name|BGE_MBX_TX_HOST_PROD0_LO
-argument_list|)
+operator|->
+name|bge_tx_prodidx
 expr_stmt|;
 while|while
 condition|(
@@ -12739,6 +12746,12 @@ name|BGE_MBX_TX_HOST_PROD0_LO
 argument_list|,
 name|prodidx
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|bge_tx_prodidx
+operator|=
+name|prodidx
 expr_stmt|;
 comment|/* 	 * Set a timeout in case the chip goes out to lunch. 	 */
 name|ifp

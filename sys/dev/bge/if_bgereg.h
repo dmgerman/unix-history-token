@@ -12033,6 +12033,9 @@ name|bge_chain_data
 name|bge_cdata
 decl_stmt|;
 comment|/* mbufs */
+name|u_int32_t
+name|bge_tx_prodidx
+decl_stmt|;
 name|u_int16_t
 name|bge_tx_saved_considx
 decl_stmt|;
