@@ -1542,6 +1542,23 @@ name|vector
 operator|+
 name|i
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"msi: routing MSI IRQ %d to vector %u\n"
+argument_list|,
+name|msi
+operator|->
+name|msi_irq
+argument_list|,
+name|msi
+operator|->
+name|msi_vector
+argument_list|)
+expr_stmt|;
 name|msi
 operator|->
 name|msi_index
@@ -2070,6 +2087,21 @@ operator|=
 name|apic_alloc_vector
 argument_list|(
 name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"msi: routing MSI-X IRQ %d to vector %u\n"
+argument_list|,
+name|msi
+operator|->
+name|msi_irq
+argument_list|,
+name|vector
 argument_list|)
 expr_stmt|;
 comment|/* Setup source. */
