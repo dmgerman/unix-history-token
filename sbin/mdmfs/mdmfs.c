@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -204,6 +210,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* Name of memory disk device (e.g., "md"). */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|mdsuffix
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Suffix of memory disk device (e.g., ".uzip"). */
 end_comment
 
 begin_decl_stmt
@@ -1061,10 +1080,12 @@ name|mdnamelen
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|isdigit
+argument_list|(
 operator|*
 name|unitstr
-operator|==
-literal|'\0'
+argument_list|)
 condition|)
 block|{
 name|autounit
@@ -1075,6 +1096,10 @@ name|unit
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|mdsuffix
+operator|=
+name|unitstr
 expr_stmt|;
 block|}
 else|else
@@ -1096,11 +1121,6 @@ condition|(
 name|ul
 operator|==
 name|ULONG_MAX
-operator|||
-operator|*
-name|p
-operator|!=
-literal|'\0'
 condition|)
 name|errx
 argument_list|(
@@ -1110,6 +1130,17 @@ literal|"bad device unit: %s"
 argument_list|,
 name|unitstr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+name|mdsuffix
+operator|=
+name|p
 expr_stmt|;
 name|unit
 operator|=
@@ -1873,7 +1904,7 @@ name|run
 argument_list|(
 name|NULL
 argument_list|,
-literal|"%s%s /dev/%s%d %s"
+literal|"%s%s /dev/%s%d%s %s"
 argument_list|,
 name|_PATH_MOUNT
 argument_list|,
@@ -1882,6 +1913,8 @@ argument_list|,
 name|mdname
 argument_list|,
 name|unit
+argument_list|,
+name|mdsuffix
 argument_list|,
 name|mtpoint
 argument_list|)
