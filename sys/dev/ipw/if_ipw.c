@@ -10506,6 +10506,7 @@ name|ic
 operator|->
 name|ic_ifp
 decl_stmt|;
+specifier|const
 name|struct
 name|firmware
 modifier|*

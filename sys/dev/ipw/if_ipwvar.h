@@ -244,6 +244,7 @@ name|void
 modifier|*
 name|sc_ih
 decl_stmt|;
+specifier|const
 name|struct
 name|firmware
 modifier|*

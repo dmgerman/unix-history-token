@@ -2234,6 +2234,7 @@ modifier|*
 name|limit
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|firmware
 modifier|*

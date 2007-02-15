@@ -244,6 +244,7 @@ begin_struct
 struct|struct
 name|iwi_fw
 block|{
+specifier|const
 name|struct
 name|firmware
 modifier|*

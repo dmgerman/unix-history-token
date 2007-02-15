@@ -1867,6 +1867,7 @@ name|uint32_t
 modifier|*
 name|imageCodePtr
 decl_stmt|;
+specifier|const
 name|struct
 name|firmware
 modifier|*

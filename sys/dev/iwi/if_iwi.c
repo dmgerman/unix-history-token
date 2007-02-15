@@ -11455,6 +11455,7 @@ modifier|*
 name|fw
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|firmware
 modifier|*
@@ -11816,6 +11817,7 @@ name|iwi_firmware_hdr
 modifier|*
 name|hdr
 decl_stmt|;
+specifier|const
 name|struct
 name|firmware
 modifier|*
