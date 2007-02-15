@@ -564,6 +564,33 @@ name|LINUX_MAP_GROWSDOWN
 value|0x0100
 end_define
 
+begin_struct
+struct|struct
+name|l_mmap_argv
+block|{
+name|l_uintptr_t
+name|addr
+decl_stmt|;
+name|l_size_t
+name|len
+decl_stmt|;
+name|l_int
+name|prot
+decl_stmt|;
+name|l_int
+name|flags
+decl_stmt|;
+name|l_int
+name|fd
+decl_stmt|;
+name|l_off_t
+name|pgoff
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * stat family of syscalls  */
 end_comment
