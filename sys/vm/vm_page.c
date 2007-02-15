@@ -2188,14 +2188,6 @@ decl_stmt|;
 name|vm_page_t
 name|root
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2238,6 +2230,14 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Now remove from the object's list of backed pages. 	 */
 if|if
 condition|(
@@ -3585,6 +3585,15 @@ name|vpgqueues
 modifier|*
 name|pq
 decl_stmt|;
+if|if
+condition|(
+name|VM_PAGE_GETQUEUE
+argument_list|(
+name|m
+argument_list|)
+operator|!=
+name|PQ_NONE
+condition|)
 name|mtx_assert
 argument_list|(
 operator|&
