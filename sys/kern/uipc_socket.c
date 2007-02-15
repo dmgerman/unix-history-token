@@ -443,7 +443,7 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|int
-name|somaxconn_sysctl
+name|sysctl_somaxconn
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -474,7 +474,7 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|,
-name|somaxconn_sysctl
+name|sysctl_somaxconn
 argument_list|,
 literal|"I"
 argument_list|,
@@ -12575,7 +12575,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|somaxconn_sysctl
+name|sysctl_somaxconn
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
