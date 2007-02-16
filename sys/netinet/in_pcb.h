@@ -460,9 +460,6 @@ comment|/* IPV6_CHECKSUM setsockopt */
 name|int
 name|inp6_cksum
 decl_stmt|;
-name|u_short
-name|inp6_ifindex
-decl_stmt|;
 name|short
 name|inp6_hops
 decl_stmt|;
@@ -538,10 +535,6 @@ define|#
 directive|define
 name|in6p_cksum
 value|inp_depend6.inp6_cksum
-define|#
-directive|define
-name|inp6_ifindex
-value|inp_depend6.inp6_ifindex
 define|#
 directive|define
 name|in6p_flags
