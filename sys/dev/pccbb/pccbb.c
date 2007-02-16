@@ -2146,9 +2146,9 @@ name|sc
 operator|->
 name|mtx
 argument_list|,
-literal|1
-operator|*
 name|hz
+operator|/
+literal|4
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -5349,6 +5349,22 @@ operator|*
 literal|300
 operator|/
 literal|1000
+argument_list|)
+expr_stmt|;
+comment|/* enable CSC interrupts */
+name|exca_putb
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|exca
+index|[
+literal|0
+index|]
+argument_list|,
+name|EXCA_INTR
+argument_list|,
+name|EXCA_INTR_ENABLE
 argument_list|)
 expr_stmt|;
 block|}
