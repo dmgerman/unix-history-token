@@ -2069,6 +2069,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_STAC9271D
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7627)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_STACXXXX
 value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0xffff)
 end_define
@@ -2214,6 +2221,12 @@ block|{
 name|HDA_CODEC_STAC9227
 block|,
 literal|"Sigmatel STAC9227"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9271D
+block|,
+literal|"Sigmatel STAC9271D"
 block|}
 block|,
 block|{
