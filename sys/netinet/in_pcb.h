@@ -503,10 +503,6 @@ name|in6p_laddr
 value|inp_inc.inc6_laddr
 define|#
 directive|define
-name|in6p_ip6_hlim
-value|inp_depend6.inp6_hlim
-define|#
-directive|define
 name|in6p_hops
 value|inp_depend6.inp6_hops
 comment|/* default hop limit */
