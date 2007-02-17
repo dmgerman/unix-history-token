@@ -5880,14 +5880,6 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-define|#
-directive|define
-name|IEEE80211_IS_CHAN_PASSIVE
-parameter_list|(
-name|_c
-parameter_list|)
-define|\
-value|(((_c)->ic_flags& IEEE80211_CHAN_PASSIVE))
 name|char
 name|buf
 index|[
@@ -6112,9 +6104,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|IEEE80211_IS_CHAN_PASSIVE
 block|}
 end_function
 
