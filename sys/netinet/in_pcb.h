@@ -1730,6 +1730,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Debugging routines compiled in when DDB is present.  */
+end_comment
+
+begin_function_decl
+name|void
+name|db_print_inpcb
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+name|inp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|indent
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
