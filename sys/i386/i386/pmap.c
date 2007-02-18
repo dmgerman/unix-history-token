@@ -6074,9 +6074,6 @@ argument_list|,
 name|NPGPTD
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -6147,9 +6144,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|PMAP_LOCK_DESTROY
 argument_list|(
 name|pmap

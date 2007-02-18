@@ -6155,9 +6155,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Recursive Mapping */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|m
 operator|->
 name|wire_count
@@ -6177,9 +6174,6 @@ name|vm_page_free_zero
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|PMAP_LOCK_DESTROY
 argument_list|(
