@@ -3898,13 +3898,6 @@ argument_list|,
 literal|"Truncated write; file may have grown while being archived."
 argument_list|)
 expr_stmt|;
-comment|/* Make bsdtar return a final error because of this. */
-name|bsdtar
-operator|->
-name|return_value
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 literal|0
