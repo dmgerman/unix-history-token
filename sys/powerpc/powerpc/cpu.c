@@ -457,12 +457,9 @@ name|models
 init|;
 name|cp
 operator|->
-name|name
-index|[
-literal|0
-index|]
+name|version
 operator|!=
-literal|'\0'
+literal|0
 condition|;
 name|cp
 operator|++
