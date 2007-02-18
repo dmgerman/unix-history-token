@@ -5802,6 +5802,9 @@ name|indent
 operator|+=
 literal|2
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 name|inc
@@ -5835,6 +5838,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+endif|#
+directive|endif
 comment|/* IPv4. */
 name|inet_ntoa_r
 argument_list|(
@@ -5854,7 +5859,12 @@ argument_list|,
 name|faddr_str
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 block|}
+endif|#
+directive|endif
 name|db_print_indent
 argument_list|(
 name|indent
