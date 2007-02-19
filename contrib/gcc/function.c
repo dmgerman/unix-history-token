@@ -28754,10 +28754,13 @@ argument_list|(
 literal|".mexitcount"
 argument_list|)
 expr_stmt|;
-name|initialized
-operator|=
-literal|1
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* Turn this off to prevent erroneous garbage collection.  */
+block|initialized = 1;
+endif|#
+directive|endif
 block|}
 name|emit_library_call
 argument_list|(
