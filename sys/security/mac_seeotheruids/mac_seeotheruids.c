@@ -424,7 +424,7 @@ name|u1
 argument_list|,
 name|PRIV_SEEOTHERUIDS
 argument_list|,
-literal|0
+name|SUSER_ALLOWJAIL
 argument_list|)
 operator|==
 literal|0
