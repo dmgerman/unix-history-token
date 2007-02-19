@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -463,9 +469,11 @@ case|:
 comment|/*  		 * If we are not superuser, then we don't get to do these ops. 		 * 		 * XXXRW: Layering? 		 */
 if|if
 condition|(
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_NET_ADDIFADDR
 argument_list|)
 condition|)
 return|return
