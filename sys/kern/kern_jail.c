@@ -2581,16 +2581,13 @@ comment|/* 		 * Allow ktrace privileges for root in jail. 		 */
 case|case
 name|PRIV_KTRACE
 case|:
+if|#
+directive|if
+literal|0
 comment|/* 		 * Allow jailed processes to configure audit identity and 		 * submit audit records (login, etc).  In the future we may 		 * want to further refine the relationship between audit and 		 * jail. 		 */
-case|case
-name|PRIV_AUDIT_GETAUDIT
-case|:
-case|case
-name|PRIV_AUDIT_SETAUDIT
-case|:
-case|case
-name|PRIV_AUDIT_SUBMIT
-case|:
+block|case PRIV_AUDIT_GETAUDIT: 	case PRIV_AUDIT_SETAUDIT: 	case PRIV_AUDIT_SUBMIT:
+endif|#
+directive|endif
 comment|/* 		 * Allow jailed processes to manipulate process UNIX 		 * credentials in any way they see fit. 		 */
 case|case
 name|PRIV_CRED_SETUID
