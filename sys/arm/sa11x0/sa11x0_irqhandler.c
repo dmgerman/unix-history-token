@@ -174,11 +174,11 @@ operator|=
 operator|(
 name|bus_space_read_4
 argument_list|(
-name|sc
+name|sa11x0_softc
 operator|->
 name|sc_iot
 argument_list|,
-name|sc
+name|sa11x0_softc
 operator|->
 name|sc_ioh
 argument_list|,
