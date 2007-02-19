@@ -1023,19 +1023,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_UFS_GETQUOTA
-value|271
-end_define
-
-begin_comment
-comment|/* getquota(). */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PRIV_UFS_QUOTAOFF
-value|272
+value|271
 end_define
 
 begin_comment
@@ -1046,7 +1035,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_UFS_QUOTAON
-value|273
+value|272
 end_define
 
 begin_comment
@@ -1056,34 +1045,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_UFS_SETQUOTA
-value|274
-end_define
-
-begin_comment
-comment|/* setquota(). */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PRIV_UFS_SETUSE
-value|275
+value|273
 end_define
 
 begin_comment
 comment|/* setuse(). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PRIV_UFS_EXCEEDQUOTA
-value|276
-end_define
-
-begin_comment
-comment|/* Exempt from quota restrictions. */
 end_comment
 
 begin_comment
@@ -1203,8 +1170,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_VFS_EXTATTR_SYSTEM
+name|PRIV_VFS_EXCEEDQUOTA
 value|320
+end_define
+
+begin_comment
+comment|/* Exempt from quota restrictions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_VFS_EXTATTR_SYSTEM
+value|321
 end_define
 
 begin_comment
@@ -1215,7 +1193,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_FCHROOT
-value|321
+value|322
 end_define
 
 begin_comment
@@ -1226,7 +1204,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_FHOPEN
-value|322
+value|323
 end_define
 
 begin_comment
@@ -1237,7 +1215,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_FHSTAT
-value|323
+value|324
 end_define
 
 begin_comment
@@ -1248,7 +1226,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_FHSTATFS
-value|324
+value|325
 end_define
 
 begin_comment
@@ -1259,7 +1237,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_GENERATION
-value|325
+value|326
 end_define
 
 begin_comment
@@ -1270,7 +1248,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_GETFH
-value|326
+value|327
 end_define
 
 begin_comment
@@ -1280,8 +1258,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PRIV_VFS_GETQUOTA
+value|328
+end_define
+
+begin_comment
+comment|/* getquota(). */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PRIV_VFS_LINK
-value|327
+value|329
 end_define
 
 begin_comment
@@ -1292,7 +1281,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_MKNOD_BAD
-value|328
+value|330
 end_define
 
 begin_comment
@@ -1303,7 +1292,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_MKNOD_DEV
-value|329
+value|331
 end_define
 
 begin_comment
@@ -1314,7 +1303,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_MKNOD_WHT
-value|330
+value|332
 end_define
 
 begin_comment
@@ -1325,7 +1314,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_MOUNT
-value|331
+value|333
 end_define
 
 begin_comment
@@ -1336,7 +1325,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_MOUNT_OWNER
-value|332
+value|334
 end_define
 
 begin_comment
@@ -1347,7 +1336,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_MOUNT_EXPORTED
-value|333
+value|335
 end_define
 
 begin_comment
@@ -1358,7 +1347,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_MOUNT_PERM
-value|334
+value|336
 end_define
 
 begin_comment
@@ -1369,7 +1358,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_MOUNT_SUIDDIR
-value|335
+value|337
 end_define
 
 begin_comment
@@ -1380,7 +1369,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_MOUNT_NONUSER
-value|336
+value|338
 end_define
 
 begin_comment
@@ -1391,7 +1380,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_SETGID
-value|337
+value|339
 end_define
 
 begin_comment
@@ -1401,8 +1390,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PRIV_VFS_SETQUOTA
+value|340
+end_define
+
+begin_comment
+comment|/* setquota(). */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PRIV_VFS_STICKYFILE
-value|338
+value|341
 end_define
 
 begin_comment
@@ -1413,7 +1413,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_SYSFLAGS
-value|339
+value|342
 end_define
 
 begin_comment
@@ -1424,7 +1424,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VFS_UNMOUNT
-value|340
+value|343
 end_define
 
 begin_comment

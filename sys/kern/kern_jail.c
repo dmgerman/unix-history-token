@@ -2678,10 +2678,10 @@ name|PRIV_SYSCTL_WRITEJAIL
 case|:
 comment|/* 		 * Allow root in jail to manage a variety of quota 		 * properties.  These should likely be conditional on a 		 * configuration option. 		 */
 case|case
-name|PRIV_UFS_GETQUOTA
+name|PRIV_VFS_GETQUOTA
 case|:
 case|case
-name|PRIV_UFS_SETQUOTA
+name|PRIV_VFS_SETQUOTA
 case|:
 comment|/* 		 * Since Jail relies on chroot() to implement file system 		 * protections, grant many VFS privileges to root in jail. 		 * Be careful to exclude mount-related and NFS-related 		 * privileges. 		 */
 case|case

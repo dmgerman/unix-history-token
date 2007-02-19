@@ -779,7 +779,7 @@ name|priv_check_cred
 argument_list|(
 name|cred
 argument_list|,
-name|PRIV_UFS_EXCEEDQUOTA
+name|PRIV_VFS_EXCEEDQUOTA
 argument_list|,
 literal|0
 argument_list|)
@@ -1462,7 +1462,7 @@ name|priv_check_cred
 argument_list|(
 name|cred
 argument_list|,
-name|PRIV_UFS_EXCEEDQUOTA
+name|PRIV_VFS_EXCEEDQUOTA
 argument_list|,
 literal|0
 argument_list|)
@@ -3128,7 +3128,7 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
-name|PRIV_UFS_GETQUOTA
+name|PRIV_VFS_GETQUOTA
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
@@ -3171,7 +3171,7 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
-name|PRIV_UFS_GETQUOTA
+name|PRIV_VFS_GETQUOTA
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
@@ -3324,7 +3324,7 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
-name|PRIV_UFS_SETQUOTA
+name|PRIV_VFS_SETQUOTA
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
