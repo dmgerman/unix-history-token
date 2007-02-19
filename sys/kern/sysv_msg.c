@@ -2276,11 +2276,15 @@ condition|)
 block|{
 name|error
 operator|=
-name|priv_check
+name|priv_check_cred
 argument_list|(
 name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|PRIV_IPC_MSGSIZE
+argument_list|,
+name|SUSER_ALLOWJAIL
 argument_list|)
 expr_stmt|;
 if|if
