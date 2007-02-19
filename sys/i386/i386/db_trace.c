@@ -1841,7 +1841,7 @@ operator|)
 operator|*
 name|fp
 operator|+
-literal|12
+literal|16
 operator|)
 expr_stmt|;
 else|else
@@ -1859,7 +1859,7 @@ operator|)
 operator|*
 name|fp
 operator|+
-literal|8
+literal|12
 operator|)
 expr_stmt|;
 if|if
