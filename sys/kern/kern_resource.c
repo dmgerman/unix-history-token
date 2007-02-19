@@ -1454,9 +1454,11 @@ break|break;
 comment|/* Disallow setting rtprio in most cases if not superuser. */
 if|if
 condition|(
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_SCHED_RTPRIO
 argument_list|)
 operator|!=
 literal|0
