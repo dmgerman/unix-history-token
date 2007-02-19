@@ -2167,7 +2167,6 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
-comment|/* 	 * XXXRW: Can this be right?  Jail is allowed to do this? 	 */
 name|error
 operator|=
 name|priv_check_cred
@@ -2178,7 +2177,7 @@ name|td_ucred
 argument_list|,
 name|PRIV_UFS_QUOTAON
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2712,7 +2711,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * XXXRW: This also seems wrong to allow in a jail? 	 */
 name|error
 operator|=
 name|priv_check_cred
@@ -2723,7 +2721,7 @@ name|td_ucred
 argument_list|,
 name|PRIV_UFS_QUOTAOFF
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3734,7 +3732,7 @@ name|td_ucred
 argument_list|,
 name|PRIV_UFS_SETUSE
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

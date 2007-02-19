@@ -2676,25 +2676,13 @@ comment|/* 		 * Allow jailed processes to write to sysctls marked as jail 		 * w
 case|case
 name|PRIV_SYSCTL_WRITEJAIL
 case|:
-comment|/* 		 * Allow root in jail to manage a variety of quota 		 * properties.  Some are a bit surprising and should be 		 * reconsidered. 		 */
+comment|/* 		 * Allow root in jail to manage a variety of quota 		 * properties.  These should likely be conditional on a 		 * configuration option. 		 */
 case|case
 name|PRIV_UFS_GETQUOTA
 case|:
 case|case
-name|PRIV_UFS_QUOTAOFF
-case|:
-comment|/* XXXRW: Slightly surprising. */
-case|case
-name|PRIV_UFS_QUOTAON
-case|:
-comment|/* XXXRW: Slightly surprising. */
-case|case
 name|PRIV_UFS_SETQUOTA
 case|:
-case|case
-name|PRIV_UFS_SETUSE
-case|:
-comment|/* XXXRW: Slightly surprising. */
 comment|/* 		 * Since Jail relies on chroot() to implement file system 		 * protections, grant many VFS privileges to root in jail. 		 * Be careful to exclude mount-related and NFS-related 		 * privileges. 		 */
 case|case
 name|PRIV_VFS_READ
