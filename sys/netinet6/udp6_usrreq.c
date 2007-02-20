@@ -1114,7 +1114,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|log_in_vain
+name|udp_log_in_vain
 condition|)
 block|{
 name|char

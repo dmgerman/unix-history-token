@@ -339,7 +339,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|log_in_vain
+name|udp_log_in_vain
 init|=
 literal|0
 decl_stmt|;
@@ -357,7 +357,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|log_in_vain
+name|udp_log_in_vain
 argument_list|,
 literal|0
 argument_list|,
@@ -1747,7 +1747,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|log_in_vain
+name|udp_log_in_vain
 condition|)
 block|{
 name|char
