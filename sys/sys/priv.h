@@ -1693,7 +1693,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NET_HWIOCTL
-value|507
+value|407
 end_define
 
 begin_comment
@@ -1704,14 +1704,14 @@ begin_define
 define|#
 directive|define
 name|PRIV_NET_SETLLADDR
-value|508
+value|408
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_NET_ADDIFGROUP
-value|509
+value|409
 end_define
 
 begin_comment
@@ -1722,7 +1722,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NET_DELIFGROUP
-value|510
+value|410
 end_define
 
 begin_comment
@@ -1733,7 +1733,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NET_IFCREATE
-value|511
+value|411
 end_define
 
 begin_comment
@@ -1744,7 +1744,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NET_IFDESTROY
-value|512
+value|412
 end_define
 
 begin_comment
@@ -1755,7 +1755,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NET_ADDIFADDR
-value|513
+value|413
 end_define
 
 begin_comment
@@ -1766,7 +1766,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NET_DELIFADDR
-value|514
+value|414
 end_define
 
 begin_comment
@@ -1781,7 +1781,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NET80211_GETKEY
-value|540
+value|440
 end_define
 
 begin_comment
@@ -1792,7 +1792,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NET80211_MANAGE
-value|541
+value|441
 end_define
 
 begin_comment
@@ -1807,7 +1807,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETATALK_RESERVEDPORT
-value|550
+value|450
 end_define
 
 begin_comment
@@ -1822,28 +1822,28 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETATM_CFG
-value|560
+value|460
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_NETATM_ADD
-value|561
+value|461
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_NETATM_DEL
-value|562
+value|462
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_NETATM_SET
-value|563
+value|463
 end_define
 
 begin_comment
@@ -1854,7 +1854,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETBLUETOOTH_RAW
-value|570
+value|470
 end_define
 
 begin_comment
@@ -1869,7 +1869,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETGRAPH_CONTROL
-value|580
+value|480
 end_define
 
 begin_comment
@@ -1880,7 +1880,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETGRAPH_TTY
-value|581
+value|481
 end_define
 
 begin_comment
@@ -1895,7 +1895,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETINET_RESERVEDPORT
-value|590
+value|490
 end_define
 
 begin_comment
@@ -1906,7 +1906,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETINET_IPFW
-value|591
+value|491
 end_define
 
 begin_comment
@@ -1917,7 +1917,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETINET_DIVERT
-value|592
+value|492
 end_define
 
 begin_comment
@@ -1928,7 +1928,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETINET_PF
-value|593
+value|493
 end_define
 
 begin_comment
@@ -1939,7 +1939,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETINET_DUMMYNET
-value|594
+value|494
 end_define
 
 begin_comment
@@ -1950,7 +1950,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETINET_CARP
-value|595
+value|495
 end_define
 
 begin_comment
@@ -1961,7 +1961,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETINET_MROUTE
-value|596
+value|496
 end_define
 
 begin_comment
@@ -1972,7 +1972,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETINET_RAW
-value|597
+value|497
 end_define
 
 begin_comment
@@ -1983,7 +1983,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETINET_GETCRED
-value|598
+value|498
 end_define
 
 begin_comment
@@ -1994,7 +1994,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETINET_ADDRCTRL6
-value|599
+value|499
 end_define
 
 begin_comment
@@ -2005,7 +2005,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETINET_ND6
-value|600
+value|500
 end_define
 
 begin_comment
@@ -2016,7 +2016,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETINET_SCOPE6
-value|601
+value|501
 end_define
 
 begin_comment
@@ -2027,7 +2027,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETINET_ALIFETIME6
-value|602
+value|502
 end_define
 
 begin_comment
@@ -2038,7 +2038,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETINET_IPSEC
-value|603
+value|503
 end_define
 
 begin_comment
@@ -2053,7 +2053,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETIPX_RESERVEDPORT
-value|620
+value|520
 end_define
 
 begin_comment
@@ -2064,7 +2064,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETIPX_RAW
-value|621
+value|521
 end_define
 
 begin_comment
@@ -2079,7 +2079,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETNCP
-value|630
+value|530
 end_define
 
 begin_comment
@@ -2094,7 +2094,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NETSMB
-value|640
+value|540
 end_define
 
 begin_comment
@@ -2109,7 +2109,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_VM86_INTCALL
-value|650
+value|550
 end_define
 
 begin_comment
@@ -2124,112 +2124,112 @@ begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED0
-value|660
+value|560
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED1
-value|661
+value|561
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED2
-value|662
+value|562
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED3
-value|663
+value|563
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED4
-value|664
+value|564
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED5
-value|665
+value|565
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED6
-value|666
+value|566
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED7
-value|667
+value|567
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED8
-value|668
+value|568
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED9
-value|669
+value|569
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED10
-value|670
+value|570
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED11
-value|671
+value|571
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED12
-value|672
+value|572
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED13
-value|673
+value|573
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED14
-value|674
+value|574
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PRIV_RESERVED15
-value|675
+value|575
 end_define
 
 begin_comment
@@ -2240,112 +2240,112 @@ begin_define
 define|#
 directive|define
 name|PRIV_MODULE0
-value|700
+value|600
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE1
-value|701
+value|601
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE2
-value|702
+value|602
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE3
-value|703
+value|603
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE4
-value|704
+value|604
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE5
-value|705
+value|605
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE6
-value|706
+value|606
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE7
-value|707
+value|607
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE8
-value|708
+value|608
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE9
-value|709
+value|609
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE10
-value|710
+value|610
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE11
-value|711
+value|611
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE12
-value|712
+value|612
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE13
-value|713
+value|613
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE14
-value|714
+value|614
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_MODULE15
-value|715
+value|615
 end_define
 
 begin_comment
@@ -2356,7 +2356,7 @@ begin_define
 define|#
 directive|define
 name|_PRIV_HIGHEST
-value|716
+value|616
 end_define
 
 begin_comment
