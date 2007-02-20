@@ -2651,9 +2651,6 @@ case|case
 name|PRIV_IPC_WRITE
 case|:
 case|case
-name|PRIV_IPC_EXEC
-case|:
-case|case
 name|PRIV_IPC_ADMIN
 case|:
 case|case

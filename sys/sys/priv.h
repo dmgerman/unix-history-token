@@ -705,19 +705,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_IPC_EXEC
-value|172
-end_define
-
-begin_comment
-comment|/* Can override IPC exec perm. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PRIV_IPC_ADMIN
-value|173
+value|172
 end_define
 
 begin_comment
@@ -728,7 +717,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_IPC_MSGSIZE
-value|174
+value|173
 end_define
 
 begin_comment
