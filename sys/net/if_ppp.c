@@ -3172,18 +3172,18 @@ case|case
 name|SIOCSIFMTU
 case|:
 comment|/* 	 * XXXRW: Isn't this suser() check redundant to the one at the ifnet 	 * layer? 	 */
-if|if
-condition|(
-operator|(
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|td
+argument_list|,
+name|PRIV_NET_SETIFMTU
 argument_list|)
-operator|)
-operator|!=
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 if|if
