@@ -166,19 +166,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_WITNESS
-value|12
-end_define
-
-begin_comment
-comment|/* Can configure WITNESS. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PRIV_IO
-value|13
+value|12
 end_define
 
 begin_comment
@@ -189,7 +178,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_KEYBOARD
-value|14
+value|13
 end_define
 
 begin_comment
@@ -200,7 +189,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_DRIVER
-value|15
+value|14
 end_define
 
 begin_comment
@@ -211,7 +200,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_ADJTIME
-value|16
+value|15
 end_define
 
 begin_comment
@@ -222,7 +211,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NTP_ADJTIME
-value|17
+value|16
 end_define
 
 begin_comment
@@ -233,7 +222,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_CLOCK_SETTIME
-value|18
+value|17
 end_define
 
 begin_comment
@@ -244,7 +233,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_SETTIMEOFDAY
-value|19
+value|18
 end_define
 
 begin_comment
@@ -255,7 +244,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_SETHOSTID
-value|20
+value|19
 end_define
 
 begin_comment
@@ -266,7 +255,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_SETDOMAINNAME
-value|21
+value|20
 end_define
 
 begin_comment
