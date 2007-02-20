@@ -1941,7 +1941,7 @@ name|cmd
 parameter_list|,
 name|int
 modifier|*
-name|err
+name|error
 parameter_list|)
 block|{
 name|u_int
@@ -1955,12 +1955,6 @@ name|WD_INTERVAL
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|cmd
-operator|&
-name|WD_ACTIVE
-operator|)
-operator|&&
 name|u
 operator|>=
 name|WD_TO_1SEC
@@ -1985,7 +1979,7 @@ operator|=
 literal|1
 expr_stmt|;
 operator|*
-name|err
+name|error
 operator|=
 literal|0
 expr_stmt|;
