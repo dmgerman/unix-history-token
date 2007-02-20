@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the 
 end_comment
 
 begin_comment
-comment|/*  * UNIX Domain (Local) Sockets  *  * This is an implementation of UNIX (local) domain sockets.  Each socket has  * an associated struct unpcb (UNIX protocol control block).  Stream sockets  * may be connected to 0 or 1 other socket.  Datagram sockets may be  * connected to 0, 1, or many other sockets.  Sockets may be created and  * connected in pairs (socketpair(2)), or bound/connected to using the file  * system name space.  For most purposes, only the receive socket buffer is  * used, as sending on one socket delivers directly to the receive socket  * buffer of a second socket.  The implementation is substantially  * complicated by the fact that "ancillary data", such as file descriptors or  * credentials, may be passed across UNIX domain sockets.  The potential for  * passing UNIX domain sockets over other UNIX domain sockets requires the  * implementation of a simple garbage collector to find and tear down cycles  * of disconnected sockets.  *  * TODO:  *	SEQPACKET, RDM  *	rethink name space problems  *	need a proper out-of-band  *	lock pushdown  */
+comment|/*  * UNIX Domain (Local) Sockets  *  * This is an implementation of UNIX (local) domain sockets.  Each socket has  * an associated struct unpcb (UNIX protocol control block).  Stream sockets  * may be connected to 0 or 1 other socket.  Datagram sockets may be  * connected to 0, 1, or many other sockets.  Sockets may be created and  * connected in pairs (socketpair(2)), or bound/connected to using the file  * system name space.  For most purposes, only the receive socket buffer is  * used, as sending on one socket delivers directly to the receive socket  * buffer of a second socket.  *  * The implementation is substantially complicated by the fact that  * "ancillary data", such as file descriptors or credentials, may be passed  * across UNIX domain sockets.  The potential for passing UNIX domain sockets  * over other UNIX domain sockets requires the implementation of a simple  * garbage collector to find and tear down cycles of disconnected sockets.  *  * TODO:  *	SEQPACKET, RDM  *	rethink name space problems  *	need a proper out-of-band  *	lock pushdown  */
 end_comment
 
 begin_include
@@ -783,6 +783,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|mbuf
 modifier|*
@@ -2189,7 +2190,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * XXXRW: should v_socket be frobbed only while holding 		 * Giant? 		 */
 name|unp
 operator|->
 name|unp_vnode
@@ -7350,6 +7350,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|mbuf
 modifier|*
