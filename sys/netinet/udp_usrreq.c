@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)udp_usrreq.c	8.6 (Berkeley) 5/23/95  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1995  *	The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)udp_usrreq.c	8.6 (Berkeley) 5/23/95  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -270,10 +270,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*FAST_IPSEC*/
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -290,10 +286,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*IPSEC*/
-end_comment
 
 begin_include
 include|#
@@ -312,14 +304,8 @@ comment|/*  * UDP protocol implementation.  * Per RFC 768, August, 1980.  */
 end_comment
 
 begin_comment
-comment|/*  * BSD 4.2 defaulted the udp checksum to be off.  Turning off udp  * checksums removes the only data integrity mechanism for packets and  * malformed packets that would otherwise be discarded by bad checksums  * may cause problems (especially for NFS data blocks).  */
+comment|/*  * BSD 4.2 defaulted the udp checksum to be off.  Turning off udp checksums  * removes the only data integrity mechanism for packets and malformed  * packets that would otherwise be discarded by bad checksums may cause  * problems (especially for NFS data blocks).  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COMPAT_42
-end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -329,25 +315,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|int
-name|udpcksum
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -468,17 +435,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* from udp_var.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|udb6
-value|udb
-end_define
-
-begin_comment
-comment|/* for KAME src sync over BSD*'s */
 end_comment
 
 begin_decl_stmt
@@ -784,38 +740,30 @@ begin_function
 name|void
 name|udp_input
 parameter_list|(
-name|m
-parameter_list|,
-name|off
-parameter_list|)
-specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|int
 name|off
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|iphlen
 init|=
 name|off
 decl_stmt|;
-specifier|register
 name|struct
 name|ip
 modifier|*
 name|ip
 decl_stmt|;
-specifier|register
 name|struct
 name|udphdr
 modifier|*
 name|uh
 decl_stmt|;
-specifier|register
 name|struct
 name|inpcb
 modifier|*
@@ -847,7 +795,7 @@ operator|.
 name|udps_ipackets
 operator|++
 expr_stmt|;
-comment|/* 	 * Strip IP options, if any; should skip this, 	 * make available to user, and use on returned packets, 	 * but we don't yet have a way to check the checksum 	 * with options still present. 	 */
+comment|/* 	 * Strip IP options, if any; should skip this, make available to 	 * user, and use on returned packets, but we don't yet have a way to 	 * check the checksum with options still present. 	 */
 if|if
 condition|(
 name|iphlen
@@ -964,7 +912,7 @@ operator|+
 name|iphlen
 operator|)
 expr_stmt|;
-comment|/* destination port of 0 is illegal, based on RFC768. */
+comment|/* 	 * Destination port of 0 is illegal, based on RFC768. 	 */
 if|if
 condition|(
 name|uh
@@ -976,7 +924,7 @@ condition|)
 goto|goto
 name|badunlocked
 goto|;
-comment|/* 	 * Construct sockaddr format source address. 	 * Stuff source address and datagram in user buffer. 	 */
+comment|/* 	 * Construct sockaddr format source address.  Stuff source address 	 * and datagram in user buffer. 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -1080,7 +1028,7 @@ argument_list|)
 expr_stmt|;
 comment|/* ip->ip_len = len; */
 block|}
-comment|/* 	 * Save a copy of the IP header in case we want restore it 	 * for sending an ICMP error message in response. 	 */
+comment|/* 	 * Save a copy of the IP header in case we want restore it for 	 * sending an ICMP error message in response. 	 */
 if|if
 condition|(
 operator|!
@@ -1295,7 +1243,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_FORWARD
-comment|/* Grab info from PACKET_TAG_IPFORWARD tag prepended to the chain. */
+comment|/* 	 * Grab info from PACKET_TAG_IPFORWARD tag prepended to the chain. 	 */
 name|fwd_tag
 operator|=
 name|m_tag_find
@@ -1319,7 +1267,7 @@ name|sockaddr_in
 modifier|*
 name|next_hop
 decl_stmt|;
-comment|/* Do the hack. */
+comment|/* 		 * Do the hack. 		 */
 name|next_hop
 operator|=
 operator|(
@@ -1352,7 +1300,7 @@ operator|->
 name|sin_port
 argument_list|)
 expr_stmt|;
-comment|/* Remove the tag from the packet.  We don't need it anymore. */
+comment|/* 		 * Remove the tag from the packet.  We don't need it anymore. 		 */
 name|m_tag_delete
 argument_list|(
 name|m
@@ -1402,8 +1350,7 @@ name|inpcb
 modifier|*
 name|last
 decl_stmt|;
-comment|/* 		 * Deliver a multicast or broadcast datagram to *all* sockets 		 * for which the local and remote addresses and ports match 		 * those of the incoming datagram.  This allows more than 		 * one process to receive multi/broadcasts on the same port. 		 * (This really ought to be done for unicast datagrams as 		 * well, but that would cause problems with existing 		 * applications that open both address-specific sockets and 		 * a wildcard socket listening to the same port -- they would 		 * end up receiving duplicates of every unicast datagram. 		 * Those applications open the multiple sockets to overcome an 		 * inadequacy of the UDP socket interface, but for backwards 		 * compatibility we avoid the problem here rather than 		 * fixing the interface.  Maybe 4.5BSD will remedy this?) 		 */
-comment|/* 		 * Locate pcb(s) for datagram. 		 * (Algorithm copied from raw_intr().) 		 */
+comment|/* 		 * Deliver a multicast or broadcast datagram to *all* sockets 		 * for which the local and remote addresses and ports match 		 * those of the incoming datagram.  This allows more than one 		 * process to receive multi/broadcasts on the same port. 		 * (This really ought to be done for unicast datagrams as 		 * well, but that would cause problems with existing 		 * applications that open both address-specific sockets and a 		 * wildcard socket listening to the same port -- they would 		 * end up receiving duplicates of every unicast datagram. 		 * Those applications open the multiple sockets to overcome 		 * an inadequacy of the UDP socket interface, but for 		 * backwards compatibility we avoid the problem here rather 		 * than fixing the interface.  Maybe 4.5BSD will remedy 		 * this?) 		 */
 name|last
 operator|=
 name|NULL
@@ -1508,11 +1455,6 @@ name|uh_sport
 condition|)
 continue|continue;
 block|}
-name|INP_LOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Check multicast packets to make sure they are only 			 * sent to sockets with multicast memberships for the 			 * packet's destination address and arrival interface 			 */
 define|#
 directive|define
@@ -1530,6 +1472,11 @@ parameter_list|(
 name|_inp
 parameter_list|)
 value|((_inp)->inp_moptions->imo_num_memberships)
+name|INP_LOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strict_mcast_mship
@@ -1687,7 +1634,7 @@ name|last
 operator|=
 name|inp
 expr_stmt|;
-comment|/* 			 * Don't look for additional matches if this one does 			 * not have either the SO_REUSEPORT or SO_REUSEADDR 			 * socket options set.  This heuristic avoids searching 			 * through all pcbs in the common case of a non-shared 			 * port.  It assumes that an application will never 			 * clear these options after setting them. 			 */
+comment|/* 			 * Don't look for additional matches if this one does 			 * not have either the SO_REUSEPORT or SO_REUSEADDR 			 * socket options set.  This heuristic avoids 			 * searching through all pcbs in the common case of a 			 * non-shared port.  It assumes that an application 			 * will never clear these options after setting them. 			 */
 if|if
 condition|(
 operator|(
@@ -1715,7 +1662,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * No matching pcb found; discard datagram. 			 * (No need to send an ICMP Port Unreachable 			 * for a broadcast or multicast datgram.) 			 */
+comment|/* 			 * No matching pcb found; discard datagram.  (No need 			 * to send an ICMP Port Unreachable for a broadcast 			 * or multicast datgram.) 			 */
 name|udpstat
 operator|.
 name|udps_noportbcast
@@ -1932,12 +1879,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Check the minimum TTL for socket. 	 */
 name|INP_LOCK
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* Check the minimum TTL for socket. */
 if|if
 condition|(
 name|inp
@@ -2011,7 +1958,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2024,39 +1970,29 @@ specifier|static
 name|void
 name|udp_append
 parameter_list|(
-name|inp
-parameter_list|,
-name|ip
-parameter_list|,
-name|n
-parameter_list|,
-name|off
-parameter_list|,
-name|udp_in
-parameter_list|)
 name|struct
 name|inpcb
 modifier|*
 name|inp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ip
 modifier|*
 name|ip
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|n
-decl_stmt|;
+parameter_list|,
 name|int
 name|off
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
 name|udp_in
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sockaddr
@@ -2121,7 +2057,6 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*IPSEC*/
 name|m_freem
 argument_list|(
 name|n
@@ -2385,7 +2320,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Notify a udp user of an asynchronous error;  * just wake up so that he can collect error status.  */
+comment|/*  * Notify a udp user of an asynchronous error; just wake up so that they can  * collect error status.  */
 end_comment
 
 begin_function
@@ -2394,19 +2329,14 @@ name|inpcb
 modifier|*
 name|udp_notify
 parameter_list|(
-name|inp
-parameter_list|,
-name|errno
-parameter_list|)
-specifier|register
 name|struct
 name|inpcb
 modifier|*
 name|inp
-decl_stmt|;
+parameter_list|,
 name|int
 name|errno
-decl_stmt|;
+parameter_list|)
 block|{
 name|inp
 operator|->
@@ -2431,7 +2361,9 @@ name|inp_socket
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|inp
+operator|)
 return|;
 block|}
 end_function
@@ -2440,24 +2372,18 @@ begin_function
 name|void
 name|udp_ctlinput
 parameter_list|(
-name|cmd
-parameter_list|,
-name|sa
-parameter_list|,
-name|vip
-parameter_list|)
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
 name|sa
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|vip
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ip
@@ -2534,7 +2460,7 @@ name|cmd
 argument_list|)
 condition|)
 return|return;
-comment|/* 	 * Hostdead is ugly because it goes linearly through all PCBs. 	 * XXX: We never get this from ICMP, otherwise it makes an 	 * excellent DoS attack on machines with many connections. 	 */
+comment|/* 	 * Hostdead is ugly because it goes linearly through all PCBs. 	 * 	 * XXX: We never get this from ICMP, otherwise it makes an excellent 	 * DoS attack on machines with many connections. 	 */
 if|if
 condition|(
 name|cmd
@@ -2762,7 +2688,9 @@ name|xinpcb
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -2774,7 +2702,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EPERM
+operator|)
 return|;
 comment|/* 	 * OK, now we're committed to doing something. 	 */
 name|INP_INFO_RLOCK
@@ -2877,7 +2807,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|inp_list
 operator|=
@@ -2901,7 +2833,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 name|INP_INFO_RLOCK
 argument_list|(
@@ -3128,7 +3062,7 @@ operator|!
 name|error
 condition|)
 block|{
-comment|/* 		 * Give the user an updated idea of our state. 		 * If the generation differs from what we told 		 * her before, she knows that something happened 		 * while we were processing this request, and it 		 * might be necessary to retry. 		 */
+comment|/* 		 * Give the user an updated idea of our state.  If the 		 * generation differs from what we told her before, she knows 		 * that something happened while we were processing this 		 * request, and it might be necessary to retry. 		 */
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -3185,7 +3119,9 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -3460,50 +3396,37 @@ specifier|static
 name|int
 name|udp_output
 parameter_list|(
-name|inp
-parameter_list|,
-name|m
-parameter_list|,
-name|addr
-parameter_list|,
-name|control
-parameter_list|,
-name|td
-parameter_list|)
-specifier|register
 name|struct
 name|inpcb
 modifier|*
 name|inp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|control
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|udpiphdr
 modifier|*
 name|ui
 decl_stmt|;
-specifier|register
 name|int
 name|len
 init|=
@@ -3576,7 +3499,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EMSGSIZE
+operator|)
 return|;
 block|}
 name|src
@@ -3594,7 +3519,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * XXX: Currently, we assume all the optional information 		 * is stored in a single mbuf. 		 */
+comment|/* 		 * XXX: Currently, we assume all the optional information is 		 * stored in a single mbuf. 		 */
 if|if
 condition|(
 name|control
@@ -3613,7 +3538,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 for|for
@@ -3813,7 +3740,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 if|if
@@ -4188,7 +4117,7 @@ name|len
 operator|-=
 name|max_linkhdr
 expr_stmt|;
-comment|/* 	 * Fill in mbuf with extended UDP header 	 * and addresses and length put into network format. 	 */
+comment|/* 	 * Fill in mbuf with extended UDP header and addresses and length put 	 * into network format. 	 */
 name|ui
 operator|=
 name|mtod
@@ -4418,14 +4347,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|ui
 operator|->
 name|ui_sum
 operator|=
 literal|0
 expr_stmt|;
-block|}
 operator|(
 operator|(
 expr|struct
@@ -4791,7 +4718,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|INP_INFO_WLOCK
 argument_list|(
@@ -4821,7 +4750,9 @@ name|udbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|inp
@@ -4859,7 +4790,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4947,7 +4880,9 @@ name|udbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -5127,7 +5062,9 @@ name|udbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EISCONN
+operator|)
 return|;
 block|}
 name|sin
@@ -5200,7 +5137,9 @@ name|udbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -5352,7 +5291,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOTCONN
+operator|)
 return|;
 block|}
 name|in_pcbdisconnect
@@ -5398,7 +5339,9 @@ name|udbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5461,6 +5404,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|udp_output
 argument_list|(
 name|inp
@@ -5473,6 +5417,7 @@ name|control
 argument_list|,
 name|td
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -5526,13 +5471,15 @@ name|inp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * This is the wrapper function for in_setsockaddr.  We just pass down  * the pcbinfo for in_setsockaddr to lock.  We don't want to do the locking  * here because in_setsockaddr will call malloc and might block.  */
+comment|/*  * This is the wrapper function for in_setsockaddr.  We just pass down the  * pcbinfo for in_setsockaddr() to lock.  We don't want to do the locking  * here because in_setsockaddr() will call malloc and might block.  */
 end_comment
 
 begin_function
@@ -5569,7 +5516,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the wrapper function for in_setpeeraddr.  We just pass down  * the pcbinfo for in_setpeeraddr to lock.  */
+comment|/*  * This is the wrapper function for in_setpeeraddr().  We just pass down the  * pcbinfo for in_setpeeraddr() to lock.  */
 end_comment
 
 begin_function
