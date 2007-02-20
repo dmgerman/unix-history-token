@@ -1105,17 +1105,19 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* Imply ``-t malloc'' */
+comment|/* Imply ``-t swap'' */
 name|mdio
 operator|.
 name|md_type
 operator|=
-name|MD_MALLOC
+name|MD_SWAP
 expr_stmt|;
 name|mdio
 operator|.
 name|md_options
 operator|=
+name|MD_CLUSTER
+operator||
 name|MD_AUTOUNIT
 operator||
 name|MD_COMPRESS
