@@ -5569,7 +5569,7 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|IWI_LOCK_ASSERT
+name|IWI_LOCK_CHECK
 argument_list|(
 name|sc
 argument_list|)
@@ -6911,7 +6911,7 @@ name|sc
 operator|->
 name|sc_ic
 decl_stmt|;
-name|IWI_LOCK_ASSERT
+name|IWI_LOCK_CHECK
 argument_list|(
 name|sc
 argument_list|)
@@ -9112,7 +9112,7 @@ name|iwi_cmd_desc
 modifier|*
 name|desc
 decl_stmt|;
-name|IWI_LOCK_ASSERT
+name|IWI_LOCK_CHECK
 argument_list|(
 name|sc
 argument_list|)
@@ -9503,7 +9503,7 @@ name|xflags
 decl_stmt|,
 name|staid
 decl_stmt|;
-name|IWI_LOCK_ASSERT
+name|IWI_LOCK_CHECK
 argument_list|(
 name|sc
 argument_list|)
@@ -10945,6 +10945,31 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * wait until pending iwi_cmd() are completed, to avoid races 	 * that could cause problems. 	 */
+while|while
+condition|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|IWI_FLAG_BUSY
+condition|)
+name|msleep
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|,
+literal|0
+argument_list|,
+literal|"iwiioctl"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -11009,32 +11034,6 @@ block|}
 block|}
 break|break;
 default|default:
-comment|/* 		 * XXX the driver has a tendency to freeze the machine 		 * when initializing the interface. This seems due to 		 * a race condition, whose origin is still unclear. 		 * Adding a printf in this particular condition seems to cure 		 * the symptom, so we do it until we find a proper fix. 		 */
-if|if
-condition|(
-name|sc
-operator|->
-name|flags
-operator|&
-name|IWI_FLAG_BUSY
-condition|)
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: flags %x cmd 0x%lx\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|sc
-operator|->
-name|flags
-argument_list|,
-name|cmd
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ieee80211_ioctl
@@ -11120,7 +11119,7 @@ decl_stmt|;
 name|int
 name|ntries
 decl_stmt|;
-name|IWI_LOCK_ASSERT
+name|IWI_LOCK_CHECK
 argument_list|(
 name|sc
 argument_list|)
@@ -12537,7 +12536,7 @@ name|ntries
 decl_stmt|,
 name|error
 decl_stmt|;
-name|IWI_LOCK_ASSERT
+name|IWI_LOCK_CHECK
 argument_list|(
 name|sc
 argument_list|)
@@ -12934,7 +12933,7 @@ name|ntries
 decl_stmt|,
 name|error
 decl_stmt|;
-name|IWI_LOCK_ASSERT
+name|IWI_LOCK_CHECK
 argument_list|(
 name|sc
 argument_list|)
@@ -13640,7 +13639,7 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
-name|IWI_LOCK_ASSERT
+name|IWI_LOCK_CHECK
 argument_list|(
 name|sc
 argument_list|)
@@ -14473,7 +14472,7 @@ name|scan_type
 decl_stmt|,
 name|error
 decl_stmt|;
-name|IWI_LOCK_ASSERT
+name|IWI_LOCK_CHECK
 argument_list|(
 name|sc
 argument_list|)
@@ -15491,7 +15490,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|IWI_LOCK_ASSERT
+name|IWI_LOCK_CHECK
 argument_list|(
 name|sc
 argument_list|)
@@ -16826,7 +16825,7 @@ name|i
 decl_stmt|;
 name|IWI_LOCK_DECL
 expr_stmt|;
-name|IWI_LOCK_ASSERT
+name|IWI_LOCK_CHECK
 argument_list|(
 name|sc
 argument_list|)
@@ -17534,7 +17533,7 @@ name|ic
 operator|->
 name|ic_ifp
 decl_stmt|;
-name|IWI_LOCK_ASSERT
+name|IWI_LOCK_CHECK
 argument_list|(
 name|sc
 argument_list|)

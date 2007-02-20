@@ -666,18 +666,14 @@ name|IWI_LOCK_DECL
 value|int	__waslocked = 0
 end_define
 
-begin_comment
-comment|//#define	IWI_LOCK_ASSERT(sc)	mtx_assert(&(sc)->sc_mtx, MA_OWNED)
-end_comment
-
 begin_define
 define|#
 directive|define
-name|IWI_LOCK_ASSERT
+name|IWI_LOCK_CHECK
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {				\ 	if (!mtx_owned(&(sc)->sc_mtx))	\ 		printf("%s iwi_lock not held\n", __func__);		\ } while (0)
+value|do {				\ 	if (!mtx_owned(&(sc)->sc_mtx))	\ 		DPRINTF(("%s iwi_lock not held\n", __func__));		\ } while (0)
 end_define
 
 begin_define
