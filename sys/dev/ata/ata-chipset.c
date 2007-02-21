@@ -2788,6 +2788,20 @@ name|ctlr
 operator|->
 name|channels
 operator|=
+name|MAX
+argument_list|(
+name|flsl
+argument_list|(
+name|ATA_INL
+argument_list|(
+name|ctlr
+operator|->
+name|r_res2
+argument_list|,
+name|ATA_AHCI_PI
+argument_list|)
+argument_list|)
+argument_list|,
 operator|(
 name|ATA_INL
 argument_list|(
@@ -2802,6 +2816,7 @@ name|ATA_AHCI_NPMASK
 operator|)
 operator|+
 literal|1
+argument_list|)
 expr_stmt|;
 comment|/* clear interrupts */
 name|ATA_OUTL
@@ -2935,9 +2950,20 @@ name|version
 operator|&
 literal|0xff
 argument_list|,
+operator|(
+name|ATA_INL
+argument_list|(
 name|ctlr
 operator|->
-name|channels
+name|r_res2
+argument_list|,
+name|ATA_AHCI_CAP
+argument_list|)
+operator|&
+name|ATA_AHCI_NPMASK
+operator|)
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -3245,7 +3271,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* not used here */
-comment|/* setup the work areas */
+comment|/* setup work areas */
 name|ATA_OUTL
 argument_list|(
 name|ctlr
@@ -4445,6 +4471,43 @@ decl_stmt|;
 name|int
 name|timeout
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ATA_INL
+argument_list|(
+name|ctlr
+operator|->
+name|r_res2
+argument_list|,
+name|ATA_AHCI_PI
+argument_list|)
+operator|&
+operator|(
+literal|1
+operator|<<
+name|ch
+operator|->
+name|unit
+operator|)
+operator|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"port not implemented\n"
+argument_list|)
+expr_stmt|;
+name|ch
+operator|->
+name|devices
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* kill off all activity on this channel */
 name|cmd
 operator|=
