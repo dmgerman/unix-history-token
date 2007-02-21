@@ -711,7 +711,7 @@ name|STAILQ_FOREACH_SAFE
 argument_list|(
 argument|d
 argument_list|,
-argument|&s->s_data
+argument|&s->s_rawdata
 argument_list|,
 argument|d_next
 argument_list|,
