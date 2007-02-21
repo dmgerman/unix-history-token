@@ -1604,7 +1604,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test whether current entry is a dir or dir link.  */
+comment|/*  * Test whether current entry is a dir or link to a dir.  */
 end_comment
 
 begin_function
@@ -1617,29 +1617,7 @@ modifier|*
 name|t
 parameter_list|)
 block|{
-comment|/* If we've already pulled stat(), just use that. */
-if|if
-condition|(
-name|t
-operator|->
-name|flags
-operator|&
-name|hasStat
-condition|)
-return|return
-operator|(
-name|S_ISDIR
-argument_list|(
-name|tree_current_stat
-argument_list|(
-name|t
-argument_list|)
-operator|->
-name|st_mode
-argument_list|)
-operator|)
-return|;
-comment|/* If we've already pulled lstat(), we may be able to use that. */
+comment|/* 	 * If we already have lstat() info, then try some 	 * cheap tests to determine if this is a dir. 	 */
 if|if
 condition|(
 name|t
@@ -1665,7 +1643,8 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* If it's not a dir and not a link, we're done. */
+comment|/* Not a dir; might be a link to a dir. */
+comment|/* If it's not a link, then it's not a link to a dir. */
 if|if
 condition|(
 operator|!
@@ -1682,9 +1661,9 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 		 * If the above two tests fail, then it's a link, but 		 * we don't know whether it's a link to a dir or a 		 * non-dir. 		 */
+comment|/* 		 * It's a link, but we don't know what it's a link to, 		 * so we'll have to use stat(). 		 */
 block|}
-comment|/* TODO: Use a more efficient mechanism when available. */
+comment|/* Use the definitive test.  Hopefully this is cached. */
 return|return
 operator|(
 name|S_ISDIR
@@ -1702,7 +1681,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test whether current entry is a physical directory.  */
+comment|/*  * Test whether current entry is a physical directory.  Usually, we  * already have at least one of stat() or lstat() in memory, so we  * use tricks to try to avoid an extra trip to the disk.  */
 end_comment
 
 begin_function
@@ -1715,20 +1694,22 @@ modifier|*
 name|t
 parameter_list|)
 block|{
-comment|/* If we've already pulled lstat(), just use that. */
+comment|/* 	 * If stat() says it isn't a dir, then it's not a dir. 	 * If stat() data is cached, this check is free, so do it first. 	 */
 if|if
 condition|(
+operator|(
 name|t
 operator|->
 name|flags
 operator|&
-name|hasLstat
-condition|)
-return|return
+name|hasStat
+operator|)
+operator|&&
 operator|(
+operator|!
 name|S_ISDIR
 argument_list|(
-name|tree_current_lstat
+name|tree_current_stat
 argument_list|(
 name|t
 argument_list|)
@@ -1736,8 +1717,12 @@ operator|->
 name|st_mode
 argument_list|)
 operator|)
+condition|)
+return|return
+literal|0
 return|;
-comment|/* TODO: Use a more efficient mechanism when available. */
+comment|/* 	 * Either stat() said it was a dir (in which case, we have 	 * to determine whether it's really a link to a dir) or 	 * stat() info wasn't available.  So we use lstat(), which 	 * hopefully is already cached. 	 */
+comment|/* Use the definitive test.  Hopefully this is cached. */
 return|return
 operator|(
 name|S_ISDIR
@@ -1768,29 +1753,6 @@ modifier|*
 name|t
 parameter_list|)
 block|{
-comment|/* If we've already pulled lstat(), just use that. */
-if|if
-condition|(
-name|t
-operator|->
-name|flags
-operator|&
-name|hasLstat
-condition|)
-return|return
-operator|(
-name|S_ISLNK
-argument_list|(
-name|tree_current_lstat
-argument_list|(
-name|t
-argument_list|)
-operator|->
-name|st_mode
-argument_list|)
-operator|)
-return|;
-comment|/* TODO: Use a more efficient mechanism when available. */
 return|return
 operator|(
 name|S_ISLNK
