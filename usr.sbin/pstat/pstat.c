@@ -236,7 +236,7 @@ block|{
 operator|.
 name|n_name
 operator|=
-literal|"_nfiles"
+literal|"_openfiles"
 block|}
 block|,
 block|{
