@@ -7429,9 +7429,9 @@ name|atapi
 operator|.
 name|sense
 operator|.
-name|error
+name|specific
 operator|&
-name|ATA_SENSE_VALID
+name|ATA_SENSE_SPEC_VALID
 condition|)
 operator|*
 name|finished
