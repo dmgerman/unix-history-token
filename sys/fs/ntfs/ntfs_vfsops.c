@@ -1425,6 +1425,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+name|error
+operator|!=
+name|ENOENT
 condition|)
 goto|goto
 name|out
@@ -1446,6 +1450,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+name|error
+operator|!=
+name|ENOENT
 condition|)
 goto|goto
 name|out
