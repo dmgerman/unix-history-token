@@ -70,6 +70,18 @@ name|SAVER_NAME
 value|"logo_saver"
 end_define
 
+begin_define
+define|#
+directive|define
+name|SET_ORIGIN
+parameter_list|(
+name|adp
+parameter_list|,
+name|o
+parameter_list|)
+value|do {				\ 	int oo = o;					\ 	if (oo != last_origin)				\ 	    set_origin(adp, last_origin = oo);		\ 	} while (0)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|unsigned
@@ -167,6 +179,12 @@ name|o
 decl_stmt|,
 name|p
 decl_stmt|;
+name|int
+name|last_origin
+init|=
+operator|-
+literal|1
+decl_stmt|;
 for|for
 control|(
 name|o
@@ -193,7 +211,7 @@ name|o
 operator|+=
 name|banksize
 expr_stmt|;
-name|set_origin
+name|SET_ORIGIN
 argument_list|(
 name|adp
 argument_list|,
@@ -269,7 +287,7 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-name|set_origin
+name|SET_ORIGIN
 argument_list|(
 name|adp
 argument_list|,
@@ -308,7 +326,7 @@ name|p
 operator|-=
 name|banksize
 expr_stmt|;
-name|set_origin
+name|SET_ORIGIN
 argument_list|(
 name|adp
 argument_list|,
