@@ -7140,6 +7140,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|u_int32_t
+name|sense_flags
+decl_stmt|;
 name|softc
 operator|=
 operator|(
@@ -7162,6 +7165,22 @@ expr_stmt|;
 name|error
 operator|=
 literal|0
+expr_stmt|;
+name|sense_flags
+operator|=
+name|SF_RETRY_UA
+expr_stmt|;
+if|if
+condition|(
+name|softc
+operator|->
+name|flags
+operator|&
+name|DA_FLAG_PACK_REMOVABLE
+condition|)
+name|sense_flags
+operator||=
+name|SF_NO_PRINT
 expr_stmt|;
 comment|/* Do a read capacity */
 name|rcap
@@ -7236,8 +7255,7 @@ argument_list|,
 comment|/*cam_flags*/
 name|CAM_RETRY_SELTO
 argument_list|,
-comment|/*sense_flags*/
-name|SF_RETRY_UA
+name|sense_flags
 argument_list|,
 name|softc
 operator|->
@@ -7382,8 +7400,7 @@ argument_list|,
 comment|/*cam_flags*/
 name|CAM_RETRY_SELTO
 argument_list|,
-comment|/*sense_flags*/
-name|SF_RETRY_UA
+name|sense_flags
 argument_list|,
 name|softc
 operator|->
