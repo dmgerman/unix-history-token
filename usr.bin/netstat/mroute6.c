@@ -206,6 +206,7 @@ name|long
 name|int
 name|waitings
 decl_stmt|;
+comment|/* XXX: sysctl not yet implemented for mif6table. */
 if|if
 condition|(
 name|mfcaddr
@@ -219,8 +220,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"No IPv6 multicast routing compiled into this"
-literal|" system.\n"
+literal|"No IPv6 multicast forwarding configured in the "
+literal|"running system.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -403,6 +404,7 @@ argument_list|(
 literal|"\nIPv6 Multicast Interface Table is empty\n"
 argument_list|)
 expr_stmt|;
+comment|/* XXX: sysctl not yet implemented for mf6ctable. */
 name|kread
 argument_list|(
 name|mfcaddr
@@ -708,6 +710,7 @@ name|struct
 name|mrt6stat
 name|mrtstat
 decl_stmt|;
+comment|/* XXX: sysctl not yet implemented for mrt6stat. */
 if|if
 condition|(
 name|mstaddr
@@ -717,8 +720,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"No IPv6 multicast routing compiled into this"
-literal|" system.\n"
+literal|"No IPv6 multicast forwarding configured in the "
+literal|"running system.\n"
 argument_list|)
 expr_stmt|;
 return|return;
