@@ -16,7 +16,7 @@ name|_SYS_FIRMWARE_H_
 end_define
 
 begin_comment
-comment|/*  * Loadable firmware support.  *  * Firmware images are embedded in kernel loadable modules that can  * be loaded on-demand or pre-loaded as desired.  Modules may contain  * one or more firmware images that are stored as opaque data arrays  * and registered with a unique string name.  Consumers request  * firmware by name with held references counted to use in disallowing  * module/data unload.  *  * When multiple images are stored in one module the one image is  * treated as the master with the other images holding references  * to it.  This means that to unload the module each dependent/subimage  * must first have its references removed.  */
+comment|/*  * Loadable firmware support.  *  * The firmware abstraction provides an interface for loading firmware  * images into the kernel and making them available to clients.  *  * Firmware images are usually embedded in kernel loadable modules that can  * be loaded on-demand or pre-loaded as desired.  Modules may contain  * one or more firmware images that are stored as opaque data arrays  * and registered with a unique string name. Clients request  * firmware by name, and are returned a struct firmware * below on success.  * The kernel keeps track of references to firmware images to allow/prevent  * module/data unload.  *  * When multiple images are stored in one module, the first image is  * treated as the master with the other images holding references  * to it.  This means that to unload the module each dependent/subimage  * must first have its references removed.  * In order for automatic loading to work, the master image must have  * the same name as the module it is embedded into.  */
 end_comment
 
 begin_struct
@@ -44,25 +44,12 @@ name|int
 name|version
 decl_stmt|;
 comment|/* version of the image */
-name|int
-name|refcnt
-decl_stmt|;
-comment|/* held references */
-name|struct
-name|firmware
-modifier|*
-name|parent
-decl_stmt|;
-comment|/* not null if a subimage */
-name|linker_file_t
-name|file
-decl_stmt|;
-comment|/* loadable module */
 block|}
 struct|;
 end_struct
 
 begin_function_decl
+specifier|const
 name|struct
 name|firmware
 modifier|*
@@ -81,6 +68,7 @@ parameter_list|,
 name|unsigned
 name|int
 parameter_list|,
+specifier|const
 name|struct
 name|firmware
 modifier|*
@@ -100,6 +88,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|struct
 name|firmware
 modifier|*
@@ -127,6 +116,7 @@ begin_function_decl
 name|void
 name|firmware_put
 parameter_list|(
+specifier|const
 name|struct
 name|firmware
 modifier|*

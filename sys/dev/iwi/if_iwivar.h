@@ -244,6 +244,7 @@ begin_struct
 struct|struct
 name|iwi_fw
 block|{
+specifier|const
 name|struct
 name|firmware
 modifier|*
@@ -412,9 +413,26 @@ decl_stmt|;
 name|int
 name|irq_rid
 decl_stmt|;
+comment|/* 	 * The card needs external firmware images to work, which is made of a 	 * bootloader, microcode and firmware proper. In version 3.00 and 	 * above, all pieces are contained in a single image, preceded by a 	 * struct iwi_firmware_hdr indicating the size of the 3 pieces. 	 * Old firmware< 3.0 has separate boot and ucode, so we need to 	 * load all of them explicitly. 	 * To avoid issues related to fragmentation, we keep the block of 	 * dma-ble memory around until detach time, and reallocate it when 	 * it becomes too small. fw_dma_size is the size currently allocated. 	 */
 name|int
 name|fw_dma_size
 decl_stmt|;
+name|uint32_t
+name|fw_flags
+decl_stmt|;
+comment|/* allocation status */
+define|#
+directive|define
+name|IWI_FW_HAVE_DMAT
+value|0x01
+define|#
+directive|define
+name|IWI_FW_HAVE_MAP
+value|0x02
+define|#
+directive|define
+name|IWI_FW_HAVE_PHY
+value|0x04
 name|bus_dma_tag_t
 name|fw_dmat
 decl_stmt|;
@@ -646,6 +664,16 @@ define|#
 directive|define
 name|IWI_LOCK_DECL
 value|int	__waslocked = 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_LOCK_CHECK
+parameter_list|(
+name|sc
+parameter_list|)
+value|do {				\ 	if (!mtx_owned(&(sc)->sc_mtx))	\ 		DPRINTF(("%s iwi_lock not held\n", __func__));		\ } while (0)
 end_define
 
 begin_define

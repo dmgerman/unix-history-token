@@ -634,7 +634,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* firmware binary image header, fields in little endian */
+comment|/*  * Old version firmware images start with this header,  * fields are in little endian (le32) format.  */
 end_comment
 
 begin_struct
@@ -719,6 +719,10 @@ directive|define
 name|IWI_FW_MODE_MONITOR
 value|2
 end_define
+
+begin_comment
+comment|/*  * New version firmware images contain boot, ucode and firmware  * all in one chunk. The header at the beginning gives the version  * and the size of each (sub)image, in le32 format.  */
+end_comment
 
 begin_struct
 struct|struct

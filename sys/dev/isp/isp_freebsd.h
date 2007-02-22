@@ -634,6 +634,7 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|500000
+specifier|const
 name|struct
 name|firmware
 modifier|*
