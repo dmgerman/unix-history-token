@@ -1583,7 +1583,7 @@ decl_stmt|;
 name|caddr_t
 name|lim
 decl_stmt|;
-name|size_t
+name|socklen_t
 name|siz
 decl_stmt|;
 name|int
@@ -1631,10 +1631,6 @@ argument_list|,
 operator|&
 name|asoc
 argument_list|,
-operator|(
-name|socklen_t
-operator|*
-operator|)
 operator|&
 name|siz
 argument_list|)
@@ -1724,10 +1720,6 @@ name|SCTP_GET_PEER_ADDRESSES
 argument_list|,
 name|addrs
 argument_list|,
-operator|(
-name|socklen_t
-operator|*
-operator|)
 operator|&
 name|siz
 argument_list|)
@@ -1929,7 +1921,7 @@ decl_stmt|;
 name|int
 name|size_of_addresses
 decl_stmt|;
-name|size_t
+name|socklen_t
 name|siz
 decl_stmt|;
 name|int
@@ -1977,10 +1969,6 @@ argument_list|,
 operator|&
 name|size_of_addresses
 argument_list|,
-operator|(
-name|socklen_t
-operator|*
-operator|)
 operator|&
 name|siz
 argument_list|)
@@ -2090,10 +2078,6 @@ name|SCTP_GET_LOCAL_ADDRESSES
 argument_list|,
 name|addrs
 argument_list|,
-operator|(
-name|socklen_t
-operator|*
-operator|)
 operator|&
 name|siz
 argument_list|)
