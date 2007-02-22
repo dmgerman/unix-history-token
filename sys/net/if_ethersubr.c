@@ -2642,8 +2642,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Give bpf a chance at the packet. 	 */
-name|BPF_MTAP
+comment|/* 	 * Give bpf a chance at the packet.  Process any 802.1Q tags 	 * that may have been attached to the mbuf. 	 */
+name|ETHER_BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
