@@ -1903,7 +1903,7 @@ argument_list|(
 name|acpi_ca_version
 argument_list|)
 argument_list|,
-literal|"%#x"
+literal|"%x"
 argument_list|,
 name|ACPI_CA_VERSION
 argument_list|)
