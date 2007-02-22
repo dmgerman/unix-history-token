@@ -3521,7 +3521,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Attched to %s.\n"
+literal|"Attached to %s.\n"
 argument_list|,
 name|prov
 argument_list|)
