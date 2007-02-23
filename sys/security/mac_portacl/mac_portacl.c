@@ -10,19 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
 end_include
 
 begin_include
@@ -40,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/libkern.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
@@ -58,7 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -100,24 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysproto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sbuf.h>
 end_include
 
@@ -149,12 +113,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_pcb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
 end_include
 
 begin_include

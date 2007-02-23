@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -28,19 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/extattr.h>
 end_include
 
 begin_include
@@ -64,7 +46,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/msg.h>
 end_include
 
 begin_include
@@ -76,31 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysproto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysent.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/sem.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/shm.h>
 end_include
 
 begin_include
@@ -125,24 +107,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/msg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sem.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/shm.h>
 end_include
 
 begin_include
@@ -173,12 +137,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
 end_include
 
 begin_include
