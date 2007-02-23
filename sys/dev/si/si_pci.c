@@ -372,6 +372,8 @@ name|sc_irq_res
 argument_list|,
 name|INTR_TYPE_TTY
 argument_list|,
+name|NULL
+argument_list|,
 name|si_intr
 argument_list|,
 name|sc

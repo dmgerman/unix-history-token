@@ -960,6 +960,8 @@ name|intr_resource
 argument_list|,
 name|INTR_TYPE_TTY
 argument_list|,
+name|NULL
+argument_list|,
 name|ppiintr
 argument_list|,
 name|dev
