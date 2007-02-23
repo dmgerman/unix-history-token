@@ -2646,6 +2646,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|pause
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|wmesg
+parameter_list|,
+name|int
+name|timo
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define

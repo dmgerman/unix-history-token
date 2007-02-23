@@ -79,6 +79,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SLEEPQ_PAUSE
+value|0x02
+end_define
+
+begin_comment
+comment|/* Used by pause. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SLEEPQ_INTERRUPTIBLE
 value|0x100
 end_define
