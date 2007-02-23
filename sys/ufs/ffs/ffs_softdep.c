@@ -10317,7 +10317,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * If the file was removed, then the space being freed was 		 * accounted for then (see softdep_filereleased()). If the 		 * file is merely being truncated, then we account for it now. 		 */
+comment|/* 		 * If the file was removed, then the space being freed was 		 * accounted for then (see softdep_releasefile()). If the 		 * file is merely being truncated, then we account for it now. 		 */
 if|if
 condition|(
 operator|(
@@ -12770,7 +12770,7 @@ operator|&
 name|blocksreleased
 argument_list|)
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 name|allerror
@@ -16203,10 +16203,10 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"softdep_filerelease: file still referenced"
+literal|"softdep_releasefile: file still referenced"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We may be called several times as the real reference count 	 * drops to zero. We only want to account for the space once. 	 */
+comment|/* 	 * We may be called several times as the on-disk link count 	 * drops to zero. We only want to account for the space once. 	 */
 if|if
 condition|(
 name|ip
