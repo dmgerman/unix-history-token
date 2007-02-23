@@ -631,6 +631,18 @@ operator|->
 name|p_pid
 condition|)
 block|{
+name|child_clear_tid
+operator|=
+name|em
+operator|->
+name|child_clear_tid
+expr_stmt|;
+name|EMUL_UNLOCK
+argument_list|(
+operator|&
+name|emul_lock
+argument_list|)
+expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
@@ -672,6 +684,8 @@ name|proctree_lock
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 name|child_clear_tid
 operator|=
 name|em
@@ -684,6 +698,7 @@ operator|&
 name|emul_lock
 argument_list|)
 expr_stmt|;
+block|}
 name|EMUL_SHARED_WLOCK
 argument_list|(
 operator|&
