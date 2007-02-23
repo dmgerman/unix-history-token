@@ -1550,6 +1550,8 @@ name|INTR_TYPE_NET
 argument_list|,
 endif|#
 directive|endif
+name|NULL
+argument_list|,
 operator|(
 name|driver_intr_t
 operator|*

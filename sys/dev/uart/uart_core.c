@@ -812,7 +812,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|uart_intr
 parameter_list|(
 name|void
@@ -828,6 +828,10 @@ init|=
 name|arg
 decl_stmt|;
 name|int
+name|flag
+init|=
+literal|0
+decl_stmt|,
 name|ipend
 decl_stmt|;
 while|while
@@ -849,6 +853,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|flag
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|ipend
@@ -905,6 +913,17 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+operator|(
+name|flag
+operator|)
+condition|?
+name|FILTER_HANDLED
+else|:
+name|FILTER_STRAY
+operator|)
+return|;
 block|}
 end_function
 
@@ -1634,10 +1653,10 @@ operator|->
 name|sc_ires
 argument_list|,
 name|INTR_TYPE_TTY
-operator||
-name|INTR_FAST
 argument_list|,
 name|uart_intr
+argument_list|,
+name|NULL
 argument_list|,
 name|sc
 argument_list|,
@@ -1665,6 +1684,12 @@ name|INTR_TYPE_TTY
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
+operator|(
+name|driver_intr_t
+operator|*
+operator|)
 name|uart_intr
 argument_list|,
 name|sc

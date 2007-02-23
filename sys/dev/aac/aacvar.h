@@ -1498,7 +1498,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|aac_fast_intr
 parameter_list|(
 name|void

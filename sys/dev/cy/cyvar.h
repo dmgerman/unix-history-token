@@ -42,7 +42,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|driver_intr_t
+name|driver_filter_t
 name|cyintr
 decl_stmt|;
 end_decl_stmt

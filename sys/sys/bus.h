@@ -237,8 +237,44 @@ value|kobj_method_t
 end_define
 
 begin_comment
-comment|/**  * @brief A driver interrupt service routine  */
+comment|/**  * @brief Driver interrupt filter return values  *  * If a driver provides an interrupt filter routine it must return an  * integer consisting of oring together zero or more of the following  * flags:  *  *	FILTER_STRAY	- this device did not trigger the interrupt  *	FILTER_HANDLED	- the interrupt has been fully handled and can be EOId  *	FILTER_SCHEDULE_THREAD - the threaded interrupt handler should be  *			  scheduled to execute  *  * If the driver does not provide a filter, then the interrupt code will  * act is if the filter had returned FILTER_SCHEDULE_THREAD.  Note that it  * is illegal to specify any other flag with FILTER_STRAY and that it is  * illegal to not specify either of FILTER_HANDLED or FILTER_SCHEDULE_THREAD  * if FILTER_STRAY is not specified.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FILTER_STRAY
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILTER_HANDLED
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILTER_SCHEDULE_THREAD
+value|0x04
+end_define
+
+begin_comment
+comment|/**  * @brief Driver interrupt service routines  *  * The filter routine is run in primary interrupt context and may not  * block or use regular mutexes.  It may only use spin mutexes for  * synchronization.  The filter may either completely handle the  * interrupt or it may perform some of the work and defer more  * expensive work to the regular interrupt handler.  If a filter  * routine is not registered by the driver, then the regular interrupt  * handler is always used to handle interrupts from this device.  *  * The regular interrupt handler executes in its own thread context  * and may use regular mutexes.  However, it is prohibited from  * sleeping on a sleep queue.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|driver_filter_t
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -1003,6 +1039,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filter
+parameter_list|,
 name|driver_intr_t
 modifier|*
 name|intr
@@ -1380,6 +1420,9 @@ name|r
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|driver_filter_t
+name|filter
 parameter_list|,
 name|driver_intr_t
 name|handler

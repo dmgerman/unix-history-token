@@ -323,6 +323,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filter
+parameter_list|,
 name|driver_intr_t
 modifier|*
 name|intr
@@ -2829,6 +2833,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filter
+parameter_list|,
 name|driver_intr_t
 modifier|*
 name|intr
@@ -2865,6 +2873,24 @@ name|i
 decl_stmt|,
 name|ret
 decl_stmt|;
+if|if
+condition|(
+name|filter
+operator|!=
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sbc.c: we cannot use a filter here\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|sbc_lock
 argument_list|(
 name|scp

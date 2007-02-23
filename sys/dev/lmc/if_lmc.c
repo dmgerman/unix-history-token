@@ -28395,6 +28395,8 @@ name|INTR_TYPE_NET
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
 name|bsd_interrupt
 argument_list|,
 name|sc

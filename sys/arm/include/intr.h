@@ -90,6 +90,15 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+name|int
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
 name|void
 function_decl|(
 modifier|*

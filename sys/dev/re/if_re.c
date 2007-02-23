@@ -856,7 +856,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|re_intr
 parameter_list|(
 name|void
@@ -5591,10 +5591,10 @@ argument_list|,
 name|INTR_TYPE_NET
 operator||
 name|INTR_MPSAFE
-operator||
-name|INTR_FAST
 argument_list|,
 name|re_intr
+argument_list|,
+name|NULL
 argument_list|,
 name|sc
 argument_list|,
@@ -8159,7 +8159,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|re_intr
 parameter_list|(
 name|arg
@@ -8204,7 +8204,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|FILTER_STRAY
+operator|)
+return|;
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -8224,7 +8228,11 @@ operator|->
 name|rl_inttask
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 

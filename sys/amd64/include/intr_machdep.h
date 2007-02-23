@@ -459,6 +459,9 @@ parameter_list|,
 name|int
 name|vector
 parameter_list|,
+name|driver_filter_t
+name|filter
+parameter_list|,
 name|driver_intr_t
 name|handler
 parameter_list|,

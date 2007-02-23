@@ -5454,6 +5454,8 @@ name|irq
 argument_list|,
 name|ISP_IFLAGS
 argument_list|,
+name|NULL
+argument_list|,
 name|isp_pci_intr
 argument_list|,
 name|isp

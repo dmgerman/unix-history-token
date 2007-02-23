@@ -1065,6 +1065,8 @@ name|INTR_TYPE_BIO
 operator||
 name|INTR_ENTROPY
 argument_list|,
+name|NULL
+argument_list|,
 name|twe_pci_intr
 argument_list|,
 name|sc

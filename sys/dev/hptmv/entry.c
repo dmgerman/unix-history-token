@@ -9581,6 +9581,8 @@ name|hpt_irq
 argument_list|,
 name|INTR_TYPE_CAM
 argument_list|,
+name|NULL
+argument_list|,
 name|hpt_intr
 argument_list|,
 name|pAdapter

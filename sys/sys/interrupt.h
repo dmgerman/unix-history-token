@@ -39,6 +39,12 @@ name|intr_thread
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|trapframe
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Describe a hardware interrupt handler.  *  * Multiple interrupt handlers for a specific event can be chained  * together.  */
 end_comment
@@ -47,6 +53,11 @@ begin_struct
 struct|struct
 name|intr_handler
 block|{
+name|driver_filter_t
+modifier|*
+name|ih_filter
+decl_stmt|;
+comment|/* Filter function. */
 name|driver_intr_t
 modifier|*
 name|ih_handler
@@ -93,17 +104,6 @@ end_struct
 
 begin_comment
 comment|/* Interrupt handle flags kept in ih_flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IH_FAST
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* Fast interrupt. */
 end_comment
 
 begin_define
@@ -446,6 +446,23 @@ directive|endif
 end_endif
 
 begin_function_decl
+name|int
+name|intr_event_handle
+parameter_list|(
+name|struct
+name|intr_event
+modifier|*
+name|ie
+parameter_list|,
+name|struct
+name|trapframe
+modifier|*
+name|frame
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_char
 name|intr_priority
 parameter_list|(
@@ -469,6 +486,9 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|driver_filter_t
+name|filter
 parameter_list|,
 name|driver_intr_t
 name|handler

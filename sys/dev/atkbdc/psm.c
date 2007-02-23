@@ -5480,6 +5480,8 @@ name|intr
 argument_list|,
 name|INTR_TYPE_TTY
 argument_list|,
+name|NULL
+argument_list|,
 name|psmintr
 argument_list|,
 name|sc

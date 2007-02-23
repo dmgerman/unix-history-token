@@ -6274,6 +6274,8 @@ name|irq_res
 argument_list|,
 name|INTR_TYPE_CAM
 argument_list|,
+name|NULL
+argument_list|,
 name|hpt_pci_intr
 argument_list|,
 name|vbus_ext

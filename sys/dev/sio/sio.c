@@ -1056,7 +1056,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|siointr
 parameter_list|(
 name|void
@@ -4767,10 +4767,10 @@ operator|->
 name|irqres
 argument_list|,
 name|INTR_TYPE_TTY
-operator||
-name|INTR_FAST
 argument_list|,
 name|siointr
+argument_list|,
+name|NULL
 argument_list|,
 name|com
 argument_list|,
@@ -4797,6 +4797,12 @@ name|irqres
 argument_list|,
 name|INTR_TYPE_TTY
 argument_list|,
+name|NULL
+argument_list|,
+operator|(
+name|driver_intr_t
+operator|*
+operator|)
 name|siointr
 argument_list|,
 name|com
@@ -6082,7 +6088,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|siointr
 parameter_list|(
 name|arg
@@ -6222,6 +6228,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* COM_MULTIPORT */
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 

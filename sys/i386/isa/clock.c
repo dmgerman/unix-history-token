@@ -579,7 +579,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|clkintr
 parameter_list|(
 name|struct
@@ -678,6 +678,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -773,7 +778,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|rtcintr
 parameter_list|(
 name|struct
@@ -839,6 +844,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -2781,16 +2791,16 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|driver_intr_t
+name|driver_filter_t
 operator|*
 operator|)
 name|clkintr
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|INTR_TYPE_CLK
-operator||
-name|INTR_FAST
 argument_list|,
 name|NULL
 argument_list|)
@@ -2907,16 +2917,16 @@ argument_list|,
 literal|8
 argument_list|,
 operator|(
-name|driver_intr_t
+name|driver_filter_t
 operator|*
 operator|)
 name|rtcintr
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|INTR_TYPE_CLK
-operator||
-name|INTR_FAST
 argument_list|,
 name|NULL
 argument_list|)

@@ -305,6 +305,9 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+name|driver_filter_t
+modifier|*
+parameter_list|,
 name|driver_intr_t
 modifier|*
 parameter_list|,

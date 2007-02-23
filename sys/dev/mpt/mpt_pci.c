@@ -2307,6 +2307,8 @@ name|pci_irq
 argument_list|,
 name|MPT_IFLAGS
 argument_list|,
+name|NULL
+argument_list|,
 name|mpt_pci_intr
 argument_list|,
 name|mpt

@@ -1792,6 +1792,8 @@ name|INTR_MPSAFE
 operator||
 name|INTR_TYPE_BIO
 argument_list|,
+name|NULL
+argument_list|,
 name|aac_new_intr
 argument_list|,
 name|sc
@@ -1833,11 +1835,11 @@ name|sc
 operator|->
 name|aac_irq
 argument_list|,
-name|INTR_FAST
-operator||
 name|INTR_TYPE_BIO
 argument_list|,
 name|aac_fast_intr
+argument_list|,
+name|NULL
 argument_list|,
 name|sc
 argument_list|,
@@ -1873,6 +1875,12 @@ name|INTR_MPSAFE
 operator||
 name|INTR_TYPE_BIO
 argument_list|,
+name|NULL
+argument_list|,
+operator|(
+name|driver_intr_t
+operator|*
+operator|)
 name|aac_fast_intr
 argument_list|,
 name|sc
@@ -3821,7 +3829,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|aac_fast_intr
 parameter_list|(
 name|void
@@ -3937,6 +3945,11 @@ name|aifthread
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 

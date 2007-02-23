@@ -669,7 +669,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|msk_intr
 parameter_list|(
 name|void
@@ -9167,10 +9167,10 @@ argument_list|,
 name|INTR_TYPE_NET
 operator||
 name|INTR_MPSAFE
-operator||
-name|INTR_FAST
 argument_list|,
 name|msk_intr
+argument_list|,
+name|NULL
 argument_list|,
 name|sc
 argument_list|,
@@ -17675,7 +17675,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|msk_intr
 parameter_list|(
 name|void
@@ -17725,7 +17725,11 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|FILTER_STRAY
+operator|)
+return|;
 block|}
 name|taskqueue_enqueue
 argument_list|(
@@ -17739,6 +17743,11 @@ operator|->
 name|msk_int_task
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 

@@ -204,6 +204,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+name|driver_filter_t
+parameter_list|,
 name|driver_intr_t
 parameter_list|,
 name|void
@@ -861,6 +863,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filt
+parameter_list|,
 name|driver_intr_t
 modifier|*
 name|intr
@@ -944,6 +950,8 @@ name|child
 argument_list|)
 argument_list|,
 name|start
+argument_list|,
+name|filt
 argument_list|,
 name|intr
 argument_list|,

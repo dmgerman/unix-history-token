@@ -1612,6 +1612,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filter
+parameter_list|,
 name|driver_intr_t
 modifier|*
 name|function
@@ -1647,6 +1651,8 @@ argument_list|,
 name|irq
 argument_list|,
 name|flags
+argument_list|,
+name|filter
 argument_list|,
 name|function
 argument_list|,
@@ -1685,6 +1691,24 @@ operator|)
 operator|->
 name|unit
 decl_stmt|;
+if|if
+condition|(
+name|filter
+operator|!=
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ata-pci.c: we cannot use a filter here\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|controller
 operator|->
 name|interrupt

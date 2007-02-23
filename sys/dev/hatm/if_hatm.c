@@ -11507,6 +11507,8 @@ name|mpsafe
 operator||
 name|INTR_TYPE_NET
 argument_list|,
+name|NULL
+argument_list|,
 name|hatm_intr
 argument_list|,
 operator|&

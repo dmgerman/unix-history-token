@@ -10764,6 +10764,8 @@ name|INTR_ENTROPY
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
 name|arcmsr_interrupt
 argument_list|,
 name|acb

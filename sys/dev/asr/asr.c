@@ -10368,6 +10368,8 @@ name|INTR_TYPE_CAM
 operator||
 name|INTR_ENTROPY
 argument_list|,
+name|NULL
+argument_list|,
 operator|(
 name|driver_intr_t
 operator|*

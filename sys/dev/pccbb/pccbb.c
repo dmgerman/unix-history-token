@@ -1435,6 +1435,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filt
+parameter_list|,
 name|driver_intr_t
 modifier|*
 name|intr
@@ -1470,13 +1474,9 @@ decl_stmt|;
 comment|/* 	 * Well, this is no longer strictly true.  You can have multiple 	 * FAST ISRs, but can't mix fast and slow, so we have to assume 	 * least common denominator until the base system supports mixing 	 * and matching better. 	 */
 if|if
 condition|(
-operator|(
-name|flags
-operator|&
-name|INTR_FAST
-operator|)
+name|filt
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1547,6 +1547,8 @@ argument_list|,
 name|irq
 argument_list|,
 name|flags
+argument_list|,
+name|NULL
 argument_list|,
 name|cbb_func_intr
 argument_list|,

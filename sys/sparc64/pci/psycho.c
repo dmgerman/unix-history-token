@@ -259,7 +259,7 @@ name|bus_addr_t
 parameter_list|,
 name|int
 parameter_list|,
-name|driver_intr_t
+name|driver_filter_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -289,7 +289,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|psycho_intr_stub
 parameter_list|(
 name|void
@@ -318,7 +318,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|psycho_ue
 parameter_list|(
 name|void
@@ -329,7 +329,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|psycho_ce
 parameter_list|(
 name|void
@@ -340,7 +340,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|psycho_pci_bus
 parameter_list|(
 name|void
@@ -351,7 +351,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|psycho_powerfail
 parameter_list|(
 name|void
@@ -362,7 +362,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|psycho_overtemp
 parameter_list|(
 name|void
@@ -379,7 +379,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|psycho_wakeup
 parameter_list|(
 name|void
@@ -765,7 +765,7 @@ name|bus_addr_t
 name|pci_clr
 decl_stmt|;
 comment|/* clear register */
-name|driver_intr_t
+name|driver_filter_t
 modifier|*
 name|pci_handler
 decl_stmt|;
@@ -860,6 +860,13 @@ begin_comment
 comment|/*  * "Sabre" is the UltraSPARC IIi onboard UPA to PCI bridge.  It manages a  * single PCI bus and does not have a streaming buffer.  It often has an APB  * (advanced PCI bridge) connected to it, which was designed specifically for  * the IIi.  The APB let's the IIi handle two independednt PCI buses, and  * appears as two "Simba"'s underneath the Sabre.  *  * "Hummingbird" is the UltraSPARC IIe onboard UPA to PCI bridge. It's  * basically the same as Sabre but without an APB underneath it.  *  * "Psycho" and "Psycho+" are dual UPA to PCI bridges.  They sit on the UPA bus  * and manage two PCI buses.  "Psycho" has two 64-bit 33MHz buses, while  * "Psycho+" controls both a 64-bit 33Mhz and a 64-bit 66Mhz PCI bus.  You  * will usually find a "Psycho+" since I don't think the original "Psycho"  * ever shipped, and if it did it would be in the U30.  *  * Each "Psycho" PCI bus appears as a separate OFW node, but since they are  * both part of the same IC, they only have a single register space.  As such,  * they need to be configured together, even though the autoconfiguration will  * attach them separately.  *  * On UltraIIi machines, "Sabre" itself usually takes pci0, with "Simba" often  * as pci1 and pci2, although they have been implemented with other PCI bus  * numbers on some machines.  *  * On UltraII machines, there can be any number of "Psycho+" ICs, each  * providing two PCI buses.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FAST
+value|0x66600000
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -870,7 +877,7 @@ begin_define
 define|#
 directive|define
 name|PSYCHO_PWRFAIL_INT_FLAGS
-value|INTR_FAST
+value|FAST
 end_define
 
 begin_else
@@ -2353,7 +2360,7 @@ name|PSR_PCIAERR_INT_MAP
 else|:
 name|PSR_PCIBERR_INT_MAP
 argument_list|,
-name|INTR_FAST
+name|FAST
 argument_list|,
 name|psycho_pci_bus
 argument_list|)
@@ -2375,7 +2382,7 @@ literal|1
 argument_list|,
 name|PSR_UE_INT_MAP
 argument_list|,
-name|INTR_FAST
+name|FAST
 argument_list|,
 name|psycho_ue
 argument_list|)
@@ -2426,7 +2433,7 @@ literal|4
 argument_list|,
 name|PSR_SPARE_INT_MAP
 argument_list|,
-name|INTR_FAST
+name|FAST
 argument_list|,
 name|psycho_overtemp
 argument_list|)
@@ -3184,7 +3191,7 @@ parameter_list|,
 name|int
 name|iflags
 parameter_list|,
-name|driver_intr_t
+name|driver_filter_t
 name|handler
 parameter_list|)
 block|{
@@ -3192,10 +3199,16 @@ name|int
 name|rid
 decl_stmt|,
 name|vec
+decl_stmt|,
+name|res
 decl_stmt|;
 name|uint64_t
 name|mr
 decl_stmt|;
+name|res
+operator|=
+name|EINVAL
+expr_stmt|;
 name|rid
 operator|=
 name|index
@@ -3251,9 +3264,24 @@ name|sc_irq_res
 index|[
 name|index
 index|]
-operator|==
+operator|!=
 name|NULL
-operator|||
+condition|)
+block|{
+if|if
+condition|(
+name|iflags
+operator|&
+name|FAST
+condition|)
+block|{
+name|iflags
+operator|&=
+operator|~
+name|FAST
+expr_stmt|;
+name|res
+operator|=
 name|bus_setup_intr
 argument_list|(
 name|sc
@@ -3273,6 +3301,8 @@ name|iflags
 argument_list|,
 name|handler
 argument_list|,
+name|NULL
+argument_list|,
 name|sc
 argument_list|,
 operator|&
@@ -3283,8 +3313,51 @@ index|[
 name|index
 index|]
 argument_list|)
-operator|!=
-literal|0
+expr_stmt|;
+block|}
+else|else
+name|res
+operator|=
+name|bus_setup_intr
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+name|sc
+operator|->
+name|sc_irq_res
+index|[
+name|index
+index|]
+argument_list|,
+name|INTR_TYPE_MISC
+operator||
+name|iflags
+argument_list|,
+name|NULL
+argument_list|,
+operator|(
+name|driver_intr_t
+operator|*
+operator|)
+name|handler
+argument_list|,
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ihand
+index|[
+name|index
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|res
 condition|)
 name|panic
 argument_list|(
@@ -3593,7 +3666,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|psycho_ue
 parameter_list|(
 name|void
@@ -3673,12 +3746,17 @@ operator|)
 name|afsr
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|psycho_ce
 parameter_list|(
 name|void
@@ -3757,12 +3835,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|psycho_pci_bus
 parameter_list|(
 name|void
@@ -3828,12 +3911,17 @@ operator|)
 name|afsr
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|psycho_powerfail
 parameter_list|(
 name|void
@@ -3879,12 +3967,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|psycho_overtemp
 parameter_list|(
 name|void
@@ -3902,6 +3995,11 @@ argument_list|(
 name|RB_POWEROFF
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -3913,7 +4011,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
+name|int
 name|psycho_wakeup
 parameter_list|(
 name|void
@@ -3947,6 +4045,11 @@ argument_list|,
 literal|"power management wakeup\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -4711,7 +4814,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|psycho_intr_stub
 parameter_list|(
 name|void
@@ -4796,6 +4899,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -4817,6 +4925,10 @@ name|ires
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filt
 parameter_list|,
 name|driver_intr_t
 modifier|*
@@ -4883,6 +4995,21 @@ name|error
 decl_stmt|,
 name|ino
 decl_stmt|;
+if|if
+condition|(
+name|filt
+operator|!=
+name|NULL
+operator|&&
+name|intr
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|sc
 operator|=
 name|device_get_softc
@@ -5016,6 +5143,18 @@ name|pc
 operator|->
 name|pci_handler
 operator|=
+operator|(
+name|filt
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|filt
+else|:
+operator|(
+name|driver_filter_t
+operator|*
+operator|)
 name|intr
 expr_stmt|;
 name|pc
@@ -5251,6 +5390,12 @@ operator|~
 name|INTMAP_V
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|filt
+operator|!=
+name|NULL
+condition|)
 name|error
 operator|=
 name|BUS_SETUP_INTR
@@ -5266,6 +5411,37 @@ name|ires
 argument_list|,
 name|flags
 argument_list|,
+name|psycho_intr_stub
+argument_list|,
+name|NULL
+argument_list|,
+name|pc
+argument_list|,
+name|cookiep
+argument_list|)
+expr_stmt|;
+else|else
+name|error
+operator|=
+name|BUS_SETUP_INTR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|child
+argument_list|,
+name|ires
+argument_list|,
+name|flags
+argument_list|,
+name|NULL
+argument_list|,
+operator|(
+name|driver_intr_t
+operator|*
+operator|)
 name|psycho_intr_stub
 argument_list|,
 name|pc

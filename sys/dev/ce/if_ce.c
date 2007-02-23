@@ -3686,6 +3686,8 @@ name|INTR_TYPE_NET
 argument_list|,
 endif|#
 directive|endif
+name|NULL
+argument_list|,
 name|ce_intr
 argument_list|,
 name|bd

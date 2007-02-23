@@ -311,6 +311,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filter
+parameter_list|,
 name|driver_intr_t
 modifier|*
 name|intr
@@ -2163,6 +2167,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filter
+parameter_list|,
 name|driver_intr_t
 modifier|*
 name|intr
@@ -2189,6 +2197,24 @@ name|sndcard_func
 modifier|*
 name|func
 decl_stmt|;
+if|if
+condition|(
+name|filter
+operator|!=
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ata-csa.c: we cannot use a filter here\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|scp
 operator|=
 name|device_get_softc

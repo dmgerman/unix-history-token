@@ -548,7 +548,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|clkintr
 parameter_list|(
 name|struct
@@ -625,6 +625,11 @@ name|frame
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -2691,10 +2696,12 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|driver_intr_t
+name|driver_filter_t
 operator|*
 operator|)
 name|clkintr
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

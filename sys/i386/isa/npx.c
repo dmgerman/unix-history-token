@@ -718,7 +718,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|npx_intr
 parameter_list|(
 name|void
@@ -930,7 +930,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|npx_intr
 parameter_list|(
 name|dummy
@@ -998,6 +998,11 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -1205,10 +1210,10 @@ argument_list|,
 name|irq_res
 argument_list|,
 name|INTR_TYPE_MISC
-operator||
-name|INTR_FAST
 argument_list|,
 name|npx_intr
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

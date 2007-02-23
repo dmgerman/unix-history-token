@@ -330,7 +330,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|at91_pio_intr
 parameter_list|(
 name|void
@@ -599,10 +599,10 @@ operator|->
 name|irq_res
 argument_list|,
 name|INTR_TYPE_MISC
-operator||
-name|INTR_FAST
 argument_list|,
 name|at91_pio_intr
+argument_list|,
+name|NULL
 argument_list|,
 name|sc
 argument_list|,
@@ -944,7 +944,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|at91_pio_intr
 parameter_list|(
 name|void
@@ -972,7 +972,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 

@@ -413,7 +413,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-name|void
+name|int
 name|clockhandler
 parameter_list|(
 name|void
@@ -1006,10 +1006,10 @@ argument_list|,
 name|irq
 argument_list|,
 name|INTR_TYPE_CLK
-operator||
-name|INTR_FAST
 argument_list|,
 name|clockhandler
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -1217,7 +1217,7 @@ comment|/*  * clockhandler:  *  *	Handle the hardclock interrupt.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|clockhandler
 parameter_list|(
 name|void
@@ -1265,7 +1265,11 @@ name|i80321_hardclock_hook
 call|)
 argument_list|()
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 

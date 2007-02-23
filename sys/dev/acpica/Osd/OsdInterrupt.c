@@ -294,6 +294,8 @@ name|INTR_TYPE_MISC
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
 operator|(
 name|driver_intr_t
 operator|*

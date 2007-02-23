@@ -1440,6 +1440,9 @@ parameter_list|,
 name|int
 name|irq
 parameter_list|,
+name|driver_filter_t
+name|filter
+parameter_list|,
 name|driver_intr_t
 name|handler
 parameter_list|,
@@ -1685,6 +1688,8 @@ name|event
 argument_list|,
 name|name
 argument_list|,
+name|filter
+argument_list|,
 name|handler
 argument_list|,
 name|arg
@@ -1852,14 +1857,11 @@ argument_list|)
 block|{
 if|if
 condition|(
-operator|!
-operator|(
 name|ih
 operator|->
-name|ih_flags
-operator|&
-name|IH_FAST
-operator|)
+name|ih_filter
+operator|==
+name|NULL
 condition|)
 block|{
 name|thread
@@ -1878,7 +1880,7 @@ name|__func__
 argument_list|,
 name|ih
 operator|->
-name|ih_handler
+name|ih_filter
 argument_list|,
 name|ih
 operator|->
@@ -1891,7 +1893,7 @@ argument_list|)
 expr_stmt|;
 name|ih
 operator|->
-name|ih_handler
+name|ih_filter
 argument_list|(
 name|ih
 operator|->

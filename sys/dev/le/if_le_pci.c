@@ -1992,6 +1992,8 @@ name|INTR_TYPE_NET
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
 name|am79900_intr
 argument_list|,
 name|sc

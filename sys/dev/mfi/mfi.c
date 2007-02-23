@@ -1927,6 +1927,8 @@ name|INTR_MPSAFE
 operator||
 name|INTR_TYPE_BIO
 argument_list|,
+name|NULL
+argument_list|,
 name|mfi_intr
 argument_list|,
 name|sc

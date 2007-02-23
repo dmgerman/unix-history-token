@@ -314,6 +314,10 @@ decl_stmt|;
 name|int
 name|pf_flags
 decl_stmt|;
+name|driver_filter_t
+modifier|*
+name|filt_handler
+decl_stmt|;
 name|driver_intr_t
 modifier|*
 name|intr_handler

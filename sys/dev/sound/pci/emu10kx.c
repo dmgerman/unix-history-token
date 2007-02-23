@@ -18073,6 +18073,8 @@ name|INTR_MPSAFE
 operator||
 name|INTR_TYPE_AV
 argument_list|,
+name|NULL
+argument_list|,
 name|emu_intr
 argument_list|,
 name|sc

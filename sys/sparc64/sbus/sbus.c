@@ -329,7 +329,7 @@ name|bus_addr_t
 name|scl_clr
 decl_stmt|;
 comment|/* clear register */
-name|driver_intr_t
+name|driver_filter_t
 modifier|*
 name|scl_handler
 decl_stmt|;
@@ -516,7 +516,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|sbus_intr_stub
 parameter_list|(
 name|void
@@ -539,7 +539,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|sbus_overtemp
 parameter_list|(
 name|void
@@ -550,7 +550,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|sbus_pwrfail
 parameter_list|(
 name|void
@@ -1990,10 +1990,10 @@ operator|->
 name|sc_ot_ires
 argument_list|,
 name|INTR_TYPE_MISC
-operator||
-name|INTR_FAST
 argument_list|,
 name|sbus_overtemp
+argument_list|,
+name|NULL
 argument_list|,
 name|sc
 argument_list|,
@@ -2088,10 +2088,10 @@ operator|->
 name|sc_pf_ires
 argument_list|,
 name|INTR_TYPE_MISC
-operator||
-name|INTR_FAST
 argument_list|,
 name|sbus_pwrfail
+argument_list|,
+name|NULL
 argument_list|,
 name|sc
 argument_list|,
@@ -3094,7 +3094,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|sbus_intr_stub
 parameter_list|(
 name|void
@@ -3138,6 +3138,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -3159,6 +3164,10 @@ name|ires
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filt
 parameter_list|,
 name|driver_intr_t
 modifier|*
@@ -3207,6 +3216,21 @@ decl_stmt|;
 name|long
 name|vec
 decl_stmt|;
+if|if
+condition|(
+name|filt
+operator|!=
+name|NULL
+operator|&&
+name|intr
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|sc
 operator|=
 name|device_get_softc
@@ -3430,6 +3454,18 @@ name|scl
 operator|->
 name|scl_handler
 operator|=
+operator|(
+name|filt
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|filt
+else|:
+operator|(
+name|driver_filter_t
+operator|*
+operator|)
 name|intr
 expr_stmt|;
 name|scl
@@ -3451,6 +3487,12 @@ operator|~
 name|INTMAP_V
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|filt
+operator|!=
+name|NULL
+condition|)
 name|error
 operator|=
 name|BUS_SETUP_INTR
@@ -3466,6 +3508,37 @@ name|ires
 argument_list|,
 name|flags
 argument_list|,
+name|sbus_intr_stub
+argument_list|,
+name|NULL
+argument_list|,
+name|scl
+argument_list|,
+name|cookiep
+argument_list|)
+expr_stmt|;
+else|else
+name|error
+operator|=
+name|BUS_SETUP_INTR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|child
+argument_list|,
+name|ires
+argument_list|,
+name|flags
+argument_list|,
+name|NULL
+argument_list|,
+operator|(
+name|driver_intr_t
+operator|*
+operator|)
 name|sbus_intr_stub
 argument_list|,
 name|scl
@@ -4611,7 +4684,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|sbus_overtemp
 parameter_list|(
 name|void
@@ -4629,6 +4702,11 @@ argument_list|(
 name|RB_POWEROFF
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -4638,7 +4716,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|sbus_pwrfail
 parameter_list|(
 name|void
@@ -4656,6 +4734,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 

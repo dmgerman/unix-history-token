@@ -350,7 +350,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|adlink_intr
 parameter_list|(
 name|void
@@ -392,7 +392,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|adlink_intr
 parameter_list|(
 name|void
@@ -441,6 +441,7 @@ literal|0x00800000
 operator|)
 condition|)
 return|return;
+comment|// XXX - FILTER_STRAY?
 name|bus_write_4
 argument_list|(
 name|sc
@@ -537,6 +538,7 @@ name|state
 argument_list|)
 expr_stmt|;
 return|return;
+comment|// XXX - FILTER_STRAY?
 block|}
 name|pg
 operator|=
@@ -598,6 +600,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -1846,6 +1853,7 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* XXX why do we need INTR_MPSAFE if INTR_FAST was declared too?!?!? */
 name|i
 operator|=
 name|bus_setup_intr
@@ -1862,10 +1870,10 @@ argument_list|,
 name|INTR_MPSAFE
 operator||
 name|INTR_TYPE_MISC
-operator||
-name|INTR_FAST
 argument_list|,
 name|adlink_intr
+argument_list|,
+name|NULL
 argument_list|,
 name|sc
 argument_list|,
@@ -1902,6 +1910,12 @@ name|INTR_MPSAFE
 operator||
 name|INTR_TYPE_MISC
 argument_list|,
+name|NULL
+argument_list|,
+operator|(
+name|driver_intr_t
+operator|*
+operator|)
 name|adlink_intr
 argument_list|,
 name|sc

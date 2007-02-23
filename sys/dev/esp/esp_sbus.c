@@ -2910,6 +2910,8 @@ name|INTR_TYPE_BIO
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
 name|ncr53c9x_intr
 argument_list|,
 name|sc

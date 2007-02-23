@@ -150,7 +150,7 @@ name|p_hasintr
 range|:
 literal|1
 decl_stmt|;
-name|driver_intr_t
+name|driver_filter_t
 modifier|*
 name|p_ih
 decl_stmt|;
@@ -514,7 +514,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|puc_intr
 parameter_list|(
 name|void
@@ -877,7 +877,17 @@ name|p_iharg
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
+return|return
+operator|(
+name|FILTER_STRAY
+operator|)
+return|;
 block|}
 end_function
 
@@ -1741,10 +1751,10 @@ operator|->
 name|sc_ires
 argument_list|,
 name|INTR_TYPE_TTY
-operator||
-name|INTR_FAST
 argument_list|,
 name|puc_intr
+argument_list|,
+name|NULL
 argument_list|,
 name|sc
 argument_list|,
@@ -1772,6 +1782,12 @@ name|INTR_TYPE_TTY
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
+operator|(
+name|driver_intr_t
+operator|*
+operator|)
 name|puc_intr
 argument_list|,
 name|sc
@@ -3294,6 +3310,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filt
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -3401,7 +3421,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ihand
+name|filt
 operator|==
 name|NULL
 operator|||
@@ -3525,6 +3545,8 @@ name|sc_ires
 argument_list|,
 name|flags
 argument_list|,
+name|filt
+argument_list|,
 name|ihand
 argument_list|,
 name|arg
@@ -3536,12 +3558,9 @@ return|;
 comment|/* We demand that serdev devices use fast interrupts. */
 if|if
 condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|INTR_FAST
-operator|)
+name|filt
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -3572,7 +3591,7 @@ name|port
 operator|->
 name|p_ih
 operator|=
-name|ihand
+name|filt
 expr_stmt|;
 name|port
 operator|->

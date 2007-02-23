@@ -160,7 +160,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|clockintr
 parameter_list|(
 name|void
@@ -176,7 +176,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void	statintr(void *);
+unit|static int	statintr(void *);
 endif|#
 directive|endif
 end_endif
@@ -498,7 +498,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|clockintr
 parameter_list|(
 name|arg
@@ -682,6 +682,11 @@ literal|0
 block|mtx_unlock_spin(&clock_lock);
 endif|#
 directive|endif
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -692,7 +697,7 @@ literal|0
 end_if
 
 begin_comment
-unit|static void statintr(arg) 	void *arg; { 	struct trapframe *frame = arg; 	u_int32_t oscr, nextmatch, oldmatch; 	int s;  	bus_space_write_4(saost_sc->sc_iot, saost_sc->sc_ioh, 			SAOST_SR, 2);
+unit|static int statintr(arg) 	void *arg; { 	struct trapframe *frame = arg; 	u_int32_t oscr, nextmatch, oldmatch; 	int s;  	bus_space_write_4(saost_sc->sc_iot, saost_sc->sc_ioh, 			SAOST_SR, 2);
 comment|/* schedule next clock intr */
 end_comment
 
@@ -702,7 +707,7 @@ comment|/* 		 * we couldn't set the matching register in time. 		 * just set it 
 end_comment
 
 begin_endif
-unit|s = splhigh(); 		oscr = bus_space_read_4(saost_sc->sc_iot, saost_sc->sc_ioh, 					SAOST_CR); 		nextmatch = oscr + 10; 		bus_space_write_4(saost_sc->sc_iot, saost_sc->sc_ioh, 				  SAOST_MR1, nextmatch); 		splx(s); 	}  	saost_sc->sc_statclock_count = nextmatch; 	statclock(TRAPF_USERMODE(frame));  }
+unit|s = splhigh(); 		oscr = bus_space_read_4(saost_sc->sc_iot, saost_sc->sc_ioh, 					SAOST_CR); 		nextmatch = oscr + 10; 		bus_space_write_4(saost_sc->sc_iot, saost_sc->sc_ioh, 				  SAOST_MR1, nextmatch); 		splx(s); 	}  	saost_sc->sc_statclock_count = nextmatch; 	statclock(TRAPF_USERMODE(frame)); 	return (FILTER_HANDLED); }
 endif|#
 directive|endif
 end_endif
@@ -850,10 +855,10 @@ argument_list|,
 name|irq1
 argument_list|,
 name|INTR_TYPE_CLK
-operator||
-name|INTR_FAST
 argument_list|,
 name|clockintr
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -864,7 +869,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|bus_setup_intr(dev, irq2, INTR_TYPE_CLK | INTR_FAST, statintr, NULL 	    ,&ih2);
+block|bus_setup_intr(dev, irq2, INTR_TYPE_CLK, statintr, NULL, NULL, 	    ,&ih2);
 endif|#
 directive|endif
 name|bus_space_write_4

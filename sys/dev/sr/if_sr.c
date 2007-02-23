@@ -1780,6 +1780,8 @@ name|res_irq
 argument_list|,
 name|INTR_TYPE_NET
 argument_list|,
+name|NULL
+argument_list|,
 name|srintr
 argument_list|,
 name|hc

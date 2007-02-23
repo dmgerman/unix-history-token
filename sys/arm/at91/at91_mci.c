@@ -878,6 +878,8 @@ name|INTR_TYPE_MISC
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
 name|at91_mci_intr
 argument_list|,
 name|sc

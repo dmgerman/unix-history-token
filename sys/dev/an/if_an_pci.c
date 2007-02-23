@@ -928,6 +928,8 @@ name|irq_res
 argument_list|,
 name|INTR_TYPE_NET
 argument_list|,
+name|NULL
+argument_list|,
 name|an_intr
 argument_list|,
 name|sc

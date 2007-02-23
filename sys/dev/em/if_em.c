@@ -1875,7 +1875,7 @@ end_else
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|em_intr_fast
 parameter_list|(
 name|void
@@ -6047,7 +6047,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|em_intr_fast
 parameter_list|(
 name|void
@@ -6095,7 +6095,11 @@ name|reg_icr
 operator|==
 literal|0xffffffff
 condition|)
-return|return;
+return|return
+operator|(
+name|FILTER_STRAY
+operator|)
+return|;
 comment|/* Definitely not our interrupt.  */
 if|if
 condition|(
@@ -6103,7 +6107,11 @@ name|reg_icr
 operator|==
 literal|0x0
 condition|)
-return|return;
+return|return
+operator|(
+name|FILTER_STRAY
+operator|)
+return|;
 comment|/* 	 * Starting with the 82571 chip, bit 31 should be used to 	 * determine whether the interrupt belongs to us. 	 */
 if|if
 condition|(
@@ -6123,7 +6131,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|FILTER_STRAY
+operator|)
+return|;
 comment|/* 	 * Mask interrupts until the taskqueue is finished running.  This is 	 * cheap, just assume that it is needed.  This also works around the 	 * MSI message reordering errata on certain systems. 	 */
 name|em_disable_intr
 argument_list|(
@@ -6174,6 +6186,11 @@ operator|->
 name|rx_overruns
 operator|++
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -10032,6 +10049,8 @@ name|INTR_TYPE_NET
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
 name|em_intr
 argument_list|,
 name|adapter
@@ -10143,10 +10162,10 @@ operator|->
 name|res_interrupt
 argument_list|,
 name|INTR_TYPE_NET
-operator||
-name|INTR_FAST
 argument_list|,
 name|em_intr_fast
+argument_list|,
+name|NULL
 argument_list|,
 name|adapter
 argument_list|,

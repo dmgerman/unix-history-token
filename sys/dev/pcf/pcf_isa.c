@@ -604,6 +604,8 @@ argument_list|,
 name|INTR_TYPE_NET
 comment|/* | INTR_ENTROPY */
 argument_list|,
+name|NULL
+argument_list|,
 name|pcf_intr
 argument_list|,
 name|sc

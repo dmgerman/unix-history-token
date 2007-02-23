@@ -382,6 +382,8 @@ name|res
 argument_list|,
 name|flags
 argument_list|,
+name|NULL
+argument_list|,
 name|hand
 argument_list|,
 name|param

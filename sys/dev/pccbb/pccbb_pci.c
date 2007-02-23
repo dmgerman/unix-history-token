@@ -1931,6 +1931,8 @@ name|INTR_TYPE_AV
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
 name|cbb_pci_intr
 argument_list|,
 name|sc

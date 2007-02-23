@@ -710,6 +710,8 @@ name|r_irq
 argument_list|,
 name|ATA_INTR_FLAGS
 argument_list|,
+name|NULL
+argument_list|,
 operator|(
 name|driver_intr_t
 operator|*

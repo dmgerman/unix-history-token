@@ -179,7 +179,7 @@ end_struct
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ppsintr
 parameter_list|(
 name|void
@@ -1093,11 +1093,11 @@ operator|(
 name|INTR_TYPE_TTY
 operator||
 name|INTR_MPSAFE
-operator||
-name|INTR_FAST
 operator|)
 argument_list|,
 name|ppsintr
+argument_list|,
+name|NULL
 argument_list|,
 name|sc
 argument_list|,
@@ -1544,7 +1544,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ppsintr
 parameter_list|(
 name|void
@@ -1589,7 +1589,11 @@ operator|&
 name|nACK
 operator|)
 condition|)
-return|return;
+return|return
+operator|(
+name|FILTER_STRAY
+operator|)
+return|;
 if|if
 condition|(
 name|sc
@@ -1669,6 +1673,11 @@ argument_list|,
 name|IRQENABLE
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 

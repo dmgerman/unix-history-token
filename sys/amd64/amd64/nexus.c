@@ -387,6 +387,9 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+name|filter
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -1909,6 +1912,9 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+name|filter
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -1996,6 +2002,8 @@ name|rman_get_start
 argument_list|(
 name|irq
 argument_list|)
+argument_list|,
+name|filter
 argument_list|,
 name|ihand
 argument_list|,

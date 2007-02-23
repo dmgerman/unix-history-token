@@ -4266,6 +4266,8 @@ name|ipmi_irq_res
 argument_list|,
 name|INTR_TYPE_MISC
 argument_list|,
+name|NULL
+argument_list|,
 name|sc
 operator|->
 name|ipmi_intr

@@ -584,10 +584,10 @@ argument_list|,
 name|irq_res
 argument_list|,
 name|INTR_TYPE_TTY
-operator||
-name|INTR_FAST
 argument_list|,
 name|cyintr
+argument_list|,
+name|NULL
 argument_list|,
 name|vsc
 argument_list|,
@@ -619,6 +619,12 @@ name|irq_res
 argument_list|,
 name|INTR_TYPE_TTY
 argument_list|,
+name|NULL
+argument_list|,
+operator|(
+name|driver_intr_t
+operator|*
+operator|)
 name|cyintr
 argument_list|,
 name|vsc

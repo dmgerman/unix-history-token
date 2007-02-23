@@ -1891,6 +1891,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filter
+parameter_list|,
 name|driver_intr_t
 modifier|*
 name|intr
@@ -1920,6 +1924,8 @@ argument_list|,
 name|irq
 argument_list|,
 name|flags
+argument_list|,
+name|filter
 argument_list|,
 name|intr
 argument_list|,

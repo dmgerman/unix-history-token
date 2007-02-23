@@ -332,6 +332,8 @@ name|sc_intr
 argument_list|,
 name|INTR_TYPE_TTY
 argument_list|,
+name|NULL
+argument_list|,
 name|mseintr
 argument_list|,
 name|sc

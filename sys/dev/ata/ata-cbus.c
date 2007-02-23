@@ -657,6 +657,8 @@ name|irq
 argument_list|,
 name|ATA_INTR_FLAGS
 argument_list|,
+name|NULL
+argument_list|,
 name|ata_cbus_intr
 argument_list|,
 name|ctlr
@@ -916,6 +918,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filter
+parameter_list|,
 name|driver_intr_t
 modifier|*
 name|intr
@@ -957,6 +963,24 @@ operator|)
 operator|->
 name|unit
 decl_stmt|;
+if|if
+condition|(
+name|filter
+operator|!=
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ata-cbus.c: we cannot use a filter here\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|controller
 operator|->
 name|interrupt

@@ -1168,6 +1168,8 @@ name|INTR_ENTROPY
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
 name|amr_pci_intr
 argument_list|,
 name|sc

@@ -149,6 +149,10 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filt
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -290,6 +294,8 @@ argument_list|(
 name|event
 argument_list|,
 name|name
+argument_list|,
+name|filt
 argument_list|,
 name|hand
 argument_list|,
@@ -457,14 +463,11 @@ argument_list|)
 block|{
 if|if
 condition|(
-operator|!
-operator|(
 name|ih
 operator|->
-name|ih_flags
-operator|&
-name|IH_FAST
-operator|)
+name|ih_filter
+operator|==
+name|NULL
 condition|)
 name|thread
 operator|=
@@ -473,7 +476,7 @@ expr_stmt|;
 else|else
 name|ih
 operator|->
-name|ih_handler
+name|ih_filter
 argument_list|(
 name|ih
 operator|->

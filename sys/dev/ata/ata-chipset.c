@@ -21169,6 +21169,8 @@ name|r_irq
 argument_list|,
 name|ATA_INTR_FLAGS
 argument_list|,
+name|NULL
+argument_list|,
 name|ata_promise_sx4_intr
 argument_list|,
 name|ctlr
@@ -21389,6 +21391,8 @@ operator|->
 name|r_irq
 argument_list|,
 name|ATA_INTR_FLAGS
+argument_list|,
+name|NULL
 argument_list|,
 name|ata_promise_mio_intr
 argument_list|,
@@ -34364,6 +34368,8 @@ operator|->
 name|r_irq
 argument_list|,
 name|ATA_INTR_FLAGS
+argument_list|,
+name|NULL
 argument_list|,
 name|ata_generic_intr
 argument_list|,

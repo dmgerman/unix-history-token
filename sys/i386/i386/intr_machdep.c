@@ -563,6 +563,9 @@ parameter_list|,
 name|int
 name|vector
 parameter_list|,
+name|driver_filter_t
+name|filter
+parameter_list|,
 name|driver_intr_t
 name|handler
 parameter_list|,
@@ -615,6 +618,8 @@ operator|->
 name|is_event
 argument_list|,
 name|name
+argument_list|,
+name|filter
 argument_list|,
 name|handler
 argument_list|,
@@ -1008,14 +1013,11 @@ argument_list|)
 block|{
 if|if
 condition|(
-operator|!
-operator|(
 name|ih
 operator|->
-name|ih_flags
-operator|&
-name|IH_FAST
-operator|)
+name|ih_filter
+operator|==
+name|NULL
 condition|)
 block|{
 name|thread
@@ -1063,7 +1065,7 @@ name|NULL
 condition|)
 name|ih
 operator|->
-name|ih_handler
+name|ih_filter
 argument_list|(
 name|frame
 argument_list|)

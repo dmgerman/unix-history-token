@@ -1444,6 +1444,8 @@ name|sbus_ires
 argument_list|,
 name|ISP_IFLAGS
 argument_list|,
+name|NULL
+argument_list|,
 name|isp_sbus_intr
 argument_list|,
 name|isp

@@ -15820,6 +15820,8 @@ name|irq
 argument_list|,
 name|INTR_TYPE_CAM
 argument_list|,
+name|NULL
+argument_list|,
 name|trm_Interrupt
 argument_list|,
 name|pACB

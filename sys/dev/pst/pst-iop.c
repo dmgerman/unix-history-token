@@ -703,6 +703,8 @@ name|INTR_ENTROPY
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
 name|iop_intr
 argument_list|,
 name|sc

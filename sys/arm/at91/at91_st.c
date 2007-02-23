@@ -674,7 +674,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|clock_intr
 parameter_list|(
 name|void
@@ -724,7 +724,17 @@ name|fp
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
+return|return
+operator|(
+name|FILTER_STRAY
+operator|)
+return|;
 block|}
 end_function
 
@@ -855,10 +865,10 @@ argument_list|,
 name|irq
 argument_list|,
 name|INTR_TYPE_CLK
-operator||
-name|INTR_FAST
 argument_list|,
 name|clock_intr
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

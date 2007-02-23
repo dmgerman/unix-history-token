@@ -130,6 +130,10 @@ modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filter
+parameter_list|,
 name|void
 function_decl|(
 modifier|*

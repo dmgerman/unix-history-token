@@ -1834,6 +1834,8 @@ name|irq
 argument_list|,
 name|INTR_TYPE_CAM
 argument_list|,
+name|NULL
+argument_list|,
 name|iir_intr
 argument_list|,
 name|gdt

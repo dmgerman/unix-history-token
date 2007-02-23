@@ -2768,7 +2768,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|cyintr
 parameter_list|(
 name|void
@@ -2894,6 +2894,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+comment|// XXX - FILTER_STRAY?
 ifdef|#
 directive|ifdef
 name|CyDebug
@@ -4845,6 +4846,11 @@ expr_stmt|;
 name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 

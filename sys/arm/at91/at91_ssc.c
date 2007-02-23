@@ -494,6 +494,8 @@ name|INTR_TYPE_MISC
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
 name|at91_ssc_intr
 argument_list|,
 name|sc

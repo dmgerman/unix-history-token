@@ -163,7 +163,7 @@ name|m_sysdev
 range|:
 literal|1
 decl_stmt|;
-name|driver_intr_t
+name|driver_filter_t
 modifier|*
 name|ih
 decl_stmt|;
@@ -485,6 +485,9 @@ name|resource
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|driver_filter_t
+modifier|*
 parameter_list|,
 name|void
 function_decl|(

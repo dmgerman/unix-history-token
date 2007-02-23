@@ -421,6 +421,8 @@ name|INTR_TYPE_TTY
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
 name|drm_irq_handler_wrap
 argument_list|,
 name|dev

@@ -1254,6 +1254,8 @@ name|irq_res
 argument_list|,
 name|INTR_TYPE_NET
 argument_list|,
+name|NULL
+argument_list|,
 name|sbsh_intr
 argument_list|,
 name|sc

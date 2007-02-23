@@ -656,6 +656,8 @@ name|INTR_TYPE_BIO
 operator||
 name|INTR_MPSAFE
 argument_list|,
+name|NULL
+argument_list|,
 name|sc
 operator|->
 name|ips_adapter_intr

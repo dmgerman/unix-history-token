@@ -1449,6 +1449,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filt
+parameter_list|,
 name|driver_intr_t
 modifier|*
 name|intr
@@ -1475,6 +1479,8 @@ argument_list|,
 name|ires
 argument_list|,
 name|flags
+argument_list|,
+name|filt
 argument_list|,
 name|intr
 argument_list|,

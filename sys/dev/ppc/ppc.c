@@ -7758,6 +7758,8 @@ name|res_irq
 argument_list|,
 name|INTR_TYPE_TTY
 argument_list|,
+name|NULL
+argument_list|,
 name|ppcintr
 argument_list|,
 name|dev
@@ -8464,6 +8466,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filt
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -8560,6 +8566,8 @@ argument_list|,
 name|r
 argument_list|,
 name|flags
+argument_list|,
+name|filt
 argument_list|,
 name|ihand
 argument_list|,
@@ -8663,6 +8671,8 @@ operator|->
 name|res_irq
 argument_list|,
 name|INTR_TYPE_TTY
+argument_list|,
+name|NULL
 argument_list|,
 name|ppcintr
 argument_list|,

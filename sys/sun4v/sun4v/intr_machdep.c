@@ -1212,14 +1212,11 @@ argument_list|)
 block|{
 if|if
 condition|(
-operator|!
-operator|(
 name|ih
 operator|->
-name|ih_flags
-operator|&
-name|IH_FAST
-operator|)
+name|ih_filter
+operator|==
+name|NULL
 condition|)
 block|{
 name|thread
@@ -1232,9 +1229,9 @@ name|MPASS
 argument_list|(
 name|ih
 operator|->
-name|ih_flags
-operator|&
-name|IH_FAST
+name|ih_filter
+operator|==
+name|NULL
 operator|&&
 name|ih
 operator|->
@@ -1253,7 +1250,7 @@ name|__func__
 argument_list|,
 name|ih
 operator|->
-name|ih_handler
+name|ih_filter
 argument_list|,
 name|ih
 operator|->
@@ -1262,7 +1259,7 @@ argument_list|)
 expr_stmt|;
 name|ih
 operator|->
-name|ih_handler
+name|ih_filter
 argument_list|(
 name|ih
 operator|->
@@ -1317,7 +1314,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ithread_wrapper
 parameter_list|(
 name|void
@@ -1356,6 +1353,11 @@ argument_list|,
 name|HV_INTR_IDLE_STATE
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -1370,6 +1372,10 @@ name|name
 parameter_list|,
 name|int
 name|vec
+parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filt
 parameter_list|,
 name|void
 function_decl|(
@@ -1420,6 +1426,21 @@ name|errcode
 decl_stmt|,
 name|pil
 decl_stmt|;
+if|if
+condition|(
+name|filt
+operator|!=
+name|NULL
+operator|&&
+name|handler
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* 	 * Work around a race where more than one CPU may be registering 	 * handlers on the same IRQ at the same time. 	 */
 name|iv
 operator|=
@@ -1543,12 +1564,9 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|INTR_FAST
-operator|)
+name|filt
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ivh
@@ -1575,7 +1593,11 @@ name|ivh
 operator|->
 name|ivh_handler
 operator|=
-name|handler
+operator|(
+name|driver_intr_t
+operator|*
+operator|)
+name|filt
 expr_stmt|;
 name|ivh
 operator|->
@@ -1598,6 +1620,8 @@ argument_list|,
 name|name
 argument_list|,
 name|ithread_wrapper
+argument_list|,
+name|NULL
 argument_list|,
 name|ivh
 argument_list|,
@@ -1625,6 +1649,8 @@ argument_list|(
 name|ie
 argument_list|,
 name|name
+argument_list|,
+name|NULL
 argument_list|,
 name|handler
 argument_list|,
@@ -1666,9 +1692,9 @@ block|}
 name|pil
 operator|=
 operator|(
-name|flags
-operator|&
-name|INTR_FAST
+name|filt
+operator|!=
+name|NULL
 operator|)
 condition|?
 name|PIL_FAST

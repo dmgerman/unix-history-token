@@ -773,6 +773,8 @@ name|INTR_TYPE_CAM
 operator||
 name|INTR_ENTROPY
 argument_list|,
+name|NULL
+argument_list|,
 name|nsp_pccard_intr
 argument_list|,
 operator|(

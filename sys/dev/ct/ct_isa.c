@@ -1570,6 +1570,8 @@ name|irq_res
 argument_list|,
 name|INTR_TYPE_CAM
 argument_list|,
+name|NULL
+argument_list|,
 operator|(
 name|driver_intr_t
 operator|*
