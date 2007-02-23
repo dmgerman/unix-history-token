@@ -5863,12 +5863,8 @@ index|]
 operator|.
 name|i
 condition|)
-name|tsleep
+name|pause
 argument_list|(
-name|NULL
-argument_list|,
-name|PPBPRI
-argument_list|,
 literal|"ppbdelay"
 argument_list|,
 name|mi

@@ -5057,14 +5057,8 @@ operator|)
 return|;
 block|}
 comment|/* 	 * This may look really goofy, but apparently it is possible 	 * to halt a miniport too soon after it's been initialized. 	 * After MiniportInitialize() finishes, pause for 1 second 	 * to give the chip a chance to handle any short-lived timers 	 * that were set in motion. If we call MiniportHalt() too soon, 	 * some of the timers may not be cancelled, because the driver 	 * expects them to fire before the halt is called. 	 */
-name|tsleep
+name|pause
 argument_list|(
-name|curthread
-operator|->
-name|td_proc
-argument_list|,
-name|PWAIT
-argument_list|,
 literal|"ndwait"
 argument_list|,
 name|hz

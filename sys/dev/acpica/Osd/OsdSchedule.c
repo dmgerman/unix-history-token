@@ -419,10 +419,6 @@ block|{
 name|int
 name|timo
 decl_stmt|;
-specifier|static
-name|int
-name|dummy
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -450,13 +446,8 @@ name|timo
 operator|>
 literal|0
 condition|)
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|dummy
-argument_list|,
-literal|0
-argument_list|,
 literal|"acpislp"
 argument_list|,
 name|timo
