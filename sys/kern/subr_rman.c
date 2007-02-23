@@ -809,9 +809,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-comment|/* Can we merge with just the next region? */
+elseif|else
 if|if
 condition|(
 name|t
@@ -819,6 +817,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* Can we merge with just the next region? */
 name|t
 operator|->
 name|r_start
@@ -835,7 +834,35 @@ name|M_RMAN
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|s
+operator|->
+name|r_end
+operator|<
+name|r
+operator|->
+name|r_start
+condition|)
+block|{
+name|TAILQ_INSERT_AFTER
+argument_list|(
+operator|&
+name|rm
+operator|->
+name|rm_list
+argument_list|,
+name|s
+argument_list|,
+name|r
+argument_list|,
+name|r_link
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|TAILQ_INSERT_BEFORE
 argument_list|(
 name|s
