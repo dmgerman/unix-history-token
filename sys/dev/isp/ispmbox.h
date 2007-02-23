@@ -2930,7 +2930,6 @@ name|uint16_t
 name|ms_cmd_cnt
 decl_stmt|;
 comment|/* Command DSD count */
-empty_stmt|;
 name|uint16_t
 name|ms_tot_cnt
 decl_stmt|;

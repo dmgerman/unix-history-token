@@ -2388,56 +2388,56 @@ begin_define
 define|#
 directive|define
 name|HCCR_2400_CMD_NOP
-value|(0x0<< 28)
+value|0x00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|HCCR_2400_CMD_RESET
-value|(0x1<< 28)
+value|0x10000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|HCCR_2400_CMD_CLEAR_RESET
-value|(0x2<< 28)
+value|0x20000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|HCCR_2400_CMD_PAUSE
-value|(0x3<< 28)
+value|0x30000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|HCCR_2400_CMD_RELEASE
-value|(0x4<< 28)
+value|0x40000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|HCCR_2400_CMD_SET_HOST_INT
-value|(0x5<< 28)
+value|0x50000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|HCCR_2400_CMD_CLEAR_HOST_INT
-value|(0x6<< 28)
+value|0x60000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|HCCR_2400_CMD_CLEAR_RISC_INT
-value|(0xA<< 28)
+value|0xA0000000
 end_define
 
 begin_define
