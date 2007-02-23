@@ -1036,7 +1036,7 @@ name|__func__
 argument_list|,
 name|ih
 operator|->
-name|ih_handler
+name|ih_filter
 argument_list|,
 name|ih
 operator|->
@@ -1073,7 +1073,7 @@ expr_stmt|;
 else|else
 name|ih
 operator|->
-name|ih_handler
+name|ih_filter
 argument_list|(
 name|ih
 operator|->
