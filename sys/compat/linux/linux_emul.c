@@ -729,6 +729,13 @@ name|refs
 operator|==
 literal|0
 condition|)
+block|{
+name|EMUL_SHARED_WUNLOCK
+argument_list|(
+operator|&
+name|emul_shared_lock
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|em
@@ -738,6 +745,8 @@ argument_list|,
 name|M_LINUX
 argument_list|)
 expr_stmt|;
+block|}
+else|else
 name|EMUL_SHARED_WUNLOCK
 argument_list|(
 operator|&
@@ -1140,6 +1149,13 @@ name|refs
 operator|==
 literal|0
 condition|)
+block|{
+name|EMUL_SHARED_WUNLOCK
+argument_list|(
+operator|&
+name|emul_shared_lock
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|em
@@ -1149,6 +1165,8 @@ argument_list|,
 name|M_LINUX
 argument_list|)
 expr_stmt|;
+block|}
+else|else
 name|EMUL_SHARED_WUNLOCK
 argument_list|(
 operator|&
