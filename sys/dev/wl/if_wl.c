@@ -2189,6 +2189,8 @@ name|res_irq
 argument_list|,
 name|INTR_TYPE_NET
 argument_list|,
+name|NULL
+argument_list|,
 name|wlintr
 argument_list|,
 name|sc

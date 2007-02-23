@@ -1492,6 +1492,8 @@ name|irq
 argument_list|,
 name|INTR_TYPE_NET
 argument_list|,
+name|NULL
+argument_list|,
 operator|(
 name|void
 argument_list|(
