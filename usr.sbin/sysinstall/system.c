@@ -1062,7 +1062,7 @@ else|#
 directive|else
 name|reboot
 argument_list|(
-literal|0
+name|RB_AUTOBOOT
 argument_list|)
 expr_stmt|;
 endif|#
