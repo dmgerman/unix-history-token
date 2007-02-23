@@ -2202,9 +2202,6 @@ name|struct
 name|emu_sc_info
 modifier|*
 name|sc
-parameter_list|,
-name|device_t
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -14707,9 +14704,6 @@ name|struct
 name|emu_sc_info
 modifier|*
 name|sc
-parameter_list|,
-name|device_t
-name|dev
 parameter_list|)
 block|{
 name|uint32_t
@@ -14995,6 +14989,8 @@ argument_list|(
 comment|/* parent */
 name|bus_get_dma_tag
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|)
 argument_list|,
@@ -18070,7 +18066,7 @@ operator|==
 name|NULL
 operator|)
 operator|||
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
@@ -18079,10 +18075,6 @@ operator|->
 name|irq
 argument_list|,
 name|INTR_MPSAFE
-operator||
-name|INTR_TYPE_AV
-argument_list|,
-name|NULL
 argument_list|,
 name|emu_intr
 argument_list|,
@@ -18199,8 +18191,6 @@ condition|(
 name|emu_init
 argument_list|(
 name|sc
-argument_list|,
-name|dev
 argument_list|)
 operator|==
 operator|-

@@ -11532,9 +11532,6 @@ name|struct
 name|sc_info
 modifier|*
 name|sc
-parameter_list|,
-name|device_t
-name|dev
 parameter_list|)
 block|{
 comment|/* allocate I/O port resource */
@@ -11799,6 +11796,8 @@ argument_list|(
 comment|/*parent*/
 name|bus_get_dma_tag
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|)
 argument_list|,
@@ -12039,8 +12038,6 @@ operator|=
 name|envy24ht_alloc_resource
 argument_list|(
 name|sc
-argument_list|,
-name|dev
 argument_list|)
 expr_stmt|;
 if|if
