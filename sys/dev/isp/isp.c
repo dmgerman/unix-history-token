@@ -14670,7 +14670,7 @@ name|pdb
 operator|.
 name|handle
 expr_stmt|;
-comment|/* 		 * Check to make sure it's still a valid entry. The 24XX seems 		 * to return a portid but not a WWPN/WWNN or role for devices 		 * which shift on a loop. 		 */
+comment|/* 		 * Check to make sure it's still a valid entry. The 24XX seems 		 * to return a portid but not a WWPN/WWNN or role for devices 		 * which shift on a loop, or have a WWPN/WWNN but no portid. 		 */
 if|if
 condition|(
 name|tmp
@@ -14692,6 +14692,15 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|isp
+operator|->
+name|isp_dblev
+operator|&
+name|ISP_LOGSANCFG
+condition|)
+block|{
 name|int
 name|a
 decl_stmt|,
@@ -14701,6 +14710,7 @@ name|c
 decl_stmt|;
 name|a
 operator|=
+operator|!
 operator|(
 name|tmp
 operator|.
@@ -14711,6 +14721,7 @@ operator|)
 expr_stmt|;
 name|b
 operator|=
+operator|!
 operator|(
 name|tmp
 operator|.
@@ -14721,6 +14732,7 @@ operator|)
 expr_stmt|;
 name|c
 operator|=
+operator|!
 operator|(
 name|tmp
 operator|.
@@ -14733,7 +14745,7 @@ name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
-name|ISP_LOGWARN
+name|ISP_LOGALL
 argument_list|,
 literal|"bad pdb (%1d%1d%1d) @ handle 0x%x"
 argument_list|,
@@ -14751,6 +14763,7 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
+block|}
 continue|continue;
 block|}
 comment|/* 		 * Now search the entire port database 		 * for the same Port and Node WWN. 		 */
