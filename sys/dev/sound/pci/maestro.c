@@ -9205,7 +9205,10 @@ condition|(
 name|bus_dma_tag_create
 argument_list|(
 comment|/*parent*/
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 comment|/*align */
 literal|4
@@ -9282,7 +9285,10 @@ condition|(
 name|bus_dma_tag_create
 argument_list|(
 comment|/*parent*/
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 comment|/*align */
 literal|1

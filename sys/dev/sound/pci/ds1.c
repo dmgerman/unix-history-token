@@ -628,6 +628,8 @@ parameter_list|(
 name|struct
 name|sc_info
 modifier|*
+parameter_list|,
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4332,6 +4334,9 @@ name|struct
 name|sc_info
 modifier|*
 name|sc
+parameter_list|,
+name|device_t
+name|dev
 parameter_list|)
 block|{
 name|int
@@ -4724,7 +4729,10 @@ if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -5711,7 +5719,10 @@ condition|(
 name|bus_dma_tag_create
 argument_list|(
 comment|/*parent*/
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 comment|/*alignment*/
 literal|2
@@ -5782,6 +5793,8 @@ condition|(
 name|ds_init
 argument_list|(
 name|sc
+argument_list|,
+name|dev
 argument_list|)
 operator|==
 operator|-
@@ -6174,6 +6187,8 @@ condition|(
 name|ds_init
 argument_list|(
 name|sc
+argument_list|,
+name|dev
 argument_list|)
 operator|==
 operator|-
