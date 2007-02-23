@@ -245,19 +245,6 @@ end_define
 begin_function
 specifier|static
 name|void
-name|mac_partition_init
-parameter_list|(
-name|struct
-name|mac_policy_conf
-modifier|*
-name|conf
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-specifier|static
-name|void
 name|mac_partition_init_label
 parameter_list|(
 name|struct
@@ -983,11 +970,6 @@ name|mac_policy_ops
 name|mac_partition_ops
 init|=
 block|{
-operator|.
-name|mpo_init
-operator|=
-name|mac_partition_init
-block|,
 operator|.
 name|mpo_init_cred_label
 operator|=

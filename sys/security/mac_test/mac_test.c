@@ -1746,62 +1746,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Policy module operations.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|mac_test_destroy
-parameter_list|(
-name|struct
-name|mac_policy_conf
-modifier|*
-name|conf
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-specifier|static
-name|void
-name|mac_test_init
-parameter_list|(
-name|struct
-name|mac_policy_conf
-modifier|*
-name|conf
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-specifier|static
-name|int
-name|mac_test_syscall
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|call
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Label operations.  */
 end_comment
 
@@ -10403,21 +10347,6 @@ name|mac_policy_ops
 name|mac_test_ops
 init|=
 block|{
-operator|.
-name|mpo_destroy
-operator|=
-name|mac_test_destroy
-block|,
-operator|.
-name|mpo_init
-operator|=
-name|mac_test_init
-block|,
-operator|.
-name|mpo_syscall
-operator|=
-name|mac_test_syscall
-block|,
 operator|.
 name|mpo_init_bpfdesc_label
 operator|=
