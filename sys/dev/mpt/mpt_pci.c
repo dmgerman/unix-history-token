@@ -2297,7 +2297,7 @@ expr_stmt|;
 comment|/* Register the interrupt handler */
 if|if
 condition|(
-name|bus_setup_intr
+name|mpt_setup_intr
 argument_list|(
 name|dev
 argument_list|,

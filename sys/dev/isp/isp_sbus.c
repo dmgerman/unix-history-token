@@ -1434,7 +1434,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|bus_setup_intr
+name|isp_setup_intr
 argument_list|(
 name|dev
 argument_list|,

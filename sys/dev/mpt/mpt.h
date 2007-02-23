@@ -844,6 +844,51 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* **************************** NewBUS interrupt Crock ************************/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|700031
+end_if
+
+begin_define
+define|#
+directive|define
+name|mpt_setup_intr
+parameter_list|(
+name|d
+parameter_list|,
+name|i
+parameter_list|,
+name|f
+parameter_list|,
+name|U
+parameter_list|,
+define|if, ifa, hp)	\ 	bus_setup_intr(d, i, f, if, ifa, hp)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|mpt_setup_intr
+value|bus_setup_intr
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/**************************** Kernel Thread Support ***************************/
 end_comment
 
