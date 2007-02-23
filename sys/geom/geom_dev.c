@@ -1944,12 +1944,10 @@ name|cp
 operator|->
 name|nend
 condition|)
-name|msleep
+name|tsleep
 argument_list|(
 operator|&
 name|dev
-argument_list|,
-name|NULL
 argument_list|,
 name|PRIBIO
 argument_list|,

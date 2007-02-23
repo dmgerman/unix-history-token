@@ -2268,12 +2268,10 @@ argument_list|,
 name|pace
 argument_list|)
 expr_stmt|;
-name|msleep
+name|tsleep
 argument_list|(
 operator|&
 name|error
-argument_list|,
-name|NULL
 argument_list|,
 name|PRIBIO
 argument_list|,
