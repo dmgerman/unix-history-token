@@ -420,18 +420,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Globals.  All but ip6_mrouter, ip6_mrtproto and mrt6stat could be static,  * except for netstat or debugging purposes.  */
+comment|/*  * Globals.  All but ip6_mrtproto and mrt6stat could be static,  * except for netstat or debugging purposes.  */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|socket
-modifier|*
-name|ip6_mrouter
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int

@@ -323,6 +323,8 @@ name|struct
 name|socket
 modifier|*
 name|ip6_mrouter
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
