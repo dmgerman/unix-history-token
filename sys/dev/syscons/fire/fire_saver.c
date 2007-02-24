@@ -110,6 +110,18 @@ parameter_list|)
 value|((n) * 3 + 2)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SET_ORIGIN
+parameter_list|(
+name|adp
+parameter_list|,
+name|o
+parameter_list|)
+value|do {				\ 	int oo = o;					\ 	if (oo != last_origin)				\ 	    set_origin(adp, last_origin = oo);		\ 	} while (0)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|u_char
@@ -177,6 +189,12 @@ name|int
 name|o
 decl_stmt|,
 name|p
+decl_stmt|;
+name|int
+name|last_origin
+init|=
+operator|-
+literal|1
 decl_stmt|;
 comment|/* make a new bottom line */
 for|for
@@ -406,7 +424,7 @@ operator|+=
 name|banksize
 expr_stmt|;
 block|}
-name|set_origin
+name|SET_ORIGIN
 argument_list|(
 name|adp
 argument_list|,
@@ -457,7 +475,7 @@ operator|-
 name|p
 argument_list|)
 expr_stmt|;
-name|set_origin
+name|SET_ORIGIN
 argument_list|(
 name|adp
 argument_list|,

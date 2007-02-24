@@ -84,6 +84,18 @@ name|STARS
 value|(SPP * (1 + 2 + 4 + 8))
 end_define
 
+begin_define
+define|#
+directive|define
+name|SET_ORIGIN
+parameter_list|(
+name|adp
+parameter_list|,
+name|o
+parameter_list|)
+value|do {				\ 	int oo = o;					\ 	if (oo != last_origin)				\ 	    set_origin(adp, last_origin = oo);		\ 	} while (0)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|u_char
@@ -190,6 +202,12 @@ name|o
 decl_stmt|,
 name|p
 decl_stmt|;
+name|int
+name|last_origin
+init|=
+operator|-
+literal|1
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -277,7 +295,7 @@ operator|+=
 name|banksize
 expr_stmt|;
 block|}
-name|set_origin
+name|SET_ORIGIN
 argument_list|(
 name|adp
 argument_list|,
@@ -360,7 +378,7 @@ operator|+=
 name|banksize
 expr_stmt|;
 block|}
-name|set_origin
+name|SET_ORIGIN
 argument_list|(
 name|adp
 argument_list|,
