@@ -429,6 +429,9 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|driver_filter_t
+name|filter
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -463,6 +466,8 @@ argument_list|,
 name|r
 argument_list|,
 name|flags
+argument_list|,
+name|filter
 argument_list|,
 name|ihand
 argument_list|,
