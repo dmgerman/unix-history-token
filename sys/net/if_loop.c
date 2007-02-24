@@ -1186,22 +1186,9 @@ argument_list|,
 name|hlen
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
+ifndef|#
+directive|ifndef
+name|__NO_STRICT_ALIGNMENT
 comment|/* The alpha doesn't like unaligned data. 		 * We move data down in the first mbuf */
 if|if
 condition|(
