@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -81,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ifaddrs.h>
 end_include
 
 begin_include
@@ -146,9 +146,9 @@ name|__unused
 parameter_list|,
 specifier|const
 name|struct
-name|rt_addrinfo
+name|ifaddrs
 modifier|*
-name|info
+name|ifa
 parameter_list|)
 block|{
 name|struct
@@ -165,12 +165,9 @@ expr|struct
 name|sockaddr_ipx
 operator|*
 operator|)
-name|info
+name|ifa
 operator|->
-name|rti_info
-index|[
-name|RTAX_IFA
-index|]
+name|ifa_addr
 expr_stmt|;
 if|if
 condition|(
@@ -193,7 +190,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flags
+name|ifa
+operator|->
+name|ifa_flags
 operator|&
 name|IFF_POINTOPOINT
 condition|)
@@ -205,17 +204,15 @@ expr|struct
 name|sockaddr_ipx
 operator|*
 operator|)
-name|info
+name|ifa
 operator|->
-name|rti_info
-index|[
-name|RTAX_BRD
-index|]
+name|ifa_broadaddr
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sipx
+operator|==
+name|NULL
 condition|)
 block|{
 name|memset

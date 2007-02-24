@@ -247,7 +247,7 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
-name|rt_addrinfo
+name|ifaddrs
 struct_decl|;
 end_struct_decl
 
@@ -296,7 +296,7 @@ name|int
 parameter_list|,
 specifier|const
 name|struct
-name|rt_addrinfo
+name|ifaddrs
 modifier|*
 parameter_list|)
 function_decl|;
@@ -512,13 +512,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|flags
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|newaddr
 decl_stmt|;
 end_decl_stmt
@@ -595,6 +588,7 @@ begin_function_decl
 name|void
 name|ifmaybeload
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name

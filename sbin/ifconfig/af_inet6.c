@@ -56,16 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/route.h>
-end_include
-
-begin_comment
-comment|/* for RTX_IFA */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -953,9 +943,9 @@ name|__unused
 parameter_list|,
 specifier|const
 name|struct
-name|rt_addrinfo
+name|ifaddrs
 modifier|*
-name|info
+name|ifa
 parameter_list|)
 block|{
 name|struct
@@ -1013,12 +1003,9 @@ expr|struct
 name|sockaddr_in6
 operator|*
 operator|)
-name|info
+name|ifa
 operator|->
-name|rti_info
-index|[
-name|RTAX_IFA
-index|]
+name|ifa_addr
 expr_stmt|;
 if|if
 condition|(
@@ -1323,12 +1310,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flags
+name|ifa
+operator|->
+name|ifa_flags
 operator|&
 name|IFF_POINTOPOINT
 condition|)
 block|{
-comment|/* note RTAX_BRD overlap with IFF_BROADCAST */
 name|sin
 operator|=
 operator|(
@@ -1336,17 +1324,16 @@ expr|struct
 name|sockaddr_in6
 operator|*
 operator|)
-name|info
+name|ifa
 operator|->
-name|rti_info
-index|[
-name|RTAX_BRD
-index|]
+name|ifa_dstaddr
 expr_stmt|;
 comment|/* 		 * some of the interfaces do not have valid destination 		 * address. 		 */
 if|if
 condition|(
 name|sin
+operator|!=
+name|NULL
 operator|&&
 name|sin
 operator|->
@@ -1510,17 +1497,15 @@ expr|struct
 name|sockaddr_in6
 operator|*
 operator|)
-name|info
+name|ifa
 operator|->
-name|rti_info
-index|[
-name|RTAX_NETMASK
-index|]
+name|ifa_netmask
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sin
+operator|==
+name|NULL
 condition|)
 name|sin
 operator|=
