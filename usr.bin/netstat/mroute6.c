@@ -54,7 +54,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -84,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdint.h>
 end_include
 
@@ -91,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_define
@@ -206,13 +236,42 @@ name|long
 name|int
 name|waitings
 decl_stmt|;
-comment|/* XXX: sysctl not yet implemented for mif6table. */
+name|size_t
+name|len
+decl_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|mif6table
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|mfcaddr
-operator|==
+name|sysctlbyname
+argument_list|(
+literal|"net.inet6.ip6.mif6table"
+argument_list|,
+name|mif6table
+argument_list|,
+operator|&
+name|len
+argument_list|,
+name|NULL
+argument_list|,
 literal|0
-operator|||
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"sysctl: net.inet6.ip6.mif6table"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|mifaddr
 operator|==
 literal|0
@@ -220,20 +279,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"No IPv6 multicast forwarding configured in the "
-literal|"running system.\n"
+literal|"No IPv6 multicast forwarding configured in "
+literal|"the running system.\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|saved_numeric_addr
-operator|=
-name|numeric_addr
-expr_stmt|;
-name|numeric_addr
-operator|=
-literal|1
-expr_stmt|;
 name|kread
 argument_list|(
 name|mifaddr
@@ -242,7 +293,6 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|&
 name|mif6table
 argument_list|,
 sizeof|sizeof
@@ -250,6 +300,15 @@ argument_list|(
 name|mif6table
 argument_list|)
 argument_list|)
+expr_stmt|;
+block|}
+name|saved_numeric_addr
+operator|=
+name|numeric_addr
+expr_stmt|;
+name|numeric_addr
+operator|=
+literal|1
 expr_stmt|;
 name|banner_printed
 operator|=
@@ -295,6 +354,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+comment|/* XXX KVM */
 name|kread
 argument_list|(
 operator|(
@@ -404,7 +464,53 @@ argument_list|(
 literal|"\nIPv6 Multicast Interface Table is empty\n"
 argument_list|)
 expr_stmt|;
-comment|/* XXX: sysctl not yet implemented for mf6ctable. */
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|mf6ctable
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"net.inet6.ip6.mf6ctable"
+argument_list|,
+name|mf6ctable
+argument_list|,
+operator|&
+name|len
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"sysctl: net.inet6.ip6.mf6ctable"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mfcaddr
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"No IPv6 multicast forwarding configured in "
+literal|"the running system.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 		 * XXX: Try KVM if the module is neither compiled nor loaded. 		 * The correct behaviour would be to always use KVM if 		 * the -M option is specified to netstat(1). 		 */
 name|kread
 argument_list|(
 name|mfcaddr
@@ -413,7 +519,6 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|&
 name|mf6ctable
 argument_list|,
 sizeof|sizeof
@@ -422,6 +527,7 @@ name|mf6ctable
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|banner_printed
 operator|=
 literal|0
@@ -572,6 +678,7 @@ block|{
 name|waitings
 operator|++
 expr_stmt|;
+comment|/* XXX KVM */
 name|kread
 argument_list|(
 operator|(
@@ -683,7 +790,7 @@ name|banner_printed
 condition|)
 name|printf
 argument_list|(
-literal|"\nIPv6 Multicast Routing Table is empty\n"
+literal|"\nIPv6 Multicast Forwarding Table is empty\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -710,7 +817,37 @@ name|struct
 name|mrt6stat
 name|mrtstat
 decl_stmt|;
-comment|/* XXX: sysctl not yet implemented for mrt6stat. */
+name|size_t
+name|len
+init|=
+sizeof|sizeof
+name|mrtstat
+decl_stmt|;
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"net.inet6.ip6.mrt6stat"
+argument_list|,
+operator|&
+name|mrtstat
+argument_list|,
+operator|&
+name|len
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"sysctl: net.inet6.ip6.mrt6stat"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mstaddr
@@ -743,6 +880,7 @@ name|mrtstat
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"IPv6 multicast forwarding:\n"
