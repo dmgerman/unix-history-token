@@ -2612,6 +2612,8 @@ condition|(
 name|ip6_mrouter
 operator|&&
 name|ip6_mforward
+operator|&&
+name|ip6_mforward
 argument_list|(
 name|ip6
 argument_list|,

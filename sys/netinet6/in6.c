@@ -1245,11 +1245,15 @@ case|:
 return|return
 operator|(
 name|mrt6_ioctl
+condition|?
+name|mrt6_ioctl
 argument_list|(
 name|cmd
 argument_list|,
 name|data
 argument_list|)
+else|:
+name|EOPNOTSUPP
 operator|)
 return|;
 block|}

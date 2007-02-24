@@ -1317,7 +1317,7 @@ block|,
 operator|.
 name|pr_input
 operator|=
-name|pim6_input
+name|encap6_input
 block|,
 operator|.
 name|pr_output
