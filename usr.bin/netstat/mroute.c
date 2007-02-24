@@ -388,7 +388,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nVirtual Interface Table\n"
+literal|"\nIPv4 Virtual Interface Table\n"
 literal|" Vif   Thresh   Rate   Local-Address   "
 literal|"Remote-Address    Pkts-In   Pkts-Out\n"
 argument_list|)
@@ -472,7 +472,7 @@ name|banner_printed
 condition|)
 name|printf
 argument_list|(
-literal|"\nVirtual Interface Table is empty\n"
+literal|"\nIPv4 Virtual Interface Table is empty\n"
 argument_list|)
 expr_stmt|;
 name|banner_printed
@@ -532,7 +532,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nIPv4 Multicast Forwarding Cache\n"
+literal|"\nIPv4 Multicast Forwarding Table\n"
 literal|" Origin          Group            "
 literal|" Packets In-Vif  Out-Vifs:Ttls\n"
 argument_list|)
@@ -716,7 +716,7 @@ name|banner_printed
 condition|)
 name|printf
 argument_list|(
-literal|"\nMulticast Routing Table is empty\n"
+literal|"\nIPv4 Multicast Forwarding Table is empty\n"
 argument_list|)
 expr_stmt|;
 name|printf
