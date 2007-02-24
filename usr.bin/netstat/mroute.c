@@ -505,6 +505,7 @@ condition|(
 name|m
 condition|)
 block|{
+comment|/* XXX KVM */
 name|kread
 argument_list|(
 operator|(
@@ -657,6 +658,7 @@ condition|(
 name|bwm
 condition|)
 block|{
+comment|/* XXX KVM */
 name|kread
 argument_list|(
 operator|(
@@ -1266,6 +1268,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* XXX KVM */
 name|kread
 argument_list|(
 name|mstaddr
