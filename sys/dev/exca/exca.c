@@ -3412,11 +3412,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|device_is_attached
+argument_list|(
 name|exca
 operator|->
 name|pccarddev
-operator|!=
-name|NULL
+argument_list|)
 condition|)
 block|{
 if|if
