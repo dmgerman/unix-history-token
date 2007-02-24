@@ -1945,7 +1945,7 @@ name|ff
 operator||=
 name|RFSIGSHARE
 expr_stmt|;
-comment|/*  	 * XXX: in linux sharing of fs info (chroot/cwd/umask) 	 * and open files is independant. in fbsd its in one 	 * structure but in reality it doesnt make any problems 	 * because both this flags are set at once usually. 	 */
+comment|/*  	 * XXX: in linux sharing of fs info (chroot/cwd/umask) 	 * and open files is independant. in fbsd its in one 	 * structure but in reality it doesn't cause any problems 	 * because both of these flags are usually set together. 	 */
 if|if
 condition|(
 operator|!
@@ -1965,7 +1965,7 @@ name|ff
 operator||=
 name|RFFDG
 expr_stmt|;
-comment|/* 	 * Attempt to detect when linux_clone(2) is used for creating 	 * kernel threads. Unfortunately despite the existence of the 	 * CLONE_THREAD flag, version of linuxthreads package used in 	 * most popular distros as of beginning of 2005 doesn't make 	 * any use of it. Therefore, this detection relay fully on 	 * empirical observation that linuxthreads sets certain 	 * combination of flags, so that we can make more or less 	 * precise detection and notify the FreeBSD kernel that several 	 * processes are in fact part of the same threading group, so 	 * that special treatment is necessary for signal delivery 	 * between those processes and fd locking. 	 */
+comment|/* 	 * Attempt to detect when linux_clone(2) is used for creating 	 * kernel threads. Unfortunately despite the existence of the 	 * CLONE_THREAD flag, version of linuxthreads package used in 	 * most popular distros as of beginning of 2005 doesn't make 	 * any use of it. Therefore, this detection relies on 	 * empirical observation that linuxthreads sets certain 	 * combination of flags, so that we can make more or less 	 * precise detection and notify the FreeBSD kernel that several 	 * processes are in fact part of the same threading group, so 	 * that special treatment is necessary for signal delivery 	 * between those processes and fd locking. 	 */
 if|if
 condition|(
 operator|(
@@ -3286,7 +3286,7 @@ operator|&
 name|LINUX_MAP_GROWSDOWN
 condition|)
 block|{
-comment|/*  		 * The linux MAP_GROWSDOWN option does not limit auto 		 * growth of the region.  Linux mmap with this option 		 * takes as addr the inital BOS, and as len, the initial 		 * region size.  It can then grow down from addr without 		 * limit.  However, linux threads has an implicit internal 		 * limit to stack size of STACK_SIZE.  Its just not 		 * enforced explicitly in linux.  But, here we impose 		 * a limit of (STACK_SIZE - GUARD_SIZE) on the stack 		 * region, since we can do this with our mmap. 		 * 		 * Our mmap with MAP_STACK takes addr as the maximum 		 * downsize limit on BOS, and as len the max size of 		 * the region.  It them maps the top SGROWSIZ bytes, 		 * and autgrows the region down, up to the limit 		 * in addr. 		 * 		 * If we don't use the MAP_STACK option, the effect 		 * of this code is to allocate a stack region of a 		 * fixed size of (STACK_SIZE - GUARD_SIZE). 		 */
+comment|/*  		 * The linux MAP_GROWSDOWN option does not limit auto 		 * growth of the region.  Linux mmap with this option 		 * takes as addr the inital BOS, and as len, the initial 		 * region size.  It can then grow down from addr without 		 * limit.  However, linux threads has an implicit internal 		 * limit to stack size of STACK_SIZE.  Its just not 		 * enforced explicitly in linux.  But, here we impose 		 * a limit of (STACK_SIZE - GUARD_SIZE) on the stack 		 * region, since we can do this with our mmap. 		 * 		 * Our mmap with MAP_STACK takes addr as the maximum 		 * downsize limit on BOS, and as len the max size of 		 * the region.  It them maps the top SGROWSIZ bytes, 		 * and auto grows the region down, up to the limit 		 * in addr. 		 * 		 * If we don't use the MAP_STACK option, the effect 		 * of this code is to allocate a stack region of a 		 * fixed size of (STACK_SIZE - GUARD_SIZE). 		 */
 if|if
 condition|(
 operator|(
@@ -5304,7 +5304,7 @@ name|info
 operator|.
 name|entry_number
 expr_stmt|;
-comment|/*  	 * Semantics of linux version: every thread in the system has array 	 * of 3 tls descriptors. 1st is GLIBC TLS, 2nd is WINE, 3rd unknown. This 	 * syscall loads one of the selected tls decriptors with a value 	 * and also loads GDT descriptors 6, 7 and 8 with the content of the per-thread  	 * descriptors. 	 * 	 * Semantics of fbsd version: I think we can ignore that linux has 3 per-thread 	 * descriptors and use just the 1st one. The tls_array[] is used only in  	 * set/get-thread_area() syscalls and for loading the GDT descriptors. In fbsd  	 * we use just one GDT descriptor for TLS so we will load just one.  	 * XXX: this doesnt work when user-space process tries to use more then 1 TLS segment 	 * comment in the linux sources says wine might do that. 	 */
+comment|/*  	 * Semantics of linux version: every thread in the system has array of 	 * 3 tls descriptors. 1st is GLIBC TLS, 2nd is WINE, 3rd unknown. This  	 * syscall loads one of the selected tls decriptors with a value and 	 * also loads GDT descriptors 6, 7 and 8 with the content of the 	 * per-thread descriptors. 	 * 	 * Semantics of fbsd version: I think we can ignore that linux has 3  	 * per-thread descriptors and use just the 1st one. The tls_array[] 	 * is used only in set/get-thread_area() syscalls and for loading the 	 * GDT descriptors. In fbsd we use just one GDT descriptor for TLS so 	 * we will load just one.  	 * 	 * XXX: this doesn't work when a user space process tries to use more 	 * than 1 TLS segment. Comment in the linux sources says wine might do 	 * this. 	 */
 comment|/*  	 * we support just GLIBC TLS now  	 * we should let 3 proceed as well because we use this segment so 	 * if code does two subsequent calls it should succeed 	 */
 if|if
 condition|(
@@ -5326,7 +5326,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/*  	 * we have to copy out the GDT entry we use 	 * FreeBSD uses GDT entry #3 for storing %gs so load that  	 * XXX: what if userspace program doesnt check this value and tries 	 * to use 6, 7 or 8?  	 */
+comment|/*  	 * we have to copy out the GDT entry we use 	 * FreeBSD uses GDT entry #3 for storing %gs so load that 	 * 	 * XXX: what if a user space program doesn't check this value and tries 	 * to use 6, 7 or 8?  	 */
 name|idx
 operator|=
 name|info

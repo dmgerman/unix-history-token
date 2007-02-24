@@ -443,7 +443,7 @@ name|proc
 operator|->
 name|p_vmspace
 expr_stmt|;
-comment|/*      * Check if file_offset page aligned,.      * Currently we cannot handle misalinged file offsets,      * and so we read in the entire image (what a waste).      */
+comment|/*      * Check if file_offset page aligned,.      * Currently we cannot handle misaligned file offsets,      * and so we read in the entire image (what a waste).      */
 if|if
 condition|(
 name|file_offset

@@ -3267,7 +3267,7 @@ value|0x0000ffff
 end_define
 
 begin_comment
-comment|/*   * macros which does the same thing as those in linux include/asm-um/ldt-i386.h   * these convert linux user-space descriptor to machine one  */
+comment|/*   * macros which does the same thing as those in linux include/asm-um/ldt-i386.h   * these convert linux user space descriptor to machine one  */
 end_comment
 
 begin_define

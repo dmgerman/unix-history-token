@@ -849,7 +849,7 @@ operator|&
 name|cup
 argument_list|)
 expr_stmt|;
-comment|/* 		 * this cannot happen at the moment and if this happens it 		 * probably mean there is a userspace bug 		 */
+comment|/* 		 * this cannot happen at the moment and if this happens it 		 * probably means there is a user space bug 		 */
 if|if
 condition|(
 name|error
