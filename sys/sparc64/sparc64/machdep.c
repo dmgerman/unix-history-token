@@ -1561,6 +1561,15 @@ argument_list|(
 name|child
 argument_list|)
 expr_stmt|;
+name|uma_set_align
+argument_list|(
+name|cache
+operator|.
+name|dc_linesize
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|getenv_int
 argument_list|(
 literal|"machdep.use_vis"
