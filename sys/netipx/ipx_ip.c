@@ -218,7 +218,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* list of all hosts and gateways or broadcast addrs */
+comment|/* List of all hosts and gateways or broadcast addrs. */
 end_comment
 
 begin_decl_stmt
@@ -227,6 +227,43 @@ name|struct
 name|ifnet_en
 modifier|*
 name|ipxip_list
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|ifreq
+name|ifr_ipxip
+init|=
+block|{
+literal|"ipxip0"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mbuf
+modifier|*
+name|ipxip_badlen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mbuf
+modifier|*
+name|ipxip_lastin
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ipxip_hold_input
 decl_stmt|;
 end_decl_stmt
 
@@ -334,15 +371,15 @@ name|struct
 name|ifnet_en
 modifier|*
 name|ipxipattach
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ifnet_en
 modifier|*
 name|m
 decl_stmt|;
-specifier|register
 name|struct
 name|ifnet
 modifier|*
@@ -545,24 +582,17 @@ specifier|static
 name|int
 name|ipxipioctl
 parameter_list|(
-name|ifp
-parameter_list|,
-name|cmd
-parameter_list|,
-name|data
-parameter_list|)
-specifier|register
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error
@@ -639,56 +669,24 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|mbuf
-modifier|*
-name|ipxip_badlen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mbuf
-modifier|*
-name|ipxip_lastin
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ipxip_hold_input
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|ipxip_input
 parameter_list|(
-name|m
-parameter_list|,
-name|hlen
-parameter_list|)
-specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|int
 name|hlen
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ip
 modifier|*
 name|ip
 decl_stmt|;
-specifier|register
 name|struct
 name|ipx
 modifier|*
@@ -710,13 +708,11 @@ name|ipxip_lastin
 operator|!=
 name|NULL
 condition|)
-block|{
 name|m_freem
 argument_list|(
 name|ipxip_lastin
 argument_list|)
 expr_stmt|;
-block|}
 name|ipxip_lastin
 operator|=
 name|m_copym
@@ -878,7 +874,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Make mbuf data length reflect IPX length. 	 * If not enough data to reflect IPX length, drop. 	 */
+comment|/* 	 * Make mbuf data length reflect IPX length.  If not enough data to 	 * reflect IPX length, drop. 	 */
 name|m
 operator|->
 name|m_data
@@ -979,9 +975,9 @@ name|m
 expr_stmt|;
 return|return;
 block|}
-comment|/* Any extra will be trimmed off by the IPX routines */
+comment|/* 		 * Any extra will be trimmed off by the IPX routines. 		 */
 block|}
-comment|/* 	 * Deliver to IPX 	 */
+comment|/* 	 * Deliver to IPX. 	 */
 name|netisr_dispatch
 argument_list|(
 name|NETISR_IPX
@@ -997,36 +993,27 @@ specifier|static
 name|int
 name|ipxipoutput
 parameter_list|(
-name|ifp
-parameter_list|,
-name|m
-parameter_list|,
-name|dst
-parameter_list|,
-name|rt
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
 name|dst
-decl_stmt|;
+parameter_list|,
 name|struct
 name|rtentry
 modifier|*
 name|rt
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ifnet_en
 modifier|*
@@ -1041,13 +1028,6 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-specifier|register
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
-specifier|register
 name|struct
 name|route
 modifier|*
@@ -1060,13 +1040,6 @@ operator|->
 name|ifen_route
 operator|)
 decl_stmt|;
-specifier|register
-name|int
-name|len
-init|=
-literal|0
-decl_stmt|;
-specifier|register
 name|struct
 name|ipx
 modifier|*
@@ -1080,6 +1053,16 @@ expr|struct
 name|ipx
 operator|*
 argument_list|)
+decl_stmt|;
+name|struct
+name|ip
+modifier|*
+name|ip
+decl_stmt|;
+name|int
+name|len
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|error
@@ -1096,7 +1079,7 @@ operator|.
 name|if_opackets
 operator|++
 expr_stmt|;
-comment|/* 	 * Calculate data length and make space 	 * for IP header. 	 */
+comment|/* 	 * Calculate data length and make space for IP header. 	 */
 name|len
 operator|=
 name|ntohs
@@ -1116,7 +1099,7 @@ name|len
 operator|++
 expr_stmt|;
 comment|/* Preserve Garbage Byte */
-comment|/* following clause not necessary on vax */
+comment|/* 	 * Following clause not necessary on VAX. 	 */
 if|if
 condition|(
 literal|3
@@ -1317,7 +1300,6 @@ expr_stmt|;
 comment|/* 	 * Output final datagram. 	 */
 name|error
 operator|=
-operator|(
 name|ip_output
 argument_list|(
 name|m
@@ -1337,7 +1319,6 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1365,16 +1346,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENETUNREACH
-operator|)
-return|;
 block|}
 end_function
 
@@ -1383,13 +1354,11 @@ specifier|static
 name|void
 name|ipxipstart
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|panic
 argument_list|(
@@ -1399,39 +1368,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|ifreq
-name|ifr_ipxip
-init|=
-block|{
-literal|"ipxip0"
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|ipxip_route
 parameter_list|(
-name|so
-parameter_list|,
-name|sopt
-parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockopt
 modifier|*
 name|sopt
-decl_stmt|;
+parameter_list|)
 block|{
-name|int
-name|error
+name|struct
+name|in_ifaddr
+modifier|*
+name|ia
 decl_stmt|;
 name|struct
 name|ifnet_en
@@ -1458,8 +1413,16 @@ modifier|*
 name|ip_dst
 decl_stmt|;
 name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|struct
 name|route
 name|ro
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|error
 operator|=
@@ -1522,7 +1485,7 @@ operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
-comment|/* 	 * Now, determine if we can get to the destination 	 */
+comment|/* 	 * Now, determine if we can get to the destination. 	 */
 name|bzero
 argument_list|(
 operator|(
@@ -1573,32 +1536,20 @@ name|rt_ifp
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|ENETUNREACH
 operator|)
 return|;
-block|}
-comment|/* 	 * And see how he's going to get back to us: 	 * i.e., what return ip address do we use? 	 */
-block|{
-specifier|register
-name|struct
-name|in_ifaddr
-modifier|*
-name|ia
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
+comment|/* 	 * And see how he's going to get back to us: i.e., what return IP 	 * address do we use? 	 */
 name|ifp
-init|=
+operator|=
 name|ro
 operator|.
 name|ro_rt
 operator|->
 name|rt_ifp
-decl_stmt|;
+expr_stmt|;
 for|for
 control|(
 name|ia
@@ -1677,7 +1628,6 @@ name|ia
 operator|->
 name|ia_addr
 expr_stmt|;
-block|}
 comment|/* 	 * Is there a free (pseudo-)interface or space? 	 */
 for|for
 control|(
@@ -1765,7 +1715,7 @@ name|src
 operator|->
 name|sin_addr
 expr_stmt|;
-comment|/* 	 * now configure this as a point to point link 	 */
+comment|/* 	 * Now configure this as a point to point link. 	 */
 name|ifr_ipxip
 operator|.
 name|ifr_name
@@ -1818,7 +1768,7 @@ operator|->
 name|sopt_td
 argument_list|)
 expr_stmt|;
-comment|/* use any of our addresses */
+comment|/* 	 * Use any of our addresses. 	 */
 name|satoipx_addr
 argument_list|(
 name|ifr_ipxip
@@ -1874,15 +1824,12 @@ specifier|static
 name|int
 name|ipxip_free
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ifnet_en
 modifier|*
@@ -1949,24 +1896,18 @@ begin_function
 name|void
 name|ipxip_ctlinput
 parameter_list|(
-name|cmd
-parameter_list|,
-name|sa
-parameter_list|,
-name|dummy
-parameter_list|)
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
 name|sa
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|dummy
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sockaddr_in
@@ -2056,16 +1997,12 @@ specifier|static
 name|void
 name|ipxip_rtchange
 parameter_list|(
-name|dst
-parameter_list|)
-specifier|register
 name|struct
 name|in_addr
 modifier|*
 name|dst
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ifnet_en
 modifier|*
