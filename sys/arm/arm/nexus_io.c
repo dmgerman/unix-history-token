@@ -326,6 +326,9 @@ name|void
 modifier|*
 name|t
 parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
 name|bus_size_t
 name|size
 parameter_list|)

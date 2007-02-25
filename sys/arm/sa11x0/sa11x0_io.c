@@ -448,17 +448,16 @@ begin_function
 name|void
 name|sa11x0_bs_unmap
 parameter_list|(
-name|t
-parameter_list|,
-name|size
-parameter_list|)
 name|void
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
 name|bus_size_t
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* 	 * Temporary implementation 	 */
 block|}
