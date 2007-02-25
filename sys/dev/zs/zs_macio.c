@@ -644,10 +644,10 @@ operator|->
 name|sc_irqres1
 argument_list|,
 name|INTR_TYPE_TTY
-operator||
-name|INTR_FAST
 argument_list|,
 name|zs_intr
+argument_list|,
+name|NULL
 argument_list|,
 name|sc
 argument_list|,
@@ -726,10 +726,10 @@ operator|->
 name|sc_irqres2
 argument_list|,
 name|INTR_TYPE_TTY
-operator||
-name|INTR_FAST
 argument_list|,
 name|zs_intr
+argument_list|,
+name|NULL
 argument_list|,
 name|sc
 argument_list|,
