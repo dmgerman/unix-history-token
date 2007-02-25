@@ -2223,12 +2223,9 @@ argument_list|)
 operator|==
 name|AT91RM92_IRQ_SYSTEM
 operator|&&
-operator|!
-operator|(
-name|flags
-operator|&
-name|INTR_FAST
-operator|)
+name|filt
+operator|==
+name|NULL
 condition|)
 name|panic
 argument_list|(
