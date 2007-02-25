@@ -1947,6 +1947,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Delete all addresses and routes which reference this interface. */
 if|if
 condition|(
 name|ifp
@@ -1966,7 +1967,6 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* find internet addresses and delete routes */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -1975,6 +1975,8 @@ argument|&ifp->if_addrhead
 argument_list|,
 argument|ifa_link
 argument_list|)
+block|{
+comment|/* deal w/IPv4 PtP destination; unlocked read */
 if|if
 condition|(
 name|ifa
@@ -1985,7 +1987,7 @@ name|sa_family
 operator|==
 name|AF_INET
 condition|)
-comment|/* Unlocked read. */
+block|{
 name|rtinit
 argument_list|(
 name|ifa
@@ -2004,6 +2006,28 @@ condition|?
 name|RTF_HOST
 else|:
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|rtinit
+argument_list|(
+name|ifa
+argument_list|,
+operator|(
+name|int
+operator|)
+name|RTM_DELETE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|if_purgeaddrs
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 name|ifp
