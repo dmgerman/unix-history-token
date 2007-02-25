@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -115,6 +121,7 @@ literal|"Usage: setchannel [-a {on|off}] [-c | -r | -s | -t] "
 literal|"[-g geom] [-m chnl_set] [chnl | freq]\n"
 literal|"  -a    Enable / disable AFC.\n"
 literal|"  -c    Select composite input.\n"
+literal|"  -d    Select tuner unit number.\n"
 literal|"  -r    Select radio input.\n"
 literal|"  -s    Select svideo input.\n"
 literal|"  -t    Select tuner.\n"
@@ -152,6 +159,22 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|DEVNAME_BASE
+value|"/dev/cxm"
+end_define
+
+begin_decl_stmt
+name|char
+name|dev_name
+index|[
+literal|16
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -191,6 +214,9 @@ name|i
 decl_stmt|;
 name|int
 name|status
+decl_stmt|;
+name|int
+name|unit
 decl_stmt|;
 name|int
 name|tfd
@@ -254,6 +280,10 @@ name|status
 operator|=
 literal|0
 expr_stmt|;
+name|unit
+operator|=
+literal|0
+expr_stmt|;
 name|x_size
 operator|=
 literal|0
@@ -273,7 +303,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:crg:m:st"
+literal|"a:cd:rg:m:st"
 argument_list|)
 operator|)
 operator|!=
@@ -342,6 +372,17 @@ name|audio
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|unit
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -656,11 +697,21 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|sprintf
+argument_list|(
+name|dev_name
+argument_list|,
+name|DEVNAME_BASE
+literal|"%d"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 name|tfd
 operator|=
 name|open
 argument_list|(
-literal|"/dev/cxm0"
+name|dev_name
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -672,9 +723,20 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"open() of /dev/cxm0 failed."
+name|stderr
+argument_list|,
+literal|"Can't open %s: %s (%d)\n"
+argument_list|,
+name|dev_name
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 name|exit
