@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: linux_futex.c,v 1.5 2005/11/23 16:14:57 manu Exp $ */
+comment|/*	$NetBSD: linux_futex.c,v 1.7 2006/07/24 19:01:49 manu Exp $ */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ literal|0
 end_if
 
 begin_endif
-unit|__KERNEL_RCSID(1, "$NetBSD: linux_futex.c,v 1.5 2005/11/23 16:14:57 manu Exp $");
+unit|__KERNEL_RCSID(1, "$NetBSD: linux_futex.c,v 1.7 2006/07/24 19:01:49 manu Exp $");
 endif|#
 directive|endif
 end_endif
@@ -1679,6 +1679,31 @@ argument_list|,
 name|timeout
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|sys_futex
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"FUTEX -> %d tsleep returns %d\n"
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|FUTEX_LOCK
 expr_stmt|;
 name|TAILQ_REMOVE
