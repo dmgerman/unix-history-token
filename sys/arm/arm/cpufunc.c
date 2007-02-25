@@ -3023,9 +3023,6 @@ operator|==
 name|CPU_ID_IXP425_266
 condition|)
 block|{
-name|ixp425_icu_init
-argument_list|()
-expr_stmt|;
 name|cpufuncs
 operator|=
 name|xscale_cpufuncs
