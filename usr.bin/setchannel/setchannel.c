@@ -273,7 +273,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:crstg:m:"
+literal|"a:crg:m:st"
 argument_list|)
 operator|)
 operator|!=
