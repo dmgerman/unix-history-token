@@ -312,13 +312,6 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|int
-name|rgephy_mii_model
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 specifier|const
 name|struct
 name|mii_phydesc
@@ -516,15 +509,6 @@ literal|0
 block|ADD(IFM_MAKEWORD(IFM_ETHER, IFM_100_TX, IFM_LOOP, sc->mii_inst), 	    BMCR_LOOP|BMCR_S100);
 endif|#
 directive|endif
-name|rgephy_mii_model
-operator|=
-name|MII_MODEL
-argument_list|(
-name|ma
-operator|->
-name|mii_id2
-argument_list|)
-expr_stmt|;
 name|rgephy_reset
 argument_list|(
 name|sc
@@ -1001,7 +985,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 * When settning the link manually, one side must 			 * be the master and the other the slave. However 			 * ifmedia doesn't give us a good way to specify 			 * this, so we fake it by using one of the LINK 			 * flags. If LINK0 is set, we program the PHY to 			 * be a master, otherwise it's a slave. 			 */
+comment|/* 			 * When setting the link manually, one side must 			 * be the master and the other the slave. However 			 * ifmedia doesn't give us a good way to specify 			 * this, so we fake it by using one of the LINK 			 * flags. If LINK0 is set, we program the PHY to 			 * be a master, otherwise it's a slave. 			 */
 if|if
 condition|(
 operator|(
@@ -1168,8 +1152,7 @@ name|sc
 operator|->
 name|mii_ticks
 operator|<=
-literal|5
-comment|/*10*/
+name|MII_ANEGTICKS
 condition|)
 break|break;
 name|sc
@@ -1422,7 +1405,6 @@ name|mii_media_active
 operator||=
 name|IFM_FDX
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1519,9 +1501,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|u_int32_t
-name|bmsr
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1553,20 +1532,16 @@ name|i
 operator|++
 control|)
 block|{
-name|bmsr
-operator|=
+if|if
+condition|(
+operator|!
+operator|(
 name|PHY_READ
 argument_list|(
 name|sc
 argument_list|,
 name|RGEPHY_MII_BMSR
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|bmsr
 operator|&
 name|RGEPHY_BMSR_LINK
 operator|)
@@ -2070,7 +2045,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

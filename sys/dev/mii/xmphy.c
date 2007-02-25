@@ -895,7 +895,7 @@ name|sc
 operator|->
 name|mii_ticks
 operator|<=
-literal|5
+name|MII_ANEGTICKS
 condition|)
 break|break;
 name|sc
@@ -1152,7 +1152,6 @@ name|mii_media_active
 operator||=
 name|IFM_HDX
 expr_stmt|;
-return|return;
 block|}
 end_function
 

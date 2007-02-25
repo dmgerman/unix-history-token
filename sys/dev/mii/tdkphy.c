@@ -115,33 +115,6 @@ directive|include
 file|"miibus_if.h"
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
-
-begin_endif
-unit|static const char rcsid[] =   "$Id: tdkphy.c,v 1.3 2000/10/14 06:20:56 jon Exp $";
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|int
