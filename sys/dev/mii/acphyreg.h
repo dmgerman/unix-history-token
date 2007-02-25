@@ -228,7 +228,7 @@ begin_define
 define|#
 directive|define
 name|AC_MCTL_BYP_PCS
-value|0x0001
+value|0x0002
 end_define
 
 begin_comment
