@@ -254,7 +254,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Sequencer output /dev/sequencer (FM 				   synthesizer and MIDI output) */
+comment|/* Sequencer output /dev/sequencer (FM 					 * synthesizer and MIDI output) */
 end_comment
 
 begin_define
@@ -1745,7 +1745,7 @@ literal|"Timer wait when timer isn't running\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	     * The old sequencer used timeouts that only increased 	     * the timer when the timer was running. 	     * Hence the sequencer would stick (?) if the 	     * timer was disabled. 	     */
+comment|/* 	         * The old sequencer used timeouts that only increased 	         * the timer when the timer was running. 	         * Hence the sequencer would stick (?) if the 	         * timer was disabled. 	         */
 name|cv_wait
 argument_list|(
 operator|&
@@ -1806,7 +1806,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("timer_wait tempo %d timerbase %d ticks %d abs %d u_sec %llu\n", t->tempo, t->timerbase, ticks, wait_abs, i);
+block|printf("timer_wait tempo %d timerbase %d ticks %d abs %d u_sec %llu\n", 	    t->tempo, t->timerbase, ticks, wait_abs, i);
 endif|#
 directive|endif
 if|if
@@ -1909,7 +1909,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("seq_timer usec %llu ticks %llu\n", when.tv_sec * 1000000ull + when.tv_usec, i);
+block|printf("seq_timer usec %llu ticks %llu\n", 	    when.tv_sec * 1000000ull + when.tv_usec, i);
 endif|#
 directive|endif
 name|t
@@ -3077,7 +3077,7 @@ operator|->
 name|musicdev
 argument_list|)
 expr_stmt|;
-comment|/* 	     * TODO: Destroy mutex and cv 	     */
+comment|/* 	         * TODO: Destroy mutex and cv 	         */
 if|if
 condition|(
 name|scp
@@ -3188,7 +3188,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|//SEQ_DEBUG(4,printf("seq_delunit: %d\n", unit));
+comment|//SEQ_DEBUG(4, printf("seq_delunit: %d\n", unit));
 name|SEQ_DEBUG
 argument_list|(
 literal|1
@@ -3845,7 +3845,7 @@ name|flags
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Mark this device busy.  	 */
+comment|/* 	 * Mark this device busy. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4513,7 +4513,7 @@ name|retval
 operator|=
 name|EWOULDBLOCK
 expr_stmt|;
-comment|/* 		 * I wish I knew which one to care about 		 */
+comment|/* 			 * I wish I knew which one to care about 			 */
 if|if
 condition|(
 name|scp
@@ -4870,7 +4870,7 @@ operator|->
 name|seq_lock
 argument_list|)
 expr_stmt|;
-comment|/* 		     * We slept, maybe things have changed since last 		     * dying check 		     */
+comment|/* 		         * We slept, maybe things have changed since last 		         * dying check 		         */
 if|if
 condition|(
 name|retval
@@ -4883,8 +4883,8 @@ goto|;
 if|#
 directive|if
 literal|0
-comment|/* 		     * Useless test 		     */
-block|if (scp != i_dev->si_drv1) 		    retval = ENXIO;
+comment|/* 		         * Useless test 		         */
+block|if (scp != i_dev->si_drv1) 				retval = ENXIO;
 endif|#
 directive|endif
 block|}
@@ -5002,15 +5002,15 @@ operator|==
 name|SEQ_FULLSIZE
 condition|)
 block|{
-comment|/* 		 * TODO: restore code for SEQ_FULLSIZE 		 */
+comment|/* 			 * TODO: restore code for SEQ_FULLSIZE 			 */
 if|#
 directive|if
 literal|0
-comment|/* A long event, these are the patches/samples for a synthesizer. */
-block|midiunit = *(u_short *)&event[2]; 		mtx_lock(&sd->seq_lock); 		ret = lookup_mididev(scp, midiunit, LOOKUP_OPEN,&md); 		mtx_unlock(&sd->seq_lock); 		if (ret != 0) 		    return (ret);  		SEQ_DEBUG(printf("seq_write: loading a patch to the unit %d.\n", midiunit));  		ret = md->synth.loadpatch(md, *(short *)&event[0], buf, p + 4, count, 0); 		return (ret);
+comment|/* 			 * A long event, these are the patches/samples for a 			 * synthesizer. 			 */
+block|midiunit = *(u_short *)&event[2]; 			mtx_lock(&sd->seq_lock); 			ret = lookup_mididev(scp, midiunit, LOOKUP_OPEN,&md); 			mtx_unlock(&sd->seq_lock); 			if (ret != 0) 				return (ret);  			SEQ_DEBUG(printf("seq_write: loading a patch to the unit %d.\n", midiunit));  			ret = md->synth.loadpatch(md, *(short *)&event[0], buf, 			    p + 4, count, 0); 			return (ret);
 else|#
 directive|else
-comment|/* 		 * For now, just flush the darn buffer 		 */
+comment|/* 			 * For now, just flush the darn buffer 			 */
 name|SEQ_DEBUG
 argument_list|(
 literal|2
@@ -5070,7 +5070,7 @@ operator|>=
 literal|128
 condition|)
 block|{
-comment|/* 		 * Some sort of an extended event. The size is eight bytes. 		 * scoop extra info. 		 */
+comment|/* 			 * Some sort of an extended event. The size is eight 			 * bytes. scoop extra info. 			 */
 if|if
 condition|(
 name|scp
@@ -5134,7 +5134,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * Size four event. 		 */
+comment|/* 			 * Size four event. 			 */
 if|if
 condition|(
 name|scp
@@ -5164,7 +5164,7 @@ operator|==
 name|SEQ_MIDIPUTC
 condition|)
 block|{
-comment|/* 		 * TODO: event[2] is unit number to receive char.  Range check 		 * it 		 */
+comment|/* 			 * TODO: event[2] is unit number to receive char. 			 * Range check it. 			 */
 block|}
 if|if
 condition|(
@@ -5202,7 +5202,7 @@ name|TMR_STOP
 operator|)
 condition|)
 block|{
-comment|/* 		     * For now, try to make midimoutain work by 		     * forcing these events to be processed immediatly 		     */
+comment|/* 			         * For now, try to make midimoutain work by 			         * forcing these events to be processed 				 * immediatly. 			         */
 name|seq_processevent
 argument_list|(
 name|scp
@@ -5266,7 +5266,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|else 		    goto err0;
+block|else 				goto err0;
 endif|#
 directive|endif
 block|}
@@ -5870,7 +5870,7 @@ break|break;
 if|#
 directive|if
 literal|0
-block|case SNDCTL_SEQ_GETINCOUNT: 		if (mode == O_WRONLY) 		    *(int *)arg = 0; 		else { 		    mtx_lock(&scp->seq_lock); 		    *(int *)arg = scp->in_q.rl; 		    mtx_unlock(&scp->seq_lock); 		    SEQ_DEBUG(printf("seq_ioctl: incount %d.\n", *(int *)arg)); 		} 		ret = 0; 		break; 	    case SNDCTL_SEQ_GETOUTCOUNT: 		if (mode == O_RDONLY) 		    *(int *)arg = 0; 		else { 		    mtx_lock(&scp->seq_lock); 		    *(int *)arg = scp->out_q.fl; 		    mtx_unlock(&scp->seq_lock); 		    SEQ_DEBUG(printf("seq_ioctl: outcount %d.\n", *(int *)arg)); 		} 		ret = 0; 		break;
+block|case SNDCTL_SEQ_GETINCOUNT: 		if (mode == O_WRONLY) 			*(int *)arg = 0; 		else { 			mtx_lock(&scp->seq_lock); 			*(int *)arg = scp->in_q.rl; 			mtx_unlock(&scp->seq_lock); 			SEQ_DEBUG(printf("seq_ioctl: incount %d.\n", 			    *(int *)arg)); 		} 		ret = 0; 		break; 	case SNDCTL_SEQ_GETOUTCOUNT: 		if (mode == O_RDONLY) 			*(int *)arg = 0; 		else { 			mtx_lock(&scp->seq_lock); 			*(int *)arg = scp->out_q.fl; 			mtx_unlock(&scp->seq_lock); 			SEQ_DEBUG(printf("seq_ioctl: outcount %d.\n", 			    *(int *)arg)); 		} 		ret = 0; 		break;
 endif|#
 directive|endif
 case|case
@@ -5947,7 +5947,7 @@ comment|/* 		 * TODO: ioctl SNDCTL_SEQ_RESETSAMPLES 		 */
 if|#
 directive|if
 literal|0
-block|case SNDCTL_SEQ_RESETSAMPLES: 		mtx_lock(&scp->seq_lock); 		ret = lookup_mididev(scp, *(int *)arg, LOOKUP_OPEN,&md); 		mtx_unlock(&scp->seq_lock); 		if (ret != 0) 		    break; 		ret = midi_ioctl(MIDIMKDEV(major(i_dev), *(int *)arg, SND_DEV_MIDIN), cmd, arg, mode, td); 		break;
+block|case SNDCTL_SEQ_RESETSAMPLES: 		mtx_lock(&scp->seq_lock); 		ret = lookup_mididev(scp, *(int *)arg, LOOKUP_OPEN,&md); 		mtx_unlock(&scp->seq_lock); 		if (ret != 0) 			break; 		ret = midi_ioctl(MIDIMKDEV(major(i_dev), *(int *)arg, 		    SND_DEV_MIDIN), cmd, arg, mode, td); 		break;
 endif|#
 directive|endif
 case|case
@@ -6030,7 +6030,7 @@ literal|0
 expr_stmt|;
 else|else
 block|{
-comment|/* 		     * TODO: count the numbder of devices that can WRITERAW 		     */
+comment|/* 		         * TODO: count the numbder of devices that can WRITERAW 		         */
 operator|*
 operator|(
 name|int
@@ -6077,7 +6077,7 @@ comment|/* 		 * TODO: ioctl SNDCTL_SYNTH_MEMAVL 		 */
 if|#
 directive|if
 literal|0
-block|case SNDCTL_SYNTH_MEMAVL: 		mtx_lock(&scp->seq_lock); 		ret = lookup_mididev(scp, *(int *)arg, LOOKUP_OPEN,&md); 		mtx_unlock(&scp->seq_lock); 		if (ret != 0) 		    break; 		ret = midi_ioctl(MIDIMKDEV(major(i_dev), *(int *)arg, SND_DEV_MIDIN), cmd, arg, mode, td); 		break;
+block|case SNDCTL_SYNTH_MEMAVL: 		mtx_lock(&scp->seq_lock); 		ret = lookup_mididev(scp, *(int *)arg, LOOKUP_OPEN,&md); 		mtx_unlock(&scp->seq_lock); 		if (ret != 0) 			break; 		ret = midi_ioctl(MIDIMKDEV(major(i_dev), *(int *)arg, 		    SND_DEV_MIDIN), cmd, arg, mode, td); 		break;
 endif|#
 directive|endif
 case|case
@@ -6485,7 +6485,7 @@ index|[
 name|midiunit
 index|]
 expr_stmt|;
-comment|/* 		     * TODO: What devtype? 		     */
+comment|/* 		         * TODO: What devtype? 		         */
 name|midiinfo
 operator|->
 name|dev_type
@@ -6956,7 +6956,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * seq_convertold  * Was the old playevent.  Use this to convert and old  * style /dev/sequencer event to a /dev/music event   */
+comment|/*  * seq_convertold  * Was the old playevent.  Use this to convert and old  * style /dev/sequencer event to a /dev/music event  */
 end_comment
 
 begin_function
@@ -7375,7 +7375,7 @@ name|notyet
 case|case
 name|SEQ_ECHO
 case|:
-comment|/* 		 * This isn't handled here yet because I don't know if I can 		 * just use four bytes events.  There might be consequences  		 * in the _read routing 		 */
+comment|/* 		 * This isn't handled here yet because I don't know if I can 		 * just use four bytes events.  There might be consequences 		 * in the _read routing 		 */
 if|if
 condition|(
 name|seq_copytoinput
@@ -7449,7 +7449,7 @@ comment|/* 			 * SYNTH_CONTROLLER(md, event[3], event[4], *(short *)&event[5]) 	
 case|case
 name|SEQ_VOLMODE
 case|:
-comment|/* 			 * SYNTH_VOLUMEMETHOD(md, event[3])  			 */
+comment|/* 			 * SYNTH_VOLUMEMETHOD(md, event[3]) 			 */
 default|default:
 name|SEQ_DEBUG
 argument_list|(
@@ -7646,7 +7646,7 @@ operator|<
 name|len
 condition|)
 block|{
-comment|/* 	     * ENOROOM?  EINPUTDROPPED? ETOUGHLUCK? 	     */
+comment|/* 	         * ENOROOM?  EINPUTDROPPED? ETOUGHLUCK? 	         */
 name|SEQ_DEBUG
 argument_list|(
 literal|2
@@ -7840,8 +7840,8 @@ if|#
 directive|if
 literal|0
 block|if (scp->music&& chn == 9) {
-comment|/* 			 * This channel is a percussion. The note number is the 			 * patch number.  			 */
-comment|/* 			mtx_unlock(&scp->seq_lock); 			if (SYNTH_SETINSTR(md, voice, 128 + note) == EAGAIN) { 			    mtx_lock(&scp->seq_lock); 			    return (QUEUEFULL); 			} 			mtx_lock(&scp->seq_lock); 			*/
+comment|/* 				 * This channel is a percussion. The note 				 * number is the patch number. 				 */
+comment|/* 				mtx_unlock(&scp->seq_lock); 				if (SYNTH_SETINSTR(md, voice, 128 + note) 				    == EAGAIN) { 					mtx_lock(&scp->seq_lock); 					return (QUEUEFULL); 				} 				mtx_lock(&scp->seq_lock); 				*/
 block|note = 60;
 comment|/* Middle C. */
 block|}
@@ -7854,7 +7854,7 @@ operator|->
 name|music
 condition|)
 block|{
-comment|/* 			mtx_unlock(&scp->seq_lock); 			if (SYNTH_SETUPVOICE(md, voice, chn) == EAGAIN) { 			    mtx_lock(&scp->seq_lock); 			    return (QUEUEFULL); 			} 			mtx_lock(&scp->seq_lock); 			*/
+comment|/* 				mtx_unlock(&scp->seq_lock); 				if (SYNTH_SETUPVOICE(md, voice, chn) 				    == EAGAIN) { 					mtx_lock(&scp->seq_lock); 					return (QUEUEFULL); 				} 				mtx_lock(&scp->seq_lock); 				*/
 block|}
 name|SYNTH_STARTNOTE
 argument_list|(
@@ -8116,13 +8116,13 @@ operator|->
 name|music
 condition|)
 block|{
-comment|/* 		     * TODO: MIDI_PITCH_BEND 		     */
+comment|/* 		         * TODO: MIDI_PITCH_BEND 		         */
 if|#
 directive|if
 literal|0
-block|mtx_lock(&md->synth.vc_mtx); 		    md->synth.chn_info[chn].bender_value = w14; 		    if (md->midiunit>= 0) {
-comment|/* Handle all of the notes playing on this channel. */
-block|key = ((int)chn<< 8); 			for (i = 0 ; i< md->synth.alloc.max_voice ; i++) 			    if ((md->synth.alloc.map[i]& 0xff00) == key) { 				mtx_unlock(&md->synth.vc_mtx); 				mtx_unlock(&scp->seq_lock); 				if (md->synth.bender(md, i, w14) == EAGAIN) { 				    mtx_lock(&scp->seq_lock); 				    return (QUEUEFULL); 				} 				mtx_lock(&scp->seq_lock); 			    } 		    } else { 			mtx_unlock(&md->synth.vc_mtx); 			mtx_unlock(&scp->seq_lock); 			if (md->synth.bender(md, chn, w14) == EAGAIN) { 			    mtx_lock(&scp->seq_lock); 			    return (QUEUEFULL); 			} 			mtx_lock(&scp->seq_lock); 		    }
+block|mtx_lock(&md->synth.vc_mtx); 			md->synth.chn_info[chn].bender_value = w14; 			if (md->midiunit>= 0) {
+comment|/* 				 * Handle all of the notes playing on this 				 * channel. 				 */
+block|key = ((int)chn<< 8); 				for (i = 0; i< md->synth.alloc.max_voice; i++) 					if ((md->synth.alloc.map[i]& 0xff00) == key) { 						mtx_unlock(&md->synth.vc_mtx); 						mtx_unlock(&scp->seq_lock); 						if (md->synth.bender(md, i, w14) == EAGAIN) { 							mtx_lock(&scp->seq_lock); 							return (QUEUEFULL); 						} 						mtx_lock(&scp->seq_lock); 					} 			} else { 				mtx_unlock(&md->synth.vc_mtx); 				mtx_unlock(&scp->seq_lock); 				if (md->synth.bender(md, chn, w14) == EAGAIN) { 					mtx_lock(&scp->seq_lock); 					return (QUEUEFULL); 				} 				mtx_lock(&scp->seq_lock); 			}
 endif|#
 directive|endif
 block|}
@@ -9053,7 +9053,7 @@ operator|==
 name|EINTR
 condition|)
 block|{
-comment|/* 		     * XXX: I don't know why we stop playing 		     */
+comment|/* 			         * XXX: I don't know why we stop playing 			         */
 name|scp
 operator|->
 name|playing
@@ -9095,7 +9095,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * A queue seems to be stuck up. Give up and clear queues. 		 */
+comment|/* 			 * A queue seems to be stuck up. Give up and clear 			 * queues. 			 */
 name|MIDIQ_CLEAR
 argument_list|(
 name|scp
@@ -9133,7 +9133,7 @@ operator|->
 name|reset_cv
 argument_list|)
 expr_stmt|;
-comment|/* 		 * TODO: Consider if the raw devices need to be flushed 		 */
+comment|/* 			 * TODO: Consider if the raw devices need to be flushed 			 */
 name|SEQ_DEBUG
 argument_list|(
 literal|1

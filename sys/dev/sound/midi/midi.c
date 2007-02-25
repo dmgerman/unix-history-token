@@ -329,7 +329,7 @@ decl_stmt|;
 name|int
 name|hiwat
 decl_stmt|;
-comment|/* QLEN(outq)>High-water -> disable writes 		     * from userland */
+comment|/* QLEN(outq)>High-water -> disable 					 * writes from userland */
 name|enum
 name|midi_states
 name|inq_state
@@ -339,7 +339,7 @@ name|inq_status
 decl_stmt|,
 name|inq_left
 decl_stmt|;
-comment|/* Variables for the state 			     * machine in Midi_in, this 			     * is to provide that signals 			     * only get issued only 			     * complete command packets. */
+comment|/* Variables for the state machine in 					 * Midi_in, this is to provide that 					 * signals only get issued only 					 * complete command packets. */
 name|struct
 name|proc
 modifier|*
@@ -538,7 +538,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Module Exports& Interface  *   * struct midi_chan *midi_init(MPU_CLASS cls, int unit, int chan) int  * midi_uninit(struct snd_midi *) 0 == no error EBUSY or other error int  * Midi_in(struct midi_chan *, char *buf, int count) int Midi_out(struct  * midi_chan *, char *buf, int count)  *   * midi_{in,out} return actual size transfered  *   */
+comment|/*  * Module Exports& Interface  *  * struct midi_chan *midi_init(MPU_CLASS cls, int unit, int chan) int  * midi_uninit(struct snd_midi *) 0 == no error EBUSY or other error int  * Midi_in(struct midi_chan *, char *buf, int count) int Midi_out(struct  * midi_chan *, char *buf, int count)  *  * midi_{in,out} return actual size transfered  *  */
 end_comment
 
 begin_comment
@@ -979,7 +979,7 @@ comment|/*  * CODE START  */
 end_comment
 
 begin_comment
-comment|/*  * Register a new rmidi device. cls midi_if interface unit == 0 means  * auto-assign new unit number unit != 0 already assigned a unit number, eg.  * not the first channel provided by this device. channel,	sub-unit  * cookie is passed back on MPU calls Typical device drivers will call with  * unit=0, channel=1..(number of channels) and cookie=soft_c and won't care  * what unit number is used.  *   * It is an error to call midi_init with an already used unit/channel combo.  *   * Returns NULL on error  *   */
+comment|/*  * Register a new rmidi device. cls midi_if interface unit == 0 means  * auto-assign new unit number unit != 0 already assigned a unit number, eg.  * not the first channel provided by this device. channel,	sub-unit  * cookie is passed back on MPU calls Typical device drivers will call with  * unit=0, channel=1..(number of channels) and cookie=soft_c and won't care  * what unit number is used.  *  * It is an error to call midi_init with an already used unit/channel combo.  *  * Returns NULL on error  *  */
 end_comment
 
 begin_function
@@ -1099,7 +1099,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	 * Find a better unit number 	 */
+comment|/* 			 * Find a better unit number 			 */
 if|if
 condition|(
 name|m
@@ -1634,7 +1634,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * midi_uninit does not call MIDI_UNINIT, as since this is the implementors  * entry point. midi_unint if fact, does not send any methods. A call to  * midi_uninit is a defacto promise that you won't manipulate ch anymore  *   */
+comment|/*  * midi_uninit does not call MIDI_UNINIT, as since this is the implementors  * entry point. midi_unint if fact, does not send any methods. A call to  * midi_uninit is a defacto promise that you won't manipulate ch anymore  *  */
 end_comment
 
 begin_function
@@ -1944,20 +1944,20 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Don't bother queuing if not in read mode.  Discard everything and 	 * return size so the caller doesn't freak out. 	 */
-block|if (!(m->flags& M_RX)) 	    return size;  	for (i = sig = 0; i< size; i++) {  	    data = buf[i]; 	    enq = 0; 	    if (data == MIDI_ACK) 		continue;  	    switch (m->inq_state) { 	    case MIDI_IN_START: 		if (MIDI_IS_STATUS(data)) { 		    switch (data) { 		    case 0xf0:
+block|if (!(m->flags& M_RX)) 		return size;  	for (i = sig = 0; i< size; i++) {  		data = buf[i]; 		enq = 0; 		if (data == MIDI_ACK) 			continue;  		switch (m->inq_state) { 		case MIDI_IN_START: 			if (MIDI_IS_STATUS(data)) { 				switch (data) { 				case 0xf0:
 comment|/* Sysex */
-block|m->inq_state = MIDI_IN_SYSEX; 			break; 		    case 0xf1:
+block|m->inq_state = MIDI_IN_SYSEX; 					break; 				case 0xf1:
 comment|/* MTC quarter frame */
 block|case 0xf3:
 comment|/* Song select */
-block|m->inq_state = MIDI_IN_DATA; 			enq = 1; 			m->inq_left = 1; 			break; 		    case 0xf2:
+block|m->inq_state = MIDI_IN_DATA; 					enq = 1; 					m->inq_left = 1; 					break; 				case 0xf2:
 comment|/* Song position pointer */
-block|m->inq_state = MIDI_IN_DATA; 			enq = 1; 			m->inq_left = 2; 			break; 		    default: 			if (MIDI_IS_COMMON(data)) { 			    enq = 1; 			    sig = 1; 			} else { 			    m->inq_state = MIDI_IN_DATA; 			    enq = 1; 			    m->inq_status = data; 			    m->inq_left = MIDI_LENGTH(data); 			} 			break; 		    } 		} else if (MIDI_IS_STATUS(m->inq_status)) { 		    m->inq_state = MIDI_IN_DATA; 		    if (!MIDIQ_FULL(m->inq)) { 			used++; 			MIDIQ_ENQ(m->inq,&m->inq_status, 1); 		    } 		    enq = 1; 		    m->inq_left = MIDI_LENGTH(m->inq_status) - 1; 		} 		break;
-comment|/* 		 * End of case MIDI_IN_START: 		 */
-block|case MIDI_IN_DATA: 		enq = 1; 		if (--m->inq_left<= 0) 		    sig = 1;
+block|m->inq_state = MIDI_IN_DATA; 					enq = 1; 					m->inq_left = 2; 					break; 				default: 					if (MIDI_IS_COMMON(data)) { 						enq = 1; 						sig = 1; 					} else { 						m->inq_state = MIDI_IN_DATA; 						enq = 1; 						m->inq_status = data; 						m->inq_left = MIDI_LENGTH(data); 					} 					break; 				} 			} else if (MIDI_IS_STATUS(m->inq_status)) { 				m->inq_state = MIDI_IN_DATA; 				if (!MIDIQ_FULL(m->inq)) { 					used++; 					MIDIQ_ENQ(m->inq,&m->inq_status, 1); 				} 				enq = 1; 				m->inq_left = MIDI_LENGTH(m->inq_status) - 1; 			} 			break;
+comment|/* 			 * End of case MIDI_IN_START: 			 */
+block|case MIDI_IN_DATA: 			enq = 1; 			if (--m->inq_left<= 0) 				sig = 1;
 comment|/* deliver data */
-block|break; 	    case MIDI_IN_SYSEX: 		if (data == MIDI_SYSEX_END) 		    m->inq_state = MIDI_IN_START; 		break; 	    }  	    if (enq) 		if (!MIDIQ_FULL(m->inq)) { 		    MIDIQ_ENQ(m->inq,&data, 1); 		    used++; 		}
-comment|/* 	     * End of the state machines main "for loop" 	     */
+block|break; 		case MIDI_IN_SYSEX: 			if (data == MIDI_SYSEX_END) 				m->inq_state = MIDI_IN_START; 			break; 		}  		if (enq) 			if (!MIDIQ_FULL(m->inq)) { 				MIDIQ_ENQ(m->inq,&data, 1); 				used++; 			}
+comment|/* 	         * End of the state machines main "for loop" 	         */
 block|} 	if (sig) {
 endif|#
 directive|endif
@@ -2565,7 +2565,7 @@ name|M_RX
 operator||
 name|M_RXEN
 expr_stmt|;
-comment|/* 	     * Only clear the inq, the outq might still have data to drain from 	     * a previous session 	     */
+comment|/* 	         * Only clear the inq, the outq might still have data to drain 	         * from a previous session 	         */
 name|MIDIQ_CLEAR
 argument_list|(
 name|m
@@ -2885,7 +2885,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * TODO: midi_read, per oss programmer's guide pg. 42 should return as soon as data is available.  */
+comment|/*  * TODO: midi_read, per oss programmer's guide pg. 42 should return as soon  * as data is available.  */
 end_comment
 
 begin_function
@@ -3061,7 +3061,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We slept, maybe things have changed since last 		 * dying check 		 */
+comment|/* 			 * We slept, maybe things have changed since last 			 * dying check 			 */
 if|if
 condition|(
 name|retval
@@ -3134,7 +3134,7 @@ literal|"midi_read start\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	     * At this point, it is certain that m->inq has data 	     */
+comment|/* 	         * At this point, it is certain that m->inq has data 	         */
 name|used
 operator|=
 name|MIN
@@ -3426,7 +3426,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We slept, maybe things have changed since last 		 * dying check 		 */
+comment|/* 			 * We slept, maybe things have changed since last 			 * dying check 			 */
 if|if
 condition|(
 name|retval
@@ -3488,7 +3488,7 @@ goto|goto
 name|err1
 goto|;
 block|}
-comment|/* 	     * We are certain than data can be placed on the queue 	     */
+comment|/* 	         * We are certain than data can be placed on the queue 	         */
 name|used
 operator|=
 name|MIN
@@ -3589,7 +3589,7 @@ argument_list|,
 name|used
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Inform the bottom half that data can be written 	     */
+comment|/* 	         * Inform the bottom half that data can be written 	         */
 if|if
 condition|(
 operator|!
@@ -3879,7 +3879,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * /dev/midistat device functions  *   */
+comment|/*  * /dev/midistat device functions  *  */
 end_comment
 
 begin_function
@@ -4446,7 +4446,7 @@ parameter_list|(
 name|x
 parameter_list|)
 value|{x, ## x}
-comment|/* 	     * Once we have some real IOCTLs define, the following will 	     * be relavant. 	     *  	     * A(SNDCTL_MIDI_PRETIME), A(SNDCTL_MIDI_MPUMODE), 	     * A(SNDCTL_MIDI_MPUCMD), A(SNDCTL_SYNTH_INFO), 	     * A(SNDCTL_MIDI_INFO), A(SNDCTL_SYNTH_MEMAVL), 	     * A(SNDCTL_FM_LOAD_INSTR), A(SNDCTL_FM_4OP_ENABLE), 	     * A(MIOSPASSTHRU), A(MIOGPASSTHRU), A(AIONWRITE), 	     * A(AIOGSIZE), A(AIOSSIZE), A(AIOGFMT), A(AIOSFMT), 	     * A(AIOGMIX), A(AIOSMIX), A(AIOSTOP), A(AIOSYNC), 	     * A(AIOGCAP), 	     */
+comment|/* 	         * Once we have some real IOCTLs define, the following will 	         * be relavant. 	         * 	         * A(SNDCTL_MIDI_PRETIME), A(SNDCTL_MIDI_MPUMODE), 	         * A(SNDCTL_MIDI_MPUCMD), A(SNDCTL_SYNTH_INFO), 	         * A(SNDCTL_MIDI_INFO), A(SNDCTL_SYNTH_MEMAVL), 	         * A(SNDCTL_FM_LOAD_INSTR), A(SNDCTL_FM_4OP_ENABLE), 	         * A(MIOSPASSTHRU), A(MIOGPASSTHRU), A(AIONWRITE), 	         * A(AIOGSIZE), A(AIOSSIZE), A(AIOGFMT), A(AIOSFMT), 	         * A(AIOGMIX), A(AIOSMIX), A(AIOSTOP), A(AIOSYNC), 	         * A(AIOGCAP), 	         */
 undef|#
 directive|undef
 name|A
@@ -4699,7 +4699,7 @@ name|M_RX
 operator||
 name|M_RXEN
 expr_stmt|;
-comment|/* 	     * Only clear the inq, the outq might still have data to drain from 	     * a previous session 	     */
+comment|/* 	         * Only clear the inq, the outq might still have data to drain 	         * from a previous session 	         */
 name|MIDIQ_CLEAR
 argument_list|(
 name|m
@@ -5256,7 +5256,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We slept, maybe things have changed since last 		 * dying check 		 */
+comment|/* 			 * We slept, maybe things have changed since last 			 * dying check 			 */
 if|if
 condition|(
 name|retval
@@ -5306,7 +5306,7 @@ goto|goto
 name|err1
 goto|;
 block|}
-comment|/* 	     * We are certain than data can be placed on the queue 	     */
+comment|/* 	         * We are certain than data can be placed on the queue 	         */
 name|used
 operator|=
 name|MIN
@@ -5404,7 +5404,7 @@ name|len
 operator|-=
 name|used
 expr_stmt|;
-comment|/* 	     * Inform the bottom half that data can be written 	     */
+comment|/* 	         * Inform the bottom half that data can be written 	         */
 if|if
 condition|(
 operator|!

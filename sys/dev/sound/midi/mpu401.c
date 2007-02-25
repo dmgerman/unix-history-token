@@ -1171,7 +1171,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|printf("mpu401_callback %s %s %s %s\n",  		flags& M_RX ? "M_RX" : "", 		flags& M_TX ? "M_TX" : "", 		flags& M_RXEN ? "M_RXEN" : "", 		flags& M_TXEN ? "M_TXEN" : "" );
+block|printf("mpu401_callback %s %s %s %s\n", 	    flags& M_RX ? "M_RX" : "", 	    flags& M_TX ? "M_TX" : "", 	    flags& M_RXEN ? "M_RXEN" : "", 	    flags& M_TXEN ? "M_TXEN" : "");
 endif|#
 directive|endif
 if|if
