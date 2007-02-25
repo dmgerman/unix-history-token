@@ -474,10 +474,10 @@ operator|->
 name|sc_irq
 argument_list|,
 name|INTR_TYPE_MISC
-operator||
-name|INTR_FAST
 argument_list|,
 name|pswitch_intr
+argument_list|,
+name|NULL
 argument_list|,
 name|dev
 argument_list|,
