@@ -1030,7 +1030,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* Settings for PCN_MODE_PORTSEL when ASEL (BCR2[1] is 0 */
+comment|/* Settings for PCN_MODE_PORTSEL when ASEL (BCR2[1]) is 0 */
 end_comment
 
 begin_define
@@ -1810,8 +1810,26 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCN_MIIADDR_PHYADD
+name|PCN_MIIADDR_PHYAD
 value|0x03E0
+end_define
+
+begin_comment
+comment|/* addresses of internal PHYs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCN_PHYAD_100BTX
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCN_PHYAD_10BT
+value|31
 end_define
 
 begin_comment
@@ -2363,8 +2381,11 @@ decl_stmt|;
 name|u_int8_t
 name|pcn_link
 decl_stmt|;
-name|u_int8_t
-name|pcn_phyaddr
+name|int8_t
+name|pcn_extphyaddr
+decl_stmt|;
+name|int8_t
+name|pcn_inst_10bt
 decl_stmt|;
 name|int
 name|pcn_if_flags
