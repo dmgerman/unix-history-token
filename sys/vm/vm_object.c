@@ -867,7 +867,7 @@ argument_list|)
 expr_stmt|;
 name|_vm_object_allocate
 argument_list|(
-name|OBJT_DEFAULT
+name|OBJT_PHYS
 argument_list|,
 name|OFF_TO_IDX
 argument_list|(
@@ -889,7 +889,7 @@ argument_list|)
 expr_stmt|;
 name|_vm_object_allocate
 argument_list|(
-name|OBJT_DEFAULT
+name|OBJT_PHYS
 argument_list|,
 name|OFF_TO_IDX
 argument_list|(
@@ -6249,6 +6249,14 @@ operator|->
 name|type
 operator|!=
 name|OBJT_PHYS
+operator|||
+name|object
+operator|==
+name|kernel_object
+operator|||
+name|object
+operator|==
+name|kmem_object
 argument_list|,
 operator|(
 literal|"attempt to remove pages from a physical object"
