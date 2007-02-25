@@ -500,6 +500,25 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|MII_PHY_DESC
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|{ MII_OUI_ ## a, MII_MODEL_ ## a ## _ ## b, \ 	MII_STR_ ## a ## _ ## b }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_PHY_END
+value|{ 0, 0, NULL }
+end_define
+
 begin_comment
 comment|/*  * An array of these structures map MII media types to BMCR/ANAR settings.  */
 end_comment
