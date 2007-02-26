@@ -504,6 +504,10 @@ name|int
 name|birthtime_nsec
 decl_stmt|;
 comment|/* creation time nanoseconds */
+name|int
+name|extsize
+decl_stmt|;
+comment|/* size of extended attribute data */
 name|off_t
 name|size
 decl_stmt|;
