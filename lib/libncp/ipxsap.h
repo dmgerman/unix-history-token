@@ -95,6 +95,7 @@ name|server_type
 decl_stmt|;
 comment|/* net order */
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -119,6 +120,7 @@ name|u_short
 name|hops
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -137,6 +139,7 @@ literal|1
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
