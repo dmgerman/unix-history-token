@@ -2865,35 +2865,6 @@ goto|goto
 name|bce_attach_fail
 goto|;
 block|}
-if|if
-condition|(
-name|BCE_CHIP_BOND_ID
-argument_list|(
-name|sc
-argument_list|)
-operator|&
-name|BCE_CHIP_BOND_ID_SERDES_BIT
-condition|)
-block|{
-name|BCE_PRINTF
-argument_list|(
-name|sc
-argument_list|,
-literal|"%s(%d): SerDes controllers are not supported!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
-name|rc
-operator|=
-name|ENODEV
-expr_stmt|;
-goto|goto
-name|bce_attach_fail
-goto|;
-block|}
 comment|/*  	 * The embedded PCIe to PCI-X bridge (EPB)  	 * in the 5708 cannot address memory above  	 * 40 bits (E7_5708CB1_23043& E6_5708SB1_23043).  	 */
 if|if
 condition|(
@@ -3678,36 +3649,6 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|bce_phy_flags
-operator|&
-name|BCE_PHY_SERDES_FLAG
-condition|)
-block|{
-name|BCE_PRINTF
-argument_list|(
-name|sc
-argument_list|,
-literal|"%s(%d): SerDes is not supported by this driver!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
-name|rc
-operator|=
-name|ENODEV
-expr_stmt|;
-goto|goto
-name|bce_attach_fail
-goto|;
-block|}
-else|else
-block|{
 comment|/* Look for our PHY. */
 if|if
 condition|(
@@ -3744,7 +3685,6 @@ expr_stmt|;
 goto|goto
 name|bce_attach_fail
 goto|;
-block|}
 block|}
 comment|/* Attach to the Ethernet interface list. */
 name|ether_ifattach
@@ -4024,26 +3964,6 @@ name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* If we have a child device on the MII bus remove it too. */
-if|if
-condition|(
-name|sc
-operator|->
-name|bce_phy_flags
-operator|&
-name|BCE_PHY_SERDES_FLAG
-condition|)
-block|{
-name|ifmedia_removeall
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|bce_ifmedia
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|bus_generic_detach
 argument_list|(
 name|dev
@@ -4058,7 +3978,6 @@ operator|->
 name|bce_miibus
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Release all remaining resources. */
 name|bce_release_resources
 argument_list|(
@@ -5236,6 +5155,15 @@ name|mii_media_active
 argument_list|)
 operator|==
 name|IFM_1000_T
+operator|||
+name|IFM_SUBTYPE
+argument_list|(
+name|mii
+operator|->
+name|mii_media_active
+argument_list|)
+operator|==
+name|IFM_1000_SX
 condition|)
 block|{
 name|DBPRINT
@@ -16993,7 +16921,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* DRC - ToDo: Add SerDes support. */
 name|mii
 operator|=
 name|device_get_softc
@@ -17113,7 +17040,6 @@ operator|->
 name|bce_miibus
 argument_list|)
 expr_stmt|;
-comment|/* DRC - ToDo: Add SerDes support. */
 name|mii_pollstat
 argument_list|(
 name|mii
@@ -20965,43 +20891,6 @@ operator|->
 name|bce_phy_flags
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|bce_phy_flags
-operator|&
-name|BCE_PHY_SERDES_FLAG
-condition|)
-block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_VERBOSE
-argument_list|,
-literal|"SerDes media set/get\n"
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ifmedia_ioctl
-argument_list|(
-name|ifp
-argument_list|,
-name|ifr
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|bce_ifmedia
-argument_list|,
-name|command
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|DBPRINT
 argument_list|(
 name|sc
@@ -21036,7 +20925,6 @@ argument_list|,
 name|command
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 comment|/* Set interface capability */
 case|case
@@ -23493,7 +23381,6 @@ condition|)
 goto|goto
 name|bce_tick_locked_exit
 goto|;
-comment|/* DRC - ToDo: Add SerDes support and check SerDes link here. */
 name|mii
 operator|=
 name|device_get_softc
