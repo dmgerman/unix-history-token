@@ -123,6 +123,11 @@ comment|/* peer credentials, if applicable */
 name|u_int
 name|unp_refcount
 decl_stmt|;
+name|struct
+name|mtx
+name|unp_mtx
+decl_stmt|;
+comment|/* mutex */
 block|}
 struct|;
 end_struct
