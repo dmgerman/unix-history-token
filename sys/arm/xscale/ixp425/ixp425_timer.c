@@ -135,7 +135,7 @@ comment|/* callback functions for intr_functions */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|ixpclk_intr
 parameter_list|(
 name|void
@@ -645,10 +645,10 @@ argument_list|,
 name|irq
 argument_list|,
 name|INTR_TYPE_CLK
+operator||
+name|INTR_FAST
 argument_list|,
 name|ixpclk_intr
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -824,7 +824,7 @@ comment|/*  * ixpclk_intr:  *  *	Handle the hardclock interrupt.  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|ixpclk_intr
 parameter_list|(
 name|void
@@ -840,7 +840,7 @@ init|=
 name|ixpclk_sc
 decl_stmt|;
 name|struct
-name|trapframe
+name|clockframe
 modifier|*
 name|frame
 init|=
@@ -863,22 +863,9 @@ argument_list|)
 expr_stmt|;
 name|hardclock
 argument_list|(
-name|TRAPF_USERMODE
-argument_list|(
 name|frame
-argument_list|)
-argument_list|,
-name|TRAPF_PC
-argument_list|(
-name|frame
-argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|FILTER_HANDLED
-operator|)
-return|;
 block|}
 end_function
 

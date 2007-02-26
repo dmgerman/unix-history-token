@@ -39,12 +39,6 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_ARM32_BUS_DMA_PRIVATE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -488,64 +482,6 @@ argument_list|(
 literal|"cannot allocate PCI MEM space"
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|AHB_OFFSET
-value|0x10000000UL
-if|if
-condition|(
-name|bus_dma_tag_create
-argument_list|(
-name|NULL
-argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-name|AHB_OFFSET
-operator|+
-literal|64
-operator|*
-literal|1024
-operator|*
-literal|1024
-argument_list|,
-name|BUS_SPACE_MAXADDR
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-literal|0xffffffff
-argument_list|,
-literal|0xff
-argument_list|,
-literal|0xffffffff
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_dmat
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"couldn't create the PCI dma tag !"
-argument_list|)
-expr_stmt|;
-comment|/*  	 * The PCI bus can only address 64MB. However, due to the way our 	 * implementation of busdma works, busdma can't tell if a device 	 * is a PCI device or not. So defaults to the PCI dma tag, which 	 * restrict the DMA'able memory to the first 64MB, and explicitely 	 * create less restrictive tags for non-PCI devices. 	 */
-name|arm_root_dma_tag
-operator|=
-name|sc
-operator|->
-name|sc_dmat
-expr_stmt|;
 comment|/* 	 * Initialize the bus space tags. 	 */
 name|ixp425_io_bs_init
 argument_list|(
@@ -675,6 +611,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * PCI->AHB address translation 	 * 	begin at the physical memory start + OFFSET 	 */
+define|#
+directive|define
+name|AHB_OFFSET
+value|0x10000000UL
 name|PCI_CSR_WRITE_4
 argument_list|(
 name|sc
@@ -1022,10 +962,6 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|driver_filter_t
-modifier|*
-name|filt
-parameter_list|,
 name|driver_intr_t
 modifier|*
 name|intr
@@ -1054,8 +990,6 @@ argument_list|,
 name|ires
 argument_list|,
 name|flags
-argument_list|,
-name|filt
 argument_list|,
 name|intr
 argument_list|,

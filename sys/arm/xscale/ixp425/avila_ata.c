@@ -63,6 +63,12 @@ directive|include
 file|<sys/resource.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|__RMAN_RESOURCE_VISIBLE
+end_define
+
 begin_include
 include|#
 directive|include
@@ -663,8 +669,6 @@ name|INTR_MPSAFE
 operator||
 name|INTR_ENTROPY
 argument_list|,
-name|NULL
-argument_list|,
 name|ata_avila_intr
 argument_list|,
 name|sc
@@ -1002,10 +1006,6 @@ name|irq
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|driver_filter_t
-modifier|*
-name|filt
 parameter_list|,
 name|driver_intr_t
 modifier|*

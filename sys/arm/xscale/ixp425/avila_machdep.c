@@ -847,6 +847,8 @@ endif|#
 directive|endif
 name|int
 name|i
+init|=
+literal|0
 decl_stmt|;
 name|uint32_t
 name|fake_preload
@@ -1993,6 +1995,9 @@ name|proc_linkup
 argument_list|(
 operator|&
 name|proc0
+argument_list|,
+operator|&
+name|ksegrp0
 argument_list|,
 operator|&
 name|thread0
