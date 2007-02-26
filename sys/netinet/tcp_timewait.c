@@ -1466,6 +1466,10 @@ name|tcp_inflight_rttthresh
 operator|=
 name|TCPTV_INFLIGHT_RTTTHRESH
 expr_stmt|;
+name|tcp_finwait2_timeout
+operator|=
+name|TCPTV_FINWAIT2_TIMEOUT
+expr_stmt|;
 name|INP_INFO_LOCK_INIT
 argument_list|(
 operator|&

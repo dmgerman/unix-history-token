@@ -1364,6 +1364,10 @@ name|u_long
 name|tcps_hc_bucketoverflow
 decl_stmt|;
 comment|/* hostcache per bucket limit hit */
+name|u_long
+name|tcps_finwait2_drops
+decl_stmt|;
+comment|/* Drop FIN_WAIT_2 connection after time limit */
 comment|/* SACK related stats */
 name|u_long
 name|tcps_sack_recovery_episode
@@ -1605,6 +1609,13 @@ define|#
 directive|define
 name|TCPCTL_MAXID
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPCTL_FINWAIT2_TIMEOUT
+value|17
 end_define
 
 begin_define

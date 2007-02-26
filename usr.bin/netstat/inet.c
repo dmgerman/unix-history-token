@@ -2219,6 +2219,13 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
+name|tcps_finwait2_drops
+argument_list|,
+literal|"\t%lu Connection%s (fin_wait_2) dropped because of timeout\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|tcps_keeptimeo
 argument_list|,
 literal|"\t%lu keepalive timeout%s\n"
