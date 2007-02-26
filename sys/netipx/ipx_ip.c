@@ -655,6 +655,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+break|break;
 default|default:
 name|error
 operator|=
