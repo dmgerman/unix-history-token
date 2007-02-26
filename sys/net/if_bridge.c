@@ -2909,11 +2909,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|BRIDGE_LOCK_INIT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|=
 name|sc
@@ -2945,6 +2940,11 @@ name|ENOSPC
 operator|)
 return|;
 block|}
+name|BRIDGE_LOCK_INIT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_brtmax
