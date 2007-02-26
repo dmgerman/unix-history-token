@@ -108,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/katelib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arm/sa11x0/sa11x0_reg.h>
 end_include
 
