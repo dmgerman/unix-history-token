@@ -33,12 +33,6 @@ directive|include
 file|"opt_ipx.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPXIP
-end_ifdef
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2068,15 +2062,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPXIP */
-end_comment
 
 end_unit
 
