@@ -267,6 +267,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|rw_wowned
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|_rw_wlock
 parameter_list|(
