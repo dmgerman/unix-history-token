@@ -485,7 +485,7 @@ name|dev
 argument_list|,
 name|rlphys
 argument_list|,
-name|BUS_PROBE_DEFAULT
+literal|0
 argument_list|)
 operator|==
 literal|0
