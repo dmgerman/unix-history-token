@@ -2259,6 +2259,14 @@ return|;
 block|}
 if|if
 condition|(
+name|len
+operator|>=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|pdu
+argument_list|)
+operator|&&
 sizeof|sizeof
 argument_list|(
 operator|*
