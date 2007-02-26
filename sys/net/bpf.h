@@ -280,14 +280,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|BIOCGSEESENT
+name|BIOCGDIRECTION
 value|_IOR('B',118, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BIOCSSEESENT
+name|BIOCSDIRECTION
 value|_IOW('B',119, u_int)
 end_define
 
@@ -318,6 +318,51 @@ directive|define
 name|BIOCSETWF
 value|_IOW('B',123, struct bpf_program)
 end_define
+
+begin_define
+define|#
+directive|define
+name|BIOCFEEDBACK
+value|_IOW('B',124, u_int)
+end_define
+
+begin_comment
+comment|/* Obsolete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIOCGSEESENT
+value|BIOCGDIRECTION
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIOCSSEESENT
+value|BIOCSDIRECTION
+end_define
+
+begin_comment
+comment|/* Packet directions */
+end_comment
+
+begin_enum
+enum|enum
+name|bpf_direction
+block|{
+name|BPF_D_IN
+block|,
+comment|/* See incoming packets */
+name|BPF_D_INOUT
+block|,
+comment|/* See incoming and outgoing packets */
+name|BPF_D_OUT
+comment|/* See outgoing packets */
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * Structure prepended to each packet.  */

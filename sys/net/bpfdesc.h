@@ -142,9 +142,13 @@ name|bd_hdrcmplt
 decl_stmt|;
 comment|/* false to fill in src lladdr automatically */
 name|int
-name|bd_seesent
+name|bd_direction
 decl_stmt|;
-comment|/* true if bpf should see sent packets */
+comment|/* select packet direction */
+name|int
+name|bd_feedback
+decl_stmt|;
+comment|/* true to feed back sent packets */
 name|int
 name|bd_async
 decl_stmt|;
@@ -296,7 +300,10 @@ name|int
 name|bd_hdrcmplt
 decl_stmt|;
 name|int
-name|bd_seesent
+name|bd_direction
+decl_stmt|;
+name|int
+name|bd_feedback
 decl_stmt|;
 name|int
 name|bd_async
