@@ -4547,9 +4547,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|smp_topology
-operator|==
-name|NULL
+literal|1
 condition|)
 block|{
 name|struct

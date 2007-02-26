@@ -419,6 +419,8 @@ literal|0
 decl_stmt|;
 name|int
 name|contested
+init|=
+literal|0
 decl_stmt|;
 name|mtx_lock
 argument_list|(
@@ -467,20 +469,6 @@ name|line
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Loop in case we lose the race for lock acquisition. 	 */
-if|if
-condition|(
-name|sx
-operator|->
-name|sx_cnt
-operator|<
-literal|0
-condition|)
-name|lock_profile_waitstart
-argument_list|(
-operator|&
-name|waittime
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|sx
@@ -504,6 +492,9 @@ name|sx_object
 argument_list|,
 operator|&
 name|contested
+argument_list|,
+operator|&
+name|waittime
 argument_list|)
 expr_stmt|;
 name|cv_wait
@@ -544,6 +535,8 @@ operator|&
 name|sx
 operator|->
 name|sx_object
+argument_list|,
+name|contested
 argument_list|,
 name|waittime
 argument_list|,
@@ -744,6 +737,8 @@ parameter_list|)
 block|{
 name|int
 name|contested
+init|=
+literal|0
 decl_stmt|;
 name|uint64_t
 name|waittime
@@ -799,18 +794,6 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sx
-operator|->
-name|sx_cnt
-condition|)
-name|lock_profile_waitstart
-argument_list|(
-operator|&
-name|waittime
-argument_list|)
-expr_stmt|;
 comment|/* Loop in case we lose the race for lock acquisition. */
 while|while
 condition|(
@@ -835,6 +818,9 @@ name|sx_object
 argument_list|,
 operator|&
 name|contested
+argument_list|,
+operator|&
+name|waittime
 argument_list|)
 expr_stmt|;
 name|cv_wait
@@ -882,6 +868,8 @@ operator|&
 name|sx
 operator|->
 name|sx_object
+argument_list|,
+name|contested
 argument_list|,
 name|waittime
 argument_list|,

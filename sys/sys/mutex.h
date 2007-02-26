@@ -711,7 +711,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if (!_obtain_lock((mp), _tid))					\ 		_mtx_lock_sleep((mp), _tid, (opts), (file), (line));	\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int contested = 0;                                              \         uint64_t waittime = 0;						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		lock_profile_obtain_lock_failed(&(mp)->mtx_object,&contested,&waittime); \ 		_mtx_lock_sleep((mp), _tid, (opts), (file), (line));	\ 	}                                                               \         lock_profile_obtain_lock_success(&(mp)->mtx_object, contested, waittime, file, line);\ } while (0)
 end_define
 
 begin_endif
@@ -750,7 +750,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int contested = 0;                                            \ 									\ 	spinlock_enter();						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		lock_profile_obtain_lock_failed(&mp->mtx_object,&contested);\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 	}								\         lock_profile_update_contest_locking(&mp->mtx_object, contested);\ } while (0)
+value|do {	\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int contested = 0;                                              \ 	uint64_t waittime = 0;						\ 	spinlock_enter();						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else {							\ 			lock_profile_obtain_lock_failed(&(mp)->mtx_object,&contested,&waittime); \ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 		}                                                       \ 	}								\         lock_profile_obtain_lock_success(&(mp)->mtx_object, contested, waittime, file, line);\ } while (0)
 end_define
 
 begin_else
