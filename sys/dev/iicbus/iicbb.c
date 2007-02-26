@@ -1647,6 +1647,24 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|iicbb
+argument_list|,
+name|ixpiic
+argument_list|,
+name|iicbb_driver
+argument_list|,
+name|iicbb_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
 name|iicbb

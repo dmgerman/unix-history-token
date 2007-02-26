@@ -204,6 +204,13 @@ argument_list|,
 name|bus_generic_print_child
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|iicbus_transfer
+argument_list|,
+name|iicbus_transfer_gen
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
@@ -485,6 +492,33 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|device_add_child
+argument_list|(
+name|dev
+argument_list|,
+literal|"ds1672"
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|device_add_child
+argument_list|(
+name|dev
+argument_list|,
+literal|"ad7418"
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* attach any known device */
+block|device_add_child(dev, "iic", -1);
+endif|#
+directive|endif
 name|bus_generic_attach
 argument_list|(
 name|dev

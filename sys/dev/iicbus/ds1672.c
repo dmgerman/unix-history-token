@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/clock.h>
 end_include
 
@@ -55,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
 end_include
 
 begin_include
