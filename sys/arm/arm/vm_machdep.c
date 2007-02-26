@@ -161,6 +161,12 @@ directive|include
 file|<vm/uma_int.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1643,7 +1649,15 @@ name|void
 modifier|*
 name|dummy
 parameter_list|)
-block|{ }
+block|{
+if|if
+condition|(
+name|busdma_swi_pending
+condition|)
+name|busdma_swi
+argument_list|()
+expr_stmt|;
+block|}
 end_function
 
 begin_function
