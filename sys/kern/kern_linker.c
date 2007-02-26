@@ -6040,7 +6040,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * this is a once-off kinky bubble sort resolve relocation dependency 	 * requirements 	 */
+comment|/* 	 * This is a once-off kinky bubble sort to resolve relocation 	 * dependency requirements. 	 */
 name|restart
 label|:
 name|TAILQ_FOREACH
