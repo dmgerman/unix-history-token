@@ -1423,6 +1423,12 @@ argument_list|(
 name|linker_kernel_file
 argument_list|)
 expr_stmt|;
+name|linker_kernel_file
+operator|->
+name|flags
+operator||=
+name|LINKER_FILE_LINKED
+expr_stmt|;
 block|}
 end_function
 
