@@ -3637,7 +3637,7 @@ name|devclass_find_internal
 argument_list|(
 name|parentname
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|FALSE
 argument_list|)
@@ -3671,7 +3671,7 @@ name|devclass_find_internal
 argument_list|(
 name|classname
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|TRUE
 argument_list|)
@@ -3700,7 +3700,7 @@ name|devclass_find_internal
 argument_list|(
 name|classname
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|FALSE
 argument_list|)
@@ -3784,7 +3784,7 @@ name|driver
 operator|->
 name|name
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|TRUE
 argument_list|)
@@ -5662,7 +5662,7 @@ name|devclass_find_internal
 argument_list|(
 name|name
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|TRUE
 argument_list|)
@@ -6561,7 +6561,7 @@ decl_stmt|;
 name|driverlink_t
 name|best
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|driverlink_t
 name|dl
@@ -6746,7 +6746,7 @@ name|device_set_devclass
 argument_list|(
 name|child
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 			 * If the driver returns SUCCESS, there can be 			 * no higher match for this device. 			 */
@@ -6779,7 +6779,7 @@ name|device_set_driver
 argument_list|(
 name|child
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -6789,7 +6789,7 @@ if|if
 condition|(
 name|best
 operator|==
-literal|0
+name|NULL
 operator|||
 name|result
 operator|>
@@ -8220,7 +8220,7 @@ name|devclass_find_internal
 argument_list|(
 name|classname
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|TRUE
 argument_list|)
@@ -8336,7 +8336,7 @@ name|kobj_t
 operator|)
 name|dev
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|dev
@@ -8413,7 +8413,7 @@ name|kobj_t
 operator|)
 name|dev
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|kobj_init
@@ -8694,13 +8694,13 @@ name|dev
 operator|->
 name|devclass
 operator|==
-literal|0
+name|NULL
 condition|)
 name|device_set_devclass
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|device_set_driver
@@ -9588,7 +9588,7 @@ name|resource_list_entry
 modifier|*
 name|rle
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|passthrough
@@ -9828,7 +9828,7 @@ name|resource_list_entry
 modifier|*
 name|rle
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|passthrough
@@ -12014,11 +12014,11 @@ name|dev
 operator|->
 name|parent
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 return|return
@@ -12077,7 +12077,7 @@ name|dev
 operator|->
 name|parent
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -12134,7 +12134,7 @@ name|dev
 operator|->
 name|parent
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -12191,7 +12191,7 @@ name|dev
 operator|->
 name|parent
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -12263,7 +12263,7 @@ name|dev
 operator|->
 name|parent
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -12435,7 +12435,7 @@ name|dev
 operator|->
 name|parent
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -13266,7 +13266,7 @@ name|devclass_find_internal
 argument_list|(
 literal|"root"
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|FALSE
 argument_list|)
@@ -13425,7 +13425,7 @@ name|dmd
 operator|->
 name|dmd_busname
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|TRUE
 argument_list|)
@@ -13553,7 +13553,7 @@ name|driver
 operator|->
 name|name
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|TRUE
 argument_list|)
