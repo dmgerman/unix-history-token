@@ -225,7 +225,7 @@ specifier|static
 name|void
 name|sidewaysintpr
 parameter_list|(
-name|u_int
+name|int
 parameter_list|,
 name|u_long
 parameter_list|)
@@ -722,7 +722,7 @@ name|void
 name|intpr
 parameter_list|(
 name|int
-name|_interval
+name|interval1
 parameter_list|,
 name|u_long
 name|ifnetaddr
@@ -849,15 +849,12 @@ return|return;
 block|}
 if|if
 condition|(
-name|_interval
+name|interval1
 condition|)
 block|{
 name|sidewaysintpr
 argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|_interval
+name|interval1
 argument_list|,
 name|ifnetaddr
 argument_list|)
@@ -2478,7 +2475,7 @@ comment|/* set if alarm goes off "early" */
 end_comment
 
 begin_comment
-comment|/*  * Print a running summary of interface statistics.  * Repeat display every interval seconds, showing statistics  * collected over that interval.  Assumes that interval is non-zero.  * First line printed at top of screen is always cumulative.  * XXX - should be rewritten to use ifmib(4).  */
+comment|/*  * Print a running summary of interface statistics.  * Repeat display every interval1 seconds, showing statistics  * collected over that interval.  Assumes that interval1 is non-zero.  * First line printed at top of screen is always cumulative.  * XXX - should be rewritten to use ifmib(4).  */
 end_comment
 
 begin_function
@@ -2486,7 +2483,7 @@ specifier|static
 name|void
 name|sidewaysintpr
 parameter_list|(
-name|unsigned
+name|int
 name|interval1
 parameter_list|,
 name|u_long
