@@ -1696,6 +1696,10 @@ name|PRIV_NET_SETLLADDR
 value|408
 end_define
 
+begin_comment
+comment|/* Set interface link-level address. */
+end_comment
+
 begin_define
 define|#
 directive|define
