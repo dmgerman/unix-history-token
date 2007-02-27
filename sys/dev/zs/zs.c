@@ -798,7 +798,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|zs_intr
 parameter_list|(
 name|void
@@ -904,6 +904,7 @@ if|if
 condition|(
 name|needsoft
 condition|)
+block|{
 name|swi_sched
 argument_list|(
 name|sc
@@ -913,6 +914,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|FILTER_STRAY
+operator|)
+return|;
 block|}
 end_function
 
