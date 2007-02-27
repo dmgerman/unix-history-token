@@ -33,7 +33,7 @@ parameter_list|(
 name|X
 parameter_list|)
 define|\
-value|tsleep(&slhci_dummy, PRIBIO, "slhci", MS_TO_TICKS(X))
+value|pause("slhci", MS_TO_TICKS(X))
 end_define
 
 begin_define

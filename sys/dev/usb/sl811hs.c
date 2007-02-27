@@ -724,12 +724,6 @@ name|usbdebug
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|slhci_dummy
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* For root hub */
 end_comment
