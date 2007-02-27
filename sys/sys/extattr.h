@@ -254,7 +254,7 @@ name|cond
 parameter_list|,
 name|str
 parameter_list|)
-value|do { \         if (cond) { printf("panic: "); printf(str); printf("\n"); exit(1); } \ } while (0)
+value|do { \         if (!(cond)) { printf("panic: "); printf(str); printf("\n"); exit(1); }\ } while (0)
 end_define
 
 begin_struct_decl
