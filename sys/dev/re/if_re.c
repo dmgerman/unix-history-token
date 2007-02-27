@@ -5753,6 +5753,26 @@ operator|->
 name|rl_stat_callout
 argument_list|)
 expr_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_fast
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rl_inttask
+argument_list|)
+expr_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_fast
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rl_txtask
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Force off the IFF_UP flag here, in case someone 		 * still had a BPF descriptor attached to this 		 * interface. If they do, ether_ifdetach() will cause 		 * the BPF code to try and clear the promisc mode 		 * flag, which will bubble down to re_ioctl(), 		 * which will try to call re_init() again. This will 		 * turn the NIC back on and restart the MII ticker, 		 * which will panic the system when the kernel tries 		 * to invoke the re_tick() function that isn't there 		 * anymore. 		 */
 name|ifp
 operator|->
@@ -5854,18 +5874,6 @@ argument_list|,
 name|sc
 operator|->
 name|rl_res
-argument_list|)
-expr_stmt|;
-comment|/* Yield the CPU long enough for any tasks to drain */
-name|tsleep
-argument_list|(
-name|sc
-argument_list|,
-name|PPAUSE
-argument_list|,
-literal|"rewait"
-argument_list|,
-name|hz
 argument_list|)
 expr_stmt|;
 comment|/* Unload and free the RX DMA ring memory and map */
