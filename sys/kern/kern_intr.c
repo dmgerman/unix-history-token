@@ -3052,6 +3052,16 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* Skip filter only handlers */
+if|if
+condition|(
+name|ih
+operator|->
+name|ih_handler
+operator|==
+name|NULL
+condition|)
+continue|continue;
 comment|/* 		 * For software interrupt threads, we only execute 		 * handlers that have their need flag set.  Hardware 		 * interrupt threads always invoke all of their handlers. 		 */
 if|if
 condition|(
