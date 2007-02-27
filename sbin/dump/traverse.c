@@ -3607,6 +3607,10 @@ if|if
 condition|(
 name|last
 operator|&&
+name|count
+operator|==
+name|blks
+operator|&&
 operator|!
 name|writingextdata
 condition|)
@@ -3709,6 +3713,10 @@ expr_stmt|;
 if|if
 condition|(
 name|last
+operator|&&
+name|count
+operator|==
+name|blks
 operator|&&
 operator|!
 name|writingextdata
