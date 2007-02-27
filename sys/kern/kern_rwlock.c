@@ -593,9 +593,13 @@ endif|#
 directive|endif
 name|uint64_t
 name|waitstart
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|contested
+init|=
+literal|0
 decl_stmt|;
 name|uintptr_t
 name|x
