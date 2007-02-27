@@ -1804,13 +1804,8 @@ name|object
 argument_list|)
 expr_stmt|;
 comment|/* 					 * More likely than not the thread 					 * holding robject's lock has lower 					 * priority than the current thread. 					 * Let the lower priority thread run. 					 */
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|proc0
-argument_list|,
-name|PVM
-argument_list|,
 literal|"vmo_de"
 argument_list|,
 literal|1
