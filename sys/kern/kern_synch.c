@@ -614,17 +614,12 @@ name|CTR5
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"msleep: thread %p (pid %ld, %s) on %s (%p)"
+literal|"msleep: thread %ld (pid %ld, %s) on %s (%p)"
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|td
+operator|->
+name|td_tid
 argument_list|,
-operator|(
-name|long
-operator|)
 name|p
 operator|->
 name|p_pid
@@ -976,17 +971,12 @@ name|CTR5
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"msleep_spin: thread %p (pid %ld, %s) on %s (%p)"
+literal|"msleep_spin: thread %ld (pid %ld, %s) on %s (%p)"
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|td
+operator|->
+name|td_tid
 argument_list|,
-operator|(
-name|long
-operator|)
 name|p
 operator|->
 name|p_pid
@@ -1658,21 +1648,16 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"mi_switch: old thread %p (kse %p, pid %ld, %s)"
+literal|"mi_switch: old thread %ld (kse %p, pid %ld, %s)"
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|td
+operator|->
+name|td_tid
 argument_list|,
 name|td
 operator|->
 name|td_sched
 argument_list|,
-operator|(
-name|long
-operator|)
 name|p
 operator|->
 name|p_pid
@@ -1854,21 +1839,16 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"mi_switch: new thread %p (kse %p, pid %ld, %s)"
+literal|"mi_switch: new thread %ld (kse %p, pid %ld, %s)"
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|td
+operator|->
+name|td_tid
 argument_list|,
 name|td
 operator|->
 name|td_sched
 argument_list|,
-operator|(
-name|long
-operator|)
 name|p
 operator|->
 name|p_pid
