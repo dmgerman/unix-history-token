@@ -2036,6 +2036,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INADDR_ALLRPTS_GROUP
+value|(u_int32_t)0xe0000016
+end_define
+
+begin_comment
+comment|/* 224.0.0.22, IGMPv3 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INADDR_CARP_GROUP
 value|(u_int32_t)0xe0000012
 end_define
