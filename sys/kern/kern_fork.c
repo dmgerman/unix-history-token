@@ -243,17 +243,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-name|int
-name|forksleep
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Place for fork1() to sleep on. */
-end_comment
-
 begin_comment
 comment|/*  * MPSAFE  */
 end_comment
@@ -3026,13 +3015,8 @@ name|p1
 argument_list|)
 expr_stmt|;
 block|}
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|forksleep
-argument_list|,
-name|PUSER
-argument_list|,
 literal|"fork"
 argument_list|,
 name|hz
