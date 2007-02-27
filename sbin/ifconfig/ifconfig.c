@@ -4512,10 +4512,12 @@ literal|35
 index|]
 decl_stmt|,
 modifier|*
-name|cp
-decl_stmt|,
-modifier|*
 name|dp
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|cp
 decl_stmt|;
 comment|/* turn interface and unit into module name */
 name|strcpy
