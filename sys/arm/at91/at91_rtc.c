@@ -308,7 +308,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|at91_rtc_intr
 parameter_list|(
 name|void
