@@ -6709,7 +6709,7 @@ block|struct timeval tv; 	tv.tv_sec = 0; 	tv.tv_usec = 200 * 1000;
 comment|/* 200ms */
 block|if (vcp->vc_flags& SMBC_WIN95) {
 comment|/* 			 * some implementations suggests to sleep here 			 * for 200ms, due to the bug in the Win95. 			 * I've didn't notice any problem, but put code 			 * for it. 			 */
-block|tsleep(&flags, PVFS, "fix95", tvtohz(&tv)); 		}
+block|pause("fix95", tvtohz(&tv)); 		}
 endif|#
 directive|endif
 block|}

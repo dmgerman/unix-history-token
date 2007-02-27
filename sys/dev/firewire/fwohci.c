@@ -7767,9 +7767,6 @@ operator|*
 operator|)
 name|fc
 decl_stmt|;
-name|int
-name|sleepch
-decl_stmt|;
 name|OWRITE
 argument_list|(
 name|sc
@@ -7807,17 +7804,8 @@ name|dmach
 argument_list|)
 expr_stmt|;
 comment|/* XXX we cannot free buffers until the DMA really stops */
-name|tsleep
+name|pause
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|sleepch
-argument_list|,
-name|FWPRI
-argument_list|,
 literal|"fwitxd"
 argument_list|,
 name|hz
@@ -7880,9 +7868,6 @@ operator|*
 operator|)
 name|fc
 decl_stmt|;
-name|int
-name|sleepch
-decl_stmt|;
 name|OWRITE
 argument_list|(
 name|sc
@@ -7918,17 +7903,8 @@ name|dmach
 argument_list|)
 expr_stmt|;
 comment|/* XXX we cannot free buffers until the DMA really stops */
-name|tsleep
+name|pause
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|sleepch
-argument_list|,
-name|FWPRI
-argument_list|,
 literal|"fwirxd"
 argument_list|,
 name|hz

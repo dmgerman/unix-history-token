@@ -690,13 +690,8 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* Give the BMC 100ms to chew on the request. */
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|error
-argument_list|,
-literal|0
-argument_list|,
 literal|"ssifwt"
 argument_list|,
 name|hz
@@ -781,13 +776,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Give the BMC another 10ms. */
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|error
-argument_list|,
-literal|0
-argument_list|,
 literal|"ssifwt"
 argument_list|,
 name|hz
@@ -1411,13 +1401,8 @@ name|ok
 condition|)
 break|break;
 comment|/* Wait 60 ms between retries. */
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|ok
-argument_list|,
-literal|0
-argument_list|,
 literal|"retry"
 argument_list|,
 literal|60
@@ -1481,13 +1466,8 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Enforce 10ms between requests. */
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|ok
-argument_list|,
-literal|0
-argument_list|,
 literal|"delay"
 argument_list|,
 name|hz

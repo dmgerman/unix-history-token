@@ -11477,15 +11477,8 @@ name|YIELD_THREAD
 expr_stmt|;
 else|#
 directive|else
-name|tsleep
+name|pause
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|hpt_worker_thread
-argument_list|,
-name|PPAUSE
-argument_list|,
 literal|"sched"
 argument_list|,
 literal|1
@@ -11621,7 +11614,7 @@ block|}
 block|}
 block|}
 comment|/*Remove this debug option*/
-comment|/* #ifdef DEBUG 		if (SIGISMEMBER(curproc->p_siglist, SIGSTOP)) 			tsleep((caddr_t)hpt_worker_thread, PPAUSE, "hptrdy", 2*hz); #endif */
+comment|/* #ifdef DEBUG 		if (SIGISMEMBER(curproc->p_siglist, SIGSTOP)) 			pause("hptrdy", 2*hz); #endif */
 if|#
 directive|if
 operator|(
@@ -11643,15 +11636,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|tsleep
+name|pause
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|hpt_worker_thread
-argument_list|,
-name|PPAUSE
-argument_list|,
 literal|"hptrdy"
 argument_list|,
 literal|2

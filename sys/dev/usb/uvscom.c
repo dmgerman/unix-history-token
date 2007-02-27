@@ -3893,13 +3893,8 @@ operator|--
 name|i
 control|)
 block|{
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|err
-argument_list|,
-name|TTIPRI
-argument_list|,
 literal|"uvsop"
 argument_list|,
 name|hz

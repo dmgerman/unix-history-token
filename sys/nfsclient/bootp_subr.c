@@ -3511,17 +3511,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* XXX: Is this needed ? */
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|error
-argument_list|,
-name|PZERO
-operator|+
-literal|8
-argument_list|,
 literal|"bootpw"
 argument_list|,
+name|hz
+operator|/
 literal|10
 argument_list|)
 expr_stmt|;

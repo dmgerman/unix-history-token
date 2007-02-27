@@ -9034,7 +9034,7 @@ argument|TRUE)
 argument_list|,
 argument|sbp_logout_all(sbp);
 comment|/* XXX wait for logout completion */
-argument|tsleep(&i, FWPRI,
+argument|pause(
 literal|"sbpdtc"
 argument|, hz/
 literal|2

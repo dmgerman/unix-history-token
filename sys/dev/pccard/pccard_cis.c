@@ -382,13 +382,8 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * XXX The following shouldn't be needed, but some slow cards 	 * XXX seem to need it still.  Need to investigate if there's 	 * XXX a way to tell if the card is 'ready' or not rather than 	 * XXX sleeping like this.  We're called just after the power 	 * XXX up of the socket.  The standard timing diagrams don't 	 * XXX seem to indicate that a delay is required.  The old 	 * XXX delay was 1s.  This delay is .1s. 	 */
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|state
-argument_list|,
-literal|0
-argument_list|,
 literal|"pccard"
 argument_list|,
 name|hz

@@ -1259,13 +1259,8 @@ condition|(
 operator|!
 name|active
 condition|)
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|harvestfifo
-argument_list|,
-literal|0
-argument_list|,
 literal|"-"
 argument_list|,
 name|hz

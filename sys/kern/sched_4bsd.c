@@ -1647,9 +1647,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|nowake
-decl_stmt|;
 for|for
 control|(
 init|;
@@ -1659,13 +1656,8 @@ block|{
 name|schedcpu
 argument_list|()
 expr_stmt|;
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|nowake
-argument_list|,
-literal|0
-argument_list|,
 literal|"-"
 argument_list|,
 name|hz

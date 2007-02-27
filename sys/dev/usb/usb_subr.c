@@ -1366,13 +1366,8 @@ literal|1000
 argument_list|)
 expr_stmt|;
 else|else
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|ms
-argument_list|,
-name|PRIBIO
-argument_list|,
 literal|"usbdly"
 argument_list|,
 operator|(

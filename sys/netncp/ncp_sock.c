@@ -689,9 +689,6 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|sendwait
-decl_stmt|;
 for|for
 control|(
 init|;
@@ -760,13 +757,8 @@ operator|->
 name|rexmit
 operator|--
 expr_stmt|;
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|sendwait
-argument_list|,
-name|PWAIT
-argument_list|,
 literal|"ncprsn"
 argument_list|,
 name|conn

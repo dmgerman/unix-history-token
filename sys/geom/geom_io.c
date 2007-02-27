@@ -2268,13 +2268,8 @@ argument_list|,
 name|pace
 argument_list|)
 expr_stmt|;
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|error
-argument_list|,
-name|PRIBIO
-argument_list|,
 literal|"g_down"
 argument_list|,
 name|hz

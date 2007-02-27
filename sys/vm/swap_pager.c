@@ -4980,9 +4980,6 @@ operator|->
 name|sw_used
 condition|)
 block|{
-name|int
-name|dummy
-decl_stmt|;
 comment|/* 		 * Objects may be locked or paging to the device being 		 * removed, so we will miss their pages and need to 		 * make another pass.  We have marked this device as 		 * SW_CLOSING, so the activity should finish soon. 		 */
 name|retries
 operator|++
@@ -5004,13 +5001,8 @@ name|sw_used
 argument_list|)
 expr_stmt|;
 block|}
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|dummy
-argument_list|,
-name|PVM
-argument_list|,
 literal|"swpoff"
 argument_list|,
 name|hz

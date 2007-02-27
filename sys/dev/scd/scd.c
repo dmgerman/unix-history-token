@@ -7141,14 +7141,8 @@ condition|)
 block|{
 break|break;
 block|}
-name|tsleep
+name|pause
 argument_list|(
-name|waitfor_status_bits
-argument_list|,
-name|PZERO
-operator|-
-literal|1
-argument_list|,
 literal|"waitfor"
 argument_list|,
 name|hz
