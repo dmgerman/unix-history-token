@@ -1408,14 +1408,12 @@ do|do
 block|{
 name|err
 operator|=
-name|msleep
+name|tsleep
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|rxdone
-argument_list|,
-name|NULL
 argument_list|,
 name|PCATCH
 operator||
