@@ -4784,6 +4784,15 @@ operator|=
 name|ticks
 expr_stmt|;
 block|}
+comment|/* Initial send window, already scaled. */
+name|tp
+operator|->
+name|snd_wnd
+operator|=
+name|th
+operator|->
+name|th_win
+expr_stmt|;
 if|if
 condition|(
 name|to
@@ -6031,15 +6040,6 @@ condition|)
 goto|goto
 name|drop
 goto|;
-comment|/* Initial send window, already scaled. */
-name|tp
-operator|->
-name|snd_wnd
-operator|=
-name|th
-operator|->
-name|th_win
-expr_stmt|;
 name|tp
 operator|->
 name|irs
