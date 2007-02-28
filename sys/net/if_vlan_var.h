@@ -55,6 +55,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EVL_PRI_MASK
+value|0xE000
+end_define
+
+begin_define
+define|#
+directive|define
 name|EVL_VLANOFTAG
 parameter_list|(
 name|tag
@@ -70,6 +77,65 @@ parameter_list|(
 name|tag
 parameter_list|)
 value|(((tag)>> 13)& 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVL_CFIOFTAG
+parameter_list|(
+name|tag
+parameter_list|)
+value|(((tag)>> 12)& 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVL_MAKETAG
+parameter_list|(
+name|vlid
+parameter_list|,
+name|pri
+parameter_list|,
+name|cfi
+parameter_list|)
+define|\
+value|((((((pri)& 7)<< 1) | ((cfi)& 1))<< 12) | ((vlid)& EVL_VLID_MASK))
+end_define
+
+begin_comment
+comment|/* Set the VLAN ID in an mbuf packet header non-destructively. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EVL_APPLY_VLID
+parameter_list|(
+name|m
+parameter_list|,
+name|vlid
+parameter_list|)
+define|\
+value|do {								\ 		if ((m)->m_flags& M_VLANTAG) {				\ 			(m)->m_pkthdr.ether_vtag&= EVL_VLID_MASK;	\ 			(m)->m_pkthdr.ether_vtag |= (vlid);		\ 		} else {						\ 			(m)->m_pkthdr.ether_vtag = (vlid);		\ 			(m)->m_flags |= M_VLANTAG;			\ 		}							\ 	} while (0)
+end_define
+
+begin_comment
+comment|/* Set the priority ID in an mbuf packet header non-destructively. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EVL_APPLY_PRI
+parameter_list|(
+name|m
+parameter_list|,
+name|pri
+parameter_list|)
+define|\
+value|do {								\ 		if ((m)->m_flags& M_VLANTAG) {				\ 			uint16_t __vlantag = (m)->m_pkthdr.ether_vtag;	\ 			(m)->m_pkthdr.ether_vtag |= EVL_MAKETAG(	\ 			    EVL_VLANOFTAG(__vlantag), (pri),		\ 			    EVL_CFIOFTAG(__vlantag));			\ 		} else {						\ 			(m)->m_pkthdr.ether_vtag =			\ 			    EVL_MAKETAG(0, (pri), 0);			\ 			(m)->m_flags |= M_VLANTAG;			\ 		}							\ 	} while (0)
 end_define
 
 begin_comment
