@@ -3557,11 +3557,6 @@ argument_list|(
 name|unp
 argument_list|)
 expr_stmt|;
-name|UNP_PCB_LOCK
-argument_list|(
-name|unp2
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unp2
@@ -3575,6 +3570,11 @@ name|ENOTCONN
 expr_stmt|;
 break|break;
 block|}
+name|UNP_PCB_LOCK
+argument_list|(
+name|unp2
+argument_list|)
+expr_stmt|;
 name|so2
 operator|=
 name|unp2
