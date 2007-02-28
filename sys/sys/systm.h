@@ -2245,7 +2245,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Finalize the world. */
+comment|/* Finalize the world */
 end_comment
 
 begin_function_decl
@@ -2350,7 +2350,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Stubs for obsolete functions that used to be for interrupt  management */
+comment|/* Stubs for obsolete functions that used to be for interrupt management */
 end_comment
 
 begin_function
