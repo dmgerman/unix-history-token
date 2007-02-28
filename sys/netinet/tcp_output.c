@@ -4956,10 +4956,16 @@ literal|0
 operator|)
 return|;
 case|case
+name|EHOSTDOWN
+case|:
+case|case
 name|EHOSTUNREACH
 case|:
 case|case
 name|ENETDOWN
+case|:
+case|case
+name|ENETUNREACH
 case|:
 if|if
 condition|(
