@@ -364,6 +364,10 @@ name|inet6domain
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXX: referenced from ip_mroute.c for dynamically loading this code. */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|ip6protosw
@@ -419,29 +423,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Globals.  All but ip6_mrtproto and mrt6stat could be static,  * except for netstat or debugging purposes.  */
-end_comment
-
 begin_decl_stmt
+specifier|static
 name|int
 name|ip6_mrouter_ver
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ip6_mrtproto
-init|=
-name|IPPROTO_PIM
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* for netstat only */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -478,6 +467,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mrt6stat
 name|mrt6stat
@@ -520,6 +510,7 @@ value|0x2
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mf6c
 modifier|*
@@ -558,6 +549,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_char
 name|n6expire
 index|[
@@ -610,6 +602,7 @@ name|MRT6DEBUG
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|mrt6debug
 init|=
@@ -618,7 +611,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* debug level 	*/
+comment|/* debug level */
 end_comment
 
 begin_define
@@ -901,6 +894,7 @@ value|50
 end_define
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|upcall_data
 index|[
