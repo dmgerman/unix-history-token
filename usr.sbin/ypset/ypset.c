@@ -436,7 +436,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"sorry, cannot ypset for domain %s on host"
+literal|"sorry, cannot ypset for domain %s on host - make sure ypbind was started with -ypset or -ypsetme"
 argument_list|,
 name|dom
 argument_list|)
