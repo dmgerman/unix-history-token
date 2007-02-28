@@ -371,15 +371,6 @@ name|u_short
 name|mif6c_pifi
 decl_stmt|;
 comment|/* the index of the physical IF */
-ifdef|#
-directive|ifdef
-name|notyet
-name|u_int
-name|mif6c_rate_limit
-decl_stmt|;
-comment|/* max rate           		     */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -693,17 +684,6 @@ name|u_int
 name|m6_rate_limit
 decl_stmt|;
 comment|/* max rate			     */
-ifdef|#
-directive|ifdef
-name|notyet
-name|struct
-name|tbf
-modifier|*
-name|m6_tbf
-decl_stmt|;
-comment|/* token bucket structure at intf.   */
-endif|#
-directive|endif
 name|struct
 name|in6_addr
 name|m6_lcl_addr
