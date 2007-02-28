@@ -240,6 +240,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* XXX: this is a very common idiom; move to<sys/mbuf.h> ? */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -847,7 +851,7 @@ value|0)
 end_define
 
 begin_comment
-comment|/*  * Macros to compute elapsed time efficiently  * Borrowed from Van Jacobson's scheduling code  */
+comment|/*  * Macros to compute elapsed time efficiently  * Borrowed from Van Jacobson's scheduling code  * XXX: replace with timersub() ?  */
 end_comment
 
 begin_define
@@ -867,6 +871,10 @@ value|\ 		      case 1: \ 			  delta += 1000000; \ 			  break; \ 		      default
 comment|/*CONSTCOND*/
 value|0)
 end_define
+
+begin_comment
+comment|/* XXX: replace with timercmp(a, b,<) ? */
+end_comment
 
 begin_define
 define|#
