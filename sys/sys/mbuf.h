@@ -696,6 +696,17 @@ begin_comment
 comment|/* ether_vtag is valid */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_PROMISC
+value|0x20000
+end_define
+
+begin_comment
+comment|/* packet was not for us */
+end_comment
+
 begin_comment
 comment|/*  * External buffer types: identify ext_buf type.  */
 end_comment
@@ -818,7 +829,7 @@ begin_define
 define|#
 directive|define
 name|M_COPYFLAGS
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTO1|M_PROTO1|M_PROTO2|\ 			    M_PROTO3|M_PROTO4|M_PROTO5|M_SKIP_FIREWALL|\ 			    M_BCAST|M_MCAST|M_FRAG|M_FIRSTFRAG|M_LASTFRAG|\ 			    M_VLANTAG)
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTO1|M_PROTO1|M_PROTO2|\ 			    M_PROTO3|M_PROTO4|M_PROTO5|M_SKIP_FIREWALL|\ 			    M_BCAST|M_MCAST|M_FRAG|M_FIRSTFRAG|M_LASTFRAG|\ 			    M_VLANTAG|M_PROMISC)
 end_define
 
 begin_comment
