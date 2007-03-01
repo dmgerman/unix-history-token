@@ -152,6 +152,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEFAULT_TTL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|MY_CMSG_SIZE
 value|CMSG_SPACE(sizeof(struct in_addr))
 end_define
@@ -178,7 +185,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-1] [-b] [-B] [-d] [-l len] [-p port] [-r] [-s srcaddr] \n"
+literal|"usage: %s [-1] [-b] [-B] [-d] [-l len] [-p port] [-r] [-s srcaddr] [-t ttl]\n"
 literal|"<dest>\n"
 argument_list|,
 name|progname
@@ -232,13 +239,6 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-s: Set IP_SENDSRCADDR to<srcaddr>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"-l: Set payload size to<len>\n"
 argument_list|)
 expr_stmt|;
@@ -249,6 +249,20 @@ argument_list|,
 literal|"-p: Set source and destination port (default: %d)\n"
 argument_list|,
 name|DEFAULT_PORT
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-s: Set IP_SENDSRCADDR to<srcaddr>\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-t: Set IP_TTL to<ttl>\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -354,6 +368,9 @@ decl_stmt|;
 name|int
 name|soptval
 decl_stmt|;
+name|int
+name|ttl
+decl_stmt|;
 name|dobind
 operator|=
 literal|0
@@ -388,6 +405,10 @@ name|portno
 operator|=
 name|DEFAULT_PORT
 expr_stmt|;
+name|ttl
+operator|=
+name|DEFAULT_TTL
+expr_stmt|;
 name|buf
 operator|=
 name|NULL
@@ -417,7 +438,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1bBdl:p:rs:"
+literal|"1bBdl:p:rs:t:"
 argument_list|)
 operator|)
 operator|!=
@@ -498,6 +519,17 @@ case|:
 name|srcaddr_s
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|ttl
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -692,6 +724,57 @@ name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+name|soptval
+operator|=
+name|ttl
+expr_stmt|;
+name|soptlen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|soptval
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|IPPROTO_IP
+argument_list|,
+name|IP_TTL
+argument_list|,
+operator|&
+name|soptval
+argument_list|,
+name|soptlen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"setsockopt IPPROTO_IP IP_TTL"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
