@@ -4677,9 +4677,7 @@ if|if
 condition|(
 name|priv_check_cred
 argument_list|(
-name|ap
-operator|->
-name|a_cred
+name|ucred
 argument_list|,
 name|PRIV_VFS_RETAINSUGID
 argument_list|,
