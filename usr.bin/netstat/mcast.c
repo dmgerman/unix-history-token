@@ -496,11 +496,32 @@ operator|.
 name|sdl_data
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX */
-block|} else { 				pgroup = addr2ascii(AF_LINK,&psa->sdl, 				    sizeof(struct sockaddr_dl), 				    addrbuf);
+ifdef|#
+directive|ifdef
+name|notyet
+block|}
+else|else
+block|{
+name|pgroup
+operator|=
+name|addr2ascii
+argument_list|(
+name|AF_LINK
+argument_list|,
+operator|&
+name|psa
+operator|->
+name|sdl
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_dl
+argument_list|)
+argument_list|,
+name|addrbuf
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
@@ -579,6 +600,9 @@ operator|.
 name|sdl_data
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 block|}
 else|else
 block|{
@@ -603,6 +627,8 @@ argument_list|,
 name|addrbuf
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 else|else
