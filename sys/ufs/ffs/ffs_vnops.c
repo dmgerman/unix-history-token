@@ -3232,6 +3232,18 @@ block|}
 comment|/* 	 * If we successfully wrote any data, and we are not the superuser 	 * we clear the setuid and setgid bits as a precaution against 	 * tampering. 	 */
 if|if
 condition|(
+operator|(
+name|ip
+operator|->
+name|i_mode
+operator|&
+operator|(
+name|ISUID
+operator||
+name|ISGID
+operator|)
+operator|)
+operator|&&
 name|resid
 operator|>
 name|uio
@@ -3241,7 +3253,10 @@ operator|&&
 name|ap
 operator|->
 name|a_cred
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|priv_check_cred
 argument_list|(
 name|ap
@@ -3276,6 +3291,7 @@ operator|->
 name|i_mode
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -4636,6 +4652,18 @@ block|}
 comment|/* 	 * If we successfully wrote any data, and we are not the superuser 	 * we clear the setuid and setgid bits as a precaution against 	 * tampering. 	 */
 if|if
 condition|(
+operator|(
+name|ip
+operator|->
+name|i_mode
+operator|&
+operator|(
+name|ISUID
+operator||
+name|ISGID
+operator|)
+operator|)
+operator|&&
 name|resid
 operator|>
 name|uio
@@ -4643,10 +4671,15 @@ operator|->
 name|uio_resid
 operator|&&
 name|ucred
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|priv_check_cred
 argument_list|(
-name|ucred
+name|ap
+operator|->
+name|a_cred
 argument_list|,
 name|PRIV_VFS_CLEARSUGID
 argument_list|,
@@ -4673,6 +4706,7 @@ name|ip
 operator|->
 name|i_mode
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

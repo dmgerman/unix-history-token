@@ -2799,6 +2799,19 @@ name|IN_CHANGE
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|ip
+operator|->
+name|i_mode
+operator|&
+operator|(
+name|ISUID
+operator||
+name|ISGID
+operator|)
+operator|)
+operator|&&
+operator|(
 name|ouid
 operator|!=
 name|uid
@@ -2806,6 +2819,7 @@ operator|||
 name|ogid
 operator|!=
 name|gid
+operator|)
 condition|)
 block|{
 if|if
