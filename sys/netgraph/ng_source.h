@@ -119,6 +119,50 @@ value|{			\ 	  { "outOctets",&ng_parse_uint64_type	},	\ 	  { "outFrames",&ng_par
 end_define
 
 begin_comment
+comment|/* Packet embedding info for NGM_SOURCE_GET/SET_TIMESTAMP */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_source_embed_info
+block|{
+name|uint16_t
+name|offset
+decl_stmt|;
+comment|/* offset from ethernet header */
+name|uint8_t
+name|flags
+decl_stmt|;
+name|uint8_t
+name|spare
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NGM_SOURCE_EMBED_ENABLE
+value|0x01
+end_define
+
+begin_comment
+comment|/* enable embedding */
+end_comment
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_SOURCE_EMBED_TYPE_INFO
+value|{				\ 	{ "offset",&ng_parse_hint16_type	},	\ 	{ "flags",&ng_parse_hint8_type	},	\ 	{ NULL }						\ }
+end_define
+
+begin_comment
 comment|/* Netgraph commands */
 end_comment
 
@@ -151,7 +195,11 @@ comment|/* configure downstream iface */
 name|NGM_SOURCE_SETPPS
 block|,
 comment|/* rate-limiting packets per second */
-block|}
+name|NGM_SOURCE_SET_TIMESTAMP
+block|,
+comment|/* embed xmit timestamp */
+name|NGM_SOURCE_GET_TIMESTAMP
+block|, }
 enum|;
 end_enum
 
