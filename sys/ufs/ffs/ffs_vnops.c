@@ -3263,7 +3263,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|PRIV_VFS_CLEARSUGID
+name|PRIV_VFS_RETAINSUGID
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
@@ -4681,7 +4681,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|PRIV_VFS_CLEARSUGID
+name|PRIV_VFS_RETAINSUGID
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)

@@ -2710,7 +2710,7 @@ case|case
 name|PRIV_VFS_CHROOT
 case|:
 case|case
-name|PRIV_VFS_CLEARSUGID
+name|PRIV_VFS_RETAINSUGID
 case|:
 case|case
 name|PRIV_VFS_FCHROOT

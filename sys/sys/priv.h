@@ -1137,12 +1137,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_VFS_CLEARSUGID
+name|PRIV_VFS_RETAINSUGID
 value|319
 end_define
 
 begin_comment
-comment|/* Don't clear sugid on change. */
+comment|/* Can retain sugid bits on change. */
 end_comment
 
 begin_define

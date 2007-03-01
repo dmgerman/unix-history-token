@@ -2828,7 +2828,7 @@ name|priv_check_cred
 argument_list|(
 name|cred
 argument_list|,
-name|PRIV_VFS_CLEARSUGID
+name|PRIV_VFS_RETAINSUGID
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
@@ -7187,7 +7187,7 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|PRIV_VFS_CLEARSUGID
+name|PRIV_VFS_RETAINSUGID
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
