@@ -2955,7 +2955,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Adjust data length if insertion of options will 	 * bump the packet length beyond the t_maxopd length. 	 * Clear the FIN bit because we cut off the tail of 	 * the segment. 	 * 	 * When doing TSO limit a burst to TCP_MAXWIN minus the 	 * IP, TCP and Options length to keep ip->ip_len from 	 * overflowing.  Prevent the last segment from being 	 * fractional thus making them all equal sized and set 	 * the flag to continue sending. 	 */
+comment|/* 	 * Adjust data length if insertion of options will 	 * bump the packet length beyond the t_maxopd length. 	 * Clear the FIN bit because we cut off the tail of 	 * the segment. 	 * 	 * When doing TSO limit a burst to TCP_MAXWIN minus the 	 * IP, TCP and Options length to keep ip->ip_len from 	 * overflowing.  Prevent the last segment from being 	 * fractional thus making them all equal sized and set 	 * the flag to continue sending.  TSO is disabled when 	 * IP options or IPSEC are present. 	 */
 if|if
 condition|(
 name|len
@@ -2993,6 +2993,8 @@ operator|=
 name|TCP_MAXWIN
 operator|-
 name|hdrlen
+operator|-
+name|optlen
 expr_stmt|;
 name|len
 operator|=
