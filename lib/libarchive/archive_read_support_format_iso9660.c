@@ -1858,7 +1858,7 @@ name|s
 operator|!=
 name|NULL
 condition|)
-name|archive_entry_set_symlink
+name|archive_entry_copy_symlink
 argument_list|(
 name|entry
 argument_list|,
