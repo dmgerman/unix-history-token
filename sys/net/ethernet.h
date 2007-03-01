@@ -2582,6 +2582,18 @@ name|ETHERMTU_JUMBO
 value|(ETHER_MAX_LEN_JUMBO - ETHER_HDR_LEN - ETHER_CRC_LEN)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ETHER_BPF_MTAP
+parameter_list|(
+name|_ifp
+parameter_list|,
+name|_m
+parameter_list|)
+value|do {					\ 	if (bpf_peers_present((_ifp)->if_bpf)) {			\ 		M_ASSERTVALID(_m);					\ 		if (((_m)->m_flags& M_VLANTAG) != 0)			\ 			ether_vlan_mtap((_ifp)->if_bpf, (_m), NULL, 0);	\ 		else							\ 			bpf_mtap((_ifp)->if_bpf, (_m));			\ 	}								\ } while (0)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2609,6 +2621,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|sockaddr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|bpf_if
 struct_decl|;
 end_struct_decl
 
@@ -2749,6 +2767,26 @@ parameter_list|(
 specifier|const
 name|u_int8_t
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ether_vlan_mtap
+parameter_list|(
+name|struct
+name|bpf_if
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
