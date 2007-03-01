@@ -1076,6 +1076,9 @@ name|int
 name|line
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|LOCK_PROFILING
 name|struct
 name|lock_object
 name|lo
@@ -1086,6 +1089,8 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+endif|#
+directive|endif
 name|_sx_assert
 argument_list|(
 name|sx
@@ -1242,6 +1247,9 @@ operator|->
 name|sx_lock
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOCK_PROFILING
 if|if
 condition|(
 name|count
@@ -1254,6 +1262,8 @@ operator|&
 name|lo
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1275,10 +1285,15 @@ name|int
 name|line
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|LOCK_PROFILING
 name|struct
 name|lock_object
 name|lo
 decl_stmt|;
+endif|#
+directive|endif
 name|_sx_assert
 argument_list|(
 name|sx
@@ -1427,12 +1442,17 @@ operator|->
 name|sx_lock
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOCK_PROFILING
 name|lock_profile_release_lock
 argument_list|(
 operator|&
 name|lo
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
