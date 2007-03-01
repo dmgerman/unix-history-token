@@ -2780,7 +2780,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* 		 * From utimes(2): 		 * If times is NULL, ... The caller must be the owner of 		 * the file, have permission to write the file, or be the 		 * super-user. 		 * If times is non-NULL, ... The caller must be the owner of 		 * the file or be the super-user. 		 * 		 * Possibly for historical reasons, try to use VADMIN in 		 * preference to VADMIN for a NULL timestamp.  This means we 		 * will return EACCES in preference to EPERM if neither 		 * check succeeds. 		 */
+comment|/* 		 * From utimes(2): 		 * If times is NULL, ... The caller must be the owner of 		 * the file, have permission to write the file, or be the 		 * super-user. 		 * If times is non-NULL, ... The caller must be the owner of 		 * the file or be the super-user. 		 * 		 * Possibly for historical reasons, try to use VADMIN in 		 * preference to VWRITE for a NULL timestamp.  This means we 		 * will return EACCES in preference to EPERM if neither 		 * check succeeds. 		 */
 if|if
 condition|(
 name|vap
