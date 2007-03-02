@@ -5769,14 +5769,6 @@ operator||
 name|FDC_KTHREAD_ALIVE
 operator|)
 expr_stmt|;
-name|wakeup
-argument_list|(
-operator|&
-name|fdc
-operator|->
-name|fdc_thread
-argument_list|)
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -8135,12 +8127,6 @@ name|error
 operator|)
 return|;
 comment|/* kill worker thread */
-name|fdc
-operator|->
-name|flags
-operator||=
-name|FDC_KTHREAD_EXIT
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -8148,6 +8134,12 @@ name|fdc
 operator|->
 name|fdc_mtx
 argument_list|)
+expr_stmt|;
+name|fdc
+operator|->
+name|flags
+operator||=
+name|FDC_KTHREAD_EXIT
 expr_stmt|;
 name|wakeup
 argument_list|(
