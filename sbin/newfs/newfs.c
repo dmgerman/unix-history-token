@@ -2086,6 +2086,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\t-J Enable journaling via gjournal\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"\t-L volume label to add to superblock\n"
 argument_list|)
 expr_stmt|;
