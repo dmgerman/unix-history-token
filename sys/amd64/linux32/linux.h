@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Tim J. Robbins  * Copyright (c) 2001 Doug Rabson  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2004 Tim J. Robbins  * Copyright (c) 2001 Doug Rabson  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_AMD64_LINUX_LINUX_H_
+name|_AMD64_LINUX_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_AMD64_LINUX_LINUX_H_
+name|_AMD64_LINUX_H_
 end_define
 
 begin_include
@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|LINUX32_MAXDSIZ
-value|(512*1024*1024)
+value|(512 * 1024 * 1024)
 end_define
 
 begin_comment
@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|LINUX32_MAXSSIZ
-value|(64*1024*1024)
+value|(64 * 1024 * 1024)
 end_define
 
 begin_comment
@@ -533,7 +533,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* address space limit */
+comment|/* Address space limit */
 end_comment
 
 begin_define
@@ -1689,7 +1689,7 @@ block|{
 name|l_uintptr_t
 name|_addr
 decl_stmt|;
-comment|/* faulting insn/memory ref. */
+comment|/* Faulting insn/memory ref. */
 block|}
 name|__packed
 name|_sigfault
@@ -1897,7 +1897,7 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-comment|/* env is ignored */
+comment|/* env is ignored. */
 name|u_int32_t
 name|mxcsr
 decl_stmt|;
@@ -1911,7 +1911,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* reg data is ignored */
+comment|/* reg data is ignored. */
 name|struct
 name|l_xmmreg
 name|_xmm
@@ -2098,63 +2098,63 @@ begin_define
 define|#
 directive|define
 name|LINUX_O_RDONLY
-value|00
+value|00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_WRONLY
-value|01
+value|00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_RDWR
-value|02
+value|00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_CREAT
-value|0100
+value|00000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_EXCL
-value|0200
+value|00000200
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_NOCTTY
-value|0400
+value|00000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_TRUNC
-value|01000
+value|00001000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_APPEND
-value|02000
+value|00002000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_NONBLOCK
-value|04000
+value|00004000
 end_define
 
 begin_define
@@ -2168,54 +2168,54 @@ begin_define
 define|#
 directive|define
 name|LINUX_O_SYNC
-value|010000
+value|00010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_FASYNC
-value|020000
+value|00020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_DIRECT
-value|040000
+value|00040000
 end_define
 
 begin_comment
-comment|/* direct disk access hint */
+comment|/* Direct disk access hint */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_LARGEFILE
-value|0100000
+value|00100000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_DIRECTORY
-value|0200000
+value|00200000
 end_define
 
 begin_comment
-comment|/* must be a directory */
+comment|/* Must be a directory */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_NOFOLLOW
-value|0400000
+value|00400000
 end_define
 
 begin_comment
-comment|/* don't follow links */
+comment|/* Do not follow links */
 end_comment
 
 begin_define
@@ -3179,7 +3179,7 @@ value|ifr_ifrn.ifrn_name
 end_define
 
 begin_comment
-comment|/* interface name */
+comment|/* Interface name */
 end_comment
 
 begin_define
@@ -3376,20 +3376,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|l_desc_struct
-block|{
-name|unsigned
-name|long
-name|a
-decl_stmt|,
-name|b
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -3398,172 +3384,181 @@ value|0x0000ffff
 end_define
 
 begin_comment
-comment|/*   * macros which does the same thing as those in linux include/asm-um/ldt-i386.h   * these convert linux user space descriptor to machine one  */
+comment|/*  * Macros which does the same thing as those in Linux include/asm-um/ldt-i386.h.  * These convert Linux user space descriptor to machine one.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LDT_entry_a
+name|LINUX_LDT_entry_a
 parameter_list|(
 name|info
 parameter_list|)
 define|\
-value|((((info)->base_addr& LINUX_LOWERWORD)<< 16) | ((info)->limit& LINUX_LOWERWORD))
+value|((((info)->base_addr& LINUX_LOWERWORD)<< 16) |	\ 	((info)->limit& LINUX_LOWERWORD))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ENTRY_B_READ_EXEC_ONLY
+name|LINUX_ENTRY_B_READ_EXEC_ONLY
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|ENTRY_B_CONTENTS
+name|LINUX_ENTRY_B_CONTENTS
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ENTRY_B_SEG_NOT_PRESENT
+name|LINUX_ENTRY_B_SEG_NOT_PRESENT
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|ENTRY_B_BASE_ADDR
+name|LINUX_ENTRY_B_BASE_ADDR
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|ENTRY_B_USEABLE
+name|LINUX_ENTRY_B_USEABLE
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|ENTRY_B_SEG32BIT
+name|LINUX_ENTRY_B_SEG32BIT
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|ENTRY_B_LIMIT
+name|LINUX_ENTRY_B_LIMIT
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|LDT_entry_b
+name|LINUX_LDT_entry_b
 parameter_list|(
 name|info
 parameter_list|)
 define|\
-value|(((info)->base_addr& 0xff000000) | \         ((info)->limit& 0xf0000) | \         ((info)->contents<< ENTRY_B_CONTENTS) | \         (((info)->seg_not_present == 0)<< ENTRY_B_SEG_NOT_PRESENT) | \         (((info)->base_addr& 0x00ff0000)>> ENTRY_B_BASE_ADDR) | \         (((info)->read_exec_only == 0)<< ENTRY_B_READ_EXEC_ONLY) | \         ((info)->seg_32bit<< ENTRY_B_SEG32BIT) | \         ((info)->useable<< ENTRY_B_USEABLE) | \         ((info)->limit_in_pages<< ENTRY_B_LIMIT) | 0x7000)
+value|(((info)->base_addr& 0xff000000) |					\ 	((info)->limit& 0xf0000) |						\ 	((info)->contents<< LINUX_ENTRY_B_CONTENTS) |				\ 	(((info)->seg_not_present == 0)<< LINUX_ENTRY_B_SEG_NOT_PRESENT) |	\ 	(((info)->base_addr& 0x00ff0000)>> LINUX_ENTRY_B_BASE_ADDR) |		\ 	(((info)->read_exec_only == 0)<< LINUX_ENTRY_B_READ_EXEC_ONLY) |	\ 	((info)->seg_32bit<< LINUX_ENTRY_B_SEG32BIT) |				\ 	((info)->useable<< LINUX_ENTRY_B_USEABLE) |				\ 	((info)->limit_in_pages<< LINUX_ENTRY_B_LIMIT) | 0x7000)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LDT_empty
+name|LINUX_LDT_empty
 parameter_list|(
 name|info
 parameter_list|)
-value|(\         (info)->base_addr       == 0&& \         (info)->limit           == 0&& \         (info)->contents        == 0&& \         (info)->seg_not_present == 1&& \         (info)->read_exec_only  == 1&& \         (info)->seg_32bit       == 0&& \         (info)->limit_in_pages  == 0&& \         (info)->useable         == 0    )
+define|\
+value|((info)->base_addr == 0&&	\ 	(info)->limit == 0&&		\ 	(info)->contents == 0&&	\ 	(info)->seg_not_present == 1&&	\ 	(info)->read_exec_only == 1&&	\ 	(info)->seg_32bit == 0&&	\ 	(info)->limit_in_pages == 0&&	\ 	(info)->useable == 0)
 end_define
 
 begin_comment
-comment|/* macros for converting segments, they do the same as those in arch/i386/kernel/process.c */
+comment|/*  * Macros for converting segments.  * They do the same as those in arch/i386/kernel/process.c in Linux.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GET_BASE
+name|LINUX_GET_BASE
 parameter_list|(
 name|desc
 parameter_list|)
-value|( \         (((desc)->a>> 16)& LINUX_LOWERWORD) | \         (((desc)->b<< 16)& 0x00ff0000) | \         ( (desc)->b& 0xff000000)   )
+define|\
+value|((((desc)->a>> 16)& LINUX_LOWERWORD) |	\ 	(((desc)->b<< 16)& 0x00ff0000) |		\ 	((desc)->b& 0xff000000))
 end_define
 
 begin_define
 define|#
 directive|define
-name|GET_LIMIT
+name|LINUX_GET_LIMIT
 parameter_list|(
 name|desc
 parameter_list|)
-value|( \         ((desc)->a& LINUX_LOWERWORD) | \          ((desc)->b& 0xf0000) )
+define|\
+value|(((desc)->a& LINUX_LOWERWORD) |	\ 	((desc)->b& 0xf0000))
 end_define
 
 begin_define
 define|#
 directive|define
-name|GET_32BIT
+name|LINUX_GET_32BIT
 parameter_list|(
 name|desc
 parameter_list|)
-value|(((desc)->b>> ENTRY_B_SEG32BIT)& 1)
+define|\
+value|(((desc)->b>> LINUX_ENTRY_B_SEG32BIT)& 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|GET_CONTENTS
+name|LINUX_GET_CONTENTS
 parameter_list|(
 name|desc
 parameter_list|)
-value|(((desc)->b>> ENTRY_B_CONTENTS)& 3)
+define|\
+value|(((desc)->b>> LINUX_ENTRY_B_CONTENTS)& 3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|GET_WRITABLE
+name|LINUX_GET_WRITABLE
 parameter_list|(
 name|desc
 parameter_list|)
-value|(((desc)->b>> ENTRY_B_READ_EXEC_ONLY)& 1)
+define|\
+value|(((desc)->b>> LINUX_ENTRY_B_READ_EXEC_ONLY)& 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|GET_LIMIT_PAGES
+name|LINUX_GET_LIMIT_PAGES
 parameter_list|(
 name|desc
 parameter_list|)
-value|(((desc)->b>> ENTRY_B_LIMIT)& 1)
+define|\
+value|(((desc)->b>> LINUX_ENTRY_B_LIMIT)& 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|GET_PRESENT
+name|LINUX_GET_PRESENT
 parameter_list|(
 name|desc
 parameter_list|)
-value|(((desc)->b>> ENTRY_B_SEG_NOT_PRESENT)& 1)
+define|\
+value|(((desc)->b>> LINUX_ENTRY_B_SEG_NOT_PRESENT)& 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|GET_USEABLE
+name|LINUX_GET_USEABLE
 parameter_list|(
 name|desc
 parameter_list|)
-value|(((desc)->b>> ENTRY_B_USEABLE)& 1)
+define|\
+value|(((desc)->b>> LINUX_ENTRY_B_USEABLE)& 1)
 end_define
 
 begin_define
@@ -3625,96 +3620,97 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|CLONE_VM
-value|0x100
+name|LINUX_CLONE_VM
+value|0x00000100
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLONE_FS
-value|0x200
+name|LINUX_CLONE_FS
+value|0x00000200
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLONE_FILES
-value|0x400
+name|LINUX_CLONE_FILES
+value|0x00000400
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLONE_SIGHAND
-value|0x800
+name|LINUX_CLONE_SIGHAND
+value|0x00000800
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLONE_PID
-value|0x1000
+name|LINUX_CLONE_PID
+value|0x00001000
 end_define
 
 begin_comment
-comment|/* this flag does not exist in linux anymore */
+comment|/* No longer exist in Linux */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CLONE_VFORK
-value|0x4000
+name|LINUX_CLONE_VFORK
+value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLONE_PARENT
+name|LINUX_CLONE_PARENT
 value|0x00008000
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLONE_THREAD
-value|0x10000
+name|LINUX_CLONE_THREAD
+value|0x00010000
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLONE_SETTLS
-value|0x80000
+name|LINUX_CLONE_SETTLS
+value|0x00080000
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLONE_CHILD_CLEARTID
-value|0x00200000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLONE_CHILD_SETTID
-value|0x01000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLONE_PARENT_SETTID
+name|LINUX_CLONE_PARENT_SETTID
 value|0x00100000
 end_define
 
 begin_define
 define|#
 directive|define
-name|THREADING_FLAGS
-value|(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND)
+name|LINUX_CLONE_CHILD_CLEARTID
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_CLONE_CHILD_SETTID
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_THREADING_FLAGS
+define|\
+value|(LINUX_CLONE_VM | LINUX_CLONE_FS | LINUX_CLONE_FILES |	\ 	LINUX_CLONE_SIGHAND | LINUX_CLONE_THREAD)
 end_define
 
 begin_endif
@@ -3723,7 +3719,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_AMD64_LINUX_LINUX_H_ */
+comment|/* !_AMD64_LINUX_H_ */
 end_comment
 
 end_unit

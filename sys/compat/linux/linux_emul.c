@@ -295,7 +295,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|CLONE_THREAD
+name|LINUX_CLONE_THREAD
 condition|)
 block|{
 comment|/* handled later in the code */
@@ -400,7 +400,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|CLONE_THREAD
+name|LINUX_CLONE_THREAD
 condition|)
 block|{
 comment|/* lookup the parent */

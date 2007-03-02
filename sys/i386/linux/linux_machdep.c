@@ -1927,7 +1927,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_VM
+name|LINUX_CLONE_VM
 condition|)
 name|ff
 operator||=
@@ -1939,7 +1939,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_SIGHAND
+name|LINUX_CLONE_SIGHAND
 condition|)
 name|ff
 operator||=
@@ -1955,9 +1955,9 @@ operator|->
 name|flags
 operator|&
 operator|(
-name|CLONE_FILES
+name|LINUX_CLONE_FILES
 operator||
-name|CLONE_FS
+name|LINUX_CLONE_FS
 operator|)
 operator|)
 condition|)
@@ -1976,7 +1976,7 @@ operator|&
 literal|0xffffff00
 operator|)
 operator|==
-name|THREADING_FLAGS
+name|LINUX_THREADING_FLAGS
 condition|)
 name|ff
 operator||=
@@ -1988,7 +1988,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_PARENT_SETTID
+name|LINUX_CLONE_PARENT_SETTID
 condition|)
 if|if
 condition|(
@@ -2033,9 +2033,9 @@ operator|->
 name|flags
 operator|&
 operator|(
-name|CLONE_PARENT
+name|LINUX_CLONE_PARENT
 operator||
-name|CLONE_THREAD
+name|LINUX_CLONE_THREAD
 operator|)
 condition|)
 block|{
@@ -2117,7 +2117,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_THREAD
+name|LINUX_CLONE_THREAD
 condition|)
 block|{
 comment|/* XXX: linux mangles pgrp and pptr somehow 		 * I think it might be this but I am not sure. 		 */
@@ -2157,7 +2157,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_CHILD_SETTID
+name|LINUX_CLONE_CHILD_SETTID
 condition|)
 name|em
 operator|->
@@ -2180,7 +2180,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_CHILD_CLEARTID
+name|LINUX_CLONE_CHILD_CLEARTID
 condition|)
 name|em
 operator|->
@@ -2209,7 +2209,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_PARENT_SETTID
+name|LINUX_CLONE_PARENT_SETTID
 condition|)
 block|{
 name|error
@@ -2296,7 +2296,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_SETTLS
+name|LINUX_CLONE_SETTLS
 condition|)
 block|{
 name|struct
@@ -2444,7 +2444,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|LDT_entry_a
+name|LINUX_LDT_entry_a
 argument_list|(
 operator|&
 name|info
@@ -2455,7 +2455,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|LDT_entry_b
+name|LINUX_LDT_entry_b
 argument_list|(
 operator|&
 name|info
@@ -2595,7 +2595,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_VFORK
+name|LINUX_CLONE_VFORK
 condition|)
 block|{
 name|PROC_LOCK
@@ -2666,7 +2666,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_VFORK
+name|LINUX_CLONE_VFORK
 condition|)
 block|{
 comment|/* wait for the children to exit, ie. emulate vfork */
@@ -5376,7 +5376,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|LDT_empty
+name|LINUX_LDT_empty
 argument_list|(
 operator|&
 name|info
@@ -5405,7 +5405,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|LDT_entry_a
+name|LINUX_LDT_entry_a
 argument_list|(
 operator|&
 name|info
@@ -5416,7 +5416,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|LDT_entry_b
+name|LINUX_LDT_entry_b
 argument_list|(
 operator|&
 name|info
@@ -5697,7 +5697,7 @@ name|info
 operator|.
 name|base_addr
 operator|=
-name|GET_BASE
+name|LINUX_GET_BASE
 argument_list|(
 operator|&
 name|desc
@@ -5707,7 +5707,7 @@ name|info
 operator|.
 name|limit
 operator|=
-name|GET_LIMIT
+name|LINUX_GET_LIMIT
 argument_list|(
 operator|&
 name|desc
@@ -5717,7 +5717,7 @@ name|info
 operator|.
 name|seg_32bit
 operator|=
-name|GET_32BIT
+name|LINUX_GET_32BIT
 argument_list|(
 operator|&
 name|desc
@@ -5727,7 +5727,7 @@ name|info
 operator|.
 name|contents
 operator|=
-name|GET_CONTENTS
+name|LINUX_GET_CONTENTS
 argument_list|(
 operator|&
 name|desc
@@ -5738,7 +5738,7 @@ operator|.
 name|read_exec_only
 operator|=
 operator|!
-name|GET_WRITABLE
+name|LINUX_GET_WRITABLE
 argument_list|(
 operator|&
 name|desc
@@ -5748,7 +5748,7 @@ name|info
 operator|.
 name|limit_in_pages
 operator|=
-name|GET_LIMIT_PAGES
+name|LINUX_GET_LIMIT_PAGES
 argument_list|(
 operator|&
 name|desc
@@ -5759,7 +5759,7 @@ operator|.
 name|seg_not_present
 operator|=
 operator|!
-name|GET_PRESENT
+name|LINUX_GET_PRESENT
 argument_list|(
 operator|&
 name|desc
@@ -5769,7 +5769,7 @@ name|info
 operator|.
 name|useable
 operator|=
-name|GET_USEABLE
+name|LINUX_GET_USEABLE
 argument_list|(
 operator|&
 name|desc

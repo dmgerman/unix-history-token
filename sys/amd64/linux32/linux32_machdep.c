@@ -2769,7 +2769,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_VM
+name|LINUX_CLONE_VM
 condition|)
 name|ff
 operator||=
@@ -2781,7 +2781,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_SIGHAND
+name|LINUX_CLONE_SIGHAND
 condition|)
 name|ff
 operator||=
@@ -2797,9 +2797,9 @@ operator|->
 name|flags
 operator|&
 operator|(
-name|CLONE_FILES
+name|LINUX_CLONE_FILES
 operator||
-name|CLONE_FS
+name|LINUX_CLONE_FS
 operator|)
 operator|)
 condition|)
@@ -2818,7 +2818,7 @@ operator|&
 literal|0xffffff00
 operator|)
 operator|==
-name|THREADING_FLAGS
+name|LINUX_THREADING_FLAGS
 condition|)
 name|ff
 operator||=
@@ -2854,9 +2854,9 @@ operator|->
 name|flags
 operator|&
 operator|(
-name|CLONE_PARENT
+name|LINUX_CLONE_PARENT
 operator||
-name|CLONE_THREAD
+name|LINUX_CLONE_THREAD
 operator|)
 condition|)
 block|{
@@ -2938,7 +2938,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_PARENT_SETTID
+name|LINUX_CLONE_PARENT_SETTID
 condition|)
 block|{
 if|if
@@ -3007,7 +3007,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_THREAD
+name|LINUX_CLONE_THREAD
 condition|)
 block|{
 comment|/* XXX: linux mangles pgrp and pptr somehow 		 * I think it might be this but I am not sure. 		 */
@@ -3047,7 +3047,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_CHILD_SETTID
+name|LINUX_CLONE_CHILD_SETTID
 condition|)
 name|em
 operator|->
@@ -3070,7 +3070,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_CHILD_CLEARTID
+name|LINUX_CLONE_CHILD_CLEARTID
 condition|)
 name|em
 operator|->
@@ -3142,7 +3142,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_SETTLS
+name|LINUX_CLONE_SETTLS
 condition|)
 block|{
 comment|/* XXX: todo */
@@ -3186,7 +3186,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_VFORK
+name|LINUX_CLONE_VFORK
 condition|)
 block|{
 name|PROC_LOCK
@@ -3257,7 +3257,7 @@ name|args
 operator|->
 name|flags
 operator|&
-name|CLONE_VFORK
+name|LINUX_CLONE_VFORK
 condition|)
 block|{
 comment|/* wait for the children to exit, ie. emulate vfork */
