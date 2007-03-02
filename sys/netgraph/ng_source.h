@@ -151,6 +151,17 @@ begin_comment
 comment|/* enable embedding */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NGM_SOURCE_INC_CNT_PER_LIST
+value|0x02
+end_define
+
+begin_comment
+comment|/* increment once per list */
+end_comment
+
 begin_comment
 comment|/* Keep this in sync with the above structure definition. */
 end_comment
@@ -160,6 +171,64 @@ define|#
 directive|define
 name|NG_SOURCE_EMBED_TYPE_INFO
 value|{				\ 	{ "offset",&ng_parse_hint16_type	},	\ 	{ "flags",&ng_parse_hint8_type	},	\ 	{ NULL }						\ }
+end_define
+
+begin_comment
+comment|/* Packet embedding info for NGM_SOURCE_GET/SET_COUNTER */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_SOURCE_COUNTERS
+value|4
+end_define
+
+begin_struct
+struct|struct
+name|ng_source_embed_cnt_info
+block|{
+name|uint16_t
+name|offset
+decl_stmt|;
+comment|/* offset from ethernet header */
+name|uint8_t
+name|flags
+decl_stmt|;
+comment|/* as above */
+name|uint8_t
+name|width
+decl_stmt|;
+comment|/* in bytes (1, 2, 4) */
+name|uint32_t
+name|next_val
+decl_stmt|;
+name|uint32_t
+name|min_val
+decl_stmt|;
+name|uint32_t
+name|max_val
+decl_stmt|;
+name|int32_t
+name|increment
+decl_stmt|;
+name|uint8_t
+name|index
+decl_stmt|;
+comment|/* which counter (0..3) */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_SOURCE_EMBED_CNT_TYPE_INFO
+value|{				\ 	{ "offset",&ng_parse_hint16_type	}, 	\ 	{ "flags",&ng_parse_hint8_type	},	\ 	{ "width",&ng_parse_uint8_type	},	\ 	{ "next_val",&ng_parse_uint32_type	},	\ 	{ "min_val",&ng_parse_uint32_type	},	\ 	{ "max_val",&ng_parse_uint32_type	},	\ 	{ "increment",&ng_parse_int32_type	},	\ 	{ "index",&ng_parse_uint8_type	},	\ 	{ NULL }						\ }
 end_define
 
 begin_comment
@@ -199,6 +268,11 @@ name|NGM_SOURCE_SET_TIMESTAMP
 block|,
 comment|/* embed xmit timestamp */
 name|NGM_SOURCE_GET_TIMESTAMP
+block|,
+name|NGM_SOURCE_SET_COUNTER
+block|,
+comment|/* embed counter */
+name|NGM_SOURCE_GET_COUNTER
 block|, }
 enum|;
 end_enum
