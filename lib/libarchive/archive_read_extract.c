@@ -1350,6 +1350,16 @@ name|extract
 operator|->
 name|st
 expr_stmt|;
+name|extract
+operator|->
+name|umask
+operator|=
+name|umask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Set the umask to zero, record old one. */
 if|if
 condition|(
 name|extract
@@ -1525,6 +1535,14 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|umask
+argument_list|(
+name|extract
+operator|->
+name|umask
+argument_list|)
+expr_stmt|;
+comment|/* Restore umask. */
 name|cleanup
 label|:
 ifdef|#
