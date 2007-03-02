@@ -123,7 +123,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|pswitch_intr
 parameter_list|(
 name|void
@@ -528,7 +528,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|pswitch_intr
 parameter_list|(
 name|void
@@ -554,6 +554,11 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
