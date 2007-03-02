@@ -2102,6 +2102,24 @@ name|vp
 operator|->
 name|v_fifoinfo
 decl_stmt|;
+if|if
+condition|(
+name|fip
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|", NULL v_fifoinfo"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|printf
 argument_list|(
 literal|", fifo with %ld readers and %ld writers"
