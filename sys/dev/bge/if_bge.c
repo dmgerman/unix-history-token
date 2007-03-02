@@ -14535,7 +14535,7 @@ operator|++
 name|count
 expr_stmt|;
 comment|/* 		 * If there's a BPF listener, bounce a copy of this frame 		 * to him. 		 */
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
