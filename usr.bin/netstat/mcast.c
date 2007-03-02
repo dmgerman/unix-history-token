@@ -245,12 +245,17 @@ index|[
 name|IFNAMSIZ
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|char
 name|addrbuf
 index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|pcolon
