@@ -1423,6 +1423,10 @@ name|SMP
 comment|/* Before sched_bind() to a CPU, wait for all CPUs to go on-line. */
 if|if
 condition|(
+name|mp_ncpus
+operator|>
+literal|1
+operator|&&
 name|sc
 operator|->
 name|sc_crypto
