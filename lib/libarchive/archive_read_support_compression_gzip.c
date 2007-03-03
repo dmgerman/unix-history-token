@@ -114,6 +114,12 @@ directive|include
 file|"archive_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"archive_read_private.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -160,7 +166,7 @@ name|int
 name|finish
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|)
 function_decl|;
@@ -172,7 +178,7 @@ name|ssize_t
 name|read_ahead
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 specifier|const
@@ -191,7 +197,7 @@ name|ssize_t
 name|read_consume
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|size_t
@@ -205,7 +211,7 @@ name|int
 name|drive_decompressor
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -245,7 +251,7 @@ name|int
 name|init
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 specifier|const
@@ -264,9 +270,21 @@ parameter_list|(
 name|struct
 name|archive
 modifier|*
-name|a
+name|_a
 parameter_list|)
 block|{
+name|struct
+name|archive_read
+modifier|*
+name|a
+init|=
+operator|(
+expr|struct
+name|archive_read
+operator|*
+operator|)
+name|_a
+decl_stmt|;
 return|return
 operator|(
 name|__archive_read_register_compression
@@ -483,7 +501,7 @@ name|int
 name|init
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -547,7 +565,7 @@ name|int
 name|init
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -570,12 +588,16 @@ name|ret
 decl_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_code
 operator|=
 name|ARCHIVE_COMPRESSION_GZIP
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 operator|=
 literal|"gzip"
@@ -605,7 +627,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -613,6 +638,8 @@ literal|"Can't allocate data for %s decompression"
 argument_list|,
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 argument_list|)
 expr_stmt|;
@@ -718,7 +745,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -726,6 +756,8 @@ literal|"Can't allocate %s decompression buffers"
 argument_list|,
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 argument_list|)
 expr_stmt|;
@@ -834,7 +866,10 @@ block|}
 comment|/* Library setup failed: Clean up. */
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -842,6 +877,8 @@ literal|"Internal error initializing %s library"
 argument_list|,
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 argument_list|)
 expr_stmt|;
@@ -868,7 +905,10 @@ name|Z_STREAM_ERROR
 case|:
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -882,7 +922,10 @@ name|Z_MEM_ERROR
 case|:
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -896,7 +939,10 @@ name|Z_VERSION_ERROR
 case|:
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -924,7 +970,7 @@ name|ssize_t
 name|read_ahead
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -976,7 +1022,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_PROGRAMMER
 argument_list|,
@@ -1149,7 +1198,7 @@ name|ssize_t
 name|read_consume
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -1175,6 +1224,8 @@ name|compression_data
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|file_position
 operator|+=
 name|n
@@ -1223,7 +1274,7 @@ name|int
 name|finish
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)
@@ -1271,7 +1322,10 @@ break|break;
 default|default:
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -1279,6 +1333,8 @@ literal|"Failed to clean up %s compressor"
 argument_list|,
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 argument_list|)
 expr_stmt|;
@@ -1319,7 +1375,10 @@ operator|->
 name|client_closer
 call|)
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|a
 operator|->
@@ -1344,7 +1403,7 @@ name|int
 name|drive_decompressor
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -1419,7 +1478,10 @@ operator|->
 name|client_reader
 call|)
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|a
 operator|->
@@ -1464,7 +1526,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|EIO
 argument_list|,
@@ -1472,6 +1537,8 @@ literal|"Premature end of %s compressed data"
 argument_list|,
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 argument_list|)
 expr_stmt|;
@@ -1483,6 +1550,8 @@ return|;
 block|}
 name|a
 operator|->
+name|archive
+operator|.
 name|raw_position
 operator|+=
 name|ret
@@ -1959,7 +2028,10 @@ default|default:
 comment|/* Any other return value is an error. */
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -1988,7 +2060,10 @@ name|fatal
 label|:
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -1996,6 +2071,8 @@ literal|"%s decompression failed"
 argument_list|,
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 argument_list|)
 expr_stmt|;

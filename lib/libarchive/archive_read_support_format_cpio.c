@@ -145,6 +145,12 @@ directive|include
 file|"archive_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"archive_read_private.h"
+end_include
+
 begin_struct
 struct|struct
 name|cpio_bin_header
@@ -448,7 +454,7 @@ name|read_header
 function_decl|)
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -526,7 +532,7 @@ name|int
 name|archive_read_format_cpio_bid
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|)
 function_decl|;
@@ -538,7 +544,7 @@ name|int
 name|archive_read_format_cpio_cleanup
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|)
 function_decl|;
@@ -550,7 +556,7 @@ name|int
 name|archive_read_format_cpio_read_data
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 specifier|const
@@ -573,7 +579,7 @@ name|int
 name|archive_read_format_cpio_read_header
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -602,7 +608,7 @@ name|int
 name|header_bin_be
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -628,7 +634,7 @@ name|int
 name|header_bin_le
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -654,7 +660,7 @@ name|int
 name|header_newc
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -680,7 +686,7 @@ name|int
 name|header_odc
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -744,9 +750,21 @@ parameter_list|(
 name|struct
 name|archive
 modifier|*
-name|a
+name|_a
 parameter_list|)
 block|{
+name|struct
+name|archive_read
+modifier|*
+name|a
+init|=
+operator|(
+expr|struct
+name|archive_read
+operator|*
+operator|)
+name|_a
+decl_stmt|;
 name|struct
 name|cpio
 modifier|*
@@ -780,7 +798,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -856,7 +877,7 @@ name|int
 name|archive_read_format_cpio_bid
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)
@@ -1119,7 +1140,7 @@ name|int
 name|archive_read_format_cpio_read_header
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -1423,7 +1444,10 @@ block|{
 comment|/* TODO: Store file location of start of block. */
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 literal|0
 argument_list|,
@@ -1461,7 +1485,7 @@ name|int
 name|archive_read_format_cpio_read_data
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -1693,7 +1717,7 @@ name|int
 name|header_newc
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -1810,12 +1834,16 @@ condition|)
 block|{
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_CPIO_SVR4_NOCRC
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"ASCII cpio (SVR4 with no CRC)"
@@ -1840,12 +1868,16 @@ condition|)
 block|{
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_CPIO_SVR4_CRC
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"ASCII cpio (SVR4 with CRC)"
@@ -2116,7 +2148,7 @@ name|int
 name|header_odc
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -2155,12 +2187,16 @@ name|bytes
 decl_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_CPIO_POSIX
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"POSIX octet-oriented cpio"
@@ -2441,7 +2477,7 @@ name|int
 name|header_bin_le
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -2480,12 +2516,16 @@ name|bytes
 decl_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_CPIO_BIN_LE
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"cpio (little-endian binary)"
@@ -2775,7 +2815,7 @@ name|int
 name|header_bin_be
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -2814,12 +2854,16 @@ name|bytes
 decl_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_CPIO_BIN_BE
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"cpio (big-endian binary)"
@@ -3109,7 +3153,7 @@ name|int
 name|archive_read_format_cpio_cleanup
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)

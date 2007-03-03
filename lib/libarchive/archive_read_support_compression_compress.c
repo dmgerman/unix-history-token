@@ -105,6 +105,12 @@ directive|include
 file|"archive_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"archive_read_private.h"
+end_include
+
 begin_comment
 comment|/*  * Because LZW decompression is pretty simple, I've just implemented  * the whole decompressor here (cribbing from "compress" source code,  * of course), rather than relying on an external library.  I have  * made an effort to clarify and simplify the algorithm, so the  * names and structure here don't exactly match those used by compress.  */
 end_comment
@@ -243,7 +249,7 @@ name|int
 name|finish
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|)
 function_decl|;
@@ -255,7 +261,7 @@ name|int
 name|init
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 specifier|const
@@ -273,7 +279,7 @@ name|ssize_t
 name|read_ahead
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 specifier|const
@@ -292,7 +298,7 @@ name|ssize_t
 name|read_consume
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|size_t
@@ -306,7 +312,7 @@ name|int
 name|getbits
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -325,7 +331,7 @@ name|int
 name|next_code
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -344,9 +350,21 @@ parameter_list|(
 name|struct
 name|archive
 modifier|*
-name|a
+name|_a
 parameter_list|)
 block|{
+name|struct
+name|archive_read
+modifier|*
+name|a
+init|=
+operator|(
+expr|struct
+name|archive_read
+operator|*
+operator|)
+name|_a
+decl_stmt|;
 return|return
 operator|(
 name|__archive_read_register_compression
@@ -493,7 +511,7 @@ name|int
 name|init
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -516,12 +534,16 @@ name|code
 decl_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_code
 operator|=
 name|ARCHIVE_COMPRESSION_COMPRESS
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 operator|=
 literal|"compress (.Z)"
@@ -576,7 +598,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -584,6 +609,8 @@ literal|"Can't allocate data for %s decompression"
 argument_list|,
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 argument_list|)
 expr_stmt|;
@@ -642,7 +669,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -650,6 +680,8 @@ literal|"Can't allocate %s decompression buffers"
 argument_list|,
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 argument_list|)
 expr_stmt|;
@@ -742,7 +774,10 @@ block|{
 comment|/* This can happen if the library is receiving 1-byte 		 * blocks and gzip and compress are both enabled. 		 * You can't distinguish gzip and compress only from 		 * the first byte. */
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
@@ -915,7 +950,7 @@ name|ssize_t
 name|read_ahead
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -967,7 +1002,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_PROGRAMMER
 argument_list|,
@@ -1194,7 +1232,7 @@ name|ssize_t
 name|read_consume
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -1220,6 +1258,8 @@ name|compression_data
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|file_position
 operator|+=
 name|n
@@ -1266,7 +1306,7 @@ name|int
 name|finish
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)
@@ -1342,7 +1382,10 @@ operator|->
 name|client_closer
 call|)
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|a
 operator|->
@@ -1367,7 +1410,7 @@ name|int
 name|next_code
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -1587,7 +1630,10 @@ block|{
 comment|/* An invalid code is a fatal error. */
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 operator|-
 literal|1
@@ -1802,7 +1848,7 @@ name|int
 name|getbits
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -1888,7 +1934,10 @@ operator|->
 name|client_reader
 call|)
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|a
 operator|->
@@ -1930,6 +1979,8 @@ operator|)
 return|;
 name|a
 operator|->
+name|archive
+operator|.
 name|raw_position
 operator|+=
 name|ret

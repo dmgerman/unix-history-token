@@ -115,22 +115,28 @@ directive|include
 file|"archive_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"archive_read_private.h"
+end_include
+
 begin_struct
 struct|struct
 name|zip
 block|{
 comment|/* entry_bytes_remaining is the number of bytes we expect. */
-name|off_t
+name|int64_t
 name|entry_bytes_remaining
 decl_stmt|;
-name|off_t
+name|int64_t
 name|entry_offset
 decl_stmt|;
 comment|/* These count the number of bytes actually read for the entry. */
-name|off_t
+name|int64_t
 name|entry_compressed_bytes_read
 decl_stmt|;
-name|off_t
+name|int64_t
 name|entry_uncompressed_bytes_read
 decl_stmt|;
 name|unsigned
@@ -187,10 +193,10 @@ decl_stmt|;
 name|ssize_t
 name|extra_length
 decl_stmt|;
-name|off_t
+name|int64_t
 name|uncompressed_size
 decl_stmt|;
-name|off_t
+name|int64_t
 name|compressed_size
 decl_stmt|;
 name|unsigned
@@ -338,7 +344,7 @@ name|int
 name|archive_read_format_zip_bid
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|)
 function_decl|;
@@ -350,7 +356,7 @@ name|int
 name|archive_read_format_zip_cleanup
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|)
 function_decl|;
@@ -362,7 +368,7 @@ name|int
 name|archive_read_format_zip_read_data
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 specifier|const
@@ -385,7 +391,7 @@ name|int
 name|archive_read_format_zip_read_data_skip
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)
@@ -398,7 +404,7 @@ name|int
 name|archive_read_format_zip_read_header
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -476,7 +482,7 @@ name|int
 name|zip_read_data_deflate
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -503,7 +509,7 @@ name|int
 name|zip_read_data_none
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -530,7 +536,7 @@ name|int
 name|zip_read_file_header
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -577,6 +583,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Largest 32-bit unsigned value, stored in a 64-bit constant. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uint64_t
+name|max_uint32
+init|=
+operator|(
+operator|(
+operator|(
+name|uint64_t
+operator|)
+literal|1
+operator|)
+operator|<<
+literal|32
+operator|)
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|archive_read_support_format_zip
@@ -584,9 +615,21 @@ parameter_list|(
 name|struct
 name|archive
 modifier|*
-name|a
+name|_a
 parameter_list|)
 block|{
+name|struct
+name|archive_read
+modifier|*
+name|a
+init|=
+operator|(
+expr|struct
+name|archive_read
+operator|*
+operator|)
+name|_a
+decl_stmt|;
 name|struct
 name|zip
 modifier|*
@@ -620,7 +663,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -690,7 +736,7 @@ name|int
 name|archive_read_format_zip_bid
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)
@@ -717,6 +763,8 @@ if|if
 condition|(
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|==
 name|ARCHIVE_FORMAT_ZIP
@@ -881,7 +929,7 @@ name|int
 name|archive_read_format_zip_read_header
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -911,6 +959,8 @@ name|zip
 decl_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_ZIP
@@ -919,12 +969,16 @@ if|if
 condition|(
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|==
 name|NULL
 condition|)
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"ZIP"
@@ -1028,7 +1082,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
@@ -1140,7 +1197,10 @@ block|{
 comment|/* 		 * We should never encounter this record here; 		 * see ZIP_LENGTH_AT_END handling below for details. 		 */
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -1155,7 +1215,10 @@ return|;
 block|}
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
@@ -1185,7 +1248,7 @@ name|int
 name|zip_read_file_header
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -1254,7 +1317,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
@@ -1499,7 +1565,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
@@ -1635,7 +1704,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
@@ -1788,6 +1860,8 @@ argument_list|)
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 name|zip
@@ -1997,7 +2071,7 @@ name|int
 name|archive_read_format_zip_read_data
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -2099,7 +2173,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
@@ -2182,7 +2259,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -2195,20 +2275,32 @@ name|ARCHIVE_WARN
 operator|)
 return|;
 block|}
+comment|/* Size field only stores the lower 32 bits of the actual size. */
 if|if
 condition|(
+operator|(
 name|zip
 operator|->
 name|uncompressed_size
+operator|&
+name|max_uint32
+operator|)
 operator|!=
+operator|(
 name|zip
 operator|->
 name|entry_uncompressed_bytes_read
+operator|&
+name|max_uint32
+operator|)
 condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -2222,7 +2314,7 @@ operator|)
 return|;
 block|}
 comment|/* TODO: Compute CRC. */
-comment|/* 			if (zip->crc32 != zip->entry_crc32_calculated) { 				archive_set_error(a, ARCHIVE_ERRNO_MISC, 				    "ZIP data CRC error"); 				return (ARCHIVE_WARN); 			} */
+comment|/* 			if (zip->crc32 != zip->entry_crc32_calculated) { 				archive_set_error(&a->archive, ARCHIVE_ERRNO_MISC, 				    "ZIP data CRC error"); 				return (ARCHIVE_WARN); 			} */
 comment|/* End-of-entry cleanup done. */
 name|zip
 operator|->
@@ -2300,7 +2392,10 @@ expr_stmt|;
 comment|/* Return a warning. */
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
@@ -2359,7 +2454,7 @@ name|int
 name|zip_read_data_none
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -2463,7 +2558,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
@@ -2561,7 +2659,7 @@ name|int
 name|zip_read_data_deflate
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -2655,7 +2753,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -2701,7 +2802,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -2747,7 +2851,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
@@ -2861,7 +2968,10 @@ name|Z_MEM_ERROR
 case|:
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -2876,7 +2986,10 @@ return|;
 default|default:
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -2979,7 +3092,7 @@ name|int
 name|zip_read_data_deflate
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -3015,7 +3128,10 @@ literal|0
 expr_stmt|;
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -3041,7 +3157,7 @@ name|int
 name|archive_read_format_zip_read_data_skip
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)
@@ -3161,7 +3277,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
@@ -3231,7 +3350,7 @@ name|int
 name|archive_read_format_zip_cleanup
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)

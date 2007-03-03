@@ -361,6 +361,12 @@ directive|include
 file|"archive_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"archive_read_private.h"
+end_include
+
 begin_comment
 comment|/*  * Layout of POSIX 'ustar' tar header.  */
 end_comment
@@ -788,7 +794,7 @@ name|int
 name|gnu_read_sparse_data
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -810,7 +816,7 @@ name|void
 name|gnu_parse_sparse_data
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -835,7 +841,7 @@ name|int
 name|header_Solaris_ACL
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -863,7 +869,7 @@ name|int
 name|header_common
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -891,7 +897,7 @@ name|int
 name|header_old_tar
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -919,7 +925,7 @@ name|int
 name|header_pax_extensions
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -947,7 +953,7 @@ name|int
 name|header_pax_global
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -976,7 +982,7 @@ name|int
 name|header_longlink
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -1005,7 +1011,7 @@ name|int
 name|header_longname
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -1034,7 +1040,7 @@ name|int
 name|header_volume
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -1063,7 +1069,7 @@ name|int
 name|header_ustar
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -1092,7 +1098,7 @@ name|int
 name|header_gnutar
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -1121,7 +1127,7 @@ name|int
 name|archive_read_format_tar_bid
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1133,7 +1139,7 @@ name|int
 name|archive_read_format_tar_cleanup
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1145,7 +1151,7 @@ name|int
 name|archive_read_format_tar_read_data
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -1172,7 +1178,7 @@ name|int
 name|archive_read_format_tar_skip
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)
@@ -1185,7 +1191,7 @@ name|int
 name|archive_read_format_tar_read_header
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -1201,7 +1207,7 @@ name|int
 name|checksum
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 specifier|const
@@ -1241,7 +1247,7 @@ name|int
 name|pax_header
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -1289,7 +1295,7 @@ name|int
 name|read_body_to_string
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -1370,7 +1376,7 @@ name|int
 name|tar_read_header
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -1617,9 +1623,21 @@ parameter_list|(
 name|struct
 name|archive
 modifier|*
-name|a
+name|_a
 parameter_list|)
 block|{
+name|struct
+name|archive_read
+modifier|*
+name|a
+init|=
+operator|(
+expr|struct
+name|archive_read
+operator|*
+operator|)
+name|_a
+decl_stmt|;
 name|struct
 name|tar
 modifier|*
@@ -1653,7 +1671,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -1723,7 +1744,7 @@ name|int
 name|archive_read_format_tar_cleanup
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)
@@ -1846,7 +1867,7 @@ name|int
 name|archive_read_format_tar_bid
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)
@@ -1873,6 +1894,8 @@ if|if
 condition|(
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|!=
 literal|0
@@ -1880,6 +1903,8 @@ operator|&&
 operator|(
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|&
 name|ARCHIVE_FORMAT_BASE_MASK
@@ -1902,6 +1927,8 @@ condition|(
 operator|(
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|&
 name|ARCHIVE_FORMAT_BASE_MASK
@@ -1995,7 +2022,10 @@ return|;
 comment|/* 		 * If we already know this is a tar archive, 		 * then we have a problem. 		 */
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
@@ -2041,6 +2071,8 @@ condition|(
 operator|(
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|&
 name|ARCHIVE_FORMAT_BASE_MASK
@@ -2333,7 +2365,7 @@ name|int
 name|archive_read_format_tar_read_header
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -2532,7 +2564,7 @@ name|int
 name|archive_read_format_tar_read_data
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -2676,7 +2708,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -2911,7 +2946,7 @@ name|int
 name|archive_read_format_tar_skip
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)
@@ -3088,7 +3123,7 @@ name|int
 name|tar_read_header
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -3232,7 +3267,10 @@ argument_list|)
 expr_stmt|;
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 literal|0
 argument_list|,
@@ -3259,7 +3297,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|EINVAL
 argument_list|,
@@ -3285,7 +3326,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|EINVAL
 argument_list|,
@@ -3325,12 +3369,16 @@ case|:
 comment|/* Solaris tar ACL */
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_TAR_PAX_INTERCHANGE
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"Solaris tar"
@@ -3357,12 +3405,16 @@ case|:
 comment|/* POSIX-standard 'g' header. */
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_TAR_PAX_INTERCHANGE
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"POSIX pax interchange format"
@@ -3449,12 +3501,16 @@ case|:
 comment|/* Used by SUN tar; same as 'x'. */
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_TAR_PAX_INTERCHANGE
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"POSIX pax interchange format (Sun variant)"
@@ -3481,12 +3537,16 @@ case|:
 comment|/* POSIX-standard 'x' header. */
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_TAR_PAX_INTERCHANGE
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"POSIX pax interchange format"
@@ -3526,12 +3586,16 @@ condition|)
 block|{
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_TAR_GNUTAR
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"GNU tar format"
@@ -3573,6 +3637,8 @@ if|if
 condition|(
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|!=
 name|ARCHIVE_FORMAT_TAR_PAX_INTERCHANGE
@@ -3580,12 +3646,16 @@ condition|)
 block|{
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_TAR_USTAR
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"POSIX ustar format"
@@ -3611,12 +3681,16 @@ else|else
 block|{
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_TAR
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"tar (non-POSIX)"
@@ -3661,7 +3735,7 @@ name|int
 name|checksum
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -3957,7 +4031,7 @@ name|int
 name|header_Solaris_ACL
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -4145,7 +4219,7 @@ name|int
 name|header_longlink
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -4253,7 +4327,7 @@ name|int
 name|header_longname
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -4359,7 +4433,7 @@ name|int
 name|header_volume
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -4417,7 +4491,7 @@ name|int
 name|read_body_to_string
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -4641,7 +4715,7 @@ name|int
 name|header_common
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -4886,6 +4960,8 @@ literal|0
 operator|&&
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|!=
 name|ARCHIVE_FORMAT_TAR_PAX_INTERCHANGE
@@ -5065,7 +5141,7 @@ name|int
 name|header_old_tar
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -5192,7 +5268,7 @@ name|int
 name|header_pax_global
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -5272,7 +5348,7 @@ name|int
 name|header_pax_extensions
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -5400,7 +5476,7 @@ name|int
 name|header_ustar
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -5724,7 +5800,7 @@ name|int
 name|pax_header
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -5872,7 +5948,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -5997,7 +6076,10 @@ argument_list|)
 expr_stmt|;
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -6036,7 +6118,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -6107,7 +6192,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -7134,7 +7222,7 @@ name|int
 name|header_gnutar
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -7504,7 +7592,7 @@ name|int
 name|gnu_read_sparse_data
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -7625,7 +7713,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
@@ -7718,7 +7809,7 @@ name|void
 name|gnu_parse_sparse_data
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,

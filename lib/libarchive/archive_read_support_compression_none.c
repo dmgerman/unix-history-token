@@ -17,12 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -120,6 +114,12 @@ directive|include
 file|"archive_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"archive_read_private.h"
+end_include
+
 begin_struct
 struct|struct
 name|archive_decompress_none
@@ -210,7 +210,7 @@ name|int
 name|archive_decompressor_none_finish
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|)
 function_decl|;
@@ -222,7 +222,7 @@ name|int
 name|archive_decompressor_none_init
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 specifier|const
@@ -240,7 +240,7 @@ name|ssize_t
 name|archive_decompressor_none_read_ahead
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 specifier|const
@@ -259,7 +259,7 @@ name|ssize_t
 name|archive_decompressor_none_read_consume
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|size_t
@@ -273,7 +273,7 @@ name|off_t
 name|archive_decompressor_none_skip
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|off_t
@@ -288,9 +288,21 @@ parameter_list|(
 name|struct
 name|archive
 modifier|*
-name|a
+name|_a
 parameter_list|)
 block|{
+name|struct
+name|archive_read
+modifier|*
+name|a
+init|=
+operator|(
+expr|struct
+name|archive_read
+operator|*
+operator|)
+name|_a
+decl_stmt|;
 return|return
 operator|(
 name|__archive_read_register_compression
@@ -349,7 +361,7 @@ name|int
 name|archive_decompressor_none_init
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -369,12 +381,16 @@ name|state
 decl_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_code
 operator|=
 name|ARCHIVE_COMPRESSION_NONE
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 operator|=
 literal|"none"
@@ -403,7 +419,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -474,7 +493,10 @@ argument_list|)
 expr_stmt|;
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -569,7 +591,7 @@ name|ssize_t
 name|archive_decompressor_none_read_ahead
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -866,7 +888,10 @@ operator|->
 name|client_reader
 call|)
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|a
 operator|->
@@ -963,6 +988,8 @@ break|break;
 block|}
 name|a
 operator|->
+name|archive
+operator|.
 name|raw_position
 operator|+=
 name|bytes_read
@@ -1018,7 +1045,7 @@ name|ssize_t
 name|archive_decompressor_none_read_consume
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -1083,6 +1110,8 @@ expr_stmt|;
 block|}
 name|a
 operator|->
+name|archive
+operator|.
 name|file_position
 operator|+=
 name|request
@@ -1105,7 +1134,7 @@ name|off_t
 name|archive_decompressor_none_skip
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -1289,7 +1318,10 @@ operator|->
 name|client_skipper
 call|)
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|a
 operator|->
@@ -1344,6 +1376,8 @@ name|bytes_skipped
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|file_position
 operator|+=
 name|bytes_skipped
@@ -1362,6 +1396,8 @@ name|client_buff
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|raw_position
 operator|+=
 name|bytes_skipped
@@ -1426,7 +1462,10 @@ block|{
 comment|/* We hit EOF before we satisfied the skip request. */
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -1444,14 +1483,6 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
-name|assert
-argument_list|(
-name|bytes_read
-operator|>=
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* precondition for cast below */
 name|min
 operator|=
 call|(
@@ -1484,13 +1515,6 @@ operator|-=
 name|bytes_read
 expr_stmt|;
 block|}
-name|assert
-argument_list|(
-name|request
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|total_bytes_skipped
@@ -1502,7 +1526,7 @@ name|int
 name|archive_decompressor_none_finish
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)
@@ -1557,7 +1581,10 @@ operator|->
 name|client_closer
 call|)
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|a
 operator|->
