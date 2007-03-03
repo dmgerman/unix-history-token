@@ -1617,6 +1617,12 @@ modifier|*
 name|t
 parameter_list|)
 block|{
+specifier|const
+name|struct
+name|stat
+modifier|*
+name|st
+decl_stmt|;
 comment|/* 	 * If we already have lstat() info, then try some 	 * cheap tests to determine if this is a dir. 	 */
 if|if
 condition|(
@@ -1663,15 +1669,29 @@ literal|0
 return|;
 comment|/* 		 * It's a link, but we don't know what it's a link to, 		 * so we'll have to use stat(). 		 */
 block|}
+name|st
+operator|=
+name|tree_current_stat
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+comment|/* If we can't stat it, it's not a dir. */
+if|if
+condition|(
+name|st
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* Use the definitive test.  Hopefully this is cached. */
 return|return
 operator|(
 name|S_ISDIR
 argument_list|(
-name|tree_current_stat
-argument_list|(
-name|t
-argument_list|)
+name|st
 operator|->
 name|st_mode
 argument_list|)
@@ -1694,6 +1714,12 @@ modifier|*
 name|t
 parameter_list|)
 block|{
+specifier|const
+name|struct
+name|stat
+modifier|*
+name|st
+decl_stmt|;
 comment|/* 	 * If stat() says it isn't a dir, then it's not a dir. 	 * If stat() data is cached, this check is free, so do it first. 	 */
 if|if
 condition|(
@@ -1722,15 +1748,29 @@ return|return
 literal|0
 return|;
 comment|/* 	 * Either stat() said it was a dir (in which case, we have 	 * to determine whether it's really a link to a dir) or 	 * stat() info wasn't available.  So we use lstat(), which 	 * hopefully is already cached. 	 */
+name|st
+operator|=
+name|tree_current_lstat
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+comment|/* If we can't stat it, it's not a dir. */
+if|if
+condition|(
+name|st
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* Use the definitive test.  Hopefully this is cached. */
 return|return
 operator|(
 name|S_ISDIR
 argument_list|(
-name|tree_current_lstat
-argument_list|(
-name|t
-argument_list|)
+name|st
 operator|->
 name|st_mode
 argument_list|)
@@ -1753,14 +1793,31 @@ modifier|*
 name|t
 parameter_list|)
 block|{
-return|return
-operator|(
-name|S_ISLNK
-argument_list|(
+specifier|const
+name|struct
+name|stat
+modifier|*
+name|st
+init|=
 name|tree_current_lstat
 argument_list|(
 name|t
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|st
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
+return|return
+operator|(
+name|S_ISLNK
+argument_list|(
+name|st
 operator|->
 name|st_mode
 argument_list|)
