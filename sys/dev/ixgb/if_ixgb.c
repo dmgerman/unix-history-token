@@ -2084,7 +2084,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,

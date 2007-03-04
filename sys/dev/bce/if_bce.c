@@ -20452,7 +20452,7 @@ name|count
 operator|++
 expr_stmt|;
 comment|/* Send a copy of the frame to any BPF listeners. */
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,

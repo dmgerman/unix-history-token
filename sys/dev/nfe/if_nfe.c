@@ -8708,7 +8708,7 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
