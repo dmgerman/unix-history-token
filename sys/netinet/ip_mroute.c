@@ -1850,7 +1850,7 @@ value|MFCHASHMOD(((a)>> 20) ^ ((a)>> 10) ^ (a) ^ \ 			((g)>> 20) ^ ((g)>> 10) ^ 
 end_define
 
 begin_comment
-comment|/*  * Find a route for a given origin IP address and Multicast group address  * Type of service parameter to be added in the future!!!  * Statistics are updated by the caller if needed  * (mrtstat.mrts_mfc_lookups and mrtstat.mrts_mfc_misses)  */
+comment|/*  * Find a route for a given origin IP address and Multicast group address  * Statistics are updated by the caller if needed  * (mrtstat.mrts_mfc_lookups and mrtstat.mrts_mfc_misses)  */
 end_comment
 
 begin_function
