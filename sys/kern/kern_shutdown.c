@@ -654,7 +654,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*  * The system call that results in a reboot  *  * MPSAFE  */
+comment|/*  * The system call that results in a reboot.  */
 end_comment
 
 begin_comment
@@ -1842,7 +1842,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Panic is called on unresolvable fatal errors.  It prints "panic: mesg",  * and then reboots.  If we are called twice, then we avoid trying to sync  * the disks as this often leads to recursive panics.  *  * MPSAFE  */
+comment|/*  * Panic is called on unresolvable fatal errors.  It prints "panic: mesg",  * and then reboots.  If we are called twice, then we avoid trying to sync  * the disks as this often leads to recursive panics.  */
 end_comment
 
 begin_function

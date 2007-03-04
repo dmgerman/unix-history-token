@@ -3272,7 +3272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * kern_sigaction  * sigaction  * freebsd4_sigaction  * osigaction  *  * MPSAFE  */
+comment|/*  * kern_sigaction  * sigaction  * freebsd4_sigaction  * osigaction  */
 end_comment
 
 begin_function
@@ -4196,10 +4196,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sigaction
@@ -4384,10 +4380,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -4586,10 +4578,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -5677,10 +5665,6 @@ begin_comment
 comment|/* COMPAT_43 */
 end_comment
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sigwait
@@ -5824,10 +5808,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -6004,10 +5984,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -6780,10 +6756,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sigpending
@@ -6896,10 +6868,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -7034,10 +7002,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -7313,10 +7277,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|osigblock
@@ -7425,10 +7385,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -7557,10 +7513,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -7766,10 +7718,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -7938,10 +7886,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -8150,10 +8094,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -8804,10 +8744,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -9079,10 +9015,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -9563,7 +9495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a signal caused by a trap to the current thread.  * If it will be caught immediately, deliver it with correct code.  * Otherwise, post it normally.  *  * MPSAFE  */
+comment|/*  * Send a signal caused by a trap to the current thread.  If it will be  * caught immediately, deliver it with correct code.  Otherwise, post it  * normally.  */
 end_comment
 
 begin_function
@@ -10337,7 +10269,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send the signal to the process.  If the signal has an action, the action  * is usually performed by the target process rather than the caller; we add  * the signal to the set of pending signals for the process.  *  * Exceptions:  *   o When a stop signal is sent to a sleeping process that takes the  *     default action, the process is stopped without awakening it.  *   o SIGCONT restarts stopped processes (or puts them back to sleep)  *     regardless of the signal action (eg, blocked or ignored).  *  * Other ignored signals are discarded immediately.  *  * MPSAFE  */
+comment|/*  * Send the signal to the process.  If the signal has an action, the action  * is usually performed by the target process rather than the caller; we add  * the signal to the set of pending signals for the process.  *  * Exceptions:  *   o When a stop signal is sent to a sleeping process that takes the  *     default action, the process is stopped without awakening it.  *   o SIGCONT restarts stopped processes (or puts them back to sleep)  *     regardless of the signal action (eg, blocked or ignored).  *  * Other ignored signals are discarded immediately.  */
 end_comment
 
 begin_function
@@ -10483,10 +10415,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -12895,10 +12823,6 @@ comment|/* NOTREACHED */
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|void
 name|thread_stopped
@@ -13651,7 +13575,7 @@ name|SIGKILL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * Force the current process to exit with the specified signal, dumping core  * if appropriate.  We bypass the normal tests for masked and caught signals,  * allowing unrecoverable failures to terminate the process without changing  * signal state.  Mark the accounting record with the signal termination.  * If dumping core, save the signal number for the debugger.  Calls exit and  * does not return.  *  * MPSAFE  */
+comment|/*  * Force the current process to exit with the specified signal, dumping core  * if appropriate.  We bypass the normal tests for masked and caught signals,  * allowing unrecoverable failures to terminate the process without changing  * signal state.  Mark the accounting record with the signal termination.  * If dumping core, save the signal number for the debugger.  Calls exit and  * does not return.  */
 name|void
 name|sigexit
 parameter_list|(
@@ -15109,7 +15033,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/*  * Nonexistent system call-- signal process (may want to handle it).  * Flag error in case process won't see signal immediately (blocked or ignored).  */
+comment|/*  * Nonexistent system call-- signal process (may want to handle it).  Flag  * error in case process won't see signal immediately (blocked or ignored).  */
 ifndef|#
 directive|ifndef
 name|_SYS_SYSPROTO_H_
@@ -15123,7 +15047,6 @@ block|}
 struct|;
 endif|#
 directive|endif
-comment|/*  * MPSAFE  */
 comment|/* ARGSUSED */
 name|int
 name|nosys
@@ -15175,7 +15098,7 @@ name|ENOSYS
 operator|)
 return|;
 block|}
-comment|/*  * Send a SIGIO or SIGURG signal to a process or process group using  * stored credentials rather than those of the current process.  */
+comment|/*  * Send a SIGIO or SIGURG signal to a process or process group using stored  * credentials rather than those of the current process.  */
 name|void
 name|pgsigio
 parameter_list|(

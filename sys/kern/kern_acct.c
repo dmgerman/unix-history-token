@@ -552,7 +552,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Accounting system call.  Written based on the specification and  * previous implementation done by Mark Tinguely.  *  * MPSAFE  */
+comment|/*  * Accounting system call.  Written based on the specification and previous  * implementation done by Mark Tinguely.  */
 end_comment
 
 begin_function

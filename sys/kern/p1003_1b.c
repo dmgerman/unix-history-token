@@ -313,10 +313,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*   * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sched_setparam
@@ -478,10 +474,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*   * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sched_getparam
@@ -636,10 +628,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*   * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -825,10 +813,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*   * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sched_getscheduler
@@ -972,10 +956,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*   * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sched_yield
@@ -1001,10 +981,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*   * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -1057,10 +1033,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*   * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sched_get_priority_min
@@ -1111,10 +1083,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*   * MPSAFE  */
-end_comment
 
 begin_function
 name|int

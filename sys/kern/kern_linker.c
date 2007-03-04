@@ -3654,10 +3654,6 @@ begin_comment
 comment|/*  * Syscalls.  */
 end_comment
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|kern_kldload
@@ -3987,10 +3983,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|kern_kldunload
@@ -4208,10 +4200,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|kldunload
@@ -4243,10 +4231,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -4300,10 +4284,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -4459,10 +4439,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -4627,10 +4603,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -4859,10 +4831,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|kldfirstmod
@@ -4987,10 +4955,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int

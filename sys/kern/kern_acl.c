@@ -798,7 +798,7 @@ comment|/*  * syscalls -- convert the path/fd to a vnode, and call vacl_whatever
 end_comment
 
 begin_comment
-comment|/*  * Given a file path, get an ACL for it  *  * MPSAFE  */
+comment|/*  * Given a file path, get an ACL for it  */
 end_comment
 
 begin_function
@@ -910,7 +910,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file path, get an ACL for it; don't follow links.  *  * MPSAFE  */
+comment|/*  * Given a file path, get an ACL for it; don't follow links.  */
 end_comment
 
 begin_function
@@ -1022,7 +1022,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file path, set an ACL for it  *  * MPSAFE  */
+comment|/*  * Given a file path, set an ACL for it.  */
 end_comment
 
 begin_function
@@ -1134,7 +1134,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file path, set an ACL for it; don't follow links.  *  * MPSAFE  */
+comment|/*  * Given a file path, set an ACL for it; don't follow links.  */
 end_comment
 
 begin_function
@@ -1246,7 +1246,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file descriptor, get an ACL for it  *  * MPSAFE  */
+comment|/*  * Given a file descriptor, get an ACL for it  */
 end_comment
 
 begin_function
@@ -1351,7 +1351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file descriptor, set an ACL for it  *  * MPSAFE  */
+comment|/*  * Given a file descriptor, set an ACL for it  */
 end_comment
 
 begin_function
@@ -1456,7 +1456,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file path, delete an ACL from it.  *  * MPSAFE  */
+comment|/*  * Given a file path, delete an ACL from it.  */
 end_comment
 
 begin_function
@@ -1564,7 +1564,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file path, delete an ACL from it; don't follow links.  *  * MPSAFE  */
+comment|/*  * Given a file path, delete an ACL from it; don't follow links.  */
 end_comment
 
 begin_function
@@ -1672,7 +1672,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file path, delete an ACL from it.  *  * MPSAFE  */
+comment|/*  * Given a file path, delete an ACL from it.  */
 end_comment
 
 begin_function
@@ -1773,7 +1773,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file path, check an ACL for it  *  * MPSAFE  */
+comment|/*  * Given a file path, check an ACL for it.  */
 end_comment
 
 begin_function
@@ -1885,7 +1885,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file path, check an ACL for it; don't follow links.  *  * MPSAFE  */
+comment|/*  * Given a file path, check an ACL for it; don't follow links.  */
 end_comment
 
 begin_function
@@ -1997,7 +1997,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file descriptor, check an ACL for it  *  * MPSAFE  */
+comment|/*  * Given a file descriptor, check an ACL for it.  */
 end_comment
 
 begin_function

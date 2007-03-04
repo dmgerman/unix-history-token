@@ -787,10 +787,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|execve
@@ -903,10 +899,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -1182,7 +1174,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * In-kernel implementation of execve().  All arguments are assumed to be  * userspace pointers from the passed thread.  *  * MPSAFE  */
+comment|/*  * In-kernel implementation of execve().  All arguments are assumed to be  * userspace pointers from the passed thread.  */
 end_comment
 
 begin_function

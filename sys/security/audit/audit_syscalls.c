@@ -88,7 +88,7 @@ name|AUDIT
 end_ifdef
 
 begin_comment
-comment|/*  * MPSAFE  *  * System call to allow a user space application to submit a BSM audit record  * to the kernel for inclusion in the audit log. This function does little  * verification on the audit record that is submitted.  *  * XXXAUDIT: Audit preselection for user records does not currently work,  * since we pre-select only based on the AUE_audit event type, not the event  * type submitted as part of the user audit data.  */
+comment|/*  * System call to allow a user space application to submit a BSM audit record  * to the kernel for inclusion in the audit log. This function does little  * verification on the audit record that is submitted.  *  * XXXAUDIT: Audit preselection for user records does not currently work,  * since we pre-select only based on the AUE_audit event type, not the event  * type submitted as part of the user audit data.  */
 end_comment
 
 begin_comment
@@ -347,7 +347,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MPSAFE  *  *  System call to manipulate auditing.  */
+comment|/*  *  System call to manipulate auditing.  */
 end_comment
 
 begin_comment
@@ -1427,7 +1427,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MPSAFE  *  * System calls to manage the user audit information.  */
+comment|/*  * System calls to manage the user audit information.  */
 end_comment
 
 begin_comment
@@ -1530,10 +1530,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* MPSAFE */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1657,7 +1653,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MPSAFE  * System calls to get and set process audit information.  */
+comment|/*  * System calls to get and set process audit information.  */
 end_comment
 
 begin_comment
@@ -1761,10 +1757,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* MPSAFE */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1889,10 +1881,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* MPSAFE */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1953,10 +1941,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* MPSAFE */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2021,7 +2005,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MPSAFE  * Syscall to manage audit files.  */
+comment|/*  * Syscall to manage audit files.  */
 end_comment
 
 begin_comment

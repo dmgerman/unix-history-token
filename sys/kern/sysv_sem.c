@@ -1769,7 +1769,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Entry point for all SEM calls  *  * MPSAFE  */
+comment|/*  * Entry point for all SEM calls.  */
 end_comment
 
 begin_function
@@ -2642,7 +2642,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Note that the user-mode half of this passes a union, not a pointer  */
+comment|/*  * Note that the user-mode half of this passes a union, not a pointer.  */
 end_comment
 
 begin_ifndef
@@ -2677,10 +2677,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -4561,10 +4557,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|semget
@@ -5336,10 +5328,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int

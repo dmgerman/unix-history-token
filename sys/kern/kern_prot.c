@@ -219,10 +219,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -323,10 +319,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -411,10 +403,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|getpgrp
@@ -495,10 +483,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -644,10 +628,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|getsid
@@ -789,10 +769,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -876,10 +852,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -940,10 +912,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1036,10 +1004,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1107,10 +1071,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -1338,10 +1298,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1594,10 +1550,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2082,10 +2034,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -2429,10 +2377,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -2674,10 +2618,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -3009,10 +2949,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -3238,10 +3174,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -3564,10 +3496,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -3973,10 +3901,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -4358,10 +4282,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -4811,10 +4731,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -5231,10 +5147,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -5407,10 +5319,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -5580,10 +5488,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -5649,10 +5553,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -5761,7 +5661,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if gid is a member of the group set.  *  * MPSAFE (cred must be held)  */
+comment|/*  * Check if gid is a member of the group set.  */
 end_comment
 
 begin_function
@@ -5836,7 +5736,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test the active securelevel against a given level.  securelevel_gt()  * implements (securelevel> level).  securelevel_ge() implements  * (securelevel>= level).  Note that the logic is inverted -- these  * functions return EPERM on "success" and 0 on "failure".  *  * XXXRW: Possibly since this has to do with privilege, it should move to  * kern_priv.c.  *  * MPSAFE  */
+comment|/*  * Test the active securelevel against a given level.  securelevel_gt()  * implements (securelevel> level).  securelevel_ge() implements  * (securelevel>= level).  Note that the logic is inverted -- these  * functions return EPERM on "success" and 0 on "failure".  *  * XXXRW: Possibly since this has to do with privilege, it should move to  * kern_priv.c.  */
 end_comment
 
 begin_function
@@ -7701,7 +7601,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a zeroed cred structure.  * MPSAFE  */
+comment|/*  * Allocate a zeroed cred structure.  */
 end_comment
 
 begin_function
@@ -7769,7 +7669,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Claim another reference to a ucred structure.  * MPSAFE  */
+comment|/*  * Claim another reference to a ucred structure.  */
 end_comment
 
 begin_function
@@ -7801,7 +7701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free a cred structure.  * Throws away space when ref count gets to 0.  * MPSAFE  */
+comment|/*  * Free a cred structure.  Throws away space when ref count gets to 0.  */
 end_comment
 
 begin_function
@@ -7923,7 +7823,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check to see if this ucred is shared.  * MPSAFE  */
+comment|/*  * Check to see if this ucred is shared.  */
 end_comment
 
 begin_function
@@ -7949,7 +7849,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy a ucred's contents from a template.  Does not block.  * MPSAFE  */
+comment|/*  * Copy a ucred's contents from a template.  Does not block.  */
 end_comment
 
 begin_function
@@ -8059,7 +7959,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dup cred struct to a new held one.  * MPSAFE  */
+comment|/*  * Dup cred struct to a new held one.  */
 end_comment
 
 begin_function
@@ -8100,7 +8000,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fill in a struct xucred based on a struct ucred.  * MPSAFE  */
+comment|/*  * Fill in a struct xucred based on a struct ucred.  */
 end_comment
 
 begin_function
@@ -8173,7 +8073,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * small routine to swap a thread's current ucred for the correct one  * taken from the process.  * MPSAFE  */
+comment|/*  * small routine to swap a thread's current ucred for the correct one taken  * from the process.  */
 end_comment
 
 begin_function
@@ -8272,10 +8172,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -8416,10 +8312,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */

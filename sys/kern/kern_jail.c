@@ -497,7 +497,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * MPSAFE  *  * struct jail_args {  *	struct jail *jail;  * };  */
+comment|/*  * struct jail_args {  *	struct jail *jail;  * };  */
 end_comment
 
 begin_function
@@ -1011,7 +1011,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MPSAFE  *  * struct jail_attach_args {  *	int jid;  * };  */
+comment|/*  * struct jail_attach_args {  *	int jid;  * };  */
 end_comment
 
 begin_function

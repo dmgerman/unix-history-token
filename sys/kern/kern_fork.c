@@ -244,10 +244,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -329,10 +325,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -420,10 +412,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int

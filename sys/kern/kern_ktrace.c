@@ -1680,10 +1680,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|void
 name|ktrsyscall
@@ -1841,10 +1837,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_decl_stmt
 name|void
@@ -2515,7 +2507,7 @@ comment|/* Interface and common routines */
 end_comment
 
 begin_comment
-comment|/*  * ktrace system call  *  * MPSAFE  */
+comment|/*  * ktrace system call  */
 end_comment
 
 begin_ifndef
@@ -3306,7 +3298,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * utrace system call  *  * MPSAFE  */
+comment|/*  * utrace system call  */
 end_comment
 
 begin_comment

@@ -385,10 +385,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|read
@@ -536,10 +532,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|pread
@@ -685,10 +677,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -885,10 +873,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -1367,10 +1351,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|write
@@ -1487,7 +1467,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Positioned write system call  */
+comment|/*  * Positioned write system call.  */
 end_comment
 
 begin_ifndef
@@ -1525,10 +1505,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -1650,7 +1626,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Gather write system call  */
+comment|/*  * Gather write system call.  */
 end_comment
 
 begin_ifndef
@@ -1682,10 +1658,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -1847,7 +1819,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Gather positioned write system call  */
+comment|/*  * Gather positioned write system call.  */
 end_comment
 
 begin_ifndef
@@ -1882,10 +1854,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -2355,7 +2323,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Ioctl system call  */
+comment|/*  * Ioctl system call.  */
 end_comment
 
 begin_ifndef
@@ -2385,10 +2353,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -3144,10 +3108,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -4258,10 +4218,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|poll
@@ -5052,7 +5008,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * OpenBSD poll system call.  * XXX this isn't quite a true representation..  OpenBSD uses select ops.  */
+comment|/*  * OpenBSD poll system call.  *  * XXX this isn't quite a true representation..  OpenBSD uses select ops.  */
 end_comment
 
 begin_ifndef
@@ -5084,10 +5040,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -5129,7 +5081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove the references to the thread from all of the objects  * we were polling.  *  * This code assumes that the underlying owner of the selinfo  * structure will hold sellock before it changes it, and that  * it will unlink itself from our list if it goes away.  */
+comment|/*  * Remove the references to the thread from all of the objects we were  * polling.  *  * This code assumes that the underlying owner of the selinfo structure will  * hold sellock before it changes it, and that it will unlink itself from our  * list if it goes away.  */
 end_comment
 
 begin_function

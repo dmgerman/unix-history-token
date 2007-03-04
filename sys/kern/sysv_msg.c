@@ -1415,7 +1415,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Entry point for all MSG calls  *  * MPSAFE  */
+comment|/*  * Entry point for all MSG calls.  */
 end_comment
 
 begin_function
@@ -1692,10 +1692,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -2549,10 +2545,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -4500,10 +4492,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|msgsnd
@@ -5722,10 +5710,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int

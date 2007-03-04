@@ -1102,7 +1102,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MPSAFE  *  * XXXAUDIT: There are a number of races present in the code below due to  * release and re-grab of the mutex.  The code should be revised to become  * slightly less racy.  *  * XXXAUDIT: Shouldn't there be logic here to sleep waiting on available  * pre_q space, suspending the system call until there is room?  */
+comment|/*  * XXXAUDIT: There are a number of races present in the code below due to  * release and re-grab of the mutex.  The code should be revised to become  * slightly less racy.  *  * XXXAUDIT: Shouldn't there be logic here to sleep waiting on available  * pre_q space, suspending the system call until there is room?  */
 end_comment
 
 begin_function
@@ -1220,10 +1220,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|void

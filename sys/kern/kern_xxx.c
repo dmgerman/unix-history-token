@@ -119,10 +119,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -250,10 +246,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -372,10 +364,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -457,10 +445,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -529,10 +513,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -616,10 +596,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1105,10 +1081,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1223,10 +1195,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */

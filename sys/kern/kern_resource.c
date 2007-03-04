@@ -308,10 +308,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|getpriority
@@ -705,10 +701,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -1207,7 +1199,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set realtime priority for LWP.  *  * MPSAFE  */
+comment|/*  * Set realtime priority for LWP.  */
 end_comment
 
 begin_ifndef
@@ -1587,7 +1579,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set realtime priority.  *  * MPSAFE  */
+comment|/*  * Set realtime priority.  */
 end_comment
 
 begin_ifndef
@@ -2321,10 +2313,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|osetrlimit
@@ -2447,10 +2435,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -2622,10 +2606,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -3311,10 +3291,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -4038,10 +4014,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int

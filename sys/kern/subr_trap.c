@@ -160,7 +160,7 @@ file|<security/mac/mac_framework.h>
 end_include
 
 begin_comment
-comment|/*  * Define the code needed before returning to user mode, for  * trap and syscall.  *  * MPSAFE  */
+comment|/*  * Define the code needed before returning to user mode, for trap and  * syscall.  */
 end_comment
 
 begin_function

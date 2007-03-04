@@ -131,7 +131,6 @@ decl_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/*  * MPSAFE  */
 name|int
 name|getcontext
 argument_list|(
@@ -221,7 +220,6 @@ name|ret
 operator|)
 return|;
 block|}
-comment|/*  * MPSAFE  */
 name|int
 name|setcontext
 argument_list|(

@@ -652,10 +652,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|socket
@@ -876,10 +872,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1114,10 +1106,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1264,7 +1252,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * accept1()  * MPSAFE  */
+comment|/*  * accept1()  */
 end_comment
 
 begin_function
@@ -2295,10 +2283,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE (accept1() is MPSAFE)  */
-end_comment
-
 begin_function
 name|int
 name|accept
@@ -2338,10 +2322,6 @@ ifdef|#
 directive|ifdef
 name|COMPAT_OLDSOCK
 end_ifdef
-
-begin_comment
-comment|/*  * MPSAFE (accept1() is MPSAFE)  */
-end_comment
 
 begin_function
 name|int
@@ -2384,10 +2364,6 @@ end_endif
 
 begin_comment
 comment|/* COMPAT_OLDSOCK */
-end_comment
-
-begin_comment
-comment|/*  * MPSAFE  */
 end_comment
 
 begin_comment
@@ -2786,10 +2762,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -3988,10 +3960,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sendto
@@ -4118,10 +4086,6 @@ directive|ifdef
 name|COMPAT_OLDSOCK
 end_ifdef
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|osend
@@ -4232,10 +4196,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -4372,10 +4332,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -5468,10 +5424,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|recvfrom
@@ -5634,10 +5586,6 @@ directive|ifdef
 name|COMPAT_OLDSOCK
 end_ifdef
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|orecvfrom
@@ -5686,10 +5634,6 @@ ifdef|#
 directive|ifdef
 name|COMPAT_OLDSOCK
 end_ifdef
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -5803,7 +5747,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Old recvmsg.  This code takes advantage of the fact that the old msghdr  * overlays the new one, missing only the flags, and with the (old) access  * rights where the control fields are now.  *  * MPSAFE  */
+comment|/*  * Old recvmsg.  This code takes advantage of the fact that the old msghdr  * overlays the new one, missing only the flags, and with the (old) access  * rights where the control fields are now.  */
 end_comment
 
 begin_function
@@ -5980,10 +5924,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -6168,10 +6108,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -6274,10 +6210,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -6551,10 +6483,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -6910,7 +6838,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * getsockname1() - Get socket name.  *  * MPSAFE  */
+comment|/*  * getsockname1() - Get socket name.  */
 end_comment
 
 begin_comment
@@ -7284,10 +7212,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|getsockname
@@ -7327,10 +7251,6 @@ ifdef|#
 directive|ifdef
 name|COMPAT_OLDSOCK
 end_ifdef
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -7376,7 +7296,7 @@ comment|/* COMPAT_OLDSOCK */
 end_comment
 
 begin_comment
-comment|/*  * getpeername1() - Get name of peer for connected socket.  *  * MPSAFE  */
+comment|/*  * getpeername1() - Get name of peer for connected socket.  */
 end_comment
 
 begin_comment
@@ -7777,10 +7697,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|getpeername
@@ -7820,10 +7736,6 @@ ifdef|#
 directive|ifdef
 name|COMPAT_OLDSOCK
 end_ifdef
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -8365,7 +8277,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sendfile(2)  *  * MPSAFE  *  * int sendfile(int fd, int s, off_t offset, size_t nbytes,  *	 struct sf_hdtr *hdtr, off_t *sbytes, int flags)  *  * Send a file specified by 'fd' and starting at 'offset' to a socket  * specified by 's'. Send only 'nbytes' of the file or until EOF if  * nbytes == 0. Optionally add a header and/or trailer to the socket  * output. If specified, write the total number of bytes sent into *sbytes.  *  */
+comment|/*  * sendfile(2)  *  * int sendfile(int fd, int s, off_t offset, size_t nbytes,  *	 struct sf_hdtr *hdtr, off_t *sbytes, int flags)  *  * Send a file specified by 'fd' and starting at 'offset' to a socket  * specified by 's'. Send only 'nbytes' of the file or until EOF if nbytes ==  * 0. Optionally add a header and/or trailer to the socket output.  If  * specified, write the total number of bytes sent into *sbytes.  *  */
 end_comment
 
 begin_function

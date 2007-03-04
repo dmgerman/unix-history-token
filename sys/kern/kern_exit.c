@@ -302,7 +302,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * exit --  *	Death of process.  *  * MPSAFE  */
+comment|/*  * exit --  *	Death of process.  */
 end_comment
 
 begin_function
@@ -1871,10 +1871,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE.  */
-end_comment
-
 begin_function
 name|int
 name|abort2
@@ -2210,7 +2206,7 @@ name|COMPAT_43
 end_ifdef
 
 begin_comment
-comment|/*  * The dirty work is handled by kern_wait().  *  * MPSAFE.  */
+comment|/*  * The dirty work is handled by kern_wait().  */
 end_comment
 
 begin_function
@@ -2283,7 +2279,7 @@ comment|/* COMPAT_43 */
 end_comment
 
 begin_comment
-comment|/*  * The dirty work is handled by kern_wait().  *  * MPSAFE.  */
+comment|/*  * The dirty work is handled by kern_wait().  */
 end_comment
 
 begin_function
