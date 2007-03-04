@@ -2017,13 +2017,13 @@ operator|&
 name|CBB_STATE_NOT_A_CARD
 condition|)
 block|{
-comment|/* 			 * Up to 20 times, try to rescan the card when we 			 * see NOT_A_CARD. 			 */
+comment|/* 			 * Up to 10 times, try to rescan the card when we see 			 * NOT_A_CARD.  10 is somehwat arbitrary.  When this 			 * pathology hits, there's a ~40% chance each try will 			 * fail.  10 tries takes about 5s and results in a 			 * 99.99% certainty of the results. 			 */
 if|if
 condition|(
 name|not_a_card
 operator|++
 operator|<
-literal|20
+literal|10
 condition|)
 block|{
 name|DEVPRINTF
@@ -2079,7 +2079,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Wait until it has been 1s since the last time we 		 * get an interrupt.  We handle the rest of the interrupt 		 * at the top of the loop.  Although we clear the bit in the 		 * ISR, we signal sc->cv from the detach path after we've 		 * set the CBB_KTHREAD_DONE bit, so we can't do a simple 		 * 1s sleep here. 		 * 		 * In our ISR, we turn off the card changed interrupt.  Turn 		 * them back on here before we wait for them to happen.  We 		 * turn them on/off so that we can tolerate a large latency 		 * between the time we signal cbb_event_thread and it gets 		 * a chance to run. 		 */
+comment|/* 		 * Wait until it has been 250ms since the last time we 		 * get an interrupt.  We handle the rest of the interrupt 		 * at the top of the loop.  Although we clear the bit in the 		 * ISR, we signal sc->cv from the detach path after we've 		 * set the CBB_KTHREAD_DONE bit, so we can't do a simple 		 * 250ms sleep here. 		 * 		 * In our ISR, we turn off the card changed interrupt.  Turn 		 * them back on here before we wait for them to happen.  We 		 * turn them on/off so that we can tolerate a large latency 		 * between the time we signal cbb_event_thread and it gets 		 * a chance to run. 		 */
 name|mtx_lock
 argument_list|(
 operator|&
