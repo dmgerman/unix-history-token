@@ -171,6 +171,32 @@ directive|include
 file|"mt_misc.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_FREEFALL_CONFIG
+end_ifdef
+
+begin_comment
+comment|/*  * Disable RPC exponential back-off for FreeBSD.org systems.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RPC_MAX_BACKOFF
+value|1
+end_define
+
+begin_comment
+comment|/* second */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -181,6 +207,11 @@ end_define
 begin_comment
 comment|/* seconds */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
