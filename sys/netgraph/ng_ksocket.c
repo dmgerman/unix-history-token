@@ -4123,6 +4123,18 @@ name|stag
 operator|->
 name|sa
 expr_stmt|;
+comment|/* Reset specific mbuf flags to prevent addressing problems. */
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+operator|(
+name|M_BCAST
+operator||
+name|M_MCAST
+operator|)
+expr_stmt|;
 comment|/* Send packet */
 name|error
 operator|=
