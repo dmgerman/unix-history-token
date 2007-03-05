@@ -352,10 +352,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Read system call.  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1316,10 +1312,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Write system call  */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -2322,10 +2314,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Ioctl system call.  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3067,10 +3055,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*  * Select system call.  */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -4183,10 +4167,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/*  * Poll system call.  */
-end_comment
 
 begin_ifndef
 ifndef|#

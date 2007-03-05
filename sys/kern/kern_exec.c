@@ -990,7 +990,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX: kern_execve has the astonishing property of not always  * returning to the caller.  If sufficiently bad things happen during  * the call to do_execve(), it can end up calling exit1(); as a result,  * callers must avoid doing anything which they might need to undo  * (e.g., allocating memory).  */
+comment|/*  * XXX: kern_execve has the astonishing property of not always returning to  * the caller.  If sufficiently bad things happen during the call to  * do_execve(), it can end up calling exit1(); as a result, callers must  * avoid doing anything which they might need to undo (e.g., allocating  * memory).  */
 end_comment
 
 begin_function
@@ -3874,7 +3874,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy out argument and environment strings from the old process  *	address space into the temporary string buffer.  */
+comment|/*  * Copy out argument and environment strings from the old process address  * space into the temporary string buffer.  */
 end_comment
 
 begin_function
@@ -4324,7 +4324,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy strings out to the new process address space, constructing  *	new arg and env vector tables. Return a pointer to the base  *	so that it can be used as the initial stack pointer.  */
+comment|/*  * Copy strings out to the new process address space, constructing new arg  * and env vector tables. Return a pointer to the base so that it can be used  * as the initial stack pointer.  */
 end_comment
 
 begin_function

@@ -3659,7 +3659,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look up a file or directory  */
+comment|/*  * Look up a file or directory.  */
 end_comment
 
 begin_function
@@ -9063,7 +9063,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Syscall to open a message queue  */
+comment|/*  * Syscall to open a message queue.  */
 end_comment
 
 begin_function
@@ -9723,7 +9723,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Syscall to unlink a message queue  */
+comment|/*  * Syscall to unlink a message queue.  */
 end_comment
 
 begin_function
@@ -10193,10 +10193,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Syscall  */
-end_comment
-
 begin_function
 name|int
 name|kmq_setattr
@@ -10418,10 +10414,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Syscall  */
-end_comment
-
 begin_function
 name|int
 name|kmq_timedreceive
@@ -10532,10 +10524,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Syscall  */
-end_comment
-
 begin_function
 name|int
 name|kmq_timedsend
@@ -10644,10 +10632,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Syscall  */
-end_comment
 
 begin_function
 name|int

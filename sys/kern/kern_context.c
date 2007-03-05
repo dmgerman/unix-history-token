@@ -78,7 +78,7 @@ file|<sys/ucontext.h>
 end_include
 
 begin_comment
-comment|/*  * The first two fields of a ucontext_t are the signal mask and  * the machine context.  The next field is uc_link; we want to  * avoid destroying the link when copying out contexts.  */
+comment|/*  * The first two fields of a ucontext_t are the signal mask and the machine  * context.  The next field is uc_link; we want to avoid destroying the link  * when copying out contexts.  */
 end_comment
 
 begin_define

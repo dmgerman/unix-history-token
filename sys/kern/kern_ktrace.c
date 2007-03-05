@@ -2506,10 +2506,6 @@ begin_comment
 comment|/* Interface and common routines */
 end_comment
 
-begin_comment
-comment|/*  * ktrace system call  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3296,10 +3292,6 @@ directive|endif
 comment|/* KTRACE */
 block|}
 end_function
-
-begin_comment
-comment|/*  * utrace system call  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */

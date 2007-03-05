@@ -551,7 +551,7 @@ comment|/* COMPAT_43 */
 end_comment
 
 begin_comment
-comment|/*  * This is the FreeBSD-1.1 compatable uname(2) interface.  These  * days it is done in libc as a wrapper around a bunch of sysctl's.  * This must maintain the old 1.1 binary ABI.  */
+comment|/*  * This is the FreeBSD-1.1 compatable uname(2) interface.  These days it is  * done in libc as a wrapper around a bunch of sysctl's.  This must maintain  * the old 1.1 binary ABI.  */
 end_comment
 
 begin_if

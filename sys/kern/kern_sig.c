@@ -2806,7 +2806,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine signal that should be delivered to process p, the current  * process, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issignal().  *  * MP SAFE.  */
+comment|/*  * Determine signal that should be delivered to process p, the current  * process, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issignal().  */
 end_comment
 
 begin_function
@@ -5360,10 +5360,6 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * sigprocmask() - MP SAFE  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -5549,10 +5545,6 @@ end_ifdef
 
 begin_comment
 comment|/* XXX - COMPAT_FBSD3 */
-end_comment
-
-begin_comment
-comment|/*  * osigprocmask() - MP SAFE  */
 end_comment
 
 begin_ifndef
@@ -7487,7 +7479,7 @@ comment|/* COMPAT_43 */
 end_comment
 
 begin_comment
-comment|/*  * Suspend calling thread until signal, providing mask to be set  * in the meantime.   */
+comment|/*  * Suspend calling thread until signal, providing mask to be set in the  * meantime.   */
 end_comment
 
 begin_ifndef

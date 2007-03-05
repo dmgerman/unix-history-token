@@ -381,32 +381,6 @@ name|async_io_version
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Sync each mounted filesystem.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SYS_SYSPROTO_H_
-end_ifndef
-
-begin_struct
-struct|struct
-name|sync_args
-block|{
-name|int
-name|dummy
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -442,6 +416,32 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Sync each mounted filesystem.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
+begin_struct
+struct|struct
+name|sync_args
+block|{
+name|int
+name|dummy
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#
@@ -714,7 +714,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Change filesystem quotas.  *  * MP SAFE  */
+comment|/*  * Change filesystem quotas.  */
 end_comment
 
 begin_ifndef
@@ -4613,7 +4613,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check permissions, allocate an open file structure,  * and call the device open routine if any.  *  * MP SAFE  */
+comment|/*  * Check permissions, allocate an open file structure, and call the device  * open routine if any.  */
 end_comment
 
 begin_ifndef
@@ -5551,7 +5551,7 @@ name|COMPAT_43
 end_ifdef
 
 begin_comment
-comment|/*  * Create a file.  *  * MP SAFE  */
+comment|/*  * Create a file.  */
 end_comment
 
 begin_ifndef
@@ -16400,7 +16400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Rename files.  Source and destination must either both be directories,  * or both not be directories.  If target is a directory, it must be empty.  */
+comment|/*  * Rename files.  Source and destination must either both be directories, or  * both not be directories.  If target is a directory, it must be empty.  */
 end_comment
 
 begin_ifndef
@@ -19517,7 +19517,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the mode mask for creation of filesystem nodes.  *  * MP SAFE  */
+comment|/*  * Set the mode mask for creation of filesystem nodes.  */
 end_comment
 
 begin_ifndef
@@ -19624,7 +19624,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Void all references to file by ripping underlying filesystem  * away from vnode.  */
+comment|/*  * Void all references to file by ripping underlying filesystem away from  * vnode.  */
 end_comment
 
 begin_ifndef
@@ -20025,7 +20025,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get (NFS) file handle  */
+comment|/*  * Get an (NFS) file handle.  */
 end_comment
 
 begin_ifndef
@@ -20481,7 +20481,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * syscall for the rpc.lockd to use to translate a NFS file handle into an  * open descriptor.  *  * warning: do not remove the priv_check() call or this becomes one giant  * security hole.  *  * MP SAFE  */
+comment|/*  * syscall for the rpc.lockd to use to translate a NFS file handle into an  * open descriptor.  *  * warning: do not remove the priv_check() call or this becomes one giant  * security hole.  */
 end_comment
 
 begin_ifndef
@@ -21365,7 +21365,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Stat an (NFS) file handle.  *  * MP SAFE  */
+comment|/*  * Stat an (NFS) file handle.  */
 end_comment
 
 begin_ifndef
@@ -21617,7 +21617,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement fstatfs() for (NFS) file handles.  *  * MP SAFE  */
+comment|/*  * Implement fstatfs() for (NFS) file handles.  */
 end_comment
 
 begin_ifndef

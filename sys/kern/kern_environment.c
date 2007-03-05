@@ -184,7 +184,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * No need to protect this with a mutex  * since SYSINITS are single threaded.  */
+comment|/*  * No need to protect this with a mutex since SYSINITS are single threaded.  */
 end_comment
 
 begin_decl_stmt

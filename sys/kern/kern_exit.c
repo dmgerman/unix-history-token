@@ -302,7 +302,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * exit --  *	Death of process.  */
+comment|/*  * exit -- death of process.  */
 end_comment
 
 begin_function
@@ -339,7 +339,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Exit: deallocate address space and other resources, change proc state  * to zombie, and unlink proc from allproc and parent's lists.  Save exit  * status and rusage for wait().  Check for child processes and orphan them.  */
+comment|/*  * Exit: deallocate address space and other resources, change proc state to  * zombie, and unlink proc from allproc and parent's lists.  Save exit status  * and rusage for wait().  Check for child processes and orphan them.  */
 end_comment
 
 begin_function

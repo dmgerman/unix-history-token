@@ -1278,7 +1278,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Duplicate a file descriptor to a particular value.  *  * note: keep in mind that a potential race condition exists when closing  * descriptors from a shared descriptor table (via rfork).  */
+comment|/*  * Duplicate a file descriptor to a particular value.  *  * Note: keep in mind that a potential race condition exists when closing  * descriptors from a shared descriptor table (via rfork).  */
 end_comment
 
 begin_ifndef
@@ -9957,7 +9957,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Apply an advisory lock on a file descriptor.  *  * Just attempt to get a record lock of the requested type on  * the entire file (l_whence = SEEK_SET, l_start = 0, l_len = 0).  */
+comment|/*  * Apply an advisory lock on a file descriptor.  *  * Just attempt to get a record lock of the requested type on the entire file  * (l_whence = SEEK_SET, l_start = 0, l_len = 0).  */
 end_comment
 
 begin_ifndef

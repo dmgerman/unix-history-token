@@ -1350,7 +1350,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The pipe system call for the DTYPE_PIPE type of pipes.  If we fail,  * let the zone pick up the pieces via pipeclose().  */
+comment|/*  * The pipe system call for the DTYPE_PIPE type of pipes.  If we fail, let  * the zone pick up the pieces via pipeclose().  */
 end_comment
 
 begin_comment

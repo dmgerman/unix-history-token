@@ -8277,7 +8277,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sendfile(2)  *  * int sendfile(int fd, int s, off_t offset, size_t nbytes,  *	 struct sf_hdtr *hdtr, off_t *sbytes, int flags)  *  * Send a file specified by 'fd' and starting at 'offset' to a socket  * specified by 's'. Send only 'nbytes' of the file or until EOF if nbytes ==  * 0. Optionally add a header and/or trailer to the socket output.  If  * specified, write the total number of bytes sent into *sbytes.  *  */
+comment|/*  * sendfile(2)  *  * int sendfile(int fd, int s, off_t offset, size_t nbytes,  *	 struct sf_hdtr *hdtr, off_t *sbytes, int flags)  *  * Send a file specified by 'fd' and starting at 'offset' to a socket  * specified by 's'. Send only 'nbytes' of the file or until EOF if nbytes ==  * 0.  Optionally add a header and/or trailer to the socket output.  If  * specified, write the total number of bytes sent into *sbytes.  */
 end_comment
 
 begin_function

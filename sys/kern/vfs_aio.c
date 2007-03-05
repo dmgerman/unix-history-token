@@ -9115,7 +9115,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * aio_error is implemented in the kernel level for compatibility purposes only.  * For a user mode async implementation, it would be best to do it in a userland  * subroutine.  */
+comment|/*  * aio_error is implemented in the kernel level for compatibility purposes  * only.  For a user mode async implementation, it would be best to do it in  * a userland subroutine.  */
 end_comment
 
 begin_function

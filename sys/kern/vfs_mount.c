@@ -1695,7 +1695,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ---------------------------------------------------------------------  * Mount a filesystem  */
+comment|/*  * Mount a filesystem.  */
 end_comment
 
 begin_function
@@ -3594,7 +3594,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ---------------------------------------------------------------------  * Old mount API.  */
+comment|/*  * Old mount API.  */
 end_comment
 
 begin_ifndef
@@ -5325,7 +5325,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ---------------------------------------------------------------------  * Unmount a filesystem.  *  * Note: unmount takes a path to the vnode mounted on as argument,  * not special file (as before).  */
+comment|/*  * Unmount a filesystem.  *  * Note: unmount takes a path to the vnode mounted on as argument, not  * special file (as before).  */
 end_comment
 
 begin_ifndef

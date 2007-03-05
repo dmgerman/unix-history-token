@@ -124,7 +124,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* The system calls return ENOSYS if an entry is called that is  * not run-time supported.  I am also logging since some programs  * start to use this when they shouldn't.  That will be removed if annoying.  */
+comment|/* The system calls return ENOSYS if an entry is called that is not run-time  * supported.  I am also logging since some programs start to use this when  * they shouldn't.  That will be removed if annoying.  */
 end_comment
 
 begin_function

@@ -861,7 +861,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ntp_gettime() - NTP user application interface  *  * See the timex.h header file for synopsis and API description. Note  * that the TAI offset is returned in the ntvtimeval.tai structure  * member.  */
+comment|/*  * ntp_gettime() - NTP user application interface  *  * See the timex.h header file for synopsis and API description.  Note that  * the TAI offset is returned in the ntvtimeval.tai structure member.  */
 end_comment
 
 begin_ifndef
@@ -1176,7 +1176,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * ntp_adjtime() - NTP daemon application interface  *  * See the timex.h header file for synopsis and API description. Note  * that the timex.constant structure member has a dual purpose to set  * the time constant and to set the TAI offset.  */
+comment|/*  * ntp_adjtime() - NTP daemon application interface  *  * See the timex.h header file for synopsis and API description.  Note that  * the timex.constant structure member has a dual purpose to set the time  * constant and to set the TAI offset.  */
 end_comment
 
 begin_ifndef

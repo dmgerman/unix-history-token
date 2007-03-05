@@ -3226,7 +3226,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Implementation of the getcwd syscall */
+comment|/* Implementation of the getcwd syscall. */
 end_comment
 
 begin_function

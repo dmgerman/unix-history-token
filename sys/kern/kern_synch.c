@@ -2228,7 +2228,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * General purpose yield system call  */
+comment|/*  * General purpose yield system call.  */
 end_comment
 
 begin_function

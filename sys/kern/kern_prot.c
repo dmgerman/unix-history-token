@@ -4252,7 +4252,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setresuid(ruid, euid, suid) is like setreuid except control over the  * saved uid is explicit.  */
+comment|/*  * setresuid(ruid, euid, suid) is like setreuid except control over the saved  * uid is explicit.  */
 end_comment
 
 begin_ifndef
@@ -4699,7 +4699,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setresgid(rgid, egid, sgid) is like setregid except control over the  * saved gid is explicit.  */
+comment|/*  * setresgid(rgid, egid, sgid) is like setregid except control over the saved  * gid is explicit.  */
 end_comment
 
 begin_ifndef
