@@ -1136,7 +1136,7 @@ operator|.
 name|flags
 operator|&=
 operator|~
-name|PTHREAD_SCOPE_SYSTEM
+name|PTHREAD_SCOPE_PROCESS
 expr_stmt|;
 name|curthread
 operator|->
