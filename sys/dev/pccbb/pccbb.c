@@ -5269,7 +5269,7 @@ literal|"cbb_pcic_socket_disable\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Turn off the card's interrupt and leave it in reset */
+comment|/* Turn off the card's interrupt and leave it in reset, wait 10ms */
 name|exca_putb
 argument_list|(
 operator|&
@@ -5320,7 +5320,7 @@ expr_stmt|;
 comment|/* wait 300ms until power fails (Tpf). */
 name|pause
 argument_list|(
-literal|"cbbP1"
+literal|"cbbP2"
 argument_list|,
 name|hz
 operator|*
