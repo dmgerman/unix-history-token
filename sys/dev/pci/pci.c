@@ -1753,12 +1753,14 @@ literal|0
 block|, 	}
 decl_stmt|;
 return|return
+operator|(
 name|maptype
 index|[
 name|mapreg
 operator|&
 literal|0x0f
 index|]
+operator|)
 return|;
 block|}
 end_function
@@ -3242,7 +3244,7 @@ name|vpd
 operator|.
 name|vpd_reg
 operator|+
-literal|2
+name|PCIR_VPD_ADDR
 argument_list|,
 name|reg
 argument_list|,
@@ -3260,7 +3262,7 @@ name|vpd
 operator|.
 name|vpd_reg
 operator|+
-literal|2
+name|PCIR_VPD_ADDR
 argument_list|,
 literal|2
 argument_list|)
@@ -3277,6 +3279,7 @@ argument_list|)
 expr_stmt|;
 comment|/* limit looping */
 return|return
+operator|(
 name|REG
 argument_list|(
 name|cfg
@@ -3285,10 +3288,11 @@ name|vpd
 operator|.
 name|vpd_reg
 operator|+
-literal|4
+name|PCIR_VPD_DATA
 argument_list|,
 literal|4
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3300,7 +3304,7 @@ literal|0
 end_if
 
 begin_comment
-unit|static void pci_write_vpd_reg(device_t pcib, pcicfgregs *cfg, int reg, uint32_t data) { 	KASSERT((reg& 3) == 0, ("VPD register must by 4 byte aligned"));  	WREG(cfg->vpd.vpd_reg + 4, data, 4); 	WREG(cfg->vpd.vpd_reg + 2, reg | 0x8000, 2); 	while ((REG(cfg->vpd.vpd_reg + 2, 2)& 0x8000) == 0x8000) 		DELAY(1);
+unit|static void pci_write_vpd_reg(device_t pcib, pcicfgregs *cfg, int reg, uint32_t data) { 	KASSERT((reg& 3) == 0, ("VPD register must by 4 byte aligned"));  	WREG(cfg->vpd.vpd_reg + PCIR_VPD_DATA, data, 4); 	WREG(cfg->vpd.vpd_reg + PCIR_VPD_ADDR, reg | 0x8000, 2); 	while ((REG(cfg->vpd.vpd_reg + PCIR_VPD_ADDR, 2)& 0x8000) == 0x8000) 		DELAY(1);
 comment|/* limit looping */
 end_comment
 
@@ -3436,7 +3440,9 @@ operator|+=
 name|byte
 expr_stmt|;
 return|return
+operator|(
 name|byte
+operator|)
 return|;
 block|}
 end_function
@@ -4799,10 +4805,14 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4927,7 +4937,9 @@ operator|.
 name|vpd_rocnt
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 operator|*
 name|vptr
@@ -4935,7 +4947,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 end_function
@@ -15816,7 +15830,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 return|return
 operator|(
