@@ -6704,7 +6704,7 @@ operator|<
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|scanresultsreq
+name|ieee80211req_scan_result
 argument_list|)
 condition|)
 return|return
