@@ -244,7 +244,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NFSSVC
 argument_list|,
-literal|"nfsserver_srvsock"
+literal|"nfss_srvsock"
 argument_list|,
 literal|"Nfs server structure"
 argument_list|)
@@ -256,7 +256,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NFSRVDESC
 argument_list|,
-literal|"nfsserver_srvdesc"
+literal|"nfss_srvdesc"
 argument_list|,
 literal|"NFS server socket descriptor"
 argument_list|)
@@ -268,7 +268,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NFSD
 argument_list|,
-literal|"nfsserver_daemon"
+literal|"nfss_daemon"
 argument_list|,
 literal|"Nfs server daemon structure"
 argument_list|)
