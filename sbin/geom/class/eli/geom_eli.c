@@ -3158,6 +3158,25 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|val
+operator|>
+name|sysconf
+argument_list|(
+name|_SC_PAGE_SIZE
+argument_list|)
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"warning: Using sectorsize bigger than "
+literal|"the page size!"
+argument_list|)
+expr_stmt|;
+block|}
 name|md
 operator|.
 name|md_sectorsize

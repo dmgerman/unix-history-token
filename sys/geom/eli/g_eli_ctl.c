@@ -1814,6 +1814,23 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+operator|*
+name|sectorsize
+operator|>
+name|PAGE_SIZE
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"warning: Using sectorsize bigger than "
+literal|"the page size!"
+argument_list|)
+expr_stmt|;
+block|}
 name|md
 operator|.
 name|md_sectorsize
