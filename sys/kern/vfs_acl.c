@@ -1246,7 +1246,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file descriptor, get an ACL for it  */
+comment|/*  * Given a file descriptor, get an ACL for it.  */
 end_comment
 
 begin_function
@@ -1351,7 +1351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file descriptor, set an ACL for it  */
+comment|/*  * Given a file descriptor, set an ACL for it.  */
 end_comment
 
 begin_function
