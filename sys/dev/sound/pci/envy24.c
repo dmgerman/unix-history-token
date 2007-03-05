@@ -12487,10 +12487,10 @@ name|dev
 argument_list|,
 name|sc
 argument_list|,
-literal|5
+name|sc
+operator|->
+name|dacn
 argument_list|,
-literal|2
-operator|+
 name|sc
 operator|->
 name|adcn
@@ -12507,7 +12507,7 @@ name|sc
 operator|->
 name|chnum
 operator|=
-literal|0
+name|ENVY24_CHAN_PLAY_DAC1
 expr_stmt|;
 for|for
 control|(
@@ -12517,7 +12517,9 @@ literal|0
 init|;
 name|i
 operator|<
-literal|5
+name|sc
+operator|->
+name|dacn
 condition|;
 name|i
 operator|++
@@ -12541,6 +12543,12 @@ name|chnum
 operator|++
 expr_stmt|;
 block|}
+name|sc
+operator|->
+name|chnum
+operator|=
+name|ENVY24_CHAN_REC_ADC1
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -12549,8 +12557,6 @@ literal|0
 init|;
 name|i
 operator|<
-literal|2
-operator|+
 name|sc
 operator|->
 name|adcn
