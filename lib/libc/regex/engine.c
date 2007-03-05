@@ -4007,6 +4007,17 @@ index|]
 operator|.
 name|rm_so
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|assert
 argument_list|(
 name|stop
