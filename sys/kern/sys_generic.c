@@ -2267,6 +2267,12 @@ expr_stmt|;
 comment|/* Socket layer is responsible for issuing SIGPIPE. */
 if|if
 condition|(
+name|fp
+operator|->
+name|f_type
+operator|!=
+name|DTYPE_SOCKET
+operator|&&
 name|error
 operator|==
 name|EPIPE
