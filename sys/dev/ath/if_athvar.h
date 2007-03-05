@@ -497,7 +497,7 @@ name|_sc
 parameter_list|,
 name|_tq
 parameter_list|)
-value|do { \ 	snprintf((_tq)->axq_name, sizeof((_tq)->axq_name), "%s_txq%u", \ 		device_get_nameunit((_sc)->sc_dev), (_tq)->axq_qnum); \ 	mtx_init(&(_tq)->axq_lock, (_tq)->axq_name, "ath_txq", MTX_DEF); \ } while (0)
+value|do { \ 	snprintf((_tq)->axq_name, sizeof((_tq)->axq_name), "%s_txq%u", \ 		device_get_nameunit((_sc)->sc_dev), (_tq)->axq_qnum); \ 	mtx_init(&(_tq)->axq_lock, (_tq)->axq_name, NULL, MTX_DEF); \ } while (0)
 end_define
 
 begin_define
@@ -1194,7 +1194,7 @@ parameter_list|(
 name|_sc
 parameter_list|)
 define|\
-value|mtx_init(&(_sc)->sc_mtx, device_get_nameunit((_sc)->sc_dev), \ 		 MTX_NETWORK_LOCK, MTX_DEF | MTX_RECURSE)
+value|mtx_init(&(_sc)->sc_mtx, device_get_nameunit((_sc)->sc_dev), \ 		 NULL, MTX_DEF | MTX_RECURSE)
 end_define
 
 begin_define
@@ -1256,7 +1256,7 @@ name|ATH_TXBUF_LOCK_INIT
 parameter_list|(
 name|_sc
 parameter_list|)
-value|do { \ 	snprintf((_sc)->sc_txname, sizeof((_sc)->sc_txname), "%s_buf", \ 		device_get_nameunit((_sc)->sc_dev)); \ 	mtx_init(&(_sc)->sc_txbuflock, (_sc)->sc_txname, "ath_buf", MTX_DEF); \ } while (0)
+value|do { \ 	snprintf((_sc)->sc_txname, sizeof((_sc)->sc_txname), "%s_buf", \ 		device_get_nameunit((_sc)->sc_dev)); \ 	mtx_init(&(_sc)->sc_txbuflock, (_sc)->sc_txname, NULL, MTX_DEF); \ } while (0)
 end_define
 
 begin_define

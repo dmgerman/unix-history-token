@@ -2504,6 +2504,7 @@ goto|goto
 name|bad2
 goto|;
 block|}
+comment|/* NB: s/w q, qnum used only by WITNESS */
 name|ath_txq_init
 argument_list|(
 name|sc
@@ -2513,11 +2514,11 @@ name|sc
 operator|->
 name|sc_mcastq
 argument_list|,
-operator|-
+name|HAL_NUM_TX_QUEUES
+operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* NB: s/w q, qnum not used */
 comment|/* NB: insure BK queue is the lowest priority h/w queue */
 if|if
 condition|(
