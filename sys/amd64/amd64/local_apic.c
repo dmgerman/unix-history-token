@@ -896,7 +896,7 @@ begin_function
 name|void
 name|lapic_init
 parameter_list|(
-name|uintptr_t
+name|vm_paddr_t
 name|addr
 parameter_list|)
 block|{

@@ -1970,7 +1970,7 @@ name|void
 modifier|*
 name|ioapic_create
 parameter_list|(
-name|uintptr_t
+name|vm_paddr_t
 name|addr
 parameter_list|,
 name|int32_t

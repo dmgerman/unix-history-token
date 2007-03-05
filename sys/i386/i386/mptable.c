@@ -1683,9 +1683,6 @@ else|else
 block|{
 name|lapic_init
 argument_list|(
-operator|(
-name|uintptr_t
-operator|)
 name|mpct
 operator|->
 name|apic_address
@@ -2499,9 +2496,6 @@ index|]
 operator|=
 name|ioapic_create
 argument_list|(
-operator|(
-name|uintptr_t
-operator|)
 name|apic
 operator|->
 name|apic_address

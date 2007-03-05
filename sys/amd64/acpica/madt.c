@@ -1593,9 +1593,6 @@ argument_list|)
 expr_stmt|;
 name|lapic_init
 argument_list|(
-operator|(
-name|uintptr_t
-operator|)
 name|madt
 operator|->
 name|LocalApicAddress
@@ -2221,9 +2218,6 @@ name|io_apic
 operator|=
 name|ioapic_create
 argument_list|(
-operator|(
-name|uintptr_t
-operator|)
 name|apic
 operator|->
 name|Address

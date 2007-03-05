@@ -517,11 +517,11 @@ name|void
 modifier|*
 name|ioapic_create
 parameter_list|(
-name|uintptr_t
+name|vm_paddr_t
 name|addr
 parameter_list|,
 name|int32_t
-name|id
+name|apic_id
 parameter_list|,
 name|int
 name|intbase
@@ -736,7 +736,7 @@ begin_function_decl
 name|void
 name|lapic_init
 parameter_list|(
-name|uintptr_t
+name|vm_paddr_t
 name|addr
 parameter_list|)
 function_decl|;
