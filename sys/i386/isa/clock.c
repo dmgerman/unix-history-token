@@ -2118,6 +2118,11 @@ parameter_list|)
 block|{
 comment|/* Restore all of the RTC's "status" (actually, control) registers. */
 comment|/* XXX locking is needed for RTC access. */
+name|rtc_reg
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|writertc
 argument_list|(
 name|RTC_STATUSB
