@@ -2289,11 +2289,19 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|tmp_name
+init|=
+literal|"_TMP"
+decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
 literal|"acpi_tz_get_temperature"
 argument_list|)
 expr_stmt|;
+comment|/* Evaluate the thermal zone's _TMP method. */
 name|status
 operator|=
 name|acpi_GetInteger
@@ -2302,7 +2310,7 @@ name|sc
 operator|->
 name|tz_handle
 argument_list|,
-literal|"_TMP"
+name|tmp_name
 argument_list|,
 operator|&
 name|temp
@@ -2343,6 +2351,29 @@ name|FALSE
 operator|)
 return|;
 block|}
+comment|/* Check it for validity. */
+name|acpi_tz_sanity
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|temp
+argument_list|,
+name|tmp_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|temp
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -3228,7 +3259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Sanity-check a temperature value.  Assume that setpoints  * should be between 0C and 150C.  */
+comment|/*  * Sanity-check a temperature value.  Assume that setpoints  * should be between 0C and 200C.  */
 end_comment
 
 begin_function
@@ -3269,7 +3300,7 @@ name|val
 operator|>
 name|TZ_ZEROC
 operator|+
-literal|1500
+literal|2000
 operator|)
 condition|)
 block|{
