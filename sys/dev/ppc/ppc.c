@@ -8547,7 +8547,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* pass registration to the upper layer, ignore the incoming resource */
+comment|/*  	 * pass registration to the upper layer, ignore the incoming  	 * resource  	 */
 return|return
 operator|(
 name|BUS_SETUP_INTR
