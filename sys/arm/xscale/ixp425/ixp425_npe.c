@@ -1074,22 +1074,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"%s: Cannot allocate softc"
-argument_list|,
-name|device_get_name
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_dev
