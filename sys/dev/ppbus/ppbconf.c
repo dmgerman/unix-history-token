@@ -1806,11 +1806,6 @@ name|ppb_device
 modifier|*
 name|ppbdev
 init|=
-operator|(
-expr|struct
-name|ppb_device
-operator|*
-operator|)
 name|device_get_ivars
 argument_list|(
 name|child
