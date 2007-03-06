@@ -1136,6 +1136,7 @@ name|BGE_IS_JUMBO_CAPABLE
 parameter_list|(
 name|sc
 parameter_list|)
+define|\
 value|((sc)->bge_flags& BGE_FLAG_JUMBO)
 end_define
 
@@ -1146,6 +1147,7 @@ name|BGE_IS_5700_FAMILY
 parameter_list|(
 name|sc
 parameter_list|)
+define|\
 value|((sc)->bge_flags& BGE_FLAG_5700_FAMILY)
 end_define
 
@@ -1156,6 +1158,7 @@ name|BGE_IS_5705_PLUS
 parameter_list|(
 name|sc
 parameter_list|)
+define|\
 value|((sc)->bge_flags& BGE_FLAG_5705_PLUS)
 end_define
 
@@ -1166,6 +1169,7 @@ name|BGE_IS_5714_FAMILY
 parameter_list|(
 name|sc
 parameter_list|)
+define|\
 value|((sc)->bge_flags& BGE_FLAG_5714_FAMILY)
 end_define
 
@@ -1176,6 +1180,7 @@ name|BGE_IS_575X_PLUS
 parameter_list|(
 name|sc
 parameter_list|)
+define|\
 value|((sc)->bge_flags& BGE_FLAG_575X_PLUS)
 end_define
 
@@ -2779,7 +2784,7 @@ literal|8
 operator|)
 operator|)
 operator|&
-literal|0xFF
+literal|0xff
 expr_stmt|;
 return|return
 operator|(
@@ -3086,7 +3091,7 @@ return|return
 operator|(
 name|val
 operator|&
-literal|0xFFFF
+literal|0xffff
 operator|)
 return|;
 block|}
@@ -5075,7 +5080,7 @@ operator|*
 literal|4
 operator|)
 argument_list|,
-literal|0xFFFFFFFF
+literal|0xffffffff
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5154,7 +5159,7 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 operator|&
-literal|0x7F
+literal|0x7f
 expr_stmt|;
 name|hashes
 index|[
@@ -5172,7 +5177,7 @@ operator|<<
 operator|(
 name|h
 operator|&
-literal|0x1F
+literal|0x1f
 operator|)
 expr_stmt|;
 block|}
@@ -5718,6 +5723,20 @@ name|BGE_PCIDMARWCTL_ONEDMA_ATONCE
 expr_stmt|;
 comment|/* XXX */
 comment|/* XXX magic values, Broadcom-supplied Linux driver */
+name|dma_rw_ctl
+operator||=
+operator|(
+literal|1
+operator|<<
+literal|20
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+literal|18
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -5728,35 +5747,11 @@ name|BGE_ASICREV_BCM5780
 condition|)
 name|dma_rw_ctl
 operator||=
-operator|(
-literal|1
-operator|<<
-literal|20
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-literal|18
-operator|)
-operator||
 name|BGE_PCIDMARWCTL_ONEDMA_ATONCE
 expr_stmt|;
 else|else
 name|dma_rw_ctl
 operator||=
-operator|(
-literal|1
-operator|<<
-literal|20
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-literal|18
-operator|)
-operator||
 operator|(
 literal|1
 operator|<<
@@ -5987,12 +5982,14 @@ name|sc
 argument_list|,
 name|BGE_MISC_CFG
 argument_list|,
+operator|(
 literal|65
 operator|<<
 literal|1
-comment|/*BGE_32BITTIME_66MHZ*/
+operator|)
 argument_list|)
 expr_stmt|;
+comment|/* BGE_32BITTIME_66MHZ */
 return|return
 operator|(
 literal|0
@@ -6274,7 +6271,7 @@ name|sc
 argument_list|,
 name|BGE_FTQ_RESET
 argument_list|,
-literal|0xFFFFFFFF
+literal|0xffffffff
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -7156,7 +7153,7 @@ name|sc
 argument_list|,
 name|BGE_RXLP_STATS_ENABLE_MASK
 argument_list|,
-literal|0x007FFFFF
+literal|0x007fffff
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -7773,7 +7770,7 @@ name|sc
 argument_list|,
 name|BGE_SDI_STATS_ENABLE_MASK
 argument_list|,
-literal|0x007FFFFF
+literal|0x007fffff
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -7842,9 +7839,11 @@ name|BGE_MI_MODE
 argument_list|,
 name|BGE_MIMODE_AUTOPOLL
 operator||
+operator|(
 literal|10
 operator|<<
 literal|16
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -11184,7 +11183,7 @@ block|{
 name|int
 name|msicount
 decl_stmt|;
-comment|/* 		 * Allocate the interrupt, using MSI if possible.  These devices 		 * support 8 MSI messages, but only the first one is used in 		 * normal operation. 		 */
+comment|/* 		 * Allocate the interrupt, using MSI if possible. These devices 		 * support 8 MSI messages, but only the first one is used in 		 * normal operation. 		 */
 if|if
 condition|(
 name|bge_can_use_msi
@@ -13391,7 +13390,7 @@ operator|(
 name|serdescfg
 operator|&
 operator|~
-literal|0xFFF
+literal|0xfff
 operator|)
 operator||
 literal|0x880
@@ -14688,7 +14687,7 @@ argument_list|,
 name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
-comment|/* Note link event. It will be processed by POLL_AND_CHECK_STATUS cmd */
+comment|/* 	 * Note link event. It will be processed 	 * by POLL_AND_CHECK_STATUS command. 	 */
 if|if
 condition|(
 name|statusword
@@ -18455,7 +18454,7 @@ name|sc
 argument_list|,
 name|BGE_FTQ_RESET
 argument_list|,
-literal|0xFFFFFFFF
+literal|0xffffffff
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -19157,7 +19156,7 @@ name|sc
 argument_list|,
 name|BGE_MAC_STS
 argument_list|,
-literal|0xFFFFFFFF
+literal|0xffffffff
 argument_list|)
 expr_stmt|;
 if|if
@@ -19221,7 +19220,7 @@ name|LINK_STATE_DOWN
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Discard link events for MII/GMII cards if MI auto-polling disabled */
+comment|/* 	 * Discard link events for MII/GMII cards 	 * if MI auto-polling is disabled. 	 */
 block|}
 elseif|else
 if|if
@@ -19236,7 +19235,7 @@ operator|&
 name|BGE_MIMODE_AUTOPOLL
 condition|)
 block|{
-comment|/* 		 * Some broken BCM chips have BGE_STATFLAG_LINKSTATE_CHANGED bit 		 * in status word always set. Workaround this bug by reading 		 * PHY link status directly. 		 */
+comment|/* 		 * Some broken BCM chips have BGE_STATFLAG_LINKSTATE_CHANGED 		 * bit in status word always set. Workaround this bug by 		 * reading PHY link status directly. 		 */
 name|link
 operator|=
 operator|(
