@@ -4196,13 +4196,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Handle data bouncing.  We might also 		 * want to add support for invalidating 		 * the caches on broken hardware 		 */
-name|dmat
-operator|->
-name|bounce_zone
-operator|->
-name|total_bounced
-operator|++
-expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_BUSDMA
@@ -4268,6 +4261,13 @@ name|links
 argument_list|)
 expr_stmt|;
 block|}
+name|dmat
+operator|->
+name|bounce_zone
+operator|->
+name|total_bounced
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4316,6 +4316,13 @@ name|links
 argument_list|)
 expr_stmt|;
 block|}
+name|dmat
+operator|->
+name|bounce_zone
+operator|->
+name|total_bounced
+operator|++
+expr_stmt|;
 block|}
 block|}
 block|}

@@ -3651,9 +3651,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Handle data bouncing.  We might also 		 * want to add support for invalidating 		 * the caches on broken hardware 		 */
-name|total_bounced
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|op
@@ -3701,6 +3698,9 @@ name|links
 argument_list|)
 expr_stmt|;
 block|}
+name|total_bounced
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3749,6 +3749,9 @@ name|links
 argument_list|)
 expr_stmt|;
 block|}
+name|total_bounced
+operator|++
+expr_stmt|;
 block|}
 block|}
 block|}
