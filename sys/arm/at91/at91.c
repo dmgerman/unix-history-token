@@ -2229,7 +2229,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"All system interrupt ISRs must be type INTR_FAST"
+literal|"All system interrupt ISRs must be FILTER"
 argument_list|)
 expr_stmt|;
 name|BUS_SETUP_INTR
