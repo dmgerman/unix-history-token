@@ -91,6 +91,12 @@ directive|include
 file|<machine/intr_machdep.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1835,13 +1841,20 @@ begin_comment
 comment|/*  * Support for balancing interrupt sources across CPUs.  For now we just  * allocate CPUs round-robin.  */
 end_comment
 
+begin_comment
+comment|/* The BSP is always a valid target. */
+end_comment
+
 begin_decl_stmt
 specifier|static
-name|u_int
-name|cpu_apic_ids
-index|[
-name|MAXCPU
-index|]
+name|cpumask_t
+name|intr_cpus
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1851,6 +1864,8 @@ name|int
 name|current_cpu
 decl_stmt|,
 name|num_cpus
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1887,6 +1902,17 @@ index|[
 name|current_cpu
 index|]
 expr_stmt|;
+name|pic
+operator|->
+name|pic_assign_cpu
+argument_list|(
+name|isrc
+argument_list|,
+name|apic_id
+argument_list|)
+expr_stmt|;
+do|do
+block|{
 name|current_cpu
 operator|++
 expr_stmt|;
@@ -1900,20 +1926,26 @@ name|current_cpu
 operator|=
 literal|0
 expr_stmt|;
-name|pic
-operator|->
-name|pic_assign_cpu
-argument_list|(
-name|isrc
-argument_list|,
-name|apic_id
-argument_list|)
-expr_stmt|;
+block|}
+do|while
+condition|(
+operator|!
+operator|(
+name|intr_cpus
+operator|&
+operator|(
+literal|1
+operator|<<
+name|current_cpu
+operator|)
+operator|)
+condition|)
+do|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Add a local APIC ID to our list of valid local APIC IDs that can  * be destinations of interrupts.  */
+comment|/*  * Add a CPU to our mask of valid CPUs that can be destinations of  * interrupts.  */
 end_comment
 
 begin_function
@@ -1921,9 +1953,22 @@ name|void
 name|intr_add_cpu
 parameter_list|(
 name|u_int
-name|apic_id
+name|cpu
 parameter_list|)
 block|{
+if|if
+condition|(
+name|cpu
+operator|>=
+name|MAXCPU
+condition|)
+name|panic
+argument_list|(
+literal|"%s: Invalid CPU ID"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -1932,26 +1977,19 @@ name|printf
 argument_list|(
 literal|"INTR: Adding local APIC %d as a target\n"
 argument_list|,
-name|apic_id
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|num_cpus
-operator|>=
-name|MAXCPU
-condition|)
-name|panic
-argument_list|(
-literal|"WARNING: Local APIC IDs exhausted!"
-argument_list|)
-expr_stmt|;
 name|cpu_apic_ids
 index|[
-name|num_cpus
+name|cpu
 index|]
-operator|=
-name|apic_id
+argument_list|)
+expr_stmt|;
+name|intr_cpus
+operator||=
+operator|(
+literal|1
+operator|<<
+name|cpu
+operator|)
 expr_stmt|;
 name|num_cpus
 operator|++

@@ -970,14 +970,6 @@ name|lapic_id
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|intr_add_cpu
-argument_list|(
-name|PCPU_GET
-argument_list|(
-name|apic_id
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Local APIC timer interrupt. */
 name|setidt
 argument_list|(

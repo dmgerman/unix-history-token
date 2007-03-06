@@ -403,24 +403,10 @@ name|void
 name|intr_add_cpu
 parameter_list|(
 name|u_int
-name|apic_id
+name|cpu
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|intr_add_cpu
-parameter_list|(
-name|apic_id
-parameter_list|)
-end_define
 
 begin_endif
 endif|#

@@ -116,6 +116,14 @@ name|smp_tlb_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|cpu_apic_ids
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
