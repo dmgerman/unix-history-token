@@ -3136,6 +3136,49 @@ modifier|*
 name|codec
 parameter_list|)
 block|{
+comment|/* 	 * YMF chips does not indicate tone and 3D enhancement capability 	 * in the AC97_REG_RESET register. 	 */
+switch|switch
+condition|(
+name|codec
+operator|->
+name|id
+condition|)
+block|{
+case|case
+literal|0x594d4800
+case|:
+comment|/* YMF743 */
+case|case
+literal|0x594d4803
+case|:
+comment|/* YMF753 */
+name|codec
+operator|->
+name|caps
+operator||=
+name|AC97_CAP_TONE
+expr_stmt|;
+name|codec
+operator|->
+name|se
+operator||=
+literal|0x04
+expr_stmt|;
+break|break;
+case|case
+literal|0x594d4802
+case|:
+comment|/* YMF752 */
+name|codec
+operator|->
+name|se
+operator||=
+literal|0x04
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 comment|/* Hide treble and bass if they don't exist */
 if|if
 condition|(
