@@ -191,7 +191,12 @@ name|fgets
 argument_list|(
 name|line
 argument_list|,
-literal|79
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|stdin
 argument_list|)

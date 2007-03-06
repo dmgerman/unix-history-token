@@ -1678,7 +1678,10 @@ name|fgets
 argument_list|(
 name|lin
 argument_list|,
-literal|80
+sizeof|sizeof
+argument_list|(
+name|lin
+argument_list|)
 argument_list|,
 name|fp
 argument_list|)

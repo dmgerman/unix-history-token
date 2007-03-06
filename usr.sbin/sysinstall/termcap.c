@@ -196,7 +196,10 @@ name|fgets
 argument_list|(
 name|str
 argument_list|,
-literal|80
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
 argument_list|,
 name|stdin
 argument_list|)
@@ -279,7 +282,10 @@ name|fgets
 argument_list|(
 name|str
 argument_list|,
-literal|80
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
 argument_list|,
 name|stdin
 argument_list|)

@@ -636,7 +636,10 @@ name|fgets
 argument_list|(
 name|symbol
 argument_list|,
-literal|1024
+sizeof|sizeof
+argument_list|(
+name|symbol
+argument_list|)
 argument_list|,
 name|keepf
 argument_list|)
