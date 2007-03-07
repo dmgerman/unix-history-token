@@ -345,6 +345,53 @@ parameter_list|)
 value|do {\ 	(_m)->m_nextpkt = NULL;					\ 	if ((_ni)->ni_savedq.ifq_tail != NULL) { 		\ 		_age -= M_AGE_GET((_ni)->ni_savedq.ifq_tail);	\ 		(_ni)->ni_savedq.ifq_tail->m_nextpkt = (_m);	\ 	} else { 						\ 		(_ni)->ni_savedq.ifq_head = (_m); 		\ 	}							\ 	M_AGE_SET(_m, _age);					\ 	(_ni)->ni_savedq.ifq_tail = (_m); 			\ 	(_qlen) = ++(_ni)->ni_savedq.ifq_len; 			\ } while (0)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IF_PREPEND_LIST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_IF_PREPEND_LIST
+parameter_list|(
+name|ifq
+parameter_list|,
+name|mhead
+parameter_list|,
+name|mtail
+parameter_list|,
+name|mcount
+parameter_list|)
+value|do {	\ 	(mtail)->m_nextpkt = (ifq)->ifq_head;			\ 	if ((ifq)->ifq_tail == NULL)				\ 		(ifq)->ifq_tail = (mtail);			\ 	(ifq)->ifq_head = (mhead);				\ 	(ifq)->ifq_len += (mcount);				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_PREPEND_LIST
+parameter_list|(
+name|ifq
+parameter_list|,
+name|mhead
+parameter_list|,
+name|mtail
+parameter_list|,
+name|mcount
+parameter_list|)
+value|do {		\ 	IF_LOCK(ifq);						\ 	_IF_PREPEND_LIST(ifq, mhead, mtail, mcount);		\ 	IF_UNLOCK(ifq);						\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IF_PREPEND_LIST */
+end_comment
+
 begin_comment
 comment|/*  * 802.1x MAC ACL database locking definitions.  */
 end_comment
