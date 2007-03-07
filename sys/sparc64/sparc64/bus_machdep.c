@@ -340,16 +340,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Since there is no way for a device to obtain a dma tag from its parent  * we use this kluge to handle different the different supported bus systems.  * The sparc64_root_dma_tag is used as parent for tags that have none, so that  * the correct methods will be used.  */
-end_comment
-
-begin_decl_stmt
-name|bus_dma_tag_t
-name|sparc64_root_dma_tag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Allocate a device specific dma_tag.  */
 end_comment
 
@@ -406,9 +396,6 @@ name|dmat
 parameter_list|)
 block|{
 name|bus_dma_tag_t
-name|impptag
-decl_stmt|;
-name|bus_dma_tag_t
 name|newtag
 decl_stmt|;
 comment|/* Return a NULL tag on failure */
@@ -416,6 +403,20 @@ operator|*
 name|dmat
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* Enforce the usage of BUS_GET_DMA_TAG(). */
+if|if
+condition|(
+name|parent
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"%s: parent DMA tag NULL"
+argument_list|,
+name|__func__
+argument_list|)
 expr_stmt|;
 name|newtag
 operator|=
@@ -446,22 +447,12 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|impptag
-operator|=
-name|parent
-operator|!=
-name|NULL
-condition|?
-name|parent
-else|:
-name|sparc64_root_dma_tag
-expr_stmt|;
-comment|/* 	 * The method table pointer and the cookie need to be taken over from 	 * the parent or the root tag. 	 */
+comment|/* 	 * The method table pointer and the cookie need to be taken over from 	 * the parent. 	 */
 name|newtag
 operator|->
 name|dt_cookie
 operator|=
-name|impptag
+name|parent
 operator|->
 name|dt_cookie
 expr_stmt|;
@@ -469,7 +460,7 @@ name|newtag
 operator|->
 name|dt_mt
 operator|=
-name|impptag
+name|parent
 operator|->
 name|dt_mt
 expr_stmt|;
@@ -618,13 +609,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Take into account any restrictions imposed by our parent tag */
-if|if
-condition|(
-name|parent
-operator|!=
-name|NULL
-condition|)
-block|{
 name|newtag
 operator|->
 name|dt_lowaddr
@@ -705,7 +689,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|newtag
@@ -2509,28 +2492,30 @@ name|NULL
 block|,
 name|NULL
 block|,
-literal|8
+literal|1
 block|,
 literal|0
 block|,
+operator|~
 literal|0
 block|,
-literal|0x3ffffffff
+operator|~
+literal|0
 block|,
 name|NULL
 block|,
 comment|/* XXX */
 name|NULL
 block|,
-literal|0x3ffffffff
+operator|~
+literal|0
 block|,
-comment|/* XXX */
-literal|0xff
+operator|~
+literal|0
 block|,
-comment|/* XXX */
-literal|0xffffffff
+operator|~
+literal|0
 block|,
-comment|/* XXX */
 literal|0
 block|,
 literal|0

@@ -8,11 +8,25 @@ comment|/*-  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights rese
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: NetBSD: sbus.c,v 1.13 1999/05/23 07:24:02 mrg Exp  *	from: @(#)sbus.c	8.1 (Berkeley) 6/11/93  *	from: NetBSD: iommu.c,v 1.42 2001/08/06 22:02:58 eeh Exp  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: NetBSD: sbus.c,v 1.13 1999/05/23 07:24:02 mrg Exp  *	from: @(#)sbus.c	8.1 (Berkeley) 6/11/93  *	from: NetBSD: iommu.c,v 1.42 2001/08/06 22:02:58 eeh Exp  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/*  * UltraSPARC IOMMU support; used by both the sbus and pci code.  * Currently, the IOTSBs are synchronized, because determining the bus the map  * is to be loaded for is not possible with the current busdma code.  * The code is structured so that the IOMMUs can be easily divorced when that  * is fixed.  *  * TODO:  * - As soon as there is a newbus way to get a parent dma tag, divorce the  *   IOTSBs.  * - Support sub-page boundaries.  * - Fix alignment handling for small allocations (the possible page offset  *   of malloc()ed memory is not handled at all). Revise interaction of  *   alignment with the load_mbuf and load_uio functions.  * - Handle lowaddr and highaddr in some way, and try to work out a way  *   for filter callbacks to work. Currently, only lowaddr is honored  *   in that no addresses above it are considered at all.  * - Implement BUS_DMA_ALLOCNOW in bus_dma_tag_create as far as possible.  * - Check the possible return values and callback error arguments;  *   the callback currently gets called in error conditions where it should  *   not be.  * - When running out of DVMA space, return EINPROGRESS in the non-  *   BUS_DMA_NOWAIT case and delay the callback until sufficient space  *   becomes available.  * - Use the streaming cache unless BUS_DMA_COHERENT is specified; do not  *   flush the streaming cache when coherent mappings are synced.  * - Add bounce buffers to support machines with more than 16GB of RAM.  */
+comment|/*  * UltraSPARC IOMMU support; used by both the PCI and SBus code.  * Currently, the IOTSBs are synchronized, because determining the bus the map  * is to be loaded for is not possible with the current busdma code.  * The code is structured so that the IOMMUs can be easily divorced when that  * is fixed.  *  * TODO:  * - As soon as there is a newbus way to get a parent dma tag, divorce the  *   IOTSBs.  * - Support sub-page boundaries.  * - Fix alignment handling for small allocations (the possible page offset  *   of malloc()ed memory is not handled at all). Revise interaction of  *   alignment with the load_mbuf and load_uio functions.  * - Handle lowaddr and highaddr in some way, and try to work out a way  *   for filter callbacks to work. Currently, only lowaddr is honored  *   in that no addresses above it are considered at all.  * - Implement BUS_DMA_ALLOCNOW in bus_dma_tag_create as far as possible.  * - Check the possible return values and callback error arguments;  *   the callback currently gets called in error conditions where it should  *   not be.  * - When running out of DVMA space, return EINPROGRESS in the non-  *   BUS_DMA_NOWAIT case and delay the callback until sufficient space  *   becomes available.  * - Use the streaming cache unless BUS_DMA_COHERENT is specified; do not  *   flush the streaming cache when coherent mappings are synced.  * - Add bounce buffers to support machines with more than 16GB of RAM.  */
 end_comment
 
 begin_include
@@ -808,7 +822,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * initialise the UltraSPARC IOMMU (SBus or PCI):  *	- allocate and setup the iotsb.  *	- enable the IOMMU  *	- initialise the streaming buffers (if they exist)  *	- create a private DVMA map.  */
+comment|/*  * initialise the UltraSPARC IOMMU (PCI or SBus):  *	- allocate and setup the iotsb.  *	- enable the IOMMU  *	- initialise the streaming buffers (if they exist)  *	- create a private DVMA map.  */
 end_comment
 
 begin_function
@@ -851,7 +865,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Setup the iommu. 	 * 	 * The sun4u iommu is part of the SBUS or PCI controller so we 	 * will deal with it here.. 	 * 	 * The IOMMU address space always ends at 0xffffe000, but the starting 	 * address depends on the size of the map.  The map size is 1024 * 2 ^ 	 * is->is_tsbsize entries, where each entry is 8 bytes.  The start of 	 * the map can be calculated by (0xffffe000<< (8 + is->is_tsbsize)). 	 */
+comment|/* 	 * Setup the iommu. 	 * 	 * The sun4u iommu is part of the PCI or SBus controller so we 	 * will deal with it here.. 	 * 	 * The IOMMU address space always ends at 0xffffe000, but the starting 	 * address depends on the size of the map.  The map size is 1024 * 2 ^ 	 * is->is_tsbsize entries, where each entry is 8 bytes.  The start of 	 * the map can be calculated by (0xffffe000<< (8 + is->is_tsbsize)). 	 */
 name|is
 operator|->
 name|is_cr
@@ -1017,7 +1031,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"iommu_init: can't initialize dvma rman"
+literal|"%s: could not initialize DVMA rman"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Allocate memory for I/O page tables.  They need to be 		 * physically contiguous. 		 */
@@ -1049,7 +1065,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"iommu_init: contigmalloc failed"
+literal|"%s: contigmalloc failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|iommu_ptsb
@@ -1102,8 +1120,10 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"iommu_init: secondary IOMMU state does not "
+literal|"%s: secondary IOMMU state does not "
 literal|"match primary"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1360,7 +1380,7 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|pa
-operator|<
+operator|<=
 name|IOMMU_MAXADDR
 argument_list|,
 operator|(
@@ -1886,7 +1906,9 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"iommu_strbuf_flush_done: flush timeout %ld, %ld at %#lx"
+literal|"%s: flush timeout %ld, %ld at %#lx"
+argument_list|,
+name|__func__
 argument_list|,
 operator|*
 name|is
@@ -2096,7 +2118,9 @@ name|IO_PAGE_SIZE
 condition|)
 name|panic
 argument_list|(
-literal|"iommu_dvmamap_load: illegal boundary specified"
+literal|"%s: illegal boundary specified"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|res
@@ -3401,7 +3425,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * IOMMU DVMA operations, common to SBUS and PCI.  */
+comment|/*  * IOMMU DVMA operations, common to PCI and SBus.  */
 end_comment
 
 begin_function
@@ -3869,7 +3893,9 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"iommu_dvmamap_load: map still in use\n"
+literal|"%s: map still in use\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4095,7 +4121,9 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"iommu_dvmamap_load_mbuf: map still in use\n"
+literal|"%s: map still in use\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4388,7 +4416,9 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"iommu_dvmamap_load_mbuf: map still in use\n"
+literal|"%s: map still in use\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4642,7 +4672,9 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"iommu_dvmamap_load_uio: map still in use\n"
+literal|"%s: map still in use\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5237,7 +5269,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"iommu_diag: tte entry %#lx"
+literal|"%s: tte entry %#lx"
+argument_list|,
+name|__func__
 argument_list|,
 name|IOMMU_GET_TTE
 argument_list|(
@@ -5319,8 +5353,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"iommu_diag: tag %d: %#lx, vpn %#lx, err %lx; "
+literal|"%s: tag %d: %#lx, vpn %#lx, err %lx; "
 literal|"data %#lx, pa %#lx, v %d, c %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|i
 argument_list|,

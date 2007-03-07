@@ -26,9 +26,6 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
-name|vm_paddr_t
-name|sc_basepaddr
-decl_stmt|;
 comment|/* Interrupt Group Number for this device */
 name|int
 name|sc_ign

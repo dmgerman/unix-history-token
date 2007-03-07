@@ -80,18 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/nexusvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ofw_upa.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 
@@ -207,7 +195,7 @@ name|central_methods
 index|[]
 init|=
 block|{
-comment|/* Device interface. */
+comment|/* Device interface */
 name|DEVMETHOD
 argument_list|(
 name|device_probe
@@ -243,7 +231,7 @@ argument_list|,
 name|bus_generic_resume
 argument_list|)
 block|,
-comment|/* Bus interface. */
+comment|/* Bus interface */
 name|DEVMETHOD
 argument_list|(
 name|bus_print_child
@@ -423,7 +411,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|nexus_get_name
+name|ofw_bus_get_name
 argument_list|(
 name|dev
 argument_list|)
@@ -503,7 +491,7 @@ argument_list|)
 expr_stmt|;
 name|node
 operator|=
-name|nexus_get_node
+name|ofw_bus_get_node
 argument_list|(
 name|dev
 argument_list|)

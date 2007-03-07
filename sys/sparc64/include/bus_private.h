@@ -183,17 +183,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * XXX: This is a kluge. It would be better to handle dma tags in a hierarchical  * way, and have a BUS_GET_DMA_TAG(); however, since this is not currently the  * case, save a root tag in the relevant bus attach function and use that.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bus_dma_tag_t
-name|sparc64_root_dma_tag
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif

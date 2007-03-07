@@ -6,33 +6,33 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_OFW_UPA_H_
+name|_MACHINE_OFW_NEXUS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_OFW_UPA_H_
+name|_MACHINE_OFW_NEXUS_H_
 end_define
 
 begin_comment
-comment|/*  * These are the regs and ranges property the psycho uses. They should be  * applicable to all UPA devices. XXX: verify this.  */
+comment|/*  * These are the regs used for devices on the nexus. They apply to all of  * Fireplane/Safari, JBus and UPA.  */
 end_comment
 
 begin_struct
 struct|struct
-name|upa_regs
+name|nexus_regs
 block|{
-name|u_int32_t
+name|uint32_t
 name|phys_hi
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|phys_lo
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|size_hi
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|size_lo
 decl_stmt|;
 block|}
@@ -42,23 +42,23 @@ end_struct
 begin_define
 define|#
 directive|define
-name|UPA_REG_PHYS
+name|NEXUS_REG_PHYS
 parameter_list|(
 name|r
 parameter_list|)
 define|\
-value|(((u_int64_t)(r)->phys_hi<< 32) | (u_int64_t)(r)->phys_lo)
+value|(((uint64_t)(r)->phys_hi<< 32) | (uint64_t)(r)->phys_lo)
 end_define
 
 begin_define
 define|#
 directive|define
-name|UPA_REG_SIZE
+name|NEXUS_REG_SIZE
 parameter_list|(
 name|r
 parameter_list|)
 define|\
-value|(((u_int64_t)(r)->size_hi<< 32) | (u_int64_t)(r)->size_lo)
+value|(((uint64_t)(r)->size_hi<< 32) | (uint64_t)(r)->size_lo)
 end_define
 
 begin_endif
@@ -67,7 +67,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_OFW_UPA_H_ */
+comment|/* !_MACHINE_OFW_NEXUS_H_ */
 end_comment
 
 end_unit

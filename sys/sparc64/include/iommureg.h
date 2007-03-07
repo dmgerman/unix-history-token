@@ -16,7 +16,7 @@ name|_MACHINE_IOMMUREG_H_
 end_define
 
 begin_comment
-comment|/*  * UltraSPARC IOMMU registers, common to both the sbus and PCI  * controllers.  */
+comment|/*  * UltraSPARC IOMMU registers, common to both the PCI and SBus  * controllers.  */
 end_comment
 
 begin_comment
@@ -170,7 +170,7 @@ begin_define
 define|#
 directive|define
 name|IOMMU_MAXADDR
-value|(1UL<< IOMMU_BITS)
+value|((1UL<< IOMMU_BITS) - 1)
 end_define
 
 begin_comment
@@ -503,7 +503,7 @@ value|STRBUF_LINESZ
 end_define
 
 begin_comment
-comment|/*  * On sun4u each bus controller has a separate IOMMU.  The IOMMU has   * a TSB which must be page aligned and physically contiguous.  Mappings  * can be of 8K IOMMU pages or 64K IOMMU pages.  We use 8K for compatibility  * with the CPU's MMU.  *  * On sysio, psycho, and psycho+, IOMMU TSBs using 8K pages can map the  * following size segments:  *  *	VA size		VA base		TSB size	tsbsize  *	--------	--------	---------	-------  *	8MB		ff800000	8K		0  *	16MB		ff000000	16K		1  *	32MB		fe000000	32K		2  *	64MB		fc000000	64K		3  *	128MB		f8000000	128K		4  *	256MB		f0000000	256K		5  *	512MB		e0000000	512K		6  *	1GB		c0000000	1MB		7  *  * Unfortunately, sabres on UltraSPARC IIi and IIe processors does not use  * this scheme to determine the IOVA base address.  Instead, bits 31-29 are  * used to check against the Target Address Space register in the IIi and  * the the IOMMU is used if they hit.  God knows what goes on in the IIe.  *  */
+comment|/*  * On sun4u each bus controller has a separate IOMMU.  The IOMMU has  * a TSB which must be page aligned and physically contiguous.  Mappings  * can be of 8K IOMMU pages or 64K IOMMU pages.  We use 8K for compatibility  * with the CPU's MMU.  *  * On sysio, psycho, and psycho+, IOMMU TSBs using 8K pages can map the  * following size segments:  *  *	VA size		VA base		TSB size	tsbsize  *	--------	--------	---------	-------  *	8MB		ff800000	8K		0  *	16MB		ff000000	16K		1  *	32MB		fe000000	32K		2  *	64MB		fc000000	64K		3  *	128MB		f8000000	128K		4  *	256MB		f0000000	256K		5  *	512MB		e0000000	512K		6  *	1GB		c0000000	1MB		7  *  * Unfortunately, sabres on UltraSPARC IIi and IIe processors does not use  * this scheme to determine the IOVA base address.  Instead, bits 31-29 are  * used to check against the Target Address Space register in the IIi and  * the the IOMMU is used if they hit.  God knows what goes on in the IIe.  *  */
 end_comment
 
 begin_define
