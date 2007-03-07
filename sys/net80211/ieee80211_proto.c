@@ -205,6 +205,42 @@ begin_decl_stmt
 specifier|const
 name|char
 modifier|*
+name|ieee80211_opmode_name
+index|[
+name|IEEE80211_OPMODE_MAX
+index|]
+init|=
+block|{
+literal|"IBSS"
+block|,
+comment|/* IEEE80211_M_IBSS */
+literal|"STA"
+block|,
+comment|/* IEEE80211_M_STA */
+literal|"#2"
+block|,
+literal|"AHDEMO"
+block|,
+comment|/* IEEE80211_M_AHDEMO */
+literal|"#4"
+block|,
+literal|"#5"
+block|,
+literal|"HOSTAP"
+block|,
+comment|/* IEEE80211_M_HOSTAP */
+literal|"#7"
+block|,
+literal|"MONITOR"
+comment|/* IEEE80211_M_MONITOR */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
 name|ieee80211_state_name
 index|[
 name|IEEE80211_S_MAX

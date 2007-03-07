@@ -132,6 +132,13 @@ block|}
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_OPMODE_MAX
+value|(IEEE80211_M_MONITOR+1)
+end_define
+
 begin_comment
 comment|/*  * 802.11g protection mode.  */
 end_comment

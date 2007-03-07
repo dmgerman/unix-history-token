@@ -1249,6 +1249,16 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
+name|ieee80211_opmode_name
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
 name|ieee80211_state_name
 index|[
 name|IEEE80211_S_MAX
