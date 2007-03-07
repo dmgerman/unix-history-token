@@ -1131,21 +1131,15 @@ argument_list|,
 name|unitstr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-operator|!=
-literal|'\0'
-condition|)
-name|mdsuffix
-operator|=
-name|p
-expr_stmt|;
 name|unit
 operator|=
 name|ul
 expr_stmt|;
+name|mdsuffix
+operator|=
+name|p
+expr_stmt|;
+comment|/* can be empty */
 block|}
 name|mtpoint
 operator|=
