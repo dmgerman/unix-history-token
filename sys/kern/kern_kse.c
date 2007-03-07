@@ -317,11 +317,6 @@ name|ku_proc
 operator|=
 name|p
 expr_stmt|;
-name|p
-operator|->
-name|p_numupcalls
-operator|++
-expr_stmt|;
 block|}
 end_function
 
@@ -379,11 +374,6 @@ argument_list|,
 name|ku_link
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|p_numupcalls
-operator|--
-expr_stmt|;
 name|upcall_stash
 argument_list|(
 name|ku
@@ -419,6 +409,22 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 	 	* If we are not a bound thread then decrement the count of 	 	* possible upcall sources 	 	*/
+if|if
+condition|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_SA
+condition|)
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_numupcalls
+operator|--
+expr_stmt|;
 name|td
 operator|->
 name|td_upcall
@@ -1505,11 +1511,11 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* 	 * Calculate the existing non-exiting upcalls in this process. 	 * If we are the last upcall but there are still other threads, 	 * then do not exit. We need the other threads to be able to  	 * complete whatever they are doing. 	 * XXX This relies on the userland knowing what to do if we return. 	 * It may be a better choice to convert ourselves into a kse_release 	 * ( or similar) and wait in the kernel to be needed. 	 * XXX Where are those other threads? I suppose they are waiting in 	 * the kernel. We should wait for them all at the user boundary after 	 * turning into an exit. 	 */
 name|count
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Calculate the existing non-exiting upcalls in this process. 	 * If we are the last upcall but there are still other threads, 	 * then do not exit. We need the other threads to be able to  	 * complete whatever they are doing. 	 * XXX This relies on the userland knowing what to do if we return. 	 * It may be a better choice to convert ourselves into a kse_release 	 * ( or similar) and wait in the kernel to be needed. 	 */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1530,11 +1536,15 @@ argument_list|)
 block|{
 if|if
 condition|(
+operator|(
 name|ku2
 operator|->
 name|ku_flags
 operator|&
 name|KUF_EXITING
+operator|)
+operator|==
+literal|0
 condition|)
 name|count
 operator|++
@@ -1542,13 +1552,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|p
-operator|->
-name|p_numupcalls
-operator|-
 name|count
-operator|)
 operator|==
 literal|1
 operator|&&
@@ -2693,6 +2697,7 @@ operator|->
 name|newgroup
 condition|)
 block|{
+comment|/* It's a bound thread (1:1) */
 if|if
 condition|(
 name|mbx
@@ -2729,6 +2734,7 @@ return|;
 block|}
 else|else
 block|{
+comment|/* It's an upcall capable thread */
 name|sa
 operator|=
 name|TDP_SA
@@ -2738,7 +2744,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Limit it to NCPU upcall contexts per proc in any case. 		 */
+comment|/* 		 * Limit it to NCPU upcall contexts per proc in any case. 		 * numupcalls will soon be numkse or something 		 * as it will represent the number of  		 * non-bound upcalls available.  (i.e. ones that can  		 * actually call up). 		 */
 if|if
 condition|(
 name|p
@@ -2759,53 +2765,18 @@ name|EPROCLIM
 operator|)
 return|;
 block|}
-comment|/* 		 * We want to make a thread (bound or unbound). 		 * If we are just the first call, either kind 		 * is ok, but if not then either we must be  		 * already an upcallable thread to make another, 		 * or a bound thread to make one of those. 		 * Once again, not quite right but good enough for now.. XXXKSE 		 * XXX bogus 		 */
+name|p
+operator|->
+name|p_numupcalls
+operator|++
+expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|first
-operator|&&
-operator|(
-operator|(
-name|td
-operator|->
-name|td_pflags
-operator|&
-name|TDP_SA
-operator|)
-operator|!=
-name|sa
-operator|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-if|if
-condition|(
-name|p
-operator|->
-name|p_numupcalls
-operator|==
-literal|0
-condition|)
-block|{
-name|sched_set_concurrency
-argument_list|(
-name|p
-argument_list|,
-name|ncpus
-argument_list|)
-expr_stmt|;
 block|}
-block|}
-comment|/*  	 * Even bound LWPs get a mailbox and an upcall to hold it. 	 */
+comment|/*  	 * Even bound LWPs get a mailbox and an upcall to hold it. 	 * XXX This should change. 	 */
 name|newku
 operator|=
 name|upcall_alloc
@@ -2845,7 +2816,7 @@ name|stack_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For the first call this may not have been set. 	 * Of course nor may it actually be needed. 	 */
+comment|/* 	 * For the first call this may not have been set. 	 * Of course nor may it actually be needed. 	 * thread_schedule_upcall() will look for it. 	 */
 if|if
 condition|(
 name|td
@@ -2870,43 +2841,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sa
-condition|)
-block|{
-if|if
-condition|(
-name|p
-operator|->
-name|p_numupcalls
-operator|>=
-name|ncpus
-condition|)
-block|{
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|upcall_free
-argument_list|(
-name|newku
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EPROCLIM
-operator|)
-return|;
-block|}
-comment|/* 		 * If we are the first time, and a normal thread, 		 * then transfer all the signals back to the 'process'. 		 * SA threading will make a special thread to handle them. 		 */
+comment|/* 	 * If we are the first time, and a normal thread, 	 * then transfer all the signals back to the 'process'. 	 * SA threading will make a special thread to handle them. 	 */
 if|if
 condition|(
 name|first
@@ -2946,11 +2881,6 @@ operator|->
 name|td_sigmask
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/* should subtract from process count (later) */
 block|}
 comment|/* 	 * Make the new upcall available to the process. 	 * It may or may not use it, but it's available. 	 */
 name|upcall_link
@@ -2995,7 +2925,7 @@ operator|->
 name|newgroup
 condition|)
 block|{
-comment|/* 		 * The newgroup parameter now means 		 * "bound, non SA, system scope" 		 * It is only used for the interrupt thread at the 		 * moment I think 		 * We'll rename it later. 		 */
+comment|/* 		 * The newgroup parameter now means 		 * "bound, non SA, system scope" 		 * It is only used for the interrupt thread at the 		 * moment I think.. (or system scope threads dopey). 		 * We'll rename it later. 		 */
 name|newtd
 operator|=
 name|thread_schedule_upcall
@@ -3070,7 +3000,7 @@ operator|->
 name|td_tid
 argument_list|)
 expr_stmt|;
-comment|/* 	 * In the same manner, if the UTS has a current user thread,  	 * then it is also running on this LWP so set it as well. 	 * The library could do that of course.. but why not.. 	 */
+comment|/* 	 * In the same manner, if the UTS has a current user thread,  	 * then it is also running on this LWP so set it as well. 	 * The library could do that of course.. but why not.. 	 * XXX I'm not sure this can ever happen but ... 	 * XXX does the UTS ever set this in the mailbox before calling this? 	 */
 if|if
 condition|(
 name|mbx
