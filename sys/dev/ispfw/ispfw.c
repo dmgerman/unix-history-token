@@ -83,6 +83,12 @@ directive|include
 file|<dev/ispfw/asm_2322.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/ispfw/asm_2400.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -198,6 +204,20 @@ define|#
 directive|define
 name|PCI_PRODUCT_QLOGIC_ISP6322
 value|0x6322
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_QLOGIC_ISP2422
+value|0x2422
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_QLOGIC_ISP2432
+value|0x2432
 end_define
 
 begin_if
@@ -584,6 +604,22 @@ case|:
 name|rp
 operator|=
 name|isp_2322_risc_code
+expr_stmt|;
+break|break;
+case|case
+name|PCI_PRODUCT_QLOGIC_ISP2422
+case|:
+case|case
+name|PCI_PRODUCT_QLOGIC_ISP2432
+case|:
+name|rp
+operator|=
+operator|(
+specifier|const
+name|u_int16_t
+operator|*
+operator|)
+name|isp_2400_risc_code
 expr_stmt|;
 break|break;
 if|#
