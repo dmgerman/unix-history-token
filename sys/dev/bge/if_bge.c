@@ -5477,7 +5477,7 @@ name|sc
 argument_list|,
 name|BGE_CPU_EVENT
 argument_list|)
-operator|!=
+operator||
 operator|(
 literal|1
 operator|<<
@@ -15035,7 +15035,7 @@ name|sc
 argument_list|,
 name|BGE_CPU_EVENT
 argument_list|)
-operator|!=
+operator||
 operator|(
 literal|1
 operator|<<
