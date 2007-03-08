@@ -382,6 +382,10 @@ name|iflag
 decl_stmt|,
 name|kflag
 decl_stmt|,
+name|lflag
+init|=
+literal|0
+decl_stmt|,
 name|nflag
 decl_stmt|;
 end_decl_stmt
@@ -631,6 +635,10 @@ name|makenetvfslist
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|lflag
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'m'
@@ -656,6 +664,17 @@ break|break;
 case|case
 literal|'t'
 case|:
+if|if
+condition|(
+name|lflag
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-l and -t are mutually exclusive."
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vfslist
