@@ -220,20 +220,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-1] [-b] [-B] [-d] [-i iface] [-l len] [-p port] [-r]\n"
-literal|"    [-s srcaddr] [-t ttl]<dest>\n"
+literal|"IPv4 broadcast test program. Sends a %d byte UDP "
+literal|"datagram to<dest>:<port>.\n\n"
 argument_list|,
-name|progname
+name|DEFAULT_PAYLOAD_SIZE
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"IPv4 broadcast test program. Sends a %d byte UDP "
-literal|"datagram to<dest>:<port>.\n"
+literal|"usage: %s [-1] [-A laddr] [-b] [-B] [-d] [-i iface] [-l len]\n"
+literal|"                   [-p port] [-r] [-s srcaddr] [-t ttl]<dest>\n"
 argument_list|,
-name|DEFAULT_PAYLOAD_SIZE
+name|progname
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -247,7 +247,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-b: bind socket to INADDR_ANY:<sport>\n"
+literal|"-A: specify laddr (default: INADDR_ANY)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-b: bind socket to<laddr>:<lport>\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -268,7 +275,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-i: Set IP_SENDIF<iface>\n"
+literal|"-i: Set IP_SENDIF<iface> (if supported)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -282,7 +289,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-p: Set source and destination port (default: %d)\n"
+literal|"-p: Set local and remote port (default: %d)\n"
 argument_list|,
 name|DEFAULT_PORT
 argument_list|)
@@ -354,6 +361,10 @@ name|sockaddr_in
 name|dsin
 decl_stmt|;
 name|struct
+name|sockaddr_in
+name|laddr
+decl_stmt|;
+name|struct
 name|sockaddr_dl
 modifier|*
 name|sdl
@@ -375,6 +386,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|ifname
+decl_stmt|;
+name|char
+modifier|*
+name|laddr_s
 decl_stmt|;
 name|char
 modifier|*
@@ -452,6 +467,10 @@ name|s_addr
 operator|=
 name|INADDR_ANY
 expr_stmt|;
+name|laddr_s
+operator|=
+name|NULL
+expr_stmt|;
 name|srcaddr_s
 operator|=
 name|NULL
@@ -493,7 +512,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1bBdi:l:p:rs:t:"
+literal|"1A:bBdi:l:p:rs:t:"
 argument_list|)
 operator|)
 operator|!=
@@ -512,6 +531,14 @@ case|:
 name|doonesbcast
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'A'
+case|:
+name|laddr_s
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -918,7 +945,7 @@ block|{
 name|memset
 argument_list|(
 operator|&
-name|dsin
+name|laddr
 argument_list|,
 literal|0
 argument_list|,
@@ -929,13 +956,13 @@ name|sockaddr_in
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dsin
+name|laddr
 operator|.
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|dsin
+name|laddr
 operator|.
 name|sin_len
 operator|=
@@ -945,7 +972,27 @@ expr|struct
 name|sockaddr_in
 argument_list|)
 expr_stmt|;
-name|dsin
+if|if
+condition|(
+name|laddr_s
+operator|!=
+name|NULL
+condition|)
+block|{
+name|laddr
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|inet_addr
+argument_list|(
+name|laddr_s
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|laddr
 operator|.
 name|sin_addr
 operator|.
@@ -953,7 +1000,7 @@ name|s_addr
 operator|=
 name|INADDR_ANY
 expr_stmt|;
-name|dsin
+name|laddr
 operator|.
 name|sin_port
 operator|=
@@ -974,11 +1021,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|dsin
+name|laddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|dsin
+name|laddr
 argument_list|)
 argument_list|)
 expr_stmt|;
