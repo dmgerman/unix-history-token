@@ -60,6 +60,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cam/cam_periph.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cam/cam_xpt_periph.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/cam_xpt_sim.h>
 end_include
 
