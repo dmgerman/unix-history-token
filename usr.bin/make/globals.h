@@ -190,6 +190,17 @@ begin_comment
 comment|/* True if every target is precious */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|is_posix
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* .POSIX target seen */
+end_comment
+
 begin_comment
 comment|/* True if should continue on unaffected portions of the graph  * when have an error in one portion */
 end_comment

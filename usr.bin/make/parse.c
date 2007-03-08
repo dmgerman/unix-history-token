@@ -3359,6 +3359,10 @@ break|break;
 case|case
 name|Posix
 case|:
+name|is_posix
+operator|=
+name|TRUE
+expr_stmt|;
 name|Var_Set
 argument_list|(
 literal|"%POSIX"
@@ -5905,7 +5909,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * parse_include  *	Parse an .include directive and push the file onto the input stack.  *	The input is the line minus the .include. A file spec is a string  *	enclosed in<> or "". The former is looked for only in sysIncPath.  *	The latter in . and the directories specified by -I command line  *	options  */
+comment|/**  * xparse_include  *	Parse an .include directive and push the file onto the input stack.  *	The input is the line minus the .include. A file spec is a string  *	enclosed in<> or "". The former is looked for only in sysIncPath.  *	The latter in . and the directories specified by -I command line  *	options  */
 end_comment
 
 begin_function
@@ -6284,6 +6288,12 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+else|else
+name|Main_AddSourceMakefile
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|file
@@ -6291,6 +6301,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|Main_AddSourceMakefile
+argument_list|(
+name|fullname
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|file
