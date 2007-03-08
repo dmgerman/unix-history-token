@@ -1136,7 +1136,6 @@ name|BGE_IS_JUMBO_CAPABLE
 parameter_list|(
 name|sc
 parameter_list|)
-define|\
 value|((sc)->bge_flags& BGE_FLAG_JUMBO)
 end_define
 
@@ -1147,7 +1146,6 @@ name|BGE_IS_5700_FAMILY
 parameter_list|(
 name|sc
 parameter_list|)
-define|\
 value|((sc)->bge_flags& BGE_FLAG_5700_FAMILY)
 end_define
 
@@ -1158,7 +1156,6 @@ name|BGE_IS_5705_PLUS
 parameter_list|(
 name|sc
 parameter_list|)
-define|\
 value|((sc)->bge_flags& BGE_FLAG_5705_PLUS)
 end_define
 
@@ -1169,7 +1166,6 @@ name|BGE_IS_5714_FAMILY
 parameter_list|(
 name|sc
 parameter_list|)
-define|\
 value|((sc)->bge_flags& BGE_FLAG_5714_FAMILY)
 end_define
 
@@ -1180,7 +1176,6 @@ name|BGE_IS_575X_PLUS
 parameter_list|(
 name|sc
 parameter_list|)
-define|\
 value|((sc)->bge_flags& BGE_FLAG_575X_PLUS)
 end_define
 
@@ -2784,7 +2779,7 @@ literal|8
 operator|)
 operator|)
 operator|&
-literal|0xff
+literal|0xFF
 expr_stmt|;
 return|return
 operator|(
@@ -3091,7 +3086,7 @@ return|return
 operator|(
 name|val
 operator|&
-literal|0xffff
+literal|0xFFFF
 operator|)
 return|;
 block|}
@@ -5080,7 +5075,7 @@ operator|*
 literal|4
 operator|)
 argument_list|,
-literal|0xffffffff
+literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5159,7 +5154,7 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 operator|&
-literal|0x7f
+literal|0x7F
 expr_stmt|;
 name|hashes
 index|[
@@ -5177,7 +5172,7 @@ operator|<<
 operator|(
 name|h
 operator|&
-literal|0x1f
+literal|0x1F
 operator|)
 expr_stmt|;
 block|}
@@ -5682,7 +5677,7 @@ name|BGE_PCI_WRITE_CMD
 operator||
 name|BGE_PCIDMARWCTL_RD_WAT_SHIFT
 argument_list|(
-literal|0xf
+literal|0xF
 argument_list|)
 operator||
 name|BGE_PCIDMARWCTL_WR_WAT_SHIFT
@@ -5752,11 +5747,9 @@ expr_stmt|;
 else|else
 name|dma_rw_ctl
 operator||=
-operator|(
 literal|1
 operator|<<
 literal|15
-operator|)
 expr_stmt|;
 block|}
 elseif|else
@@ -5802,7 +5795,7 @@ argument_list|(
 literal|0x3
 argument_list|)
 operator||
-literal|0x0f
+literal|0x0F
 expr_stmt|;
 comment|/* 		 * 5703 and 5704 need ONEDMA_AT_ONCE as a workaround 		 * for hardware bugs. 		 */
 if|if
@@ -5832,7 +5825,7 @@ argument_list|,
 name|BGE_PCI_CLKCTL
 argument_list|)
 operator|&
-literal|0x1f
+literal|0x1F
 expr_stmt|;
 if|if
 condition|(
@@ -5868,7 +5861,7 @@ argument_list|(
 literal|0x7
 argument_list|)
 operator||
-literal|0x0f
+literal|0x0F
 expr_stmt|;
 if|if
 condition|(
@@ -5982,14 +5975,9 @@ name|sc
 argument_list|,
 name|BGE_MISC_CFG
 argument_list|,
-operator|(
-literal|65
-operator|<<
-literal|1
-operator|)
+name|BGE_32BITTIME_66MHZ
 argument_list|)
 expr_stmt|;
-comment|/* BGE_32BITTIME_66MHZ */
 return|return
 operator|(
 literal|0
@@ -6271,7 +6259,7 @@ name|sc
 argument_list|,
 name|BGE_FTQ_RESET
 argument_list|,
-literal|0xffffffff
+literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -7153,7 +7141,7 @@ name|sc
 argument_list|,
 name|BGE_RXLP_STATS_ENABLE_MASK
 argument_list|,
-literal|0x007fffff
+literal|0x007FFFFF
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -7636,11 +7624,9 @@ name|BGE_ASICREV_BCM5787
 condition|)
 name|val
 operator||=
-operator|(
 literal|1
 operator|<<
 literal|29
-operator|)
 expr_stmt|;
 comment|/* Turn on write DMA state machine */
 name|CSR_WRITE_4
@@ -7770,7 +7756,7 @@ name|sc
 argument_list|,
 name|BGE_SDI_STATS_ENABLE_MASK
 argument_list|,
-literal|0x007fffff
+literal|0x007FFFFF
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -11131,7 +11117,7 @@ condition|(
 operator|(
 name|reg
 operator|&
-literal|0xff
+literal|0xFF
 operator|)
 operator|==
 name|BGE_PCIE_CAPID
@@ -11183,7 +11169,7 @@ block|{
 name|int
 name|msicount
 decl_stmt|;
-comment|/* 		 * Allocate the interrupt, using MSI if possible. These devices 		 * support 8 MSI messages, but only the first one is used in 		 * normal operation. 		 */
+comment|/* 		 * Allocate the interrupt, using MSI if possible.  These devices 		 * support 8 MSI messages, but only the first one is used in 		 * normal operation. 		 */
 if|if
 condition|(
 name|bge_can_use_msi
@@ -11500,7 +11486,7 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-literal|0x0c14
+literal|0x0C14
 argument_list|)
 expr_stmt|;
 if|if
@@ -11511,7 +11497,7 @@ operator|>>
 literal|16
 operator|)
 operator|==
-literal|0x484b
+literal|0x484B
 condition|)
 block|{
 name|eaddr
@@ -11544,7 +11530,7 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-literal|0x0c18
+literal|0x0C18
 argument_list|)
 expr_stmt|;
 name|eaddr
@@ -12872,11 +12858,7 @@ name|reset
 operator|=
 name|BGE_MISCCFG_RESET_CORE_CLOCKS
 operator||
-operator|(
-literal|65
-operator|<<
-literal|1
-operator|)
+name|BGE_32BITTIME_66MHZ
 expr_stmt|;
 comment|/* XXX: Broadcom Linux driver. */
 if|if
@@ -12894,7 +12876,7 @@ name|CSR_READ_4
 argument_list|(
 name|sc
 argument_list|,
-literal|0x7e2c
+literal|0x7E2C
 argument_list|)
 operator|==
 literal|0x60
@@ -12904,7 +12886,7 @@ name|CSR_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
-literal|0x7e2c
+literal|0x7E2C
 argument_list|,
 literal|0x20
 argument_list|)
@@ -12925,20 +12907,16 @@ name|sc
 argument_list|,
 name|BGE_MISC_CFG
 argument_list|,
-operator|(
 literal|1
 operator|<<
 literal|29
-operator|)
 argument_list|)
 expr_stmt|;
 name|reset
 operator||=
-operator|(
 literal|1
 operator|<<
 literal|29
-operator|)
 expr_stmt|;
 block|}
 block|}
@@ -13003,7 +12981,7 @@ name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
-literal|0xc4
+literal|0xC4
 argument_list|,
 literal|4
 argument_list|)
@@ -13012,7 +12990,7 @@ name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
-literal|0xc4
+literal|0xC4
 argument_list|,
 name|v
 operator||
@@ -13031,9 +13009,9 @@ name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
-literal|0xd8
+literal|0xD8
 argument_list|,
-literal|0xf5000
+literal|0xF5000
 argument_list|,
 literal|4
 argument_list|)
@@ -13085,11 +13063,7 @@ name|sc
 argument_list|,
 name|BGE_MISC_CFG
 argument_list|,
-operator|(
-literal|65
-operator|<<
-literal|1
-operator|)
+name|BGE_32BITTIME_66MHZ
 argument_list|)
 expr_stmt|;
 comment|/* Re-enable MSI, if neccesary, and enable the memory arbiter. */
@@ -13298,14 +13272,14 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-literal|0x7c00
+literal|0x7C00
 argument_list|)
 expr_stmt|;
 name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-literal|0x7c00
+literal|0x7C00
 argument_list|,
 name|reset
 operator||
@@ -13390,7 +13364,7 @@ operator|(
 name|serdescfg
 operator|&
 operator|~
-literal|0xfff
+literal|0xFFF
 operator|)
 operator||
 literal|0x880
@@ -13430,14 +13404,14 @@ name|CSR_READ_4
 argument_list|(
 name|sc
 argument_list|,
-literal|0x7c00
+literal|0x7C00
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
-literal|0x7c00
+literal|0x7C00
 argument_list|,
 name|v
 operator||
@@ -14086,7 +14060,7 @@ name|cur_rx
 operator|->
 name|bge_ip_csum
 operator|^
-literal|0xffff
+literal|0xFFFF
 operator|)
 operator|==
 literal|0
@@ -14687,7 +14661,7 @@ argument_list|,
 name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note link event. It will be processed 	 * by POLL_AND_CHECK_STATUS command. 	 */
+comment|/* Note link event. It will be processed by POLL_AND_CHECK_STATUS. */
 if|if
 condition|(
 name|statusword
@@ -18454,7 +18428,7 @@ name|sc
 argument_list|,
 name|BGE_FTQ_RESET
 argument_list|,
-literal|0xffffffff
+literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -19156,7 +19130,7 @@ name|sc
 argument_list|,
 name|BGE_MAC_STS
 argument_list|,
-literal|0xffffffff
+literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
 if|if
@@ -19220,7 +19194,6 @@ name|LINK_STATE_DOWN
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Discard link events for MII/GMII cards 	 * if MI auto-polling is disabled. 	 */
 block|}
 elseif|else
 if|if
@@ -19235,7 +19208,7 @@ operator|&
 name|BGE_MIMODE_AUTOPOLL
 condition|)
 block|{
-comment|/* 		 * Some broken BCM chips have BGE_STATFLAG_LINKSTATE_CHANGED 		 * bit in status word always set. Workaround this bug by 		 * reading PHY link status directly. 		 */
+comment|/* 		 * Some broken BCM chips have BGE_STATFLAG_LINKSTATE_CHANGED bit 		 * in status word always set. Workaround this bug by reading 		 * PHY link status directly. 		 */
 name|link
 operator|=
 operator|(
@@ -19373,6 +19346,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+else|else
+block|{
+comment|/* 		 * Discard link events for MII/GMII controllers 		 * if MI auto-polling is disabled. 		 */
 block|}
 comment|/* Clear the attention. */
 name|CSR_WRITE_4
@@ -19748,7 +19725,7 @@ literal|0x800
 init|;
 name|i
 operator|<
-literal|0xa00
+literal|0xA00
 condition|;
 control|)
 block|{
