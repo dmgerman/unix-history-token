@@ -1326,14 +1326,11 @@ name|curthread
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|td
-operator|!=
-name|PCPU_GET
+operator|!
+name|TD_IS_IDLETHREAD
 argument_list|(
-name|idlethread
+name|td
 argument_list|)
-operator|)
 operator|&&
 name|bp
 operator|->

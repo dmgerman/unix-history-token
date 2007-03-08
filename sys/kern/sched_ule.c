@@ -6309,11 +6309,9 @@ expr_stmt|;
 comment|/* 	 * If the thread has been assigned it may be in the process of switching 	 * to the new cpu.  This is the case in sched_bind(). 	 */
 if|if
 condition|(
-name|td
-operator|==
-name|PCPU_GET
+name|TD_IS_IDLETHREAD
 argument_list|(
-name|idlethread
+name|td
 argument_list|)
 condition|)
 block|{

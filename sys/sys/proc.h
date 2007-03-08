@@ -1521,6 +1521,42 @@ parameter_list|)
 value|((td)->td_flags& TDF_UPIBLOCKED)
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|TD_IS_IDLETHREAD
+parameter_list|(
+name|td
+parameter_list|)
+value|((td) == pcpu(idlethread))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TD_IS_IDLETHREAD
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_flags& TDF_IDLETD)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define

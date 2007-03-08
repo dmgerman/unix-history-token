@@ -494,11 +494,9 @@ name|td
 operator|==
 name|NULL
 operator|||
-name|td
-operator|==
-name|PCPU_GET
+name|TD_IS_IDLETHREAD
 argument_list|(
-name|idlethread
+name|td
 argument_list|)
 condition|)
 return|return

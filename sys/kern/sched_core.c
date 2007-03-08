@@ -4463,11 +4463,9 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|td
-operator|==
-name|PCPU_GET
+name|TD_IS_IDLETHREAD
 argument_list|(
-name|idlethread
+name|td
 argument_list|)
 condition|)
 block|{
@@ -5656,11 +5654,10 @@ block|{
 comment|/* 		 * Processes of equal idle priority are run round-robin. 		 */
 if|if
 condition|(
-name|td
-operator|!=
-name|PCPU_GET
+operator|!
+name|TD_IS_IDLETHREAD
 argument_list|(
-name|idlethread
+name|td
 argument_list|)
 operator|&&
 operator|--

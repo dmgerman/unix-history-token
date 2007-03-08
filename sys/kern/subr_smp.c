@@ -818,11 +818,11 @@ operator|)
 operator|==
 literal|0
 operator|&&
+operator|!
+name|TD_IS_IDLETHREAD
+argument_list|(
 name|td
-operator|!=
-name|pc
-operator|->
-name|pc_idlethread
+argument_list|)
 condition|)
 block|{
 name|td

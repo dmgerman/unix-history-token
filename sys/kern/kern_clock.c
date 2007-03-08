@@ -1505,11 +1505,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|td
-operator|!=
-name|PCPU_GET
+operator|!
+name|TD_IS_IDLETHREAD
 argument_list|(
-name|idlethread
+name|td
 argument_list|)
 condition|)
 name|cp_time
