@@ -3614,6 +3614,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXX: Because sockaddr_dl has deeper structure than the sockaddr  * structs used to represent other address families, it is necessary  * to perform a different comparison.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3623,7 +3627,21 @@ name|a1
 parameter_list|,
 name|a2
 parameter_list|)
+define|\
 value|(bcmp((a1), (a2), ((a1))->sa_len) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sa_dl_equal
+parameter_list|(
+name|a1
+parameter_list|,
+name|a2
+parameter_list|)
+define|\
+value|((((struct sockaddr_dl *)(a1))->sdl_len ==			\ 	 ((struct sockaddr_dl *)(a2))->sdl_len)&&			\ 	 (bcmp(LLADDR((struct sockaddr_dl *)(a1)),			\ 	       LLADDR((struct sockaddr_dl *)(a2)),			\ 	       ((struct sockaddr_dl *)(a1))->sdl_alen) == 0))
 end_define
 
 begin_comment
@@ -8547,6 +8565,30 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|sa
+operator|->
+name|sa_family
+operator|==
+name|AF_LINK
+condition|)
+block|{
+if|if
+condition|(
+name|sa_dl_equal
+argument_list|(
+name|ifma
+operator|->
+name|ifma_addr
+argument_list|,
+name|sa
+argument_list|)
+condition|)
+break|break;
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|sa_equal
 argument_list|(
 name|ifma
@@ -8557,6 +8599,7 @@ name|sa
 argument_list|)
 condition|)
 break|break;
+block|}
 block|}
 return|return
 name|ifma
