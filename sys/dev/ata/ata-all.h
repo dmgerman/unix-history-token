@@ -2621,6 +2621,10 @@ define|#
 directive|define
 name|ATA_ATAPI_SLAVE
 value|0x08
+define|#
+directive|define
+name|ATA_PORTMULTIPLIER
+value|0x10
 name|struct
 name|mtx
 name|state_mtx
