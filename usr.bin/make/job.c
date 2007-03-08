@@ -7687,7 +7687,7 @@ block|}
 if|if
 condition|(
 name|fifoFd
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
