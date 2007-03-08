@@ -4740,9 +4740,10 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_EOF
 operator|)
 return|;
+comment|/* End of ACL entries. */
 block|}
 operator|*
 name|type
