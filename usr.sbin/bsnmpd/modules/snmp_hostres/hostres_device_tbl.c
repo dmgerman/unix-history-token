@@ -2036,6 +2036,9 @@ case|:
 case|case
 literal|'?'
 case|:
+case|case
+literal|'!'
+case|:
 name|refresh_device_tbl
 argument_list|(
 literal|1
