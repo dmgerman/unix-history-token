@@ -673,7 +673,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|ng_apply_item
 parameter_list|(
 name|node_p
@@ -7325,6 +7325,62 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|static __inline item_p ng_upgrade_write(struct ng_queue *ngq, item_p item) { 	KASSERT(ngq !=&ng_deadnode.nd_input_queue, 	    ("%s: working on deadnode", __func__));  	NGI_SET_WRITER(item);  	mtx_lock_spin(&(ngq->q_mtx));
+comment|/* 	 * There will never be no readers as we are there ourselves. 	 * Set the WRITER_ACTIVE flags ASAP to block out fast track readers. 	 * The caller we are running from will call ng_leave_read() 	 * soon, so we must account for that. We must leave again with the 	 * READER lock. If we find other readers, then 	 * queue the request for later. However "later" may be rignt now 	 * if there are no readers. We don't really care if there are queued 	 * items as we will bypass them anyhow. 	 */
+end_comment
+
+begin_comment
+unit|atomic_add_long(&ngq->q_flags, WRITER_ACTIVE - READER_INCREMENT); 	if (ngq->q_flags& (NGQ_WMASK& ~OP_PENDING) == WRITER_ACTIVE) { 		mtx_unlock_spin(&(ngq->q_mtx));
+comment|/* It's just us, act on the item. */
+end_comment
+
+begin_comment
+comment|/* will NOT drop writer lock when done */
+end_comment
+
+begin_comment
+unit|ng_apply_item(node, item, 0);
+comment|/* 		 * Having acted on the item, atomically  		 * down grade back to READER and finish up 	 	 */
+end_comment
+
+begin_comment
+unit|atomic_add_long(&ngq->q_flags, 		    READER_INCREMENT - WRITER_ACTIVE);
+comment|/* Our caller will call ng_leave_read() */
+end_comment
+
+begin_comment
+unit|return; 	}
+comment|/* 	 * It's not just us active, so queue us AT THE HEAD. 	 * "Why?" I hear you ask. 	 * Put us at the head of the queue as we've already been 	 * through it once. If there is nothing else waiting, 	 * set the correct flags. 	 */
+end_comment
+
+begin_comment
+unit|if ((item->el_next = ngq->queue) == NULL) {
+comment|/* 		 * Set up the "last" pointer. 		 * We are the only (and thus last) item 		 */
+end_comment
+
+begin_comment
+unit|ngq->last =&(item->el_next);
+comment|/* We've gone from, 0 to 1 item in the queue */
+end_comment
+
+begin_comment
+unit|atomic_add_long(&ngq->q_flags, OP_PENDING);  		CTR3(KTR_NET, "%20s: node [%x] (%p) set OP_PENDING", __func__, 		    ngq->q_node->nd_ID, ngq->q_node); 	}; 	ngq->queue = item; 	CTR5(KTR_NET, "%20s: node [%x] (%p) requeued item %p as WRITER", 	    __func__, ngq->q_node->nd_ID, ngq->q_node, item );
+comment|/* Reverse what we did above. That downgrades us back to reader */
+end_comment
+
+begin_endif
+unit|atomic_add_long(&ngq->q_flags, READER_INCREMENT - WRITER_ACTIVE); 	if (NEXT_QUEUED_ITEM_CAN_PROCEED(ngq)) 		ng_setisr(ngq->q_node); 	mtx_unlock_spin(&(ngq->q_mtx));  	return; }
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|__inline
@@ -7998,8 +8054,7 @@ name|node
 argument_list|)
 expr_stmt|;
 comment|/* zaps stored node */
-name|error
-operator|=
+comment|/* Don't report any errors. act as if it had been queued */
 name|ng_apply_item
 argument_list|(
 name|node
@@ -8075,7 +8130,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ng_apply_item
 parameter_list|(
 name|node_p
@@ -8090,11 +8145,6 @@ parameter_list|)
 block|{
 name|hook_p
 name|hook
-decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
 decl_stmt|;
 name|ng_rcvdata_t
 modifier|*
@@ -8199,10 +8249,6 @@ name|node
 argument_list|)
 condition|)
 block|{
-name|error
-operator|=
-name|EIO
-expr_stmt|;
 name|NG_FREE_ITEM
 argument_list|(
 name|item
@@ -8252,8 +8298,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|error
-operator|=
 call|(
 modifier|*
 name|rcvdata
@@ -8305,10 +8349,6 @@ block|{
 name|TRAP_ERROR
 argument_list|()
 expr_stmt|;
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
 name|NG_FREE_ITEM
 argument_list|(
 name|item
@@ -8356,8 +8396,6 @@ literal|0
 operator|)
 condition|)
 block|{
-name|error
-operator|=
 name|ng_generic_msg
 argument_list|(
 name|node
@@ -8407,10 +8445,6 @@ block|{
 name|TRAP_ERROR
 argument_list|()
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|NG_FREE_ITEM
 argument_list|(
 name|item
@@ -8418,8 +8452,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|error
-operator|=
 call|(
 modifier|*
 name|rcvmsg
@@ -8460,10 +8492,6 @@ condition|)
 block|{
 name|TRAP_ERROR
 argument_list|()
-expr_stmt|;
-name|error
-operator|=
-name|EINVAL
 expr_stmt|;
 name|NG_FREE_ITEM
 argument_list|(
@@ -8530,7 +8558,13 @@ name|nd_input_queue
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|rw
+operator|==
+name|NGQRW_W
+condition|)
 block|{
 name|ng_leave_write
 argument_list|(
@@ -8541,6 +8575,7 @@ name|nd_input_queue
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* else do nothing */
 comment|/* Apply callback. */
 if|if
 condition|(
@@ -8558,11 +8593,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
