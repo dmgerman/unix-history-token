@@ -114,6 +114,8 @@ name|struct
 name|pidfh
 modifier|*
 name|pfh
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|ch
