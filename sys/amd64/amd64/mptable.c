@@ -1613,6 +1613,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|vm_paddr_t
+name|addr
+decl_stmt|;
 comment|/* Is this a pre-defined config? */
 name|printf
 argument_list|(
@@ -1628,10 +1631,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|lapic_init
-argument_list|(
+name|addr
+operator|=
 name|DEFAULT_APIC_BASE
-argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1645,12 +1647,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|lapic_init
-argument_list|(
+name|addr
+operator|=
 name|mpct
 operator|->
 name|apic_address
-argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1689,6 +1690,11 @@ block|}
 name|printf
 argument_list|(
 literal|">\n"
+argument_list|)
+expr_stmt|;
+name|lapic_init
+argument_list|(
+name|addr
 argument_list|)
 expr_stmt|;
 return|return
