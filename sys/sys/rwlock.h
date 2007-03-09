@@ -615,6 +615,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|rw_sleep
+parameter_list|(
+name|chan
+parameter_list|,
+name|rw
+parameter_list|,
+name|pri
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|_sleep((chan),&(rw)->rw_object, (pri), (wmesg), (timo))
+end_define
+
+begin_define
+define|#
+directive|define
 name|rw_initialized
 parameter_list|(
 name|rw

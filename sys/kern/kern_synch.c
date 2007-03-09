@@ -360,16 +360,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * General sleep call.  Suspends the current thread until a wakeup is  * performed on the specified identifier.  The thread will then be made  * runnable with the specified priority.  Sleeps at most timo/hz seconds  * (0 means no timeout).  If pri includes PCATCH flag, signals are checked  * before and after sleeping, else signals are not checked.  Returns 0 if  * awakened, EWOULDBLOCK if the timeout expires.  If PCATCH is set and a  * signal needs to be delivered, ERESTART is returned if the current system  * call should be restarted if possible, and EINTR is returned if the system  * call should be interrupted by the signal (return EINTR).  *  * The mutex argument is unlocked before the caller is suspended, and  * re-locked before msleep returns.  If priority includes the PDROP  * flag the mutex is not re-locked before returning.  */
+comment|/*  * General sleep call.  Suspends the current thread until a wakeup is  * performed on the specified identifier.  The thread will then be made  * runnable with the specified priority.  Sleeps at most timo/hz seconds  * (0 means no timeout).  If pri includes PCATCH flag, signals are checked  * before and after sleeping, else signals are not checked.  Returns 0 if  * awakened, EWOULDBLOCK if the timeout expires.  If PCATCH is set and a  * signal needs to be delivered, ERESTART is returned if the current system  * call should be restarted if possible, and EINTR is returned if the system  * call should be interrupted by the signal (return EINTR).  *  * The lock argument is unlocked before the caller is suspended, and  * re-locked before _sleep() returns.  If priority includes the PDROP  * flag the lock is not re-locked before returning.  */
 end_comment
 
 begin_function
 name|int
-name|msleep
+name|_sleep
 parameter_list|(
 name|ident
 parameter_list|,
-name|mtx
+name|lock
 parameter_list|,
 name|priority
 parameter_list|,
@@ -382,9 +382,9 @@ modifier|*
 name|ident
 decl_stmt|;
 name|struct
-name|mtx
+name|lock_object
 modifier|*
-name|mtx
+name|lock
 decl_stmt|;
 name|int
 name|priority
@@ -407,18 +407,25 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|lock_class
+modifier|*
+name|class
+decl_stmt|;
 name|int
 name|catch
 decl_stmt|,
-name|rval
-decl_stmt|,
 name|flags
 decl_stmt|,
+name|lock_state
+decl_stmt|,
 name|pri
+decl_stmt|,
+name|rval
 decl_stmt|;
 name|WITNESS_SAVE_DECL
 argument_list|(
-name|mtx
+name|lock_witness
 argument_list|)
 expr_stmt|;
 name|td
@@ -458,16 +465,7 @@ name|WARN_GIANTOK
 operator||
 name|WARN_SLEEPOK
 argument_list|,
-name|mtx
-operator|==
-name|NULL
-condition|?
-name|NULL
-else|:
-operator|&
-name|mtx
-operator|->
-name|mtx_object
+name|lock
 argument_list|,
 literal|"Sleeping on \"%s\""
 argument_list|,
@@ -486,7 +484,7 @@ operator|&
 name|Giant
 argument_list|)
 operator|||
-name|mtx
+name|lock
 operator|!=
 name|NULL
 operator|||
@@ -496,7 +494,7 @@ operator|&
 name|lbolt
 argument_list|,
 operator|(
-literal|"sleeping without a mutex"
+literal|"sleeping without a lock"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -529,13 +527,31 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|lock
+operator|!=
+name|NULL
+condition|)
+name|class
+operator|=
+name|LOCK_CLASS
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
+else|else
+name|class
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
 name|cold
 condition|)
 block|{
 comment|/* 		 * During autoconfiguration, just return; 		 * don't run any other threads or panic below, 		 * in case this is the idle thread and already asleep. 		 * XXX: this used to do "s = splhigh(); splx(safepri); 		 * splx(s);" to give interrupts a chance, but there is 		 * no way to give interrupts a chance now. 		 */
 if|if
 condition|(
-name|mtx
+name|lock
 operator|!=
 name|NULL
 operator|&&
@@ -543,9 +559,11 @@ name|priority
 operator|&
 name|PDROP
 condition|)
-name|mtx_unlock
+name|class
+operator|->
+name|lc_unlock
 argument_list|(
-name|mtx
+name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -595,7 +613,7 @@ expr_stmt|;
 else|else
 name|flags
 operator|=
-name|SLEEPQ_MSLEEP
+name|SLEEPQ_SLEEP
 expr_stmt|;
 if|if
 condition|(
@@ -614,7 +632,7 @@ name|CTR5
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"msleep: thread %ld (pid %ld, %s) on %s (%p)"
+literal|"sleep: thread %ld (pid %ld, %s) on %s (%p)"
 argument_list|,
 name|td
 operator|->
@@ -638,36 +656,35 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|mtx
+name|lock
 operator|!=
 name|NULL
 condition|)
 block|{
-name|mtx_assert
-argument_list|(
-name|mtx
-argument_list|,
-name|MA_OWNED
-operator||
-name|MA_NOTRECURSED
-argument_list|)
-expr_stmt|;
 name|WITNESS_SAVE
 argument_list|(
-operator|&
-name|mtx
-operator|->
-name|mtx_object
+name|lock
 argument_list|,
-name|mtx
+name|lock_witness
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|lock_state
+operator|=
+name|class
+operator|->
+name|lc_unlock
 argument_list|(
-name|mtx
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+comment|/* GCC needs to follow the Yellow Brick Road */
+name|lock_state
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 comment|/* 	 * We put ourselves on the sleep queue and start our timeout 	 * before calling thread_suspend_check, as we could stop there, 	 * and a wakeup or a SIGCONT (or both) could occur while we were 	 * stopped without resuming us.  Thus, we must be ready for sleep 	 * when cursig() is called.  If the wakeup happens while we're 	 * stopped, then td will no longer be on a sleep queue upon 	 * return from cursig(). 	 */
 name|sleepq_add
 argument_list|(
@@ -680,10 +697,7 @@ name|lbolt
 condition|?
 name|NULL
 else|:
-operator|&
-name|mtx
-operator|->
-name|mtx_object
+name|lock
 argument_list|,
 name|wmesg
 argument_list|,
@@ -818,7 +832,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|mtx
+name|lock
 operator|!=
 name|NULL
 operator|&&
@@ -830,19 +844,20 @@ name|PDROP
 operator|)
 condition|)
 block|{
-name|mtx_lock
+name|class
+operator|->
+name|lc_lock
 argument_list|(
-name|mtx
+name|lock
+argument_list|,
+name|lock_state
 argument_list|)
 expr_stmt|;
 name|WITNESS_RESTORE
 argument_list|(
-operator|&
-name|mtx
-operator|->
-name|mtx_object
+name|lock
 argument_list|,
-name|mtx
+name|lock_witness
 argument_list|)
 expr_stmt|;
 block|}
@@ -1029,7 +1044,7 @@ name|mtx_object
 argument_list|,
 name|wmesg
 argument_list|,
-name|SLEEPQ_MSLEEP
+name|SLEEPQ_SLEEP
 argument_list|,
 literal|0
 argument_list|)
@@ -1252,7 +1267,7 @@ name|sleepq_broadcast
 argument_list|(
 name|ident
 argument_list|,
-name|SLEEPQ_MSLEEP
+name|SLEEPQ_SLEEP
 argument_list|,
 operator|-
 literal|1
@@ -1288,7 +1303,7 @@ name|sleepq_signal
 argument_list|(
 name|ident
 argument_list|,
-name|SLEEPQ_MSLEEP
+name|SLEEPQ_SLEEP
 argument_list|,
 operator|-
 literal|1

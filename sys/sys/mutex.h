@@ -1253,6 +1253,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|mtx_sleep
+parameter_list|(
+name|chan
+parameter_list|,
+name|mtx
+parameter_list|,
+name|pri
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|_sleep((chan),&(mtx)->mtx_object, (pri), (wmesg), (timo))
+end_define
+
+begin_define
+define|#
+directive|define
 name|mtx_initialized
 parameter_list|(
 name|m

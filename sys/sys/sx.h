@@ -494,6 +494,25 @@ parameter_list|)
 value|do {						\ 	if (sx_xlocked(sx))						\ 		sx_xunlock(sx);						\ 	else								\ 		sx_sunlock(sx);						\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|sx_sleep
+parameter_list|(
+name|chan
+parameter_list|,
+name|sx
+parameter_list|,
+name|pri
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|_sleep((chan),&(sx)->sx_object, (pri), (wmesg), (timo))
+end_define
+
 begin_if
 if|#
 directive|if

@@ -57,12 +57,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SLEEPQ_MSLEEP
+name|SLEEPQ_SLEEP
 value|0x00
 end_define
 
 begin_comment
-comment|/* Used by msleep/wakeup. */
+comment|/* Used by sleep/wakeup. */
 end_comment
 
 begin_define

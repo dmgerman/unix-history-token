@@ -464,6 +464,12 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
+name|lock_object
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|malloc_type
 struct_decl|;
 end_struct_decl
@@ -2597,16 +2603,16 @@ end_comment
 
 begin_function_decl
 name|int
-name|msleep
+name|_sleep
 parameter_list|(
 name|void
 modifier|*
 name|chan
 parameter_list|,
 name|struct
-name|mtx
+name|lock_object
 modifier|*
-name|mtx
+name|lock
 parameter_list|,
 name|int
 name|pri
@@ -2619,8 +2625,34 @@ parameter_list|,
 name|int
 name|timo
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_define
+define|#
+directive|define
+name|msleep
+parameter_list|(
+name|chan
+parameter_list|,
+name|mtx
+parameter_list|,
+name|pri
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|_sleep((chan),&(mtx)->mtx_object, (pri), (wmesg), (timo))
+end_define
 
 begin_function_decl
 name|int
@@ -2643,8 +2675,15 @@ parameter_list|,
 name|int
 name|timo
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -2674,7 +2713,8 @@ name|wmesg
 parameter_list|,
 name|timo
 parameter_list|)
-value|msleep(chan, NULL, pri, wmesg, timo)
+define|\
+value|_sleep((chan), NULL, (pri), (wmesg), (timo))
 end_define
 
 begin_function_decl
