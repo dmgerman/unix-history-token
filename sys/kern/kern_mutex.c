@@ -280,8 +280,14 @@ name|lock_class
 name|lock_class_mtx_sleep
 init|=
 block|{
+operator|.
+name|lc_name
+operator|=
 literal|"sleep mutex"
 block|,
+operator|.
+name|lc_flags
+operator|=
 name|LC_SLEEPLOCK
 operator||
 name|LC_RECURSABLE
@@ -289,7 +295,11 @@ block|,
 ifdef|#
 directive|ifdef
 name|DDB
+operator|.
+name|lc_ddb_show
+operator|=
 name|db_show_mtx
+block|,
 endif|#
 directive|endif
 block|}
@@ -302,8 +312,14 @@ name|lock_class
 name|lock_class_mtx_spin
 init|=
 block|{
+operator|.
+name|lc_name
+operator|=
 literal|"spin mutex"
 block|,
+operator|.
+name|lc_flags
+operator|=
 name|LC_SPINLOCK
 operator||
 name|LC_RECURSABLE
@@ -311,7 +327,11 @@ block|,
 ifdef|#
 directive|ifdef
 name|DDB
+operator|.
+name|lc_ddb_show
+operator|=
 name|db_show_mtx
+block|,
 endif|#
 directive|endif
 block|}

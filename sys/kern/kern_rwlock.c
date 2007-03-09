@@ -123,8 +123,14 @@ name|lock_class
 name|lock_class_rw
 init|=
 block|{
+operator|.
+name|lc_name
+operator|=
 literal|"rw"
 block|,
+operator|.
+name|lc_flags
+operator|=
 name|LC_SLEEPLOCK
 operator||
 name|LC_RECURSABLE
@@ -134,7 +140,11 @@ block|,
 ifdef|#
 directive|ifdef
 name|DDB
+operator|.
+name|lc_ddb_show
+operator|=
 name|db_show_rwlock
+block|,
 endif|#
 directive|endif
 block|}

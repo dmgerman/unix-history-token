@@ -123,8 +123,14 @@ name|lock_class
 name|lock_class_sx
 init|=
 block|{
+operator|.
+name|lc_name
+operator|=
 literal|"sx"
 block|,
+operator|.
+name|lc_flags
+operator|=
 name|LC_SLEEPLOCK
 operator||
 name|LC_SLEEPABLE
@@ -136,7 +142,11 @@ block|,
 ifdef|#
 directive|ifdef
 name|DDB
+operator|.
+name|lc_ddb_show
+operator|=
 name|db_show_sx
+block|,
 endif|#
 directive|endif
 block|}
