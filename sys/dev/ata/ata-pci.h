@@ -1543,6 +1543,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_SII3124
+value|0x31241095
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_SII3132
+value|0x31321095
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_SII0680
 value|0x06801095
 end_define
@@ -2256,6 +2270,13 @@ define|#
 directive|define
 name|SIIMEMIO
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIIPRBIO
+value|2
 end_define
 
 begin_define
