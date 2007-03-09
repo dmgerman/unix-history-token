@@ -142,8 +142,14 @@ name|lock_class
 name|lock_class_lockmgr
 init|=
 block|{
+operator|.
+name|lc_name
+operator|=
 literal|"lockmgr"
 block|,
+operator|.
+name|lc_flags
+operator|=
 name|LC_SLEEPLOCK
 operator||
 name|LC_SLEEPABLE
@@ -155,6 +161,9 @@ block|,
 ifdef|#
 directive|ifdef
 name|DDB
+operator|.
+name|lc_ddb_show
+operator|=
 name|db_show_lockmgr
 endif|#
 directive|endif
