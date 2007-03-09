@@ -34,7 +34,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Lock classes.  Each lock has a class which describes characteristics  * common to all types of locks of a given class.  *  * Spin locks in general must always protect against preemption, as it is  * an error to perform any type of context switch while holding a spin lock.  * Also, for an individual lock to be recursable, its class must allow  * recursion and the lock itself must explicitly allow recursion.  */
+comment|/*  * Lock classes.  Each lock has a class which describes characteristics  * common to all types of locks of a given class.  *  * Spin locks in general must always protect against preemption, as it is  * an error to perform any type of context switch while holding a spin lock.  * Also, for an individual lock to be recursable, its class must allow  * recursion and the lock itself must explicitly allow recursion.  *  * The 'lc_ddb_show' function pointer is used to dump class-specific  * data for the 'show lock' DDB command.  The 'lc_lock' and  * 'lc_unlock' function pointers are used in sleep(9) and cv_wait(9)  * to lock and unlock locks while blocking on a sleep queue.  The  * return value of 'lc_unlock' will be passed to 'lc_lock' on resume  * to allow communication of state between the two routines.  */
 end_comment
 
 begin_struct
@@ -53,6 +53,33 @@ name|void
 function_decl|(
 modifier|*
 name|lc_ddb_show
+function_decl|)
+parameter_list|(
+name|struct
+name|lock_object
+modifier|*
+name|lock
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|lc_lock
+function_decl|)
+parameter_list|(
+name|struct
+name|lock_object
+modifier|*
+name|lock
+parameter_list|,
+name|int
+name|how
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|lc_unlock
 function_decl|)
 parameter_list|(
 name|struct
