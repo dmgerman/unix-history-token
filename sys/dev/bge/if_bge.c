@@ -1006,6 +1006,30 @@ block|,
 literal|"BCM5715 A1"
 block|}
 block|,
+block|{
+name|BGE_CHIPID_BCM5715_A3
+block|,
+literal|"BCM5715 A3"
+block|}
+block|,
+block|{
+name|BGE_CHIPID_BCM5755_A0
+block|,
+literal|"BCM5755 A0"
+block|}
+block|,
+block|{
+name|BGE_CHIPID_BCM5755_A1
+block|,
+literal|"BCM5755 A1"
+block|}
+block|,
+block|{
+name|BGE_CHIPID_BCM5755_A2
+block|,
+literal|"BCM5755 A2"
+block|}
+block|,
 comment|/* 5754 and 5787 share the same ASIC ID */
 block|{
 name|BGE_CHIPID_BCM5787_A0
