@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/refcount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -4885,11 +4891,15 @@ name|ucred
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|refcount_init
+argument_list|(
+operator|&
 name|outcred
 operator|->
 name|cr_ref
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 name|outcred
 operator|->

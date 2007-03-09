@@ -104,12 +104,11 @@ modifier|*
 name|cr_label
 decl_stmt|;
 comment|/* MAC label */
-name|struct
-name|mtx
+name|void
 modifier|*
-name|cr_mtxp
+name|cr_pad0
 decl_stmt|;
-comment|/* protect refcount */
+comment|/* dummy, for KBI compat */
 block|}
 struct|;
 end_struct
