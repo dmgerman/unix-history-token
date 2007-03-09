@@ -206,7 +206,7 @@ operator|*
 operator|)
 name|ifa
 operator|->
-name|ifa_broadaddr
+name|ifa_dstaddr
 expr_stmt|;
 if|if
 condition|(
