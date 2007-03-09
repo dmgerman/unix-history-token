@@ -475,6 +475,12 @@ argument_list|(
 name|tid_unrhdr
 argument_list|)
 expr_stmt|;
+name|td
+operator|->
+name|td_syscalls
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Note that td_critnest begins life as 1 because the thread is not 	 * running and is thereby implicitly waiting to be on the receiving 	 * end of a context switch.  A context switch must occur inside a 	 * critical section, and in fact, includes hand-off of the sched_lock. 	 * After a context switch to a newly created thread, it will release 	 * sched_lock for the first time, and its td_critnest will hit 0 for 	 * the first time.  This happens on the far end of a context switch, 	 * and when it context switches away from itself, it will in fact go 	 * back into a critical section, and hand off the sched lock to the 	 * next thread. 	 */
 name|td
 operator|->

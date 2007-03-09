@@ -3003,6 +3003,11 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
+name|td
+operator|->
+name|td_syscalls
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|error

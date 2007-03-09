@@ -4160,6 +4160,11 @@ name|error
 expr_stmt|;
 block|}
 block|}
+name|td
+operator|->
+name|td_syscalls
+operator|++
+expr_stmt|;
 comment|/* 	 * Check for misbehavior. 	 */
 name|WITNESS_WARN
 argument_list|(

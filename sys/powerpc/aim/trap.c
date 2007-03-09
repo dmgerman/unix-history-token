@@ -1915,6 +1915,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|td
+operator|->
+name|td_syscalls
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|error
