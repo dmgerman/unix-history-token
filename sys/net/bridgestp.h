@@ -728,6 +728,20 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_struct
+struct|struct
+name|bstp_cb_ops
+block|{
+name|bstp_state_cb_t
+name|bcb_state
+decl_stmt|;
+name|bstp_rtage_cb_t
+name|bcb_rtage
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Because BPDU's do not make nicely aligned structures, two different  * declarations are used: bstp_?bpdu (wire representation, packed) and  * bstp_*_unit (internal, nicely aligned version).  */
 end_comment
@@ -1361,9 +1375,9 @@ name|struct
 name|bstp_state
 modifier|*
 parameter_list|,
-name|bstp_state_cb_t
-parameter_list|,
-name|bstp_rtage_cb_t
+name|struct
+name|bstp_cb_ops
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
