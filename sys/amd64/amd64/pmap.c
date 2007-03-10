@@ -360,17 +360,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|vm_paddr_t
-name|avail_start
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* PA of first available physical page */
-end_comment
-
-begin_decl_stmt
 name|vm_offset_t
 name|virtual_avail
 decl_stmt|;
@@ -1631,6 +1620,10 @@ specifier|static
 name|u_int64_t
 name|allocpages
 parameter_list|(
+name|vm_paddr_t
+modifier|*
+name|firstaddr
+parameter_list|,
 name|int
 name|n
 parameter_list|)
@@ -1640,7 +1633,8 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|avail_start
+operator|*
+name|firstaddr
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -1655,7 +1649,8 @@ operator|*
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|avail_start
+operator|*
+name|firstaddr
 operator|+=
 name|n
 operator|*
@@ -1674,7 +1669,9 @@ specifier|static
 name|void
 name|create_pagetables
 parameter_list|(
-name|void
+name|vm_paddr_t
+modifier|*
+name|firstaddr
 parameter_list|)
 block|{
 name|int
@@ -1685,6 +1682,8 @@ name|KPTphys
 operator|=
 name|allocpages
 argument_list|(
+name|firstaddr
+argument_list|,
 name|NKPT
 argument_list|)
 expr_stmt|;
@@ -1692,6 +1691,8 @@ name|KPML4phys
 operator|=
 name|allocpages
 argument_list|(
+name|firstaddr
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1699,6 +1700,8 @@ name|KPDPphys
 operator|=
 name|allocpages
 argument_list|(
+name|firstaddr
+argument_list|,
 name|NKPML4E
 argument_list|)
 expr_stmt|;
@@ -1706,6 +1709,8 @@ name|KPDphys
 operator|=
 name|allocpages
 argument_list|(
+name|firstaddr
+argument_list|,
 name|NKPDPE
 argument_list|)
 expr_stmt|;
@@ -1739,6 +1744,8 @@ name|DMPDPphys
 operator|=
 name|allocpages
 argument_list|(
+name|firstaddr
+argument_list|,
 name|NDMPML4E
 argument_list|)
 expr_stmt|;
@@ -1746,6 +1753,8 @@ name|DMPDphys
 operator|=
 name|allocpages
 argument_list|(
+name|firstaddr
+argument_list|,
 name|ndmpdp
 argument_list|)
 expr_stmt|;
@@ -1773,7 +1782,8 @@ operator|<<
 name|PAGE_SHIFT
 operator|)
 operator|<
-name|avail_start
+operator|*
+name|firstaddr
 condition|;
 name|i
 operator|++
@@ -1876,7 +1886,8 @@ operator|<<
 name|PDRSHIFT
 operator|)
 operator|<
-name|avail_start
+operator|*
+name|firstaddr
 condition|;
 name|i
 operator|++
@@ -2199,19 +2210,11 @@ decl_stmt|,
 modifier|*
 name|unused
 decl_stmt|;
-name|avail_start
-operator|=
-operator|*
-name|firstaddr
-expr_stmt|;
 comment|/* 	 * Create an initial set of page tables to run the kernel in. 	 */
 name|create_pagetables
-argument_list|()
-expr_stmt|;
-operator|*
+argument_list|(
 name|firstaddr
-operator|=
-name|avail_start
+argument_list|)
 expr_stmt|;
 name|virtual_avail
 operator|=
@@ -2220,7 +2223,8 @@ name|vm_offset_t
 operator|)
 name|KERNBASE
 operator|+
-name|avail_start
+operator|*
+name|firstaddr
 expr_stmt|;
 name|virtual_avail
 operator|=
