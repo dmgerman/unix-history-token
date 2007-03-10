@@ -943,6 +943,17 @@ begin_comment
 comment|/* delete ignore rate */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_JOIN
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* sta joining our bss */
+end_comment
+
 begin_function_decl
 name|int
 name|ieee80211_fix_rate

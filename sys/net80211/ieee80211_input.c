@@ -11344,6 +11344,8 @@ name|rates
 argument_list|,
 name|xrates
 argument_list|,
+name|IEEE80211_F_JOIN
+operator||
 name|IEEE80211_F_DOSORT
 operator||
 name|IEEE80211_F_DOFRATE
