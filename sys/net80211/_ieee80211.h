@@ -677,6 +677,17 @@ define|\
 value|(((_c)->ic_flags& IEEE80211_CHAN_GSM) != 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_PASSIVE
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_PASSIVE) != 0)
+end_define
+
 begin_comment
 comment|/* ni_chan encoding for FH phy */
 end_comment
