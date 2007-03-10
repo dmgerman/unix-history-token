@@ -8146,6 +8146,11 @@ block|{
 name|hook_p
 name|hook
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 name|ng_rcvdata_t
 modifier|*
 name|rcvdata
@@ -8249,6 +8254,10 @@ name|node
 argument_list|)
 condition|)
 block|{
+name|error
+operator|=
+name|EIO
+expr_stmt|;
 name|NG_FREE_ITEM
 argument_list|(
 name|item
@@ -8298,6 +8307,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|error
+operator|=
 call|(
 modifier|*
 name|rcvdata
@@ -8349,6 +8360,10 @@ block|{
 name|TRAP_ERROR
 argument_list|()
 expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
 name|NG_FREE_ITEM
 argument_list|(
 name|item
@@ -8396,6 +8411,8 @@ literal|0
 operator|)
 condition|)
 block|{
+name|error
+operator|=
 name|ng_generic_msg
 argument_list|(
 name|node
@@ -8445,6 +8462,10 @@ block|{
 name|TRAP_ERROR
 argument_list|()
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|NG_FREE_ITEM
 argument_list|(
 name|item
@@ -8452,6 +8473,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|error
+operator|=
 call|(
 modifier|*
 name|rcvmsg
@@ -8492,6 +8515,10 @@ condition|)
 block|{
 name|TRAP_ERROR
 argument_list|()
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
 expr_stmt|;
 name|NG_FREE_ITEM
 argument_list|(
@@ -8558,13 +8585,7 @@ name|nd_input_queue
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|rw
-operator|==
-name|NGQRW_W
-condition|)
+else|else
 block|{
 name|ng_leave_write
 argument_list|(
@@ -8575,7 +8596,6 @@ name|nd_input_queue
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* else do nothing */
 comment|/* Apply callback. */
 if|if
 condition|(
