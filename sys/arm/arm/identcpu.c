@@ -530,9 +530,9 @@ literal|16
 index|]
 init|=
 block|{
-literal|"step 0"
+literal|"step 0 (A0)"
 block|,
-literal|"rev 1"
+literal|"rev 1 (ARMv5TE)"
 block|,
 literal|"rev 2"
 block|,
