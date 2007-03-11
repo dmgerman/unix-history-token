@@ -5947,8 +5947,8 @@ end_define
 
 begin_function
 specifier|static
-name|int
 name|__inline
+name|int
 name|iswpaoui
 parameter_list|(
 specifier|const
@@ -5987,8 +5987,8 @@ end_function
 
 begin_function
 specifier|static
-name|int
 name|__inline
+name|int
 name|iswmeoui
 parameter_list|(
 specifier|const
@@ -6027,8 +6027,8 @@ end_function
 
 begin_function
 specifier|static
-name|int
 name|__inline
+name|int
 name|iswmeparam
 parameter_list|(
 specifier|const
@@ -6074,8 +6074,8 @@ end_function
 
 begin_function
 specifier|static
-name|int
 name|__inline
+name|int
 name|iswmeinfo
 parameter_list|(
 specifier|const
@@ -6121,8 +6121,8 @@ end_function
 
 begin_function
 specifier|static
-name|int
 name|__inline
+name|int
 name|isatherosoui
 parameter_list|(
 specifier|const
