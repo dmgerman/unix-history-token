@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/ed.h,v 3.44 2005/03/05 03:20:15 christos Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/ed.h,v 3.49 2006/08/23 15:03:13 christos Exp $ */
 end_comment
 
 begin_comment
@@ -40,17 +40,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|TABSIZE
-value|8
-end_define
-
-begin_comment
-comment|/* usually 8 spaces/tab */
-end_comment
 
 begin_define
 define|#
@@ -130,16 +119,14 @@ end_comment
 begin_typedef
 typedef|typedef
 name|CCRETVAL
-argument_list|(
-argument|*PFCmd
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|PFCmd
+function_decl|)
+parameter_list|(
 name|Char
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_comment
@@ -436,7 +423,6 @@ end_typedef
 begin_typedef
 typedef|typedef
 union|union
-name|Xmapval
 block|{
 comment|/* value passed to the Xkey routines */
 name|KEYCMD
@@ -565,6 +551,10 @@ begin_comment
 comment|/* the real input data */
 end_comment
 
+begin_comment
+comment|/*FIXBUF*/
+end_comment
+
 begin_decl_stmt
 name|EXTERN
 name|Char
@@ -635,6 +625,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* the emacs "mark" (dot is Cursor) */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+name|MarkIsSet
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if the mark has been set explicitly */
 end_comment
 
 begin_decl_stmt
@@ -736,6 +737,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*FIXBUF*/
+end_comment
+
 begin_decl_stmt
 name|EXTERN
 name|Char
@@ -760,28 +765,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|EXTERN
-name|Char
+name|struct
+name|Strbuf
 name|HistBuf
-index|[
-name|INBUFSIZE
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* history buffer */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|Char
-modifier|*
-name|LastHist
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* points to end of history buffer */
+comment|/* = Strbuf_INIT; history buffer */
 end_comment
 
 begin_decl_stmt
@@ -795,53 +786,75 @@ begin_comment
 comment|/* what point up the history we are at now. */
 end_comment
 
-begin_decl_stmt
-name|EXTERN
-name|Char
-name|WhichBuf
-index|[
-name|INBUFSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* buffer for which command */
+comment|/* buffer for which command and others */
 end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|Char
-modifier|*
-name|LastWhich
+name|struct
+name|Strbuf
+name|SavedBuf
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* points to end of which buffer */
+comment|/* = Strbuf_INIT; */
 end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|Char
-modifier|*
-name|CursWhich
+name|size_t
+name|LastSaved
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* points to the cursor point in which buf */
+comment|/* points to end of saved buffer */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|size_t
+name|CursSaved
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* points to the cursor point in saved buf */
 end_comment
 
 begin_decl_stmt
 name|EXTERN
 name|int
-name|HistWhich
+name|HistSaved
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Hist_num is saved in this */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+name|RestoreSaved
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if SavedBuf should be restored */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|IncMatchLen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current match length during incremental search */
 end_comment
 
 begin_decl_stmt
@@ -1023,7 +1036,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|Char
+name|char
 name|T_Tabs
 decl_stmt|;
 end_decl_stmt
@@ -1034,7 +1047,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|Char
+name|char
 name|T_Margin
 decl_stmt|;
 end_decl_stmt
@@ -1096,7 +1109,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|Char
+name|char
 name|T_HasMeta
 decl_stmt|;
 end_decl_stmt
@@ -1378,67 +1391,47 @@ begin_comment
 comment|/*  * We don't prototype these, cause some systems have them wrong!  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|tgetent
-name|__P
-argument_list|(
-operator|(
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|tgetstr
-name|__P
-argument_list|(
-operator|(
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|tgetflag
-name|__P
-argument_list|(
-operator|(
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|tgetnum
-name|__P
-argument_list|(
-operator|(
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|tgoto
-name|__P
-argument_list|(
-operator|(
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1459,131 +1452,113 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|tgetent
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|tgetstr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|tgetflag
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|tgetnum
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|tgoto
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|tputs
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|int
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
 directive|define
 name|PUTPURE
-value|((void (*)__P((int))) putpure)
+value|((void (*)(int)) putpure)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUTRAW
-value|((void (*)__P((int))) putraw)
+value|((void (*)(int)) putraw)
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/gethost.c,v 1.10 2005/01/05 16:06:13 christos Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/gethost.c,v 1.12 2006/03/02 18:46:44 christos Exp $ */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|RCSID
 argument_list|(
-literal|"$Id: gethost.c,v 1.10 2005/01/05 16:06:13 christos Exp $"
+literal|"$tcsh: gethost.c,v 1.12 2006/03/02 18:46:44 christos Exp $"
 argument_list|)
 end_macro
 
@@ -230,54 +230,45 @@ name|S_KEYWORD
 value|3
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|findtoken
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|gettoken
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
-decl|main
-name|__P
-argument_list|(
-operator|(
+name|main
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 index|[]
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* findtoken():  *	Return the token number of the given token  */
@@ -288,12 +279,10 @@ specifier|static
 name|int
 name|findtoken
 parameter_list|(
-name|ptr
-parameter_list|)
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -361,19 +350,15 @@ name|char
 modifier|*
 name|gettoken
 parameter_list|(
+name|char
+modifier|*
+modifier|*
 name|pptr
 parameter_list|,
+name|char
+modifier|*
 name|token
 parameter_list|)
-name|char
-modifier|*
-modifier|*
-name|pptr
-decl_stmt|;
-name|char
-modifier|*
-name|token
-decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -481,18 +466,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|line

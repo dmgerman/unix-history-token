@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/tc.h,v 3.6 2004/08/04 17:12:31 christos Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/tc.h,v 3.8 2006/01/12 19:55:38 christos Exp $ */
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|size_t
 name|tlength
 decl_stmt|;
 end_decl_stmt
@@ -99,6 +99,114 @@ define|#
 directive|define
 name|FMT_SCHED
 value|3
+end_define
+
+begin_struct
+struct|struct
+name|strbuf
+block|{
+name|char
+modifier|*
+name|s
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+comment|/* Valid characters */
+name|size_t
+name|size
+decl_stmt|;
+comment|/* Allocated characters */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|Strbuf
+block|{
+name|Char
+modifier|*
+name|s
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+comment|/* Valid characters */
+name|size_t
+name|size
+decl_stmt|;
+comment|/* Allocated characters */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* We don't have explicit initializers for variables with static storage    duration, so these values should be equivalent to default initialization. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|strbuf_INIT
+value|{ NULL, 0, 0 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strbuf_INIT
+value|{ NULL, 0, 0 }
+end_define
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|strbuf
+name|strbuf_init
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|Strbuf
+name|Strbuf_init
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* A string vector in progress */
+end_comment
+
+begin_struct
+struct|struct
+name|blk_buf
+block|{
+name|Char
+modifier|*
+modifier|*
+name|vec
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+comment|/* Valid strings */
+name|size_t
+name|size
+decl_stmt|;
+comment|/* Allocated space for string pointers */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|BLK_BUF_INIT
+value|{ NULL, 0, 0 }
 end_define
 
 begin_endif

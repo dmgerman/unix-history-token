@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/snames.h,v 1.3 1996/04/26 19:20:31 christos Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/snames.h,v 1.3 1996/04/26 19:20:31 christos Exp $ */
 end_comment
 
 begin_comment
