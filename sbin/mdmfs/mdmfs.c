@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -208,6 +214,19 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
+name|char
+modifier|*
+name|mdsuffix
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Suffix of memory disk device (e.g., ".uzip"). */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|size_t
 name|mdnamelen
 decl_stmt|;
@@ -216,6 +235,17 @@ end_decl_stmt
 begin_comment
 comment|/* Length of mdname. */
 end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|path_mdconfig
+init|=
+name|_PATH_MDCONFIG
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -448,6 +478,8 @@ decl_stmt|,
 name|softdep
 decl_stmt|,
 name|autounit
+decl_stmt|,
+name|newfs
 decl_stmt|;
 name|char
 modifier|*
@@ -499,6 +531,10 @@ expr_stmt|;
 name|autounit
 operator|=
 name|false
+expr_stmt|;
+name|newfs
+operator|=
+name|true
 expr_stmt|;
 name|have_mdtype
 operator|=
@@ -590,7 +626,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:Cc:Dd:e:F:f:hi:LlMm:Nn:O:o:p:Ss:t:Uv:w:X"
+literal|"a:b:Cc:Dd:E:e:F:f:hi:LlMm:Nn:O:o:Pp:Ss:t:Uv:w:X"
 argument_list|)
 operator|)
 operator|!=
@@ -669,6 +705,14 @@ literal|"-d %s"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'E'
+case|:
+name|path_mdconfig
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -853,6 +897,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'P'
+case|:
+name|newfs
+operator|=
+name|false
+expr_stmt|;
+break|break;
+case|case
 literal|'p'
 case|:
 if|if
@@ -1028,10 +1080,12 @@ name|mdnamelen
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|isdigit
+argument_list|(
 operator|*
 name|unitstr
-operator|==
-literal|'\0'
+argument_list|)
 condition|)
 block|{
 name|autounit
@@ -1042,6 +1096,10 @@ name|unit
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|mdsuffix
+operator|=
+name|unitstr
 expr_stmt|;
 block|}
 else|else
@@ -1063,11 +1121,6 @@ condition|(
 name|ul
 operator|==
 name|ULONG_MAX
-operator|||
-operator|*
-name|p
-operator|!=
-literal|'\0'
 condition|)
 name|errx
 argument_list|(
@@ -1082,6 +1135,11 @@ name|unit
 operator|=
 name|ul
 expr_stmt|;
+name|mdsuffix
+operator|=
+name|p
+expr_stmt|;
+comment|/* can be empty */
 block|}
 name|mtpoint
 operator|=
@@ -1109,6 +1167,22 @@ operator|&
 name|newfs_arg
 argument_list|,
 literal|"-U"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mdtype
+operator|!=
+name|MD_VNODE
+operator|&&
+operator|!
+name|newfs
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-P requires a vnode-backed disk"
 argument_list|)
 expr_stmt|;
 comment|/* Do the work. */
@@ -1141,6 +1215,10 @@ argument_list|,
 name|mdtype
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|newfs
+condition|)
 name|do_newfs
 argument_list|(
 name|newfs_arg
@@ -1435,7 +1513,7 @@ name|NULL
 argument_list|,
 literal|"%s -a %s%s -u %s%d"
 argument_list|,
-name|_PATH_MDCONFIG
+name|path_mdconfig
 argument_list|,
 name|ta
 argument_list|,
@@ -1561,7 +1639,7 @@ name|fd
 argument_list|,
 literal|"%s -a %s%s"
 argument_list|,
-name|_PATH_MDCONFIG
+name|path_mdconfig
 argument_list|,
 name|ta
 argument_list|,
@@ -1590,8 +1668,7 @@ block|{
 comment|/* Since we didn't run, we can't read.  Fake it. */
 name|unit
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -1768,7 +1845,7 @@ name|NULL
 argument_list|,
 literal|"%s -d -u %s%d"
 argument_list|,
-name|_PATH_MDCONFIG
+name|path_mdconfig
 argument_list|,
 name|mdname
 argument_list|,
@@ -1821,7 +1898,7 @@ name|run
 argument_list|(
 name|NULL
 argument_list|,
-literal|"%s%s /dev/%s%d %s"
+literal|"%s%s /dev/%s%d%s %s"
 argument_list|,
 name|_PATH_MOUNT
 argument_list|,
@@ -1830,6 +1907,8 @@ argument_list|,
 name|mdname
 argument_list|,
 name|unit
+argument_list|,
+name|mdsuffix
 argument_list|,
 name|mtpoint
 argument_list|)
@@ -2925,11 +3004,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-DLlMNSUX] [-a maxcontig] [-b block-size] [-c cylinders]\n"
-literal|"\t[-d rotdelay] [-e maxbpg] [-F file] [-f frag-size] [-i bytes]\n"
-literal|"\t[-m percent-free] [-n rotational-positions] [-O optimization]\n"
-literal|"\t[-o mount-options] [-p permissions] [-s size] [-v version]\n"
-literal|"\t[-w user:group] md-device mount-point\n"
+literal|"usage: %s [-DLlMNPSUX] [-a maxcontig] [-b block-size]\n"
+literal|"\t[-c blocks-per-cylinder-group][-d max-extent-size] [-E path-mdconfig]\n"
+literal|"\t[-e maxbpg] [-F file] [-f frag-size] [-i bytes] [-m percent-free]\n"
+literal|"\t[-n rotational-positions] [-O optimization] [-o mount-options]\n"
+literal|"\t[-p permissions] [-s size] [-v version] [-w user:group]\n"
+literal|"\tmd-device mount-point\n"
 argument_list|,
 name|getprogname
 argument_list|()
