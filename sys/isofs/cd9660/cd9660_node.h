@@ -109,6 +109,7 @@ name|long
 name|iso_extent
 decl_stmt|;
 comment|/* extent of file */
+name|unsigned
 name|long
 name|i_size
 decl_stmt|;
