@@ -200,24 +200,6 @@ directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/mii/mii.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mii/miivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"miibus_if.h"
-end_include
-
 begin_comment
 comment|/*  * #define MY_USEIOSPACE  */
 end_comment
