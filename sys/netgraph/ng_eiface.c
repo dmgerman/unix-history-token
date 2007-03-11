@@ -898,6 +898,8 @@ name|if_drv_flags
 operator||=
 name|IFF_DRV_OACTIVE
 expr_stmt|;
+if|if
+condition|(
 name|ng_send_fn
 argument_list|(
 name|priv
@@ -913,6 +915,15 @@ name|ifp
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 block|}
 end_function
