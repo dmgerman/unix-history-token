@@ -1089,33 +1089,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * Supported rates for 802.11b mode (in 500Kbps unit).  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|ieee80211_rateset
-name|ipw_rateset_11b
-init|=
-block|{
-literal|4
-block|,
-block|{
-literal|2
-block|,
-literal|4
-block|,
-literal|11
-block|,
-literal|22
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -1732,16 +1705,6 @@ operator|=
 name|val
 operator|&
 literal|0xff
-expr_stmt|;
-comment|/* set supported .11b rates */
-name|ic
-operator|->
-name|ic_sup_rates
-index|[
-name|IEEE80211_MODE_11B
-index|]
-operator|=
-name|ipw_rateset_11b
 expr_stmt|;
 comment|/* set supported .11b channels */
 for|for
