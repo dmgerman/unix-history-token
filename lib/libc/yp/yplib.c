@@ -383,7 +383,7 @@ begin_decl_stmt
 name|int
 name|_yplib_timeout
 init|=
-literal|10
+literal|20
 decl_stmt|;
 end_decl_stmt
 
@@ -4052,6 +4052,35 @@ name|YPERR_DOMAIN
 operator|)
 return|;
 block|}
+comment|/* 	 * Set low retry timeout to realistically handle UDP packet 	 * loss for yp_next packet bursts. 	 */
+name|tv
+operator|.
+name|tv_sec
+operator|=
+literal|1
+expr_stmt|;
+name|tv
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
+name|clnt_control
+argument_list|(
+name|ysd
+operator|->
+name|dom_client
+argument_list|,
+name|CLSET_RETRY_TIMEOUT
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|tv
+argument_list|)
+expr_stmt|;
 name|tv
 operator|.
 name|tv_sec
