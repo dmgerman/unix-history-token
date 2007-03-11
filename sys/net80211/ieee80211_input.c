@@ -3962,6 +3962,8 @@ name|ieee80211_fix_rate
 argument_list|(
 name|ni
 argument_list|,
+name|rs
+argument_list|,
 name|flags
 argument_list|)
 return|;

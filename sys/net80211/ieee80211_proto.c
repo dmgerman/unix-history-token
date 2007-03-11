@@ -1558,6 +1558,11 @@ name|ieee80211_node
 modifier|*
 name|ni
 parameter_list|,
+name|struct
+name|ieee80211_rateset
+modifier|*
+name|nrs
+parameter_list|,
 name|int
 name|flags
 parameter_list|)
@@ -1599,11 +1604,6 @@ name|struct
 name|ieee80211_rateset
 modifier|*
 name|srs
-decl_stmt|;
-name|struct
-name|ieee80211_rateset
-modifier|*
-name|nrs
 decl_stmt|;
 name|u_int8_t
 name|r
@@ -1650,13 +1650,6 @@ name|ni
 operator|->
 name|ni_chan
 argument_list|)
-expr_stmt|;
-name|nrs
-operator|=
-operator|&
-name|ni
-operator|->
-name|ni_rates
 expr_stmt|;
 for|for
 control|(

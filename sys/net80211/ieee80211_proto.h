@@ -1011,6 +1011,10 @@ name|struct
 name|ieee80211_node
 modifier|*
 parameter_list|,
+name|struct
+name|ieee80211_rateset
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;

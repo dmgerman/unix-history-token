@@ -2298,6 +2298,11 @@ name|ieee80211_fix_rate
 argument_list|(
 name|ni
 argument_list|,
+operator|&
+name|ni
+operator|->
+name|ni_rates
+argument_list|,
 name|IEEE80211_F_JOIN
 operator||
 name|IEEE80211_F_DONEGO
@@ -3650,6 +3655,13 @@ argument_list|(
 name|ic
 operator|->
 name|ic_bss
+argument_list|,
+operator|&
+name|ic
+operator|->
+name|ic_bss
+operator|->
+name|ni_rates
 argument_list|,
 name|IEEE80211_F_DODEL
 operator||
