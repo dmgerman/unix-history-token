@@ -17,11 +17,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_PARAM_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_STAT_H
+end_ifdef
 
 begin_include
 include|#
@@ -29,17 +46,44 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FCNTL_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<fcntl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -117,11 +161,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LOCALE_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<locale.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -146,11 +201,28 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
 
 begin_include
 include|#
@@ -158,17 +230,44 @@ directive|include
 file|<string.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_TIME_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<time.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -192,6 +291,10 @@ include|#
 directive|include
 file|"bsdtar.h"
 end_include
+
+begin_comment
+comment|/*  * Per POSIX.1-1988, tar defaults to reading/writing archives to/from  * the default tape device for the system.  Pick something reasonable here.  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -404,6 +507,8 @@ block|,
 name|OPTION_NEWER_MTIME_THAN
 block|,
 name|OPTION_NODUMP
+block|,
+name|OPTION_NO_SAME_OWNER
 block|,
 name|OPTION_NO_SAME_PERMISSIONS
 block|,
@@ -800,7 +905,7 @@ name|no_argument
 block|,
 name|NULL
 block|,
-literal|'o'
+name|OPTION_NO_SAME_OWNER
 block|}
 block|,
 block|{
@@ -955,6 +1060,18 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* A basic set of security flags to request from libarchive. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SECURITY
+define|\
+value|(ARCHIVE_EXTRACT_SECURE_SYMLINKS		\ 	 | ARCHIVE_EXTRACT_SECURE_NODOTDOT)
+end_define
 
 begin_function
 name|int
@@ -1170,7 +1287,14 @@ name|extract_flags
 operator|=
 name|ARCHIVE_EXTRACT_TIME
 expr_stmt|;
-comment|/* Default for root user: preserve ownership on extract. */
+comment|/* Default: Perform basic security checks. */
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|SECURITY
+expr_stmt|;
+comment|/* Defaults for root user: */
 if|if
 condition|(
 name|bsdtar
@@ -1179,12 +1303,40 @@ name|user_uid
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* --same-owner */
 name|bsdtar
 operator|->
 name|extract_flags
 operator||=
 name|ARCHIVE_EXTRACT_OWNER
 expr_stmt|;
+comment|/* -p */
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_PERM
+expr_stmt|;
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_ACL
+expr_stmt|;
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_XATTR
+expr_stmt|;
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_FFLAGS
+expr_stmt|;
+block|}
 comment|/* Rewrite traditional-style tar arguments, if used. */
 name|argv
 operator|=
@@ -1213,6 +1365,7 @@ operator|=
 name|argc
 expr_stmt|;
 comment|/* Process all remaining arguments now. */
+comment|/* 	 * Comments following each option indicate where that option 	 * originated:  SUSv2, POSIX, GNU tar, star, etc.  If there's 	 * no such comment, then I don't know of anyone else who 	 * implements that option. 	 */
 while|while
 condition|(
 operator|(
@@ -1350,6 +1503,7 @@ break|break;
 case|case
 name|OPTION_FORMAT
 case|:
+comment|/* GNU tar, others */
 name|bsdtar
 operator|->
 name|create_format
@@ -1428,6 +1582,7 @@ break|break;
 case|case
 name|OPTION_HELP
 case|:
+comment|/* GNU tar, others */
 name|long_help
 argument_list|(
 name|bsdtar
@@ -1443,6 +1598,7 @@ case|case
 literal|'I'
 case|:
 comment|/* GNU tar */
+comment|/* 			 * TODO: Allow 'names' to come from an archive, 			 * not just a text file.  Design a good UI for 			 * allowing names and mode/owner to be read 			 * from an archive, with contents coming from 			 * disk.  This can be used to "refresh" an 			 * archive or to design archives with special 			 * permissions without having to create those 			 * permissions on disk. 			 */
 name|bsdtar
 operator|->
 name|names_from_file
@@ -1453,6 +1609,7 @@ break|break;
 case|case
 name|OPTION_INCLUDE
 case|:
+comment|/* 			 * Noone else has the @archive extension, so 			 * noone else needs this to filter entries 			 * when transforming archives. 			 */
 if|if
 condition|(
 name|include
@@ -1630,6 +1787,7 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+comment|/* 		 * Selecting files by time: 		 *    --newer-?time='date' Only files newer than 'date' 		 *    --newer-?time-than='file' Only files newer than time 		 *         on specified file (useful for incremental backups) 		 * TODO: Add corresponding "older" options to reverse these. 		 */
 case|case
 name|OPTION_NEWER_CTIME
 case|:
@@ -1776,10 +1934,49 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+name|OPTION_NO_SAME_OWNER
+case|:
+comment|/* GNU tar */
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_OWNER
+expr_stmt|;
+break|break;
+case|case
 name|OPTION_NO_SAME_PERMISSIONS
 case|:
 comment|/* GNU tar */
-comment|/* 			 * This is always the default in FreeBSD's 			 * version of GNU tar; it's also the default 			 * behavior for bsdtar, so treat the 			 * command-line option as a no-op. 			 */
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_PERM
+expr_stmt|;
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_ACL
+expr_stmt|;
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_XATTR
+expr_stmt|;
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_FFLAGS
+expr_stmt|;
 break|break;
 case|case
 name|OPTION_NULL
@@ -1805,7 +2002,7 @@ break|break;
 case|case
 literal|'o'
 case|:
-comment|/* SUSv2 and GNU conflict here */
+comment|/* SUSv2 and GNU conflict here, but not fatally */
 name|option_o
 operator|=
 literal|1
@@ -1815,7 +2012,7 @@ break|break;
 case|case
 name|OPTION_ONE_FILE_SYSTEM
 case|:
-comment|/* -l in GNU tar */
+comment|/* GNU tar */
 name|bsdtar
 operator|->
 name|option_dont_traverse_mounts
@@ -1837,6 +2034,13 @@ case|case
 literal|'P'
 case|:
 comment|/* GNU tar */
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|SECURITY
+expr_stmt|;
 name|bsdtar
 operator|->
 name|option_absolute_paths
@@ -1979,10 +2183,20 @@ break|break;
 case|case
 name|OPTION_VERSION
 case|:
+comment|/* GNU convention */
 name|version
 argument_list|()
 expr_stmt|;
 break|break;
+if|#
+directive|if
+literal|0
+comment|/* 		 * The -W longopt feature is handled inside of 		 * bsdtar_getop(), so -W is not available here. 		 */
+block|case 'W':
+comment|/* Obscure, but useful GNU convention. */
+block|break;
+endif|#
+directive|endif
 case|case
 literal|'w'
 case|:
@@ -2192,6 +2406,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Sanity-check options. 	 */
+comment|/* If no "real" mode was specified, treat -h as --help. */
 if|if
 condition|(
 operator|(
@@ -2216,6 +2431,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Otherwise, a mode is required. */
 if|if
 condition|(
 name|bsdtar

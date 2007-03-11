@@ -418,6 +418,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pathcmp
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|process_lines
 parameter_list|(
 name|struct
