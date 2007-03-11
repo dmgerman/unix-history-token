@@ -11,6 +11,13 @@ begin_comment
 comment|/*  * The goal of this file (and the matching test.c) is to  * simplify the very repetitive test-*.c test programs.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_FILE_OFFSET_BITS
+value|64
+end_define
+
 begin_include
 include|#
 directive|include
@@ -124,6 +131,49 @@ error|#
 directive|error
 error|Oops: No config.h and no pre-built configuration in test.h.
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* No non-FreeBSD platform will have __FBSDID, so just define it here. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_comment
+comment|/* For __FBSDID */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__FBSDID
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* null */
+end_comment
 
 begin_endif
 endif|#

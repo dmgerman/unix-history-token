@@ -194,6 +194,27 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_LINUX_FS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<linux/fs.h>
+end_include
+
+begin_comment
+comment|/* for Linux file flags */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_LINUX_EXT2_FS_H
 end_ifdef
 
@@ -3197,7 +3218,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
