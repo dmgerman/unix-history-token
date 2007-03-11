@@ -44,16 +44,6 @@ name|POSIXJOBS
 end_define
 
 begin_comment
-comment|/*  * POSIXSIGS	Use the POSIX signal facilities to emulate BSD signals.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|POSIXSIGS
-end_undef
-
-begin_comment
 comment|/*  * VFORK	This machine has a vfork().    *		It used to be that for job control to work, this define  *		was mandatory. This is not the case any more.  *		If you think you still need it, but you don't have vfork,   *		define this anyway and then do #define vfork fork.    *		I do this anyway on a Sun because of yellow pages brain damage,  *		[should not be needed under 4.1]  *		and on the iris4d cause	SGI's fork is sufficiently "virtual"   *		that vfork isn't necessary.  (Besides, SGI's vfork is weird).  *		Note that some machines eg. rs6000 have a vfork, but not  *		with the berkeley semantics, so we cannot use it there either.  */
 end_comment
 
@@ -74,17 +64,7 @@ name|BSDJOBS
 end_define
 
 begin_comment
-comment|/*  * BSDSIGS	You have 4.2-style signals, rather than USG style.  *		Note: POSIX systems should not define this unless they  *		have sigvec() and friends (ie: 4.3BSD-RENO, HP-UX).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BSDSIGS
-end_define
-
-begin_comment
-comment|/*  * BSDTIMES	You have BSD-style process time stuff (like rusage)  *		This may or may not be true.  For example, Apple Unix  *		(OREO) has BSDJOBS and BSDSIGS but not BSDTIMES.  */
+comment|/*  * BSDTIMES	You have BSD-style process time stuff (like rusage)  *		This may or may not be true.  For example, Apple Unix  *		(OREO) has BSDJOBS but not BSDTIMES.  */
 end_comment
 
 begin_define

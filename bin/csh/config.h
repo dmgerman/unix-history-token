@@ -42,6 +42,47 @@ comment|/* #undef HAVE_AUTH_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `catgets' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CATGETS
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<crypt.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CRYPT_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `crypt', and to 0 if you don't.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_CRYPT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `environ', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_ENVIRON
+value|0
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `gethostname', and to 0 if you    don't. */
 end_comment
 
@@ -49,6 +90,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_DECL_GETHOSTNAME
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `getpgrp', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_GETPGRP
 value|1
 end_define
 
@@ -73,6 +125,14 @@ directive|define
 name|HAVE_DUP2
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `getauthid' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETAUTHID */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `getcwd' function. */
@@ -116,7 +176,7 @@ comment|/* #undef HAVE_GETUTENT */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the iconv () interface */
+comment|/* Define if you have the iconv() function. */
 end_comment
 
 begin_comment
@@ -142,6 +202,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_LONG_LONG
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if mbrtowc and mbstate_t are properly declared. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MBRTOWC
 value|1
 end_define
 
@@ -268,6 +339,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STDLIB_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `strcoll' function and it is properly defined.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRCOLL
 value|1
 end_define
 
@@ -485,6 +567,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define as const if the declaration of iconv() needs const. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICONV_CONST
+value|const
+end_define
+
+begin_comment
+comment|/* Support NLS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NLS
+value|1
+end_define
+
+begin_comment
 comment|/* Define to the address where bug reports for this package should be sent. */
 end_comment
 
@@ -540,28 +644,6 @@ value|""
 end_define
 
 begin_comment
-comment|/* Define to 1 if the C compiler supports function prototypes. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PROTOTYPES
-value|1
-end_define
-
-begin_comment
-comment|/* Define as the return type of signal handlers (`int' or `void'). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RETSIGTYPE
-value|void
-end_define
-
-begin_comment
 comment|/* Define to 1 if the `setpgrp' function takes no argument. */
 end_comment
 
@@ -596,17 +678,6 @@ begin_define
 define|#
 directive|define
 name|STDC_HEADERS
-value|1
-end_define
-
-begin_comment
-comment|/* Define like PROTOTYPES; this can be used by system headers. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__PROTOTYPES
 value|1
 end_define
 
@@ -648,6 +719,14 @@ end_comment
 
 begin_comment
 comment|/* #undef socklen_t */
+end_comment
+
+begin_comment
+comment|/* Define to `int' not defined in<sys/types.h>. */
+end_comment
+
+begin_comment
+comment|/* #undef ssize_t */
 end_comment
 
 begin_comment
