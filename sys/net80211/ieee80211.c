@@ -1335,6 +1335,13 @@ name|u_int
 name|flags
 parameter_list|)
 block|{
+define|#
+directive|define
+name|IS_FREQ_IN_PSB
+parameter_list|(
+name|_freq
+parameter_list|)
+value|((_freq)> 4940&& (_freq)< 4990)
 if|if
 condition|(
 name|flags
@@ -1417,13 +1424,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|flags
-operator|&
-operator|(
-name|IEEE80211_CHAN_HALF
-operator||
-name|IEEE80211_CHAN_QUARTER
-operator|)
+name|IS_FREQ_IN_PSB
+argument_list|(
+name|freq
+argument_list|)
 condition|)
 return|return
 name|mappsb
@@ -1513,13 +1517,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|flags
-operator|&
-operator|(
-name|IEEE80211_CHAN_HALF
-operator||
-name|IEEE80211_CHAN_QUARTER
-operator|)
+name|IS_FREQ_IN_PSB
+argument_list|(
+name|freq
+argument_list|)
 condition|)
 return|return
 name|mappsb
@@ -1570,6 +1571,9 @@ operator|/
 literal|5
 return|;
 block|}
+undef|#
+directive|undef
+name|IS_FREQ_IN_PSB
 block|}
 end_function
 
