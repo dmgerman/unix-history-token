@@ -479,7 +479,7 @@ name|ni
 operator|->
 name|ni_txseqs
 index|[
-literal|0
+name|IEEE80211_NONQOS_TID
 index|]
 operator|<<
 name|IEEE80211_SEQ_SEQ_SHIFT
@@ -489,7 +489,7 @@ name|ni
 operator|->
 name|ni_txseqs
 index|[
-literal|0
+name|IEEE80211_NONQOS_TID
 index|]
 operator|++
 expr_stmt|;
@@ -3095,7 +3095,7 @@ name|ni
 operator|->
 name|ni_txseqs
 index|[
-literal|0
+name|IEEE80211_NONQOS_TID
 index|]
 operator|<<
 name|IEEE80211_SEQ_SEQ_SHIFT
@@ -3105,7 +3105,7 @@ name|ni
 operator|->
 name|ni_txseqs
 index|[
-literal|0
+name|IEEE80211_NONQOS_TID
 index|]
 operator|++
 expr_stmt|;

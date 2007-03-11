@@ -1182,7 +1182,7 @@ block|}
 else|else
 name|tid
 operator|=
-literal|0
+name|IEEE80211_NONQOS_TID
 expr_stmt|;
 name|rxseq
 operator|=
