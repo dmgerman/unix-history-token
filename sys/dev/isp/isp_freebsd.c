@@ -11227,12 +11227,8 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|500000
+literal|600000
 end_if
-
-begin_comment
-comment|/*  * Support functions for Found/Lost  */
-end_comment
 
 begin_function
 specifier|static
