@@ -2213,16 +2213,6 @@ name|TO_BE_RECLAIMED
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|KEY_UNDEFINED
-parameter_list|(
-name|k
-parameter_list|)
-value|((k).wk_cipher ==&ieee80211_cipher_none)
-end_define
-
 begin_comment
 comment|/*  * Return the transmit key to use in sending a unicast frame.  * If a unicast key is set we use that.  When no unicast key is set  * we fall back to the default transmit key.  */
 end_comment
@@ -2242,8 +2232,9 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|KEY_UNDEFINED
+name|IEEE80211_KEY_UNDEFINED
 argument_list|(
+operator|&
 name|ni
 operator|->
 name|ni_ucastkey
@@ -2258,8 +2249,9 @@ name|ic_def_txkey
 operator|==
 name|IEEE80211_KEYIX_NONE
 operator|||
-name|KEY_UNDEFINED
+name|IEEE80211_KEY_UNDEFINED
 argument_list|(
+operator|&
 name|ic
 operator|->
 name|ic_nw_keys
@@ -2331,8 +2323,9 @@ name|ic_def_txkey
 operator|==
 name|IEEE80211_KEYIX_NONE
 operator|||
-name|KEY_UNDEFINED
+name|IEEE80211_KEY_UNDEFINED
 argument_list|(
+operator|&
 name|ic
 operator|->
 name|ic_nw_keys
@@ -3153,15 +3146,15 @@ operator|==
 name|IEEE80211_M_STA
 condition|?
 operator|!
-name|KEY_UNDEFINED
+name|IEEE80211_KEY_UNDEFINED
 argument_list|(
-operator|*
 name|key
 argument_list|)
 else|:
 operator|!
-name|KEY_UNDEFINED
+name|IEEE80211_KEY_UNDEFINED
 argument_list|(
+operator|&
 name|ni
 operator|->
 name|ni_ucastkey
