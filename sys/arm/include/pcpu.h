@@ -91,6 +91,20 @@ parameter_list|)
 value|(__pcpu.pc_ ## member)
 end_define
 
+begin_comment
+comment|/*  * XXX The implementation of this operation should be made atomic  * with respect to preemption.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCPU_LAZY_INC
+parameter_list|(
+name|member
+parameter_list|)
+value|(++__pcpu.pc_ ## member)
+end_define
+
 begin_define
 define|#
 directive|define

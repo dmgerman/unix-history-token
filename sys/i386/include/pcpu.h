@@ -98,6 +98,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCPU_LAZY_INC
+parameter_list|(
+name|member
+parameter_list|)
+value|(++pcpup->pc_ ## member)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCPU_PTR
 parameter_list|(
 name|member
@@ -190,6 +200,20 @@ value|__extension__ ({				\ 	__pcpu_type(name) __res;					\ 	struct __s {							
 end_define
 
 begin_comment
+comment|/*  * Increments the value of the per-cpu counter name.  The implementation  * must be atomic with respect to interrupts.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__PCPU_LAZY_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|do {					\ 	CTASSERT(sizeof(__pcpu_type(name)) == 1 ||			\ 	    sizeof(__pcpu_type(name)) == 2 ||				\ 	    sizeof(__pcpu_type(name)) == 4);				\ 	if (sizeof(__pcpu_type(name)) == 1) {				\ 		__asm __volatile("incb %%fs:%0"				\ 		    : "=m" (*(__pcpu_type(name) *)(__pcpu_offset(name)))\ 		    : "m" (*(__pcpu_type(name) *)(__pcpu_offset(name))));\ 	} else if (sizeof(__pcpu_type(name)) == 2) {			\ 		__asm __volatile("incw %%fs:%0"				\ 		    : "=m" (*(__pcpu_type(name) *)(__pcpu_offset(name)))\ 		    : "m" (*(__pcpu_type(name) *)(__pcpu_offset(name))));\ 	} else if (sizeof(__pcpu_type(name)) == 4) {			\ 		__asm __volatile("incl %%fs:%0"				\ 		    : "=m" (*(__pcpu_type(name) *)(__pcpu_offset(name)))\ 		    : "m" (*(__pcpu_type(name) *)(__pcpu_offset(name))));\ 	}								\ } while (0)
+end_define
+
+begin_comment
 comment|/*  * Sets the value of the per-cpu variable name to value val.  */
 end_comment
 
@@ -213,6 +237,16 @@ parameter_list|(
 name|member
 parameter_list|)
 value|__PCPU_GET(pc_ ## member)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_LAZY_INC
+parameter_list|(
+name|member
+parameter_list|)
+value|__PCPU_LAZY_INC(pc_ ## member)
 end_define
 
 begin_define
