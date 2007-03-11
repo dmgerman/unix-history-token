@@ -521,8 +521,11 @@ name|u_int32_t
 name|ic_caps
 decl_stmt|;
 comment|/* capabilities */
-name|u_int16_t
+name|u_int8_t
 name|ic_modecaps
+index|[
+literal|2
+index|]
 decl_stmt|;
 comment|/* set of mode capabilities */
 name|u_int16_t
