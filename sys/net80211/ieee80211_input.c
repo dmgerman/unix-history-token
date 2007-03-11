@@ -5810,7 +5810,7 @@ name|_len
 parameter_list|,
 name|_minlen
 parameter_list|)
-value|do {			\ 	if ((_len)< (_minlen)) {					\ 		IEEE80211_DISCARD(ic, IEEE80211_MSG_ELEMID,		\ 		    wh, ieee80211_mgt_subtype_name[subtype>>		\ 			IEEE80211_FC0_SUBTYPE_SHIFT],			\ 		    "%s", "ie too short");				\ 		ic->ic_stats.is_rx_elem_toosmall++;			\ 		return;							\ 	}								\ } while (0)
+value|do {			\ 	if ((_len)< (_minlen)) {					\ 		IEEE80211_DISCARD(ic, IEEE80211_MSG_ELEMID,		\ 		    wh, ieee80211_mgt_subtype_name[subtype>>		\ 			IEEE80211_FC0_SUBTYPE_SHIFT],			\ 		    "ie too short, got %d, expected %d",		\ 		    (_len), (_minlen));					\ 		ic->ic_stats.is_rx_elem_toosmall++;			\ 		return;							\ 	}								\ } while (0)
 end_define
 
 begin_ifdef
