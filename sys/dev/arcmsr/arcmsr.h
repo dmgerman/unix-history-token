@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|ARCMSR_DRIVER_VERSION
-value|"Driver Version 1.20.00.13 2006-8-18"
+value|"Driver Version 1.20.00.14 2007-2-05"
 end_define
 
 begin_define
@@ -115,6 +115,13 @@ define|#
 directive|define
 name|ARCMSR_MAX_ADAPTER
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_RELEASE_SIMQ_LEVEL
+value|230
 end_define
 
 begin_comment
@@ -1850,6 +1857,10 @@ directive|define
 name|ACB_F_MAPFREESRB_FAILD
 value|0x0200
 comment|/* arcmsr_map_freesrb faild */
+define|#
+directive|define
+name|ACB_F_CAM_DEV_QFRZN
+value|0x0400
 name|struct
 name|CommandControlBlock
 modifier|*
