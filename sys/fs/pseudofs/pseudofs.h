@@ -515,6 +515,42 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/*  * Destroy callback  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFS_DESTROY_ARGS
+define|\
+value|struct pfs_node *pn
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_DESTROY_PROTO
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|int name(PFS_DESTROY_ARGS);
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|pfs_destroy_t
+function_decl|)
+parameter_list|(
+name|PFS_DESTROY_ARGS
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/*  * pfs_info: describes a pseudofs instance  */
 end_comment
 
@@ -610,6 +646,9 @@ name|pn_vis
 decl_stmt|;
 name|pfs_getextattr_t
 name|pn_getextattr
+decl_stmt|;
+name|pfs_destroy_t
+name|pn_destroy
 decl_stmt|;
 name|void
 modifier|*
@@ -818,6 +857,9 @@ parameter_list|,
 name|pfs_vis_t
 name|vis
 parameter_list|,
+name|pfs_destroy_t
+name|destroy
+parameter_list|,
 name|int
 name|flags
 parameter_list|)
@@ -849,6 +891,9 @@ parameter_list|,
 name|pfs_vis_t
 name|vis
 parameter_list|,
+name|pfs_destroy_t
+name|destroy
+parameter_list|,
 name|int
 name|flags
 parameter_list|)
@@ -879,6 +924,9 @@ name|attr
 parameter_list|,
 name|pfs_vis_t
 name|vis
+parameter_list|,
+name|pfs_destroy_t
+name|destroy
 parameter_list|,
 name|int
 name|flags

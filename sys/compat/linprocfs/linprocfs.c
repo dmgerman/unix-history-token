@@ -5308,6 +5308,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -5319,6 +5321,8 @@ literal|"cpuinfo"
 argument_list|,
 operator|&
 name|linprocfs_docpuinfo
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5340,6 +5344,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -5351,6 +5357,8 @@ literal|"loadavg"
 argument_list|,
 operator|&
 name|linprocfs_doloadavg
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5372,13 +5380,15 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
 literal|0
-block|pfs_create_file(root, "modules",&linprocfs_domodules, 	    NULL, NULL, PFS_RD);
+block|pfs_create_file(root, "modules",&linprocfs_domodules, 	    NULL, NULL, NULL, PFS_RD);
 endif|#
 directive|endif
 name|pfs_create_file
@@ -5389,6 +5399,8 @@ literal|"mounts"
 argument_list|,
 operator|&
 name|linprocfs_domtab
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5410,6 +5422,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -5421,6 +5435,8 @@ literal|"self"
 argument_list|,
 operator|&
 name|procfs_docurproc
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5442,6 +5458,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -5453,6 +5471,8 @@ literal|"uptime"
 argument_list|,
 operator|&
 name|linprocfs_douptime
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5474,6 +5494,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -5485,6 +5507,8 @@ argument_list|(
 name|root
 argument_list|,
 literal|"net"
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5506,6 +5530,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -5517,6 +5543,8 @@ argument_list|(
 name|root
 argument_list|,
 literal|"pid"
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5538,6 +5566,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -5554,6 +5584,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -5565,6 +5597,8 @@ literal|"environ"
 argument_list|,
 operator|&
 name|linprocfs_doprocenviron
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5587,6 +5621,8 @@ argument_list|,
 operator|&
 name|procfs_notsystem
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -5598,6 +5634,8 @@ literal|"maps"
 argument_list|,
 operator|&
 name|linprocfs_doprocmaps
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5621,6 +5659,8 @@ argument_list|,
 operator|&
 name|procfs_candebug
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RDWR
 operator||
 name|PFS_RAW
@@ -5634,6 +5674,8 @@ literal|"root"
 argument_list|,
 operator|&
 name|linprocfs_doprocroot
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5655,6 +5697,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -5666,6 +5710,8 @@ literal|"statm"
 argument_list|,
 operator|&
 name|linprocfs_doprocstatm
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5687,6 +5733,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -5698,6 +5746,8 @@ argument_list|(
 name|root
 argument_list|,
 literal|"scsi"
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5719,6 +5769,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -5730,6 +5782,8 @@ literal|"scsi"
 argument_list|,
 operator|&
 name|linprocfs_doscsiscsi
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5751,6 +5805,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -5762,6 +5818,8 @@ argument_list|(
 name|dir
 argument_list|,
 literal|"kernel"
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5783,6 +5841,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -5794,6 +5854,8 @@ literal|"ostype"
 argument_list|,
 operator|&
 name|linprocfs_doostype
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5815,6 +5877,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -5826,6 +5890,8 @@ literal|"msgmni"
 argument_list|,
 operator|&
 name|linprocfs_domsgmni
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5847,6 +5913,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -5858,6 +5926,8 @@ literal|"sem"
 argument_list|,
 operator|&
 name|linprocfs_dosem
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

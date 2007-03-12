@@ -489,6 +489,9 @@ parameter_list|,
 name|pfs_vis_t
 name|vis
 parameter_list|,
+name|pfs_destroy_t
+name|destroy
+parameter_list|,
 name|int
 name|flags
 parameter_list|)
@@ -567,6 +570,12 @@ operator|->
 name|pn_vis
 operator|=
 name|vis
+expr_stmt|;
+name|dir
+operator|->
+name|pn_destroy
+operator|=
+name|destroy
 expr_stmt|;
 name|dir
 operator|->
@@ -657,6 +666,9 @@ parameter_list|,
 name|pfs_vis_t
 name|vis
 parameter_list|,
+name|pfs_destroy_t
+name|destroy
+parameter_list|,
 name|int
 name|flags
 parameter_list|)
@@ -736,6 +748,12 @@ name|vis
 expr_stmt|;
 name|node
 operator|->
+name|pn_destroy
+operator|=
+name|destroy
+expr_stmt|;
+name|node
+operator|->
 name|pn_flags
 operator|=
 name|flags
@@ -802,6 +820,9 @@ parameter_list|,
 name|pfs_vis_t
 name|vis
 parameter_list|,
+name|pfs_destroy_t
+name|destroy
+parameter_list|,
 name|int
 name|flags
 parameter_list|)
@@ -824,6 +845,8 @@ argument_list|,
 name|attr
 argument_list|,
 name|vis
+argument_list|,
+name|destroy
 argument_list|,
 name|flags
 argument_list|)
@@ -1123,6 +1146,24 @@ name|pi_mutex
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* callback to free any private resources */
+if|if
+condition|(
+name|node
+operator|->
+name|pn_destroy
+operator|!=
+name|NULL
+condition|)
+call|(
+name|node
+operator|->
+name|pn_destroy
+call|)
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 comment|/* revoke vnodes and release memory */
 name|pfs_disable
 argument_list|(

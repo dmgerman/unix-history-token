@@ -814,6 +814,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -860,6 +862,8 @@ argument_list|(
 name|dir
 argument_list|,
 name|host
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -944,6 +948,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -960,6 +966,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -971,6 +979,8 @@ literal|"proc_name"
 argument_list|,
 operator|&
 name|linsysfs_scsiname
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -1149,6 +1159,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1159,6 +1171,8 @@ argument_list|(
 name|scsi
 argument_list|,
 literal|"scsi_host"
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -1180,6 +1194,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1191,6 +1207,8 @@ argument_list|(
 name|dir
 argument_list|,
 literal|"pci0000:00"
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

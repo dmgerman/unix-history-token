@@ -555,6 +555,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -570,6 +572,8 @@ name|procfs_attr
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_PROCDEP
 argument_list|)
 expr_stmt|;
@@ -580,6 +584,8 @@ argument_list|,
 literal|"cmdline"
 argument_list|,
 name|procfs_doproccmdline
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -600,6 +606,8 @@ name|procfs_attr
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_WR
 argument_list|)
 expr_stmt|;
@@ -615,6 +623,8 @@ name|procfs_attr
 argument_list|,
 name|procfs_candebug
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RDWR
 operator||
 name|PFS_RAW
@@ -627,6 +637,8 @@ argument_list|,
 literal|"etype"
 argument_list|,
 name|procfs_doproctype
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -647,6 +659,8 @@ name|procfs_attr
 argument_list|,
 name|procfs_candebug
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RDWR
 operator||
 name|PFS_RAW
@@ -664,6 +678,8 @@ name|NULL
 argument_list|,
 name|procfs_notsystem
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -680,6 +696,8 @@ argument_list|,
 name|procfs_attr
 argument_list|,
 name|procfs_candebug
+argument_list|,
+name|NULL
 argument_list|,
 name|PFS_RDWR
 operator||
@@ -710,6 +728,8 @@ name|procfs_attr
 argument_list|,
 name|procfs_candebug
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_WR
 argument_list|)
 expr_stmt|;
@@ -724,6 +744,8 @@ argument_list|,
 name|procfs_attr
 argument_list|,
 name|procfs_candebug
+argument_list|,
+name|NULL
 argument_list|,
 name|PFS_WR
 argument_list|)
@@ -740,6 +762,8 @@ name|procfs_attr
 argument_list|,
 name|procfs_candebug
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RDWR
 operator||
 name|PFS_RAW
@@ -752,6 +776,8 @@ argument_list|,
 literal|"rlimit"
 argument_list|,
 name|procfs_doprocrlimit
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -772,6 +798,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
@@ -786,6 +814,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|procfs_notsystem
+argument_list|,
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
