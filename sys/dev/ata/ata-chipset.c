@@ -30799,6 +30799,15 @@ operator|&
 name|ATA_R_TIMEOUT
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_READ
+condition|)
 name|request
 operator|->
 name|donecount
@@ -30807,6 +30816,16 @@ name|prb
 operator|->
 name|transfer_count
 expr_stmt|;
+else|else
+name|request
+operator|->
+name|donecount
+operator|=
+name|request
+operator|->
+name|bytecount
+expr_stmt|;
+block|}
 comment|/* any controller errors flagged ? */
 if|if
 condition|(
