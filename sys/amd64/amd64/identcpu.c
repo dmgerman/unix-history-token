@@ -951,7 +951,8 @@ comment|/* CR8 in legacy mode */
 literal|"\006<b5>"
 literal|"\007<b6>"
 literal|"\010<b7>"
-literal|"\011<b8>"
+literal|"\011Prefetch"
+comment|/* 3DNow! Prefetch/PrefetchW */
 literal|"\012<b9>"
 literal|"\013<b10>"
 literal|"\014<b11>"

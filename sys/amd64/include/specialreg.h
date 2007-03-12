@@ -713,6 +713,13 @@ name|AMDID2_CR8
 value|0x00000010
 end_define
 
+begin_define
+define|#
+directive|define
+name|AMDID2_PREFETCH
+value|0x00000100
+end_define
+
 begin_comment
 comment|/*  * CPUID instruction 1 ebx info  */
 end_comment
