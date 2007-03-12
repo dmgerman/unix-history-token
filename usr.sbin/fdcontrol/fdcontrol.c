@@ -393,12 +393,6 @@ name|mode
 operator|=
 name|O_RDWR
 expr_stmt|;
-name|mode
-operator|=
-name|O_RDONLY
-operator||
-name|O_NONBLOCK
-expr_stmt|;
 if|if
 condition|(
 operator|(
