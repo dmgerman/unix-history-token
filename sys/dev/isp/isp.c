@@ -24122,7 +24122,7 @@ name|isp_print_bytes
 argument_list|(
 name|isp
 argument_list|,
-literal|"Reqeonse Queue Entry"
+literal|"Request Queue Entry"
 argument_list|,
 name|QENTRY_LEN
 argument_list|,
@@ -37319,6 +37319,8 @@ literal|0x7ffe0000
 decl_stmt|;
 name|uint32_t
 name|tmp
+init|=
+literal|0
 decl_stmt|;
 name|ISP_WRITE
 argument_list|(

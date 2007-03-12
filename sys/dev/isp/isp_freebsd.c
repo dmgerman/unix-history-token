@@ -87,6 +87,17 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/devicestat.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -11227,12 +11238,8 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|500000
+literal|600000
 end_if
-
-begin_comment
-comment|/*  * Support functions for Found/Lost  */
-end_comment
 
 begin_function
 specifier|static
