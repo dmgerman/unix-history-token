@@ -2641,6 +2641,12 @@ name|unp
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|UNP_PCB_UNLOCK
+argument_list|(
+name|unp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
