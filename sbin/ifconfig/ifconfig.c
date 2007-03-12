@@ -949,12 +949,6 @@ operator|,
 name|argv
 operator|++
 expr_stmt|;
-comment|/* check and maybe load support for this interface */
-name|ifmaybeload
-argument_list|(
-name|ifname
-argument_list|)
-expr_stmt|;
 name|ifindex
 operator|=
 name|if_nametoindex
@@ -1032,6 +1026,11 @@ literal|1
 argument_list|,
 literal|"%s: cloning name too long"
 argument_list|,
+name|ifname
+argument_list|)
+expr_stmt|;
+name|ifmaybeload
+argument_list|(
 name|ifname
 argument_list|)
 expr_stmt|;
