@@ -3255,7 +3255,7 @@ name|RW_LOCK_WRITE_WAITERS
 case|:
 name|db_printf
 argument_list|(
-literal|"readers and waiters\n"
+literal|"readers and writers\n"
 argument_list|)
 expr_stmt|;
 break|break;
