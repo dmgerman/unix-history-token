@@ -2660,6 +2660,25 @@ operator|&
 name|vlan_cloner
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"vlan: initialized, using "
+ifdef|#
+directive|ifdef
+name|VLAN_ARRAY
+literal|"full-size arrays"
+else|#
+directive|else
+literal|"hash tables with chaining"
+endif|#
+directive|endif
+literal|"\n"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
@@ -2691,6 +2710,15 @@ name|NULL
 expr_stmt|;
 name|VLAN_LOCK_DESTROY
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"vlan: unloaded\n"
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
