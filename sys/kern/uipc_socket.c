@@ -660,8 +660,7 @@ name|socket
 modifier|*
 name|soalloc
 parameter_list|(
-name|int
-name|mflags
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -675,7 +674,7 @@ name|uma_zalloc
 argument_list|(
 name|socket_zone
 argument_list|,
-name|mflags
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -700,7 +699,7 @@ name|mac_init_socket
 argument_list|(
 name|so
 argument_list|,
-name|mflags
+name|M_NOWAIT
 argument_list|)
 operator|!=
 literal|0
@@ -946,9 +945,7 @@ return|;
 name|so
 operator|=
 name|soalloc
-argument_list|(
-name|M_WAITOK
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

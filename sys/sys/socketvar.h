@@ -1854,8 +1854,7 @@ name|socket
 modifier|*
 name|soalloc
 parameter_list|(
-name|int
-name|mflags
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

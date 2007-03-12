@@ -820,9 +820,7 @@ return|;
 name|so
 operator|=
 name|soalloc
-argument_list|(
-name|M_NOWAIT
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
