@@ -7779,6 +7779,33 @@ name|err
 argument_list|)
 expr_stmt|;
 block|}
+name|err
+operator|=
+name|insmntque1
+argument_list|(
+name|vp
+argument_list|,
+name|vfsp
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* XXX: Too early for mpsafe fs */
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"coda: insmntque failed: error %d"
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
 name|vp
 operator|->
 name|v_data
