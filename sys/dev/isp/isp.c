@@ -23271,6 +23271,12 @@ name|isp_rspbsy
 operator|=
 literal|0
 expr_stmt|;
+name|optr
+operator|=
+name|isp
+operator|->
+name|isp_residx
+expr_stmt|;
 block|}
 endif|#
 directive|endif
