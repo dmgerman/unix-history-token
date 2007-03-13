@@ -169,6 +169,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPPROTO_ZEROHOP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_ZEROHOP
+value|114
+end_define
+
+begin_comment
+comment|/* any 0-hop protocol */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -231,7 +253,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s [-1] [-A laddr] [-b] [-B] [-d] [-i iface] [-l len]\n"
-literal|"                   [-p port] [-r] [-s srcaddr] [-t ttl]<dest>\n"
+literal|"                   [-p port] [-R] [-s srcaddr] [-t ttl]<dest>\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -292,6 +314,15 @@ argument_list|,
 literal|"-p: Set local and remote port (default: %d)\n"
 argument_list|,
 name|DEFAULT_PORT
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-R: Use raw IP (protocol %d)\n"
+argument_list|,
+name|IPPROTO_ZEROHOP
 argument_list|)
 expr_stmt|;
 if|#
@@ -413,6 +444,9 @@ decl_stmt|;
 name|int
 name|dorandom
 decl_stmt|;
+name|int
+name|dorawip
+decl_stmt|;
 name|size_t
 name|buflen
 decl_stmt|;
@@ -454,6 +488,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|dorandom
+operator|=
+literal|0
+expr_stmt|;
+name|dorawip
 operator|=
 literal|0
 expr_stmt|;
@@ -512,7 +550,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1A:bBdi:l:p:rs:t:"
+literal|"1A:bBdi:l:p:Rrs:t:"
 argument_list|)
 operator|)
 operator|!=
@@ -593,6 +631,14 @@ name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|dorawip
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -685,6 +731,39 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|dorawip
+condition|)
+block|{
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"WARNING: not running as root.\n"
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|socket
+argument_list|(
+name|PF_INET
+argument_list|,
+name|SOCK_RAW
+argument_list|,
+name|IPPROTO_ZEROHOP
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|s
 operator|=
 name|socket
@@ -696,6 +775,7 @@ argument_list|,
 name|IPPROTO_UDP
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|s
