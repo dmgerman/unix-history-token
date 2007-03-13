@@ -568,6 +568,12 @@ name|ispsoftc
 modifier|*
 name|next
 decl_stmt|;
+name|bus_space_tag_t
+name|bus_tag
+decl_stmt|;
+name|bus_space_handle_t
+name|bus_handle
+decl_stmt|;
 name|uint64_t
 name|default_port_wwn
 decl_stmt|;
@@ -790,6 +796,20 @@ define|#
 directive|define
 name|isp_lock
 value|isp_osinfo.lock
+end_define
+
+begin_define
+define|#
+directive|define
+name|isp_bus_tag
+value|isp_osinfo.bus_tag
+end_define
+
+begin_define
+define|#
+directive|define
+name|isp_bus_handle
+value|isp_osinfo.bus_handle
 end_define
 
 begin_comment
@@ -1063,7 +1083,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|switch (type) {							\ case SYNC_SFORDEV:						\ case SYNC_REQUEST:						\ 	bus_dmamap_sync(isp->isp_cdmat, isp->isp_cdmap, 	\ 	   BUS_DMASYNC_PREREAD | BUS_DMASYNC_PREWRITE);		\ 	break;							\ case SYNC_SFORCPU:						\ case SYNC_RESULT:						\ 	bus_dmamap_sync(isp->isp_cdmat, isp->isp_cdmap,		\ 	   BUS_DMASYNC_POSTREAD | BUS_DMASYNC_POSTWRITE);	\ 	break;							\ default:							\ 	break;							\ }
+value|switch (type) {							\ case SYNC_SFORDEV:						\ case SYNC_REQUEST:						\ 	bus_dmamap_sync(isp->isp_cdmat, isp->isp_cdmap, 	\ 	   BUS_DMASYNC_PREREAD | BUS_DMASYNC_PREWRITE);		\ 	break;							\ case SYNC_SFORCPU:						\ case SYNC_RESULT:						\ 	bus_dmamap_sync(isp->isp_cdmat, isp->isp_cdmap,		\ 	   BUS_DMASYNC_POSTREAD | BUS_DMASYNC_POSTWRITE);	\ 	break;							\ case SYNC_REG:							\ 	bus_space_barrier(isp->isp_bus_tag,			\ 	    isp->isp_bus_handle, offset, size, 			\ 	    BUS_SPACE_BARRIER_READ);				\ 	break;							\ default:							\ 	break;							\ }
 end_define
 
 begin_define
