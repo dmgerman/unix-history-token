@@ -3164,10 +3164,10 @@ name|RW_LOCK_READ
 condition|)
 name|db_printf
 argument_list|(
-literal|"RLOCK: %jd locks\n"
+literal|"RLOCK: %ju locks\n"
 argument_list|,
 call|(
-name|intmax_t
+name|uintmax_t
 call|)
 argument_list|(
 name|RW_READERS
