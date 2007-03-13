@@ -19422,7 +19422,7 @@ parameter_list|,
 name|oid
 parameter_list|)
 define|\
-value|SYSCTL_ADD_PROC(ctx, parent, OID_AUTO, oid, CTLTYPE_QUAD|CTLFLAG_RD, \ 	    sc, offsetof(struct bge_stats, node), bge_sysctl_stats, "IU", \ 	    desc)
+value|SYSCTL_ADD_PROC(ctx, parent, OID_AUTO, oid, CTLTYPE_UINT|CTLFLAG_RD, \ 	    sc, offsetof(struct bge_stats, node), bge_sysctl_stats, "IU", \ 	    desc)
 end_define
 
 begin_function
@@ -19649,13 +19649,13 @@ name|sc
 argument_list|,
 name|ctx
 argument_list|,
-literal|"Interface Discarded Frames"
+literal|"Discarded Input Frames"
 argument_list|,
 name|children
 argument_list|,
 name|ifInDiscards
 argument_list|,
-literal|"Discards"
+literal|"InputDiscards"
 argument_list|)
 expr_stmt|;
 name|BGE_SYSCTL_STAT
@@ -19664,13 +19664,13 @@ name|sc
 argument_list|,
 name|ctx
 argument_list|,
-literal|"Interface Errors"
+literal|"Input Errors"
 argument_list|,
 name|children
 argument_list|,
 name|ifInErrors
 argument_list|,
-literal|"Errors"
+literal|"InputErrors"
 argument_list|)
 expr_stmt|;
 name|BGE_SYSCTL_STAT
@@ -20069,7 +20069,7 @@ name|rxstats
 operator|.
 name|inRangeLengthError
 argument_list|,
-literal|"RangeLengthError"
+literal|"inRangeLengthError"
 argument_list|)
 expr_stmt|;
 name|BGE_SYSCTL_STAT
@@ -20086,7 +20086,7 @@ name|rxstats
 operator|.
 name|outRangeLengthError
 argument_list|,
-literal|"RangeLengthError"
+literal|"outRangeLengthError"
 argument_list|)
 expr_stmt|;
 name|tree
@@ -20297,9 +20297,9 @@ name|children
 argument_list|,
 name|txstats
 operator|.
-name|dot3StatsExcessiveCollisions
+name|dot3StatsLateCollisions
 argument_list|,
-literal|"ExcessiveCollisions"
+literal|"LateCollisions"
 argument_list|)
 expr_stmt|;
 name|BGE_SYSCTL_STAT
@@ -20420,7 +20420,7 @@ name|bge_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|uint64_t
+name|uint32_t
 name|result
 decl_stmt|;
 name|int
@@ -20461,31 +20461,6 @@ name|BGE_STATS_BLOCK
 expr_stmt|;
 name|result
 operator|=
-operator|(
-call|(
-name|uint64_t
-call|)
-argument_list|(
-name|CSR_READ_4
-argument_list|(
-name|sc
-argument_list|,
-name|base
-operator|+
-name|offset
-operator|+
-name|offsetof
-argument_list|(
-name|bge_hostaddr
-argument_list|,
-name|bge_addr_hi
-argument_list|)
-argument_list|)
-argument_list|)
-operator|<<
-literal|32
-operator|)
-operator||
 name|CSR_READ_4
 argument_list|(
 name|sc
