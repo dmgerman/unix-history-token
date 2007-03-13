@@ -716,6 +716,19 @@ name|sc
 operator|->
 name|timeout
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|active
+condition|)
+name|ichwd_tmr_enable
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ichwd_tmr_set
 argument_list|(
 name|sc
@@ -723,6 +736,7 @@ argument_list|,
 name|timeout
 argument_list|)
 expr_stmt|;
+block|}
 name|ichwd_tmr_reload
 argument_list|(
 name|sc
