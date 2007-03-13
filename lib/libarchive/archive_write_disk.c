@@ -3021,7 +3021,16 @@ operator|->
 name|flags
 operator|&
 name|ARCHIVE_EXTRACT_UNLINK
+operator|&&
+operator|!
+name|S_ISDIR
+argument_list|(
+name|a
+operator|->
+name|mode
+argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 name|unlink
@@ -3030,16 +3039,40 @@ name|a
 operator|->
 name|name
 argument_list|)
-operator|!=
+operator|==
 literal|0
-operator|&&
+condition|)
+block|{
+comment|/* We removed it, we're done. */
+block|}
+elseif|else
+if|if
+condition|(
 name|errno
-operator|!=
+operator|==
 name|ENOENT
 condition|)
 block|{
-comment|/* If the file doesn't exist, that's okay. */
-comment|/* Anything else is a problem. */
+comment|/* File didn't exist, that's just as good. */
+block|}
+elseif|else
+if|if
+condition|(
+name|rmdir
+argument_list|(
+name|a
+operator|->
+name|name
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* It was a dir, but now it's gone. */
+block|}
+else|else
+block|{
+comment|/* We tried, but couldn't get rid of it. */
 name|archive_set_error
 argument_list|(
 operator|&
@@ -3057,6 +3090,7 @@ operator|(
 name|ARCHIVE_WARN
 operator|)
 return|;
+block|}
 block|}
 comment|/* Try creating it first; if this fails, we'll try to recover. */
 name|en
