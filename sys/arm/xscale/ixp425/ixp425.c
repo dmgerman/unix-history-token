@@ -295,6 +295,31 @@ name|IXP425_EXP_BUS_SIZE
 block|,
 name|IXP425_EXP_BUS_CS1_VBASE
 block|}
+block|,
+block|{
+name|IXP425_EXP_BUS_CS2_HWBASE
+block|,
+name|IXP425_EXP_BUS_SIZE
+block|,
+name|IXP425_EXP_BUS_CS2_VBASE
+block|}
+block|,
+comment|/* ADI Pronghorn Metro IDE/CF is mapped here */
+block|{
+name|IXP425_EXP_BUS_CS3_HWBASE
+block|,
+name|IXP425_EXP_BUS_SIZE
+block|,
+name|IXP425_EXP_BUS_CS3_VBASE
+block|}
+block|,
+block|{
+name|IXP425_EXP_BUS_CS4_HWBASE
+block|,
+name|IXP425_EXP_BUS_SIZE
+block|,
+name|IXP425_EXP_BUS_CS4_VBASE
+block|}
 block|, }
 struct|;
 end_struct

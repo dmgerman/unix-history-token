@@ -2900,6 +2900,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXP425_EXP_BUS_CSx_VBASE
+parameter_list|(
+name|i
+parameter_list|)
+define|\
+value|(IXP425_MAC_B_VBASE + (i)*IXP425_MAC_B_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXP425_EXP_BUS_CS1_HWBASE
 value|IXP425_EXP_BUS_CSx_HWBASE(1)
 end_define
@@ -2908,7 +2919,7 @@ begin_define
 define|#
 directive|define
 name|IXP425_EXP_BUS_CS1_VBASE
-value|(IXP425_MAC_B_VBASE + IXP425_MAC_B_SIZE)
+value|IXP425_EXP_BUS_CSx_VBASE(1)
 end_define
 
 begin_define
@@ -2916,17 +2927,6 @@ define|#
 directive|define
 name|IXP425_EXP_BUS_CS1_SIZE
 value|0x1000
-end_define
-
-begin_comment
-comment|/* NB: not mapped (yet) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXP425_EXP_BUS_CS0_HWBASE
-value|IXP425_EXP_BUS_CSx_HWBASE(0)
 end_define
 
 begin_define
@@ -2939,6 +2939,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXP425_EXP_BUS_CS2_VBASE
+value|IXP425_EXP_BUS_CSx_VBASE(2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP425_EXP_BUS_CS2_SIZE
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXP425_EXP_BUS_CS3_HWBASE
 value|IXP425_EXP_BUS_CSx_HWBASE(3)
 end_define
@@ -2946,8 +2960,47 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXP425_EXP_BUS_CS3_VBASE
+value|IXP425_EXP_BUS_CSx_VBASE(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP425_EXP_BUS_CS3_SIZE
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXP425_EXP_BUS_CS4_HWBASE
 value|IXP425_EXP_BUS_CSx_HWBASE(4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP425_EXP_BUS_CS4_VBASE
+value|IXP425_EXP_BUS_CSx_VBASE(4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP425_EXP_BUS_CS4_SIZE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* NB: not mapped (yet) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP425_EXP_BUS_CS0_HWBASE
+value|IXP425_EXP_BUS_CSx_HWBASE(0)
 end_define
 
 begin_define
