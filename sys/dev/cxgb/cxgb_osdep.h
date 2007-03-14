@@ -417,6 +417,13 @@ name|x
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|L1_CACHE_BYTES
+value|32
+end_define
+
 begin_endif
 endif|#
 directive|endif
