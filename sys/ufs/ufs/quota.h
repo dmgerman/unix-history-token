@@ -256,7 +256,7 @@ file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/*  * The following structure records disk usage for a user or group on a  * filesystem. There is one allocated for each quota that exists on any  * filesystem for the current user or group. A cache is kept of recently  * used entries.  */
+comment|/*  * The following structure records disk usage for a user or group on a  * filesystem. There is one allocated for each quota that exists on any  * filesystem for the current user or group. A cache is kept of recently  * used entries.  * (h) protected by dqhlock  */
 end_comment
 
 begin_struct
@@ -269,14 +269,19 @@ argument|dquot
 argument_list|)
 name|dq_hash
 expr_stmt|;
-comment|/* hash list */
+comment|/* (h) hash list */
 name|TAILQ_ENTRY
 argument_list|(
 argument|dquot
 argument_list|)
 name|dq_freelist
 expr_stmt|;
-comment|/* free list */
+comment|/* (h) free list */
+name|struct
+name|mtx
+name|dq_lock
+decl_stmt|;
+comment|/* lock for concurrency */
 name|u_int16_t
 name|dq_flags
 decl_stmt|;
@@ -288,7 +293,7 @@ comment|/* quota type of this dquot */
 name|u_int32_t
 name|dq_cnt
 decl_stmt|;
-comment|/* count of active references */
+comment|/* (h) count of active references */
 name|u_int32_t
 name|dq_id
 decl_stmt|;
@@ -298,7 +303,7 @@ name|ufsmount
 modifier|*
 name|dq_ump
 decl_stmt|;
-comment|/* filesystem that this is taken from */
+comment|/* (h) filesystem that this is 					   taken from */
 name|struct
 name|dqblk
 name|dq_dqb
@@ -514,6 +519,50 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|DQI_LOCK
+parameter_list|(
+name|dq
+parameter_list|)
+value|mtx_lock(&(dq)->dq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DQI_UNLOCK
+parameter_list|(
+name|dq
+parameter_list|)
+value|mtx_unlock(&(dq)->dq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DQI_WAIT
+parameter_list|(
+name|dq
+parameter_list|,
+name|prio
+parameter_list|,
+name|msg
+parameter_list|)
+value|do {		\ 	while ((dq)->dq_flags& DQ_LOCK) {	\ 		(dq)->dq_flags |= DQ_WANT;	\ 		(void) msleep((dq),		\&(dq)->dq_lock, (prio), (msg), 0); \ 	}					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DQI_WAKEUP
+parameter_list|(
+name|dq
+parameter_list|)
+value|do {			\ 	if ((dq)->dq_flags& DQ_WANT)		\ 		wakeup((dq));			\ 	(dq)->dq_flags&= ~(DQ_WANT|DQ_LOCK);	\ } while (0)
+end_define
 
 begin_struct_decl
 struct_decl|struct
