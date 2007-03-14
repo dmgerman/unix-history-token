@@ -2977,7 +2977,7 @@ name|errno
 argument_list|,
 literal|"%s: Cannot stat"
 argument_list|,
-name|path
+name|name
 argument_list|)
 expr_stmt|;
 name|bsdtar
