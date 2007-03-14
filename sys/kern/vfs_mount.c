@@ -4034,14 +4034,7 @@ name|td
 operator|->
 name|td_ucred
 argument_list|)
-condition|)
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
-if|if
-condition|(
+operator|||
 name|usermount
 operator|==
 literal|0
