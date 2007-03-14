@@ -7391,7 +7391,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Report errors during filesystem mounting.   */
+comment|/*  * Report errors during filesystem mounting.  */
 end_comment
 
 begin_function
