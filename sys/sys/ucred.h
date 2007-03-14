@@ -16,7 +16,7 @@ name|_SYS_UCRED_H_
 end_define
 
 begin_comment
-comment|/*  * Credentials.  *  * Please do not inspect cr_uid directly to determine superuserness.  * Only the suser() or suser_cred() function should be used for this.  */
+comment|/*  * Credentials.  *  * Please do not inspect cr_uid directly to determine superuserness.  The  * priv(9) interface should be used to check for privilege.  */
 end_comment
 
 begin_if
