@@ -3767,6 +3767,10 @@ if|if
 condition|(
 name|request
 operator|->
+name|u
+operator|.
+name|atapi
+operator|.
 name|saved_cmd
 operator|!=
 literal|0
