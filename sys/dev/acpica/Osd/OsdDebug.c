@@ -242,7 +242,7 @@ name|Info
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ACPI fatal signal, type 0x%x  code 0x%x  argument 0x%x"
+literal|"ACPI fatal signal, type 0x%x code 0x%x argument 0x%x"
 argument_list|,
 name|fatal
 operator|->
@@ -257,11 +257,16 @@ operator|->
 name|Argument
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG
 name|kdb_enter
 argument_list|(
 literal|"AcpiOsSignal"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|ACPI_SIGNAL_BREAKPOINT
