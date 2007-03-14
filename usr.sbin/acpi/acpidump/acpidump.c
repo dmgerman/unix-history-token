@@ -102,6 +102,15 @@ argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"To send ASL:\n\t%s -dt | gzip -c9> foo.asl.gz\n"
+argument_list|,
+name|progname
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
