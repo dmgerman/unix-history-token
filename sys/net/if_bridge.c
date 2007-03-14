@@ -2624,10 +2624,6 @@ name|bridge_dn_p
 operator|=
 name|bridge_dummynet
 expr_stmt|;
-name|bstp_linkstate_p
-operator|=
-name|bstp_linkstate
-expr_stmt|;
 name|bridge_detach_cookie
 operator|=
 name|EVENTHANDLER_REGISTER
@@ -2672,10 +2668,6 @@ operator|=
 name|NULL
 expr_stmt|;
 name|bridge_dn_p
-operator|=
-name|NULL
-expr_stmt|;
-name|bstp_linkstate_p
 operator|=
 name|NULL
 expr_stmt|;

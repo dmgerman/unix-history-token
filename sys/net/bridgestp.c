@@ -9857,6 +9857,10 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
+name|bstp_linkstate_p
+operator|=
+name|NULL
+expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
