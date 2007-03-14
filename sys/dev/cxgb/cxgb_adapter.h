@@ -1699,7 +1699,7 @@ name|desc_reclaimable
 parameter_list|(
 name|q
 parameter_list|)
-value|(q->processed - q->cleaned - TX_MAX_DESC)
+value|((q)->processed - (q)->cleaned - TX_MAX_DESC)
 end_define
 
 begin_define
