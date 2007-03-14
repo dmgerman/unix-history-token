@@ -352,20 +352,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|USE_PREFETCH
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_PREFETCH
-end_ifdef
-
-begin_define
-define|#
-directive|define
 name|L1_CACHE_BYTES
-value|64
+value|32
 end_define
 
 begin_function
@@ -382,25 +370,6 @@ block|{
 asm|__asm volatile("prefetcht0 %0" :: "m" (*(unsigned long *)x));
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|prefetch
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -437,6 +406,15 @@ define|#
 directive|define
 name|smp_mb
 parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|prefetch
+parameter_list|(
+name|x
+parameter_list|)
 end_define
 
 begin_endif
