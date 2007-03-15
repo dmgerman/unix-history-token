@@ -408,6 +408,8 @@ name|stopst
 parameter_list|,
 name|sopno
 name|lev
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 specifier|static
@@ -485,6 +487,10 @@ name|states
 name|aft
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|MAX_RECURSION
+value|100
 define|#
 directive|define
 name|BOL
@@ -1709,6 +1715,8 @@ operator|(
 name|sopno
 operator|)
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1874,6 +1882,8 @@ argument_list|,
 operator|(
 name|sopno
 operator|)
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3202,6 +3212,8 @@ parameter_list|,
 name|stopst
 parameter_list|,
 name|lev
+parameter_list|,
+name|rec
 parameter_list|)
 name|struct
 name|match
@@ -3226,6 +3238,9 @@ name|sopno
 name|lev
 decl_stmt|;
 comment|/* PLUS nesting level */
+name|int
+name|rec
+decl_stmt|;
 block|{
 name|int
 name|i
@@ -4007,6 +4022,22 @@ index|]
 operator|.
 name|rm_so
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+operator|&&
+name|rec
+operator|++
+operator|>
+name|MAX_RECURSION
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|assert
 argument_list|(
 name|stop
@@ -4105,6 +4136,8 @@ argument_list|,
 name|stopst
 argument_list|,
 name|lev
+argument_list|,
+name|rec
 argument_list|)
 operator|)
 return|;
@@ -4130,6 +4163,8 @@ argument_list|,
 name|stopst
 argument_list|,
 name|lev
+argument_list|,
+name|rec
 argument_list|)
 expr_stmt|;
 if|if
@@ -4166,6 +4201,8 @@ argument_list|,
 name|stopst
 argument_list|,
 name|lev
+argument_list|,
+name|rec
 argument_list|)
 operator|)
 return|;
@@ -4225,6 +4262,8 @@ argument_list|,
 name|lev
 operator|+
 literal|1
+argument_list|,
+name|rec
 argument_list|)
 operator|)
 return|;
@@ -4263,6 +4302,8 @@ argument_list|,
 name|lev
 operator|-
 literal|1
+argument_list|,
+name|rec
 argument_list|)
 operator|)
 return|;
@@ -4298,6 +4339,8 @@ argument_list|,
 name|stopst
 argument_list|,
 name|lev
+argument_list|,
+name|rec
 argument_list|)
 expr_stmt|;
 if|if
@@ -4325,6 +4368,8 @@ argument_list|,
 name|lev
 operator|-
 literal|1
+argument_list|,
+name|rec
 argument_list|)
 operator|)
 return|;
@@ -4395,6 +4440,8 @@ argument_list|,
 name|esub
 argument_list|,
 name|lev
+argument_list|,
+name|rec
 argument_list|)
 expr_stmt|;
 if|if
@@ -4579,6 +4626,8 @@ argument_list|,
 name|stopst
 argument_list|,
 name|lev
+argument_list|,
+name|rec
 argument_list|)
 expr_stmt|;
 if|if
@@ -4678,6 +4727,8 @@ argument_list|,
 name|stopst
 argument_list|,
 name|lev
+argument_list|,
+name|rec
 argument_list|)
 expr_stmt|;
 if|if
