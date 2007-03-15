@@ -2773,7 +2773,7 @@ name|seq_lock
 argument_list|,
 literal|"seqflq"
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
@@ -3668,7 +3668,7 @@ name|seqinfo_mtx
 argument_list|,
 literal|"seqmod"
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|)

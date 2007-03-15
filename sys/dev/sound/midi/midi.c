@@ -1280,7 +1280,7 @@ name|lock
 argument_list|,
 literal|"raw midi"
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
@@ -1294,7 +1294,7 @@ name|qlock
 argument_list|,
 literal|"q raw midi"
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
@@ -6128,7 +6128,7 @@ name|midistat_lock
 argument_list|,
 literal|"midistat lock"
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
