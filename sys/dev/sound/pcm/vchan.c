@@ -1909,14 +1909,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ch
-condition|)
-return|return
-name|NULL
-return|;
 name|ch
 operator|->
 name|parent
@@ -3860,21 +3852,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|pce
-condition|)
-block|{
-name|CHN_LOCK
-argument_list|(
-name|parent
-argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
-return|;
-block|}
 comment|/* create a new playback channel */
 name|child
 operator|=
