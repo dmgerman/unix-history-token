@@ -129,7 +129,7 @@ directive|define
 name|SCTP_IPI_ADDR_INIT
 parameter_list|()
 define|\
-value|mtx_init(&sctppcbinfo.ipi_addr_mtx, "sctp-addr-wq", "sctp_addr_wq", MTX_DEF)
+value|mtx_init(&sctppcbinfo.ipi_addr_mtx, "sctp-addr", "sctp_addr", MTX_DEF)
 end_define
 
 begin_define
@@ -155,6 +155,40 @@ directive|define
 name|SCTP_IPI_ADDR_UNLOCK
 parameter_list|()
 value|mtx_unlock(&sctppcbinfo.ipi_addr_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_IPI_ITERATOR_WQ_INIT
+parameter_list|()
+define|\
+value|mtx_init(&sctppcbinfo.ipi_iterator_wq_mtx, "sctp-it-wq", "sctp_it_wq", MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_IPI_ITERATOR_WQ_DESTROY
+parameter_list|()
+define|\
+value|mtx_destroy(&sctppcbinfo.ipi_iterator_wq_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_IPI_ITERATOR_WQ_LOCK
+parameter_list|()
+value|do { 					\              mtx_lock(&sctppcbinfo.ipi_iterator_wq_mtx);                \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_IPI_ITERATOR_WQ_UNLOCK
+parameter_list|()
+value|mtx_unlock(&sctppcbinfo.ipi_iterator_wq_mtx)
 end_define
 
 begin_define
@@ -360,37 +394,6 @@ parameter_list|)
 value|mtx_unlock(&(_tcb)->tcb_send_mtx)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SCTP_INP_INCR_REF
-parameter_list|(
-name|_inp
-parameter_list|)
-value|{ int x; \                                   atomic_add_int(&((_inp)->refcount), 1); \                                   x = atomic_fetchadd_int(&sctp_logoff_stuff, 1); \                                   if(x == 30000) \                                       sctp_logoff_stuff = x = 0; \                                   sctp_logoff[x].inp = _inp; \                                   sctp_logoff[x].ticks = ticks; \                                   sctp_logoff[x].lineno = __LINE__; \                                   sctp_logoff[x].updown = 1; \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_INP_DECR_REF
-parameter_list|(
-name|_inp
-parameter_list|)
-value|{ int x; \                                   if (atomic_fetchadd_int(&((_inp)->refcount), -1) == 0 ) panic("refcount goes negative"); \                                   x = atomic_fetchadd_int(&sctp_logoff_stuff, 1); \                                   if(x == 30000) \                                       sctp_logoff_stuff = x = 0; \                                   sctp_logoff[x].inp = _inp; \                                   sctp_logoff[x].ticks = ticks; \                                   sctp_logoff[x].lineno = __LINE__; \                                   sctp_logoff[x].updown = 0; \ }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -410,11 +413,6 @@ name|_inp
 parameter_list|)
 value|atomic_add_int(&((_inp)->refcount), -1)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

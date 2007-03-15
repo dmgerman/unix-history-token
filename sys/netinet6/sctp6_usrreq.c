@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/sctp_sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/sctp_output.h>
 end_include
 
@@ -117,41 +123,12 @@ directive|include
 file|<netinet6/sctp6_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|sctp_debug_on
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SCTP_DEBUG */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|struct
 name|protosw
 name|inetsw
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sctp_no_csum_on_loopback
 decl_stmt|;
 end_decl_stmt
 
@@ -1498,9 +1475,16 @@ name|ip6cp
 init|=
 name|NULL
 decl_stmt|;
+name|uint32_t
+name|vrf_id
+decl_stmt|;
 name|int
 name|cm
 decl_stmt|;
+name|vrf_id
+operator|=
+name|SCTP_DEFAULT_VRFID
+expr_stmt|;
 if|if
 condition|(
 name|pktdst
@@ -1755,6 +1739,8 @@ operator|&
 name|net
 argument_list|,
 literal|1
+argument_list|,
+name|vrf_id
 argument_list|)
 expr_stmt|;
 comment|/* inp's ref-count increased&& stcb locked */
@@ -1954,6 +1940,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|uint32_t
+name|vrf_id
+decl_stmt|;
+name|vrf_id
+operator|=
+name|SCTP_DEFAULT_VRFID
+expr_stmt|;
 comment|/* 	 * XXXRW: Other instances of getcred use SUSER_ALLOWJAIL, as socket 	 * visibility is scoped using cr_canseesocket(), which it is not 	 * here. 	 */
 name|error
 operator|=
@@ -2064,6 +2057,8 @@ operator|&
 name|net
 argument_list|,
 literal|1
+argument_list|,
+name|vrf_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -3173,6 +3168,10 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/* This could be made common with sctp_detach() since they are identical */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -4210,6 +4209,9 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|uint32_t
+name|vrf_id
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -4281,6 +4283,10 @@ operator|)
 return|;
 comment|/* I made the same as TCP since we are 					 * not setup? */
 block|}
+name|vrf_id
+operator|=
+name|SCTP_DEFAULT_VRFID
+expr_stmt|;
 name|SCTP_ASOC_CREATE_LOCK
 argument_list|(
 name|inp
@@ -4654,6 +4660,8 @@ operator|&
 name|error
 argument_list|,
 literal|0
+argument_list|,
+name|vrf_id
 argument_list|)
 expr_stmt|;
 name|SCTP_ASOC_CREATE_UNLOCK
@@ -4771,6 +4779,14 @@ name|struct
 name|sctp_inpcb
 modifier|*
 name|inp
+decl_stmt|;
+name|uint32_t
+name|vrf_id
+decl_stmt|;
+name|struct
+name|sctp_ifa
+modifier|*
+name|sctp_ifa
 decl_stmt|;
 name|int
 name|error
@@ -4977,11 +4993,13 @@ goto|goto
 name|notConn6
 goto|;
 block|}
-name|sin6
-operator|->
-name|sin6_addr
+name|vrf_id
 operator|=
-name|sctp_ipv6_source_address_selection
+name|SCTP_DEFAULT_VRFID
+expr_stmt|;
+name|sctp_ifa
+operator|=
+name|sctp_source_address_selection
 argument_list|(
 name|inp
 argument_list|,
@@ -5000,8 +5018,28 @@ argument_list|,
 name|net
 argument_list|,
 literal|0
+argument_list|,
+name|vrf_id
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sctp_ifa
+condition|)
+block|{
+name|sin6
+operator|->
+name|sin6_addr
+operator|=
+name|sctp_ifa
+operator|->
+name|address
+operator|.
+name|sin6
+operator|.
+name|sin6_addr
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -5055,8 +5093,10 @@ name|laddr
 operator|->
 name|ifa
 operator|->
-name|ifa_addr
-operator|->
+name|address
+operator|.
+name|sa
+operator|.
 name|sa_family
 operator|==
 name|AF_INET6
@@ -5074,11 +5114,14 @@ expr|struct
 name|sockaddr_in6
 operator|*
 operator|)
+operator|&
 name|laddr
 operator|->
 name|ifa
 operator|->
-name|ifa_addr
+name|address
+operator|.
+name|sin6
 expr_stmt|;
 name|sin6
 operator|->

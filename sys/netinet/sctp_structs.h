@@ -201,7 +201,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Users of the iterator need to malloc a iterator with a call to  * sctp_initiate_iterator(inp_func, assoc_func, pcb_flags, pcb_features,  *     asoc_state, void-ptr-arg, uint32-arg, end_func, inp);  *  * Use the following two defines if you don't care what pcb flags are on the EP  * and/or you don't care what state the association is in.  *  * Note that if you specify an INP as the last argument then ONLY each  * association of that single INP will be executed upon. Note that the pcb  * flags STILL apply so if the inp you specify has different pcb_flags then  * what you put in pcb_flags nothing will happen. use SCTP_PCB_ANY_FLAGS to  * assure the inp you specify gets treated.  */
+comment|/*  * Users of the iterator need to malloc a iterator with a call to  * sctp_initiate_iterator(inp_func, assoc_func, inp_func,  pcb_flags, pcb_features,  *     asoc_state, void-ptr-arg, uint32-arg, end_func, inp);  *  * Use the following two defines if you don't care what pcb flags are on the EP  * and/or you don't care what state the association is in.  *  * Note that if you specify an INP as the last argument then ONLY each  * association of that single INP will be executed upon. Note that the pcb  * flags STILL apply so if the inp you specify has different pcb_flags then  * what you put in pcb_flags nothing will happen. use SCTP_PCB_ANY_FLAGS to  * assure the inp you specify gets treated.  */
 end_comment
 
 begin_define
@@ -253,7 +253,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|void
+name|int
 function_decl|(
 modifier|*
 name|inp_func
@@ -295,7 +295,7 @@ begin_struct
 struct|struct
 name|sctp_iterator
 block|{
-name|LIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|sctp_iterator
 argument_list|)
@@ -325,6 +325,10 @@ name|inp_func
 name|function_inp
 decl_stmt|;
 comment|/* per endpoint function */
+name|inp_func
+name|function_inp_end
+decl_stmt|;
+comment|/* end INP function */
 name|end_func
 name|function_atend
 decl_stmt|;
@@ -356,6 +360,9 @@ decl_stmt|;
 name|uint8_t
 name|no_chunk_output
 decl_stmt|;
+name|uint8_t
+name|done_current_ep
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -379,7 +386,7 @@ value|0x00000002
 end_define
 
 begin_expr_stmt
-name|LIST_HEAD
+name|TAILQ_HEAD
 argument_list|(
 name|sctpiterators
 argument_list|,
@@ -422,6 +429,21 @@ end_struct
 
 begin_struct
 struct|struct
+name|sctp_asconf_iterator
+block|{
+name|struct
+name|sctpladdr
+name|list_of_work
+decl_stmt|;
+name|int
+name|cnt
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sctp_nets
 block|{
 name|TAILQ_ENTRY
@@ -450,8 +472,9 @@ name|sctp_sockstore
 name|_l_addr
 decl_stmt|;
 comment|/* remote peer addr */
-name|union
-name|sctp_sockstore
+name|struct
+name|sctp_ifa
+modifier|*
 name|_s_addr
 decl_stmt|;
 comment|/* our selected src addr */
@@ -1144,7 +1167,7 @@ name|sctp_asconf_addr_param
 name|ap
 decl_stmt|;
 name|struct
-name|ifaddr
+name|sctp_ifa
 modifier|*
 name|ifa
 decl_stmt|;
@@ -1285,7 +1308,7 @@ comment|/* timer for delayed events */
 comment|/* list of local addresses when add/del in progress */
 name|struct
 name|sctpladdr
-name|sctp_local_addr_list
+name|sctp_restricted_addrs
 decl_stmt|;
 name|struct
 name|sctpnetlisthead
@@ -1412,6 +1435,9 @@ comment|/* queue of chunks waiting to be sent into the local stack */
 name|struct
 name|sctp_readhead
 name|pending_reply_queue
+decl_stmt|;
+name|uint32_t
+name|vrf_id
 decl_stmt|;
 name|uint32_t
 name|cookie_preserve_req
@@ -1699,6 +1725,18 @@ name|delayed_ack
 decl_stmt|;
 name|unsigned
 name|int
+name|old_delayed_ack
+decl_stmt|;
+name|unsigned
+name|int
+name|sack_freq
+decl_stmt|;
+name|unsigned
+name|int
+name|data_pkts_seen
+decl_stmt|;
+name|unsigned
+name|int
 name|numduptsns
 decl_stmt|;
 name|int
@@ -1836,9 +1874,9 @@ name|uint8_t
 name|authenticated
 decl_stmt|;
 comment|/* packet authenticated ok */
-comment|/* 	 * This flag indicates that we need to send the first SACK. If in 	 * place it says we have NOT yet sent a SACK and need to. 	 */
+comment|/* 	 * This flag indicates that a SACK need to be sent. Initially this 	 * is 1 to send the first sACK immediately. 	 */
 name|uint8_t
-name|first_ack_sent
+name|send_sack
 decl_stmt|;
 comment|/* max burst after fast retransmit completes */
 name|uint8_t

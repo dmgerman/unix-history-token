@@ -43,6 +43,27 @@ directive|include
 file|<netinet/sctp_os_bsd.h>
 end_include
 
+begin_comment
+comment|/* All os's must implement this address gatherer. If  * no VRF's exist, then vrf 0 is the only one and all  * addresses and ifn's live here.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_VRF
+value|0
+end_define
+
+begin_function_decl
+name|void
+name|sctp_init_vrf_list
+parameter_list|(
+name|int
+name|vrfid
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

@@ -33,6 +33,50 @@ directive|define
 name|__sctp_constants_h__
 end_define
 
+begin_comment
+comment|/* Number of packets to get before sack sent by default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_SACK_FREQ
+value|2
+end_define
+
+begin_comment
+comment|/* Address limit - This variable is calculated  * based on an 1500 byte mtu. We take out 100 bytes  * for the cookie, 40 bytes for a v6 header and 32  * bytes for the init structure. A second init structure  * for the init-ack and then finally a third one for the  * imbedded init. This yeilds 100+40+(3 * 32) = 236 bytes.  * This leaves 1264 bytes for addresses. Now whatever we  * send in the INIT() we need to allow to get back in the  * INIT-ACK plus all the values from INIT and INIT-ACK  * listed in the cookie. Plus we need some overhead for  * maybe copied parameters in the COOKIE. If we  * allow 20 addresses, and each side has 20 V6 addresses  * that will be 400 bytes. In the INIT-ACK we will  * see the INIT-ACK 400 + 800 in the cookie. This leaves  * 64 bytes slack for misc things in the cookie. Otherwise  * we need to allow IP fragmentation.. which I believe  * the INIT-ACK and COOKIE do, I don't think we do that  * to the INIT though. So the max you could make this  * value is 60 addresses.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_ADDRESS_LIMIT
+value|20
+end_define
+
+begin_comment
+comment|/* Number of addresses where we just skip the counting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_COUNT_LIMIT
+value|40
+end_define
+
+begin_comment
+comment|/* Number of ticks to delay before running  * iterator on an address change.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_ADDRESS_TICK_DELAY
+value|2
+end_define
+
 begin_define
 define|#
 directive|define
@@ -56,6 +100,38 @@ define|#
 directive|define
 name|SCTP_STAT_LOG_SIZE
 value|80000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_USE_THREAD_BASED_ITERATOR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_KTRHEAD_NAME
+value|"sctp_iterator"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_KTHREAD_PAGES
+value|2
+end_define
+
+begin_comment
+comment|/* If you support Multi-VRF how big to  * make the initial array of VRF's to.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_VRF_SIZE
+value|4
 end_define
 
 begin_comment
@@ -981,12 +1057,44 @@ begin_comment
 comment|/* default AUTO_ASCONF mode enable(1)/disable(0) value (sysctl) */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCTP_APPLE_AUTO_ASCONF
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|SCTP_DEFAULT_AUTO_ASCONF
 value|0
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_AUTO_ASCONF
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Theshold for rwnd updates, we have to read (sb_hiwat>>  * SCTP_RWND_HIWAT_SHIFT) before we will look to see if we need to send a  * window update sack. When we look, we compare the last rwnd we sent vs the  * current rwnd. It too must be greater than this value. Using 3 divdes the  * hiwat by 8, so for 200k rwnd we need to read 24k. For a 64k rwnd we need  * to read 8k. This seems about right.. I hope :-D.. we do set a  * min of a MTU on it so if the rwnd is real small we will insist  * on a full MTU of 1500 bytes.  */
@@ -1394,6 +1502,13 @@ define|#
 directive|define
 name|SCTP_OUTPUT_FROM_COOKIE_ACK
 value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_OUTPUT_FROM_DRAIN
+value|15
 end_define
 
 begin_comment
@@ -1977,6 +2092,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_ADDR_REQ_PRIMARY
+value|0x400
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_REACHABLE_MASK
 value|0x203
 end_define
@@ -2397,6 +2519,10 @@ name|SCTP_ASOC_MAX_CHUNKS_ON_QUEUE
 value|512
 end_define
 
+begin_comment
+comment|/* The conversion from time to ticks and vice versa is done by rounding  * upwards. This way we can test in the code the time to be positive and  * know that this corresponds to a positive number of ticks.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2404,7 +2530,7 @@ name|MSEC_TO_TICKS
 parameter_list|(
 name|x
 parameter_list|)
-value|((hz == 1000) ? x : (((x) * hz) / 1000))
+value|((hz == 1000) ? x : ((((x) * hz) + 999) / 1000))
 end_define
 
 begin_define
@@ -2414,7 +2540,7 @@ name|TICKS_TO_MSEC
 parameter_list|(
 name|x
 parameter_list|)
-value|((hz == 1000) ? x : (((x) * 1000) / hz))
+value|((hz == 1000) ? x : ((((x) * 1000) + (hz - 1)) / hz))
 end_define
 
 begin_define
@@ -2434,7 +2560,7 @@ name|TICKS_TO_SEC
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) / hz)
+value|(((x) + (hz - 1)) / hz)
 end_define
 
 begin_comment

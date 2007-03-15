@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/priv.h>
 end_include
 
@@ -394,6 +400,76 @@ value|LIST_EMPTY(list)
 end_define
 
 begin_comment
+comment|/*  * Local address and interface list handling  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_MAX_VRF_ID
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SIZE_OF_VRF_HASH
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_IFNAMSIZ
+value|IFNAMSIZ
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_VRFID
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_IFN_IS_IFT_LOOP
+parameter_list|(
+name|ifn
+parameter_list|)
+value|((ifn)->ifn_type == IFT_LOOP)
+end_define
+
+begin_comment
+comment|/*  * Access to IFN's to help with src-addr-selection  */
+end_comment
+
+begin_comment
+comment|/* This could return VOID if the index works but for BSD we provide both. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_GET_IFN_VOID_FROM_ROUTE
+parameter_list|(
+name|ro
+parameter_list|)
+value|(void *)ro->ro_rt->rt_ifp
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_GET_IF_INDEX_FROM_ROUTE
+parameter_list|(
+name|ro
+parameter_list|)
+value|ro->ro_rt->rt_ifp->if_index
+end_define
+
+begin_comment
 comment|/*  * general memory allocation  */
 end_comment
 
@@ -447,6 +523,13 @@ parameter_list|(
 name|var
 parameter_list|)
 value|FREE(var, M_SONAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PROCESS_STRUCT
+value|struct proc *
 end_define
 
 begin_comment
@@ -921,6 +1004,54 @@ parameter_list|(
 name|inp
 parameter_list|)
 value|(((struct inpcb *)inp)->inp_flags& IN6P_IPV6_V6ONLY)
+end_define
+
+begin_comment
+comment|/* is the socket non-blocking? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SO_IS_NBIO
+parameter_list|(
+name|so
+parameter_list|)
+value|((so)->so_state& SS_NBIO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SET_SO_NBIO
+parameter_list|(
+name|so
+parameter_list|)
+value|((so)->so_state |= SS_NBIO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CLEAR_SO_NBIO
+parameter_list|(
+name|so
+parameter_list|)
+value|((so)->so_state&= ~SS_NBIO)
+end_define
+
+begin_comment
+comment|/* get the socket type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SO_TYPE
+parameter_list|(
+name|so
+parameter_list|)
+value|((so)->so_type)
 end_define
 
 begin_comment

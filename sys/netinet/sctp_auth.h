@@ -293,43 +293,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * global variables  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|sctp_asconf_auth_nochk
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sysctl to disable ASCONF auth chk */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|sctp_auth_disable
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sysctl for temp feature interop */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|sctp_auth_random_len
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sysctl */
-end_comment
-
-begin_comment
 comment|/*  * Macros  */
 end_comment
 

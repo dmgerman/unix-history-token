@@ -742,12 +742,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Turn off any non-blocking semantic. */
+name|SCTP_CLEAR_SO_NBIO
+argument_list|(
 name|newso
-operator|->
-name|so_state
-operator|&=
-operator|~
-name|SS_NBIO
+argument_list|)
 expr_stmt|;
 name|newso
 operator|->

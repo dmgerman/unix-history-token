@@ -492,6 +492,56 @@ value|0x00001106
 end_define
 
 begin_comment
+comment|/* Special hook for dynamically setting primary for all assoc's,  * this is a write only option that requires root privledge.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SET_DYNAMIC_PRIMARY
+value|0x00002001
+end_define
+
+begin_comment
+comment|/* VRF (virtual router feature) and multi-VRF support  * options. VRF's provide splits within a router  * that give the views of multiple routers. A  * standard host, without VRF support, is just  * a single VRF. If VRF's are supported then  * the transport must be VRF aware. This means  * that every socket call coming in must be directed  * within the endpoint to one of the VRF's it belongs  * to. The endpoint, before binding, may select  * the "default" VRF it is in by using a set socket  * option with SCTP_VRF_ID. This will also  * get propegated to the default VRF. Once the  * endpoint binds an address then it CANNOT add  * additional VRF's to become a Multi-VRF endpoint.  *  * Before BINDING additional VRF's can be added with  * the SCTP_ADD_VRF_ID call or deleted with  * SCTP_DEL_VRF_ID.  *  * Associations are ALWAYS contained inside a single  * VRF. They cannot reside in two (or more) VRF's. Incoming  * packets, assuming the router is VRF aware, can always  * tell us what VRF they arrived on. A host not supporting  * any VRF's will find that the packets always arrived on the  * single VRF that the host has.  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_VRF_ID
+value|0x00003001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ADD_VRF_ID
+value|0x00003002
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_GET_VRF_IDS
+value|0x00003003
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_GET_ASOC_VRF
+value|0x00003004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEL_VRF_ID
+value|0x00003005
+end_define
+
+begin_comment
 comment|/*  * hidden implementation specific options these are NOT user visible (should  * move out of sctp.h)  */
 end_comment
 

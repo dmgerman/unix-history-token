@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2006, Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2007, Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/sctp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/sctp_sysctl.h>
 end_include
 
 begin_include
@@ -81,34 +87,9 @@ directive|include
 file|<netinet/sctp_timer.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|sctp_debug_on
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * NOTES: On the outbound side of things I need to check the sack timer to  * see if I should generate a sack into the chunk queue (if I have data to  * send that is and will be sending it .. for bundling.  *  * The callback in sctp_usrreq.c will get called when the socket is read from.  * This will cause sctp_service_queues() to get called on the top entry in  * the list.  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sctp_strict_sacks
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|__inline
@@ -6829,14 +6810,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|int
-name|sctp_max_chunks_on_queue
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -7215,35 +7188,12 @@ name|numduptsns
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|SCTP_OS_TIMER_PENDING
-argument_list|(
-operator|&
 name|asoc
 operator|->
-name|dack_timer
-operator|.
-name|timer
-argument_list|)
-condition|)
-block|{
-comment|/* 			 * By starting the timer we assure that we WILL sack 			 * at the end of the packet when sctp_sack_check 			 * gets called. 			 */
-name|sctp_timer_start
-argument_list|(
-name|SCTP_TIMER_TYPE_RECV
-argument_list|,
-name|stcb
-operator|->
-name|sctp_ep
-argument_list|,
-name|stcb
-argument_list|,
-name|NULL
-argument_list|)
+name|send_sack
+operator|=
+literal|1
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -11723,12 +11673,12 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|first_ack_sent
+name|send_sack
 operator|==
-literal|0
+literal|1
 operator|)
 operator|||
-comment|/* First time we send a 								 * sack */
+comment|/* We need to send a 								 * SACK */
 operator|(
 operator|(
 name|was_a_gap
@@ -11766,20 +11716,21 @@ operator|==
 literal|0
 operator|)
 operator|||
+comment|/* Delayed sack disabled */
 operator|(
-name|SCTP_OS_TIMER_PENDING
-argument_list|(
-operator|&
 name|stcb
 operator|->
 name|asoc
 operator|.
-name|dack_timer
+name|data_pkts_seen
+operator|>=
+name|stcb
+operator|->
+name|asoc
 operator|.
-name|timer
-argument_list|)
+name|sack_freq
 operator|)
-comment|/* timer was up . second 											 * packet */
+comment|/* hit limit of pkts */
 condition|)
 block|{
 if|if
@@ -11797,9 +11748,9 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|first_ack_sent
+name|send_sack
 operator|==
-literal|1
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -11854,14 +11805,6 @@ block|}
 else|else
 block|{
 comment|/* 					 * Ok we must build a SACK since the 					 * timer is pending, we got our 					 * first packet OR there are gaps or 					 * duplicates. 					 */
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|first_ack_sent
-operator|=
-literal|1
-expr_stmt|;
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -11883,6 +11826,22 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|SCTP_OS_TIMER_PENDING
+argument_list|(
+operator|&
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|dack_timer
+operator|.
+name|timer
+argument_list|)
+condition|)
+block|{
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_RECV
@@ -11896,6 +11855,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -12165,13 +12125,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sctp_strict_data_order
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|int
@@ -12570,6 +12523,11 @@ expr_stmt|;
 name|break_flag
 operator|=
 literal|0
+expr_stmt|;
+name|asoc
+operator|->
+name|data_pkts_seen
+operator|++
 expr_stmt|;
 while|while
 condition|(
@@ -13331,19 +13289,14 @@ operator|==
 name|SCTP_STATE_SHUTDOWN_SENT
 condition|)
 block|{
-comment|/* 		 * Assure that we ack right away by making sure that a d-ack 		 * timer is running. So the sack_check will send a sack. 		 */
-name|sctp_timer_start
-argument_list|(
-name|SCTP_TIMER_TYPE_RECV
-argument_list|,
+comment|/* Assure that we ack right away */
 name|stcb
 operator|->
-name|sctp_ep
-argument_list|,
-name|stcb
-argument_list|,
-name|net
-argument_list|)
+name|asoc
+operator|.
+name|send_sack
+operator|=
+literal|1
 expr_stmt|;
 block|}
 comment|/* Start a sack timer or QUEUE a SACK for sending */
@@ -13368,40 +13321,51 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|first_ack_sent
-operator|)
-condition|)
-block|{
-comment|/* Everything is in order */
-if|if
-condition|(
-name|stcb
-operator|->
-name|asoc
-operator|.
 name|mapping_array
 index|[
 literal|0
 index|]
-operator|==
+operator|!=
 literal|0xff
+operator|)
 condition|)
 block|{
-comment|/* need to do the slide */
-name|sctp_sack_check
-argument_list|(
+if|if
+condition|(
+operator|(
 name|stcb
-argument_list|,
+operator|->
+name|asoc
+operator|.
+name|data_pkts_seen
+operator|>=
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|sack_freq
+operator|)
+operator|||
+operator|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|delayed_ack
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|send_sack
+operator|==
 literal|1
-argument_list|,
-name|was_a_gap
-argument_list|,
-operator|&
-name|abort_flag
-argument_list|)
-expr_stmt|;
-block|}
-else|else
+operator|)
+condition|)
 block|{
 if|if
 condition|(
@@ -13418,14 +13382,6 @@ name|timer
 argument_list|)
 condition|)
 block|{
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|first_ack_sent
-operator|=
-literal|1
-expr_stmt|;
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -13438,6 +13394,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
+block|}
 name|sctp_send_sack
 argument_list|(
 name|stcb
@@ -13445,6 +13402,22 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+operator|!
+name|SCTP_OS_TIMER_PENDING
+argument_list|(
+operator|&
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|dack_timer
+operator|.
+name|timer
+argument_list|)
+condition|)
 block|{
 name|sctp_timer_start
 argument_list|(
@@ -14537,6 +14510,39 @@ name|sent
 operator|=
 name|SCTP_DATAGRAM_MARKED
 expr_stmt|;
+if|if
+condition|(
+name|tp1
+operator|->
+name|rec
+operator|.
+name|data
+operator|.
+name|chunk_was_revoked
+condition|)
+block|{
+comment|/* deflate the cwnd */
+name|tp1
+operator|->
+name|whoTo
+operator|->
+name|cwnd
+operator|-=
+name|tp1
+operator|->
+name|book_size
+expr_stmt|;
+name|tp1
+operator|->
+name|rec
+operator|.
+name|data
+operator|.
+name|chunk_was_revoked
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 break|break;
 block|}
@@ -14657,15 +14663,6 @@ name|SCTP_DATAGRAM_ACKED
 condition|)
 block|{
 comment|/* it has been revoked */
-if|if
-condition|(
-name|sctp_cmt_on_off
-condition|)
-block|{
-comment|/* 					 * If CMT is ON, leave "sent" at 					 * ACKED. CMT causes reordering of 					 * data and acks (received on 					 * different interfaces) can be 					 * persistently reordered. Acking 					 * followed by apparent revoking and 					 * re-acking causes unexpected weird 					 * behavior. So, at this time, CMT 					 * does not respect renegs. Renegs 					 * cannot be recovered. I will fix 					 * this once I am sure that things 					 * are working right again with CMT. 					 */
-block|}
-else|else
-block|{
 name|tp1
 operator|->
 name|sent
@@ -14682,12 +14679,23 @@ name|chunk_was_revoked
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 					 * We must add this stuff back in to 					 * assure timers and such get 					 * started. 					 */
+comment|/* 				 * We must add this stuff back in to assure 				 * timers and such get started. 				 */
 name|tp1
 operator|->
 name|whoTo
 operator|->
 name|flight_size
+operator|+=
+name|tp1
+operator|->
+name|book_size
+expr_stmt|;
+comment|/* 				 * We inflate the cwnd to compensate for our 				 * artificial inflation of the flight_size. 				 */
+name|tp1
+operator|->
+name|whoTo
+operator|->
+name|cwnd
 operator|+=
 name|tp1
 operator|->
@@ -14737,7 +14745,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 block|}
 elseif|else
 if|if
@@ -14841,13 +14848,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sctp_peer_chunk_oh
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -15362,7 +15362,7 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * Here we check to see if we were have already done a FR 		 * and if so we see if the biggest TSN we saw in the sack is 		 * smaller than the recovery point. If so we don't strike 		 * the tsn... otherwise we CAN strike the TSN. 		 */
-comment|/* 		 * @@@ JRI: Check for CMT 		 */
+comment|/* 		 * @@@ JRI: Check for CMT if (accum_moved&& 		 * asoc->fast_retran_loss_recovery&& (sctp_cmt_on_off == 		 * 0)) { 		 */
 if|if
 condition|(
 name|accum_moved
@@ -15370,12 +15370,6 @@ operator|&&
 name|asoc
 operator|->
 name|fast_retran_loss_recovery
-operator|&&
-operator|(
-name|sctp_cmt_on_off
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 comment|/* 			 * Strike the TSN if in fast-recovery and cum-ack 			 * moved. 			 */
@@ -15657,7 +15651,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/* 			 * @@@ JRI: TODO: remove code for HTNA algo. CMT's 			 * SFR algo covers HTNA. 			 */
+comment|/* 			 * JRI: TODO: remove code for HTNA algo. CMT's SFR 			 * algo covers HTNA. 			 */
 block|}
 elseif|else
 if|if
@@ -15851,7 +15845,7 @@ condition|(
 name|sctp_cmt_on_off
 condition|)
 block|{
-comment|/* 				 * CMT: Using RTX_SSTHRESH policy for CMT. 				 * If CMT is being used, then pick dest with 				 * largest ssthresh for any retransmission. 				 * (iyengar@cis.udel.edu, 2005/08/12) 				 */
+comment|/* 				 * CMT: Using RTX_SSTHRESH policy for CMT. 				 * If CMT is being used, then pick dest with 				 * largest ssthresh for any retransmission. 				 */
 name|tp1
 operator|->
 name|no_fr_allowed
@@ -17747,20 +17741,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|sctp_early_fr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sctp_L2_abc_variable
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|__inline
@@ -17806,7 +17786,7 @@ argument_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|JANA_CODE_WHY_THIS
+name|JANA_CMT_FAST_RECOVERY
 comment|/* 		 * CMT fast recovery code. Need to debug. 		 */
 if|if
 condition|(
@@ -18133,32 +18113,13 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|JANA_CODE_WHY_THIS
-comment|/* 		 * Cannot skip for CMT. Need to come back and check these 		 * variables for CMT. CMT fast recovery code. Need to debug. 		 */
-if|if
-condition|(
-name|sctp_cmt_on_off
-operator|==
-literal|1
-operator|&&
-name|net
-operator|->
-name|fast_retran_loss_recovery
-operator|&&
-name|net
-operator|->
-name|will_exit_fast_recovery
-operator|==
-literal|0
-condition|)
+name|JANA_CMT_FAST_RECOVERY
+comment|/* 		 * CMT fast recovery code 		 */
+comment|/* 		 * if (sctp_cmt_on_off == 1&& 		 * net->fast_retran_loss_recovery&& 		 * net->will_exit_fast_recovery == 0) { // @@@ Do something 		 * }	   else if (sctp_cmt_on_off == 0&& 		 * asoc->fast_retran_loss_recovery&& will_exit == 0) { 		 */
 endif|#
 directive|endif
 if|if
 condition|(
-name|sctp_cmt_on_off
-operator|==
-literal|0
-operator|&&
 name|asoc
 operator|->
 name|fast_retran_loss_recovery
@@ -18168,7 +18129,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * If we are in loss recovery we skip any 				 * cwnd update 				 */
+comment|/* 			 * If we are in loss recovery we skip any cwnd 			 * update 			 */
 goto|goto
 name|skip_cwnd_update
 goto|;
@@ -19268,6 +19229,39 @@ name|asoc
 operator|->
 name|sent_queue_retran_cnt
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tp1
+operator|->
+name|rec
+operator|.
+name|data
+operator|.
+name|chunk_was_revoked
+condition|)
+block|{
+comment|/* deflate the cwnd */
+name|tp1
+operator|->
+name|whoTo
+operator|->
+name|cwnd
+operator|-=
+name|tp1
+operator|->
+name|book_size
+expr_stmt|;
+name|tp1
+operator|->
+name|rec
+operator|.
+name|data
+operator|.
+name|chunk_was_revoked
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|tp1
@@ -21428,7 +21422,7 @@ name|net_ack2
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * CMT: Reset CUC algo variable before SACK processing 		 */
+comment|/* 		 * CMT: Reset CUC and Fast recovery algo variables before 		 * SACK processing 		 */
 name|net
 operator|->
 name|new_pseudo_cumack
@@ -21877,6 +21871,39 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+if|if
+condition|(
+name|tp1
+operator|->
+name|rec
+operator|.
+name|data
+operator|.
+name|chunk_was_revoked
+condition|)
+block|{
+comment|/* deflate the cwnd */
+name|tp1
+operator|->
+name|whoTo
+operator|->
+name|cwnd
+operator|-=
+name|tp1
+operator|->
+name|book_size
+expr_stmt|;
+name|tp1
+operator|->
+name|rec
+operator|.
+name|data
+operator|.
+name|chunk_was_revoked
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|tp1
 operator|->
@@ -22440,12 +22467,6 @@ directive|endif
 block|}
 if|if
 condition|(
-operator|(
-name|sctp_cmt_on_off
-operator|==
-literal|0
-operator|)
-operator|&&
 name|asoc
 operator|->
 name|fast_retran_loss_recovery
@@ -22578,6 +22599,17 @@ operator|->
 name|whoTo
 operator|->
 name|flight_size
+operator|+=
+name|tp1
+operator|->
+name|book_size
+expr_stmt|;
+comment|/* 					 * To ensure that this increase in 					 * flightsize, which is artificial, 					 * does not throttle the sender, we 					 * also increase the cwnd 					 * artificially. 					 */
+name|tp1
+operator|->
+name|whoTo
+operator|->
+name|cwnd
 operator|+=
 name|tp1
 operator|->
@@ -23445,7 +23477,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * CMT fast recovery code. Need to debug. ((sctp_cmt_on_off == 1)&& 	 * (net->fast_retran_loss_recovery == 0))) 	 */
+comment|/* 	 * CMT fast recovery code. Need to debug. ((sctp_cmt_on_off == 1)&& 	 * (net->fast_retran_loss_recovery == 0))) if 	 * ((asoc->fast_retran_loss_recovery == 0) || (sctp_cmt_on_off == 	 * 1)) { 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|net
@@ -23457,19 +23489,11 @@ argument_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|asoc
 operator|->
 name|fast_retran_loss_recovery
 operator|==
 literal|0
-operator|)
-operator|||
-operator|(
-name|sctp_cmt_on_off
-operator|==
-literal|1
-operator|)
 condition|)
 block|{
 comment|/* out of a RFC2582 Fast recovery window? */
@@ -23985,6 +24009,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * CMT Fast recovery 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|net
