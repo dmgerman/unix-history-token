@@ -6006,6 +6006,8 @@ name|ip_ttl
 operator|<=
 literal|1
 operator|||
+name|IN_LOCAL_GROUP
+argument_list|(
 name|ntohl
 argument_list|(
 name|ip
@@ -6014,8 +6016,7 @@ name|ip_dst
 operator|.
 name|s_addr
 argument_list|)
-operator|<=
-name|INADDR_MAX_LOCAL_GROUP
+argument_list|)
 condition|)
 block|{
 name|MFC_UNLOCK
