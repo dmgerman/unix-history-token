@@ -78,8 +78,8 @@ end_endif
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|DSA_version
+index|[]
 init|=
 literal|"DSA"
 name|OPENSSL_VERSION_PTEXT

@@ -25,6 +25,12 @@ directive|include
 file|<openssl/e_os2.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

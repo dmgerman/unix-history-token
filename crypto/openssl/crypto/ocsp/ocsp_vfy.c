@@ -1575,6 +1575,9 @@ name|requestorName
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|gen
+operator|||
 name|gen
 operator|->
 name|type

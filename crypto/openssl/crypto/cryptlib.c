@@ -82,6 +82,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|lock_names
 index|[
 name|CRYPTO_NUM_LOCKS

@@ -15,28 +15,28 @@ begin_define
 define|#
 directive|define
 name|NUM_NID
-value|769
+value|772
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_SN
-value|765
+value|768
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_LN
-value|765
+value|768
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_OBJ
-value|721
+value|724
 end_define
 
 begin_decl_stmt
@@ -45,7 +45,7 @@ name|unsigned
 name|char
 name|lvalues
 index|[
-literal|5107
+literal|5116
 index|]
 init|=
 block|{
@@ -10982,6 +10982,27 @@ block|,
 literal|0x2B
 block|,
 comment|/* [5098] OBJ_camellia_256_ofb128 */
+literal|0x55
+block|,
+literal|0x1D
+block|,
+literal|0x09
+block|,
+comment|/* [5106] OBJ_subject_directory_attributes */
+literal|0x55
+block|,
+literal|0x1D
+block|,
+literal|0x1C
+block|,
+comment|/* [5109] OBJ_issuing_distribution_point */
+literal|0x55
+block|,
+literal|0x1D
+block|,
+literal|0x1D
+block|,
+comment|/* [5112] OBJ_certificate_issuer */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -26086,6 +26107,66 @@ operator|)
 block|,
 literal|0
 block|}
+block|,
+block|{
+literal|"subjectDirectoryAttributes"
+block|,
+literal|"X509v3 Subject Directory Attributes"
+block|,
+name|NID_subject_directory_attributes
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5106
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"issuingDistributionPoint"
+block|,
+literal|"X509v3 Issuing Distrubution Point"
+block|,
+name|NID_issuing_distribution_point
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5109
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"certificateIssuer"
+block|,
+literal|"X509v3 Certificate Issuer"
+block|,
+name|NID_certificate_issuer
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5112
+index|]
+operator|)
+block|,
+literal|0
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -28017,6 +28098,15 @@ index|]
 operator|)
 block|,
 comment|/* "certicom-arc" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|771
+index|]
+operator|)
+block|,
+comment|/* "certificateIssuer" */
 operator|&
 operator|(
 name|nid_objs
@@ -30168,6 +30258,15 @@ index|]
 operator|)
 block|,
 comment|/* "issuerAltName" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|770
+index|]
+operator|)
+block|,
+comment|/* "issuingDistributionPoint" */
 operator|&
 operator|(
 name|nid_objs
@@ -32701,6 +32800,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|769
+index|]
+operator|)
+block|,
+comment|/* "subjectDirectoryAttributes" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|398
 index|]
 operator|)
@@ -33849,6 +33957,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|771
+index|]
+operator|)
+block|,
+comment|/* "X509v3 Certificate Issuer" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|89
 index|]
 operator|)
@@ -33890,6 +34007,15 @@ index|]
 operator|)
 block|,
 comment|/* "X509v3 Issuer Alternative Name" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|770
+index|]
+operator|)
+block|,
+comment|/* "X509v3 Issuing Distrubution Point" */
 operator|&
 operator|(
 name|nid_objs
@@ -33953,6 +34079,15 @@ index|]
 operator|)
 block|,
 comment|/* "X509v3 Subject Alternative Name" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|769
+index|]
+operator|)
+block|,
+comment|/* "X509v3 Subject Directory Attributes" */
 operator|&
 operator|(
 name|nid_objs
@@ -40289,6 +40424,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|769
+index|]
+operator|)
+block|,
+comment|/* OBJ_subject_directory_attributes 2 5 29 9 */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|82
 index|]
 operator|)
@@ -40384,6 +40528,24 @@ index|]
 operator|)
 block|,
 comment|/* OBJ_delta_crl                    2 5 29 27 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|770
+index|]
+operator|)
+block|,
+comment|/* OBJ_issuing_distribution_point   2 5 29 28 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|771
+index|]
+operator|)
+block|,
+comment|/* OBJ_certificate_issuer           2 5 29 29 */
 operator|&
 operator|(
 name|nid_objs

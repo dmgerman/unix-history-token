@@ -2484,12 +2484,6 @@ condition|)
 goto|goto
 name|err
 goto|;
-name|s
-operator|->
-name|first_packet
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 name|SSL_connect

@@ -560,7 +560,7 @@ operator|(
 name|x
 operator|->
 name|ex_flags
-operator|&&
+operator|&
 name|EXFLAG_SS
 operator|)
 operator|||
@@ -2223,6 +2223,15 @@ comment|/* Tree OK: continue */
 case|case
 literal|1
 case|:
+if|if
+condition|(
+operator|!
+name|tree
+condition|)
+comment|/* 			 * tree_init() returns success and a null tree 			 * if it's just looking at a trust anchor. 			 * I'm not sure that returning success here is 			 * correct, but I'm sure that reporting this 			 * as an internal error which our caller 			 * interprets as a malloc failure is wrong. 			 */
+return|return
+literal|1
+return|;
 break|break;
 block|}
 if|if

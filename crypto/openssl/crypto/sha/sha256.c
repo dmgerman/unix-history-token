@@ -62,8 +62,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|SHA256_version
+index|[]
 init|=
 literal|"SHA-256"
 name|OPENSSL_VERSION_PTEXT

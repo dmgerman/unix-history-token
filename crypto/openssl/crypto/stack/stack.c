@@ -51,8 +51,8 @@ end_define
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|STACK_version
+index|[]
 init|=
 literal|"Stack"
 name|OPENSSL_VERSION_PTEXT

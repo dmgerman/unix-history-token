@@ -105,6 +105,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_crld
 init|=

@@ -25,7 +25,24 @@ directive|define
 name|BLOCK_CIPHER_ecb_loop
 parameter_list|()
 define|\
-value|unsigned int i, bl; \ 	bl = ctx->cipher->block_size;\ 	if(inl< bl) return 1;\ 	inl -= bl; \ 	for(i=0; i<= inl; i+=bl) \  #define BLOCK_CIPHER_func_ecb(cname, cprefix, kstruct, ksched) \ static int cname##_ecb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	BLOCK_CIPHER_ecb_loop() \ 		cprefix##_ecb_encrypt(in + i, out + i,&((kstruct *)ctx->cipher_data)->ksched, ctx->encrypt);\ 	return 1;\ }
+value|unsigned int i, bl; \ 	bl = ctx->cipher->block_size;\ 	if(inl< bl) return 1;\ 	inl -= bl; \ 	for(i=0; i<= inl; i+=bl)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLOCK_CIPHER_func_ecb
+parameter_list|(
+name|cname
+parameter_list|,
+name|cprefix
+parameter_list|,
+name|kstruct
+parameter_list|,
+name|ksched
+parameter_list|)
+define|\
+value|static int cname##_ecb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	BLOCK_CIPHER_ecb_loop() \ 		cprefix##_ecb_encrypt(in + i, out + i,&((kstruct *)ctx->cipher_data)->ksched, ctx->encrypt);\ 	return 1;\ }
 end_define
 
 begin_define

@@ -30,9 +30,17 @@ name|ul
 parameter_list|)
 define|\
 value|ul=(unsigned long)a*b; \ if (ul != 0) \ 	{ \ 	r=(ul&0xffff)-(ul>>16); \ 	r-=((r)>>16); \ 	} \ else \ 	r=(-(int)a-b+1);
-comment|/* assuming a or b is 0 and in range */
-value|\  #ifdef undef
 end_define
+
+begin_comment
+comment|/* assuming a or b is 0 and in range */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|undef
+end_ifdef
 
 begin_define
 define|#

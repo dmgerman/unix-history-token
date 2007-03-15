@@ -127,6 +127,26 @@ name|v3_inhibit_anyp
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_RFC3779
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|X509V3_EXT_METHOD
+name|v3_addr
+decl_stmt|,
+name|v3_asid
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* This table will be searched using OBJ_bsearch so it *must* kept in  * order of the ext_nid values.  */
 end_comment
@@ -243,6 +263,17 @@ block|,
 operator|&
 name|v3_info
 block|,
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_RFC3779
+operator|&
+name|v3_addr
+block|,
+operator|&
+name|v3_asid
+block|,
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_OCSP

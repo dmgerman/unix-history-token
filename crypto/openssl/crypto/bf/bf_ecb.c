@@ -32,8 +32,8 @@ end_comment
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|BF_version
+index|[]
 init|=
 literal|"Blowfish"
 name|OPENSSL_VERSION_PTEXT

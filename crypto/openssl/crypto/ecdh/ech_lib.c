@@ -49,8 +49,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|ECDH_version
+index|[]
 init|=
 literal|"ECDH"
 name|OPENSSL_VERSION_PTEXT

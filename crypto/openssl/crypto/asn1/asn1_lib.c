@@ -83,8 +83,8 @@ end_function_decl
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|ASN1_version
+index|[]
 init|=
 literal|"ASN.1"
 name|OPENSSL_VERSION_PTEXT

@@ -51,6 +51,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_skey_id
 init|=

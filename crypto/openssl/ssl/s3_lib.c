@@ -71,8 +71,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|ssl3_version_str
+index|[]
 init|=
 literal|"SSLv3"
 name|OPENSSL_VERSION_PTEXT
@@ -1131,7 +1131,7 @@ name|SSL_HIGH
 block|,
 literal|0
 block|,
-literal|112
+literal|168
 block|,
 literal|168
 block|,
@@ -1263,7 +1263,7 @@ name|SSL_HIGH
 block|,
 literal|0
 block|,
-literal|112
+literal|168
 block|,
 literal|168
 block|,
@@ -1428,7 +1428,7 @@ name|SSL_EXP40
 block|,
 literal|0
 block|,
-literal|128
+literal|40
 block|,
 literal|128
 block|,
@@ -1527,7 +1527,7 @@ name|SSL_EXP40
 block|,
 literal|0
 block|,
-literal|128
+literal|40
 block|,
 literal|128
 block|,

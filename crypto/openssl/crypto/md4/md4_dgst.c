@@ -28,8 +28,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|MD4_version
+index|[]
 init|=
 literal|"MD4"
 name|OPENSSL_VERSION_PTEXT

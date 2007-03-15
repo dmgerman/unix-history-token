@@ -794,19 +794,11 @@ expr_stmt|;
 comment|/* Lets check version */
 if|if
 condition|(
+operator|!
 name|s
 operator|->
 name|first_packet
 condition|)
-block|{
-name|s
-operator|->
-name|first_packet
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
 block|{
 if|if
 condition|(

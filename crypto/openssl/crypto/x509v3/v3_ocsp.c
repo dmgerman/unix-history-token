@@ -282,6 +282,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_ocsp_crlid
 init|=
@@ -321,6 +322,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_ocsp_acutoff
 init|=
@@ -360,6 +362,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_crl_invdate
 init|=
@@ -399,6 +402,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_crl_hold
 init|=
@@ -438,6 +442,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_ocsp_nonce
 init|=
@@ -474,6 +479,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_ocsp_nocheck
 init|=
@@ -513,6 +519,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_ocsp_serviceloc
 init|=

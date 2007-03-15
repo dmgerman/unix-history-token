@@ -67,8 +67,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|BN_version
+index|[]
 init|=
 literal|"Big Number"
 name|OPENSSL_VERSION_PTEXT

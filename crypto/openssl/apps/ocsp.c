@@ -691,6 +691,9 @@ goto|;
 name|SSL_load_error_strings
 argument_list|()
 expr_stmt|;
+name|OpenSSL_add_ssl_algorithms
+argument_list|()
+expr_stmt|;
 name|args
 operator|=
 name|argv
@@ -3517,6 +3520,24 @@ name|end
 goto|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|ctx
+operator|==
+name|NULL
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"Error creating SSL context.\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
 name|SSL_CTX_set_mode
 argument_list|(
 name|ctx

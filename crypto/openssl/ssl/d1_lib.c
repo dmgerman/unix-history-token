@@ -32,8 +32,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|dtls1_version_str
+index|[]
 init|=
 literal|"DTLSv1"
 name|OPENSSL_VERSION_PTEXT

@@ -7949,6 +7949,11 @@ argument_list|(
 name|conf
 argument_list|)
 expr_stmt|;
+name|NCONF_free
+argument_list|(
+name|extconf
+argument_list|)
+expr_stmt|;
 name|OBJ_cleanup
 argument_list|()
 expr_stmt|;

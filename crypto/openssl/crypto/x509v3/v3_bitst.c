@@ -210,6 +210,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_nscert
 init|=
@@ -223,6 +224,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_key_usage
 init|=

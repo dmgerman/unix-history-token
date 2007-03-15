@@ -28,8 +28,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|RC2_version
+index|[]
 init|=
 literal|"RC2"
 name|OPENSSL_VERSION_PTEXT

@@ -28,8 +28,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|CAST_version
+index|[]
 init|=
 literal|"CAST"
 name|OPENSSL_VERSION_PTEXT

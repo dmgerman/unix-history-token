@@ -59,8 +59,8 @@ end_define
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|TXT_DB_version
+index|[]
 init|=
 literal|"TXT_DB"
 name|OPENSSL_VERSION_PTEXT

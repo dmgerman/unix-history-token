@@ -54,7 +54,7 @@ argument_list|,
 name|ASN1_BIT_STRING
 argument_list|)
 block|,
-name|ASN1_EXP_SEQUENCE_OF
+name|ASN1_EXP_SEQUENCE_OF_OPT
 argument_list|(
 argument|OCSP_SIGNATURE
 argument_list|,

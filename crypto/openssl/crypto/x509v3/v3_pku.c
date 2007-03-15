@@ -69,6 +69,7 @@ comment|/* static PKEY_USAGE_PERIOD *v2i_PKEY_USAGE_PERIOD(X509V3_EXT_METHOD *me
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_pkey_usage_period
 init|=

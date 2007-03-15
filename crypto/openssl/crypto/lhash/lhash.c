@@ -44,8 +44,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|lh_version
+index|[]
 init|=
 literal|"lhash"
 name|OPENSSL_VERSION_PTEXT

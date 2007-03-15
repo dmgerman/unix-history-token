@@ -1263,7 +1263,7 @@ parameter_list|,
 name|rep_xcrypt
 parameter_list|)
 define|\
-value|static inline void *name(size_t cnt,		\ 	struct padlock_cipher_data *cdata,	\ 	void *out, const void *inp) 		\ {	void *iv; 				\ 	asm volatile ( "pushl	%%ebx\n"	\ 		"	leal	16(%0),%%edx\n"	\ 		"	leal	32(%0),%%ebx\n"	\ 			rep_xcrypt "\n"		\ 		"	popl	%%ebx"		\ 		: "=a"(iv), "=c"(cnt), "=D"(out), "=S"(inp) \ 		: "0"(cdata), "1"(cnt), "2"(out), "3"(inp) \ 		: "edx", "cc");			\ 	return iv;				\ }
+value|static inline void *name(size_t cnt,		\ 	struct padlock_cipher_data *cdata,	\ 	void *out, const void *inp) 		\ {	void *iv; 				\ 	asm volatile ( "pushl	%%ebx\n"	\ 		"	leal	16(%0),%%edx\n"	\ 		"	leal	32(%0),%%ebx\n"	\ 			rep_xcrypt "\n"		\ 		"	popl	%%ebx"		\ 		: "=a"(iv), "=c"(cnt), "=D"(out), "=S"(inp) \ 		: "0"(cdata), "1"(cnt), "2"(out), "3"(inp), "m"(*cdata)  \ 		: "edx", "cc", "memory");	\ 	return iv;				\ }
 end_define
 
 begin_comment

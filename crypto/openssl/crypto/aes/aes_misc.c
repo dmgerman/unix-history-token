@@ -28,8 +28,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|AES_version
+index|[]
 init|=
 literal|"AES"
 name|OPENSSL_VERSION_PTEXT

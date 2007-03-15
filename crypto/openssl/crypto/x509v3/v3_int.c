@@ -30,6 +30,7 @@ file|<openssl/x509v3.h>
 end_include
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_crl_num
 init|=
@@ -72,6 +73,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_delta_crl
 init|=
@@ -144,6 +146,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_inhibit_anyp
 init|=
