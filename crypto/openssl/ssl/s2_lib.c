@@ -46,8 +46,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|ssl2_version_str
+index|[]
 init|=
 literal|"SSLv2"
 name|OPENSSL_VERSION_PTEXT

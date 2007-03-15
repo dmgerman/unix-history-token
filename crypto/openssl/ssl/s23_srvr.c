@@ -2179,12 +2179,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|s
-operator|->
-name|first_packet
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 name|SSL_accept

@@ -73,8 +73,8 @@ end_endif
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|RSA_version
+index|[]
 init|=
 literal|"RSA"
 name|OPENSSL_VERSION_PTEXT
