@@ -184,13 +184,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<cxgb3_ioctl.h>
+file|<cxgb_ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<common/cxgb3_regs.h>
+file|<common/cxgb_regs.h>
 end_include
 
 begin_include
