@@ -6723,7 +6723,7 @@ name|char
 modifier|*
 name|argv
 index|[
-literal|8
+literal|7
 index|]
 decl_stmt|;
 if|if
