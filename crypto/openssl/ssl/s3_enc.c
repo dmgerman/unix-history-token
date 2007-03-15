@@ -836,6 +836,15 @@ condition|)
 goto|goto
 name|err
 goto|;
+else|else
+comment|/* make sure it's intialized in case we exit later with an error */
+name|EVP_CIPHER_CTX_init
+argument_list|(
+name|s
+operator|->
+name|enc_read_ctx
+argument_list|)
+expr_stmt|;
 name|dd
 operator|=
 name|s
@@ -1029,6 +1038,15 @@ condition|)
 goto|goto
 name|err
 goto|;
+else|else
+comment|/* make sure it's intialized in case we exit later with an error */
+name|EVP_CIPHER_CTX_init
+argument_list|(
+name|s
+operator|->
+name|enc_write_ctx
+argument_list|)
+expr_stmt|;
 name|dd
 operator|=
 name|s
@@ -1146,11 +1164,6 @@ condition|(
 name|reuse_dd
 condition|)
 name|EVP_CIPHER_CTX_cleanup
-argument_list|(
-name|dd
-argument_list|)
-expr_stmt|;
-name|EVP_CIPHER_CTX_init
 argument_list|(
 name|dd
 argument_list|)

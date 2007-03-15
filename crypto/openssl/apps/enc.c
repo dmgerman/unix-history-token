@@ -1916,6 +1916,10 @@ name|BIO_set_callback_arg
 argument_list|(
 name|in
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|bio_err
 argument_list|)
 expr_stmt|;
@@ -1923,6 +1927,10 @@ name|BIO_set_callback_arg
 argument_list|(
 name|out
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|bio_err
 argument_list|)
 expr_stmt|;
@@ -2299,6 +2307,10 @@ name|BIO_set_callback_arg
 argument_list|(
 name|b64
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|bio_err
 argument_list|)
 expr_stmt|;
@@ -2832,6 +2844,10 @@ name|BIO_set_callback_arg
 argument_list|(
 name|benc
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|bio_err
 argument_list|)
 expr_stmt|;

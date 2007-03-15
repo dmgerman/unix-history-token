@@ -47,20 +47,11 @@ directive|include
 file|<string.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-end_if
-
 begin_typedef
 typedef|typedef
 name|unsigned
 name|char
-name|uint8_t
+name|u8
 typedef|;
 end_typedef
 
@@ -68,33 +59,9 @@ begin_typedef
 typedef|typedef
 name|unsigned
 name|int
-name|uint32_t
+name|u32
 typedef|;
 end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|__int64
-name|uint64_t
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<inttypes.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -108,14 +75,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-define|#
-directive|define
-name|ALIGN
-value|4
-define|#
-directive|define
-name|UNITSIZE
-value|4
 if|#
 directive|if
 name|defined
@@ -152,7 +111,7 @@ name|GETU32
 parameter_list|(
 name|p
 parameter_list|)
-value|SWAP(*((uint32_t *)(p)))
+value|SWAP(*((u32 *)(p)))
 define|#
 directive|define
 name|PUTU32
@@ -161,7 +120,7 @@ name|ct
 parameter_list|,
 name|st
 parameter_list|)
-value|{ *((uint32_t *)(ct)) = SWAP((st)); }
+value|{ *((u32 *)(ct)) = SWAP((st)); }
 define|#
 directive|define
 name|CAMELLIA_SWAP4
@@ -178,7 +137,7 @@ name|GETU32
 parameter_list|(
 name|pt
 parameter_list|)
-value|(((uint32_t)(pt)[0]<< 24) \ 	^ ((uint32_t)(pt)[1]<< 16) \ 	^ ((uint32_t)(pt)[2]<<  8) \ 	^ ((uint32_t)(pt)[3]))
+value|(((u32)(pt)[0]<< 24) \ 	^ ((u32)(pt)[1]<< 16) \ 	^ ((u32)(pt)[2]<<  8) \ 	^ ((u32)(pt)[3]))
 define|#
 directive|define
 name|PUTU32
@@ -187,10 +146,7 @@ name|ct
 parameter_list|,
 name|st
 parameter_list|)
-value|{ (ct)[0] = (uint8_t)((st)>> 24); \ 	(ct)[1] = (uint8_t)((st)>> 16); \ 	(ct)[2] = (uint8_t)((st)>>  8); \ 	(ct)[3] = (uint8_t)(st); }
-ifdef|#
-directive|ifdef
-name|L_ENDIAN
+value|{ (ct)[0] = (u8)((st)>> 24); \ 	(ct)[1] = (u8)((st)>> 16); \ 	(ct)[2] = (u8)((st)>>  8); \ 	(ct)[3] = (u8)(st); }
 if|#
 directive|if
 operator|(
@@ -199,11 +155,17 @@ argument_list|(
 name|__GNUC__
 argument_list|)
 operator|&&
-operator|!
+operator|(
 name|defined
 argument_list|(
-name|i386
+name|__x86_64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64
+argument_list|)
+operator|)
 operator|)
 define|#
 directive|define
@@ -215,7 +177,6 @@ define|\
 value|do{\     asm("bswap %1" : "+r" (x));\   }while(0)
 else|#
 directive|else
-comment|/* not gcc */
 define|#
 directive|define
 name|CAMELLIA_SWAP4
@@ -223,22 +184,9 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do{\      x = ((uint32_t)x<< 16) + ((uint32_t)x>> 16);\      x = (((uint32_t)x& 0xff00ff)<< 8) + (((uint32_t)x>> 8)& 0xff00ff);\    } while(0)
+value|do{\      x = ((u32)x<< 16) + ((u32)x>> 16);\      x = (((u32)x& 0xff00ff)<< 8) + (((u32)x>> 8)& 0xff00ff);\    } while(0)
 endif|#
 directive|endif
-comment|/* not gcc */
-else|#
-directive|else
-comment|/* big endian */
-define|#
-directive|define
-name|CAMELLIA_SWAP4
-parameter_list|(
-name|x
-parameter_list|)
-endif|#
-directive|endif
-comment|/* L_ENDIAN */
 endif|#
 directive|endif
 define|#
@@ -287,12 +235,11 @@ name|void
 name|camellia_setup128
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|u8
 modifier|*
 name|key
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|subkey
 parameter_list|)
@@ -301,12 +248,11 @@ name|void
 name|camellia_setup192
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|u8
 modifier|*
 name|key
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|subkey
 parameter_list|)
@@ -315,12 +261,11 @@ name|void
 name|camellia_setup256
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|u8
 modifier|*
 name|key
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|subkey
 parameter_list|)
@@ -329,11 +274,11 @@ name|void
 name|camellia_encrypt128
 parameter_list|(
 specifier|const
-name|uint32_t
+name|u32
 modifier|*
 name|subkey
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|io
 parameter_list|)
@@ -342,11 +287,11 @@ name|void
 name|camellia_decrypt128
 parameter_list|(
 specifier|const
-name|uint32_t
+name|u32
 modifier|*
 name|subkey
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|io
 parameter_list|)
@@ -355,11 +300,11 @@ name|void
 name|camellia_encrypt256
 parameter_list|(
 specifier|const
-name|uint32_t
+name|u32
 modifier|*
 name|subkey
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|io
 parameter_list|)
@@ -368,11 +313,11 @@ name|void
 name|camellia_decrypt256
 parameter_list|(
 specifier|const
-name|uint32_t
+name|u32
 modifier|*
 name|subkey
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|io
 parameter_list|)

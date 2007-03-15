@@ -533,7 +533,21 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|type *PEM_read_##name(FILE *fp, type **x, pem_password_cb *cb, void *u)\ { \ return(((type *(*)(D2I_OF(type),char *,FILE *,type **,pem_password_cb *,void *))openssl_fcast(PEM_ASN1_read))(d2i_##asn1, str,fp,x,cb,u)); \ } \  #define IMPLEMENT_PEM_write_fp(name, type, str, asn1) \ int PEM_write_##name(FILE *fp, type *x) \ { \ return(((int (*)(I2D_OF(type),const char *,FILE *,type *, const EVP_CIPHER *,unsigned char *,int, pem_password_cb *,void *))openssl_fcast(PEM_ASN1_write))(i2d_##asn1,str,fp,x,NULL,NULL,0,NULL,NULL)); \ }
+value|type *PEM_read_##name(FILE *fp, type **x, pem_password_cb *cb, void *u)\ { \ return(((type *(*)(D2I_OF(type),char *,FILE *,type **,pem_password_cb *,void *))openssl_fcast(PEM_ASN1_read))(d2i_##asn1, str,fp,x,cb,u)); \ }
+define|#
+directive|define
+name|IMPLEMENT_PEM_write_fp
+parameter_list|(
+name|name
+parameter_list|,
+name|type
+parameter_list|,
+name|str
+parameter_list|,
+name|asn1
+parameter_list|)
+define|\
+value|int PEM_write_##name(FILE *fp, type *x) \ { \ return(((int (*)(I2D_OF(type),const char *,FILE *,type *, const EVP_CIPHER *,unsigned char *,int, pem_password_cb *,void *))openssl_fcast(PEM_ASN1_write))(i2d_##asn1,str,fp,x,NULL,NULL,0,NULL,NULL)); \ }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_fp_const

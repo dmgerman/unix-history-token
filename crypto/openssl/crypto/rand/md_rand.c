@@ -240,8 +240,8 @@ end_endif
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|RAND_version
+index|[]
 init|=
 literal|"RAND"
 name|OPENSSL_VERSION_PTEXT

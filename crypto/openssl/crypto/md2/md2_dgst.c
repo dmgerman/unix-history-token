@@ -46,8 +46,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|MD2_version
+index|[]
 init|=
 literal|"MD2"
 name|OPENSSL_VERSION_PTEXT

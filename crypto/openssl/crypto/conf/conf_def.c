@@ -346,8 +346,8 @@ end_function_decl
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|CONF_def_version
+index|[]
 init|=
 literal|"CONF_def"
 name|OPENSSL_VERSION_PTEXT

@@ -40,10 +40,6 @@ file|"cmll_locl.h"
 end_include
 
 begin_comment
-comment|/*  * must be defined uint32_t  */
-end_comment
-
-begin_comment
 comment|/* key constants */
 end_comment
 
@@ -139,41 +135,6 @@ begin_comment
 comment|/* e is pointer of subkey */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|L_ENDIAN
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CamelliaSubkeyL
-parameter_list|(
-name|INDEX
-parameter_list|)
-value|(subkey[(INDEX)*2 + 1])
-end_define
-
-begin_define
-define|#
-directive|define
-name|CamelliaSubkeyR
-parameter_list|(
-name|INDEX
-parameter_list|)
-value|(subkey[(INDEX)*2])
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* big endian */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -193,15 +154,6 @@ name|INDEX
 parameter_list|)
 value|(subkey[(INDEX)*2 + 1])
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IS_LITTLE_ENDIAN */
-end_comment
 
 begin_comment
 comment|/* rotation right shift 1byte */
@@ -364,87 +316,6 @@ begin_comment
 comment|/*  * for speed up  *  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|CAMELLIA_FLS
-parameter_list|(
-name|ll
-parameter_list|,
-name|lr
-parameter_list|,
-name|rl
-parameter_list|,
-name|rr
-parameter_list|,
-name|kll
-parameter_list|,
-name|klr
-parameter_list|,
-name|krl
-parameter_list|,
-name|krr
-parameter_list|,
-name|t0
-parameter_list|,
-name|t1
-parameter_list|,
-name|t2
-parameter_list|,
-name|t3
-parameter_list|)
-define|\
-value|do									\ 	{								\ 	t0 = kll;							\ 	t2 = krr;							\ 	t0&= ll;							\ 	t2 |= rr;							\ 	rl ^= t2;							\ 	lr ^= CAMELLIA_RL1(t0);						\ 	t3 = krl;							\ 	t1 = klr;							\ 	t3&= rl;							\ 	t1 |= lr;							\ 	ll ^= t1;							\ 	rr ^= CAMELLIA_RL1(t3);						\ 	} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAMELLIA_ROUNDSM
-parameter_list|(
-name|xl
-parameter_list|,
-name|xr
-parameter_list|,
-name|kl
-parameter_list|,
-name|kr
-parameter_list|,
-name|yl
-parameter_list|,
-name|yr
-parameter_list|,
-name|il
-parameter_list|,
-name|ir
-parameter_list|,
-name|t0
-parameter_list|,
-name|t1
-parameter_list|)
-define|\
-value|do									\ 	{								\ 	ir =  CAMELLIA_SP1110(xr& 0xff);				\ 	il =  CAMELLIA_SP1110((xl>>24)& 0xff);				\ 	ir ^= CAMELLIA_SP0222((xr>>24)& 0xff);				\ 	il ^= CAMELLIA_SP0222((xl>>16)& 0xff);				\ 	ir ^= CAMELLIA_SP3033((xr>>16)& 0xff);				\ 	il ^= CAMELLIA_SP3033((xl>>8)& 0xff);				\ 	ir ^= CAMELLIA_SP4404((xr>>8)& 0xff);				\ 	il ^= CAMELLIA_SP4404(xl& 0xff);				\ 	il ^= kl;							\ 	ir ^= il ^ kr;							\ 	yl ^= ir;							\ 	yr ^= CAMELLIA_RR8(il) ^ ir;					\ 	} while(0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* for MS-VC */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -507,15 +378,10 @@ define|\
 value|do									\ 	{								\ 	il = xl;							\ 	ir = xr;							\ 	t0 = il>> 16;							\ 	t1 = ir>> 16;							\ 	ir = CAMELLIA_SP1110(ir& 0xff)					\ 		^ CAMELLIA_SP0222((t1>> 8)& 0xff)			\ 		^ CAMELLIA_SP3033(t1& 0xff)				\ 		^ CAMELLIA_SP4404((ir>> 8)& 0xff);			\ 	il = CAMELLIA_SP1110((t0>> 8)& 0xff)				\ 		^ CAMELLIA_SP0222(t0& 0xff)				\ 		^ CAMELLIA_SP3033((il>> 8)& 0xff)			\ 		^ CAMELLIA_SP4404(il& 0xff);				\ 	il ^= kl;							\ 	ir ^= kr;							\ 	ir ^= il;							\ 	il = CAMELLIA_RR8(il);						\ 	il ^= ir;							\ 	yl ^= ir;							\ 	yr ^= il;							\ 	} while(0)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
-name|uint32_t
+name|u32
 name|camellia_sp1110
 index|[
 literal|256
@@ -1040,7 +906,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|uint32_t
+name|u32
 name|camellia_sp0222
 index|[
 literal|256
@@ -1565,7 +1431,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|uint32_t
+name|u32
 name|camellia_sp3033
 index|[
 literal|256
@@ -2090,7 +1956,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|uint32_t
+name|u32
 name|camellia_sp4404
 index|[
 literal|256
@@ -2641,17 +2507,16 @@ name|void
 name|camellia_setup128
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|u8
 modifier|*
 name|key
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|subkey
 parameter_list|)
 block|{
-name|uint32_t
+name|u32
 name|kll
 decl_stmt|,
 name|klr
@@ -2660,7 +2525,7 @@ name|krl
 decl_stmt|,
 name|krr
 decl_stmt|;
-name|uint32_t
+name|u32
 name|il
 decl_stmt|,
 name|ir
@@ -2673,7 +2538,7 @@ name|w0
 decl_stmt|,
 name|w1
 decl_stmt|;
-name|uint32_t
+name|u32
 name|kw4l
 decl_stmt|,
 name|kw4r
@@ -2684,13 +2549,13 @@ name|tl
 decl_stmt|,
 name|tr
 decl_stmt|;
-name|uint32_t
+name|u32
 name|subL
 index|[
 literal|26
 index|]
 decl_stmt|;
-name|uint32_t
+name|u32
 name|subR
 index|[
 literal|26
@@ -5522,17 +5387,16 @@ name|void
 name|camellia_setup256
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|u8
 modifier|*
 name|key
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|subkey
 parameter_list|)
 block|{
-name|uint32_t
+name|u32
 name|kll
 decl_stmt|,
 name|klr
@@ -5542,7 +5406,7 @@ decl_stmt|,
 name|krr
 decl_stmt|;
 comment|/* left half of key */
-name|uint32_t
+name|u32
 name|krll
 decl_stmt|,
 name|krlr
@@ -5552,7 +5416,7 @@ decl_stmt|,
 name|krrr
 decl_stmt|;
 comment|/* right half of key */
-name|uint32_t
+name|u32
 name|il
 decl_stmt|,
 name|ir
@@ -5566,7 +5430,7 @@ decl_stmt|,
 name|w1
 decl_stmt|;
 comment|/* temporary variables */
-name|uint32_t
+name|u32
 name|kw4l
 decl_stmt|,
 name|kw4r
@@ -5577,13 +5441,13 @@ name|tl
 decl_stmt|,
 name|tr
 decl_stmt|;
-name|uint32_t
+name|u32
 name|subL
 index|[
 literal|34
 index|]
 decl_stmt|;
-name|uint32_t
+name|u32
 name|subR
 index|[
 literal|34
@@ -9432,24 +9296,22 @@ name|void
 name|camellia_setup192
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|u8
 modifier|*
 name|key
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|subkey
 parameter_list|)
 block|{
-name|unsigned
-name|char
+name|u8
 name|kk
 index|[
 literal|32
 index|]
 decl_stmt|;
-name|uint32_t
+name|u32
 name|krll
 decl_stmt|,
 name|krlr
@@ -9470,8 +9332,7 @@ expr_stmt|;
 name|memcpy
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u8
 operator|*
 operator|)
 operator|&
@@ -9487,8 +9348,7 @@ expr_stmt|;
 name|memcpy
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u8
 operator|*
 operator|)
 operator|&
@@ -9518,8 +9378,7 @@ operator|+
 literal|24
 argument_list|,
 operator|(
-name|unsigned
-name|char
+name|u8
 operator|*
 operator|)
 operator|&
@@ -9535,8 +9394,7 @@ operator|+
 literal|28
 argument_list|,
 operator|(
-name|unsigned
-name|char
+name|u8
 operator|*
 operator|)
 operator|&
@@ -9565,16 +9423,16 @@ name|void
 name|camellia_encrypt128
 parameter_list|(
 specifier|const
-name|uint32_t
+name|u32
 modifier|*
 name|subkey
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|io
 parameter_list|)
 block|{
-name|uint32_t
+name|u32
 name|il
 decl_stmt|,
 name|ir
@@ -9583,11 +9441,6 @@ name|t0
 decl_stmt|,
 name|t1
 decl_stmt|;
-name|SWAP4WORD
-argument_list|(
-name|io
-argument_list|)
-expr_stmt|;
 comment|/* pre whitening but absorb kw2*/
 name|io
 index|[
@@ -10518,11 +10371,6 @@ literal|3
 index|]
 operator|=
 name|t1
-expr_stmt|;
-name|SWAP4WORD
-argument_list|(
-name|io
-argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -10533,16 +10381,16 @@ name|void
 name|camellia_decrypt128
 parameter_list|(
 specifier|const
-name|uint32_t
+name|u32
 modifier|*
 name|subkey
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|io
 parameter_list|)
 block|{
-name|uint32_t
+name|u32
 name|il
 decl_stmt|,
 name|ir
@@ -10552,11 +10400,6 @@ decl_stmt|,
 name|t1
 decl_stmt|;
 comment|/* temporary valiables */
-name|SWAP4WORD
-argument_list|(
-name|io
-argument_list|)
-expr_stmt|;
 comment|/* pre whitening but absorb kw2*/
 name|io
 index|[
@@ -11487,11 +11330,6 @@ literal|3
 index|]
 operator|=
 name|t1
-expr_stmt|;
-name|SWAP4WORD
-argument_list|(
-name|io
-argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -11506,16 +11344,16 @@ name|void
 name|camellia_encrypt256
 parameter_list|(
 specifier|const
-name|uint32_t
+name|u32
 modifier|*
 name|subkey
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|io
 parameter_list|)
 block|{
-name|uint32_t
+name|u32
 name|il
 decl_stmt|,
 name|ir
@@ -11525,11 +11363,6 @@ decl_stmt|,
 name|t1
 decl_stmt|;
 comment|/* temporary valiables */
-name|SWAP4WORD
-argument_list|(
-name|io
-argument_list|)
-expr_stmt|;
 comment|/* pre whitening but absorb kw2*/
 name|io
 index|[
@@ -12757,11 +12590,6 @@ literal|3
 index|]
 operator|=
 name|t1
-expr_stmt|;
-name|SWAP4WORD
-argument_list|(
-name|io
-argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -12772,16 +12600,16 @@ name|void
 name|camellia_decrypt256
 parameter_list|(
 specifier|const
-name|uint32_t
+name|u32
 modifier|*
 name|subkey
 parameter_list|,
-name|uint32_t
+name|u32
 modifier|*
 name|io
 parameter_list|)
 block|{
-name|uint32_t
+name|u32
 name|il
 decl_stmt|,
 name|ir
@@ -12791,11 +12619,6 @@ decl_stmt|,
 name|t1
 decl_stmt|;
 comment|/* temporary valiables */
-name|SWAP4WORD
-argument_list|(
-name|io
-argument_list|)
-expr_stmt|;
 comment|/* pre whitening but absorb kw2*/
 name|io
 index|[
@@ -14023,11 +13846,6 @@ literal|3
 index|]
 operator|=
 name|t1
-expr_stmt|;
-name|SWAP4WORD
-argument_list|(
-name|io
-argument_list|)
 expr_stmt|;
 return|return;
 block|}

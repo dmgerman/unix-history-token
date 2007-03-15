@@ -444,6 +444,14 @@ operator|(
 literal|"no explicit policy"
 operator|)
 return|;
+case|case
+name|X509_V_ERR_UNNESTED_RESOURCE
+case|:
+return|return
+operator|(
+literal|"RFC 3779 resource not subset of parent's resources"
+operator|)
+return|;
 default|default:
 name|BIO_snprintf
 argument_list|(

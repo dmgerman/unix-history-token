@@ -314,6 +314,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|unsigned
 name|long
 name|tag2bit

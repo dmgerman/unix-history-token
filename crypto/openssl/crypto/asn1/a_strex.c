@@ -616,6 +616,10 @@ condition|(
 name|p
 operator|==
 name|buf
+operator|&&
+name|flags
+operator|&
+name|ASN1_STRFLGS_ESC_2253
 condition|)
 name|orflags
 operator|=
@@ -762,6 +766,10 @@ condition|(
 name|p
 operator|==
 name|q
+operator|&&
+name|flags
+operator|&
+name|ASN1_STRFLGS_ESC_2253
 condition|)
 name|orflags
 operator|=

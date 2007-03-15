@@ -1178,6 +1178,10 @@ define|#
 directive|define
 name|X509_V_ERR_NO_EXPLICIT_POLICY
 value|43
+define|#
+directive|define
+name|X509_V_ERR_UNNESTED_RESOURCE
+value|44
 comment|/* The application is not happy */
 define|#
 directive|define

@@ -176,7 +176,7 @@ name|dummy_nid
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 return|;
 return|return

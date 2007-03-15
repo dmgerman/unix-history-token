@@ -41,8 +41,8 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|Hex
+index|[]
 init|=
 literal|"0123456789ABCDEF"
 decl_stmt|;

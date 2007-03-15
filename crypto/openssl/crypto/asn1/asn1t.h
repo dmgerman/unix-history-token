@@ -127,7 +127,15 @@ parameter_list|(
 name|itname
 parameter_list|)
 define|\
-value|const ASN1_ITEM * itname##_it(void) \ 	{ \ 		static const ASN1_ITEM local_it = { \  #define ASN1_ITEM_end(itname) \ 		}; \ 	return&local_it; \ 	}
+value|const ASN1_ITEM * itname##_it(void) \ 	{ \ 		static const ASN1_ITEM local_it = {
+define|#
+directive|define
+name|ASN1_ITEM_end
+parameter_list|(
+name|itname
+parameter_list|)
+define|\
+value|}; \ 	return&local_it; \ 	}
 endif|#
 directive|endif
 comment|/* Macros to aid ASN1 template writing */

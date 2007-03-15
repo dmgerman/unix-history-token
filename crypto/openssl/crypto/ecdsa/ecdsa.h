@@ -499,6 +499,10 @@ name|ECDSA_R_MISSING_PARAMETERS
 value|103
 define|#
 directive|define
+name|ECDSA_R_NEED_NEW_SETUP_VALUES
+value|106
+define|#
+directive|define
 name|ECDSA_R_RANDOM_NUMBER_GENERATION_FAILED
 value|104
 define|#

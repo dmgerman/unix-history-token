@@ -1407,9 +1407,15 @@ if|if
 condition|(
 name|noout
 condition|)
+block|{
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|end
 goto|;
+block|}
 name|BIO_printf
 argument_list|(
 name|bio_err

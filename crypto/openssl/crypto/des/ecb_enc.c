@@ -41,8 +41,8 @@ begin_decl_stmt
 name|OPENSSL_GLOBAL
 specifier|const
 name|char
-modifier|*
 name|libdes_version
+index|[]
 init|=
 literal|"libdes"
 name|OPENSSL_VERSION_PTEXT
@@ -53,8 +53,8 @@ begin_decl_stmt
 name|OPENSSL_GLOBAL
 specifier|const
 name|char
-modifier|*
 name|DES_version
+index|[]
 init|=
 literal|"DES"
 name|OPENSSL_VERSION_PTEXT

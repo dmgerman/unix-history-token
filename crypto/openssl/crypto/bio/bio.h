@@ -419,22 +419,52 @@ define|#
 directive|define
 name|BIO_FLAGS_MEM_RDONLY
 value|0x200
-define|#
-directive|define
+typedef|typedef
+name|struct
+name|bio_st
+name|BIO
+typedef|;
+name|void
 name|BIO_set_flags
 parameter_list|(
+name|BIO
+modifier|*
 name|b
 parameter_list|,
-name|f
+name|int
+name|flags
 parameter_list|)
-value|((b)->flags|=(f))
+function_decl|;
+name|int
+name|BIO_test_flags
+parameter_list|(
+specifier|const
+name|BIO
+modifier|*
+name|b
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+name|void
+name|BIO_clear_flags
+parameter_list|(
+name|BIO
+modifier|*
+name|b
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|BIO_get_flags
 parameter_list|(
 name|b
 parameter_list|)
-value|((b)->flags)
+value|BIO_test_flags(b, ~(0x0))
 define|#
 directive|define
 name|BIO_set_retry_special
@@ -442,7 +472,7 @@ parameter_list|(
 name|b
 parameter_list|)
 define|\
-value|((b)->flags|=(BIO_FLAGS_IO_SPECIAL|BIO_FLAGS_SHOULD_RETRY))
+value|BIO_set_flags(b, (BIO_FLAGS_IO_SPECIAL|BIO_FLAGS_SHOULD_RETRY))
 define|#
 directive|define
 name|BIO_set_retry_read
@@ -450,7 +480,7 @@ parameter_list|(
 name|b
 parameter_list|)
 define|\
-value|((b)->flags|=(BIO_FLAGS_READ|BIO_FLAGS_SHOULD_RETRY))
+value|BIO_set_flags(b, (BIO_FLAGS_READ|BIO_FLAGS_SHOULD_RETRY))
 define|#
 directive|define
 name|BIO_set_retry_write
@@ -458,17 +488,8 @@ parameter_list|(
 name|b
 parameter_list|)
 define|\
-value|((b)->flags|=(BIO_FLAGS_WRITE|BIO_FLAGS_SHOULD_RETRY))
+value|BIO_set_flags(b, (BIO_FLAGS_WRITE|BIO_FLAGS_SHOULD_RETRY))
 comment|/* These are normally used internally in BIOs */
-define|#
-directive|define
-name|BIO_clear_flags
-parameter_list|(
-name|b
-parameter_list|,
-name|f
-parameter_list|)
-value|((b)->flags&= ~(f))
 define|#
 directive|define
 name|BIO_clear_retry_flags
@@ -476,7 +497,7 @@ parameter_list|(
 name|b
 parameter_list|)
 define|\
-value|((b)->flags&= ~(BIO_FLAGS_RWS|BIO_FLAGS_SHOULD_RETRY))
+value|BIO_clear_flags(b, (BIO_FLAGS_RWS|BIO_FLAGS_SHOULD_RETRY))
 define|#
 directive|define
 name|BIO_get_retry_flags
@@ -484,7 +505,7 @@ parameter_list|(
 name|b
 parameter_list|)
 define|\
-value|((b)->flags&(BIO_FLAGS_RWS|BIO_FLAGS_SHOULD_RETRY))
+value|BIO_test_flags(b, (BIO_FLAGS_RWS|BIO_FLAGS_SHOULD_RETRY))
 comment|/* These should be used by the application to tell why we should retry */
 define|#
 directive|define
@@ -492,35 +513,35 @@ name|BIO_should_read
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)->flags& BIO_FLAGS_READ)
+value|BIO_test_flags(a, BIO_FLAGS_READ)
 define|#
 directive|define
 name|BIO_should_write
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)->flags& BIO_FLAGS_WRITE)
+value|BIO_test_flags(a, BIO_FLAGS_WRITE)
 define|#
 directive|define
 name|BIO_should_io_special
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)->flags& BIO_FLAGS_IO_SPECIAL)
+value|BIO_test_flags(a, BIO_FLAGS_IO_SPECIAL)
 define|#
 directive|define
 name|BIO_retry_type
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)->flags& BIO_FLAGS_RWS)
+value|BIO_test_flags(a, BIO_FLAGS_RWS)
 define|#
 directive|define
 name|BIO_should_retry
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)->flags& BIO_FLAGS_SHOULD_RETRY)
+value|BIO_test_flags(a, BIO_FLAGS_SHOULD_RETRY)
 comment|/* The next three are used in conjunction with the  * BIO_should_io_special() condition.  After this returns true,  * BIO *BIO_get_retry_BIO(BIO *bio, int *reason); will walk the BIO   * stack and return the 'reason' for the special and the offending BIO.  * Given a BIO, BIO_get_retry_reason(bio) will return the code. */
 comment|/* Returned from the SSL bio when the certificate retrieval code had an error */
 define|#
@@ -588,57 +609,108 @@ parameter_list|(
 name|a
 parameter_list|)
 value|((a)&BIO_CB_RETURN)
-define|#
-directive|define
+name|long
+argument_list|(
+operator|*
+name|BIO_get_callback
+argument_list|(
+specifier|const
+name|BIO
+operator|*
+name|b
+argument_list|)
+argument_list|)
+argument_list|(
+expr|struct
+name|bio_st
+operator|*
+argument_list|,
+name|int
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|long
+argument_list|,
+name|long
+argument_list|)
+expr_stmt|;
+name|void
 name|BIO_set_callback
 parameter_list|(
+name|BIO
+modifier|*
 name|b
 parameter_list|,
-name|cb
-parameter_list|)
-value|((b)->callback=(cb))
-define|#
-directive|define
-name|BIO_set_callback_arg
+name|long
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
 parameter_list|(
-name|b
-parameter_list|,
-name|arg
-parameter_list|)
-value|((b)->cb_arg=(char *)(arg))
-define|#
-directive|define
-name|BIO_get_callback_arg
-parameter_list|(
-name|b
-parameter_list|)
-value|((b)->cb_arg)
-define|#
-directive|define
-name|BIO_get_callback
-parameter_list|(
-name|b
-parameter_list|)
-value|((b)->callback)
-define|#
-directive|define
-name|BIO_method_name
-parameter_list|(
-name|b
-parameter_list|)
-value|((b)->method->name)
-define|#
-directive|define
-name|BIO_method_type
-parameter_list|(
-name|b
-parameter_list|)
-value|((b)->method->type)
-typedef|typedef
 name|struct
 name|bio_st
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|long
+parameter_list|,
+name|long
+parameter_list|)
+parameter_list|)
+function_decl|;
+name|char
+modifier|*
+name|BIO_get_callback_arg
+parameter_list|(
+specifier|const
 name|BIO
-typedef|;
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+name|void
+name|BIO_set_callback_arg
+parameter_list|(
+name|BIO
+modifier|*
+name|b
+parameter_list|,
+name|char
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|BIO_method_name
+parameter_list|(
+specifier|const
+name|BIO
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+name|int
+name|BIO_method_type
+parameter_list|(
+specifier|const
+name|BIO
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
 typedef|typedef
 name|void
 name|bio_info_cb
@@ -1233,6 +1305,10 @@ define|#
 directive|define
 name|BIO_C_RESET_READ_REQUEST
 value|147
+define|#
+directive|define
+name|BIO_C_SET_MD_CTX
+value|148
 define|#
 directive|define
 name|BIO_set_app_data

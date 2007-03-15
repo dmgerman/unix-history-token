@@ -486,6 +486,13 @@ argument_list|(
 name|nm
 argument_list|)
 expr_stmt|;
+name|OPENSSL_cleanse
+argument_list|(
+name|data
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 name|OPENSSL_free
 argument_list|(
 name|data

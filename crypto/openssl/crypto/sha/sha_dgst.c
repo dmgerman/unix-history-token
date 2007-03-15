@@ -50,8 +50,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|SHA_version
+index|[]
 init|=
 literal|"SHA"
 name|OPENSSL_VERSION_PTEXT

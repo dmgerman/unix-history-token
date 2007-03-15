@@ -28,8 +28,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|tls1_version_str
+index|[]
 init|=
 literal|"TLSv1"
 name|OPENSSL_VERSION_PTEXT

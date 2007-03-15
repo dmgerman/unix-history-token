@@ -1356,9 +1356,23 @@ comment|/* 85 */
 name|NID_basic_constraints
 block|,
 comment|/* 87 */
+name|NID_certificate_policies
+block|,
+comment|/* 89 */
 name|NID_ext_key_usage
 block|,
 comment|/* 126 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_RFC3779
+name|NID_sbgp_ipAddrBlock
+block|,
+comment|/* 290 */
+name|NID_sbgp_autonomousSysNum
+block|,
+comment|/* 291 */
+endif|#
+directive|endif
 name|NID_proxyCertInfo
 comment|/* 661 */
 block|}
@@ -2064,6 +2078,41 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_RFC3779
+name|x
+operator|->
+name|rfc3779_addr
+operator|=
+name|X509_get_ext_d2i
+argument_list|(
+name|x
+argument_list|,
+name|NID_sbgp_ipAddrBlock
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|x
+operator|->
+name|rfc3779_asid
+operator|=
+name|X509_get_ext_d2i
+argument_list|(
+name|x
+argument_list|,
+name|NID_sbgp_autonomousSysNum
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i

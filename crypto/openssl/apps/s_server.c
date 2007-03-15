@@ -6101,6 +6101,10 @@ argument_list|(
 name|con
 argument_list|)
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|bio_s_out
 argument_list|)
 expr_stmt|;
@@ -8034,6 +8038,10 @@ argument_list|(
 name|con
 argument_list|)
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|bio_s_out
 argument_list|)
 expr_stmt|;

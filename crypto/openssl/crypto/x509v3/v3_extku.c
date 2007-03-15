@@ -93,6 +93,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_ext_ku
 init|=
@@ -136,6 +137,7 @@ comment|/* NB OCSP acceptable responses also is a SEQUENCE OF OBJECT */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|X509V3_EXT_METHOD
 name|v3_ocsp_accresp
 init|=

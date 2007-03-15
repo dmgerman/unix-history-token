@@ -59,8 +59,8 @@ begin_decl_stmt
 name|OPENSSL_EXTERN
 specifier|const
 name|char
-modifier|*
 name|OSSL_DES_version
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -72,8 +72,8 @@ begin_decl_stmt
 name|OPENSSL_EXTERN
 specifier|const
 name|char
-modifier|*
 name|OSSL_libdes_version
+index|[]
 decl_stmt|;
 end_decl_stmt
 

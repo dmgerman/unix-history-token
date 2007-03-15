@@ -50,8 +50,8 @@ end_include
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|CONF_version
+index|[]
 init|=
 literal|"CONF"
 name|OPENSSL_VERSION_PTEXT

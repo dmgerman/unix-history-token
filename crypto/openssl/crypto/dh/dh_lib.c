@@ -51,8 +51,8 @@ end_endif
 begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|DH_version
+index|[]
 init|=
 literal|"Diffie-Hellman"
 name|OPENSSL_VERSION_PTEXT

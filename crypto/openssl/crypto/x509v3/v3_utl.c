@@ -135,24 +135,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|a2i_ipadd
-parameter_list|(
-name|unsigned
-name|char
-modifier|*
-name|ipout
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|ipasc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|ipv4_from_asc
 parameter_list|(
 name|unsigned
@@ -1907,6 +1889,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+specifier|const
 specifier|static
 name|char
 name|hexdig
@@ -3245,7 +3228,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|a2i_ipadd
 parameter_list|(
