@@ -24064,6 +24064,9 @@ modifier|*
 name|request_ccb
 decl_stmt|;
 comment|/* CCB representing the probe request */
+name|cam_status
+name|status
+decl_stmt|;
 name|probe_softc
 modifier|*
 name|softc
@@ -24189,11 +24192,26 @@ name|softc
 operator|=
 name|softc
 expr_stmt|;
+name|status
+operator|=
 name|cam_periph_acquire
 argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|!=
+name|CAM_REQ_CMP
+condition|)
+block|{
+return|return
+operator|(
+name|status
+operator|)
+return|;
+block|}
 comment|/* 	 * Ensure we've waited at least a bus settle 	 * delay before attempting to probe the device. 	 * For HBAs that don't do bus resets, this won't make a difference. 	 */
 name|cam_periph_freeze_after_event
 argument_list|(
