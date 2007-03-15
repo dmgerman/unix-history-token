@@ -2980,12 +2980,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|bsdtar
-operator|->
-name|return_value
-operator|=
-literal|1
-expr_stmt|;
 continue|continue;
 block|}
 if|if
