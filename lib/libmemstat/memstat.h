@@ -81,7 +81,7 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * Library error conditions, mostly from the underlying data sources.  On  * failure, functions typically return (-1) or (NULL); on success, (0) or a  * valid data pointer.  The error from the last operation is stored in  * struct memory_type, and accessed via memstat_get_error(mtp).  */
+comment|/*  * Library error conditions, mostly from the underlying data sources.  On  * failure, functions typically return (-1) or (NULL); on success, (0) or a  * valid data pointer.  The error from the last operation is stored in  * struct memory_type_list, and accessed via memstat_get_error(list).  */
 end_comment
 
 begin_define
