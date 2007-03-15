@@ -1886,6 +1886,23 @@ name|n2
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|if_printf
+argument_list|(
+name|trunk
+operator|->
+name|parent
+argument_list|,
+literal|"VLAN hash table resized from %d to %d buckets\n"
+argument_list|,
+name|n
+argument_list|,
+name|n2
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
