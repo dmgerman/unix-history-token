@@ -700,8 +700,6 @@ block|{
 return|return
 name|ctx
 operator|->
-name|cipher
-operator|->
 name|key_len
 return|;
 block|}
