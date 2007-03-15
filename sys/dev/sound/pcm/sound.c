@@ -212,15 +212,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-return|return
-name|NULL
-return|;
 name|mtx_init
 argument_list|(
 name|m
