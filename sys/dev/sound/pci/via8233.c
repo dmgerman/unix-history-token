@@ -5853,7 +5853,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"sound softc"
+literal|"snd_via8233 softc"
 argument_list|)
 expr_stmt|;
 name|callout_init

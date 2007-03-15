@@ -2225,7 +2225,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"sound softc"
+literal|"snd_via82c686 softc"
 argument_list|)
 expr_stmt|;
 comment|/* Get resources */

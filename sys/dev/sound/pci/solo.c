@@ -4904,7 +4904,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"sound softc"
+literal|"snd_solo softc"
 argument_list|)
 expr_stmt|;
 return|return

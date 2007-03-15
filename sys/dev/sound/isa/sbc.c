@@ -650,7 +650,7 @@ operator|->
 name|dev
 argument_list|)
 argument_list|,
-literal|"sound softc"
+literal|"snd_sbc softc"
 argument_list|)
 expr_stmt|;
 block|}

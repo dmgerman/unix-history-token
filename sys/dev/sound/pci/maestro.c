@@ -9149,7 +9149,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"hardware status lock"
+literal|"snd_maestro softc"
 argument_list|,
 name|MTX_DEF
 operator||

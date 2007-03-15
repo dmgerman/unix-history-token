@@ -4373,7 +4373,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"sound softc"
+literal|"snd_cmi softc"
 argument_list|)
 expr_stmt|;
 name|data

@@ -6794,38 +6794,9 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"sound softc"
+literal|"snd_maestro3 softc"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_lock
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"cannot create mutex\n"
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|sc
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 for|for
 control|(
 name|card
