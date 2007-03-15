@@ -4733,7 +4733,7 @@ name|snd_scale
 operator|=
 name|to
 operator|.
-name|to_requested_s_scale
+name|to_wscale
 expr_stmt|;
 name|tp
 operator|->
@@ -10706,7 +10706,7 @@ name|TOF_SCALE
 expr_stmt|;
 name|to
 operator|->
-name|to_requested_s_scale
+name|to_wscale
 operator|=
 name|min
 argument_list|(

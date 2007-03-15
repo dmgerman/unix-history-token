@@ -181,7 +181,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|TCPOLEN_EOL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|TCPOPT_NOP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_NOP
 value|1
 end_define
 
@@ -220,10 +234,6 @@ name|TCPOPT_SACK_PERMITTED
 value|4
 end_define
 
-begin_comment
-comment|/* Experimental */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -238,9 +248,12 @@ name|TCPOPT_SACK
 value|5
 end_define
 
-begin_comment
-comment|/* Experimental */
-end_comment
+begin_define
+define|#
+directive|define
+name|TCPOLEN_SACKHDR
+value|2
+end_define
 
 begin_define
 define|#

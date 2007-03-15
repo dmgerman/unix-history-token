@@ -731,7 +731,7 @@ comment|/* TCP_SIGNATURE */
 end_comment
 
 begin_comment
-comment|/*  * Structure to hold TCP options that are only used during segment  * processing (in tcp_input), but not held in the tcpcb.  * It's basically used to reduce the number of parameters  * to tcp_dooptions.  */
+comment|/*  * Structure to hold TCP options that are only used during segment  * processing (in tcp_input), but not held in the tcpcb.  * It's basically used to reduce the number of parameters  * to tcp_dooptions and tcp_addoptions.  * The binary order of the to_flags is relevant for packing of the  * options in tcp_addoptions.  */
 end_comment
 
 begin_struct
@@ -744,19 +744,24 @@ decl_stmt|;
 comment|/* which options are present */
 define|#
 directive|define
-name|TOF_TS
-value|0x0001
-comment|/* timestamp */
-define|#
-directive|define
 name|TOF_MSS
-value|0x0010
+value|0x0001
 comment|/* maximum segment size */
 define|#
 directive|define
 name|TOF_SCALE
-value|0x0020
+value|0x0002
 comment|/* window scaling */
+define|#
+directive|define
+name|TOF_SACKPERM
+value|0x0004
+comment|/* SACK permitted */
+define|#
+directive|define
+name|TOF_TS
+value|0x0010
+comment|/* timestamp */
 define|#
 directive|define
 name|TOF_SIGNATURE
@@ -772,18 +777,26 @@ directive|define
 name|TOF_SACK
 value|0x0100
 comment|/* Peer sent SACK option */
+define|#
+directive|define
+name|TOF_MAXOPT
+value|0x0200
 name|u_int32_t
 name|to_tsval
 decl_stmt|;
+comment|/* our new timestamp */
 name|u_int32_t
 name|to_tsecr
 decl_stmt|;
+comment|/* reflected timestamp */
 name|u_int16_t
 name|to_mss
 decl_stmt|;
+comment|/* maximum segment size */
 name|u_int8_t
-name|to_requested_s_scale
+name|to_wscale
 decl_stmt|;
+comment|/* window scaling */
 name|u_int8_t
 name|to_nsacks
 decl_stmt|;
@@ -793,6 +806,11 @@ modifier|*
 name|to_sacks
 decl_stmt|;
 comment|/* pointer to the first SACK blocks */
+name|u_char
+modifier|*
+name|to_signature
+decl_stmt|;
+comment|/* pointer to the MD5 signature */
 block|}
 struct|;
 end_struct
@@ -1760,6 +1778,20 @@ end_decl_stmt
 begin_comment
 comment|/* SACK enabled/disabled */
 end_comment
+
+begin_function_decl
+name|int
+name|tcp_addoptions
+parameter_list|(
+name|struct
+name|tcpopt
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|struct
