@@ -444,6 +444,8 @@ block|,
 literal|"clusterr"
 block|,
 literal|"clusterw"
+block|,
+literal|"force"
 block|}
 decl_stmt|;
 end_decl_stmt
