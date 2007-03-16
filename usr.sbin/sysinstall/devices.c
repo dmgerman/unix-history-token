@@ -428,14 +428,14 @@ name|NETWORK
 argument_list|(
 literal|"aue"
 argument_list|,
-literal|"ADMtek USB ethernet adapter"
+literal|"ADMtek USB Ethernet adapter"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"axe"
 argument_list|,
-literal|"ASIX Electronics USB ethernet adapter"
+literal|"ASIX Electronics USB Ethernet adapter"
 argument_list|)
 block|,
 name|NETWORK
@@ -449,21 +449,28 @@ name|NETWORK
 argument_list|(
 literal|"bfe"
 argument_list|,
-literal|"Broadcom BCM440x PCI ethernet card"
+literal|"Broadcom BCM440x PCI Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"bge"
 argument_list|,
-literal|"Broadcom BCM570x PCI gigabit ethernet card"
+literal|"Broadcom BCM570x PCI Gigabit Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"cue"
 argument_list|,
-literal|"CATC USB ethernet adapter"
+literal|"CATC USB Ethernet adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"cxgb"
+argument_list|,
+literal|"Chelsio T3 10Gb Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
@@ -498,7 +505,7 @@ name|NETWORK
 argument_list|(
 literal|"dc"
 argument_list|,
-literal|"DEC/Intel 21143 (and clones) PCI fast ethernet card"
+literal|"DEC/Intel 21143 (and clones) PCI Fast Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
@@ -533,35 +540,35 @@ name|NETWORK
 argument_list|(
 literal|"em"
 argument_list|,
-literal|"Intel(R) PRO/1000 ethernet card"
+literal|"Intel(R) PRO/1000 Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"ex"
 argument_list|,
-literal|"Intel EtherExpress Pro/10 ethernet card"
+literal|"Intel EtherExpress Pro/10 Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"fe"
 argument_list|,
-literal|"Fujitsu MB86960A/MB86965A ethernet card"
+literal|"Fujitsu MB86960A/MB86965A Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"gem"
 argument_list|,
-literal|"Apple GMAC or Sun ERI/GEM ethernet adapter"
+literal|"Apple GMAC or Sun ERI/GEM Ethernet adapter"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"hme"
 argument_list|,
-literal|"Sun HME (Happy Meal Ethernet) ethernet adapter"
+literal|"Sun HME (Happy Meal Ethernet) Ethernet adapter"
 argument_list|)
 block|,
 name|NETWORK
@@ -582,28 +589,28 @@ name|NETWORK
 argument_list|(
 literal|"kue"
 argument_list|,
-literal|"Kawasaki LSI USB ethernet adapter"
+literal|"Kawasaki LSI USB Ethernet adapter"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"le"
 argument_list|,
-literal|"AMD Am7900 LANCE or Am79C9xx PCnet ethernet adapter"
+literal|"AMD Am7900 LANCE or Am79C9xx PCnet Ethernet adapter"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"lge"
 argument_list|,
-literal|"Level 1 LXT1001 gigabit ethernet card"
+literal|"Level 1 LXT1001 Gigabit Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"msk"
 argument_list|,
-literal|"Marvell/SysKonnect Yukon II gigabit Ethernet"
+literal|"Marvell/SysKonnect Yukon II Gigabit Ethernet"
 argument_list|)
 block|,
 name|NETWORK
@@ -624,7 +631,7 @@ name|NETWORK
 argument_list|(
 literal|"nge"
 argument_list|,
-literal|"NatSemi PCI gigabit ethernet card"
+literal|"NatSemi PCI Gigabit Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
@@ -638,49 +645,49 @@ name|NETWORK
 argument_list|(
 literal|"pcn"
 argument_list|,
-literal|"AMD Am79c79x PCI ethernet card"
+literal|"AMD Am79c79x PCI Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"ray"
 argument_list|,
-literal|"Raytheon Raylink 802.11 wireless adaptor"
+literal|"Raytheon Raylink 802.11 wireless adapter"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"re"
 argument_list|,
-literal|"RealTek 8139C+/8169/8169S/8110S PCI ethernet card"
+literal|"RealTek 8139C+/8169/8169S/8110S PCI Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"rl"
 argument_list|,
-literal|"RealTek 8129/8139 PCI ethernet card"
+literal|"RealTek 8129/8139 PCI Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"rue"
 argument_list|,
-literal|"RealTek USB ethernet card"
+literal|"RealTek USB Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"sf"
 argument_list|,
-literal|"Adaptec AIC-6915 PCI ethernet card"
+literal|"Adaptec AIC-6915 PCI Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"sis"
 argument_list|,
-literal|"SiS 900/SiS 7016 PCI ethernet card"
+literal|"SiS 900/SiS 7016 PCI Ethernet card"
 argument_list|)
 block|,
 ifdef|#
@@ -690,7 +697,7 @@ name|NETWORK
 argument_list|(
 literal|"snc"
 argument_list|,
-literal|"SONIC ethernet card"
+literal|"SONIC Ethernet card"
 argument_list|)
 block|,
 endif|#
@@ -699,70 +706,70 @@ name|NETWORK
 argument_list|(
 literal|"sn"
 argument_list|,
-literal|"SMC/Megahertz ethernet card"
+literal|"SMC/Megahertz Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"ste"
 argument_list|,
-literal|"Sundance ST201 PCI ethernet card"
+literal|"Sundance ST201 PCI Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"stge"
 argument_list|,
-literal|"Sundance/Tamarack TC9021 gigabit Ethernet"
+literal|"Sundance/Tamarack TC9021 Gigabit Ethernet"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"sk"
 argument_list|,
-literal|"SysKonnect PCI gigabit ethernet card"
+literal|"SysKonnect PCI Gigabit Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"tx"
 argument_list|,
-literal|"SMC 9432TX ethernet card"
+literal|"SMC 9432TX Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"txp"
 argument_list|,
-literal|"3Com 3cR990 ethernet card"
+literal|"3Com 3cR990 Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"ti"
 argument_list|,
-literal|"Alteon Networks PCI gigabit ethernet card"
+literal|"Alteon Networks PCI Gigabit Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"tl"
 argument_list|,
-literal|"Texas Instruments ThunderLAN PCI ethernet card"
+literal|"Texas Instruments ThunderLAN PCI Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"vge"
 argument_list|,
-literal|"VIA VT612x PCI gigabit ethernet card"
+literal|"VIA VT612x PCI Gigabit Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"vr"
 argument_list|,
-literal|"VIA VT3043/VT86C100A Rhine PCI ethernet card"
+literal|"VIA VT3043/VT86C100A Rhine PCI Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
@@ -776,14 +783,14 @@ name|NETWORK
 argument_list|(
 literal|"vx"
 argument_list|,
-literal|"3COM 3c590 / 3c595 ethernet card"
+literal|"3COM 3c590 / 3c595 Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"wb"
 argument_list|,
-literal|"Winbond W89C840F PCI ethernet card"
+literal|"Winbond W89C840F PCI Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
@@ -795,23 +802,16 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
-literal|"wx"
-argument_list|,
-literal|"Intel Gigabit Ethernet (82452) card"
-argument_list|)
-block|,
-name|NETWORK
-argument_list|(
 literal|"xe"
 argument_list|,
-literal|"Xircom/Intel EtherExpress Pro100/16 ethernet card"
+literal|"Xircom/Intel EtherExpress Pro100/16 Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
 argument_list|(
 literal|"xl"
 argument_list|,
-literal|"3COM 3c90x / 3c90xB PCI ethernet card"
+literal|"3COM 3c90x / 3c90xB PCI Ethernet card"
 argument_list|)
 block|,
 name|NETWORK
