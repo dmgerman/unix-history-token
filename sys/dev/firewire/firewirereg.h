@@ -1043,8 +1043,6 @@ decl_stmt|;
 name|uint8_t
 name|tl
 decl_stmt|;
-union|union
-block|{
 name|void
 function_decl|(
 modifier|*
@@ -1056,9 +1054,6 @@ name|fw_xfer
 modifier|*
 parameter_list|)
 function_decl|;
-block|}
-name|act
-union|;
 struct|struct
 block|{
 name|struct

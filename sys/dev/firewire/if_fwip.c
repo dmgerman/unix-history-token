@@ -1921,8 +1921,6 @@ name|MCLBYTES
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fwip_unicast_input
@@ -2038,8 +2036,6 @@ name|fwip
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fwip_output_callback

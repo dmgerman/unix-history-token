@@ -4794,8 +4794,6 @@ argument_list|)
 decl_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|sbp_reset_start_callback
@@ -5743,8 +5741,6 @@ name|SBP_DEV_PROBE
 condition|)
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|sbp_agent_reset_callback
@@ -5752,8 +5748,6 @@ expr_stmt|;
 else|else
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|sbp_do_attach
@@ -5910,8 +5904,6 @@ argument_list|)
 decl_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|sbp_busy_timeout_callback
@@ -6229,8 +6221,6 @@ condition|)
 return|return;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|sbp_orb_pointer_callback
@@ -6551,8 +6541,6 @@ condition|)
 return|return;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|sbp_doorbell_callback
@@ -7451,8 +7439,6 @@ return|return;
 block|}
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|sbp_mgm_callback
@@ -8876,7 +8862,7 @@ directive|if
 name|NEED_RESPONSE
 argument|xfer->send.off =
 literal|0
-argument|; 	sfp = (struct fw_pkt *)xfer->send.buf; 	sfp->mode.wres.dst = rfp->mode.wreqb.src; 	xfer->dst = sfp->mode.wres.dst; 	xfer->spd = min(sdev->target->fwdev->speed, max_speed); 	xfer->act.hand = sbp_loginres_callback;  	sfp->mode.wres.tlrt = rfp->mode.wreqb.tlrt; 	sfp->mode.wres.tcode = FWTCODE_WRES; 	sfp->mode.wres.rtcode =
+argument|; 	sfp = (struct fw_pkt *)xfer->send.buf; 	sfp->mode.wres.dst = rfp->mode.wreqb.src; 	xfer->dst = sfp->mode.wres.dst; 	xfer->spd = min(sdev->target->fwdev->speed, max_speed); 	xfer->hand = sbp_loginres_callback;  	sfp->mode.wres.tlrt = rfp->mode.wreqb.tlrt; 	sfp->mode.wres.tcode = FWTCODE_WRES; 	sfp->mode.wres.rtcode =
 literal|0
 argument|; 	sfp->mode.wres.pri =
 literal|0
@@ -8993,7 +8979,7 @@ comment|/* send */
 literal|0
 argument|,
 comment|/* recv */
-argument|SBP_RECV_LEN); 		xfer->act.hand = sbp_recv;
+argument|SBP_RECV_LEN); 		xfer->hand = sbp_recv;
 if|#
 directive|if
 name|NEED_RESPONSE

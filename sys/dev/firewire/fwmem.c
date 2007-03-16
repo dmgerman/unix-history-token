@@ -472,8 +472,6 @@ argument_list|)
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|hand

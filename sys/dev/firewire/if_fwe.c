@@ -2095,8 +2095,6 @@ name|fwe
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fwe_output_callback

@@ -7523,8 +7523,6 @@ name|SBP_TARG_RECV_LEN
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|sbp_targ_recv
@@ -8242,8 +8240,6 @@ expr_stmt|;
 comment|/* XXX */
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|sbp_targ_resp_callback
@@ -8617,8 +8613,6 @@ argument_list|)
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|sbp_targ_recv

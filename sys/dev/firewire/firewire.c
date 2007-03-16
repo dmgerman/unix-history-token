@@ -1017,8 +1017,6 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|==
 name|NULL
@@ -1026,7 +1024,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"act.hand == NULL\n"
+literal|"hand == NULL\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1427,7 +1425,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX allow bus explore packets only after bus rest */
-block|if (fc->status< FWBUSEXPLORE) { 		xfer->resp = EAGAIN; 		xfer->state = FWXF_BUSY; 		if (xfer->act.hand != NULL) 			xfer->act.hand(xfer); 		return; 	}
+block|if (fc->status< FWBUSEXPLORE) { 		xfer->resp = EAGAIN; 		xfer->state = FWXF_BUSY; 		if (xfer->hand != NULL) 			xfer->hand(xfer); 		return; 	}
 endif|#
 directive|endif
 name|microtime
@@ -4217,8 +4215,6 @@ return|return;
 block|}
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fw_vmaccess
@@ -5162,8 +5158,6 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|==
 name|NULL
@@ -5171,7 +5165,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"act.hand == NULL\n"
+literal|"hand == NULL\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5191,8 +5185,6 @@ argument_list|)
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 argument_list|(
 name|xfer
@@ -5545,8 +5537,6 @@ name|fc
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fw_asy_callback_free
@@ -7458,8 +7448,6 @@ name|addr
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fw_bus_explore_callback
@@ -7739,8 +7727,6 @@ name|addr_lo
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|hand
@@ -10365,13 +10351,11 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			rb->xfer->act.hand = fw_asy_callback; */
+comment|/* 			rb->xfer->hand = fw_asy_callback; */
 name|rb
 operator|->
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fw_xfer_free
@@ -10496,8 +10480,6 @@ name|rb
 operator|->
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 argument_list|(
 name|rb
@@ -11105,8 +11087,6 @@ argument_list|)
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fw_try_bmr_callback
@@ -11769,8 +11749,6 @@ argument_list|)
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fw_xfer_free
