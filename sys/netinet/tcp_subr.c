@@ -593,18 +593,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int	tcp_rttdflt = TCPTV_SRTTDFLT / PR_SLOWHZ; SYSCTL_INT(_net_inet_tcp, TCPCTL_RTTDFLT, rttdflt, CTLFLAG_RW,&tcp_rttdflt , 0, "Default maximum TCP Round Trip Time");
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|tcp_do_rfc1323
