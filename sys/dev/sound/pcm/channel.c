@@ -8171,7 +8171,7 @@ operator|=
 name|FEEDER_RATE
 init|;
 name|type
-operator|<=
+operator|<
 name|FEEDER_LAST
 condition|;
 name|type

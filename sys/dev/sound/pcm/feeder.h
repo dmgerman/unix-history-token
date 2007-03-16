@@ -259,41 +259,48 @@ begin_define
 define|#
 directive|define
 name|FEEDER_ROOT
-value|1
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|FEEDER_FMT
-value|2
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|FEEDER_MIXER
-value|3
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|FEEDER_RATE
-value|4
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|FEEDER_FILTER
-value|5
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|FEEDER_VOLUME
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEEDER_SWAPLR
 value|6
 end_define
 
@@ -301,7 +308,7 @@ begin_define
 define|#
 directive|define
 name|FEEDER_LAST
-value|FEEDER_VOLUME
+value|32
 end_define
 
 begin_define
