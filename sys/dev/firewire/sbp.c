@@ -308,6 +308,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|SBP_MAXPHYS
+value|MIN(MAXPHYS, (512*1024)
+comment|/* 512KB */
+value|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SBP_DMA_SIZE
 value|PAGE_SIZE
 end_define
@@ -786,7 +795,7 @@ begin_define
 define|#
 directive|define
 name|SBP_IND_MAX
-value|howmany(MAXPHYS, SBP_SEG_MAX)
+value|howmany(SBP_MAXPHYS, SBP_SEG_MAX)
 end_define
 
 begin_else
@@ -798,7 +807,7 @@ begin_define
 define|#
 directive|define
 name|SBP_IND_MAX
-value|howmany(MAXPHYS, PAGE_SIZE)
+value|howmany(SBP_MAXPHYS, PAGE_SIZE)
 end_define
 
 begin_endif
