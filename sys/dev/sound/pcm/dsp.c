@@ -8777,7 +8777,7 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Assumes ret == EWOULDBLOCK... */
+comment|/* Assumes ret == EAGAIN... */
 block|}
 block|}
 block|}
