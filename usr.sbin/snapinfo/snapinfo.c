@@ -273,27 +273,33 @@ operator|!
 name|all
 condition|)
 block|{
+name|char
+name|resolved
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
 name|path
 operator|=
 operator|*
 name|argv
 expr_stmt|;
+comment|/* 		 * mount(8) use realpath(3) before mounting file system, 		 * so let's do the same with the given path. 		 */
 if|if
 condition|(
-name|strrchr
+name|realpath
 argument_list|(
 name|path
 argument_list|,
-literal|'/'
+name|resolved
 argument_list|)
 operator|==
 name|NULL
 operator|||
-comment|/* is absolute path */
-operator|(
+comment|/* can create full path */
 name|stat
 argument_list|(
-name|path
+name|resolved
 argument_list|,
 operator|&
 name|st
@@ -301,21 +307,25 @@ argument_list|)
 operator|==
 operator|-
 literal|1
-operator|)
 operator|||
 comment|/* is it stat'able */
 operator|!
-operator|(
+name|S_ISDIR
+argument_list|(
 name|st
 operator|.
 name|st_mode
-operator|&
-name|S_IFDIR
-operator|)
+argument_list|)
 condition|)
+block|{
 comment|/* is it a directory */
 name|usage
 argument_list|()
+expr_stmt|;
+block|}
+name|path
+operator|=
+name|resolved
 expr_stmt|;
 block|}
 name|fscount
