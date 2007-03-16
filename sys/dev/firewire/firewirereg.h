@@ -319,16 +319,10 @@ decl_stmt|;
 name|u_int
 name|max_hop
 decl_stmt|;
-name|u_int
-name|max_asyretry
-decl_stmt|;
 define|#
 directive|define
 name|FWPHYASYST
 value|(1<< 0)
-name|u_int
-name|retry_count
-decl_stmt|;
 name|uint32_t
 name|ongobus
 range|:

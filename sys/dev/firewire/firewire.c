@@ -8751,11 +8751,6 @@ expr_stmt|;
 return|return;
 name|errnode
 label|:
-name|fc
-operator|->
-name|retry_count
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|fc
