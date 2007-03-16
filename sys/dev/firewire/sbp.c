@@ -6816,12 +6816,6 @@ name|fd
 operator|.
 name|fc
 expr_stmt|;
-name|xfer
-operator|->
-name|retry_req
-operator|=
-name|fw_asybusy
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -8882,7 +8876,7 @@ directive|if
 name|NEED_RESPONSE
 argument|xfer->send.off =
 literal|0
-argument|; 	sfp = (struct fw_pkt *)xfer->send.buf; 	sfp->mode.wres.dst = rfp->mode.wreqb.src; 	xfer->dst = sfp->mode.wres.dst; 	xfer->spd = min(sdev->target->fwdev->speed, max_speed); 	xfer->act.hand = sbp_loginres_callback; 	xfer->retry_req = fw_asybusy;  	sfp->mode.wres.tlrt = rfp->mode.wreqb.tlrt; 	sfp->mode.wres.tcode = FWTCODE_WRES; 	sfp->mode.wres.rtcode =
+argument|; 	sfp = (struct fw_pkt *)xfer->send.buf; 	sfp->mode.wres.dst = rfp->mode.wreqb.src; 	xfer->dst = sfp->mode.wres.dst; 	xfer->spd = min(sdev->target->fwdev->speed, max_speed); 	xfer->act.hand = sbp_loginres_callback;  	sfp->mode.wres.tlrt = rfp->mode.wreqb.tlrt; 	sfp->mode.wres.tcode = FWTCODE_WRES; 	sfp->mode.wres.rtcode =
 literal|0
 argument|; 	sfp->mode.wres.pri =
 literal|0

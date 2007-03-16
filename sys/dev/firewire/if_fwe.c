@@ -2086,12 +2086,6 @@ name|fc
 expr_stmt|;
 name|xfer
 operator|->
-name|retry_req
-operator|=
-name|fw_asybusy
-expr_stmt|;
-name|xfer
-operator|->
 name|sc
 operator|=
 operator|(

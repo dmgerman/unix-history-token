@@ -8248,12 +8248,6 @@ name|hand
 operator|=
 name|sbp_targ_resp_callback
 expr_stmt|;
-name|xfer
-operator|->
-name|retry_req
-operator|=
-name|fw_asybusy
-expr_stmt|;
 name|sfp
 operator|->
 name|mode
