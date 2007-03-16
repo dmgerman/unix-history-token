@@ -8901,7 +8901,14 @@ argument|static int sbp_attach(device_t dev) { 	struct sbp_softc *sbp; 	struct c
 argument_list|,
 argument|s
 argument_list|,
-argument|error;  SBP_DEBUG(
+argument|error;  	if (DFLTPHYS> SBP_MAXPHYS) 		device_printf(dev,
+literal|"Warning, DFLTPHYS(%dKB) is larger than "
+literal|"SBP_MAXPHYS(%dKB).\n"
+argument|, DFLTPHYS /
+literal|1024
+argument|, 			SBP_MAXPHYS /
+literal|1024
+argument|);  SBP_DEBUG(
 literal|0
 argument|) 	printf(
 literal|"sbp_attach (cold=%d)\n"
