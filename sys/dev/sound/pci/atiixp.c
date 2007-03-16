@@ -3374,6 +3374,10 @@ name|subdev
 condition|)
 block|{
 case|case
+literal|0x11831043
+case|:
+comment|/* ASUS A6R */
+case|case
 literal|0x2043161f
 case|:
 comment|/* Maxselect x710s - http://maxselect.ru/ */
