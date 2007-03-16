@@ -2726,7 +2726,7 @@ condition|)
 block|{
 name|l
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|count
 argument_list|,
@@ -2915,7 +2915,7 @@ condition|)
 block|{
 name|l
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|count
 argument_list|,
