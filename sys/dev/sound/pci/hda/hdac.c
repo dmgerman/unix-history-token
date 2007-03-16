@@ -658,6 +658,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASUS_A7T_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x13c2)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASUS_ALL_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ASUS, 0xffff)
 end_define
@@ -18143,6 +18150,16 @@ block|{
 name|ASUS_A7M_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC880
+block|,
+name|HDA_QUIRK_GPIO0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ASUS_A7T_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC882
 block|,
 name|HDA_QUIRK_GPIO0
 block|,
