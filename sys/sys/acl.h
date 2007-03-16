@@ -352,7 +352,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * POSIX.1e ACLs are capable of expressing the read, write, and execute  * bits of the POSIX mode field.  We provide two masks: one that defines  * the bits the ACL will replace in the mode, and the other that defines  * the bits that must be preseved when an ACL is updating a mode.  */
+comment|/*  * POSIX.1e ACLs are capable of expressing the read, write, and execute bits  * of the POSIX mode field.  We provide two masks: one that defines the bits  * the ACL will replace in the mode, and the other that defines the bits that  * must be preseved when an ACL is updating a mode.  */
 end_comment
 
 begin_define
@@ -370,7 +370,7 @@ value|(~ACL_OVERRIDE_MASK)
 end_define
 
 begin_comment
-comment|/*  * File system independent code to move back and forth between POSIX mode  * and POSIX.1e ACL representations.  */
+comment|/*  * File system independent code to move back and forth between POSIX mode and  * POSIX.1e ACL representations.  */
 end_comment
 
 begin_function_decl
@@ -481,7 +481,7 @@ comment|/* !_KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Syscall interface -- use the library calls instead as the syscalls  * have strict acl entry ordering requirements.  */
+comment|/*  * Syscall interface -- use the library calls instead as the syscalls have  * strict acl entry ordering requirements.  */
 end_comment
 
 begin_function_decl
@@ -704,7 +704,7 @@ end_function_decl
 
 begin_function_decl
 name|__END_DECLS
-comment|/*  * Supported POSIX.1e ACL manipulation and assignment/retrieval API  * _np calls are local extensions that reflect an environment capable of  * opening file descriptors of directories, and allowing additional  * ACL type for different filesystems (i.e., AFS).  */
+comment|/*  * Supported POSIX.1e ACL manipulation and assignment/retrieval API _np calls  * are local extensions that reflect an environment capable of opening file  * descriptors of directories, and allowing additional ACL type for different  * filesystems (i.e., AFS).  */
 name|__BEGIN_DECLS
 name|int
 name|acl_add_perm
