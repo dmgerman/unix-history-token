@@ -6585,6 +6585,8 @@ literal|1
 if|if
 condition|(
 name|firewire_debug
+operator|>
+literal|1
 condition|)
 name|dump_db
 argument_list|(
@@ -9555,6 +9557,8 @@ expr_stmt|;
 if|if
 condition|(
 name|firewire_debug
+operator|>
+literal|1
 condition|)
 block|{
 name|printf
@@ -9691,6 +9695,8 @@ directive|endif
 if|if
 condition|(
 name|firewire_debug
+operator|>
+literal|1
 condition|)
 block|{
 name|printf
