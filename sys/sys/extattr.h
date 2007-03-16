@@ -66,7 +66,7 @@ value|"system"
 end_define
 
 begin_comment
-comment|/*  * The following macro is designed to initialize an array that maps extended  * attribute namespace values to their names, e.g., char  * *extattr_namespace_names[] = EXTATTR_NAMESPACE_NAMES;  */
+comment|/*  * The following macro is designed to initialize an array that maps  * extended-attribute namespace values to their names, e.g.:  *  * char *extattr_namespace_names[] = EXTATTR_NAMESPACE_NAMES;  */
 end_comment
 
 begin_define
