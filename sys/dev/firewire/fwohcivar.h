@@ -223,6 +223,9 @@ name|fwohci_task_complete
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+name|cycle_lost
+decl_stmt|;
 block|}
 name|fwohci_softc_t
 typedef|;
