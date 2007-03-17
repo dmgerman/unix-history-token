@@ -5562,6 +5562,20 @@ name|div
 operator|)
 return|;
 block|}
+comment|/* runtime == slptime */
+if|if
+condition|(
+name|td
+operator|->
+name|td_sched
+operator|->
+name|skg_runtime
+condition|)
+return|return
+operator|(
+name|SCHED_INTERACT_HALF
+operator|)
+return|;
 comment|/* 	 * This can happen if slptime and runtime are 0. 	 */
 return|return
 operator|(
