@@ -5263,14 +5263,12 @@ expr_stmt|;
 else|else
 endif|#
 directive|endif
-block|{
 name|ip
 operator|->
 name|ip_len
 operator|+=
 name|optlen
 expr_stmt|;
-block|}
 block|}
 else|else
 name|optlen
@@ -5308,6 +5306,8 @@ argument_list|,
 name|hlen
 argument_list|,
 name|tlen
+operator|+
+name|optlen
 operator|-
 name|hlen
 argument_list|)
