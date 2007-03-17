@@ -445,10 +445,6 @@ name|mbuf
 modifier|*
 name|mb
 decl_stmt|;
-comment|/* XXXRW: not 100% clear the lock is needed here. */
-name|NFSD_LOCK_ASSERT
-argument_list|()
-expr_stmt|;
 name|nd
 operator|->
 name|nd_repstat
@@ -473,9 +469,6 @@ comment|/* XXX recheck */
 name|siz
 operator|=
 literal|0
-expr_stmt|;
-name|NFSD_UNLOCK
-argument_list|()
 expr_stmt|;
 name|MGETHDR
 argument_list|(
@@ -536,9 +529,6 @@ argument_list|(
 name|mreq
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|NFSD_LOCK
-argument_list|()
 expr_stmt|;
 name|tl
 operator|=
@@ -882,10 +872,6 @@ name|off
 init|=
 literal|0
 decl_stmt|;
-comment|/* XXXRW: may not need lock? */
-name|NFSD_LOCK_ASSERT
-argument_list|()
-expr_stmt|;
 operator|++
 name|nfs_realign_test
 expr_stmt|;
@@ -923,9 +909,6 @@ literal|0x3
 operator|)
 condition|)
 block|{
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
 name|MGET
 argument_list|(
 name|n
@@ -952,9 +935,6 @@ name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 block|}
-name|NFSD_LOCK
-argument_list|()
-expr_stmt|;
 name|n
 operator|->
 name|m_len

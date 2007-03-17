@@ -367,9 +367,6 @@ name|be
 parameter_list|,
 name|caddr_t
 name|bpos
-parameter_list|,
-name|int
-name|droplock
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -446,15 +443,7 @@ define|#
 directive|define
 name|nfsm_clget
 define|\
-value|nfsm_clget_xx(&tl, mb,&mp,&bp,&be, bpos, 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|nfsm_clget_nolock
-define|\
-value|nfsm_clget_xx(&tl, mb,&mp,&bp,&be, bpos, 0)
+value|nfsm_clget_xx(&tl, mb,&mp,&bp,&be, bpos)
 end_define
 
 begin_endif

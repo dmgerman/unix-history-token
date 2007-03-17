@@ -704,6 +704,9 @@ operator|.
 name|srvcache_nonidemdonehits
 operator|++
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 operator|*
 name|repp
 operator|=
@@ -727,6 +730,9 @@ expr_stmt|;
 name|ret
 operator|=
 name|RC_REPLY
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 block|}
 elseif|else

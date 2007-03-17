@@ -2041,6 +2041,9 @@ name|procrastinate
 operator|=
 name|nfsrvw_procrastinate
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|writes_todo
@@ -2112,6 +2115,9 @@ operator|,
 operator|&
 name|mreq
 operator|)
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
