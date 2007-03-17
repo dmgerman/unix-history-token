@@ -829,9 +829,6 @@ name|char
 modifier|*
 name|pathname
 parameter_list|,
-name|unsigned
-name|pathlen
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -3287,11 +3284,6 @@ name|lst
 argument_list|,
 name|name
 argument_list|,
-name|tree_current_pathlen
-argument_list|(
-name|tree
-argument_list|)
-argument_list|,
 name|tree_current_access_path
 argument_list|(
 name|tree
@@ -3337,9 +3329,6 @@ name|char
 modifier|*
 name|pathname
 parameter_list|,
-name|unsigned
-name|pathlen
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -3378,12 +3367,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|pathlen
-expr_stmt|;
-comment|/* UNUSED */
 name|fd
 operator|=
 operator|-
