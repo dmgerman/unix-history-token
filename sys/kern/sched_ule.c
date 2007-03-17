@@ -1869,11 +1869,15 @@ name|tdq_ridx
 condition|)
 name|pri
 operator|=
-operator|(
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|pri
 operator|-
 literal|1
-operator|)
+argument_list|)
 operator|%
 name|RQ_NQS
 expr_stmt|;
