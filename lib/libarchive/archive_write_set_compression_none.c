@@ -586,6 +586,14 @@ operator|(
 name|ARCHIVE_FATAL
 operator|)
 return|;
+name|a
+operator|->
+name|archive
+operator|.
+name|raw_position
+operator|+=
+name|bytes_written
+expr_stmt|;
 name|remaining
 operator|-=
 name|bytes_written
