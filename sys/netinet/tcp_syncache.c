@@ -5260,14 +5260,17 @@ operator|+
 name|optlen
 argument_list|)
 expr_stmt|;
+else|else
 endif|#
 directive|endif
+block|{
 name|ip
 operator|->
 name|ip_len
 operator|+=
 name|optlen
 expr_stmt|;
+block|}
 block|}
 else|else
 name|optlen
