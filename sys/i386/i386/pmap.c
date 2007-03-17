@@ -1300,9 +1300,6 @@ name|pmap_bootstrap
 parameter_list|(
 name|vm_paddr_t
 name|firstaddr
-parameter_list|,
-name|vm_paddr_t
-name|loadaddr
 parameter_list|)
 block|{
 name|vm_offset_t
