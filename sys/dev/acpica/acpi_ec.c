@@ -555,8 +555,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ec_burst_mode
-init|=
-name|TRUE
 decl_stmt|;
 end_decl_stmt
 
@@ -585,7 +583,7 @@ argument_list|,
 operator|&
 name|ec_burst_mode
 argument_list|,
-name|TRUE
+literal|0
 argument_list|,
 literal|"Enable use of burst mode (faster for nearly all systems)"
 argument_list|)
