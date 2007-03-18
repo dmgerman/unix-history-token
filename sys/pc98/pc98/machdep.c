@@ -7862,8 +7862,6 @@ comment|/* call pmap initialization to make new kernel address space */
 name|pmap_bootstrap
 argument_list|(
 name|first
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Size up each available chunk of physical memory. 	 */
