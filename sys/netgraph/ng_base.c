@@ -2229,7 +2229,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * Node has no constructor. We cannot ask for one 		 * to be made. It must be brought into existance by 		 * some external agency. The external agency should 		 * call ng_make_node_common() directly to get the 		 * netgraph part initialised. 		 */
+comment|/* 		 * Node has no constructor. We cannot ask for one 		 * to be made. It must be brought into existence by 		 * some external agency. The external agency should 		 * call ng_make_node_common() directly to get the 		 * netgraph part initialised. 		 */
 name|TRAP_ERROR
 argument_list|()
 expr_stmt|;
@@ -2510,7 +2510,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Forceably start the shutdown process on a node. Either call  * it's shutdown method, or do the default shutdown if there is  * no type-specific method.  *  * We can only be called form a shutdown message, so we know we have  * a writer lock, and therefore exclusive access. It also means  * that we should not be on the work queue, but we check anyhow.  *  * Persistent node types must have a type-specific method which  * Allocates a new node in which case, this one is irretrievably going away,  * or cleans up anything it needs, and just makes the node valid again,  * in which case we allow the node to survive.  *  * XXX We need to think of how to tell a persistant node that we  * REALLY need to go away because the hardware has gone or we  * are rebooting.... etc.  */
+comment|/*  * Forceably start the shutdown process on a node. Either call  * its shutdown method, or do the default shutdown if there is  * no type-specific method.  *  * We can only be called from a shutdown message, so we know we have  * a writer lock, and therefore exclusive access. It also means  * that we should not be on the work queue, but we check anyhow.  *  * Persistent node types must have a type-specific method which  * allocates a new node in which case, this one is irretrievably going away,  * or cleans up anything it needs, and just makes the node valid again,  * in which case we allow the node to survive.  *  * XXX We need to think of how to tell a persistent node that we  * REALLY need to go away because the hardware has gone or we  * are rebooting.... etc.  */
 end_comment
 
 begin_function
@@ -3366,7 +3366,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove a name from a node. This should only be called  * when shutting down and removing the node.  * IF we allow name changing this may be more resurected.  */
+comment|/*  * Remove a name from a node. This should only be called  * when shutting down and removing the node.  * IF we allow name changing this may be more resurrected.  */
 end_comment
 
 begin_function
@@ -3977,7 +3977,7 @@ operator|->
 name|disconnect
 condition|)
 block|{
-comment|/* 		 * The type handler may elect to destroy the node so don't 		 * trust its existance after this point. (except 		 * that we still hold a reference on it. (which we 		 * inherrited from the hook we are destroying) 		 */
+comment|/* 		 * The type handler may elect to destroy the node so don't 		 * trust its existence after this point. (except 		 * that we still hold a reference on it. (which we 		 * inherrited from the hook we are destroying) 		 */
 call|(
 modifier|*
 name|node
@@ -4606,7 +4606,7 @@ name|hook
 argument_list|)
 expr_stmt|;
 comment|/* one for the node */
-comment|/* 	 * We now have a symetrical situation, where both hooks have been 	 * linked to their nodes, the newhook methods have been called 	 * And the references are all correct. The hooks are still marked 	 * as invalid, as we have not called the 'connect' methods 	 * yet. 	 * We can call the local one immediatly as we have the 	 * node locked, but we need to queue the remote one. 	 */
+comment|/* 	 * We now have a symmetrical situation, where both hooks have been 	 * linked to their nodes, the newhook methods have been called 	 * And the references are all correct. The hooks are still marked 	 * as invalid, as we have not called the 'connect' methods 	 * yet. 	 * We can call the local one immediately as we have the 	 * node locked, but we need to queue the remote one. 	 */
 if|if
 condition|(
 name|hook
@@ -5231,7 +5231,7 @@ comment|/* Shut this node down as soon as everyone is clear of it */
 end_comment
 
 begin_comment
-comment|/* Should add arg "immediatly" to jump the queue */
+comment|/* Should add arg "immediately" to jump the queue */
 end_comment
 
 begin_function
@@ -5936,7 +5936,7 @@ name|node
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Now follow the sequence of hooks 	 * XXX 	 * We actually cannot guarantee that the sequence 	 * is not being demolished as we crawl along it 	 * without extra-ordinary locking etc. 	 * So this is a bit dodgy to say the least. 	 * We can probably hold up some things by holding 	 * the nodelist mutex for the time of this 	 * crawl if we wanted.. At least that way we wouldn't have to 	 * worry about the nodes dissappearing, but the hooks would still 	 * be a problem. 	 */
+comment|/* 	 * Now follow the sequence of hooks 	 * XXX 	 * We actually cannot guarantee that the sequence 	 * is not being demolished as we crawl along it 	 * without extra-ordinary locking etc. 	 * So this is a bit dodgy to say the least. 	 * We can probably hold up some things by holding 	 * the nodelist mutex for the time of this 	 * crawl if we wanted.. At least that way we wouldn't have to 	 * worry about the nodes disappearing, but the hooks would still 	 * be a problem. 	 */
 for|for
 control|(
 name|cp
@@ -6158,7 +6158,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***************************************************************\ * Input queue handling. * All activities are submitted to the node via the input queue * which implements a multiple-reader/single-writer gate. * Items which cannot be handled immeditly are queued. * * read-write queue locking inline functions			* \***************************************************************/
+comment|/***************************************************************\ * Input queue handling. * All activities are submitted to the node via the input queue * which implements a multiple-reader/single-writer gate. * Items which cannot be handled immediately are queued. * * read-write queue locking inline functions			* \***************************************************************/
 end_comment
 
 begin_function_decl
@@ -7563,7 +7563,7 @@ name|q_mtx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Take us off the work queue if we are there. 	 * We definatly have no work to be done. 	 */
+comment|/* 	 * Take us off the work queue if we are there. 	 * We definately have no work to be done. 	 */
 name|ng_worklist_remove
 argument_list|(
 name|ngq
@@ -8336,7 +8336,7 @@ name|hook
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * The hook has been zapped then we can't 				 * use it. Immediatly drop its reference. 				 * The message may not need it. 				 */
+comment|/* 				 * The hook has been zapped then we can't 				 * use it. Immediately drop its reference. 				 * The message may not need it. 				 */
 name|NG_HOOK_UNREF
 argument_list|(
 name|hook
@@ -11648,7 +11648,7 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-comment|/* You cant unload it because an interface may be using it.  */
+comment|/* You can't unload it because an interface may be using it. */
 name|error
 operator|=
 name|EBUSY
