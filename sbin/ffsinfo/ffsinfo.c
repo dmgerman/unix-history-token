@@ -501,11 +501,9 @@ operator|<
 operator|-
 literal|1
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'i'
@@ -546,11 +544,9 @@ name|cfg_in
 operator|<
 literal|0
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'l'
@@ -595,11 +591,9 @@ name|cfg_lv
 operator|>
 literal|0x3ff
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'o'
@@ -622,7 +616,6 @@ name|out_file
 operator|==
 name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -630,7 +623,6 @@ argument_list|,
 literal|"strdup failed"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'?'
@@ -656,11 +648,9 @@ name|argc
 operator|!=
 literal|1
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-block|}
 name|device
 operator|=
 operator|*
@@ -691,7 +681,6 @@ argument_list|,
 literal|'/'
 argument_list|)
 operator|&&
-operator|(
 name|stat
 argument_list|(
 name|device
@@ -702,10 +691,9 @@ argument_list|)
 operator|==
 operator|-
 literal|1
-operator|)
 condition|)
 block|{
-comment|/* 		 * No path prefix was given, so try in that order: 		 *     /dev/r%s 		 *     /dev/%s 		 *     /dev/vinum/r%s 		 *     /dev/vinum/%s. 		 *  		 * FreeBSD now doesn't distinguish between raw and  block 		 * devices any longer, but it should still work this way. 		 */
+comment|/*- 		 * No path prefix was given, so try in this order: 		 *     /dev/r%s 		 *     /dev/%s 		 *     /dev/vinum/r%s 		 *     /dev/vinum/%s. 		 *  		 * FreeBSD now doesn't distinguish between raw and  block 		 * devices any longer, but it should still work this way. 		 */
 name|len
 operator|=
 name|strlen
@@ -742,7 +730,6 @@ name|special
 operator|==
 name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -750,7 +737,6 @@ argument_list|,
 literal|"malloc failed"
 argument_list|)
 expr_stmt|;
-block|}
 name|snprintf
 argument_list|(
 name|special
@@ -831,8 +817,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-comment|/* 					 * For now this is the 'last resort'. 					 */
+comment|/* For now this is the 'last resort' */
 name|snprintf
 argument_list|(
 name|special
@@ -846,7 +831,6 @@ argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|device
@@ -892,7 +876,6 @@ name|cfg_lv
 operator|&
 literal|0x001
 condition|)
-block|{
 name|DBG_DUMP_FS
 argument_list|(
 operator|&
@@ -901,8 +884,7 @@ argument_list|,
 literal|"primary sblock"
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 	 * Determine here what cylinder groups to dump. 	 */
+comment|/* Determine here what cylinder groups to dump */
 if|if
 condition|(
 name|cfg_cg
@@ -1017,7 +999,6 @@ name|fscs
 operator|==
 name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -1025,8 +1006,7 @@ argument_list|,
 literal|"calloc failed"
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 		 * Get the cylinder summary into the memory ... 		 */
+comment|/* get the cylinder summary into the memory ... */
 for|for
 control|(
 name|i
@@ -1116,7 +1096,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
@@ -1129,12 +1108,11 @@ name|d_error
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|dbg_csp
 operator|=
 name|fscs
 expr_stmt|;
-comment|/* 		 * ... and dump it. 		 */
+comment|/* ... and dump it */
 for|for
 control|(
 name|dbg_csc
@@ -1178,7 +1156,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * For each requested cylinder group ... 	 */
+comment|/* for each requested cylinder group ... */
 for|for
 control|(
 name|cylno
@@ -1214,7 +1192,7 @@ operator|&
 literal|0x002
 condition|)
 block|{
-comment|/* 			 * ... dump the superblock copies ... 			 */
+comment|/* dump the superblock copies */
 if|if
 condition|(
 name|bread
@@ -1249,7 +1227,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
@@ -1261,7 +1238,6 @@ operator|.
 name|d_error
 argument_list|)
 expr_stmt|;
-block|}
 name|DBG_DUMP_FS
 argument_list|(
 operator|&
@@ -1271,7 +1247,7 @@ name|dbg_line
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * ... read the cylinder group and dump whatever was requested. 		 */
+comment|/* 		 * Read the cylinder group and dump whatever was 		 * requested. 		 */
 if|if
 condition|(
 name|bread
@@ -1311,7 +1287,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
@@ -1323,14 +1298,12 @@ operator|.
 name|d_error
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cfg_lv
 operator|&
 literal|0x008
 condition|)
-block|{
 name|DBG_DUMP_CG
 argument_list|(
 operator|&
@@ -1342,14 +1315,12 @@ operator|&
 name|acg
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cfg_lv
 operator|&
 literal|0x010
 condition|)
-block|{
 name|DBG_DUMP_INMAP
 argument_list|(
 operator|&
@@ -1361,14 +1332,12 @@ operator|&
 name|acg
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cfg_lv
 operator|&
 literal|0x020
 condition|)
-block|{
 name|DBG_DUMP_FRMAP
 argument_list|(
 operator|&
@@ -1380,7 +1349,6 @@ operator|&
 name|acg
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cfg_lv
@@ -1427,7 +1395,6 @@ name|cfg_lv
 operator|&
 literal|0x080
 condition|)
-block|{
 name|DBG_DUMP_SPTBL
 argument_list|(
 operator|&
@@ -1439,11 +1406,10 @@ operator|&
 name|acg
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
-comment|/* 	 * Dump the requested inode(s). 	 */
+comment|/* Dump the requested inode(s) */
 if|if
 condition|(
 name|cfg_in
@@ -1451,7 +1417,6 @@ operator|!=
 operator|-
 literal|2
 condition|)
-block|{
 name|DUMP_WHOLE_INODE
 argument_list|(
 operator|(
@@ -1462,7 +1427,6 @@ argument_list|,
 name|cfg_lv
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 for|for
@@ -1489,7 +1453,6 @@ condition|;
 name|in
 operator|++
 control|)
-block|{
 name|DUMP_WHOLE_INODE
 argument_list|(
 name|in
@@ -1497,7 +1460,6 @@ argument_list|,
 name|cfg_lv
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|DBG_CLOSE
 expr_stmt|;
