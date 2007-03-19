@@ -482,7 +482,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"aue"
 block|,
-literal|"ADMtek USB ethernet adapter"
+literal|"ADMtek USB Ethernet adapter"
 block|}
 block|,
 block|{
@@ -490,7 +490,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"axe"
 block|,
-literal|"ASIX Electronics USB ethernet adapter"
+literal|"ASIX Electronics USB Ethernet adapter"
 block|}
 block|,
 block|{
@@ -506,7 +506,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"bfe"
 block|,
-literal|"Broadcom BCM440x PCI ethernet card"
+literal|"Broadcom BCM440x PCI Ethernet card"
 block|}
 block|,
 block|{
@@ -514,7 +514,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"bge"
 block|,
-literal|"Broadcom BCM570x PCI gigabit ethernet card"
+literal|"Broadcom BCM570x PCI Gigabit Ethernet card"
 block|}
 block|,
 block|{
@@ -522,7 +522,15 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"cue"
 block|,
-literal|"CATC USB ethernet adapter"
+literal|"CATC USB Ethernet adapter"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
+literal|"cxgb"
+block|,
+literal|"Chelsio T3 10Gb Ethernet card"
 block|}
 block|,
 block|{
@@ -562,7 +570,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"dc"
 block|,
-literal|"DEC/Intel 21143 (and clones) PCI fast ethernet card"
+literal|"DEC/Intel 21143 (and clones) PCI Fast Ethernet card"
 block|}
 block|,
 block|{
@@ -594,7 +602,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"ep"
 block|,
-literal|"3Com 3C509 ethernet card/3C589 PCMCIA"
+literal|"3Com 3C509 Ethernet card/3C589 PCMCIA"
 block|}
 block|,
 block|{
@@ -602,7 +610,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"el"
 block|,
-literal|"3Com 3C501 ethernet card"
+literal|"3Com 3C501 Ethernet card"
 block|}
 block|,
 block|{
@@ -610,7 +618,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"em"
 block|,
-literal|"Intel(R) PRO/1000 ethernet card"
+literal|"Intel(R) PRO/1000 Ethernet card"
 block|}
 block|,
 block|{
@@ -618,7 +626,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"ex"
 block|,
-literal|"Intel EtherExpress Pro/10 ethernet card"
+literal|"Intel EtherExpress Pro/10 Ethernet card"
 block|}
 block|,
 block|{
@@ -626,7 +634,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"fe"
 block|,
-literal|"Fujitsu MB86960A/MB86965A ethernet card"
+literal|"Fujitsu MB86960A/MB86965A Ethernet card"
 block|}
 block|,
 block|{
@@ -634,7 +642,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"gem"
 block|,
-literal|"Apple GMAC or Sun ERI/GEM ethernet adapter"
+literal|"Apple GMAC or Sun ERI/GEM Ethernet adapter"
 block|}
 block|,
 block|{
@@ -642,7 +650,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"hme"
 block|,
-literal|"Sun HME (Happy Meal Ethernet) ethernet adapter"
+literal|"Sun HME (Happy Meal Ethernet) Ethernet adapter"
 block|}
 block|,
 block|{
@@ -666,7 +674,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"kue"
 block|,
-literal|"Kawasaki LSI USB ethernet adapter"
+literal|"Kawasaki LSI USB Ethernet adapter"
 block|}
 block|,
 block|{
@@ -674,7 +682,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"le"
 block|,
-literal|"AMD Am7900 LANCE or Am79C9xx PCnet ethernet adapter"
+literal|"AMD Am7900 LANCE or Am79C9xx PCnet Ethernet adapter"
 block|}
 block|,
 block|{
@@ -682,7 +690,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"lnc"
 block|,
-literal|"Lance/PCnet (Isolan/Novell NE2100/NE32-VL) ethernet"
+literal|"Lance/PCnet (Isolan/Novell NE2100/NE32-VL) Ethernet"
 block|}
 block|,
 block|{
@@ -690,7 +698,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"lge"
 block|,
-literal|"Level 1 LXT1001 gigabit ethernet card"
+literal|"Level 1 LXT1001 Gigabit Ethernet card"
 block|}
 block|,
 block|{
@@ -698,7 +706,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"nge"
 block|,
-literal|"NatSemi PCI gigabit ethernet card"
+literal|"NatSemi PCI Gigabit Ethernet card"
 block|}
 block|,
 block|{
@@ -714,7 +722,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"pcn"
 block|,
-literal|"AMD Am79c79x PCI ethernet card"
+literal|"AMD Am79c79x PCI Ethernet card"
 block|}
 block|,
 block|{
@@ -722,7 +730,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"ray"
 block|,
-literal|"Raytheon Raylink 802.11 wireless adaptor"
+literal|"Raytheon Raylink 802.11 wireless adapter"
 block|}
 block|,
 block|{
@@ -730,7 +738,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"re"
 block|,
-literal|"RealTek 8139C+/8169/8169S/8110S PCI ethernet card"
+literal|"RealTek 8139C+/8169/8169S/8110S PCI Ethernet card"
 block|}
 block|,
 block|{
@@ -738,7 +746,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"rl"
 block|,
-literal|"RealTek 8129/8139 PCI ethernet card"
+literal|"RealTek 8129/8139 PCI Ethernet card"
 block|}
 block|,
 block|{
@@ -746,7 +754,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"rue"
 block|,
-literal|"RealTek USB ethernet card"
+literal|"RealTek USB Ethernet card"
 block|}
 block|,
 block|{
@@ -754,7 +762,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"sf"
 block|,
-literal|"Adaptec AIC-6915 PCI ethernet card"
+literal|"Adaptec AIC-6915 PCI Ethernet card"
 block|}
 block|,
 block|{
@@ -762,7 +770,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"sis"
 block|,
-literal|"SiS 900/SiS 7016 PCI ethernet card"
+literal|"SiS 900/SiS 7016 PCI Ethernet card"
 block|}
 block|,
 ifdef|#
@@ -773,7 +781,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"snc"
 block|,
-literal|"SONIC ethernet card"
+literal|"SONIC Ethernet card"
 block|}
 block|,
 endif|#
@@ -783,7 +791,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"sn"
 block|,
-literal|"SMC/Megahertz ethernet card"
+literal|"SMC/Megahertz Ethernet card"
 block|}
 block|,
 block|{
@@ -791,7 +799,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"ste"
 block|,
-literal|"Sundance ST201 PCI ethernet card"
+literal|"Sundance ST201 PCI Ethernet card"
 block|}
 block|,
 block|{
@@ -799,7 +807,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"sk"
 block|,
-literal|"SysKonnect PCI gigabit ethernet card"
+literal|"SysKonnect PCI Gigabit Ethernet card"
 block|}
 block|,
 block|{
@@ -807,7 +815,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"stge"
 block|,
-literal|"Sundance/Tamarack TC9021 gigabit Ethernet"
+literal|"Sundance/Tamarack TC9021 Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -815,7 +823,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"tx"
 block|,
-literal|"SMC 9432TX ethernet card"
+literal|"SMC 9432TX Ethernet card"
 block|}
 block|,
 block|{
@@ -823,7 +831,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"txp"
 block|,
-literal|"3Com 3cR990 ethernet card"
+literal|"3Com 3cR990 Ethernet card"
 block|}
 block|,
 block|{
@@ -831,7 +839,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"ti"
 block|,
-literal|"Alteon Networks PCI gigabit ethernet card"
+literal|"Alteon Networks PCI Gigabit Ethernet card"
 block|}
 block|,
 block|{
@@ -839,7 +847,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"tl"
 block|,
-literal|"Texas Instruments ThunderLAN PCI ethernet card"
+literal|"Texas Instruments ThunderLAN PCI Ethernet card"
 block|}
 block|,
 block|{
@@ -847,7 +855,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"vge"
 block|,
-literal|"VIA VT612x PCI gigabit ethernet card"
+literal|"VIA VT612x PCI Gigabit Ethernet card"
 block|}
 block|,
 block|{
@@ -855,7 +863,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"vr"
 block|,
-literal|"VIA VT3043/VT86C100A Rhine PCI ethernet card"
+literal|"VIA VT3043/VT86C100A Rhine PCI Ethernet card"
 block|}
 block|,
 block|{
@@ -871,7 +879,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"vx"
 block|,
-literal|"3COM 3c590 / 3c595 ethernet card"
+literal|"3COM 3c590 / 3c595 Ethernet card"
 block|}
 block|,
 block|{
@@ -879,7 +887,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"wb"
 block|,
-literal|"Winbond W89C840F PCI ethernet card"
+literal|"Winbond W89C840F PCI Ethernet card"
 block|}
 block|,
 block|{
@@ -893,17 +901,9 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
-literal|"wx"
-block|,
-literal|"Intel Gigabit Ethernet (82452) card"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
 literal|"xe"
 block|,
-literal|"Xircom/Intel EtherExpress Pro100/16 ethernet card"
+literal|"Xircom/Intel EtherExpress Pro100/16 Ethernet card"
 block|}
 block|,
 block|{
@@ -911,7 +911,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"xl"
 block|,
-literal|"3COM 3c90x / 3c90xB PCI ethernet card"
+literal|"3COM 3c90x / 3c90xB PCI Ethernet card"
 block|}
 block|,
 block|{
