@@ -308,6 +308,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|SBP_MAXPHYS
+value|MIN(MAXPHYS, (512*1024)
+comment|/* 512KB */
+value|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SBP_DMA_SIZE
 value|PAGE_SIZE
 end_define
@@ -786,7 +795,7 @@ begin_define
 define|#
 directive|define
 name|SBP_IND_MAX
-value|howmany(MAXPHYS, SBP_SEG_MAX)
+value|howmany(SBP_MAXPHYS, SBP_SEG_MAX)
 end_define
 
 begin_else
@@ -798,7 +807,7 @@ begin_define
 define|#
 directive|define
 name|SBP_IND_MAX
-value|howmany(MAXPHYS, PAGE_SIZE)
+value|howmany(SBP_MAXPHYS, PAGE_SIZE)
 end_define
 
 begin_endif
@@ -8889,7 +8898,14 @@ argument|static int sbp_attach(device_t dev) { 	struct sbp_softc *sbp; 	struct c
 argument_list|,
 argument|s
 argument_list|,
-argument|error;  SBP_DEBUG(
+argument|error;  	if (DFLTPHYS> SBP_MAXPHYS) 		device_printf(dev,
+literal|"Warning, DFLTPHYS(%dKB) is larger than "
+literal|"SBP_MAXPHYS(%dKB).\n"
+argument|, DFLTPHYS /
+literal|1024
+argument|, 			SBP_MAXPHYS /
+literal|1024
+argument|);  SBP_DEBUG(
 literal|0
 argument|) 	printf(
 literal|"sbp_attach (cold=%d)\n"
