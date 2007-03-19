@@ -17,7 +17,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|ST_DEVICEID_ST201
+name|ST_DEVICEID_ST201_1
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|ST_DEVICEID_ST201_2
 value|0x0201
 end_define
 

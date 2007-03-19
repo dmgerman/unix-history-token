@@ -289,7 +289,15 @@ block|{
 block|{
 name|ST_VENDORID
 block|,
-name|ST_DEVICEID_ST201
+name|ST_DEVICEID_ST201_1
+block|,
+literal|"Sundance ST201 10/100BaseTX"
+block|}
+block|,
+block|{
+name|ST_VENDORID
+block|,
+name|ST_DEVICEID_ST201_2
 block|,
 literal|"Sundance ST201 10/100BaseTX"
 block|}
