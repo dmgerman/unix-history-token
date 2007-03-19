@@ -486,6 +486,11 @@ argument_list|)
 name|next_vrf
 expr_stmt|;
 name|struct
+name|sctp_ifalist
+modifier|*
+name|vrf_addr_hash
+decl_stmt|;
+name|struct
 name|sctp_ifnlist
 name|ifnlist
 decl_stmt|;
@@ -494,6 +499,9 @@ name|vrf_id
 decl_stmt|;
 name|uint32_t
 name|total_ifa_count
+decl_stmt|;
+name|u_long
+name|vrf_hashmark
 decl_stmt|;
 block|}
 struct|;
@@ -601,6 +609,12 @@ argument_list|(
 argument|sctp_ifa
 argument_list|)
 name|next_ifa
+expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|sctp_ifa
+argument_list|)
+name|next_bucket
 expr_stmt|;
 name|struct
 name|sctp_ifn

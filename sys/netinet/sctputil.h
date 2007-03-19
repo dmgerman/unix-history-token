@@ -113,6 +113,18 @@ comment|/*  * Function prototypes  */
 end_comment
 
 begin_function_decl
+name|uint32_t
+name|sctp_get_ifa_hash_val
+parameter_list|(
+name|struct
+name|sockaddr
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|sctp_ifa
 modifier|*

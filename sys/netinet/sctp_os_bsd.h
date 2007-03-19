@@ -434,6 +434,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_VRF_HASH_SIZE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_IFN_IS_IFT_LOOP
 parameter_list|(
 name|ifn
