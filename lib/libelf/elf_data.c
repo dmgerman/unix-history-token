@@ -1019,7 +1019,7 @@ name|s
 operator|->
 name|s_shdr
 operator|.
-name|s_shdr32
+name|s_shdr64
 operator|.
 name|sh_offset
 expr_stmt|;
@@ -1029,7 +1029,7 @@ name|s
 operator|->
 name|s_shdr
 operator|.
-name|s_shdr32
+name|s_shdr64
 operator|.
 name|sh_size
 expr_stmt|;
@@ -1039,7 +1039,7 @@ name|s
 operator|->
 name|s_shdr
 operator|.
-name|s_shdr32
+name|s_shdr64
 operator|.
 name|sh_addralign
 expr_stmt|;
