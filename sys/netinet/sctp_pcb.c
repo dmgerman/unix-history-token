@@ -1010,7 +1010,8 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sctp_ifap
+expr|struct
+name|sctp_ifa
 argument_list|)
 argument_list|)
 expr_stmt|;

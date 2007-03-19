@@ -1055,6 +1055,39 @@ value|((so)->so_type)
 end_define
 
 begin_comment
+comment|/* reserve sb space for a socket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SORESERVE
+parameter_list|(
+name|so
+parameter_list|,
+name|send
+parameter_list|,
+name|recv
+parameter_list|)
+value|soreserve(so, send, recv)
+end_define
+
+begin_comment
+comment|/* clear the socket buffer state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SB_CLEAR
+parameter_list|(
+name|sb
+parameter_list|)
+define|\
+value|(sb).sb_cc = 0;		\ 	(sb).sb_mb = NULL;	\ 	(sb).sb_mbcnt = 0;
+end_define
+
+begin_comment
 comment|/*  * SCTP AUTH  */
 end_comment
 
