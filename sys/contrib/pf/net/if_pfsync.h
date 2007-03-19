@@ -572,6 +572,9 @@ argument|pfsync_softc
 argument_list|)
 name|sc_next
 expr_stmt|;
+name|eventhandler_tag
+name|sc_detachtag
+decl_stmt|;
 endif|#
 directive|endif
 block|}
