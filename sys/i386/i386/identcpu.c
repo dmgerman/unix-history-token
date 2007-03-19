@@ -3140,7 +3140,8 @@ literal|"\005DS_CPL"
 comment|/* CPL Qualified Debug Store */
 literal|"\006VMX"
 comment|/* Virtual Machine Extensions */
-literal|"\007<b6>"
+literal|"\007SMX"
+comment|/* LaGrange Technology */
 literal|"\010EST"
 comment|/* Enhanced SpeedStep */
 literal|"\011TM2"
@@ -3158,7 +3159,8 @@ comment|/* Send Task Priority Messages*/
 literal|"\020<b15>"
 literal|"\021<b16>"
 literal|"\022<b17>"
-literal|"\023<b18>"
+literal|"\023DCA"
+comment|/* Direct Cache Access */
 literal|"\024<b19>"
 literal|"\025<b20>"
 literal|"\026<b21>"
