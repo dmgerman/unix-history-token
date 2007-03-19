@@ -928,7 +928,7 @@ name|ipstealth
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"IP stealth mode, no TTL decrementation on forwarding"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

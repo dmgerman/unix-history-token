@@ -493,7 +493,7 @@ name|sysctl_msec_to_ticks
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"FIN-WAIT2 timeout"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

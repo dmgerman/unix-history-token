@@ -587,8 +587,7 @@ name|tcp_minmssoverload
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of TCP Segments per Second allowed to"
-literal|"be under the MINMSS Size"
+literal|"Number of TCP Segments per Second allowed to be under the MINMSS Size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -974,8 +973,7 @@ name|nolocaltimewait
 argument_list|,
 literal|0
 argument_list|,
-literal|"Do not create compressed TCP TIME_WAIT entries"
-literal|"for local connections"
+literal|"Do not create compressed TCP TIME_WAIT entries for local connections"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -639,7 +639,7 @@ name|tcp_insecure_rst
 argument_list|,
 literal|0
 argument_list|,
-literal|"Follow the old (insecure) criteria for accepting RST packets."
+literal|"Follow the old (insecure) criteria for accepting RST packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
