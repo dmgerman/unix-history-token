@@ -545,6 +545,29 @@ parameter_list|)
 value|device_printf(adap->dev, fmt, ##__VA_ARGS__)
 end_define
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|700000
+end_if
+
+begin_define
+define|#
+directive|define
+name|t3_os_sleep
+parameter_list|(
+name|x
+parameter_list|)
+value|DELAY((x) * 3000)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -554,6 +577,11 @@ name|x
 parameter_list|)
 value|DELAY((x) * 1000)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Standard PHY definitions */
