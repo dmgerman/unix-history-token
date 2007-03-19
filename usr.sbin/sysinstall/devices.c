@@ -533,7 +533,7 @@ name|NETWORK
 argument_list|(
 literal|"ep"
 argument_list|,
-literal|"3Com 3C509 ethernet card/3C589 PCMCIA"
+literal|"3Com 3C509 Ethernet card/3C589 PCMCIA"
 argument_list|)
 block|,
 name|NETWORK
