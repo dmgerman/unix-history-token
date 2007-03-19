@@ -3110,7 +3110,7 @@ specifier|const
 name|u_char
 name|eaddr
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* 00:00:00:00:00:00 */
