@@ -209,6 +209,16 @@ modifier|*
 name|sb_lastrecord
 decl_stmt|;
 comment|/* (c/d) first mbuf of last 						 * record in socket buffer */
+name|struct
+name|mbuf
+modifier|*
+name|sb_sndptr
+decl_stmt|;
+comment|/* (c/d) pointer into mbuf chain */
+name|u_int
+name|sb_sndptroff
+decl_stmt|;
+comment|/* (c/d) byte offset of ptr into chain */
 name|u_int
 name|sb_cc
 decl_stmt|;
@@ -955,7 +965,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_OOBDATA) \ 		(sb)->sb_ctl -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt -= (m)->m_ext.ext_size; \ }
+value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_OOBDATA) \ 		(sb)->sb_ctl -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt -= (m)->m_ext.ext_size; \ 	if ((sb)->sb_sndptr == (m)) { \ 		(sb)->sb_sndptr = NULL; \ 		(sb)->sb_sndptroff = 0; \ 	} \ 	if ((sb)->sb_sndptroff != 0) \ 		(sb)->sb_sndptroff -= (m)->m_len; \ }
 end_define
 
 begin_comment
@@ -1810,6 +1820,30 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|sbsndptr
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|,
+name|u_int
+name|off
+parameter_list|,
+name|u_int
+name|len
+parameter_list|,
+name|u_int
+modifier|*
+name|moff
 parameter_list|)
 function_decl|;
 end_function_decl
