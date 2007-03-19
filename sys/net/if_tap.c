@@ -680,6 +680,19 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|tapuponopen
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* IFF_UP on open() */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|tapdclone
 init|=
 literal|1
@@ -798,6 +811,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Allow user to open /dev/tap (based on node permissions)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_tap
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|up_on_open
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|tapuponopen
+argument_list|,
+literal|0
+argument_list|,
+literal|"Bring interface up when /dev/tap is opened"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2424,6 +2458,16 @@ name|if_drv_flags
 operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
+expr_stmt|;
+if|if
+condition|(
+name|tapuponopen
+condition|)
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_UP
 expr_stmt|;
 name|splx
 argument_list|(
