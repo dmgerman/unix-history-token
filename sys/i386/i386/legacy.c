@@ -450,14 +450,14 @@ name|device_t
 name|parent
 parameter_list|)
 block|{
-comment|/* 	 * Add child device with order of 1 so it gets probed 	 * after ACPI (which is at order 0. 	 */
+comment|/* 	 * Add child device with order of 11 so it gets probed 	 * after ACPI (which is at order 10). 	 */
 if|if
 condition|(
 name|BUS_ADD_CHILD
 argument_list|(
 name|parent
 argument_list|,
-literal|1
+literal|11
 argument_list|,
 literal|"legacy"
 argument_list|,

@@ -652,7 +652,7 @@ name|BUS_ADD_CHILD
 argument_list|(
 name|parent
 argument_list|,
-literal|0
+literal|5
 argument_list|,
 literal|"smapi"
 argument_list|,
