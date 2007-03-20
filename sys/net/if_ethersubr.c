@@ -2857,6 +2857,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|if_printf
 argument_list|(
 name|ifp
@@ -2864,6 +2867,8 @@ argument_list|,
 literal|"cannot pullup VLAN header\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ifp
 operator|->
 name|if_ierrors
