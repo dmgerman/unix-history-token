@@ -507,6 +507,9 @@ decl_stmt|;
 name|bus_addr_t
 name|dma_paddr
 decl_stmt|;
+name|bus_size_t
+name|dma_size
+decl_stmt|;
 name|caddr_t
 name|dma_vaddr
 decl_stmt|;
