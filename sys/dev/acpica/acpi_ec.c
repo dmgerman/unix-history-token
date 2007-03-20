@@ -3017,6 +3017,9 @@ decl_stmt|;
 name|EC_STATUS
 name|EcStatus
 decl_stmt|;
+name|int
+name|query_pend
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|Context
@@ -3126,6 +3129,10 @@ name|FALSE
 expr_stmt|;
 block|}
 comment|/*      * If the EC_SCI bit of the status register is not set, then pass      * it along to any potential waiters as it may be an IBE/OBF event.      * If it is set, queue a query handler.      */
+name|query_pend
+operator|=
+name|FALSE
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3203,14 +3210,25 @@ name|ec_sci_pend
 operator|=
 name|TRUE
 expr_stmt|;
+name|query_pend
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 else|else
-block|{
 name|printf
 argument_list|(
 literal|"Queuing GPE query handler failed.\n"
 argument_list|)
 expr_stmt|;
+block|}
+comment|/*      * If we didn't queue a query handler, which will eventually re-enable      * the GPE, re-enable it right now so we can get more events.      */
+if|if
+condition|(
+operator|!
+name|query_pend
+condition|)
+block|{
 name|Status
 operator|=
 name|AcpiEnableGpe
@@ -3235,10 +3253,9 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"EcGpeHandler: AcpiEnableEvent failed\n"
+literal|"EcGpeHandler: AcpiEnableGpe failed\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|EcUnlock
 argument_list|(
