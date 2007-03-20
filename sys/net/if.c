@@ -478,24 +478,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|struct
-name|ifmultiaddr
-modifier|*
-name|if_findmulti
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|if_freemulti
 parameter_list|(
@@ -10033,7 +10015,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|struct
 name|ifmultiaddr
 modifier|*
