@@ -8,10 +8,6 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All righ
 end_comment
 
 begin_comment
-comment|/* TODO: use -M, -N for kernel/namelist. */
-end_comment
-
-begin_comment
 comment|/* TODO: use sysctl. */
 end_comment
 
@@ -789,6 +785,13 @@ name|kernel
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|core
+init|=
+name|NULL
+decl_stmt|;
 comment|/* "ifmcstat [kernel]" format is supported for backward compatiblity */
 if|if
 condition|(
@@ -814,7 +817,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:f:k:"
+literal|"i:f:M:N:"
 argument_list|)
 operator|)
 operator|!=
@@ -915,7 +918,18 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 case|case
-literal|'k'
+literal|'M'
+case|:
+name|core
+operator|=
+name|strdup
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
 case|:
 name|kernel
 operator|=
@@ -930,7 +944,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ifmcstat [-i interface] [-f address family] [-k kernel]\n"
+literal|"usage: ifmcstat [-i interface] [-f address family] [-M core] [-N system]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -950,7 +964,7 @@ name|kvm_openfiles
 argument_list|(
 name|kernel
 argument_list|,
-name|NULL
+name|core
 argument_list|,
 name|NULL
 argument_list|,
