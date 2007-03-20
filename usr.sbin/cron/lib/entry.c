@@ -1712,6 +1712,19 @@ name|eof
 goto|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|env_get
+argument_list|(
+literal|"HOME"
+argument_list|,
+name|e
+operator|->
+name|envp
+argument_list|)
+condition|)
+block|{
 name|prev_env
 operator|=
 name|e
@@ -1770,6 +1783,7 @@ expr_stmt|;
 goto|goto
 name|eof
 goto|;
+block|}
 block|}
 if|if
 condition|(
