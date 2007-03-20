@@ -450,24 +450,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Nominal space allocated to a raw ip socket.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RIPSNDQ
-value|8192
-end_define
-
-begin_define
-define|#
-directive|define
-name|RIPRCVQ
-value|8192
-end_define
-
-begin_comment
 comment|/*  * Raw interface to IP protocol.  */
 end_comment
 
@@ -2551,7 +2533,7 @@ begin_decl_stmt
 name|u_long
 name|rip_sendspace
 init|=
-name|RIPSNDQ
+literal|9216
 decl_stmt|;
 end_decl_stmt
 
@@ -2559,7 +2541,7 @@ begin_decl_stmt
 name|u_long
 name|rip_recvspace
 init|=
-name|RIPRCVQ
+literal|9216
 decl_stmt|;
 end_decl_stmt
 
