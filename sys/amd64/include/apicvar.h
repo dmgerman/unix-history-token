@@ -435,6 +435,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|vm_paddr_t
+name|lapic_paddr
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|u_int
 name|apic_alloc_vector

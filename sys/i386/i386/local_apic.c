@@ -585,6 +585,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|vm_paddr_t
+name|lapic_paddr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|u_long
 name|lapic_timer_divisor
@@ -926,6 +932,10 @@ argument_list|(
 name|lapic_t
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|lapic_paddr
+operator|=
+name|addr
 expr_stmt|;
 name|setidt
 argument_list|(
