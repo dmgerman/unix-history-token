@@ -30,20 +30,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CHELSIO_FW_MAJOR
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHELSIO_FW_MINOR
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|DEFAULT_JUMBO
 end_define
 

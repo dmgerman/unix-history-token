@@ -555,6 +555,20 @@ parameter_list|)
 value|DELAY((x) * 1000)
 end_define
 
+begin_define
+define|#
+directive|define
+name|max_t
+parameter_list|(
+name|type
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(type)max((a), (b))
+end_define
+
 begin_comment
 comment|/* Standard PHY definitions */
 end_comment

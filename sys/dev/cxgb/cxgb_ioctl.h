@@ -221,6 +221,12 @@ decl_stmt|;
 name|int32_t
 name|cong_thres
 decl_stmt|;
+name|int32_t
+name|vector
+decl_stmt|;
+name|int32_t
+name|qnum
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -247,6 +253,38 @@ decl_stmt|;
 name|uint8_t
 name|binding
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ch_hw_sched
+block|{
+name|uint32_t
+name|cmd
+decl_stmt|;
+name|uint8_t
+name|sched
+decl_stmt|;
+name|int8_t
+name|mode
+decl_stmt|;
+name|int8_t
+name|channel
+decl_stmt|;
+name|int32_t
+name|kbps
+decl_stmt|;
+comment|/* rate in Kbps */
+name|int32_t
+name|class_ipg
+decl_stmt|;
+comment|/* tenths of nanoseconds */
+name|int32_t
+name|flow_ipg
+decl_stmt|;
+comment|/* usec */
 block|}
 struct|;
 end_struct

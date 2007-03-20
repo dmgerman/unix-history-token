@@ -167,9 +167,6 @@ name|struct
 name|link_config
 name|link_config
 decl_stmt|;
-name|int
-name|activity
-decl_stmt|;
 name|struct
 name|ifmedia
 name|media
