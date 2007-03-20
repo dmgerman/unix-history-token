@@ -3141,7 +3141,7 @@ comment|/* CPL Qualified Debug Store */
 literal|"\006VMX"
 comment|/* Virtual Machine Extensions */
 literal|"\007SMX"
-comment|/* LaGrange Technology */
+comment|/* Safer Mode Extensions */
 literal|"\010EST"
 comment|/* Enhanced SpeedStep */
 literal|"\011TM2"
@@ -3154,7 +3154,7 @@ literal|"\014<b11>"
 literal|"\015<b12>"
 literal|"\016CX16"
 comment|/* CMPXCHG16B Instruction */
-literal|"\017XTPR"
+literal|"\017xTPR"
 comment|/* Send Task Priority Messages*/
 literal|"\020<b15>"
 literal|"\021<b16>"

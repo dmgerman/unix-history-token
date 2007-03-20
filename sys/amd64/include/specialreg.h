@@ -572,6 +572,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID2_SMX
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID2_EST
 value|0x00000080
 end_define
@@ -609,6 +616,13 @@ define|#
 directive|define
 name|CPUID2_XTPR
 value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_DCA
+value|0x00040000
 end_define
 
 begin_comment
