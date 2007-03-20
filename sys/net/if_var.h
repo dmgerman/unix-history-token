@@ -1950,7 +1950,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Multicast address structure.  This is analogous to the ifaddr  * structure except that it keeps track of multicast addresses.  * Also, the reference count here is a count of requests for this  * address, not a count of pointers to this structure.  */
+comment|/*  * Multicast address structure.  This is analogous to the ifaddr  * structure except that it keeps track of multicast addresses.  */
 end_comment
 
 begin_struct
@@ -1991,6 +1991,12 @@ modifier|*
 name|ifma_protospec
 decl_stmt|;
 comment|/* protocol-specific state, if any */
+name|struct
+name|ifmultiaddr
+modifier|*
+name|ifma_llifma
+decl_stmt|;
+comment|/* pointer to ifma for ifma_lladdr */
 block|}
 struct|;
 end_struct
@@ -2263,6 +2269,17 @@ modifier|*
 parameter_list|,
 name|struct
 name|sockaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|if_delmulti_ifma
+parameter_list|(
+name|struct
+name|ifmultiaddr
 modifier|*
 parameter_list|)
 function_decl|;
