@@ -1094,6 +1094,26 @@ define|\
 value|(sb).sb_cc = 0;		\ 	(sb).sb_mb = NULL;	\ 	(sb).sb_mbcnt = 0;
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_SB_LIMIT_RCV
+parameter_list|(
+name|so
+parameter_list|)
+value|so->so_rcv.sb_hiwat
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SB_LIMIT_SND
+parameter_list|(
+name|so
+parameter_list|)
+value|so->so_snd.sb_hiwat
+end_define
+
 begin_comment
 comment|/*  * SCTP AUTH  */
 end_comment

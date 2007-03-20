@@ -7196,11 +7196,10 @@ name|inp
 operator|->
 name|partial_delivery_point
 operator|=
+name|SCTP_SB_LIMIT_RCV
+argument_list|(
 name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_hiwat
+argument_list|)
 operator|>>
 name|SCTP_PARTIAL_DELIVERY_SHIFT
 expr_stmt|;

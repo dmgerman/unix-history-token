@@ -12021,14 +12021,6 @@ block|{
 comment|/* 					 * this guy had a RTO calculation 					 * pending on it, cancel it 					 */
 name|tp1
 operator|->
-name|whoTo
-operator|->
-name|rto_pending
-operator|=
-literal|0
-expr_stmt|;
-name|tp1
-operator|->
 name|do_rtt
 operator|=
 literal|0

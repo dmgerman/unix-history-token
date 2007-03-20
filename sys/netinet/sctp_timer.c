@@ -2338,12 +2338,6 @@ name|flight_size
 expr_stmt|;
 name|net
 operator|->
-name|rto_pending
-operator|=
-literal|0
-expr_stmt|;
-name|net
-operator|->
 name|fast_retran_ip
 operator|=
 literal|0

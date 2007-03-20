@@ -18631,13 +18631,12 @@ name|htonl
 argument_list|(
 name|max
 argument_list|(
+name|SCTP_SB_LIMIT_RCV
+argument_list|(
 name|inp
 operator|->
 name|sctp_socket
-operator|->
-name|so_rcv
-operator|.
-name|sb_hiwat
+argument_list|)
 argument_list|,
 name|SCTP_MINIMAL_RWND
 argument_list|)
@@ -23815,13 +23814,12 @@ name|htonl
 argument_list|(
 name|max
 argument_list|(
+name|SCTP_SB_LIMIT_RCV
+argument_list|(
 name|inp
 operator|->
 name|sctp_socket
-operator|->
-name|so_rcv
-operator|.
-name|sb_hiwat
+argument_list|)
 argument_list|,
 name|SCTP_MINIMAL_RWND
 argument_list|)
@@ -35474,9 +35472,7 @@ condition|(
 name|bundle_at
 condition|)
 block|{
-comment|/* if (!net->rto_pending) { */
 comment|/* setup for a RTO measurement */
-comment|/* net->rto_pending = 1; */
 name|tsns_sent
 operator|=
 name|data_list
@@ -35499,9 +35495,6 @@ name|do_rtt
 operator|=
 literal|1
 expr_stmt|;
-comment|/* } else { */
-comment|/* data_list[0]->do_rtt = 0; */
-comment|/* } */
 name|SCTP_STAT_INCR_BY
 argument_list|(
 name|sctps_senddata
@@ -47081,13 +47074,12 @@ argument_list|)
 expr_stmt|;
 name|spc
 operator|=
+name|SCTP_SB_LIMIT_RCV
+argument_list|(
 name|stcb
 operator|->
 name|sctp_socket
-operator|->
-name|so_rcv
-operator|.
-name|sb_hiwat
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -51535,13 +51527,12 @@ name|uio
 operator|->
 name|uio_resid
 operator|>
+name|SCTP_SB_LIMIT_SND
+argument_list|(
 name|stcb
 operator|->
 name|sctp_socket
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -53332,11 +53323,10 @@ block|{
 if|if
 condition|(
 operator|(
+name|SCTP_SB_LIMIT_SND
+argument_list|(
 name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
+argument_list|)
 operator|<
 operator|(
 name|sndlen
@@ -54144,11 +54134,10 @@ block|}
 comment|/* Calculate the maximum we can send */
 if|if
 condition|(
+name|SCTP_SB_LIMIT_SND
+argument_list|(
 name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
+argument_list|)
 operator|>
 name|stcb
 operator|->
@@ -54159,11 +54148,10 @@ condition|)
 block|{
 name|max_len
 operator|=
+name|SCTP_SB_LIMIT_SND
+argument_list|(
 name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
+argument_list|)
 operator|-
 name|stcb
 operator|->
@@ -54255,11 +54243,10 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+name|SCTP_SB_LIMIT_SND
+argument_list|(
 name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
+argument_list|)
 operator|<
 operator|(
 name|stcb
@@ -54416,11 +54403,10 @@ block|}
 block|}
 if|if
 condition|(
+name|SCTP_SB_LIMIT_SND
+argument_list|(
 name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
+argument_list|)
 operator|>
 name|stcb
 operator|->
@@ -54431,11 +54417,10 @@ condition|)
 block|{
 name|max_len
 operator|=
+name|SCTP_SB_LIMIT_SND
+argument_list|(
 name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
+argument_list|)
 operator|-
 name|stcb
 operator|->
@@ -54916,11 +54901,10 @@ name|mm
 decl_stmt|;
 if|if
 condition|(
+name|SCTP_SB_LIMIT_SND
+argument_list|(
 name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
+argument_list|)
 operator|>
 name|stcb
 operator|->
@@ -54930,11 +54914,10 @@ name|total_output_queue_size
 condition|)
 name|max_len
 operator|=
+name|SCTP_SB_LIMIT_SND
+argument_list|(
 name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
+argument_list|)
 operator|-
 name|stcb
 operator|->
@@ -55256,11 +55239,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_SB_LIMIT_SND
+argument_list|(
 name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
+argument_list|)
 operator|>
 name|stcb
 operator|->
@@ -55270,11 +55252,10 @@ name|total_output_queue_size
 condition|)
 name|max_len
 operator|=
+name|SCTP_SB_LIMIT_SND
+argument_list|(
 name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
+argument_list|)
 operator|-
 name|stcb
 operator|->
@@ -55777,11 +55758,10 @@ expr_stmt|;
 comment|/* 			 * This is a bit strange, but I think it will work. 			 * The total_output_queue_size is locked and 			 * protected by the TCB_LOCK, which we just 			 * released. There is a race that can occur between 			 * releasing it above, and me getting the socket 			 * lock, where sacks come in but we have not put the 			 * SB_WAIT on the so_snd buffer to get the wakeup. 			 * After the LOCK is applied the sack_processing 			 * will also need to LOCK the so->so_snd to do the 			 * actual sowwakeup(). So once we have the socket 			 * buffer lock if we recheck the size we KNOW we 			 * will get to sleep safely with the wakeup flag in 			 * place. 			 */
 if|if
 condition|(
+name|SCTP_SB_LIMIT_SND
+argument_list|(
 name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
+argument_list|)
 operator|<
 operator|(
 name|stcb

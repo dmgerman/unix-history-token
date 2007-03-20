@@ -600,10 +600,6 @@ name|rto_variance_dir
 decl_stmt|;
 comment|/* increase = 1, decreasing = 0 */
 name|uint8_t
-name|rto_pending
-decl_stmt|;
-comment|/* is segment marked for RTO update  ** if we 				 * split? */
-name|uint8_t
 name|fast_retran_ip
 decl_stmt|;
 comment|/* fast retransmit in progress */
