@@ -396,21 +396,6 @@ value|216
 end_define
 
 begin_comment
-comment|/*  * TCP_MINMSSOVERLOAD is defined to be 1000 which should cover any type  * of interactive TCP session.  * See tcp_subr.c tcp_minmssoverload SYSCTL declaration and tcp_input.c  * for more comments.  * Setting this to "0" disables the minmssoverload check.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCP_MINMSSOVERLOAD
-value|0
-end_define
-
-begin_comment
-comment|/* XXX: Disabled until refined */
-end_comment
-
-begin_comment
 comment|/*  * Default maximum segment size for TCP6.  * With an IP6 MSS of 1280, this is 1220,  * but 1024 is probably more convenient. (xxx kazu in doubt)  * This should be defined as MIN(1024, IP6_MSS - sizeof (struct tcpip6hdr))  */
 end_comment
 

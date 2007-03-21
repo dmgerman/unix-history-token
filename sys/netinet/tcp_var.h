@@ -565,19 +565,6 @@ name|u_char
 name|snd_limited
 decl_stmt|;
 comment|/* segments limited transmitted */
-comment|/* anti DoS counters */
-name|u_long
-name|rcv_second
-decl_stmt|;
-comment|/* start of interval second */
-name|u_long
-name|rcv_pps
-decl_stmt|;
-comment|/* received packets per second */
-name|u_long
-name|rcv_byps
-decl_stmt|;
-comment|/* received bytes per second */
 comment|/* SACK related state */
 name|int
 name|sack_enable
@@ -1723,13 +1710,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|tcp_minmss
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tcp_minmssoverload
 decl_stmt|;
 end_decl_stmt
 

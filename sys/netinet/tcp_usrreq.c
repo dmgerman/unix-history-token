@@ -8140,33 +8140,6 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"snd_limited: %u   rcv_second: %lu   rcv_pps: %lu   "
-literal|"tcv_byps: %lu\n"
-argument_list|,
-name|tp
-operator|->
-name|snd_limited
-argument_list|,
-name|tp
-operator|->
-name|rcv_second
-argument_list|,
-name|tp
-operator|->
-name|rcv_pps
-argument_list|,
-name|tp
-operator|->
-name|rcv_byps
-argument_list|)
-expr_stmt|;
-name|db_print_indent
-argument_list|(
-name|indent
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
 literal|"sack_enable: %d   snd_numholes: %d  snd_holes first: %p\n"
 argument_list|,
 name|tp
