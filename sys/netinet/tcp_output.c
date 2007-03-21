@@ -2603,6 +2603,8 @@ operator|>
 name|TCP_MAXWIN
 operator|-
 name|hdrlen
+operator|-
+name|optlen
 condition|)
 block|{
 name|len
