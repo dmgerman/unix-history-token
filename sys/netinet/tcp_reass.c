@@ -10,7 +10,7 @@ file|"opt_ipfw.h"
 end_include
 
 begin_comment
-comment|/* for ipfw_fwd		*/
+comment|/* for ipfw_fwd	*/
 end_comment
 
 begin_include
@@ -3045,10 +3045,10 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 endif|#
 directive|endif
 comment|/* IPFIREWALL_FORWARD */
+block|{
 if|if
 condition|(
 name|isipv6
@@ -3127,13 +3127,7 @@ operator|.
 name|rcvif
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 block|}
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 if|#
 directive|if
 name|defined
