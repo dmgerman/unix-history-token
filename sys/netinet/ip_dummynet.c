@@ -88,7 +88,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/netisr.h>
 end_include
 
 begin_include
@@ -207,7 +219,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|searches
 decl_stmt|,
 name|search_steps
@@ -278,6 +290,82 @@ end_decl_stmt
 begin_comment
 comment|/* RED - default max packet size */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|timeval
+name|prev_t
+decl_stmt|,
+name|t
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|long
+name|tick_last
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Last tick duration (usec). */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|tick_delta
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Last vs standard tick diff (usec). */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|tick_delta_sum
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Accumulated tick difference (usec).*/
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|tick_adjustment
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Tick adjustments done. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|tick_lost
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Lost(coalesced) ticks number. */
+end_comment
+
+begin_comment
+comment|/* Adjusted vs non-adjusted curr_time difference (ticks). */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|tick_diff
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Three heaps contain queues and pipes that the scheduler handles:  *  * ready_heap contains all dn_flow_queue related to fixed-rate pipes.  *  * wfq_ready_heap contains the pipes associated with WF2Q flows  *  * extract_heap contains pipes associated with delay lines.  *  */
@@ -555,7 +643,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_net_inet_ip_dummynet
 argument_list|,
@@ -622,7 +710,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_net_inet_ip_dummynet
 argument_list|,
@@ -643,7 +731,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_net_inet_ip_dummynet
 argument_list|,
@@ -768,6 +856,111 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_LONG
+argument_list|(
+name|_net_inet_ip_dummynet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tick_delta
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|tick_delta
+argument_list|,
+literal|0
+argument_list|,
+literal|"Last vs standard tick difference (usec)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_LONG
+argument_list|(
+name|_net_inet_ip_dummynet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tick_delta_sum
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|tick_delta_sum
+argument_list|,
+literal|0
+argument_list|,
+literal|"Accumulated tick difference (usec)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_LONG
+argument_list|(
+name|_net_inet_ip_dummynet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tick_adjustment
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|tick_adjustment
+argument_list|,
+literal|0
+argument_list|,
+literal|"Tick adjustments done."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_LONG
+argument_list|(
+name|_net_inet_ip_dummynet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tick_diff
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|tick_diff
+argument_list|,
+literal|0
+argument_list|,
+literal|"Adjusted vs non-adjusted curr_time difference (ticks)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_LONG
+argument_list|(
+name|_net_inet_ip_dummynet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tick_lost
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|tick_lost
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of ticks coalesced by dummynet taskqueue."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -851,14 +1044,42 @@ end_endif
 begin_decl_stmt
 specifier|static
 name|struct
+name|task
+name|dn_task
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|taskqueue
+modifier|*
+name|dn_tq
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|dummynet_task
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|struct
 name|mtx
 name|dummynet_mtx
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * NB: Recursion is needed to deal with re-entry via ICMP.  That is,  *     a packet may be dispatched via ip_input from dummynet_io and  *     re-enter through ip_output.  Yech.  */
-end_comment
 
 begin_define
 define|#
@@ -866,7 +1087,7 @@ directive|define
 name|DUMMYNET_LOCK_INIT
 parameter_list|()
 define|\
-value|mtx_init(&dummynet_mtx, "dummynet", NULL, MTX_DEF | MTX_RECURSE)
+value|mtx_init(&dummynet_mtx, "dummynet", NULL, MTX_DEF)
 end_define
 
 begin_define
@@ -3125,7 +3346,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is called once per tick, or HZ times per second. It is used to  * increment the current tick counter and schedule expired events.  */
+comment|/*  * This is called one tick, after previous run. It is used to  * schedule next run.  */
 end_comment
 
 begin_function
@@ -3137,6 +3358,34 @@ name|void
 modifier|*
 name|__unused
 name|unused
+parameter_list|)
+block|{
+name|taskqueue_enqueue
+argument_list|(
+name|dn_tq
+argument_list|,
+operator|&
+name|dn_task
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * The main dummynet processing function.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|dummynet_task
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|,
+name|int
+name|pending
 parameter_list|)
 block|{
 name|struct
@@ -3177,6 +3426,12 @@ comment|/* generic parameter to handler */
 name|int
 name|i
 decl_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
+name|DUMMYNET_LOCK
+argument_list|()
+expr_stmt|;
 name|heaps
 index|[
 literal|0
@@ -3204,12 +3459,126 @@ operator|&
 name|extract_heap
 expr_stmt|;
 comment|/* delay line */
-name|DUMMYNET_LOCK
-argument_list|()
+comment|/* Update number of lost(coalesced) ticks. */
+name|tick_lost
+operator|+=
+name|pending
+operator|-
+literal|1
 expr_stmt|;
+name|getmicrouptime
+argument_list|(
+operator|&
+name|t
+argument_list|)
+expr_stmt|;
+comment|/* Last tick duration (usec). */
+name|tick_last
+operator|=
+operator|(
+name|t
+operator|.
+name|tv_sec
+operator|-
+name|prev_t
+operator|.
+name|tv_sec
+operator|)
+operator|*
+literal|1000000
+operator|+
+operator|(
+name|t
+operator|.
+name|tv_usec
+operator|-
+name|prev_t
+operator|.
+name|tv_usec
+operator|)
+expr_stmt|;
+comment|/* Last tick vs standard tick difference (usec). */
+name|tick_delta
+operator|=
+operator|(
+name|tick_last
+operator|*
+name|hz
+operator|-
+literal|1000000
+operator|)
+operator|/
+name|hz
+expr_stmt|;
+comment|/* Accumulated tick difference (usec). */
+name|tick_delta_sum
+operator|+=
+name|tick_delta
+expr_stmt|;
+name|prev_t
+operator|=
+name|t
+expr_stmt|;
+comment|/*  	 * Adjust curr_time if accumulated tick difference greater than  	 * 'standard' tick. Since curr_time should be monotonically increasing,  	 * we do positive adjustment as required and throttle curr_time in  	 * case of negative adjustment.  	 */
 name|curr_time
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|tick_delta_sum
+operator|-
+name|tick
+operator|>=
+literal|0
+condition|)
+block|{
+name|int
+name|diff
+init|=
+name|tick_delta_sum
+operator|/
+name|tick
+decl_stmt|;
+name|curr_time
+operator|+=
+name|diff
+expr_stmt|;
+name|tick_diff
+operator|+=
+name|diff
+expr_stmt|;
+name|tick_delta_sum
+operator|%=
+name|tick
+expr_stmt|;
+name|tick_adjustment
+operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|tick_delta_sum
+operator|+
+name|tick
+operator|<=
+literal|0
+condition|)
+block|{
+name|curr_time
+operator|--
+expr_stmt|;
+name|tick_diff
+operator|--
+expr_stmt|;
+name|tick_delta_sum
+operator|+=
+name|tick
+expr_stmt|;
+name|tick_adjustment
+operator|++
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -3269,7 +3638,8 @@ name|curr_time
 condition|)
 name|printf
 argument_list|(
-literal|"dummynet: warning, heap %d is %d ticks late\n"
+literal|"dummynet: warning, "
+literal|"heap %d is %d ticks late\n"
 argument_list|,
 name|i
 argument_list|,
@@ -3290,6 +3660,7 @@ name|key
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* store a copy before heap_extract */
 name|p
 operator|=
 name|h
@@ -3301,7 +3672,7 @@ index|]
 operator|.
 name|object
 expr_stmt|;
-comment|/* store a copy before heap_extract */
+comment|/* need to extract before processing */
 name|heap_extract
 argument_list|(
 name|h
@@ -3309,7 +3680,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* need to extract before processing */
 if|if
 condition|(
 name|i
@@ -3355,7 +3725,8 @@ literal|'\0'
 condition|)
 name|printf
 argument_list|(
-literal|"dummynet: bad ready_event_wfq for pipe %s\n"
+literal|"dummynet: bad ready_event_wfq "
+literal|"for pipe %s\n"
 argument_list|,
 name|pipe
 operator|->
@@ -3468,6 +3839,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* Mark timestamp as invalid. */
 name|q
 operator|->
 name|S
@@ -3478,7 +3850,6 @@ name|F
 operator|+
 literal|1
 expr_stmt|;
-comment|/* Mark timestamp as invalid. */
 name|pipe
 operator|->
 name|sum
@@ -3515,6 +3886,9 @@ name|dummynet
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -3638,8 +4012,10 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-name|ip_input
+name|netisr_dispatch
 argument_list|(
+name|NETISR_IP
+argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -3650,8 +4026,10 @@ name|INET6
 case|case
 name|DN_TO_IP6_IN
 case|:
-name|ip6_input
+name|netisr_dispatch
 argument_list|(
+name|NETISR_IPV6
+argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -5131,13 +5509,13 @@ name|int
 name|len
 parameter_list|)
 block|{
-comment|/*      * RED algorithm      *      * RED calculates the average queue size (avg) using a low-pass filter      * with an exponential weighted (w_q) moving average:      * 	avg<-  (1-w_q) * avg + w_q * q_size      * where q_size is the queue length (measured in bytes or * packets).      *      * If q_size == 0, we compute the idle time for the link, and set      *	avg = (1 - w_q)^(idle/s)      * where s is the time needed for transmitting a medium-sized packet.      *      * Now, if avg< min_th the packet is enqueued.      * If avg> max_th the packet is dropped. Otherwise, the packet is      * dropped with probability P function of avg.      *      */
+comment|/* 	 * RED algorithm 	 * 	 * RED calculates the average queue size (avg) using a low-pass filter 	 * with an exponential weighted (w_q) moving average: 	 * 	avg<-  (1-w_q) * avg + w_q * q_size 	 * where q_size is the queue length (measured in bytes or * packets). 	 * 	 * If q_size == 0, we compute the idle time for the link, and set 	 *	avg = (1 - w_q)^(idle/s) 	 * where s is the time needed for transmitting a medium-sized packet. 	 * 	 * Now, if avg< min_th the packet is enqueued. 	 * If avg> max_th the packet is dropped. Otherwise, the packet is 	 * dropped with probability P function of avg. 	 */
 name|int64_t
 name|p_b
 init|=
 literal|0
 decl_stmt|;
-comment|/* queue in bytes or packets ? */
+comment|/* Queue in bytes or packets? */
 name|u_int
 name|q_size
 init|=
@@ -5171,7 +5549,7 @@ name|q_size
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* average queue size estimation */
+comment|/* Average queue size estimation. */
 if|if
 condition|(
 name|q_size
@@ -5179,7 +5557,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 	 * queue is not empty, avg<- avg + (q_size - avg) * w_q 	 */
+comment|/* Queue is not empty, avg<- avg + (q_size - avg) * w_q */
 name|int
 name|diff
 init|=
@@ -5222,7 +5600,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * queue is empty, find for how long the queue has been 	 * empty and use a lookup table for computing 	 * (1 - * w_q)^(idle_time/s) where s is the time to send a 	 * (small) packet. 	 * XXX check wraps... 	 */
+comment|/* 		 * Queue is empty, find for how long the queue has been 		 * empty and use a lookup table for computing 		 * (1 - * w_q)^(idle_time/s) where s is the time to send a 		 * (small) packet. 		 * XXX check wraps... 		 */
 if|if
 condition|(
 name|q
@@ -5289,7 +5667,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* should i drop ? */
+comment|/* Should i drop? */
 if|if
 condition|(
 name|q
@@ -5309,9 +5687,11 @@ operator|-
 literal|1
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-comment|/* accept packet ; */
+comment|/* accept packet */
 block|}
 if|if
 condition|(
@@ -5334,7 +5714,7 @@ operator|&
 name|DN_IS_GENTLE_RED
 condition|)
 block|{
-comment|/* 	     * According to Gentle-RED, if avg is greater than max_th the 	     * packet is dropped with a probability 	     *	p_b = c_3 * avg - c_4 	     * where c_3 = (1 - max_p) / max_th, and c_4 = 1 - 2 * max_p 	     */
+comment|/* 			 * According to Gentle-RED, if avg is greater than 			 * max_th the packet is dropped with a probability 			 *	 p_b = c_3 * avg - c_4 			 * where c_3 = (1 - max_p) / max_th 			 *       c_4 = 1 - 2 * max_p 			 */
 name|p_b
 operator|=
 name|SCALE_MUL
@@ -5376,7 +5756,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -5392,7 +5774,7 @@ operator|->
 name|min_th
 condition|)
 block|{
-comment|/* 	 * we compute p_b using the linear dropping function p_b = c_1 * 	 * avg - c_2, where c_1 = max_p / (max_th - min_th), and c_2 = 	 * max_p * min_th / (max_th - min_th) 	 */
+comment|/* 		 * We compute p_b using the linear dropping function 		 *	 p_b = c_1 * avg - c_2 		 * where c_1 = max_p / (max_th - min_th) 		 * 	 c_2 = max_p * min_th / (max_th - min_th) 		 */
 name|p_b
 operator|=
 name|SCALE_MUL
@@ -5457,7 +5839,7 @@ literal|0xffff
 expr_stmt|;
 else|else
 block|{
-comment|/* 	 * q->count counts packets arrived since last drop, so a greater 	 * value of q->count means a greater packet drop probability. 	 */
+comment|/* 		 * q->count counts packets arrived since last drop, so a greater 		 * value of q->count means a greater packet drop probability. 		 */
 if|if
 condition|(
 name|SCALE_MUL
@@ -5493,7 +5875,7 @@ literal|"dummynet: - red drop"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* after a drop we calculate a new random value */
+comment|/* After a drop we calculate a new random value. */
 name|q
 operator|->
 name|random
@@ -5504,14 +5886,18 @@ operator|&
 literal|0xffff
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* drop */
 block|}
 block|}
-comment|/* end of RED algorithm */
+comment|/* End of RED algorithm. */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* accept */
 block|}
@@ -6571,6 +6957,8 @@ name|i
 index|]
 init|;
 name|q
+operator|!=
+name|NULL
 condition|;
 name|q
 operator|=
@@ -6649,12 +7037,14 @@ condition|(
 name|all
 condition|)
 block|{
-comment|/* RED - free lookup table */
+comment|/* RED - free lookup table. */
 if|if
 condition|(
 name|fs
 operator|->
 name|w_q_lookup
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -6670,6 +7060,8 @@ condition|(
 name|fs
 operator|->
 name|rq
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -6680,13 +7072,15 @@ argument_list|,
 name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
-comment|/* if this fs is not part of a pipe, free it */
+comment|/* If this fs is not part of a pipe, free it. */
 if|if
 condition|(
 name|fs
 operator|->
 name|pipe
-operator|&&
+operator|==
+name|NULL
+operator|||
 name|fs
 operator|!=
 operator|&
@@ -7363,7 +7757,6 @@ name|x
 operator|->
 name|c_4
 operator|=
-operator|(
 name|SCALE
 argument_list|(
 literal|1
@@ -7374,10 +7767,9 @@ operator|*
 name|p
 operator|->
 name|max_p
-operator|)
 expr_stmt|;
 block|}
-comment|/* if the lookup table already exist, free and create it again */
+comment|/* If the lookup table already exist, free and create it again. */
 if|if
 condition|(
 name|x
@@ -7410,7 +7802,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\ndummynet: net.inet.ip.dummynet.red_lookup_depth must be> 0\n"
+literal|"\ndummynet: net.inet.ip.dummynet.red_lookup_depth"
+literal|"must be> 0\n"
 argument_list|)
 expr_stmt|;
 name|free
@@ -7421,7 +7814,9 @@ name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|x
@@ -7476,10 +7871,12 @@ name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOSPC
+operator|)
 return|;
 block|}
-comment|/* fill the lookup table with (1 - w_q)^x */
+comment|/* Fill the lookup table with (1 - w_q)^x */
 name|x
 operator|->
 name|lookup_step
@@ -7583,7 +7980,9 @@ operator|=
 name|red_max_pkt_size
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -7834,7 +8233,7 @@ operator|=
 literal|50
 expr_stmt|;
 block|}
-comment|/* configuring RED */
+comment|/* Configuring RED. */
 if|if
 condition|(
 name|x
@@ -7855,7 +8254,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setup pipe or queue parameters.  */
+comment|/*  * Setup pipe or queue parameters.  */
 end_comment
 
 begin_function
@@ -7891,7 +8290,7 @@ name|i
 decl_stmt|,
 name|error
 decl_stmt|;
-comment|/*      * The config program passes parameters as follows:      * bw = bits/second (0 means no limits),      * delay = ms, must be translated into ticks.      * qsize = slots/bytes      */
+comment|/* 	 * The config program passes parameters as follows: 	 * bw = bits/second (0 means no limits), 	 * delay = ms, must be translated into ticks. 	 * qsize = slots/bytes 	 */
 name|p
 operator|->
 name|delay
@@ -7906,7 +8305,7 @@ operator|)
 operator|/
 literal|1000
 expr_stmt|;
-comment|/* We need either a pipe number or a flow_set number */
+comment|/* We need either a pipe number or a flow_set number. */
 if|if
 condition|(
 name|p
@@ -7922,7 +8321,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -7939,7 +8340,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -8031,7 +8434,7 @@ name|pipe
 operator|=
 name|pipe
 expr_stmt|;
-comment|/* idle_heap is the only one from which we extract from the middle. 	     */
+comment|/* 			 * idle_heap is the only one from which 			 * we extract from the middle. 			 */
 name|pipe
 operator|->
 name|idle_heap
@@ -8062,7 +8465,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* Flush accumulated credit for all queues */
+comment|/* Flush accumulated credit for all queues. */
 for|for
 control|(
 name|i
@@ -8280,7 +8683,9 @@ name|DUMMYNET_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|fs
@@ -8377,7 +8782,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Change parent pipe not allowed; must delete and recreate */
+comment|/* 			 * Change parent pipe not allowed; 			 * must delete and recreate. 			 */
 if|if
 condition|(
 name|pfs
@@ -8399,7 +8804,9 @@ name|DUMMYNET_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 block|}
@@ -8474,7 +8881,9 @@ argument_list|()
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -10212,6 +10621,44 @@ name|ip_dn_ruledel_ptr
 operator|=
 name|dn_rule_delete
 expr_stmt|;
+name|TASK_INIT
+argument_list|(
+operator|&
+name|dn_task
+argument_list|,
+literal|0
+argument_list|,
+name|dummynet_task
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|dn_tq
+operator|=
+name|taskqueue_create_fast
+argument_list|(
+literal|"dummynet"
+argument_list|,
+name|M_NOWAIT
+argument_list|,
+name|taskqueue_thread_enqueue
+argument_list|,
+operator|&
+name|dn_tq
+argument_list|)
+expr_stmt|;
+name|taskqueue_start_threads
+argument_list|(
+operator|&
+name|dn_tq
+argument_list|,
+literal|1
+argument_list|,
+name|PI_NET
+argument_list|,
+literal|"dummynet"
+argument_list|)
+expr_stmt|;
 name|callout_init
 argument_list|(
 operator|&
@@ -10230,6 +10677,13 @@ argument_list|,
 name|dummynet
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Initialize curr_time adjustment mechanics. */
+name|getmicrouptime
+argument_list|(
+operator|&
+name|prev_t
 argument_list|)
 expr_stmt|;
 block|}
@@ -10261,10 +10715,29 @@ name|ip_dn_ruledel_ptr
 operator|=
 name|NULL
 expr_stmt|;
+name|DUMMYNET_LOCK
+argument_list|()
+expr_stmt|;
 name|callout_stop
 argument_list|(
 operator|&
 name|dn_timeout
+argument_list|)
+expr_stmt|;
+name|DUMMYNET_UNLOCK
+argument_list|()
+expr_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|dn_tq
+argument_list|,
+operator|&
+name|dn_task
+argument_list|)
+expr_stmt|;
+name|taskqueue_free
+argument_list|(
+name|dn_tq
 argument_list|)
 expr_stmt|;
 name|dummynet_flush
