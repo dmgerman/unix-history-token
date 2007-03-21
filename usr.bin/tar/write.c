@@ -655,9 +655,6 @@ name|char
 modifier|*
 name|pathname
 parameter_list|,
-name|unsigned
-name|pathlen
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1991,15 +1988,15 @@ operator|*
 name|arg
 operator|!=
 literal|'/'
-operator|||
+operator|&&
 operator|(
 name|arg
 index|[
 literal|0
 index|]
-operator|==
+operator|!=
 literal|'@'
-operator|&&
+operator|||
 name|arg
 index|[
 literal|1
@@ -2803,14 +2800,8 @@ name|errno
 argument_list|,
 literal|"%s: Cannot stat"
 argument_list|,
-name|path
+name|name
 argument_list|)
-expr_stmt|;
-name|bsdtar
-operator|->
-name|return_value
-operator|=
-literal|1
 expr_stmt|;
 continue|continue;
 block|}
@@ -3119,11 +3110,6 @@ name|lst
 argument_list|,
 name|name
 argument_list|,
-name|tree_current_pathlen
-argument_list|(
-name|tree
-argument_list|)
-argument_list|,
 name|tree_current_access_path
 argument_list|(
 name|tree
@@ -3169,9 +3155,6 @@ name|char
 modifier|*
 name|pathname
 parameter_list|,
-name|unsigned
-name|pathlen
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -3210,12 +3193,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|pathlen
-expr_stmt|;
-comment|/* UNUSED */
 name|fd
 operator|=
 operator|-
