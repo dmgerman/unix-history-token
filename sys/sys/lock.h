@@ -1627,34 +1627,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|witness_check_mutex
+name|witness_check
 parameter_list|(
-name|m
+name|l
 parameter_list|)
 define|\
-value|WITNESS_CHECKORDER(&(m)->lock_object, LOP_EXCLUSIVE, LOCK_FILE,	\ 	    LOCK_LINE)
+value|WITNESS_CHECKORDER(&(l)->lock_object, LOP_EXCLUSIVE, LOCK_FILE,	\ 	    LOCK_LINE)
 end_define
 
 begin_define
 define|#
 directive|define
-name|witness_check_shared_sx
+name|witness_check_shared
 parameter_list|(
-name|sx
+name|l
 parameter_list|)
 define|\
-value|WITNESS_CHECKORDER(&(sx)->lock_object, 0, LOCK_FILE, LOCK_LINE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|witness_check_exclusive_sx
-parameter_list|(
-name|sx
-parameter_list|)
-define|\
-value|WITNESS_CHECKORDER(&(sx)->lock_object, LOP_EXCLUSIVE, LOCK_FILE, \ 	    LOCK_LINE)
+value|WITNESS_CHECKORDER(&(l)->lock_object, 0, LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_endif
