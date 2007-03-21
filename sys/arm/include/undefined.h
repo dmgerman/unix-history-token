@@ -34,25 +34,23 @@ end_include
 begin_typedef
 typedef|typedef
 name|int
-argument_list|(
-argument|*undef_handler_t
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|undef_handler_t
+function_decl|)
+parameter_list|(
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 name|trapframe_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_define
@@ -80,45 +78,36 @@ begin_comment
 comment|/* Prototypes for undefined.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 modifier|*
 name|install_coproc_handler
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|undef_handler_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|remove_coproc_handler
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|undefined_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * XXX Stuff below here is for use before malloc() is available.  Most code  * shouldn't use it.  */
@@ -145,21 +134,18 @@ begin_comment
 comment|/*  * Handlers installed using install_coproc_handler_static shouldn't be  * removed.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|install_coproc_handler_static
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|undefined_handler
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Calls up to undefined.c from trap handlers */
