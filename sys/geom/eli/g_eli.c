@@ -3109,7 +3109,7 @@ argument_list|,
 operator|&
 name|crie
 argument_list|,
-literal|1
+name|CRYPTOCAP_F_HARDWARE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3145,7 +3145,7 @@ argument_list|,
 operator|&
 name|crie
 argument_list|,
-literal|0
+name|CRYPTOCAP_F_SOFTWARE
 argument_list|)
 expr_stmt|;
 if|if

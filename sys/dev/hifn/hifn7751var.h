@@ -612,6 +612,16 @@ comment|/* # ops submitted w/o int */
 name|int
 name|sc_suspended
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HIFN_VULCANDEV
+name|struct
+name|cdev
+modifier|*
+name|sc_pkdev
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

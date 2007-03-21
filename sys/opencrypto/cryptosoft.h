@@ -145,16 +145,16 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|u_int8_t
-modifier|*
 name|hmac_ipad_buffer
+index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|u_int8_t
-modifier|*
 name|hmac_opad_buffer
+index|[]
 decl_stmt|;
 end_decl_stmt
 

@@ -451,7 +451,9 @@ begin_decl_stmt
 name|int
 name|crypto_support
 init|=
-literal|0
+name|CRYPTOCAP_F_HARDWARE
+operator||
+name|CRYPTOCAP_F_SOFTWARE
 decl_stmt|;
 end_decl_stmt
 

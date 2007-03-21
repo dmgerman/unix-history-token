@@ -8,7 +8,7 @@ comment|/*	$OpenBSD: cryptodev.h,v 1.31 2002/06/11 11:14:29 beck Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * The author of this code is Angelos D. Keromytis (angelos@cis.upenn.edu)  *  * This code was written by Angelos D. Keromytis in Athens, Greece, in  * February 2000. Network Security Technologies Inc. (NSTI) kindly  * supported the development of this code.  *  * Copyright (c) 2000 Angelos D. Keromytis  *  * Permission to use, copy, and modify this software with or without fee  * is hereby granted, provided that this entire notice is included in  * all source code copies of any software which is or includes a copy or  * modification of this software.  *  * THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTY. IN PARTICULAR, NONE OF THE AUTHORS MAKES ANY  * REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE  * MERCHANTABILITY OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR  * PURPOSE.  *  * Copyright (c) 2001 Theo de Raadt  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *   notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *   notice, this list of conditions and the following disclaimer in the  *   documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *   derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Effort sponsored in part by the Defense Advanced Research Projects  * Agency (DARPA) and Air Force Research Laboratory, Air Force  * Materiel Command, USAF, under agreement number F30602-01-2-0537.  *  */
+comment|/*-  * The author of this code is Angelos D. Keromytis (angelos@cis.upenn.edu)  * Copyright (c) 2002-2006 Sam Leffler, Errno Consulting  *  * This code was written by Angelos D. Keromytis in Athens, Greece, in  * February 2000. Network Security Technologies Inc. (NSTI) kindly  * supported the development of this code.  *  * Copyright (c) 2000 Angelos D. Keromytis  *  * Permission to use, copy, and modify this software with or without fee  * is hereby granted, provided that this entire notice is included in  * all source code copies of any software which is or includes a copy or  * modification of this software.  *  * THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTY. IN PARTICULAR, NONE OF THE AUTHORS MAKES ANY  * REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE  * MERCHANTABILITY OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR  * PURPOSE.  *  * Copyright (c) 2001 Theo de Raadt  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *   notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *   notice, this list of conditions and the following disclaimer in the  *   documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *   derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Effort sponsored in part by the Defense Advanced Research Projects  * Agency (DARPA) and Air Force Research Laboratory, Air Force  * Materiel Command, USAF, under agreement number F30602-01-2-0537.  *  */
 end_comment
 
 begin_ifndef
@@ -496,6 +496,36 @@ begin_comment
 comment|/* Can do SHA on msg */
 end_comment
 
+begin_comment
+comment|/*  * Crypto driver/device flags.  They can set in the crid  * parameter when creating a session or submitting a key  * op to affect the device/driver assigned.  If neither  * of these are specified then the crid is assumed to hold  * the driver id of an existing (and suitable) device that  * must be used to satisfy the request.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_FLAG_HARDWARE
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* hardware accelerated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_FLAG_SOFTWARE
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* software implementation */
+end_comment
+
+begin_comment
+comment|/* NB: deprecated */
+end_comment
+
 begin_struct
 struct|struct
 name|session_op
@@ -526,6 +556,51 @@ name|u_int32_t
 name|ses
 decl_stmt|;
 comment|/* returns: session # */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|session2_op
+block|{
+name|u_int32_t
+name|cipher
+decl_stmt|;
+comment|/* ie. CRYPTO_DES_CBC */
+name|u_int32_t
+name|mac
+decl_stmt|;
+comment|/* ie. CRYPTO_MD5_HMAC */
+name|u_int32_t
+name|keylen
+decl_stmt|;
+comment|/* cipher key */
+name|caddr_t
+name|key
+decl_stmt|;
+name|int
+name|mackeylen
+decl_stmt|;
+comment|/* mac key */
+name|caddr_t
+name|mackey
+decl_stmt|;
+name|u_int32_t
+name|ses
+decl_stmt|;
+comment|/* returns: session # */
+name|int
+name|crid
+decl_stmt|;
+comment|/* driver id + flags (rw) */
+name|int
+name|pad
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* for future expansion */
 block|}
 struct|;
 end_struct
@@ -578,6 +653,29 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Parameters for looking up a crypto driver/device by  * device name or by id.  The latter are returned for  * created sessions (crid) and completed key operations.  */
+end_comment
+
+begin_struct
+struct|struct
+name|crypt_find_op
+block|{
+name|int
+name|crid
+decl_stmt|;
+comment|/* driver id + flags */
+name|char
+name|name
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* device/driver name */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* bignum parameter, in packed bytes, ... */
 end_comment
 
@@ -623,8 +721,9 @@ name|crk_oparams
 decl_stmt|;
 comment|/* # of output parameters */
 name|u_int
-name|crk_pad1
+name|crk_crid
 decl_stmt|;
+comment|/* NB: only used by CIOCKEY2 (rw) */
 name|struct
 name|crparam
 name|crk_param
@@ -735,6 +834,20 @@ name|CRIOGET
 value|_IOWR('c', 100, u_int32_t)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CRIOASYMFEAT
+value|CIOCASYMFEAT
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRIOFINDDEV
+value|CIOCFINDDEV
+end_define
+
 begin_comment
 comment|/* the following are done against the cloned descriptor */
 end_comment
@@ -772,6 +885,27 @@ define|#
 directive|define
 name|CIOCASYMFEAT
 value|_IOR('c', 105, u_int32_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CIOCGSESSION2
+value|_IOWR('c', 106, struct session2_op)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CIOCKEY2
+value|_IOWR('c', 107, struct crypt_kop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CIOCFINDDEV
+value|_IOWR('c', 108, struct crypt_find_op)
 end_define
 
 begin_struct
@@ -1170,6 +1304,10 @@ name|u_short
 name|krp_oparams
 decl_stmt|;
 comment|/* # of output parameters */
+name|u_int
+name|krp_crid
+decl_stmt|;
+comment|/* desired device, etc. */
 name|u_int32_t
 name|krp_hid
 decl_stmt|;
@@ -1197,149 +1335,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Crypto capabilities structure.  *  * Synchronization:  * (d) - protected by CRYPTO_DRIVER_LOCK()  * (q) - protected by CRYPTO_Q_LOCK()  * Not tagged fields are read-only.  */
-end_comment
-
-begin_struct
-struct|struct
-name|cryptocap
-block|{
-name|u_int32_t
-name|cc_sessions
-decl_stmt|;
-comment|/* (d) number of sessions */
-name|u_int32_t
-name|cc_koperations
-decl_stmt|;
-comment|/* (d) number os asym operations */
-comment|/* 	 * Largest possible operator length (in bits) for each type of 	 * encryption algorithm. 	 */
-name|u_int16_t
-name|cc_max_op_len
-index|[
-name|CRYPTO_ALGORITHM_MAX
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|u_int8_t
-name|cc_alg
-index|[
-name|CRYPTO_ALGORITHM_MAX
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|u_int8_t
-name|cc_kalg
-index|[
-name|CRK_ALGORITHM_MAX
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|u_int8_t
-name|cc_flags
-decl_stmt|;
-comment|/* (d) flags */
-define|#
-directive|define
-name|CRYPTOCAP_F_CLEANUP
-value|0x01
-comment|/* needs resource cleanup */
-define|#
-directive|define
-name|CRYPTOCAP_F_SOFTWARE
-value|0x02
-comment|/* software implementation */
-define|#
-directive|define
-name|CRYPTOCAP_F_SYNC
-value|0x04
-comment|/* operates synchronously */
-name|u_int8_t
-name|cc_qblocked
-decl_stmt|;
-comment|/* (q) symmetric q blocked */
-name|u_int8_t
-name|cc_kqblocked
-decl_stmt|;
-comment|/* (q) asymmetric q blocked */
-name|void
-modifier|*
-name|cc_arg
-decl_stmt|;
-comment|/* callback argument */
-name|int
-function_decl|(
-modifier|*
-name|cc_newsession
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|u_int32_t
-modifier|*
-parameter_list|,
-name|struct
-name|cryptoini
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|cc_process
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|struct
-name|cryptop
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|cc_freesession
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|u_int64_t
-parameter_list|)
-function_decl|;
-name|void
-modifier|*
-name|cc_karg
-decl_stmt|;
-comment|/* callback argument */
-name|int
-function_decl|(
-modifier|*
-name|cc_kprocess
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|struct
-name|cryptkop
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Session ids are 64 bits.  The lower 32 bits contain a "local id" which  * is a driver-private session identifier.  The upper 32 bits contain a  * "hardware id" used by the core crypto code to identify the driver and  * a copy of the driver's capabilities that can be used by client code to  * optimize operation.  */
 end_comment
 
@@ -1350,7 +1345,7 @@ name|CRYPTO_SESID2HID
 parameter_list|(
 name|_sid
 parameter_list|)
-value|(((_sid)>> 32)& 0xffffff)
+value|(((_sid)>> 32)& 0x00ffffff)
 end_define
 
 begin_define
@@ -1360,7 +1355,7 @@ name|CRYPTO_SESID2CAPS
 parameter_list|(
 name|_sid
 parameter_list|)
-value|(((_sid)>> 56)& 0xff)
+value|(((_sid)>> 32)& 0xff000000)
 end_define
 
 begin_define
@@ -1412,13 +1407,75 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|CRYPTOCAP_F_HARDWARE
+value|CRYPTO_FLAG_HARDWARE
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTOCAP_F_SOFTWARE
+value|CRYPTO_FLAG_SOFTWARE
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTOCAP_F_SYNC
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* operates synchronously */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|int32_t
 name|crypto_get_driverid
 parameter_list|(
-name|u_int32_t
+name|device_t
+name|dev
+parameter_list|,
+name|int
 name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|crypto_find_driver
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|device_t
+name|crypto_find_device_byhid
+parameter_list|(
+name|int
+name|hid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|crypto_getcaps
+parameter_list|(
+name|int
+name|hid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1439,55 +1496,6 @@ name|maxoplen
 parameter_list|,
 name|u_int32_t
 name|flags
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|newses
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|u_int32_t
-modifier|*
-parameter_list|,
-name|struct
-name|cryptoini
-modifier|*
-parameter_list|)
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|freeses
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|u_int64_t
-parameter_list|)
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|process
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|struct
-name|cryptop
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-parameter_list|,
-name|void
-modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1502,25 +1510,6 @@ parameter_list|,
 name|int
 parameter_list|,
 name|u_int32_t
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|struct
-name|cryptkop
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-parameter_list|,
-name|void
-modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl

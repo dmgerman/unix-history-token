@@ -411,8 +411,33 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HIFN_0_PUCTRL2
+value|0x28
+end_define
+
+begin_comment
+comment|/* Processing Unit Control (2nd map) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_0_MUTE1
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|HIFN_0_MUTE2
+value|0x90
+end_define
+
+begin_define
+define|#
+directive|define
 name|HIFN_0_SPACESIZE
-value|0x20
+value|0x100
 end_define
 
 begin_comment
@@ -1192,7 +1217,7 @@ value|0x0400
 end_define
 
 begin_comment
-comment|/* must be written as 1 */
+comment|/* must be written as this value */
 end_comment
 
 begin_comment
@@ -1334,6 +1359,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HIFN_1_DMA_CNFG2
+value|0x6c
+end_define
+
+begin_comment
+comment|/* 7955/7956: dma config #2 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HIFN_1_7811_MIPSRST
 value|0x94
 end_define
@@ -1383,7 +1419,7 @@ value|0x304
 end_define
 
 begin_comment
-comment|/* Public Operand Length */
+comment|/* 7951-compat Public Operand Length */
 end_comment
 
 begin_define
@@ -1394,7 +1430,7 @@ value|0x308
 end_define
 
 begin_comment
-comment|/* Public Operand */
+comment|/* 7951-compat Public Operand */
 end_comment
 
 begin_define
@@ -1405,7 +1441,7 @@ value|0x30c
 end_define
 
 begin_comment
-comment|/* Public Status */
+comment|/* 7951-compat Public Status */
 end_comment
 
 begin_define
@@ -1416,7 +1452,7 @@ value|0x310
 end_define
 
 begin_comment
-comment|/* Public Interrupt nable */
+comment|/* Public Interrupt enable */
 end_comment
 
 begin_define
@@ -1439,6 +1475,39 @@ end_define
 
 begin_comment
 comment|/* RNG data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_1_PUB_MODE
+value|0x320
+end_define
+
+begin_comment
+comment|/* PK mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_1_PUB_FIFO_OPLEN
+value|0x380
+end_define
+
+begin_comment
+comment|/* first element of oplen fifo */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_1_PUB_FIFO_OP
+value|0x384
+end_define
+
+begin_comment
+comment|/* first element of op fifo */
 end_comment
 
 begin_define
@@ -2220,6 +2289,82 @@ comment|/* Master Reset # */
 end_comment
 
 begin_comment
+comment|/* DMA Configuration Register (HIFN_1_DMA_CNFG2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_DMACNFG2_PKSWAP32
+value|(1<< 19)
+end_define
+
+begin_comment
+comment|/* swap the OPLEN/OP reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_DMACNFG2_PKSWAP8
+value|(1<< 18)
+end_define
+
+begin_comment
+comment|/* swap the bits of OPLEN/OP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_DMACNFG2_BAR0_SWAP32
+value|(1<<17)
+end_define
+
+begin_comment
+comment|/* swap the bytes of BAR0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_DMACNFG2_BAR1_SWAP8
+value|(1<<16)
+end_define
+
+begin_comment
+comment|/* swap the bits  of BAR0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_DMACNFG2_INIT_WRITE_BURST_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|HIFN_DMACNFG2_INIT_READ_BURST_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|HIFN_DMACNFG2_TGT_WRITE_BURST_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|HIFN_DMACNFG2_TGT_READ_BURST_SHIFT
+value|0
+end_define
+
+begin_comment
 comment|/* 7811 RNG Enable Register (HIFN_1_7811_RNGENA) */
 end_comment
 
@@ -2657,6 +2802,61 @@ begin_comment
 comment|/* carry */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HIFN_PUBSTS_FIFO_EMPTY
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* fifo empty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PUBSTS_FIFO_FULL
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* fifo full */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PUBSTS_FIFO_OVFL
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* fifo overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PUBSTS_FIFO_WRITE
+value|0x000f0000
+end_define
+
+begin_comment
+comment|/* fifo write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PUBSTS_FIFO_READ
+value|0x0f000000
+end_define
+
+begin_comment
+comment|/* fifo read */
+end_comment
+
 begin_comment
 comment|/* Public interrupt enable register (HIFN_1_PUB_IEN) */
 end_comment
@@ -2885,6 +3085,32 @@ directive|define
 name|HIFN_PLL_CONFIG
 value|(HIFN_PLL_IS|HIFN_PLL_ND|HIFN_PLL_REF_SEL)
 end_define
+
+begin_comment
+comment|/*  * Public Key Engine Mode Register  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PKMODE_HOSTINVERT
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* HOST INVERT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PKMODE_ENHANCED
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Enable enhanced mode */
+end_comment
 
 begin_comment
 comment|/*********************************************************************  * Structs for board commands   *  *********************************************************************/
