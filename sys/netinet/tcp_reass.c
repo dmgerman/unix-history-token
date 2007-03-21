@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_tcp_input.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_tcp_sack.h"
 end_include
 
@@ -513,12 +507,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCP_DROP_SYNFIN
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -548,11 +536,6 @@ literal|"Drop TCP packets with SYN+FIN set"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -2825,9 +2808,6 @@ name|th
 operator|->
 name|th_flags
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TCP_DROP_SYNFIN
 comment|/* 	 * If the drop_synfin option is enabled, drop all packets with 	 * both the SYN and FIN bits set. This prevents e.g. nmap from 	 * identifying the TCP/IP stack. 	 * 	 * This is a violation of the TCP specification. 	 */
 if|if
 condition|(
@@ -2852,8 +2832,6 @@ condition|)
 goto|goto
 name|drop
 goto|;
-endif|#
-directive|endif
 comment|/* 	 * Convert TCP protocol specific fields to host format. 	 */
 name|th
 operator|->
