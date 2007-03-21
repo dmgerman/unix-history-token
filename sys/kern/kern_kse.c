@@ -5252,7 +5252,7 @@ name|p
 operator|->
 name|p_mtx
 operator|.
-name|mtx_object
+name|lock_object
 argument_list|,
 literal|"thread exiting in userret"
 argument_list|)

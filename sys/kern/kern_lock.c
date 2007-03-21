@@ -929,7 +929,7 @@ name|lkp
 operator|->
 name|lk_interlock
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 literal|"Acquiring lockmgr lock \"%s\""
 argument_list|,

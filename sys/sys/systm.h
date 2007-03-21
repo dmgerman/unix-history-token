@@ -2651,7 +2651,7 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|_sleep((chan),&(mtx)->mtx_object, (pri), (wmesg), (timo))
+value|_sleep((chan),&(mtx)->lock_object, (pri), (wmesg), (timo))
 end_define
 
 begin_function_decl

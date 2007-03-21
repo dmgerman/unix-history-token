@@ -299,7 +299,7 @@ argument_list|,
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 literal|"Waiting on \"%s\""
 argument_list|,
@@ -313,7 +313,7 @@ argument_list|(
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|mp
 argument_list|)
@@ -353,7 +353,7 @@ argument_list|,
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|cvp
 operator|->
@@ -403,7 +403,7 @@ argument_list|(
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|mp
 argument_list|)
@@ -478,7 +478,7 @@ argument_list|,
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 literal|"Waiting on \"%s\""
 argument_list|,
@@ -527,7 +527,7 @@ argument_list|,
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|cvp
 operator|->
@@ -656,7 +656,7 @@ argument_list|,
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 literal|"Waiting on \"%s\""
 argument_list|,
@@ -670,7 +670,7 @@ argument_list|(
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|mp
 argument_list|)
@@ -714,7 +714,7 @@ argument_list|,
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|cvp
 operator|->
@@ -768,7 +768,7 @@ argument_list|(
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|mp
 argument_list|)
@@ -863,7 +863,7 @@ argument_list|,
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 literal|"Waiting on \"%s\""
 argument_list|,
@@ -877,7 +877,7 @@ argument_list|(
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|mp
 argument_list|)
@@ -919,7 +919,7 @@ argument_list|,
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|cvp
 operator|->
@@ -978,7 +978,7 @@ argument_list|(
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|mp
 argument_list|)
@@ -1084,7 +1084,7 @@ argument_list|,
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 literal|"Waiting on \"%s\""
 argument_list|,
@@ -1098,7 +1098,7 @@ argument_list|(
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|mp
 argument_list|)
@@ -1140,7 +1140,7 @@ argument_list|,
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|cvp
 operator|->
@@ -1201,7 +1201,7 @@ argument_list|(
 operator|&
 name|mp
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|mp
 argument_list|)

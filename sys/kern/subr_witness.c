@@ -4333,7 +4333,7 @@ operator|==
 operator|&
 name|Giant
 operator|.
-name|mtx_object
+name|lock_object
 condition|)
 continue|continue;
 comment|/* 			 * If we are locking a sleepable lock and this lock 			 * is Giant, then skip it. 			 */
@@ -4356,7 +4356,7 @@ operator|==
 operator|&
 name|Giant
 operator|.
-name|mtx_object
+name|lock_object
 condition|)
 continue|continue;
 comment|/* 			 * If we are locking a sleepable lock and this lock 			 * isn't sleepable, we want to treat it as a lock 			 * order violation to enfore a general lock order of 			 * sleepable locks before non-sleepable locks. 			 */
@@ -4409,7 +4409,7 @@ operator|==
 operator|&
 name|Giant
 operator|.
-name|mtx_object
+name|lock_object
 condition|)
 goto|goto
 name|reversal
@@ -4460,7 +4460,7 @@ operator|==
 operator|&
 name|Giant
 operator|.
-name|mtx_object
+name|lock_object
 condition|)
 block|{
 if|if
@@ -4547,7 +4547,7 @@ operator|==
 operator|&
 name|Giant
 operator|.
-name|mtx_object
+name|lock_object
 condition|)
 name|printf
 argument_list|(
@@ -4829,7 +4829,7 @@ operator|==
 operator|&
 name|Giant
 operator|.
-name|mtx_object
+name|lock_object
 operator|&&
 operator|(
 name|lock
@@ -6382,7 +6382,7 @@ operator|==
 operator|&
 name|Giant
 operator|.
-name|mtx_object
+name|lock_object
 condition|)
 continue|continue;
 if|if

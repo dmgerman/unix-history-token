@@ -1632,7 +1632,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|WITNESS_CHECKORDER(&(m)->mtx_object, LOP_EXCLUSIVE, LOCK_FILE,	\ 	    LOCK_LINE)
+value|WITNESS_CHECKORDER(&(m)->lock_object, LOP_EXCLUSIVE, LOCK_FILE,	\ 	    LOCK_LINE)
 end_define
 
 begin_define
@@ -1643,7 +1643,7 @@ parameter_list|(
 name|sx
 parameter_list|)
 define|\
-value|WITNESS_CHECKORDER(&(sx)->sx_object, 0, LOCK_FILE, LOCK_LINE)
+value|WITNESS_CHECKORDER(&(sx)->lock_object, 0, LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -1654,7 +1654,7 @@ parameter_list|(
 name|sx
 parameter_list|)
 define|\
-value|WITNESS_CHECKORDER(&(sx)->sx_object, LOP_EXCLUSIVE, LOCK_FILE,	\ 	    LOCK_LINE)
+value|WITNESS_CHECKORDER(&(sx)->lock_object, LOP_EXCLUSIVE, LOCK_FILE, \ 	    LOCK_LINE)
 end_define
 
 begin_endif

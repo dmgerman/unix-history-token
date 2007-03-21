@@ -43,7 +43,7 @@ name|sx
 block|{
 name|struct
 name|lock_object
-name|sx_object
+name|lock_object
 decl_stmt|;
 comment|/* Common lock properties. */
 name|struct
@@ -510,7 +510,7 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|_sleep((chan),&(sx)->sx_object, (pri), (wmesg), (timo))
+value|_sleep((chan),&(sx)->lock_object, (pri), (wmesg), (timo))
 end_define
 
 begin_if

@@ -384,7 +384,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 operator|&
 name|lock_class_rw
@@ -397,7 +397,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 operator|&
 name|lock_class_rw
@@ -444,7 +444,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|lock_destroy
@@ -452,7 +452,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 block|}
@@ -552,7 +552,7 @@ name|__func__
 operator|,
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 operator|.
 name|lo_name
 operator|,
@@ -567,7 +567,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 name|LOP_NEWORDER
 operator||
@@ -596,7 +596,7 @@ argument_list|,
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -612,7 +612,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 name|LOP_EXCLUSIVE
 argument_list|,
@@ -675,7 +675,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 name|LOP_EXCLUSIVE
 argument_list|,
@@ -691,7 +691,7 @@ argument_list|,
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -707,7 +707,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|__rw_wunlock
@@ -782,7 +782,7 @@ name|__func__
 operator|,
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 operator|.
 name|lo_name
 operator|,
@@ -797,7 +797,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 name|LOP_NEWORDER
 argument_list|,
@@ -863,7 +863,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -909,7 +909,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 name|contested
 argument_list|,
@@ -932,7 +932,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 operator|&
 name|contested
@@ -947,7 +947,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 comment|/* 		 * The lock might have been released while we spun, so 		 * recheck its state and restart the loop if there is no 		 * longer a write lock. 		 */
@@ -969,7 +969,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|cpu_spinwait
@@ -1011,7 +1011,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|cpu_spinwait
@@ -1026,7 +1026,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -1072,7 +1072,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 if|if
@@ -1082,7 +1082,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -1136,7 +1136,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -1157,7 +1157,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 name|rw_owner
 argument_list|(
@@ -1174,7 +1174,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -1199,7 +1199,7 @@ argument_list|,
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -1215,7 +1215,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -1279,7 +1279,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -1295,7 +1295,7 @@ argument_list|,
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -1354,7 +1354,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -1454,7 +1454,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -1495,7 +1495,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Try to drop our lock leaving the lock in a unlocked 		 * state. 		 * 		 * If you wanted to do explicit lock handoff you'd have to 		 * do it here.  You'd also want to use turnstile_signal() 		 * and you'd have to handle the race where a higher 		 * priority thread blocks on the write lock before the 		 * thread you wakeup actually runs and have the new thread 		 * "steal" the lock.  For now it's a lot simpler to just 		 * wakeup all of the waiters. 		 * 		 * As above, if we fail, then another thread might have 		 * acquired a read lock, so drop the turnstile lock and 		 * restart. 		 */
@@ -1525,7 +1525,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1537,7 +1537,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -1561,7 +1561,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|MPASS
@@ -1592,7 +1592,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 block|}
@@ -1644,7 +1644,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -1659,7 +1659,7 @@ name|__func__
 argument_list|,
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,
@@ -1692,7 +1692,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|v
@@ -1714,7 +1714,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|cpu_spinwait
@@ -1758,7 +1758,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|CTR2
@@ -1779,7 +1779,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|cpu_spinwait
@@ -1821,7 +1821,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|cpu_spinwait
@@ -1836,7 +1836,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -1889,7 +1889,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 if|if
@@ -1899,7 +1899,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -1953,7 +1953,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -1974,7 +1974,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 name|rw_owner
 argument_list|(
@@ -1991,7 +1991,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -2073,7 +2073,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -2094,7 +2094,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|ts
@@ -2104,7 +2104,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2135,7 +2135,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -2156,7 +2156,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2254,7 +2254,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -2297,7 +2297,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|)
@@ -2436,7 +2436,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Try to switch from one reader to a writer again.  This time 	 * we honor the current state of the RW_LOCK_WRITE_WAITERS 	 * flag.  If we obtain the lock with the flag set, then claim 	 * ownership of the turnstile.  In the SMP case it is possible 	 * for there to not be an associated turnstile even though there 	 * are waiters if all of the waiters are spinning. 	 */
@@ -2483,7 +2483,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 operator|!=
 name|NULL
@@ -2503,7 +2503,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 else|else
@@ -2512,7 +2512,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|out
@@ -2524,7 +2524,7 @@ argument_list|,
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -2544,7 +2544,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 name|LOP_EXCLUSIVE
 operator||
@@ -2611,7 +2611,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -2654,7 +2654,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|v
@@ -2682,7 +2682,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2812,7 +2812,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2832,7 +2832,7 @@ argument_list|,
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -2925,7 +2925,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 name|what
 argument_list|,
@@ -2975,7 +2975,7 @@ literal|"Lock %s not %slocked @ %s:%d\n"
 argument_list|,
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,
@@ -3015,7 +3015,7 @@ literal|"Lock %s not exclusively locked @ %s:%d\n"
 argument_list|,
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,
@@ -3036,7 +3036,7 @@ argument_list|(
 operator|&
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 argument_list|,
 name|what
 argument_list|,
@@ -3063,7 +3063,7 @@ literal|"Lock %s exclusively locked @ %s:%d\n"
 argument_list|,
 name|rw
 operator|->
-name|rw_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,

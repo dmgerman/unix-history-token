@@ -435,7 +435,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 operator|&
 name|lock_class_sx
@@ -448,7 +448,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 operator|&
 name|lock_class_sx
@@ -508,7 +508,7 @@ name|__func__
 operator|,
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 operator|.
 name|lo_name
 operator|)
@@ -541,7 +541,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|lock_destroy
@@ -549,7 +549,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 block|}
@@ -605,7 +605,7 @@ name|__func__
 operator|,
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 operator|.
 name|lo_name
 operator|,
@@ -620,7 +620,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 name|LOP_NEWORDER
 argument_list|,
@@ -649,7 +649,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 operator|&
 name|contested
@@ -695,7 +695,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 name|contested
 argument_list|,
@@ -713,7 +713,7 @@ argument_list|,
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -729,7 +729,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -799,7 +799,7 @@ argument_list|,
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -815,7 +815,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 name|LOP_TRYLOCK
 argument_list|,
@@ -851,7 +851,7 @@ argument_list|,
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -929,7 +929,7 @@ name|__func__
 operator|,
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 operator|.
 name|lo_name
 operator|,
@@ -944,7 +944,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 name|LOP_NEWORDER
 operator||
@@ -975,7 +975,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 operator|&
 name|contested
@@ -1028,7 +1028,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 name|contested
 argument_list|,
@@ -1046,7 +1046,7 @@ argument_list|,
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -1062,7 +1062,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 name|LOP_EXCLUSIVE
 argument_list|,
@@ -1138,7 +1138,7 @@ argument_list|,
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -1154,7 +1154,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 name|LOP_EXCLUSIVE
 operator||
@@ -1192,7 +1192,7 @@ argument_list|,
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -1265,7 +1265,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -1294,7 +1294,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 block|}
@@ -1349,7 +1349,7 @@ argument_list|,
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -1426,7 +1426,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 name|LOP_EXCLUSIVE
 argument_list|,
@@ -1488,7 +1488,7 @@ argument_list|,
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -1504,7 +1504,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -1582,7 +1582,7 @@ argument_list|,
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -1598,7 +1598,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 name|LOP_EXCLUSIVE
 operator||
@@ -1631,7 +1631,7 @@ argument_list|,
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -1709,7 +1709,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -1753,7 +1753,7 @@ argument_list|,
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 literal|0
 argument_list|,
@@ -1853,7 +1853,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 name|what
 argument_list|,
@@ -1897,7 +1897,7 @@ literal|"Lock %s not %slocked @ %s:%d\n"
 argument_list|,
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,
@@ -1950,7 +1950,7 @@ literal|"Lock %s not exclusively locked @ %s:%d\n"
 argument_list|,
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,
@@ -1978,7 +1978,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|,
 name|what
 argument_list|,
@@ -2011,7 +2011,7 @@ literal|"Lock %s exclusively locked @ %s:%d\n"
 argument_list|,
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,
@@ -2257,7 +2257,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|)
 operator|==
 operator|&
@@ -2303,7 +2303,7 @@ argument_list|(
 operator|&
 name|sx
 operator|->
-name|sx_object
+name|lock_object
 argument_list|)
 operator|==
 operator|&

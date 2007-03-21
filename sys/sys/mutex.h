@@ -711,7 +711,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int contested = 0;						\ 	uint64_t waittime = 0;						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		lock_profile_obtain_lock_failed(&(mp)->mtx_object,	\&contested,&waittime);				\ 		_mtx_lock_sleep((mp), _tid, (opts), (file), (line));	\ 	}								\ 	lock_profile_obtain_lock_success(&(mp)->mtx_object, contested,	\ 	    waittime, (file), (line));					\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int contested = 0;						\ 	uint64_t waittime = 0;						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		lock_profile_obtain_lock_failed(&(mp)->lock_object,	\&contested,&waittime);				\ 		_mtx_lock_sleep((mp), _tid, (opts), (file), (line));	\ 	}								\ 	lock_profile_obtain_lock_success(&(mp)->lock_object, contested,	\ 	    waittime, (file), (line));					\ } while (0)
 end_define
 
 begin_endif
@@ -750,7 +750,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {	\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int contested = 0;						\ 	uint64_t waittime = 0;						\ 	spinlock_enter();						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else {							\ 			lock_profile_obtain_lock_failed(&(mp)->mtx_object, \&contested,&waittime);			\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 		}							\ 	}								\ 	lock_profile_obtain_lock_success(&(mp)->mtx_object, contested,	\ 	    waittime, (file), (line));					\ } while (0)
+value|do {	\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int contested = 0;						\ 	uint64_t waittime = 0;						\ 	spinlock_enter();						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else {							\ 			lock_profile_obtain_lock_failed(&(mp)->lock_object, \&contested,&waittime);			\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 		}							\ 	}								\ 	lock_profile_obtain_lock_success(&(mp)->lock_object, contested,	\ 	    waittime, (file), (line));					\ } while (0)
 end_define
 
 begin_else
@@ -1266,7 +1266,7 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|_sleep((chan),&(mtx)->mtx_object, (pri), (wmesg), (timo))
+value|_sleep((chan),&(mtx)->lock_object, (pri), (wmesg), (timo))
 end_define
 
 begin_define
@@ -1276,7 +1276,7 @@ name|mtx_initialized
 parameter_list|(
 name|m
 parameter_list|)
-value|lock_initalized(&(m)->mtx_object)
+value|lock_initalized(&(m)->lock_object)
 end_define
 
 begin_define
@@ -1306,7 +1306,7 @@ name|mtx_name
 parameter_list|(
 name|m
 parameter_list|)
-value|((m)->mtx_object.lo_name)
+value|((m)->lock_object.lo_name)
 end_define
 
 begin_comment
@@ -1345,7 +1345,7 @@ directive|define
 name|DROP_GIANT
 parameter_list|()
 define|\
-value|do {									\ 	int _giantcnt;							\ 	WITNESS_SAVE_DECL(Giant);					\ 									\ 	if (mtx_owned(&Giant))						\ 		WITNESS_SAVE(&Giant.mtx_object, Giant);			\ 	for (_giantcnt = 0; mtx_owned(&Giant); _giantcnt++)		\ 		mtx_unlock(&Giant)
+value|do {									\ 	int _giantcnt;							\ 	WITNESS_SAVE_DECL(Giant);					\ 									\ 	if (mtx_owned(&Giant))						\ 		WITNESS_SAVE(&Giant.lock_object, Giant);		\ 	for (_giantcnt = 0; mtx_owned(&Giant); _giantcnt++)		\ 		mtx_unlock(&Giant)
 end_define
 
 begin_define
@@ -1354,7 +1354,7 @@ directive|define
 name|PICKUP_GIANT
 parameter_list|()
 define|\
-value|mtx_assert(&Giant, MA_NOTOWNED);				\ 	while (_giantcnt--)						\ 		mtx_lock(&Giant);					\ 	if (mtx_owned(&Giant))						\ 		WITNESS_RESTORE(&Giant.mtx_object, Giant);		\ } while (0)
+value|mtx_assert(&Giant, MA_NOTOWNED);				\ 	while (_giantcnt--)						\ 		mtx_lock(&Giant);					\ 	if (mtx_owned(&Giant))						\ 		WITNESS_RESTORE(&Giant.lock_object, Giant);		\ } while (0)
 end_define
 
 begin_define
@@ -1363,7 +1363,7 @@ directive|define
 name|PARTIAL_PICKUP_GIANT
 parameter_list|()
 define|\
-value|mtx_assert(&Giant, MA_NOTOWNED);				\ 	while (_giantcnt--)						\ 		mtx_lock(&Giant);					\ 	if (mtx_owned(&Giant))						\ 		WITNESS_RESTORE(&Giant.mtx_object, Giant)
+value|mtx_assert(&Giant, MA_NOTOWNED);				\ 	while (_giantcnt--)						\ 		mtx_lock(&Giant);					\ 	if (mtx_owned(&Giant))						\ 		WITNESS_RESTORE(&Giant.lock_object, Giant)
 end_define
 
 begin_endif

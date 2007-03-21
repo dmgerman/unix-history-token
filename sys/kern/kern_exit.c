@@ -1744,7 +1744,7 @@ argument_list|,
 operator|&
 name|proctree_lock
 operator|.
-name|sx_object
+name|lock_object
 argument_list|,
 literal|"process (pid %d) exiting"
 argument_list|,

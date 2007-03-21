@@ -3079,7 +3079,7 @@ name|e
 parameter_list|,
 name|v
 parameter_list|)
-value|do {					\ 	PROC_LOCK_ASSERT(p, MA_OWNED);					\ 	WITNESS_WARN(WARN_GIANTOK | WARN_SLEEPOK,&p->p_mtx.mtx_object, \  	    "checking stopevent %d", (e));				\ 	if ((p)->p_stops& (e))						\ 		stopevent((p), (e), (v));				\ } while (0)
+value|do {					\ 	PROC_LOCK_ASSERT(p, MA_OWNED);					\ 	WITNESS_WARN(WARN_GIANTOK | WARN_SLEEPOK,&p->p_mtx.lock_object, \  	    "checking stopevent %d", (e));				\ 	if ((p)->p_stops& (e))						\ 		stopevent((p), (e), (v));				\ } while (0)
 end_define
 
 begin_comment

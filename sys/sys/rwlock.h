@@ -199,7 +199,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {	\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int contested = 0;                                              \         uint64_t waitstart = 0;                                         \ 						                        \ 	if (!_rw_write_lock((rw), _tid)) {				\ 		lock_profile_obtain_lock_failed(&(rw)->rw_object,	\&contested,&waitstart);				\ 		_rw_wlock_hard((rw), _tid, (file), (line));		\ 	}                                                               \ 	lock_profile_obtain_lock_success(&(rw)->rw_object, contested,	\ 	    waitstart, (file), (line));					\ } while (0)
+value|do {	\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int contested = 0;                                              \         uint64_t waitstart = 0;                                         \ 						                        \ 	if (!_rw_write_lock((rw), _tid)) {				\ 		lock_profile_obtain_lock_failed(&(rw)->lock_object,	\&contested,&waitstart);				\ 		_rw_wlock_hard((rw), _tid, (file), (line));		\ 	}                                                               \ 	lock_profile_obtain_lock_success(&(rw)->lock_object, contested,	\ 	    waitstart, (file), (line));					\ } while (0)
 end_define
 
 begin_comment
@@ -628,7 +628,7 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|_sleep((chan),&(rw)->rw_object, (pri), (wmesg), (timo))
+value|_sleep((chan),&(rw)->lock_object, (pri), (wmesg), (timo))
 end_define
 
 begin_define
@@ -638,7 +638,7 @@ name|rw_initialized
 parameter_list|(
 name|rw
 parameter_list|)
-value|lock_initalized(&(rw)->rw_object)
+value|lock_initalized(&(rw)->lock_object)
 end_define
 
 begin_struct

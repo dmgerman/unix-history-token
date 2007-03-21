@@ -11929,7 +11929,7 @@ name|p
 operator|->
 name|p_mtx
 operator|.
-name|mtx_object
+name|lock_object
 argument_list|,
 literal|"Stopping for traced signal"
 argument_list|)
@@ -12657,7 +12657,7 @@ name|p
 operator|->
 name|p_mtx
 operator|.
-name|mtx_object
+name|lock_object
 argument_list|,
 literal|"Catching SIGSTOP"
 argument_list|)

@@ -678,7 +678,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 operator|==
 operator|&
@@ -689,7 +689,7 @@ literal|"mtx_lock() of spin mutex %s @ %s:%d"
 operator|,
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_name
 operator|,
@@ -704,7 +704,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 operator||
@@ -737,7 +737,7 @@ argument_list|,
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|,
@@ -755,7 +755,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 operator||
@@ -826,7 +826,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 operator|==
 operator|&
@@ -837,7 +837,7 @@ literal|"mtx_unlock() of spin mutex %s @ %s:%d"
 operator|,
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_name
 operator|,
@@ -857,7 +857,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 operator||
@@ -875,7 +875,7 @@ argument_list|,
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|,
@@ -900,7 +900,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|_rel_sleep_lock
@@ -971,7 +971,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 operator|==
 operator|&
@@ -982,7 +982,7 @@ literal|"mtx_lock_spin() of sleep mutex %s @ %s:%d"
 operator|,
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_name
 operator|,
@@ -997,7 +997,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 operator||
@@ -1030,7 +1030,7 @@ argument_list|,
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|,
@@ -1048,7 +1048,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 operator||
@@ -1114,7 +1114,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 operator|==
 operator|&
@@ -1125,7 +1125,7 @@ literal|"mtx_unlock_spin() of sleep mutex %s @ %s:%d"
 operator|,
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_name
 operator|,
@@ -1140,7 +1140,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 operator||
@@ -1158,7 +1158,7 @@ argument_list|,
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|,
@@ -1183,7 +1183,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|_rel_spin_lock
@@ -1262,7 +1262,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 operator|==
 operator|&
@@ -1273,7 +1273,7 @@ literal|"mtx_trylock() of spin mutex %s @ %s:%d"
 operator|,
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_name
 operator|,
@@ -1293,7 +1293,7 @@ operator|&&
 operator|(
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_flags
 operator|&
@@ -1343,7 +1343,7 @@ argument_list|,
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|,
@@ -1364,7 +1364,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 operator||
@@ -1395,7 +1395,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|contested
 argument_list|,
@@ -1489,7 +1489,7 @@ argument_list|(
 operator|(
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_flags
 operator|&
@@ -1503,7 +1503,7 @@ literal|"_mtx_lock_sleep: recursed on non-recursive mutex %s @ %s:%d\n"
 operator|,
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_name
 operator|,
@@ -1535,7 +1535,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|)
@@ -1558,7 +1558,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|)
@@ -1571,7 +1571,7 @@ literal|"_mtx_lock_sleep: %s contested (lock=%p) at %s:%d"
 argument_list|,
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,
@@ -1604,7 +1604,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|v
@@ -1626,7 +1626,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|cpu_spinwait
@@ -1667,7 +1667,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1706,7 +1706,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|cpu_spinwait
@@ -1773,7 +1773,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 while|while
@@ -1835,7 +1835,7 @@ name|line
 argument_list|,
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,
@@ -1844,7 +1844,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 argument_list|,
 name|WITNESS_LINE
@@ -1852,7 +1852,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1869,7 +1869,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|mtx_owner
 argument_list|(
@@ -1896,7 +1896,7 @@ literal|"contention end: %s acquired by %p at %s:%d"
 argument_list|,
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,
@@ -1969,7 +1969,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|)
@@ -2062,7 +2062,7 @@ name|m
 argument_list|,
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,
@@ -2081,7 +2081,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|td
 argument_list|)
@@ -2109,7 +2109,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|)
@@ -2215,7 +2215,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|)
@@ -2236,7 +2236,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|ts
@@ -2246,7 +2246,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 if|if
@@ -2256,7 +2256,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|)
@@ -2301,7 +2301,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|)
@@ -2320,7 +2320,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2390,7 +2390,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|)
@@ -2420,7 +2420,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|)
@@ -2519,7 +2519,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|)
@@ -2553,7 +2553,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|)
@@ -2589,7 +2589,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|opts
 argument_list|)
@@ -2700,7 +2700,7 @@ literal|"mutex %s not owned at %s:%d"
 argument_list|,
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,
@@ -2733,7 +2733,7 @@ literal|"mutex %s recursed at %s:%d"
 argument_list|,
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,
@@ -2761,7 +2761,7 @@ literal|"mutex %s unrecursed at %s:%d"
 argument_list|,
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,
@@ -2788,7 +2788,7 @@ literal|"mutex %s owned at %s:%d"
 argument_list|,
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_name
 argument_list|,
@@ -3099,7 +3099,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|class
 argument_list|,
@@ -3111,7 +3111,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|class
 argument_list|,
@@ -3182,7 +3182,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 operator|==
 operator|&
@@ -3203,7 +3203,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|LOP_EXCLUSIVE
 argument_list|,
@@ -3224,7 +3224,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 name|lock_destroy
@@ -3232,7 +3232,7 @@ argument_list|(
 operator|&
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|)
 expr_stmt|;
 block|}
@@ -3387,7 +3387,7 @@ if|if
 condition|(
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_flags
 operator|&
@@ -3402,7 +3402,7 @@ if|if
 condition|(
 name|m
 operator|->
-name|mtx_object
+name|lock_object
 operator|.
 name|lo_flags
 operator|&

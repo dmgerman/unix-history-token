@@ -25,7 +25,7 @@ name|mtx
 block|{
 name|struct
 name|lock_object
-name|mtx_object
+name|lock_object
 decl_stmt|;
 comment|/* Common lock properties. */
 specifier|volatile

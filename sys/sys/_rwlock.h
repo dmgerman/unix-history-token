@@ -25,7 +25,7 @@ name|rwlock
 block|{
 name|struct
 name|lock_object
-name|rw_object
+name|lock_object
 decl_stmt|;
 specifier|volatile
 name|uintptr_t

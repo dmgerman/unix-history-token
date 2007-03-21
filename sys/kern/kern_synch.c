@@ -1022,7 +1022,7 @@ argument_list|(
 operator|&
 name|mtx
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|mtx
 argument_list|)
@@ -1040,7 +1040,7 @@ argument_list|,
 operator|&
 name|mtx
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|wmesg
 argument_list|,
@@ -1179,7 +1179,7 @@ argument_list|(
 operator|&
 name|mtx
 operator|->
-name|mtx_object
+name|lock_object
 argument_list|,
 name|mtx
 argument_list|)
