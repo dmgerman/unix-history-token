@@ -48,7 +48,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* speed select, lower bit */
+comment|/* Speed select, lower bit */
 end_comment
 
 begin_define
@@ -315,7 +315,7 @@ value|0x001F
 end_define
 
 begin_comment
-comment|/* selector field, 00001=Ethernet */
+comment|/* Selector field, 00001=Ethernet */
 end_comment
 
 begin_define
@@ -377,7 +377,7 @@ value|0x001F
 end_define
 
 begin_comment
-comment|/* selector field, 00001=Ethernet */
+comment|/* Selector field, 00001=Ethernet */
 end_comment
 
 begin_define
@@ -388,7 +388,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* ethernet */
+comment|/* Ethernet */
 end_comment
 
 begin_define
@@ -494,7 +494,7 @@ value|0xE000
 end_define
 
 begin_comment
-comment|/* test modes */
+comment|/* Test modes */
 end_comment
 
 begin_define
@@ -736,7 +736,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* Tx output disable d*/
+comment|/* TX output disabled */
 end_comment
 
 begin_define
@@ -1066,7 +1066,7 @@ value|0x13
 end_define
 
 begin_comment
-comment|/* false carrier sense counter */
+comment|/* False carrier sense counter */
 end_comment
 
 begin_define
@@ -1441,7 +1441,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* autoneg complete */
+comment|/* Autoneg complete */
 end_comment
 
 begin_define
@@ -1452,7 +1452,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* autoneg complete ack */
+comment|/* Autoneg complete ack */
 end_comment
 
 begin_define
@@ -1463,7 +1463,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* autoneg complete ack detect */
+comment|/* Autoneg complete ack detect */
 end_comment
 
 begin_define
@@ -1474,7 +1474,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* autoneg next page wait */
+comment|/* Autoneg next page wait */
 end_comment
 
 begin_define
@@ -1485,7 +1485,7 @@ value|0x0700
 end_define
 
 begin_comment
-comment|/* AN HDC */
+comment|/* Autoneg HDC */
 end_comment
 
 begin_define
@@ -1507,7 +1507,7 @@ value|0x0040
 end_define
 
 begin_comment
-comment|/* remote fault */
+comment|/* Remote fault */
 end_comment
 
 begin_define
@@ -1518,7 +1518,7 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/* AN page received */
+comment|/* Autoneg page received */
 end_comment
 
 begin_define
@@ -1529,7 +1529,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* LP AN ability */
+comment|/* Link partner autoneg ability */
 end_comment
 
 begin_define
@@ -1540,7 +1540,7 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* LP Next page ability */
+comment|/* Link partner next page ability */
 end_comment
 
 begin_define
@@ -1661,7 +1661,7 @@ value|0x1A
 end_define
 
 begin_comment
-comment|/* interrupt status */
+comment|/* Interrupt status */
 end_comment
 
 begin_define
@@ -1694,7 +1694,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* counter above 32K */
+comment|/* Counter above 32K */
 end_comment
 
 begin_define
@@ -1705,7 +1705,7 @@ value|0x0800
 end_define
 
 begin_comment
-comment|/* all counter below 128 */
+comment|/* All counter below 128 */
 end_comment
 
 begin_define
@@ -1826,7 +1826,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* CEC error */
+comment|/* CRC error */
 end_comment
 
 begin_define
@@ -1837,7 +1837,7 @@ value|0x1B
 end_define
 
 begin_comment
-comment|/* interrupt mask */
+comment|/* Interrupt mask */
 end_comment
 
 begin_define
@@ -1870,7 +1870,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* counter above 32K */
+comment|/* Counter above 32K */
 end_comment
 
 begin_define
@@ -1881,7 +1881,7 @@ value|0x0800
 end_define
 
 begin_comment
-comment|/* all counter below 128 */
+comment|/* All counter below 128 */
 end_comment
 
 begin_define
@@ -2002,8 +2002,29 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* CEC error */
+comment|/* CRC error */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BRGPHY_MII_TEST1
+value|0x1E
+end_define
+
+begin_define
+define|#
+directive|define
+name|BRGPHY_TEST1_TRIM_EN
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|BRGPHY_TEST1_CRC_EN
+value|0x8000
+end_define
 
 begin_define
 define|#
