@@ -1648,7 +1648,7 @@ name|msi_needed
 operator|=
 name|msi_count
 operator|=
-literal|5
+name|SGE_MSIX_COUNT
 expr_stmt|;
 if|if
 condition|(
