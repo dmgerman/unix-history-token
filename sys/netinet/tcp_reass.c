@@ -3689,6 +3689,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* 	 * When the socket is accepting connections (the INPCB is in LISTEN 	 * state) we look into the SYN cache if this is a new connection 	 * attempt or the completion of a previous one. 	 */
 if|if
 condition|(
 name|so
@@ -3713,17 +3714,12 @@ name|inc
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 name|inc
 operator|.
 name|inc_isipv6
 operator|=
 name|isipv6
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|isipv6
@@ -4051,64 +4047,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 		 * If it is from this socket, drop it, it must be forged. 		 * Don't bother responding if the destination was a broadcast. 		 */
-if|if
-condition|(
-name|th
-operator|->
-name|th_dport
-operator|==
-name|th
-operator|->
-name|th_sport
-condition|)
-block|{
-if|if
-condition|(
-name|isipv6
-condition|)
-block|{
-if|if
-condition|(
-name|IN6_ARE_ADDR_EQUAL
-argument_list|(
-operator|&
-name|ip6
-operator|->
-name|ip6_dst
-argument_list|,
-operator|&
-name|ip6
-operator|->
-name|ip6_src
-argument_list|)
-condition|)
-goto|goto
-name|drop
-goto|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|ip
-operator|->
-name|ip_dst
-operator|.
-name|s_addr
-operator|==
-name|ip
-operator|->
-name|ip_src
-operator|.
-name|s_addr
-condition|)
-goto|goto
-name|drop
-goto|;
-block|}
-block|}
-comment|/* 		 * RFC1122 4.2.3.10, p. 104: discard bcast/mcast SYN 		 * 		 * Note that it is quite possible to receive unicast 		 * link-layer packets with a broadcast IP address. Use 		 * in_broadcast() to find them. 		 */
+comment|/* 		 * Basic sanity checks on incoming SYN requests: 		 * 		 * Don't bother responding if the destination was a 		 * broadcast according to RFC1122 4.2.3.10, p. 104. 		 * 		 * If it is from this socket, drop it, it must be forged. 		 * 		 * Note that it is quite possible to receive unicast 		 * link-layer packets with a broadcast IP address. Use 		 * in_broadcast() to find them. 		 */
 if|if
 condition|(
 name|m
@@ -4129,6 +4068,35 @@ condition|(
 name|isipv6
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
+if|if
+condition|(
+name|th
+operator|->
+name|th_dport
+operator|==
+name|th
+operator|->
+name|th_sport
+operator|&&
+name|IN6_ARE_ADDR_EQUAL
+argument_list|(
+operator|&
+name|ip6
+operator|->
+name|ip6_dst
+argument_list|,
+operator|&
+name|ip6
+operator|->
+name|ip6_src
+argument_list|)
+condition|)
+goto|goto
+name|drop
+goto|;
 if|if
 condition|(
 name|IN6_IS_ADDR_MULTICAST
@@ -4150,9 +4118,36 @@ condition|)
 goto|goto
 name|drop
 goto|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|th
+operator|->
+name|th_dport
+operator|==
+name|th
+operator|->
+name|th_sport
+operator|&&
+name|ip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+operator|==
+name|ip
+operator|->
+name|ip_src
+operator|.
+name|s_addr
+condition|)
+goto|goto
+name|drop
+goto|;
 if|if
 condition|(
 name|IN_MULTICAST
@@ -4207,7 +4202,7 @@ goto|goto
 name|drop
 goto|;
 block|}
-comment|/* 		 * SYN appears to be valid; create compressed TCP state 		 * for syncache, or perform t/tcp connection. 		 */
+comment|/* 		 * SYN appears to be valid.  Create compressed TCP state 		 * for syncache. 		 */
 if|if
 condition|(
 name|so
@@ -4288,34 +4283,10 @@ condition|)
 goto|goto
 name|drop
 goto|;
-comment|/* XXX: does not happen */
-if|if
-condition|(
-name|so
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* 				 * Entry added to syncache, mbuf used to 				 * send SYN,ACK packet.  Everything unlocked 				 * already. 				 */
+comment|/* 			 * Entry added to syncache, mbuf used to 			 * send SYN-ACK packet.  Everything unlocked 			 * already. 			 */
 return|return;
 block|}
-name|panic
-argument_list|(
-literal|"T/TCP not supported at the moment"
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* T/TCP */
-comment|/* 			 * Segment passed TAO tests. 			 * XXX: Can't happen at the moment. 			 */
-block|INP_UNLOCK(inp); 			inp = sotoinpcb(so); 			INP_LOCK(inp); 			tp = intotcpcb(inp); 			tp->t_starttime = ticks; 			tp->t_state = TCPS_ESTABLISHED;
-comment|/* 			 * T/TCP logic: 			 * If there is a FIN or if there is data, then 			 * delay SYN,ACK(SYN) in the hope of piggy-backing 			 * it on a response segment.  Otherwise must send 			 * ACK now in case the other side is slow starting. 			 */
-block|if (thflags& TH_FIN || tlen != 0) 				tp->t_flags |= (TF_DELACK | TF_NEEDSYN); 			else 				tp->t_flags |= (TF_ACKNOW | TF_NEEDSYN); 			tiwin = th->th_win<< tp->snd_scale; 			tcpstat.tcps_connects++; 			soisconnected(so); 			goto trimthenstep6;
-endif|#
-directive|endif
-comment|/* T/TCP */
-block|}
+comment|/* Catch all.  Everthing that makes it down here is junk. */
 goto|goto
 name|drop
 goto|;
@@ -6025,13 +5996,6 @@ operator|=
 name|TCPS_SYN_RECEIVED
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* T/TCP */
-block|trimthenstep6:
-endif|#
-directive|endif
 name|KASSERT
 argument_list|(
 name|headlocked
