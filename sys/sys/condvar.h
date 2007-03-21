@@ -29,7 +29,7 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
-name|mtx
+name|lock_object
 struct_decl|;
 end_struct_decl
 
@@ -106,7 +106,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cv_wait
+name|_cv_wait
 parameter_list|(
 name|struct
 name|cv
@@ -114,16 +114,16 @@ modifier|*
 name|cvp
 parameter_list|,
 name|struct
-name|mtx
+name|lock_object
 modifier|*
-name|mp
+name|lock
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|cv_wait_unlock
+name|_cv_wait_unlock
 parameter_list|(
 name|struct
 name|cv
@@ -131,16 +131,16 @@ modifier|*
 name|cvp
 parameter_list|,
 name|struct
-name|mtx
+name|lock_object
 modifier|*
-name|mp
+name|lock
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|cv_wait_sig
+name|_cv_wait_sig
 parameter_list|(
 name|struct
 name|cv
@@ -148,16 +148,16 @@ modifier|*
 name|cvp
 parameter_list|,
 name|struct
-name|mtx
+name|lock_object
 modifier|*
-name|mp
+name|lock
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|cv_timedwait
+name|_cv_timedwait
 parameter_list|(
 name|struct
 name|cv
@@ -165,9 +165,9 @@ modifier|*
 name|cvp
 parameter_list|,
 name|struct
-name|mtx
+name|lock_object
 modifier|*
-name|mp
+name|lock
 parameter_list|,
 name|int
 name|timo
@@ -177,7 +177,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cv_timedwait_sig
+name|_cv_timedwait_sig
 parameter_list|(
 name|struct
 name|cv
@@ -185,9 +185,9 @@ modifier|*
 name|cvp
 parameter_list|,
 name|struct
-name|mtx
+name|lock_object
 modifier|*
-name|mp
+name|lock
 parameter_list|,
 name|int
 name|timo
@@ -221,6 +221,75 @@ name|pri
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|cv_wait
+parameter_list|(
+name|cvp
+parameter_list|,
+name|lock
+parameter_list|)
+define|\
+value|_cv_wait((cvp),&(lock)->lock_object)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cv_wait_unlock
+parameter_list|(
+name|cvp
+parameter_list|,
+name|lock
+parameter_list|)
+define|\
+value|_cv_wait_unlock((cvp),&(lock)->lock_object)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cv_wait_sig
+parameter_list|(
+name|cvp
+parameter_list|,
+name|lock
+parameter_list|)
+define|\
+value|_cv_wait_sig((cvp),&(lock)->lock_object)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cv_timedwait
+parameter_list|(
+name|cvp
+parameter_list|,
+name|lock
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|_cv_timedwait((cvp),&(lock)->lock_object, (timo))
+end_define
+
+begin_define
+define|#
+directive|define
+name|cv_timedwait_sig
+parameter_list|(
+name|cvp
+parameter_list|,
+name|lock
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|_cv_timedwait_sig((cvp),&(lock)->lock_object, (timo))
+end_define
 
 begin_define
 define|#
