@@ -2189,13 +2189,11 @@ name|void
 modifier|*
 name|ipgen
 parameter_list|,
-specifier|register
 name|struct
 name|tcphdr
 modifier|*
 name|th
 parameter_list|,
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -2211,7 +2209,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|tlen
 decl_stmt|;
