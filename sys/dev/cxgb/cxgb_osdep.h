@@ -216,6 +216,13 @@ name|CXGB_TX_CLEANUP_THRESHOLD
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|LOG_WARNING
+value|1
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
