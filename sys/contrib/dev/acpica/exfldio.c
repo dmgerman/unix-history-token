@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 1.116 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 1.128 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -141,7 +141,7 @@ name|RgnDesc
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
-literal|"ExSetupRegion"
+name|ExSetupRegion
 argument_list|,
 name|FieldDatumByteOffset
 argument_list|)
@@ -165,12 +165,12 @@ operator|!=
 name|ACPI_TYPE_REGION
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Needed Region, found type %X (%s)\n"
+literal|"Needed Region, found type %X (%s)"
 operator|,
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
@@ -227,6 +227,25 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Exit if Address/Length have been disallowed by the host OS */
+if|if
+condition|(
+name|RgnDesc
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|&
+name|AOPOBJ_INVALID
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_ILLEGAL_ADDRESS
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Exit now for SMBus address space, it has a non-linear address space      * and the request cannot be directly validated      */
 if|if
 condition|(
 name|RgnDesc
@@ -372,12 +391,12 @@ name|AccessByteWidth
 condition|)
 block|{
 comment|/*              * This is the case where the AccessType (AccWord, etc.) is wider              * than the region itself.  For example, a region of length one              * byte, and a field with Dword access specified.              */
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Field [%4.4s] access width (%d bytes) too large for region [%4.4s] (length %X)\n"
+literal|"Field [%4.4s] access width (%d bytes) too large for region [%4.4s] (length %X)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -413,12 +432,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*          * Offset rounded up to next multiple of field width          * exceeds region length, indicate an error          */
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Field [%4.4s] Base+Offset+Width %X+%X+%X is beyond end of region [%4.4s] (length %X)\n"
+literal|"Field [%4.4s] Base+Offset+Width %X+%X+%X is beyond end of region [%4.4s] (length %X)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -509,7 +528,7 @@ name|Address
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"ExAccessRegion"
+name|ExAccessRegion
 argument_list|)
 expr_stmt|;
 comment|/*      * Ensure that the region operands are fully evaluated and verify      * the validity of the request      */
@@ -599,7 +618,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|" Region [%s:%X], Width %X, ByteBase %X, Offset %X at %8.8X%8.8X\n"
+literal|" Region [%s:%X], Width %X, ByteBase %X, Offset %X at %p\n"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -630,10 +649,11 @@ name|BaseByteOffset
 operator|,
 name|FieldDatumByteOffset
 operator|,
-name|ACPI_FORMAT_UINT64
-argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|Address
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -675,12 +695,12 @@ operator|==
 name|AE_NOT_IMPLEMENTED
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Region %s(%X) not implemented\n"
+literal|"Region %s(%X) not implemented"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -708,10 +728,12 @@ operator|==
 name|AE_NOT_EXIST
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Region %s(%X) has no handler\n"
+name|AE_INFO
+operator|,
+literal|"Region %s(%X) has no handler"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -841,7 +863,7 @@ name|LocalValue
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
-literal|"ExFieldDatumIo"
+name|ExFieldDatumIo
 argument_list|,
 name|FieldDatumByteOffset
 argument_list|)
@@ -1245,10 +1267,12 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Wrong object type in field I/O %X\n"
+name|AE_INFO
+operator|,
+literal|"Wrong object type in field I/O %X"
 operator|,
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
@@ -1368,7 +1392,7 @@ name|CurrentValue
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
-literal|"ExWriteWithUpdateRule"
+name|ExWriteWithUpdateRule
 argument_list|,
 name|Mask
 argument_list|)
@@ -1491,12 +1515,12 @@ name|Mask
 expr_stmt|;
 break|break;
 default|default:
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"WriteWithUpdateRule: Unknown UpdateRule setting: %X\n"
+literal|"Unknown UpdateRule value: %X"
 operator|,
 operator|(
 name|ObjDesc
@@ -1625,7 +1649,7 @@ name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"ExExtractFromField"
+name|ExExtractFromField
 argument_list|)
 expr_stmt|;
 comment|/* Validate target buffer and clear it */
@@ -1643,12 +1667,12 @@ name|BitLength
 argument_list|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Field size %X (bits) is too large for buffer (%X)\n"
+literal|"Field size %X (bits) is too large for buffer (%X)"
 operator|,
 name|ObjDesc
 operator|->
@@ -1807,7 +1831,26 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Merge with previous datum if necessary */
+comment|/*          * Merge with previous datum if necessary.          *          * Note: Before the shift, check if the shift value will be larger than          * the integer size. If so, there is no need to perform the operation.          * This avoids the differences in behavior between different compilers          * concerning shift values larger than the target data width.          */
+if|if
+condition|(
+operator|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessBitWidth
+operator|-
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|StartFieldBitOffset
+operator|)
+operator|<
+name|ACPI_INTEGER_BIT_SIZE
+condition|)
+block|{
 name|MergedDatum
 operator||=
 name|RawDatum
@@ -1826,6 +1869,7 @@ operator|.
 name|StartFieldBitOffset
 operator|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|i
@@ -1977,6 +2021,9 @@ name|ACPI_INTEGER
 name|Mask
 decl_stmt|;
 name|ACPI_INTEGER
+name|WidthMask
+decl_stmt|;
+name|ACPI_INTEGER
 name|MergedDatum
 decl_stmt|;
 name|ACPI_INTEGER
@@ -2008,7 +2055,7 @@ name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"ExInsertIntoField"
+name|ExInsertIntoField
 argument_list|)
 expr_stmt|;
 comment|/* Validate input buffer */
@@ -2026,12 +2073,12 @@ name|BitLength
 argument_list|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Field size %X (bits) is too large for buffer (%X)\n"
+literal|"Field size %X (bits) is too large for buffer (%X)"
 operator|,
 name|ObjDesc
 operator|->
@@ -2049,9 +2096,41 @@ name|AE_BUFFER_OVERFLOW
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Compute the number of datums (access width data items) */
+comment|/*      * Create the bitmasks used for bit insertion.      * Note: This if/else is used to bypass compiler differences with the      * shift operator      */
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessBitWidth
+operator|==
+name|ACPI_INTEGER_BIT_SIZE
+condition|)
+block|{
+name|WidthMask
+operator|=
+name|ACPI_INTEGER_MAX
+expr_stmt|;
+block|}
+else|else
+block|{
+name|WidthMask
+operator|=
+name|ACPI_MASK_BITS_ABOVE
+argument_list|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessBitWidth
+argument_list|)
+expr_stmt|;
+block|}
 name|Mask
 operator|=
+name|WidthMask
+operator|&
 name|ACPI_MASK_BITS_BELOW
 argument_list|(
 name|ObjDesc
@@ -2061,6 +2140,7 @@ operator|.
 name|StartFieldBitOffset
 argument_list|)
 expr_stmt|;
+comment|/* Compute the number of datums (access width data items) */
 name|DatumCount
 operator|=
 name|ACPI_ROUND_UP_TO
@@ -2180,7 +2260,6 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Start new output datum by merging with previous input datum */
 name|FieldOffset
 operator|+=
 name|ObjDesc
@@ -2189,6 +2268,26 @@ name|CommonField
 operator|.
 name|AccessByteWidth
 expr_stmt|;
+comment|/*          * Start new output datum by merging with previous input datum          * if necessary.          *          * Note: Before the shift, check if the shift value will be larger than          * the integer size. If so, there is no need to perform the operation.          * This avoids the differences in behavior between different compilers          * concerning shift values larger than the target data width.          */
+if|if
+condition|(
+operator|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessBitWidth
+operator|-
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|StartFieldBitOffset
+operator|)
+operator|<
+name|ACPI_INTEGER_BIT_SIZE
+condition|)
+block|{
 name|MergedDatum
 operator|=
 name|RawDatum
@@ -2207,9 +2306,17 @@ operator|.
 name|StartFieldBitOffset
 operator|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|MergedDatum
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|Mask
 operator|=
-name|ACPI_INTEGER_MAX
+name|WidthMask
 expr_stmt|;
 if|if
 condition|(

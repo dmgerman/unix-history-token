@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmresrcl.c - "Large" Resource Descriptor disassembly  *              $Revision: 1.29 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dmresrcl.c - "Large" Resource Descriptor disassembly  *              $Revision: 1.37 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -51,15 +51,15 @@ name|AcpiDmAddressNames
 index|[]
 init|=
 block|{
-literal|"Address Space Granularity"
+literal|"Granularity"
 block|,
-literal|"Address Range Minimum"
+literal|"Range Minimum"
 block|,
-literal|"Address Range Maximum"
+literal|"Range Maximum"
 block|,
-literal|"Address Translation Offset"
+literal|"Translation Offset"
 block|,
-literal|"Address Length"
+literal|"Length"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -72,13 +72,13 @@ name|AcpiDmMemoryNames
 index|[]
 init|=
 block|{
-literal|"Address Range Minimum"
+literal|"Range Minimum"
 block|,
-literal|"Address Range Maximum"
+literal|"Range Maximum"
 block|,
-literal|"Address Alignment"
+literal|"Alignment"
 block|,
-literal|"Address Length"
+literal|"Length"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -276,13 +276,12 @@ literal|16
 case|:
 name|AcpiDmDumpInteger16
 argument_list|(
-operator|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT16
-operator|*
-operator|)
+argument_list|,
 name|Source
-operator|)
+argument_list|)
 index|[
 name|i
 index|]
@@ -299,13 +298,12 @@ literal|32
 case|:
 name|AcpiDmDumpInteger32
 argument_list|(
-operator|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT32
-operator|*
-operator|)
+argument_list|,
 name|Source
-operator|)
+argument_list|)
 index|[
 name|i
 index|]
@@ -325,7 +323,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDm  *  * PARAMETERS:  Source              - Pointer to the contiguous data fields  *              Type                - 16, 32, or 64 (bit)  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode fields common to address descriptors  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmAddressFields  *  * PARAMETERS:  Source              - Pointer to the contiguous data fields  *              Type                - 16, 32, or 64 (bit)  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode fields common to address descriptors  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -383,13 +381,12 @@ literal|16
 case|:
 name|AcpiDmDumpInteger16
 argument_list|(
-operator|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT16
-operator|*
-operator|)
+argument_list|,
 name|Source
-operator|)
+argument_list|)
 index|[
 name|i
 index|]
@@ -406,13 +403,12 @@ literal|32
 case|:
 name|AcpiDmDumpInteger32
 argument_list|(
-operator|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT32
-operator|*
-operator|)
+argument_list|,
 name|Source
-operator|)
+argument_list|)
 index|[
 name|i
 index|]
@@ -429,13 +425,12 @@ literal|64
 case|:
 name|AcpiDmDumpInteger64
 argument_list|(
-operator|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT64
-operator|*
-operator|)
+argument_list|,
 name|Source
-operator|)
+argument_list|)
 index|[
 name|i
 index|]
@@ -640,6 +635,8 @@ argument_list|,
 name|AcpiGbl_WordDecode
 index|[
 name|ResourceType
+operator|&
+literal|0x3
 index|]
 argument_list|)
 expr_stmt|;
@@ -678,7 +675,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" %s,"
 argument_list|,
-name|AcpiGbl_RNGDecode
+name|AcpiGbl_RngDecode
 index|[
 name|SpecificFlags
 operator|&
@@ -777,7 +774,7 @@ literal|1
 operator|)
 index|]
 argument_list|,
-name|AcpiGbl_DECDecode
+name|AcpiGbl_DecDecode
 index|[
 operator|(
 name|Flags
@@ -862,7 +859,7 @@ operator|>>
 literal|3
 index|]
 argument_list|,
-name|AcpiGbl_DECDecode
+name|AcpiGbl_DecDecode
 index|[
 operator|(
 name|Flags
@@ -894,7 +891,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|", %s"
 argument_list|,
-name|AcpiGbl_TTPDecode
+name|AcpiGbl_TtpDecode
 index|[
 operator|(
 name|SpecificFlags
@@ -918,7 +915,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|", %s"
 argument_list|,
-name|AcpiGbl_TRSDecode
+name|AcpiGbl_TrsDecode
 index|[
 operator|(
 name|SpecificFlags
@@ -963,7 +960,7 @@ literal|1
 operator|)
 index|]
 argument_list|,
-name|AcpiGbl_DECDecode
+name|AcpiGbl_DecDecode
 index|[
 operator|(
 name|Flags
@@ -996,7 +993,7 @@ operator|>>
 literal|3
 index|]
 argument_list|,
-name|AcpiGbl_MEMDecode
+name|AcpiGbl_MemDecode
 index|[
 operator|(
 name|SpecificFlags
@@ -1007,7 +1004,7 @@ operator|>>
 literal|1
 index|]
 argument_list|,
-name|AcpiGbl_RWDecode
+name|AcpiGbl_RwDecode
 index|[
 operator|(
 name|SpecificFlags
@@ -1037,7 +1034,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|", %s, %s"
 argument_list|,
-name|AcpiGbl_MTPDecode
+name|AcpiGbl_MtpDecode
 index|[
 operator|(
 name|SpecificFlags
@@ -1048,7 +1045,7 @@ operator|>>
 literal|3
 index|]
 argument_list|,
-name|AcpiGbl_TTPDecode
+name|AcpiGbl_TtpDecode
 index|[
 operator|(
 name|SpecificFlags
@@ -1110,7 +1107,7 @@ block|{
 comment|/* The two optional fields are not used */
 name|AcpiOsPrintf
 argument_list|(
-literal|",,"
+literal|",, "
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1118,15 +1115,14 @@ block|}
 comment|/* Get a pointer to the ResourceSource */
 name|AmlResourceSource
 operator|=
-operator|(
-operator|(
+name|ACPI_ADD_PTR
+argument_list|(
 name|UINT8
-operator|*
-operator|)
+argument_list|,
 name|Resource
-operator|)
-operator|+
+argument_list|,
 name|MinimumTotalLength
+argument_list|)
 expr_stmt|;
 comment|/*      * Always emit the ResourceSourceIndex (Byte)      *      * NOTE: Some ASL compilers always create a 0 byte (in the AML) for the      * Index even if the String does not exist. Although this is in violation      * of the ACPI specification, it is very important to emit ASL code that      * can be compiled back to the identical AML. There may be fields and/or      * indexes into the resource template buffer that are compiled to absolute      * offsets, and these will be broken if the AML length is changed.      */
 name|AcpiOsPrintf
@@ -1177,7 +1173,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|","
+literal|", "
 argument_list|)
 expr_stmt|;
 block|}
@@ -1246,6 +1242,10 @@ argument_list|)
 argument_list|,
 name|Length
 argument_list|)
+expr_stmt|;
+comment|/* Insert a descriptor name */
+name|AcpiDmDescriptorName
+argument_list|()
 expr_stmt|;
 comment|/* Type-specific flags */
 name|AcpiDmAddressFlags
@@ -1325,6 +1325,10 @@ argument_list|,
 name|Length
 argument_list|)
 expr_stmt|;
+comment|/* Insert a descriptor name */
+name|AcpiDmDescriptorName
+argument_list|()
+expr_stmt|;
 comment|/* Type-specific flags */
 name|AcpiDmAddressFlags
 argument_list|(
@@ -1403,6 +1407,10 @@ argument_list|,
 name|Length
 argument_list|)
 expr_stmt|;
+comment|/* Insert a descriptor name */
+name|AcpiDmDescriptorName
+argument_list|()
+expr_stmt|;
 comment|/* Type-specific flags */
 name|AcpiDmAddressFlags
 argument_list|(
@@ -1480,7 +1488,7 @@ argument_list|,
 literal|"Type-Specific Attributes"
 argument_list|)
 expr_stmt|;
-comment|/* Type-specific flags */
+comment|/* Insert a descriptor name */
 name|AcpiDmIndent
 argument_list|(
 name|Level
@@ -1488,6 +1496,10 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+name|AcpiDmDescriptorName
+argument_list|()
+expr_stmt|;
+comment|/* Type-specific flags */
 name|AcpiDmAddressFlags
 argument_list|(
 name|Resource
@@ -1530,7 +1542,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Memory24 (%s,\n"
 argument_list|,
-name|AcpiGbl_RWDecode
+name|AcpiGbl_RwDecode
 index|[
 name|Resource
 operator|->
@@ -1557,12 +1569,16 @@ argument_list|,
 name|Level
 argument_list|)
 expr_stmt|;
+comment|/* Insert a descriptor name */
 name|AcpiDmIndent
 argument_list|(
 name|Level
 operator|+
 literal|1
 argument_list|)
+expr_stmt|;
+name|AcpiDmDescriptorName
+argument_list|()
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
@@ -1601,7 +1617,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Memory32 (%s,\n"
 argument_list|,
-name|AcpiGbl_RWDecode
+name|AcpiGbl_RwDecode
 index|[
 name|Resource
 operator|->
@@ -1628,12 +1644,16 @@ argument_list|,
 name|Level
 argument_list|)
 expr_stmt|;
+comment|/* Insert a descriptor name */
 name|AcpiDmIndent
 argument_list|(
 name|Level
 operator|+
 literal|1
 argument_list|)
+expr_stmt|;
+name|AcpiDmDescriptorName
+argument_list|()
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
@@ -1672,7 +1692,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Memory32Fixed (%s,\n"
 argument_list|,
-name|AcpiGbl_RWDecode
+name|AcpiGbl_RwDecode
 index|[
 name|Resource
 operator|->
@@ -1720,12 +1740,16 @@ argument_list|,
 literal|"Address Length"
 argument_list|)
 expr_stmt|;
+comment|/* Insert a descriptor name */
 name|AcpiDmIndent
 argument_list|(
 name|Level
 operator|+
 literal|1
 argument_list|)
+expr_stmt|;
+name|AcpiDmDescriptorName
+argument_list|()
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
@@ -1793,7 +1817,7 @@ name|GenericReg
 operator|.
 name|BitWidth
 argument_list|,
-literal|"Register Bit Width"
+literal|"Bit Width"
 argument_list|)
 expr_stmt|;
 name|AcpiDmIndent
@@ -1811,7 +1835,7 @@ name|GenericReg
 operator|.
 name|BitOffset
 argument_list|,
-literal|"Register Bit Offset"
+literal|"Bit Offset"
 argument_list|)
 expr_stmt|;
 name|AcpiDmIndent
@@ -1829,10 +1853,17 @@ name|GenericReg
 operator|.
 name|Address
 argument_list|,
-literal|"Register Address"
+literal|"Address"
 argument_list|)
 expr_stmt|;
 comment|/* Optional field for ACPI 3.0 */
+name|AcpiDmIndent
+argument_list|(
+name|Level
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Resource
@@ -1842,16 +1873,9 @@ operator|.
 name|AccessSize
 condition|)
 block|{
-name|AcpiDmIndent
-argument_list|(
-name|Level
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"0x%2.2X                // %s\n"
+literal|"0x%2.2X,               // %s\n"
 argument_list|,
 name|Resource
 operator|->
@@ -1862,13 +1886,25 @@ argument_list|,
 literal|"Access Size"
 argument_list|)
 expr_stmt|;
-block|}
 name|AcpiDmIndent
 argument_list|(
 name|Level
 operator|+
 literal|1
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|","
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* DescriptorName was added for ACPI 3.0+ */
+name|AcpiDmDescriptorName
+argument_list|()
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
@@ -1922,7 +1958,7 @@ literal|1
 operator|)
 index|]
 argument_list|,
-name|AcpiGbl_HEDecode
+name|AcpiGbl_HeDecode
 index|[
 operator|(
 name|Resource
@@ -1937,7 +1973,7 @@ operator|&
 literal|1
 index|]
 argument_list|,
-name|AcpiGbl_LLDecode
+name|AcpiGbl_LlDecode
 index|[
 operator|(
 name|Resource
@@ -1952,7 +1988,7 @@ operator|&
 literal|1
 index|]
 argument_list|,
-name|AcpiGbl_SHRDecode
+name|AcpiGbl_ShrDecode
 index|[
 operator|(
 name|Resource
@@ -2000,12 +2036,16 @@ operator|.
 name|ResourceLength
 argument_list|)
 expr_stmt|;
-comment|/* Dump the interrupt list */
+comment|/* Insert a descriptor name */
+name|AcpiDmDescriptorName
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|")\n"
 argument_list|)
 expr_stmt|;
+comment|/* Dump the interrupt list */
 name|AcpiDmIndent
 argument_list|(
 name|Level
@@ -2095,7 +2135,7 @@ name|UINT32
 name|Level
 parameter_list|)
 block|{
-comment|/* Dump descriptor name */
+comment|/* Dump macro name */
 name|AcpiDmIndent
 argument_list|(
 name|Level
@@ -2103,9 +2143,18 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Vendor%s          // Length = 0x%.2X\n"
+literal|"Vendor%s ("
 argument_list|,
 name|Name
+argument_list|)
+expr_stmt|;
+comment|/* Insert a descriptor name */
+name|AcpiDmDescriptorName
+argument_list|()
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|")      // Length = 0x%.2X\n"
 argument_list|,
 name|Length
 argument_list|)
@@ -2166,19 +2215,18 @@ parameter_list|)
 block|{
 name|AcpiDmVendorCommon
 argument_list|(
-literal|"Long () "
+literal|"Long "
 argument_list|,
-operator|(
-operator|(
+name|ACPI_ADD_PTR
+argument_list|(
 name|UINT8
-operator|*
-operator|)
+argument_list|,
 name|Resource
-operator|)
-operator|+
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|AML_RESOURCE_LARGE_HEADER
+argument_list|)
 argument_list|)
 argument_list|,
 name|Length

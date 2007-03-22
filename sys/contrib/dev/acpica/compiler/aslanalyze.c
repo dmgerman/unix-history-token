@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: aslanalyze.c - check for semantic errors  *              $Revision: 1.96 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: aslanalyze.c - check for semantic errors  *              $Revision: 1.115 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -187,8 +187,150 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|BOOLEAN
+name|AnIsInternalMethod
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|UINT32
+name|AnGetInternalMethodReturnType
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AnMapArgTypeToBtype  *  * PARAMETERS:  ArgType      - The ARGI required type(s) for this argument,  *                             from the opcode info table  *  * RETURN:      The corresponding Bit-encoded types  *  * DESCRIPTION: Convert an encoded ARGI required argument type code into a  *              bitfield type code.  Implements the implicit source conversion  *              rules.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AnIsInternalMethod  *  * PARAMETERS:  Op              - Current op  *  * RETURN:      Boolean  *  * DESCRIPTION: Check for an internal control method.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|BOOLEAN
+name|AnIsInternalMethod
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+operator|!
+name|ACPI_STRCMP
+argument_list|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+argument_list|,
+literal|"\\_OSI"
+argument_list|)
+operator|)
+operator|||
+operator|(
+operator|!
+name|ACPI_STRCMP
+argument_list|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+argument_list|,
+literal|"_OSI"
+argument_list|)
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AnGetInternalMethodReturnType  *  * PARAMETERS:  Op              - Current op  *  * RETURN:      Btype  *  * DESCRIPTION: Get the return type of an internal method  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|UINT32
+name|AnGetInternalMethodReturnType
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+operator|!
+name|ACPI_STRCMP
+argument_list|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+argument_list|,
+literal|"\\_OSI"
+argument_list|)
+operator|)
+operator|||
+operator|(
+operator|!
+name|ACPI_STRCMP
+argument_list|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+argument_list|,
+literal|"_OSI"
+argument_list|)
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|ACPI_BTYPE_STRING
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AnMapArgTypeToBtype  *  * PARAMETERS:  ArgType      - The ARGI required type(s) for this argument,  *                             from the opcode info table  *  * RETURN:      The corresponding Bit-encoded types  *  * DESCRIPTION: Convert an encoded ARGI required argument type code into a  *              bitfield type code. Implements the implicit source conversion  *              rules.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -355,11 +497,14 @@ name|ACPI_BTYPE_REFERENCE
 operator|)
 return|;
 case|case
-name|ARGI_REGION_OR_FIELD
+name|ARGI_REGION_OR_BUFFER
 case|:
+comment|/* Used by Load() only. Allow buffers in addition to regions/fields */
 return|return
 operator|(
 name|ACPI_BTYPE_REGION
+operator||
+name|ACPI_BTYPE_BUFFER
 operator||
 name|ACPI_BTYPE_FIELD_UNIT
 operator|)
@@ -394,7 +539,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AnMapEtypeToBtype  *  * PARAMETERS:  Etype           - Encoded ACPI Type  *  * RETURN:      Btype corresponding to the Etype  *  * DESCRIPTION: Convert an encoded ACPI type to a bitfield type applying the  *              operand conversion rules.  In other words, returns the type(s)  *              this Etype is implicitly converted to during interpretation.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AnMapEtypeToBtype  *  * PARAMETERS:  Etype           - Encoded ACPI Type  *  * RETURN:      Btype corresponding to the Etype  *  * DESCRIPTION: Convert an encoded ACPI type to a bitfield type applying the  *              operand conversion rules. In other words, returns the type(s)  *              this Etype is implicitly converted to during interpretation.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -872,7 +1017,7 @@ name|ASL_MSG_COMPILER_INTERNAL
 argument_list|,
 name|Op
 argument_list|,
-name|NULL
+literal|"could not map type"
 argument_list|)
 expr_stmt|;
 block|}
@@ -904,13 +1049,33 @@ operator|!
 name|ReferencedNode
 condition|)
 block|{
-name|printf
+comment|/* Check for an internal method */
+if|if
+condition|(
+name|AnIsInternalMethod
 argument_list|(
-literal|"No back ptr to Op: type %X\n"
+name|Op
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|AnGetInternalMethodReturnType
+argument_list|(
+name|Op
+argument_list|)
+operator|)
+return|;
+block|}
+name|AslError
+argument_list|(
+name|ASL_ERROR
 argument_list|,
-name|Node
-operator|->
-name|Type
+name|ASL_MSG_COMPILER_INTERNAL
+argument_list|,
+name|Op
+argument_list|,
+literal|"null Op pointer"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1048,8 +1213,7 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
-name|ACPI_STRNCMP
+name|ACPI_COMPARE_NAME
 argument_list|(
 name|Name
 argument_list|,
@@ -1059,8 +1223,6 @@ name|i
 index|]
 operator|.
 name|Name
-argument_list|,
-name|ACPI_NAME_SIZE
 argument_list|)
 condition|)
 block|{
@@ -1269,7 +1431,7 @@ name|ACPI_COMPILER_RESERVED_NAME
 operator|)
 return|;
 block|}
-comment|/*      * The name didn't match any of the known reserved names.  Flag it as a      * warning, since the entire namespace starting with an underscore is      * reserved by the ACPI spec.      */
+comment|/*      * The name didn't match any of the known reserved names. Flag it as a      * warning, since the entire namespace starting with an underscore is      * reserved by the ACPI spec.      */
 name|AslError
 argument_list|(
 name|ASL_WARNING
@@ -1364,7 +1526,7 @@ name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|" %s requires %d"
+literal|"%s requires %d"
 argument_list|,
 name|Op
 operator|->
@@ -1411,7 +1573,7 @@ name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|" %s requires %d"
+literal|"%s requires %d"
 argument_list|,
 name|ReservedMethods
 index|[
@@ -1685,7 +1847,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AnMethodAnalysisWalkBegin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback for the analysis walk.  Check methods for :  *              1) Initialized local variables  *              2) Valid arguments  *              3) Return types  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AnMethodAnalysisWalkBegin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback for the analysis walk. Check methods for:  *              1) Initialized local variables  *              2) Valid arguments  *              3) Return types  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1761,11 +1923,6 @@ name|ActualArgs
 init|=
 literal|0
 decl_stmt|;
-name|ACPI_FUNCTION_NAME
-argument_list|(
-literal|"AnMethodAnalysisWalkBegin"
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|Op
@@ -2186,12 +2343,12 @@ name|MethodInfo
 condition|)
 block|{
 comment|/*              * Probably was an error in the method declaration,              * no additional error here              */
-name|ACPI_DEBUG_PRINT
+name|ACPI_WARNING
 argument_list|(
 operator|(
-name|ACPI_DB_WARN
+name|AE_INFO
 operator|,
-literal|"%p, No parent method\n"
+literal|"%p, No parent method"
 operator|,
 name|Op
 operator|)
@@ -2326,12 +2483,12 @@ name|MethodInfo
 condition|)
 block|{
 comment|/*              * Probably was an error in the method declaration,              * no additional error here              */
-name|ACPI_DEBUG_PRINT
+name|ACPI_WARNING
 argument_list|(
 operator|(
-name|ACPI_DB_WARN
+name|AE_INFO
 operator|,
-literal|"%p, No parent method\n"
+literal|"%p, No parent method"
 operator|,
 name|Op
 operator|)
@@ -2472,12 +2629,12 @@ name|MethodInfo
 condition|)
 block|{
 comment|/*              * Probably was an error in the method declaration,              * no additional error here              */
-name|ACPI_DEBUG_PRINT
+name|ACPI_WARNING
 argument_list|(
 operator|(
-name|ACPI_DB_WARN
+name|AE_INFO
 operator|,
-literal|"%p, No parent method\n"
+literal|"%p, No parent method"
 operator|,
 name|Op
 operator|)
@@ -2899,7 +3056,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AnLastStatementIsReturn  *  * PARAMETERS:  Op            - A method parse node  *  * RETURN:      TRUE if last statement is an ASL RETURN.  False otherwise  *  * DESCRIPTION: Walk down the list of top level statements within a method  *              to find the last one.  Check if that last statement is in  *              fact a RETURN statement.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AnLastStatementIsReturn  *  * PARAMETERS:  Op            - A method parse node  *  * RETURN:      TRUE if last statement is an ASL RETURN. False otherwise  *  * DESCRIPTION: Walk down the list of top level statements within a method  *              to find the last one. Check if that last statement is in  *              fact a RETURN statement.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2970,7 +3127,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AnMethodAnalysisWalkEnd  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback for analysis walk.  Complete method  *              return analysis.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AnMethodAnalysisWalkEnd  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback for analysis walk. Complete method  *              return analysis.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -3108,14 +3265,14 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/*              * No return statement, and execution can possibly exit              * via this path.  This is equivalent to Return ()              */
+comment|/*              * No return statement, and execution can possibly exit              * via this path. This is equivalent to Return ()              */
 name|MethodInfo
 operator|->
 name|NumReturnNoValue
 operator|++
 expr_stmt|;
 block|}
-comment|/*          * Check for case where some return statements have a return value          * and some do not.  Exit without a return statement is a return with          * no value          */
+comment|/*          * Check for case where some return statements have a return value          * and some do not. Exit without a return statement is a return with          * no value          */
 if|if
 condition|(
 name|MethodInfo
@@ -3143,7 +3300,7 @@ name|ExternalName
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * If there are any RETURN() statements with no value, or there is a          * control path that allows the method to exit without a return value,          * we mark the method as a method that does not return a value.  This          * knowledge can be used to check method invocations that expect a          * returned value.          */
+comment|/*          * If there are any RETURN() statements with no value, or there is a          * control path that allows the method to exit without a return value,          * we mark the method as a method that does not return a value. This          * knowledge can be used to check method invocations that expect a          * returned value.          */
 if|if
 condition|(
 name|MethodInfo
@@ -3187,7 +3344,7 @@ argument_list|,
 name|MethodInfo
 argument_list|)
 expr_stmt|;
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|MethodInfo
 argument_list|)
@@ -3220,7 +3377,7 @@ name|MethodInfo
 operator|->
 name|Op
 expr_stmt|;
-comment|/*          * If there is a peer node after the return statement, then this          * node is unreachable code -- i.e., it won't be executed because of          *  thepreceeding Return() statement.          */
+comment|/*          * If there is a peer node after the return statement, then this          * node is unreachable code -- i.e., it won't be executed because of          * the preceeding Return() statement.          */
 if|if
 condition|(
 name|Op
@@ -3285,7 +3442,7 @@ name|PARSEOP_ELSE
 operator|)
 condition|)
 block|{
-comment|/*              * This IF has a corresponding ELSE.  The IF block has no exit,              * (it contains an unconditional Return)              * mark the ELSE block to remember this fact.              */
+comment|/*              * This IF has a corresponding ELSE. The IF block has no exit,              * (it contains an unconditional Return)              * mark the ELSE block to remember this fact.              */
 name|Op
 operator|->
 name|Asl
@@ -3326,7 +3483,7 @@ name|NODE_IF_HAS_NO_EXIT
 operator|)
 condition|)
 block|{
-comment|/*              * This ELSE block has no exit and the corresponding IF block              * has no exit either.  Therefore, the parent node has no exit.              */
+comment|/*              * This ELSE block has no exit and the corresponding IF block              * has no exit either. Therefore, the parent node has no exit.              */
 name|Op
 operator|->
 name|Asl
@@ -3412,7 +3569,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AnMethodTypingWalkEnd  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback for typing walk.  Complete method  *              return analysis.  Check methods for :  *              1) Initialized local variables  *              2) Valid arguments  *              3) Return types  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AnMethodTypingWalkEnd  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback for typing walk. Complete the method  *              return analysis. Check methods for:  *              1) Initialized local variables  *              2) Valid arguments  *              3) Return types  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -3521,7 +3678,29 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/*                  * The method is untyped at this time (typically a forward                  *  reference). We must recursively type the method here                  */
+comment|/*                  * The called method is untyped at this time (typically a                  * forward reference).                  *                  * Check for a recursive method call first.                  */
+if|if
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParentMethod
+operator|!=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|->
+name|Asl
+operator|.
+name|Node
+operator|->
+name|Op
+condition|)
+block|{
+comment|/* We must type the method here */
 name|TrWalkParseTree
 argument_list|(
 name|Op
@@ -3557,7 +3736,8 @@ name|Child
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Returns a value, get it's type */
+block|}
+comment|/* Returns a value, save the value type */
 if|if
 condition|(
 name|Op
@@ -3766,7 +3946,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AnOperandTypecheckWalkBegin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback for the analysis walk.  Check methods for:  *              1) Initialized local variables  *              2) Valid arguments  *              3) Return types  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AnOperandTypecheckWalkBegin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback for the analysis walk. Check methods for:  *              1) Initialized local variables  *              2) Valid arguments  *              3) Return types  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -3792,7 +3972,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AnOperandTypecheckWalkEnd  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback for analysis walk.  Complete method  *              return analysis.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AnOperandTypecheckWalkEnd  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback for analysis walk. Complete method  *              return analysis.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -3959,18 +4139,12 @@ operator|==
 name|PARSEOP_METHODCALL
 condition|)
 block|{
+comment|/* Check for an internal method */
 if|if
 condition|(
-operator|!
-name|ACPI_STRCMP
+name|AnIsInternalMethod
 argument_list|(
 name|ArgOp
-operator|->
-name|Asl
-operator|.
-name|ExternalName
-argument_list|,
-literal|"\\_OSI"
 argument_list|)
 condition|)
 block|{
@@ -4417,6 +4591,20 @@ operator|==
 name|PARSEOP_METHODCALL
 condition|)
 block|{
+if|if
+condition|(
+name|AnIsInternalMethod
+argument_list|(
+name|ArgOp
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
 comment|/* Check a method call for a valid return value */
 name|AnCheckMethodReturnValue
 argument_list|(
@@ -4511,7 +4699,122 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AnOtherSemanticAnalysisWalkBegin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback for the analysis walk.  Check methods for :  *              1) Initialized local variables  *              2) Valid arguments  *              3) Return types  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AnIsResultUsed  *  * PARAMETERS:  Op              - Parent op for the operator  *  * RETURN:      TRUE if result from this operation is actually consumed  *  * DESCRIPTION: Determine if the function result value from an operator is  *              used.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|BOOLEAN
+name|AnIsResultUsed
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+block|{
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Parent
+decl_stmt|;
+switch|switch
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+condition|)
+block|{
+case|case
+name|PARSEOP_INCREMENT
+case|:
+case|case
+name|PARSEOP_DECREMENT
+case|:
+comment|/* These are standalone operators, no return value */
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+default|default:
+break|break;
+block|}
+comment|/* Examine parent to determine if the return value is used */
+name|Parent
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+expr_stmt|;
+switch|switch
+condition|(
+name|Parent
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+condition|)
+block|{
+comment|/* If/While - check if the operator is the predicate */
+case|case
+name|PARSEOP_IF
+case|:
+case|case
+name|PARSEOP_WHILE
+case|:
+comment|/* First child is the predicate */
+if|if
+condition|(
+name|Parent
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|==
+name|Op
+condition|)
+block|{
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+comment|/* Not used if one of these is the parent */
+case|case
+name|PARSEOP_METHOD
+case|:
+case|case
+name|PARSEOP_DEFINITIONBLOCK
+case|:
+case|case
+name|PARSEOP_ELSE
+case|:
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+default|default:
+comment|/* Any other type of parent means that the result is used */
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AnOtherSemanticAnalysisWalkBegin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback for the analysis walk. Checks for  *              miscellaneous issues in the code.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -4530,6 +4833,405 @@ modifier|*
 name|Context
 parameter_list|)
 block|{
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ArgNode
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|PrevArgNode
+init|=
+name|NULL
+decl_stmt|;
+specifier|const
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
+decl_stmt|;
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
+argument_list|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+argument_list|)
+expr_stmt|;
+comment|/*      * Determine if an execution class operator actually does something by      * checking if it has a target and/or the function return value is used.      * (Target is optional, so a standalone statement can actually do nothing.)      */
+if|if
+condition|(
+operator|(
+name|OpInfo
+operator|->
+name|Class
+operator|==
+name|AML_CLASS_EXECUTE
+operator|)
+operator|&&
+operator|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_HAS_RETVAL
+operator|)
+operator|&&
+operator|(
+operator|!
+name|AnIsResultUsed
+argument_list|(
+name|Op
+argument_list|)
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_HAS_TARGET
+condition|)
+block|{
+comment|/*              * Find the target node, it is always the last child. If the traget              * is not specified in the ASL, a default node of type Zero was              * created by the parser.              */
+name|ArgNode
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+while|while
+condition|(
+name|ArgNode
+operator|->
+name|Asl
+operator|.
+name|Next
+condition|)
+block|{
+name|PrevArgNode
+operator|=
+name|ArgNode
+expr_stmt|;
+name|ArgNode
+operator|=
+name|ArgNode
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+block|}
+comment|/* Divide() is the only weird case, it has two targets */
+if|if
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_DIVIDE_OP
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|ArgNode
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_ZERO
+operator|)
+operator|&&
+operator|(
+name|PrevArgNode
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_ZERO
+operator|)
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_WARNING
+argument_list|,
+name|ASL_MSG_RESULT_NOT_USED
+argument_list|,
+name|Op
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|ArgNode
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_ZERO
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_WARNING
+argument_list|,
+name|ASL_MSG_RESULT_NOT_USED
+argument_list|,
+name|Op
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/*              * Has no target and the result is not used. Only a couple opcodes              * can have this combination.              */
+switch|switch
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+condition|)
+block|{
+case|case
+name|PARSEOP_ACQUIRE
+case|:
+case|case
+name|PARSEOP_WAIT
+case|:
+break|break;
+default|default:
+name|AslError
+argument_list|(
+name|ASL_WARNING
+argument_list|,
+name|ASL_MSG_RESULT_NOT_USED
+argument_list|,
+name|Op
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+comment|/*      * Semantic checks for individual ASL operators      */
+switch|switch
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+condition|)
+block|{
+case|case
+name|PARSEOP_ACQUIRE
+case|:
+case|case
+name|PARSEOP_WAIT
+case|:
+comment|/*          * Emit a warning if the timeout parameter for these operators is not          * ACPI_WAIT_FOREVER, and the result value from the operator is not          * checked, meaning that a timeout could happen, but the code          * would not know about it.          */
+comment|/* First child is the namepath, 2nd child is timeout */
+name|ArgNode
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+name|ArgNode
+operator|=
+name|ArgNode
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+comment|/*          * Check for the WAIT_FOREVER case - defined by the ACPI spec to be          * 0xFFFF or greater          */
+if|if
+condition|(
+operator|(
+operator|(
+name|ArgNode
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_WORDCONST
+operator|)
+operator|||
+operator|(
+name|ArgNode
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_INTEGER
+operator|)
+operator|)
+operator|&&
+operator|(
+name|ArgNode
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+operator|>=
+operator|(
+name|ACPI_INTEGER
+operator|)
+name|ACPI_WAIT_FOREVER
+operator|)
+condition|)
+block|{
+break|break;
+block|}
+comment|/*          * The operation could timeout. If the return value is not used          * (indicates timeout occurred), issue a warning          */
+if|if
+condition|(
+operator|!
+name|AnIsResultUsed
+argument_list|(
+name|Op
+argument_list|)
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_WARNING
+argument_list|,
+name|ASL_MSG_TIMEOUT
+argument_list|,
+name|ArgNode
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|PARSEOP_CREATEFIELD
+case|:
+comment|/*          * Check for a zero Length (NumBits) operand. NumBits is the 3rd operand          */
+name|ArgNode
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+name|ArgNode
+operator|=
+name|ArgNode
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+name|ArgNode
+operator|=
+name|ArgNode
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ArgNode
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_ZERO
+operator|)
+operator|||
+operator|(
+operator|(
+name|ArgNode
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_INTEGER
+operator|)
+operator|&&
+operator|(
+name|ArgNode
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+operator|==
+literal|0
+operator|)
+operator|)
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_NON_ZERO
+argument_list|,
+name|ArgNode
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+default|default:
+break|break;
+block|}
 return|return
 name|AE_OK
 return|;
@@ -4537,7 +5239,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AnOtherSemanticAnalysisWalkEnd  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback for analysis walk.  Complete method  *              return analysis.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AnOtherSemanticAnalysisWalkEnd  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback for analysis walk. Complete method  *              return analysis.  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsxfeval - Public interfaces to the ACPI subsystem  *                         ACPI Object evaluation interfaces  *              $Revision: 1.17 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsxfeval - Public interfaces to the ACPI subsystem  *                         ACPI Object evaluation interfaces  *              $Revision: 1.30 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -81,7 +81,7 @@ name|FALSE
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"AcpiEvaluateObjectTyped"
+name|AcpiEvaluateObjectTyped
 argument_list|)
 expr_stmt|;
 comment|/* Return buffer must be valid */
@@ -163,12 +163,12 @@ literal|0
 condition|)
 block|{
 comment|/* Error because caller specifically asked for a return value */
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"No return value\n"
+literal|"No return value"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -203,12 +203,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Return object type does not match requested type */
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Incorrect return type [%s] requested [%s]\n"
+literal|"Incorrect return type [%s] requested [%s]"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -266,6 +266,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiEvaluateObjectTyped
+argument_list|)
+end_macro
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvaluateObject  *  * PARAMETERS:  Handle              - Object handle (optional)  *              Pathname            - Object pathname (optional)  *              ExternalParams      - List of parameters to pass to method,  *                                    terminated by NULL.  May be NULL  *                                    if no parameters are being passed.  *              ReturnBuffer        - Where to put method's return value (if  *                                    any).  If NULL, no value is returned.  *  * RETURN:      Status  *  * DESCRIPTION: Find and evaluate the given object, passing the given  *              parameters if necessary.  One of "Handle" or "Pathname" must  *              be valid (non-null)  *  ******************************************************************************/
 end_comment
@@ -292,10 +299,8 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_STATUS
-name|Status2
-decl_stmt|;
-name|ACPI_PARAMETER_INFO
+name|ACPI_EVALUATE_INFO
+modifier|*
 name|Info
 decl_stmt|;
 name|ACPI_SIZE
@@ -306,34 +311,71 @@ name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"AcpiEvaluateObject"
+name|AcpiEvaluateObject
 argument_list|)
 expr_stmt|;
+comment|/* Allocate and initialize the evaluation information block */
 name|Info
-operator|.
-name|Node
 operator|=
-name|Handle
+name|ACPI_ALLOCATE_ZEROED
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ACPI_EVALUATE_INFO
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Info
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
+name|Info
+operator|->
+name|Pathname
+operator|=
+name|Pathname
 expr_stmt|;
 name|Info
-operator|.
-name|Parameters
-operator|=
-name|NULL
-expr_stmt|;
-name|Info
-operator|.
-name|ReturnObject
-operator|=
-name|NULL
-expr_stmt|;
-name|Info
-operator|.
+operator|->
 name|ParameterType
 operator|=
 name|ACPI_PARAM_ARGS
 expr_stmt|;
-comment|/*      * If there are parameters to be passed to the object      * (which must be a control method), the external objects      * must be converted to internal objects      */
+comment|/* Convert and validate the device handle */
+name|Info
+operator|->
+name|PrefixNode
+operator|=
+name|AcpiNsMapHandleToNode
+argument_list|(
+name|Handle
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Info
+operator|->
+name|PrefixNode
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_BAD_PARAMETER
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+comment|/*      * If there are parameters to be passed to a control method, the external      * objects must all be converted to internal objects      */
 if|if
 condition|(
 name|ExternalParams
@@ -345,10 +387,10 @@ condition|)
 block|{
 comment|/*          * Allocate a new parameter block for the internal objects          * Add 1 to count to allow for null terminated internal list          */
 name|Info
-operator|.
+operator|->
 name|Parameters
 operator|=
-name|ACPI_MEM_CALLOCATE
+name|ACPI_ALLOCATE_ZEROED
 argument_list|(
 operator|(
 operator|(
@@ -372,17 +414,19 @@ if|if
 condition|(
 operator|!
 name|Info
-operator|.
+operator|->
 name|Parameters
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_NO_MEMORY
-argument_list|)
 expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
-comment|/*          * Convert each external object in the list to an          * internal object          */
+comment|/* Convert each external object in the list to an internal object */
 for|for
 control|(
 name|i
@@ -413,7 +457,7 @@ index|]
 argument_list|,
 operator|&
 name|Info
-operator|.
+operator|->
 name|Parameters
 index|[
 name|i
@@ -428,22 +472,13 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiUtDeleteInternalObjectList
-argument_list|(
-name|Info
-operator|.
-name|Parameters
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 block|}
 name|Info
-operator|.
+operator|->
 name|Parameters
 index|[
 name|ExternalParams
@@ -472,14 +507,17 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/*          *  The path is fully qualified, just evaluate by name          */
+comment|/* The path is fully qualified, just evaluate by name */
+name|Info
+operator|->
+name|PrefixNode
+operator|=
+name|NULL
+expr_stmt|;
 name|Status
 operator|=
-name|AcpiNsEvaluateByName
+name|AcpiNsEvaluate
 argument_list|(
-name|Pathname
-argument_list|,
-operator|&
 name|Info
 argument_list|)
 expr_stmt|;
@@ -491,7 +529,7 @@ operator|!
 name|Handle
 condition|)
 block|{
-comment|/*          * A handle is optional iff a fully qualified pathname          * is specified.  Since we've already handled fully          * qualified names above, this is an error          */
+comment|/*          * A handle is optional iff a fully qualified pathname is specified.          * Since we've already handled fully qualified names above, this is          * an error          */
 if|if
 condition|(
 operator|!
@@ -501,9 +539,9 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|ACPI_DB_INFO
 operator|,
-literal|"Both Handle and Pathname are NULL\n"
+literal|"Both Handle and Pathname are NULL"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -513,9 +551,11 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|ACPI_DB_INFO
 operator|,
-literal|"Handle is NULL and Pathname is relative\n"
+literal|"Null Handle with relative pathname [%s]"
+operator|,
+name|Pathname
 operator|)
 argument_list|)
 expr_stmt|;
@@ -527,37 +567,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*          * We get here if we have a handle -- and if we have a          * pathname it is relative.  The handle will be validated          * in the lower procedures          */
-if|if
-condition|(
-operator|!
-name|Pathname
-condition|)
-block|{
-comment|/*              * The null pathname case means the handle is for              * the actual object to be evaluated              */
+comment|/* We have a namespace a node and a possible relative path */
 name|Status
 operator|=
-name|AcpiNsEvaluateByHandle
+name|AcpiNsEvaluate
 argument_list|(
-operator|&
 name|Info
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/*             * Both a Handle and a relative Pathname             */
-name|Status
-operator|=
-name|AcpiNsEvaluateRelative
-argument_list|(
-name|Pathname
-argument_list|,
-operator|&
-name|Info
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/*      * If we are expecting a return value, and all went well above,      * copy the return value to an external object.      */
 if|if
@@ -569,7 +586,7 @@ if|if
 condition|(
 operator|!
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 condition|)
 block|{
@@ -587,7 +604,7 @@ condition|(
 name|ACPI_GET_DESCRIPTOR_TYPE
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 argument_list|)
 operator|==
@@ -600,7 +617,7 @@ operator|=
 name|AE_TYPE
 expr_stmt|;
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 operator|=
 name|NULL
@@ -621,13 +638,13 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/*                  * Find out how large a buffer is needed                  * to contain the returned object                  */
+comment|/* Get the size of the returned object */
 name|Status
 operator|=
 name|AcpiUtGetObjectSize
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 argument_list|,
 operator|&
@@ -660,7 +677,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/*                          * Caller's buffer is too small or a new one can't be allocated                          */
+comment|/*                          * Caller's buffer is too small or a new one can't                          * be allocated                          */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -683,13 +700,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*                          *  We have enough space for the object, build it                          */
+comment|/* We have enough space for the object, build it */
 name|Status
 operator|=
 name|AcpiUtCopyIobjectToEobject
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 argument_list|,
 name|ReturnBuffer
@@ -703,29 +720,19 @@ block|}
 if|if
 condition|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 condition|)
 block|{
-comment|/*          * Delete the internal return object.  NOTE: Interpreter          * must be locked to avoid race condition.          */
-name|Status2
-operator|=
+comment|/*          * Delete the internal return object. NOTE: Interpreter must be          * locked to avoid race condition.          */
 name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|Status2
-argument_list|)
-condition|)
-block|{
-comment|/*              * Delete the internal return object. (Or at least              * decrement the reference count by one)              */
+comment|/* Remove one reference on the return object (should delete it) */
 name|AcpiUtRemoveReference
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 argument_list|)
 expr_stmt|;
@@ -733,12 +740,13 @@ name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
 block|}
-block|}
-comment|/*      * Free the input parameter list (if we created one),      */
+name|Cleanup
+label|:
+comment|/* Free the input parameter list (if we created one) */
 if|if
 condition|(
 name|Info
-operator|.
+operator|->
 name|Parameters
 condition|)
 block|{
@@ -746,11 +754,16 @@ comment|/* Free the allocated parameter block */
 name|AcpiUtDeleteInternalObjectList
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|Parameters
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_FREE
+argument_list|(
+name|Info
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -758,6 +771,13 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiEvaluateObject
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiWalkNamespace  *  * PARAMETERS:  Type                - ACPI_OBJECT_TYPE to search for  *              StartObject         - Handle in namespace where search begins  *              MaxDepth            - Depth to which search is to reach  *              UserFunction        - Called when an object of "Type" is found  *              Context             - Passed to user function  *              ReturnValue         - Location where return value of  *                                    UserFunction is put if terminated early  *  * RETURNS      Return value from the UserFunction if terminated early.  *              Otherwise, returns NULL.  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the object specified by StartHandle.  *              The UserFunction is called whenever an object that matches  *              the type parameter is found.  If the user function returns  *              a non-zero value, the search is terminated immediately and this  *              value is returned to the caller.  *  *              The point of this procedure is to provide a generic namespace  *              walk routine that can be called from multiple places to  *              provide multiple services;  the User Function can be tailored  *              to each task, whether it is a print function, a compare  *              function, etc.  *  ******************************************************************************/
@@ -794,7 +814,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"AcpiWalkNamespace"
+name|AcpiWalkNamespace
 argument_list|)
 expr_stmt|;
 comment|/* Parameter validation */
@@ -803,7 +823,7 @@ condition|(
 operator|(
 name|Type
 operator|>
-name|ACPI_TYPE_EXTERNAL_MAX
+name|ACPI_TYPE_LOCAL_MAX
 operator|)
 operator|||
 operator|(
@@ -879,6 +899,13 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiWalkNamespace
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetDeviceCallback  *  * PARAMETERS:  Callback from AcpiGetDevice  *  * RETURN:      Status  *  * DESCRIPTION: Takes callbacks from WalkNamespace and filters out all non-  *              present devices, or if they specified a HID, it filters based  *              on that.  *  ******************************************************************************/
@@ -1023,11 +1050,11 @@ operator|!
 operator|(
 name|Flags
 operator|&
-literal|0x01
+name|ACPI_STA_DEVICE_PRESENT
 operator|)
 condition|)
 block|{
-comment|/* Don't return at the device or children of the device if not there */
+comment|/* Don't examine children of the device if not present */
 return|return
 operator|(
 name|AE_CTRL_DEPTH
@@ -1187,7 +1214,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|Cid
 argument_list|)
@@ -1199,7 +1226,7 @@ operator|)
 return|;
 block|}
 block|}
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|Cid
 argument_list|)
@@ -1264,7 +1291,7 @@ name|Info
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"AcpiGetDevices"
+name|AcpiGetDevices
 argument_list|)
 expr_stmt|;
 comment|/* Parameter validation */
@@ -1283,21 +1310,21 @@ block|}
 comment|/*      * We're going to call their callback from OUR callback, so we need      * to know what it is, and their context parameter.      */
 name|Info
 operator|.
-name|Context
-operator|=
-name|Context
-expr_stmt|;
-name|Info
-operator|.
-name|UserFunction
-operator|=
-name|UserFunction
-expr_stmt|;
-name|Info
-operator|.
 name|Hid
 operator|=
 name|HID
+expr_stmt|;
+name|Info
+operator|.
+name|Context
+operator|=
+name|Context
+expr_stmt|;
+name|Info
+operator|.
+name|UserFunction
+operator|=
+name|UserFunction
 expr_stmt|;
 comment|/*      * Lock the namespace around the walk.      * The namespace will be unlocked/locked around each call      * to the user function - since this function      * must be allowed to make Acpi calls itself.      */
 name|Status
@@ -1356,6 +1383,13 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiGetDevices
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiAttachData  *  * PARAMETERS:  ObjHandle           - Namespace node  *              Handler             - Handler for this attachment  *              Data                - Pointer to data to be attached  *  * RETURN:      Status  *  * DESCRIPTION: Attach arbitrary data and handler to a namespace node.  *  ******************************************************************************/
@@ -1474,6 +1508,13 @@ return|;
 block|}
 end_function
 
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiAttachData
+argument_list|)
+end_macro
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDetachData  *  * PARAMETERS:  ObjHandle           - Namespace node handle  *              Handler             - Handler used in call to AcpiAttachData  *  * RETURN:      Status  *  * DESCRIPTION: Remove data that was previously attached to a node.  *  ******************************************************************************/
 end_comment
@@ -1581,6 +1622,13 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiDetachData
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetData  *  * PARAMETERS:  ObjHandle           - Namespace node  *              Handler             - Handler used in call to AttachData  *              Data                - Where the data is returned  *  * RETURN:      Status  *  * DESCRIPTION: Retrieve data that was previously attached to a namespace node.  *  ******************************************************************************/
@@ -1699,6 +1747,13 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiGetData
+argument_list|)
+end_macro
 
 end_unit
 

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 1.172 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 1.187 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -46,23 +46,27 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwClearAcpiStatus  *  * PARAMETERS:  Flags           - Lock the hardware or not  *  * RETURN:      none  *  * DESCRIPTION: Clears all fixed and general purpose status bits  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwClearAcpiStatus  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Clears all fixed and general purpose status bits  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiHwClearAcpiStatus
 parameter_list|(
-name|UINT32
-name|Flags
+name|void
 parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_CPU_FLAGS
+name|LockFlags
+init|=
+literal|0
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"HwClearAcpiStatus"
+name|HwClearAcpiStatus
 argument_list|)
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
@@ -77,46 +81,21 @@ operator|,
 operator|(
 name|UINT16
 operator|)
-name|ACPI_GET_ADDRESS
-argument_list|(
 name|AcpiGbl_FADT
-operator|->
-name|XPm1aEvtBlk
+operator|.
+name|XPm1aEventBlock
 operator|.
 name|Address
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Flags
-operator|&
-name|ACPI_MTX_LOCK
-condition|)
-block|{
-name|Status
+name|LockFlags
 operator|=
-name|AcpiUtAcquireMutex
+name|AcpiOsAcquireLock
 argument_list|(
-name|ACPI_MTX_HARDWARE
+name|AcpiGbl_HardwareLock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 name|Status
 operator|=
 name|AcpiHwRegisterWrite
@@ -143,14 +122,11 @@ block|}
 comment|/* Clear the fixed events */
 if|if
 condition|(
-name|ACPI_VALID_ADDRESS
-argument_list|(
 name|AcpiGbl_FADT
-operator|->
-name|XPm1bEvtBlk
+operator|.
+name|XPm1bEventBlock
 operator|.
 name|Address
-argument_list|)
 condition|)
 block|{
 name|Status
@@ -163,8 +139,8 @@ name|ACPI_BITMASK_ALL_FIXED_STATUS
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPm1bEvtBlk
+operator|.
+name|XPm1bEventBlock
 argument_list|)
 expr_stmt|;
 if|if
@@ -190,22 +166,13 @@ argument_list|)
 expr_stmt|;
 name|UnlockAndExit
 label|:
-if|if
-condition|(
-name|Flags
-operator|&
-name|ACPI_MTX_LOCK
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|AcpiUtReleaseMutex
+name|AcpiOsReleaseLock
 argument_list|(
-name|ACPI_MTX_HARDWARE
+name|AcpiGbl_HardwareLock
+argument_list|,
+name|LockFlags
 argument_list|)
 expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -239,16 +206,13 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|ACPI_PARAMETER_INFO
-name|Info
-decl_stmt|;
-name|char
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|SleepStateName
+name|Info
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"AcpiGetSleepTypeData"
+name|AcpiGetSleepTypeData
 argument_list|)
 expr_stmt|;
 comment|/* Validate parameters */
@@ -273,37 +237,48 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Evaluate the namespace object containing the values for this state */
+comment|/* Allocate the evaluation information block */
 name|Info
-operator|.
-name|Parameters
 operator|=
-name|NULL
+name|ACPI_ALLOCATE_ZEROED
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ACPI_EVALUATE_INFO
+argument_list|)
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|Info
-operator|.
-name|ReturnObject
-operator|=
-name|NULL
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
 expr_stmt|;
-name|SleepStateName
+block|}
+name|Info
+operator|->
+name|Pathname
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|char
-operator|*
-operator|)
+argument_list|,
 name|AcpiGbl_SleepStateNames
 index|[
 name|SleepState
 index|]
+argument_list|)
 expr_stmt|;
+comment|/* Evaluate the namespace object containing the values for this state */
 name|Status
 operator|=
-name|AcpiNsEvaluateByName
+name|AcpiNsEvaluate
 argument_list|(
-name|SleepStateName
-argument_list|,
-operator|&
 name|Info
 argument_list|)
 expr_stmt|;
@@ -327,31 +302,35 @@ argument_list|(
 name|Status
 argument_list|)
 operator|,
-name|SleepStateName
+name|Info
+operator|->
+name|Pathname
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 comment|/* Must have a return object */
 if|if
 condition|(
 operator|!
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"No Sleep State object returned from [%s]\n"
+name|AE_INFO
 operator|,
-name|SleepStateName
+literal|"No Sleep State object returned from [%s]"
+operator|,
+name|Info
+operator|->
+name|Pathname
 operator|)
 argument_list|)
 expr_stmt|;
@@ -367,17 +346,19 @@ condition|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 argument_list|)
 operator|!=
 name|ACPI_TYPE_PACKAGE
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Sleep State return object is not a Package\n"
+name|AE_INFO
+operator|,
+literal|"Sleep State return object is not a Package"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -386,12 +367,12 @@ operator|=
 name|AE_AML_OPERAND_TYPE
 expr_stmt|;
 block|}
-comment|/*      * The package must have at least two elements.  NOTE (March 2005): This      * goes against the current ACPI spec which defines this object as a      * package with one encoded DWORD element.  However, existing practice      * by BIOS vendors seems to be to have 2 or more elements, at least      * one per sleep type (A/B).      */
+comment|/*      * The package must have at least two elements. NOTE (March 2005): This      * goes against the current ACPI spec which defines this object as a      * package with one encoded DWORD element. However, existing practice      * by BIOS vendors seems to be to have 2 or more elements, at least      * one per sleep type (A/B).      */
 elseif|else
 if|if
 condition|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 operator|->
 name|Package
@@ -401,10 +382,12 @@ operator|<
 literal|2
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Sleep State return package does not have at least two elements\n"
+name|AE_INFO
+operator|,
+literal|"Sleep State return package does not have at least two elements"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -421,7 +404,7 @@ operator|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 operator|->
 name|Package
@@ -439,7 +422,7 @@ operator|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 operator|->
 name|Package
@@ -454,15 +437,17 @@ name|ACPI_TYPE_INTEGER
 operator|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Sleep State return package elements are not both Integers (%s, %s)\n"
+name|AE_INFO
+operator|,
+literal|"Sleep State return package elements are not both Integers (%s, %s)"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 operator|->
 name|Package
@@ -476,7 +461,7 @@ operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 operator|->
 name|Package
@@ -505,7 +490,7 @@ name|UINT8
 call|)
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 operator|->
 name|Package
@@ -528,7 +513,7 @@ name|UINT8
 call|)
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 operator|->
 name|Package
@@ -552,28 +537,27 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"%s While evaluating SleepState [%s], bad Sleep object %p type %s\n"
-operator|,
-name|AcpiFormatException
-argument_list|(
 name|Status
-argument_list|)
 operator|,
-name|SleepStateName
+literal|"While evaluating SleepState [%s], bad Sleep object %p type %s"
 operator|,
 name|Info
-operator|.
+operator|->
+name|Pathname
+operator|,
+name|Info
+operator|->
 name|ReturnObject
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
 argument_list|)
 operator|)
@@ -583,8 +567,15 @@ block|}
 name|AcpiUtRemoveReference
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|ReturnObject
+argument_list|)
+expr_stmt|;
+name|Cleanup
+label|:
+name|ACPI_FREE
+argument_list|(
+name|Info
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -594,6 +585,13 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiGetSleepTypeData
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwGetRegisterBitMask  *  * PARAMETERS:  RegisterId          - Index of ACPI Register to access  *  * RETURN:      The bitmask to be used when accessing the register  *  * DESCRIPTION: Map RegisterId into a register bitmask.  *  ******************************************************************************/
@@ -608,10 +606,8 @@ name|UINT32
 name|RegisterId
 parameter_list|)
 block|{
-name|ACPI_FUNCTION_NAME
-argument_list|(
-literal|"HwGetBitRegisterInfo"
-argument_list|)
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -620,12 +616,12 @@ operator|>
 name|ACPI_BITREG_MAX
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Invalid BitRegister ID: %X\n"
+literal|"Invalid BitRegister ID: %X"
 operator|,
 name|RegisterId
 operator|)
@@ -650,7 +646,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetRegister  *  * PARAMETERS:  RegisterId      - ID of ACPI BitRegister to access  *              ReturnValue     - Value that was read from the register  *              Flags           - Lock the hardware or not  *  * RETURN:      Status and the value read from specified Register.  Value  *              returned is normalized to bit0 (is shifted all the way right)  *  * DESCRIPTION: ACPI BitRegister read function.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetRegister  *  * PARAMETERS:  RegisterId      - ID of ACPI BitRegister to access  *              ReturnValue     - Value that was read from the register  *  * RETURN:      Status and the value read from specified Register. Value  *              returned is normalized to bit0 (is shifted all the way right)  *  * DESCRIPTION: ACPI BitRegister read function.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -663,9 +659,6 @@ parameter_list|,
 name|UINT32
 modifier|*
 name|ReturnValue
-parameter_list|,
-name|UINT32
-name|Flags
 parameter_list|)
 block|{
 name|UINT32
@@ -682,7 +675,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"AcpiGetRegister"
+name|AcpiGetRegister
 argument_list|)
 expr_stmt|;
 comment|/* Get the info structure corresponding to the requested ACPI Register */
@@ -705,41 +698,12 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|Flags
-operator|&
-name|ACPI_MTX_LOCK
-condition|)
-block|{
-name|Status
-operator|=
-name|AcpiUtAcquireMutex
-argument_list|(
-name|ACPI_MTX_HARDWARE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/* Read from the register */
 name|Status
 operator|=
 name|AcpiHwRegisterRead
 argument_list|(
-name|ACPI_MTX_DO_NOT_LOCK
+name|ACPI_MTX_LOCK
 argument_list|,
 name|BitRegInfo
 operator|->
@@ -749,22 +713,6 @@ operator|&
 name|RegisterValue
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Flags
-operator|&
-name|ACPI_MTX_LOCK
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_HARDWARE
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ACPI_SUCCESS
@@ -819,8 +767,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiGetRegister
+argument_list|)
+end_macro
+
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetRegister  *  * PARAMETERS:  RegisterId      - ID of ACPI BitRegister to access  *              Value           - (only used on write) value to write to the  *                                Register, NOT pre-normalized to the bit pos  *              Flags           - Lock the hardware or not  *  * RETURN:      Status  *  * DESCRIPTION: ACPI Bit Register write function.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetRegister  *  * PARAMETERS:  RegisterId      - ID of ACPI BitRegister to access  *              Value           - (only used on write) value to write to the  *                                Register, NOT pre-normalized to the bit pos  *  * RETURN:      Status  *  * DESCRIPTION: ACPI Bit Register write function.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -832,9 +787,6 @@ name|RegisterId
 parameter_list|,
 name|UINT32
 name|Value
-parameter_list|,
-name|UINT32
-name|Flags
 parameter_list|)
 block|{
 name|UINT32
@@ -849,9 +801,12 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_CPU_FLAGS
+name|LockFlags
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
-literal|"AcpiSetRegister"
+name|AcpiSetRegister
 argument_list|,
 name|RegisterId
 argument_list|)
@@ -870,10 +825,12 @@ operator|!
 name|BitRegInfo
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Bad ACPI HW RegisterId: %X\n"
+name|AE_INFO
+operator|,
+literal|"Bad ACPI HW RegisterId: %X"
 operator|,
 name|RegisterId
 operator|)
@@ -885,35 +842,13 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|Flags
-operator|&
-name|ACPI_MTX_LOCK
-condition|)
-block|{
-name|Status
+name|LockFlags
 operator|=
-name|AcpiUtAcquireMutex
+name|AcpiOsAcquireLock
 argument_list|(
-name|ACPI_MTX_HARDWARE
+name|AcpiGbl_HardwareLock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/* Always do a register read first so we can insert the new bits  */
 name|Status
 operator|=
@@ -952,7 +887,7 @@ block|{
 case|case
 name|ACPI_REGISTER_PM1_STATUS
 case|:
-comment|/*          * Status Registers are different from the rest.  Clear by          * writing 1, and writing 0 has no effect.  So, the only relevant          * information is the single bit we're interested in, all others should          * be written as 0 so they will be left unchanged.          */
+comment|/*          * Status Registers are different from the rest. Clear by          * writing 1, and writing 0 has no effect. So, the only relevant          * information is the single bit we're interested in, all others should          * be written as 0 so they will be left unchanged.          */
 name|Value
 operator|=
 name|ACPI_REGISTER_PREPARE_BITS
@@ -1109,14 +1044,11 @@ name|RegisterValue
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
 name|AcpiGbl_FADT
-operator|->
-name|XPm2CntBlk
+operator|.
+name|XPm2ControlBlock
 operator|.
 name|Address
-argument_list|)
 argument_list|)
 operator|)
 argument_list|)
@@ -1147,14 +1079,11 @@ name|RegisterValue
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
 name|AcpiGbl_FADT
-operator|->
-name|XPm2CntBlk
+operator|.
+name|XPm2ControlBlock
 operator|.
 name|Address
-argument_list|)
 argument_list|)
 operator|)
 argument_list|)
@@ -1181,22 +1110,13 @@ break|break;
 block|}
 name|UnlockAndExit
 label|:
-if|if
-condition|(
-name|Flags
-operator|&
-name|ACPI_MTX_LOCK
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|AcpiUtReleaseMutex
+name|AcpiOsReleaseLock
 argument_list|(
-name|ACPI_MTX_HARDWARE
+name|AcpiGbl_HardwareLock
+argument_list|,
+name|LockFlags
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Normalize the value that was read */
 name|ACPI_DEBUG_EXEC
 argument_list|(
@@ -1242,8 +1162,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiSetRegister
+argument_list|)
+end_macro
+
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwRegisterRead  *  * PARAMETERS:  UseLock             - Mutex hw access  *              RegisterId          - RegisterID + Offset  *              ReturnValue         - Where the register value is returned  *  * RETURN:      Status and the value read.  *  * DESCRIPTION: Acpi register read function.  Registers are read at the  *              given offset.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwRegisterRead  *  * PARAMETERS:  UseLock             - Lock hardware? True/False  *              RegisterId          - ACPI Register ID  *              ReturnValue         - Where the register value is returned  *  * RETURN:      Status and the value read.  *  * DESCRIPTION: Read from the specified ACPI register  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1274,9 +1201,14 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_CPU_FLAGS
+name|LockFlags
+init|=
+literal|0
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"HwRegisterRead"
+name|HwRegisterRead
 argument_list|)
 expr_stmt|;
 if|if
@@ -1286,27 +1218,13 @@ operator|==
 name|UseLock
 condition|)
 block|{
-name|Status
+name|LockFlags
 operator|=
-name|AcpiUtAcquireMutex
+name|AcpiOsAcquireLock
 argument_list|(
-name|ACPI_MTX_HARDWARE
+name|AcpiGbl_HardwareLock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 switch|switch
 condition|(
@@ -1328,8 +1246,8 @@ name|Value1
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPm1aEvtBlk
+operator|.
+name|XPm1aEventBlock
 argument_list|)
 expr_stmt|;
 if|if
@@ -1356,8 +1274,8 @@ name|Value2
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPm1bEvtBlk
+operator|.
+name|XPm1bEventBlock
 argument_list|)
 expr_stmt|;
 name|Value1
@@ -1428,8 +1346,8 @@ name|Value1
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPm1aCntBlk
+operator|.
+name|XPm1aControlBlock
 argument_list|)
 expr_stmt|;
 if|if
@@ -1455,8 +1373,8 @@ name|Value2
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPm1bCntBlk
+operator|.
+name|XPm1bControlBlock
 argument_list|)
 expr_stmt|;
 name|Value1
@@ -1479,8 +1397,8 @@ name|Value1
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPm2CntBlk
+operator|.
+name|XPm2ControlBlock
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1499,8 +1417,8 @@ name|Value1
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPmTmrBlk
+operator|.
+name|XPmTimerBlock
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1513,8 +1431,8 @@ operator|=
 name|AcpiOsReadPort
 argument_list|(
 name|AcpiGbl_FADT
-operator|->
-name|SmiCmd
+operator|.
+name|SmiCommand
 argument_list|,
 operator|&
 name|Value1
@@ -1524,12 +1442,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Unknown Register ID: %X\n"
+literal|"Unknown Register ID: %X"
 operator|,
 name|RegisterId
 operator|)
@@ -1550,12 +1468,11 @@ operator|==
 name|UseLock
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|AcpiUtReleaseMutex
+name|AcpiOsReleaseLock
 argument_list|(
-name|ACPI_MTX_HARDWARE
+name|AcpiGbl_HardwareLock
+argument_list|,
+name|LockFlags
 argument_list|)
 expr_stmt|;
 block|}
@@ -1582,7 +1499,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwRegisterWrite  *  * PARAMETERS:  UseLock             - Mutex hw access  *              RegisterId          - RegisterID + Offset  *              Value               - The value to write  *  * RETURN:      Status  *  * DESCRIPTION: Acpi register Write function.  Registers are written at the  *              given offset.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwRegisterWrite  *  * PARAMETERS:  UseLock             - Lock hardware? True/False  *              RegisterId          - ACPI Register ID  *              Value               - The value to write  *  * RETURN:      Status  *  * DESCRIPTION: Write to the specified ACPI register  *  * NOTE: In accordance with the ACPI specification, this function automatically  * preserves the value of the following bits, meaning that these bits cannot be  * changed via this interface:  *  * PM1_CONTROL[0] = SCI_EN  * PM1_CONTROL[9]  * PM1_STATUS[11]  *  * ACPI References:  * 1) Hardware Ignored Bits: When software writes to a register with ignored  *      bit fields, it preserves the ignored bit fields  * 2) SCI_EN: OSPM always preserves this bit position  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1602,9 +1519,17 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_CPU_FLAGS
+name|LockFlags
+init|=
+literal|0
+decl_stmt|;
+name|UINT32
+name|ReadValue
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"HwRegisterWrite"
+name|HwRegisterWrite
 argument_list|)
 expr_stmt|;
 if|if
@@ -1614,27 +1539,13 @@ operator|==
 name|UseLock
 condition|)
 block|{
-name|Status
+name|LockFlags
 operator|=
-name|AcpiUtAcquireMutex
+name|AcpiOsAcquireLock
 argument_list|(
-name|ACPI_MTX_HARDWARE
+name|AcpiGbl_HardwareLock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 switch|switch
 condition|(
@@ -1645,6 +1556,42 @@ case|case
 name|ACPI_REGISTER_PM1_STATUS
 case|:
 comment|/* 16-bit access */
+comment|/* Perform a read first to preserve certain bits (per ACPI spec) */
+name|Status
+operator|=
+name|AcpiHwRegisterRead
+argument_list|(
+name|ACPI_MTX_DO_NOT_LOCK
+argument_list|,
+name|ACPI_REGISTER_PM1_STATUS
+argument_list|,
+operator|&
+name|ReadValue
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
+comment|/* Insert the bits to be preserved */
+name|ACPI_INSERT_BITS
+argument_list|(
+name|Value
+argument_list|,
+name|ACPI_PM1_STATUS_PRESERVED_BITS
+argument_list|,
+name|ReadValue
+argument_list|)
+expr_stmt|;
+comment|/* Now we can write the data */
 name|Status
 operator|=
 name|AcpiHwLowLevelWrite
@@ -1655,8 +1602,8 @@ name|Value
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPm1aEvtBlk
+operator|.
+name|XPm1aEventBlock
 argument_list|)
 expr_stmt|;
 if|if
@@ -1682,15 +1629,15 @@ name|Value
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPm1bEvtBlk
+operator|.
+name|XPm1bEventBlock
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_REGISTER_PM1_ENABLE
 case|:
-comment|/* 16-bit access*/
+comment|/* 16-bit access */
 name|Status
 operator|=
 name|AcpiHwLowLevelWrite
@@ -1733,6 +1680,42 @@ case|case
 name|ACPI_REGISTER_PM1_CONTROL
 case|:
 comment|/* 16-bit access */
+comment|/*          * Perform a read first to preserve certain bits (per ACPI spec)          *          * Note: This includes SCI_EN, we never want to change this bit          */
+name|Status
+operator|=
+name|AcpiHwRegisterRead
+argument_list|(
+name|ACPI_MTX_DO_NOT_LOCK
+argument_list|,
+name|ACPI_REGISTER_PM1_CONTROL
+argument_list|,
+operator|&
+name|ReadValue
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
+comment|/* Insert the bits to be preserved */
+name|ACPI_INSERT_BITS
+argument_list|(
+name|Value
+argument_list|,
+name|ACPI_PM1_CONTROL_PRESERVED_BITS
+argument_list|,
+name|ReadValue
+argument_list|)
+expr_stmt|;
+comment|/* Now we can write the data */
 name|Status
 operator|=
 name|AcpiHwLowLevelWrite
@@ -1743,8 +1726,8 @@ name|Value
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPm1aCntBlk
+operator|.
+name|XPm1aControlBlock
 argument_list|)
 expr_stmt|;
 if|if
@@ -1769,8 +1752,8 @@ name|Value
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPm1bCntBlk
+operator|.
+name|XPm1bControlBlock
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1788,8 +1771,8 @@ name|Value
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPm1aCntBlk
+operator|.
+name|XPm1aControlBlock
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1807,8 +1790,8 @@ name|Value
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPm1bCntBlk
+operator|.
+name|XPm1bControlBlock
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1826,8 +1809,8 @@ name|Value
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPm2CntBlk
+operator|.
+name|XPm2ControlBlock
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1845,8 +1828,8 @@ name|Value
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XPmTmrBlk
+operator|.
+name|XPmTimerBlock
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1860,8 +1843,8 @@ operator|=
 name|AcpiOsWritePort
 argument_list|(
 name|AcpiGbl_FADT
-operator|->
-name|SmiCmd
+operator|.
+name|SmiCommand
 argument_list|,
 name|Value
 argument_list|,
@@ -1885,12 +1868,11 @@ operator|==
 name|UseLock
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|AcpiUtReleaseMutex
+name|AcpiOsReleaseLock
 argument_list|(
-name|ACPI_MTX_HARDWARE
+name|AcpiGbl_HardwareLock
+argument_list|,
+name|LockFlags
 argument_list|)
 expr_stmt|;
 block|}
@@ -1930,7 +1912,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
-literal|"HwLowLevelRead"
+name|HwLowLevelRead
 argument_list|)
 expr_stmt|;
 comment|/*      * Must have a valid pointer to a GAS structure, and      * a non-zero address within. However, don't return an error      * because the PM1A/B code must not fail if B isn't present.      */
@@ -1946,7 +1928,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/* Get a local copy of the address.  Handles possible alignment issues */
+comment|/* Get a local copy of the address. Handles possible alignment issues */
 name|ACPI_MOVE_64_TO_64
 argument_list|(
 operator|&
@@ -1961,10 +1943,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ACPI_VALID_ADDRESS
-argument_list|(
 name|Address
-argument_list|)
 condition|)
 block|{
 return|return
@@ -1983,7 +1962,7 @@ switch|switch
 condition|(
 name|Reg
 operator|->
-name|AddressSpaceId
+name|SpaceId
 condition|)
 block|{
 case|case
@@ -1996,10 +1975,7 @@ argument_list|(
 operator|(
 name|ACPI_PHYSICAL_ADDRESS
 operator|)
-name|ACPI_GET_ADDRESS
-argument_list|(
 name|Address
-argument_list|)
 argument_list|,
 name|Value
 argument_list|,
@@ -2017,10 +1993,7 @@ argument_list|(
 operator|(
 name|ACPI_IO_ADDRESS
 operator|)
-name|ACPI_GET_ADDRESS
-argument_list|(
 name|Address
-argument_list|)
 argument_list|,
 name|Value
 argument_list|,
@@ -2029,16 +2002,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Unsupported address space: %X\n"
+literal|"Unsupported address space: %X"
 operator|,
 name|Reg
 operator|->
-name|AddressSpaceId
+name|SpaceId
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2062,17 +2035,14 @@ name|Width
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
 name|Address
-argument_list|)
 argument_list|)
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
 name|Reg
 operator|->
-name|AddressSpaceId
+name|SpaceId
 argument_list|)
 operator|)
 argument_list|)
@@ -2112,7 +2082,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
-literal|"HwLowLevelWrite"
+name|HwLowLevelWrite
 argument_list|)
 expr_stmt|;
 comment|/*      * Must have a valid pointer to a GAS structure, and      * a non-zero address within. However, don't return an error      * because the PM1A/B code must not fail if B isn't present.      */
@@ -2128,7 +2098,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/* Get a local copy of the address.  Handles possible alignment issues */
+comment|/* Get a local copy of the address. Handles possible alignment issues */
 name|ACPI_MOVE_64_TO_64
 argument_list|(
 operator|&
@@ -2143,10 +2113,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ACPI_VALID_ADDRESS
-argument_list|(
 name|Address
-argument_list|)
 condition|)
 block|{
 return|return
@@ -2160,7 +2127,7 @@ switch|switch
 condition|(
 name|Reg
 operator|->
-name|AddressSpaceId
+name|SpaceId
 condition|)
 block|{
 case|case
@@ -2173,10 +2140,7 @@ argument_list|(
 operator|(
 name|ACPI_PHYSICAL_ADDRESS
 operator|)
-name|ACPI_GET_ADDRESS
-argument_list|(
 name|Address
-argument_list|)
 argument_list|,
 name|Value
 argument_list|,
@@ -2194,10 +2158,7 @@ argument_list|(
 operator|(
 name|ACPI_IO_ADDRESS
 operator|)
-name|ACPI_GET_ADDRESS
-argument_list|(
 name|Address
-argument_list|)
 argument_list|,
 name|Value
 argument_list|,
@@ -2206,16 +2167,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Unsupported address space: %X\n"
+literal|"Unsupported address space: %X"
 operator|,
 name|Reg
 operator|->
-name|AddressSpaceId
+name|SpaceId
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2238,17 +2199,14 @@ name|Width
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
 name|Address
-argument_list|)
 argument_list|)
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
 name|Reg
 operator|->
-name|AddressSpaceId
+name|SpaceId
 argument_list|)
 operator|)
 argument_list|)

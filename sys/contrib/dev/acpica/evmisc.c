@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 1.86 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 1.103 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -45,6 +45,10 @@ literal|"evmisc"
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* Names for Notify() values, used for debug output */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -66,7 +70,7 @@ literal|"Device Check"
 block|,
 literal|"Device Wake"
 block|,
-literal|"Eject request"
+literal|"Eject Request"
 block|,
 literal|"Device Check Light"
 block|,
@@ -83,6 +87,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Pointer to FACS needed for the Global Lock */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|ACPI_TABLE_FACS
+modifier|*
+name|Facs
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Local prototypes */
@@ -103,9 +121,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|ACPI_SYSTEM_XFACE
-name|AcpiEvGlobalLockThread
+name|UINT32
+name|AcpiEvGlobalLockHandler
 parameter_list|(
 name|void
 modifier|*
@@ -116,12 +133,10 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|UINT32
-name|AcpiEvGlobalLockHandler
+name|ACPI_STATUS
+name|AcpiEvRemoveGlobalLockHandler
 parameter_list|(
 name|void
-modifier|*
-name|Context
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -211,7 +226,7 @@ name|AE_OK
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
-literal|"EvQueueNotifyRequest"
+name|EvQueueNotifyRequest
 argument_list|)
 expr_stmt|;
 comment|/*      * For value 3 (Ejection Request), some device method may need to be run.      * For value 2 (Device Wake) if _PRW exists, the _PS0 method may need      *   to be run.      * For value 0x80 (Status Change) on the power button or sleep button,      *   initiate soft-off or sleep operation?      */
@@ -385,7 +400,7 @@ name|NotifyInfo
 operator|->
 name|Common
 operator|.
-name|DataType
+name|DescriptorType
 operator|=
 name|ACPI_DESC_TYPE_STATE_NOTIFY
 expr_stmt|;
@@ -418,9 +433,9 @@ name|HandlerObj
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiOsQueueForExecution
+name|AcpiOsExecute
 argument_list|(
-name|OSD_PRIORITY_HIGH
+name|OSL_NOTIFY_HANDLER
 argument_list|,
 name|AcpiEvNotifyDispatch
 argument_list|,
@@ -651,61 +666,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGlobalLockThread  *  * PARAMETERS:  Context         - From thread interface, not used  *  * RETURN:      None  *  * DESCRIPTION: Invoked by SCI interrupt handler upon acquisition of the  *              Global Lock.  Simply signal all threads that are waiting  *              for the lock.  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ACPI_SYSTEM_XFACE
-name|AcpiEvGlobalLockThread
-parameter_list|(
-name|void
-modifier|*
-name|Context
-parameter_list|)
-block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-comment|/* Signal threads that are waiting for the lock */
-if|if
-condition|(
-name|AcpiGbl_GlobalLockThreadCount
-condition|)
-block|{
-comment|/* Send sufficient units to the semaphore */
-name|Status
-operator|=
-name|AcpiOsSignalSemaphore
-argument_list|(
-name|AcpiGbl_GlobalLockSemaphore
-argument_list|,
-name|AcpiGbl_GlobalLockThreadCount
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|ACPI_REPORT_ERROR
-argument_list|(
-operator|(
-literal|"Could not signal Global Lock semaphore\n"
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGlobalLockHandler  *  * PARAMETERS:  Context         - From thread interface, not used  *  * RETURN:      ACPI_INTERRUPT_HANDLED or ACPI_INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Invoked directly from the SCI handler when a global lock  *              release interrupt occurs.  Grab the global lock and queue  *              the global lock thread for execution  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGlobalLockHandler  *  * PARAMETERS:  Context         - From thread interface, not used  *  * RETURN:      ACPI_INTERRUPT_HANDLED  *  * DESCRIPTION: Invoked directly from the SCI handler when a global lock  *              release interrupt occurs. Attempt to acquire the global lock,  *              if successful, signal the thread waiting for the lock.  *  * NOTE: Assumes that the semaphore can be signaled from interrupt level. If  * this is not possible for some reason, a separate thread will have to be  * scheduled to do this.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -726,12 +687,10 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-comment|/*      * Attempt to get the lock      * If we don't get it now, it will be marked pending and we will      * take another interrupt when it becomes free.      */
+comment|/*      * Attempt to get the lock.      *      * If we don't get it now, it will be marked pending and we will      * take another interrupt when it becomes free.      */
 name|ACPI_ACQUIRE_GLOBAL_LOCK
 argument_list|(
-name|AcpiGbl_CommonFACS
-operator|.
-name|GlobalLock
+name|Facs
 argument_list|,
 name|Acquired
 argument_list|)
@@ -741,21 +700,19 @@ condition|(
 name|Acquired
 condition|)
 block|{
-comment|/* Got the lock, now wake all threads waiting for it */
+comment|/* Got the lock, now wake the thread waiting for it */
 name|AcpiGbl_GlobalLockAcquired
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* Run the Global Lock thread which will signal all waiting threads */
+comment|/* Send a unit to the semaphore */
 name|Status
 operator|=
-name|AcpiOsQueueForExecution
+name|AcpiOsSignalSemaphore
 argument_list|(
-name|OSD_PRIORITY_HIGH
+name|AcpiGbl_GlobalLockSemaphore
 argument_list|,
-name|AcpiEvGlobalLockThread
-argument_list|,
-name|Context
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -766,23 +723,15 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Could not queue Global Lock thread, %s\n"
+name|AE_INFO
 operator|,
-name|AcpiFormatException
-argument_list|(
-name|Status
-argument_list|)
+literal|"Could not signal Global Lock semaphore"
 operator|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ACPI_INTERRUPT_NOT_HANDLED
-operator|)
-return|;
 block|}
 block|}
 return|return
@@ -809,9 +758,38 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvInitGlobalLockHandler"
+name|EvInitGlobalLockHandler
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
+name|AcpiGetTableByIndex
+argument_list|(
+name|ACPI_TABLE_INDEX_FACS
+argument_list|,
+operator|(
+name|ACPI_TABLE_HEADER
+operator|*
+operator|*
+operator|)
+operator|&
+name|Facs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 name|AcpiGbl_GlobalLockPresent
 operator|=
 name|TRUE
@@ -835,10 +813,12 @@ operator|==
 name|AE_NO_HARDWARE_RESPONSE
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"No response from Global Lock hardware, disabling lock\n"
+name|AE_INFO
+operator|,
+literal|"No response from Global Lock hardware, disabling lock"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -860,7 +840,48 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEvAcquireGlobalLock  *  * PARAMETERS:  Timeout         - Max time to wait for the lock, in millisec.  *  * RETURN:      Status  *  * DESCRIPTION: Attempt to gain ownership of the Global Lock.  *  *****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvRemoveGlobalLockHandler  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Remove the handler for the Global Lock  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|ACPI_STATUS
+name|AcpiEvRemoveGlobalLockHandler
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|EvRemoveGlobalLockHandler
+argument_list|)
+expr_stmt|;
+name|AcpiGbl_GlobalLockPresent
+operator|=
+name|FALSE
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiRemoveFixedEventHandler
+argument_list|(
+name|ACPI_EVENT_GLOBAL
+argument_list|,
+name|AcpiEvGlobalLockHandler
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiEvAcquireGlobalLock  *  * PARAMETERS:  Timeout         - Max time to wait for the lock, in millisec.  *  * RETURN:      Status  *  * DESCRIPTION: Attempt to gain ownership of the Global Lock.  *  * MUTEX:       Interpreter must be locked  *  * Note: The original implementation allowed multiple threads to "acquire" the  * Global Lock, and the OS would hold the lock until the last thread had  * released it. However, this could potentially starve the BIOS out of the  * lock, especially in the case where there is a tight handshake between the  * Embedded Controller driver and the BIOS. Therefore, this implementation  * allows only one thread to acquire the HW Global Lock at a time, and makes  * the global lock appear as a standard mutex on the OS side.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -883,49 +904,58 @@ name|FALSE
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvAcquireGlobalLock"
+name|EvAcquireGlobalLock
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ACPI_APPLICATION
-comment|/* Make sure that we actually have a global lock */
+comment|/*      * Only one thread can acquire the GL at a time, the GlobalLockMutex      * enforces this. This interface releases the interpreter if we must wait.      */
+name|Status
+operator|=
+name|AcpiExSystemWaitMutex
+argument_list|(
+name|AcpiGbl_GlobalLockMutex
+operator|->
+name|Mutex
+operator|.
+name|OsMutex
+argument_list|,
+name|Timeout
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Make sure that a global lock actually exists. If not, just treat      * the lock as a standard mutex.      */
 if|if
 condition|(
 operator|!
 name|AcpiGbl_GlobalLockPresent
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_GLOBAL_LOCK
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* One more thread wants the global lock */
-name|AcpiGbl_GlobalLockThreadCount
-operator|++
-expr_stmt|;
-comment|/*      * If we (OS side vs. BIOS side) have the hardware lock already,      * we are done      */
-if|if
-condition|(
 name|AcpiGbl_GlobalLockAcquired
-condition|)
-block|{
+operator|=
+name|TRUE
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* We must acquire the actual hardware lock */
+comment|/* Attempt to acquire the actual hardware lock */
 name|ACPI_ACQUIRE_GLOBAL_LOCK
 argument_list|(
-name|AcpiGbl_CommonFACS
-operator|.
-name|GlobalLock
+name|Facs
 argument_list|,
 name|Acquired
 argument_list|)
@@ -941,7 +971,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Acquired the HW Global Lock\n"
+literal|"Acquired hardware Global Lock\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -955,24 +985,24 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Did not get the lock.  The pending bit was set above, and we must now      * wait until we get the global lock released interrupt.      */
+comment|/*      * Did not get the lock. The pending bit was set above, and we must now      * wait until we get the global lock released interrupt.      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Waiting for the HW Global Lock\n"
+literal|"Waiting for hardware Global Lock\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Acquire the global lock semaphore first.      * Since this wait will block, we must release the interpreter      */
+comment|/*      * Wait for handshake with the global lock interrupt handler.      * This interface releases the interpreter if we must wait.      */
 name|Status
 operator|=
 name|AcpiExSystemWaitSemaphore
 argument_list|(
 name|AcpiGbl_GlobalLockSemaphore
 argument_list|,
-name|Timeout
+name|ACPI_WAIT_FOREVER
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -1006,19 +1036,22 @@ name|AE_OK
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvReleaseGlobalLock"
+name|EvReleaseGlobalLock
 argument_list|)
 expr_stmt|;
+comment|/* Lock must be already acquired */
 if|if
 condition|(
 operator|!
-name|AcpiGbl_GlobalLockThreadCount
+name|AcpiGbl_GlobalLockAcquired
 condition|)
 block|{
-name|ACPI_REPORT_WARNING
+name|ACPI_WARNING
 argument_list|(
 operator|(
-literal|"Cannot release HW Global Lock, it has not been acquired\n"
+name|AE_INFO
+operator|,
+literal|"Cannot release the ACPI Global Lock, it has not been acquired"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1028,37 +1061,20 @@ name|AE_NOT_ACQUIRED
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* One fewer thread has the global lock */
-name|AcpiGbl_GlobalLockThreadCount
-operator|--
-expr_stmt|;
 if|if
 condition|(
-name|AcpiGbl_GlobalLockThreadCount
+name|AcpiGbl_GlobalLockPresent
 condition|)
 block|{
-comment|/* There are still some threads holding the lock, cannot release */
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * No more threads holding lock, we can do the actual hardware      * release      */
+comment|/* Allow any thread to release the lock */
 name|ACPI_RELEASE_GLOBAL_LOCK
 argument_list|(
-name|AcpiGbl_CommonFACS
-operator|.
-name|GlobalLock
+name|Facs
 argument_list|,
 name|Pending
 argument_list|)
 expr_stmt|;
-name|AcpiGbl_GlobalLockAcquired
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/*      * If the pending bit was set, we must write GBL_RLS to the control      * register      */
+comment|/*          * If the pending bit was set, we must write GBL_RLS to the control          * register          */
 if|if
 condition|(
 name|Pending
@@ -1071,11 +1087,33 @@ argument_list|(
 name|ACPI_BITREG_GLOBAL_LOCK_RELEASE
 argument_list|,
 literal|1
-argument_list|,
-name|ACPI_MTX_LOCK
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"Released hardware Global Lock\n"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiGbl_GlobalLockAcquired
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* Release the local GL mutex */
+name|AcpiOsReleaseMutex
+argument_list|(
+name|AcpiGbl_GlobalLockMutex
+operator|->
+name|Mutex
+operator|.
+name|OsMutex
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -1103,7 +1141,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvTerminate"
+name|EvTerminate
 argument_list|)
 expr_stmt|;
 if|if
@@ -1147,12 +1185,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Could not disable fixed event %d\n"
+literal|"Could not disable fixed event %d"
 operator|,
 operator|(
 name|UINT32
@@ -1185,12 +1223,35 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Could not remove SCI handler\n"
+literal|"Could not remove SCI handler"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
+name|AcpiEvRemoveGlobalLockHandler
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Could not remove Global Lock handler"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1225,12 +1286,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_WARNING
 argument_list|(
 operator|(
-name|ACPI_DB_WARN
+name|AE_INFO
 operator|,
-literal|"AcpiDisable failed\n"
+literal|"AcpiDisable failed"
 operator|)
 argument_list|)
 expr_stmt|;

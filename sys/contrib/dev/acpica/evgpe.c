@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evgpe - General Purpose Event handling and dispatch  *              $Revision: 1.53 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evgpe - General Purpose Event handling and dispatch  *              $Revision: 1.68 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -77,7 +77,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvSetGpeType"
+name|EvSetGpeType
 argument_list|)
 expr_stmt|;
 comment|/* Validate type and update register enable masks */
@@ -160,7 +160,7 @@ name|RegisterBit
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvUpdateGpeEnableMasks"
+name|EvUpdateGpeEnableMasks
 argument_list|)
 expr_stmt|;
 name|GpeRegisterInfo
@@ -183,9 +183,22 @@ expr_stmt|;
 block|}
 name|RegisterBit
 operator|=
+call|(
+name|UINT8
+call|)
+argument_list|(
+literal|1
+operator|<<
+operator|(
 name|GpeEventInfo
 operator|->
-name|RegisterBit
+name|GpeNumber
+operator|-
+name|GpeRegisterInfo
+operator|->
+name|BaseGpeNumber
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* 1) Disable case.  Simply clear all enable bits */
 if|if
@@ -331,7 +344,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvEnableGpe"
+name|EvEnableGpe
 argument_list|)
 expr_stmt|;
 comment|/* Make sure HW enable masks are updated */
@@ -476,7 +489,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvDisableGpe"
+name|EvDisableGpe
 argument_list|)
 expr_stmt|;
 if|if
@@ -837,7 +850,7 @@ decl_stmt|;
 name|UINT32
 name|EnableReg
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|ACPI_CPU_FLAGS
 name|Flags
 decl_stmt|;
 name|ACPI_NATIVE_UINT
@@ -848,7 +861,7 @@ name|j
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
-literal|"EvGpeDetect"
+name|EvGpeDetect
 argument_list|)
 expr_stmt|;
 comment|/* Check for the case where there are no GPEs */
@@ -864,7 +877,7 @@ name|IntStatus
 operator|)
 return|;
 block|}
-comment|/* Examine all GPE blocks attached to this interrupt level */
+comment|/*      * We need to obtain the GPE lock for both the data structs and registers      * Note: Not necessary to obtain the hardware lock, since the GPE registers      * are owned by the GpeLock.      */
 name|Flags
 operator|=
 name|AcpiOsAcquireLock
@@ -872,6 +885,7 @@ argument_list|(
 name|AcpiGbl_GpeLock
 argument_list|)
 expr_stmt|;
+comment|/* Examine all GPE blocks attached to this interrupt level */
 name|GpeBlock
 operator|=
 name|GpeXruptList
@@ -1025,10 +1039,11 @@ if|if
 condition|(
 name|EnabledStatusByte
 operator|&
-name|AcpiGbl_DecodeTo8bit
-index|[
+operator|(
+literal|1
+operator|<<
 name|j
-index|]
+operator|)
 condition|)
 block|{
 comment|/*                      * Found an active GPE. Dispatch the event to a handler                      * or method.                      */
@@ -1088,7 +1103,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAsynchExecuteGpeMethod  *  * PARAMETERS:  Context (GpeEventInfo) - Info for this GPE  *  * RETURN:      None  *  * DESCRIPTION: Perform the actual execution of a GPE control method.  This  *              function is called from an invocation of AcpiOsQueueForExecution  *              (and therefore does NOT execute at interrupt level) so that  *              the control method itself is not executed in the context of  *              an interrupt handler.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAsynchExecuteGpeMethod  *  * PARAMETERS:  Context (GpeEventInfo) - Info for this GPE  *  * RETURN:      None  *  * DESCRIPTION: Perform the actual execution of a GPE control method. This  *              function is called from an invocation of AcpiOsExecute and  *              therefore does NOT execute at interrupt level - so that  *              the control method itself is not executed in the context of  *              an interrupt handler.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1112,23 +1127,19 @@ operator|*
 operator|)
 name|Context
 decl_stmt|;
-name|UINT32
-name|GpeNumber
-init|=
-literal|0
-decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
 name|ACPI_GPE_EVENT_INFO
 name|LocalGpeEventInfo
 decl_stmt|;
-name|ACPI_PARAMETER_INFO
+name|ACPI_EVALUATE_INFO
+modifier|*
 name|Info
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvAsynchExecuteGpeMethod"
+name|EvAsynchExecuteGpeMethod
 argument_list|)
 expr_stmt|;
 name|Status
@@ -1226,10 +1237,34 @@ operator|==
 name|ACPI_GPE_DISPATCH_METHOD
 condition|)
 block|{
-comment|/*          * Invoke the GPE Method (_Lxx, _Exx) i.e., evaluate the _Lxx/_Exx          * control method that corresponds to this GPE          */
+comment|/* Allocate the evaluation information block */
 name|Info
-operator|.
-name|Node
+operator|=
+name|ACPI_ALLOCATE_ZEROED
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ACPI_EVALUATE_INFO
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Info
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_NO_MEMORY
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/*              * Invoke the GPE Method (_Lxx, _Exx) i.e., evaluate the _Lxx/_Exx              * control method that corresponds to this GPE              */
+name|Info
+operator|->
+name|PrefixNode
 operator|=
 name|LocalGpeEventInfo
 operator|.
@@ -1238,7 +1273,7 @@ operator|.
 name|MethodNode
 expr_stmt|;
 name|Info
-operator|.
+operator|->
 name|Parameters
 operator|=
 name|ACPI_CAST_PTR
@@ -1250,19 +1285,30 @@ name|GpeEventInfo
 argument_list|)
 expr_stmt|;
 name|Info
-operator|.
+operator|->
 name|ParameterType
 operator|=
 name|ACPI_PARAM_GPE
 expr_stmt|;
+name|Info
+operator|->
+name|Flags
+operator|=
+name|ACPI_IGNORE_RETURN_VALUE
+expr_stmt|;
 name|Status
 operator|=
-name|AcpiNsEvaluateByHandle
+name|AcpiNsEvaluate
 argument_list|(
-operator|&
 name|Info
 argument_list|)
 expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|Info
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -1271,15 +1317,14 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
-literal|"%s while evaluating method [%4.4s] for GPE[%2X]\n"
+name|AE_INFO
 operator|,
-name|AcpiFormatException
-argument_list|(
 name|Status
-argument_list|)
+operator|,
+literal|"while evaluating GPE method [%4.4s]"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1289,8 +1334,6 @@ name|Dispatch
 operator|.
 name|MethodNode
 argument_list|)
-operator|,
-name|GpeNumber
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1366,8 +1409,11 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvGpeDispatch"
+name|EvGpeDispatch
 argument_list|)
+expr_stmt|;
+name|AcpiGpeCount
+operator|++
 expr_stmt|;
 comment|/*      * If edge-triggered, clear the GPE status bit now.  Note that      * level-triggered events are cleared after the GPE is serviced.      */
 if|if
@@ -1398,15 +1444,14 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
-literal|"AcpiEvGpeDispatch: %s, Unable to clear GPE[%2X]\n"
+name|AE_INFO
 operator|,
-name|AcpiFormatException
-argument_list|(
 name|Status
-argument_list|)
+operator|,
+literal|"Unable to clear GPE[%2X]"
 operator|,
 name|GpeNumber
 operator|)
@@ -1419,35 +1464,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Save current system state */
 if|if
 condition|(
+operator|!
 name|AcpiGbl_SystemAwakeAndRunning
 condition|)
 block|{
-name|ACPI_SET_BIT
-argument_list|(
-name|GpeEventInfo
-operator|->
-name|Flags
-argument_list|,
-name|ACPI_GPE_SYSTEM_RUNNING
-argument_list|)
+comment|/*          * We just woke up because of a wake GPE. Disable any further GPEs          * until we are fully up and running (Only wake GPEs should be enabled          * at this time, but we just brute-force disable them all.)          * 1) We must disable this particular wake GPE so it won't fire again          * 2) We want to disable all wake GPEs, since we are now awake          */
+operator|(
+name|void
+operator|)
+name|AcpiHwDisableAllGpes
+argument_list|()
 expr_stmt|;
 block|}
-else|else
-block|{
-name|ACPI_CLEAR_BIT
-argument_list|(
-name|GpeEventInfo
-operator|->
-name|Flags
-argument_list|,
-name|ACPI_GPE_SYSTEM_RUNNING
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Dispatch the GPE to either an installed handler, or the control      * method associated with this GPE (_Lxx or _Exx).      * If a handler exists, we invoke it and do not attempt to run the method.      * If there is neither a handler nor a method, we disable the level to      * prevent further events from coming in here.      */
+comment|/*      * Dispatch the GPE to either an installed handler, or the control method      * associated with this GPE (_Lxx or _Exx). If a handler exists, we invoke      * it and do not attempt to run the method. If there is neither a handler      * nor a method, we disable this GPE to prevent further such pointless      * events from firing.      */
 switch|switch
 condition|(
 name|GpeEventInfo
@@ -1510,15 +1541,14 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
-literal|"AcpiEvGpeDispatch: %s, Unable to clear GPE[%2X]\n"
+name|AE_INFO
 operator|,
-name|AcpiFormatException
-argument_list|(
 name|Status
-argument_list|)
+operator|,
+literal|"Unable to clear GPE[%2X]"
 operator|,
 name|GpeNumber
 operator|)
@@ -1535,7 +1565,7 @@ break|break;
 case|case
 name|ACPI_GPE_DISPATCH_METHOD
 case|:
-comment|/*          * Disable GPE, so it doesn't keep firing before the method has a          * chance to run.          */
+comment|/*          * Disable the GPE, so it doesn't keep firing before the method has a          * chance to run (it runs asynchronously with interrupts enabled).          */
 name|Status
 operator|=
 name|AcpiEvDisableGpe
@@ -1551,15 +1581,14 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
-literal|"AcpiEvGpeDispatch: %s, Unable to disable GPE[%2X]\n"
+name|AE_INFO
 operator|,
-name|AcpiFormatException
-argument_list|(
 name|Status
-argument_list|)
+operator|,
+literal|"Unable to disable GPE[%2X]"
 operator|,
 name|GpeNumber
 operator|)
@@ -1574,9 +1603,9 @@ block|}
 comment|/*          * Execute the method associated with the GPE          * NOTE: Level-triggered GPEs are cleared after the method completes.          */
 name|Status
 operator|=
-name|AcpiOsQueueForExecution
+name|AcpiOsExecute
 argument_list|(
-name|OSD_PRIORITY_GPE
+name|OSL_GPE_HANDLER
 argument_list|,
 name|AcpiEvAsynchExecuteGpeMethod
 argument_list|,
@@ -1591,15 +1620,14 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
-literal|"AcpiEvGpeDispatch: %s, Unable to queue handler for GPE[%2X] - event disabled\n"
+name|AE_INFO
 operator|,
-name|AcpiFormatException
-argument_list|(
 name|Status
-argument_list|)
+operator|,
+literal|"Unable to queue handler for GPE[%2X] - event disabled"
 operator|,
 name|GpeNumber
 operator|)
@@ -1609,16 +1637,18 @@ block|}
 break|break;
 default|default:
 comment|/* No handler or method to run! */
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"AcpiEvGpeDispatch: No handler or method for GPE[%2X], disabling event\n"
+name|AE_INFO
+operator|,
+literal|"No handler or method for GPE[%2X], disabling event"
 operator|,
 name|GpeNumber
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*          * Disable the GPE.  The GPE will remain disabled until the ACPI          * Core Subsystem is restarted, or a handler is installed.          */
+comment|/*          * Disable the GPE. The GPE will remain disabled until the ACPI          * Core Subsystem is restarted, or a handler is installed.          */
 name|Status
 operator|=
 name|AcpiEvDisableGpe
@@ -1634,15 +1664,14 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
-literal|"AcpiEvGpeDispatch: %s, Unable to disable GPE[%2X]\n"
+name|AE_INFO
 operator|,
-name|AcpiFormatException
-argument_list|(
 name|Status
-argument_list|)
+operator|,
+literal|"Unable to disable GPE[%2X]"
 operator|,
 name|GpeNumber
 operator|)
@@ -1663,99 +1692,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_GPE_NOTIFY_CHECK
-end_ifdef
-
-begin_comment
-comment|/*******************************************************************************  * TBD: NOT USED, PROTOTYPE ONLY AND WILL PROBABLY BE REMOVED  *  * FUNCTION:    AcpiEvCheckForWakeOnlyGpe  *  * PARAMETERS:  GpeEventInfo    - info for this GPE  *  * RETURN:      Status  *  * DESCRIPTION: Determine if a a GPE is "wake-only".  *  *              Called from Notify() code in interpreter when a "DeviceWake"  *              Notify comes in.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_STATUS
-name|AcpiEvCheckForWakeOnlyGpe
-parameter_list|(
-name|ACPI_GPE_EVENT_INFO
-modifier|*
-name|GpeEventInfo
-parameter_list|)
-block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-literal|"EvCheckForWakeOnlyGpe"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|GpeEventInfo
-operator|)
-operator|&&
-comment|/* Only>0 for _Lxx/_Exx */
-operator|(
-operator|(
-name|GpeEventInfo
-operator|->
-name|Flags
-operator|&
-name|ACPI_GPE_SYSTEM_MASK
-operator|)
-operator|==
-name|ACPI_GPE_SYSTEM_RUNNING
-operator|)
-condition|)
-comment|/* System state at GPE time */
-block|{
-comment|/* This must be a wake-only GPE, disable it */
-name|Status
-operator|=
-name|AcpiEvDisableGpe
-argument_list|(
-name|GpeEventInfo
-argument_list|)
-expr_stmt|;
-comment|/* Set GPE to wake-only.  Do not change wake disabled/enabled status */
-name|AcpiEvSetGpeType
-argument_list|(
-name|GpeEventInfo
-argument_list|,
-name|ACPI_GPE_TYPE_WAKE
-argument_list|)
-expr_stmt|;
-name|ACPI_REPORT_INFO
-argument_list|(
-operator|(
-literal|"GPE %p was updated from wake/run to wake-only\n"
-operator|,
-name|GpeEventInfo
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* This was a wake-only GPE */
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_WAKE_ONLY_GPE
-argument_list|)
-expr_stmt|;
-block|}
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

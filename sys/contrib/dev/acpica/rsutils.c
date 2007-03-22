@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 1.50 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 1.67 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -67,6 +67,9 @@ decl_stmt|;
 name|UINT8
 name|BitCount
 decl_stmt|;
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/* Decode the mask bits */
 for|for
 control|(
@@ -140,6 +143,9 @@ decl_stmt|;
 name|UINT16
 name|Mask
 decl_stmt|;
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/* Encode the list into a single bitmask */
 for|for
 control|(
@@ -205,6 +211,9 @@ block|{
 name|ACPI_NATIVE_UINT
 name|i
 decl_stmt|;
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/* One move per item */
 for|for
 control|(
@@ -246,25 +255,23 @@ case|:
 name|ACPI_MOVE_16_TO_16
 argument_list|(
 operator|&
-operator|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT16
-operator|*
-operator|)
+argument_list|,
 name|Destination
-operator|)
+argument_list|)
 index|[
 name|i
 index|]
 argument_list|,
 operator|&
-operator|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT16
-operator|*
-operator|)
+argument_list|,
 name|Source
-operator|)
+argument_list|)
 index|[
 name|i
 index|]
@@ -277,25 +284,23 @@ case|:
 name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
-operator|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT32
-operator|*
-operator|)
+argument_list|,
 name|Destination
-operator|)
+argument_list|)
 index|[
 name|i
 index|]
 argument_list|,
 operator|&
-operator|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT32
-operator|*
-operator|)
+argument_list|,
 name|Source
-operator|)
+argument_list|)
 index|[
 name|i
 index|]
@@ -308,25 +313,23 @@ case|:
 name|ACPI_MOVE_64_TO_64
 argument_list|(
 operator|&
-operator|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT64
-operator|*
-operator|)
+argument_list|,
 name|Destination
-operator|)
+argument_list|)
 index|[
 name|i
 index|]
 argument_list|,
 operator|&
-operator|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT64
-operator|*
-operator|)
+argument_list|,
 name|Source
-operator|)
+argument_list|)
 index|[
 name|i
 index|]
@@ -337,104 +340,6 @@ default|default:
 return|return;
 block|}
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetResourceInfo  *  * PARAMETERS:  ResourceType        - Byte 0 of a resource descriptor  *  * RETURN:      Pointer to the resource conversion handler  *  * DESCRIPTION: Extract the Resource Type/Name from the first byte of  *              a resource descriptor.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_RESOURCE_INFO
-modifier|*
-name|AcpiRsGetResourceInfo
-parameter_list|(
-name|UINT8
-name|ResourceType
-parameter_list|)
-block|{
-name|ACPI_RESOURCE_INFO
-modifier|*
-name|SizeInfo
-decl_stmt|;
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
-expr_stmt|;
-comment|/* Determine if this is a small or large resource */
-if|if
-condition|(
-name|ResourceType
-operator|&
-name|ACPI_RESOURCE_NAME_LARGE
-condition|)
-block|{
-comment|/* Large Resource Type -- bits 6:0 contain the name */
-if|if
-condition|(
-name|ResourceType
-operator|>
-name|ACPI_RESOURCE_NAME_LARGE_MAX
-condition|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-name|SizeInfo
-operator|=
-operator|&
-name|AcpiGbl_LgResourceInfo
-index|[
-operator|(
-name|ResourceType
-operator|&
-name|ACPI_RESOURCE_NAME_LARGE_MASK
-operator|)
-index|]
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Small Resource Type -- bits 6:3 contain the name */
-name|SizeInfo
-operator|=
-operator|&
-name|AcpiGbl_SmResourceInfo
-index|[
-operator|(
-operator|(
-name|ResourceType
-operator|&
-name|ACPI_RESOURCE_NAME_SMALL_MASK
-operator|)
-operator|>>
-literal|3
-operator|)
-index|]
-expr_stmt|;
-block|}
-comment|/* Zero entry indicates an invalid resource type */
-if|if
-condition|(
-operator|!
-name|SizeInfo
-operator|->
-name|MinimumInternalStructLength
-condition|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|SizeInfo
-operator|)
-return|;
 block|}
 end_function
 
@@ -460,7 +365,22 @@ decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/* Determine if this is a small or large resource */
+comment|/* Length is the total descriptor length minus the header length */
+name|ResourceLength
+operator|=
+call|(
+name|ACPI_RS_LENGTH
+call|)
+argument_list|(
+name|TotalLength
+operator|-
+name|AcpiUtGetResourceHeaderLength
+argument_list|(
+name|Aml
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Length is stored differently for large and small descriptors */
 if|if
 condition|(
 name|Aml
@@ -472,22 +392,7 @@ operator|&
 name|ACPI_RESOURCE_NAME_LARGE
 condition|)
 block|{
-comment|/* Large Resource type -- bytes 1-2 contain the 16-bit length */
-name|ResourceLength
-operator|=
-call|(
-name|ACPI_RS_LENGTH
-call|)
-argument_list|(
-name|TotalLength
-operator|-
-sizeof|sizeof
-argument_list|(
-name|AML_RESOURCE_LARGE_HEADER
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Insert length into the Large descriptor length field */
+comment|/* Large descriptor -- bytes 1-2 contain the 16-bit length */
 name|ACPI_MOVE_16_TO_16
 argument_list|(
 operator|&
@@ -504,22 +409,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Small Resource type -- bits 2:0 of byte 0 contain the length */
-name|ResourceLength
-operator|=
-call|(
-name|ACPI_RS_LENGTH
-call|)
-argument_list|(
-name|TotalLength
-operator|-
-sizeof|sizeof
-argument_list|(
-name|AML_RESOURCE_SMALL_HEADER
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Insert length into the descriptor type byte */
+comment|/* Small descriptor -- bits 2:0 of byte 0 contain the length */
 name|Aml
 operator|->
 name|SmallHeader
@@ -571,7 +461,7 @@ block|{
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/* Set the Descriptor Type */
+comment|/* Set the Resource Type */
 name|Aml
 operator|->
 name|SmallHeader
@@ -665,7 +555,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetResourceSource  *  * PARAMETERS:  ResourceLength      - Length field of the descriptor  *              MinimumLength       - Minimum length of the descriptor (minus  *                                    any optional fields)  *              ResourceSource      - Where the ResourceSource is returned  *              Aml                 - Pointer to the raw AML descriptor  *              StringPtr           - (optional) where to store the actual  *                                    ResourceSource string  *  * RETURN:      Length of the string plus NULL terminator, rounded up to 32 bit  *  * DESCRIPTION: Copy the optional ResourceSource data from a raw AML descriptor  *              to an internal resource descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetResourceSource  *  * PARAMETERS:  ResourceLength      - Length field of the descriptor  *              MinimumLength       - Minimum length of the descriptor (minus  *                                    any optional fields)  *              ResourceSource      - Where the ResourceSource is returned  *              Aml                 - Pointer to the raw AML descriptor  *              StringPtr           - (optional) where to store the actual  *                                    ResourceSource string  *  * RETURN:      Length of the string plus NULL terminator, rounded up to native  *              word boundary  *  * DESCRIPTION: Copy the optional ResourceSource data from a raw AML descriptor  *              to an internal resource descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -712,15 +602,14 @@ argument_list|)
 expr_stmt|;
 name|AmlResourceSource
 operator|=
-operator|(
-operator|(
+name|ACPI_ADD_PTR
+argument_list|(
 name|UINT8
-operator|*
-operator|)
+argument_list|,
 name|Aml
-operator|)
-operator|+
+argument_list|,
 name|MinimumLength
+argument_list|)
 expr_stmt|;
 comment|/*      * ResourceSource is present if the length of the descriptor is longer than      * the minimum length.      *      * Note: Some resource descriptors will have an additional null, so      * we add 1 to the minimum length.      */
 if|if
@@ -764,43 +653,49 @@ name|ResourceSource
 operator|->
 name|StringPtr
 operator|=
-operator|(
+name|ACPI_ADD_PTR
+argument_list|(
 name|char
-operator|*
-operator|)
-operator|(
-operator|(
-name|UINT8
-operator|*
-operator|)
+argument_list|,
 name|ResourceSource
-operator|)
-operator|+
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ACPI_RESOURCE_SOURCE
 argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * In order for the StructSize to fall on a 32-bit boundary, calculate          * the length of the string (+1 for the NULL terminator) and expand the          * StructSize to the next 32-bit boundary.          *          * Zero the entire area of the buffer.          */
+comment|/*          * In order for the Resource length to be a multiple of the native          * word, calculate the length of the string (+1 for NULL terminator)          * and expand to the next word multiple.          *          * Zero the entire area of the buffer.          */
 name|TotalLength
 operator|=
-name|ACPI_ROUND_UP_TO_32BITS
-argument_list|(
+operator|(
+name|UINT32
+operator|)
 name|ACPI_STRLEN
 argument_list|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|char
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|AmlResourceSource
 index|[
 literal|1
 index|]
 argument_list|)
+argument_list|)
 operator|+
 literal|1
+expr_stmt|;
+name|TotalLength
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|ACPI_ROUND_UP_TO_NATIVE_WORD
+argument_list|(
+name|TotalLength
 argument_list|)
 expr_stmt|;
 name|ACPI_MEMSET
@@ -825,15 +720,16 @@ name|ResourceSource
 operator|->
 name|StringPtr
 argument_list|,
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|char
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|AmlResourceSource
 index|[
 literal|1
 index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -845,8 +741,6 @@ name|TotalLength
 operator|)
 return|;
 block|}
-else|else
-block|{
 comment|/* ResourceSource is not present */
 name|ResourceSource
 operator|->
@@ -871,7 +765,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -920,15 +813,14 @@ block|{
 comment|/* Point to the end of the AML descriptor */
 name|AmlResourceSource
 operator|=
-operator|(
-operator|(
+name|ACPI_ADD_PTR
+argument_list|(
 name|UINT8
-operator|*
-operator|)
+argument_list|,
 name|Aml
-operator|)
-operator|+
+argument_list|,
 name|MinimumLength
+argument_list|)
 expr_stmt|;
 comment|/* Copy the ResourceSourceIndex */
 name|AmlResourceSource
@@ -946,15 +838,16 @@ expr_stmt|;
 comment|/* Copy the ResourceSource string */
 name|ACPI_STRCPY
 argument_list|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|char
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|AmlResourceSource
 index|[
 literal|1
 index|]
+argument_list|)
 argument_list|,
 name|ResourceSource
 operator|->
@@ -986,15 +879,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetPrtMethodData  *  * PARAMETERS:  Handle          - a handle to the containing object  *              RetBuffer       - a pointer to a buffer structure for the  *                                  results  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the _PRT value of an object  *              contained in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetPrtMethodData  *  * PARAMETERS:  Node            - Device node  *              RetBuffer       - Pointer to a buffer structure for the  *                                results  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the _PRT value of an object  *              contained in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsGetPrtMethodData
 parameter_list|(
-name|ACPI_HANDLE
-name|Handle
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*
@@ -1010,7 +904,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"RsGetPrtMethodData"
+name|RsGetPrtMethodData
 argument_list|)
 expr_stmt|;
 comment|/* Parameters guaranteed valid by caller */
@@ -1019,7 +913,7 @@ name|Status
 operator|=
 name|AcpiUtEvaluateObject
 argument_list|(
-name|Handle
+name|Node
 argument_list|,
 name|METHOD_NAME__PRT
 argument_list|,
@@ -1068,15 +962,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetCrsMethodData  *  * PARAMETERS:  Handle          - a handle to the containing object  *              RetBuffer       - a pointer to a buffer structure for the  *                                  results  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the _CRS value of an object  *              contained in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetCrsMethodData  *  * PARAMETERS:  Node            - Device node  *              RetBuffer       - Pointer to a buffer structure for the  *                                results  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the _CRS value of an object  *              contained in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsGetCrsMethodData
 parameter_list|(
-name|ACPI_HANDLE
-name|Handle
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*
@@ -1092,7 +987,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"RsGetCrsMethodData"
+name|RsGetCrsMethodData
 argument_list|)
 expr_stmt|;
 comment|/* Parameters guaranteed valid by caller */
@@ -1101,7 +996,7 @@ name|Status
 operator|=
 name|AcpiUtEvaluateObject
 argument_list|(
-name|Handle
+name|Node
 argument_list|,
 name|METHOD_NAME__CRS
 argument_list|,
@@ -1150,15 +1045,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetPrsMethodData  *  * PARAMETERS:  Handle          - a handle to the containing object  *              RetBuffer       - a pointer to a buffer structure for the  *                                  results  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the _PRS value of an object  *              contained in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetPrsMethodData  *  * PARAMETERS:  Node            - Device node  *              RetBuffer       - Pointer to a buffer structure for the  *                                results  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the _PRS value of an object  *              contained in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsGetPrsMethodData
 parameter_list|(
-name|ACPI_HANDLE
-name|Handle
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*
@@ -1174,7 +1070,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"RsGetPrsMethodData"
+name|RsGetPrsMethodData
 argument_list|)
 expr_stmt|;
 comment|/* Parameters guaranteed valid by caller */
@@ -1183,7 +1079,7 @@ name|Status
 operator|=
 name|AcpiUtEvaluateObject
 argument_list|(
-name|Handle
+name|Node
 argument_list|,
 name|METHOD_NAME__PRS
 argument_list|,
@@ -1232,7 +1128,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetMethodData  *  * PARAMETERS:  Handle          - a handle to the containing object  *              Path            - Path to method, relative to Handle  *              RetBuffer       - a pointer to a buffer structure for the  *                                  results  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the _CRS or _PRS value of an  *              object contained in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetMethodData  *  * PARAMETERS:  Handle          - Handle to the containing object  *              Path            - Path to method, relative to Handle  *              RetBuffer       - Pointer to a buffer structure for the  *                                results  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the _CRS or _PRS value of an  *              object contained in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1260,7 +1156,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"RsGetMethodData"
+name|RsGetMethodData
 argument_list|)
 expr_stmt|;
 comment|/* Parameters guaranteed valid by caller */
@@ -1318,27 +1214,29 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsSetSrsMethodData  *  * PARAMETERS:  Handle          - a handle to the containing object  *              InBuffer        - a pointer to a buffer structure of the  *                                  parameter  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to set the _SRS of an object contained  *              in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsSetSrsMethodData  *  * PARAMETERS:  Node            - Device node  *              InBuffer        - Pointer to a buffer structure of the  *                                parameter  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to set the _SRS of an object contained  *              in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  * Note: Parameters guaranteed valid by caller  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsSetSrsMethodData
 parameter_list|(
-name|ACPI_HANDLE
-name|Handle
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*
 name|InBuffer
 parameter_list|)
 block|{
-name|ACPI_PARAMETER_INFO
+name|ACPI_EVALUATE_INFO
+modifier|*
 name|Info
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|Params
+name|Args
 index|[
 literal|2
 index|]
@@ -1351,11 +1249,63 @@ name|Buffer
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"RsSetSrsMethodData"
+name|RsSetSrsMethodData
 argument_list|)
 expr_stmt|;
-comment|/* Parameters guaranteed valid by caller */
-comment|/*      * The InBuffer parameter will point to a linked list of      * resource parameters.  It needs to be formatted into a      * byte stream to be sent in as an input parameter to _SRS      *      * Convert the linked list into a byte stream      */
+comment|/* Allocate and initialize the evaluation information block */
+name|Info
+operator|=
+name|ACPI_ALLOCATE_ZEROED
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ACPI_EVALUATE_INFO
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Info
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
+name|Info
+operator|->
+name|PrefixNode
+operator|=
+name|Node
+expr_stmt|;
+name|Info
+operator|->
+name|Pathname
+operator|=
+name|METHOD_NAME__SRS
+expr_stmt|;
+name|Info
+operator|->
+name|Parameters
+operator|=
+name|Args
+expr_stmt|;
+name|Info
+operator|->
+name|ParameterType
+operator|=
+name|ACPI_PARAM_ARGS
+expr_stmt|;
+name|Info
+operator|->
+name|Flags
+operator|=
+name|ACPI_IGNORE_RETURN_VALUE
+expr_stmt|;
+comment|/*      * The InBuffer parameter will point to a linked list of      * resource parameters. It needs to be formatted into a      * byte stream to be sent in as an input parameter to _SRS      *      * Convert the linked list into a byte stream      */
 name|Buffer
 operator|.
 name|Length
@@ -1382,14 +1332,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
-comment|/* Init the param object */
-name|Params
+comment|/* Create and initialize the method parameter object */
+name|Args
 index|[
 literal|0
 index|]
@@ -1402,27 +1350,29 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|Params
+name|Args
 index|[
 literal|0
 index|]
 condition|)
 block|{
-name|AcpiOsFree
+comment|/*          * Must free the buffer allocated above (otherwise it is freed          * later)          */
+name|ACPI_FREE
 argument_list|(
 name|Buffer
 operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_NO_MEMORY
-argument_list|)
 expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
-comment|/* Set up the parameter object */
-name|Params
+name|Args
 index|[
 literal|0
 index|]
@@ -1438,7 +1388,7 @@ name|Buffer
 operator|.
 name|Length
 expr_stmt|;
-name|Params
+name|Args
 index|[
 literal|0
 index|]
@@ -1451,7 +1401,7 @@ name|Buffer
 operator|.
 name|Pointer
 expr_stmt|;
-name|Params
+name|Args
 index|[
 literal|0
 index|]
@@ -1462,74 +1412,35 @@ name|Flags
 operator|=
 name|AOPOBJ_DATA_VALID
 expr_stmt|;
-name|Params
+name|Args
 index|[
 literal|1
 index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|Info
-operator|.
-name|Node
-operator|=
-name|Handle
-expr_stmt|;
-name|Info
-operator|.
-name|Parameters
-operator|=
-name|Params
-expr_stmt|;
-name|Info
-operator|.
-name|ParameterType
-operator|=
-name|ACPI_PARAM_ARGS
-expr_stmt|;
-comment|/* Execute the method, no return value */
+comment|/* Execute the method, no return value is expected */
 name|Status
 operator|=
-name|AcpiNsEvaluateRelative
+name|AcpiNsEvaluate
 argument_list|(
-name|METHOD_NAME__SRS
-argument_list|,
-operator|&
 name|Info
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-comment|/* Delete any return object (especially if ImplicitReturn is enabled) */
-if|if
-condition|(
-name|Info
-operator|.
-name|ReturnObject
-condition|)
-block|{
+comment|/* Clean up and return the status from AcpiNsEvaluate */
 name|AcpiUtRemoveReference
 argument_list|(
-name|Info
-operator|.
-name|ReturnObject
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-comment|/* Clean up and return the status from AcpiNsEvaluateRelative */
-name|AcpiUtRemoveReference
-argument_list|(
-name|Params
+name|Args
 index|[
 literal|0
 index|]
+argument_list|)
+expr_stmt|;
+name|Cleanup
+label|:
+name|ACPI_FREE
+argument_list|(
+name|Info
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS

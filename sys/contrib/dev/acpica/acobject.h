@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 1.130 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 1.143 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -20,37 +20,79 @@ name|_ACOBJECT_H
 end_define
 
 begin_comment
-comment|/*  * The ACPI_OPERAND_OBJECT  is used to pass AML operands from the dispatcher  * to the interpreter, and to keep track of the various handlers such as  * address space handlers and notify handlers.  The object is a constant  * size in order to allow it to be cached and reused.  */
+comment|/* acpisrc:StructDefs -- for acpisrc conversion */
 end_comment
+
+begin_comment
+comment|/*  * The ACPI_OPERAND_OBJECT is used to pass AML operands from the dispatcher  * to the interpreter, and to keep track of the various handlers such as  * address space handlers and notify handlers. The object is a constant  * size in order to allow it to be cached and reused.  *  * Note: The object is optimized to be aligned and will not work if it is  * byte-packed.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|ACPI_MACHINE_WIDTH
+operator|==
+literal|64
+end_if
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|8
+name|)
+end_pragma
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|4
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * Common Descriptors  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Common area for all objects.  *  * DataType is used to differentiate between internal descriptors, and MUST  * be the first byte in this structure.  */
+comment|/*  * Common area for all objects.  *  * DescriptorType is used to differentiate between internal descriptors, and  * must be in the same place across all descriptors  *  * Note: The DescriptorType and Type fields must appear in the identical  * position in both the ACPI_NAMESPACE_NODE and ACPI_OPERAND_OBJECT  * structures.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_OBJECT_COMMON_HEADER
-comment|/* SIZE/ALIGNMENT: 32 bits, one ptr plus trailing 8-bit flag */
 define|\
-value|UINT8                           Descriptor;
+value|union acpi_operand_object       *NextObject;
+comment|/* Objects linked to parent NS node */
+value|\     UINT8                           DescriptorType;
 comment|/* To differentiate various internal objs */
 value|\     UINT8                           Type;
 comment|/* ACPI_OBJECT_TYPE */
 value|\     UINT16                          ReferenceCount;
 comment|/* For object deletion management */
-value|\     union acpi_operand_object       *NextObject;
-comment|/* Objects linked to parent NS node */
 value|\     UINT8                           Flags;
 end_define
 
 begin_comment
-unit|\
-comment|/* Values for flag byte above */
+comment|/*      * Note: There are 3 bytes available here before the      * next natural alignment boundary (for both 32/64 cases)      */
+end_comment
+
+begin_comment
+comment|/* Values for Flag byte above */
 end_comment
 
 begin_define
@@ -95,69 +137,15 @@ name|AOPOBJ_SINGLE_DATUM
 value|0x20
 end_define
 
-begin_comment
-comment|/*  * Common bitfield for the field objects  * "Field Datum"  -- a datum from the actual field object  * "Buffer Datum" -- a datum from a user buffer, read from or to be written to the field  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|ACPI_COMMON_FIELD_INFO
-comment|/* SIZE/ALIGNMENT: 24 bits + three 32-bit values */
-define|\
-value|UINT8                           FieldFlags;
-comment|/* Access, update, and lock bits */
-value|\     UINT8                           Attribute;
-comment|/* From AccessAs keyword */
-value|\     UINT8                           AccessByteWidth;
-comment|/* Read/Write size in bytes */
-value|\     UINT32                          BitLength;
-comment|/* Length of field in bits */
-value|\     UINT32                          BaseByteOffset;
-comment|/* Byte offset within containing object */
-value|\     UINT8                           StartFieldBitOffset;
-comment|/* Bit offset within first field datum (0-63) */
-value|\     UINT8                           AccessBitWidth;
-comment|/* Read/Write size in bits (8-64) */
-value|\     UINT32                          Value;
-comment|/* Value to store into the Bank or Index register */
-value|\     ACPI_NAMESPACE_NODE             *Node;
+name|AOPOBJ_INVALID
+value|0x40
 end_define
 
 begin_comment
-comment|/* Link back to parent node */
-end_comment
-
-begin_comment
-comment|/*  * Fields common to both Strings and Buffers  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_COMMON_BUFFER_INFO
-define|\
-value|UINT32                          Length;
-end_define
-
-begin_comment
-comment|/*  * Common fields for objects that support ASL notifications  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_COMMON_NOTIFY_INFO
-define|\
-value|union acpi_operand_object       *SystemNotify;
-comment|/* Handler for system notifies */
-value|\     union acpi_operand_object       *DeviceNotify;
-comment|/* Handler for driver notifies */
-value|\     union acpi_operand_object       *Handler;
-end_define
-
-begin_comment
-comment|/* Handler for Address space */
+comment|/* Used if host OS won't allow an OpRegion address */
 end_comment
 
 begin_comment
@@ -181,6 +169,13 @@ struct|struct
 name|acpi_object_integer
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
+name|UINT8
+name|Fill
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Prevent warning on some compilers */
 name|ACPI_INTEGER
 name|Value
 decl_stmt|;
@@ -190,8 +185,19 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Note: The String and Buffer object must be identical through the Pointer  * element.  There is code that depends on this.  */
+comment|/*  * Note: The String and Buffer object must be identical through the Pointer  * and length elements.  There is code that depends on this.  *  * Fields common to both Strings and Buffers  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_COMMON_BUFFER_INFO
+parameter_list|(
+name|_Type
+parameter_list|)
+define|\
+value|_Type                           *Pointer; \     UINT32                          Length;
+end_define
 
 begin_typedef
 typedef|typedef
@@ -201,10 +207,9 @@ comment|/* Null terminated, ASCII characters only */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_BUFFER_INFO
+argument_list|(
 name|char
-modifier|*
-name|Pointer
-decl_stmt|;
+argument_list|)
 comment|/* String in AML stream or allocated string */
 block|}
 name|ACPI_OBJECT_STRING
@@ -218,23 +223,22 @@ name|acpi_object_buffer
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_BUFFER_INFO
+argument_list|(
+name|UINT8
+argument_list|)
+comment|/* Buffer in AML stream or allocated buffer */
+name|UINT32
+name|AmlLength
+decl_stmt|;
 name|UINT8
 modifier|*
-name|Pointer
+name|AmlStart
 decl_stmt|;
-comment|/* Buffer in AML stream or allocated buffer */
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
 comment|/* Link back to parent node */
-name|UINT8
-modifier|*
-name|AmlStart
-decl_stmt|;
-name|UINT32
-name|AmlLength
-decl_stmt|;
 block|}
 name|ACPI_OBJECT_BUFFER
 typedef|;
@@ -246,17 +250,6 @@ struct|struct
 name|acpi_object_package
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
-name|UINT32
-name|Count
-decl_stmt|;
-comment|/* # of elements in package */
-name|UINT32
-name|AmlLength
-decl_stmt|;
-name|UINT8
-modifier|*
-name|AmlStart
-decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
@@ -269,6 +262,17 @@ modifier|*
 name|Elements
 decl_stmt|;
 comment|/* Array of pointers to AcpiObjects */
+name|UINT8
+modifier|*
+name|AmlStart
+decl_stmt|;
+name|UINT32
+name|AmlLength
+decl_stmt|;
+name|UINT32
+name|Count
+decl_stmt|;
+comment|/* # of elements in package */
 block|}
 name|ACPI_OBJECT_PACKAGE
 typedef|;
@@ -284,75 +288,12 @@ struct|struct
 name|acpi_object_event
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
-name|void
-modifier|*
-name|Semaphore
+name|ACPI_SEMAPHORE
+name|OsSemaphore
 decl_stmt|;
+comment|/* Actual OS synchronization object */
 block|}
 name|ACPI_OBJECT_EVENT
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ACPI_INFINITE_CONCURRENCY
-value|0xFF
-end_define
-
-begin_typedef
-typedef|typedef
-name|ACPI_STATUS
-function_decl|(
-modifier|*
-name|ACPI_INTERNAL_METHOD
-function_decl|)
-parameter_list|(
-name|struct
-name|acpi_walk_state
-modifier|*
-name|WalkState
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_object_method
-block|{
-name|ACPI_OBJECT_COMMON_HEADER
-name|UINT8
-name|MethodFlags
-decl_stmt|;
-name|UINT8
-name|ParamCount
-decl_stmt|;
-name|UINT32
-name|AmlLength
-decl_stmt|;
-name|void
-modifier|*
-name|Semaphore
-decl_stmt|;
-name|UINT8
-modifier|*
-name|AmlStart
-decl_stmt|;
-name|ACPI_INTERNAL_METHOD
-name|Implementation
-decl_stmt|;
-name|UINT8
-name|Concurrency
-decl_stmt|;
-name|UINT8
-name|ThreadCount
-decl_stmt|;
-name|ACPI_OWNER_ID
-name|OwnerId
-decl_stmt|;
-block|}
-name|ACPI_OBJECT_METHOD
 typedef|;
 end_typedef
 
@@ -370,17 +311,20 @@ name|UINT16
 name|AcquisitionDepth
 decl_stmt|;
 comment|/* Allow multiple Acquires, same thread */
+name|ACPI_MUTEX
+name|OsMutex
+decl_stmt|;
+comment|/* Actual OS synchronization object */
+name|ACPI_THREAD_ID
+name|ThreadId
+decl_stmt|;
+comment|/* Current owner of the mutex */
 name|struct
 name|acpi_thread_state
 modifier|*
 name|OwnerThread
 decl_stmt|;
 comment|/* Current owner of the mutex */
-name|void
-modifier|*
-name|Semaphore
-decl_stmt|;
-comment|/* Actual OS synchronization object */
 name|union
 name|acpi_operand_object
 modifier|*
@@ -416,12 +360,6 @@ name|ACPI_OBJECT_COMMON_HEADER
 name|UINT8
 name|SpaceId
 decl_stmt|;
-name|union
-name|acpi_operand_object
-modifier|*
-name|Handler
-decl_stmt|;
-comment|/* Handler for region access */
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
@@ -430,21 +368,88 @@ comment|/* Containing namespace node */
 name|union
 name|acpi_operand_object
 modifier|*
-name|Next
+name|Handler
 decl_stmt|;
-name|UINT32
-name|Length
+comment|/* Handler for region access */
+name|union
+name|acpi_operand_object
+modifier|*
+name|Next
 decl_stmt|;
 name|ACPI_PHYSICAL_ADDRESS
 name|Address
+decl_stmt|;
+name|UINT32
+name|Length
 decl_stmt|;
 block|}
 name|ACPI_OBJECT_REGION
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_object_method
+block|{
+name|ACPI_OBJECT_COMMON_HEADER
+name|UINT8
+name|MethodFlags
+decl_stmt|;
+name|UINT8
+name|ParamCount
+decl_stmt|;
+name|UINT8
+name|SyncLevel
+decl_stmt|;
+name|union
+name|acpi_operand_object
+modifier|*
+name|Mutex
+decl_stmt|;
+name|UINT8
+modifier|*
+name|AmlStart
+decl_stmt|;
+name|ACPI_INTERNAL_METHOD
+name|Implementation
+decl_stmt|;
+name|UINT32
+name|AmlLength
+decl_stmt|;
+name|UINT8
+name|ThreadCount
+decl_stmt|;
+name|ACPI_OWNER_ID
+name|OwnerId
+decl_stmt|;
+block|}
+name|ACPI_OBJECT_METHOD
+typedef|;
+end_typedef
+
 begin_comment
 comment|/******************************************************************************  *  * Objects that can be notified.  All share a common NotifyInfo area.  *  *****************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  * Common fields for objects that support ASL notifications  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_COMMON_NOTIFY_INFO
+define|\
+value|union acpi_operand_object       *SystemNotify;
+comment|/* Handler for system notifies */
+value|\     union acpi_operand_object       *DeviceNotify;
+comment|/* Handler for driver notifies */
+value|\     union acpi_operand_object       *Handler;
+end_define
+
+begin_comment
+comment|/* Handler for Address space */
 end_comment
 
 begin_typedef
@@ -500,13 +505,14 @@ struct|struct
 name|acpi_object_processor
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
-name|ACPI_COMMON_NOTIFY_INFO
-name|UINT32
+comment|/* The next two fields take advantage of the 3-byte space before NOTIFY_INFO */
+name|UINT8
 name|ProcId
 decl_stmt|;
-name|UINT32
+name|UINT8
 name|Length
 decl_stmt|;
+name|ACPI_COMMON_NOTIFY_INFO
 name|ACPI_IO_ADDRESS
 name|Address
 decl_stmt|;
@@ -531,6 +537,38 @@ begin_comment
 comment|/******************************************************************************  *  * Fields.  All share a common header/info field.  *  *****************************************************************************/
 end_comment
 
+begin_comment
+comment|/*  * Common bitfield for the field objects  * "Field Datum"  -- a datum from the actual field object  * "Buffer Datum" -- a datum from a user buffer, read from or to be written to the field  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_COMMON_FIELD_INFO
+define|\
+value|UINT8                           FieldFlags;
+comment|/* Access, update, and lock bits */
+value|\     UINT8                           Attribute;
+comment|/* From AccessAs keyword */
+value|\     UINT8                           AccessByteWidth;
+comment|/* Read/Write size in bytes */
+value|\     ACPI_NAMESPACE_NODE             *Node;
+comment|/* Link back to parent node */
+value|\     UINT32                          BitLength;
+comment|/* Length of field in bits */
+value|\     UINT32                          BaseByteOffset;
+comment|/* Byte offset within containing object */
+value|\     UINT32                          Value;
+comment|/* Value to store into the Bank or Index register */
+value|\     UINT8                           StartFieldBitOffset;
+comment|/* Bit offset within first field datum (0-63) */
+value|\     UINT8                           AccessBitWidth;
+end_define
+
+begin_comment
+comment|/* Read/Write size in bits (8-64) */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -544,8 +582,7 @@ name|acpi_operand_object
 operator|*
 name|RegionObj
 expr_stmt|;
-comment|/* Containing Operation Region object */
-comment|/* (REGION/BANK fields only) */
+comment|/* Parent Operation Region object (REGION/BANK fields only) */
 block|}
 name|ACPI_OBJECT_FIELD_COMMON
 typedef|;
@@ -667,17 +704,6 @@ name|ACPI_OBJECT_NOTIFY_HANDLER
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* Flags for address handler */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_ADDR_HANDLER_DEFAULT_INSTALLED
-value|0x1
-end_define
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -687,8 +713,8 @@ name|ACPI_OBJECT_COMMON_HEADER
 name|UINT8
 name|SpaceId
 decl_stmt|;
-name|UINT16
-name|Hflags
+name|UINT8
+name|HandlerFlags
 decl_stmt|;
 name|ACPI_ADR_SPACE_HANDLER
 name|Handler
@@ -722,6 +748,17 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* Flags for address handler (HandlerFlags) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_ADDR_HANDLER_DEFAULT_INSTALLED
+value|0x01
+end_define
+
+begin_comment
 comment|/******************************************************************************  *  * Special internal objects  *  *****************************************************************************/
 end_comment
 
@@ -742,10 +779,6 @@ comment|/* Used for IndexOp */
 name|UINT16
 name|Opcode
 decl_stmt|;
-name|UINT32
-name|Offset
-decl_stmt|;
-comment|/* Used for ArgOp, LocalOp, and IndexOp */
 name|void
 modifier|*
 name|Object
@@ -761,6 +794,10 @@ modifier|*
 modifier|*
 name|Where
 decl_stmt|;
+name|UINT32
+name|Offset
+decl_stmt|;
+comment|/* Used for ArgOp, LocalOp, and IndexOp */
 block|}
 name|ACPI_OBJECT_REFERENCE
 typedef|;
@@ -776,19 +813,6 @@ struct|struct
 name|acpi_object_extra
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
-name|UINT8
-name|ByteFill1
-decl_stmt|;
-name|UINT16
-name|WordFill1
-decl_stmt|;
-name|UINT32
-name|AmlLength
-decl_stmt|;
-name|UINT8
-modifier|*
-name|AmlStart
-decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Method_REG
@@ -799,6 +823,13 @@ modifier|*
 name|RegionContext
 decl_stmt|;
 comment|/* Region-specific data */
+name|UINT8
+modifier|*
+name|AmlStart
+decl_stmt|;
+name|UINT32
+name|AmlLength
+decl_stmt|;
 block|}
 name|ACPI_OBJECT_EXTRA
 typedef|;
@@ -1062,14 +1093,30 @@ end_define
 
 begin_typedef
 typedef|typedef
+struct|struct
+name|acpi_common_descriptor
+block|{
+name|void
+modifier|*
+name|CommonPointer
+decl_stmt|;
+name|UINT8
+name|DescriptorType
+decl_stmt|;
+comment|/* To differentiate various internal objs */
+block|}
+name|ACPI_COMMON_DESCRIPTOR
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 union|union
 name|acpi_descriptor
 block|{
-name|UINT8
-name|DescriptorId
+name|ACPI_COMMON_DESCRIPTOR
+name|Common
 decl_stmt|;
-comment|/* To differentiate various internal objs */
-block|\
 name|ACPI_OPERAND_OBJECT
 name|Object
 decl_stmt|;
@@ -1083,6 +1130,14 @@ block|}
 name|ACPI_DESCRIPTOR
 typedef|;
 end_typedef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|)
+end_pragma
 
 begin_endif
 endif|#

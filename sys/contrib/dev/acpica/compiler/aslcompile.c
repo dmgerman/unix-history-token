@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: aslcompile - top level compile module  *              $Revision: 1.88 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: aslcompile - top level compile module  *              $Revision: 1.97 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -423,7 +423,171 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlCheckForAscii  *  * PARAMETERS:  FileInfo        - Points to an open input file  *  * RETURN:      Status  *  * DESCRIPTION: Verify that the input file is entirely ASCII.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlConsume*  *  * PARAMETERS:  FileInfo        - Points to an open input file  *  * RETURN:      Number of lines consumed  *  * DESCRIPTION: Step over both types of comment during check for ascii chars  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|FlConsumeAnsiComment
+parameter_list|(
+name|ASL_FILE_INFO
+modifier|*
+name|FileInfo
+parameter_list|,
+name|ASL_FILE_STATUS
+modifier|*
+name|Status
+parameter_list|)
+block|{
+name|UINT8
+name|Byte
+decl_stmt|;
+name|BOOLEAN
+name|ClosingComment
+init|=
+name|FALSE
+decl_stmt|;
+while|while
+condition|(
+name|fread
+argument_list|(
+operator|&
+name|Byte
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+name|FileInfo
+operator|->
+name|Handle
+argument_list|)
+condition|)
+block|{
+comment|/* Scan until comment close is found */
+if|if
+condition|(
+name|ClosingComment
+condition|)
+block|{
+if|if
+condition|(
+name|Byte
+operator|==
+literal|'/'
+condition|)
+block|{
+return|return;
+block|}
+if|if
+condition|(
+name|Byte
+operator|!=
+literal|'*'
+condition|)
+block|{
+comment|/* Reset */
+name|ClosingComment
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|Byte
+operator|==
+literal|'*'
+condition|)
+block|{
+name|ClosingComment
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+comment|/* Maintain line count */
+if|if
+condition|(
+name|Byte
+operator|==
+literal|0x0A
+condition|)
+block|{
+name|Status
+operator|->
+name|Line
+operator|++
+expr_stmt|;
+block|}
+name|Status
+operator|->
+name|Offset
+operator|++
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|FlConsumeNewComment
+parameter_list|(
+name|ASL_FILE_INFO
+modifier|*
+name|FileInfo
+parameter_list|,
+name|ASL_FILE_STATUS
+modifier|*
+name|Status
+parameter_list|)
+block|{
+name|UINT8
+name|Byte
+decl_stmt|;
+while|while
+condition|(
+name|fread
+argument_list|(
+operator|&
+name|Byte
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+name|FileInfo
+operator|->
+name|Handle
+argument_list|)
+condition|)
+block|{
+name|Status
+operator|->
+name|Offset
+operator|++
+expr_stmt|;
+comment|/* Comment ends at newline */
+if|if
+condition|(
+name|Byte
+operator|==
+literal|0x0A
+condition|)
+block|{
+name|Status
+operator|->
+name|Line
+operator|++
+expr_stmt|;
+return|return;
+block|}
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    FlCheckForAscii  *  * PARAMETERS:  FileInfo        - Points to an open input file  *  * RETURN:      Status  *  * DESCRIPTION: Verify that the input file is entirely ASCII. Ignores characters  *              within comments. Note: does not handle nested comments and does  *              not handle comment delimiters within string literals. However,  *              on the rare chance this happens and an invalid character is  *              missed, the parser will catch the error by failing in some  *              spectactular manner.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -444,11 +608,26 @@ name|BadBytes
 init|=
 literal|0
 decl_stmt|;
-name|ACPI_SIZE
-name|Offset
+name|BOOLEAN
+name|OpeningComment
 init|=
-literal|0
+name|FALSE
 decl_stmt|;
+name|ASL_FILE_STATUS
+name|Status
+decl_stmt|;
+name|Status
+operator|.
+name|Line
+operator|=
+literal|1
+expr_stmt|;
+name|Status
+operator|.
+name|Offset
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Read the entire file */
 while|while
 condition|(
@@ -467,6 +646,64 @@ name|Handle
 argument_list|)
 condition|)
 block|{
+comment|/* Ignore comment fields (allow non-ascii within) */
+if|if
+condition|(
+name|OpeningComment
+condition|)
+block|{
+comment|/* Check for second comment open delimiter */
+if|if
+condition|(
+name|Byte
+operator|==
+literal|'*'
+condition|)
+block|{
+name|FlConsumeAnsiComment
+argument_list|(
+name|FileInfo
+argument_list|,
+operator|&
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Byte
+operator|==
+literal|'/'
+condition|)
+block|{
+name|FlConsumeNewComment
+argument_list|(
+name|FileInfo
+argument_list|,
+operator|&
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Reset */
+name|OpeningComment
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|Byte
+operator|==
+literal|'/'
+condition|)
+block|{
+name|OpeningComment
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 comment|/* Check for an ASCII character */
 if|if
 condition|(
@@ -486,10 +723,16 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Non-ASCII character [0x%2.2X] found at file offset 0x%8.8X\n"
+literal|"Non-ASCII character [0x%2.2X] found in line %u, file offset 0x%.2X\n"
 argument_list|,
 name|Byte
 argument_list|,
+name|Status
+operator|.
+name|Line
+argument_list|,
+name|Status
+operator|.
 name|Offset
 argument_list|)
 expr_stmt|;
@@ -498,6 +741,23 @@ name|BadBytes
 operator|++
 expr_stmt|;
 block|}
+comment|/* Update line counter */
+elseif|else
+if|if
+condition|(
+name|Byte
+operator|==
+literal|0x0A
+condition|)
+block|{
+name|Status
+operator|.
+name|Line
+operator|++
+expr_stmt|;
+block|}
+name|Status
+operator|.
 name|Offset
 operator|++
 expr_stmt|;
@@ -522,14 +782,14 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%d non-ASCII characters found in input file, could be a binary file\n"
+literal|"%u non-ASCII characters found in input source text, could be a binary file\n"
 argument_list|,
 name|BadBytes
 argument_list|)
 expr_stmt|;
 name|AslError
 argument_list|(
-name|ASL_WARNING
+name|ASL_ERROR
 argument_list|,
 name|ASL_MSG_NON_ASCII
 argument_list|,
@@ -620,14 +880,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* Optional check for 100% ASCII source file */
-if|if
-condition|(
-name|Gbl_CheckForAscii
-condition|)
-block|{
-comment|/*          * NOTE: This code is optional because there can be "special" characters          * embedded in comments (such as the "copyright" symbol, 0xA9).          * Just emit a warning if there are non-ascii characters present.          */
-comment|/* Check if the input file is 100% ASCII text */
+comment|/* Check for 100% ASCII source file (comments are ignored) */
 name|Status
 operator|=
 name|FlCheckForAscii
@@ -639,6 +892,23 @@ name|ASL_FILE_INPUT
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AePrintErrorLog
+argument_list|(
+name|ASL_FILE_STDERR
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 name|Status
 operator|=
@@ -712,6 +982,10 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/* Optional parse tree dump, compiler debug output only */
+name|LsDumpParseTree
+argument_list|()
+expr_stmt|;
 name|OpcGetIntegerWidth
 argument_list|(
 name|RootNode
@@ -995,7 +1269,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* Namespace lookup */
+comment|/* Namespace cross-reference */
 name|AslGbl_NamespaceEvent
 operator|=
 name|UtBeginEvent
@@ -1007,11 +1281,6 @@ name|Status
 operator|=
 name|LkCrossReferenceNamespace
 argument_list|()
-expr_stmt|;
-name|UtEndEvent
-argument_list|(
-name|AslGbl_NamespaceEvent
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1026,6 +1295,15 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/* Namespace - Check for non-referenced objects */
+name|LkFindUnreferencedObjects
+argument_list|()
+expr_stmt|;
+name|UtEndEvent
+argument_list|(
+name|AslGbl_NamespaceEvent
+argument_list|)
+expr_stmt|;
 comment|/*      * Semantic analysis.  This can happen only after the      * namespace has been loaded and cross-referenced.      *      * part one - check control methods      */
 name|Event
 operator|=
@@ -1641,7 +1919,7 @@ operator|!
 name|Gbl_SourceOutputFlag
 condition|)
 block|{
-name|unlink
+name|remove
 argument_list|(
 name|Gbl_Files
 index|[
@@ -1670,7 +1948,7 @@ name|Gbl_IgnoreErrors
 operator|)
 condition|)
 block|{
-name|unlink
+name|remove
 argument_list|(
 name|Gbl_Files
 index|[
@@ -1693,7 +1971,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nMaximum error count (%d) exceeded.\n"
+literal|"\nMaximum error count (%d) exceeded\n"
 argument_list|,
 name|ASL_MAX_ERROR_COUNT
 argument_list|)
@@ -1704,14 +1982,22 @@ argument_list|(
 name|ASL_FILE_STDOUT
 argument_list|)
 expr_stmt|;
+comment|/*      * Return non-zero exit code if there have been errors, unless the      * global ignore error flag has been set      */
 if|if
 condition|(
+operator|(
 name|Gbl_ExceptionCount
 index|[
 name|ASL_ERROR
 index|]
 operator|>
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|!
+name|Gbl_IgnoreErrors
+operator|)
 condition|)
 block|{
 name|exit

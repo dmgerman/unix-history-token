@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: asllookup- Namespace lookup  *              $Revision: 1.95 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: asllookup- Namespace lookup  *              $Revision: 1.103 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -181,6 +181,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|LkIsObjectUsed
+parameter_list|(
+name|ACPI_HANDLE
+name|ObjHandle
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|ReturnValue
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    LsDoOneNamespaceObject  *  * PARAMETERS:  ACPI_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Dump a namespace object to the namespace output file.  *              Called during the walk of the namespace to dump all objects.  *  ******************************************************************************/
 end_comment
@@ -301,11 +324,10 @@ name|ObjDesc
 operator|)
 operator|&&
 operator|(
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Descriptor
+argument_list|)
 operator|==
 name|ACPI_DESC_TYPE_OPERAND
 operator|)
@@ -829,12 +851,16 @@ expr_stmt|;
 if|if
 condition|(
 name|Op
+operator|&&
+operator|(
+name|Op
 operator|->
 name|Asl
 operator|.
 name|ParseOpcode
 operator|==
 name|PARSEOP_INTEGER
+operator|)
 condition|)
 block|{
 name|FlPrintFile
@@ -871,6 +897,66 @@ name|AmlSubtreeLength
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_TYPE_LOCAL_RESOURCE
+case|:
+name|FlPrintFile
+argument_list|(
+name|ASL_FILE_NAMESPACE_OUTPUT
+argument_list|,
+literal|"  [Desc Offset     0x%.4X Bytes]"
+argument_list|,
+name|Node
+operator|->
+name|Value
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_TYPE_LOCAL_RESOURCE_FIELD
+case|:
+if|if
+condition|(
+name|Node
+operator|->
+name|Flags
+operator|&
+literal|0x80
+condition|)
+block|{
+name|FlPrintFile
+argument_list|(
+name|ASL_FILE_NAMESPACE_OUTPUT
+argument_list|,
+literal|"   [Field Offset    0x%.4X Bits 0x%.4X Bytes]"
+argument_list|,
+name|Node
+operator|->
+name|Value
+argument_list|,
+name|Node
+operator|->
+name|Value
+operator|/
+literal|8
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|FlPrintFile
+argument_list|(
+name|ASL_FILE_NAMESPACE_OUTPUT
+argument_list|,
+literal|"   [Field Offset    0x%.4X Bytes]"
+argument_list|,
+name|Node
+operator|->
+name|Value
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 default|default:
 comment|/* Nothing to do for other types */
 break|break;
@@ -888,6 +974,31 @@ operator|(
 name|AE_OK
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|LsSetupNsList
+parameter_list|(
+name|void
+modifier|*
+name|Handle
+parameter_list|)
+block|{
+name|Gbl_NsOutputFlag
+operator|=
+name|TRUE
+expr_stmt|;
+name|Gbl_Files
+index|[
+name|ASL_FILE_NAMESPACE_OUTPUT
+index|]
+operator|.
+name|Handle
+operator|=
+name|Handle
+expr_stmt|;
 block|}
 end_function
 
@@ -917,6 +1028,10 @@ name|AE_OK
 operator|)
 return|;
 block|}
+name|Gbl_NumNamespaceObjects
+operator|=
+literal|0
+expr_stmt|;
 comment|/* File header */
 name|FlPrintFile
 argument_list|(
@@ -1087,6 +1202,307 @@ operator|(
 name|FALSE
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    LkGetNameOp  *  * PARAMETERS:  Op              - Current Op  *  * RETURN:      NameOp associated with the input op  *  * DESCRIPTION: Find the name declaration op associated with the operator  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|LkGetNameOp
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+block|{
+specifier|const
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|NameOp
+init|=
+name|Op
+decl_stmt|;
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
+argument_list|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+argument_list|)
+expr_stmt|;
+comment|/* Get the NamePath from the appropriate place */
+if|if
+condition|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_NAMED
+condition|)
+block|{
+comment|/* For nearly all NAMED operators, the name reference is the first child */
+name|NameOp
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+if|if
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_ALIAS_OP
+condition|)
+block|{
+comment|/*              * ALIAS is the only oddball opcode, the name declaration              * (alias name) is the second operand              */
+name|NameOp
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_CREATE
+condition|)
+block|{
+comment|/* Name must appear as the last parameter */
+name|NameOp
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+while|while
+condition|(
+operator|!
+operator|(
+name|NameOp
+operator|->
+name|Asl
+operator|.
+name|CompileFlags
+operator|&
+name|NODE_IS_NAME_DECLARATION
+operator|)
+condition|)
+block|{
+name|NameOp
+operator|=
+name|NameOp
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+block|}
+block|}
+return|return
+operator|(
+name|NameOp
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    LkIsObjectUsed  *  * PARAMETERS:  ACPI_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Check for an unreferenced namespace object and emit a warning.  *              We have to be careful, because some types and names are  *              typically or always unreferenced, we don't want to issue  *              excessive warnings.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|ACPI_STATUS
+name|LkIsObjectUsed
+parameter_list|(
+name|ACPI_HANDLE
+name|ObjHandle
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|ReturnValue
+parameter_list|)
+block|{
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+init|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_NAMESPACE_NODE
+argument_list|,
+name|ObjHandle
+argument_list|)
+decl_stmt|;
+comment|/* Referenced flag is set during the namespace xref */
+if|if
+condition|(
+name|Node
+operator|->
+name|Flags
+operator|&
+name|ANOBJ_IS_REFERENCED
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+comment|/*      * Ignore names that start with an underscore,      * these are the reserved ACPI names and are typically not referenced,      * they are called by the host OS.      */
+if|if
+condition|(
+name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
+index|[
+literal|0
+index|]
+operator|==
+literal|'_'
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+comment|/* There are some types that are typically not referenced, ignore them */
+switch|switch
+condition|(
+name|Node
+operator|->
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_DEVICE
+case|:
+case|case
+name|ACPI_TYPE_PROCESSOR
+case|:
+case|case
+name|ACPI_TYPE_POWER
+case|:
+case|case
+name|ACPI_TYPE_LOCAL_RESOURCE
+case|:
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+default|default:
+break|break;
+block|}
+comment|/* All others are valid unreferenced namespace objects */
+if|if
+condition|(
+name|Node
+operator|->
+name|Op
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_WARNING2
+argument_list|,
+name|ASL_MSG_NOT_REFERENCED
+argument_list|,
+name|LkGetNameOp
+argument_list|(
+name|Node
+operator|->
+name|Op
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    LkFindUnreferencedObjects  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Namespace walk to find objects that are not referenced in any  *              way. Must be called after the namespace has been cross  *              referenced.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|LkFindUnreferencedObjects
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Walk entire namespace from the supplied root */
+operator|(
+name|void
+operator|)
+name|AcpiNsWalkNamespace
+argument_list|(
+name|ACPI_TYPE_ANY
+argument_list|,
+name|ACPI_ROOT_OBJECT
+argument_list|,
+name|ACPI_UINT32_MAX
+argument_list|,
+name|FALSE
+argument_list|,
+name|LkIsObjectUsed
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1322,7 +1738,7 @@ name|Flags
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
-literal|"LkNamespaceLocateBegin"
+name|LkNamespaceLocateBegin
 argument_list|,
 name|Op
 argument_list|)
@@ -1472,7 +1888,7 @@ operator|&
 name|AML_NAMED
 condition|)
 block|{
-comment|/* For all NAMED operators, the name reference is the first child */
+comment|/* For nearly all NAMED operators, the name reference is the first child */
 name|Path
 operator|=
 name|Op
@@ -1835,6 +2251,36 @@ name|Status
 operator|)
 return|;
 block|}
+comment|/* Check for a reference vs. name declaration */
+if|if
+condition|(
+operator|!
+operator|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_NAMED
+operator|)
+operator|&&
+operator|!
+operator|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_CREATE
+operator|)
+condition|)
+block|{
+comment|/* This node has been referenced, mark it for reference check */
+name|Node
+operator|->
+name|Flags
+operator||=
+name|ANOBJ_IS_REFERENCED
+expr_stmt|;
+block|}
 comment|/* Attempt to optimize the NamePath */
 name|OptOptimizeNamePath
 argument_list|(
@@ -1851,7 +2297,7 @@ argument_list|,
 name|Node
 argument_list|)
 expr_stmt|;
-comment|/*      * Dereference an alias. (A name reference that is an alias.)      * Aliases are not nested;  The alias always points to the final object      */
+comment|/*      * 1) Dereference an alias (A name reference that is an alias)      *    Aliases are not nested, the alias always points to the final object      */
 if|if
 condition|(
 operator|(
@@ -1889,7 +2335,7 @@ name|Asl
 operator|.
 name|Child
 expr_stmt|;
-comment|/* Who in turn points back to original target alias node */
+comment|/* That in turn points back to original target alias node */
 if|if
 condition|(
 name|NextOp
@@ -1908,23 +2354,9 @@ operator|.
 name|Node
 expr_stmt|;
 block|}
-else|else
-block|{
-name|AslError
-argument_list|(
-name|ASL_ERROR
-argument_list|,
-name|ASL_MSG_COMPILER_INTERNAL
-argument_list|,
-name|Op
-argument_list|,
-literal|"Missing alias link"
-argument_list|)
-expr_stmt|;
+comment|/* Else - forward reference to alias, will be resolved later */
 block|}
-block|}
-comment|/* 1) Check for a reference to a resource descriptor */
-elseif|else
+comment|/* 2) Check for a reference to a resource descriptor */
 if|if
 condition|(
 operator|(
@@ -2130,7 +2562,7 @@ name|Op
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 2) Check for a method invocation */
+comment|/* 3) Check for a method invocation */
 elseif|else
 if|if
 condition|(
@@ -2455,7 +2887,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/* 3) Check for an ASL Field definition */
+comment|/* 4) Check for an ASL Field definition */
 elseif|else
 if|if
 condition|(
@@ -2880,7 +3312,7 @@ name|OpInfo
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"LkNamespaceLocateEnd"
+name|LkNamespaceLocateEnd
 argument_list|)
 expr_stmt|;
 comment|/* We are only interested in opcodes that have an associated name */

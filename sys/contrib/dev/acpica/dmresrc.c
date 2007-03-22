@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmresrc.c - Resource Descriptor disassembly  *              $Revision: 1.26 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dmresrc.c - Resource Descriptor disassembly  *              $Revision: 1.35 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -73,10 +73,11 @@ end_typedef
 begin_decl_stmt
 specifier|static
 name|ACPI_RESOURCE_HANDLER
-name|AcpiGbl_SmResourceDispatch
+name|AcpiGbl_DumpResourceDispatch
 index|[]
 init|=
 block|{
+comment|/* Small descriptors */
 name|NULL
 block|,
 comment|/* 0x00, Reserved */
@@ -123,18 +124,9 @@ name|AcpiDmVendorSmallDescriptor
 block|,
 comment|/* 0x0E, ACPI_RESOURCE_NAME_SMALL_VENDOR */
 name|NULL
+block|,
 comment|/* 0x0F, ACPI_RESOURCE_NAME_END_TAG (not used) */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|ACPI_RESOURCE_HANDLER
-name|AcpiGbl_LgResourceDispatch
-index|[]
-init|=
-block|{
+comment|/* Large descriptors */
 name|NULL
 block|,
 comment|/* 0x00, Reserved */
@@ -175,19 +167,54 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Local prototypes */
+comment|/* Only used for single-threaded applications */
 end_comment
 
-begin_function_decl
+begin_comment
+comment|/* TBD: remove when name is passed as parameter to the dump functions */
+end_comment
+
+begin_decl_stmt
 specifier|static
-name|ACPI_RESOURCE_HANDLER
-name|AcpiDmGetResourceHandler
+name|UINT32
+name|ResourceName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDescriptorName  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Emit a name for the descriptor if one is present (indicated  *              by the name being changed from the default name.) A name is only  *              emitted if a reference to the descriptor has been made somewhere  *              in the original ASL code.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiDmDescriptorName
 parameter_list|(
-name|UINT8
-name|ResourceType
+name|void
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+if|if
+condition|(
+name|ResourceName
+operator|==
+name|ACPI_DEFAULT_RESNAME
+condition|)
+block|{
+return|return;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"%4.4s"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|ResourceName
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpInteger*  *  * PARAMETERS:  Value               - Value to emit  *              Name                - Associated name (emitted as a comment)  *  * RETURN:      None  *  * DESCRIPTION: Integer output helper functions  *  ******************************************************************************/
@@ -283,89 +310,12 @@ literal|"0x%8.8X%8.8X, // %s\n"
 argument_list|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
 name|Value
-argument_list|)
 argument_list|)
 argument_list|,
 name|Name
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmGetResourceHandler  *  * PARAMETERS:  ResourceType        - Byte 0 of a resource descriptor  *  * RETURN:      Pointer to the resource conversion handler. NULL is returned  *              if the ResourceType is invalid.  *  * DESCRIPTION: Return the handler associated with this resource type.  *              May also be used to validate a ResourceType.  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|ACPI_RESOURCE_HANDLER
-name|AcpiDmGetResourceHandler
-parameter_list|(
-name|UINT8
-name|ResourceType
-parameter_list|)
-block|{
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
-expr_stmt|;
-comment|/* Determine if this is a small or large resource */
-if|if
-condition|(
-name|ResourceType
-operator|&
-name|ACPI_RESOURCE_NAME_LARGE
-condition|)
-block|{
-comment|/* Large Resource Type -- bits 6:0 contain the name */
-if|if
-condition|(
-name|ResourceType
-operator|>
-name|ACPI_RESOURCE_NAME_LARGE_MAX
-condition|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|AcpiGbl_LgResourceDispatch
-index|[
-operator|(
-name|ResourceType
-operator|&
-name|ACPI_RESOURCE_NAME_LARGE_MASK
-operator|)
-index|]
-operator|)
-return|;
-block|}
-else|else
-block|{
-comment|/* Small Resource Type -- bits 6:3 contain the name */
-return|return
-operator|(
-name|AcpiGbl_SmResourceDispatch
-index|[
-operator|(
-operator|(
-name|ResourceType
-operator|&
-name|ACPI_RESOURCE_NAME_SMALL_MASK
-operator|)
-operator|>>
-literal|3
-operator|)
-index|]
-operator|)
-return|;
-block|}
 block|}
 end_function
 
@@ -467,6 +417,10 @@ name|ACPI_OP_WALK_INFO
 modifier|*
 name|Info
 parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
 name|UINT8
 modifier|*
 name|ByteData
@@ -475,6 +429,9 @@ name|UINT32
 name|ByteCount
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_NATIVE_UINT
 name|CurrentByteOffset
 decl_stmt|;
@@ -486,7 +443,7 @@ name|ResourceLength
 decl_stmt|;
 name|void
 modifier|*
-name|DescriptorBody
+name|Aml
 decl_stmt|;
 name|UINT32
 name|Level
@@ -496,8 +453,12 @@ name|DependentFns
 init|=
 name|FALSE
 decl_stmt|;
-name|ACPI_RESOURCE_HANDLER
-name|Handler
+name|UINT8
+name|ResourceIndex
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 decl_stmt|;
 name|Level
 operator|=
@@ -505,6 +466,30 @@ name|Info
 operator|->
 name|Level
 expr_stmt|;
+name|ResourceName
+operator|=
+name|ACPI_DEFAULT_RESNAME
+expr_stmt|;
+name|Node
+operator|=
+name|Op
+operator|->
+name|Common
+operator|.
+name|Node
+expr_stmt|;
+if|if
+condition|(
+name|Node
+condition|)
+block|{
+name|Node
+operator|=
+name|Node
+operator|->
+name|Child
+expr_stmt|;
+block|}
 for|for
 control|(
 name|CurrentByteOffset
@@ -517,8 +502,7 @@ name|ByteCount
 condition|;
 control|)
 block|{
-comment|/* Get the descriptor type and length */
-name|DescriptorBody
+name|Aml
 operator|=
 operator|&
 name|ByteData
@@ -526,26 +510,60 @@ index|[
 name|CurrentByteOffset
 index|]
 expr_stmt|;
+comment|/* Get the descriptor type and length */
 name|ResourceType
 operator|=
 name|AcpiUtGetResourceType
 argument_list|(
-name|DescriptorBody
+name|Aml
 argument_list|)
 expr_stmt|;
 name|ResourceLength
 operator|=
 name|AcpiUtGetResourceLength
 argument_list|(
-name|DescriptorBody
+name|Aml
 argument_list|)
 expr_stmt|;
+comment|/* Validate the Resource Type and Resource Length */
+name|Status
+operator|=
+name|AcpiUtValidateResource
+argument_list|(
+name|Aml
+argument_list|,
+operator|&
+name|ResourceIndex
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"/*** Could not validate Resource, type (%X) %s***/\n"
+argument_list|,
+name|ResourceType
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Point to next descriptor */
 name|CurrentByteOffset
 operator|+=
 name|AcpiUtGetDescriptorLength
 argument_list|(
-name|DescriptorBody
+name|Aml
 argument_list|)
 expr_stmt|;
 comment|/* Descriptor pre-processing */
@@ -609,7 +627,7 @@ expr_stmt|;
 comment|/* Go ahead and insert EndDependentFn() */
 name|AcpiDmEndDependentDescriptor
 argument_list|(
-name|DescriptorBody
+name|Aml
 argument_list|,
 name|ResourceLength
 argument_list|,
@@ -631,39 +649,38 @@ return|return;
 default|default:
 break|break;
 block|}
-comment|/* Get the handler associated with this Descriptor Type */
-name|Handler
-operator|=
-name|AcpiDmGetResourceHandler
-argument_list|(
-name|ResourceType
-argument_list|)
-expr_stmt|;
+comment|/* Disassemble the resource structure */
 if|if
 condition|(
-operator|!
-name|Handler
+name|Node
 condition|)
 block|{
-comment|/*              * Invalid Descriptor Type.              *              * Since the entire resource buffer has been previously walked and              * validated, this is a very serious error indicating that someone              * overwrote the buffer.              */
-name|AcpiOsPrintf
-argument_list|(
-literal|"/*** Unknown Resource type (%X) ***/\n"
-argument_list|,
-name|ResourceType
-argument_list|)
+name|ResourceName
+operator|=
+name|Node
+operator|->
+name|Name
+operator|.
+name|Integer
 expr_stmt|;
-return|return;
+name|Node
+operator|=
+name|Node
+operator|->
+name|Peer
+expr_stmt|;
 block|}
-comment|/* Disassemble the resource structure */
-name|Handler
-argument_list|(
-name|DescriptorBody
-argument_list|,
+name|AcpiGbl_DumpResourceDispatch
+index|[
+name|ResourceIndex
+index|]
+operator|(
+name|Aml
+operator|,
 name|ResourceLength
-argument_list|,
+operator|,
 name|Level
-argument_list|)
+operator|)
 expr_stmt|;
 comment|/* Descriptor post-processing */
 if|if
@@ -686,11 +703,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsResourceTemplate  *  * PARAMETERS:  Op          - Buffer Op to be examined  *  * RETURN:      TRUE if this Buffer Op contains a valid resource  *              descriptor.  *  * DESCRIPTION: Walk a byte list to determine if it consists of a valid set  *              of resource descriptors.  Nothing is output.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsResourceTemplate  *  * PARAMETERS:  Op          - Buffer Op to be examined  *  * RETURN:      Status. AE_OK if valid template  *  * DESCRIPTION: Walk a byte list to determine if it consists of a valid set  *              of resource descriptors.  Nothing is output.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|BOOLEAN
+name|ACPI_STATUS
 name|AcpiDmIsResourceTemplate
 parameter_list|(
 name|ACPI_PARSE_OBJECT
@@ -698,26 +715,23 @@ modifier|*
 name|Op
 parameter_list|)
 block|{
-name|UINT8
-modifier|*
-name|ByteData
-decl_stmt|;
-name|UINT32
-name|ByteCount
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|NextOp
 decl_stmt|;
-name|ACPI_NATIVE_UINT
-name|CurrentByteOffset
+name|UINT8
+modifier|*
+name|Aml
 decl_stmt|;
 name|UINT8
-name|ResourceType
-decl_stmt|;
-name|void
 modifier|*
-name|DescriptorBody
+name|EndAml
+decl_stmt|;
+name|ACPI_SIZE
+name|Length
 decl_stmt|;
 comment|/* This op must be a buffer */
 if|if
@@ -732,10 +746,12 @@ name|AML_BUFFER_OP
 condition|)
 block|{
 return|return
-name|FALSE
+operator|(
+name|AE_TYPE
+operator|)
 return|;
 block|}
-comment|/* Get to the ByteData list */
+comment|/* Get the ByteData list and length */
 name|NextOp
 operator|=
 name|Op
@@ -762,15 +778,22 @@ condition|)
 block|{
 return|return
 operator|(
-name|FALSE
+name|AE_TYPE
 operator|)
 return|;
 block|}
-comment|/* Extract the data pointer and data length */
-name|ByteCount
+name|Aml
+operator|=
+name|NextOp
+operator|->
+name|Named
+operator|.
+name|Data
+expr_stmt|;
+name|Length
 operator|=
 operator|(
-name|UINT32
+name|ACPI_SIZE
 operator|)
 name|NextOp
 operator|->
@@ -780,132 +803,62 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|ByteData
+comment|/* Walk the byte list, abort on any invalid descriptor type or length */
+name|Status
 operator|=
-name|NextOp
-operator|->
-name|Named
-operator|.
-name|Data
-expr_stmt|;
-comment|/*      * The absolute minimum resource template is an END_TAG (2 bytes),      * and the list must be terminated by a valid 2-byte END_TAG      */
-if|if
-condition|(
-operator|(
-name|ByteCount
-operator|<
-literal|2
-operator|)
-operator|||
-operator|(
-name|ByteData
-index|[
-name|ByteCount
-operator|-
-literal|2
-index|]
-operator|!=
-operator|(
-name|ACPI_RESOURCE_NAME_END_TAG
-operator||
-literal|1
-operator|)
-operator|)
-condition|)
-block|{
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-comment|/* Walk the byte list, abort on any invalid descriptor ID or length */
-for|for
-control|(
-name|CurrentByteOffset
-operator|=
-literal|0
-init|;
-name|CurrentByteOffset
-operator|<
-name|ByteCount
-condition|;
-control|)
-block|{
-comment|/* Get the descriptor type and length */
-name|DescriptorBody
-operator|=
+name|AcpiUtWalkAmlResources
+argument_list|(
+name|Aml
+argument_list|,
+name|Length
+argument_list|,
+name|NULL
+argument_list|,
 operator|&
-name|ByteData
-index|[
-name|CurrentByteOffset
-index|]
-expr_stmt|;
-name|ResourceType
-operator|=
-name|AcpiUtGetResourceType
-argument_list|(
-name|DescriptorBody
+name|EndAml
 argument_list|)
 expr_stmt|;
-comment|/* Point to next descriptor */
-name|CurrentByteOffset
-operator|+=
-name|AcpiUtGetDescriptorLength
-argument_list|(
-name|DescriptorBody
-argument_list|)
-expr_stmt|;
-comment|/* END_TAG terminates the descriptor list */
 if|if
 condition|(
-name|ResourceType
-operator|==
-name|ACPI_RESOURCE_NAME_END_TAG
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
 condition|)
 block|{
-comment|/*              * For the resource template to be valid, one END_TAG must appear              * at the very end of the ByteList, not before              */
+return|return
+operator|(
+name|AE_TYPE
+operator|)
+return|;
+block|}
+comment|/*      * For the resource template to be valid, one EndTag must appear      * at the very end of the ByteList, not before. (For proper disassembly      * of a ResourceTemplate, the buffer must not have any extra data after      * the EndTag.)      */
 if|if
 condition|(
-name|CurrentByteOffset
+operator|(
+name|Aml
+operator|+
+name|Length
+operator|-
+sizeof|sizeof
+argument_list|(
+name|AML_RESOURCE_END_TAG
+argument_list|)
+operator|)
 operator|!=
-name|ByteCount
+name|EndAml
 condition|)
 block|{
 return|return
 operator|(
-name|FALSE
+name|AE_AML_NO_RESOURCE_END_TAG
 operator|)
 return|;
 block|}
-comment|/*              * All resource descriptor types and lengths are valid,              * this list appears to be a valid resource template              */
+comment|/*      * All resource descriptors are valid, therefore this list appears      * to be a valid resource template      */
 return|return
 operator|(
-name|TRUE
-operator|)
-return|;
-block|}
-comment|/* Validate the resource name (must be after check for END_TAG) */
-if|if
-condition|(
-operator|!
-name|AcpiDmGetResourceHandler
-argument_list|(
-name|ResourceType
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-block|}
-comment|/* Did not find an END_TAG, something seriously wrong */
-return|return
-operator|(
-name|FALSE
+name|AE_OK
 operator|)
 return|;
 block|}

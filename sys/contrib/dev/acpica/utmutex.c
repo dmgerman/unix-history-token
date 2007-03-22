@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utmutex - local mutex support  *              $Revision: 1.3 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utmutex - local mutex support  *              $Revision: 1.12 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -78,7 +78,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"UtMutexInitialize"
+name|UtMutexInitialize
 argument_list|)
 expr_stmt|;
 comment|/*      * Create each of the predefined mutex objects      */
@@ -90,7 +90,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_MUTEX
+name|ACPI_NUM_MUTEX
 condition|;
 name|i
 operator|++
@@ -118,12 +118,35 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Create the spinlocks for use at interrupt level */
 name|Status
 operator|=
 name|AcpiOsCreateLock
 argument_list|(
 operator|&
 name|AcpiGbl_GpeLock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
+name|AcpiOsCreateLock
+argument_list|(
+operator|&
+name|AcpiGbl_HardwareLock
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -150,7 +173,7 @@ name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"UtMutexTerminate"
+name|UtMutexTerminate
 argument_list|)
 expr_stmt|;
 comment|/*      * Delete each predefined mutex object      */
@@ -162,7 +185,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_MUTEX
+name|ACPI_NUM_MUTEX
 condition|;
 name|i
 operator|++
@@ -177,9 +200,15 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Delete the spinlocks */
 name|AcpiOsDeleteLock
 argument_list|(
 name|AcpiGbl_GpeLock
+argument_list|)
+expr_stmt|;
+name|AcpiOsDeleteLock
+argument_list|(
+name|AcpiGbl_HardwareLock
 argument_list|)
 expr_stmt|;
 name|return_VOID
@@ -207,7 +236,7 @@ name|AE_OK
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
-literal|"UtCreateMutex"
+name|UtCreateMutex
 argument_list|,
 name|MutexId
 argument_list|)
@@ -216,7 +245,7 @@ if|if
 condition|(
 name|MutexId
 operator|>
-name|MAX_MUTEX
+name|ACPI_MAX_MUTEX
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -238,12 +267,8 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiOsCreateSemaphore
+name|AcpiOsCreateMutex
 argument_list|(
-literal|1
-argument_list|,
-literal|1
-argument_list|,
 operator|&
 name|AcpiGbl_MutexInfo
 index|[
@@ -293,12 +318,9 @@ name|ACPI_MUTEX_HANDLE
 name|MutexId
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
-literal|"UtDeleteMutex"
+name|UtDeleteMutex
 argument_list|,
 name|MutexId
 argument_list|)
@@ -307,7 +329,7 @@ if|if
 condition|(
 name|MutexId
 operator|>
-name|MAX_MUTEX
+name|ACPI_MAX_MUTEX
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -316,9 +338,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|Status
-operator|=
-name|AcpiOsDeleteSemaphore
+name|AcpiOsDeleteMutex
 argument_list|(
 name|AcpiGbl_MutexInfo
 index|[
@@ -348,7 +368,7 @@ name|ACPI_MUTEX_NOT_ACQUIRED
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
@@ -369,19 +389,19 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|UINT32
+name|ACPI_THREAD_ID
 name|ThisThreadId
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
-literal|"UtAcquireMutex"
+name|UtAcquireMutex
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|MutexId
 operator|>
-name|MAX_MUTEX
+name|ACPI_MAX_MUTEX
 condition|)
 block|{
 return|return
@@ -411,7 +431,7 @@ name|MutexId
 init|;
 name|i
 operator|<
-name|MAX_MUTEX
+name|ACPI_MAX_MUTEX
 condition|;
 name|i
 operator|++
@@ -436,12 +456,12 @@ operator|==
 name|MutexId
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Mutex [%s] already acquired by this thread [%X]\n"
+literal|"Mutex [%s] already acquired by this thread [%X]"
 operator|,
 name|AcpiUtGetMutexName
 argument_list|(
@@ -458,12 +478,12 @@ name|AE_ALREADY_ACQUIRED
 operator|)
 return|;
 block|}
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Invalid acquire order: Thread %X owns [%s], wants [%s]\n"
+literal|"Invalid acquire order: Thread %X owns [%s], wants [%s]"
 operator|,
 name|ThisThreadId
 operator|,
@@ -507,7 +527,7 @@ argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiOsWaitSemaphore
+name|AcpiOsAcquireMutex
 argument_list|(
 name|AcpiGbl_MutexInfo
 index|[
@@ -515,8 +535,6 @@ name|MutexId
 index|]
 operator|.
 name|Mutex
-argument_list|,
-literal|1
 argument_list|,
 name|ACPI_WAIT_FOREVER
 argument_list|)
@@ -565,24 +583,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Thread %X could not acquire Mutex [%s] %s\n"
+name|Status
+operator|,
+literal|"Thread %X could not acquire Mutex [%X]"
 operator|,
 name|ThisThreadId
 operator|,
-name|AcpiUtGetMutexName
-argument_list|(
 name|MutexId
-argument_list|)
-operator|,
-name|AcpiFormatException
-argument_list|(
-name|Status
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -607,15 +619,12 @@ name|ACPI_MUTEX_HANDLE
 name|MutexId
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|UINT32
+name|ACPI_THREAD_ID
 name|ThisThreadId
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
-literal|"UtReleaseMutex"
+name|UtReleaseMutex
 argument_list|)
 expr_stmt|;
 name|ThisThreadId
@@ -643,7 +652,7 @@ if|if
 condition|(
 name|MutexId
 operator|>
-name|MAX_MUTEX
+name|ACPI_MAX_MUTEX
 condition|)
 block|{
 return|return
@@ -665,17 +674,14 @@ operator|==
 name|ACPI_MUTEX_NOT_ACQUIRED
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Mutex [%s] is not acquired, cannot release\n"
+literal|"Mutex [%X] is not acquired, cannot release"
 operator|,
-name|AcpiUtGetMutexName
-argument_list|(
 name|MutexId
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -701,7 +707,7 @@ name|MutexId
 init|;
 name|i
 operator|<
-name|MAX_MUTEX
+name|ACPI_MAX_MUTEX
 condition|;
 name|i
 operator|++
@@ -728,12 +734,12 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Invalid release order: owns [%s], releasing [%s]\n"
+literal|"Invalid release order: owns [%s], releasing [%s]"
 operator|,
 name|AcpiUtGetMutexName
 argument_list|(
@@ -767,9 +773,7 @@ name|ThreadId
 operator|=
 name|ACPI_MUTEX_NOT_ACQUIRED
 expr_stmt|;
-name|Status
-operator|=
-name|AcpiOsSignalSemaphore
+name|AcpiOsReleaseMutex
 argument_list|(
 name|AcpiGbl_MutexInfo
 index|[
@@ -777,62 +781,11 @@ name|MutexId
 index|]
 operator|.
 name|Mutex
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"Thread %X could not release Mutex [%s] %s\n"
-operator|,
-name|ThisThreadId
-operator|,
-name|AcpiUtGetMutexName
-argument_list|(
-name|MutexId
-argument_list|)
-operator|,
-name|AcpiFormatException
-argument_list|(
-name|Status
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_MUTEX
-operator|,
-literal|"Thread %X released Mutex [%s]\n"
-operator|,
-name|ThisThreadId
-operator|,
-name|AcpiUtGetMutexName
-argument_list|(
-name|MutexId
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
-name|Status
+name|AE_OK
 operator|)
 return|;
 block|}

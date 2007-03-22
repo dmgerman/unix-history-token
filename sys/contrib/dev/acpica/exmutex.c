@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmutex - ASL Mutex Acquire/Release functions  *              $Revision: 1.28 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmutex - ASL Mutex Acquire/Release functions  *              $Revision: 1.40 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/acinterp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/acevents.h>
 end_include
 
 begin_define
@@ -234,6 +240,162 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAcquireMutexObject  *  * PARAMETERS:  TimeDesc            - Timeout in milliseconds  *              ObjDesc             - Mutex object  *              Thread              - Current thread state  *  * RETURN:      Status  *  * DESCRIPTION: Acquire an AML mutex, low-level interface. Provides a common  *              path that supports multiple acquires by the same thread.  *  * MUTEX:       Interpreter must be locked  *  * NOTE: This interface is called from three places:  * 1) From AcpiExAcquireMutex, via an AML Acquire() operator  * 2) From AcpiExAcquireGlobalLock when an AML Field access requires the  *    global lock  * 3) From the external interface, AcpiAcquireGlobalLock  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiExAcquireMutexObject
+parameter_list|(
+name|UINT16
+name|Timeout
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|,
+name|ACPI_THREAD_ID
+name|ThreadId
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE_PTR
+argument_list|(
+name|ExAcquireMutexObject
+argument_list|,
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ObjDesc
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BAD_PARAMETER
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Support for multiple acquires by the owning thread */
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|ThreadId
+operator|==
+name|ThreadId
+condition|)
+block|{
+comment|/*          * The mutex is already owned by this thread, just increment the          * acquisition depth          */
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|AcquisitionDepth
+operator|++
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Acquire the mutex, wait if necessary. Special case for Global Lock */
+if|if
+condition|(
+name|ObjDesc
+operator|==
+name|AcpiGbl_GlobalLockMutex
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiEvAcquireGlobalLock
+argument_list|(
+name|Timeout
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|Status
+operator|=
+name|AcpiExSystemWaitMutex
+argument_list|(
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|OsMutex
+argument_list|,
+name|Timeout
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+comment|/* Includes failure from a timeout on TimeDesc */
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Acquired the mutex: update mutex object */
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|ThreadId
+operator|=
+name|ThreadId
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|AcquisitionDepth
+operator|=
+literal|1
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|OriginalSyncLevel
+operator|=
+literal|0
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|OwnerThread
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Used only for AML Acquire() */
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAcquireMutex  *  * PARAMETERS:  TimeDesc            - Timeout integer  *              ObjDesc             - Mutex object  *              WalkState           - Current method execution state  *  * RETURN:      Status  *  * DESCRIPTION: Acquire an AML mutex  *  ******************************************************************************/
 end_comment
 
@@ -259,7 +421,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
-literal|"ExAcquireMutex"
+name|ExAcquireMutex
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -276,7 +438,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Sanity check -- we must have a valid thread ID */
+comment|/* Must have a valid thread ID */
 if|if
 condition|(
 operator|!
@@ -285,10 +447,12 @@ operator|->
 name|Thread
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Cannot acquire Mutex [%4.4s], null thread info\n"
+name|AE_INFO
+operator|,
+literal|"Cannot acquire Mutex [%4.4s], null thread info"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -307,7 +471,7 @@ name|AE_AML_INTERNAL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Current Sync must be less than or equal to the sync level of the      * mutex.  This mechanism provides some deadlock prevention      */
+comment|/*      * Current sync level must be less than or equal to the sync level of the      * mutex. This mechanism provides some deadlock prevention      */
 if|if
 condition|(
 name|WalkState
@@ -323,10 +487,12 @@ operator|.
 name|SyncLevel
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Cannot acquire Mutex [%4.4s], incorrect SyncLevel\n"
+name|AE_INFO
+operator|,
+literal|"Cannot acquire Mutex [%4.4s], current SyncLevel is too large (%d)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -336,6 +502,12 @@ name|Mutex
 operator|.
 name|Node
 argument_list|)
+operator|,
+name|WalkState
+operator|->
+name|Thread
+operator|->
+name|CurrentSyncLevel
 operator|)
 argument_list|)
 expr_stmt|;
@@ -345,87 +517,45 @@ name|AE_AML_MUTEX_ORDER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Support for multiple acquires by the owning thread */
-if|if
-condition|(
-name|ObjDesc
-operator|->
-name|Mutex
-operator|.
-name|OwnerThread
-condition|)
-block|{
-comment|/* Special case for Global Lock, allow all threads */
-if|if
-condition|(
-operator|(
-name|ObjDesc
-operator|->
-name|Mutex
-operator|.
-name|OwnerThread
-operator|->
-name|ThreadId
-operator|==
-name|WalkState
-operator|->
-name|Thread
-operator|->
-name|ThreadId
-operator|)
-operator|||
-operator|(
-name|ObjDesc
-operator|->
-name|Mutex
-operator|.
-name|Semaphore
-operator|==
-name|AcpiGbl_GlobalLockSemaphore
-operator|)
-condition|)
-block|{
-comment|/*              * The mutex is already owned by this thread,              * just increment the acquisition depth              */
-name|ObjDesc
-operator|->
-name|Mutex
-operator|.
-name|AcquisitionDepth
-operator|++
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-comment|/* Acquire the mutex, wait if necessary */
 name|Status
 operator|=
-name|AcpiExSystemAcquireMutex
+name|AcpiExAcquireMutexObject
 argument_list|(
+operator|(
+name|UINT16
+operator|)
 name|TimeDesc
+operator|->
+name|Integer
+operator|.
+name|Value
 argument_list|,
 name|ObjDesc
+argument_list|,
+name|WalkState
+operator|->
+name|Thread
+operator|->
+name|ThreadId
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_FAILURE
+name|ACPI_SUCCESS
 argument_list|(
 name|Status
 argument_list|)
+operator|&&
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|AcquisitionDepth
+operator|==
+literal|1
 condition|)
 block|{
-comment|/* Includes failure from a timeout on TimeDesc */
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Have the mutex: update mutex and walk info and save the SyncLevel */
+comment|/* Save Thread object, original/current sync levels */
 name|ObjDesc
 operator|->
 name|Mutex
@@ -435,14 +565,6 @@ operator|=
 name|WalkState
 operator|->
 name|Thread
-expr_stmt|;
-name|ObjDesc
-operator|->
-name|Mutex
-operator|.
-name|AcquisitionDepth
-operator|=
-literal|1
 expr_stmt|;
 name|ObjDesc
 operator|->
@@ -478,9 +600,143 @@ operator|->
 name|Thread
 argument_list|)
 expr_stmt|;
+block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReleaseMutexObject  *  * PARAMETERS:  ObjDesc             - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Release a previously acquired Mutex, low level interface.  *              Provides a common path that supports multiple releases (after  *              previous multiple acquires) by the same thread.  *  * MUTEX:       Interpreter must be locked  *  * NOTE: This interface is called from three places:  * 1) From AcpiExReleaseMutex, via an AML Acquire() operator  * 2) From AcpiExReleaseGlobalLock when an AML Field access requires the  *    global lock  * 3) From the external interface, AcpiReleaseGlobalLock  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiExReleaseMutexObject
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|ExReleaseMutexObject
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|AcquisitionDepth
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|AE_NOT_ACQUIRED
+operator|)
+return|;
+block|}
+comment|/* Match multiple Acquires with multiple Releases */
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|AcquisitionDepth
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|AcquisitionDepth
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Just decrement the depth and return */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|OwnerThread
+condition|)
+block|{
+comment|/* Unlink the mutex from the owner's list */
+name|AcpiExUnlinkMutex
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|OwnerThread
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* Release the mutex, special case for Global Lock */
+if|if
+condition|(
+name|ObjDesc
+operator|==
+name|AcpiGbl_GlobalLockMutex
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiEvReleaseGlobalLock
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsReleaseMutex
+argument_list|(
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|OsMutex
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Clear mutex info */
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|ThreadId
+operator|=
+literal|0
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -505,10 +761,12 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"ExReleaseMutex"
+name|ExReleaseMutex
 argument_list|)
 expr_stmt|;
 if|if
@@ -534,10 +792,12 @@ operator|.
 name|OwnerThread
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Cannot release Mutex [%4.4s], not acquired\n"
+name|AE_INFO
+operator|,
+literal|"Cannot release Mutex [%4.4s], not acquired"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -553,37 +813,6 @@ expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_AML_MUTEX_NOT_ACQUIRED
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Sanity check -- we must have a valid thread ID */
-if|if
-condition|(
-operator|!
-name|WalkState
-operator|->
-name|Thread
-condition|)
-block|{
-name|ACPI_REPORT_ERROR
-argument_list|(
-operator|(
-literal|"Cannot release Mutex [%4.4s], null thread info\n"
-operator|,
-name|AcpiUtGetNodeName
-argument_list|(
-name|ObjDesc
-operator|->
-name|Mutex
-operator|.
-name|Node
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_AML_INTERNAL
 argument_list|)
 expr_stmt|;
 block|}
@@ -608,19 +837,17 @@ operator|)
 operator|&&
 operator|(
 name|ObjDesc
-operator|->
-name|Mutex
-operator|.
-name|Semaphore
 operator|!=
-name|AcpiGbl_GlobalLockSemaphore
+name|AcpiGbl_GlobalLockMutex
 operator|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Thread %X cannot release Mutex [%4.4s] acquired by thread %X\n"
+name|AE_INFO
+operator|,
+literal|"Thread %X cannot release Mutex [%4.4s] acquired by thread %X"
 operator|,
 name|WalkState
 operator|->
@@ -653,7 +880,40 @@ name|AE_AML_NOT_OWNER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * The sync level of the mutex must be less than or      * equal to the current sync level      */
+comment|/* Must have a valid thread ID */
+if|if
+condition|(
+operator|!
+name|WalkState
+operator|->
+name|Thread
+condition|)
+block|{
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Cannot release Mutex [%4.4s], null thread info"
+operator|,
+name|AcpiUtGetNodeName
+argument_list|(
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|Node
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_INTERNAL
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * The sync level of the mutex must be less than or equal to the current      * sync level      */
 if|if
 condition|(
 name|ObjDesc
@@ -669,10 +929,12 @@ operator|->
 name|CurrentSyncLevel
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Cannot release Mutex [%4.4s], incorrect SyncLevel\n"
+name|AE_INFO
+operator|,
+literal|"Cannot release Mutex [%4.4s], SyncLevel mismatch: mutex %d current %d"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -682,6 +944,18 @@ name|Mutex
 operator|.
 name|Node
 argument_list|)
+operator|,
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|SyncLevel
+operator|,
+name|WalkState
+operator|->
+name|Thread
+operator|->
+name|CurrentSyncLevel
 operator|)
 argument_list|)
 expr_stmt|;
@@ -691,13 +965,12 @@ name|AE_AML_MUTEX_ORDER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Match multiple Acquires with multiple Releases */
+name|Status
+operator|=
+name|AcpiExReleaseMutexObject
+argument_list|(
 name|ObjDesc
-operator|->
-name|Mutex
-operator|.
-name|AcquisitionDepth
-operator|--
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -706,40 +979,11 @@ operator|->
 name|Mutex
 operator|.
 name|AcquisitionDepth
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
-comment|/* Just decrement the depth and return */
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Unlink the mutex from the owner's list */
-name|AcpiExUnlinkMutex
-argument_list|(
-name|ObjDesc
-argument_list|)
-expr_stmt|;
-comment|/* Release the mutex */
-name|Status
-operator|=
-name|AcpiExSystemReleaseMutex
-argument_list|(
-name|ObjDesc
-argument_list|)
-expr_stmt|;
-comment|/* Update the mutex and walk state, restore SyncLevel before acquire */
-name|ObjDesc
-operator|->
-name|Mutex
-operator|.
-name|OwnerThread
-operator|=
-name|NULL
-expr_stmt|;
+comment|/* Restore the original SyncLevel */
 name|WalkState
 operator|->
 name|Thread
@@ -752,6 +996,7 @@ name|Mutex
 operator|.
 name|OriginalSyncLevel
 expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -761,7 +1006,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReleaseAllMutexes  *  * PARAMETERS:  Thread          - Current executing thread object  *  * RETURN:      Status  *  * DESCRIPTION: Release all mutexes held by this thread  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReleaseAllMutexes  *  * PARAMETERS:  Thread          - Current executing thread object  *  * RETURN:      Status  *  * DESCRIPTION: Release all mutexes held by this thread  *  * NOTE: This function is called as the thread is exiting the interpreter.  * Mutexes are not released when an individual control method is exited, but  * only when the parent thread actually exits the interpreter. This allows one  * method to acquire a mutex, and a different method to release it, as long as  * this is performed underneath a single parent control method.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -783,10 +1028,7 @@ name|AcquiredMutexList
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|This
-decl_stmt|;
-name|ACPI_STATUS
-name|Status
+name|ObjDesc
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
@@ -797,27 +1039,19 @@ condition|(
 name|Next
 condition|)
 block|{
-name|This
+name|ObjDesc
 operator|=
 name|Next
 expr_stmt|;
 name|Next
 operator|=
-name|This
+name|ObjDesc
 operator|->
 name|Mutex
 operator|.
 name|Next
 expr_stmt|;
-name|This
-operator|->
-name|Mutex
-operator|.
-name|AcquisitionDepth
-operator|=
-literal|1
-expr_stmt|;
-name|This
+name|ObjDesc
 operator|->
 name|Mutex
 operator|.
@@ -825,7 +1059,7 @@ name|Prev
 operator|=
 name|NULL
 expr_stmt|;
-name|This
+name|ObjDesc
 operator|->
 name|Mutex
 operator|.
@@ -833,26 +1067,44 @@ name|Next
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Release the mutex */
-name|Status
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|AcquisitionDepth
 operator|=
-name|AcpiExSystemReleaseMutex
-argument_list|(
-name|This
-argument_list|)
+literal|0
 expr_stmt|;
+comment|/* Release the mutex, special case for Global Lock */
 if|if
 condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
+name|ObjDesc
+operator|==
+name|AcpiGbl_GlobalLockMutex
 condition|)
 block|{
-continue|continue;
+comment|/* Ignore errors */
+operator|(
+name|void
+operator|)
+name|AcpiEvReleaseGlobalLock
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsReleaseMutex
+argument_list|(
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|OsMutex
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Mark mutex unowned */
-name|This
+name|ObjDesc
 operator|->
 name|Mutex
 operator|.
@@ -860,12 +1112,20 @@ name|OwnerThread
 operator|=
 name|NULL
 expr_stmt|;
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|ThreadId
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Update Thread SyncLevel (Last mutex is the important one) */
 name|Thread
 operator|->
 name|CurrentSyncLevel
 operator|=
-name|This
+name|ObjDesc
 operator|->
 name|Mutex
 operator|.
