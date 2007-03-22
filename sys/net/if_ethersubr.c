@@ -3058,7 +3058,7 @@ else|else
 endif|#
 directive|endif
 block|{
-comment|/* 		 * If the frame was received promiscuously, set the 		 * M_PROMISC flag on the mbuf chain. The frame may need to 		 * be seen by the rest of the Ethernet input path in case of 		 * re-entry (e.g. bridge, vlan, netgraph) but should not be 		 * seen by upper protocol layers. 		 */
+comment|/* 		 * If the frame received was not for our MAC address, set the 		 * M_PROMISC flag on the mbuf chain. The frame may need to 		 * be seen by the rest of the Ethernet input path in case of 		 * re-entry (e.g. bridge, vlan, netgraph) but should not be 		 * seen by upper protocol layers. 		 */
 if|if
 condition|(
 operator|!
@@ -3069,17 +3069,6 @@ operator|->
 name|ether_dhost
 argument_list|)
 operator|&&
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_PROMISC
-operator|)
-operator|!=
-literal|0
-operator|&&
-operator|!
 name|bcmp
 argument_list|(
 name|IF_LLADDR
@@ -3093,6 +3082,8 @@ name|ether_dhost
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
+operator|!=
+literal|0
 condition|)
 name|m
 operator|->
