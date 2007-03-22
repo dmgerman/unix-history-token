@@ -4313,6 +4313,7 @@ comment|/* 		 * We know that the packet was lost, so back out the 		 * sequence 
 if|if
 condition|(
 operator|(
+operator|(
 name|tp
 operator|->
 name|t_flags
@@ -4329,11 +4330,8 @@ name|tp
 operator|->
 name|tt_persist
 argument_list|)
-condition|)
-block|{
-comment|/* 			 * No need to check for TH_FIN here because 			 * the TF_SENTFIN flag handles that case. 			 */
-if|if
-condition|(
+operator|)
+operator|&&
 operator|(
 name|flags
 operator|&
@@ -4386,7 +4384,6 @@ operator|-=
 name|len
 expr_stmt|;
 block|}
-block|}
 name|out
 label|:
 name|SOCKBUF_UNLOCK_ASSERT
@@ -4398,13 +4395,14 @@ name|so_snd
 argument_list|)
 expr_stmt|;
 comment|/* Check gotos. */
-if|if
+switch|switch
 condition|(
 name|error
-operator|==
-name|ENOBUFS
 condition|)
 block|{
+case|case
+name|ENOBUFS
+case|:
 if|if
 condition|(
 operator|!
@@ -4451,14 +4449,9 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|error
-operator|==
+case|case
 name|EMSGSIZE
-condition|)
-block|{
+case|:
 comment|/* 			 * ip_output() will have already fixed the route 			 * for us.  tcp_mtudisc() will, as its last action, 			 * initiate retransmission, so it is important to 			 * not do so here. 			 */
 name|tcp_mtudisc
 argument_list|(
@@ -4470,21 +4463,24 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-block|}
+case|case
+name|EHOSTDOWN
+case|:
+case|case
+name|EHOSTUNREACH
+case|:
+case|case
+name|ENETDOWN
+case|:
+case|case
+name|ENETUNREACH
+case|:
 if|if
 condition|(
-operator|(
-name|error
-operator|==
-name|EHOSTUNREACH
-operator|||
-name|error
-operator|==
-name|ENETDOWN
-operator|)
-operator|&&
 name|TCPS_HAVERCVDSYN
 argument_list|(
 name|tp
@@ -4505,11 +4501,14 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* FALLTHROUGH */
+default|default:
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 block|}
 name|tcpstat
 operator|.
