@@ -222,6 +222,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_ADAPTIVE_MUTEXES
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ADAPTIVE_MUTEXES
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Internal utility macros.  */
 end_comment
@@ -1443,18 +1469,9 @@ name|int
 name|line
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NO_ADAPTIVE_MUTEXES
-argument_list|)
+ifdef|#
+directive|ifdef
+name|ADAPTIVE_MUTEXES
 specifier|volatile
 name|struct
 name|thread
@@ -1714,18 +1731,9 @@ argument_list|()
 expr_stmt|;
 continue|continue;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NO_ADAPTIVE_MUTEXES
-argument_list|)
+ifdef|#
+directive|ifdef
+name|ADAPTIVE_MUTEXES
 comment|/* 		 * If the current owner of the lock is executing on another 		 * CPU, spin instead of blocking. 		 */
 name|owner
 operator|=
@@ -1799,7 +1807,7 @@ continue|continue;
 block|}
 endif|#
 directive|endif
-comment|/* SMP&& !NO_ADAPTIVE_MUTEXES */
+comment|/* ADAPTIVE_MUTEXES */
 comment|/* 		 * We definitely must sleep for this lock. 		 */
 name|mtx_assert
 argument_list|(
@@ -2270,18 +2278,9 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NO_ADAPTIVE_MUTEXES
-argument_list|)
+ifdef|#
+directive|ifdef
+name|ADAPTIVE_MUTEXES
 if|if
 condition|(
 name|ts

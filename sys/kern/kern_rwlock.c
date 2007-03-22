@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_no_adaptive_rwlocks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -86,6 +92,32 @@ include|#
 directive|include
 file|<machine/cpu.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_ADAPTIVE_RWLOCKS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ADAPTIVE_RWLOCKS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -744,7 +776,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|SMP
+name|ADAPTIVE_RWLOCKS
 specifier|volatile
 name|struct
 name|thread
@@ -1045,7 +1077,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|SMP
+name|ADAPTIVE_RWLOCKS
 comment|/* 		 * If the owner is running on another CPU, spin until 		 * the owner stops running or the state of the lock 		 * changes. 		 */
 name|owner
 operator|=
@@ -1625,7 +1657,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|SMP
+name|ADAPTIVE_RWLOCKS
 specifier|volatile
 name|struct
 name|thread
@@ -1855,7 +1887,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|SMP
+name|ADAPTIVE_RWLOCKS
 comment|/* 		 * If the lock is write locked and the owner is 		 * running on another CPU, spin until the owner stops 		 * running or the state of the lock changes. 		 */
 name|owner
 operator|=
@@ -2109,7 +2141,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SMP
+name|ADAPTIVE_RWLOCKS
 comment|/* 	 * There might not be a turnstile for this lock if all of 	 * the waiters are adaptively spinning.  In that case, just 	 * reset the lock to the unlocked state and return. 	 */
 if|if
 condition|(
@@ -2172,7 +2204,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Use the same algo as sx locks for now.  Prefer waking up shared 	 * waiters if we have any over writers.  This is probably not ideal. 	 * 	 * 'v' is the value we are going to write back to rw_lock.  If we 	 * have waiters on both queues, we need to preserve the state of 	 * the waiter flag for the queue we don't wake up.  For now this is 	 * hardcoded for the algorithm mentioned above. 	 * 	 * In the case of both readers and writers waiting we wakeup the 	 * readers but leave the RW_LOCK_WRITE_WAITERS flag set.  If a 	 * new writer comes in before a reader it will claim the lock up 	 * above.  There is probably a potential priority inversion in 	 * there that could be worked around either by waking both queues 	 * of waiters or doing some complicated lock handoff gymnastics. 	 * 	 * Note that in the SMP case, if both flags are set, there might 	 * not be any actual writers on the turnstile as they might all 	 * be spinning.  In that case, we don't want to preserve the 	 * RW_LOCK_WRITE_WAITERS flag as the turnstile is going to go 	 * away once we wakeup all the readers. 	 */
+comment|/* 	 * Use the same algo as sx locks for now.  Prefer waking up shared 	 * waiters if we have any over writers.  This is probably not ideal. 	 * 	 * 'v' is the value we are going to write back to rw_lock.  If we 	 * have waiters on both queues, we need to preserve the state of 	 * the waiter flag for the queue we don't wake up.  For now this is 	 * hardcoded for the algorithm mentioned above. 	 * 	 * In the case of both readers and writers waiting we wakeup the 	 * readers but leave the RW_LOCK_WRITE_WAITERS flag set.  If a 	 * new writer comes in before a reader it will claim the lock up 	 * above.  There is probably a potential priority inversion in 	 * there that could be worked around either by waking both queues 	 * of waiters or doing some complicated lock handoff gymnastics. 	 * 	 * Note that in the ADAPTIVE_RWLOCKS case, if both flags are 	 * set, there might not be any actual writers on the turnstile 	 * as they might all be spinning.  In that case, we don't want 	 * to preserve the RW_LOCK_WRITE_WAITERS flag as the turnstile 	 * is going to go away once we wakeup all the readers. 	 */
 name|v
 operator|=
 name|RW_UNLOCKED
@@ -2192,7 +2224,7 @@ name|TS_SHARED_QUEUE
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SMP
+name|ADAPTIVE_RWLOCKS
 if|if
 condition|(
 name|rw
@@ -2235,7 +2267,7 @@ name|TS_EXCLUSIVE_QUEUE
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SMP
+name|ADAPTIVE_RWLOCKS
 comment|/* 	 * We have to make sure that we actually have waiters to 	 * wakeup.  If they are all spinning, then we just need to 	 * disown the turnstile and return. 	 */
 if|if
 condition|(
@@ -2439,7 +2471,7 @@ operator|->
 name|lock_object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try to switch from one reader to a writer again.  This time 	 * we honor the current state of the RW_LOCK_WRITE_WAITERS 	 * flag.  If we obtain the lock with the flag set, then claim 	 * ownership of the turnstile.  In the SMP case it is possible 	 * for there to not be an associated turnstile even though there 	 * are waiters if all of the waiters are spinning. 	 */
+comment|/* 	 * Try to switch from one reader to a writer again.  This time 	 * we honor the current state of the RW_LOCK_WRITE_WAITERS 	 * flag.  If we obtain the lock with the flag set, then claim 	 * ownership of the turnstile.  In the ADAPTIVE_RWLOCKS case 	 * it is possible for there to not be an associated turnstile 	 * even though there are waiters if all of the waiters are 	 * spinning. 	 */
 name|v
 operator|=
 name|rw
@@ -2471,7 +2503,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SMP
+name|ADAPTIVE_RWLOCKS
 if|if
 condition|(
 name|success
@@ -2674,7 +2706,7 @@ name|RW_LOCK_WRITE_WAITERS
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Downgrade from a write lock while preserving 	 * RW_LOCK_WRITE_WAITERS and give up ownership of the 	 * turnstile.  If there are any read waiters, wake them up. 	 * 	 * For SMP, we have to allow for the fact that all of the 	 * read waiters might be spinning.  In that case, act as if 	 * RW_LOCK_READ_WAITERS is not set.  Also, only preserve 	 * the RW_LOCK_WRITE_WAITERS flag if at least one writer is 	 * blocked on the turnstile. 	 */
+comment|/* 	 * Downgrade from a write lock while preserving 	 * RW_LOCK_WRITE_WAITERS and give up ownership of the 	 * turnstile.  If there are any read waiters, wake them up. 	 * 	 * For ADAPTIVE_RWLOCKS, we have to allow for the fact that 	 * all of the read waiters might be spinning.  In that case, 	 * act as if RW_LOCK_READ_WAITERS is not set.  Also, only 	 * preserve the RW_LOCK_WRITE_WAITERS flag if at least one 	 * writer is blocked on the turnstile. 	 */
 name|ts
 operator|=
 name|turnstile_lookup
@@ -2687,7 +2719,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SMP
+name|ADAPTIVE_RWLOCKS
 if|if
 condition|(
 name|ts
@@ -2799,7 +2831,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SMP
+name|ADAPTIVE_RWLOCKS
 elseif|else
 if|if
 condition|(
