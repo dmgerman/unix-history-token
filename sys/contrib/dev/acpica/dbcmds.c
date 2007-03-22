@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 115 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 1.150 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -304,6 +304,30 @@ literal|"DDBHANDLES"
 block|}
 block|,
 block|{
+literal|"DEBUG"
+block|}
+block|,
+block|{
+literal|"REGIONFIELDS"
+block|}
+block|,
+block|{
+literal|"BANKFIELDS"
+block|}
+block|,
+block|{
+literal|"INDEXFIELDS"
+block|}
+block|,
+block|{
+literal|"REFERENCES"
+block|}
+block|,
+block|{
+literal|"ALIAS"
+block|}
+block|,
+block|{
 name|NULL
 block|}
 comment|/* Must be null terminated */
@@ -463,18 +487,6 @@ modifier|*
 name|ObjectArg
 parameter_list|)
 block|{
-if|#
-directive|if
-name|ACPI_MACHINE_WIDTH
-operator|==
-literal|16
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
-else|#
-directive|else
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -564,8 +576,6 @@ operator|(
 name|Status
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -749,7 +759,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MAX_MUTEX
+name|ACPI_MAX_MUTEX
 condition|;
 name|i
 operator|++
@@ -795,13 +805,14 @@ modifier|*
 name|TableArg
 parameter_list|)
 block|{
-name|UINT32
+name|ACPI_NATIVE_UINT
 name|i
 decl_stmt|;
 name|ACPI_TABLE_DESC
 modifier|*
 name|TableDesc
 decl_stmt|;
+comment|/*      * Walk the root table list      */
 for|for
 control|(
 name|i
@@ -810,7 +821,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_ACPI_TABLE_TYPES
+name|AcpiGbl_RootTableList
+operator|.
+name|Count
 condition|;
 name|i
 operator|++
@@ -818,28 +831,23 @@ control|)
 block|{
 name|TableDesc
 operator|=
-name|AcpiGbl_TableLists
+operator|&
+name|AcpiGbl_RootTableList
+operator|.
+name|Tables
 index|[
 name|i
 index|]
-operator|.
-name|Next
 expr_stmt|;
-while|while
-condition|(
-name|TableDesc
-condition|)
-block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%s at %p length %.5X"
+literal|"%4.4s at %p length %.5X"
 argument_list|,
-name|AcpiGbl_TableData
-index|[
-name|i
-index|]
+name|TableDesc
+operator|->
+name|Signature
 operator|.
-name|Name
+name|Ascii
 argument_list|,
 name|TableDesc
 operator|->
@@ -855,14 +863,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|TableDesc
+operator|->
+name|Pointer
+operator|&&
+operator|(
 name|i
 operator|!=
-name|ACPI_TABLE_FACS
+name|ACPI_TABLE_INDEX_FACS
+operator|)
 condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" OemID=%6s TableId=%8s OemRevision=%8.8X"
+literal|" OemId=\"%6s\" OemTableId=\"%8s\" OemRevision=%8.8X"
 argument_list|,
 name|TableDesc
 operator|->
@@ -889,13 +903,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|TableDesc
-operator|=
-name|TableDesc
-operator|->
-name|Next
-expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -917,99 +924,17 @@ modifier|*
 name|InstanceArg
 parameter_list|)
 block|{
-name|UINT32
-name|i
-decl_stmt|;
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-comment|/* Search all tables for the target type */
-for|for
-control|(
-name|i
-operator|=
+comment|/* TBD: Need to reimplement for new data structures */
+if|#
+directive|if
 literal|0
-init|;
-name|i
-operator|<
-name|NUM_ACPI_TABLE_TYPES
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|!
-name|ACPI_STRNCMP
-argument_list|(
-name|TableArg
-argument_list|,
-name|AcpiGbl_TableData
-index|[
-name|i
-index|]
-operator|.
-name|Signature
-argument_list|,
-name|AcpiGbl_TableData
-index|[
-name|i
-index|]
-operator|.
-name|SigLength
-argument_list|)
-condition|)
-block|{
+block|UINT32                  i;     ACPI_STATUS             Status;
+comment|/* Search all tables for the target type */
+block|for (i = 0; i< (ACPI_TABLE_ID_MAX+1); i++)     {         if (!ACPI_STRNCMP (TableArg, AcpiGbl_TableData[i].Signature,                 AcpiGbl_TableData[i].SigLength))         {
 comment|/* Found the table, unload it */
-name|Status
-operator|=
-name|AcpiUnloadTable
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"[%s] unloaded and uninstalled\n"
-argument_list|,
-name|TableArg
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"%s, while unloading [%s]\n"
-argument_list|,
-name|AcpiFormatException
-argument_list|(
-name|Status
-argument_list|)
-argument_list|,
-name|TableArg
-argument_list|)
-expr_stmt|;
-block|}
-return|return;
-block|}
-block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|"Unknown table type [%s]\n"
-argument_list|,
-name|TableArg
-argument_list|)
-expr_stmt|;
+block|Status = AcpiUnloadTable (i);             if (ACPI_SUCCESS (Status))             {                 AcpiOsPrintf ("[%s] unloaded and uninstalled\n", TableArg);             }             else             {                 AcpiOsPrintf ("%s, while unloading [%s]\n",                     AcpiFormatException (Status), TableArg);             }              return;         }     }      AcpiOsPrintf ("Unknown table type [%s]\n", TableArg);
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1330,7 +1255,7 @@ name|AmlLength
 argument_list|,
 name|NULL
 argument_list|,
-literal|1
+name|ACPI_IMODE_LOAD_PASS1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1933,7 +1858,9 @@ argument_list|,
 name|Index
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 name|Status
 operator|=
@@ -1956,7 +1883,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 name|ObjDesc
 operator|=
@@ -2002,7 +1931,9 @@ argument_list|,
 name|Index
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 name|Status
 operator|=
@@ -2025,7 +1956,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 name|ObjDesc
 operator|=
@@ -2056,6 +1989,13 @@ break|break;
 default|default:
 break|break;
 block|}
+name|Cleanup
+label|:
+name|AcpiUtRemoveReference
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2156,7 +2096,7 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|Buffer
 operator|.
@@ -2522,7 +2462,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|Buffer
 operator|.
@@ -2669,11 +2609,11 @@ block|{
 comment|/* Validate new scope from the root */
 name|Status
 operator|=
-name|AcpiNsGetNodeByPath
+name|AcpiNsGetNode
 argument_list|(
-name|Name
-argument_list|,
 name|AcpiGbl_RootNode
+argument_list|,
+name|Name
 argument_list|,
 name|ACPI_NS_NO_UPSEARCH
 argument_list|,
@@ -2713,11 +2653,11 @@ block|{
 comment|/* Validate new scope relative to old scope */
 name|Status
 operator|=
-name|AcpiNsGetNodeByPath
+name|AcpiNsGetNode
 argument_list|(
-name|Name
-argument_list|,
 name|AcpiGbl_DbScopeNode
+argument_list|,
+name|Name
 argument_list|,
 name|ACPI_NS_NO_UPSEARCH
 argument_list|,
@@ -2915,9 +2855,9 @@ argument_list|,
 name|Aml2Length
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/* Check for descriptor byte match */
+elseif|else
 if|if
 condition|(
 name|ACPI_MEMCMP
@@ -2966,7 +2906,7 @@ name|Aml1Length
 expr_stmt|;
 name|Aml2
 operator|+=
-name|Aml1Length
+name|Aml2Length
 expr_stmt|;
 block|}
 block|}
@@ -3169,7 +3109,7 @@ name|Length
 argument_list|)
 expr_stmt|;
 comment|/* Cleanup and exit */
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|NewAml
 operator|.
@@ -3178,7 +3118,7 @@ argument_list|)
 expr_stmt|;
 name|Exit2
 label|:
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|ResourceObj
 operator|.
@@ -3187,7 +3127,7 @@ argument_list|)
 expr_stmt|;
 name|Exit1
 label|:
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|ReturnObj
 operator|.
@@ -3215,11 +3155,6 @@ modifier|*
 name|ObjectArg
 parameter_list|)
 block|{
-if|#
-directive|if
-name|ACPI_MACHINE_WIDTH
-operator|!=
-literal|16
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
@@ -3357,11 +3292,12 @@ goto|;
 block|}
 name|AcpiRsDumpIrqList
 argument_list|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT8
-operator|*
-operator|)
+argument_list|,
 name|AcpiGbl_DbBuffer
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* _CRS */
@@ -3641,8 +3577,6 @@ name|ACPI_DB_CONSOLE_OUTPUT
 argument_list|)
 expr_stmt|;
 return|return;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -4025,15 +3959,13 @@ name|Node
 argument_list|,
 name|METHOD_NAME__PRT
 argument_list|,
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_HANDLE
-operator|*
-operator|)
-operator|(
-name|uintptr_t
-operator|)
+argument_list|,
 operator|&
 name|TempNode
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4102,7 +4034,7 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|Buffer
 operator|.
@@ -4256,7 +4188,7 @@ operator|.
 name|Value
 argument_list|)
 expr_stmt|;
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|Cid
 argument_list|)
