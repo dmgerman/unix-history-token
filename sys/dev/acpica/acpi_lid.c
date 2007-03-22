@@ -699,9 +699,9 @@ block|{
 case|case
 name|ACPI_NOTIFY_STATUS_CHANGED
 case|:
-name|AcpiOsQueueForExecution
+name|AcpiOsExecute
 argument_list|(
-name|OSD_PRIORITY_LO
+name|OSL_NOTIFY_HANDLER
 argument_list|,
 name|acpi_lid_notify_status_changed
 argument_list|,

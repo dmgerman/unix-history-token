@@ -1409,8 +1409,8 @@ operator|->
 name|l_isa_irq
 operator|&&
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 operator|==
 name|irq
 operator|&&
@@ -4394,8 +4394,8 @@ block|{
 name|pos_irq
 operator|=
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 expr_stmt|;
 name|pos_weight
 operator|=
@@ -4645,8 +4645,8 @@ comment|/* 	 * If the SCI is an ISA IRQ, add it to the bitmask of known good 	 *
 if|if
 condition|(
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 operator|<
 name|NUM_ISA_INTERRUPTS
 condition|)
@@ -4656,8 +4656,8 @@ operator|(
 literal|1
 operator|<<
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 operator|)
 expr_stmt|;
 block|}

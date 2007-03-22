@@ -1318,9 +1318,9 @@ name|led_state
 operator|=
 name|onoff
 expr_stmt|;
-name|AcpiOsQueueForExecution
+name|AcpiOsExecute
 argument_list|(
-name|OSD_PRIORITY_LO
+name|OSL_NOTIFY_HANDLER
 argument_list|,
 operator|(
 name|void

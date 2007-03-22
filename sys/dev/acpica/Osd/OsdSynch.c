@@ -140,6 +140,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Default number of maximum pending threads. */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -714,7 +718,7 @@ name|AE_OK
 expr_stmt|;
 break|break;
 block|}
-comment|/* limit number of pending treads */
+comment|/* limit number of pending threads */
 if|if
 condition|(
 name|as

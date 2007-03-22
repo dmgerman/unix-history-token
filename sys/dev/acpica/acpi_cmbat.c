@@ -628,9 +628,9 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-name|AcpiOsQueueForExecution
+name|AcpiOsExecute
 argument_list|(
-name|OSD_PRIORITY_LO
+name|OSL_NOTIFY_HANDLER
 argument_list|,
 name|acpi_cmbat_init_battery
 argument_list|,
@@ -695,9 +695,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|AcpiOsQueueForExecution
+name|AcpiOsExecute
 argument_list|(
-name|OSD_PRIORITY_LO
+name|OSL_NOTIFY_HANDLER
 argument_list|,
 name|acpi_cmbat_init_battery
 argument_list|,
@@ -778,9 +778,9 @@ case|case
 name|ACPI_BATTERY_BIF_CHANGE
 case|:
 comment|/* 	 * Queue a callback to get the current battery info from thread 	 * context.  It's not safe to block in a notify handler. 	 */
-name|AcpiOsQueueForExecution
+name|AcpiOsExecute
 argument_list|(
-name|OSD_PRIORITY_LO
+name|OSL_NOTIFY_HANDLER
 argument_list|,
 name|acpi_cmbat_get_bif_task
 argument_list|,

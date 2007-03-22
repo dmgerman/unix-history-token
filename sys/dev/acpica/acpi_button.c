@@ -1031,9 +1031,9 @@ block|{
 case|case
 name|ACPI_NOTIFY_BUTTON_PRESSED_FOR_SLEEP
 case|:
-name|AcpiOsQueueForExecution
+name|AcpiOsExecute
 argument_list|(
-name|OSD_PRIORITY_LO
+name|OSL_NOTIFY_HANDLER
 argument_list|,
 name|acpi_button_notify_sleep
 argument_list|,
@@ -1044,9 +1044,9 @@ break|break;
 case|case
 name|ACPI_NOTIFY_BUTTON_PRESSED_FOR_WAKEUP
 case|:
-name|AcpiOsQueueForExecution
+name|AcpiOsExecute
 argument_list|(
-name|OSD_PRIORITY_LO
+name|OSL_NOTIFY_HANDLER
 argument_list|,
 name|acpi_button_notify_wakeup
 argument_list|,

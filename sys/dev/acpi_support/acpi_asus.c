@@ -1719,9 +1719,9 @@ name|status
 operator|=
 name|AcpiGetTableHeader
 argument_list|(
-name|ACPI_TABLE_DSDT
+name|ACPI_SIG_DSDT
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|th
@@ -3311,9 +3311,9 @@ name|state
 operator|=
 name|state
 expr_stmt|;
-name|AcpiOsQueueForExecution
+name|AcpiOsExecute
 argument_list|(
-name|OSD_PRIORITY_LO
+name|OSL_NOTIFY_HANDLER
 argument_list|,
 operator|(
 name|void

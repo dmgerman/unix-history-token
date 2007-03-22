@@ -1384,8 +1384,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 argument_list|,
 name|INTR_TRIGGER_LEVEL
 argument_list|,

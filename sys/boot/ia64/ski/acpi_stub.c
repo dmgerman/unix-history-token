@@ -51,7 +51,7 @@ typedef|typedef
 struct|struct
 comment|/* LOCAL SAPIC */
 block|{
-name|APIC_HEADER
+name|ACPI_SUBTABLE_HEADER
 name|Header
 decl_stmt|;
 name|UINT8
@@ -92,7 +92,7 @@ typedef|typedef
 struct|struct
 comment|/* IO SAPIC */
 block|{
-name|APIC_HEADER
+name|ACPI_SUBTABLE_HEADER
 name|Header
 decl_stmt|;
 name|UINT8
@@ -123,22 +123,22 @@ end_comment
 begin_struct
 struct|struct
 block|{
-name|MULTIPLE_APIC_TABLE
-name|Header
+name|ACPI_TABLE_MADT
+name|MADT
 decl_stmt|;
-name|MADT_LOCAL_SAPIC
+name|ACPI_MADT_LOCAL_SAPIC
 name|cpu0
 decl_stmt|;
-name|MADT_LOCAL_SAPIC
+name|ACPI_MADT_LOCAL_SAPIC
 name|cpu1
 decl_stmt|;
-name|MADT_LOCAL_SAPIC
+name|ACPI_MADT_LOCAL_SAPIC
 name|cpu2
 decl_stmt|;
-name|MADT_LOCAL_SAPIC
+name|ACPI_MADT_LOCAL_SAPIC
 name|cpu3
 decl_stmt|;
-name|MADT_IO_SAPIC
+name|ACPI_MADT_IO_SAPIC
 name|sapic
 decl_stmt|;
 block|}
@@ -147,7 +147,7 @@ init|=
 block|{
 comment|/* Header. */
 block|{
-name|APIC_SIG
+name|ACPI_SIG_MADT
 block|,
 comment|/* Signature. */
 sizeof|sizeof
@@ -362,7 +362,7 @@ name|xsdt
 init|=
 block|{
 block|{
-name|XSDT_SIG
+name|ACPI_SIG_XSDT
 block|,
 comment|/* Signature. */
 sizeof|sizeof
@@ -400,11 +400,11 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|RSDP_DESCRIPTOR
+name|ACPI_TABLE_RSDP
 name|acpi_root
 init|=
 block|{
-name|RSDP_SIG
+name|ACPI_SIG_RSDP
 block|,
 literal|0
 block|,
@@ -541,6 +541,8 @@ argument_list|)
 argument_list|,
 operator|&
 name|apic
+operator|.
+name|MADT
 operator|.
 name|Header
 operator|.

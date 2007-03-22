@@ -83,7 +83,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|RSDP_DESCRIPTOR
+name|ACPI_TABLE_RSDP
 modifier|*
 name|biosacpi_find_rsdp
 parameter_list|(
@@ -94,7 +94,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|RSDP_DESCRIPTOR
+name|ACPI_TABLE_RSDP
 modifier|*
 name|biosacpi_search_rsdp
 parameter_list|(
@@ -122,7 +122,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|RSDP_DESCRIPTOR
+name|ACPI_TABLE_RSDP
 modifier|*
 name|rsdp
 decl_stmt|;
@@ -150,6 +150,27 @@ name|NULL
 condition|)
 return|return;
 comment|/* export values from the RSDP */
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%p"
+argument_list|,
+name|VTOP
+argument_list|(
+name|rsdp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|setenv
+argument_list|(
+literal|"hint.acpi.0.rsdp"
+argument_list|,
+name|buf
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|revision
 operator|=
 name|rsdp
@@ -309,14 +330,14 @@ end_comment
 
 begin_function
 specifier|static
-name|RSDP_DESCRIPTOR
+name|ACPI_TABLE_RSDP
 modifier|*
 name|biosacpi_find_rsdp
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|RSDP_DESCRIPTOR
+name|ACPI_TABLE_RSDP
 modifier|*
 name|rsdp
 decl_stmt|;
@@ -400,7 +421,7 @@ end_function
 
 begin_function
 specifier|static
-name|RSDP_DESCRIPTOR
+name|ACPI_TABLE_RSDP
 modifier|*
 name|biosacpi_search_rsdp
 parameter_list|(
@@ -412,7 +433,7 @@ name|int
 name|length
 parameter_list|)
 block|{
-name|RSDP_DESCRIPTOR
+name|ACPI_TABLE_RSDP
 modifier|*
 name|rsdp
 decl_stmt|;
@@ -446,7 +467,7 @@ block|{
 name|rsdp
 operator|=
 operator|(
-name|RSDP_DESCRIPTOR
+name|ACPI_TABLE_RSDP
 operator|*
 operator|)
 name|PTOV
@@ -466,11 +487,11 @@ name|rsdp
 operator|->
 name|Signature
 argument_list|,
-name|RSDP_SIG
+name|ACPI_SIG_RSDP
 argument_list|,
 name|strlen
 argument_list|(
-name|RSDP_SIG
+name|ACPI_SIG_RSDP
 argument_list|)
 argument_list|)
 condition|)

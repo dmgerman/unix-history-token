@@ -541,9 +541,9 @@ case|case
 name|ACPI_POWERSOURCE_STAT_CHANGE
 case|:
 comment|/* Temporarily.  It is better to notify policy manager */
-name|AcpiOsQueueForExecution
+name|AcpiOsExecute
 argument_list|(
-name|OSD_PRIORITY_LO
+name|OSL_NOTIFY_HANDLER
 argument_list|,
 name|acpi_acad_get_status
 argument_list|,
@@ -763,9 +763,9 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-name|AcpiOsQueueForExecution
+name|AcpiOsExecute
 argument_list|(
-name|OSD_PRIORITY_LO
+name|OSL_NOTIFY_HANDLER
 argument_list|,
 name|acpi_acad_init_acline
 argument_list|,

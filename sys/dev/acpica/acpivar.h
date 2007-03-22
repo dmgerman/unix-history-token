@@ -2149,12 +2149,23 @@ begin_comment
 comment|/* Default number of task queue threads to start. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MAX_THREADS
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|ACPI_MAX_THREADS
 value|3
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Use the device logging level for ktr(4). */

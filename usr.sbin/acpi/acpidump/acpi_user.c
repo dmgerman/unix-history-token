@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<kenv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -68,6 +74,16 @@ include|#
 directive|include
 file|"acpidump.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|char
+name|hint_acpi_0_rsdp
+index|[]
+init|=
+literal|"hint.acpi.0.rsdp"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -485,6 +501,11 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__i386__
 argument_list|)
 name|struct
@@ -597,7 +618,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* __i386__ */
+comment|/* __amd64__ || __i386__ */
 return|return
 operator|(
 name|NULL
@@ -624,6 +645,12 @@ name|ACPIrsdp
 modifier|*
 name|rsdp
 decl_stmt|;
+name|char
+name|buf
+index|[
+literal|20
+index|]
+decl_stmt|;
 name|u_long
 name|addr
 decl_stmt|;
@@ -633,7 +660,40 @@ decl_stmt|;
 name|acpi_user_init
 argument_list|()
 expr_stmt|;
-comment|/* Attempt to use sysctl to find RSD PTR record. */
+comment|/* Attempt to use kenv or sysctl to find RSD PTR record. */
+if|if
+condition|(
+name|kenv
+argument_list|(
+name|KENV_GET
+argument_list|,
+name|hint_acpi_0_rsdp
+argument_list|,
+name|buf
+argument_list|,
+literal|20
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|addr
+operator|=
+name|strtoul
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|==
+literal|0
+condition|)
+block|{
 name|len
 operator|=
 sizeof|sizeof
@@ -657,12 +717,20 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
-block|{
+name|addr
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
+name|addr
+operator|!=
+literal|0
+operator|&&
 operator|(
 name|rsdp
 operator|=
@@ -679,15 +747,6 @@ operator|(
 name|rsdp
 operator|)
 return|;
-else|else
-name|warnx
-argument_list|(
-literal|"sysctl %s does not point to RSDP"
-argument_list|,
-name|machdep_acpi_root
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|acpi_scan_rsd_ptr

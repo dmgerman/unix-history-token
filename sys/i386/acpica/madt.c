@@ -158,7 +158,7 @@ typedef|typedef
 name|void
 name|madt_entry_handler
 parameter_list|(
-name|APIC_HEADER
+name|ACPI_SUBTABLE_HEADER
 modifier|*
 name|entry
 parameter_list|,
@@ -223,7 +223,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|MULTIPLE_APIC_TABLE
+name|ACPI_TABLE_MADT
 modifier|*
 name|madt
 decl_stmt|;
@@ -262,7 +262,7 @@ name|intr_polarity
 name|interrupt_polarity
 parameter_list|(
 name|UINT16
-name|Polarity
+name|IntiFlags
 parameter_list|,
 name|UINT8
 name|Source
@@ -277,7 +277,7 @@ name|intr_trigger
 name|interrupt_trigger
 parameter_list|(
 name|UINT16
-name|TriggerMode
+name|IntiFlags
 parameter_list|,
 name|UINT8
 name|Source
@@ -363,7 +363,7 @@ specifier|static
 name|void
 name|madt_parse_apics
 parameter_list|(
-name|APIC_HEADER
+name|ACPI_SUBTABLE_HEADER
 modifier|*
 name|entry
 parameter_list|,
@@ -379,7 +379,7 @@ specifier|static
 name|void
 name|madt_parse_interrupt_override
 parameter_list|(
-name|MADT_INTERRUPT_OVERRIDE
+name|ACPI_MADT_INTERRUPT_OVERRIDE
 modifier|*
 name|intr
 parameter_list|)
@@ -391,7 +391,7 @@ specifier|static
 name|void
 name|madt_parse_ints
 parameter_list|(
-name|APIC_HEADER
+name|ACPI_SUBTABLE_HEADER
 modifier|*
 name|entry
 parameter_list|,
@@ -408,7 +408,7 @@ specifier|static
 name|void
 name|madt_parse_local_nmi
 parameter_list|(
-name|MADT_LOCAL_APIC_NMI
+name|ACPI_MADT_LOCAL_APIC_NMI
 modifier|*
 name|nmi
 parameter_list|)
@@ -420,7 +420,7 @@ specifier|static
 name|void
 name|madt_parse_nmi
 parameter_list|(
-name|MADT_NMI_SOURCE
+name|ACPI_MADT_NMI_SOURCE
 modifier|*
 name|nmi
 parameter_list|)
@@ -452,7 +452,7 @@ specifier|static
 name|void
 name|madt_probe_cpus_handler
 parameter_list|(
-name|APIC_HEADER
+name|ACPI_SUBTABLE_HEADER
 modifier|*
 name|entry
 parameter_list|,
@@ -825,7 +825,7 @@ name|Signature
 argument_list|,
 name|sig
 argument_list|,
-literal|4
+name|ACPI_NAME_SIZE
 argument_list|)
 operator|!=
 literal|0
@@ -878,9 +878,11 @@ if|if
 condition|(
 name|ACPI_FAILURE
 argument_list|(
-name|AcpiTbVerifyTableChecksum
+name|AcpiTbChecksum
 argument_list|(
 name|table
+argument_list|,
+name|length
 argument_list|)
 argument_list|)
 condition|)
@@ -963,18 +965,18 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_POINTER
+name|ACPI_PHYSICAL_ADDRESS
 name|rsdp_ptr
 decl_stmt|;
-name|RSDP_DESCRIPTOR
+name|ACPI_TABLE_RSDP
 modifier|*
 name|rsdp
 decl_stmt|;
-name|RSDT_DESCRIPTOR
+name|ACPI_TABLE_RSDT
 modifier|*
 name|rsdt
 decl_stmt|;
-name|XSDT_DESCRIPTOR
+name|ACPI_TABLE_XSDT
 modifier|*
 name|xsdt
 decl_stmt|;
@@ -1000,54 +1002,29 @@ return|;
 comment|/* 	 * Map in the RSDP.  Since ACPI uses AcpiOsMapMemory() which in turn 	 * calls pmap_mapbios() to find the RSDP, we assume that we can use 	 * pmap_mapbios() to map the RSDP. 	 */
 if|if
 condition|(
-name|AcpiOsGetRootPointer
-argument_list|(
-name|ACPI_LOGICAL_ADDRESSING
-argument_list|,
-operator|&
+operator|(
 name|rsdp_ptr
-argument_list|)
-operator|!=
-name|AE_OK
+operator|=
+name|AcpiOsGetRootPointer
+argument_list|()
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|__i386__
-name|KASSERT
-argument_list|(
-name|rsdp_ptr
-operator|.
-name|Pointer
-operator|.
-name|Physical
-operator|<
-name|KERNLOAD
-argument_list|,
-operator|(
-literal|"RSDP too high"
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|rsdp
 operator|=
 name|pmap_mapbios
 argument_list|(
 name|rsdp_ptr
-operator|.
-name|Pointer
-operator|.
-name|Physical
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|RSDP_DESCRIPTOR
+name|ACPI_TABLE_RSDP
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1092,8 +1069,12 @@ block|{
 comment|/* 		 * AcpiOsGetRootPointer only verifies the checksum for 		 * the version 1.0 portion of the RSDP.  Version 2.0 has 		 * an additional checksum that we verify first. 		 */
 if|if
 condition|(
-name|AcpiTbGenerateChecksum
+name|AcpiTbChecksum
 argument_list|(
+operator|(
+name|UINT8
+operator|*
+operator|)
 name|rsdp
 argument_list|,
 name|ACPI_RSDP_XCHECKSUM_LENGTH
@@ -1125,7 +1106,7 @@ name|XsdtPhysicalAddress
 argument_list|,
 literal|1
 argument_list|,
-name|XSDT_SIG
+name|ACPI_SIG_XSDT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1155,6 +1136,8 @@ operator|=
 operator|(
 name|xsdt
 operator|->
+name|Header
+operator|.
 name|Length
 operator|-
 sizeof|sizeof
@@ -1212,7 +1195,7 @@ name|RsdtPhysicalAddress
 argument_list|,
 literal|1
 argument_list|,
-name|RSDT_SIG
+name|ACPI_SIG_RSDT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1242,6 +1225,8 @@ operator|=
 operator|(
 name|rsdt
 operator|->
+name|Header
+operator|.
 name|Length
 operator|-
 sizeof|sizeof
@@ -1296,7 +1281,7 @@ name|rsdp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|RSDP_DESCRIPTOR
+name|ACPI_TABLE_RSDP
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1345,7 +1330,7 @@ name|madt_physaddr
 argument_list|,
 literal|0
 argument_list|,
-name|APIC_SIG
+name|ACPI_SIG_MADT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1460,9 +1445,9 @@ name|table
 operator|->
 name|Signature
 argument_list|,
-name|APIC_SIG
+name|ACPI_SIG_MADT
 argument_list|,
-literal|4
+name|ACPI_NAME_SIZE
 argument_list|)
 operator|!=
 literal|0
@@ -1532,7 +1517,7 @@ name|madt_physaddr
 argument_list|,
 literal|0
 argument_list|,
-name|APIC_SIG
+name|ACPI_SIG_MADT
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1595,7 +1580,7 @@ name|lapic_init
 argument_list|(
 name|madt
 operator|->
-name|LocalApicAddress
+name|Address
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1609,11 +1594,15 @@ sizeof|sizeof
 argument_list|(
 name|madt
 operator|->
+name|Header
+operator|.
 name|OemId
 argument_list|)
 argument_list|,
 name|madt
 operator|->
+name|Header
+operator|.
 name|OemId
 argument_list|,
 operator|(
@@ -1623,11 +1612,15 @@ sizeof|sizeof
 argument_list|(
 name|madt
 operator|->
+name|Header
+operator|.
 name|OemTableId
 argument_list|)
 argument_list|,
 name|madt
 operator|->
+name|Header
+operator|.
 name|OemTableId
 argument_list|)
 expr_stmt|;
@@ -1725,8 +1718,8 @@ condition|(
 name|madt_find_interrupt
 argument_list|(
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 argument_list|,
 operator|&
 name|ioapic
@@ -1739,11 +1732,11 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"MADT: Could not find APIC for SCI IRQ %d\n"
+literal|"MADT: Could not find APIC for SCI IRQ %u\n"
 argument_list|,
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 argument_list|)
 expr_stmt|;
 else|else
@@ -1876,7 +1869,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|APIC_HEADER
+name|ACPI_SUBTABLE_HEADER
 modifier|*
 name|entry
 decl_stmt|;
@@ -1899,6 +1892,8 @@ operator|)
 operator|+
 name|madt
 operator|->
+name|Header
+operator|.
 name|Length
 expr_stmt|;
 for|for
@@ -1924,7 +1919,7 @@ block|{
 name|entry
 operator|=
 operator|(
-name|APIC_HEADER
+name|ACPI_SUBTABLE_HEADER
 operator|*
 operator|)
 name|p
@@ -1951,7 +1946,7 @@ specifier|static
 name|void
 name|madt_probe_cpus_handler
 parameter_list|(
-name|APIC_HEADER
+name|ACPI_SUBTABLE_HEADER
 modifier|*
 name|entry
 parameter_list|,
@@ -1960,7 +1955,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|MADT_PROCESSOR_APIC
+name|ACPI_MADT_LOCAL_APIC
 modifier|*
 name|proc
 decl_stmt|;
@@ -1977,13 +1972,13 @@ name|Type
 condition|)
 block|{
 case|case
-name|APIC_PROCESSOR
+name|ACPI_MADT_TYPE_LOCAL_APIC
 case|:
 comment|/* 		 * The MADT does not include a BSP flag, so we have to 		 * let the MP code figure out which CPU is the BSP on 		 * its own. 		 */
 name|proc
 operator|=
 operator|(
-name|MADT_PROCESSOR_APIC
+name|ACPI_MADT_LOCAL_APIC
 operator|*
 operator|)
 name|entry
@@ -1994,19 +1989,23 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"MADT: Found CPU APIC ID %d ACPI ID %d: %s\n"
+literal|"MADT: Found CPU APIC ID %u ACPI ID %u: %s\n"
 argument_list|,
 name|proc
 operator|->
-name|LocalApicId
+name|Id
 argument_list|,
 name|proc
 operator|->
 name|ProcessorId
 argument_list|,
+operator|(
 name|proc
 operator|->
-name|ProcessorEnabled
+name|LapicFlags
+operator|&
+name|ACPI_MADT_ENABLED
+operator|)
 condition|?
 literal|"enabled"
 else|:
@@ -2016,28 +2015,32 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
 name|proc
 operator|->
-name|ProcessorEnabled
+name|LapicFlags
+operator|&
+name|ACPI_MADT_ENABLED
+operator|)
 condition|)
 break|break;
 if|if
 condition|(
 name|proc
 operator|->
-name|LocalApicId
+name|Id
 operator|>=
 name|NLAPICS
 condition|)
 name|panic
 argument_list|(
-literal|"%s: CPU ID %d too high"
+literal|"%s: CPU ID %u too high"
 argument_list|,
 name|__func__
 argument_list|,
 name|proc
 operator|->
-name|LocalApicId
+name|Id
 argument_list|)
 expr_stmt|;
 name|la
@@ -2047,7 +2050,7 @@ name|lapics
 index|[
 name|proc
 operator|->
-name|LocalApicId
+name|Id
 index|]
 expr_stmt|;
 name|KASSERT
@@ -2059,11 +2062,11 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"Duplicate local APIC ID %d"
+literal|"Duplicate local APIC ID %u"
 operator|,
 name|proc
 operator|->
-name|LocalApicId
+name|Id
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2085,7 +2088,7 @@ name|lapic_create
 argument_list|(
 name|proc
 operator|->
-name|LocalApicId
+name|Id
 argument_list|,
 literal|0
 argument_list|)
@@ -2104,7 +2107,7 @@ specifier|static
 name|void
 name|madt_parse_apics
 parameter_list|(
-name|APIC_HEADER
+name|ACPI_SUBTABLE_HEADER
 modifier|*
 name|entry
 parameter_list|,
@@ -2114,7 +2117,7 @@ name|arg
 name|__unused
 parameter_list|)
 block|{
-name|MADT_IO_APIC
+name|ACPI_MADT_IO_APIC
 modifier|*
 name|apic
 decl_stmt|;
@@ -2126,12 +2129,12 @@ name|Type
 condition|)
 block|{
 case|case
-name|APIC_IO
+name|ACPI_MADT_TYPE_IO_APIC
 case|:
 name|apic
 operator|=
 operator|(
-name|MADT_IO_APIC
+name|ACPI_MADT_IO_APIC
 operator|*
 operator|)
 name|entry
@@ -2142,15 +2145,15 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"MADT: Found IO APIC ID %d, Interrupt %d at %p\n"
+literal|"MADT: Found IO APIC ID %u, Interrupt %u at %p\n"
 argument_list|,
 name|apic
 operator|->
-name|IoApicId
+name|Id
 argument_list|,
 name|apic
 operator|->
-name|Interrupt
+name|GlobalIrqBase
 argument_list|,
 operator|(
 name|void
@@ -2168,19 +2171,19 @@ if|if
 condition|(
 name|apic
 operator|->
-name|IoApicId
+name|Id
 operator|>=
 name|NIOAPICS
 condition|)
 name|panic
 argument_list|(
-literal|"%s: I/O APIC ID %d too high"
+literal|"%s: I/O APIC ID %u too high"
 argument_list|,
 name|__func__
 argument_list|,
 name|apic
 operator|->
-name|IoApicId
+name|Id
 argument_list|)
 expr_stmt|;
 if|if
@@ -2189,7 +2192,7 @@ name|ioapics
 index|[
 name|apic
 operator|->
-name|IoApicId
+name|Id
 index|]
 operator|.
 name|io_apic
@@ -2198,20 +2201,20 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"%s: Double APIC ID %d"
+literal|"%s: Double APIC ID %u"
 argument_list|,
 name|__func__
 argument_list|,
 name|apic
 operator|->
-name|IoApicId
+name|Id
 argument_list|)
 expr_stmt|;
 name|ioapics
 index|[
 name|apic
 operator|->
-name|IoApicId
+name|Id
 index|]
 operator|.
 name|io_apic
@@ -2224,25 +2227,25 @@ name|Address
 argument_list|,
 name|apic
 operator|->
-name|IoApicId
+name|Id
 argument_list|,
 name|apic
 operator|->
-name|Interrupt
+name|GlobalIrqBase
 argument_list|)
 expr_stmt|;
 name|ioapics
 index|[
 name|apic
 operator|->
-name|IoApicId
+name|Id
 index|]
 operator|.
 name|io_vector
 operator|=
 name|apic
 operator|->
-name|Interrupt
+name|GlobalIrqBase
 expr_stmt|;
 break|break;
 default|default:
@@ -2262,7 +2265,7 @@ name|intr_polarity
 name|interrupt_polarity
 parameter_list|(
 name|UINT16
-name|Polarity
+name|IntiFlags
 parameter_list|,
 name|UINT8
 name|Source
@@ -2270,19 +2273,21 @@ parameter_list|)
 block|{
 switch|switch
 condition|(
-name|Polarity
+name|IntiFlags
+operator|&
+name|ACPI_MADT_POLARITY_MASK
 condition|)
 block|{
 case|case
-name|POLARITY_CONFORMS
+name|ACPI_MADT_POLARITY_CONFORMS
 case|:
 if|if
 condition|(
 name|Source
 operator|==
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 condition|)
 return|return
 operator|(
@@ -2296,7 +2301,7 @@ name|INTR_POLARITY_HIGH
 operator|)
 return|;
 case|case
-name|POLARITY_ACTIVE_HIGH
+name|ACPI_MADT_POLARITY_ACTIVE_HIGH
 case|:
 return|return
 operator|(
@@ -2304,7 +2309,7 @@ name|INTR_POLARITY_HIGH
 operator|)
 return|;
 case|case
-name|POLARITY_ACTIVE_LOW
+name|ACPI_MADT_POLARITY_ACTIVE_LOW
 case|:
 return|return
 operator|(
@@ -2328,7 +2333,7 @@ name|intr_trigger
 name|interrupt_trigger
 parameter_list|(
 name|UINT16
-name|TriggerMode
+name|IntiFlags
 parameter_list|,
 name|UINT8
 name|Source
@@ -2336,19 +2341,21 @@ parameter_list|)
 block|{
 switch|switch
 condition|(
-name|TriggerMode
+name|IntiFlags
+operator|&
+name|ACPI_MADT_TRIGGER_MASK
 condition|)
 block|{
 case|case
-name|TRIGGER_CONFORMS
+name|ACPI_MADT_TRIGGER_CONFORMS
 case|:
 if|if
 condition|(
 name|Source
 operator|==
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 condition|)
 return|return
 operator|(
@@ -2362,7 +2369,7 @@ name|INTR_TRIGGER_EDGE
 operator|)
 return|;
 case|case
-name|TRIGGER_EDGE
+name|ACPI_MADT_TRIGGER_EDGE
 case|:
 return|return
 operator|(
@@ -2370,7 +2377,7 @@ name|INTR_TRIGGER_EDGE
 operator|)
 return|;
 case|case
-name|TRIGGER_LEVEL
+name|ACPI_MADT_TRIGGER_LEVEL
 case|:
 return|return
 operator|(
@@ -2624,7 +2631,7 @@ specifier|static
 name|void
 name|madt_parse_interrupt_override
 parameter_list|(
-name|MADT_INTERRUPT_OVERRIDE
+name|ACPI_MADT_INTERRUPT_OVERRIDE
 modifier|*
 name|intr
 parameter_list|)
@@ -2663,13 +2670,13 @@ name|ACPI_Q_MADT_IRQ0
 operator|&&
 name|intr
 operator|->
-name|Source
+name|SourceIrq
 operator|==
 literal|0
 operator|&&
 name|intr
 operator|->
-name|Interrupt
+name|GlobalIrq
 operator|==
 literal|2
 condition|)
@@ -2695,11 +2702,11 @@ literal|"MADT: Interrupt override: source %u, irq %u\n"
 argument_list|,
 name|intr
 operator|->
-name|Source
+name|SourceIrq
 argument_list|,
 name|intr
 operator|->
-name|Interrupt
+name|GlobalIrq
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2721,7 +2728,7 @@ name|madt_find_interrupt
 argument_list|(
 name|intr
 operator|->
-name|Interrupt
+name|GlobalIrq
 argument_list|,
 operator|&
 name|new_ioapic
@@ -2735,15 +2742,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"MADT: Could not find APIC for vector %d (IRQ %d)\n"
+literal|"MADT: Could not find APIC for vector %u (IRQ %u)\n"
 argument_list|,
 name|intr
 operator|->
-name|Interrupt
+name|GlobalIrq
 argument_list|,
 name|intr
 operator|->
-name|Source
+name|SourceIrq
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2755,11 +2762,11 @@ name|interrupt_trigger
 argument_list|(
 name|intr
 operator|->
-name|TriggerMode
+name|IntiFlags
 argument_list|,
 name|intr
 operator|->
-name|Source
+name|SourceIrq
 argument_list|)
 expr_stmt|;
 name|pol
@@ -2768,11 +2775,11 @@ name|interrupt_polarity
 argument_list|(
 name|intr
 operator|->
-name|Polarity
+name|IntiFlags
 argument_list|,
 name|intr
 operator|->
-name|Source
+name|SourceIrq
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the SCI is identity mapped but has edge trigger and 	 * active-hi polarity or the force_sci_lo tunable is set, 	 * force it to use level/lo. 	 */
@@ -2780,11 +2787,11 @@ if|if
 condition|(
 name|intr
 operator|->
-name|Source
+name|SourceIrq
 operator|==
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 condition|)
 block|{
 name|madt_found_sci_override
@@ -2937,11 +2944,11 @@ if|if
 condition|(
 name|intr
 operator|->
-name|Source
+name|SourceIrq
 operator|!=
 name|intr
 operator|->
-name|Interrupt
+name|GlobalIrq
 condition|)
 block|{
 comment|/* 		 * If the SCI is remapped to a non-ISA global interrupt, 		 * then override the vector we use to setup and allocate 		 * the interrupt. 		 */
@@ -2949,23 +2956,23 @@ if|if
 condition|(
 name|intr
 operator|->
-name|Interrupt
+name|GlobalIrq
 operator|>
 literal|15
 operator|&&
 name|intr
 operator|->
-name|Source
+name|SourceIrq
 operator|==
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 condition|)
 name|acpi_OverrideInterruptLevel
 argument_list|(
 name|intr
 operator|->
-name|Interrupt
+name|GlobalIrq
 argument_list|)
 expr_stmt|;
 else|else
@@ -2977,7 +2984,7 @@ name|new_pin
 argument_list|,
 name|intr
 operator|->
-name|Source
+name|SourceIrq
 argument_list|)
 expr_stmt|;
 if|if
@@ -2986,7 +2993,7 @@ name|madt_find_interrupt
 argument_list|(
 name|intr
 operator|->
-name|Source
+name|SourceIrq
 argument_list|,
 operator|&
 name|old_ioapic
@@ -2999,11 +3006,11 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"MADT: Could not find APIC for source IRQ %d\n"
+literal|"MADT: Could not find APIC for source IRQ %u\n"
 argument_list|,
 name|intr
 operator|->
-name|Source
+name|SourceIrq
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3018,7 +3025,7 @@ argument_list|)
 operator|==
 name|intr
 operator|->
-name|Source
+name|SourceIrq
 condition|)
 name|ioapic_disable_pin
 argument_list|(
@@ -3059,7 +3066,7 @@ specifier|static
 name|void
 name|madt_parse_nmi
 parameter_list|(
-name|MADT_NMI_SOURCE
+name|ACPI_MADT_NMI_SOURCE
 modifier|*
 name|nmi
 parameter_list|)
@@ -3077,7 +3084,7 @@ name|madt_find_interrupt
 argument_list|(
 name|nmi
 operator|->
-name|Interrupt
+name|GlobalIrq
 argument_list|,
 operator|&
 name|ioapic
@@ -3091,11 +3098,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"MADT: Could not find APIC for vector %d\n"
+literal|"MADT: Could not find APIC for vector %u\n"
 argument_list|,
 name|nmi
 operator|->
-name|Interrupt
+name|GlobalIrq
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3109,11 +3116,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|nmi
 operator|->
-name|TriggerMode
-operator|!=
-name|TRIGGER_CONFORMS
+name|IntiFlags
+operator|&
+name|ACPI_MADT_TRIGGER_CONFORMS
+operator|)
 condition|)
 name|ioapic_set_triggermode
 argument_list|(
@@ -3125,7 +3135,7 @@ name|interrupt_trigger
 argument_list|(
 name|nmi
 operator|->
-name|TriggerMode
+name|IntiFlags
 argument_list|,
 literal|0
 argument_list|)
@@ -3133,11 +3143,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|nmi
 operator|->
-name|Polarity
-operator|!=
-name|TRIGGER_CONFORMS
+name|IntiFlags
+operator|&
+name|ACPI_MADT_TRIGGER_CONFORMS
+operator|)
 condition|)
 name|ioapic_set_polarity
 argument_list|(
@@ -3149,7 +3162,7 @@ name|interrupt_polarity
 argument_list|(
 name|nmi
 operator|->
-name|Polarity
+name|IntiFlags
 argument_list|,
 literal|0
 argument_list|)
@@ -3167,7 +3180,7 @@ specifier|static
 name|void
 name|madt_parse_local_nmi
 parameter_list|(
-name|MADT_LOCAL_APIC_NMI
+name|ACPI_MADT_LOCAL_APIC_NMI
 modifier|*
 name|nmi
 parameter_list|)
@@ -3211,7 +3224,8 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"MADT: Ignoring local NMI routed to ACPI CPU %u\n"
+literal|"MADT: Ignoring local NMI routed to "
+literal|"ACPI CPU %u\n"
 argument_list|,
 name|nmi
 operator|->
@@ -3248,11 +3262,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|nmi
 operator|->
-name|TriggerMode
-operator|!=
-name|TRIGGER_CONFORMS
+name|IntiFlags
+operator|&
+name|ACPI_MADT_TRIGGER_CONFORMS
+operator|)
 condition|)
 name|lapic_set_lvt_triggermode
 argument_list|(
@@ -3264,7 +3281,7 @@ name|interrupt_trigger
 argument_list|(
 name|nmi
 operator|->
-name|TriggerMode
+name|IntiFlags
 argument_list|,
 literal|0
 argument_list|)
@@ -3272,11 +3289,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|nmi
 operator|->
-name|Polarity
-operator|!=
-name|POLARITY_CONFORMS
+name|IntiFlags
+operator|&
+name|ACPI_MADT_POLARITY_CONFORMS
+operator|)
 condition|)
 name|lapic_set_lvt_polarity
 argument_list|(
@@ -3288,7 +3308,7 @@ name|interrupt_polarity
 argument_list|(
 name|nmi
 operator|->
-name|Polarity
+name|IntiFlags
 argument_list|,
 literal|0
 argument_list|)
@@ -3306,7 +3326,7 @@ specifier|static
 name|void
 name|madt_parse_ints
 parameter_list|(
-name|APIC_HEADER
+name|ACPI_SUBTABLE_HEADER
 modifier|*
 name|entry
 parameter_list|,
@@ -3324,12 +3344,12 @@ name|Type
 condition|)
 block|{
 case|case
-name|APIC_XRUPT_OVERRIDE
+name|ACPI_MADT_TYPE_INTERRUPT_OVERRIDE
 case|:
 name|madt_parse_interrupt_override
 argument_list|(
 operator|(
-name|MADT_INTERRUPT_OVERRIDE
+name|ACPI_MADT_INTERRUPT_OVERRIDE
 operator|*
 operator|)
 name|entry
@@ -3337,12 +3357,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|APIC_NMI
+name|ACPI_MADT_TYPE_NMI_SOURCE
 case|:
 name|madt_parse_nmi
 argument_list|(
 operator|(
-name|MADT_NMI_SOURCE
+name|ACPI_MADT_NMI_SOURCE
 operator|*
 operator|)
 name|entry
@@ -3350,12 +3370,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|APIC_LOCAL_NMI
+name|ACPI_MADT_TYPE_LOCAL_APIC_NMI
 case|:
 name|madt_parse_local_nmi
 argument_list|(
 operator|(
-name|MADT_LOCAL_APIC_NMI
+name|ACPI_MADT_LOCAL_APIC_NMI
 operator|*
 operator|)
 name|entry
@@ -3436,7 +3456,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"no pcpu data for CPU %d"
+literal|"no pcpu data for CPU %u"
 operator|,
 name|i
 operator|)

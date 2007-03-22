@@ -139,8 +139,7 @@ name|GLptr
 parameter_list|,
 name|Acq
 parameter_list|)
-define|\
-value|((Acq) = acpi_acquire_global_lock(GLptr))
+value|do {			\ 	(Acq) = acpi_acquire_global_lock(&((GLptr)->GlobalLock));	\ } while (0)
 end_define
 
 begin_define
@@ -152,8 +151,7 @@ name|GLptr
 parameter_list|,
 name|Acq
 parameter_list|)
-define|\
-value|((Acq) = acpi_release_global_lock(GLptr))
+value|do {			\ 	(Acq) = acpi_release_global_lock(&((GLptr)->GlobalLock));	\ } while (0)
 end_define
 
 begin_endif

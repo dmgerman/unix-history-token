@@ -676,6 +676,10 @@ condition|(
 name|status
 operator|!=
 name|AE_NOT_FOUND
+operator|&&
+name|status
+operator|!=
+name|AE_TYPE
 condition|)
 name|printf
 argument_list|(
