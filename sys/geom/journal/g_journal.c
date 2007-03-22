@@ -13113,7 +13113,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<Jstart>%jd</Jstart>"
+literal|"<Jstart>%jd</Jstart>\n"
 argument_list|,
 operator|(
 name|intmax_t
@@ -13127,7 +13127,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<Jend>%jd</Jend>"
+literal|"<Jend>%jd</Jend>\n"
 argument_list|,
 operator|(
 name|intmax_t
