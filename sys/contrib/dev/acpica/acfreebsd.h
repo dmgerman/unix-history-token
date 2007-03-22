@@ -297,11 +297,20 @@ directive|define
 name|ACPI_USE_SYSTEM_CLIBRARY
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|700020
+operator|)
+end_if
 
 begin_comment
 comment|/* Or strstr (used in debugging mode, also move to libkern) */
