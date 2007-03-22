@@ -94,6 +94,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|defined
+name|ACPI_DBG_TRACK_ALLOCATIONS
+operator|||
+name|defined
+name|ACPI_USE_LOCAL_CACHE
+end_if
+
 begin_function_decl
 specifier|static
 name|void
@@ -105,6 +115,11 @@ name|List
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Statistics subcommands  */
@@ -1114,7 +1129,7 @@ directive|ifdef
 name|ACPI_DBG_TRACK_ALLOCATIONS
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n----Object and Cache Statistics (all in hex)---------\n"
+literal|"\n----Object Statistics (all in hex)---------\n"
 argument_list|)
 expr_stmt|;
 name|AcpiDbListInfo
@@ -1127,9 +1142,16 @@ argument_list|(
 name|AcpiGbl_NsNodeList
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|ACPI_USE_LOCAL_CACHE
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n----Cache Statistics (all in hex)----------\n"
+argument_list|)
+expr_stmt|;
 name|AcpiDbListInfo
 argument_list|(
 name|AcpiGbl_OperandCache
@@ -1150,8 +1172,6 @@ argument_list|(
 name|AcpiGbl_StateCache
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 break|break;

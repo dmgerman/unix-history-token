@@ -525,7 +525,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"FADT (revision %u) is longer than ACPI 2.0 version, truncating length 0x%X to 0x%X"
+literal|"FADT (revision %u) is longer than ACPI 2.0 version, truncating length 0x%X to 0x%zX"
 operator|,
 name|Table
 operator|->

@@ -929,6 +929,9 @@ decl_stmt|;
 name|ACPI_NATIVE_UINT
 name|i
 decl_stmt|;
+name|BOOLEAN
+name|DsdtOverriden
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|TbLoadNamespace
@@ -992,6 +995,10 @@ name|UnlockAndExit
 goto|;
 block|}
 comment|/*      * Find DSDT table      */
+name|DsdtOverriden
+operator|=
+name|FALSE
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiOsTableOverride
@@ -1065,6 +1072,10 @@ operator|.
 name|Flags
 operator|=
 name|ACPI_TABLE_ORIGIN_UNKNOWN
+expr_stmt|;
+name|DsdtOverriden
+operator|=
+name|TRUE
 expr_stmt|;
 name|ACPI_INFO
 argument_list|(
@@ -1158,7 +1169,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|2
 init|;
 name|i
 operator|<
@@ -1225,6 +1236,42 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+continue|continue;
+block|}
+comment|/* Delete SSDT when DSDT is overriden */
+if|if
+condition|(
+name|ACPI_COMPARE_NAME
+argument_list|(
+operator|&
+operator|(
+name|AcpiGbl_RootTableList
+operator|.
+name|Tables
+index|[
+name|i
+index|]
+operator|.
+name|Signature
+operator|)
+argument_list|,
+name|ACPI_SIG_SSDT
+argument_list|)
+operator|&&
+name|DsdtOverriden
+condition|)
+block|{
+name|AcpiTbDeleteTable
+argument_list|(
+operator|&
+name|AcpiGbl_RootTableList
+operator|.
+name|Tables
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* Ignore errors while loading tables, get as many as possible */
