@@ -164,6 +164,8 @@ argument_list|,
 name|SBUS_REGSHFT
 argument_list|,
 name|SBUS_RCLK
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;

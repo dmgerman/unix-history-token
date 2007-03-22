@@ -1827,6 +1827,9 @@ name|regshft
 parameter_list|,
 name|u_int
 name|rclk
+parameter_list|,
+name|u_int
+name|rid
 parameter_list|)
 block|{
 name|struct
@@ -1912,7 +1915,7 @@ name|sc
 operator|->
 name|sc_rrid
 operator|=
-literal|0
+name|rid
 expr_stmt|;
 name|sc
 operator|->
@@ -1964,7 +1967,7 @@ name|sc
 operator|->
 name|sc_rrid
 operator|=
-literal|0
+name|rid
 expr_stmt|;
 name|sc
 operator|->

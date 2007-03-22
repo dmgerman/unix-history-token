@@ -384,8 +384,13 @@ name|device_t
 name|dev
 parameter_list|,
 name|u_int
+name|regshft
 parameter_list|,
 name|u_int
+name|rclk
+parameter_list|,
+name|u_int
+name|rid
 parameter_list|)
 function_decl|;
 end_function_decl

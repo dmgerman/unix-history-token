@@ -164,6 +164,8 @@ argument_list|,
 name|MACIO_REGSHFT
 argument_list|,
 name|MACIO_RCLK
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;
