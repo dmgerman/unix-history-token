@@ -4754,6 +4754,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+comment|/* 	 * At this point, the new object is still private, so the order in 	 * which the original and new objects are locked does not matter. 	 */
 name|VM_OBJECT_LOCK
 argument_list|(
 name|new_object
@@ -4997,8 +4998,6 @@ argument_list|(
 name|orig_object
 argument_list|)
 argument_list|,
-name|PDROP
-operator||
 name|PVM
 argument_list|,
 literal|"spltwt"
@@ -5009,11 +5008,6 @@ expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
 name|new_object
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_LOCK
-argument_list|(
-name|orig_object
 argument_list|)
 expr_stmt|;
 goto|goto
