@@ -717,6 +717,7 @@ name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
