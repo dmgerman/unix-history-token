@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 1.288 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 1.316 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -20,7 +20,32 @@ name|__ACTYPES_H__
 end_define
 
 begin_comment
-comment|/*! [Begin] no source code translation (keep the typedefs) */
+comment|/* acpisrc:StructDefs -- for acpisrc conversion */
+end_comment
+
+begin_comment
+comment|/*  * ACPI_MACHINE_WIDTH must be specified in an OS- or compiler-dependent header  * and must be either 32 or 64. 16-bit ACPICA is no longer supported, as of  * 12/2006.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MACHINE_WIDTH
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|ACPI_MACHINE_WIDTH not defined
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*! [Begin] no source code translation */
 end_comment
 
 begin_comment
@@ -78,109 +103,27 @@ name|ACPI_ASCII_MAX
 value|0x7F
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEFINE_ALTERNATE_TYPES
-end_ifdef
-
 begin_comment
-comment|/*  * Types used only in translated source, defined here to enable  * cross-platform compilation only.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|s32
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|u8
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|u16
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|u32
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|COMPILER_DEPENDENT_UINT64
-name|u64
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Data types - Fixed across all compilation models (16/32/64)  *  * BOOLEAN          Logical Boolean.  * INT8             8-bit  (1 byte) signed value  * UINT8            8-bit  (1 byte) unsigned value  * INT16            16-bit (2 byte) signed value  * UINT16           16-bit (2 byte) unsigned value  * INT32            32-bit (4 byte) signed value  * UINT32           32-bit (4 byte) unsigned value  * INT64            64-bit (8 byte) signed value  * UINT64           64-bit (8 byte) unsigned value  * ACPI_NATIVE_INT  32-bit on IA-32, 64-bit on IA-64 signed value  * ACPI_NATIVE_UINT 32-bit on IA-32, 64-bit on IA-64 unsigned value  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ACPI_MACHINE_WIDTH
-end_ifndef
-
-begin_error
-error|#
-directive|error
-error|ACPI_MACHINE_WIDTH not defined
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|ACPI_MACHINE_WIDTH
-operator|==
-literal|64
-end_if
-
-begin_comment
-comment|/*! [Begin] no source code translation (keep the typedefs) */
+comment|/*  * Architecture-specific ACPICA Subsystem Data Types  *  * The goal of these types is to provide source code portability across  * 16-bit, 32-bit, and 64-bit targets.  *  * 1) The following types are of fixed size for all targets (16/32/64):  *  * BOOLEAN      Logical boolean  *  * UINT8        8-bit  (1 byte) unsigned value  * UINT16       16-bit (2 byte) unsigned value  * UINT32       32-bit (4 byte) unsigned value  * UINT64       64-bit (8 byte) unsigned value  *  * INT16        16-bit (2 byte) signed value  * INT32        32-bit (4 byte) signed value  * INT64        64-bit (8 byte) signed value  *  * COMPILER_DEPENDENT_UINT64/INT64 - These types are defined in the  * compiler-dependent header(s) and were introduced because there is no common  * 64-bit integer type across the various compilation models, as shown in  * the table below.  *  * Datatype  LP64 ILP64 LLP64 ILP32 LP32 16bit  * char      8    8     8     8     8    8  * short     16   16    16    16    16   16  * _int32         32  * int       32   64    32    32    16   16  * long      64   64    32    32    32   32  * long long            64    64  * pointer   64   64    64    32    32   32  *  * Note: ILP64 and LP32 are currently not supported.  *  *  * 2) These types represent the native word size of the target mode of the  * processor, and may be 16-bit, 32-bit, or 64-bit as required. They are  * usually used for memory allocation, efficient loop counters, and array  * indexes. The types are similar to the size_t type in the C library and are  * required because there is no C type that consistently represents the native  * data width.  *  * ACPI_SIZE        16/32/64-bit unsigned value  * ACPI_NATIVE_UINT 16/32/64-bit unsigned value  * ACPI_NATIVE_INT  16/32/64-bit signed value  *  */
 end_comment
 
 begin_comment
-comment|/*  * 64-bit type definitions  */
+comment|/*******************************************************************************  *  * Common types for all compilers, all targets  *  ******************************************************************************/
 end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|UINT8
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef
 name|unsigned
 name|char
 name|BOOLEAN
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|UINT8
 typedef|;
 end_typedef
 
@@ -194,10 +137,37 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
-name|INT32
+name|COMPILER_DEPENDENT_UINT64
+name|UINT64
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|COMPILER_DEPENDENT_INT64
+name|INT64
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*! [End] no source code translation !*/
+end_comment
+
+begin_comment
+comment|/*******************************************************************************  *  * Types specific to 64-bit targets  *  ******************************************************************************/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|ACPI_MACHINE_WIDTH
+operator|==
+literal|64
+end_if
+
+begin_comment
+comment|/*! [Begin] no source code translation (keep the typedefs as-is) */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -209,28 +179,14 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|COMPILER_DEPENDENT_INT64
-name|INT64
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|COMPILER_DEPENDENT_UINT64
-name|UINT64
+name|int
+name|INT32
 typedef|;
 end_typedef
 
 begin_comment
 comment|/*! [End] no source code translation !*/
 end_comment
-
-begin_typedef
-typedef|typedef
-name|INT64
-name|ACPI_NATIVE_INT
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -241,8 +197,8 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|UINT64
-name|ACPI_TABLE_PTR
+name|INT64
+name|ACPI_NATIVE_INT
 typedef|;
 end_typedef
 
@@ -260,34 +216,6 @@ name|ACPI_PHYSICAL_ADDRESS
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|UINT64
-name|ACPI_SIZE
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ALIGNED_ADDRESS_BOUNDARY
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* No hardware alignment support in IA64 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_NATIVE_DIVIDE
-end_define
-
-begin_comment
-comment|/* Native 64-bit integer support */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -302,8 +230,18 @@ name|ACPI_SIZE_MAX
 value|ACPI_UINT64_MAX
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_USE_NATIVE_DIVIDE
+end_define
+
 begin_comment
-comment|/*  * In the case of the Itanium Processor Family (IPF), the hardware does not  * support misaligned memory transfers. Set the MISALIGNMENT_NOT_SUPPORTED flag  * to indicate that special precautions must be taken to avoid alignment faults.  * (IA64 or ia64 is currently used by existing compilers to indicate IPF.)  *  * Note: EM64T and other X86-64 processors do support misaligned transfers,  * so there is no need to define this flag.  */
+comment|/* Has native 64-bit integer support */
+end_comment
+
+begin_comment
+comment|/*  * In the case of the Itanium Processor Family (IPF), the hardware does not  * support misaligned memory transfers. Set the MISALIGNMENT_NOT_SUPPORTED flag  * to indicate that special precautions must be taken to avoid alignment faults.  * (IA64 or ia64 is currently used by existing compilers to indicate IPF.)  *  * Note: EM64T and other X86-64 processors support misaligned transfers,  * so there is no need to define this flag.  */
 end_comment
 
 begin_if
@@ -331,170 +269,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_elif
-elif|#
-directive|elif
-name|ACPI_MACHINE_WIDTH
-operator|==
-literal|16
-end_elif
-
 begin_comment
-comment|/*! [Begin] no source code translation (keep the typedefs as-is) */
+comment|/*******************************************************************************  *  * Types specific to 32-bit targets  *  ******************************************************************************/
 end_comment
-
-begin_comment
-comment|/*  * 16-bit type definitions  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|UINT8
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|BOOLEAN
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|UINT16
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|long
-name|INT32
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|INT16
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|UINT32
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|UINT32
-name|Lo
-decl_stmt|;
-name|UINT32
-name|Hi
-decl_stmt|;
-block|}
-name|UINT64
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*! [End] no source code translation !*/
-end_comment
-
-begin_typedef
-typedef|typedef
-name|UINT16
-name|ACPI_NATIVE_UINT
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|INT16
-name|ACPI_NATIVE_INT
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|UINT32
-name|ACPI_TABLE_PTR
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|UINT32
-name|ACPI_IO_ADDRESS
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|ACPI_PHYSICAL_ADDRESS
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|UINT16
-name|ACPI_SIZE
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ALIGNED_ADDRESS_BOUNDARY
-value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_NATIVE_DIVIDE
-end_define
-
-begin_comment
-comment|/* No 64-bit integers, ok to use native divide */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MAX_PTR
-value|ACPI_UINT16_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_SIZE_MAX
-value|ACPI_UINT16_MAX
-end_define
-
-begin_comment
-comment|/*  * (16-bit only) internal integers must be 32-bits, so  * 64-bit integers cannot be supported  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_NO_INTEGER64_SUPPORT
-end_define
 
 begin_elif
 elif|#
@@ -505,43 +282,8 @@ literal|32
 end_elif
 
 begin_comment
-comment|/*! [Begin] no source code translation (keep the typedefs) */
+comment|/*! [Begin] no source code translation (keep the typedefs as-is) */
 end_comment
-
-begin_comment
-comment|/*  * 32-bit type definitions (default)  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|UINT8
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|BOOLEAN
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|UINT16
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|INT32
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -553,28 +295,14 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|COMPILER_DEPENDENT_INT64
-name|INT64
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|COMPILER_DEPENDENT_UINT64
-name|UINT64
+name|int
+name|INT32
 typedef|;
 end_typedef
 
 begin_comment
 comment|/*! [End] no source code translation !*/
 end_comment
-
-begin_typedef
-typedef|typedef
-name|INT32
-name|ACPI_NATIVE_INT
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -585,8 +313,8 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|UINT64
-name|ACPI_TABLE_PTR
+name|INT32
+name|ACPI_NATIVE_INT
 typedef|;
 end_typedef
 
@@ -599,24 +327,10 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|UINT64
+name|UINT32
 name|ACPI_PHYSICAL_ADDRESS
 typedef|;
 end_typedef
-
-begin_typedef
-typedef|typedef
-name|UINT32
-name|ACPI_SIZE
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ALIGNED_ADDRESS_BOUNDARY
-value|0x00000004
-end_define
 
 begin_define
 define|#
@@ -637,6 +351,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* ACPI_MACHINE_WIDTH must be either 64 or 32 */
+end_comment
+
 begin_error
 error|#
 directive|error
@@ -649,130 +367,88 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This type is used for bitfields in ACPI tables. The only type that is  * even remotely portable is UINT8. Anything else is not portable, so  * do not add any more bitfield types.  */
+comment|/* Variable-width type, used instead of clib size_t */
 end_comment
-
-begin_typedef
-typedef|typedef
-name|UINT8
-name|UINT8_BIT
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef
 name|ACPI_NATIVE_UINT
-name|ACPI_PTRDIFF
+name|ACPI_SIZE
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Pointer overlays to avoid lots of typecasting for  * code that accepts both physical and logical pointers.  */
+comment|/*******************************************************************************  *  * OS-dependent and compiler-dependent types  *  * If the defaults below are not appropriate for the host system, they can  * be defined in the compiler-specific or OS-specific header, and this will  * take precedence.  *  ******************************************************************************/
 end_comment
 
-begin_typedef
-typedef|typedef
-union|union
-name|acpi_pointers
-block|{
-name|ACPI_PHYSICAL_ADDRESS
-name|Physical
-decl_stmt|;
-name|void
-modifier|*
-name|Logical
-decl_stmt|;
-name|ACPI_TABLE_PTR
-name|Value
-decl_stmt|;
-block|}
-name|ACPI_POINTERS
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_pointer
-block|{
-name|UINT32
-name|PointerType
-decl_stmt|;
-name|union
-name|acpi_pointers
-name|Pointer
-decl_stmt|;
-block|}
-name|ACPI_POINTER
-typedef|;
-end_typedef
-
 begin_comment
-comment|/* PointerTypes for above */
+comment|/* Value returned by AcpiOsGetThreadId */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ACPI_PHYSICAL_POINTER
-value|0x01
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_THREAD_ID
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ACPI_LOGICAL_POINTER
-value|0x02
+name|ACPI_THREAD_ID
+value|ACPI_NATIVE_UINT
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* Processor mode */
+comment|/* Object returned from AcpiOsCreateLock */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ACPI_PHYSICAL_ADDRESSING
-value|0x04
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_SPINLOCK
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ACPI_LOGICAL_ADDRESSING
-value|0x08
+name|ACPI_SPINLOCK
+value|void *
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_MEMORY_MODE
-value|0x0C
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_PHYSMODE_PHYSPTR
-value|ACPI_PHYSICAL_ADDRESSING | ACPI_PHYSICAL_POINTER
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_LOGMODE_PHYSPTR
-value|ACPI_LOGICAL_ADDRESSING  | ACPI_PHYSICAL_POINTER
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_LOGMODE_LOGPTR
-value|ACPI_LOGICAL_ADDRESSING  | ACPI_LOGICAL_POINTER
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/*  * If ACPI_CACHE_T was not defined in the OS-dependent header,  * define it now. This is typically the case where the local cache  * manager implementation is to be used (ACPI_USE_LOCAL_CACHE)  */
+comment|/* Flags for AcpiOsAcquireLock/AcpiOsReleaseLock */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_CPU_FLAGS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_CPU_FLAGS
+value|ACPI_NATIVE_UINT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Object returned from AcpiOsCreateCache */
 end_comment
 
 begin_ifndef
@@ -794,7 +470,102 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Useful defines  */
+comment|/* Use C99 uintptr_t for pointer casting if available, "void *" otherwise */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_UINTPTR_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_UINTPTR_T
+value|void *
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * ACPI_PRINTF_LIKE is used to tag functions as "printf-like" because  * some compilers can catch printf format string problems  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_PRINTF_LIKE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_PRINTF_LIKE
+parameter_list|(
+name|c
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Some compilers complain about unused variables. Sometimes we don't want to  * use all the variables (for example, _AcpiModuleName). This allows us  * to to tell the compiler in a per-variable manner that a variable  * is unused  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_UNUSED_VAR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_UNUSED_VAR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * All ACPICA functions that are available to the rest of the kernel are  * tagged with this macro which can be defined as appropriate for the host.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_EXPORT_SYMBOL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXPORT_SYMBOL
+parameter_list|(
+name|Symbol
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*******************************************************************************  *  * Independent types  *  ******************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Logical defines and NULL */
 end_comment
 
 begin_ifdef
@@ -864,7 +635,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Local datatypes  */
+comment|/*  * Mescellaneous types  */
 end_comment
 
 begin_typedef
@@ -910,7 +681,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Actually a ptr to an Node */
+comment|/* Actually a ptr to a NS Node */
 end_comment
 
 begin_typedef
@@ -962,68 +733,25 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Acpi integer width. In ACPI version 1, integers are  * 32 bits.  In ACPI version 2, integers are 64 bits.  * Note that this pertains to the ACPI integer type only, not  * other integers used in the implementation of the ACPI CA  * subsystem.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_NO_INTEGER64_SUPPORT
-end_ifdef
-
-begin_comment
-comment|/* 32-bit integers only, no 64-bit support */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|UINT32
-name|ACPI_INTEGER
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ACPI_INTEGER_MAX
-value|ACPI_UINT32_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_INTEGER_BIT_SIZE
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MAX_DECIMAL_DIGITS
-value|10
-end_define
-
-begin_comment
-comment|/* 2^32 = 4,294,967,296 */
+comment|/* Synchronization objects */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DIVIDE
+name|ACPI_MUTEX
+value|void *
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SEMAPHORE
+value|void *
 end_define
 
 begin_comment
-comment|/* Use compiler native 32-bit divide */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* 64-bit integers */
+comment|/*  * Acpi integer width. In ACPI version 1, integers are 32 bits.  In ACPI  * version 2, integers are 64 bits. Note that this pertains to the ACPI integer  * type only, not other integers used in the implementation of the ACPI CA  * subsystem.  */
 end_comment
 
 begin_typedef
@@ -1081,11 +809,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1122,7 +845,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_ROOT_OBJECT
-value|(ACPI_HANDLE) ACPI_PTR_ADD (char, NULL, ACPI_MAX_PTR)
+value|ACPI_ADD_PTR (ACPI_HANDLE, NULL, ACPI_MAX_PTR)
 end_define
 
 begin_comment
@@ -1192,8 +915,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_INITIALIZED_OK
+name|ACPI_SUBSYSTEM_INITIALIZE
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_INITIALIZED_OK
+value|0x02
 end_define
 
 begin_comment
@@ -1423,80 +1153,6 @@ define|#
 directive|define
 name|ACPI_NOTIFY_POWER_FAULT
 value|(UINT8) 7
-end_define
-
-begin_comment
-comment|/*  *  Table types.  These values are passed to the table related APIs  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|UINT32
-name|ACPI_TABLE_TYPE
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_RSDP
-value|(ACPI_TABLE_TYPE) 0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_DSDT
-value|(ACPI_TABLE_TYPE) 1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_FADT
-value|(ACPI_TABLE_TYPE) 2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_FACS
-value|(ACPI_TABLE_TYPE) 3
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_PSDT
-value|(ACPI_TABLE_TYPE) 4
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_SSDT
-value|(ACPI_TABLE_TYPE) 5
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_XSDT
-value|(ACPI_TABLE_TYPE) 6
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_MAX
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUM_ACPI_TABLE_TYPES
-value|(ACPI_TABLE_MAX+1)
 end_define
 
 begin_comment
@@ -1808,189 +1464,6 @@ value|0xFF
 end_define
 
 begin_comment
-comment|/*  * Bitmapped ACPI types.  Used internally only  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_ANY
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_INTEGER
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_STRING
-value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_BUFFER
-value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_PACKAGE
-value|0x00000008
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_FIELD_UNIT
-value|0x00000010
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_DEVICE
-value|0x00000020
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_EVENT
-value|0x00000040
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_METHOD
-value|0x00000080
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_MUTEX
-value|0x00000100
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_REGION
-value|0x00000200
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_POWER
-value|0x00000400
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_PROCESSOR
-value|0x00000800
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_THERMAL
-value|0x00001000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_BUFFER_FIELD
-value|0x00002000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_DDB_HANDLE
-value|0x00004000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_DEBUG_OBJECT
-value|0x00008000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_REFERENCE
-value|0x00010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_RESOURCE
-value|0x00020000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_COMPUTE_DATA
-value|(ACPI_BTYPE_INTEGER | ACPI_BTYPE_STRING | ACPI_BTYPE_BUFFER)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_DATA
-value|(ACPI_BTYPE_COMPUTE_DATA  | ACPI_BTYPE_PACKAGE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_DATA_REFERENCE
-value|(ACPI_BTYPE_DATA | ACPI_BTYPE_REFERENCE | ACPI_BTYPE_DDB_HANDLE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_DEVICE_OBJECTS
-value|(ACPI_BTYPE_DEVICE | ACPI_BTYPE_THERMAL | ACPI_BTYPE_PROCESSOR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_OBJECTS_AND_REFS
-value|0x0001FFFF
-end_define
-
-begin_comment
-comment|/* ARG or LOCAL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_BTYPE_ALL_OBJECTS
-value|0x0000FFFF
-end_define
-
-begin_comment
 comment|/*  * All I/O  */
 end_comment
 
@@ -2158,7 +1631,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * GPE info flags - Per GPE  * +-+-+-+---+---+-+  * |7|6|5|4:3|2:1|0|  * +-+-+-+---+---+-+  *  | | |  |   |  |  *  | | |  |   |  +--- Interrupt type: Edge or Level Triggered  *  | | |  |   +--- Type: Wake-only, Runtime-only, or wake/runtime  *  | | |  +--- Type of dispatch -- to method, handler, or none  *  | | +--- Enabled for runtime?  *  | +--- Enabled for wake?  *  +--- System state when GPE ocurred (running/waking)  */
+comment|/*  * GPE info flags - Per GPE  * +-+-+-+---+---+-+  * |7|6|5|4:3|2:1|0|  * +-+-+-+---+---+-+  *  | | |  |   |  |  *  | | |  |   |  +--- Interrupt type: Edge or Level Triggered  *  | | |  |   +--- Type: Wake-only, Runtime-only, or wake/runtime  *  | | |  +--- Type of dispatch -- to method, handler, or none  *  | | +--- Enabled for runtime?  *  | +--- Enabled for wake?  *  +--- Unused  */
 end_comment
 
 begin_define
@@ -2306,27 +1779,6 @@ end_define
 begin_comment
 comment|/* Both run/wake */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_SYSTEM_MASK
-value|(UINT8) 0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_SYSTEM_RUNNING
-value|(UINT8) 0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_SYSTEM_WAKING
-value|(UINT8) 0x00
-end_define
 
 begin_comment
 comment|/*  * Flags for GPE and Lock interfaces  */
@@ -2904,23 +2356,6 @@ value|0x0003
 end_define
 
 begin_comment
-comment|/*  * ACPI Table Info.  One per ACPI table _type_  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_table_info
-block|{
-name|UINT32
-name|Count
-decl_stmt|;
-block|}
-name|ACPI_TABLE_INFO
-typedef|;
-end_typedef
-
-begin_comment
 comment|/*  * System info returned by AcpiGetSystemInfo()  */
 end_comment
 
@@ -2949,15 +2384,6 @@ name|DebugLevel
 decl_stmt|;
 name|UINT32
 name|DebugLayer
-decl_stmt|;
-name|UINT32
-name|NumTableTypes
-decl_stmt|;
-name|ACPI_TABLE_INFO
-name|TableInfo
-index|[
-name|NUM_ACPI_TABLE_TYPES
-index|]
 decl_stmt|;
 block|}
 name|ACPI_SYSTEM_INFO
@@ -3347,14 +2773,64 @@ name|ACPI_VALID_SXDS
 value|0x0020
 end_define
 
+begin_comment
+comment|/* Flags for _STA method */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_STA_DEVICE_PRESENT
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_STA_DEVICE_ENABLED
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_STA_DEVICE_UI
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_STA_DEVICE_FUNCTIONING
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_STA_DEVICE_OK
+value|0x08
+end_define
+
+begin_comment
+comment|/* Synonym */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_STA_BATTERY_PRESENT
+value|0x10
+end_define
+
 begin_define
 define|#
 directive|define
 name|ACPI_COMMON_OBJ_INFO
 define|\
-value|ACPI_OBJECT_TYPE            Type;
+value|ACPI_OBJECT_TYPE                Type;
 comment|/* ACPI object type */
-value|\     ACPI_NAME                   Name
+value|\     ACPI_NAME                       Name
 end_define
 
 begin_comment
@@ -3569,11 +3045,15 @@ name|ACPI_ENTIRE_RANGE
 value|(ACPI_NON_ISA_ONLY_RANGES | ACPI_ISA_ONLY_RANGES)
 end_define
 
+begin_comment
+comment|/* Type of translation - 1=Sparse, 0=Dense */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_SPARSE_TRANSLATION
-value|(UINT8) 0x03
+value|(UINT8) 0x01
 end_define
 
 begin_comment
@@ -3832,6 +3312,45 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* UUID data structures for use in vendor-defined resource descriptors */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_uuid
+block|{
+name|UINT8
+name|Data
+index|[
+name|ACPI_UUID_LENGTH
+index|]
+decl_stmt|;
+block|}
+name|ACPI_UUID
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_vendor_uuid
+block|{
+name|UINT8
+name|Subtype
+decl_stmt|;
+name|UINT8
+name|Data
+index|[
+name|ACPI_UUID_LENGTH
+index|]
+decl_stmt|;
+block|}
+name|ACPI_VENDOR_UUID
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  *  Structures used to describe device resources  */
 end_comment
 
@@ -3968,6 +3487,38 @@ index|]
 decl_stmt|;
 block|}
 name|ACPI_RESOURCE_VENDOR
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Vendor resource with UUID info (introduced in ACPI 3.0) */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_resource_vendor_typed
+block|{
+name|UINT16
+name|ByteLength
+decl_stmt|;
+name|UINT8
+name|UuidSubtype
+decl_stmt|;
+name|UINT8
+name|Uuid
+index|[
+name|ACPI_UUID_LENGTH
+index|]
+decl_stmt|;
+name|UINT8
+name|ByteData
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|ACPI_RESOURCE_VENDOR_TYPED
 typedef|;
 end_typedef
 
@@ -4146,7 +3697,7 @@ define|#
 directive|define
 name|ACPI_RESOURCE_ADDRESS_COMMON
 define|\
-value|UINT8                       ResourceType; \     UINT8                       ProducerConsumer; \     UINT8                       Decode; \     UINT8                       MinAddressFixed; \     UINT8                       MaxAddressFixed; \     ACPI_RESOURCE_ATTRIBUTE     Info;
+value|UINT8                           ResourceType; \     UINT8                           ProducerConsumer; \     UINT8                           Decode; \     UINT8                           MinAddressFixed; \     UINT8                           MaxAddressFixed; \     ACPI_RESOURCE_ATTRIBUTE         Info;
 end_define
 
 begin_typedef
@@ -4495,6 +4046,9 @@ decl_stmt|;
 name|ACPI_RESOURCE_VENDOR
 name|Vendor
 decl_stmt|;
+name|ACPI_RESOURCE_VENDOR_TYPED
+name|VendorTyped
+decl_stmt|;
 name|ACPI_RESOURCE_END_TAG
 name|EndTag
 decl_stmt|;
@@ -4604,46 +4158,6 @@ parameter_list|)
 value|(ACPI_RESOURCE *)((UINT8 *) Res + Res->Length)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ACPI_MISALIGNMENT_NOT_SUPPORTED
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ACPI_ALIGN_RESOURCE_SIZE
-parameter_list|(
-name|Length
-parameter_list|)
-value|(Length)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ACPI_ALIGN_RESOURCE_SIZE
-parameter_list|(
-name|Length
-parameter_list|)
-value|ACPI_ROUND_UP_TO_NATIVE_WORD(Length)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * END: of definitions for Resource Attributes  */
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -4673,10 +4187,6 @@ block|}
 name|ACPI_PCI_ROUTING_TABLE
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*  * END: of definitions for PCI Routing tables  */
-end_comment
 
 begin_endif
 endif|#

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 1.106 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 1.121 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -67,19 +67,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSearchNode  *  * PARAMETERS:  TargetName      - Ascii ACPI name to search for  *              Node            - Starting node where search will begin  *              Type            - Object type to match  *              ReturnNode      - Where the matched Named obj is returned  *  * RETURN:      Status  *  * DESCRIPTION: Search a single level of the namespace.  Performs a  *              simple search of the specified level, and does not add  *              entries or search parents.  *  *  *      Named object lists are built (and subsequently dumped) in the  *      order in which the names are encountered during the namespace load;  *  *      All namespace searching is linear in this implementation, but  *      could be easily modified to support any improved search  *      algorithm.  However, the linear search was chosen for simplicity  *      and because the trees are small and the other interpreter  *      execution overhead is relatively high.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSearchOneScope  *  * PARAMETERS:  TargetName      - Ascii ACPI name to search for  *              ParentNode      - Starting node where search will begin  *              Type            - Object type to match  *              ReturnNode      - Where the matched Named obj is returned  *  * RETURN:      Status  *  * DESCRIPTION: Search a single level of the namespace. Performs a  *              simple search of the specified level, and does not add  *              entries or search parents.  *  *  *      Named object lists are built (and subsequently dumped) in the  *      order in which the names are encountered during the namespace load;  *  *      All namespace searching is linear in this implementation, but  *      could be easily modified to support any improved search  *      algorithm. However, the linear search was chosen for simplicity  *      and because the trees are small and the other interpreter  *      execution overhead is relatively high.  *  *      Note: CPU execution analysis has shown that the AML interpreter spends  *      a very small percentage of its time searching the namespace. Therefore,  *      the linear search seems to be sufficient, as there would seem to be  *      little value in improving the search.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiNsSearchNode
+name|AcpiNsSearchOneScope
 parameter_list|(
 name|UINT32
 name|TargetName
 parameter_list|,
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|Node
+name|ParentNode
 parameter_list|,
 name|ACPI_OBJECT_TYPE
 name|Type
@@ -92,11 +92,11 @@ parameter_list|)
 block|{
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|NextNode
+name|Node
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"NsSearchNode"
+name|NsSearchOneScope
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -117,7 +117,7 @@ name|ScopeName
 operator|=
 name|AcpiNsGetExternalPathname
 argument_list|(
-name|Node
+name|ParentNode
 argument_list|)
 expr_stmt|;
 if|if
@@ -134,14 +134,15 @@ literal|"Searching %s (%p) For [%4.4s] (%s)\n"
 operator|,
 name|ScopeName
 operator|,
-name|Node
+name|ParentNode
 operator|,
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|char
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|TargetName
+argument_list|)
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -150,7 +151,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|ScopeName
 argument_list|)
@@ -160,21 +161,21 @@ block|}
 endif|#
 directive|endif
 comment|/*      * Search for name at this namespace level, which is to say that we      * must search for the name among the children of this object      */
-name|NextNode
-operator|=
 name|Node
+operator|=
+name|ParentNode
 operator|->
 name|Child
 expr_stmt|;
 while|while
 condition|(
-name|NextNode
+name|Node
 condition|)
 block|{
 comment|/* Check for match against the name */
 if|if
 condition|(
-name|NextNode
+name|Node
 operator|->
 name|Name
 operator|.
@@ -188,25 +189,25 @@ if|if
 condition|(
 name|AcpiNsGetType
 argument_list|(
-name|NextNode
+name|Node
 argument_list|)
 operator|==
 name|ACPI_TYPE_LOCAL_METHOD_ALIAS
 condition|)
 block|{
-name|NextNode
+name|Node
 operator|=
 name|ACPI_CAST_PTR
 argument_list|(
 name|ACPI_NAMESPACE_NODE
 argument_list|,
-name|NextNode
+name|Node
 operator|->
 name|Object
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*              * Found matching entry.              */
+comment|/* Found matching entry */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -214,35 +215,36 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"Name [%4.4s] (%s) %p found in scope [%4.4s] %p\n"
 operator|,
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|char
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|TargetName
+argument_list|)
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
-name|NextNode
+name|Node
 operator|->
 name|Type
 argument_list|)
 operator|,
-name|NextNode
+name|Node
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
-name|Node
+name|ParentNode
 argument_list|)
 operator|,
-name|Node
+name|ParentNode
 operator|)
 argument_list|)
 expr_stmt|;
 operator|*
 name|ReturnNode
 operator|=
-name|NextNode
+name|Node
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -253,7 +255,7 @@ block|}
 comment|/*          * The last entry in the list points back to the parent,          * so a flag is used to indicate the end-of-list          */
 if|if
 condition|(
-name|NextNode
+name|Node
 operator|->
 name|Flags
 operator|&
@@ -264,9 +266,9 @@ comment|/* Searched entire list, we are done */
 break|break;
 block|}
 comment|/* Didn't match name, move on to the next peer object */
-name|NextNode
+name|Node
 operator|=
-name|NextNode
+name|Node
 operator|->
 name|Peer
 expr_stmt|;
@@ -279,12 +281,13 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"Name [%4.4s] (%s) not found in search in scope [%4.4s] %p first child %p\n"
 operator|,
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|char
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|TargetName
+argument_list|)
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -293,12 +296,12 @@ argument_list|)
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
-name|Node
+name|ParentNode
 argument_list|)
 operator|,
-name|Node
+name|ParentNode
 operator|,
-name|Node
+name|ParentNode
 operator|->
 name|Child
 operator|)
@@ -313,7 +316,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSearchParentTree  *  * PARAMETERS:  TargetName      - Ascii ACPI name to search for  *              Node            - Starting node where search will begin  *              Type            - Object type to match  *              ReturnNode      - Where the matched Node is returned  *  * RETURN:      Status  *  * DESCRIPTION: Called when a name has not been found in the current namespace  *              level.  Before adding it or giving up, ACPI scope rules require  *              searching enclosing scopes in cases identified by AcpiNsLocal().  *  *              "A name is located by finding the matching name in the current  *              name space, and then in the parent name space. If the parent  *              name space does not contain the name, the search continues  *              recursively until either the name is found or the name space  *              does not have a parent (the root of the name space).  This  *              indicates that the name is not found" (From ACPI Specification,  *              section 5.3)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSearchParentTree  *  * PARAMETERS:  TargetName      - Ascii ACPI name to search for  *              Node            - Starting node where search will begin  *              Type            - Object type to match  *              ReturnNode      - Where the matched Node is returned  *  * RETURN:      Status  *  * DESCRIPTION: Called when a name has not been found in the current namespace  *              level. Before adding it or giving up, ACPI scope rules require  *              searching enclosing scopes in cases identified by AcpiNsLocal().  *  *              "A name is located by finding the matching name in the current  *              name space, and then in the parent name space. If the parent  *              name space does not contain the name, the search continues  *              recursively until either the name is found or the name space  *              does not have a parent (the root of the name space). This  *              indicates that the name is not found" (From ACPI Specification,  *              section 5.3)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -346,7 +349,7 @@ name|ParentNode
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"NsSearchParentTree"
+name|NsSearchParentTree
 argument_list|)
 expr_stmt|;
 name|ParentNode
@@ -370,12 +373,13 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"[%4.4s] has no parent\n"
 operator|,
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|char
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|TargetName
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -400,12 +404,13 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"[%4.4s] type [%s] must be local to this scope (no parent search)\n"
 operator|,
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|char
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|TargetName
+argument_list|)
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -433,12 +438,13 @@ argument_list|(
 name|ParentNode
 argument_list|)
 operator|,
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|char
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|TargetName
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -448,10 +454,10 @@ condition|(
 name|ParentNode
 condition|)
 block|{
-comment|/*          * Search parent scope.  Use TYPE_ANY because we don't care about the          * object type at this point, we only care about the existence of          * the actual name we are searching for.  Typechecking comes later.          */
+comment|/*          * Search parent scope. Use TYPE_ANY because we don't care about the          * object type at this point, we only care about the existence of          * the actual name we are searching for. Typechecking comes later.          */
 name|Status
 operator|=
-name|AcpiNsSearchNode
+name|AcpiNsSearchOneScope
 argument_list|(
 name|TargetName
 argument_list|,
@@ -476,7 +482,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Not found here, go up another level          * (until we reach the root)          */
+comment|/* Not found here, go up another level (until we reach the root) */
 name|ParentNode
 operator|=
 name|AcpiNsGetParentNode
@@ -495,7 +501,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSearchAndEnter  *  * PARAMETERS:  TargetName          - Ascii ACPI name to search for (4 chars)  *              WalkState           - Current state of the walk  *              Node                - Starting node where search will begin  *              InterpreterMode     - Add names only in ACPI_MODE_LOAD_PASS_x.  *                                    Otherwise,search only.  *              Type                - Object type to match  *              Flags               - Flags describing the search restrictions  *              ReturnNode          - Where the Node is returned  *  * RETURN:      Status  *  * DESCRIPTION: Search for a name segment in a single namespace level,  *              optionally adding it if it is not found.  If the passed  *              Type is not Any and the type previously stored in the  *              entry was Any (i.e. unknown), update the stored type.  *  *              In ACPI_IMODE_EXECUTE, search only.  *              In other modes, search and add if not found.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSearchAndEnter  *  * PARAMETERS:  TargetName          - Ascii ACPI name to search for (4 chars)  *              WalkState           - Current state of the walk  *              Node                - Starting node where search will begin  *              InterpreterMode     - Add names only in ACPI_MODE_LOAD_PASS_x.  *                                    Otherwise,search only.  *              Type                - Object type to match  *              Flags               - Flags describing the search restrictions  *              ReturnNode          - Where the Node is returned  *  * RETURN:      Status  *  * DESCRIPTION: Search for a name segment in a single namespace level,  *              optionally adding it if it is not found. If the passed  *              Type is not Any and the type previously stored in the  *              entry was Any (i.e. unknown), update the stored type.  *  *              In ACPI_IMODE_EXECUTE, search only.  *              In other modes, search and add if not found.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -537,7 +543,7 @@ name|NewNode
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"NsSearchAndEnter"
+name|NsSearchAndEnter
 argument_list|)
 expr_stmt|;
 comment|/* Parameter validation */
@@ -553,12 +559,12 @@ operator|!
 name|ReturnNode
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Null param: Node %p Name %X ReturnNode %p\n"
+literal|"Null parameter: Node %p Name %X ReturnNode %p"
 operator|,
 name|Node
 operator|,
@@ -568,20 +574,13 @@ name|ReturnNode
 operator|)
 argument_list|)
 expr_stmt|;
-name|ACPI_REPORT_ERROR
-argument_list|(
-operator|(
-literal|"NsSearchAndEnter: Null parameter\n"
-operator|)
-argument_list|)
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Name must consist of printable characters */
+comment|/*      * Name must consist of valid ACPI characters. We will repair the name if      * necessary because we don't want to abort because of this, but we want      * all namespace names to be printable. A warning message is appropriate.      *      * This issue came up because there are in fact machines that exhibit      * this problem, and we want to be able to enable ACPI support for them,      * even though there are a few bad names.      */
 if|if
 condition|(
 operator|!
@@ -591,20 +590,64 @@ name|TargetName
 argument_list|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|TargetName
+operator|=
+name|AcpiUtRepairName
+argument_list|(
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
+argument_list|,
+operator|&
+name|TargetName
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Report warning only if in strict mode or debug mode */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_EnableInterpreterSlack
+condition|)
+block|{
+name|ACPI_WARNING
 argument_list|(
 operator|(
-literal|"NsSearchAndEnter: Bad character in ACPI Name: %X\n"
+name|AE_INFO
 operator|,
+literal|"Found bad character(s) in name, repaired: [%4.4s]\n"
+operator|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
+argument_list|,
+operator|&
 name|TargetName
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
+block|}
+else|else
+block|{
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|AE_BAD_CHARACTER
+operator|(
+name|ACPI_DB_WARN
+operator|,
+literal|"Found bad character(s) in name, repaired: [%4.4s]\n"
+operator|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
+argument_list|,
+operator|&
+name|TargetName
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Try to find the name in the namespace level specified by the caller */
 operator|*
@@ -614,7 +657,7 @@ name|ACPI_ENTRY_NOT_FOUND
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiNsSearchNode
+name|AcpiNsSearchOneScope
 argument_list|(
 name|TargetName
 argument_list|,
@@ -653,14 +696,14 @@ operator|=
 name|AE_ALREADY_EXISTS
 expr_stmt|;
 block|}
-comment|/*          * Either found it or there was an error          * -- finished either way          */
+comment|/* Either found it or there was an error: finished either way */
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * The name was not found.  If we are NOT performing the first pass      * (name entry) of loading the namespace, search the parent tree (all the      * way to the root if necessary.) We don't want to perform the parent      * search when the namespace is actually being loaded.  We want to perform      * the search when namespace references are being resolved (load pass 2)      * and during the execution phase.      */
+comment|/*      * The name was not found. If we are NOT performing the first pass      * (name entry) of loading the namespace, search the parent tree (all the      * way to the root if necessary.) We don't want to perform the parent      * search when the namespace is actually being loaded. We want to perform      * the search when namespace references are being resolved (load pass 2)      * and during the execution phase.      */
 if|if
 condition|(
 operator|(
@@ -705,7 +748,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * In execute mode, just search, never add names.  Exit now.      */
+comment|/* In execute mode, just search, never add names. Exit now */
 if|if
 condition|(
 name|InterpreterMode
@@ -720,12 +763,13 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"%4.4s Not found in %p [Not adding]\n"
 operator|,
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|char
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|TargetName
+argument_list|)
 operator|,
 name|Node
 operator|)
@@ -755,6 +799,40 @@ name|return_ACPI_STATUS
 argument_list|(
 name|AE_NO_MEMORY
 argument_list|)
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+comment|/*      * Node is an object defined by an External() statement      */
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_NS_EXTERNAL
+condition|)
+block|{
+name|NewNode
+operator|->
+name|Flags
+operator||=
+name|ANOBJ_IS_EXTERNAL
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_NS_TEMPORARY
+condition|)
+block|{
+name|NewNode
+operator|->
+name|Flags
+operator||=
+name|ANOBJ_TEMPORARY
 expr_stmt|;
 block|}
 comment|/* Install the new object into the parent's list of children */

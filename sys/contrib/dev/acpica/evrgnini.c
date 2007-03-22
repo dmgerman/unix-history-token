@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 1.78 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 1.88 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -46,6 +46,34 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|/* Local prototypes */
+end_comment
+
+begin_function_decl
+specifier|static
+name|BOOLEAN
+name|AcpiEvMatchPciRootBridge
+parameter_list|(
+name|char
+modifier|*
+name|Id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|BOOLEAN
+name|AcpiEvIsPciRootBridge
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvSystemMemoryRegionSetup  *  * PARAMETERS:  Handle              - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Setup a SystemMemory operation region  *  ******************************************************************************/
 end_comment
 
@@ -85,7 +113,7 @@ name|LocalRegionContext
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvSystemMemoryRegionSetup"
+name|EvSystemMemoryRegionSetup
 argument_list|)
 expr_stmt|;
 if|if
@@ -101,10 +129,38 @@ operator|*
 name|RegionContext
 condition|)
 block|{
-name|ACPI_MEM_FREE
-argument_list|(
+name|LocalRegionContext
+operator|=
+operator|(
+name|ACPI_MEM_SPACE_CONTEXT
+operator|*
+operator|)
 operator|*
 name|RegionContext
+expr_stmt|;
+comment|/* Delete a cached mapping if present */
+if|if
+condition|(
+name|LocalRegionContext
+operator|->
+name|MappedLength
+condition|)
+block|{
+name|AcpiOsUnmapMemory
+argument_list|(
+name|LocalRegionContext
+operator|->
+name|MappedLogicalAddress
+argument_list|,
+name|LocalRegionContext
+operator|->
+name|MappedLength
+argument_list|)
+expr_stmt|;
+block|}
+name|ACPI_FREE
+argument_list|(
+name|LocalRegionContext
 argument_list|)
 expr_stmt|;
 operator|*
@@ -122,7 +178,7 @@ block|}
 comment|/* Create a new context */
 name|LocalRegionContext
 operator|=
-name|ACPI_MEM_CALLOCATE
+name|ACPI_ALLOCATE_ZEROED
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -204,7 +260,7 @@ parameter_list|)
 block|{
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvIoSpaceRegionSetup"
+name|EvIoSpaceRegionSetup
 argument_list|)
 expr_stmt|;
 if|if
@@ -287,6 +343,10 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|PciRootNode
 decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|PciDeviceNode
+decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|RegionObj
@@ -297,12 +357,9 @@ operator|*
 operator|)
 name|Handle
 decl_stmt|;
-name|ACPI_DEVICE_ID
-name|ObjectHID
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvPciConfigRegionSetup"
+name|EvPciConfigRegionSetup
 argument_list|)
 expr_stmt|;
 name|HandlerObj
@@ -354,7 +411,7 @@ condition|(
 name|PciId
 condition|)
 block|{
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|PciId
 argument_list|)
@@ -402,60 +459,13 @@ operator|!=
 name|AcpiGbl_RootNode
 condition|)
 block|{
-name|Status
-operator|=
-name|AcpiUtExecute_HID
+comment|/* Get the _HID/_CID in order to detect a RootBridge */
+if|if
+condition|(
+name|AcpiEvIsPciRootBridge
 argument_list|(
 name|PciRootNode
-argument_list|,
-operator|&
-name|ObjectHID
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-comment|/*                  * Got a valid _HID string, check if this is a PCI root.                  * New for ACPI 3.0: check for a PCI Express root also.                  */
-if|if
-condition|(
-operator|!
-operator|(
-name|ACPI_STRNCMP
-argument_list|(
-name|ObjectHID
-operator|.
-name|Value
-argument_list|,
-name|PCI_ROOT_HID_STRING
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|PCI_ROOT_HID_STRING
-argument_list|)
-argument_list|)
-operator|||
-operator|!
-operator|(
-name|ACPI_STRNCMP
-argument_list|(
-name|ObjectHID
-operator|.
-name|Value
-argument_list|,
-name|PCI_EXPRESS_ROOT_HID_STRING
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|PCI_EXPRESS_ROOT_HID_STRING
-argument_list|)
-argument_list|)
-operator|)
-operator|)
 condition|)
 block|{
 comment|/* Install a handler for this PCI root bridge */
@@ -492,7 +502,7 @@ operator|==
 name|AE_SAME_HANDLER
 condition|)
 block|{
-comment|/*                              * It is OK if the handler is already installed on the root                              * bridge.  Still need to return a context object for the                              * new PCI_Config operation region, however.                              */
+comment|/*                          * It is OK if the handler is already installed on the root                          * bridge.  Still need to return a context object for the                          * new PCI_Config operation region, however.                          */
 name|Status
 operator|=
 name|AE_OK
@@ -500,19 +510,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
-literal|"Could not install PciConfig handler for Root Bridge %4.4s, %s\n"
+name|AE_INFO
+operator|,
+name|Status
+operator|,
+literal|"Could not install PciConfig handler for Root Bridge %4.4s"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
 name|PciRootNode
-argument_list|)
-operator|,
-name|AcpiFormatException
-argument_list|(
-name|Status
 argument_list|)
 operator|)
 argument_list|)
@@ -520,7 +529,6 @@ expr_stmt|;
 block|}
 block|}
 break|break;
-block|}
 block|}
 name|PciRootNode
 operator|=
@@ -564,7 +572,7 @@ block|}
 comment|/* Region is still not initialized. Create a new context */
 name|PciId
 operator|=
-name|ACPI_MEM_CALLOCATE
+name|ACPI_ALLOCATE_ZEROED
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -584,7 +592,48 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * For PCI_Config space access, we need the segment, bus,      * device and function numbers.  Acquire them here.      */
+comment|/*      * For PCI_Config space access, we need the segment, bus,      * device and function numbers.  Acquire them here.      *      * Find the parent device object. (This allows the operation region to be      * within a subscope under the device, such as a control method.)      */
+name|PciDeviceNode
+operator|=
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|Node
+expr_stmt|;
+while|while
+condition|(
+name|PciDeviceNode
+operator|&&
+operator|(
+name|PciDeviceNode
+operator|->
+name|Type
+operator|!=
+name|ACPI_TYPE_DEVICE
+operator|)
+condition|)
+block|{
+name|PciDeviceNode
+operator|=
+name|AcpiNsGetParentNode
+argument_list|(
+name|PciDeviceNode
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|PciDeviceNode
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_OPERAND_TYPE
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * Get the PCI device and function numbers from the _ADR object      * contained in the parent's scope.      */
 name|Status
 operator|=
@@ -592,7 +641,7 @@ name|AcpiUtEvaluateNumericObject
 argument_list|(
 name|METHOD_NAME__ADR
 argument_list|,
-name|ParentNode
+name|PciDeviceNode
 argument_list|,
 operator|&
 name|PciValue
@@ -723,6 +772,218 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvMatchPciRootBridge  *  * PARAMETERS:  Id              - The HID/CID in string format  *  * RETURN:      TRUE if the Id is a match for a PCI/PCI-Express Root Bridge  *  * DESCRIPTION: Determine if the input ID is a PCI Root Bridge ID.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|BOOLEAN
+name|AcpiEvMatchPciRootBridge
+parameter_list|(
+name|char
+modifier|*
+name|Id
+parameter_list|)
+block|{
+comment|/*      * Check if this is a PCI root.      * ACPI 3.0+: check for a PCI Express root also.      */
+if|if
+condition|(
+operator|!
+operator|(
+name|ACPI_STRNCMP
+argument_list|(
+name|Id
+argument_list|,
+name|PCI_ROOT_HID_STRING
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|PCI_ROOT_HID_STRING
+argument_list|)
+argument_list|)
+operator|)
+operator|||
+operator|!
+operator|(
+name|ACPI_STRNCMP
+argument_list|(
+name|Id
+argument_list|,
+name|PCI_EXPRESS_ROOT_HID_STRING
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|PCI_EXPRESS_ROOT_HID_STRING
+argument_list|)
+argument_list|)
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvIsPciRootBridge  *  * PARAMETERS:  Node            - Device node being examined  *  * RETURN:      TRUE if device is a PCI/PCI-Express Root Bridge  *  * DESCRIPTION: Determine if the input device represents a PCI Root Bridge by  *              examining the _HID and _CID for the device.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|BOOLEAN
+name|AcpiEvIsPciRootBridge
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_DEVICE_ID
+name|Hid
+decl_stmt|;
+name|ACPI_COMPATIBLE_ID_LIST
+modifier|*
+name|Cid
+decl_stmt|;
+name|ACPI_NATIVE_UINT
+name|i
+decl_stmt|;
+comment|/*      * Get the _HID and check for a PCI Root Bridge      */
+name|Status
+operator|=
+name|AcpiUtExecute_HID
+argument_list|(
+name|Node
+argument_list|,
+operator|&
+name|Hid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|AcpiEvMatchPciRootBridge
+argument_list|(
+name|Hid
+operator|.
+name|Value
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+comment|/*      * The _HID did not match.      * Get the _CID and check for a PCI Root Bridge      */
+name|Status
+operator|=
+name|AcpiUtExecute_CID
+argument_list|(
+name|Node
+argument_list|,
+operator|&
+name|Cid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+comment|/* Check all _CIDs in the returned list */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|Cid
+operator|->
+name|Count
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|AcpiEvMatchPciRootBridge
+argument_list|(
+name|Cid
+operator|->
+name|Id
+index|[
+name|i
+index|]
+operator|.
+name|Value
+argument_list|)
+condition|)
+block|{
+name|ACPI_FREE
+argument_list|(
+name|Cid
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+block|}
+name|ACPI_FREE
+argument_list|(
+name|Cid
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvPciBarRegionSetup  *  * PARAMETERS:  Handle              - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Setup a PciBAR operation region  *  * MUTEX:       Assumes namespace is not locked  *  ******************************************************************************/
 end_comment
 
@@ -748,7 +1009,7 @@ parameter_list|)
 block|{
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvPciBarRegionSetup"
+name|EvPciBarRegionSetup
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -785,7 +1046,7 @@ parameter_list|)
 block|{
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvCmosRegionSetup"
+name|EvCmosRegionSetup
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -822,7 +1083,7 @@ parameter_list|)
 block|{
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvDefaultRegionSetup"
+name|EvDefaultRegionSetup
 argument_list|)
 expr_stmt|;
 if|if
@@ -855,7 +1116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitializeRegion  *  * PARAMETERS:  RegionObj       - Region we are initializing  *              AcpiNsLocked    - Is namespace locked?  *  * RETURN:      Status  *  * DESCRIPTION: Initializes the region, finds any _REG methods and saves them  *              for execution at a later time  *  *              Get the appropriate address space handler for a newly  *              created region.  *  *              This also performs address space specific initialization.  For  *              example, PCI regions must have an _ADR object that contains  *              a PCI address in the scope of the definition.  This address is  *              required to perform an access to PCI config space.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitializeRegion  *  * PARAMETERS:  RegionObj       - Region we are initializing  *              AcpiNsLocked    - Is namespace locked?  *  * RETURN:      Status  *  * DESCRIPTION: Initializes the region, finds any _REG methods and saves them  *              for execution at a later time  *  *              Get the appropriate address space handler for a newly  *              created region.  *  *              This also performs address space specific initialization.  For  *              example, PCI regions must have an _ADR object that contains  *              a PCI address in the scope of the definition.  This address is  *              required to perform an access to PCI config space.  *  * MUTEX:       Interpreter should be unlocked, because we may run the _REG  *              method for this region.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -908,7 +1169,7 @@ name|RegionObj2
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
-literal|"EvInitializeRegion"
+name|EvInitializeRegion
 argument_list|,
 name|AcpiNsLocked
 argument_list|)
@@ -1019,7 +1280,7 @@ expr_stmt|;
 comment|/* Find any "_REG" method associated with this region definition */
 name|Status
 operator|=
-name|AcpiNsSearchNode
+name|AcpiNsSearchOneScope
 argument_list|(
 operator|*
 name|RegNamePtr

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evgpeblk - GPE block creation and initialization.  *              $Revision: 1.47 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evgpeblk - GPE block creation and initialization.  *              $Revision: 1.60 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -141,7 +141,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvValidGpeEvent  *  * PARAMETERS:  GpeEventInfo                - Info for this GPE  *  * RETURN:      TRUE if the GpeEvent is valid  *  * DESCRIPTION: Validate a GPE event.  DO NOT CALL FROM INTERRUPT LEVEL.  *              Should be called only when the GPE lists are semaphore locked  *              and not subject to change.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvValidGpeEvent  *  * PARAMETERS:  GpeEventInfo                - Info for this GPE  *  * RETURN:      TRUE if the GpeEvent is valid  *  * DESCRIPTION: Validate a GPE event. DO NOT CALL FROM INTERRUPT LEVEL.  *              Should be called only when the GPE lists are semaphore locked  *              and not subject to change.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -276,12 +276,12 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|ACPI_CPU_FLAGS
 name|Flags
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvWalkGpeList"
+name|EvWalkGpeList
 argument_list|)
 expr_stmt|;
 name|Flags
@@ -395,7 +395,7 @@ name|j
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvDeleteGpeHandlers"
+name|EvDeleteGpeHandlers
 argument_list|)
 expr_stmt|;
 comment|/* Examine each GPE Register within the block */
@@ -459,7 +459,7 @@ operator|==
 name|ACPI_GPE_DISPATCH_HANDLER
 condition|)
 block|{
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|GpeEventInfo
 operator|->
@@ -495,7 +495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvSaveMethodInfo  *  * PARAMETERS:  Callback from WalkNamespace  *  * RETURN:      Status  *  * DESCRIPTION: Called from AcpiWalkNamespace.  Expects each object to be a  *              control method under the _GPE portion of the namespace.  *              Extract the name and GPE type from the object, saving this  *              information for quick lookup during GPE dispatch  *  *              The name of each GPE control method is of the form:  *              "_Lxx" or "_Exx"  *              Where:  *                  L      - means that the GPE is level triggered  *                  E      - means that the GPE is edge triggered  *                  xx     - is the GPE number [in HEX]  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvSaveMethodInfo  *  * PARAMETERS:  Callback from WalkNamespace  *  * RETURN:      Status  *  * DESCRIPTION: Called from AcpiWalkNamespace. Expects each object to be a  *              control method under the _GPE portion of the namespace.  *              Extract the name and GPE type from the object, saving this  *              information for quick lookup during GPE dispatch  *  *              The name of each GPE control method is of the form:  *              "_Lxx" or "_Exx"  *              Where:  *                  L      - means that the GPE is level triggered  *                  E      - means that the GPE is edge triggered  *                  xx     - is the GPE number [in HEX]  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -552,7 +552,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvSaveMethodInfo"
+name|EvSaveMethodInfo
 argument_list|)
 expr_stmt|;
 comment|/*      * _Lxx and _Exx GPE method support      *      * 1) Extract the name from the object and convert to a string      */
@@ -581,7 +581,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * 2) Edge/Level determination is based on the 2nd character      *    of the method name      *      * NOTE: Default GPE type is RUNTIME.  May be changed later to WAKE      * if a _PRW object is found that points to this GPE.      */
+comment|/*      * 2) Edge/Level determination is based on the 2nd character      *    of the method name      *      * NOTE: Default GPE type is RUNTIME. May be changed later to WAKE      * if a _PRW object is found that points to this GPE.      */
 switch|switch
 condition|(
 name|Name
@@ -611,9 +611,9 @@ comment|/* Unknown method type, just ignore it! */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|ACPI_DB_LOAD
 operator|,
-literal|"Unknown GPE method type: %s (name not of form _Lxx or _Exx)\n"
+literal|"Ignoring unknown GPE method type: %s (name not of form _Lxx or _Exx)"
 operator|,
 name|Name
 operator|)
@@ -652,9 +652,9 @@ comment|/* Conversion failed; invalid method, just ignore it */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|ACPI_DB_LOAD
 operator|,
-literal|"Could not extract GPE number from name: %s (name is not of form _Lxx or _Exx)\n"
+literal|"Could not extract GPE number from name: %s (name is not of form _Lxx or _Exx)"
 operator|,
 name|Name
 operator|)
@@ -703,7 +703,7 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Now we can add this information to the GpeEventInfo block      * for use during dispatch of this GPE.  Default type is RUNTIME, although      * this may change when the _PRW methods are executed later.      */
+comment|/*      * Now we can add this information to the GpeEventInfo block      * for use during dispatch of this GPE. Default type is RUNTIME, although      * this may change when the _PRW methods are executed later.      */
 name|GpeEventInfo
 operator|=
 operator|&
@@ -777,7 +777,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvMatchPrwAndGpe  *  * PARAMETERS:  Callback from WalkNamespace  *  * RETURN:      Status.  NOTE: We ignore errors so that the _PRW walk is  *              not aborted on a single _PRW failure.  *  * DESCRIPTION: Called from AcpiWalkNamespace.  Expects each object to be a  *              Device.  Run the _PRW method.  If present, extract the GPE  *              number and mark the GPE as a WAKE GPE.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvMatchPrwAndGpe  *  * PARAMETERS:  Callback from WalkNamespace  *  * RETURN:      Status. NOTE: We ignore errors so that the _PRW walk is  *              not aborted on a single _PRW failure.  *  * DESCRIPTION: Called from AcpiWalkNamespace. Expects each object to be a  *              Device. Run the _PRW method. If present, extract the GPE  *              number and mark the GPE as a WAKE GPE.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -843,7 +843,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvMatchPrwAndGpe"
+name|EvMatchPrwAndGpe
 argument_list|)
 expr_stmt|;
 comment|/* Check for a _PRW method under this device */
@@ -1155,7 +1155,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGetGpeXruptBlock  *  * PARAMETERS:  InterruptNumber      - Interrupt for a GPE block  *  * RETURN:      A GPE interrupt block  *  * DESCRIPTION: Get or Create a GPE interrupt block.  There is one interrupt  *              block per unique interrupt level used for GPEs.  *              Should be called only when the GPE lists are semaphore locked  *              and not subject to change.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGetGpeXruptBlock  *  * PARAMETERS:  InterruptNumber      - Interrupt for a GPE block  *  * RETURN:      A GPE interrupt block  *  * DESCRIPTION: Get or Create a GPE interrupt block. There is one interrupt  *              block per unique interrupt level used for GPEs.  *              Should be called only when the GPE lists are semaphore locked  *              and not subject to change.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1179,12 +1179,12 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|ACPI_CPU_FLAGS
 name|Flags
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvGetGpeXruptBlock"
+name|EvGetGpeXruptBlock
 argument_list|)
 expr_stmt|;
 comment|/* No need for lock since we are not changing any list elements here */
@@ -1222,7 +1222,7 @@ block|}
 comment|/* Not found, must allocate a new xrupt descriptor */
 name|GpeXrupt
 operator|=
-name|ACPI_MEM_CALLOCATE
+name|ACPI_ALLOCATE_ZEROED
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1312,8 +1312,8 @@ condition|(
 name|InterruptNumber
 operator|!=
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 condition|)
 block|{
 name|Status
@@ -1335,12 +1335,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Could not install GPE interrupt handler at level 0x%X\n"
+literal|"Could not install GPE interrupt handler at level 0x%X"
 operator|,
 name|InterruptNumber
 operator|)
@@ -1362,7 +1362,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvDeleteGpeXrupt  *  * PARAMETERS:  GpeXrupt        - A GPE interrupt info block  *  * RETURN:      Status  *  * DESCRIPTION: Remove and free a GpeXrupt block.  Remove an associated  *              interrupt handler if not the SCI interrupt.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvDeleteGpeXrupt  *  * PARAMETERS:  GpeXrupt        - A GPE interrupt info block  *  * RETURN:      Status  *  * DESCRIPTION: Remove and free a GpeXrupt block. Remove an associated  *              interrupt handler if not the SCI interrupt.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1378,12 +1378,12 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|ACPI_CPU_FLAGS
 name|Flags
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvDeleteGpeXrupt"
+name|EvDeleteGpeXrupt
 argument_list|)
 expr_stmt|;
 comment|/* We never want to remove the SCI interrupt handler */
@@ -1394,8 +1394,8 @@ operator|->
 name|InterruptNumber
 operator|==
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 condition|)
 block|{
 name|GpeXrupt
@@ -1488,7 +1488,7 @@ name|Flags
 argument_list|)
 expr_stmt|;
 comment|/* Free the block */
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|GpeXrupt
 argument_list|)
@@ -1529,12 +1529,12 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|ACPI_CPU_FLAGS
 name|Flags
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvInstallGpeBlock"
+name|EvInstallGpeBlock
 argument_list|)
 expr_stmt|;
 name|Status
@@ -1682,12 +1682,12 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|ACPI_CPU_FLAGS
 name|Flags
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvInstallGpeBlock"
+name|EvInstallGpeBlock
 argument_list|)
 expr_stmt|;
 name|Status
@@ -1827,21 +1827,21 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Free the GpeBlock */
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|GpeBlock
 operator|->
 name|RegisterInfo
 argument_list|)
 expr_stmt|;
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|GpeBlock
 operator|->
 name|EventInfo
 argument_list|)
 expr_stmt|;
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|GpeBlock
 argument_list|)
@@ -1908,13 +1908,13 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvCreateGpeInfoBlocks"
+name|EvCreateGpeInfoBlocks
 argument_list|)
 expr_stmt|;
 comment|/* Allocate the GPE register information block */
 name|GpeRegisterInfo
 operator|=
-name|ACPI_MEM_CALLOCATE
+name|ACPI_ALLOCATE_ZEROED
 argument_list|(
 operator|(
 name|ACPI_SIZE
@@ -1935,12 +1935,12 @@ operator|!
 name|GpeRegisterInfo
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Could not allocate the GpeRegisterInfo table\n"
+literal|"Could not allocate the GpeRegisterInfo table"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1950,10 +1950,10 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Allocate the GPE EventInfo block.  There are eight distinct GPEs      * per register.  Initialization to zeros is sufficient.      */
+comment|/*      * Allocate the GPE EventInfo block. There are eight distinct GPEs      * per register. Initialization to zeros is sufficient.      */
 name|GpeEventInfo
 operator|=
-name|ACPI_MEM_CALLOCATE
+name|ACPI_ALLOCATE_ZEROED
 argument_list|(
 operator|(
 operator|(
@@ -1978,12 +1978,12 @@ operator|!
 name|GpeEventInfo
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Could not allocate the GpeEventInfo table\n"
+literal|"Could not allocate the GpeEventInfo table"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2008,7 +2008,7 @@ name|EventInfo
 operator|=
 name|GpeEventInfo
 expr_stmt|;
-comment|/*      * Initialize the GPE Register and Event structures.  A goal of these      * tables is to hide the fact that there are two separate GPE register sets      * in a given gpe hardware block, the status registers occupy the first half,      * and the enable registers occupy the second half.      */
+comment|/*      * Initialize the GPE Register and Event structures. A goal of these      * tables is to hide the fact that there are two separate GPE register sets      * in a given GPE hardware block, the status registers occupy the first half,      * and the enable registers occupy the second half.      */
 name|ThisRegister
 operator|=
 name|GpeRegisterInfo
@@ -2053,83 +2053,67 @@ name|ACPI_GPE_REGISTER_WIDTH
 operator|)
 argument_list|)
 expr_stmt|;
-name|ACPI_STORE_ADDRESS
-argument_list|(
 name|ThisRegister
 operator|->
 name|StatusAddress
 operator|.
 name|Address
-argument_list|,
-operator|(
-name|ACPI_GET_ADDRESS
-argument_list|(
+operator|=
 name|GpeBlock
 operator|->
 name|BlockAddress
 operator|.
 name|Address
-argument_list|)
 operator|+
 name|i
-operator|)
-argument_list|)
 expr_stmt|;
-name|ACPI_STORE_ADDRESS
-argument_list|(
 name|ThisRegister
 operator|->
 name|EnableAddress
 operator|.
 name|Address
-argument_list|,
-operator|(
-name|ACPI_GET_ADDRESS
-argument_list|(
+operator|=
 name|GpeBlock
 operator|->
 name|BlockAddress
 operator|.
 name|Address
-argument_list|)
 operator|+
 name|i
 operator|+
 name|GpeBlock
 operator|->
 name|RegisterCount
-operator|)
-argument_list|)
 expr_stmt|;
 name|ThisRegister
 operator|->
 name|StatusAddress
 operator|.
-name|AddressSpaceId
+name|SpaceId
 operator|=
 name|GpeBlock
 operator|->
 name|BlockAddress
 operator|.
-name|AddressSpaceId
+name|SpaceId
 expr_stmt|;
 name|ThisRegister
 operator|->
 name|EnableAddress
 operator|.
-name|AddressSpaceId
+name|SpaceId
 operator|=
 name|GpeBlock
 operator|->
 name|BlockAddress
 operator|.
-name|AddressSpaceId
+name|SpaceId
 expr_stmt|;
 name|ThisRegister
 operator|->
 name|StatusAddress
 operator|.
-name|RegisterBitWidth
+name|BitWidth
 operator|=
 name|ACPI_GPE_REGISTER_WIDTH
 expr_stmt|;
@@ -2137,7 +2121,7 @@ name|ThisRegister
 operator|->
 name|EnableAddress
 operator|.
-name|RegisterBitWidth
+name|BitWidth
 operator|=
 name|ACPI_GPE_REGISTER_WIDTH
 expr_stmt|;
@@ -2145,7 +2129,7 @@ name|ThisRegister
 operator|->
 name|StatusAddress
 operator|.
-name|RegisterBitOffset
+name|BitOffset
 operator|=
 name|ACPI_GPE_REGISTER_WIDTH
 expr_stmt|;
@@ -2153,7 +2137,7 @@ name|ThisRegister
 operator|->
 name|EnableAddress
 operator|.
-name|RegisterBitOffset
+name|BitOffset
 operator|=
 name|ACPI_GPE_REGISTER_WIDTH
 expr_stmt|;
@@ -2174,12 +2158,18 @@ control|)
 block|{
 name|ThisEvent
 operator|->
-name|RegisterBit
+name|GpeNumber
 operator|=
-name|AcpiGbl_DecodeTo8bit
-index|[
+call|(
+name|UINT8
+call|)
+argument_list|(
+name|ThisRegister
+operator|->
+name|BaseGpeNumber
+operator|+
 name|j
-index|]
+argument_list|)
 expr_stmt|;
 name|ThisEvent
 operator|->
@@ -2191,7 +2181,7 @@ name|ThisEvent
 operator|++
 expr_stmt|;
 block|}
-comment|/*          * Clear the status/enable registers.  Note that status registers          * are cleared by writing a '1', while enable registers are cleared          * by writing a '0'.          */
+comment|/* Disable all GPEs within this register */
 name|Status
 operator|=
 name|AcpiHwLowLevelWrite
@@ -2218,6 +2208,7 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
+comment|/* Clear any pending GPE events within this register */
 name|Status
 operator|=
 name|AcpiHwLowLevelWrite
@@ -2260,7 +2251,7 @@ condition|(
 name|GpeRegisterInfo
 condition|)
 block|{
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|GpeRegisterInfo
 argument_list|)
@@ -2271,7 +2262,7 @@ condition|(
 name|GpeEventInfo
 condition|)
 block|{
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|GpeEventInfo
 argument_list|)
@@ -2286,7 +2277,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvCreateGpeBlock  *  * PARAMETERS:  GpeDevice           - Handle to the parent GPE block  *              GpeBlockAddress     - Address and SpaceID  *              RegisterCount       - Number of GPE register pairs in the block  *              GpeBlockBaseNumber  - Starting GPE number for the block  *              InterruptNumber     - H/W interrupt for the block  *              ReturnGpeBlock      - Where the new block descriptor is returned  *  * RETURN:      Status  *  * DESCRIPTION: Create and Install a block of GPE registers  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvCreateGpeBlock  *  * PARAMETERS:  GpeDevice           - Handle to the parent GPE block  *              GpeBlockAddress     - Address and SpaceID  *              RegisterCount       - Number of GPE register pairs in the block  *              GpeBlockBaseNumber  - Starting GPE number for the block  *              InterruptNumber     - H/W interrupt for the block  *              ReturnGpeBlock      - Where the new block descriptor is returned  *  * RETURN:      Status  *  * DESCRIPTION: Create and Install a block of GPE registers. All GPEs within  *              the block are disabled at exit.  *              Note: Assumes namespace is locked.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2316,35 +2307,16 @@ modifier|*
 name|ReturnGpeBlock
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_GPE_BLOCK_INFO
 modifier|*
 name|GpeBlock
 decl_stmt|;
-name|ACPI_GPE_EVENT_INFO
-modifier|*
-name|GpeEventInfo
-decl_stmt|;
-name|ACPI_NATIVE_UINT
-name|i
-decl_stmt|;
-name|ACPI_NATIVE_UINT
-name|j
-decl_stmt|;
-name|UINT32
-name|WakeGpeCount
-decl_stmt|;
-name|UINT32
-name|GpeEnabledCount
-decl_stmt|;
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|ACPI_GPE_WALK_INFO
-name|GpeInfo
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvCreateGpeBlock"
+name|EvCreateGpeBlock
 argument_list|)
 expr_stmt|;
 if|if
@@ -2362,7 +2334,7 @@ block|}
 comment|/* Allocate a new GPE block */
 name|GpeBlock
 operator|=
-name|ACPI_MEM_CALLOCATE
+name|ACPI_ALLOCATE_ZEROED
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2385,6 +2357,12 @@ block|}
 comment|/* Initialize the new GPE block */
 name|GpeBlock
 operator|->
+name|Node
+operator|=
+name|GpeDevice
+expr_stmt|;
+name|GpeBlock
+operator|->
 name|RegisterCount
 operator|=
 name|RegisterCount
@@ -2394,12 +2372,6 @@ operator|->
 name|BlockBaseNumber
 operator|=
 name|GpeBlockBaseNumber
-expr_stmt|;
-name|GpeBlock
-operator|->
-name|Node
-operator|=
-name|GpeDevice
 expr_stmt|;
 name|ACPI_MEMCPY
 argument_list|(
@@ -2416,7 +2388,7 @@ name|ACPI_GENERIC_ADDRESS
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Create the RegisterInfo and EventInfo sub-structures */
+comment|/*      * Create the RegisterInfo and EventInfo sub-structures      * Note: disables and clears all GPEs in the block      */
 name|Status
 operator|=
 name|AcpiEvCreateGpeInfoBlocks
@@ -2432,7 +2404,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|GpeBlock
 argument_list|)
@@ -2443,7 +2415,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Install the new block in the global list(s) */
+comment|/* Install the new block in the global lists */
 name|Status
 operator|=
 name|AcpiEvInstallGpeBlock
@@ -2461,7 +2433,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_MEM_FREE
+name|ACPI_FREE
 argument_list|(
 name|GpeBlock
 argument_list|)
@@ -2492,13 +2464,141 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/*      * Runtime option: Should Wake GPEs be enabled at runtime?  The default      * is No,they should only be enabled just as the machine goes to sleep.      */
+comment|/* Return the new block */
+if|if
+condition|(
+name|ReturnGpeBlock
+condition|)
+block|{
+operator|(
+operator|*
+name|ReturnGpeBlock
+operator|)
+operator|=
+name|GpeBlock
+expr_stmt|;
+block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INIT
+operator|,
+literal|"GPE %02X to %02X [%4.4s] %u regs on int 0x%X\n"
+operator|,
+operator|(
+name|UINT32
+operator|)
+name|GpeBlock
+operator|->
+name|BlockBaseNumber
+operator|,
+call|(
+name|UINT32
+call|)
+argument_list|(
+name|GpeBlock
+operator|->
+name|BlockBaseNumber
+operator|+
+operator|(
+operator|(
+name|GpeBlock
+operator|->
+name|RegisterCount
+operator|*
+name|ACPI_GPE_REGISTER_WIDTH
+operator|)
+operator|-
+literal|1
+operator|)
+argument_list|)
+operator|,
+name|GpeDevice
+operator|->
+name|Name
+operator|.
+name|Ascii
+operator|,
+name|GpeBlock
+operator|->
+name|RegisterCount
+operator|,
+name|InterruptNumber
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitializeGpeBlock  *  * PARAMETERS:  GpeDevice           - Handle to the parent GPE block  *              GpeBlock            - Gpe Block info  *  * RETURN:      Status  *  * DESCRIPTION: Initialize and enable a GPE block. First find and run any  *              _PRT methods associated with the block, then enable the  *              appropriate GPEs.  *              Note: Assumes namespace is locked.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiEvInitializeGpeBlock
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|GpeDevice
+parameter_list|,
+name|ACPI_GPE_BLOCK_INFO
+modifier|*
+name|GpeBlock
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_GPE_EVENT_INFO
+modifier|*
+name|GpeEventInfo
+decl_stmt|;
+name|ACPI_GPE_WALK_INFO
+name|GpeInfo
+decl_stmt|;
+name|UINT32
+name|WakeGpeCount
+decl_stmt|;
+name|UINT32
+name|GpeEnabledCount
+decl_stmt|;
+name|ACPI_NATIVE_UINT
+name|i
+decl_stmt|;
+name|ACPI_NATIVE_UINT
+name|j
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|EvInitializeGpeBlock
+argument_list|)
+expr_stmt|;
+comment|/* Ignore a null GPE block (e.g., if no GPE block 1 exists) */
+if|if
+condition|(
+operator|!
+name|GpeBlock
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Runtime option: Should wake GPEs be enabled at runtime?  The default      * is no, they should only be enabled just as the machine goes to sleep.      */
 if|if
 condition|(
 name|AcpiGbl_LeaveWakeGpesDisabled
 condition|)
 block|{
-comment|/*          * Differentiate RUNTIME vs WAKE GPEs, via the _PRW control methods.          * (Each GPE that has one or more _PRWs that reference it is by          * definition a WAKE GPE and will not be enabled while the machine          * is running.)          */
+comment|/*          * Differentiate runtime vs wake GPEs, via the _PRW control methods.          * Each GPE that has one or more _PRWs that reference it is by          * definition a wake GPE and will not be enabled while the machine          * is running.          */
 name|GpeInfo
 operator|.
 name|GpeBlock
@@ -2532,7 +2632,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Enable all GPEs in this block that are 1) "runtime" or "run/wake" GPEs,      * and 2) have a corresponding _Lxx or _Exx method.  All other GPEs must      * be enabled via the AcpiEnableGpe() external interface.      */
+comment|/*      * Enable all GPEs in this block that have these attributes:      * 1) are "runtime" or "run/wake" GPEs, and      * 2) have a corresponding _Lxx or _Exx method      *      * Any other GPEs within this block must be enabled via the AcpiEnableGpe()      * external interface.      */
 name|WakeGpeCount
 operator|=
 literal|0
@@ -2630,66 +2730,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Dump info about this GPE block */
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INIT
-operator|,
-literal|"GPE %02X to %02X [%4.4s] %u regs on int 0x%X\n"
-operator|,
-operator|(
-name|UINT32
-operator|)
-name|GpeBlock
-operator|->
-name|BlockBaseNumber
-operator|,
-call|(
-name|UINT32
-call|)
-argument_list|(
-name|GpeBlock
-operator|->
-name|BlockBaseNumber
-operator|+
-operator|(
-operator|(
-name|GpeBlock
-operator|->
-name|RegisterCount
-operator|*
-name|ACPI_GPE_REGISTER_WIDTH
-operator|)
-operator|-
-literal|1
-operator|)
-argument_list|)
-operator|,
-name|GpeDevice
-operator|->
-name|Name
-operator|.
-name|Ascii
-operator|,
-name|GpeBlock
-operator|->
-name|RegisterCount
-operator|,
-name|InterruptNumber
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Enable all valid GPEs found above */
-name|Status
-operator|=
-name|AcpiHwEnableRuntimeGpeBlock
-argument_list|(
-name|NULL
-argument_list|,
-name|GpeBlock
-argument_list|)
-expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -2703,23 +2743,39 @@ name|GpeEnabledCount
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Return the new block */
+comment|/* Enable all valid runtime GPEs found above */
+name|Status
+operator|=
+name|AcpiHwEnableRuntimeGpeBlock
+argument_list|(
+name|NULL
+argument_list|,
+name|GpeBlock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|ReturnGpeBlock
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
 condition|)
 block|{
+name|ACPI_ERROR
+argument_list|(
 operator|(
-operator|*
-name|ReturnGpeBlock
-operator|)
-operator|=
+name|AE_INFO
+operator|,
+literal|"Could not enable GPEs in GpeBlock %p"
+operator|,
 name|GpeBlock
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -2756,7 +2812,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvGpeInitialize"
+name|EvGpeInitialize
 argument_list|)
 expr_stmt|;
 name|Status
@@ -2785,17 +2841,14 @@ comment|/*      * Determine the maximum GPE number for this machine.      *     
 if|if
 condition|(
 name|AcpiGbl_FADT
-operator|->
-name|Gpe0BlkLen
+operator|.
+name|Gpe0BlockLength
 operator|&&
-name|ACPI_GET_ADDRESS
-argument_list|(
 name|AcpiGbl_FADT
-operator|->
-name|XGpe0Blk
+operator|.
+name|XGpe0Block
 operator|.
 name|Address
-argument_list|)
 condition|)
 block|{
 comment|/* GPE block 0 exists (has both length and address> 0) */
@@ -2806,8 +2859,8 @@ name|UINT16
 call|)
 argument_list|(
 name|AcpiGbl_FADT
-operator|->
-name|Gpe0BlkLen
+operator|.
+name|Gpe0BlockLength
 operator|/
 literal|2
 argument_list|)
@@ -2831,16 +2884,16 @@ name|AcpiGbl_FadtGpeDevice
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XGpe0Blk
+operator|.
+name|XGpe0Block
 argument_list|,
 name|RegisterCount0
 argument_list|,
 literal|0
 argument_list|,
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 argument_list|,
 operator|&
 name|AcpiGbl_GpeFadtBlocks
@@ -2857,15 +2910,14 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
-literal|"Could not create GPE Block 0, %s\n"
+name|AE_INFO
 operator|,
-name|AcpiFormatException
-argument_list|(
 name|Status
-argument_list|)
+operator|,
+literal|"Could not create GPE Block 0"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2874,17 +2926,14 @@ block|}
 if|if
 condition|(
 name|AcpiGbl_FADT
-operator|->
-name|Gpe1BlkLen
+operator|.
+name|Gpe1BlockLength
 operator|&&
-name|ACPI_GET_ADDRESS
-argument_list|(
 name|AcpiGbl_FADT
-operator|->
-name|XGpe1Blk
+operator|.
+name|XGpe1Block
 operator|.
 name|Address
-argument_list|)
 condition|)
 block|{
 comment|/* GPE block 1 exists (has both length and address> 0) */
@@ -2895,8 +2944,8 @@ name|UINT16
 call|)
 argument_list|(
 name|AcpiGbl_FADT
-operator|->
-name|Gpe1BlkLen
+operator|.
+name|Gpe1BlockLength
 operator|/
 literal|2
 argument_list|)
@@ -2912,24 +2961,26 @@ operator|(
 name|GpeNumberMax
 operator|>=
 name|AcpiGbl_FADT
-operator|->
+operator|.
 name|Gpe1Base
 operator|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"GPE0 block (GPE 0 to %d) overlaps the GPE1 block (GPE %d to %d) - Ignoring GPE1\n"
+name|AE_INFO
+operator|,
+literal|"GPE0 block (GPE 0 to %d) overlaps the GPE1 block (GPE %d to %d) - Ignoring GPE1"
 operator|,
 name|GpeNumberMax
 operator|,
 name|AcpiGbl_FADT
-operator|->
+operator|.
 name|Gpe1Base
 operator|,
 name|AcpiGbl_FADT
-operator|->
+operator|.
 name|Gpe1Base
 operator|+
 operator|(
@@ -2961,18 +3012,18 @@ name|AcpiGbl_FadtGpeDevice
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
-operator|->
-name|XGpe1Blk
+operator|.
+name|XGpe1Block
 argument_list|,
 name|RegisterCount1
 argument_list|,
 name|AcpiGbl_FADT
-operator|->
+operator|.
 name|Gpe1Base
 argument_list|,
 name|AcpiGbl_FADT
-operator|->
-name|SciInt
+operator|.
+name|SciInterrupt
 argument_list|,
 operator|&
 name|AcpiGbl_GpeFadtBlocks
@@ -2989,15 +3040,14 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
-literal|"Could not create GPE Block 1, %s\n"
+name|AE_INFO
 operator|,
-name|AcpiFormatException
-argument_list|(
 name|Status
-argument_list|)
+operator|,
+literal|"Could not create GPE Block 1"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3006,7 +3056,7 @@ comment|/*              * GPE0 and GPE1 do not have to be contiguous in the GPE 
 name|GpeNumberMax
 operator|=
 name|AcpiGbl_FADT
-operator|->
+operator|.
 name|Gpe1Base
 operator|+
 operator|(
@@ -3059,10 +3109,12 @@ operator|>
 name|ACPI_GPE_MAX
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Maximum GPE number from FADT is too large: 0x%X\n"
+name|AE_INFO
+operator|,
+literal|"Maximum GPE number from FADT is too large: 0x%X"
 operator|,
 name|GpeNumberMax
 operator|)

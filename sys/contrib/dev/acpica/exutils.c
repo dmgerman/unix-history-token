@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 1.118 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 1.129 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -86,11 +86,11 @@ name|ACPI_NO_METHOD_EXECUTION
 end_ifndef
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExEnterInterpreter  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Enter the interpreter execution region.  Failure to enter  *              the interpreter region is a fatal system error  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExEnterInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Enter the interpreter execution region. Failure to enter  *              the interpreter region is a fatal system error. Used in  *              conjunction with ExitInterpreter.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiExEnterInterpreter
 parameter_list|(
 name|void
@@ -101,14 +101,14 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"ExEnterInterpreter"
+name|ExEnterInterpreter
 argument_list|)
 expr_stmt|;
 name|Status
 operator|=
 name|AcpiUtAcquireMutex
 argument_list|(
-name|ACPI_MTX_EXECUTE
+name|ACPI_MTX_INTERPRETER
 argument_list|)
 expr_stmt|;
 if|if
@@ -119,24 +119,55 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Could not acquire interpreter mutex\n"
+name|AE_INFO
+operator|,
+literal|"Could not acquire AML Interpreter mutex"
 operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
+name|return_VOID
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExExitInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Exit the interpreter execution region  *  * Cases where the interpreter is unlocked:  *      1) Completion of the execution of a control method  *      2) Method blocked on a Sleep() AML opcode  *      3) Method blocked on an Acquire() AML opcode  *      4) Method blocked on a Wait() AML opcode  *      5) Method blocked to acquire the global lock  *      6) Method blocked to execute a serialized control method that is  *          already executing  *      7) About to invoke a user-installed opregion handler  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReacquireInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Reacquire the interpreter execution region from within the  *              interpreter code. Failure to enter the interpreter region is a  *              fatal system error. Used in  conjuction with  *              RelinquishInterpreter  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiExReacquireInterpreter
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|ExReacquireInterpreter
+argument_list|)
+expr_stmt|;
+comment|/*      * If the global serialized flag is set, do not release the interpreter,      * since it was not actually released by AcpiExRelinquishInterpreter.      * This forces the interpreter to be single threaded.      */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_AllMethodsSerialized
+condition|)
+block|{
+name|AcpiExEnterInterpreter
+argument_list|()
+expr_stmt|;
+block|}
+name|return_VOID
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExExitInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Exit the interpreter execution region. This is the top level  *              routine used to exit the interpreter when all processing has  *              been completed.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -151,14 +182,14 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"ExExitInterpreter"
+name|ExExitInterpreter
 argument_list|)
 expr_stmt|;
 name|Status
 operator|=
 name|AcpiUtReleaseMutex
 argument_list|(
-name|ACPI_MTX_EXECUTE
+name|ACPI_MTX_INTERPRETER
 argument_list|)
 expr_stmt|;
 if|if
@@ -169,10 +200,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
+name|ACPI_ERROR
 argument_list|(
 operator|(
-literal|"Could not release interpreter mutex\n"
+name|AE_INFO
+operator|,
+literal|"Could not release AML Interpreter mutex"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -183,7 +216,39 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExTruncateFor32bitTable  *  * PARAMETERS:  ObjDesc         - Object to be truncated  *  * RETURN:      none  *  * DESCRIPTION: Truncate a number to 32-bits if the currently executing method  *              belongs to a 32-bit ACPI table.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExRelinquishInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Exit the interpreter execution region, from within the  *              interpreter - before attempting an operation that will possibly  *              block the running thread.  *  * Cases where the interpreter is unlocked internally  *      1) Method to be blocked on a Sleep() AML opcode  *      2) Method to be blocked on an Acquire() AML opcode  *      3) Method to be blocked on a Wait() AML opcode  *      4) Method to be blocked to acquire the global lock  *      5) Method to be blocked waiting to execute a serialized control method  *          that is currently executing  *      6) About to invoke a user-installed opregion handler  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiExRelinquishInterpreter
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|ExRelinquishInterpreter
+argument_list|)
+expr_stmt|;
+comment|/*      * If the global serialized flag is set, do not release the interpreter.      * This forces the interpreter to be single threaded.      */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_AllMethodsSerialized
+condition|)
+block|{
+name|AcpiExExitInterpreter
+argument_list|()
+expr_stmt|;
+block|}
+name|return_VOID
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExTruncateFor32bitTable  *  * PARAMETERS:  ObjDesc         - Object to be truncated  *  * RETURN:      none  *  * DESCRIPTION: Truncate an ACPI Integer to 32 bits if the execution mode is  *              32-bit, as determined by the revision of the DSDT.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -198,12 +263,21 @@ block|{
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/*      * Object must be a valid number and we must be executing      * a control method      */
+comment|/*      * Object must be a valid number and we must be executing      * a control method. NS node could be there for AML_INT_NAMEPATH_OP.      */
 if|if
 condition|(
 operator|(
 operator|!
 name|ObjDesc
+operator|)
+operator|||
+operator|(
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
+operator|!=
+name|ACPI_DESC_TYPE_OPERAND
 operator|)
 operator|||
 operator|(
@@ -242,95 +316,87 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAcquireGlobalLock  *  * PARAMETERS:  FieldFlags            - Flags with Lock rule:  *                                      AlwaysLock or NeverLock  *  * RETURN:      TRUE/FALSE indicating whether the lock was actually acquired  *  * DESCRIPTION: Obtain the global lock and keep track of this fact via two  *              methods.  A global variable keeps the state of the lock, and  *              the state is returned to the caller.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAcquireGlobalLock  *  * PARAMETERS:  FieldFlags            - Flags with Lock rule:  *                                      AlwaysLock or NeverLock  *  * RETURN:      None  *  * DESCRIPTION: Obtain the ACPI hardware Global Lock, only if the field  *              flags specifiy that it is to be obtained before field access.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|BOOLEAN
+name|void
 name|AcpiExAcquireGlobalLock
 parameter_list|(
 name|UINT32
 name|FieldFlags
 parameter_list|)
 block|{
-name|BOOLEAN
-name|Locked
-init|=
-name|FALSE
-decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"ExAcquireGlobalLock"
+name|ExAcquireGlobalLock
 argument_list|)
 expr_stmt|;
-comment|/* Only attempt lock if the AlwaysLock bit is set */
+comment|/* Only use the lock if the AlwaysLock bit is set */
 if|if
 condition|(
+operator|!
+operator|(
 name|FieldFlags
 operator|&
 name|AML_FIELD_LOCK_RULE_MASK
+operator|)
 condition|)
 block|{
-comment|/* We should attempt to get the lock, wait forever */
+name|return_VOID
+expr_stmt|;
+block|}
+comment|/* Attempt to get the global lock, wait forever */
 name|Status
 operator|=
-name|AcpiEvAcquireGlobalLock
+name|AcpiExAcquireMutexObject
 argument_list|(
 name|ACPI_WAIT_FOREVER
+argument_list|,
+name|AcpiGbl_GlobalLockMutex
+argument_list|,
+name|AcpiOsGetThreadId
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_SUCCESS
+name|ACPI_FAILURE
 argument_list|(
 name|Status
 argument_list|)
 condition|)
 block|{
-name|Locked
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-else|else
-block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|AE_INFO
 operator|,
-literal|"Could not acquire Global Lock, %s\n"
-operator|,
-name|AcpiFormatException
-argument_list|(
 name|Status
-argument_list|)
+operator|,
+literal|"Could not acquire Global Lock"
 operator|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-name|return_UINT8
-argument_list|(
-name|Locked
-argument_list|)
+name|return_VOID
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReleaseGlobalLock  *  * PARAMETERS:  LockedByMe      - Return value from corresponding call to  *                                AcquireGlobalLock.  *  * RETURN:      None  *  * DESCRIPTION: Release the global lock if it is locked.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReleaseGlobalLock  *  * PARAMETERS:  FieldFlags            - Flags with Lock rule:  *                                      AlwaysLock or NeverLock  *  * RETURN:      None  *  * DESCRIPTION: Release the ACPI hardware Global Lock  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiExReleaseGlobalLock
 parameter_list|(
-name|BOOLEAN
-name|LockedByMe
+name|UINT32
+name|FieldFlags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -338,20 +404,30 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"ExReleaseGlobalLock"
+name|ExReleaseGlobalLock
 argument_list|)
 expr_stmt|;
-comment|/* Only attempt unlock if the caller locked it */
+comment|/* Only use the lock if the AlwaysLock bit is set */
 if|if
 condition|(
-name|LockedByMe
+operator|!
+operator|(
+name|FieldFlags
+operator|&
+name|AML_FIELD_LOCK_RULE_MASK
+operator|)
 condition|)
 block|{
-comment|/* OK, now release the lock */
+name|return_VOID
+expr_stmt|;
+block|}
+comment|/* Release the global lock */
 name|Status
 operator|=
-name|AcpiEvReleaseGlobalLock
-argument_list|()
+name|AcpiExReleaseMutexObject
+argument_list|(
+name|AcpiGbl_GlobalLockMutex
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -362,19 +438,17 @@ argument_list|)
 condition|)
 block|{
 comment|/* Report the error, but there isn't much else we can do */
-name|ACPI_REPORT_ERROR
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
-literal|"Could not release ACPI Global Lock, %s\n"
+name|AE_INFO
 operator|,
-name|AcpiFormatException
-argument_list|(
 name|Status
-argument_list|)
+operator|,
+literal|"Could not release Global Lock"
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|return_VOID
 expr_stmt|;
@@ -405,7 +479,7 @@ name|CurrentValue
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"ExDigitsNeeded"
+name|ExDigitsNeeded
 argument_list|)
 expr_stmt|;
 comment|/* ACPI_INTEGER is unsigned, so we don't worry about a '-' prefix */
