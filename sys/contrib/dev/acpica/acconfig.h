@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 169 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 1.234 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2005, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20051021
+value|0x20070320
 end_define
 
 begin_comment
@@ -97,8 +97,19 @@ begin_comment
 comment|/* Interpreter operand objects */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_NAMESPACE_CACHE_DEPTH
+value|96
+end_define
+
 begin_comment
-comment|/*  * Should the subystem abort the loading of an ACPI table if the  * table checksum is incorrect?  */
+comment|/* Namespace objects */
+end_comment
+
+begin_comment
+comment|/*  * Should the subsystem abort the loading of an ACPI table if the  * table checksum is incorrect?  */
 end_comment
 
 begin_define
@@ -124,28 +135,6 @@ value|3
 end_define
 
 begin_comment
-comment|/* String size constants */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MAX_STRING_LENGTH
-value|512
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_PATHNAME_MAX
-value|256
-end_define
-
-begin_comment
-comment|/* A full namespace pathname */
-end_comment
-
-begin_comment
 comment|/* Maximum count for a semaphore object */
 end_comment
 
@@ -157,14 +146,14 @@ value|256
 end_define
 
 begin_comment
-comment|/* Max reference count (for debug only) */
+comment|/* Maximum object reference count (detects object deletion issues) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_MAX_REFERENCE_COUNT
-value|0x400
+value|0x800
 end_define
 
 begin_comment
@@ -176,6 +165,28 @@ define|#
 directive|define
 name|ACPI_SYSMEM_REGION_WINDOW_SIZE
 value|4096
+end_define
+
+begin_comment
+comment|/* OwnerId tracking. 8 entries allows for 255 OwnerIds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_OWNERID_MASKS
+value|8
+end_define
+
+begin_comment
+comment|/* Size of the root table array is increased by this increment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_ROOT_TABLE_SIZE_INCREMENT
+value|4
 end_define
 
 begin_comment
@@ -233,18 +244,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* Maximum length of resulting string when converting from a buffer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MAX_STRING_CONVERSION
-value|200
-end_define
-
-begin_comment
-comment|/* Length of _HID, _UID, and _CID values */
+comment|/* Length of _HID, _UID, _CID, and UUID values */
 end_comment
 
 begin_define
@@ -259,6 +259,13 @@ define|#
 directive|define
 name|ACPI_MAX_CID_LENGTH
 value|48
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_UUID_LENGTH
+value|16
 end_define
 
 begin_comment
@@ -277,6 +284,28 @@ define|#
 directive|define
 name|ACPI_OBJ_MAX_OPERAND
 value|7
+end_define
+
+begin_comment
+comment|/* Number of elements in the Result Stack frame, can be an arbitrary value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESULTS_FRAME_OBJ_NUM
+value|8
+end_define
+
+begin_comment
+comment|/*  * Maximal number of elements the Result Stack can contain,  * it may be an arbitray value not exceeding the types of  * ResultSize and ResultCount (now UINT8).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESULTS_OBJ_NUM_MAX
+value|255
 end_define
 
 begin_comment
@@ -306,6 +335,24 @@ define|#
 directive|define
 name|ACPI_PATH_SEPARATOR
 value|'.'
+end_define
+
+begin_comment
+comment|/* Sizes for ACPI table headers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_OEM_ID_SIZE
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OEM_TABLE_ID_SIZE
+value|8
 end_define
 
 begin_comment
@@ -398,43 +445,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_NUM_ACCESS_TYPES
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NUM_UPDATE_RULES
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NUM_LOCK_RULES
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NUM_MATCH_OPS
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NUM_OPCODES
-value|256
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NUM_FIELD_NAMES
-value|2
+name|ACPI_MAX_MATCH_OPCODE
+value|5
 end_define
 
 begin_comment
@@ -464,17 +476,6 @@ define|#
 directive|define
 name|ACPI_SMBUS_BUFFER_SIZE
 value|34
-end_define
-
-begin_comment
-comment|/* Number of strings associated with the _OSI reserved method */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_NUM_OSI_STRINGS
-value|10
 end_define
 
 begin_comment
