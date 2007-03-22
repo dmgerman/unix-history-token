@@ -316,6 +316,12 @@ directive|include
 file|<machine/in_cksum.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<opencrypto/cryptodev.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
