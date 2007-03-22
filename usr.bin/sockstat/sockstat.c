@@ -2913,7 +2913,7 @@ return|return
 operator|(
 name|proc
 operator|.
-name|ki_ocomm
+name|ki_comm
 operator|)
 return|;
 block|}
