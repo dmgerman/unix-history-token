@@ -909,6 +909,58 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|tcp_do_segment
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+name|struct
+name|tcpcb
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|tcp_dropwithreset
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+parameter_list|,
+name|struct
+name|tcpcb
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|tcp_pulloutofband
 parameter_list|(
@@ -1996,6 +2048,20 @@ name|inp
 init|=
 name|NULL
 decl_stmt|;
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+init|=
+name|NULL
+decl_stmt|;
+name|struct
+name|socket
+modifier|*
+name|so
+init|=
+name|NULL
+decl_stmt|;
 name|u_char
 modifier|*
 name|optp
@@ -2017,47 +2083,15 @@ decl_stmt|;
 name|int
 name|drop_hdrlen
 decl_stmt|;
-name|struct
-name|tcpcb
-modifier|*
-name|tp
-init|=
-name|NULL
-decl_stmt|;
 name|int
 name|thflags
 decl_stmt|;
-name|struct
-name|socket
-modifier|*
-name|so
-init|=
-name|NULL
-decl_stmt|;
 name|int
-name|todrop
-decl_stmt|,
-name|acked
-decl_stmt|,
-name|ourfinisacked
-decl_stmt|,
-name|needoutput
+name|rstreason
 init|=
 literal|0
 decl_stmt|;
-name|u_long
-name|tiwin
-decl_stmt|;
-name|struct
-name|tcpopt
-name|to
-decl_stmt|;
-comment|/* options in this segment */
-name|int
-name|headlocked
-init|=
-literal|0
-decl_stmt|;
+comment|/* For badport_bandlim accounting purposes */
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_FORWARD
@@ -2068,10 +2102,9 @@ name|fwd_tag
 decl_stmt|;
 endif|#
 directive|endif
-name|int
-name|rstreason
-decl_stmt|;
-comment|/* For badport_bandlim accounting purposes */
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|ip6_hdr
 modifier|*
@@ -2079,9 +2112,6 @@ name|ip6
 init|=
 name|NULL
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 name|int
 name|isipv6
 decl_stmt|;
@@ -2101,6 +2131,11 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|tcpopt
+name|to
+decl_stmt|;
+comment|/* options in this segment */
 ifdef|#
 directive|ifdef
 name|TCPDEBUG
@@ -2148,20 +2183,11 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-name|bzero
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|to
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|to
-argument_list|)
-argument_list|)
+operator|.
+name|to_flags
+operator|=
+literal|0
 expr_stmt|;
 name|tcpstat
 operator|.
@@ -2862,19 +2888,12 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|headlocked
-operator|=
-literal|1
-expr_stmt|;
 name|findpcb
 label|:
-name|KASSERT
+name|INP_INFO_WLOCK_ASSERT
 argument_list|(
-name|headlocked
-argument_list|,
-operator|(
-literal|"tcp_input: findpcb: head not locked"
-operator|)
+operator|&
+name|tcbinfo
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3140,7 +3159,7 @@ expr_stmt|;
 endif|#
 directive|endif
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 block|}
 elseif|else
@@ -3172,7 +3191,7 @@ expr_stmt|;
 endif|#
 directive|endif
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 block|}
 endif|#
@@ -3425,7 +3444,7 @@ operator|->
 name|ip6_hlim
 condition|)
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 elseif|else
 endif|#
@@ -3441,7 +3460,7 @@ operator|->
 name|ip_ttl
 condition|)
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 block|}
 comment|/* 	 * A previous connection in TIMEWAIT state is supposed to catch 	 * stray or duplicate segments arriving late.  If this segment 	 * was a legitimate new connection attempt the old INPCB gets 	 * removed and we can try again to find a listening socket. 	 */
@@ -3537,8 +3556,9 @@ operator|==
 name|TCPS_CLOSED
 condition|)
 goto|goto
-name|drop
+name|dropunlock
 goto|;
+comment|/* XXX: dropwithreset??? */
 ifdef|#
 directive|ifdef
 name|MAC
@@ -3557,7 +3577,7 @@ name|m
 argument_list|)
 condition|)
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 endif|#
 directive|endif
@@ -3574,7 +3594,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"tcp_input: so == NULL"
+literal|"%s: so == NULL"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3682,6 +3704,9 @@ name|inc_isipv6
 operator|=
 name|isipv6
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 name|isipv6
@@ -3705,6 +3730,8 @@ name|ip6_dst
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 name|inc
 operator|.
@@ -3898,9 +3925,29 @@ name|tp
 operator|->
 name|rcv_nxt
 expr_stmt|;
+comment|/* 				 * Process the segment and the data it 				 * contains.  tcp_do_segment() consumes 				 * the mbuf chain and unlocks the inpcb. 				 * XXX: The potential return value of 				 * TIME_WAIT nuked is supposed to be 				 * handled above. 				 */
+if|if
+condition|(
+name|tcp_do_segment
+argument_list|(
+name|m
+argument_list|,
+name|th
+argument_list|,
+name|so
+argument_list|,
+name|tp
+argument_list|,
+name|drop_hdrlen
+argument_list|,
+name|tlen
+argument_list|)
+condition|)
 goto|goto
-name|after_listen
+name|findpcb
 goto|;
+comment|/* TIME_WAIT nuked */
+return|return;
 block|}
 if|if
 condition|(
@@ -3918,7 +3965,7 @@ name|th
 argument_list|)
 expr_stmt|;
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 block|}
 if|if
@@ -3948,7 +3995,7 @@ name|dropwithreset
 goto|;
 block|}
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 block|}
 comment|/* 		 * Segment's flags are (SYN) or (SYN|FIN). 		 */
@@ -4023,7 +4070,7 @@ name|M_MCAST
 operator|)
 condition|)
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 if|if
 condition|(
@@ -4057,7 +4104,7 @@ name|ip6_src
 argument_list|)
 condition|)
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 if|if
 condition|(
@@ -4078,7 +4125,7 @@ name|ip6_src
 argument_list|)
 condition|)
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 endif|#
 directive|endif
@@ -4108,7 +4155,7 @@ operator|.
 name|s_addr
 condition|)
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 if|if
 condition|(
@@ -4161,7 +4208,7 @@ name|rcvif
 argument_list|)
 condition|)
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 block|}
 comment|/* 		 * SYN appears to be valid.  Create compressed TCP state 		 * for syncache. 		 */
@@ -4243,43 +4290,188 @@ name|m
 argument_list|)
 condition|)
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 comment|/* 			 * Entry added to syncache, mbuf used to 			 * send SYN-ACK packet.  Everything unlocked 			 * already. 			 */
 return|return;
 block|}
 comment|/* Catch all.  Everthing that makes it down here is junk. */
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 block|}
-name|after_listen
-label|:
-name|KASSERT
+comment|/* 	 * Segment belongs to a connection in SYN_SENT, ESTABLISHED or 	 * later state.  tcp_do_segment() always consumes the mbuf chain 	 * and unlocks the inpcb. 	 */
+if|if
+condition|(
+name|tcp_do_segment
 argument_list|(
-name|headlocked
+name|m
 argument_list|,
-operator|(
-literal|"tcp_input: after_listen: head not locked"
-operator|)
+name|th
+argument_list|,
+name|so
+argument_list|,
+name|tp
+argument_list|,
+name|drop_hdrlen
+argument_list|,
+name|tlen
+argument_list|)
+condition|)
+goto|goto
+name|findpcb
+goto|;
+comment|/* XXX: TIME_WAIT was nuked. */
+return|return;
+name|dropwithreset
+label|:
+name|tcp_dropwithreset
+argument_list|(
+name|m
+argument_list|,
+name|th
+argument_list|,
+name|tp
+argument_list|,
+name|tlen
+argument_list|,
+name|rstreason
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* mbuf chain got consumed. */
+name|dropunlock
+label|:
+if|if
+condition|(
+name|tp
+operator|!=
+name|NULL
+condition|)
+name|INP_UNLOCK
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* Syncache takes care of sockets in the listen state. */
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
+name|drop
+label|:
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+condition|)
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|tcp_do_segment
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+name|th
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|,
+name|int
+name|drop_hdrlen
+parameter_list|,
+name|int
+name|tlen
+parameter_list|)
+block|{
+name|int
+name|thflags
+decl_stmt|,
+name|acked
+decl_stmt|,
+name|ourfinisacked
+decl_stmt|,
+name|needoutput
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|headlocked
+init|=
+literal|1
+decl_stmt|;
+name|int
+name|rstreason
+decl_stmt|,
+name|todrop
+decl_stmt|,
+name|win
+decl_stmt|;
+name|u_long
+name|tiwin
+decl_stmt|;
+name|struct
+name|tcpopt
+name|to
+decl_stmt|;
+name|thflags
+operator|=
+name|th
+operator|->
+name|th_flags
+expr_stmt|;
+name|INP_INFO_WLOCK_ASSERT
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|tp
 operator|->
 name|t_state
-operator|!=
+operator|>
 name|TCPS_LISTEN
 argument_list|,
 operator|(
-literal|"tcp_input: TCPS_LISTEN"
+literal|"%s: TCPS_LISTEN"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4329,9 +4521,29 @@ argument_list|(
 operator|&
 name|to
 argument_list|,
-name|optp
+operator|(
+name|u_char
+operator|*
+operator|)
+operator|(
+name|th
+operator|+
+literal|1
+operator|)
 argument_list|,
-name|optlen
+operator|(
+name|th
+operator|->
+name|th_off
+operator|<<
+literal|2
+operator|)
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcphdr
+argument_list|)
 argument_list|,
 operator|(
 name|thflags
@@ -4775,7 +4987,9 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"headlocked"
+literal|"%s: headlocked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5204,7 +5418,9 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"headlocked"
+literal|"%s: headlocked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5539,10 +5755,6 @@ goto|;
 block|}
 block|}
 comment|/* 	 * Calculate amount of space in receive window, 	 * and then do TCP input processing. 	 * Receive window is amount of space in rcv queue, 	 * but not less than advertised window. 	 */
-block|{
-name|int
-name|win
-decl_stmt|;
 name|win
 operator|=
 name|sbspace
@@ -5585,7 +5797,6 @@ name|rcv_nxt
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Reset receive buffer auto scaling when not in bulk receive mode. */
 name|tp
 operator|->
@@ -5716,8 +5927,10 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input: after_listen"
-literal|": tcp_drop.2: head not locked"
+literal|"%s: after_listen: "
+literal|"tcp_drop.2: head not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5967,14 +6180,17 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input: trimthenstep6: head not "
-literal|"locked"
+literal|"%s: trimthenstep6: head not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
 name|INP_LOCK_ASSERT
 argument_list|(
-name|inp
+name|tp
+operator|->
+name|t_inpcb
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Advance th->th_seq to correspond to first data byte. 		 * If data, trim to stay within window, 		 * dropping FIN if necessary. 		 */
@@ -6081,7 +6297,9 @@ operator|!=
 name|TCPS_TIME_WAIT
 argument_list|,
 operator|(
-literal|"timewait"
+literal|"%s: timewait"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6256,9 +6474,10 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input: "
-literal|"trimthenstep6: tcp_close: head not "
-literal|"locked"
+literal|"%s: trimthenstep6: "
+literal|"tcp_close: head not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6281,8 +6500,10 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"trimthenstep6: "
+literal|"%s: trimthenstep6: "
 literal|"tcp_close.2: head not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6306,7 +6527,9 @@ operator|!=
 name|TCPS_TIME_WAIT
 argument_list|,
 operator|(
-literal|"timewait"
+literal|"%s: timewait"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6621,8 +6844,10 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"trimthenstep6: tcp_close.3: head not "
-literal|"locked"
+literal|"%s: trimthenstep6: tcp_close.3: head "
+literal|"not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6702,7 +6927,9 @@ operator|!=
 name|TCPS_TIME_WAIT
 argument_list|,
 operator|(
-literal|"timewait"
+literal|"%s: timewait"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6735,8 +6962,10 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"trimthenstep6: "
+literal|"%s: trimthenstep6: "
 literal|"tcp_close.4: head not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6747,9 +6976,12 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-goto|goto
-name|findpcb
-goto|;
+comment|/* XXX: Shouldn't be possible. */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 comment|/* 			 * If window is closed can only take segments at 			 * window edge, and have to drop data and PUSH from 			 * incoming segments.  Continue processing, but 			 * remember to ack.  Otherwise, drop segment 			 * and ack. 			 */
 if|if
@@ -6895,8 +7127,10 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input: tcp_drop: trimthenstep6: "
+literal|"%s: tcp_drop: trimthenstep6: "
 literal|"head not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7157,7 +7391,9 @@ operator|!=
 name|TCPS_TIME_WAIT
 argument_list|,
 operator|(
-literal|"timewait"
+literal|"%s: timewait"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7608,7 +7844,9 @@ operator|<=
 literal|2
 argument_list|,
 operator|(
-literal|"tp->snd_limited too big"
+literal|"%s: tp->snd_limited too big"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7693,7 +7931,9 @@ operator|==
 literal|2
 argument_list|,
 operator|(
-literal|"dupacks not 1 or 2"
+literal|"%s: dupacks not 1 or 2"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7797,7 +8037,9 @@ name|TF_SENTFIN
 operator|)
 argument_list|,
 operator|(
-literal|"sent too much"
+literal|"%s: sent too much"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7854,7 +8096,9 @@ name|snd_una
 argument_list|)
 argument_list|,
 operator|(
-literal|"th_ack<= snd_una"
+literal|"%s: th_ack<= snd_una"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8056,14 +8300,17 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input: process_ACK: head not "
-literal|"locked"
+literal|"%s: process_ACK: head not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
 name|INP_LOCK_ASSERT
 argument_list|(
-name|inp
+name|tp
+operator|->
+name|t_inpcb
 argument_list|)
 expr_stmt|;
 name|acked
@@ -8715,8 +8962,10 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input: process_ACK: "
+literal|"%s: process_ACK: "
 literal|"head not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8731,12 +8980,20 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
+name|headlocked
+operator|=
+literal|0
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 break|break;
 comment|/* 		 * In LAST_ACK, we may still be waiting for data to drain 		 * and/or to be acked, as well as for the ack of our FIN. 		 * If our FIN is now acknowledged, delete the TCB, 		 * enter the closed state and return. 		 */
@@ -8753,8 +9010,10 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input: process_ACK:"
-literal|" tcp_close: head not locked"
+literal|"%s: process_ACK: "
+literal|"tcp_close: head not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8783,7 +9042,9 @@ operator|!=
 name|TCPS_TIME_WAIT
 argument_list|,
 operator|(
-literal|"timewait"
+literal|"%s: timewait"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8814,13 +9075,17 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input: step6: head not locked"
+literal|"%s: step6: head not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
 name|INP_LOCK_ASSERT
 argument_list|(
-name|inp
+name|tp
+operator|->
+name|t_inpcb
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Update window information. 	 * Don't look at window if no ACK: TAC's send garbage on first SYN. 	 */
@@ -9193,13 +9458,17 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input: dodata: head not locked"
+literal|"%s: dodata: head not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
 name|INP_LOCK_ASSERT
 argument_list|(
-name|inp
+name|tp
+operator|->
+name|t_inpcb
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Process the segment text, merging it into the TCP sequencing queue, 	 * and arranging for acknowledgment of receipt if necessary. 	 * This process logically involves adjusting tp->rcv_wnd as data 	 * is presented to the user (this happens in tcp_usrreq.c, 	 * case PRU_RCVD).  If a FIN has already been received on this 	 * connection then we just ignore the text. 	 */
@@ -9408,25 +9677,13 @@ argument_list|,
 name|save_end
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Note the amount of data that peer has sent into 		 * our window, in order to estimate the sender's 		 * buffer size. 		 */
-name|len
-operator|=
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_hiwat
-operator|-
-operator|(
-name|tp
-operator|->
-name|rcv_adv
-operator|-
-name|tp
-operator|->
-name|rcv_nxt
-operator|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 		 * Note the amount of data that peer has sent into 		 * our window, in order to estimate the sender's 		 * buffer size. 		 * XXX: Unused. 		 */
+block|len = so->so_rcv.sb_hiwat - (tp->rcv_adv - tp->rcv_nxt);
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -9544,8 +9801,10 @@ operator|==
 literal|1
 argument_list|,
 operator|(
-literal|"tcp_input: dodata: "
+literal|"%s: dodata: "
 literal|"TCP_FIN_WAIT_2: head not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9560,7 +9819,11 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 		 * In TIME_WAIT state restart the 2 MSL time_wait timer. 		 */
 case|case
 name|TCPS_TIME_WAIT
@@ -9574,7 +9837,9 @@ operator|!=
 name|TCPS_TIME_WAIT
 argument_list|,
 operator|(
-literal|"timewait"
+literal|"%s: timewait"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9669,13 +9934,17 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"tcp_input: check_delack: head locked"
+literal|"%s: check_delack: head locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
 name|INP_LOCK_ASSERT
 argument_list|(
-name|inp
+name|tp
+operator|->
+name|t_inpcb
 argument_list|)
 expr_stmt|;
 if|if
@@ -9710,10 +9979,16 @@ expr_stmt|;
 block|}
 name|INP_UNLOCK
 argument_list|(
-name|inp
+name|tp
+operator|->
+name|t_inpcb
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|dropafterack
 label|:
 name|KASSERT
@@ -9721,7 +9996,9 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input: dropafterack: head not locked"
+literal|"%s: dropafterack: head not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9811,7 +10088,9 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"headlocked should be 1"
+literal|"%s: headlocked should be 1"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9837,7 +10116,9 @@ argument_list|)
 expr_stmt|;
 name|INP_UNLOCK
 argument_list|(
-name|inp
+name|tp
+operator|->
+name|t_inpcb
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -9845,7 +10126,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|dropwithreset
 label|:
 name|KASSERT
@@ -9853,252 +10138,25 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input: dropwithreset: head not locked"
+literal|"%s: dropwithreset: head not locked"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Generate a RST, dropping incoming segment. 	 * Make ACK acceptable to originator of segment. 	 * Don't bother to respond if destination was broadcast/multicast. 	 */
-if|if
-condition|(
-operator|(
-name|thflags
-operator|&
-name|TH_RST
-operator|)
-operator|||
+name|tcp_dropwithreset
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-operator|(
-name|M_BCAST
-operator||
-name|M_MCAST
-operator|)
-condition|)
-goto|goto
-name|drop
-goto|;
-if|if
-condition|(
-name|isipv6
-condition|)
-block|{
-if|if
-condition|(
-name|IN6_IS_ADDR_MULTICAST
-argument_list|(
-operator|&
-name|ip6
-operator|->
-name|ip6_dst
-argument_list|)
-operator|||
-name|IN6_IS_ADDR_MULTICAST
-argument_list|(
-operator|&
-name|ip6
-operator|->
-name|ip6_src
-argument_list|)
-condition|)
-goto|goto
-name|drop
-goto|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|IN_MULTICAST
-argument_list|(
-name|ntohl
-argument_list|(
-name|ip
-operator|->
-name|ip_dst
-operator|.
-name|s_addr
-argument_list|)
-argument_list|)
-operator|||
-name|IN_MULTICAST
-argument_list|(
-name|ntohl
-argument_list|(
-name|ip
-operator|->
-name|ip_src
-operator|.
-name|s_addr
-argument_list|)
-argument_list|)
-operator|||
-name|ip
-operator|->
-name|ip_src
-operator|.
-name|s_addr
-operator|==
-name|htonl
-argument_list|(
-name|INADDR_BROADCAST
-argument_list|)
-operator|||
-name|in_broadcast
-argument_list|(
-name|ip
-operator|->
-name|ip_dst
 argument_list|,
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-argument_list|)
-condition|)
-goto|goto
-name|drop
-goto|;
-block|}
-comment|/* IPv6 anycast check is done at tcp6_input() */
-comment|/* 	 * Perform bandwidth limiting. 	 */
-if|if
-condition|(
-name|badport_bandlim
-argument_list|(
+name|th
+argument_list|,
+name|tp
+argument_list|,
+name|tlen
+argument_list|,
 name|rstreason
 argument_list|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|drop
-goto|;
-ifdef|#
-directive|ifdef
-name|TCPDEBUG
-if|if
-condition|(
-name|tp
-operator|==
-literal|0
-operator|||
-operator|(
-name|tp
-operator|->
-name|t_inpcb
-operator|->
-name|inp_socket
-operator|->
-name|so_options
-operator|&
-name|SO_DEBUG
-operator|)
-condition|)
-name|tcp_trace
-argument_list|(
-name|TA_DROP
-argument_list|,
-name|ostate
-argument_list|,
-name|tp
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|tcp_saveipgen
-argument_list|,
-operator|&
-name|tcp_savetcp
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|thflags
-operator|&
-name|TH_ACK
-condition|)
-comment|/* mtod() below is safe as long as hdr dropping is delayed */
-name|tcp_respond
-argument_list|(
-name|tp
-argument_list|,
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|void
-operator|*
-argument_list|)
-argument_list|,
-name|th
-argument_list|,
-name|m
-argument_list|,
-operator|(
-name|tcp_seq
-operator|)
-literal|0
-argument_list|,
-name|th
-operator|->
-name|th_ack
-argument_list|,
-name|TH_RST
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
-name|thflags
-operator|&
-name|TH_SYN
-condition|)
-name|tlen
-operator|++
-expr_stmt|;
-comment|/* mtod() below is safe as long as hdr dropping is delayed */
-name|tcp_respond
-argument_list|(
-name|tp
-argument_list|,
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|void
-operator|*
-argument_list|)
-argument_list|,
-name|th
-argument_list|,
-name|m
-argument_list|,
-name|th
-operator|->
-name|th_seq
-operator|+
-name|tlen
-argument_list|,
-operator|(
-name|tcp_seq
-operator|)
-literal|0
-argument_list|,
-name|TH_RST
-operator||
-name|TH_ACK
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|tp
@@ -10107,7 +10165,9 @@ name|NULL
 condition|)
 name|INP_UNLOCK
 argument_list|(
-name|inp
+name|tp
+operator|->
+name|t_inpcb
 argument_list|)
 expr_stmt|;
 if|if
@@ -10120,7 +10180,11 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|drop
 label|:
 comment|/* 	 * Drop space held by incoming segment and return. 	 */
@@ -10175,7 +10239,9 @@ name|NULL
 condition|)
 name|INP_UNLOCK
 argument_list|(
-name|inp
+name|tp
+operator|->
+name|t_inpcb
 argument_list|)
 expr_stmt|;
 if|if
@@ -10188,6 +10254,312 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Issue RST on TCP segment.  The mbuf must still include the original  * packet header.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|tcp_dropwithreset
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+name|th
+parameter_list|,
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|,
+name|int
+name|tlen
+parameter_list|,
+name|int
+name|rstreason
+parameter_list|)
+block|{
+name|struct
+name|ip
+modifier|*
+name|ip
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|struct
+name|ip6_hdr
+modifier|*
+name|ip6
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * Generate a RST, dropping incoming segment. 	 * Make ACK acceptable to originator of segment. 	 * Don't bother to respond if destination was broadcast/multicast. 	 */
+if|if
+condition|(
+operator|(
+name|th
+operator|->
+name|th_flags
+operator|&
+name|TH_RST
+operator|)
+operator|||
+name|m
+operator|->
+name|m_flags
+operator|&
+operator|(
+name|M_BCAST
+operator||
+name|M_MCAST
+operator|)
+condition|)
+goto|goto
+name|drop
+goto|;
+ifdef|#
+directive|ifdef
+name|INET6
+if|if
+condition|(
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+operator|->
+name|ip_v
+operator|==
+literal|6
+condition|)
+block|{
+name|ip6
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip6_hdr
+operator|*
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|IN6_IS_ADDR_MULTICAST
+argument_list|(
+operator|&
+name|ip6
+operator|->
+name|ip6_dst
+argument_list|)
+operator|||
+name|IN6_IS_ADDR_MULTICAST
+argument_list|(
+operator|&
+name|ip6
+operator|->
+name|ip6_src
+argument_list|)
+condition|)
+goto|goto
+name|drop
+goto|;
+comment|/* IPv6 anycast check is done at tcp6_input() */
+block|}
+else|else
+endif|#
+directive|endif
+block|{
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|IN_MULTICAST
+argument_list|(
+name|ntohl
+argument_list|(
+name|ip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+argument_list|)
+argument_list|)
+operator|||
+name|IN_MULTICAST
+argument_list|(
+name|ntohl
+argument_list|(
+name|ip
+operator|->
+name|ip_src
+operator|.
+name|s_addr
+argument_list|)
+argument_list|)
+operator|||
+name|ip
+operator|->
+name|ip_src
+operator|.
+name|s_addr
+operator|==
+name|htonl
+argument_list|(
+name|INADDR_BROADCAST
+argument_list|)
+operator|||
+name|in_broadcast
+argument_list|(
+name|ip
+operator|->
+name|ip_dst
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+argument_list|)
+condition|)
+goto|goto
+name|drop
+goto|;
+block|}
+comment|/* Perform bandwidth limiting. */
+if|if
+condition|(
+name|badport_bandlim
+argument_list|(
+name|rstreason
+argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|drop
+goto|;
+comment|/* tcp_respond consumes the mbuf chain. */
+if|if
+condition|(
+name|th
+operator|->
+name|th_flags
+operator|&
+name|TH_ACK
+condition|)
+block|{
+name|tcp_respond
+argument_list|(
+name|tp
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|void
+operator|*
+argument_list|)
+argument_list|,
+name|th
+argument_list|,
+name|m
+argument_list|,
+operator|(
+name|tcp_seq
+operator|)
+literal|0
+argument_list|,
+name|th
+operator|->
+name|th_ack
+argument_list|,
+name|TH_RST
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|th
+operator|->
+name|th_flags
+operator|&
+name|TH_SYN
+condition|)
+name|tlen
+operator|++
+expr_stmt|;
+name|tcp_respond
+argument_list|(
+name|tp
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|void
+operator|*
+argument_list|)
+argument_list|,
+name|th
+argument_list|,
+name|m
+argument_list|,
+name|th
+operator|->
+name|th_seq
+operator|+
+name|tlen
+argument_list|,
+operator|(
+name|tcp_seq
+operator|)
+literal|0
+argument_list|,
+name|TH_RST
+operator||
+name|TH_ACK
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+name|drop
+label|:
 name|m_freem
 argument_list|(
 name|m
