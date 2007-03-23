@@ -891,9 +891,9 @@ goto|goto
 name|out
 goto|;
 block|}
-name|AcpiOsExecute
+name|AcpiOsQueueForExecution
 argument_list|(
-name|OSL_NOTIFY_HANDLER
+name|OSD_PRIORITY_LO
 argument_list|,
 name|acpi_dock_attach_later
 argument_list|,
