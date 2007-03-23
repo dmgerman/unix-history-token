@@ -1351,6 +1351,9 @@ goto|goto
 name|RetryFault
 goto|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 			 * Mark page busy for other processes, and the  			 * pagedaemon.  If it still isn't completely valid 			 * (readable), jump to readrest, else break-out ( we 			 * found the page ). 			 */
 name|vm_page_busy
 argument_list|(
@@ -1358,9 +1361,6 @@ name|fs
 operator|.
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2449,15 +2449,15 @@ operator|.
 name|first_pindex
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|fs
 operator|.
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|fs
 operator|.
