@@ -1209,6 +1209,21 @@ operator|->
 name|t_inpcb
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|to
+operator|->
+name|to_flags
+operator|&
+name|TOF_SACK
+argument_list|,
+operator|(
+literal|"%s: SACK invalid"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|num_sack_blks
 operator|=
 literal|0
