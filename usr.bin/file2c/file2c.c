@@ -53,7 +53,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-n count] [-x] [prefix [suffix]]\n"
+literal|"usage: %s [-n count] [-s] [-x] [prefix [suffix]]\n"
 argument_list|,
 name|getprogname
 argument_list|()
@@ -89,9 +89,15 @@ name|linepos
 decl_stmt|,
 name|maxcount
 decl_stmt|,
+name|pretty
+decl_stmt|,
 name|radix
 decl_stmt|;
 name|maxcount
+operator|=
+literal|0
+expr_stmt|;
+name|pretty
 operator|=
 literal|0
 expr_stmt|;
@@ -110,7 +116,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"n:x"
+literal|"n:sx"
 argument_list|)
 operator|)
 operator|!=
@@ -137,6 +143,15 @@ name|NULL
 argument_list|,
 literal|10
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+comment|/* Be more style(9) comliant. */
+name|pretty
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -247,6 +262,38 @@ name|linepos
 operator|=
 literal|0
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|pretty
+condition|)
+block|{
+if|if
+condition|(
+name|count
+condition|)
+block|{
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+name|linepos
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
+name|putchar
+argument_list|(
+literal|'\t'
+argument_list|)
+expr_stmt|;
+name|linepos
+operator|+=
+literal|8
+expr_stmt|;
+block|}
 block|}
 switch|switch
 condition|(
