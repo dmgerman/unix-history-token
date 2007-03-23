@@ -3563,7 +3563,6 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-block|{
 name|strlcpy
 argument_list|(
 name|kp
@@ -3582,26 +3581,6 @@ name|ki_comm
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Temporarily give the thread a default name of the process 		 * as it's erroneously used in the snmp code. 		 * Remove this when that is fixed. (soon I'm told) 		 */
-name|strlcpy
-argument_list|(
-name|kp
-operator|->
-name|ki_ocomm
-argument_list|,
-name|p
-operator|->
-name|p_comm
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|kp
-operator|->
-name|ki_ocomm
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|p
