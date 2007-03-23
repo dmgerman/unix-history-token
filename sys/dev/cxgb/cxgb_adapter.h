@@ -753,6 +753,9 @@ decl_stmt|;
 name|bus_size_t
 name|mmio_len
 decl_stmt|;
+name|bus_size_t
+name|link_width
+decl_stmt|;
 comment|/* DMA resources */
 name|bus_dma_tag_t
 name|parent_dmat
