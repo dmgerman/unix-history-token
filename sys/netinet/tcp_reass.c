@@ -2022,7 +2022,7 @@ name|tcpcb
 modifier|*
 name|tp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|thflags
@@ -2032,7 +2032,7 @@ name|socket
 modifier|*
 name|so
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|todrop
@@ -2336,7 +2336,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|tcpstat
@@ -2702,7 +2702,7 @@ name|off
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|tcpstat
@@ -3116,10 +3116,7 @@ name|INET6
 if|if
 condition|(
 name|isipv6
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|inp
 operator|!=
 name|NULL
@@ -3145,7 +3142,6 @@ directive|endif
 goto|goto
 name|drop
 goto|;
-block|}
 block|}
 elseif|else
 endif|#
@@ -3516,7 +3512,7 @@ if|if
 condition|(
 name|tp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|INP_UNLOCK
@@ -3743,7 +3739,7 @@ name|th
 operator|->
 name|th_dport
 expr_stmt|;
-comment|/* 	         * If the state is LISTEN then ignore segment if it contains 		 * a RST.  If the segment contains an ACK then it is bad and 		 * send a RST.  If it does not contain a SYN then it is not 		 * interesting; drop it. 		 * 		 * If the state is SYN_RECEIVED (syncache) and seg contains 		 * an ACK, but not for our SYN/ACK, send a RST.  If the seg 		 * contains a RST, check the sequence number to see if it 		 * is a valid reset segment. 		 */
+comment|/* 		 * If the state is LISTEN then ignore segment if it contains 		 * a RST.  If the segment contains an ACK then it is bad and 		 * send a RST.  If it does not contain a SYN then it is not 		 * interesting; drop it. 		 * 		 * If the state is SYN_RECEIVED (syncache) and seg contains 		 * an ACK, but not for our SYN/ACK, send a RST.  If the seg 		 * contains a RST, check the sequence number to see if it 		 * is a valid reset segment. 		 */
 if|if
 condition|(
 operator|(
@@ -10779,7 +10775,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 block|}
