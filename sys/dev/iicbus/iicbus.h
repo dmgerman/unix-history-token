@@ -15,10 +15,34 @@ directive|define
 name|__IICBUS_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|IICBUS_IVAR
+parameter_list|(
+name|d
+parameter_list|)
+value|(struct iicbus_ivar *) device_get_ivars(d)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IICBUS_SOFTC
+parameter_list|(
+name|d
+parameter_list|)
+value|(struct iicbus_softc *) device_get_softc(d)
+end_define
+
 begin_struct
 struct|struct
 name|iicbus_softc
 block|{
+name|device_t
+name|dev
+decl_stmt|;
+comment|/* Myself */
 name|device_t
 name|owner
 decl_stmt|;
@@ -30,6 +54,52 @@ comment|/* address of the 'started' slave 				 * 0 if no start condition succeed
 block|}
 struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|iicbus_ivar
+block|{
+name|uint32_t
+name|addr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_enum
+enum|enum
+block|{
+name|IICBUS_IVAR_ADDR
+comment|/* Address or base address */
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|IICBUS_ACCESSOR
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|,
+name|T
+parameter_list|)
+define|\
+value|__inline static int							\ iicbus_get_ ## A(device_t dev, T *t)					\ {									\ 	return BUS_READ_IVAR(device_get_parent(dev), dev,		\ 	    IICBUS_IVAR_ ## B, (uintptr_t *) t);			\ }
+end_define
+
+begin_macro
+name|IICBUS_ACCESSOR
+argument_list|(
+argument|addr
+argument_list|,
+argument|ADDR
+argument_list|,
+argument|uint32_t
+argument_list|)
+end_macro
 
 begin_function_decl
 specifier|extern
