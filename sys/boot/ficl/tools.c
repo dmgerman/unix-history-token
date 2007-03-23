@@ -836,8 +836,32 @@ condition|(
 name|c
 operator|.
 name|i
-operator|>
+operator|==
 literal|0
+condition|)
+name|sprintf
+argument_list|(
+name|cp
+argument_list|,
+literal|"repeat (branch %d)"
+argument_list|,
+name|pc
+operator|+
+name|c
+operator|.
+name|i
+operator|-
+name|param0
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c
+operator|.
+name|i
+operator|==
+literal|1
 condition|)
 name|sprintf
 argument_list|(
@@ -859,7 +883,32 @@ name|sprintf
 argument_list|(
 name|cp
 argument_list|,
-literal|"repeat (branch %d)"
+literal|"endof (branch %d)"
+argument_list|,
+name|pc
+operator|+
+name|c
+operator|.
+name|i
+operator|-
+name|param0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|OF
+case|:
+name|c
+operator|=
+operator|*
+operator|++
+name|pc
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|cp
+argument_list|,
+literal|"of (branch %d)"
 argument_list|,
 name|pc
 operator|+

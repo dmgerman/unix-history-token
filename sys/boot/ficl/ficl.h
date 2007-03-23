@@ -99,7 +99,7 @@ comment|/*  ** the Good Stuff starts here... */
 define|#
 directive|define
 name|FICL_VER
-value|"3.02"
+value|"3.03"
 define|#
 directive|define
 name|FICL_VER_MAJOR
@@ -107,7 +107,7 @@ value|3
 define|#
 directive|define
 name|FICL_VER_MINOR
-value|2
+value|3
 if|#
 directive|if
 operator|!
@@ -2149,7 +2149,7 @@ name|pExitParen
 decl_stmt|;
 name|FICL_WORD
 modifier|*
-name|pIfParen
+name|pBranch0
 decl_stmt|;
 name|FICL_WORD
 modifier|*
@@ -2181,7 +2181,15 @@ name|pSemiParen
 decl_stmt|;
 name|FICL_WORD
 modifier|*
+name|pOfParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
 name|pStore
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pDrop
 decl_stmt|;
 name|FICL_WORD
 modifier|*
@@ -2677,6 +2685,8 @@ block|,
 name|LITERAL
 block|,
 name|LOOP
+block|,
+name|OF
 block|,
 name|PLOOP
 block|,
