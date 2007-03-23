@@ -284,7 +284,7 @@ name|TWI_MMR_DADR
 parameter_list|(
 name|n
 parameter_list|)
-value|((n)<< 16)
+value|((n)<< 15)
 end_define
 
 begin_comment
