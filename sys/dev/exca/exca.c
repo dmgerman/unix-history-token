@@ -1054,7 +1054,7 @@ name|EXCA_MEM_WINS
 condition|)
 return|return
 operator|(
-literal|1
+name|ENOSPC
 operator|)
 return|;
 if|if
@@ -1096,7 +1096,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|EINVAL
 operator|)
 return|;
 block|}
@@ -1353,7 +1353,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the map that we're using to hold the resoruce.  This works well  * so long as the client drivers don't do silly things like map the same  * area mutliple times, or map both common and attribute memory at the  * same time.  This latter restriction is a bug.  We likely should just  * store a pointer to the res in the mem[x] data structure.  */
+comment|/*  * Find the map that we're using to hold the resource.  This works well  * so long as the client drivers don't do silly things like map the same  * area mutliple times, or map both common and attribute memory at the  * same time.  This latter restriction is a bug.  We likely should just  * store a pointer to the res in the mem[x] data structure.  */
 end_comment
 
 begin_function
@@ -2167,7 +2167,7 @@ name|EXCA_IO_WINS
 condition|)
 return|return
 operator|(
-literal|1
+name|ENOSPC
 operator|)
 return|;
 name|sc
@@ -3514,18 +3514,47 @@ name|err
 decl_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|rman_get_flags
 argument_list|(
 name|res
 argument_list|)
 operator|&
 name|RF_ACTIVE
-operator|)
 condition|)
-block|{
-comment|/* not already activated */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|err
+operator|=
+name|BUS_ACTIVATE_RESOURCE
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|exca
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+name|child
+argument_list|,
+name|type
+argument_list|,
+name|rid
+argument_list|,
+name|res
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+return|return
+operator|(
+name|err
+operator|)
+return|;
 switch|switch
 condition|(
 name|type
@@ -3561,26 +3590,12 @@ name|res
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
-name|err
-operator|=
-literal|0
-expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(
 name|err
 condition|)
-return|return
-operator|(
-name|err
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|BUS_ACTIVATE_RESOURCE
+name|BUS_DEACTIVATE_RESOURCE
 argument_list|(
 name|device_get_parent
 argument_list|(
@@ -3597,6 +3612,10 @@ name|rid
 argument_list|,
 name|res
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|err
 operator|)
 return|;
 block|}
