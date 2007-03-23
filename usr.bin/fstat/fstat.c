@@ -791,7 +791,7 @@ literal|0
 expr_stmt|;
 name|what
 operator|=
-name|KERN_PROC_ALL
+name|KERN_PROC_PROC
 expr_stmt|;
 name|nlistf
 operator|=
