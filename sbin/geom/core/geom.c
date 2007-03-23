@@ -3728,14 +3728,15 @@ operator|&
 name|mesh
 argument_list|)
 expr_stmt|;
-name|warnx
+name|errx
 argument_list|(
+name|EXIT_FAILURE
+argument_list|,
 literal|"Class %s not found."
 argument_list|,
 name|gclass_name
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|nargs
 operator|=
@@ -3799,8 +3800,10 @@ name|gp
 argument_list|)
 expr_stmt|;
 else|else
-name|warnx
+name|errx
 argument_list|(
+name|EXIT_FAILURE
+argument_list|,
 literal|"No such geom: %s."
 argument_list|,
 name|name
@@ -4427,18 +4430,15 @@ name|classp
 operator|==
 name|NULL
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+name|EXIT_FAILURE
+argument_list|,
 literal|"Class %s not found."
 argument_list|,
 name|gclass_name
 argument_list|)
 expr_stmt|;
-goto|goto
-name|end
-goto|;
-block|}
 name|nargs
 operator|=
 name|gctl_get_int
@@ -4522,8 +4522,10 @@ name|gp
 operator|==
 name|NULL
 condition|)
-name|warnx
+name|errx
 argument_list|(
+name|EXIT_FAILURE
+argument_list|,
 literal|"No such geom: %s."
 argument_list|,
 name|name
