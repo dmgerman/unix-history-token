@@ -1150,10 +1150,7 @@ name|error
 operator|=
 name|iicbus_request_bus
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|iicdev
-argument_list|)
+name|parent
 argument_list|,
 name|iicdev
 argument_list|,
@@ -1555,7 +1552,7 @@ name|error
 operator|=
 name|iicbus_transfer
 argument_list|(
-name|parent
+name|iicdev
 argument_list|,
 operator|(
 expr|struct
@@ -1651,10 +1648,7 @@ expr_stmt|;
 block|}
 name|iicbus_release_bus
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|iicdev
-argument_list|)
+name|parent
 argument_list|,
 name|iicdev
 argument_list|)
