@@ -4533,12 +4533,6 @@ case|:
 case|case
 name|IP_MULTICAST_LOOP
 case|:
-case|case
-name|IP_ADD_MEMBERSHIP
-case|:
-case|case
-name|IP_DROP_MEMBERSHIP
-case|:
 name|error
 operator|=
 name|ip_getmoptions
