@@ -5297,6 +5297,11 @@ argument_list|,
 name|MT_DATA
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+condition|)
+block|{
 name|req
 operator|=
 operator|(
@@ -5379,6 +5384,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
