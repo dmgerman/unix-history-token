@@ -2819,6 +2819,23 @@ argument_list|(
 name|bsdtar
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|return_value
+operator|!=
+literal|0
+condition|)
+name|bsdtar_warnc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|,
+literal|"Error exit delayed from previous errors."
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|bsdtar
