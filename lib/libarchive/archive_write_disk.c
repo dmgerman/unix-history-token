@@ -397,6 +397,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TODO_MODE_FORCE
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|TODO_MODE_BASE
 value|0x20000000
 end_define
@@ -1436,6 +1443,13 @@ operator|&
 name|ARCHIVE_EXTRACT_PERM
 condition|)
 block|{
+name|a
+operator|->
+name|todo
+operator||=
+name|TODO_MODE_FORCE
+expr_stmt|;
+comment|/* Be pushy about permissions. */
 comment|/* 		 * SGID requires an extra "check" step because we 		 * cannot easily predict the GID that the system will 		 * assign.  (Different systems assign GIDs to files 		 * based on a variety of criteria, including process 		 * credentials and the gid of the enclosing 		 * directory.)  We can only restore the SGID bit if 		 * the file has the right GID, and we only know the 		 * GID if we either set it (see set_ownership) or if 		 * we've actually called stat() on the file after it 		 * was restored.  Since there are several places at 		 * which we might verify the GID, we need a TODO bit 		 * to keep track. 		 */
 if|if
 condition|(
@@ -3363,9 +3377,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * There's a dir in the way of a dir.  Don't 			 * waste time with rmdir()/mkdir(), just fix 			 * up the permissions on the existing dir. 			 */
+comment|/* 			 * There's a dir in the way of a dir.  Don't 			 * waste time with rmdir()/mkdir(), just fix 			 * up the permissions on the existing dir. 			 * Note that we don't change perms on existing 			 * dirs unless _EXTRACT_PERM is specified. 			 */
 if|if
 condition|(
+operator|(
 name|a
 operator|->
 name|mode
@@ -3375,12 +3390,27 @@ operator|->
 name|st
 operator|.
 name|st_mode
+operator|)
+operator|&&
+operator|(
+name|a
+operator|->
+name|todo
+operator|&
+name|TODO_MODE_FORCE
+operator|)
 condition|)
 name|a
 operator|->
 name|deferred
 operator||=
+operator|(
+name|a
+operator|->
+name|todo
+operator|&
 name|TODO_MODE
+operator|)
 expr_stmt|;
 comment|/* Ownership doesn't need deferred fixup. */
 name|en
@@ -3654,6 +3684,13 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* Defer setting dir times. */
 name|a
 operator|->
@@ -3700,6 +3737,7 @@ operator|&=
 operator|~
 name|TODO_MODE
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|S_IFIFO
