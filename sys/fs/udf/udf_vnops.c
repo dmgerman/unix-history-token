@@ -4467,7 +4467,7 @@ name|a_cnp
 operator|->
 name|cn_thread
 expr_stmt|;
-comment|/* 	 * If this is a LOOKUP and we've already partially searched through 	 * the directory, pick up where we left off and flag that the 	 * directory may need to be searched twice.  For a full description, 	 * see /sys/isofs/cd9660/cd9660_lookup.c:cd9660_lookup() 	 */
+comment|/* 	 * If this is a LOOKUP and we've already partially searched through 	 * the directory, pick up where we left off and flag that the 	 * directory may need to be searched twice.  For a full description, 	 * see /sys/fs/cd9660/cd9660_lookup.c:cd9660_lookup() 	 */
 if|if
 condition|(
 name|nameiop
