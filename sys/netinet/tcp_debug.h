@@ -41,6 +41,11 @@ name|td_ti
 decl_stmt|;
 struct|struct
 block|{
+define|#
+directive|define
+name|IP6_HDR_LEN
+value|40
+comment|/* sizeof(struct ip6_hdr) */
 if|#
 directive|if
 operator|!
@@ -62,10 +67,9 @@ directive|else
 name|u_char
 name|ip6buf
 index|[
-literal|40
+name|IP6_HDR_LEN
 index|]
 decl_stmt|;
-comment|/* sizeof(struct ip6_hdr) */
 endif|#
 directive|endif
 name|struct

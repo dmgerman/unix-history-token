@@ -2143,7 +2143,7 @@ comment|/* 	 * The size of tcp_saveipgen must be the size of the max ip header, 
 name|u_char
 name|tcp_saveipgen
 index|[
-literal|40
+name|IP6_HDR_LEN
 index|]
 decl_stmt|;
 name|struct
@@ -4441,6 +4441,27 @@ name|struct
 name|tcpopt
 name|to
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPDEBUG
+comment|/* 	 * The size of tcp_saveipgen must be the size of the max ip header, 	 * now IPv6. 	 */
+name|u_char
+name|tcp_saveipgen
+index|[
+name|IP6_HDR_LEN
+index|]
+decl_stmt|;
+name|struct
+name|tcphdr
+name|tcp_savetcp
+decl_stmt|;
+name|short
+name|ostate
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 name|thflags
 operator|=
 name|th
