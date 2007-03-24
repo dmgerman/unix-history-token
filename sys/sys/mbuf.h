@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mbuf.h	8.5 (Berkeley) 2/19/95  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mbuf.h	8.5 (Berkeley) 2/19/95  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -66,7 +66,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Mbufs are of a single size, MSIZE (sys/param.h), which  * includes overhead.  An mbuf may add a single "mbuf cluster" of size  * MCLBYTES (also in sys/param.h), which has no additional overhead  * and is used instead of the internal data area; this is done when  * at least MINCLSIZE of data must be stored.  Additionally, it is possible  * to allocate a separate buffer externally and attach it to the mbuf in  * a way similar to that of mbuf clusters.  */
+comment|/*  * Mbufs are of a single size, MSIZE (sys/param.h), which includes overhead.  * An mbuf may add a single "mbuf cluster" of size MCLBYTES (also in  * sys/param.h), which has no additional overhead and is used instead of the  * internal data area; this is done when at least MINCLSIZE of data must be  * stored.  Additionally, it is possible to allocate a separate buffer  * externally and attach it to the mbuf in a way similar to that of mbuf  * clusters.  */
 end_comment
 
 begin_define
@@ -311,7 +311,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is set.  */
+comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is  * set.  */
 end_comment
 
 begin_struct
@@ -360,7 +360,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The core of the mbuf object along with some shortcut defines for  * practical purposes.  */
+comment|/*  * The core of the mbuf object along with some shortcut defines for practical  * purposes.  */
 end_comment
 
 begin_struct
@@ -844,7 +844,7 @@ value|(M_PROTO1|M_PROTO2|M_PROTO3|M_PROTO4|M_PROTO5)
 end_define
 
 begin_comment
-comment|/*  * Flags indicating hw checksum support and sw checksum requirements.  * This field can be directly tested against if_data.ifi_hwassist.  */
+comment|/*  * Flags indicating hw checksum support and sw checksum requirements.  This  * field can be directly tested against if_data.ifi_hwassist.  */
 end_comment
 
 begin_define
@@ -1137,7 +1137,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Flags specifying how an allocation should be made.  *  * The flag to use is as follows:  * - M_DONTWAIT or M_NOWAIT from an interrupt handler to not block allocation.  * - M_WAIT or M_WAITOK or M_TRYWAIT from wherever it is safe to block.  *  * M_DONTWAIT/M_NOWAIT means that we will not block the thread explicitly  * and if we cannot allocate immediately we may return NULL,  * whereas M_WAIT/M_WAITOK/M_TRYWAIT means that if we cannot allocate  * resources we will block until they are available, and thus never  * return NULL.  *  * XXX Eventually just phase this out to use M_WAITOK/M_NOWAIT.  */
+comment|/*  * Flags specifying how an allocation should be made.  *  * The flag to use is as follows:  * - M_DONTWAIT or M_NOWAIT from an interrupt handler to not block allocation.  * - M_WAIT or M_WAITOK or M_TRYWAIT from wherever it is safe to block.  *  * M_DONTWAIT/M_NOWAIT means that we will not block the thread explicitly and  * if we cannot allocate immediately we may return NULL, whereas  * M_WAIT/M_WAITOK/M_TRYWAIT means that if we cannot allocate resources we  * will block until they are available, and thus never return NULL.  *  * XXX Eventually just phase this out to use M_WAITOK/M_NOWAIT.  */
 end_comment
 
 begin_define
@@ -1522,6 +1522,7 @@ name|type
 block|;
 return|return
 operator|(
+operator|(
 expr|struct
 name|mbuf
 operator|*
@@ -1537,12 +1538,13 @@ argument_list|,
 name|how
 argument_list|)
 operator|)
+operator|)
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/* XXX This should be depracated, very little use */
+comment|/*  * XXX This should be deprecated, very little use.  */
 end_comment
 
 begin_expr_stmt
@@ -1608,7 +1610,9 @@ end_expr_stmt
 
 begin_return
 return|return
+operator|(
 name|m
+operator|)
 return|;
 end_return
 
@@ -1645,6 +1649,7 @@ name|type
 expr_stmt|;
 return|return
 operator|(
+operator|(
 expr|struct
 name|mbuf
 operator|*
@@ -1659,6 +1664,7 @@ name|args
 argument_list|,
 name|how
 argument_list|)
+operator|)
 operator|)
 return|;
 block|}
@@ -1696,6 +1702,7 @@ name|type
 block|;
 return|return
 operator|(
+operator|(
 expr|struct
 name|mbuf
 operator|*
@@ -1711,18 +1718,18 @@ argument_list|,
 name|how
 argument_list|)
 operator|)
+operator|)
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/*  * m_getjcl() returns an mbuf with a cluster of the specified size attached.  * For size it takes MCLBYTES, MJUMPAGESIZE, MJUM9BYTES, MJUM16BYTES.  */
+comment|/*  * m_getjcl() returns an mbuf with a cluster of the specified size attached.  * For size it takes MCLBYTES, MJUMPAGESIZE, MJUM9BYTES, MJUM16BYTES.  *  * XXX: This is rather large, should be real function maybe.  */
 end_comment
 
 begin_expr_stmt
 specifier|static
 name|__inline
-comment|/* XXX: This is rather large, should be real function maybe. */
 expr|struct
 name|mbuf
 operator|*
@@ -1781,7 +1788,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 end_expr_stmt
 
@@ -1871,14 +1880,18 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_if
 
 begin_return
 return|return
+operator|(
 name|m
+operator|)
 return|;
 end_return
 
@@ -1927,7 +1940,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|n
+operator|)
 return|;
 block|}
 end_function
@@ -2024,7 +2039,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * m_cljget() is different from m_clget() as it can allocate clusters  * without attaching them to an mbuf.  In that case the return value  * is the pointer to the cluster of the requested size.  If an mbuf was  * specified, it gets the cluster attached to it and the return value  * can be safely ignored.  * For size it takes MCLBYTES, MJUMPAGESIZE, MJUM9BYTES, MJUM16BYTES.  */
+comment|/*  * m_cljget() is different from m_clget() as it can allocate clusters without  * attaching them to an mbuf.  In that case the return value is the pointer  * to the cluster of the requested size.  If an mbuf was specified, it gets  * the cluster attached to it and the return value can be safely ignored.  * For size it takes MCLBYTES, MJUMPAGESIZE, MJUM9BYTES, MJUM16BYTES.  */
 end_comment
 
 begin_function
@@ -2175,11 +2190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mbuf, cluster, and external object allocation macros  * (for compatibility purposes).  */
-end_comment
-
-begin_comment
-comment|/* NB: M_COPY_PKTHDR is deprecated.  Use M_MOVE_PKTHDR or m_dup_pktdr. */
+comment|/*  * mbuf, cluster, and external object allocation macros (for compatibility  * purposes).  */
 end_comment
 
 begin_define
@@ -2275,7 +2286,7 @@ value|m_getm2((m), (len), (how), (type), M_PKTHDR)
 end_define
 
 begin_comment
-comment|/*  * Evaluate TRUE if it's safe to write to the mbuf m's data region (this  * can be both the local data payload, or an external buffer area,  * depending on whether M_EXT is set).  */
+comment|/*  * Evaluate TRUE if it's safe to write to the mbuf m's data region (this can  * be both the local data payload, or an external buffer area, depending on  * whether M_EXT is set).  */
 end_comment
 
 begin_define
@@ -2305,11 +2316,7 @@ value|KASSERT(m != NULL&& m->m_flags& M_PKTHDR,			\ 	    ("%s: no mbuf packet he
 end_define
 
 begin_comment
-comment|/* Ensure that the supplied mbuf is a valid, non-free mbuf. */
-end_comment
-
-begin_comment
-comment|/* XXX: Broken at the moment.  Need some UMA magic to make it work again. */
+comment|/*  * Ensure that the supplied mbuf is a valid, non-free mbuf.  *  * XXX: Broken at the moment.  Need some UMA magic to make it work again.  */
 end_comment
 
 begin_define
@@ -2324,7 +2331,7 @@ value|KASSERT((((struct mbuf *)m)->m_flags& 0) == 0,			\ 	    ("%s: attempted us
 end_define
 
 begin_comment
-comment|/*  * Set the m_data pointer of a newly-allocated mbuf (m_get/MGET) to place  * an object of the specified size at the end of the mbuf, longword aligned.  */
+comment|/*  * Set the m_data pointer of a newly-allocated mbuf (m_get/MGET) to place an  * object of the specified size at the end of the mbuf, longword aligned.  */
 end_comment
 
 begin_define
@@ -2340,7 +2347,7 @@ value|do {						\ 	KASSERT(!((m)->m_flags& (M_PKTHDR|M_EXT)),			\ 		("%s: M_ALIG
 end_define
 
 begin_comment
-comment|/*  * As above, for mbufs allocated with m_gethdr/MGETHDR  * or initialized by M_COPY_PKTHDR.  */
+comment|/*  * As above, for mbufs allocated with m_gethdr/MGETHDR or initialized by  * M_DUP/MOVE_PKTHDR.  */
 end_comment
 
 begin_define
@@ -2356,7 +2363,7 @@ value|do {						\ 	KASSERT((m)->m_flags& M_PKTHDR&& !((m)->m_flags& M_EXT),	\ 		
 end_define
 
 begin_comment
-comment|/*  * Compute the amount of space available  * before the current start of data in an mbuf.  *  * The M_WRITABLE() is a temporary, conservative safety measure: the burden  * of checking writability of the mbuf data area rests solely with the caller.  */
+comment|/*  * Compute the amount of space available before the current start of data in  * an mbuf.  *  * The M_WRITABLE() is a temporary, conservative safety measure: the burden  * of checking writability of the mbuf data area rests solely with the caller.  */
 end_comment
 
 begin_define
@@ -2371,7 +2378,7 @@ value|((m)->m_flags& M_EXT ?						\ 	    (M_WRITABLE(m) ? (m)->m_data - (m)->m_e
 end_define
 
 begin_comment
-comment|/*  * Compute the amount of space available  * after the end of data in an mbuf.  *  * The M_WRITABLE() is a temporary, conservative safety measure: the burden  * of checking writability of the mbuf data area rests solely with the caller.  */
+comment|/*  * Compute the amount of space available after the end of data in an mbuf.  *  * The M_WRITABLE() is a temporary, conservative safety measure: the burden  * of checking writability of the mbuf data area rests solely with the caller.  */
 end_comment
 
 begin_define
@@ -2386,7 +2393,7 @@ value|((m)->m_flags& M_EXT ?						\ 	    (M_WRITABLE(m) ? (m)->m_ext.ext_buf + (
 end_define
 
 begin_comment
-comment|/*  * Arrange to prepend space of size plen to mbuf m.  * If a new mbuf must be allocated, how specifies whether to wait.  * If the allocation fails, the original mbuf chain is freed and m is  * set to NULL.  */
+comment|/*  * Arrange to prepend space of size plen to mbuf m.  If a new mbuf must be  * allocated, how specifies whether to wait.  If the allocation fails, the  * original mbuf chain is freed and m is set to NULL.  */
 end_comment
 
 begin_define
@@ -2404,7 +2411,7 @@ value|do {					\ 	struct mbuf **_mmp =&(m);					\ 	struct mbuf *_mm = *_mmp;				
 end_define
 
 begin_comment
-comment|/*  * Change mbuf to new type.  * This is a relatively expensive operation and should be avoided.  */
+comment|/*  * Change mbuf to new type.  This is a relatively expensive operation and  * should be avoided.  */
 end_comment
 
 begin_define
@@ -3108,11 +3115,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*-  * Network packets may have annotations attached by affixing a list  * of "packet tags" to the pkthdr structure.  Packet tags are  * dynamically allocated semi-opaque data structures that have  * a fixed header (struct m_tag) that specifies the size of the  * memory block and a<cookie,type> pair that identifies it.  * The cookie is a 32-bit unique unsigned value used to identify  * a module or ABI.  By convention this value is chosen as the  * date+time that the module is created, expressed as the number of  * seconds since the epoch (e.g., using date -u +'%s').  The type value  * is an ABI/module-specific value that identifies a particular annotation  * and is private to the module.  For compatibility with systems  * like OpenBSD that define packet tags w/o an ABI/module cookie,  * the value PACKET_ABI_COMPAT is used to implement m_tag_get and  * m_tag_find compatibility shim functions and several tag types are  * defined below.  Users that do not require compatibility should use  * a private cookie value so that packet tag-related definitions  * can be maintained privately.  *  * Note that the packet tag returned by m_tag_alloc has the default  * memory alignment implemented by malloc.  To reference private data  * one can use a construct like:  *  *	struct m_tag *mtag = m_tag_alloc(...);  *	struct foo *p = (struct foo *)(mtag+1);  *  * if the alignment of struct m_tag is sufficient for referencing members  * of struct foo.  Otherwise it is necessary to embed struct m_tag within  * the private data structure to insure proper alignment; e.g.,  *  *	struct foo {  *		struct m_tag	tag;  *		...  *	};  *	struct foo *p = (struct foo *) m_tag_alloc(...);  *	struct m_tag *mtag =&p->tag;  */
+comment|/*-  * Network packets may have annotations attached by affixing a list of  * "packet tags" to the pkthdr structure.  Packet tags are dynamically  * allocated semi-opaque data structures that have a fixed header  * (struct m_tag) that specifies the size of the memory block and a  *<cookie,type> pair that identifies it.  The cookie is a 32-bit unique  * unsigned value used to identify a module or ABI.  By convention this value  * is chosen as the date+time that the module is created, expressed as the  * number of seconds since the epoch (e.g., using date -u +'%s').  The type  * value is an ABI/module-specific value that identifies a particular  * annotation and is private to the module.  For compatibility with systems  * like OpenBSD that define packet tags w/o an ABI/module cookie, the value  * PACKET_ABI_COMPAT is used to implement m_tag_get and m_tag_find  * compatibility shim functions and several tag types are defined below.  * Users that do not require compatibility should use a private cookie value  * so that packet tag-related definitions can be maintained privately.  *  * Note that the packet tag returned by m_tag_alloc has the default memory  * alignment implemented by malloc.  To reference private data one can use a  * construct like:  *  *	struct m_tag *mtag = m_tag_alloc(...);  *	struct foo *p = (struct foo *)(mtag+1);  *  * if the alignment of struct m_tag is sufficient for referencing members of  * struct foo.  Otherwise it is necessary to embed struct m_tag within the  * private data structure to insure proper alignment; e.g.,  *  *	struct foo {  *		struct m_tag	tag;  *		...  *	};  *	struct foo *p = (struct foo *) m_tag_alloc(...);  *	struct m_tag *mtag =&p->tag;  */
 end_comment
 
 begin_comment
-comment|/*  * Persistent tags stay with an mbuf until the mbuf is reclaimed.  * Otherwise tags are expected to ``vanish'' when they pass through  * a network interface.  For most interfaces this happens normally  * as the tags are reclaimed when the mbuf is free'd.  However in  * some special cases reclaiming must be done manually.  An example  * is packets that pass through the loopback interface.  Also, one  * must be careful to do this when ``turning around'' packets (e.g.,  * icmp_reflect).  *  * To mark a tag persistent bit-or this flag in when defining the  * tag id.  The tag will then be treated as described above.  */
+comment|/*  * Persistent tags stay with an mbuf until the mbuf is reclaimed.  Otherwise  * tags are expected to ``vanish'' when they pass through a network  * interface.  For most interfaces this happens normally as the tags are  * reclaimed when the mbuf is free'd.  However in some special cases  * reclaiming must be done manually.  An example is packets that pass through  * the loopback interface.  Also, one must be careful to do this when  * ``turning around'' packets (e.g., icmp_reflect).  *  * To mark a tag persistent bit-or this flag in when defining the tag id.  * The tag will then be treated as described above.  */
 end_comment
 
 begin_define
@@ -3583,7 +3590,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set up the contents of a tag.  Note that this does not  * fill in the free method; the caller is expected to do that.  *  * XXX probably should be called m_tag_init, but that was  * already taken.  */
+comment|/*  * Set up the contents of a tag.  Note that this does not fill in the free  * method; the caller is expected to do that.  *  * XXX probably should be called m_tag_init, but that was already taken.  */
 end_comment
 
 begin_function
