@@ -1634,6 +1634,7 @@ name|CMAP1
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Leave in place an identity mapping (virt == phys) for the low 1 MB 	 * physical memory region that is used by the ACPI wakeup code.  This 	 * mapping must not have PG_G set.  	 */
 ifdef|#
 directive|ifdef
 name|XBOX
@@ -1649,7 +1650,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
 operator|<
@@ -1672,20 +1673,6 @@ expr_stmt|;
 comment|/* Turn on PG_G on kernel page(s) */
 name|pmap_set_pg
 argument_list|()
-expr_stmt|;
-comment|/* 	 * Create an identity mapping (virt == phys) for the low 1 MB 	 * physical memory region that is used by the ACPI wakeup code. 	 * This mapping must not have PG_G set.  	 */
-name|kernel_pmap
-operator|->
-name|pm_pdir
-index|[
-literal|0
-index|]
-operator|=
-name|PG_PS
-operator||
-name|PG_RW
-operator||
-name|PG_V
 expr_stmt|;
 block|}
 end_function
