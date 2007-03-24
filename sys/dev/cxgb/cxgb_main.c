@@ -1584,7 +1584,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"PCIe x%ld Link, expect reduced performance\n"
+literal|"PCIe x%d Link, expect reduced performance\n"
 argument_list|,
 name|sc
 operator|->
