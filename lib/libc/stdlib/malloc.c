@@ -12624,6 +12624,13 @@ modifier|*
 name|node
 decl_stmt|;
 comment|/* 	 * This allocation requires alignment that is even larger than chunk 	 * alignment.  This means that huge_malloc() isn't good enough. 	 * 	 * Allocate almost twice as many chunks as are demanded by the size or 	 * alignment, in order to assure the alignment can be achieved, then 	 * unmap leading and trailing chunks. 	 */
+name|assert
+argument_list|(
+name|alignment
+operator|>=
+name|chunksize
+argument_list|)
+expr_stmt|;
 name|chunk_size
 operator|=
 name|CHUNK_CEILING
@@ -13253,14 +13260,10 @@ modifier|*
 name|ret
 decl_stmt|;
 name|size_t
-name|orig_size
+name|ceil_size
 decl_stmt|;
 comment|/* 	 * Round size up to the nearest multiple of alignment. 	 * 	 * This done, we can take advantage of the fact that for each small 	 * size class, every object is aligned at the smallest power of two 	 * that is non-zero in the base two representation of the size.  For 	 * example: 	 * 	 *   Size |   Base 2 | Minimum alignment 	 *   -----+----------+------------------ 	 *     96 |  1100000 |  32 	 *    144 | 10100000 |  32 	 *    192 | 11000000 |  64 	 * 	 * Depending on runtime settings, it is possible that arena_malloc() 	 * will further round up to a power of two, but that never causes 	 * correctness issues. 	 */
-name|orig_size
-operator|=
-name|size
-expr_stmt|;
-name|size
+name|ceil_size
 operator|=
 operator|(
 name|size
@@ -13277,11 +13280,12 @@ operator|-
 name|alignment
 operator|)
 expr_stmt|;
+comment|/* 	 * (ceil_size< size) protects against the combination of maximal 	 * alignment and size greater than maximal alignment. 	 */
 if|if
 condition|(
-name|size
+name|ceil_size
 operator|<
-name|orig_size
+name|size
 condition|)
 block|{
 comment|/* size_t overflow. */
@@ -13293,7 +13297,7 @@ return|;
 block|}
 if|if
 condition|(
-name|size
+name|ceil_size
 operator|<=
 name|pagesize
 operator|||
@@ -13302,7 +13306,7 @@ name|alignment
 operator|<=
 name|pagesize
 operator|&&
-name|size
+name|ceil_size
 operator|<=
 name|arena_maxclass
 operator|)
@@ -13314,7 +13318,7 @@ argument_list|(
 name|choose_arena
 argument_list|()
 argument_list|,
-name|size
+name|ceil_size
 argument_list|)
 expr_stmt|;
 else|else
@@ -13322,7 +13326,7 @@ block|{
 name|size_t
 name|run_size
 decl_stmt|;
-comment|/* 		 * We can't achieve sub-page alignment, so round up 		 * permanently; it makes later calculations simpler. 		 */
+comment|/* 		 * We can't achieve sub-page alignment, so round up alignment 		 * permanently; it makes later calculations simpler. 		 */
 name|alignment
 operator|=
 name|PAGE_CEILING
@@ -13330,18 +13334,25 @@ argument_list|(
 name|alignment
 argument_list|)
 expr_stmt|;
-name|size
+name|ceil_size
 operator|=
 name|PAGE_CEILING
 argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
+comment|/* 		 * (ceil_size< size) protects against very large sizes within 		 * pagesize of SIZE_T_MAX. 		 * 		 * (ceil_size + alignment< ceil_size) protects against the 		 * combination of maximal alignment and ceil_size large enough 		 * to cause overflow.  This is similar to the first overflow 		 * check above, but it needs to be repeated due to the new 		 * ceil_size value, which may now be *equal* to maximal 		 * alignment, whereas before we only detected overflow if the 		 * original size was *greater* than maximal alignment. 		 */
 if|if
 condition|(
-name|size
+name|ceil_size
 operator|<
-name|orig_size
+name|size
+operator|||
+name|ceil_size
+operator|+
+name|alignment
+operator|<
+name|ceil_size
 condition|)
 block|{
 comment|/* size_t overflow. */
@@ -13354,19 +13365,21 @@ block|}
 comment|/* 		 * Calculate the size of the over-size run that arena_palloc() 		 * would need to allocate in order to guarantee the alignment. 		 */
 if|if
 condition|(
-name|size
+name|ceil_size
 operator|>=
 name|alignment
 condition|)
 name|run_size
 operator|=
-name|size
+name|ceil_size
 operator|+
 name|alignment
 operator|-
 name|pagesize
 expr_stmt|;
 else|else
+block|{
+comment|/* 			 * It is possible that (alignment<< 1) will cause 			 * overflow, but it doesn't matter because we also 			 * subtract pagesize, which in the case of overflow 			 * leaves us with a very large run_size.  That causes 			 * the first conditional below to fail, which means 			 * that the bogus run_size value never gets used for 			 * anything important. 			 */
 name|run_size
 operator|=
 operator|(
@@ -13377,16 +13390,10 @@ operator|)
 operator|-
 name|pagesize
 expr_stmt|;
-comment|/* Protect against size_t overflow in the first conditional. */
+block|}
 if|if
 condition|(
-operator|(
 name|run_size
-operator||
-name|alignment
-operator||
-name|size
-operator|)
 operator|<=
 name|arena_maxclass
 condition|)
@@ -13400,7 +13407,7 @@ argument_list|()
 argument_list|,
 name|alignment
 argument_list|,
-name|size
+name|ceil_size
 argument_list|,
 name|run_size
 argument_list|)
@@ -13417,7 +13424,7 @@ name|ret
 operator|=
 name|huge_malloc
 argument_list|(
-name|size
+name|ceil_size
 argument_list|)
 expr_stmt|;
 else|else
@@ -13427,7 +13434,7 @@ name|huge_palloc
 argument_list|(
 name|alignment
 argument_list|,
-name|size
+name|ceil_size
 argument_list|)
 expr_stmt|;
 block|}
