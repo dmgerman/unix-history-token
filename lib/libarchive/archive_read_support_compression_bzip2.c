@@ -489,7 +489,7 @@ name|int
 name|init
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
