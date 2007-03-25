@@ -1497,9 +1497,6 @@ name|EFAULT
 argument_list|)
 expr_stmt|;
 block|}
-name|GIANT_REQUIRED
-expr_stmt|;
-comment|/* XXX until socket locking done */
 comment|/* create the socket */
 name|rpc
 operator|->
@@ -1512,6 +1509,9 @@ operator|=
 name|rpc
 operator|->
 name|rc_name
+expr_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
 expr_stmt|;
 name|error
 operator|=
@@ -1540,6 +1540,9 @@ name|td_ucred
 argument_list|,
 name|td
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2816,9 +2819,6 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
-comment|/* XXX until socket locking done */
 if|if
 condition|(
 name|rpc
@@ -2838,6 +2838,9 @@ name|rc_so
 operator|=
 name|NULL
 expr_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|soshutdown
 argument_list|(
 name|so
@@ -2849,6 +2852,9 @@ name|soclose
 argument_list|(
 name|so
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -2988,9 +2994,6 @@ name|soflags
 decl_stmt|,
 name|flags
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
-comment|/* XXX until socket locking done */
 if|if
 condition|(
 name|rep
@@ -3115,6 +3118,10 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * XXXRW: If/when this code becomes MPSAFE itself, Giant might have 	 * to be conditionally acquired earlier for the stack so has to avoid 	 * lock order reversals with any locks held over rpcclnt_send(). 	 */
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|sosend
@@ -3133,6 +3140,9 @@ name|flags
 argument_list|,
 name|td
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3327,9 +3337,6 @@ name|sotype
 decl_stmt|,
 name|rcvflg
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
-comment|/* XXX until socket locking done */
 comment|/* 	 * Set up arguments for soreceive() 	 */
 operator|*
 name|mp
@@ -3660,6 +3667,9 @@ name|rcvflg
 operator|=
 name|MSG_WAITALL
 expr_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|soreceive
@@ -3678,6 +3688,9 @@ argument_list|,
 operator|&
 name|rcvflg
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3820,6 +3833,9 @@ name|rcvflg
 operator|=
 name|MSG_WAITALL
 expr_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|soreceive
@@ -3838,6 +3854,9 @@ argument_list|,
 operator|&
 name|rcvflg
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 block|}
 do|while
@@ -3933,6 +3952,9 @@ name|rcvflg
 operator|=
 literal|0
 expr_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|soreceive
@@ -3952,6 +3974,9 @@ argument_list|,
 operator|&
 name|rcvflg
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4204,6 +4229,9 @@ name|rcvflg
 operator|=
 literal|0
 expr_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|soreceive
@@ -4223,9 +4251,12 @@ operator|&
 name|rcvflg
 argument_list|)
 expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|RPCDEBUG
 argument_list|(
-literal|"soreceivce returns %d"
+literal|"soreceive returns %d"
 argument_list|,
 name|error
 argument_list|)
