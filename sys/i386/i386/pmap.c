@@ -6768,6 +6768,18 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+comment|/* 			 * The TLB entry for a PG_G mapping is invalidated 			 * by pmap_remove_pte(). 			 */
+if|if
+condition|(
+operator|(
+operator|*
+name|pte
+operator|&
+name|PG_G
+operator|)
+operator|==
+literal|0
+condition|)
 name|anyvalid
 operator|=
 literal|1
