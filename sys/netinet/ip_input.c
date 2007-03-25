@@ -6433,7 +6433,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX these routines are called from the upper part of the kernel.  * They need to be locked when we remove Giant.  *  * They could also be moved to ip_mroute.c, since all the RSVP  *  handling is done there already.  */
+comment|/*  * XXXRW: Multicast routing code in ip_mroute.c is generally MPSAFE, but the  * ip_rsvp and ip_rsvp_on variables need to be interlocked with rsvp_on  * locking.  This code remains in ip_input.c as ip_mroute.c is optionally  * compiled.  */
 end_comment
 
 begin_decl_stmt
