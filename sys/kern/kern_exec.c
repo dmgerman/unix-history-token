@@ -3642,7 +3642,7 @@ name|sysent
 operator|=
 name|sv
 expr_stmt|;
-comment|/* Called with Giant held, do not depend on it! */
+comment|/* May be called with Giant held */
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|process_exec
