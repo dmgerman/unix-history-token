@@ -1865,7 +1865,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Wake up the buffer deamon if necessary */
+comment|/* Wake up the buffer daemon if necessary */
 end_comment
 
 begin_function
