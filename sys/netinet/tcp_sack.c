@@ -1209,21 +1209,6 @@ operator|->
 name|t_inpcb
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|to
-operator|->
-name|to_flags
-operator|&
-name|TOF_SACK
-argument_list|,
-operator|(
-literal|"%s: SACK invalid"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 name|num_sack_blks
 operator|=
 literal|0
@@ -1272,7 +1257,16 @@ operator|=
 name|th_ack
 expr_stmt|;
 block|}
-comment|/* 	 * Append received valid SACK blocks to sack_blocks[]. 	 */
+comment|/* 	 * Append received valid SACK blocks to sack_blocks[], but only 	 * if we received new blocks from the other side. 	 */
+if|if
+condition|(
+name|to
+operator|->
+name|to_flags
+operator|&
+name|TOF_SACK
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -1406,6 +1400,7 @@ index|]
 operator|=
 name|sack
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Return if SND.UNA is not advanced and no valid SACK block 	 * is received. 	 */
 if|if
