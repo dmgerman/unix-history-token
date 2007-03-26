@@ -2561,6 +2561,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+comment|/* XXX TTY */
 name|vpold
 operator|=
 name|td
@@ -2626,6 +2627,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+comment|/* XXX TTY */
 block|}
 return|return
 operator|(
