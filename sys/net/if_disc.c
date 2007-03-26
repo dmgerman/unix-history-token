@@ -143,7 +143,6 @@ name|ifnet
 modifier|*
 name|sc_ifp
 decl_stmt|;
-comment|/* must be first */
 block|}
 struct|;
 end_struct
