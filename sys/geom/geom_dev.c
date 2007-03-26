@@ -536,21 +536,11 @@ name|error
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: I'm not 100% sure we can call make_dev(9) without Giant 	 * yet.  Once we can, we don't need to drop topology here either. 	 */
 name|unit
 operator|=
 name|alloc_unr
 argument_list|(
 name|unithdr
-argument_list|)
-expr_stmt|;
-name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|dev
@@ -589,15 +579,6 @@ operator|->
 name|si_flags
 operator||=
 name|SI_CANDELETE
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-name|g_topology_lock
-argument_list|()
 expr_stmt|;
 name|dev
 operator|->
