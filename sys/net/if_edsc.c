@@ -155,6 +155,7 @@ modifier|*
 name|sc_ifp
 decl_stmt|;
 comment|/* ptr to generic interface configuration */
+comment|/* 	 * A non-null driver can keep various things here, for instance, 	 * the hardware revision, cached values of write-only registers, etc. 	 */
 block|}
 struct|;
 end_struct
