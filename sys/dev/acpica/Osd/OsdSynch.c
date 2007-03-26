@@ -236,7 +236,7 @@ parameter_list|,
 name|UINT32
 name|InitialUnits
 parameter_list|,
-name|ACPI_HANDLE
+name|ACPI_SEMAPHORE
 modifier|*
 name|OutHandle
 parameter_list|)
@@ -399,7 +399,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiOsDeleteSemaphore
 parameter_list|(
-name|ACPI_HANDLE
+name|ACPI_SEMAPHORE
 name|Handle
 parameter_list|)
 block|{
@@ -475,7 +475,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiOsWaitSemaphore
 parameter_list|(
-name|ACPI_HANDLE
+name|ACPI_SEMAPHORE
 name|Handle
 parameter_list|,
 name|UINT32
@@ -1085,7 +1085,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiOsSignalSemaphore
 parameter_list|(
-name|ACPI_HANDLE
+name|ACPI_SEMAPHORE
 name|Handle
 parameter_list|,
 name|UINT32
