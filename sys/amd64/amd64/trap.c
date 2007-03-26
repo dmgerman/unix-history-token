@@ -2628,25 +2628,12 @@ operator|!=
 name|SEL_UPL
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* try to stabilize the system XXX */
 name|panic
 argument_list|(
 literal|"syscall"
 argument_list|)
 expr_stmt|;
 comment|/* NOT REACHED */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 block|}
 endif|#
 directive|endif
