@@ -1249,6 +1249,28 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Combined mutex + mutex name storage since the latter must persist. */
+end_comment
+
+begin_struct
+struct|struct
+name|acpi_mtx_msg
+block|{
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+name|char
+name|msg
+index|[
+literal|32
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function
 name|ACPI_STATUS
 name|AcpiOsCreateLock
@@ -1259,7 +1281,7 @@ name|OutHandle
 parameter_list|)
 block|{
 name|struct
-name|mtx
+name|acpi_mtx_msg
 modifier|*
 name|m
 decl_stmt|;
@@ -1302,11 +1324,35 @@ operator|(
 name|AE_NO_MEMORY
 operator|)
 return|;
-name|mtx_init
+comment|/* Build a unique name based on the address of the handle. */
+name|snprintf
 argument_list|(
 name|m
+operator|->
+name|msg
 argument_list|,
-literal|"acpica subsystem lock"
+sizeof|sizeof
+argument_list|(
+name|m
+operator|->
+name|msg
+argument_list|)
+argument_list|,
+literal|"acpi subsys %p"
+argument_list|,
+name|OutHandle
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|m
+operator|->
+name|mtx
+argument_list|,
+name|m
+operator|->
+name|msg
 argument_list|,
 name|NULL
 argument_list|,
@@ -1359,6 +1405,13 @@ return|return;
 name|mtx_destroy
 argument_list|(
 name|m
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|m
+argument_list|,
+name|M_ACPISEM
 argument_list|)
 expr_stmt|;
 block|}
