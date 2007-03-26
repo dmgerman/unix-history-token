@@ -368,11 +368,11 @@ init|=
 block|{
 block|{
 comment|/* user */
-literal|"V:C:qn:u:c:d:e:p:g:G:mk:s:oL:i:w:h:H:Db:NPy:Y"
+literal|"V:C:qn:u:c:d:e:p:g:G:mM:k:s:oL:i:w:h:H:Db:NPy:Y"
 block|,
 literal|"V:C:qn:u:rY"
 block|,
-literal|"V:C:qn:u:c:d:e:p:g:G:ml:k:s:w:L:h:H:FNPY"
+literal|"V:C:qn:u:c:d:e:p:g:G:mM:l:k:s:w:L:h:H:FNPY"
 block|,
 literal|"V:C:qn:u:FPa7"
 block|,
@@ -432,18 +432,6 @@ end_function
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_expr_stmt
-name|umask
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* We wish to handle this manually */
-end_comment
 
 begin_expr_stmt
 name|LIST_INIT
