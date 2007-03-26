@@ -38,6 +38,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -4106,6 +4118,63 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Update TSC freq with the value indicated by the caller. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|tsc_freq_changed
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+specifier|const
+name|struct
+name|cf_level
+modifier|*
+name|level
+parameter_list|,
+name|int
+name|status
+parameter_list|)
+block|{
+comment|/* If there was an error during the transition, don't do anything. */
+if|if
+condition|(
+name|status
+operator|!=
+literal|0
+condition|)
+return|return;
+comment|/* Total setting for this level gives the new frequency in MHz. */
+name|hw_clockrate
+operator|=
+name|level
+operator|->
+name|total_set
+operator|.
+name|freq
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|EVENTHANDLER_DEFINE
+argument_list|(
+name|cpufreq_post_change
+argument_list|,
+name|tsc_freq_changed
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_ANY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Final stage of CPU identification. -- Should I check TI?  */

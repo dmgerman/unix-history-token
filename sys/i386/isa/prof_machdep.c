@@ -50,6 +50,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/gmon.h>
 end_include
 
@@ -188,6 +206,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I686_CPU
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cputime_prof_active
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -204,7 +248,7 @@ name|__GNUCLIKE_ASM
 end_ifdef
 
 begin_asm
-asm|__asm("								\n\ GM_STATE	=	0					\n\ GMON_PROF_OFF	=	3					\n\ 								\n\ 	.text							\n\ 	.p2align 4,0x90						\n\ 	.globl	__mcount					\n\ 	.type	__mcount,@function				\n\ __mcount:							\n\ 	#							\n\ 	# Check that we are profiling.  Do it early for speed.	\n\ 	#							\n\ 	cmpl	$GMON_PROF_OFF,_gmonparam+GM_STATE		\n\  	je	.mcount_exit					\n\  	#							\n\  	# __mcount is the same as [.]mcount except the caller	\n\  	# hasn't changed the stack except to call here, so the	\n\ 	# caller's raddr is above our raddr.			\n\ 	#							\n\  	movl	4(%esp),%edx					\n\  	jmp	.got_frompc					\n\  								\n\  	.p2align 4,0x90						\n\  	.globl	.mcount						\n\ .mcount:							\n\  	.globl	__cyg_profile_func_enter			\n\ __cyg_profile_func_enter:					\n\ 	cmpl	$GMON_PROF_OFF,_gmonparam+GM_STATE		\n\ 	je	.mcount_exit					\n\ 	#							\n\ 	# The caller's stack frame has already been built, so	\n\ 	# %ebp is the caller's frame pointer.  The caller's	\n\ 	# raddr is in the caller's frame following the caller's	\n\ 	# caller's frame pointer.				\n\ 	#							\n\ 	movl	4(%ebp),%edx					\n\ .got_frompc:							\n\ 	#							\n\ 	# Our raddr is the caller's pc.				\n\ 	#							\n\ 	movl	(%esp),%eax					\n\ 								\n\ 	pushfl							\n\ 	pushl	%eax						\n\ 	pushl	%edx						\n\ 	cli							\n\ 	call	mcount						\n\ 	addl	$8,%esp						\n\ 	popfl							\n\ .mcount_exit:							\n\ 	ret							\n\ ");
+asm|__asm("								\n\ GM_STATE	=	0					\n\ GMON_PROF_OFF	=	3					\n\ 								\n\ 	.text							\n\ 	.p2align 4,0x90						\n\ 	.globl	__mcount					\n\ 	.type	__mcount,@function				\n\ __mcount:							\n\ 	#							\n\ 	# Check that we are profiling.  Do it early for speed.	\n\ 	#							\n\ 	cmpl	$GMON_PROF_OFF,_gmonparam+GM_STATE		\n\ 	je	.mcount_exit					\n\ 	#							\n\ 	# __mcount is the same as [.]mcount except the caller	\n\ 	# hasn't changed the stack except to call here, so the	\n\ 	# caller's raddr is above our raddr.			\n\ 	#							\n\ 	movl	4(%esp),%edx					\n\ 	jmp	.got_frompc					\n\ 								\n\ 	.p2align 4,0x90						\n\ 	.globl	.mcount						\n\ .mcount:							\n\ 	.globl	__cyg_profile_func_enter			\n\ __cyg_profile_func_enter:					\n\ 	cmpl	$GMON_PROF_OFF,_gmonparam+GM_STATE		\n\ 	je	.mcount_exit					\n\ 	#							\n\ 	# The caller's stack frame has already been built, so	\n\ 	# %ebp is the caller's frame pointer.  The caller's	\n\ 	# raddr is in the caller's frame following the caller's	\n\ 	# caller's frame pointer.				\n\ 	#							\n\ 	movl	4(%ebp),%edx					\n\ .got_frompc:							\n\ 	#							\n\ 	# Our raddr is the caller's pc.				\n\ 	#							\n\ 	movl	(%esp),%eax					\n\ 								\n\ 	pushfl							\n\ 	pushl	%eax						\n\ 	pushl	%edx						\n\ 	cli							\n\ 	call	mcount						\n\ 	addl	$8,%esp						\n\ 	popfl							\n\ .mcount_exit:							\n\ 	ret							\n\ ");
 end_asm
 
 begin_else
@@ -248,7 +292,7 @@ name|__GNUCLIKE_ASM
 end_ifdef
 
 begin_asm
-asm|__asm("								\n\ 	.text							\n\ #								\n\ # Dummy label to be seen when gprof -u hides [.]mexitcount.	\n\ #								\n\ 	.p2align 4,0x90						\n\ 	.globl	__mexitcount					\n\ 	.type	__mexitcount,@function				\n\ __mexitcount:							\n\ 	nop							\n\ 								\n\ GMON_PROF_HIRES	=	4					\n\ 								\n\ 	.p2align 4,0x90						\n\ 	.globl	.mexitcount					\n\ .mexitcount:							\n\  	.globl	__cyg_profile_func_exit				\n\ __cyg_profile_func_exit:					\n\ 	cmpl	$GMON_PROF_HIRES,_gmonparam+GM_STATE		\n\ 	jne	.mexitcount_exit				\n\ 	pushl	%edx						\n\ 	pushl	%eax						\n\ 	movl	8(%esp),%eax					\n\ 	pushfl							\n\ 	pushl	%eax						\n\ 	cli							\n\ 	call	mexitcount					\n\ 	addl	$4,%esp						\n\ 	popfl							\n\ 	popl	%eax						\n\ 	popl	%edx						\n\ .mexitcount_exit:						\n\ 	ret							\n\ ");
+asm|__asm("								\n\ 	.text							\n\ #								\n\ # Dummy label to be seen when gprof -u hides [.]mexitcount.	\n\ #								\n\ 	.p2align 4,0x90						\n\ 	.globl	__mexitcount					\n\ 	.type	__mexitcount,@function				\n\ __mexitcount:							\n\ 	nop							\n\ 								\n\ GMON_PROF_HIRES	=	4					\n\ 								\n\ 	.p2align 4,0x90						\n\ 	.globl	.mexitcount					\n\ .mexitcount:							\n\ 	.globl	__cyg_profile_func_exit				\n\ __cyg_profile_func_exit:					\n\ 	cmpl	$GMON_PROF_HIRES,_gmonparam+GM_STATE		\n\ 	jne	.mexitcount_exit				\n\ 	pushl	%edx						\n\ 	pushl	%eax						\n\ 	movl	8(%esp),%eax					\n\ 	pushfl							\n\ 	pushl	%eax						\n\ 	cli							\n\ 	call	mexitcount					\n\ 	addl	$4,%esp						\n\ 	popfl							\n\ 	popl	%eax						\n\ 	popl	%edx						\n\ .mexitcount_exit:						\n\ 	ret							\n\ ");
 end_asm
 
 begin_endif
@@ -805,8 +849,8 @@ operator|!
 name|tsc_is_broken
 operator|&&
 name|mp_ncpus
-operator|<
-literal|2
+operator|==
+literal|1
 condition|)
 name|cputime_clock
 operator|=
@@ -840,6 +884,7 @@ name|cputime_clock
 operator|==
 name|CPUTIME_CLOCK_TSC
 condition|)
+block|{
 name|gp
 operator|->
 name|profrate
@@ -848,6 +893,11 @@ name|tsc_freq
 operator|>>
 literal|1
 expr_stmt|;
+name|cputime_prof_active
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|#
 directive|if
 name|defined
@@ -1021,8 +1071,115 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I686_CPU
+argument_list|)
+if|if
+condition|(
+name|cputime_clock
+operator|==
+name|CPUTIME_CLOCK_TSC
+condition|)
+name|cputime_prof_active
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I686_CPU
+argument_list|)
+end_if
+
+begin_comment
+comment|/* If the cpu frequency changed while profiling, report a warning. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|tsc_freq_changed
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+specifier|const
+name|struct
+name|cf_level
+modifier|*
+name|level
+parameter_list|,
+name|int
+name|status
+parameter_list|)
+block|{
+comment|/* If there was an error during the transition, don't do anything. */
+if|if
+condition|(
+name|status
+operator|!=
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+name|cputime_prof_active
+operator|&&
+name|cputime_clock
+operator|==
+name|CPUTIME_CLOCK_TSC
+condition|)
+name|printf
+argument_list|(
+literal|"warning: cpu freq changed while profiling active\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|EVENTHANDLER_DEFINE
+argument_list|(
+name|cpufreq_post_change
+argument_list|,
+name|tsc_freq_changed
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_ANY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* I586_CPU || I686_CPU */
+end_comment
 
 begin_endif
 endif|#
