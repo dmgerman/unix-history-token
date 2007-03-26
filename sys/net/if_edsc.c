@@ -108,7 +108,7 @@ file|<net/if.h>
 end_include
 
 begin_comment
-comment|/* basic network interface related things */
+comment|/* basic part of ifnet(9) */
 end_comment
 
 begin_include
@@ -138,11 +138,11 @@ file|<net/if_var.h>
 end_include
 
 begin_comment
-comment|/* struct ifnet and other kernel-only stuff */
+comment|/* kernel-only part of ifnet(9) */
 end_comment
 
 begin_comment
-comment|/*  * Software configuration of an interface instance.  */
+comment|/*  * Software configuration of an interface specific to this device type.  */
 end_comment
 
 begin_struct
@@ -154,7 +154,7 @@ name|ifnet
 modifier|*
 name|sc_ifp
 decl_stmt|;
-comment|/* must be first */
+comment|/* ptr to generic interface configuration */
 block|}
 struct|;
 end_struct
