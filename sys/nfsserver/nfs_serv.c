@@ -21672,6 +21672,10 @@ name|nfh
 operator|.
 name|fh_generic
 expr_stmt|;
+name|vfslocked
+operator|=
+literal|0
+expr_stmt|;
 name|nfsm_srvmtofh
 argument_list|(
 name|fhp
