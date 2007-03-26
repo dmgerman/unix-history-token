@@ -188,6 +188,9 @@ name|vpd_reg
 decl_stmt|;
 comment|/* base register, + 2 for addr, + 4 data */
 name|char
+name|vpd_cached
+decl_stmt|;
+name|char
 modifier|*
 name|vpd_ident
 decl_stmt|;
