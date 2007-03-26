@@ -2857,12 +2857,6 @@ name|cpumask
 operator||=
 name|other_cpus
 expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|smp_ipi_mtx
-argument_list|)
-expr_stmt|;
 name|smp_masked_invlpg
 argument_list|(
 name|other_cpus
@@ -2870,12 +2864,6 @@ argument_list|,
 name|sf
 operator|->
 name|kva
-argument_list|)
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 block|}
