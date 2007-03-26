@@ -5785,7 +5785,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|to
 operator|==
 name|NULL
 condition|)
