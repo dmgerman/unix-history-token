@@ -1302,8 +1302,8 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|acpi_spinlock
+operator|*
+name|h
 argument_list|)
 argument_list|,
 name|M_ACPISEM
@@ -1348,6 +1348,7 @@ argument_list|,
 literal|"acpi subsystem GPE lock"
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|OutHandle
