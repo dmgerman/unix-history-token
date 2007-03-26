@@ -1459,10 +1459,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|&
 name|h
-operator|->
-name|lock
 argument_list|,
 name|M_ACPISEM
 argument_list|)
