@@ -291,7 +291,7 @@ name|thread
 name|thread0
 name|__aligned
 argument_list|(
-literal|8
+literal|16
 argument_list|)
 decl_stmt|;
 end_decl_stmt
