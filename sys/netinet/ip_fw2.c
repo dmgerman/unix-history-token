@@ -3487,46 +3487,45 @@ begin_comment
 comment|/*  * We enter here when we have a rule with O_LOG.  * XXX this function alone takes about 2Kbytes of code!  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
 name|ipfw_log
-argument_list|(
-expr|struct
+parameter_list|(
+name|struct
 name|ip_fw
-operator|*
+modifier|*
 name|f
-argument_list|,
+parameter_list|,
 name|u_int
 name|hlen
-argument_list|,
-expr|struct
+parameter_list|,
+name|struct
 name|ip_fw_args
-operator|*
+modifier|*
 name|args
-argument_list|,
-expr|struct
+parameter_list|,
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-argument_list|,
-expr|struct
+parameter_list|,
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|oif
-argument_list|,
+parameter_list|,
 name|u_short
 name|offset
-argument_list|,
+parameter_list|,
 name|uint32_t
 name|tablearg
-argument_list|,
-expr|struct
+parameter_list|,
+name|struct
 name|ip
-operator|*
+modifier|*
 name|ip
-argument_list|)
-decl|>>>>>>> 1.144
+parameter_list|)
 block|{
 name|struct
 name|ether_header
@@ -5005,7 +5004,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * IMPORTANT: the hash function for dynamic rules must be commutative  * in source and destination (ip,port), because rules are bidirectional  * and we want to find both in the same bucket.  */
