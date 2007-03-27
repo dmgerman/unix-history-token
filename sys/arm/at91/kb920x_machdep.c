@@ -514,13 +514,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|pv_addr
-name|minidataclean
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|trapframe
@@ -1451,15 +1444,6 @@ argument_list|,
 name|KSTACK_PAGES
 argument_list|)
 expr_stmt|;
-name|alloc_pages
-argument_list|(
-name|minidataclean
-operator|.
-name|pv_pa
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|valloc_pages
 argument_list|(
 name|msgbufpv
@@ -1614,23 +1598,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_map_entry
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|afterkern
-argument_list|,
-name|minidataclean
-operator|.
-name|pv_pa
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|,
-name|PTE_CACHE
-argument_list|)
-expr_stmt|;
 comment|/* Map the vector page. */
 name|pmap_map_entry
 argument_list|(
