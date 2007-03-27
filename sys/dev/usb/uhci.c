@@ -3770,6 +3770,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* stop the controller */
+name|cmd
+operator|&=
+operator|~
+name|UHCI_CMD_RS
+expr_stmt|;
 comment|/* save some state if BIOS doesn't */
 name|sc
 operator|->
