@@ -16094,10 +16094,11 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* I/O resource */
-name|struct
-name|resource_spec
-modifier|*
-name|msk_res_spec
+name|int
+name|msk_res_type
+decl_stmt|;
+name|int
+name|msk_res_id
 decl_stmt|;
 name|struct
 name|resource
@@ -16108,11 +16109,6 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* IRQ resources */
-name|struct
-name|resource_spec
-modifier|*
-name|msk_irq_spec
-decl_stmt|;
 name|void
 modifier|*
 name|msk_intrhand
