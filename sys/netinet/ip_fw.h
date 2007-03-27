@@ -1271,6 +1271,11 @@ name|_ip6dn_args
 name|dummypar
 decl_stmt|;
 comment|/* dummynet->ip6_output */
+name|struct
+name|sockaddr_in
+name|hopstore
+decl_stmt|;
+comment|/* store here if cannot use a pointer */
 block|}
 struct|;
 end_struct
