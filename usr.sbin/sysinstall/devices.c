@@ -704,6 +704,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"msk"
+block|,
+literal|"Marvell/SysKonnect Yukon II gigabit Ethernet"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"nge"
 block|,
 literal|"NatSemi PCI Gigabit Ethernet card"
