@@ -4980,6 +4980,19 @@ name|ifma_msghdr
 operator|*
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ifp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: link-layer multicast address w/o ifp\n"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|ifmam
 operator|->
 name|ifmam_index

@@ -11214,7 +11214,7 @@ name|ifma
 operator|->
 name|ifma_ifp
 expr_stmt|;
-comment|/* 	 * If the ifnet is detaching, null out references to ifnet, 	 * so that upper protocol layers will notice, and not attempt 	 * to obtain locks for an ifnet which no longer exists. 	 * It is OK to call rt_newmaddrmsg() with a NULL ifp. 	 */
+comment|/* 	 * If the ifnet is detaching, null out references to ifnet, 	 * so that upper protocol layers will notice, and not attempt 	 * to obtain locks for an ifnet which no longer exists. The 	 * routing socket announcement must happen before the ifnet 	 * instance is detached from the system. 	 */
 if|if
 condition|(
 name|detaching
@@ -11234,12 +11234,28 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 		 * ifp may already be nulled out if we are being reentered 		 * to delete the ll_ifma. 		 */
+if|if
+condition|(
+name|ifp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|rt_newmaddrmsg
+argument_list|(
+name|RTM_DELMADDR
+argument_list|,
+name|ifma
+argument_list|)
+expr_stmt|;
 name|ifma
 operator|->
 name|ifma_ifp
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -11253,13 +11269,6 @@ condition|)
 return|return
 literal|0
 return|;
-name|rt_newmaddrmsg
-argument_list|(
-name|RTM_DELMADDR
-argument_list|,
-name|ifma
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If this ifma is a network-layer ifma, a link-layer ifma may 	 * have been associated with it. Release it first if so. 	 */
 name|ll_ifma
 operator|=
