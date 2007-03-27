@@ -3241,17 +3241,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cmd
-operator|>
-literal|0
-condition|)
-operator|*
-name|error
-operator|=
-literal|0
-expr_stmt|;
 block|}
 block|}
 end_function

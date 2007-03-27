@@ -238,8 +238,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cmd
-operator|&&
 literal|4
 operator|<=
 name|u

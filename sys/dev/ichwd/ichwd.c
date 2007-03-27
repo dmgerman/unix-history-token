@@ -761,17 +761,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cmd
-operator|>
-literal|0
-condition|)
-operator|*
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
 block|}
 block|}
 end_function

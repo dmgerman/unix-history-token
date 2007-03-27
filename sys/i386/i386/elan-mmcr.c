@@ -1809,17 +1809,6 @@ name|cur
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|u
-operator|>
-literal|0
-condition|)
-operator|*
-name|error
-operator|=
-literal|0
-expr_stmt|;
 block|}
 block|}
 end_function

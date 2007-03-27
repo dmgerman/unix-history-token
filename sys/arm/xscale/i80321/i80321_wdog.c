@@ -267,11 +267,7 @@ name|uint64_t
 operator|)
 literal|1
 operator|<<
-operator|(
 name|cmd
-operator|&
-name|WD_INTERVAL
-operator|)
 operator|<=
 operator|(
 name|uint64_t
@@ -303,7 +299,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* XXX Can't disable this watchdog? */
+comment|/* Can't disable this watchdog! */
 if|if
 condition|(
 name|sc
@@ -314,18 +310,6 @@ operator|*
 name|error
 operator|=
 name|EOPNOTSUPP
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|cmd
-operator|>
-literal|0
-condition|)
-operator|*
-name|error
-operator|=
-name|EINVAL
 expr_stmt|;
 block|}
 block|}
