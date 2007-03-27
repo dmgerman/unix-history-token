@@ -517,16 +517,6 @@ begin_comment
 comment|/*  * Enable Giant pushdown based on whether or not the vm is mpsafe in this  * build.  Without mpsafevm the buffer cache can not run Giant free.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
-end_if
-
 begin_decl_stmt
 name|int
 name|mpsafe_vfs
@@ -534,22 +524,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|mpsafe_vfs
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|TUNABLE_INT
