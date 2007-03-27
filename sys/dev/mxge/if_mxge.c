@@ -8432,6 +8432,12 @@ expr_stmt|;
 name|mb
 argument_list|()
 expr_stmt|;
+name|src
+operator|->
+name|addr_low
+operator|=
+name|low
+expr_stmt|;
 name|dst
 operator|->
 name|addr_low
