@@ -218,6 +218,11 @@ name|u_int
 name|ch_nr
 decl_stmt|;
 name|int
+name|ch_enabled
+range|:
+literal|1
+decl_stmt|;
+name|int
 name|ch_sysdev
 range|:
 literal|1
