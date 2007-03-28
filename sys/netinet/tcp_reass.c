@@ -3403,7 +3403,7 @@ operator|==
 literal|2
 condition|)
 goto|goto
-name|drop
+name|dropunlock
 goto|;
 name|rstreason
 operator|=
