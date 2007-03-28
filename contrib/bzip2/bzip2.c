@@ -12,47 +12,11 @@ comment|/*-----------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--   This file is a part of bzip2 and/or libbzip2, a program and   library for lossless, block-sorting data compression.    Copyright (C) 1996-2005 Julian R Seward.  All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions   are met:    1. Redistributions of source code must retain the above copyright      notice, this list of conditions and the following disclaimer.    2. The origin of this software must not be misrepresented; you must       not claim that you wrote the original software.  If you use this       software in a product, an acknowledgment in the product       documentation would be appreciated but is not required.    3. Altered source versions must be plainly marked as such, and must      not be misrepresented as being the original software.    4. The name of the author may not be used to endorse or promote       products derived from this software without specific prior written       permission.    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.    Julian Seward, Cambridge, UK.   jseward@bzip.org   bzip2/libbzip2 version 1.0 of 21 March 2000    This program is based on (at least) the work of:      Mike Burrows      David Wheeler      Peter Fenwick      Alistair Moffat      Radford Neal      Ian H. Witten      Robert Sedgewick      Jon L. Bentley    For more information on these sources, see the manual. --*/
+comment|/* ------------------------------------------------------------------    This file is part of bzip2/libbzip2, a program and library for    lossless, block-sorting data compression.     bzip2/libbzip2 version 1.0.4 of 20 December 2006    Copyright (C) 1996-2006 Julian Seward<jseward@bzip.org>     Please read the WARNING, DISCLAIMER and PATENTS sections in the     README file.     This program is released under the terms of the license contained    in the file LICENSE.    ------------------------------------------------------------------ */
 end_comment
 
 begin_comment
-comment|/*----------------------------------------------------*/
-end_comment
-
-begin_comment
-comment|/*--- IMPORTANT                                    ---*/
-end_comment
-
-begin_comment
-comment|/*----------------------------------------------------*/
-end_comment
-
-begin_comment
-comment|/*--    WARNING:       This program and library (attempts to) compress data by        performing several non-trivial transformations on it.         Unless you are 100% familiar with *all* the algorithms        contained herein, and with the consequences of modifying them,        you should NOT meddle with the compression or decompression        machinery.  Incorrect changes can and very likely *will*        lead to disasterous loss of data.     DISCLAIMER:       I TAKE NO RESPONSIBILITY FOR ANY LOSS OF DATA ARISING FROM THE       USE OF THIS PROGRAM, HOWSOEVER CAUSED.        Every compression of a file implies an assumption that the       compressed file can be decompressed to reproduce the original.       Great efforts in design, coding and testing have been made to       ensure that this program works correctly.  However, the       complexity of the algorithms, and, in particular, the presence       of various special cases in the code which occur with very low       but non-zero probability make it impossible to rule out the       possibility of bugs remaining in the program.  DO NOT COMPRESS       ANY DATA WITH THIS PROGRAM AND/OR LIBRARY UNLESS YOU ARE PREPARED        TO ACCEPT THE POSSIBILITY, HOWEVER SMALL, THAT THE DATA WILL        NOT BE RECOVERABLE.        That is not to say this program is inherently unreliable.       Indeed, I very much hope the opposite is true.  bzip2/libbzip2       has been carefully constructed and extensively tested.     PATENTS:       To the best of my knowledge, bzip2/libbzip2 does not use any        patented algorithms.  However, I do not have the resources        available to carry out a full patent search.  Therefore I cannot        give any guarantee of the above statement. --*/
-end_comment
-
-begin_comment
-comment|/*----------------------------------------------------*/
-end_comment
-
-begin_comment
-comment|/*--- and now for something much more pleasant :-) ---*/
-end_comment
-
-begin_comment
-comment|/*----------------------------------------------------*/
-end_comment
-
-begin_comment
-comment|/*---------------------------------------------*/
-end_comment
-
-begin_comment
-comment|/*--   Place a 1 beside your platform, and 0 elsewhere. --*/
-end_comment
-
-begin_comment
-comment|/*--   Generic 32-bit Unix.   Also works on 64-bit Unix boxes.   This is the default. --*/
+comment|/* Place a 1 beside your platform, and 0 elsewhere.    Generic 32-bit Unix.    Also works on 64-bit Unix boxes.    This is the default. */
 end_comment
 
 begin_define
@@ -876,6 +840,7 @@ specifier|static
 name|void
 name|panic
 argument_list|(
+specifier|const
 name|Char
 operator|*
 argument_list|)
@@ -970,6 +935,17 @@ modifier|*
 name|myMalloc
 parameter_list|(
 name|Int32
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|applySavedFileAttrToOutputFile
+parameter_list|(
+name|IntNative
+name|fd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1782,6 +1758,28 @@ operator|!=
 name|stdout
 condition|)
 block|{
+name|Int32
+name|fd
+init|=
+name|fileno
+argument_list|(
+name|zStream
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+goto|goto
+name|errhandler_io
+goto|;
+name|applySavedFileAttrToOutputFile
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|fclose
@@ -2359,6 +2357,36 @@ condition|)
 goto|goto
 name|errhandler_io
 goto|;
+if|if
+condition|(
+name|stream
+operator|!=
+name|stdout
+condition|)
+block|{
+name|Int32
+name|fd
+init|=
+name|fileno
+argument_list|(
+name|stream
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+goto|goto
+name|errhandler_io
+goto|;
+name|applySavedFileAttrToOutputFile
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
 name|ret
 operator|=
 name|fclose
@@ -3394,6 +3422,7 @@ specifier|static
 name|void
 name|panic
 parameter_list|(
+specifier|const
 name|Char
 modifier|*
 name|s
@@ -3958,6 +3987,7 @@ comment|/* Open an output file safely with O_EXCL and good permissions.    This 
 end_comment
 
 begin_function
+specifier|static
 name|FILE
 modifier|*
 name|fopen_output_safely
@@ -4232,7 +4262,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|applySavedMetaInfoToOutputFile
+name|applySavedTimeInfoToOutputFile
 parameter_list|(
 name|Char
 modifier|*
@@ -4267,22 +4297,6 @@ name|st_mtime
 expr_stmt|;
 name|retVal
 operator|=
-name|chmod
-argument_list|(
-name|dstName
-argument_list|,
-name|fileMetaInfo
-operator|.
-name|st_mode
-argument_list|)
-expr_stmt|;
-name|ERROR_IF_NOT_ZERO
-argument_list|(
-name|retVal
-argument_list|)
-expr_stmt|;
-name|retVal
-operator|=
 name|utime
 argument_list|(
 name|dstName
@@ -4296,11 +4310,48 @@ argument_list|(
 name|retVal
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|applySavedFileAttrToOutputFile
+parameter_list|(
+name|IntNative
+name|fd
+parameter_list|)
+block|{
+if|#
+directive|if
+name|BZ_UNIX
+name|IntNative
+name|retVal
+decl_stmt|;
 name|retVal
 operator|=
-name|chown
+name|fchmod
 argument_list|(
-name|dstName
+name|fd
+argument_list|,
+name|fileMetaInfo
+operator|.
+name|st_mode
+argument_list|)
+expr_stmt|;
+name|ERROR_IF_NOT_ZERO
+argument_list|(
+name|retVal
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fchown
+argument_list|(
+name|fd
 argument_list|,
 name|fileMetaInfo
 operator|.
@@ -4389,6 +4440,7 @@ value|4
 end_define
 
 begin_decl_stmt
+specifier|const
 name|Char
 modifier|*
 name|zSuffix
@@ -4409,6 +4461,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|Char
 modifier|*
 name|unzSuffix
@@ -4437,6 +4490,7 @@ name|Char
 modifier|*
 name|s
 parameter_list|,
+specifier|const
 name|Char
 modifier|*
 name|suffix
@@ -4500,10 +4554,12 @@ name|Char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|Char
 modifier|*
 name|oldSuffix
 parameter_list|,
+specifier|const
 name|Char
 modifier|*
 name|newSuffix
@@ -4612,6 +4668,10 @@ name|copyFileName
 argument_list|(
 name|inName
 argument_list|,
+operator|(
+name|Char
+operator|*
+operator|)
 literal|"(stdin)"
 argument_list|)
 expr_stmt|;
@@ -4619,6 +4679,10 @@ name|copyFileName
 argument_list|(
 name|outName
 argument_list|,
+operator|(
+name|Char
+operator|*
+operator|)
 literal|"(stdout)"
 argument_list|)
 expr_stmt|;
@@ -4662,6 +4726,10 @@ name|copyFileName
 argument_list|(
 name|outName
 argument_list|,
+operator|(
+name|Char
+operator|*
+operator|)
 literal|"(stdout)"
 argument_list|)
 expr_stmt|;
@@ -5306,7 +5374,7 @@ operator|==
 name|SM_F2F
 condition|)
 block|{
-name|applySavedMetaInfoToOutputFile
+name|applySavedTimeInfoToOutputFile
 argument_list|(
 name|outName
 argument_list|)
@@ -5415,6 +5483,10 @@ name|copyFileName
 argument_list|(
 name|inName
 argument_list|,
+operator|(
+name|Char
+operator|*
+operator|)
 literal|"(stdin)"
 argument_list|)
 expr_stmt|;
@@ -5422,6 +5494,10 @@ name|copyFileName
 argument_list|(
 name|outName
 argument_list|,
+operator|(
+name|Char
+operator|*
+operator|)
 literal|"(stdout)"
 argument_list|)
 expr_stmt|;
@@ -5502,6 +5578,10 @@ name|copyFileName
 argument_list|(
 name|outName
 argument_list|,
+operator|(
+name|Char
+operator|*
+operator|)
 literal|"(stdout)"
 argument_list|)
 expr_stmt|;
@@ -6086,7 +6166,7 @@ operator|==
 name|SM_F2F
 condition|)
 block|{
-name|applySavedMetaInfoToOutputFile
+name|applySavedTimeInfoToOutputFile
 argument_list|(
 name|outName
 argument_list|)
@@ -6256,6 +6336,10 @@ name|copyFileName
 argument_list|(
 name|outName
 argument_list|,
+operator|(
+name|Char
+operator|*
+operator|)
 literal|"(none)"
 argument_list|)
 expr_stmt|;
@@ -6271,6 +6355,10 @@ name|copyFileName
 argument_list|(
 name|inName
 argument_list|,
+operator|(
+name|Char
+operator|*
+operator|)
 literal|"(stdin)"
 argument_list|)
 expr_stmt|;
@@ -6604,11 +6692,11 @@ argument_list|,
 literal|"bzip2, a block-sorting file compressor.  "
 literal|"Version %s.\n"
 literal|"   \n"
-literal|"   Copyright (C) 1996-2005 by Julian Seward.\n"
+literal|"   Copyright (C) 1996-2006 by Julian Seward.\n"
 literal|"   \n"
 literal|"   This program is free software; you can redistribute it and/or modify\n"
 literal|"   it under the terms set out in the LICENSE file, which is included\n"
-literal|"   in the bzip2-1.0 source distribution.\n"
+literal|"   in the bzip2-1.0.4 source distribution.\n"
 literal|"   \n"
 literal|"   This program is distributed in the hope that it will be useful,\n"
 literal|"   but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -7316,6 +7404,10 @@ name|copyFileName
 argument_list|(
 name|inName
 argument_list|,
+operator|(
+name|Char
+operator|*
+operator|)
 literal|"(none)"
 argument_list|)
 expr_stmt|;
@@ -7323,6 +7415,10 @@ name|copyFileName
 argument_list|(
 name|outName
 argument_list|,
+operator|(
+name|Char
+operator|*
+operator|)
 literal|"(none)"
 argument_list|)
 expr_stmt|;
@@ -7385,6 +7481,10 @@ argument_list|(
 operator|&
 name|argList
 argument_list|,
+operator|(
+name|Char
+operator|*
+operator|)
 literal|"BZIP2"
 argument_list|)
 expr_stmt|;
@@ -7393,6 +7493,10 @@ argument_list|(
 operator|&
 name|argList
 argument_list|,
+operator|(
+name|Char
+operator|*
+operator|)
 literal|"BZIP"
 argument_list|)
 expr_stmt|;

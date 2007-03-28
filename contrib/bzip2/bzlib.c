@@ -16,11 +16,11 @@ comment|/*-------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--   This file is a part of bzip2 and/or libbzip2, a program and   library for lossless, block-sorting data compression.    Copyright (C) 1996-2005 Julian R Seward.  All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions   are met:    1. Redistributions of source code must retain the above copyright      notice, this list of conditions and the following disclaimer.    2. The origin of this software must not be misrepresented; you must       not claim that you wrote the original software.  If you use this       software in a product, an acknowledgment in the product       documentation would be appreciated but is not required.    3. Altered source versions must be plainly marked as such, and must      not be misrepresented as being the original software.    4. The name of the author may not be used to endorse or promote       products derived from this software without specific prior written       permission.    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.    Julian Seward, Cambridge, UK.   jseward@bzip.org   bzip2/libbzip2 version 1.0 of 21 March 2000    This program is based on (at least) the work of:      Mike Burrows      David Wheeler      Peter Fenwick      Alistair Moffat      Radford Neal      Ian H. Witten      Robert Sedgewick      Jon L. Bentley    For more information on these sources, see the manual. --*/
+comment|/* ------------------------------------------------------------------    This file is part of bzip2/libbzip2, a program and library for    lossless, block-sorting data compression.     bzip2/libbzip2 version 1.0.4 of 20 December 2006    Copyright (C) 1996-2006 Julian Seward<jseward@bzip.org>     Please read the WARNING, DISCLAIMER and PATENTS sections in the     README file.     This program is released under the terms of the license contained    in the file LICENSE.    ------------------------------------------------------------------ */
 end_comment
 
 begin_comment
-comment|/*--    CHANGES    ~~~~~~~    0.9.0 -- original version.     0.9.0a/b -- no changes in this file.     0.9.0c       * made zero-length BZ_FLUSH work correctly in bzCompress().       * fixed bzWrite/bzRead to ignore zero-length requests.       * fixed bzread to correctly handle read requests after EOF.       * wrong parameter order in call to bzDecompressInit in         bzBuffToBuffDecompress.  Fixed. --*/
+comment|/* CHANGES    0.9.0    -- original version.    0.9.0a/b -- no changes in this file.    0.9.0c   -- made zero-length BZ_FLUSH work correctly in bzCompress().      fixed bzWrite/bzRead to ignore zero-length requests.      fixed bzread to correctly handle read requests after EOF.      wrong parameter order in call to bzDecompressInit in      bzBuffToBuffDecompress.  Fixed. */
 end_comment
 
 begin_include
@@ -7028,7 +7028,7 @@ comment|/*---------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--    Code contributed by Yoshioka Tsuneo    (QWF00133@niftyserve.or.jp/tsuneo-y@is.aist-nara.ac.jp),    to support better zlib compatibility.    This code is not _officially_ part of libbzip2 (yet);    I haven't tested it, documented it, or considered the    threading-safeness of it.    If this code breaks, please contact both Yoshioka and me. --*/
+comment|/*--    Code contributed by Yoshioka Tsuneo (tsuneo@rr.iij4u.or.jp)    to support better zlib compatibility.    This code is not _officially_ part of libbzip2 (yet);    I haven't tested it, documented it, or considered the    threading-safeness of it.    If this code breaks, please contact both Yoshioka and me. --*/
 end_comment
 
 begin_comment
@@ -7040,7 +7040,7 @@ comment|/*---------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--    return version like "0.9.0c". --*/
+comment|/*--    return version like "0.9.5d, 4-Sept-1999". --*/
 end_comment
 
 begin_function
@@ -7757,16 +7757,6 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|fp
-init|=
-operator|(
-operator|(
-name|bzFile
-operator|*
-operator|)
-name|b
-operator|)
-operator|->
-name|handle
 decl_stmt|;
 if|if
 condition|(
@@ -7777,6 +7767,18 @@ condition|)
 block|{
 return|return;
 block|}
+name|fp
+operator|=
+operator|(
+operator|(
+name|bzFile
+operator|*
+operator|)
+name|b
+operator|)
+operator|->
+name|handle
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7867,6 +7869,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|bzerrorstrings
