@@ -44,6 +44,17 @@ decl_stmt|;
 name|unsigned
 name|thisSecond
 decl_stmt|;
+comment|// Clamp to 20s
+if|if
+condition|(
+name|seconds
+operator|>
+literal|20
+condition|)
+name|seconds
+operator|=
+literal|20
+expr_stmt|;
 name|thisSecond
 operator|=
 name|GetSeconds
@@ -85,7 +96,7 @@ block|}
 do|while
 condition|(
 name|thisSecond
-operator|<
+operator|!=
 name|seconds
 condition|)
 do|;

@@ -181,12 +181,16 @@ name|AT91C_MASTER_CLOCK
 value|60000000
 end_define
 
+begin_comment
+comment|/* #define GetSeconds() (AT91C_BASE_RTC->RTC_TIMR& AT91C_RTC_SEC) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|GetSeconds
 parameter_list|()
-value|(AT91C_BASE_RTC->RTC_TIMR& AT91C_RTC_SEC)
+value|(AT91C_BASE_ST->ST_CRTR>> 15)
 end_define
 
 begin_function_decl

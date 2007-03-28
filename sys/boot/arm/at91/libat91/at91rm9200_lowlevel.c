@@ -96,6 +96,12 @@ operator|*
 operator|)
 name|SDRAM_BASE
 decl_stmt|;
+name|AT91C_BASE_ST
+operator|->
+name|ST_RTMR
+operator|=
+literal|1
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|BOOT_TSC
