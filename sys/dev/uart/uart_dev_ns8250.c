@@ -280,6 +280,12 @@ name|bas
 argument_list|)
 expr_stmt|;
 comment|/* 1/10th the time to transmit 1 character (estimate). */
+if|if
+condition|(
+name|divisor
+operator|<=
+literal|134
+condition|)
 return|return
 operator|(
 literal|16000000
@@ -289,6 +295,21 @@ operator|/
 name|bas
 operator|->
 name|rclk
+operator|)
+return|;
+return|return
+operator|(
+literal|16000
+operator|*
+name|divisor
+operator|/
+operator|(
+name|bas
+operator|->
+name|rclk
+operator|/
+literal|1000
+operator|)
 operator|)
 return|;
 block|}
