@@ -237,6 +237,10 @@ case|:
 case|case
 name|NG_L2CAP_INFO_RSP
 case|:
+comment|/* 		 * Do not check return ng_l2cap_lp_send() value, because 		 * in these cases we do not really have a graceful way out. 		 * ECHO and INFO responses are internal to the stack and not 		 * visible to user. REJect is just being nice to remote end 		 * (otherwise remote end will timeout anyway). DISCON is 		 * probably most interesting here, however, if it fails 		 * there is nothing we can do anyway. 		 */
+operator|(
+name|void
+operator|)
 name|ng_l2cap_lp_send
 argument_list|(
 name|con
