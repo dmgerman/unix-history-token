@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|NG_NETFLOW_MAXIFACES
-value|2048
+value|USHRT_MAX
 end_define
 
 begin_comment
