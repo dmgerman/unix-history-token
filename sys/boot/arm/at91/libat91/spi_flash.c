@@ -1032,13 +1032,6 @@ name|pSPI
 operator|->
 name|SPI_SR
 expr_stmt|;
-comment|// Increment real time counter every SLCK
-name|AT91C_BASE_ST
-operator|->
-name|ST_RTMR
-operator|=
-literal|1
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|BOOT_BWCT
