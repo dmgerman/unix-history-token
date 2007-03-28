@@ -167,9 +167,6 @@ name|struct
 name|link_config
 name|link_config
 decl_stmt|;
-name|int
-name|activity
-decl_stmt|;
 name|struct
 name|ifmedia
 name|media
@@ -701,6 +698,10 @@ name|port_info
 modifier|*
 name|port
 decl_stmt|;
+name|int
+name|idx
+decl_stmt|;
+comment|/* qset # */
 block|}
 struct|;
 end_struct
@@ -751,6 +752,9 @@ name|bt
 decl_stmt|;
 name|bus_size_t
 name|mmio_len
+decl_stmt|;
+name|uint32_t
+name|link_width
 decl_stmt|;
 comment|/* DMA resources */
 name|bus_dma_tag_t
@@ -1699,7 +1703,7 @@ name|desc_reclaimable
 parameter_list|(
 name|q
 parameter_list|)
-value|((q)->processed - (q)->cleaned - TX_MAX_DESC)
+value|((int)((q)->processed - (q)->cleaned - TX_MAX_DESC))
 end_define
 
 begin_define

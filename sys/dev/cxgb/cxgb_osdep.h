@@ -216,6 +216,13 @@ name|CXGB_TX_CLEANUP_THRESHOLD
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|LOG_WARNING
+value|1
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -545,14 +552,6 @@ parameter_list|)
 value|device_printf(adap->dev, fmt, ##__VA_ARGS__)
 end_define
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|700000
-end_if
-
 begin_define
 define|#
 directive|define
@@ -560,28 +559,22 @@ name|t3_os_sleep
 parameter_list|(
 name|x
 parameter_list|)
-value|DELAY((x) * 3000)
+value|DELAY((x) * 2000)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
 directive|define
-name|t3_os_sleep
+name|max_t
 parameter_list|(
-name|x
+name|type
+parameter_list|,
+name|a
+parameter_list|,
+name|b
 parameter_list|)
-value|DELAY((x) * 1000)
+value|(type)max((a), (b))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Standard PHY definitions */

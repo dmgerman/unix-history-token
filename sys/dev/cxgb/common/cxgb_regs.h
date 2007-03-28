@@ -25152,14 +25152,14 @@ begin_define
 define|#
 directive|define
 name|S_TX_MOD_TIMER_MODE
-value|9
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|M_TX_MOD_TIMER_MODE
-value|0x7f
+value|0xff
 end_define
 
 begin_define
