@@ -295,6 +295,14 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x98359710
+block|,
+literal|"MosChip MCS9835 PCI Dual UART"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x01c0135c
 block|,
 literal|"Quatech SSCLP-200/300"
