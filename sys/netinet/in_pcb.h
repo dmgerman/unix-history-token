@@ -712,10 +712,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * NB: We cannot enable assertions when IPv6 is configured as  *     this code is shared by both IPv4 and IPv6 and IPv6 is  *     not properly locked.  */
-end_comment
-
 begin_define
 define|#
 directive|define
