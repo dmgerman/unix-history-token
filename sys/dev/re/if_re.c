@@ -386,6 +386,16 @@ block|,
 block|{
 name|RT_VENDORID
 block|,
+name|RT_DEVICEID_8169
+block|,
+name|RL_HWREV_8169_8110SC
+block|,
+literal|"RealTek 8169SC/8110SC Single-chip Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|RT_VENDORID
+block|,
 name|RT_DEVICEID_8169SC
 block|,
 name|RL_HWREV_8169_8110SC
