@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: socks.c,v 1.16 2006/01/25 23:21:37 djm Exp $	*/
+comment|/*	$OpenBSD: socks.c,v 1.17 2006/09/25 04:51:20 ray Exp $	*/
 end_comment
 
 begin_comment
@@ -1851,6 +1851,17 @@ argument_list|(
 name|buf
 argument_list|,
 literal|"HTTP/1.0 200 "
+argument_list|,
+literal|12
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strncmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"HTTP/1.1 200 "
 argument_list|,
 literal|12
 argument_list|)
