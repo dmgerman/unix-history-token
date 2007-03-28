@@ -102,11 +102,6 @@ name|defined
 argument_list|(
 name|__arm__
 argument_list|)
-comment|/* The word size of the default bfd target.  */
-define|#
-directive|define
-name|BFD_DEFAULT_TARGET_SIZE
-value|32
 define|#
 directive|define
 name|BFD_HOST_64BIT_LONG
@@ -140,11 +135,6 @@ name|defined
 argument_list|(
 name|__ia64__
 argument_list|)
-comment|/* The word size of the default bfd target.  */
-define|#
-directive|define
-name|BFD_DEFAULT_TARGET_SIZE
-value|64
 define|#
 directive|define
 name|BFD_HOST_64BIT_LONG
