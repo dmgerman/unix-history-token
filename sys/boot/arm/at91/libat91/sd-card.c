@@ -548,19 +548,12 @@ name|int
 name|sizeToRead
 parameter_list|)
 block|{
-name|unsigned
-name|log2sl
-init|=
-name|MCI_Device
-operator|.
-name|READ_BL_LEN
-decl_stmt|;
+comment|//	unsigned log2sl = MCI_Device.READ_BL_LEN;
+comment|//	unsigned sectorLength = 1<< log2sl;
 name|unsigned
 name|sectorLength
 init|=
-literal|1
-operator|<<
-name|log2sl
+literal|512
 decl_stmt|;
 comment|///////////////////////////////////////////////////////////////////////
 if|if
@@ -690,19 +683,12 @@ name|unsigned
 name|length
 parameter_list|)
 block|{
-name|unsigned
-name|log2sl
-init|=
-name|MCI_Device
-operator|.
-name|READ_BL_LEN
-decl_stmt|;
+comment|//	unsigned log2sl = MCI_Device.READ_BL_LEN;
+comment|//	unsigned sectorLength = 1<< log2sl;
 name|unsigned
 name|sectorLength
 init|=
-literal|1
-operator|<<
-name|log2sl
+literal|512
 decl_stmt|;
 name|int
 name|sizeToRead
