@@ -16592,7 +16592,7 @@ condition|(
 name|sc
 operator|->
 name|fw_dma_size
-operator|>
+operator|>=
 name|size
 condition|)
 return|return
