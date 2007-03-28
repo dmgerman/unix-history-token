@@ -5014,14 +5014,6 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * release our own reference 		 */
-name|fdrop
-argument_list|(
-name|fp
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 comment|/* 		 * handle special fdopen() case.  bleh.  dupfdopen() is 		 * responsible for dropping the old contents of ofiles[indx] 		 * if it succeeds. 		 */
 if|if
 condition|(
@@ -5075,6 +5067,13 @@ index|]
 operator|=
 name|indx
 expr_stmt|;
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5089,6 +5088,13 @@ argument_list|,
 name|fp
 argument_list|,
 name|indx
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|fdrop
+argument_list|(
+name|fp
 argument_list|,
 name|td
 argument_list|)
