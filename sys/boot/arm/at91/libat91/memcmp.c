@@ -61,11 +61,15 @@ condition|)
 continue|continue;
 return|return
 operator|(
+name|size
+operator|||
+operator|(
 operator|*
 name|to
 operator|!=
 operator|*
 name|from
+operator|)
 operator|)
 return|;
 block|}
