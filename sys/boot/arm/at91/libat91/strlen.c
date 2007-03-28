@@ -60,6 +60,8 @@ operator|(
 name|ptr
 operator|-
 name|buffer
+operator|-
+literal|1
 operator|)
 return|;
 block|}
