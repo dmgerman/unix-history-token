@@ -2117,6 +2117,8 @@ operator|(
 name|ATA_R_ATAPI
 operator||
 name|ATA_R_QUIET
+operator||
+name|ATA_R_DEBUG
 operator|)
 expr_stmt|;
 name|request
