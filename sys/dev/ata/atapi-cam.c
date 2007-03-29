@@ -1344,6 +1344,12 @@ block|{
 name|struct
 name|ata_device
 modifier|*
+name|old_atadev
+index|[
+literal|2
+index|]
+decl_stmt|,
+modifier|*
 name|atadev
 decl_stmt|;
 name|device_t
@@ -1354,6 +1360,8 @@ name|int
 name|nchildren
 decl_stmt|,
 name|i
+decl_stmt|,
+name|dev_changed
 decl_stmt|;
 if|if
 condition|(
@@ -1382,6 +1390,30 @@ name|scp
 operator|->
 name|state_lock
 argument_list|)
+expr_stmt|;
+name|old_atadev
+index|[
+literal|0
+index|]
+operator|=
+name|scp
+operator|->
+name|atadev
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|old_atadev
+index|[
+literal|1
+index|]
+operator|=
+name|scp
+operator|->
+name|atadev
+index|[
+literal|1
+index|]
 expr_stmt|;
 name|scp
 operator|->
@@ -1500,6 +1532,36 @@ name|atadev
 expr_stmt|;
 block|}
 block|}
+name|dev_changed
+operator|=
+operator|(
+name|old_atadev
+index|[
+literal|0
+index|]
+operator|!=
+name|scp
+operator|->
+name|atadev
+index|[
+literal|0
+index|]
+operator|)
+operator|||
+operator|(
+name|old_atadev
+index|[
+literal|1
+index|]
+operator|!=
+name|scp
+operator|->
+name|atadev
+index|[
+literal|1
+index|]
+operator|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1538,6 +1600,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dev_changed
+condition|)
+break|break;
 comment|/*FALLTHROUGH*/
 case|case
 name|ATTACH
@@ -2342,8 +2410,6 @@ decl_stmt|;
 name|int
 name|request_flags
 init|=
-name|ATA_R_QUIET
-operator||
 name|ATA_R_ATAPI
 decl_stmt|;
 name|CAM_DEBUG
@@ -2757,6 +2823,23 @@ name|cdb_str
 argument_list|)
 argument_list|)
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|CAM_DEBUGGED
+argument_list|(
+name|ccb_h
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|)
+condition|)
+block|{
+name|request_flags
+operator||=
+name|ATA_R_DEBUG
 expr_stmt|;
 block|}
 endif|#
@@ -3184,12 +3267,6 @@ expr_stmt|;
 comment|/* XXX lost granularity */
 name|request
 operator|->
-name|retries
-operator|=
-literal|2
-expr_stmt|;
-name|request
-operator|->
 name|callback
 operator|=
 operator|&
@@ -3200,6 +3277,13 @@ operator|->
 name|flags
 operator|=
 name|request_flags
+expr_stmt|;
+comment|/* 	 * no retries are to be performed at the ATA level; any retries 	 * will be done by CAM . 	 */
+name|request
+operator|->
+name|retries
+operator|=
+literal|0
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -3468,68 +3552,59 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"atapi_cb: hcb@%p error = %02x: (sk = %02x%s%s%s)\n"
+literal|"atapi_cb: hcb@%p sense = %02x: sk = %01x%s%s%s\n"
 argument_list|,
 name|hcb
 argument_list|,
 name|err
 argument_list|,
 name|err
-operator|>>
-literal|4
+operator|&
+literal|0x0f
 argument_list|,
 operator|(
 name|err
 operator|&
-literal|4
+literal|0x80
 operator|)
 condition|?
-literal|" ABRT"
+literal|", Filemark"
 else|:
 literal|""
 argument_list|,
 operator|(
 name|err
 operator|&
-literal|2
+literal|0x40
 operator|)
 condition|?
-literal|" EOM"
+literal|", EOM"
 else|:
 literal|""
 argument_list|,
 operator|(
 name|err
 operator|&
-literal|1
+literal|0x20
 operator|)
 condition|?
-literal|" ILI"
+literal|", ILI"
 else|:
 literal|""
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"dev %s: cmd %02x status %02x result %02x\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|request
 operator|->
 name|dev
-argument_list|)
 argument_list|,
+literal|"cmd %s status %02x result %02x error %02x\n"
+argument_list|,
+name|ata_cmd2str
+argument_list|(
 name|request
-operator|->
-name|u
-operator|.
-name|atapi
-operator|.
-name|ccb
-index|[
-literal|0
-index|]
+argument_list|)
 argument_list|,
 name|request
 operator|->
@@ -3538,6 +3613,10 @@ argument_list|,
 name|request
 operator|->
 name|result
+argument_list|,
+name|request
+operator|->
+name|error
 argument_list|)
 expr_stmt|;
 block|}
@@ -3589,6 +3668,26 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_TIMEOUT
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|rc
+operator|=
+name|CAM_CMD_TIMEOUT
+expr_stmt|;
+block|}
+else|else
+block|{
 name|rc
 operator|=
 name|CAM_SCSI_STATUS_ERROR
@@ -3617,12 +3716,22 @@ block|{
 if|#
 directive|if
 literal|0
-block|static const int8_t ccb[16] = { ATAPI_REQUEST_SENSE, 0, 0, 0, 		sizeof(struct atapi_sense), 0, 0, 0, 0, 0, 0, 		0, 0, 0, 0, 0 };  	    bcopy (ccb, request->u.atapi.ccb, sizeof ccb); 	    request->data = (caddr_t)&csio->sense_data; 	    request->bytecount = sizeof(struct atapi_sense); 	    request->transfersize = min(request->bytecount, 65534); 	    request->timeout = csio->ccb_h.timeout / 1000; 	    request->retries = 2; 	    request->flags = ATA_R_QUIET|ATA_R_ATAPI|ATA_R_IMMEDIATE; 	    hcb->flags |= AUTOSENSE;  	    ata_queue_request(request); 	    return;
+block|static const int8_t ccb[16] = { ATAPI_REQUEST_SENSE, 0, 0, 0, 		    sizeof(struct atapi_sense), 0, 0, 0, 0, 0, 0, 		    0, 0, 0, 0, 0 };  		bcopy (ccb, request->u.atapi.ccb, sizeof ccb); 		request->data = (caddr_t)&csio->sense_data; 		request->bytecount = sizeof(struct atapi_sense); 		request->transfersize = min(request->bytecount, 65534); 		request->timeout = csio->ccb_h.timeout / 1000; 		request->retries = 2; 		request->flags = ATA_R_QUIET|ATA_R_ATAPI|ATA_R_IMMEDIATE; 		hcb->flags |= AUTOSENSE;  		ata_queue_request(request); 		return;
 else|#
 directive|else
-comment|/* The ATA driver has already requested sense for us. */
+comment|/* 		 * Use auto-sense data from the ATA layer, if it has 		 * issued a REQUEST SENSE automatically and that operation 		 * returned without error. 		 */
 if|if
 condition|(
+name|request
+operator|->
+name|u
+operator|.
+name|atapi
+operator|.
+name|saved_cmd
+operator|!=
+literal|0
+operator|&&
 name|request
 operator|->
 name|error
@@ -3630,7 +3739,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* The ATA autosense suceeded. */
 name|bcopy
 argument_list|(
 operator|&
@@ -3662,6 +3770,7 @@ name|status
 operator||=
 name|CAM_AUTOSNS_VALID
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
