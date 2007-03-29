@@ -252,11 +252,33 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|MALLOC_DEBUG
-end_ifndef
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NDEBUG
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|NDEBUG
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_ifndef
 ifndef|#
@@ -1245,21 +1267,21 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|unsigned
+name|size_t
 name|pagesize
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
+name|size_t
 name|pagesize_mask
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
+name|size_t
 name|pagesize_2pow
 decl_stmt|;
 end_decl_stmt
