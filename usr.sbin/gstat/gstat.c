@@ -133,7 +133,7 @@ specifier|static
 name|int
 name|flag_I
 init|=
-literal|500000
+literal|1000000
 decl_stmt|;
 end_decl_stmt
 
