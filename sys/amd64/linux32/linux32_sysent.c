@@ -6210,7 +6210,10 @@ block|}
 block|,
 comment|/* 294 = linux_migrate_pages */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|linux_openat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -6218,7 +6221,7 @@ operator|*
 operator|)
 name|linux_openat
 block|,
-name|AUE_NULL
+name|AUE_OPEN_RWTC
 block|,
 name|NULL
 block|,

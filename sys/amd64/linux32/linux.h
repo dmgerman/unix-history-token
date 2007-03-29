@@ -2118,6 +2118,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_O_ACCMODE
+value|00000003
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_O_CREAT
 value|00000100
 end_define
@@ -2335,6 +2342,13 @@ define|#
 directive|define
 name|LINUX_F_UNLCK
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_AT_FDCWD
+value|-100
 end_define
 
 begin_comment

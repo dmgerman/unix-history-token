@@ -108,6 +108,25 @@ end_function_decl
 begin_define
 define|#
 directive|define
+name|LCONVPATH_SEG
+parameter_list|(
+name|td
+parameter_list|,
+name|upath
+parameter_list|,
+name|pathp
+parameter_list|,
+name|i
+parameter_list|,
+name|seg
+parameter_list|)
+define|\
+value|do {								\ 		int _error;						\ 									\ 		_error = linux_emul_convpath(td, upath, seg,		\ 		    pathp, i);						\ 		if (*(pathp) == NULL)					\ 			return (_error);				\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LCONVPATH
 parameter_list|(
 name|td
@@ -119,7 +138,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|do {								\ 		int _error;						\ 									\ 		_error = linux_emul_convpath(td, upath, UIO_USERSPACE,  \ 		    pathp, i);						\ 		if (*(pathp) == NULL)					\ 			return (_error);				\ 	} while (0)
+value|LCONVPATH_SEG(td, upath, pathp, i, UIO_USERSPACE)
 end_define
 
 begin_define
