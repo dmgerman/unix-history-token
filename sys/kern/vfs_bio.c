@@ -2522,12 +2522,7 @@ operator|->
 name|b_kvasize
 argument_list|)
 expr_stmt|;
-name|vm_map_lock
-argument_list|(
-name|buffer_map
-argument_list|)
-expr_stmt|;
-name|vm_map_delete
+name|vm_map_remove
 argument_list|(
 name|buffer_map
 argument_list|,
@@ -2548,11 +2543,6 @@ operator|+
 name|bp
 operator|->
 name|b_kvasize
-argument_list|)
-expr_stmt|;
-name|vm_map_unlock
-argument_list|(
-name|buffer_map
 argument_list|)
 expr_stmt|;
 name|bp
