@@ -20283,7 +20283,7 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG1
 argument_list|,
-literal|"XS_TGT(xs)=%d- handle value %d"
+literal|"XS_TGT(xs)=%d- hdlidx value %d"
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -21591,7 +21591,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"RESET BUS NOT IMPLETENTED"
+literal|"RESET BUS NOT IMPLEMENTED"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -21782,7 +21782,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"RESET DEV NOT IMPLETENTED"
+literal|"RESET DEV NOT IMPLEMENTED"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -22018,7 +22018,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"ABORT CMD NOT IMPLETENTED"
+literal|"ABORT CMD NOT IMPLEMENTED"
 argument_list|)
 expr_stmt|;
 break|break;
