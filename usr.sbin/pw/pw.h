@@ -201,6 +201,10 @@ modifier|*
 name|home
 decl_stmt|;
 comment|/* Where to create home directory */
+name|mode_t
+name|homemode
+decl_stmt|;
+comment|/* Home directory permissions */
 name|char
 modifier|*
 name|shelldir

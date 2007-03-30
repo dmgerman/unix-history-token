@@ -676,16 +676,13 @@ argument_list|(
 name|set
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-name|dmode
+name|cnf
+operator|->
+name|homemode
 operator|=
-name|S_IRWXU
-operator||
-name|S_IRWXG
-operator||
-name|S_IRWXO
+name|dmode
 expr_stmt|;
+block|}
 comment|/* 	 * If we'll need to use it or we're updating it, 	 * then create the base home directory if necessary 	 */
 if|if
 condition|(
@@ -831,7 +828,9 @@ name|mkdir
 argument_list|(
 name|dbuf
 argument_list|,
-name|dmode
+name|cnf
+operator|->
+name|homemode
 argument_list|)
 operator|!=
 operator|-
@@ -940,7 +939,9 @@ name|mkdir
 argument_list|(
 name|dbuf
 argument_list|,
-name|dmode
+name|cnf
+operator|->
+name|homemode
 argument_list|)
 operator|==
 operator|-
@@ -1006,7 +1007,9 @@ name|mkdir
 argument_list|(
 name|dbuf
 argument_list|,
-name|dmode
+name|cnf
+operator|->
+name|homemode
 argument_list|)
 operator|==
 operator|-
@@ -4730,7 +4733,9 @@ name|cnf
 operator|->
 name|dotdir
 argument_list|,
-name|dmode
+name|cnf
+operator|->
+name|homemode
 argument_list|,
 name|pwd
 operator|->

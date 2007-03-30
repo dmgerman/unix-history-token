@@ -81,6 +81,8 @@ name|_UC_LOGFILE
 block|,
 name|_UC_HOMEROOT
 block|,
+name|_UC_HOMEMODE
+block|,
 name|_UC_SHELLPATH
 block|,
 name|_UC_SHELLS
@@ -214,6 +216,9 @@ comment|/* Where to log changes */
 literal|"/home"
 block|,
 comment|/* Where to create home directory */
+literal|0777
+block|,
+comment|/* Home directory perms, modified by umask */
 literal|"/bin"
 block|,
 comment|/* Where shells are located */
@@ -283,6 +288,8 @@ literal|"\n# Log add/change/remove information in this file\n"
 block|,
 literal|"\n# Root directory in which $HOME directory is created\n"
 block|,
+literal|"\n# Mode for the new $HOME directory, will be modified by umask\n"
+block|,
 literal|"\n# Colon separated list of directories containing valid shells\n"
 block|,
 literal|"\n# Comma separated list of available shells (without paths)\n"
@@ -336,6 +343,8 @@ block|,
 literal|"logfile"
 block|,
 literal|"home"
+block|,
+literal|"homemode"
 block|,
 literal|"shellpath"
 block|,
@@ -961,6 +970,10 @@ name|i
 init|=
 literal|0
 decl_stmt|;
+name|mode_t
+modifier|*
+name|modeset
+decl_stmt|;
 while|while
 condition|(
 name|i
@@ -1208,6 +1221,49 @@ else|:
 name|newstr
 argument_list|(
 name|q
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|_UC_HOMEMODE
+case|:
+name|modeset
+operator|=
+name|setmode
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
+name|config
+operator|.
+name|homemode
+operator|=
+operator|(
+name|q
+operator|==
+name|NULL
+operator|||
+operator|!
+name|boolean_val
+argument_list|(
+name|q
+argument_list|,
+literal|1
+argument_list|)
+operator|)
+condition|?
+literal|0777
+else|:
+name|getmode
+argument_list|(
+name|modeset
+argument_list|,
+literal|0777
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|modeset
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1976,6 +2032,25 @@ operator|=
 name|config
 operator|.
 name|home
+expr_stmt|;
+break|break;
+case|case
+name|_UC_HOMEMODE
+case|:
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%04o"
+argument_list|,
+name|config
+operator|.
+name|homemode
+argument_list|)
+expr_stmt|;
+name|quote
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
