@@ -904,7 +904,7 @@ name|error
 operator|==
 literal|0
 condition|)
-comment|/* linux process can exec fbsd one, dont attempt 		 * to create emuldata for such process using 		 * linux_proc_init, this leads to a panic on KASSERT 		 * because such process has p->p_emuldata == NULL 		 */
+comment|/* Linux process can execute FreeBSD one, do not attempt 		 * to create emuldata for such process using 		 * linux_proc_init, this leads to a panic on KASSERT 		 * because such process has p->p_emuldata == NULL. 		 */
 if|if
 condition|(
 name|td
@@ -2351,7 +2351,7 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-comment|/* make it run */
+comment|/* 	 * Make this runnable after we are finished with it. 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2434,7 +2434,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* exclude RFPPWAIT */
+comment|/* Exclude RFPPWAIT */
 if|if
 condition|(
 operator|(
@@ -2692,46 +2692,25 @@ name|ARGS
 argument_list|(
 name|clone
 argument_list|,
-literal|"flags %x, stack %x, parent tid: %x, child tid: %x"
+literal|"flags %x, stack %p, parent tid: %p, "
+literal|"child tid: %p"
 argument_list|)
 argument_list|,
 operator|(
 name|unsigned
-name|int
 operator|)
 name|args
 operator|->
 name|flags
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
-operator|(
-name|uintptr_t
-operator|)
 name|args
 operator|->
 name|stack
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
-operator|(
-name|uintptr_t
-operator|)
 name|args
 operator|->
 name|parent_tidptr
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
-operator|(
-name|uintptr_t
-operator|)
 name|args
 operator|->
 name|child_tidptr
@@ -2805,7 +2784,7 @@ name|ff
 operator||=
 name|RFSIGSHARE
 expr_stmt|;
-comment|/*  	 * XXX: in linux sharing of fs info (chroot/cwd/umask) 	 * and open files is independant. in fbsd its in one 	 * structure but in reality it doesn't cause any problems 	 * because both of these flags are usually set together. 	 */
+comment|/* 	 * XXX: In Linux, sharing of fs info (chroot/cwd/umask) 	 * and open files is independant.  In FreeBSD, its in one 	 * structure but in reality it does not make any problems 	 * because both of these flags are set at once usually. 	 */
 if|if
 condition|(
 operator|!
@@ -2980,7 +2959,6 @@ operator|&
 name|LINUX_CLONE_THREAD
 condition|)
 block|{
-comment|/* XXX: linux mangles pgrp and pptr somehow 		 * I think it might be this but I am not sure. 		 */
 ifdef|#
 directive|ifdef
 name|notyet
@@ -3129,7 +3107,7 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-comment|/*  	 * in a case of stack = NULL we are supposed to COW calling process stack 	 * this is what normal fork() does so we just keep the tf_rsp arg intact 	 */
+comment|/* 	 * In a case of stack = NULL, we are supposed to COW calling process 	 * stack. This is what normal fork() does, so we just keep tf_rsp arg 	 * intact. 	 */
 if|if
 condition|(
 name|args
@@ -3426,11 +3404,12 @@ name|printf
 argument_list|(
 name|LMSG
 argument_list|(
-literal|"clone: successful rfork to %ld, stack %p sig = %d"
+literal|"clone: successful rfork to %d, "
+literal|"stack %p sig = %d"
 argument_list|)
 argument_list|,
 operator|(
-name|long
+name|int
 operator|)
 name|p2
 operator|->
@@ -3636,16 +3615,9 @@ name|ARGS
 argument_list|(
 name|mmap2
 argument_list|,
-literal|"%p, %d, %d, 0x%08x, %d, %d"
+literal|"0x%08x, %d, %d, 0x%08x, %d, %d"
 argument_list|)
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
 name|args
 operator|->
 name|addr
@@ -3802,16 +3774,9 @@ name|ARGS
 argument_list|(
 name|mmap
 argument_list|,
-literal|"%p, %d, %d, 0x%08x, %d, %d"
+literal|"0x%08x, %d, %d, 0x%08x, %d, %d"
 argument_list|)
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
 name|linux_args
 operator|.
 name|addr
@@ -4184,7 +4149,7 @@ operator|&
 name|LINUX_MAP_GROWSDOWN
 condition|)
 block|{
-comment|/*  		 * The linux MAP_GROWSDOWN option does not limit auto 		 * growth of the region.  Linux mmap with this option 		 * takes as addr the inital BOS, and as len, the initial 		 * region size.  It can then grow down from addr without 		 * limit.  However, linux threads has an implicit internal 		 * limit to stack size of STACK_SIZE.  Its just not 		 * enforced explicitly in linux.  But, here we impose 		 * a limit of (STACK_SIZE - GUARD_SIZE) on the stack 		 * region, since we can do this with our mmap. 		 * 		 * Our mmap with MAP_STACK takes addr as the maximum 		 * downsize limit on BOS, and as len the max size of 		 * the region.  It them maps the top SGROWSIZ bytes, 		 * and auto grows the region down, up to the limit 		 * in addr. 		 * 		 * If we don't use the MAP_STACK option, the effect 		 * of this code is to allocate a stack region of a 		 * fixed size of (STACK_SIZE - GUARD_SIZE). 		 */
+comment|/* 		 * The Linux MAP_GROWSDOWN option does not limit auto 		 * growth of the region.  Linux mmap with this option 		 * takes as addr the inital BOS, and as len, the initial 		 * region size.  It can then grow down from addr without 		 * limit.  However, Linux threads has an implicit internal 		 * limit to stack size of STACK_SIZE.  Its just not 		 * enforced explicitly in Linux.  But, here we impose 		 * a limit of (STACK_SIZE - GUARD_SIZE) on the stack 		 * region, since we can do this with our mmap. 		 * 		 * Our mmap with MAP_STACK takes addr as the maximum 		 * downsize limit on BOS, and as len the max size of 		 * the region.  It them maps the top SGROWSIZ bytes, 		 * and auto grows the region down, up to the limit 		 * in addr. 		 * 		 * If we don't use the MAP_STACK option, the effect 		 * of this code is to allocate a stack region of a 		 * fixed size of (STACK_SIZE - GUARD_SIZE). 		 */
 if|if
 condition|(
 operator|(
@@ -4208,7 +4173,7 @@ operator|->
 name|vm_maxsaddr
 condition|)
 block|{
-comment|/*  			 * Some linux apps will attempt to mmap 			 * thread stacks near the top of their 			 * address space.  If their TOS is greater 			 * than vm_maxsaddr, vm_map_growstack() 			 * will confuse the thread stack with the 			 * process stack and deliver a SEGV if they 			 * attempt to grow the thread stack past their 			 * current stacksize rlimit.  To avoid this, 			 * adjust vm_maxsaddr upwards to reflect 			 * the current stacksize rlimit rather 			 * than the maximum possible stacksize. 			 * It would be better to adjust the 			 * mmap'ed region, but some apps do not check 			 * mmap's return value. 			 */
+comment|/* 			 * Some Linux apps will attempt to mmap 			 * thread stacks near the top of their 			 * address space.  If their TOS is greater 			 * than vm_maxsaddr, vm_map_growstack() 			 * will confuse the thread stack with the 			 * process stack and deliver a SEGV if they 			 * attempt to grow the thread stack past their 			 * current stacksize rlimit.  To avoid this, 			 * adjust vm_maxsaddr upwards to reflect 			 * the current stacksize rlimit rather 			 * than the maximum possible stacksize. 			 * It would be better to adjust the 			 * mmap'ed region, but some apps do not check 			 * mmap's return value. 			 */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -4267,7 +4232,7 @@ name|STACK_SIZE
 operator|-
 name|GUARD_SIZE
 expr_stmt|;
-comment|/*  		 * This gives us a new BOS.  If we're using VM_STACK, then 		 * mmap will just map the top SGROWSIZ bytes, and let 		 * the stack grow down to the limit at BOS.  If we're 		 * not using VM_STACK we map the full stack, since we 		 * don't have a way to autogrow it. 		 */
+comment|/* 		 * This gives us a new BOS.  If we're using VM_STACK, then 		 * mmap will just map the top SGROWSIZ bytes, and let 		 * the stack grow down to the limit at BOS.  If we're 		 * not using VM_STACK we map the full stack, since we 		 * don't have a way to autogrow it. 		 */
 name|bsd_args
 operator|.
 name|addr
@@ -5056,7 +5021,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Linux has two extra args, restart and oldmask.  We dont use these,  * but it seems that "restart" is actually a context pointer that  * enables the signal to happen with a different register set.  */
+comment|/*  * Linux has two extra args, restart and oldmask.  We don't use these,  * but it seems that "restart" is actually a context pointer that  * enables the signal to happen with a different register set.  */
 end_comment
 
 begin_function
