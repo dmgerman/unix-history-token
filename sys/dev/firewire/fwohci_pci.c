@@ -2305,6 +2305,11 @@ name|NULL
 return|;
 block|}
 comment|/* XXX 	 * Clear the bus reset event flag to start transactions even when 	 * interrupt is disabled during the boot process. 	 */
+if|if
+condition|(
+name|cold
+condition|)
+block|{
 name|DELAY
 argument_list|(
 literal|250
@@ -2335,6 +2340,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|child
