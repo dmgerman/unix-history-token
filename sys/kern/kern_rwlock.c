@@ -1754,7 +1754,7 @@ argument_list|()
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * If the lock was released by a writer with both readers 		 * and writers waiting and a reader hasn't woken up and 		 * acquired the lock yet, rw_lock will be set to the 		 * value RW_UNLOCKED | RW_LOCK_WRITE_WAITERS.  If we see 		 * that value, try to acquire it once.  Note that we have 		 * to preserve the RW_LOCK_WRITE_WAITERS flag as there are 		 * other writers waiting still. If we fail, restart the 		 * loop. 		 */
+comment|/* 		 * If the lock was released by a writer with both readers 		 * and writers waiting and a reader hasn't woken up and 		 * acquired the lock yet, rw_lock will be set to the 		 * value RW_UNLOCKED | RW_LOCK_WRITE_WAITERS.  If we see 		 * that value, try to acquire it once.  Note that we have 		 * to preserve the RW_LOCK_WRITE_WAITERS flag as there are 		 * other writers waiting still.  If we fail, restart the 		 * loop. 		 */
 if|if
 condition|(
 name|v
@@ -2443,7 +2443,7 @@ condition|)
 block|{
 name|success
 operator|=
-name|atomic_cmpset_acq_ptr
+name|atomic_cmpset_ptr
 argument_list|(
 operator|&
 name|rw
@@ -2482,7 +2482,7 @@ name|RW_LOCK_WRITE_WAITERS
 expr_stmt|;
 name|success
 operator|=
-name|atomic_cmpset_acq_ptr
+name|atomic_cmpset_ptr
 argument_list|(
 operator|&
 name|rw
