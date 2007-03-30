@@ -1635,8 +1635,6 @@ name|WD_INTERVAL
 expr_stmt|;
 if|if
 condition|(
-name|spec
-operator|&&
 name|u
 operator|>
 literal|0
@@ -1808,17 +1806,6 @@ operator|=
 name|w
 expr_stmt|;
 name|cur
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|u
-operator|>
-literal|0
-condition|)
-operator|*
-name|error
 operator|=
 literal|0
 expr_stmt|;

@@ -438,8 +438,6 @@ name|WD_INTERVAL
 expr_stmt|;
 if|if
 condition|(
-name|cmd
-operator|&&
 name|u
 operator|>=
 literal|14
