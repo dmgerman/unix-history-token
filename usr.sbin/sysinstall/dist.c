@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -202,6 +208,13 @@ name|subdist
 parameter_list|)
 define|\
 value|{ name, mask, DIST_ ## flag, DT_SUBDIST, { .my_dist = subdist } }
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTE_END
+value|{ NULL, NULL, 0, 0, { NULL } }
 end_define
 
 begin_define
@@ -395,9 +408,7 @@ argument_list|,
 name|XOrgDistTable
 argument_list|)
 block|,
-block|{
-name|NULL
-block|}
+name|DTE_END
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -442,9 +453,7 @@ argument_list|)
 block|,
 endif|#
 directive|endif
-block|{
-name|NULL
-block|}
+name|DTE_END
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -700,9 +709,7 @@ argument_list|,
 literal|"/usr/src"
 argument_list|)
 block|,
-block|{
-name|NULL
-block|}
+name|DTE_END
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -910,9 +917,7 @@ argument_list|,
 literal|"xorg-fontserver"
 argument_list|)
 block|,
-block|{
-name|NULL
-block|}
+name|DTE_END
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1526,7 +1531,7 @@ operator|!
 name|msgYesNo
 argument_list|(
 literal|"Would you like to install the FreeBSD ports collection?\n\n"
-literal|"This will give you ready access to over 13,300 ported software packages,\n"
+literal|"This will give you ready access to over 14,900 ported software packages,\n"
 literal|"at a cost of around 440MB of disk space when \"clean\" and possibly\n"
 literal|"much more than that when a lot of the distribution tarballs are loaded\n"
 literal|"(unless you have the extra discs available from a FreeBSD CD/DVD distribution\n"
@@ -4379,7 +4384,7 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-comment|/* Only do base fixup if base dist was successfully extracted */
+comment|/* Only do kernel fixup if kernel dist was successfully extracted */
 if|if
 condition|(
 operator|(

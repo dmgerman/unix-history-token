@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -550,7 +556,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"pread (%lu @ 0x%lx)"
+literal|"pread (%zu @ 0x%llx)"
 argument_list|,
 name|size
 argument_list|,
@@ -916,7 +922,7 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"%s: bad mpcth address (0x%lx)\n"
+literal|"%s: bad mpcth address (0x%llx)\n"
 argument_list|,
 name|__func__
 argument_list|,
