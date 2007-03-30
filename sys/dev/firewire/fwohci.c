@@ -2503,6 +2503,11 @@ argument_list|,
 name|OHCI_HCC_LPS
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|500
+argument_list|)
+expr_stmt|;
 name|reg
 operator|=
 name|fwphy_rddata
