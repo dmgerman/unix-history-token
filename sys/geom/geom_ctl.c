@@ -2034,10 +2034,14 @@ expr_stmt|;
 if|if
 condition|(
 name|p
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|LIST_FOREACH
 argument_list|(
 argument|mp
@@ -2086,12 +2090,13 @@ operator|)
 return|;
 block|}
 block|}
-block|}
 name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Geom not found"
+literal|"Geom not found: \"%s\""
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -2171,7 +2176,9 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Provider not found"
+literal|"Provider not found: \"%s\""
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
