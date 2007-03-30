@@ -1993,11 +1993,6 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* bus_reset */
-name|fw_busreset
-argument_list|(
-name|fc
-argument_list|)
-expr_stmt|;
 name|fc
 operator|->
 name|ibr
