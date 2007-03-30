@@ -9885,7 +9885,7 @@ name|i_val
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"ssid HIDE"
+literal|"hidessid"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9895,7 +9895,7 @@ name|verbose
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"ssid SHOW"
+literal|"-hidessid"
 argument_list|)
 expr_stmt|;
 block|}
