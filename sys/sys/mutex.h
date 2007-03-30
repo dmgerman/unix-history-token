@@ -1354,7 +1354,7 @@ directive|define
 name|PICKUP_GIANT
 parameter_list|()
 define|\
-value|mtx_assert(&Giant, MA_NOTOWNED);				\ 	while (_giantcnt--)						\ 		mtx_lock(&Giant);					\ 	if (mtx_owned(&Giant))						\ 		WITNESS_RESTORE(&Giant.lock_object, Giant);		\ } while (0)
+value|PARTIAL_PICKUP_GIANT();						\ } while (0)
 end_define
 
 begin_define
@@ -1371,8 +1371,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|UGAR
+parameter_list|(
+name|rval
+parameter_list|)
+value|do {							\ 	int _val = (rval);						\ 	mtx_unlock(&Giant);						\ 	return (_val);							\ } while (0)
+end_define
+
 begin_comment
-comment|/*  * Network MPSAFE temporary workarounds.  When debug_mpsafenet  * is 1 the network is assumed to operate without Giant on the  * input path and protocols that require Giant must collect it  * on entry.  When 0 Giant is grabbed in the network interface  * ISR's and in the netisr path and there is no need to grab  * the Giant lock.  Note that, unlike GIANT_PICKUP() and  * GIANT_DROP(), these macros directly wrap mutex operations  * without special recursion handling.  *  * This mechanism is intended as temporary until everything of  * importance is properly locked.  Note: the semantics for  * NET_{LOCK,UNLOCK}_GIANT() are not the same as DROP_GIANT()  * and PICKUP_GIANT(), as they are plain mutex operations  * without a recursion counter.  */
+comment|/*  * Network MPSAFE temporary workarounds.  When debug_mpsafenet  * is 1 the network is assumed to operate without Giant on the  * input path and protocols that require Giant must collect it  * on entry.  When 0 Giant is grabbed in the network interface  * ISR's and in the netisr path and there is no need to grab  * the Giant lock.  Note that, unlike PICKUP_GIANT() and  * DROP_GIANT(), these macros directly wrap mutex operations  * without special recursion handling.  *  * This mechanism is intended as temporary until everything of  * importance is properly locked.  Note: the semantics for  * NET_{LOCK,UNLOCK}_GIANT() are not the same as DROP_GIANT()  * and PICKUP_GIANT(), as they are plain mutex operations  * without a recursion counter.  */
 end_comment
 
 begin_decl_stmt
@@ -1415,16 +1425,6 @@ define|#
 directive|define
 name|NET_CALLOUT_MPSAFE
 value|(debug_mpsafenet ? CALLOUT_MPSAFE : 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UGAR
-parameter_list|(
-name|rval
-parameter_list|)
-value|do {							\ 	int _val = (rval);						\ 	mtx_unlock(&Giant);						\ 	return (_val);							\ } while (0)
 end_define
 
 begin_struct
