@@ -746,7 +746,7 @@ name|lock
 modifier|*
 name|lkp
 parameter_list|,
-name|int
+name|u_int
 name|flags
 parameter_list|,
 name|struct
@@ -2469,12 +2469,6 @@ name|prio
 expr_stmt|;
 name|lkp
 operator|->
-name|lk_wmesg
-operator|=
-name|wmesg
-expr_stmt|;
-name|lkp
-operator|->
 name|lk_timo
 operator|=
 name|timo
@@ -2517,6 +2511,27 @@ argument_list|,
 name|wmesg
 argument_list|)
 expr_stmt|;
+name|lock_init
+argument_list|(
+operator|&
+name|lkp
+operator|->
+name|lk_object
+argument_list|,
+operator|&
+name|lock_class_lockmgr
+argument_list|,
+name|wmesg
+argument_list|,
+name|NULL
+argument_list|,
+name|LO_RECURSABLE
+operator||
+name|LO_SLEEPABLE
+operator||
+name|LO_UPGRADABLE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2550,6 +2565,14 @@ name|lk_wmesg
 argument_list|)
 expr_stmt|;
 name|lock_profile_object_destroy
+argument_list|(
+operator|&
+name|lkp
+operator|->
+name|lk_object
+argument_list|)
+expr_stmt|;
+name|lock_destroy
 argument_list|(
 operator|&
 name|lkp
@@ -2917,6 +2940,17 @@ expr_stmt|;
 comment|/* Simple test to see if wchan points to a lockmgr lock. */
 if|if
 condition|(
+name|LOCK_CLASS
+argument_list|(
+operator|&
+name|lkp
+operator|->
+name|lk_object
+argument_list|)
+operator|==
+operator|&
+name|lock_class_lockmgr
+operator|&&
 name|lkp
 operator|->
 name|lk_wmesg
@@ -2956,6 +2990,17 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|LOCK_CLASS
+argument_list|(
+operator|&
+name|lkp
+operator|->
+name|lk_object
+argument_list|)
+operator|==
+operator|&
+name|lock_class_lockmgr
+operator|&&
 name|lkp
 operator|->
 name|lk_wmesg
@@ -3073,7 +3118,7 @@ name|lock
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"lock type: %s\n"
+literal|" lock type: %s\n"
 argument_list|,
 name|lkp
 operator|->
@@ -3082,7 +3127,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"state: "
+literal|" state: "
 argument_list|)
 expr_stmt|;
 if|if
@@ -3165,7 +3210,7 @@ literal|0
 condition|)
 name|db_printf
 argument_list|(
-literal|"waiters: %d\n"
+literal|" waiters: %d\n"
 argument_list|,
 name|lkp
 operator|->

@@ -73,6 +73,10 @@ modifier|*
 name|lk_interlock
 decl_stmt|;
 comment|/* lock on remaining fields */
+name|u_int
+name|lk_flags
+decl_stmt|;
+comment|/* see below */
 name|int
 name|lk_sharecount
 decl_stmt|;
@@ -117,13 +121,6 @@ directive|endif
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|lk_flags
-value|lk_object.lo_flags
-end_define
 
 begin_define
 define|#
@@ -556,7 +553,7 @@ name|struct
 name|lock
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 name|flags
 parameter_list|,
 name|struct
