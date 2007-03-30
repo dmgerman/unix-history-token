@@ -2949,6 +2949,33 @@ comment|/* default 32 vs 16 bit size */
 literal|0
 comment|/* limit granularity (byte/page units)*/
 block|}
+block|,
+comment|/* GUGS32_SEL	8 32 bit GS Descriptor for user */
+block|{
+literal|0x0
+block|,
+comment|/* segment base address  */
+literal|0xfffff
+block|,
+comment|/* length - all address space */
+name|SDT_MEMRWA
+block|,
+comment|/* segment type */
+name|SEL_UPL
+block|,
+comment|/* segment descriptor priority level */
+literal|1
+block|,
+comment|/* segment descriptor present */
+literal|0
+block|,
+comment|/* long */
+literal|1
+block|,
+comment|/* default 32 vs 16 bit size */
+literal|1
+comment|/* limit granularity (byte/page units)*/
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt

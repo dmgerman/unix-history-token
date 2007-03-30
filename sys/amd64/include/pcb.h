@@ -25,6 +25,12 @@ directive|include
 file|<machine/fpu.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/segments.h>
+end_include
+
 begin_struct
 struct|struct
 name|pcb
@@ -123,6 +129,16 @@ name|caddr_t
 name|pcb_onfault
 decl_stmt|;
 comment|/* copyin/out fault recovery */
+comment|/* 32-bit segment descriptor */
+name|struct
+name|user_segment_descriptor
+modifier|*
+name|pcb_gs32p
+decl_stmt|;
+name|struct
+name|user_segment_descriptor
+name|pcb_gs32sd
+decl_stmt|;
 block|}
 struct|;
 end_struct

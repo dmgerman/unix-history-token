@@ -2468,6 +2468,10 @@ name|_udatasel
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* leave user %fs and %gs untouched */
+end_comment
+
 begin_expr_stmt
 name|PROC_LOCK
 argument_list|(
@@ -3119,6 +3123,7 @@ name|pcb_es
 operator|=
 name|_udatasel
 expr_stmt|;
+comment|/* leave user %fs and %gs untouched */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -4322,6 +4327,9 @@ name|td
 operator|->
 name|td_pcb
 decl_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|wrmsr
 argument_list|(
 name|MSR_FSBASE
@@ -4349,6 +4357,9 @@ name|pcb_gsbase
 operator|=
 literal|0
 expr_stmt|;
+name|critical_exit
+argument_list|()
+expr_stmt|;
 name|load_ds
 argument_list|(
 name|_udatasel
@@ -4366,7 +4377,7 @@ argument_list|)
 expr_stmt|;
 name|load_gs
 argument_list|(
-literal|0
+name|_udatasel
 argument_list|)
 expr_stmt|;
 name|pcb
@@ -4391,7 +4402,7 @@ name|pcb
 operator|->
 name|pcb_gs
 operator|=
-literal|0
+name|_udatasel
 expr_stmt|;
 name|bzero
 argument_list|(

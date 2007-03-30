@@ -1064,7 +1064,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* TSS for entering kernel etc  */
+comment|/* TSS for entering kernel etc */
 end_comment
 
 begin_comment
@@ -1074,8 +1074,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NGDT
+name|GUGS32_SEL
 value|8
+end_define
+
+begin_comment
+comment|/* User 32 bit GS Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGDT
+value|9
 end_define
 
 begin_ifdef
