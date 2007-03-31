@@ -383,6 +383,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 modifier|*
