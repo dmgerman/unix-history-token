@@ -1036,7 +1036,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|mtx_init(&(n)->q_mtx, "ng_node", NULL, MTX_SPIN)
+value|mtx_init(&(n)->q_mtx, "ng_node", NULL, MTX_DEF)
 end_define
 
 begin_define
@@ -1047,7 +1047,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|mtx_lock_spin(&(n)->q_mtx)
+value|mtx_lock(&(n)->q_mtx)
 end_define
 
 begin_define
@@ -1058,7 +1058,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|mtx_unlock_spin(&(n)->q_mtx)
+value|mtx_unlock(&(n)->q_mtx)
 end_define
 
 begin_define
@@ -1067,7 +1067,7 @@ directive|define
 name|NG_WORKLIST_LOCK_INIT
 parameter_list|()
 define|\
-value|mtx_init(&ng_worklist_mtx, "ng_worklist", NULL, MTX_SPIN)
+value|mtx_init(&ng_worklist_mtx, "ng_worklist", NULL, MTX_DEF)
 end_define
 
 begin_define
@@ -1076,7 +1076,7 @@ directive|define
 name|NG_WORKLIST_LOCK
 parameter_list|()
 define|\
-value|mtx_lock_spin(&ng_worklist_mtx)
+value|mtx_lock(&ng_worklist_mtx)
 end_define
 
 begin_define
@@ -1085,7 +1085,7 @@ directive|define
 name|NG_WORKLIST_UNLOCK
 parameter_list|()
 define|\
-value|mtx_unlock_spin(&ng_worklist_mtx)
+value|mtx_unlock(&ng_worklist_mtx)
 end_define
 
 begin_ifdef
