@@ -546,28 +546,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * This is used for pipe and queue actions, which need to store  * a single pointer (which can have different size on different  * architectures.  * Note that, because of previous instructions, pipe_ptr might  * be unaligned in the overall structure, so it needs to be  * manipulated with care.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_ipfw_insn_pipe
-block|{
-name|ipfw_insn
-name|o
-decl_stmt|;
-name|void
-modifier|*
-name|pipe_ptr
-decl_stmt|;
-comment|/* XXX */
-block|}
-name|ipfw_insn_pipe
-typedef|;
-end_typedef
-
-begin_comment
 comment|/*  * This is used for storing an altq queue id number.  */
 end_comment
 
@@ -1380,22 +1358,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|void
-name|flush_pipe_ptrs
-parameter_list|(
-name|struct
-name|dn_flow_set
-modifier|*
-name|match
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* used by dummynet */
-end_comment
 
 begin_typedef
 typedef|typedef
