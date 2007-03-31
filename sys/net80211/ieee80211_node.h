@@ -278,6 +278,11 @@ modifier|*
 name|ni_wme_ie
 decl_stmt|;
 comment|/* captured WME ie */
+define|#
+directive|define
+name|IEEE80211_NONQOS_TID
+value|16
+comment|/* index for non-QoS sta */
 name|u_int16_t
 name|ni_txseqs
 index|[

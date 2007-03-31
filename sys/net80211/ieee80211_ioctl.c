@@ -6528,7 +6528,7 @@ name|ni
 operator|->
 name|ni_txseqs
 index|[
-literal|0
+name|IEEE80211_NONQOS_TID
 index|]
 expr_stmt|;
 name|si
@@ -6542,7 +6542,7 @@ name|ni
 operator|->
 name|ni_rxseqs
 index|[
-literal|0
+name|IEEE80211_NONQOS_TID
 index|]
 expr_stmt|;
 block|}
