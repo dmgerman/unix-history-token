@@ -189,6 +189,9 @@ name|dummy
 name|__unused
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|namei_zone
 operator|=
 name|uma_zcreate
@@ -210,6 +213,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|getnewvnode
 argument_list|(
 literal|"crossmp"
@@ -221,6 +226,17 @@ name|dead_vnodeops
 argument_list|,
 operator|&
 name|vp_crossmp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"nameiinit: getnewvnode"
 argument_list|)
 expr_stmt|;
 name|vp_crossmp
