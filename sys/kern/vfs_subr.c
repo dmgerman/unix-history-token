@@ -357,19 +357,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|vdropl
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|vinactive
 parameter_list|(
 name|struct
@@ -9861,7 +9848,6 @@ comment|/*  * Drop the hold count of the vnode.  If this is the last reference t
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|vdropl
 parameter_list|(
