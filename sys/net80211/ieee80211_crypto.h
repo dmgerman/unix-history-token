@@ -624,6 +624,17 @@ name|ieee80211_cipher_none
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_KEY_UNDEFINED
+parameter_list|(
+name|k
+parameter_list|)
+define|\
+value|((k)->wk_cipher ==&ieee80211_cipher_none)
+end_define
+
 begin_function_decl
 name|void
 name|ieee80211_crypto_register
