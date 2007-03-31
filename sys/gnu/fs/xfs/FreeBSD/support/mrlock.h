@@ -32,23 +32,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sx.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<support/debug.h>
-end_include
-
 begin_comment
-comment|/*  * Implement mrlocks on FreeBSD that work for XFS.  * Use FreeBSD sx lock and add necessary functions  * if additional functionality is requested  */
+comment|/*  * Implement mrlocks on FreeBSD that work for XFS.  * Map mrlock functions to corresponding equivalents in  * sx.  */
 end_comment
 
 begin_typedef
@@ -74,7 +62,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*   * Compatibility defines, not really used  */
+comment|/*  * Compatibility defines, not really used  */
 end_comment
 
 begin_define
@@ -91,22 +79,6 @@ name|MRLOCK_ALLOW_EQUAL_PRI
 value|0x8
 end_define
 
-begin_comment
-comment|/*  * mraccessf/mrupdatef take flags to be passed in while sleeping;  * only PLTWAIT is currently supported.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|mrinit
-parameter_list|(
-name|lock
-parameter_list|,
-name|name
-parameter_list|)
-value|sx_init(lock, name)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -121,50 +93,6 @@ parameter_list|,
 name|seq
 parameter_list|)
 value|sx_init(lock, name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mrfree
-parameter_list|(
-name|lock
-parameter_list|)
-value|_sx_xfs_destroy(lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mraccessf
-parameter_list|(
-name|lock
-parameter_list|,
-name|f
-parameter_list|)
-value|sx_slock(lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mrupdatef
-parameter_list|(
-name|lock
-parameter_list|,
-name|f
-parameter_list|)
-value|sx_xlock(lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mraccunlock
-parameter_list|(
-name|lock
-parameter_list|)
-value|sx_sunlock(lock)
 end_define
 
 begin_define
@@ -192,9 +120,9 @@ define|#
 directive|define
 name|mraccess
 parameter_list|(
-name|mrp
+name|lock
 parameter_list|)
-value|mraccessf(mrp, 0)
+value|sx_slock(lock)
 end_define
 
 begin_define
@@ -202,39 +130,9 @@ define|#
 directive|define
 name|mrupdate
 parameter_list|(
-name|mrp
-parameter_list|)
-value|mrupdatef(mrp, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mrislocked_access
-parameter_list|(
 name|lock
 parameter_list|)
-value|_sx_xfs_xowned(lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mrislocked_update
-parameter_list|(
-name|lock
-parameter_list|)
-value|_sx_xfs_sowned(lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mrtrypromote
-parameter_list|(
-name|lock
-parameter_list|)
-value|sx_try_upgrade(lock)
+value|sx_xlock(lock)
 end_define
 
 begin_define
@@ -247,97 +145,6 @@ parameter_list|)
 value|sx_downgrade(lock)
 end_define
 
-begin_function_decl
-name|int
-name|ismrlocked
-parameter_list|(
-name|mrlock_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_sx_xfs_lock
-parameter_list|(
-name|struct
-name|sx
-modifier|*
-name|sx
-parameter_list|,
-name|int
-name|type
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_sx_xfs_unlock
-parameter_list|(
-name|struct
-name|sx
-modifier|*
-name|sx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_sx_xfs_destroy
-parameter_list|(
-name|struct
-name|sx
-modifier|*
-name|sx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|_sx_xfs_xowned
-parameter_list|(
-name|lock
-parameter_list|)
-value|((lock)->sx_cnt< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_sx_xfs_sowned
-parameter_list|(
-name|lock
-parameter_list|)
-value|((lock)->sx_cnt> 0)
-end_define
-
-begin_comment
-comment|/*  * Functions, not implemented in FreeBSD   */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -345,24 +152,32 @@ name|mrunlock
 parameter_list|(
 name|lock
 parameter_list|)
-define|\
-value|_sx_xfs_unlock(lock, __FILE__, __LINE__)
+value|sx_unlock(lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|mrlock
+name|mrfree
 parameter_list|(
 name|lock
-parameter_list|,
-name|type
-parameter_list|,
-name|flags
 parameter_list|)
-define|\
-value|_sx_xfs_lock(lock, type, __FILE__, __LINE__)
+value|do {		\ 	if (sx_xlocked(lock))		\ 		sx_xunlock(lock);	\ 	sx_destroy(lock);		\ } while (0)
 end_define
+
+begin_function_decl
+name|int
+name|ismrlocked
+parameter_list|(
+name|mrlock_t
+modifier|*
+name|mrp
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
