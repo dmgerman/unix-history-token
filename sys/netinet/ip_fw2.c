@@ -9619,7 +9619,7 @@ condition|)
 block|{
 name|wildcard
 operator|=
-literal|1
+name|INPLOOKUP_WILDCARD
 expr_stmt|;
 name|pi
 operator|=
