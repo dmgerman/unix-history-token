@@ -853,7 +853,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* 	 * Bottom bit of bar indicates resouce type.  There should be 	 * constants in pcireg.h for fields in a BAR. 	 */
+comment|/* Check the BAR to determine our resource type. */
 name|sc
 operator|->
 name|ipmi_io_rid
@@ -865,6 +865,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|PCI_BAR_IO
+argument_list|(
 name|pci_read_config
 argument_list|(
 name|dev
@@ -876,8 +878,7 @@ argument_list|)
 argument_list|,
 literal|4
 argument_list|)
-operator|&
-literal|0x1
+argument_list|)
 condition|)
 name|type
 operator|=
