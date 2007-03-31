@@ -1087,7 +1087,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator|==
-literal|1
+name|PCIP_BRIDGE_PCI_SUBTRACTIVE
 condition|)
 name|sc
 operator|->

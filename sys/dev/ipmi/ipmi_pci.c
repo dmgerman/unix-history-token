@@ -732,7 +732,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-literal|0x07
+name|PCIS_SERIALBUS_IPMI
 condition|)
 block|{
 name|device_set_desc
@@ -800,7 +800,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-literal|0
+name|PCIP_SERIALBUS_IPMI_SMIC
 case|:
 name|iface
 operator|=
@@ -808,7 +808,7 @@ name|SMIC_MODE
 expr_stmt|;
 break|break;
 case|case
-literal|1
+name|PCIP_SERIALBUS_IPMI_KCS
 case|:
 name|iface
 operator|=
@@ -816,7 +816,7 @@ name|KCS_MODE
 expr_stmt|;
 break|break;
 case|case
-literal|2
+name|PCIP_SERIALBUS_IPMI_BT
 case|:
 name|iface
 operator|=
