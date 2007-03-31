@@ -17700,6 +17700,10 @@ name|sc_nullalt
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * The interface will be initialized later again, so an 		 * error does not hurt. 		 */
+operator|(
+name|void
+operator|)
 name|usbd_set_interface
 argument_list|(
 name|as
