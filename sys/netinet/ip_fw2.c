@@ -19082,7 +19082,14 @@ name|rules
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ipfw2 (+ipv6) initialized, divert %s, "
+literal|"ipfw2 "
+ifdef|#
+directive|ifdef
+name|INET6
+literal|"(+ipv6) "
+endif|#
+directive|endif
+literal|"initialized, divert %s, "
 literal|"rule-based forwarding "
 ifdef|#
 directive|ifdef
