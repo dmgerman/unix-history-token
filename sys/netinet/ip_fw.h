@@ -1393,6 +1393,24 @@ name|fw_enable
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fw6_enable
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* For kernel ipfw_ether and ipfw_bridge. */
 end_comment
