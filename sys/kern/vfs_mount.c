@@ -340,18 +340,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|vfs_mount_destroy
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|vfs_getopt_pos
 parameter_list|(
@@ -723,7 +711,6 @@ comment|/* Release all resources related to the mount options. */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|vfs_freeopts
 parameter_list|(
@@ -2321,7 +2308,6 @@ comment|/*  * Destroy the mount struct previously allocated by vfs_mount_alloc()
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|vfs_mount_destroy
 parameter_list|(

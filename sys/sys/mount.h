@@ -3039,6 +3039,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vfs_mount_destroy
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vfs_event_signal
 parameter_list|(
 name|fsid_t
@@ -3047,6 +3058,18 @@ parameter_list|,
 name|u_int32_t
 parameter_list|,
 name|intptr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfs_freeopts
+parameter_list|(
+name|struct
+name|vfsoptlist
+modifier|*
+name|opts
 parameter_list|)
 function_decl|;
 end_function_decl
