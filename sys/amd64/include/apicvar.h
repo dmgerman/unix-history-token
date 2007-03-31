@@ -439,6 +439,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_int
+name|apic_alloc_vectors
+parameter_list|(
+name|u_int
+modifier|*
+name|irqs
+parameter_list|,
+name|u_int
+name|count
+parameter_list|,
+name|u_int
+name|align
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|apic_enable_vector
 parameter_list|(
