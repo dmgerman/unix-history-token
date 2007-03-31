@@ -3567,7 +3567,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * aspace --  *	Append the source space to the destination space, allocating new  *	space as necessary.  */
+comment|/*  * cspace --  *	Concatenate space: append the source space to the destination space,  *	allocating new space as necessary.  */
 end_comment
 
 begin_function
