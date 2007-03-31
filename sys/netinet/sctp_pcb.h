@@ -757,7 +757,7 @@ decl_stmt|;
 name|u_long
 name|hashrestartmark
 decl_stmt|;
-comment|/* 	 * The TCP model represents a substantial overhead in that we get an 	 * additional hash table to keep explicit connections in. The 	 * listening TCP endpoint will exist in the usual ephash above and 	 * accept only INIT's. It will be incapable of sending off an INIT. 	 * When a dg arrives we must look in the normal ephash. If we find a 	 * TCP endpoint that will tell us to go to the specific endpoint 	 * hash and re-hash to find the right assoc/socket. If we find a UDP 	 * model socket we then must complete the lookup. If this fails, 	 * i.e. no association can be found then we must continue to see if 	 * a sctp_peeloff()'d socket is in the tcpephash (a spun off socket 	 * acts like a TCP model connected socket). 	 */
+comment|/*- 	 * The TCP model represents a substantial overhead in that we get an 	 * additional hash table to keep explicit connections in. The 	 * listening TCP endpoint will exist in the usual ephash above and 	 * accept only INIT's. It will be incapable of sending off an INIT. 	 * When a dg arrives we must look in the normal ephash. If we find a 	 * TCP endpoint that will tell us to go to the specific endpoint 	 * hash and re-hash to find the right assoc/socket. If we find a UDP 	 * model socket we then must complete the lookup. If this fails, 	 * i.e. no association can be found then we must continue to see if 	 * a sctp_peeloff()'d socket is in the tcpephash (a spun off socket 	 * acts like a TCP model connected socket). 	 */
 name|struct
 name|sctppcbhead
 modifier|*
@@ -892,7 +892,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Here we have all the relevant information for each SCTP entity created. We  * will need to modify this as approprate. We also need to figure out how to  * access /dev/random.  */
+comment|/*-  * Here we have all the relevant information for each SCTP entity created. We  * will need to modify this as approprate. We also need to figure out how to  * access /dev/random.  */
 end_comment
 
 begin_struct
@@ -1081,7 +1081,7 @@ begin_struct
 struct|struct
 name|sctp_inpcb
 block|{
-comment|/* 	 * put an inpcb in front of it all, kind of a waste but we need to 	 * for compatability with all the other stuff. 	 */
+comment|/*- 	 * put an inpcb in front of it all, kind of a waste but we need to 	 * for compatability with all the other stuff. 	 */
 union|union
 block|{
 name|struct
@@ -1202,7 +1202,7 @@ name|struct
 name|sctp_sndrcvinfo
 name|def_send
 decl_stmt|;
-comment|/* 	 * These three are here for the sosend_dgram (pkt, pkt_last and 	 * control). routine. However, I don't think anyone in the current 	 * FreeBSD kernel calls this. So they are candidates with sctp_sendm 	 * for de-supporting. 	 */
+comment|/*- 	 * These three are here for the sosend_dgram 	 * (pkt, pkt_last and control). 	 * routine. However, I don't think anyone in 	 * the current FreeBSD kernel calls this. So 	 * they are candidates with sctp_sendm for 	 * de-supporting. 	 */
 name|struct
 name|mbuf
 modifier|*
@@ -1304,7 +1304,7 @@ name|struct
 name|sctp_association
 name|asoc
 decl_stmt|;
-comment|/* 	 * freed_by_sorcv_sincelast is protected by the sockbuf_lock NOT the 	 * tcb_lock. Its special in this way to help avoid extra mutex calls 	 * in the reading of data. 	 */
+comment|/*- 	 * freed_by_sorcv_sincelast is protected by the sockbuf_lock NOT the 	 * tcb_lock. Its special in this way to help avoid extra mutex calls 	 * in the reading of data. 	 */
 name|uint32_t
 name|freed_by_sorcv_sincelast
 decl_stmt|;
@@ -1644,7 +1644,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * For this call ep_addr, the to is the destination endpoint address of the  * peer (relative to outbound). The from field is only used if the TCP model  * is enabled and helps distingush amongst the subset bound (non-boundall).  * The TCP model MAY change the actual ep field, this is why it is passed.  */
+comment|/*-  * For this call ep_addr, the to is the destination endpoint address of the  * peer (relative to outbound). The from field is only used if the TCP model  * is enabled and helps distingush amongst the subset bound (non-boundall).  * The TCP model MAY change the actual ep field, this is why it is passed.  */
 end_comment
 
 begin_function_decl
@@ -2078,7 +2078,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Null in last arg inpcb indicate run on ALL ep's. Specific inp in last arg  * indicates run on ONLY assoc's of the specified endpoint.  */
+comment|/*-  * Null in last arg inpcb indicate run on ALL ep's. Specific inp in last arg  * indicates run on ONLY assoc's of the specified endpoint.  */
 end_comment
 
 begin_function_decl

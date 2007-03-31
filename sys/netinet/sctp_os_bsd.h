@@ -829,6 +829,18 @@ name|SCTP_BUF_PREPEND
 value|M_PREPEND
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_ALIGN_TO_END
+parameter_list|(
+name|m
+parameter_list|,
+name|len
+parameter_list|)
+value|if(m->m_flags& M_PKTHDR) { \                                      MH_ALIGN(m, len); \                                   } else if ((m->m_flags& M_EXT) == 0) { \                                      M_ALIGN(m, len); \                                   }
+end_define
+
 begin_comment
 comment|/*************************/
 end_comment

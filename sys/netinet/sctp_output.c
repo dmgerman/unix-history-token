@@ -15883,6 +15883,17 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+name|SCTP_ALIGN_TO_END
+argument_list|(
+name|o_pak
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|SCTP_BUF_LEN
 argument_list|(
 name|SCTP_HEADER_TO_CHAIN
@@ -17117,6 +17128,17 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+name|SCTP_ALIGN_TO_END
+argument_list|(
+name|o_pak
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip6_hdr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|SCTP_BUF_LEN
 argument_list|(
 name|SCTP_HEADER_TO_CHAIN
@@ -29327,36 +29349,6 @@ argument_list|(
 name|sctps_windowprobed
 argument_list|)
 expr_stmt|;
-name|data_list
-index|[
-name|i
-index|]
-operator|->
-name|rec
-operator|.
-name|data
-operator|.
-name|state_flags
-operator||=
-name|SCTP_WINDOW_PROBE
-expr_stmt|;
-block|}
-else|else
-block|{
-name|data_list
-index|[
-name|i
-index|]
-operator|->
-name|rec
-operator|.
-name|data
-operator|.
-name|state_flags
-operator|&=
-operator|~
-name|SCTP_WINDOW_PROBE
-expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -29853,6 +29845,36 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
+name|sp
+operator|->
+name|length
+operator|<=
+name|goal_mtu
+operator|)
+operator|||
+operator|(
+operator|(
+name|sp
+operator|->
+name|length
+operator|-
+name|goal_mtu
+operator|)
+operator|<
+name|sctp_min_residual
+operator|)
+condition|)
+block|{
+comment|/* Sub-optimial residual don't split */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|sp
 operator|->
 name|msg_is_complete
@@ -30193,22 +30215,30 @@ name|some_taken
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|goal_mtu
-operator|>=
-name|sp
+name|stcb
 operator|->
-name|length
-operator|)
-operator|&&
-operator|(
+name|asoc
+operator|.
+name|state
+operator|&
+name|SCTP_STATE_CLOSED_SOCKET
+condition|)
+block|{
 name|sp
 operator|->
 name|msg_is_complete
-operator|)
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|msg_is_complete
 condition|)
 block|{
-comment|/* It all fits and its a complete msg, no brainer */
+comment|/* The message is complete */
 name|to_move
 operator|=
 name|min
@@ -30229,7 +30259,7 @@ operator|->
 name|length
 condition|)
 block|{
-comment|/* Getting it all */
+comment|/* All of it fits in the MTU */
 if|if
 condition|(
 name|sp
@@ -30252,7 +30282,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Not getting it all, frag point overrides */
+comment|/* Not all of it fits, we fragment */
 if|if
 condition|(
 name|sp
@@ -32141,7 +32171,15 @@ name|moved_how_much
 expr_stmt|;
 name|goal_mtu
 operator|-=
+operator|(
 name|moved_how_much
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctp_data_chunk
+argument_list|)
+operator|)
 expr_stmt|;
 name|goal_mtu
 operator|&=
@@ -32845,6 +32883,12 @@ name|sctp_next
 argument_list|)
 control|)
 block|{
+name|net
+operator|->
+name|window_probe
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|old_startat
@@ -34616,7 +34660,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 					 * strange, we have a chunk that is 					 * to bit for its destination and 					 * yet no fragment ok flag. 					 * Something went wrong when the 					 * PMTU changed...we did not mark 					 * this chunk for some reason?? I 					 * will fix it here by letting IP 					 * fragment it for now and printing 					 * a warning. This really should not 					 * happen ... 					 */
+comment|/*- 					 * strange, we have a chunk that is 					 * to big for its destination and 					 * yet no fragment ok flag. 					 * Something went wrong when the 					 * PMTU changed...we did not mark 					 * this chunk for some reason?? I 					 * will fix it here by letting IP 					 * fragment it for now and printing 					 * a warning. This really should not 					 * happen ... 					 */
 ifdef|#
 directive|ifdef
 name|SCTP_DEBUG
@@ -34891,7 +34935,11 @@ directive|ifdef
 name|INVARIANTS
 name|panic
 argument_list|(
-literal|"gag"
+literal|"Exceeding mtu of %d out size is %d"
+argument_list|,
+name|mx_mtu
+argument_list|,
+name|to_out
 argument_list|)
 expr_stmt|;
 else|#
@@ -34908,6 +34956,12 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|chk
+operator|->
+name|window_probe
+operator|=
+literal|0
+expr_stmt|;
 name|data_list
 index|[
 name|bundle_at
@@ -35029,6 +35083,27 @@ name|one_chunk
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|one_chunk
+condition|)
+block|{
+name|data_list
+index|[
+literal|0
+index|]
+operator|->
+name|window_probe
+operator|=
+literal|1
+expr_stmt|;
+name|net
+operator|->
+name|window_probe
+operator|=
+literal|1
+expr_stmt|;
+block|}
 break|break;
 block|}
 block|}
@@ -35038,7 +35113,7 @@ comment|/* 					 * Must be sent in order of the 					 * TSN's (on a network) 			
 break|break;
 block|}
 block|}
-comment|/* for () */
+comment|/* for (chunk gather loop for this net) */
 block|}
 comment|/* if asoc.state OPEN */
 comment|/* Is there something to send for this destination? */
@@ -35378,7 +35453,15 @@ name|reason_code
 operator|=
 literal|6
 expr_stmt|;
+comment|/*- 				 * I add this line to be paranoid. As far as 				 * I can tell the continue, takes us back to 				 * the top of the for, but just to make sure 				 * I will reset these again here. 				 */
+name|ctl_cnt
+operator|=
+name|bundle_at
+operator|=
+literal|0
+expr_stmt|;
 continue|continue;
+comment|/* This takes us back to the 						 * for() for the nets. */
 block|}
 else|else
 block|{
@@ -35747,7 +35830,7 @@ modifier|*
 name|op_err
 parameter_list|)
 block|{
-comment|/* 	 * Prepend a OPERATIONAL_ERROR chunk header and put on the end of 	 * the control chunk queue. 	 */
+comment|/*- 	 * Prepend a OPERATIONAL_ERROR chunk header and put on the end of 	 * the control chunk queue. 	 */
 name|struct
 name|sctp_chunkhdr
 modifier|*
@@ -36015,7 +36098,7 @@ modifier|*
 name|net
 parameter_list|)
 block|{
-comment|/* 	 * pull out the cookie and put it at the front of the control chunk 	 * queue. 	 */
+comment|/*- 	 * pull out the cookie and put it at the front of the control chunk 	 * queue. 	 */
 name|int
 name|at
 decl_stmt|;
@@ -38122,7 +38205,7 @@ modifier|*
 name|fr_done
 parameter_list|)
 block|{
-comment|/* 	 * send out one MTU of retransmission. If fast_retransmit is 	 * happening we ignore the cwnd. Otherwise we obey the cwnd and 	 * rwnd. For a Cookie or Asconf in the control chunk queue we 	 * retransmit them by themselves. 	 *  	 * For data chunks we will pick out the lowest TSN's in the sent_queue 	 * marked for resend and bundle them all together (up to a MTU of 	 * destination). The address to send to should have been 	 * selected/changed where the retransmission was marked (i.e. in FR 	 * or t3-timeout routines). 	 */
+comment|/*- 	 * send out one MTU of retransmission. If fast_retransmit is 	 * happening we ignore the cwnd. Otherwise we obey the cwnd and 	 * rwnd. For a Cookie or Asconf in the control chunk queue we 	 * retransmit them by themselves. 	 * 	 * For data chunks we will pick out the lowest TSN's in the sent_queue 	 * marked for resend and bundle them all together (up to a MTU of 	 * destination). The address to send to should have been 	 * selected/changed where the retransmission was marked (i.e. in FR 	 * or t3-timeout routines). 	 */
 name|struct
 name|sctp_tmit_chunk
 modifier|*
@@ -38813,8 +38896,7 @@ condition|)
 block|{
 return|return
 operator|(
-operator|-
-literal|1
+name|SCTP_RETRAN_DONE
 operator|)
 return|;
 block|}
@@ -38882,6 +38964,62 @@ condition|)
 block|{
 comment|/* No, not sent to this net or not ready for rtx */
 continue|continue;
+block|}
+if|if
+condition|(
+operator|(
+name|sctp_max_retran_chunk
+operator|)
+operator|&&
+operator|(
+name|chk
+operator|->
+name|snd_count
+operator|>=
+name|sctp_max_retran_chunk
+operator|)
+condition|)
+block|{
+comment|/* Gak, we have exceeded max unlucky retran, abort! */
+ifdef|#
+directive|ifdef
+name|SCTP_DEBUG
+name|printf
+argument_list|(
+literal|"Gak, chk->snd_count:%d>= max:%d - send abort\n"
+argument_list|,
+name|chk
+operator|->
+name|snd_count
+argument_list|,
+name|sctp_max_retran_chunk
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|sctp_send_abort_tcb
+argument_list|(
+name|stcb
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|sctp_timer_start
+argument_list|(
+name|SCTP_TIMER_TYPE_ASOCKILL
+argument_list|,
+name|inp
+argument_list|,
+name|stcb
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|SCTP_RETRAN_EXIT
+operator|)
+return|;
 block|}
 comment|/* pick up the net */
 name|net
@@ -38993,6 +39131,40 @@ name|one_chunk
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|asoc
+operator|->
+name|peers_rwnd
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|asoc
+operator|->
+name|total_flight
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|chk
+operator|->
+name|window_probe
+operator|=
+literal|1
+expr_stmt|;
+name|chk
+operator|->
+name|whoTo
+operator|->
+name|window_probe
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -39273,16 +39445,6 @@ name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_windowprobed
 argument_list|)
-expr_stmt|;
-name|chk
-operator|->
-name|rec
-operator|.
-name|data
-operator|.
-name|state_flags
-operator||=
-name|SCTP_WINDOW_PROBE
 expr_stmt|;
 block|}
 block|}
@@ -39929,22 +40091,6 @@ name|time_last_sent
 expr_stmt|;
 if|if
 condition|(
-name|asoc
-operator|->
-name|sent_queue_retran_cnt
-operator|<
-literal|0
-condition|)
-block|{
-name|asoc
-operator|->
-name|sent_queue_retran_cnt
-operator|=
-literal|0
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|data_list
 index|[
 name|i
@@ -40189,7 +40335,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 						 * ok we just fast-retrans'd 						 * the lowest TSN, i.e the 						 * first on the list. In 						 * this case we want to give 						 * some more time to get a 						 * SACK back without a 						 * t3-expiring. 						 */
+comment|/*- 						 * ok we just fast-retrans'd 						 * the lowest TSN, i.e the 						 * first on the list. In 						 * this case we want to give 						 * some more time to get a 						 * SACK back without a 						 * t3-expiring. 						 */
 name|sctp_timer_stop
 argument_list|(
 name|SCTP_TIMER_TYPE_SEND
@@ -40425,7 +40571,7 @@ name|int
 name|from_where
 parameter_list|)
 block|{
-comment|/* 	 * Ok this is the generic chunk service queue. we must do the 	 * following: - See if there are retransmits pending, if so we must 	 * do these first and return. - Service the stream queue that is 	 * next, moving any message (note I must get a complete message i.e. 	 * FIRST/MIDDLE and LAST to the out queue in one pass) and assigning 	 * TSN's - Check to see if the cwnd/rwnd allows any output, if so we 	 * go ahead and fomulate and send the low level chunks. Making sure 	 * to combine any control in the control chunk queue also. 	 */
+comment|/*- 	 * Ok this is the generic chunk service queue. we must do the 	 * following: - See if there are retransmits pending, if so we must 	 * do these first and return. - Service the stream queue that is 	 * next, moving any message (note I must get a complete message i.e. 	 * FIRST/MIDDLE and LAST to the out queue in one pass) and assigning 	 * TSN's - Check to see if the cwnd/rwnd allows any output, if so we 	 * go ahead and fomulate and send the low level chunks. Making sure 	 * to combine any control in the control chunk queue also. 	 */
 name|struct
 name|sctp_association
 modifier|*
@@ -40642,7 +40788,7 @@ operator|->
 name|sent_queue_retran_cnt
 condition|)
 block|{
-comment|/* 		 * Ok, it is retransmission time only, we send out only ONE 		 * packet with a single call off to the retran code. 		 */
+comment|/*- 		 * Ok, it is retransmission time only, we send out only ONE 		 * packet with a single call off to the retran code. 		 */
 if|if
 condition|(
 name|from_where
@@ -40650,7 +40796,7 @@ operator|==
 name|SCTP_OUTPUT_FROM_COOKIE_ACK
 condition|)
 block|{
-comment|/* 			 * Special hook for handling cookiess discarded by 			 * peer that carried data. Send cookie-ack only and 			 * then the next call with get the retran's. 			 */
+comment|/*- 			 *Special hook for handling cookiess discarded 			 * by peer that carried data. Send cookie-ack only 			 * and then the next call with get the retran's. 			 */
 operator|(
 name|void
 operator|)
@@ -40752,7 +40898,7 @@ literal|0
 condition|)
 block|{
 comment|/* Can't send anymore */
-comment|/* 			 * now lets push out control by calling med-level 			 * output once. this assures that we WILL send HB's 			 * if queued too. 			 */
+comment|/*- 			 * now lets push out control by calling med-level 			 * output once. this assures that we WILL send HB's 			 * if queued too. 			 */
 operator|(
 name|void
 operator|)
@@ -40824,7 +40970,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* 			 * The count was off.. retran is not happening so do 			 * the normal retransmission. 			 */
+comment|/*- 			 * The count was off.. retran is not happening so do 			 * the normal retransmission. 			 */
 ifdef|#
 directive|ifdef
 name|SCTP_AUDITING_ENABLED
@@ -40841,6 +40987,20 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|ret
+operator|==
+name|SCTP_RETRAN_EXIT
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 block|}
 if|if
@@ -40987,7 +41147,7 @@ operator|==
 name|SCTP_ADDR_NOT_REACHABLE
 condition|)
 block|{
-comment|/* 			 * if possible move things off of this address we 			 * still may send below due to the dormant state but 			 * we try to find an alternate address to send to 			 * and if we have one we move all queued data on the 			 * out wheel to this alternate address. 			 */
+comment|/*- 			 * if possible move things off of this address we 			 * still may send below due to the dormant state but 			 * we try to find an alternate address to send to 			 * and if we have one we move all queued data on the 			 * out wheel to this alternate address. 			 */
 if|if
 condition|(
 name|net
@@ -41008,7 +41168,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * if ((asoc->sat_network) || (net->addr_is_local)) 			 * { burst_limit = asoc->max_burst * 			 * SCTP_SAT_NETWORK_BURST_INCR; } 			 */
+comment|/*- 			 * if ((asoc->sat_network) || (net->addr_is_local)) 			 * { burst_limit = asoc->max_burst * 			 * SCTP_SAT_NETWORK_BURST_INCR; } 			 */
 if|if
 condition|(
 name|sctp_use_cwnd_based_maxburst
@@ -41333,7 +41493,7 @@ condition|(
 name|nagle_on
 condition|)
 block|{
-comment|/* 			 * When nagle is on, we look at how much is un_sent, 			 * then if its smaller than an MTU and we have data 			 * in flight we stop. 			 */
+comment|/*- 			 * When nagle is on, we look at how much is un_sent, then 			 * if its smaller than an MTU and we have data in 			 * flight we stop. 			 */
 name|un_sent
 operator|=
 operator|(
@@ -41567,7 +41727,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Now we need to clean up the control chunk chain if a ECNE is on 	 * it. It must be marked as UNSENT again so next call will continue 	 * to send it until such time that we get a CWR, to remove it. 	 */
+comment|/*- 	 * Now we need to clean up the control chunk chain if a ECNE is on 	 * it. It must be marked as UNSENT again so next call will continue 	 * to send it until such time that we get a CWR, to remove it. 	 */
 if|if
 condition|(
 name|stcb
@@ -41958,7 +42118,7 @@ operator|++
 expr_stmt|;
 name|sctp_fill_in_rest
 label|:
-comment|/* 	 * Here we go through and fill out the part that deals with 	 * stream/seq of the ones we skip. 	 */
+comment|/*- 	 * Here we go through and fill out the part that deals with 	 * stream/seq of the ones we skip. 	 */
 name|SCTP_BUF_LEN
 argument_list|(
 name|chk
@@ -42126,7 +42286,7 @@ operator|<
 name|space_needed
 condition|)
 block|{
-comment|/* 			 * ok we must trim down the chunk by lowering the 			 * advance peer ack point. 			 */
+comment|/*- 			 * ok we must trim down the chunk by lowering the 			 * advance peer ack point. 			 */
 name|cnt_of_skipped
 operator|=
 operator|(
@@ -42149,7 +42309,7 @@ argument_list|)
 operator|)
 operator|)
 expr_stmt|;
-comment|/* 			 * Go through and find the TSN that will be the one 			 * we report. 			 */
+comment|/*- 			 * Go through and find the TSN that will be the one 			 * we report. 			 */
 name|at
 operator|=
 name|TAILQ_FIRST
@@ -42192,7 +42352,7 @@ name|last
 operator|=
 name|at
 expr_stmt|;
-comment|/* 			 * last now points to last one I can report, update 			 * peer ack point 			 */
+comment|/*- 			 * last now points to last one I can report, update 			 * peer ack point 			 */
 name|asoc
 operator|->
 name|advanced_peer_ack_point
@@ -42314,7 +42474,7 @@ expr_stmt|;
 name|fwdtsn
 operator|++
 expr_stmt|;
-comment|/* 		 * Move pointer to after the fwdtsn and transfer to the 		 * strseq pointer. 		 */
+comment|/*- 		 * Move pointer to after the fwdtsn and transfer to the 		 * strseq pointer. 		 */
 name|strseq
 operator|=
 operator|(
@@ -42324,7 +42484,7 @@ operator|*
 operator|)
 name|fwdtsn
 expr_stmt|;
-comment|/* 		 * Now populate the strseq list. This is done blindly 		 * without pulling out duplicate stream info. This is 		 * inefficent but won't harm the process since the peer will 		 * look at these in sequence and will thus release anything. 		 * It could mean we exceed the PMTU and chop off some that 		 * we could have included.. but this is unlikely (aka 1432/4 		 * would mean 300+ stream seq's would have to be reported in 		 * one FWD-TSN. With a bit of work we can later FIX this to 		 * optimize and pull out duplcates.. but it does add more 		 * overhead. So for now... not! 		 */
+comment|/*- 		 * Now populate the strseq list. This is done blindly 		 * without pulling out duplicate stream info. This is 		 * inefficent but won't harm the process since the peer will 		 * look at these in sequence and will thus release anything. 		 * It could mean we exceed the PMTU and chop off some that 		 * we could have included.. but this is unlikely (aka 1432/4 		 * would mean 300+ stream seq's would have to be reported in 		 * one FWD-TSN. With a bit of work we can later FIX this to 		 * optimize and pull out duplcates.. but it does add more 		 * overhead. So for now... not! 		 */
 name|at
 operator|=
 name|TAILQ_FIRST
@@ -42434,7 +42594,7 @@ modifier|*
 name|stcb
 parameter_list|)
 block|{
-comment|/* 	 * Queue up a SACK in the control queue. We must first check to see 	 * if a SACK is somehow on the control queue. If so, we will take 	 * and and remove the old one. 	 */
+comment|/*- 	 * Queue up a SACK in the control queue. We must first check to see 	 * if a SACK is somehow on the control queue. If so, we will take 	 * and and remove the old one. 	 */
 name|struct
 name|sctp_association
 modifier|*
@@ -42779,7 +42939,7 @@ name|SCTP_ADDR_NOT_REACHABLE
 operator|)
 condition|)
 block|{
-comment|/* 		 * Ok, we have some duplicates or the destination for the 		 * sack is unreachable, lets see if we can select an 		 * alternate than asoc->last_data_chunk_from 		 */
+comment|/*- 		 * Ok, we have some duplicates or the destination for the 		 * sack is unreachable, lets see if we can select an 		 * alternate than asoc->last_data_chunk_from 		 */
 if|if
 condition|(
 operator|(
@@ -43198,7 +43358,7 @@ operator|&&
 name|sctp_cmt_use_dac
 condition|)
 block|{
-comment|/* 		 * CMT DAC algorithm: If 2 (i.e., 0x10) packets have been 		 * received, then set high bit to 1, else 0. Reset 		 * pkts_rcvd. 		 */
+comment|/*- 		 * CMT DAC algorithm: If 2 (i.e., 0x10) packets have been 		 * received, then set high bit to 1, else 0. Reset 		 * pkts_rcvd. 		 */
 name|sack
 operator|->
 name|ch
@@ -43318,7 +43478,7 @@ name|offset
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		 * cum-ack behind the mapping array, so we start and use all 		 * entries. 		 */
+comment|/*- 		 * cum-ack behind the mapping array, so we start and use all 		 * entries. 		 */
 name|jstart
 operator|=
 literal|0
@@ -43336,7 +43496,7 @@ name|asoc
 operator|->
 name|cumulative_tsn
 expr_stmt|;
-comment|/* 		 * we skip the first one when the cum-ack is at or above the 		 * mapping array base. 		 */
+comment|/*- 		 * we skip the first one when the cum-ack is at or above the 		 * mapping array base. 		 */
 name|jstart
 operator|=
 literal|1
@@ -43832,7 +43992,7 @@ name|sctphdr
 modifier|*
 name|shdr
 decl_stmt|;
-comment|/* 	 * Add an AUTH chunk, if chunk requires it and save the offset into 	 * the chain for AUTH 	 */
+comment|/*- 	 * Add an AUTH chunk, if chunk requires it and save the offset into 	 * the chain for AUTH 	 */
 if|if
 condition|(
 name|sctp_auth_is_required_chunk
@@ -45234,7 +45394,7 @@ name|ms_goneby
 operator|=
 literal|0x7fffffff
 expr_stmt|;
-comment|/* 		 * When the address state is unconfirmed but still 		 * considered reachable, we HB at a higher rate. Once it 		 * goes confirmed OR reaches the "unreachable" state, thenw 		 * we cut it back to HB at a more normal pace. 		 */
+comment|/*- 		 * When the address state is unconfirmed but still 		 * considered reachable, we HB at a higher rate. Once it 		 * goes confirmed OR reaches the "unreachable" state, thenw 		 * we cut it back to HB at a more normal pace. 		 */
 if|if
 condition|(
 operator|(
@@ -45355,7 +45515,7 @@ name|state_overide
 operator|)
 condition|)
 block|{
-comment|/* 		 * Found the one with longest delay bounds OR it is 		 * unconfirmed and still not marked unreachable. 		 */
+comment|/*- 		 * Found the one with longest delay bounds OR it is 		 * unconfirmed and still not marked unreachable. 		 */
 ifdef|#
 directive|ifdef
 name|SCTP_DEBUG
@@ -45500,7 +45660,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * All our busy none to send to, just start the 			 * timer again. 			 */
+comment|/*- 			 * All our busy none to send to, just start the 			 * timer again. 			 */
 if|if
 condition|(
 name|stcb
@@ -46115,7 +46275,7 @@ name|max_send_times
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * we have lost the association, in a way this is quite bad 		 * since we really are one less time since we really did not 		 * send yet. This is the down side to the Q's style as 		 * defined in the RFC and not my alternate style defined in 		 * the RFC. 		 */
+comment|/*- 		 * we have lost the association, in a way this is 		 * quite bad since we really are one less time since 		 * we really did not send yet. This is the down side 		 * to the Q's style as defined in the RFC and not my 		 * alternate style defined in the RFC. 		 */
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -46197,7 +46357,7 @@ argument_list|(
 name|sctps_sendheartbeat
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Call directly med level routine to put out the chunk. It will 	 * always tumble out control chunks aka HB but it may even tumble 	 * out data too. 	 */
+comment|/*- 	 * Call directly med level routine to put out the chunk. It will 	 * always tumble out control chunks aka HB but it may even tumble 	 * out data too. 	 */
 return|return
 operator|(
 literal|1
@@ -46616,7 +46776,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * peer must declare support before I send one. 		 */
+comment|/*- 		 * peer must declare support before I send one. 		 */
 return|return;
 block|}
 if|if
@@ -47139,7 +47299,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * If my rwnd is 0, possibly from mbuf depletion as well as 		 * space used, tell the peer there is NO space aka onq == bw 		 */
+comment|/*- 		 * If my rwnd is 0, possibly from mbuf depletion as well as 		 * space used, tell the peer there is NO space aka onq == bw 		 */
 name|drp
 operator|->
 name|current_onq
@@ -47735,7 +47895,7 @@ operator|>
 name|len
 condition|)
 block|{
-comment|/* 		 * Need to worry about the pad we may end up adding to the 		 * end. This is easy since the struct is either aligned to 4 		 * bytes or 2 bytes off. 		 */
+comment|/*- 		 * Need to worry about the pad we may end up adding to the 		 * end. This is easy since the struct is either aligned to 4 		 * bytes or 2 bytes off. 		 */
 name|req_out
 operator|->
 name|list_of_streams
@@ -47976,7 +48136,7 @@ operator|>
 name|len
 condition|)
 block|{
-comment|/* 		 * Need to worry about the pad we may end up adding to the 		 * end. This is easy since the struct is either aligned to 4 		 * bytes or 2 bytes off. 		 */
+comment|/*- 		 * Need to worry about the pad we may end up adding to the 		 * end. This is easy since the struct is either aligned to 4 		 * bytes or 2 bytes off. 		 */
 name|req_in
 operator|->
 name|list_of_streams
@@ -48643,7 +48803,7 @@ operator|->
 name|stream_reset_outstanding
 condition|)
 block|{
-comment|/* 		 * Already one pending, must get ACK back to clear the flag. 		 */
+comment|/*- 		 * Already one pending, must get ACK back to clear the flag. 		 */
 return|return
 operator|(
 name|EBUSY
@@ -49070,7 +49230,7 @@ modifier|*
 name|err_cause
 parameter_list|)
 block|{
-comment|/* 	 * Formulate the abort message, and send it back down. 	 */
+comment|/*- 	 * Formulate the abort message, and send it back down. 	 */
 name|struct
 name|mbuf
 modifier|*
@@ -51260,7 +51420,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* 	 * Add this one for m in now, that way if the alloc fails we won't 	 * have a bad cnt. 	 */
+comment|/*- 	 * Add this one for m in now, that way if the alloc fails we won't 	 * have a bad cnt. 	 */
 name|SCTP_BUF_RESV_UF
 argument_list|(
 name|m
@@ -51493,7 +51653,7 @@ name|int
 name|non_blocking
 parameter_list|)
 block|{
-comment|/* 	 * This routine must be very careful in its work. Protocol 	 * processing is up and running so care must be taken to spl...() 	 * when you need to do something that may effect the stcb/asoc. The 	 * sb is locked however. When data is copied the protocol processing 	 * should be enabled since this is a slower operation... 	 */
+comment|/*- 	 * This routine must be very careful in its work. Protocol 	 * processing is up and running so care must be taken to spl...() 	 * when you need to do something that may effect the stcb/asoc. The 	 * sb is locked however. When data is copied the protocol processing 	 * should be enabled since this is a slower operation... 	 */
 name|struct
 name|sctp_stream_queue_pending
 modifier|*
@@ -52527,7 +52687,7 @@ condition|(
 name|addr
 condition|)
 block|{
-comment|/* 		 * Since we did not use findep we must increment it, and if 		 * we don't find a tcb decrement it. 		 */
+comment|/*- 		 * Since we did not use findep we must 		 * increment it, and if we don't find a tcb 		 * decrement it. 		 */
 name|SCTP_INP_WLOCK
 argument_list|(
 name|inp
@@ -52822,7 +52982,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 				 * User asks to abort a non-existant assoc, 				 * or EOF a non-existant assoc with no data 				 */
+comment|/*- 				 * User asks to abort a non-existant assoc, 				 * or EOF a non-existant assoc with no data 				 */
 name|error
 operator|=
 name|ENOENT
@@ -53182,7 +53342,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 							 * inbound side must 							 * be set to 0xffff, 							 * also NOTE when we 							 * get the INIT-ACK 							 * back (for INIT 							 * sender) we MUST 							 * reduce the count 							 * (streamoutcnt) 							 * but first check 							 * if we sent to any 							 * of the upper 							 * streams that were 							 * dropped (if some 							 * were). Those that 							 * were dropped must 							 * be notified to 							 * the upper layer 							 * as failed to 							 * send. 							 */
+comment|/*- 							 * inbound side must be set 							 * to 0xffff, also NOTE when 							 * we get the INIT-ACK back 							 * (for INIT sender) we MUST 							 * reduce the count 							 * (streamoutcnt) but first 							 * check if we sent to any 							 * of the upper streams that 							 * were dropped (if some 							 * were). Those that were 							 * dropped must be notified 							 * to the upper layer as 							 * failed to send. 							 */
 name|asoc
 operator|->
 name|strmout
@@ -53268,7 +53428,7 @@ name|queue_only_for_init
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 			 * we may want to dig in after this call and adjust 			 * the MTU value. It defaulted to 1500 (constant) 			 * but the ro structure may now have an update and 			 * thus we may need to change it BEFORE we append 			 * the message. 			 */
+comment|/*- 			 * we may want to dig in after this call and adjust the MTU 			 * value. It defaulted to 1500 (constant) but the ro 			 * structure may now have an update and thus we may need to 			 * change it BEFORE we append the message. 			 */
 name|net
 operator|=
 name|stcb
@@ -53644,7 +53804,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * CMT: Added check for CMT above. net above is the primary 		 * dest. If CMT is ON, sender should always attempt to send 		 * with the output routine sctp_fill_outqueue() that loops 		 * through all destination addresses. Therefore, if CMT is 		 * ON, queue_only is NOT set to 1 here, so that 		 * sctp_chunk_output() can be called below. 		 */
+comment|/*- 		 * CMT: Added check for CMT above. net above is the primary 		 * dest. If CMT is ON, sender should always attempt to send 		 * with the output routine sctp_fill_outqueue() that loops 		 * through all destination addresses. Therefore, if CMT is 		 * ON, queue_only is NOT set to 1 here, so that 		 * sctp_chunk_output() can be called below. 		 */
 name|queue_only
 operator|=
 literal|1
@@ -54047,7 +54207,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* 					 * Here if we can't get his data we 					 * still abort we just don't get to 					 * send the users note :-0 					 */
+comment|/*- 					 * Here if we can't get his data we 					 * still abort we just don't get to 					 * send the users note :-0 					 */
 name|sctp_m_freem
 argument_list|(
 name|mm
@@ -55495,7 +55655,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 				 * Ok, Nagle is set on and we have data 				 * outstanding. Don't send anything and let 				 * SACKs drive out the data unless wen have 				 * a "full" segment to send. 				 */
+comment|/*- 				 * Ok, Nagle is set on and we have data outstanding. 				 * Don't send anything and let SACKs drive out the 				 * data unless wen have a "full" segment to send. 				 */
 ifdef|#
 directive|ifdef
 name|SCTP_NAGLE_LOGGING
@@ -55686,7 +55846,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 				 * need to start chunk output before 				 * blocking.. note that if a lock is already 				 * applied, then the input via the net is 				 * happening and I don't need to start 				 * output :-D 				 */
+comment|/*- 				 * need to start chunk output 				 * before blocking.. note that if 				 * a lock is already applied, then 				 * the input via the net is happening 				 * and I don't need to start output :-D 				 */
 if|if
 condition|(
 name|hold_tcblock
@@ -55755,7 +55915,7 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
-comment|/* 			 * This is a bit strange, but I think it will work. 			 * The total_output_queue_size is locked and 			 * protected by the TCB_LOCK, which we just 			 * released. There is a race that can occur between 			 * releasing it above, and me getting the socket 			 * lock, where sacks come in but we have not put the 			 * SB_WAIT on the so_snd buffer to get the wakeup. 			 * After the LOCK is applied the sack_processing 			 * will also need to LOCK the so->so_snd to do the 			 * actual sowwakeup(). So once we have the socket 			 * buffer lock if we recheck the size we KNOW we 			 * will get to sleep safely with the wakeup flag in 			 * place. 			 */
+comment|/*- 			 * This is a bit strange, but I think it will 			 * work. The total_output_queue_size is locked and 			 * protected by the TCB_LOCK, which we just released. 			 * There is a race that can occur between releasing it 			 * above, and me getting the socket lock, where sacks 			 * come in but we have not put the SB_WAIT on the 			 * so_snd buffer to get the wakeup. After the LOCK 			 * is applied the sack_processing will also need to 			 * LOCK the so->so_snd to do the actual sowwakeup(). So 			 * once we have the socket buffer lock if we recheck the 			 * size we KNOW we will get to sleep safely with the 			 * wakeup flag in place. 			 */
 if|if
 condition|(
 name|SCTP_SB_LIMIT_SND
@@ -56224,8 +56384,8 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * we still got (or just got) data to send, so set 			 * SHUTDOWN_PENDING 			 */
-comment|/* 			 * XXX sockets draft says that SCTP_EOF should be 			 * sent with no data.  currently, we will allow user 			 * data to be sent first and move to 			 * SHUTDOWN-PENDING 			 */
+comment|/*- 			 * we still got (or just got) data to send, so set 			 * SHUTDOWN_PENDING 			 */
+comment|/*- 			 * XXX sockets draft says that SCTP_EOF should be 			 * sent with no data.  currently, we will allow user 			 * data to be sent first and move to 			 * SHUTDOWN-PENDING 			 */
 if|if
 condition|(
 operator|(
@@ -56651,7 +56811,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * Ok, Nagle is set on and we have data outstanding. Don't 		 * send anything and let SACKs drive out the data unless wen 		 * have a "full" segment to send. 		 */
+comment|/*- 		 * Ok, Nagle is set on and we have data outstanding. 		 * Don't send anything and let SACKs drive out the 		 * data unless wen have a "full" segment to send. 		 */
 ifdef|#
 directive|ifdef
 name|SCTP_NAGLE_LOGGING

@@ -2222,12 +2222,6 @@ decl_stmt|;
 name|uint32_t
 name|rtt
 decl_stmt|;
-name|uint32_t
-name|rttvar
-decl_stmt|;
-name|uint8_t
-name|direction
-decl_stmt|;
 block|}
 struct|;
 end_struct

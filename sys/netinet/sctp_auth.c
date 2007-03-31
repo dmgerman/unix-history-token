@@ -6044,7 +6044,7 @@ decl_stmt|;
 name|struct
 name|sctp_auth_random
 modifier|*
-name|random
+name|p_random
 init|=
 name|NULL
 decl_stmt|;
@@ -6213,7 +6213,7 @@ name|NULL
 condition|)
 return|return;
 comment|/* save the random and length for the key */
-name|random
+name|p_random
 operator|=
 operator|(
 expr|struct
@@ -6229,7 +6229,7 @@ operator|-
 sizeof|sizeof
 argument_list|(
 operator|*
-name|random
+name|p_random
 argument_list|)
 expr_stmt|;
 block|}
@@ -6594,13 +6594,13 @@ block|{
 comment|/* copy in the RANDOM */
 if|if
 condition|(
-name|random
+name|p_random
 operator|!=
 name|NULL
 condition|)
 name|bcopy
 argument_list|(
-name|random
+name|p_random
 operator|->
 name|random_data
 argument_list|,
@@ -6619,7 +6619,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
-name|random
+name|p_random
 argument_list|)
 operator|+
 name|random_len
@@ -6657,7 +6657,7 @@ block|{
 comment|/* copy in the RANDOM */
 if|if
 condition|(
-name|random
+name|p_random
 operator|!=
 name|NULL
 condition|)
@@ -6667,14 +6667,14 @@ operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
-name|random
+name|p_random
 argument_list|)
 operator|+
 name|random_len
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|random
+name|p_random
 argument_list|,
 name|new_key
 operator|->
@@ -8301,6 +8301,10 @@ decl_stmt|,
 name|got_hmacs
 init|=
 literal|0
+decl_stmt|,
+name|got_chklist
+init|=
+literal|0
 decl_stmt|;
 comment|/* go through each of the params. */
 name|phdr
@@ -8672,6 +8676,26 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|ptype
+operator|==
+name|SCTP_CHUNK_LIST
+condition|)
+block|{
+comment|/* did the peer send a non-empty chunk list? */
+if|if
+condition|(
+name|plen
+operator|>
+literal|0
+condition|)
+name|got_chklist
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|offset
 operator|+=
 name|SCTP_SIZE32
@@ -8725,6 +8749,37 @@ name|peer_supports_auth
 operator|=
 literal|0
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|peer_supports_auth
+operator|&&
+name|got_chklist
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|SCTP_DEBUG
+if|if
+condition|(
+name|sctp_debug_on
+operator|&
+name|SCTP_DEBUG_AUTH1
+condition|)
+name|printf
+argument_list|(
+literal|"SCTP: peer sent chunk list w/o AUTH\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 if|if
 condition|(

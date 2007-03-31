@@ -1900,17 +1900,6 @@ value|0x0c
 end_define
 
 begin_comment
-comment|/* Chunk flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_WINDOW_PROBE
-value|0x01
-end_define
-
-begin_comment
 comment|/*  * SCTP states for internal state machine XXX (should match "user" values)  */
 end_comment
 
@@ -3438,7 +3427,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_DEFAULT_SPLIT_POINT_MIN
-value|1452
+value|2904
 end_define
 
 begin_comment
@@ -4037,6 +4026,20 @@ parameter_list|,
 name|gap
 parameter_list|)
 value|(arry[(gap>> 3)]&= ((~(0x01<< ((gap& 0x07))))& 0xff))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_RETRAN_DONE
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_RETRAN_EXIT
+value|-2
 end_define
 
 begin_comment

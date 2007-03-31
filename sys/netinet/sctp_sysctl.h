@@ -1462,49 +1462,6 @@ value|0
 end_define
 
 begin_comment
-comment|/* use_rttvar_congctrl: Use Congestion Control via rtt variation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_USE_RTTVAR_CONGCTRL
-value|37
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_USE_RTTVAR_CONGCTRL_DESC
-value|"Use Congestion Control via rtt variation"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_USE_RTTVAR_CONGCTRL_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_USE_RTTVAR_CONGCTRL_MAX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_USE_RTTVAR_CONGCTRL_DEFAULT
-value|0
-end_define
-
-begin_comment
-comment|/* UNUSED?? */
-end_comment
-
-begin_comment
 comment|/* deadlock_detect: SMP Deadlock detection on/off */
 end_comment
 
@@ -1512,7 +1469,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_DEADLOCK_DETECT
-value|38
+value|37
 end_define
 
 begin_define
@@ -1551,7 +1508,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_EARLY_FAST_RETRAN_MSEC
-value|39
+value|38
 end_define
 
 begin_define
@@ -1590,7 +1547,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_ASCONF_AUTH_NOCHK
-value|40
+value|39
 end_define
 
 begin_define
@@ -1629,7 +1586,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_AUTH_DISABLE
-value|41
+value|40
 end_define
 
 begin_define
@@ -1668,7 +1625,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_NAT_FRIENDLY
-value|42
+value|41
 end_define
 
 begin_define
@@ -1707,7 +1664,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_ABC_L_VAR
-value|43
+value|42
 end_define
 
 begin_define
@@ -1746,7 +1703,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_MAX_CHAINED_MBUFS
-value|44
+value|43
 end_define
 
 begin_define
@@ -1785,7 +1742,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_CMT_USE_DAC
-value|45
+value|44
 end_define
 
 begin_define
@@ -1824,7 +1781,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_DO_SCTP_DRAIN
-value|46
+value|45
 end_define
 
 begin_define
@@ -1863,7 +1820,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_HB_MAX_BURST
-value|47
+value|46
 end_define
 
 begin_define
@@ -1902,7 +1859,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_ABORT_AT_LIMIT
-value|48
+value|47
 end_define
 
 begin_define
@@ -1941,7 +1898,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_STRICT_DATA_ORDER
-value|49
+value|48
 end_define
 
 begin_define
@@ -1973,6 +1930,90 @@ value|0
 end_define
 
 begin_comment
+comment|/* min residual in in a data fragment leftover  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_MIN_REDIDUAL
+value|49
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_MIN_RESIDUAL_DESC
+value|"Minimum residual data chunk in second part of split"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_MIN_RESIDUAL_MIN
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_MIN_RESIDUAL_MAX
+value|65535
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_MIN_RESIDUAL_DEFAULT
+value|1452
+end_define
+
+begin_comment
+comment|/* min residual in in a data fragment leftover  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_MAX_RETRAN
+value|50
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_MAX_RETRAN_DESC
+value|"Maximum times a unlucky chunk can be retran'd before assoc abort "
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_MAX_RETRAN_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_MAX_RETRAN_MAX
+value|65535
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_MAX_RETRAN_DEFAULT
+value|30
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCTP_DEBUG
+end_ifdef
+
+begin_comment
 comment|/* debug: Configure debug output */
 end_comment
 
@@ -1980,7 +2021,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_DEBUG
-value|50
+value|51
 end_define
 
 begin_define
@@ -2011,17 +2052,11 @@ name|SCTPCTL_DEBUG_DEFAULT
 value|0
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|SCTPCTL_MAXID
-value|50
+value|51
 end_define
 
 begin_else
@@ -2033,7 +2068,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_MAXID
-value|49
+value|50
 end_define
 
 begin_endif
@@ -2055,7 +2090,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "autoasconf", CTLTYPE_INT }, \ 	{ "ecn_enable", CTLTYPE_INT }, \ 	{ "ecn_nonce", CTLTYPE_INT }, \ 	{ "strict_sack", CTLTYPE_INT }, \ 	{ "looback_nocsum", CTLTYPE_INT }, \ 	{ "strict_init", CTLTYPE_INT }, \ 	{ "peer_chkoh", CTLTYPE_INT }, \ 	{ "maxburst", CTLTYPE_INT }, \ 	{ "maxchunks", CTLTYPE_INT }, \ 	{ "delayed_sack_time", CTLTYPE_INT }, \ 	{ "sack_freq", CTLTYPE_INT }, \ 	{ "heartbeat_interval", CTLTYPE_INT }, \ 	{ "pmtu_raise_time", CTLTYPE_INT }, \ 	{ "shutdown_guard_time", CTLTYPE_INT }, \ 	{ "secret_lifetime", CTLTYPE_INT }, \ 	{ "rto_max", CTLTYPE_INT }, \ 	{ "rto_min", CTLTYPE_INT }, \ 	{ "rto_initial", CTLTYPE_INT }, \ 	{ "init_rto_max", CTLTYPE_INT }, \ 	{ "valid_cookie_life", CTLTYPE_INT }, \ 	{ "init_rtx_max", CTLTYPE_INT }, \ 	{ "assoc_rtx_max", CTLTYPE_INT }, \ 	{ "path_rtx_max", CTLTYPE_INT }, \ 	{ "outgoing_streams", CTLTYPE_INT }, \ 	{ "cmt_on_off", CTLTYPE_INT }, \ 	{ "cwnd_maxburst", CTLTYPE_INT }, \ 	{ "early_fast_retran", CTLTYPE_INT }, \ 	{ "use_rttvar_congctrl", CTLTYPE_INT }, \ 	{ "deadlock_detect", CTLTYPE_INT }, \ 	{ "early_fast_retran_msec", CTLTYPE_INT }, \ 	{ "asconf_auth_nochk", CTLTYPE_INT }, \ 	{ "auth_disable", CTLTYPE_INT }, \ 	{ "nat_friendly", CTLTYPE_INT }, \ 	{ "abc_l_var", CTLTYPE_INT }, \ 	{ "max_mbuf_chain", CTLTYPE_INT }, \ 	{ "cmt_use_dac", CTLTYPE_INT }, \ 	{ "do_sctp_drain", CTLTYPE_INT }, \ 	{ "warm_crc_table", CTLTYPE_INT }, \ 	{ "abort_at_limit", CTLTYPE_INT }, \ 	{ "strict_data_order", CTLTYPE_INT }, \ 	{ "tcbhashsize", CTLTYPE_INT }, \ 	{ "pcbhashsize", CTLTYPE_INT }, \ 	{ "chunkscale", CTLTYPE_INT }, \ 	{ "min_split_point", CTLTYPE_INT }, \ 	{ "add_more_on_output", CTLTYPE_INT }, \ 	{ "sys_resource", CTLTYPE_INT }, \ 	{ "asoc_resource", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "autoasconf", CTLTYPE_INT }, \ 	{ "ecn_enable", CTLTYPE_INT }, \ 	{ "ecn_nonce", CTLTYPE_INT }, \ 	{ "strict_sack", CTLTYPE_INT }, \ 	{ "looback_nocsum", CTLTYPE_INT }, \ 	{ "strict_init", CTLTYPE_INT }, \ 	{ "peer_chkoh", CTLTYPE_INT }, \ 	{ "maxburst", CTLTYPE_INT }, \ 	{ "maxchunks", CTLTYPE_INT }, \ 	{ "delayed_sack_time", CTLTYPE_INT }, \ 	{ "sack_freq", CTLTYPE_INT }, \ 	{ "heartbeat_interval", CTLTYPE_INT }, \ 	{ "pmtu_raise_time", CTLTYPE_INT }, \ 	{ "shutdown_guard_time", CTLTYPE_INT }, \ 	{ "secret_lifetime", CTLTYPE_INT }, \ 	{ "rto_max", CTLTYPE_INT }, \ 	{ "rto_min", CTLTYPE_INT }, \ 	{ "rto_initial", CTLTYPE_INT }, \ 	{ "init_rto_max", CTLTYPE_INT }, \ 	{ "valid_cookie_life", CTLTYPE_INT }, \ 	{ "init_rtx_max", CTLTYPE_INT }, \ 	{ "assoc_rtx_max", CTLTYPE_INT }, \ 	{ "path_rtx_max", CTLTYPE_INT }, \ 	{ "outgoing_streams", CTLTYPE_INT }, \ 	{ "cmt_on_off", CTLTYPE_INT }, \ 	{ "cwnd_maxburst", CTLTYPE_INT }, \ 	{ "early_fast_retran", CTLTYPE_INT }, \ 	{ "deadlock_detect", CTLTYPE_INT }, \ 	{ "early_fast_retran_msec", CTLTYPE_INT }, \ 	{ "asconf_auth_nochk", CTLTYPE_INT }, \ 	{ "auth_disable", CTLTYPE_INT }, \ 	{ "nat_friendly", CTLTYPE_INT }, \ 	{ "abc_l_var", CTLTYPE_INT }, \ 	{ "max_mbuf_chain", CTLTYPE_INT }, \ 	{ "cmt_use_dac", CTLTYPE_INT }, \ 	{ "do_sctp_drain", CTLTYPE_INT }, \ 	{ "warm_crc_table", CTLTYPE_INT }, \ 	{ "abort_at_limit", CTLTYPE_INT }, \ 	{ "strict_data_order", CTLTYPE_INT }, \ 	{ "tcbhashsize", CTLTYPE_INT }, \ 	{ "pcbhashsize", CTLTYPE_INT }, \ 	{ "chunkscale", CTLTYPE_INT }, \ 	{ "min_split_point", CTLTYPE_INT }, \ 	{ "add_more_on_output", CTLTYPE_INT }, \ 	{ "sys_resource", CTLTYPE_INT }, \ 	{ "asoc_resource", CTLTYPE_INT }, \ 	{ "min_residual", CTLTYPE_INT }, \ 	{ "max_retran_chunk", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ }
 end_define
 
 begin_else
@@ -2067,7 +2102,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "autoasconf", CTLTYPE_INT }, \ 	{ "ecn_enable", CTLTYPE_INT }, \ 	{ "ecn_nonce", CTLTYPE_INT }, \ 	{ "strict_sack", CTLTYPE_INT }, \ 	{ "looback_nocsum", CTLTYPE_INT }, \ 	{ "strict_init", CTLTYPE_INT }, \ 	{ "peer_chkoh", CTLTYPE_INT }, \ 	{ "maxburst", CTLTYPE_INT }, \ 	{ "maxchunks", CTLTYPE_INT }, \ 	{ "delayed_sack_time", CTLTYPE_INT }, \ 	{ "sack_freq", CTLTYPE_INT }, \ 	{ "heartbeat_interval", CTLTYPE_INT }, \ 	{ "pmtu_raise_time", CTLTYPE_INT }, \ 	{ "shutdown_guard_time", CTLTYPE_INT }, \ 	{ "secret_lifetime", CTLTYPE_INT }, \ 	{ "rto_max", CTLTYPE_INT }, \ 	{ "rto_min", CTLTYPE_INT }, \ 	{ "rto_initial", CTLTYPE_INT }, \ 	{ "init_rto_max", CTLTYPE_INT }, \ 	{ "valid_cookie_life", CTLTYPE_INT }, \ 	{ "init_rtx_max", CTLTYPE_INT }, \ 	{ "assoc_rtx_max", CTLTYPE_INT }, \ 	{ "path_rtx_max", CTLTYPE_INT }, \ 	{ "outgoing_streams", CTLTYPE_INT }, \ 	{ "cmt_on_off", CTLTYPE_INT }, \ 	{ "cwnd_maxburst", CTLTYPE_INT }, \ 	{ "early_fast_retran", CTLTYPE_INT }, \ 	{ "use_rttvar_congctrl", CTLTYPE_INT }, \ 	{ "deadlock_detect", CTLTYPE_INT }, \ 	{ "early_fast_retran_msec", CTLTYPE_INT }, \ 	{ "asconf_auth_nochk", CTLTYPE_INT }, \ 	{ "auth_disable", CTLTYPE_INT }, \ 	{ "nat_friendly", CTLTYPE_INT }, \ 	{ "abc_l_var", CTLTYPE_INT }, \ 	{ "max_mbuf_chain", CTLTYPE_INT }, \ 	{ "cmt_use_dac", CTLTYPE_INT }, \ 	{ "do_sctp_drain", CTLTYPE_INT }, \ 	{ "warm_crc_table", CTLTYPE_INT }, \ 	{ "abort_at_limit", CTLTYPE_INT }, \ 	{ "strict_data_order", CTLTYPE_INT }, \ 	{ "tcbhashsize", CTLTYPE_INT }, \ 	{ "pcbhashsize", CTLTYPE_INT }, \ 	{ "chunkscale", CTLTYPE_INT }, \ 	{ "min_split_point", CTLTYPE_INT }, \ 	{ "add_more_on_output", CTLTYPE_INT }, \ 	{ "sys_resource", CTLTYPE_INT }, \ 	{ "asoc_resource", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "autoasconf", CTLTYPE_INT }, \ 	{ "ecn_enable", CTLTYPE_INT }, \ 	{ "ecn_nonce", CTLTYPE_INT }, \ 	{ "strict_sack", CTLTYPE_INT }, \ 	{ "looback_nocsum", CTLTYPE_INT }, \ 	{ "strict_init", CTLTYPE_INT }, \ 	{ "peer_chkoh", CTLTYPE_INT }, \ 	{ "maxburst", CTLTYPE_INT }, \ 	{ "maxchunks", CTLTYPE_INT }, \ 	{ "delayed_sack_time", CTLTYPE_INT }, \ 	{ "sack_freq", CTLTYPE_INT }, \ 	{ "heartbeat_interval", CTLTYPE_INT }, \ 	{ "pmtu_raise_time", CTLTYPE_INT }, \ 	{ "shutdown_guard_time", CTLTYPE_INT }, \ 	{ "secret_lifetime", CTLTYPE_INT }, \ 	{ "rto_max", CTLTYPE_INT }, \ 	{ "rto_min", CTLTYPE_INT }, \ 	{ "rto_initial", CTLTYPE_INT }, \ 	{ "init_rto_max", CTLTYPE_INT }, \ 	{ "valid_cookie_life", CTLTYPE_INT }, \ 	{ "init_rtx_max", CTLTYPE_INT }, \ 	{ "assoc_rtx_max", CTLTYPE_INT }, \ 	{ "path_rtx_max", CTLTYPE_INT }, \ 	{ "outgoing_streams", CTLTYPE_INT }, \ 	{ "cmt_on_off", CTLTYPE_INT }, \ 	{ "cwnd_maxburst", CTLTYPE_INT }, \ 	{ "early_fast_retran", CTLTYPE_INT }, \ 	{ "deadlock_detect", CTLTYPE_INT }, \ 	{ "early_fast_retran_msec", CTLTYPE_INT }, \ 	{ "asconf_auth_nochk", CTLTYPE_INT }, \ 	{ "auth_disable", CTLTYPE_INT }, \ 	{ "nat_friendly", CTLTYPE_INT }, \ 	{ "abc_l_var", CTLTYPE_INT }, \ 	{ "max_mbuf_chain", CTLTYPE_INT }, \ 	{ "cmt_use_dac", CTLTYPE_INT }, \ 	{ "do_sctp_drain", CTLTYPE_INT }, \ 	{ "warm_crc_table", CTLTYPE_INT }, \ 	{ "abort_at_limit", CTLTYPE_INT }, \ 	{ "strict_data_order", CTLTYPE_INT }, \ 	{ "tcbhashsize", CTLTYPE_INT }, \ 	{ "pcbhashsize", CTLTYPE_INT }, \ 	{ "chunkscale", CTLTYPE_INT }, \ 	{ "min_split_point", CTLTYPE_INT }, \ 	{ "add_more_on_output", CTLTYPE_INT }, \ 	{ "sys_resource", CTLTYPE_INT }, \ 	{ "asoc_resource", CTLTYPE_INT }, \ 	{ "max_retran_chunk", CTLTYPE_INT }, \ 	{ "min_residual", CTLTYPE_INT }, \ }
 end_define
 
 begin_endif
@@ -2428,6 +2463,20 @@ begin_decl_stmt
 specifier|extern
 name|uint32_t
 name|sctp_strict_data_order
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|sctp_min_residual
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|sctp_max_retran_chunk
 decl_stmt|;
 end_decl_stmt
 

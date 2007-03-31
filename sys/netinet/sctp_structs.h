@@ -536,9 +536,6 @@ name|partial_bytes_acked
 decl_stmt|;
 comment|/* in CA tracks when to incr a MTU */
 name|uint32_t
-name|rtt_variance
-decl_stmt|;
-name|uint32_t
 name|prev_rtt
 decl_stmt|;
 comment|/* tracking variables to avoid the aloc/free in sack processing */
@@ -576,6 +573,18 @@ decl_stmt|;
 name|uint32_t
 name|tos_flowlabel
 decl_stmt|;
+name|struct
+name|timeval
+name|start_time
+decl_stmt|;
+comment|/* time when this net was created */
+name|uint32_t
+name|marked_retrans
+decl_stmt|;
+comment|/* number or DATA chunks marked for timer 				 * based retransmissions */
+name|uint32_t
+name|marked_fastretrans
+decl_stmt|;
 comment|/* if this guy is ok or not ... status */
 name|uint16_t
 name|dest_state
@@ -595,10 +604,6 @@ name|uint8_t
 name|will_exit_fast_recovery
 decl_stmt|;
 comment|/* Flags that probably can be combined into dest_state */
-name|uint8_t
-name|rto_variance_dir
-decl_stmt|;
-comment|/* increase = 1, decreasing = 0 */
 name|uint8_t
 name|fast_retran_ip
 decl_stmt|;
@@ -634,6 +639,10 @@ name|uint8_t
 name|new_pseudo_cumack
 decl_stmt|;
 comment|/* CMT CUC algorithm. Flag used to 					 * indicate if a new pseudo-cumack or 					 * rtx-pseudo-cumack has been received */
+name|uint8_t
+name|window_probe
+decl_stmt|;
+comment|/* Doing a window probe? */
 ifdef|#
 directive|ifdef
 name|SCTP_HIGH_SPEED
@@ -643,18 +652,6 @@ decl_stmt|;
 comment|/* index into the last HS table entry we used */
 endif|#
 directive|endif
-name|struct
-name|timeval
-name|start_time
-decl_stmt|;
-comment|/* time when this net was created */
-name|uint32_t
-name|marked_retrans
-decl_stmt|;
-comment|/* number or DATA chunks marked for timer 				 * based retransmissions */
-name|uint32_t
-name|marked_fastretrans
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -867,6 +864,9 @@ name|pr_sctp_on
 decl_stmt|;
 name|uint8_t
 name|copy_by_ref
+decl_stmt|;
+name|uint8_t
+name|window_probe
 decl_stmt|;
 block|}
 struct|;

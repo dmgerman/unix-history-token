@@ -17581,9 +17581,6 @@ name|sctp_queued_to_read
 modifier|*
 name|ctl
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 for|for
 control|(
 name|i
@@ -20032,7 +20029,7 @@ decl_stmt|;
 name|struct
 name|sctp_auth_random
 modifier|*
-name|random
+name|p_random
 init|=
 name|NULL
 decl_stmt|;
@@ -21958,7 +21955,7 @@ operator|-
 literal|26
 operator|)
 return|;
-name|random
+name|p_random
 operator|=
 operator|(
 expr|struct
@@ -21974,7 +21971,7 @@ operator|-
 sizeof|sizeof
 argument_list|(
 operator|*
-name|random
+name|p_random
 argument_list|)
 expr_stmt|;
 comment|/* enforce the random length */
@@ -22600,6 +22597,26 @@ block|}
 if|if
 condition|(
 operator|!
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|peer_supports_auth
+operator|&&
+name|got_chklist
+condition|)
+block|{
+comment|/* peer does not support auth but sent a chunks list? */
+return|return
+operator|(
+operator|-
+literal|31
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|!
 name|sctp_asconf_auth_nochk
 operator|&&
 name|stcb
@@ -22616,10 +22633,11 @@ operator|.
 name|peer_supports_auth
 condition|)
 block|{
+comment|/* peer supports asconf but not auth? */
 return|return
 operator|(
 operator|-
-literal|31
+literal|32
 operator|)
 return|;
 block|}
@@ -22648,13 +22666,13 @@ block|{
 comment|/* copy in the RANDOM */
 if|if
 condition|(
-name|random
+name|p_random
 operator|!=
 name|NULL
 condition|)
 name|bcopy
 argument_list|(
-name|random
+name|p_random
 operator|->
 name|random_data
 argument_list|,
@@ -22673,7 +22691,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
-name|random
+name|p_random
 argument_list|)
 operator|+
 name|random_len
@@ -22711,7 +22729,7 @@ block|{
 comment|/* copy in the RANDOM */
 if|if
 condition|(
-name|random
+name|p_random
 operator|!=
 name|NULL
 condition|)
@@ -22721,14 +22739,14 @@ operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
-name|random
+name|p_random
 argument_list|)
 operator|+
 name|random_len
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|random
+name|p_random
 argument_list|,
 name|new_key
 operator|->
@@ -22809,10 +22827,11 @@ endif|#
 directive|endif
 else|else
 block|{
+comment|/* failed to get memory for the key */
 return|return
 operator|(
 operator|-
-literal|32
+literal|33
 operator|)
 return|;
 block|}
