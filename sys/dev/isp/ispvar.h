@@ -4,7 +4,11 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Soft Definitions for for Qlogic ISP SCSI adapters.  *  * Copyright (c) 1997-2006 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  *  Copyright (c) 1997-2007 by Matthew Jacob  *  All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *   *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *   *  THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *  ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *  SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * Soft Definitions for for Qlogic ISP SCSI adapters.  */
 end_comment
 
 begin_ifndef
@@ -36,6 +40,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<dev/ic/isp_stds.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ic/ispmbox.h>
 end_include
 
@@ -49,6 +59,12 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/isp/isp_stds.h>
+end_include
 
 begin_include
 include|#
@@ -70,6 +86,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|"isp_stds.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ispmbox.h"
 end_include
 
@@ -87,6 +109,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|"isp_stds.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ispmbox.h"
 end_include
 
@@ -99,14 +127,14 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MAJOR
-value|2
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|11
+value|0
 end_define
 
 begin_comment
@@ -134,7 +162,7 @@ parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|uint16_t
+name|uint32_t
 modifier|*
 parameter_list|,
 name|uint16_t
@@ -144,7 +172,7 @@ name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|uint16_t
+name|uint32_t
 function_decl|(
 modifier|*
 name|dv_rd_reg
@@ -167,7 +195,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|uint16_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 name|int
@@ -195,10 +223,10 @@ parameter_list|,
 name|ispreq_t
 modifier|*
 parameter_list|,
-name|uint16_t
+name|uint32_t
 modifier|*
 parameter_list|,
-name|uint16_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 name|void
@@ -213,7 +241,7 @@ parameter_list|,
 name|XS_T
 modifier|*
 parameter_list|,
-name|uint16_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 name|void
@@ -250,7 +278,8 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-name|uint16_t
+specifier|const
+name|void
 modifier|*
 name|dv_ispfw
 decl_stmt|;
@@ -281,7 +310,7 @@ begin_define
 define|#
 directive|define
 name|MAX_FC_TARG
-value|256
+value|512
 end_define
 
 begin_define
@@ -522,6 +551,17 @@ begin_comment
 comment|/* for registers */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SYNC_ATIOQ
+value|5
+end_define
+
+begin_comment
+comment|/* atio result queue (24xx) */
+end_comment
+
 begin_comment
 comment|/*  * Request/Response Queue defines and macros.  * The maximum is defined per platform (and can be based on board type).  */
 end_comment
@@ -658,7 +698,7 @@ parameter_list|,
 name|nxti
 parameter_list|)
 define|\
-value|MEMORYBARRIER(isp, SYNC_REQUEST, isp->isp_reqidx, QENTRY_LEN);	\ 	WRITE_REQUEST_QUEUE_IN_POINTER(isp, nxti);			\ 	isp->isp_reqidx = nxti
+value|MEMORYBARRIER(isp, SYNC_REQUEST, isp->isp_reqidx, QENTRY_LEN);	\ 	ISP_WRITE(isp, isp->isp_rqstinrp, nxti);			\ 	isp->isp_reqidx = nxti
 end_define
 
 begin_comment
@@ -670,55 +710,66 @@ typedef|typedef
 struct|struct
 block|{
 name|uint32_t
+label|:
+literal|10
+operator|,
+name|isp_bad_nvram
+operator|:
+literal|1
+operator|,
 name|isp_gotdparms
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 name|isp_req_ack_active_neg
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 name|isp_data_line_active_neg
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 name|isp_cmd_dma_burst_enable
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 name|isp_data_dma_burst_enabl
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 name|isp_fifo_threshold
-range|:
+operator|:
 literal|3
-decl_stmt|,
+operator|,
+name|isp_ptisp
+operator|:
+literal|1
+operator|,
 name|isp_ultramode
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 name|isp_diffmode
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 name|isp_lvdmode
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 name|isp_fast_mttr
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 comment|/* fast sram */
 name|isp_initiator_id
-range|:
+operator|:
 literal|4
-decl_stmt|,
+operator|,
 name|isp_async_data_setup
-range|:
+operator|:
 literal|4
-decl_stmt|;
+expr_stmt|;
 name|uint16_t
 name|isp_selection_timeout
 decl_stmt|;
@@ -966,10 +1017,14 @@ begin_comment
 comment|/*  * Fibre Channel Specifics  */
 end_comment
 
+begin_comment
+comment|/* These are for non-2K Login Firmware cards */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|FL_PORT_ID
+name|FL_ID
 value|0x7e
 end_define
 
@@ -980,18 +1035,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FC_PORT_ID
-value|0x7f
-end_define
-
-begin_comment
-comment|/* Fabric Controller Special ID */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FC_SNS_ID
+name|SNS_ID
 value|0x80
 end_define
 
@@ -999,31 +1043,238 @@ begin_comment
 comment|/* SNS Server Special ID */
 end_comment
 
-begin_comment
-comment|/* #define	ISP_USE_GA_NXT	1 */
-end_comment
+begin_define
+define|#
+directive|define
+name|NPH_MAX
+value|0xfe
+end_define
 
 begin_comment
-comment|/* Use GA_NXT with switches */
+comment|/* These are for 2K Login Firmware cards */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GA_NXT_MAX
-end_ifndef
 
 begin_define
 define|#
 directive|define
-name|GA_NXT_MAX
-value|256
+name|NPH_RESERVED
+value|0x7F0
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* begin of reserved N-port handles */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NPH_MGT_ID
+value|0x7FA
+end_define
+
+begin_comment
+comment|/* Management Server Special ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NPH_SNS_ID
+value|0x7FC
+end_define
+
+begin_comment
+comment|/* SNS Server Special ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NPH_FL_ID
+value|0x7FE
+end_define
+
+begin_comment
+comment|/* FL Port Special ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NPH_MAX_2K
+value|0x800
+end_define
+
+begin_comment
+comment|/*  * "Unassigned" handle to be used internally  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NIL_HANDLE
+value|0xffff
+end_define
+
+begin_comment
+comment|/*  * Limit for devices on an arbitrated loop.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCAL_LOOP_LIM
+value|126
+end_define
+
+begin_comment
+comment|/*  * Special Port IDs  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MANAGEMENT_PORT_ID
+value|0xFFFFFA
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNS_PORT_ID
+value|0xFFFFFC
+end_define
+
+begin_define
+define|#
+directive|define
+name|FABRIC_PORT_ID
+value|0xFFFFFE
+end_define
+
+begin_comment
+comment|/*  * FC Port Database entry.  *  * It has a handle that the f/w uses to address commands to a device.  * This handle's value may be assigned by the firmware (e.g., for local loop  * devices) or by the driver (e.g., for fabric devices).  *  * It has a state. If the state if VALID, that means that we've logged into  * the device. We also *may* have a initiator map index entry. This is a value  * from 0..MAX_FC_TARG that is used to index into the isp_ini_map array. If  * the value therein is non-zero, then that value minus one is used to index  * into the Port Database to find the handle for forming commands. There is  * back-index minus one value within to Port Database entry that tells us   * which entry in isp_ini_map points to us (to avoid searching).  *  * Local loop devices the firmware automatically performs PLOGI on for us  * (which is why that handle is imposed upon us). Fabric devices we assign  * a handle to and perform the PLOGI on.  *  * When a PORT DATABASE CHANGED asynchronous event occurs, we mark all VALID  * entries as PROBATIONAL. This allows us, if policy says to, just keep track  * of devices whose handles change but are otherwise the same device (and  * thus keep 'target' constant).  *  * In any case, we search all possible local loop handles. For each one that  * has a port database entity returned, we search for any PROBATIONAL entry  * that matches it and update as appropriate. Otherwise, as a new entry, we  * find room for it in the Port Database. We *try* and use the handle as the  * index to put it into the Database, but that's just an optimization. We mark  * the entry VALID and make sure that the target index is updated and correct.  *  * When we get done searching the local loop, we then search similarily for  * a list of devices we've gotten from the fabric name controller (if we're  * on a fabric). VALID marking is also done similarily.  *  * When all of this is done, we can march through the database and clean up  * any entry that is still PROBATIONAL (these represent devices which have  * departed). Then we're done and can resume normal operations.  *  * Negative invariants that we try and test for are:  *  *  + There can never be two non-NIL entries with the same { Port, Node } WWN  *    duples.  *  *  + There can never be two non-NIL entries with the same handle.  *  *  + There can never be two non-NIL entries which have the same ini_map_idx  *    value.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+comment|/* 	 * This is the handle that the firmware needs in order for us to 	 * send commands to the device. For pre-24XX cards, this would be 	 * the 'loopid'. 	 */
+name|uint16_t
+name|handle
+decl_stmt|;
+comment|/* 	 * The ini_map_idx, if nonzero, is the system virtual target ID (+1) 	 * as a cross-reference with the isp_ini_map. 	 * 	 * A device is 'autologin' if the firmware automatically logs into 	 * it (re-logins as needed). Basically, local private loop devices. 	 * 	 * The state is the current state of thsi entry. 	 * 	 * Role is Initiator, Target, Both 	 * 	 * Portid is obvious, as or node&& port WWNs. The new_role and 	 * new_portid is for when we are pending a change. 	 */
+name|uint16_t
+name|ini_map_idx
+range|:
+literal|12
+decl_stmt|,
+name|autologin
+range|:
+literal|1
+decl_stmt|,
+comment|/* F/W does PLOGI/PLOGO */
+name|state
+range|:
+literal|3
+decl_stmt|;
+name|uint32_t
+name|reserved
+range|:
+literal|6
+decl_stmt|,
+name|roles
+range|:
+literal|2
+decl_stmt|,
+name|portid
+range|:
+literal|24
+decl_stmt|;
+name|uint32_t
+name|new_reserved
+range|:
+literal|6
+decl_stmt|,
+name|new_roles
+range|:
+literal|2
+decl_stmt|,
+name|new_portid
+range|:
+literal|24
+decl_stmt|;
+name|uint64_t
+name|node_wwn
+decl_stmt|;
+name|uint64_t
+name|port_wwn
+decl_stmt|;
+block|}
+name|fcportdb_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|FC_PORTDB_STATE_NIL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_PORTDB_STATE_PROBATIONAL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_PORTDB_STATE_DEAD
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_PORTDB_STATE_CHANGED
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_PORTDB_STATE_NEW
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_PORTDB_STATE_PENDING_VALID
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_PORTDB_STATE_ZOMBIE
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_PORTDB_STATE_VALID
+value|7
+end_define
+
+begin_comment
+comment|/*  * FC card specific information  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -1031,20 +1282,35 @@ struct|struct
 block|{
 name|uint32_t
 label|:
-literal|13
+literal|10
+operator|,
+name|isp_tmode
+operator|:
+literal|1
+operator|,
+name|isp_2klogin
+operator|:
+literal|1
+operator|,
+name|isp_sccfw
+operator|:
+literal|1
 operator|,
 name|isp_gbspeed
 operator|:
 literal|3
 operator|,
 operator|:
-literal|2
+literal|1
 operator|,
-name|isp_iid_set
 operator|:
 literal|1
 operator|,
-name|loop_seen_once
+name|isp_gotdparms
+operator|:
+literal|1
+operator|,
+name|isp_bad_nvram
 operator|:
 literal|1
 operator|,
@@ -1055,18 +1321,14 @@ operator|,
 comment|/* Current Loop State */
 name|isp_fwstate
 operator|:
-literal|3
+literal|4
 operator|,
 comment|/* ISP F/W state */
-name|isp_gotdparms
-operator|:
-literal|1
-operator|,
 name|isp_topo
 operator|:
 literal|3
 operator|,
-name|isp_onfabric
+name|loop_seen_once
 operator|:
 literal|1
 expr_stmt|;
@@ -1083,9 +1345,11 @@ name|uint16_t
 name|isp_fwoptions
 decl_stmt|;
 name|uint16_t
-name|isp_iid
+name|isp_xfwoptions
 decl_stmt|;
-comment|/* 'initiator' id */
+name|uint16_t
+name|isp_zfwoptions
+decl_stmt|;
 name|uint16_t
 name|isp_loopid
 decl_stmt|;
@@ -1113,89 +1377,25 @@ name|uint16_t
 name|isp_maxfrmlen
 decl_stmt|;
 name|uint64_t
-name|isp_nodewwn
+name|isp_wwnn_nvram
 decl_stmt|;
 name|uint64_t
-name|isp_portwwn
+name|isp_wwpn_nvram
 decl_stmt|;
-comment|/* 	 * Port Data Base. This is indexed by 'target', which is invariate. 	 * However, elements within can move around due to loop changes, 	 * so the actual loop ID passed to the F/W is in this structure. 	 * The first time the loop is seen up, loopid will match the index 	 * (except for fabric nodes which are above mapped above FC_SNS_ID 	 * and are completely virtual), but subsequent LIPs can cause things 	 * to move around. 	 */
-struct|struct
-name|lportdb
-block|{
-name|uint32_t
-name|loopid
-range|:
-literal|16
-decl_stmt|,
-range|:
-literal|2
-decl_stmt|,
-name|fc4_type
-range|:
-literal|4
-decl_stmt|,
-name|last_fabric_dev
-range|:
-literal|1
-decl_stmt|,
-name|relogin
-range|:
-literal|1
-decl_stmt|,
-name|force_logout
-range|:
-literal|1
-decl_stmt|,
-name|was_fabric_dev
-range|:
-literal|1
-decl_stmt|,
-name|fabric_dev
-range|:
-literal|1
-decl_stmt|,
-name|loggedin
-range|:
-literal|1
-decl_stmt|,
-name|roles
-range|:
-literal|2
-decl_stmt|,
-name|tvalid
-range|:
-literal|1
-decl_stmt|,
-name|valid
-range|:
-literal|1
-decl_stmt|;
-name|uint32_t
-name|port_type
-range|:
-literal|8
-decl_stmt|,
-name|portid
-range|:
-literal|24
-decl_stmt|;
-name|uint64_t
-name|node_wwn
-decl_stmt|;
-name|uint64_t
-name|port_wwn
-decl_stmt|;
-block|}
+comment|/* 	 * Our Port Data Base 	 */
+name|fcportdb_t
 name|portdb
 index|[
 name|MAX_FC_TARG
 index|]
-struct|,
-name|tport
+decl_stmt|;
+comment|/* 	 * This maps system virtual 'target' id to a portdb entry. 	 * 	 * The mapping function is to take any non-zero entry and 	 * subtract one to get the portdb index. This means that 	 * entries which are zero are unmapped (i.e., don't exist). 	 */
+name|uint16_t
+name|isp_ini_map
 index|[
-name|FC_PORT_ID
+name|MAX_FC_TARG
 index|]
-struct|;
+decl_stmt|;
 comment|/* 	 * Scratch DMA mapped in area to fetch Port Database stuff, etc. 	 */
 name|void
 modifier|*
@@ -1298,28 +1498,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|LOOP_SCANNING_FABRIC
+name|LOOP_SCANNING_LOOP
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_FSCAN_DONE
+name|LOOP_LSCAN_DONE
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SCANNING_LOOP
+name|LOOP_SCANNING_FABRIC
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_LSCAN_DONE
+name|LOOP_FSCAN_DONE
 value|6
 end_define
 
@@ -1440,7 +1640,7 @@ name|isp_port
 range|:
 literal|1
 decl_stmt|,
-comment|/* 23XX only */
+comment|/* 23XX/24XX only */
 name|isp_failed
 range|:
 literal|1
@@ -1480,22 +1680,30 @@ name|uint32_t
 name|isp_confopts
 decl_stmt|;
 comment|/* config options */
-name|uint16_t
+name|uint32_t
 name|isp_rqstinrp
 decl_stmt|;
 comment|/* register for REQINP */
-name|uint16_t
+name|uint32_t
 name|isp_rqstoutrp
 decl_stmt|;
 comment|/* register for REQOUTP */
-name|uint16_t
+name|uint32_t
 name|isp_respinrp
 decl_stmt|;
 comment|/* register for RESINP */
-name|uint16_t
+name|uint32_t
 name|isp_respoutrp
 decl_stmt|;
 comment|/* register for RESOUTP */
+name|uint32_t
+name|isp_atioinrp
+decl_stmt|;
+comment|/* register for ATIOINP */
+name|uint32_t
+name|isp_atiooutrp
+decl_stmt|;
+comment|/* register for ATIOOUTP */
 comment|/* 	 * Instrumentation 	 */
 name|uint64_t
 name|isp_intcnt
@@ -1530,64 +1738,67 @@ decl_stmt|;
 comment|/* 	 * Volatile state 	 */
 specifier|volatile
 name|uint32_t
-name|isp_obits
-range|:
+operator|:
 literal|8
-decl_stmt|,
-comment|/* mailbox command output */
+operator|,
 name|isp_mboxbsy
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 comment|/* mailbox command active */
 name|isp_state
-range|:
+operator|:
 literal|3
-decl_stmt|,
+operator|,
 name|isp_sendmarker
-range|:
+operator|:
 literal|2
-decl_stmt|,
+operator|,
 comment|/* send a marker entry */
 name|isp_update
-range|:
+operator|:
 literal|2
-decl_stmt|,
+operator|,
 comment|/* update parameters */
 name|isp_nactive
-range|:
+operator|:
 literal|16
-decl_stmt|;
+expr_stmt|;
 comment|/* how many commands active */
 specifier|volatile
-name|uint16_t
+name|uint32_t
 name|isp_reqodx
 decl_stmt|;
 comment|/* index of last ISP pickup */
 specifier|volatile
-name|uint16_t
+name|uint32_t
 name|isp_reqidx
 decl_stmt|;
 comment|/* index of next request */
 specifier|volatile
-name|uint16_t
+name|uint32_t
 name|isp_residx
 decl_stmt|;
 comment|/* index of next result */
 specifier|volatile
-name|uint16_t
+name|uint32_t
 name|isp_resodx
 decl_stmt|;
 comment|/* index of next result */
 specifier|volatile
-name|uint16_t
+name|uint32_t
 name|isp_rspbsy
 decl_stmt|;
 specifier|volatile
-name|uint16_t
+name|uint32_t
 name|isp_lasthdls
 decl_stmt|;
 comment|/* last handle seed */
+specifier|volatile
+name|uint32_t
+name|isp_obits
+decl_stmt|;
+comment|/* mailbox command output */
 specifier|volatile
 name|uint16_t
 name|isp_mboxtmp
@@ -1611,6 +1822,10 @@ decl_stmt|;
 specifier|volatile
 name|uint16_t
 name|isp_mbxwrk2
+decl_stmt|;
+specifier|volatile
+name|uint16_t
+name|isp_mbxwrk8
 decl_stmt|;
 name|void
 modifier|*
@@ -1648,6 +1863,19 @@ decl_stmt|;
 name|XS_DMA_ADDR_T
 name|isp_result_dma
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+comment|/* for 24XX only */
+name|void
+modifier|*
+name|isp_atioq
+decl_stmt|;
+name|XS_DMA_ADDR_T
+name|isp_atioq_dma
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -1686,22 +1914,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP_RESETSTATE
+name|ISP_CRASHED
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISP_INITSTATE
+name|ISP_RESETSTATE
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISP_RUNSTATE
+name|ISP_INITSTATE
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_RUNSTATE
+value|4
 end_define
 
 begin_comment
@@ -1873,6 +2108,17 @@ begin_comment
 comment|/* override NVRAM execution throttle */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ISP_CFG_FOURGB
+value|0x2000
+end_define
+
+begin_comment
+comment|/* force 4GB connection (24XX only) */
+end_comment
+
 begin_comment
 comment|/*  * Prior to calling isp_reset for the first time, the outer layer  * should set isp_role to one of NONE, INITIATOR, TARGET, BOTH.  *  * If you set ISP_ROLE_NONE, the cards will be reset, new firmware loaded,  * NVRAM read, and defaults set, but any further initialization (e.g.  * INITIALIZE CONTROL BLOCK commands for 2X00 cards) won't be done.  *  * If INITIATOR MODE isn't set, attempts to run commands will be stopped  * at isp_start and completed with the moral equivalent of SELECTION TIMEOUT.  *  * If TARGET MODE is set, it doesn't mean that the rest of target mode support  * needs to be enabled, or will even work. What happens with the 2X00 cards  * here is that if you have enabled it with TARGET MODE as part of the ICB  * options, but you haven't given the f/w any ram resources for ATIOs or  * Immediate Notifies, the f/w just handles what it can and you never see  * anything. Basically, it sends a single byte of data (the first byte,  * which you can set as part of the INITIALIZE CONTROL BLOCK command) for  * INQUIRY, and sends back QUEUE FULL status for any other command.  *  */
 end_comment
@@ -1954,6 +2200,17 @@ end_define
 
 begin_comment
 comment|/* ..except for 2300s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_CODE_ORG_2400
+value|0x100000
+end_define
+
+begin_comment
+comment|/* ..and 2400s */
 end_comment
 
 begin_define
@@ -2055,6 +2312,23 @@ name|micro
 parameter_list|)
 define|\
 value|(ISP_FW_REVX((i)->isp_fwrev)> ISP_FW_REV(major, minor, micro))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FW_OLDER_THAN
+parameter_list|(
+name|i
+parameter_list|,
+name|major
+parameter_list|,
+name|minor
+parameter_list|,
+name|micro
+parameter_list|)
+define|\
+value|(ISP_FW_REVX((i)->isp_fwrev)< ISP_FW_REV(major, minor, micro))
 end_define
 
 begin_comment
@@ -2252,13 +2526,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP_HA_FC_2422
-value|0x61
-end_define
-
-begin_define
-define|#
-directive|define
 name|IS_SCSI
 parameter_list|(
 name|isp
@@ -2403,7 +2670,7 @@ name|IS_23XX
 parameter_list|(
 name|isp
 parameter_list|)
-value|((isp)->isp_type>= ISP_HA_FC_2300)
+value|((isp)->isp_type>= ISP_HA_FC_2300&& \ 				(isp)->isp_type< ISP_HA_FC_2400)
 end_define
 
 begin_define
@@ -2457,7 +2724,7 @@ name|DMA_WD3
 parameter_list|(
 name|x
 parameter_list|)
-value|((((uint64_t)x)>> 48)& 0xffff)
+value|(((uint16_t)(((uint64_t)x)>> 48))& 0xffff)
 end_define
 
 begin_define
@@ -2467,7 +2734,7 @@ name|DMA_WD2
 parameter_list|(
 name|x
 parameter_list|)
-value|((((uint64_t)x)>> 32)& 0xffff)
+value|(((uint16_t)(((uint64_t)x)>> 32))& 0xffff)
 end_define
 
 begin_define
@@ -2477,7 +2744,7 @@ name|DMA_WD1
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> 16)& 0xffff)
+value|((uint16_t)((x)>> 16)& 0xffff)
 end_define
 
 begin_define
@@ -2487,7 +2754,7 @@ name|DMA_WD0
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)& 0xffff))
+value|((uint16_t)((x)& 0xffff))
 end_define
 
 begin_define
@@ -2593,7 +2860,7 @@ parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|uint16_t
+name|uint32_t
 parameter_list|,
 name|uint16_t
 parameter_list|,
@@ -2713,9 +2980,9 @@ comment|/* Synchronize Port Database */
 name|ISPCTL_SEND_LIP
 block|,
 comment|/* Send a LIP */
-name|ISPCTL_GET_POSMAP
+name|ISPCTL_GET_PORTNAME
 block|,
-comment|/* Get FC-AL position map */
+comment|/* get portname from an N-port handle */
 name|ISPCTL_RUN_MBOXCMD
 block|,
 comment|/* run a mailbox command */
@@ -2723,7 +2990,10 @@ name|ISPCTL_TOGGLE_TMODE
 block|,
 comment|/* toggle target mode */
 name|ISPCTL_GET_PDB
+block|,
 comment|/* get a single port database entry */
+name|ISPCTL_PLOGX
+comment|/* do a port login/logout */
 block|}
 name|ispctl_t
 typedef|;
@@ -2773,12 +3043,18 @@ comment|/* Loop Reset Received */
 name|ISPASYNC_CHANGE_NOTIFY
 block|,
 comment|/* FC Change Notification */
-name|ISPASYNC_FABRIC_DEV
+name|ISPASYNC_DEV_ARRIVED
 block|,
-comment|/* FC Fabric Device Arrival */
-name|ISPASYNC_PROMENADE
+comment|/* FC Device Arrival */
+name|ISPASYNC_DEV_CHANGED
 block|,
-comment|/* FC Objects coming&& going */
+comment|/* FC Device Change */
+name|ISPASYNC_DEV_STAYED
+block|,
+comment|/* FC Device Stayed the Same */
+name|ISPASYNC_DEV_GONE
+block|,
+comment|/* FC Device Depart */
 name|ISPASYNC_TARGET_NOTIFY
 block|,
 comment|/* target asynchronous notification event */
@@ -2946,12 +3222,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_LOGDEBUG4
+name|ISP_LOGSANCFG
 value|0x100
 end_define
 
 begin_comment
-comment|/* log high frequency debug messages */
+comment|/* log SAN configuration */
 end_comment
 
 begin_define
@@ -2988,7 +3264,7 @@ comment|/* log all debug messages (target) */
 end_comment
 
 begin_comment
-comment|/*  * Each Platform provides it's own isposinfo substructure of the ispsoftc  * defined above.  *  * Each platform must also provide the following macros/defines:  *  *  *	ISP2100_SCRLEN	-	length for the Fibre Channel scratch DMA area  *  *	MEMZERO(dst, src)			platform zeroing function  *	MEMCPY(dst, src, count)			platform copying function  *	SNPRINTF(buf, bufsize, fmt, ...)	snprintf  *	USEC_DELAY(usecs)			microsecond spindelay function  *	USEC_SLEEP(isp, usecs)			microsecond sleep function  *  *	NANOTIME_T				nanosecond time type  *  *	GET_NANOTIME(NANOTIME_T *)		get current nanotime.  *  *	GET_NANOSEC(NANOTIME_T *)		get uint64_t from NANOTIME_T  *  *	NANOTIME_SUB(NANOTIME_T *, NANOTIME_T *)  *						subtract two NANOTIME_T values  *  *  *	MAXISPREQUEST(ispsoftc_t *)	maximum request queue size  *						for this particular board type  *  *	MEMORYBARRIER(ispsoftc_t *, barrier_type, offset, size)  *  *		Function/Macro the provides memory synchronization on  *		various objects so that the ISP's and the system's view  *		of the same object is consistent.  *  *	MBOX_ACQUIRE(ispsoftc_t *)		acquire lock on mailbox regs  *	MBOX_WAIT_COMPLETE(ispsoftc_t *)	wait for mailbox cmd to be done  *	MBOX_NOTIFY_COMPLETE(ispsoftc_t *)	notification of mbox cmd donee  *	MBOX_RELEASE(ispsoftc_t *)		release lock on mailbox regs  *  *	FC_SCRATCH_ACQUIRE(ispsoftc_t *)	acquire lock on FC scratch area  *	FC_SCRATCH_RELEASE(ispsoftc_t *)	acquire lock on FC scratch area  *  *	SCSI_GOOD	SCSI 'Good' Status  *	SCSI_CHECK	SCSI 'Check Condition' Status  *	SCSI_BUSY	SCSI 'Busy' Status  *	SCSI_QFULL	SCSI 'Queue Full' Status  *  *	XS_T		Platform SCSI transaction type (i.e., command for HBA)  *	XS_DMA_ADDR_T	Platform PCI DMA Address Type  *	XS_ISP(xs)	gets an instance out of an XS_T  *	XS_CHANNEL(xs)	gets the channel (bus # for DUALBUS cards) ""  *	XS_TGT(xs)	gets the target ""  *	XS_LUN(xs)	gets the lun ""  *	XS_CDBP(xs)	gets a pointer to the scsi CDB ""  *	XS_CDBLEN(xs)	gets the CDB's length ""  *	XS_XFRLEN(xs)	gets the associated data transfer length ""  *	XS_TIME(xs)	gets the time (in milliseconds) for this command  *	XS_RESID(xs)	gets the current residual count  *	XS_STSP(xs)	gets a pointer to the SCSI status byte ""  *	XS_SNSP(xs)	gets a pointer to the associate sense data  *	XS_SNSLEN(xs)	gets the length of sense data storage  *	XS_SNSKEY(xs)	dereferences XS_SNSP to get the current stored Sense Key  *	XS_TAG_P(xs)	predicate of whether this command should be tagged  *	XS_TAG_TYPE(xs)	which type of tag to use  *	XS_SETERR(xs)	set error state  *  *		HBA_NOERROR	command has no erros  *		HBA_BOTCH	hba botched something  *		HBA_CMDTIMEOUT	command timed out  *		HBA_SELTIMEOUT	selection timed out (also port logouts for FC)  *		HBA_TGTBSY	target returned a BUSY status  *		HBA_BUSRESET	bus reset destroyed command  *		HBA_ABORTED	command was aborted (by request)  *		HBA_DATAOVR	a data overrun was detected  *		HBA_ARQFAIL	Automatic Request Sense failed  *  *	XS_ERR(xs)	return current error state  *	XS_NOERR(xs)	there is no error currently set  *	XS_INITERR(xs)	initialize error state  *  *	XS_SAVE_SENSE(xs, sp)		save sense data  *  *	XS_SET_STATE_STAT(isp, sp, xs)	platform dependent interpreter of  *					response queue entry status bits  *  *  *	DEFAULT_IID(ispsoftc_t *)		Default SCSI initiator ID  *	DEFAULT_LOOPID(ispsoftc_t *)	Default FC Loop ID  *	DEFAULT_NODEWWN(ispsoftc_t *)	Default Node WWN  *	DEFAULT_PORTWWN(ispsoftc_t *)	Default Port WWN  *	DEFAULT_FRAMESIZE(ispsoftc_t *)	Default Frame Size  *	DEFAULT_EXEC_THROTTLE(ispsoftc_t *) Default Execution Throttle  *		These establish reasonable defaults for each platform.  * 		These must be available independent of card NVRAM and are  *		to be used should NVRAM not be readable.  *  *	ISP_NODEWWN(ispsoftc_t *)	FC Node WWN to use  *	ISP_PORTWWN(ispsoftc_t *)	FC Port WWN to use  *  *		These are to be used after NVRAM is read. The tags  *		in fcparam.isp_{node,port}wwn reflect the values  *		read from NVRAM (possibly corrected for card botches).  *		Each platform can take that information and override  *		it or ignore and return the Node and Port WWNs to be  * 		used when sending the Qlogic f/w the Initialization Control  *		Block.  *  *	(XXX these do endian specific transformations- in transition XXX)  *  *	ISP_IOXPUT_8(ispsoftc_t *, uint8_t srcval, uint8_t *dstptr)  *	ISP_IOXPUT_16(ispsoftc_t *, uint16_t srcval, uint16_t *dstptr)  *	ISP_IOXPUT_32(ispsoftc_t *, uint32_t srcval, uint32_t *dstptr)  *  *	ISP_IOXGET_8(ispsoftc_t *, uint8_t *srcptr, uint8_t dstrval)  *	ISP_IOXGET_16(ispsoftc_t *, uint16_t *srcptr, uint16_t dstrval)  *	ISP_IOXGET_32(ispsoftc_t *, uint32_t *srcptr, uint32_t dstrval)  *  *	ISP_SWIZZLE_NVRAM_WORD(ispsoftc_t *, uint16_t *)  */
+comment|/*  * Each Platform provides it's own isposinfo substructure of the ispsoftc  * defined above.  *  * Each platform must also provide the following macros/defines:  *  *  *	ISP2100_SCRLEN	-	length for the Fibre Channel scratch DMA area  *  *	MEMZERO(dst, src)			platform zeroing function  *	MEMCPY(dst, src, count)			platform copying function  *	SNPRINTF(buf, bufsize, fmt, ...)	snprintf  *	USEC_DELAY(usecs)			microsecond spindelay function  *	USEC_SLEEP(isp, usecs)			microsecond sleep function  *  *	NANOTIME_T				nanosecond time type  *  *	GET_NANOTIME(NANOTIME_T *)		get current nanotime.  *  *	GET_NANOSEC(NANOTIME_T *)		get uint64_t from NANOTIME_T  *  *	NANOTIME_SUB(NANOTIME_T *, NANOTIME_T *)  *						subtract two NANOTIME_T values  *  *  *	MAXISPREQUEST(ispsoftc_t *)	maximum request queue size  *						for this particular board type  *  *	MEMORYBARRIER(ispsoftc_t *, barrier_type, offset, size)  *  *		Function/Macro the provides memory synchronization on  *		various objects so that the ISP's and the system's view  *		of the same object is consistent.  *  *	MBOX_ACQUIRE(ispsoftc_t *)		acquire lock on mailbox regs  *	MBOX_WAIT_COMPLETE(ispsoftc_t *, mbreg_t *) wait for cmd to be done  *	MBOX_NOTIFY_COMPLETE(ispsoftc_t *)	notification of mbox cmd donee  *	MBOX_RELEASE(ispsoftc_t *)		release lock on mailbox regs  *  *	FC_SCRATCH_ACQUIRE(ispsoftc_t *)	acquire lock on FC scratch area  *	FC_SCRATCH_RELEASE(ispsoftc_t *)	acquire lock on FC scratch area  *  *	SCSI_GOOD	SCSI 'Good' Status  *	SCSI_CHECK	SCSI 'Check Condition' Status  *	SCSI_BUSY	SCSI 'Busy' Status  *	SCSI_QFULL	SCSI 'Queue Full' Status  *  *	XS_T		Platform SCSI transaction type (i.e., command for HBA)  *	XS_DMA_ADDR_T	Platform PCI DMA Address Type  *	XS_ISP(xs)	gets an instance out of an XS_T  *	XS_CHANNEL(xs)	gets the channel (bus # for DUALBUS cards) ""  *	XS_TGT(xs)	gets the target ""  *	XS_LUN(xs)	gets the lun ""  *	XS_CDBP(xs)	gets a pointer to the scsi CDB ""  *	XS_CDBLEN(xs)	gets the CDB's length ""  *	XS_XFRLEN(xs)	gets the associated data transfer length ""  *	XS_TIME(xs)	gets the time (in milliseconds) for this command  *	XS_RESID(xs)	gets the current residual count  *	XS_STSP(xs)	gets a pointer to the SCSI status byte ""  *	XS_SNSP(xs)	gets a pointer to the associate sense data  *	XS_SNSLEN(xs)	gets the length of sense data storage  *	XS_SNSKEY(xs)	dereferences XS_SNSP to get the current stored Sense Key  *	XS_TAG_P(xs)	predicate of whether this command should be tagged  *	XS_TAG_TYPE(xs)	which type of tag to use  *	XS_SETERR(xs)	set error state  *  *		HBA_NOERROR	command has no erros  *		HBA_BOTCH	hba botched something  *		HBA_CMDTIMEOUT	command timed out  *		HBA_SELTIMEOUT	selection timed out (also port logouts for FC)  *		HBA_TGTBSY	target returned a BUSY status  *		HBA_BUSRESET	bus reset destroyed command  *		HBA_ABORTED	command was aborted (by request)  *		HBA_DATAOVR	a data overrun was detected  *		HBA_ARQFAIL	Automatic Request Sense failed  *  *	XS_ERR(xs)	return current error state  *	XS_NOERR(xs)	there is no error currently set  *	XS_INITERR(xs)	initialize error state  *  *	XS_SAVE_SENSE(xs, sp, len)	save sense data  *  *	XS_SET_STATE_STAT(isp, sp, xs)	platform dependent interpreter of  *					response queue entry status bits  *  *  *	DEFAULT_IID(ispsoftc_t *)		Default SCSI initiator ID  *	DEFAULT_LOOPID(ispsoftc_t *)		Default FC Loop ID  *	DEFAULT_NODEWWN(ispsoftc_t *)		Default Node WWN  *	DEFAULT_PORTWWN(ispsoftc_t *)		Default Port WWN  *	DEFAULT_FRAMESIZE(ispsoftc_t *)		Default Frame Size  *	DEFAULT_EXEC_THROTTLE(ispsoftc_t *) Default Execution Throttle  *		These establish reasonable defaults for each platform.  * 		These must be available independent of card NVRAM and are  *		to be used should NVRAM not be readable.  *  *	ISP_NODEWWN(ispsoftc_t *)		FC Node WWN to use  *	ISP_PORTWWN(ispsoftc_t *)		FC Port WWN to use  *  *		These are to be used after NVRAM is read. The tags  *		in fcparam.isp_ww{n,p}n_nvram reflect the values  *		read from NVRAM (possibly corrected for card botches).  *		Each platform can take that information and override  *		it or ignore and return the Node and Port WWNs to be  * 		used when sending the Qlogic f/w the Initialization  *		Control Block.  *  *	(XXX these do endian specific transformations- in transition XXX)  *  *	ISP_IOXPUT_8(ispsoftc_t *, uint8_t srcval, uint8_t *dstptr)  *	ISP_IOXPUT_16(ispsoftc_t *, uint16_t srcval, uint16_t *dstptr)  *	ISP_IOXPUT_32(ispsoftc_t *, uint32_t srcval, uint32_t *dstptr)  *  *	ISP_IOXGET_8(ispsoftc_t *, uint8_t *srcptr, uint8_t dstrval)  *	ISP_IOXGET_16(ispsoftc_t *, uint16_t *srcptr, uint16_t dstrval)  *	ISP_IOXGET_32(ispsoftc_t *, uint32_t *srcptr, uint32_t dstrval)  *  *	ISP_SWIZZLE_NVRAM_WORD(ispsoftc_t *, uint16_t *)  */
 end_comment
 
 begin_endif

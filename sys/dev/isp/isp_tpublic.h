@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Qlogic ISP Host Adapter Public Target Interface Structures&& Routines  *  * Copyright (c) 1997-2006 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  *  Copyright (c) 1997-2007 by Matthew Jacob  *  All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *   *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *   *  THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *  ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *  SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -72,6 +72,12 @@ init|=
 literal|99
 block|,
 comment|/* the argument is a pointer to a hba_register_t */
+name|QIN_GETINFO
+block|,
+comment|/* the argument is a pointer to a info_t */
+name|QIN_SETINFO
+block|,
+comment|/* the argument is a pointer to a info_t */
 name|QIN_ENABLE
 block|,
 comment|/* the argument is a pointer to a enadis_t */
@@ -103,13 +109,14 @@ begin_define
 define|#
 directive|define
 name|QR_VERSION
-value|10
+value|15
 end_define
 
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
+comment|/* NB: tags from here to r_version must never change */
 name|void
 modifier|*
 name|r_identity
@@ -138,16 +145,87 @@ decl_stmt|;
 name|int
 name|r_version
 decl_stmt|;
+name|uint32_t
+name|r_locator
+decl_stmt|;
+name|uint32_t
+name|r_nchannels
+decl_stmt|;
 enum|enum
 block|{
 name|R_FC
 block|,
-name|R_SCSI
+name|R_SPI
 block|}
 name|r_type
 enum|;
+name|void
+modifier|*
+name|r_private
+decl_stmt|;
 block|}
 name|hba_register_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * An information structure that is used to get or set per-channel  * transport layer parameters.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|void
+modifier|*
+name|i_identity
+decl_stmt|;
+enum|enum
+block|{
+name|I_FC
+block|,
+name|I_SPI
+block|}
+name|i_type
+enum|;
+name|int
+name|i_channel
+decl_stmt|;
+name|int
+name|i_error
+decl_stmt|;
+union|union
+block|{
+struct|struct
+block|{
+name|uint64_t
+name|wwnn_nvram
+decl_stmt|;
+name|uint64_t
+name|wwpn_nvram
+decl_stmt|;
+name|uint64_t
+name|wwnn
+decl_stmt|;
+name|uint64_t
+name|wwpn
+decl_stmt|;
+block|}
+name|fc
+struct|;
+struct|struct
+block|{
+name|int
+name|iid
+decl_stmt|;
+block|}
+name|spi
+struct|;
+block|}
+name|i_id
+union|;
+block|}
+name|info_t
 typedef|;
 end_typedef
 
@@ -212,13 +290,22 @@ name|nt_lun
 decl_stmt|;
 comment|/* logical unit */
 name|uint16_t
-name|nt_padding
-decl_stmt|;
-comment|/* padding */
-name|uint32_t
+label|:
+literal|15
+operator|,
+name|nt_need_ack
+operator|:
+literal|1
+expr_stmt|;
+comment|/* this notify needs an ACK */
+name|uint64_t
 name|nt_tagval
 decl_stmt|;
 comment|/* tag value */
+name|uint32_t
+name|nt_channel
+decl_stmt|;
+comment|/* channel id */
 name|tmd_ncode_t
 name|nt_ncode
 decl_stmt|;
@@ -261,7 +348,7 @@ begin_define
 define|#
 directive|define
 name|TAG_ANY
-value|0
+value|((uint64_t) 0)
 end_define
 
 begin_define
@@ -373,7 +460,7 @@ begin_define
 define|#
 directive|define
 name|QCDS
-value|8
+value|(sizeof (void *))
 end_define
 
 begin_endif
@@ -409,14 +496,21 @@ name|uint64_t
 name|cd_tgt
 decl_stmt|;
 comment|/* target id */
-name|uint64_t
+name|uint8_t
 name|cd_lun
+index|[
+literal|8
+index|]
 decl_stmt|;
 comment|/* logical unit */
-name|uint32_t
+name|uint64_t
 name|cd_tagval
 decl_stmt|;
 comment|/* tag value */
+name|uint32_t
+name|cd_channel
+decl_stmt|;
+comment|/* channel index */
 name|uint32_t
 name|cd_lflags
 decl_stmt|;
@@ -443,14 +537,8 @@ decl_stmt|;
 comment|/* current error */
 name|uint8_t
 name|cd_tagtype
-range|:
-literal|4
-decl_stmt|,
-name|cd_port
-range|:
-literal|4
 decl_stmt|;
-comment|/* port number on HBA */
+comment|/* tag type */
 name|uint8_t
 name|cd_scsi_status
 decl_stmt|;
@@ -523,12 +611,12 @@ decl_stmt|;
 block|}
 name|cd_lreserved
 index|[
-literal|2
+literal|4
 index|]
 union|,
 name|cd_hreserved
 index|[
-literal|2
+literal|4
 index|]
 union|;
 block|}
@@ -592,6 +680,29 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|L0LUN_TO_FLATLUN
+parameter_list|(
+name|lptr
+parameter_list|)
+value|((((lptr)[0]& 0x3f)<< 8) | ((lptr)[1]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLATLUN_TO_L0LUN
+parameter_list|(
+name|lptr
+parameter_list|,
+name|lun
+parameter_list|)
+define|\
+value|(lptr)[1] = lun;                                \     if (sizeof (lun) == 1) {                        \         (lptr)[0] = 0;                              \     } else {                                        \         int nl = (lun);                             \         if (nl< 256) {                             \             (lptr)[0] = 0;                          \         } else {                                    \             (lptr)[0] = 0x40 | ((nl>> 8)& 0x3f);  \         }                                           \     }                                               \     memset(&(lptr)[2], 0, 6)
+end_define
 
 begin_comment
 comment|/*  * Note that NODISC (obviously) doesn't apply to non-SPI transport.  *  * Note that knowing the data direction and lengh at the time of receipt of  * a command from the initiator is a feature only of Fibre Channel.  *  * The CDFL_BIDIR is in anticipation of the adoption of some newer  * features required by OSD.  *  * The principle selector for MD layer to know whether data is to  * be transferred in any QOUT_TMD_CONT call is cd_xfrlen- the  * flags CDFH_DATA_IN and CDFH_DATA_OUT define which direction.  */

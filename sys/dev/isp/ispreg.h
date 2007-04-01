@@ -4,7 +4,11 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Machine Independent (well, as best as possible) register  * definitions for Qlogic ISP SCSI adapters.  *  * Copyright (c) 1997-2006 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  *  Copyright (c) 1997-2007 by Matthew Jacob  *  All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *   *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *   *  THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *  ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *  SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * Machine Independent (well, as best as possible) register  * definitions for Qlogic ISP SCSI adapters.  */
 end_comment
 
 begin_ifndef
@@ -57,6 +61,13 @@ define|#
 directive|define
 name|PCI_MBOX_REGS2300_OFF
 value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_MBOX_REGS2400_OFF
+value|0x80
 end_define
 
 begin_define
@@ -304,7 +315,7 @@ comment|/* RW : Bus NVRAM */
 end_comment
 
 begin_comment
-comment|/*  * These are specific to the 2300.  *  * They *claim* you can read BIU_R2HSTSLO with a full 32 bit access  * and get both registers, but I'm a bit dubious about that. But the  * point here is that the top 16 bits are firmware defined bits that  * the RISC processor uses to inform the host about something- usually  * something which was nominally in a mailbox register.  */
+comment|/*  * These are specific to the 2300.  */
 end_comment
 
 begin_define
@@ -506,6 +517,10 @@ end_define
 
 begin_comment
 comment|/* Low 16 bits fast post ctio */
+end_comment
+
+begin_comment
+comment|/* fifo command stuff- mostly for SPI */
 end_comment
 
 begin_define
@@ -1029,12 +1044,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BIU2100_PCI64
+name|BIU2100_NVRAM_OFFSET
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2100_FLASH_UPPER_64K
 value|0x04
 end_define
 
 begin_comment
-comment|/*  R: 64 Bit PCI slot */
+comment|/* RW: Upper 64K Bank Select */
 end_comment
 
 begin_define
@@ -1132,6 +1154,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BIU_IMASK
+value|(BIU_ICR_ENABLE_RISC_INT|BIU_ICR_ENABLE_ALL_INTS)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BIU2100_ICR_ENABLE_ALL_INTS
 value|0x8000
 end_define
@@ -1188,31 +1217,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ENABLE_INTS
-parameter_list|(
-name|isp
-parameter_list|)
-value|(IS_SCSI(isp))?  \  ISP_WRITE(isp, BIU_ICR, BIU_ICR_ENABLE_RISC_INT | BIU_ICR_ENABLE_ALL_INTS) : \  ISP_WRITE(isp, BIU_ICR, BIU2100_ICR_ENA_RISC_INT | BIU2100_ICR_ENABLE_ALL_INTS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTS_ENABLED
-parameter_list|(
-name|isp
-parameter_list|)
-value|((IS_SCSI(isp))?  \  (ISP_READ(isp, BIU_ICR)& (BIU_ICR_ENABLE_RISC_INT|BIU_ICR_ENABLE_ALL_INTS)) :\  (ISP_READ(isp, BIU_ICR)& \ 	(BIU2100_ICR_ENA_RISC_INT|BIU2100_ICR_ENABLE_ALL_INTS)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|DISABLE_INTS
-parameter_list|(
-name|isp
-parameter_list|)
-value|ISP_WRITE(isp, BIU_ICR, 0)
+name|BIU2100_IMASK
+value|(BIU2100_ICR_ENA_RISC_INT|BIU2100_ICR_ENABLE_ALL_INTS)
 end_define
 
 begin_comment
@@ -1360,7 +1366,8 @@ name|isp
 parameter_list|,
 name|isr
 parameter_list|)
-value|(IS_FC(isp)? \ 	((isr& BIU2100_ISR_RISC_INT) != 0) : ((isr& BIU_ISR_RISC_INT) != 0))
+define|\
+value|IS_FC(isp)?								\   (IS_24XX(isp)? (isr& BIU2400_ISR_RISC_INT) : (isr& BIU2100_ISR_RISC_INT)) :\   (isr& BIU_ISR_RISC_INT)
 end_define
 
 begin_define
@@ -1371,7 +1378,7 @@ parameter_list|(
 name|isp
 parameter_list|)
 define|\
-value|(IS_FC(isp)? BIU2100_ISR_RISC_INT: BIU_ISR_RISC_INT)
+value|(IS_FC(isp)? (IS_24XX(isp)? BIU2400_ISR_RISC_INT : BIU2100_ISR_RISC_INT) : \  (BIU_ISR_RISC_INT))
 end_define
 
 begin_comment
@@ -1431,6 +1438,17 @@ directive|define
 name|BIU_NVRAM_DATAIN
 value|0x0008
 end_define
+
+begin_define
+define|#
+directive|define
+name|BIU_NVRAM_BUSY
+value|0x0080
+end_define
+
+begin_comment
+comment|/* 2322/24xx only */
+end_comment
 
 begin_define
 define|#
@@ -1966,6 +1984,503 @@ comment|/* FIFO Byte count mask */
 end_comment
 
 begin_comment
+comment|/*  * 2400 Interface Offsets and Register Definitions  *   * The 2400 looks quite different in terms of registers from other QLogic cards.  * It is getting to be a genuine pain and challenge to keep the same model  * for all.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_FLASH_ADDR
+value|(BIU_BLOCK+0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_FLASH_DATA
+value|(BIU_BLOCK+0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_CSR
+value|(BIU_BLOCK+0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_ICR
+value|(BIU_BLOCK+0x0C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_ISR
+value|(BIU_BLOCK+0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_REQINP
+value|(BIU_BLOCK+0x1C)
+end_define
+
+begin_comment
+comment|/* Request Queue In */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_REQOUTP
+value|(BIU_BLOCK+0x20)
+end_define
+
+begin_comment
+comment|/* Request Queue Out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_RSPINP
+value|(BIU_BLOCK+0x24)
+end_define
+
+begin_comment
+comment|/* Response Queue In */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_RSPOUTP
+value|(BIU_BLOCK+0x28)
+end_define
+
+begin_comment
+comment|/* Response Queue Out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_PRI_RQINP
+value|(BIU_BLOCK+0x2C)
+end_define
+
+begin_comment
+comment|/* Priority Request Q In */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_PRI_RSPINP
+value|(BIU_BLOCK+0x30)
+end_define
+
+begin_comment
+comment|/* Priority Request Q Out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_ATIO_RSPINP
+value|(BIU_BLOCK+0x3C)
+end_define
+
+begin_comment
+comment|/* ATIO Queue In */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_ATIO_REQINP
+value|(BIU_BLOCK+0x40)
+end_define
+
+begin_comment
+comment|/* ATIO Queue Out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_R2HSTSLO
+value|(BIU_BLOCK+0x44)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_R2HSTSHI
+value|(BIU_BLOCK+0x46)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_HCCR
+value|(BIU_BLOCK+0x48)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_GPIOD
+value|(BIU_BLOCK+0x4C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_GPIOE
+value|(BIU_BLOCK+0x50)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_HSEMA
+value|(BIU_BLOCK+0x58)
+end_define
+
+begin_comment
+comment|/* BIU2400_FLASH_ADDR definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_FLASH_DFLAG
+value|(1<< 30)
+end_define
+
+begin_comment
+comment|/* BIU2400_CSR definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_NVERR
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_DMA_ACTIVE
+value|(1<< 17)
+end_define
+
+begin_comment
+comment|/* RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_DMA_STOP
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_FUNCTION
+value|(1<< 15)
+end_define
+
+begin_comment
+comment|/* RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_PCIX_MODE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 8)& 0xf)
+end_define
+
+begin_comment
+comment|/* RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_CSR_64BIT
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_FLASH_ENABLE
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_SOFT_RESET
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* BIU2400_ICR definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_ICR_ENA_RISC_INT
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_IMASK
+value|(BIU2400_ICR_ENA_RISC_INT)
+end_define
+
+begin_comment
+comment|/* BIU2400_ISR definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU2400_ISR_RISC_INT
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_R2HST_INTR
+value|BIU_R2HST_INTR
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_R2HST_PAUSED
+value|BIU_R2HST_PAUSED
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU2400_R2HST_ISTAT_MASK
+value|0x1f
+end_define
+
+begin_comment
+comment|/* interrupt status meanings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP2400R2HST_ROM_MBX_OK
+value|0x1
+end_define
+
+begin_comment
+comment|/* ROM mailbox cmd done ok */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP2400R2HST_ROM_MBX_FAIL
+value|0x2
+end_define
+
+begin_comment
+comment|/* ROM mailbox cmd done fail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP2400R2HST_MBX_OK
+value|0x10
+end_define
+
+begin_comment
+comment|/* mailbox cmd done ok */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP2400R2HST_MBX_FAIL
+value|0x11
+end_define
+
+begin_comment
+comment|/* mailbox cmd done fail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP2400R2HST_ASYNC_EVENT
+value|0x12
+end_define
+
+begin_comment
+comment|/* Async Event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP2400R2HST_RSPQ_UPDATE
+value|0x13
+end_define
+
+begin_comment
+comment|/* Response Queue Update */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP2400R2HST_ATIO_RSPQ_UPDATE
+value|0x1C
+end_define
+
+begin_comment
+comment|/* ATIO Response Queue Update */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP2400R2HST_ATIO_RQST_UPDATE
+value|0x1D
+end_define
+
+begin_comment
+comment|/* ATIO Request Queue Update */
+end_comment
+
+begin_comment
+comment|/* BIU2400_HCCR definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HCCR_2400_CMD_NOP
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCCR_2400_CMD_RESET
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCCR_2400_CMD_CLEAR_RESET
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCCR_2400_CMD_PAUSE
+value|0x30000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCCR_2400_CMD_RELEASE
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCCR_2400_CMD_SET_HOST_INT
+value|0x50000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCCR_2400_CMD_CLEAR_HOST_INT
+value|0x60000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCCR_2400_CMD_CLEAR_RISC_INT
+value|0xA0000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCCR_2400_RISC_ERR
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 12)& 0x7)
+end_define
+
+begin_comment
+comment|/* RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HCCR_2400_RISC2HOST_INT
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HCCR_2400_RISC_RESET
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* RO */
+end_comment
+
+begin_comment
 comment|/*  * Mailbox Block Register Offsets  */
 end_comment
 
@@ -2082,7 +2597,7 @@ value|(MBOX_BLOCK+0xE)
 end_define
 
 begin_comment
-comment|/*  * Strictly speaking, it's   *  SCSI&& 2100 : 8 MBOX registers  *  2200: 24 MBOX registers  *  2300: 32 MBOX registers  */
+comment|/*  * Strictly speaking, it's   *  SCSI&& 2100 : 8 MBOX registers  *  2200: 24 MBOX registers  *  2300/2400: 32 MBOX registers  */
 end_comment
 
 begin_define
@@ -2134,6 +2649,21 @@ name|MAILBOX_STORAGE
 value|12
 end_define
 
+begin_comment
+comment|/* if timeout == 0, then default timeout is picked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBCMD_DEFAULT_TIMEOUT
+value|100000
+end_define
+
+begin_comment
+comment|/* 100 ms */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2146,8 +2676,20 @@ index|]
 decl_stmt|;
 name|uint16_t
 name|ibits
-decl_stmt|,
+decl_stmt|;
+name|uint16_t
 name|obits
+decl_stmt|;
+name|uint32_t
+label|:
+literal|28
+operator|,
+name|logval
+operator|:
+literal|4
+expr_stmt|;
+name|uint32_t
+name|timeout
 decl_stmt|;
 block|}
 name|mbreg_t
@@ -4462,6 +5004,43 @@ comment|/*  W : BIOS enable */
 end_comment
 
 begin_comment
+comment|/*  * Defines for Interrupts  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_INTS_ENABLED
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|((IS_SCSI(isp))?  							\   (ISP_READ(isp, BIU_ICR)& BIU_IMASK) :				\    (IS_24XX(isp)? (ISP_READ(isp, BIU2400_ICR)& BIU2400_IMASK) :	\    (ISP_READ(isp, BIU_ICR)& BIU2100_IMASK)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ENABLE_INTS
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|(IS_SCSI(isp) ?  							\    ISP_WRITE(isp, BIU_ICR, BIU_IMASK) :					\    (IS_24XX(isp) ?							\     (ISP_WRITE(isp, BIU2400_ICR, BIU2400_IMASK)) :			\     (ISP_WRITE(isp, BIU_ICR, BIU2100_IMASK))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_DISABLE_INTS
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|IS_24XX(isp)? ISP_WRITE(isp, BIU2400_ICR, 0) : ISP_WRITE(isp, BIU_ICR, 0)
+end_define
+
+begin_comment
 comment|/*  * NVRAM Definitions (PCI cards only)  */
 end_comment
 
@@ -4803,7 +5382,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP_NVARM_TARGSIZE
+name|ISP_NVRAM_TARGSIZE
 value|6
 end_define
 
@@ -4817,7 +5396,7 @@ parameter_list|,
 name|tidx
 parameter_list|)
 define|\
-value|(ISP_NVRAM_TARGOFF + (ISP_NVARM_TARGSIZE * (tgt)) + (tidx))
+value|(ISP_NVRAM_TARGOFF + (ISP_NVRAM_TARGSIZE * (tgt)) + (tidx))
 end_define
 
 begin_define
@@ -5864,7 +6443,7 @@ value|ISPBSMX(c, _IxT16(t, 4, (b)), 7, 0x01)
 end_define
 
 begin_comment
-comment|/*  * Qlogic 2XXX NVRAM is an array of 256 bytes.  *  * Some portion of the front of this is for general RISC engine parameters,  * mostly reflecting the state of the last INITIALIZE FIRMWARE mailbox command.  *  * This is followed by some general host adapter parameters, and ends with  * a checksum xor byte at offset 255. For non-byte entities data is stored  * in Little Endian order.  */
+comment|/*  * Qlogic 2100 thru 2300 NVRAM is an array of 256 bytes.  *  * Some portion of the front of this is for general RISC engine parameters,  * mostly reflecting the state of the last INITIALIZE FIRMWARE mailbox command.  *  * This is followed by some general host adapter parameters, and ends with  * a checksum xor byte at offset 255. For non-byte entities data is stored  * in Little Endian order.  */
 end_comment
 
 begin_define
@@ -5895,7 +6474,7 @@ name|ISP2100_NVRAM_OPTIONS
 parameter_list|(
 name|c
 parameter_list|)
-value|(c)[8]
+value|((c)[8] | ((c)[9]<< 8))
 end_define
 
 begin_define
@@ -5965,13 +6544,23 @@ name|ISP2100_NVRAM_HARDLOOPID
 parameter_list|(
 name|c
 parameter_list|)
-value|(c)[26]
+value|((c)[26] | ((c)[27]<< 8))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISP2200_NVRAM_NODE_NAME
+name|ISP2100_NVRAM_TOV
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[29])
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_NVRAM_NODE_NAME
 parameter_list|(
 name|c
 parameter_list|)
@@ -5981,11 +6570,61 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP2100_XFW_OPTIONS
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[38] | ((c)[39]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_RACC_TIMER
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)[40]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_IDELAY_TIMER
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)[41]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_ZFW_OPTIONS
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[42] | ((c)[43]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_SERIAL_LINK
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[68] | ((c)[69]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP2100_NVRAM_HBA_OPTIONS
 parameter_list|(
 name|c
 parameter_list|)
-value|(c)[70]
+value|((c)[70] | ((c)[71]<< 8))
 end_define
 
 begin_define
@@ -6071,11 +6710,189 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP2200_HBA_FEATURES
+name|ISP2100_RESET_DELAY
 parameter_list|(
 name|c
 parameter_list|)
-value|(c)[232] | ((c)[233]<< 8)
+value|(c)[81]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_HBA_FEATURES
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[232] | ((c)[233]<< 8))
+end_define
+
+begin_comment
+comment|/*  * Qlogic 2400 NVRAM is an array of 512 bytes with a 32 bit checksum.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_PORT0_ADDR
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_PORT1_ADDR
+value|0x180
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_SIZE
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_VERSION
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[4] | ((c)[5]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_MAXFRAMELENGTH
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)[12]) | ((c)[13]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_EXECUTION_THROTTLE
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)[14]) | ((c)[15]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_EXCHANGE_COUNT
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)[16]) | ((c)[17]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_HARDLOOPID
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[18] | ((c)[19]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_PORT_NAME
+parameter_list|(
+name|c
+parameter_list|)
+value|(\ 		(((uint64_t)(c)[20])<< 56) | \ 		(((uint64_t)(c)[21])<< 48) | \ 		(((uint64_t)(c)[22])<< 40) | \ 		(((uint64_t)(c)[23])<< 32) | \ 		(((uint64_t)(c)[24])<< 24) | \ 		(((uint64_t)(c)[25])<< 16) | \ 		(((uint64_t)(c)[26])<<  8) | \ 		(((uint64_t)(c)[27])<<  0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_NODE_NAME
+parameter_list|(
+name|c
+parameter_list|)
+value|(\ 		(((uint64_t)(c)[28])<< 56) | \ 		(((uint64_t)(c)[29])<< 48) | \ 		(((uint64_t)(c)[30])<< 40) | \ 		(((uint64_t)(c)[31])<< 32) | \ 		(((uint64_t)(c)[32])<< 24) | \ 		(((uint64_t)(c)[33])<< 16) | \ 		(((uint64_t)(c)[34])<<  8) | \ 		(((uint64_t)(c)[35])<<  0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_LOGIN_RETRY_CNT
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[36] | ((c)[37]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_LINK_DOWN_ON_NOS
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[38] | ((c)[39]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_INTERRUPT_DELAY
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[40] | ((c)[41]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_LOGIN_TIMEOUT
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[42] | ((c)[43]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_FIRMWARE_OPTIONS1
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|((c)[44] | ((c)[45]<< 8) | ((c)[46]<< 16) | ((c)[47]<< 24))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_FIRMWARE_OPTIONS2
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|((c)[48] | ((c)[49]<< 8) | ((c)[50]<< 16) | ((c)[51]<< 24))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_NVRAM_FIRMWARE_OPTIONS3
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|((c)[52] | ((c)[53]<< 8) | ((c)[54]<< 16) | ((c)[55]<< 24))
 end_define
 
 begin_comment
