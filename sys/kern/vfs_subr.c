@@ -9857,6 +9857,13 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
+name|ASSERT_VI_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"vdropl"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
