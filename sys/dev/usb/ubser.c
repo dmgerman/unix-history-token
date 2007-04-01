@@ -1065,6 +1065,9 @@ name|epcount
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|usbd_endpoint_count
 argument_list|(
 name|sc
