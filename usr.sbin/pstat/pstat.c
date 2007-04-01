@@ -472,11 +472,11 @@ literal|1
 expr_stmt|;
 name|opts
 operator|=
-literal|"hkM:N:"
+literal|"ghkmM:N:"
 expr_stmt|;
 name|usagestr
 operator|=
-literal|"swapinfo [-hk] [-M core [-N system]]"
+literal|"swapinfo [-ghkm] [-M core [-N system]]"
 expr_stmt|;
 block|}
 else|else
@@ -522,6 +522,15 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'g'
+case|:
+name|putenv
+argument_list|(
+literal|"BLOCKSIZE=1G"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'h'
 case|:
 name|humanflag
@@ -535,6 +544,15 @@ case|:
 name|putenv
 argument_list|(
 literal|"BLOCKSIZE=1K"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+name|putenv
+argument_list|(
+literal|"BLOCKSIZE=1M"
 argument_list|)
 expr_stmt|;
 break|break;
