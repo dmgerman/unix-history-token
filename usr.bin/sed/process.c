@@ -598,6 +598,9 @@ operator|==
 name|NULL
 operator|||
 name|lastaddr
+operator|||
+name|lastline
+argument_list|()
 condition|)
 operator|(
 name|void
