@@ -437,7 +437,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  * 	m - mountlist_mtx  *	i - interlock  *	l - mnt_lock  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
+comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  *	m - mountlist_mtx  *	i - interlock  *	l - mnt_lock  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
 end_comment
 
 begin_struct
@@ -1730,7 +1730,7 @@ value|0x00200000
 end_define
 
 begin_comment
-comment|/* stores file names as Unicode*/
+comment|/* stores file names as Unicode */
 end_comment
 
 begin_typedef
@@ -1751,7 +1751,7 @@ comment|/* should be VFSIDCTL_VERS1 (below) */
 name|fsid_t
 name|vc_fsid
 decl_stmt|;
-comment|/* fsid to operate on. */
+comment|/* fsid to operate on */
 name|char
 name|vc_fstypename
 index|[
@@ -1767,18 +1767,18 @@ name|void
 modifier|*
 name|vc_ptr
 decl_stmt|;
-comment|/* pointer to data structure. */
+comment|/* pointer to data structure */
 name|size_t
 name|vc_len
 decl_stmt|;
-comment|/* sizeof said structure. */
+comment|/* sizeof said structure */
 name|u_int32_t
 name|vc_spare
 index|[
 literal|12
 index|]
 decl_stmt|;
-comment|/* spare (must be zero). */
+comment|/* spare (must be zero) */
 block|}
 struct|;
 end_struct
@@ -2779,7 +2779,7 @@ name|VFS_ASSERT_GIANT
 parameter_list|(
 name|MP
 parameter_list|)
-value|do 					\ {									\ 	struct mount *_mp;						\ 	_mp = (MP);							\ 	if (VFS_NEEDSGIANT_(_mp))					\ 		mtx_assert(&Giant, MA_OWNED);				\ } while (0)
+value|do						\ {									\ 	struct mount *_mp;						\ 	_mp = (MP);							\ 	if (VFS_NEEDSGIANT_(_mp))					\ 		mtx_assert(&Giant, MA_OWNED);				\ } while (0)
 end_define
 
 begin_define
