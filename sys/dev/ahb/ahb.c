@@ -1666,6 +1666,8 @@ goto|goto
 name|error_exit
 goto|;
 comment|/* Enable our interrupt */
+if|if
+condition|(
 name|bus_setup_intr
 argument_list|(
 name|dev
@@ -1685,7 +1687,12 @@ argument_list|,
 operator|&
 name|ih
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|error_exit
+goto|;
 return|return
 operator|(
 literal|0
