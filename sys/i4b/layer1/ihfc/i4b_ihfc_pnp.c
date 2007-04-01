@@ -687,6 +687,8 @@ index|]
 expr_stmt|;
 block|}
 comment|/* setup interrupt routine now to avvoid stray	* 				 * interrupts.					*/
+if|if
+condition|(
 name|bus_setup_intr
 argument_list|(
 name|dev
@@ -714,7 +716,23 @@ argument_list|,
 operator|&
 name|dummy
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ihfc%d: failed to setup irq.\n"
+argument_list|,
+name|unit
+argument_list|)
 expr_stmt|;
+name|HFC_END
+expr_stmt|;
+return|return
+name|ENXIO
+return|;
+block|}
 name|flag
 operator|=
 literal|1
@@ -1011,6 +1029,8 @@ name|iobase
 expr_stmt|;
 comment|/* set internal iobase	*/
 comment|/* setup interrupt routine now to avvoid stray	* 		 * interrupts.					*/
+if|if
+condition|(
 name|bus_setup_intr
 argument_list|(
 name|dev
@@ -1038,7 +1058,23 @@ argument_list|,
 operator|&
 name|dummy
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ihfc%d: failed to setup irq.\n"
+argument_list|,
+name|unit
+argument_list|)
 expr_stmt|;
+name|HFC_END
+expr_stmt|;
+return|return
+name|ENXIO
+return|;
+block|}
 name|flag
 operator|=
 literal|1

@@ -2466,6 +2466,8 @@ operator|.
 name|irq
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|bus_setup_intr
 argument_list|(
 name|dev
@@ -2498,6 +2500,28 @@ operator|&
 name|ih
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"avm_pnp%d: Could not setup irq.\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 name|sc
 operator|->
 name|sc_unit

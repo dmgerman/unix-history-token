@@ -1140,6 +1140,8 @@ name|irq
 argument_list|)
 expr_stmt|;
 comment|/* register interupt routine */
+if|if
+condition|(
 name|bus_setup_intr
 argument_list|(
 name|dev
@@ -1173,7 +1175,26 @@ argument_list|,
 operator|&
 name|ih
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"isic%d: Could not setup the irq for AVM A1/Fritz!\n"
+argument_list|,
+name|unit
+argument_list|)
 expr_stmt|;
+name|isic_detach_common
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+name|ENXIO
+return|;
+block|}
 comment|/* check IRQ validity */
 switch|switch
 condition|(
