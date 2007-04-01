@@ -1667,6 +1667,27 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* 	 * Netgraph 	 */
+block|{
+literal|"ng_node"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"ng_worklist"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 comment|/* 	 * CDEV 	 */
 block|{
 literal|"system map"
@@ -1785,20 +1806,6 @@ block|}
 block|,
 block|{
 literal|"zstty"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
-block|{
-literal|"ng_node"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
-block|{
-literal|"ng_worklist"
 block|,
 operator|&
 name|lock_class_mtx_spin
