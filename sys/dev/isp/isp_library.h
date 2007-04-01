@@ -135,6 +135,7 @@ parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
