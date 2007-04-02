@@ -101,7 +101,7 @@ name|EMUL_LOCK
 parameter_list|(
 name|l
 parameter_list|)
-value|sx_xlock(l)
+value|mtx_lock(l)
 end_define
 
 begin_define
@@ -111,7 +111,7 @@ name|EMUL_UNLOCK
 parameter_list|(
 name|l
 parameter_list|)
-value|sx_xunlock(l)
+value|mtx_unlock(l)
 end_define
 
 begin_define
@@ -244,7 +244,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|sx
+name|mtx
 name|emul_lock
 decl_stmt|;
 end_decl_stmt

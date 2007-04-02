@@ -156,7 +156,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|sx
+name|mtx
 name|emul_lock
 decl_stmt|;
 end_decl_stmt

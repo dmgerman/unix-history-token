@@ -5530,12 +5530,16 @@ operator|*
 name|ldhp
 argument_list|)
 expr_stmt|;
-name|sx_init
+name|mtx_init
 argument_list|(
 operator|&
 name|emul_lock
 argument_list|,
 literal|"emuldata lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|sx_init
@@ -5720,7 +5724,7 @@ operator|*
 name|ldhp
 argument_list|)
 expr_stmt|;
-name|sx_destroy
+name|mtx_destroy
 argument_list|(
 operator|&
 name|emul_lock
