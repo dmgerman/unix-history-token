@@ -3588,6 +3588,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|SK_YU_READ_2
 argument_list|(
 name|sc_if
@@ -3596,6 +3597,9 @@ name|YUKON_SMICR
 argument_list|)
 operator|&
 name|YU_SMICR_BUSY
+operator|)
+operator|==
+literal|0
 condition|)
 break|break;
 block|}
@@ -3605,7 +3609,6 @@ name|i
 operator|==
 name|SK_TIMEOUT
 condition|)
-block|{
 name|if_printf
 argument_list|(
 name|sc_if
@@ -3615,12 +3618,6 @@ argument_list|,
 literal|"phy write timeout\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 return|return
 operator|(
 literal|0
