@@ -59,6 +59,8 @@ name|devinfo
 decl_stmt|;
 name|int
 name|busy
+range|:
+literal|1
 decl_stmt|;
 name|int
 name|hwvol_muted
@@ -274,8 +276,6 @@ block|,
 operator|.
 name|d_flags
 operator|=
-name|D_TRACKCLOSE
-operator||
 name|D_NEEDGIANT
 block|,
 operator|.
@@ -3441,7 +3441,8 @@ expr_stmt|;
 name|m
 operator|->
 name|busy
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 name|snd_mtxunlock
 argument_list|(
@@ -3518,7 +3519,8 @@ block|}
 name|m
 operator|->
 name|busy
-operator|--
+operator|=
+literal|0
 expr_stmt|;
 name|snd_mtxunlock
 argument_list|(
