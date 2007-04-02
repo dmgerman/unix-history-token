@@ -3281,14 +3281,6 @@ operator|||
 name|m
 operator|->
 name|busy
-operator|||
-operator|(
-name|m
-operator|->
-name|flags
-operator|&
-name|PG_BUSY
-operator|)
 condition|)
 continue|continue;
 name|TAILQ_FOREACH_SAFE
