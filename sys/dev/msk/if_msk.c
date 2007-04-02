@@ -310,7 +310,7 @@ specifier|static
 name|int
 name|msi_disable
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -399,11 +399,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|MSI_SUPPORT
-end_undef
+end_define
 
 begin_undef
 undef|#
@@ -7866,6 +7866,8 @@ ifdef|#
 directive|ifdef
 name|MSI_SUPPORT
 name|int
+name|i
+decl_stmt|,
 name|msic
 decl_stmt|;
 endif|#
