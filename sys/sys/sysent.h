@@ -500,6 +500,17 @@ end_struct
 begin_define
 define|#
 directive|define
+name|MAKE_SYSENT
+parameter_list|(
+name|syscallname
+parameter_list|)
+define|\
+value|static struct sysent syscallname##_sysent = {           \     (sizeof(struct syscallname ## _args )               \      / sizeof(register_t)),                             \     (sy_call_t *)& syscallname,                         \     SYS_AUE_##syscallname                               \ }
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYSCALL_MODULE
 parameter_list|(
 name|name
@@ -524,7 +535,7 @@ parameter_list|(
 name|syscallname
 parameter_list|)
 define|\
-value|static int syscallname##_syscall = SYS_##syscallname;   \ static struct sysent syscallname##_sysent = {           \     (sizeof(struct syscallname ## _args )               \      / sizeof(register_t)),                             \     (sy_call_t *)& syscallname,                         \     SYS_AUE_##syscallname                               \ };                                                      \ SYSCALL_MODULE(syscallname,                             \& syscallname##_syscall,& syscallname##_sysent,    \     NULL, NULL);
+value|static int syscallname##_syscall = SYS_##syscallname;   \ MAKE_SYSENT(syscallname);                               \ SYSCALL_MODULE(syscallname,                             \& syscallname##_syscall,& syscallname##_sysent,    \     NULL, NULL);
 end_define
 
 begin_define
