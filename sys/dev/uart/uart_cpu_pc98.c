@@ -106,6 +106,11 @@ modifier|*
 name|di
 parameter_list|)
 block|{
+name|struct
+name|uart_class
+modifier|*
+name|class
+decl_stmt|;
 name|unsigned
 name|int
 name|i
@@ -114,13 +119,23 @@ name|ivar
 decl_stmt|,
 name|flags
 decl_stmt|;
-comment|/* Check the environment. */
-name|di
-operator|->
-name|ops
+name|class
 operator|=
-name|uart_ns8250_ops
+operator|&
+name|uart_ns8250_class
 expr_stmt|;
+if|if
+condition|(
+name|class
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* Check the environment. */
 if|if
 condition|(
 name|uart_getenv
@@ -128,6 +143,8 @@ argument_list|(
 name|devtype
 argument_list|,
 name|di
+argument_list|,
+name|class
 argument_list|)
 operator|==
 literal|0
@@ -240,7 +257,10 @@ name|di
 operator|->
 name|ops
 operator|=
-name|uart_ns8250_ops
+name|uart_getops
+argument_list|(
+name|class
+argument_list|)
 expr_stmt|;
 name|di
 operator|->
@@ -270,7 +290,10 @@ name|bst
 argument_list|,
 name|ivar
 argument_list|,
-literal|8
+name|uart_getrange
+argument_list|(
+name|class
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,

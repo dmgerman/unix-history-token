@@ -3612,7 +3612,7 @@ operator|->
 name|sc_sysdev
 operator|->
 name|ops
-operator|.
+operator|->
 name|putc
 argument_list|(
 operator|&
@@ -3630,7 +3630,7 @@ operator|->
 name|sc_sysdev
 operator|->
 name|ops
-operator|.
+operator|->
 name|putc
 argument_list|(
 operator|&

@@ -143,7 +143,11 @@ name|di
 operator|->
 name|ops
 operator|=
-name|uart_ns8250_ops
+name|uart_getops
+argument_list|(
+operator|&
+name|uart_ns8250_class
+argument_list|)
 expr_stmt|;
 name|di
 operator|->

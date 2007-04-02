@@ -194,6 +194,12 @@ name|uart_class
 block|{
 name|KOBJ_CLASS_FIELDS
 expr_stmt|;
+name|struct
+name|uart_ops
+modifier|*
+name|uc_ops
+decl_stmt|;
+comment|/* Low-level console operations. */
 name|u_int
 name|uc_range
 decl_stmt|;
@@ -205,30 +211,6 @@ comment|/* Default rclk for this device. */
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|uart_class
-name|uart_ns8250_class
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|uart_class
-name|uart_sab82532_class
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|uart_class
-name|uart_z8530_class
-decl_stmt|;
-end_decl_stmt
 
 begin_struct
 struct|struct

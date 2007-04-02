@@ -86,8 +86,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|uart_ops
-name|uart_sa1110_ops
+name|uart_class
+name|uart_sa1110_class
 decl_stmt|;
 end_decl_stmt
 
@@ -157,7 +157,11 @@ name|di
 operator|->
 name|ops
 operator|=
-name|uart_sa1110_ops
+name|uart_getops
+argument_list|(
+operator|&
+name|uart_sa1110_class
+argument_list|)
 expr_stmt|;
 name|di
 operator|->

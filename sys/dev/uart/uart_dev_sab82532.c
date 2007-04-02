@@ -807,6 +807,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|uart_ops
 name|uart_sab82532_ops
@@ -1856,7 +1857,7 @@ name|uart_class
 name|uart_sab82532_class
 init|=
 block|{
-literal|"sab82532 class"
+literal|"sab82532"
 block|,
 name|sab82532_methods
 block|,
@@ -1865,6 +1866,12 @@ argument_list|(
 expr|struct
 name|sab82532_softc
 argument_list|)
+block|,
+operator|.
+name|uc_ops
+operator|=
+operator|&
+name|uart_sab82532_ops
 block|,
 operator|.
 name|uc_range

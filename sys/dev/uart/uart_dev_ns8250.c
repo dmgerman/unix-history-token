@@ -932,6 +932,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|uart_ops
 name|uart_ns8250_ops
@@ -1675,7 +1676,7 @@ name|uart_class
 name|uart_ns8250_class
 init|=
 block|{
-literal|"ns8250 class"
+literal|"ns8250"
 block|,
 name|ns8250_methods
 block|,
@@ -1684,6 +1685,12 @@ argument_list|(
 expr|struct
 name|ns8250_softc
 argument_list|)
+block|,
+operator|.
+name|uc_ops
+operator|=
+operator|&
+name|uart_ns8250_ops
 block|,
 operator|.
 name|uc_range

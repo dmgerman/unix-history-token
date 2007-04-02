@@ -584,6 +584,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|uart_ops
 name|at91_usart_ops
@@ -3167,7 +3168,7 @@ name|uart_class
 name|at91_usart_class
 init|=
 block|{
-literal|"at91_usart class"
+literal|"at91_usart"
 block|,
 name|at91_usart_methods
 block|,
@@ -3176,6 +3177,12 @@ argument_list|(
 expr|struct
 name|at91_usart_softc
 argument_list|)
+block|,
+operator|.
+name|uc_ops
+operator|=
+operator|&
+name|at91_usart_ops
 block|,
 operator|.
 name|uc_range

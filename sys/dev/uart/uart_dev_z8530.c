@@ -914,6 +914,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|uart_ops
 name|uart_z8530_ops
@@ -1449,7 +1450,7 @@ name|uart_class
 name|uart_z8530_class
 init|=
 block|{
-literal|"z8530 class"
+literal|"z8530"
 block|,
 name|z8530_methods
 block|,
@@ -1458,6 +1459,12 @@ argument_list|(
 expr|struct
 name|z8530_softc
 argument_list|)
+block|,
+operator|.
+name|uc_ops
+operator|=
+operator|&
+name|uart_z8530_ops
 block|,
 operator|.
 name|uc_range

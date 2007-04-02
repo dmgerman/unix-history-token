@@ -212,6 +212,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|uart_ops
 name|uart_sa1110_ops
@@ -1357,11 +1358,17 @@ name|uart_class
 name|uart_sa1110_class
 init|=
 block|{
-literal|"sa1110 class"
+literal|"sa1110"
 block|,
 name|sa1110_methods
 block|,
 literal|1
+block|,
+operator|.
+name|uc_ops
+operator|=
+operator|&
+name|uart_sa1110_ops
 block|,
 operator|.
 name|uc_range

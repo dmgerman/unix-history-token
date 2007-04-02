@@ -175,6 +175,11 @@ name|dig64_hcdp_entry
 modifier|*
 name|ent
 decl_stmt|;
+name|struct
+name|uart_class
+modifier|*
+name|class
+decl_stmt|;
 name|bus_addr_t
 name|addr
 decl_stmt|;
@@ -185,6 +190,22 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|class
+operator|=
+operator|&
+name|uart_ns8250_class
+expr_stmt|;
+if|if
+condition|(
+name|class
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* 	 * Use the DIG64 HCDP table if present. 	 */
 name|hcdp
 operator|=
@@ -285,7 +306,10 @@ name|di
 operator|->
 name|ops
 operator|=
-name|uart_ns8250_ops
+name|uart_getops
+argument_list|(
+name|class
+argument_list|)
 expr_stmt|;
 name|di
 operator|->
@@ -327,7 +351,10 @@ name|bst
 argument_list|,
 name|addr
 argument_list|,
-literal|8
+name|uart_getrange
+argument_list|(
+name|class
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -417,12 +444,6 @@ block|}
 comment|/* FALLTHROUGH */
 block|}
 comment|/* Check the environment. */
-name|di
-operator|->
-name|ops
-operator|=
-name|uart_ns8250_ops
-expr_stmt|;
 return|return
 operator|(
 name|uart_getenv
@@ -430,6 +451,8 @@ argument_list|(
 name|devtype
 argument_list|,
 name|di
+argument_list|,
+name|class
 argument_list|)
 operator|)
 return|;
