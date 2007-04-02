@@ -1382,6 +1382,7 @@ modifier|*
 name|h
 decl_stmt|;
 specifier|const
+name|unsigned
 name|char
 modifier|*
 name|p
@@ -1460,6 +1461,7 @@ name|p
 operator|=
 operator|(
 specifier|const
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -1522,7 +1524,7 @@ condition|(
 operator|*
 name|p
 operator|==
-literal|'\xff'
+literal|'\177'
 condition|)
 comment|/* End-of-volume-descriptor marker. */
 break|break;
