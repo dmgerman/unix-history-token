@@ -6639,6 +6639,7 @@ name|fixup_entry
 modifier|*
 name|le
 decl_stmt|;
+name|unsigned
 name|long
 name|set
 decl_stmt|,
