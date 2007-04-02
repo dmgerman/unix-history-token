@@ -202,9 +202,11 @@ name|archive
 block|{
 comment|/* 	 * The magic/state values are used to sanity-check the 	 * client's usage.  If an API function is called at a 	 * ridiculous time, or the client passes us an invalid 	 * pointer, these values allow me to catch that. 	 */
 name|unsigned
+name|int
 name|magic
 decl_stmt|;
 name|unsigned
+name|int
 name|state
 decl_stmt|;
 comment|/* 	 * Some public API functions depend on the "real" type of the 	 * archive object. 	 */
@@ -267,9 +269,11 @@ name|archive
 modifier|*
 parameter_list|,
 name|unsigned
+name|int
 name|magic
 parameter_list|,
 name|unsigned
+name|int
 name|state
 parameter_list|,
 specifier|const

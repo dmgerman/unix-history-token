@@ -229,11 +229,13 @@ specifier|static
 name|void
 name|write_all_states
 parameter_list|(
+name|unsigned
 name|int
 name|states
 parameter_list|)
 block|{
 name|unsigned
+name|int
 name|lowbit
 decl_stmt|;
 comment|/* A trick for computing the lowest set bit. */
@@ -296,9 +298,11 @@ modifier|*
 name|a
 parameter_list|,
 name|unsigned
+name|int
 name|magic
 parameter_list|,
 name|unsigned
+name|int
 name|state
 parameter_list|,
 specifier|const
