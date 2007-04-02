@@ -648,12 +648,21 @@ expr_stmt|;
 name|EMAC_Init
 argument_list|()
 expr_stmt|;
-name|sdcard_init
-argument_list|()
-expr_stmt|;
 name|EMAC_SetMACAddress
 argument_list|(
 name|mac
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|sdcard_init
+argument_list|()
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"Looking for SD card\n"
 argument_list|)
 expr_stmt|;
 name|dmadat
