@@ -1897,6 +1897,29 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * XXX: Current 		 */
+if|if
+condition|(
+name|nr
+operator|==
+name|ISP_ROLE_BOTH
+condition|)
+block|{
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"dual roles not supported"
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
 operator|*
 operator|(
 name|int
@@ -6015,7 +6038,7 @@ name|char
 name|lfmt
 index|[]
 init|=
-literal|"now %sabled for target mode"
+literal|"now %sabled for target mode\n"
 decl_stmt|;
 name|union
 name|ccb

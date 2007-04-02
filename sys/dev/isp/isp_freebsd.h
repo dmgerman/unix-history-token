@@ -383,7 +383,6 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-specifier|const
 name|void
 modifier|*
 modifier|*
@@ -2734,6 +2733,29 @@ include|#
 directive|include
 file|<dev/isp/isp_library.h>
 end_include
+
+begin_comment
+comment|/*  * XXX: Temp  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|ISP_DEFAULT_ROLES
+operator|==
+name|ISP_ROLE_BOTH
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Dual Role Temporarily Unsupported"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

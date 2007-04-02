@@ -9651,6 +9651,8 @@ index|[
 name|isp_handle_index
 argument_list|(
 name|handle
+operator|&
+name|ISP_HANDLE_MASK
 argument_list|)
 index|]
 expr_stmt|;
@@ -11636,6 +11638,8 @@ argument_list|(
 name|rq
 operator|->
 name|req_handle
+operator|&
+name|ISP_HANDLE_MASK
 argument_list|)
 index|]
 expr_stmt|;
@@ -12201,6 +12205,8 @@ argument_list|(
 name|rq
 operator|->
 name|req_handle
+operator|&
+name|ISP_HANDLE_MASK
 argument_list|)
 index|]
 expr_stmt|;
@@ -12966,6 +12972,8 @@ argument_list|(
 name|rq
 operator|->
 name|req_handle
+operator|&
+name|ISP_HANDLE_MASK
 argument_list|)
 index|]
 expr_stmt|;
@@ -13901,6 +13909,8 @@ argument_list|(
 name|rq
 operator|->
 name|req_handle
+operator|&
+name|ISP_HANDLE_MASK
 argument_list|)
 index|]
 expr_stmt|;
@@ -14413,7 +14423,9 @@ decl_stmt|;
 name|bus_dmamap_t
 modifier|*
 name|dp
-init|=
+decl_stmt|;
+name|dp
+operator|=
 operator|&
 name|pcs
 operator|->
@@ -14422,9 +14434,11 @@ index|[
 name|isp_handle_index
 argument_list|(
 name|handle
+operator|&
+name|ISP_HANDLE_MASK
 argument_list|)
 index|]
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
