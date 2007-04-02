@@ -10524,7 +10524,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>
-literal|700025
+literal|602105
 end_if
 
 begin_comment
@@ -11198,7 +11198,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>
-literal|700025
+literal|602105
 block|{
 name|int
 name|msicount
@@ -12618,7 +12618,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>
-literal|700025
+literal|602105
 if|if
 condition|(
 name|sc
