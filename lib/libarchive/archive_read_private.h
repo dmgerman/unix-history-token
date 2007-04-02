@@ -122,7 +122,7 @@ comment|/* File offset of beginning of most recently-read header. */
 name|off_t
 name|header_position
 decl_stmt|;
-comment|/* 	 * Detection functions for decompression: bid functions are 	 * given a block of data from the beginning of the stream and 	 * can bid on whether or not they support the data stream. 	 * General guideline: bid the number of bits that you actually 	 * test, e.g., 16 if you test a 2-byte magic value.  The 	 * highest bidder will have their init function invoked, which 	 * can set up pointers to specific handlers. 	 * 	 * On write, the client just invokes an archive_write_set function 	 * which sets up the data here directly. 	 */
+comment|/* 	 * Detection functions for decompression: bid functions are 	 * given a block of data from the beginning of the stream and 	 * can bid on whether or not they support the data stream. 	 * General guideline: bid the number of bits that you actually 	 * test, e.g., 16 if you test a 2-byte magic value.  The 	 * highest bidder will have their init function invoked, which 	 * can set up pointers to specific handlers. 	 */
 struct|struct
 block|{
 name|int
@@ -172,41 +172,12 @@ comment|/* Data for (de)compressor. */
 name|int
 function_decl|(
 modifier|*
-name|compression_init
-function_decl|)
-parameter_list|(
-name|struct
-name|archive_read
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* Initialize. */
-name|int
-function_decl|(
-modifier|*
 name|compression_finish
 function_decl|)
 parameter_list|(
 name|struct
 name|archive_read
 modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|compression_write
-function_decl|)
-parameter_list|(
-name|struct
-name|archive_read
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 comment|/* 	 * Read uses a peek/consume I/O model: the decompression code 	 * returns a pointer to the requested block and advances the 	 * file position only when requested by a consume call.  This 	 * reduces copying and also simplifies look-ahead for format 	 * detection. 	 */
