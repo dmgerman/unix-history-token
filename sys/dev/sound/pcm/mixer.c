@@ -59,8 +59,6 @@ name|devinfo
 decl_stmt|;
 name|int
 name|busy
-range|:
-literal|1
 decl_stmt|;
 name|int
 name|hwvol_muted
