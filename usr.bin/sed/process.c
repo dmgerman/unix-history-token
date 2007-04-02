@@ -1311,7 +1311,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|(a)->type == AT_RE ? regexec_e((a)->u.r, ps, 0, 1, psl) :	\ 	    (a)->type == AT_LINE ? linenum == (a)->u.l : lastline()
+value|((a)->type == AT_RE ? regexec_e((a)->u.r, ps, 0, 1, psl) :	\ 	    (a)->type == AT_LINE ? linenum == (a)->u.l : lastline())
 end_define
 
 begin_comment
