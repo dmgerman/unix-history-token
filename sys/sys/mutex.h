@@ -711,7 +711,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int contested = 0;						\ 	uint64_t waittime = 0;						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		lock_profile_obtain_lock_failed(&(mp)->lock_object,	\&contested,&waittime);				\ 		_mtx_lock_sleep((mp), _tid, (opts), (file), (line));	\ 	}								\ 	lock_profile_obtain_lock_success(&(mp)->lock_object, contested,	\ 	    waittime, (file), (line));					\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	if (!_obtain_lock((mp), _tid)) {				\ 		_mtx_lock_sleep((mp), _tid, (opts), (file), (line));	\ 	} else 								\               	lock_profile_obtain_lock_success(&(mp)->lock_object, 0,	\ 		    0, (file), (line));					\ } while (0)
 end_define
 
 begin_endif
@@ -750,7 +750,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {	\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int contested = 0;						\ 	uint64_t waittime = 0;						\ 	spinlock_enter();						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else {							\ 			lock_profile_obtain_lock_failed(&(mp)->lock_object, \&contested,&waittime);			\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 		}							\ 	}								\ 	lock_profile_obtain_lock_success(&(mp)->lock_object, contested,	\ 	    waittime, (file), (line));					\ } while (0)
+value|do {	\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	spinlock_enter();						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else {							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 		}							\ 	} else 								\               	lock_profile_obtain_lock_success(&(mp)->lock_object, 0,	\ 		    0, (file), (line));					\ } while (0)
 end_define
 
 begin_else
@@ -850,7 +850,7 @@ name|_rel_spin_lock
 parameter_list|(
 name|mp
 parameter_list|)
-value|do {						\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else								\ 		_release_lock_quick((mp));				\ 	spinlock_exit();						\ } while (0)
+value|do {						\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else {								\ 		lock_profile_release_lock(&(mp)->lock_object);          \ 		_release_lock_quick((mp));				\ 	}                                                               \ 	spinlock_exit();				                \ } while (0)
 end_define
 
 begin_else
