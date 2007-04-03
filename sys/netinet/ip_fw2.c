@@ -819,16 +819,6 @@ begin_comment
 comment|/* bounded to 1..1000 in add_rule() */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|int
-name|ipfw_chg_hook
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -854,7 +844,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -862,8 +852,6 @@ name|OID_AUTO
 argument_list|,
 name|enable
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE3
@@ -872,10 +860,6 @@ operator|&
 name|fw_enable
 argument_list|,
 literal|0
-argument_list|,
-name|ipfw_chg_hook
-argument_list|,
-literal|"I"
 argument_list|,
 literal|"Enable ipfw"
 argument_list|)
@@ -18875,38 +18859,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Firewall"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_PROC
-argument_list|(
-operator|&
-name|ip6_fw_sysctl_ctx
-argument_list|,
-name|SYSCTL_CHILDREN
-argument_list|(
-name|ip6_fw_sysctl_tree
-argument_list|)
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"enable"
-argument_list|,
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_SECURE3
-argument_list|,
-operator|&
-name|fw6_enable
-argument_list|,
-literal|0
-argument_list|,
-name|ipfw_chg_hook
-argument_list|,
-literal|"I"
-argument_list|,
-literal|"Enable ipfw+6"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT
