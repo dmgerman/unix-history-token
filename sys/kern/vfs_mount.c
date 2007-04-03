@@ -6514,6 +6514,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|root_mount_complete
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Hold root mount.  */
+end_comment
+
 begin_function
 name|struct
 name|root_hold_token
@@ -6582,6 +6595,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Release root mount.  */
+end_comment
+
 begin_function
 name|void
 name|root_mount_rel
@@ -6627,10 +6644,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Wait for all subsystems to release root mount.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
-name|root_mount_wait
+name|root_mount_prepare
 parameter_list|(
 name|void
 parameter_list|)
@@ -6723,6 +6744,107 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Root was mounted, share the good news.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|root_mount_done
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|mountlist_mtx
+argument_list|)
+expr_stmt|;
+name|root_mount_complete
+operator|=
+literal|1
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|root_mount_complete
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|mountlist_mtx
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Wait until root is mounted.  */
+end_comment
+
+begin_function
+name|void
+name|root_mount_wait
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* 	 * Panic on an obvious deadlock - the function can't be called from 	 * a thread which is doing the whole SYSINIT stuff. 	 */
+name|KASSERT
+argument_list|(
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"root_mount_wait: cannot be called from the swapper thread"
+operator|)
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|mountlist_mtx
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|!
+name|root_mount_complete
+condition|)
+block|{
+name|msleep
+argument_list|(
+operator|&
+name|root_mount_complete
+argument_list|,
+operator|&
+name|mountlist_mtx
+argument_list|,
+name|PZERO
+argument_list|,
+literal|"rootwait"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|mountlist_mtx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -7470,7 +7592,7 @@ name|asked
 init|=
 literal|0
 decl_stmt|;
-name|root_mount_wait
+name|root_mount_prepare
 argument_list|()
 expr_stmt|;
 name|mount_zone
@@ -7515,7 +7637,9 @@ operator|!
 name|vfs_mountroot_ask
 argument_list|()
 condition|)
-return|return;
+goto|goto
+name|mounted
+goto|;
 name|asked
 operator|=
 literal|1
@@ -7543,7 +7667,9 @@ argument_list|(
 name|ctrootdevname
 argument_list|)
 condition|)
-return|return;
+goto|goto
+name|mounted
+goto|;
 name|ctrootdevname
 operator|=
 name|NULL
@@ -7585,7 +7711,9 @@ name|i
 index|]
 argument_list|)
 condition|)
-return|return;
+goto|goto
+name|mounted
+goto|;
 block|}
 block|}
 comment|/* 	 * Try to use the value read by the loader from /etc/fstab, or 	 * supplied via some other means.  This is the preferred 	 * mechanism. 	 */
@@ -7620,7 +7748,9 @@ condition|(
 operator|!
 name|error
 condition|)
-return|return;
+goto|goto
+name|mounted
+goto|;
 block|}
 comment|/* 	 * Try values that may have been computed by code during boot 	 */
 if|if
@@ -7634,7 +7764,9 @@ literal|0
 index|]
 argument_list|)
 condition|)
-return|return;
+goto|goto
+name|mounted
+goto|;
 if|if
 condition|(
 operator|!
@@ -7646,7 +7778,9 @@ literal|1
 index|]
 argument_list|)
 condition|)
-return|return;
+goto|goto
+name|mounted
+goto|;
 comment|/* 	 * If we (still) have a compiled-in default, try it. 	 */
 if|if
 condition|(
@@ -7662,7 +7796,9 @@ argument_list|(
 name|ctrootdevname
 argument_list|)
 condition|)
-return|return;
+goto|goto
+name|mounted
+goto|;
 comment|/* 	 * Everything so far has failed, prompt on the console if we haven't 	 * already tried that. 	 */
 if|if
 condition|(
@@ -7675,11 +7811,18 @@ operator|!
 name|vfs_mountroot_ask
 argument_list|()
 condition|)
-return|return;
+goto|goto
+name|mounted
+goto|;
 name|panic
 argument_list|(
 literal|"Root mount failed, startup aborted."
 argument_list|)
+expr_stmt|;
+name|mounted
+label|:
+name|root_mount_done
+argument_list|()
 expr_stmt|;
 block|}
 end_function
