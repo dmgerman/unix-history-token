@@ -1336,16 +1336,6 @@ name|lo
 operator|->
 name|lo_profile_obj
 decl_stmt|;
-comment|/* don't reset the timer when/if recursing */
-if|if
-condition|(
-name|l
-operator|->
-name|lpo_acqtime
-operator|==
-literal|0
-condition|)
-block|{
 name|lo
 operator|->
 name|lo_profile_obj
@@ -1413,7 +1403,6 @@ name|lpo_waittime
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 end_function
 

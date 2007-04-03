@@ -529,9 +529,18 @@ name|int
 name|line
 parameter_list|)
 block|{
+comment|/* don't reset the timer when/if recursing */
 if|if
 condition|(
 name|lock_prof_enable
+operator|&&
+name|lo
+operator|->
+name|lo_profile_obj
+operator|.
+name|lpo_acqtime
+operator|==
+literal|0
 condition|)
 block|{
 ifdef|#
