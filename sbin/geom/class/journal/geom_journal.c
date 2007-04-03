@@ -779,7 +779,7 @@ argument_list|(
 name|req
 argument_list|,
 literal|"File system exists on %s and this "
-literal|"operation is going to destroy it. Use -f if you "
+literal|"operation would destroy it.\nUse -f if you "
 literal|"really want to do it."
 argument_list|,
 name|data
@@ -790,6 +790,20 @@ block|}
 name|journal
 operator|=
 name|data
+expr_stmt|;
+name|msize
+operator|=
+name|g_get_mediasize
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+name|ssize
+operator|=
+name|g_get_sectorsize
+argument_list|(
+name|data
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -805,20 +819,45 @@ operator|=
 literal|1073741824ULL
 expr_stmt|;
 block|}
-name|msize
-operator|=
-name|g_get_mediasize
+else|else
+block|{
+if|if
+condition|(
+name|jsize
+operator|<
+literal|104857600
+condition|)
+block|{
+name|gctl_error
 argument_list|(
-name|data
+name|req
+argument_list|,
+literal|"Journal too small."
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+operator|(
+name|jsize
+operator|%
 name|ssize
-operator|=
-name|g_get_sectorsize
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|gctl_error
 argument_list|(
-name|data
+name|req
+argument_list|,
+literal|"Invalid journal size."
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
+block|}
 if|if
 condition|(
 name|jsize
