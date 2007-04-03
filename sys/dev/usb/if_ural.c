@@ -12521,14 +12521,6 @@ decl_stmt|;
 name|usb_device_request_t
 name|req
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splusb
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Asynchronously read statistic registers (cleared by read). 	 */
 name|req
 operator|.
@@ -12611,11 +12603,6 @@ argument_list|(
 name|sc
 operator|->
 name|amrr_xfer
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
