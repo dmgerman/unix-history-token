@@ -16855,7 +16855,7 @@ name|cmdlen
 operator|!=
 name|F_INSN_SIZE
 argument_list|(
-name|ipfw_insn
+name|ipfw_insn_pipe
 argument_list|)
 condition|)
 goto|goto
