@@ -1892,7 +1892,16 @@ condition|)
 block|{
 name|int
 name|err
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ih
+condition|)
+block|{
+name|err
+operator|=
 name|bus_teardown_intr
 argument_list|(
 name|self
@@ -1905,12 +1914,11 @@ name|sc
 operator|->
 name|ih
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|err
 condition|)
-comment|/* XXX or should we panic? */
 name|device_printf
 argument_list|(
 name|self
@@ -1965,13 +1973,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|sc
-operator|->
-name|irq_res
-condition|)
-block|{
 name|bus_release_resource
 argument_list|(
 name|self
