@@ -764,40 +764,64 @@ decl_stmt|;
 comment|/* Termination function to call */
 name|bool
 name|mainprog
+range|:
+literal|1
 decl_stmt|;
 comment|/* True if this is the main program */
 name|bool
 name|rtld
+range|:
+literal|1
 decl_stmt|;
 comment|/* True if this is the dynamic linker */
 name|bool
 name|textrel
+range|:
+literal|1
 decl_stmt|;
 comment|/* True if there are relocations to text seg */
 name|bool
 name|symbolic
+range|:
+literal|1
 decl_stmt|;
 comment|/* True if generated with "-Bsymbolic" */
 name|bool
 name|bind_now
+range|:
+literal|1
 decl_stmt|;
 comment|/* True if all relocations should be made first */
 name|bool
 name|traced
+range|:
+literal|1
 decl_stmt|;
 comment|/* Already printed in ldd trace output */
 name|bool
 name|jmpslots_done
+range|:
+literal|1
 decl_stmt|;
 comment|/* Already have relocated the jump slots */
 name|bool
 name|init_done
+range|:
+literal|1
 decl_stmt|;
 comment|/* Already have added object to init list */
 name|bool
 name|tls_done
+range|:
+literal|1
 decl_stmt|;
 comment|/* Already allocated offset for static TLS */
+name|bool
+name|phdr_alloc
+range|:
+literal|1
+decl_stmt|;
+comment|/* Phdr is allocated and needs to be freed. */
 name|struct
 name|link_map
 name|linkmap
