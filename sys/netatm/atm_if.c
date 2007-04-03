@@ -500,6 +500,9 @@ decl_stmt|;
 name|Cmn_vcc
 modifier|*
 name|cvp
+decl_stmt|,
+modifier|*
+name|cvp_next
 decl_stmt|;
 name|int
 name|err
@@ -632,6 +635,12 @@ condition|(
 name|cvp
 condition|)
 block|{
+name|cvp_next
+operator|=
+name|cvp
+operator|->
+name|cv_next
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|cup
@@ -643,9 +652,7 @@ argument_list|)
 expr_stmt|;
 name|cvp
 operator|=
-name|cvp
-operator|->
-name|cv_next
+name|cvp_next
 expr_stmt|;
 block|}
 name|cup
