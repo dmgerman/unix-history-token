@@ -1960,7 +1960,7 @@ begin_define
 define|#
 directive|define
 name|PT_GNU_EH_FRAME
-value|PT_SUNW_UNWIND
+value|0x6474e550
 end_define
 
 begin_define
