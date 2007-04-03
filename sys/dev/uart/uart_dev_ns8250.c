@@ -1199,21 +1199,11 @@ name|c
 parameter_list|)
 block|{
 name|int
-name|delay
-decl_stmt|,
 name|limit
 decl_stmt|;
-comment|/* 1/10th the time to transmit 1 character (estimate). */
-name|delay
-operator|=
-name|ns8250_delay
-argument_list|(
-name|bas
-argument_list|)
-expr_stmt|;
 name|limit
 operator|=
-literal|20
+literal|250000
 expr_stmt|;
 while|while
 condition|(
@@ -1235,7 +1225,7 @@ name|limit
 condition|)
 name|DELAY
 argument_list|(
-name|delay
+literal|4
 argument_list|)
 expr_stmt|;
 name|uart_setreg
@@ -1254,7 +1244,7 @@ argument_list|)
 expr_stmt|;
 name|limit
 operator|=
-literal|40
+literal|250000
 expr_stmt|;
 while|while
 condition|(
@@ -1276,7 +1266,7 @@ name|limit
 condition|)
 name|DELAY
 argument_list|(
-name|delay
+literal|4
 argument_list|)
 expr_stmt|;
 block|}
@@ -1334,20 +1324,10 @@ parameter_list|)
 block|{
 name|int
 name|c
-decl_stmt|,
-name|delay
 decl_stmt|;
 name|uart_lock
 argument_list|(
 name|hwmtx
-argument_list|)
-expr_stmt|;
-comment|/* 1/10th the time to transmit 1 character (estimate). */
-name|delay
-operator|=
-name|ns8250_delay
-argument_list|(
-name|bas
 argument_list|)
 expr_stmt|;
 while|while
@@ -1373,7 +1353,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-name|delay
+literal|4
 argument_list|)
 expr_stmt|;
 name|uart_lock
