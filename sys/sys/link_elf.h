@@ -22,7 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/elf.h>
 end_include
 
 begin_comment
@@ -185,6 +185,96 @@ enum|;
 block|}
 struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|dl_phdr_info
+block|{
+name|Elf_Addr
+name|dlpi_addr
+decl_stmt|;
+comment|/* module relocation base */
+specifier|const
+name|char
+modifier|*
+name|dlpi_name
+decl_stmt|;
+comment|/* module name */
+specifier|const
+name|Elf_Phdr
+modifier|*
+name|dlpi_phdr
+decl_stmt|;
+comment|/* pointer to module's phdr */
+name|Elf_Half
+name|dlpi_phnum
+decl_stmt|;
+comment|/* number of entries in phdr */
+name|unsigned
+name|long
+name|long
+name|int
+name|dlpi_adds
+decl_stmt|;
+comment|/* total # of loads */
+name|unsigned
+name|long
+name|long
+name|int
+name|dlpi_subs
+decl_stmt|;
+comment|/* total # of unloads */
+name|size_t
+name|dlpi_tls_modid
+decl_stmt|;
+name|void
+modifier|*
+name|dlpi_tls_data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_macro
+name|__BEGIN_DECLS
+end_macro
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|__dl_iterate_hdr_callback
+function_decl|)
+parameter_list|(
+name|struct
+name|dl_phdr_info
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_function_decl
+specifier|extern
+name|int
+name|dl_iterate_phdr
+parameter_list|(
+name|__dl_iterate_hdr_callback
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
