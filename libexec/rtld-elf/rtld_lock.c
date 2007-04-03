@@ -71,7 +71,7 @@ struct|struct
 name|Struct_Lock
 block|{
 specifier|volatile
-name|int
+name|u_int
 name|lock
 decl_stmt|;
 name|void
