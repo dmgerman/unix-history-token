@@ -5181,12 +5181,12 @@ name|FORCE
 operator|&&
 name|last_remove
 operator|==
-name|time_uptime
+name|time_second
 condition|)
 return|return;
 name|last_remove
 operator|=
-name|time_uptime
+name|time_second
 expr_stmt|;
 comment|/* 	 * because O_LIMIT refer to parent rules, during the first pass only 	 * remove child and mark any pending LIMIT_PARENT, and remove 	 * them in a second pass. 	 */
 name|next_pass
@@ -5309,7 +5309,7 @@ name|q
 operator|->
 name|expire
 argument_list|,
-name|time_uptime
+name|time_second
 argument_list|)
 condition|)
 goto|goto
@@ -5491,7 +5491,7 @@ name|q
 operator|->
 name|expire
 argument_list|,
-name|time_uptime
+name|time_second
 argument_list|)
 condition|)
 block|{
@@ -5896,7 +5896,7 @@ name|q
 operator|->
 name|expire
 operator|=
-name|time_uptime
+name|time_second
 operator|+
 name|dyn_syn_lifetime
 expr_stmt|;
@@ -6016,7 +6016,7 @@ name|q
 operator|->
 name|expire
 operator|=
-name|time_uptime
+name|time_second
 operator|+
 name|dyn_ack_lifetime
 expr_stmt|;
@@ -6043,7 +6043,7 @@ name|q
 operator|->
 name|expire
 operator|=
-name|time_uptime
+name|time_second
 operator|+
 name|dyn_fin_lifetime
 expr_stmt|;
@@ -6072,7 +6072,7 @@ name|q
 operator|->
 name|expire
 operator|=
-name|time_uptime
+name|time_second
 operator|+
 name|dyn_rst_lifetime
 expr_stmt|;
@@ -6093,7 +6093,7 @@ name|q
 operator|->
 name|expire
 operator|=
-name|time_uptime
+name|time_second
 operator|+
 name|dyn_udp_lifetime
 expr_stmt|;
@@ -6105,7 +6105,7 @@ name|q
 operator|->
 name|expire
 operator|=
-name|time_uptime
+name|time_second
 operator|+
 name|dyn_short_lifetime
 expr_stmt|;
@@ -6447,7 +6447,7 @@ name|r
 operator|->
 name|expire
 operator|=
-name|time_uptime
+name|time_second
 operator|+
 name|dyn_syn_lifetime
 expr_stmt|;
@@ -6704,7 +6704,7 @@ name|q
 operator|->
 name|expire
 operator|=
-name|time_uptime
+name|time_second
 operator|+
 name|dyn_short_lifetime
 expr_stmt|;
@@ -6831,12 +6831,12 @@ if|if
 condition|(
 name|last_log
 operator|!=
-name|time_uptime
+name|time_second
 condition|)
 block|{
 name|last_log
 operator|=
-name|time_uptime
+name|time_second
 expr_stmt|;
 name|printf
 argument_list|(
@@ -6884,12 +6884,12 @@ if|if
 condition|(
 name|last_log
 operator|!=
-name|time_uptime
+name|time_second
 condition|)
 block|{
 name|last_log
 operator|=
-name|time_uptime
+name|time_second
 expr_stmt|;
 name|printf
 argument_list|(
@@ -7199,12 +7199,12 @@ name|fw_verbose
 operator|&&
 name|last_log
 operator|!=
-name|time_uptime
+name|time_second
 condition|)
 block|{
 name|last_log
 operator|=
-name|time_uptime
+name|time_second
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -14371,7 +14371,7 @@ name|f
 operator|->
 name|timestamp
 operator|=
-name|time_uptime
+name|time_second
 expr_stmt|;
 if|if
 condition|(
@@ -14847,7 +14847,7 @@ name|f
 operator|->
 name|timestamp
 operator|=
-name|time_uptime
+name|time_second
 expr_stmt|;
 name|IPFW_RUNLOCK
 argument_list|(
@@ -17495,7 +17495,7 @@ name|dst
 operator|->
 name|expire
 argument_list|,
-name|time_uptime
+name|time_second
 argument_list|)
 condition|?
 literal|0
@@ -17504,7 +17504,7 @@ name|dst
 operator|->
 name|expire
 operator|-
-name|time_uptime
+name|time_second
 expr_stmt|;
 name|bp
 operator|+=
@@ -18631,7 +18631,7 @@ if|if
 condition|(
 name|TIME_LEQ
 argument_list|(
-name|time_uptime
+name|time_second
 operator|+
 name|dyn_keepalive_interval
 argument_list|,
@@ -18650,7 +18650,7 @@ name|q
 operator|->
 name|expire
 argument_list|,
-name|time_uptime
+name|time_second
 argument_list|)
 condition|)
 continue|continue;
