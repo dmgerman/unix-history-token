@@ -18861,6 +18861,15 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|time_t
+name|boot_seconds
+decl_stmt|;
+name|boot_seconds
+operator|=
+name|boottime
+operator|.
+name|tv_sec
+expr_stmt|;
 comment|/* XXX this can take a long time and locking will block packet flow */
 name|IPFW_RLOCK
 argument_list|(
@@ -18910,6 +18919,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* 			 * XXX HACK. Store the disable mask in the "next" pointer 			 * in a wild attempt to keep the ABI the same. 			 * Why do we do this on EVERY rule? 			 */
 name|bcopy
 argument_list|(
 operator|&
@@ -18934,6 +18944,32 @@ argument_list|(
 name|set_disable
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+expr|struct
+name|ip_fw
+operator|*
+operator|)
+name|bp
+operator|)
+operator|->
+name|timestamp
+condition|)
+operator|(
+operator|(
+expr|struct
+name|ip_fw
+operator|*
+operator|)
+name|bp
+operator|)
+operator|->
+name|timestamp
+operator|+=
+name|boot_seconds
 expr_stmt|;
 name|bp
 operator|+=
