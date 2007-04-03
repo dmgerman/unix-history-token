@@ -188,10 +188,12 @@ name|refcount_up
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|check
 decl_stmt|,
 name|calc_check
+decl_stmt|,
+name|vrf_id
 decl_stmt|;
 name|struct
 name|inpcb
@@ -212,7 +214,7 @@ name|offset
 decl_stmt|,
 name|iphlen
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ecn_bits
 decl_stmt|;
 name|struct
@@ -228,6 +230,10 @@ init|=
 operator|*
 name|offp
 decl_stmt|;
+name|vrf_id
+operator|=
+name|SCTP_DEFAULT_VRFID
+expr_stmt|;
 name|m
 operator|=
 name|SCTP_HEADER_TO_CHAIN
@@ -568,6 +574,8 @@ name|in6p
 argument_list|,
 operator|&
 name|net
+argument_list|,
+name|vrf_id
 argument_list|)
 expr_stmt|;
 comment|/* in6p's ref-count increased&& stcb locked */
@@ -684,6 +692,8 @@ name|in6p
 argument_list|,
 operator|&
 name|net
+argument_list|,
+name|vrf_id
 argument_list|)
 expr_stmt|;
 comment|/* in6p's ref-count increased */
@@ -742,7 +752,7 @@ name|init_chk
 argument_list|)
 argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -1061,7 +1071,7 @@ modifier|*
 name|net
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|nxtsz
 decl_stmt|;
 if|if
@@ -1218,7 +1228,7 @@ block|{
 if|if
 condition|(
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|chk
@@ -1251,7 +1261,7 @@ block|{
 if|if
 condition|(
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|chk
@@ -4147,7 +4157,9 @@ comment|/* I made the same as TCP since we are 					 * not setup? */
 block|}
 name|vrf_id
 operator|=
-name|SCTP_DEFAULT_VRFID
+name|inp
+operator|->
+name|def_vrf_id
 expr_stmt|;
 name|SCTP_ASOC_CREATE_LOCK
 argument_list|(
@@ -4857,7 +4869,9 @@ goto|;
 block|}
 name|vrf_id
 operator|=
-name|SCTP_DEFAULT_VRFID
+name|inp
+operator|->
+name|def_vrf_id
 expr_stmt|;
 name|sctp_ifa
 operator|=
@@ -4868,8 +4882,7 @@ argument_list|,
 name|stcb
 argument_list|,
 operator|(
-expr|struct
-name|route
+name|sctp_route_t
 operator|*
 operator|)
 operator|&

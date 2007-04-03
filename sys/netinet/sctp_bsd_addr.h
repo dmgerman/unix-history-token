@@ -32,7 +32,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<netinet/sctp_header.h>
+file|<netinet/sctp_pcb.h>
 end_include
 
 begin_if
@@ -89,7 +89,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|sctp_addr_change
 parameter_list|(

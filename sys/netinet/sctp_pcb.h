@@ -159,12 +159,6 @@ directive|include
 file|<netinet/sctp_auth.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/sctp_bsd_addr.h>
-end_include
-
 begin_comment
 comment|/*  * PCB flags (in sctp_flags bitmask)  */
 end_comment
@@ -651,7 +645,7 @@ name|uint8_t
 name|src_is_glob
 decl_stmt|;
 name|uint8_t
-name|resv
+name|in_ifa_list
 decl_stmt|;
 block|}
 struct|;
@@ -1589,6 +1583,9 @@ name|struct
 name|sctp_nets
 modifier|*
 modifier|*
+parameter_list|,
+name|uint32_t
+name|vrf_id
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/sctp_bsd_addr.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/sctp_asconf.h>
 end_include
 
@@ -4745,6 +4739,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* free the entry */
+name|sctp_free_ifa
+argument_list|(
+name|aa
+operator|->
+name|ifa
+argument_list|)
+expr_stmt|;
 name|SCTP_FREE
 argument_list|(
 name|aa
@@ -4830,6 +4831,16 @@ operator|->
 name|ifa
 operator|=
 name|ifa
+expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
+name|ifa
+operator|->
+name|refcount
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* correlation_id filled in during send routine later... */
 if|if
@@ -5227,6 +5238,11 @@ name|type
 parameter_list|)
 block|{
 name|struct
+name|sctp_ifa
+modifier|*
+name|ifa
+decl_stmt|;
+name|struct
 name|sctp_asconf_addr
 modifier|*
 name|aa
@@ -5371,6 +5387,13 @@ name|next
 argument_list|)
 expr_stmt|;
 comment|/* free the entry */
+name|sctp_free_ifa
+argument_list|(
+name|aa
+operator|->
+name|ifa
+argument_list|)
+expr_stmt|;
 name|SCTP_FREE
 argument_list|(
 name|aa
@@ -5434,6 +5457,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* free the entry */
+name|sctp_free_ifa
+argument_list|(
+name|aa
+operator|->
+name|ifa
+argument_list|)
+expr_stmt|;
 name|SCTP_FREE
 argument_list|(
 name|aa
@@ -5448,6 +5478,53 @@ return|;
 block|}
 block|}
 comment|/* for each aa */
+if|if
+condition|(
+name|stcb
+condition|)
+block|{
+name|vrf_id
+operator|=
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|vrf_id
+expr_stmt|;
+block|}
+else|else
+block|{
+name|vrf_id
+operator|=
+name|SCTP_DEFAULT_VRFID
+expr_stmt|;
+block|}
+name|ifa
+operator|=
+name|sctp_find_ifa_by_addr
+argument_list|(
+name|sa
+argument_list|,
+name|vrf_id
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifa
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Invalid address */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* adding new request to the queue */
 name|SCTP_MALLOC
 argument_list|(
@@ -5502,10 +5579,6 @@ return|;
 block|}
 comment|/* fill in asconf address parameter fields */
 comment|/* top level elements are "networked" during send */
-name|vrf_id
-operator|=
-name|SCTP_DEFAULT_VRFID
-expr_stmt|;
 name|aa
 operator|->
 name|ap
@@ -5522,13 +5595,16 @@ name|aa
 operator|->
 name|ifa
 operator|=
-name|sctp_find_ifa_by_addr
+name|ifa
+expr_stmt|;
+name|atomic_add_int
 argument_list|(
-name|sa
+operator|&
+name|ifa
+operator|->
+name|refcount
 argument_list|,
-name|vrf_id
-argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* correlation_id filled in during send routine later... */
@@ -6241,6 +6317,13 @@ argument_list|,
 name|aparam
 argument_list|,
 name|next
+argument_list|)
+expr_stmt|;
+name|sctp_free_ifa
+argument_list|(
+name|aparam
+operator|->
+name|ifa
 argument_list|)
 expr_stmt|;
 name|SCTP_FREE
@@ -10796,10 +10879,27 @@ name|next_addr
 goto|;
 block|}
 comment|/* see if this address really (still) exists */
+if|if
+condition|(
+name|stcb
+condition|)
+block|{
+name|vrf_id
+operator|=
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|vrf_id
+expr_stmt|;
+block|}
+else|else
+block|{
 name|vrf_id
 operator|=
 name|SCTP_DEFAULT_VRFID
 expr_stmt|;
+block|}
 name|sctp_ifa
 operator|=
 name|sctp_find_ifa_by_addr
@@ -11749,10 +11849,27 @@ decl_stmt|;
 name|uint32_t
 name|vrf_id
 decl_stmt|;
+if|if
+condition|(
+name|stcb
+condition|)
+block|{
+name|vrf_id
+operator|=
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|vrf_id
+expr_stmt|;
+block|}
+else|else
+block|{
 name|vrf_id
 operator|=
 name|SCTP_DEFAULT_VRFID
 expr_stmt|;
+block|}
 name|vrf
 operator|=
 name|sctp_find_vrf

@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/sctp_bsd_addr.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/sctp_uio.h>
 end_include
 
@@ -1176,6 +1170,7 @@ decl_stmt|;
 name|uint32_t
 name|vrf_id
 decl_stmt|;
+comment|/* FIX, for non-bsd is this right? */
 name|vrf_id
 operator|=
 name|SCTP_DEFAULT_VRFID
@@ -1571,6 +1566,7 @@ decl_stmt|;
 name|uint32_t
 name|vrf_id
 decl_stmt|;
+comment|/* FIX, for non-bsd is this right? */
 name|vrf_id
 operator|=
 name|SCTP_DEFAULT_VRFID
@@ -3804,6 +3800,11 @@ operator|)
 return|;
 block|}
 comment|/* not reached */
+name|printf
+argument_list|(
+literal|"Not reached reached?\n"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3929,6 +3930,11 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Ok we hit the case that the shutdown call was 			 * made after an abort or something. Nothing to do 			 * now. 			 */
+name|SCTP_INP_RUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -6100,11 +6106,6 @@ name|SCTP_PCB_FLAGS_UNBOUND
 condition|)
 block|{
 comment|/* Bind a ephemeral port */
-name|SCTP_INP_WUNLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|sctp_inpcb_bind
@@ -6125,14 +6126,6 @@ goto|goto
 name|out_now
 goto|;
 block|}
-block|}
-else|else
-block|{
-name|SCTP_INP_WUNLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* FIX ME: do we want to pass in a vrf on the connect call? */
 name|vrf_id
@@ -10609,6 +10602,11 @@ operator|*
 name|shmac
 argument_list|)
 expr_stmt|;
+name|SCTP_INP_RUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 comment|/* is there room for all of the hmac ids? */
@@ -11220,7 +11218,9 @@ return|;
 block|}
 name|vrf_id
 operator|=
-name|SCTP_DEFAULT_VRFID
+name|inp
+operator|->
+name|def_vrf_id
 expr_stmt|;
 name|error
 operator|=
@@ -16292,15 +16292,6 @@ operator|->
 name|sctp_asoc_list
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|stcb
-condition|)
-name|SCTP_TCB_UNLOCK
-argument_list|(
-name|stcb
-argument_list|)
-expr_stmt|;
 name|SCTP_INP_RUNLOCK
 argument_list|(
 name|inp
@@ -16344,6 +16335,14 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|SCTP_TCB_LOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -16363,7 +16362,9 @@ goto|;
 block|}
 name|vrf_id
 operator|=
-name|SCTP_DEFAULT_VRFID
+name|inp
+operator|->
+name|def_vrf_id
 expr_stmt|;
 comment|/* We are GOOD to go */
 name|stcb
@@ -16455,6 +16456,11 @@ argument_list|,
 name|stcb
 argument_list|)
 expr_stmt|;
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 name|out_now
 label|:
 if|if
@@ -16464,15 +16470,6 @@ condition|)
 name|SCTP_ASOC_CREATE_UNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stcb
-condition|)
-name|SCTP_TCB_UNLOCK
-argument_list|(
-name|stcb
 argument_list|)
 expr_stmt|;
 name|SCTP_INP_DECR_REF
@@ -16820,6 +16817,11 @@ operator|&
 name|SCTP_PCB_FLAGS_UDPTYPE
 condition|)
 block|{
+name|SCTP_INP_RUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOTSUP
@@ -17514,7 +17516,9 @@ goto|;
 block|}
 name|vrf_id
 operator|=
-name|SCTP_DEFAULT_VRFID
+name|inp
+operator|->
+name|def_vrf_id
 expr_stmt|;
 name|sctp_ifa
 operator|=
@@ -17525,8 +17529,7 @@ argument_list|,
 name|stcb
 argument_list|,
 operator|(
-expr|struct
-name|route
+name|sctp_route_t
 operator|*
 operator|)
 operator|&

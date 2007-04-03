@@ -181,8 +181,7 @@ name|sctp_tcb
 modifier|*
 name|stcb
 parameter_list|,
-name|struct
-name|route
+name|sctp_route_t
 modifier|*
 name|ro
 parameter_list|,

@@ -1127,6 +1127,18 @@ value|so->so_snd.sb_hiwat
 end_define
 
 begin_comment
+comment|/*  * routes, output, etc.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|route
+name|sctp_route_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * SCTP AUTH  */
 end_comment
 

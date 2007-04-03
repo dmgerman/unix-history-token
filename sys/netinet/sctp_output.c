@@ -10366,7 +10366,9 @@ name|vrf_id
 decl_stmt|;
 name|vrf_id
 operator|=
-name|SCTP_DEFAULT_VRFID
+name|inp
+operator|->
+name|def_vrf_id
 expr_stmt|;
 name|SCTP_IPI_ADDR_LOCK
 argument_list|()
@@ -11709,8 +11711,7 @@ name|sctp_inpcb
 modifier|*
 name|inp
 parameter_list|,
-name|struct
-name|route
+name|sctp_route_t
 modifier|*
 name|ro
 parameter_list|,
@@ -11758,7 +11759,7 @@ modifier|*
 name|sctp_ifa
 decl_stmt|,
 modifier|*
-name|pass
+name|sifa
 decl_stmt|;
 name|struct
 name|sctp_vrf
@@ -11844,7 +11845,7 @@ literal|0
 operator|)
 condition|)
 continue|continue;
-name|pass
+name|sifa
 operator|=
 name|sctp_is_ifa_addr_prefered
 argument_list|(
@@ -11859,7 +11860,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pass
+name|sifa
 operator|==
 name|NULL
 condition|)
@@ -11870,14 +11871,14 @@ name|sctp_is_addr_in_ep
 argument_list|(
 name|inp
 argument_list|,
-name|pass
+name|sifa
 argument_list|)
 condition|)
 block|{
 name|atomic_add_int
 argument_list|(
 operator|&
-name|pass
+name|sifa
 operator|->
 name|refcount
 argument_list|,
@@ -11886,7 +11887,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pass
+name|sifa
 operator|)
 return|;
 block|}
@@ -11959,7 +11960,7 @@ block|{
 comment|/* address has been removed */
 continue|continue;
 block|}
-name|pass
+name|sifa
 operator|=
 name|sctp_is_ifa_addr_prefered
 argument_list|(
@@ -11976,7 +11977,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pass
+name|sifa
 operator|==
 name|NULL
 condition|)
@@ -11984,7 +11985,7 @@ continue|continue;
 name|atomic_add_int
 argument_list|(
 operator|&
-name|pass
+name|sifa
 operator|->
 name|refcount
 argument_list|,
@@ -11993,7 +11994,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pass
+name|sifa
 operator|)
 return|;
 block|}
@@ -12085,7 +12086,7 @@ block|{
 comment|/* address has been removed */
 continue|continue;
 block|}
-name|pass
+name|sifa
 operator|=
 name|sctp_is_ifa_addr_acceptable
 argument_list|(
@@ -12102,7 +12103,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pass
+name|sifa
 operator|==
 name|NULL
 condition|)
@@ -12110,7 +12111,7 @@ continue|continue;
 name|atomic_add_int
 argument_list|(
 operator|&
-name|pass
+name|sifa
 operator|->
 name|refcount
 argument_list|,
@@ -12119,7 +12120,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pass
+name|sifa
 operator|)
 return|;
 block|}
@@ -12171,8 +12172,7 @@ name|sctp_nets
 modifier|*
 name|net
 parameter_list|,
-name|struct
-name|route
+name|sctp_route_t
 modifier|*
 name|ro
 parameter_list|,
@@ -12215,7 +12215,7 @@ modifier|*
 name|sctp_ifa
 decl_stmt|,
 modifier|*
-name|pass
+name|sifa
 decl_stmt|;
 name|uint8_t
 name|start_at_beginning
@@ -12280,7 +12280,7 @@ condition|(
 name|sctp_ifn
 condition|)
 block|{
-comment|/* first try for an prefered address on the ep */
+comment|/* first try for a prefered address on the ep */
 name|LIST_FOREACH
 argument_list|(
 argument|sctp_ifa
@@ -12317,7 +12317,7 @@ name|sctp_ifa
 argument_list|)
 condition|)
 block|{
-name|pass
+name|sifa
 operator|=
 name|sctp_is_ifa_addr_prefered
 argument_list|(
@@ -12332,7 +12332,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pass
+name|sifa
 operator|==
 name|NULL
 condition|)
@@ -12350,7 +12350,7 @@ name|sctp_is_addr_restricted
 argument_list|(
 name|stcb
 argument_list|,
-name|pass
+name|sifa
 argument_list|)
 operator|)
 condition|)
@@ -12361,7 +12361,7 @@ block|}
 name|atomic_add_int
 argument_list|(
 operator|&
-name|pass
+name|sifa
 operator|->
 name|refcount
 argument_list|,
@@ -12370,7 +12370,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pass
+name|sifa
 operator|)
 return|;
 block|}
@@ -12412,7 +12412,7 @@ name|sctp_ifa
 argument_list|)
 condition|)
 block|{
-name|pass
+name|sifa
 operator|=
 name|sctp_is_ifa_addr_acceptable
 argument_list|(
@@ -12427,7 +12427,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pass
+name|sifa
 operator|==
 name|NULL
 condition|)
@@ -12445,7 +12445,7 @@ name|sctp_is_addr_restricted
 argument_list|(
 name|stcb
 argument_list|,
-name|pass
+name|sifa
 argument_list|)
 operator|)
 condition|)
@@ -12456,7 +12456,7 @@ block|}
 name|atomic_add_int
 argument_list|(
 operator|&
-name|pass
+name|sifa
 operator|->
 name|refcount
 argument_list|,
@@ -12465,7 +12465,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pass
+name|sifa
 operator|)
 return|;
 block|}
@@ -12547,7 +12547,7 @@ block|{
 comment|/* address has been removed */
 continue|continue;
 block|}
-name|pass
+name|sifa
 operator|=
 name|sctp_is_ifa_addr_prefered
 argument_list|(
@@ -12564,7 +12564,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pass
+name|sifa
 operator|==
 name|NULL
 condition|)
@@ -12582,7 +12582,7 @@ name|sctp_is_addr_restricted
 argument_list|(
 name|stcb
 argument_list|,
-name|pass
+name|sifa
 argument_list|)
 operator|)
 condition|)
@@ -12601,7 +12601,7 @@ expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
-name|pass
+name|sifa
 operator|->
 name|refcount
 argument_list|,
@@ -12610,7 +12610,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pass
+name|sifa
 operator|)
 return|;
 block|}
@@ -12713,7 +12713,7 @@ block|{
 comment|/* address has been removed */
 continue|continue;
 block|}
-name|pass
+name|sifa
 operator|=
 name|sctp_is_ifa_addr_acceptable
 argument_list|(
@@ -12730,7 +12730,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pass
+name|sifa
 operator|==
 name|NULL
 condition|)
@@ -12748,7 +12748,7 @@ name|sctp_is_addr_restricted
 argument_list|(
 name|stcb
 argument_list|,
-name|pass
+name|sifa
 argument_list|)
 operator|)
 condition|)
@@ -12767,7 +12767,7 @@ expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
-name|pass
+name|sifa
 operator|->
 name|refcount
 argument_list|,
@@ -12776,7 +12776,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pass
+name|sifa
 operator|)
 return|;
 block|}
@@ -12846,7 +12846,7 @@ modifier|*
 name|ifa
 decl_stmt|,
 modifier|*
-name|pass
+name|sifa
 decl_stmt|;
 name|int
 name|num_eligible_addr
@@ -12879,7 +12879,7 @@ literal|0
 operator|)
 condition|)
 continue|continue;
-name|pass
+name|sifa
 operator|=
 name|sctp_is_ifa_addr_prefered
 argument_list|(
@@ -12894,7 +12894,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pass
+name|sifa
 operator|==
 name|NULL
 condition|)
@@ -12916,7 +12916,7 @@ name|sctp_is_addr_restricted
 argument_list|(
 name|stcb
 argument_list|,
-name|pass
+name|sifa
 argument_list|)
 condition|)
 block|{
@@ -12933,7 +12933,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|pass
+name|sifa
 operator|)
 return|;
 block|}
@@ -12983,7 +12983,7 @@ modifier|*
 name|ifa
 decl_stmt|,
 modifier|*
-name|pass
+name|sifa
 decl_stmt|;
 name|int
 name|num_eligible_addr
@@ -13018,7 +13018,7 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|pass
+name|sifa
 operator|=
 name|sctp_is_ifa_addr_prefered
 argument_list|(
@@ -13033,7 +13033,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pass
+name|sifa
 operator|==
 name|NULL
 condition|)
@@ -13057,7 +13057,7 @@ name|sctp_is_addr_restricted
 argument_list|(
 name|stcb
 argument_list|,
-name|pass
+name|sifa
 argument_list|)
 condition|)
 block|{
@@ -13099,8 +13099,7 @@ name|sctp_nets
 modifier|*
 name|net
 parameter_list|,
-name|struct
-name|route
+name|sctp_route_t
 modifier|*
 name|ro
 parameter_list|,
@@ -13152,7 +13151,7 @@ modifier|*
 name|sctp_ifa
 decl_stmt|,
 modifier|*
-name|pass
+name|sifa
 decl_stmt|;
 name|uint32_t
 name|ifn_index
@@ -13516,7 +13515,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|pass
+name|sifa
 operator|=
 name|sctp_select_nth_prefered_addr_from_ifn_boundall
 argument_list|(
@@ -13537,7 +13536,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pass
+name|sifa
 operator|==
 name|NULL
 condition|)
@@ -13580,7 +13579,7 @@ expr_stmt|;
 name|sctp_print_address
 argument_list|(
 operator|&
-name|pass
+name|sifa
 operator|->
 name|address
 operator|.
@@ -13611,7 +13610,7 @@ block|}
 name|atomic_add_int
 argument_list|(
 operator|&
-name|pass
+name|sifa
 operator|->
 name|refcount
 argument_list|,
@@ -13620,7 +13619,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pass
+name|sifa
 operator|)
 return|;
 block|}
@@ -13669,7 +13668,7 @@ literal|0
 operator|)
 condition|)
 continue|continue;
-name|pass
+name|sifa
 operator|=
 name|sctp_is_ifa_addr_acceptable
 argument_list|(
@@ -13684,7 +13683,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pass
+name|sifa
 operator|==
 name|NULL
 condition|)
@@ -13706,7 +13705,7 @@ name|sctp_is_addr_restricted
 argument_list|(
 name|stcb
 argument_list|,
-name|pass
+name|sifa
 argument_list|)
 condition|)
 block|{
@@ -13717,7 +13716,7 @@ block|}
 name|atomic_add_int
 argument_list|(
 operator|&
-name|pass
+name|sifa
 operator|->
 name|refcount
 argument_list|,
@@ -13726,7 +13725,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pass
+name|sifa
 operator|)
 return|;
 block|}
@@ -13811,7 +13810,7 @@ literal|0
 operator|)
 condition|)
 continue|continue;
-name|pass
+name|sifa
 operator|=
 name|sctp_is_ifa_addr_acceptable
 argument_list|(
@@ -13826,7 +13825,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pass
+name|sifa
 operator|==
 name|NULL
 condition|)
@@ -13848,7 +13847,7 @@ name|sctp_is_addr_restricted
 argument_list|(
 name|stcb
 argument_list|,
-name|pass
+name|sifa
 argument_list|)
 condition|)
 block|{
@@ -13859,7 +13858,7 @@ block|}
 name|atomic_add_int
 argument_list|(
 operator|&
-name|pass
+name|sifa
 operator|->
 name|refcount
 argument_list|,
@@ -13868,7 +13867,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pass
+name|sifa
 operator|)
 return|;
 block|}
@@ -13902,8 +13901,7 @@ name|sctp_tcb
 modifier|*
 name|stcb
 parameter_list|,
-name|struct
-name|route
+name|sctp_route_t
 modifier|*
 name|ro
 parameter_list|,
@@ -15673,8 +15671,7 @@ decl_stmt|;
 name|uint32_t
 name|vrf_id
 decl_stmt|;
-name|struct
-name|route
+name|sctp_route_t
 modifier|*
 name|ro
 decl_stmt|;
@@ -15713,7 +15710,9 @@ condition|)
 block|{
 name|vrf_id
 operator|=
-name|SCTP_DEFAULT_VRFID
+name|inp
+operator|->
+name|def_vrf_id
 expr_stmt|;
 block|}
 else|else
@@ -15846,8 +15845,7 @@ name|ip
 init|=
 name|NULL
 decl_stmt|;
-name|struct
-name|route
+name|sctp_route_t
 name|iproute
 decl_stmt|;
 name|uint8_t
@@ -16194,8 +16192,7 @@ block|{
 name|ro
 operator|=
 operator|(
-expr|struct
-name|route
+name|sctp_route_t
 operator|*
 operator|)
 operator|&
@@ -17279,8 +17276,7 @@ expr_stmt|;
 name|ro
 operator|=
 operator|(
-expr|struct
-name|route
+name|sctp_route_t
 operator|*
 operator|)
 operator|&
@@ -17306,8 +17302,7 @@ block|{
 name|ro
 operator|=
 operator|(
-expr|struct
-name|route
+name|sctp_route_t
 operator|*
 operator|)
 operator|&
@@ -19779,7 +19774,7 @@ name|struct
 name|sctp_scoping
 name|scp
 decl_stmt|;
-comment|/* 		 * To optimize this we could put the scoping stuff into a 		 * structure and remove the individual uint8's from the 		 * assoc structure. Then we could just pass in the address 		 * within the stcb.. but for now this is a quick hack to get 		 * the address stuff teased apart. 		 */
+comment|/* 		 * To optimize this we could put the scoping stuff into a 		 * structure and remove the individual uint8's from the 		 * assoc structure. Then we could just sifa in the address 		 * within the stcb.. but for now this is a quick hack to get 		 * the address stuff teased apart. 		 */
 name|scp
 operator|.
 name|ipv4_addr_legal
@@ -19918,7 +19913,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We pass 0 here to NOT set IP_DF if its IPv4, we ignore the return 	 * here since the timer will drive a retranmission. 	 */
+comment|/* 	 * We sifa 0 here to NOT set IP_DF if its IPv4, we ignore the return 	 * here since the timer will drive a retranmission. 	 */
 comment|/* I don't expect this to execute but we will be safe here */
 name|padval
 operator|=
@@ -21927,8 +21922,7 @@ name|sockaddr_in6
 modifier|*
 name|sin6
 decl_stmt|;
-name|struct
-name|route
+name|sctp_route_t
 modifier|*
 name|ro
 decl_stmt|;
@@ -21984,10 +21978,6 @@ decl_stmt|;
 name|uint32_t
 name|vrf_id
 decl_stmt|;
-name|vrf_id
-operator|=
-name|SCTP_DEFAULT_VRFID
-expr_stmt|;
 if|if
 condition|(
 name|stcb
@@ -22000,9 +21990,21 @@ name|stcb
 operator|->
 name|asoc
 expr_stmt|;
+name|vrf_id
+operator|=
+name|asoc
+operator|->
+name|vrf_id
+expr_stmt|;
 block|}
 else|else
 block|{
+name|vrf_id
+operator|=
+name|inp
+operator|->
+name|def_vrf_id
+expr_stmt|;
 name|asoc
 operator|=
 name|NULL
@@ -22440,8 +22442,7 @@ name|sctp_ifa
 modifier|*
 name|addr
 decl_stmt|;
-name|struct
-name|route
+name|sctp_route_t
 name|iproute
 decl_stmt|;
 name|sin
@@ -22977,8 +22978,7 @@ expr_stmt|;
 name|ro
 operator|=
 operator|(
-expr|struct
-name|route
+name|sctp_route_t
 operator|*
 operator|)
 operator|&
@@ -23267,8 +23267,7 @@ argument_list|,
 name|stcb
 argument_list|,
 operator|(
-expr|struct
-name|route
+name|sctp_route_t
 operator|*
 operator|)
 operator|&
@@ -23423,8 +23422,7 @@ argument_list|,
 name|stcb
 argument_list|,
 operator|(
-expr|struct
-name|route
+name|sctp_route_t
 operator|*
 operator|)
 operator|&
@@ -24771,7 +24769,7 @@ name|struct
 name|sctp_scoping
 name|scp
 decl_stmt|;
-comment|/* 		 * To optimize this we could put the scoping stuff into a 		 * structure and remove the individual uint8's from the stc 		 * structure. Then we could just pass in the address within 		 * the stc.. but for now this is a quick hack to get the 		 * address stuff teased apart. 		 */
+comment|/* 		 * To optimize this we could put the scoping stuff into a 		 * structure and remove the individual uint8's from the stc 		 * structure. Then we could just sifa in the address within 		 * the stc.. but for now this is a quick hack to get the 		 * address stuff teased apart. 		 */
 name|scp
 operator|.
 name|ipv4_addr_legal
@@ -25159,7 +25157,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 	 * We pass 0 here to NOT set IP_DF if its IPv4, we ignore the return 	 * here since the timer will drive a retranmission. 	 */
+comment|/* 	 * We sifa 0 here to NOT set IP_DF if its IPv4, we ignore the return 	 * here since the timer will drive a retranmission. 	 */
 name|padval
 operator|=
 name|p_len
@@ -26514,7 +26512,7 @@ argument_list|,
 name|sp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We could in theory (for sendall) pass the length in, but we would 	 * still have to hunt through the chain since we need to setup the 	 * tail_mbuf 	 */
+comment|/* 	 * We could in theory (for sendall) sifa the length in, but we would 	 * still have to hunt through the chain since we need to setup the 	 * tail_mbuf 	 */
 while|while
 condition|(
 name|at
@@ -45104,8 +45102,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|struct
-name|route
+name|sctp_route_t
 name|ro
 decl_stmt|;
 name|bzero
@@ -49932,8 +49929,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|struct
-name|route
+name|sctp_route_t
 name|ro
 decl_stmt|;
 comment|/* zap the stack pointer to the route */
@@ -50471,8 +50467,7 @@ name|ip
 modifier|*
 name|out
 decl_stmt|;
-name|struct
-name|route
+name|sctp_route_t
 name|ro
 decl_stmt|;
 name|o_pak
@@ -52941,7 +52936,7 @@ else|else
 block|{
 comment|/* 			 * UDP style, we must go ahead and start the INIT 			 * process 			 */
 name|uint32_t
-name|vrf
+name|vrf_id
 decl_stmt|;
 if|if
 condition|(
@@ -52992,9 +52987,11 @@ name|out_unlocked
 goto|;
 block|}
 comment|/* get an asoc/stcb struct */
-name|vrf
+name|vrf_id
 operator|=
-name|SCTP_DEFAULT_VRFID
+name|inp
+operator|->
+name|def_vrf_id
 expr_stmt|;
 name|stcb
 operator|=
@@ -53011,7 +53008,7 @@ name|error
 argument_list|,
 literal|0
 argument_list|,
-name|vrf
+name|vrf_id
 argument_list|)
 expr_stmt|;
 if|if

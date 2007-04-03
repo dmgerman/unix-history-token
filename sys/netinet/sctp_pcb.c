@@ -635,6 +635,50 @@ literal|1
 condition|)
 block|{
 comment|/* We zero'd the count */
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+if|if
+condition|(
+name|sctp_ifap
+operator|->
+name|in_ifa_list
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"Attempt to free item in a list"
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+if|if
+condition|(
+name|sctp_ifap
+operator|->
+name|in_ifa_list
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"in_ifa_list was not clear, fixing cnt\n"
+argument_list|)
+expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
+name|sctp_ifap
+operator|->
+name|refcount
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 name|SCTP_FREE
 argument_list|(
 name|sctp_ifap
@@ -1366,6 +1410,12 @@ operator|->
 name|ifa_count
 operator|++
 expr_stmt|;
+name|sctp_ifap
+operator|->
+name|in_ifa_list
+operator|=
+literal|1
+expr_stmt|;
 name|vrf
 operator|->
 name|total_ifa_count
@@ -1538,6 +1588,12 @@ argument_list|,
 name|next_ifa
 argument_list|)
 expr_stmt|;
+name|sctp_ifap
+operator|->
+name|in_ifa_list
+operator|=
+literal|0
+expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -1614,6 +1670,9 @@ name|sctp_nets
 modifier|*
 modifier|*
 name|netp
+parameter_list|,
+name|uint32_t
+name|vrf_id
 parameter_list|)
 block|{
 comment|/**** ASSUMSES THE CALLER holds the INP_INFO_RLOCK */
@@ -1815,6 +1874,22 @@ operator|->
 name|sctp_flags
 operator|&
 name|SCTP_PCB_FLAGS_SOCKET_ALLGONE
+condition|)
+block|{
+name|SCTP_INP_RUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|inp
+operator|->
+name|def_vrf_id
+operator|==
+name|vrf_id
 condition|)
 block|{
 name|SCTP_INP_RUNLOCK
@@ -2385,6 +2460,8 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|sctp_nets
@@ -2482,7 +2559,7 @@ operator|&
 name|SCTP_PCB_FLAGS_TCPTYPE
 condition|)
 block|{
-comment|/* 		 * Now either this guy is our listener or it's the 		 * connector. If it is the one that issued the connect, then 		 * it's only chance is to be the first TCB in the list. If 		 * it is the acceptor, then do the special_lookup to hash 		 * and find the real inp. 		 */
+comment|/*- 		 * Now either this guy is our listener or it's the 		 * connector. If it is the one that issued the connect, then 		 * it's only chance is to be the first TCB in the list. If 		 * it is the acceptor, then do the special_lookup to hash 		 * and find the real inp. 		 */
 if|if
 condition|(
 operator|(
@@ -2512,6 +2589,10 @@ argument_list|,
 name|local
 argument_list|,
 name|netp
+argument_list|,
+name|inp
+operator|->
+name|def_vrf_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -4673,6 +4754,8 @@ argument_list|,
 name|to
 argument_list|,
 name|netp
+argument_list|,
+name|vrf_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -4690,6 +4773,8 @@ argument_list|,
 name|to
 argument_list|,
 name|netp
+argument_list|,
+name|vrf_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -5621,6 +5706,9 @@ name|sctp_nets
 modifier|*
 modifier|*
 name|netp
+parameter_list|,
+name|uint32_t
+name|vrf_id
 parameter_list|)
 block|{
 name|int
@@ -5673,13 +5761,6 @@ name|sctp_inpcb
 modifier|*
 name|inp
 decl_stmt|;
-name|uint32_t
-name|vrf_id
-decl_stmt|;
-name|vrf_id
-operator|=
-name|SCTP_DEFAULT_VRFID
-expr_stmt|;
 name|iph
 operator|=
 name|mtod
@@ -8311,6 +8392,18 @@ operator|=
 name|oladdr
 operator|->
 name|ifa
+expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
+name|laddr
+operator|->
+name|ifa
+operator|->
+name|refcount
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -14707,6 +14800,11 @@ expr_stmt|;
 name|SCTP_TCB_SEND_LOCK_DESTROY
 argument_list|(
 name|stcb
+argument_list|)
+expr_stmt|;
+name|SCTP_INP_WUNLOCK
+argument_list|(
+name|inp
 argument_list|)
 expr_stmt|;
 operator|*
@@ -24251,7 +24349,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * start a new iterator  * iterates through all endpoints and associations based on the pcb_state  * flags and asoc_state.  "af" (mandatory) is executed for all matching  * assocs and "ef" (optional) is executed when the iterator completes.  * "inpf" (optional) is executed for each new endpoint as it is being  * iterated through.  */
+comment|/*  * start a new iterator  * iterates through all endpoints and associations based on the pcb_state  * flags and asoc_state.  "af" (mandatory) is executed for all matching  * assocs and "ef" (optional) is executed when the iterator completes.  * "inpf" (optional) is executed for each new endpoint as it is being  * iterated through. inpe (optional) is called when the inp completes  * its way through all the stcbs.  */
 end_comment
 
 begin_function
