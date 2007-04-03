@@ -483,11 +483,11 @@ else|else
 block|{
 name|opts
 operator|=
-literal|"TM:N:hfknst"
+literal|"TM:N:fghkmnst"
 expr_stmt|;
 name|usagestr
 operator|=
-literal|"pstat [-Tfhknst] [-M core [-N system]]"
+literal|"pstat [-Tfghkmnst] [-M core [-N system]]"
 expr_stmt|;
 block|}
 while|while
