@@ -1164,7 +1164,9 @@ if|if
 condition|(
 name|SX_SHARERS
 argument_list|(
-name|x
+name|sx
+operator|->
+name|sx_lock
 argument_list|)
 operator|==
 literal|0
