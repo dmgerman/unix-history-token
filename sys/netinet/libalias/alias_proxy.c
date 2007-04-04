@@ -1577,7 +1577,7 @@ decl_stmt|;
 name|int
 name|hlen
 decl_stmt|;
-name|u_char
+name|char
 modifier|*
 name|p
 decl_stmt|;
