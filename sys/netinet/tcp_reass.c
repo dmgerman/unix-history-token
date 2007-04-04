@@ -10978,6 +10978,13 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|flags
+operator|&
+name|TO_SYN
+condition|)
+continue|continue;
 name|to
 operator|->
 name|to_flags
