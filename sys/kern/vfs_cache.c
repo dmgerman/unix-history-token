@@ -3360,7 +3360,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3387,7 +3387,7 @@ argument_list|,
 name|buflen
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3630,7 +3630,7 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3654,7 +3654,7 @@ argument_list|,
 name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)

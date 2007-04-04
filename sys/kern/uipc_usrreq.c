@@ -7028,7 +7028,7 @@ goto|goto
 name|next
 goto|;
 block|}
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|td
 operator|->
@@ -7049,7 +7049,7 @@ name|newfds
 argument_list|)
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|td
 operator|->
@@ -7105,7 +7105,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|td
 operator|->
@@ -7223,7 +7223,7 @@ operator|=
 name|f
 expr_stmt|;
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|td
 operator|->
@@ -7834,7 +7834,7 @@ name|fdp
 operator|=
 name|data
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdescp
 argument_list|)
@@ -7880,7 +7880,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdescp
 argument_list|)
@@ -7916,7 +7916,7 @@ name|DFLAG_PASSABLE
 operator|)
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdescp
 argument_list|)
@@ -7964,7 +7964,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdescp
 argument_list|)
@@ -8057,7 +8057,7 @@ name|unp_rights
 operator|++
 expr_stmt|;
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdescp
 argument_list|)

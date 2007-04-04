@@ -774,6 +774,8 @@ name|int
 name|error
 init|=
 literal|0
+decl_stmt|,
+name|vfslocked
 decl_stmt|;
 name|struct
 name|vnode
@@ -831,7 +833,7 @@ operator|==
 name|LINUX_AT_FDCWD
 condition|)
 block|{
-name|FILEDESC_LOCK
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -842,7 +844,12 @@ name|fdp
 operator|->
 name|fd_cdir
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|vref
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -900,6 +907,11 @@ name|ENOTDIR
 operator|)
 return|;
 block|}
+name|vref
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
 name|fdrop
 argument_list|(
 name|fp
@@ -908,6 +920,7 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * XXXRW: This is bogus, as vn_fullpath() returns only an advisory 	 * file path, and may fail in several common situations, including 	 * for file systmes that don't use the name cache, and if the entry 	 * for the file falls out of the name cache.  We should implement 	 * openat() in the FreeBSD native system call layer properly (using a 	 * requested starting directory), and have Linux and other ABIs wrap 	 * the native implementation. 	 */
 name|error
 operator|=
 name|vn_fullpath
@@ -971,6 +984,25 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
+argument_list|(
+name|dvp
+operator|->
+name|v_mount
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error

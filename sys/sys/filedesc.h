@@ -30,19 +30,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/priority.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/_lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/_mutex.h>
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -126,18 +126,10 @@ name|fd_holdcnt
 decl_stmt|;
 comment|/* hold count on structure + mutex */
 name|struct
-name|mtx
-name|fd_mtx
+name|sx
+name|fd_sx
 decl_stmt|;
 comment|/* protects members of this struct */
-name|int
-name|fd_locked
-decl_stmt|;
-comment|/* long lock flag */
-name|int
-name|fd_wanted
-decl_stmt|;
-comment|/* "" */
 name|struct
 name|kqlist
 name|fd_kqlist
@@ -224,92 +216,91 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FILEDESC_LOCK_INIT
+parameter_list|(
+name|fdp
+parameter_list|)
+value|sx_init(&(fdp)->fd_sx, "filedesc structure")
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_LOCK_DESTROY
+parameter_list|(
+name|fdp
+parameter_list|)
+value|sx_destroy(&(fdp)->fd_sx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FILEDESC_LOCK
 parameter_list|(
-name|fd
+name|fdp
 parameter_list|)
-define|\
-value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		(fd)->fd_wanted++;							\ 		while ((fd)->fd_locked)							\ 			msleep(&(fd)->fd_locked,&(fd)->fd_mtx, PLOCK, "fdesc", 0);	\ 		(fd)->fd_locked = 2;							\ 		(fd)->fd_wanted--;							\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0)
+value|(&(fdp)->fd_sx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FILEDESC_UNLOCK
+name|FILEDESC_XLOCK
 parameter_list|(
-name|fd
+name|fdp
 parameter_list|)
-define|\
-value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		KASSERT((fd)->fd_locked == 2,						\ 		    ("fdesc locking mistake %d should be %d", (fd)->fd_locked, 2));	\ 		(fd)->fd_locked = 0;							\ 		if ((fd)->fd_wanted)							\ 			wakeup(&(fd)->fd_locked);					\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0)
+value|sx_xlock(&(fdp)->fd_sx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_XUNLOCK
 parameter_list|(
-name|fd
+name|fdp
 parameter_list|)
-define|\
-value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		(fd)->fd_wanted++;							\ 		while ((fd)->fd_locked)							\ 			msleep(&(fd)->fd_locked,&(fd)->fd_mtx, PLOCK, "fdesc", 0);	\ 		(fd)->fd_locked = 1;							\ 		(fd)->fd_wanted--;							\ 	} while (0)
+value|sx_xunlock(&(fdp)->fd_sx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_SLOCK
 parameter_list|(
-name|fd
+name|fdp
 parameter_list|)
-define|\
-value|do {										\ 		KASSERT((fd)->fd_locked == 1,						\ 		    ("fdesc locking mistake %d should be %d", (fd)->fd_locked, 1));	\ 		(fd)->fd_locked = 0;							\ 		if ((fd)->fd_wanted)							\ 			wakeup(&(fd)->fd_locked);					\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0)
+value|sx_slock(&(fdp)->fd_sx)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INVARIANT_SUPPORT
-end_ifdef
+begin_define
+define|#
+directive|define
+name|FILEDESC_SUNLOCK
+parameter_list|(
+name|fdp
+parameter_list|)
+value|sx_sunlock(&(fdp)->fd_sx)
+end_define
 
 begin_define
 define|#
 directive|define
 name|FILEDESC_LOCK_ASSERT
 parameter_list|(
-name|fd
-parameter_list|,
-name|arg
+name|fdp
 parameter_list|)
-define|\
-value|do {										\ 		if ((arg) == MA_OWNED)							\ 			KASSERT((fd)->fd_locked != 0, ("fdesc locking mistake"));	\ 		else									\ 			KASSERT((fd)->fd_locked == 0, ("fdesc locking mistake"));	\ 	} while (0)
+value|sx_assert(&(fdp)->fd_sx, SX_LOCKED | \ 					    SX_NOTRECURSED)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
 directive|define
-name|FILEDESC_LOCK_ASSERT
+name|FILEDESC_XLOCK_ASSERT
 parameter_list|(
-name|fd
-parameter_list|,
-name|arg
+name|fdp
 parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|FILEDESC_LOCK_DESC
-value|"filedesc structure"
+value|sx_assert(&(fdp)->fd_sx, SX_XLOCKED | \ 					    SX_NOTRECURSED)
 end_define
 
 begin_struct_decl

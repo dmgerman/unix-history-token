@@ -731,7 +731,7 @@ block|}
 endif|#
 directive|endif
 comment|/* 	 * Get starting point for the translation. 	 */
-name|FILEDESC_LOCK
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -772,7 +772,7 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)

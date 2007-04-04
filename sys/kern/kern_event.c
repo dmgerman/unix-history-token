@@ -2531,7 +2531,7 @@ argument_list|,
 name|kq
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2548,7 +2548,7 @@ argument_list|,
 name|kq_list
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2574,16 +2574,16 @@ name|DTYPE_KQUEUE
 expr_stmt|;
 name|fp
 operator|->
+name|f_data
+operator|=
+name|kq
+expr_stmt|;
+name|fp
+operator|->
 name|f_ops
 operator|=
 operator|&
 name|kqueueops
-expr_stmt|;
-name|fp
-operator|->
-name|f_data
-operator|=
-name|kq
 expr_stmt|;
 name|FILE_UNLOCK
 argument_list|(
@@ -7231,7 +7231,7 @@ argument_list|(
 name|kq
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -7250,7 +7250,7 @@ argument_list|,
 name|kq_list
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -8639,7 +8639,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * remove all knotes referencing a specified fd  * must be called with FILEDESC lock.  This prevents a race where a new fd  * comes along and occupies the entry and we attach a knote to the fd.  */
+comment|/*  * Remove all knotes referencing a specified fd must be called with FILEDESC  * lock.  This prevents a race where a new fd comes along and occupies the  * entry and we attach a knote to the fd.  */
 end_comment
 
 begin_function
@@ -8679,11 +8679,9 @@ decl_stmt|;
 name|int
 name|influx
 decl_stmt|;
-name|FILEDESC_LOCK_ASSERT
+name|FILEDESC_XLOCK_ASSERT
 argument_list|(
 name|fdp
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We shouldn't have to worry about new kevents appearing on fd 	 * since filedesc is locked. 	 */

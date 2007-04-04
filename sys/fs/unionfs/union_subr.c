@@ -2125,7 +2125,7 @@ block|}
 break|break;
 default|default:
 comment|/* UNIONFS_TRADITIONAL */
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_SLOCK
 argument_list|(
 name|td
 operator|->
@@ -2149,7 +2149,7 @@ name|p_fd
 operator|->
 name|fd_cmask
 expr_stmt|;
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|td
 operator|->

@@ -1041,9 +1041,9 @@ return|return
 name|error
 return|;
 block|}
-name|FILEDESC_LOCK_FAST
+name|FILE_LOCK
 argument_list|(
-name|fdp
+name|fp
 argument_list|)
 expr_stmt|;
 name|fp
@@ -1073,9 +1073,9 @@ name|f_type
 operator|=
 name|DTYPE_SOCKET
 expr_stmt|;
-name|FILEDESC_UNLOCK_FAST
+name|FILE_UNLOCK
 argument_list|(
-name|fdp
+name|fp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate a stream structure and attach it to this socket. 	 * We don't bother locking so_emuldata for SVR4 stream sockets as 	 * its value is constant for the lifetime of the stream once it 	 * is initialized here. 	 */

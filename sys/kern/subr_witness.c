@@ -1319,13 +1319,6 @@ name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"filedesc structure"
-block|,
-operator|&
-name|lock_class_mtx_sleep
-block|}
-block|,
-block|{
 literal|"pipe mutex"
 block|,
 operator|&
@@ -1388,13 +1381,6 @@ name|NULL
 block|}
 block|,
 comment|/* 	 * Sockets 	 */
-block|{
-literal|"filedesc structure"
-block|,
-operator|&
-name|lock_class_mtx_sleep
-block|}
-block|,
 block|{
 literal|"accept"
 block|,

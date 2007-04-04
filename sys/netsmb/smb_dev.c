@@ -1786,7 +1786,7 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -1828,7 +1828,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -1844,7 +1844,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)

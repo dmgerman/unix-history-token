@@ -559,7 +559,7 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -627,7 +627,7 @@ operator|->
 name|fd_nfiles
 operator|)
 expr_stmt|;
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)

@@ -6893,7 +6893,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_SLOCK
 argument_list|(
 name|p
 operator|->
@@ -6964,7 +6964,7 @@ argument_list|(
 name|rootvnode
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|p
 operator|->

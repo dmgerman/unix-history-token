@@ -997,11 +997,9 @@ name|int
 name|fd
 parameter_list|)
 block|{
-name|FILEDESC_LOCK_ASSERT
+name|FILEDESC_XLOCK_ASSERT
 argument_list|(
 name|fdp
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1092,11 +1090,9 @@ name|int
 name|fd
 parameter_list|)
 block|{
-name|FILEDESC_LOCK_ASSERT
+name|FILEDESC_XLOCK_ASSERT
 argument_list|(
 name|fdp
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1741,7 +1737,8 @@ name|p
 operator|->
 name|p_fd
 expr_stmt|;
-name|FILEDESC_LOCK
+comment|/* 	 * XXXRW: It could be an exclusive lock is not [always] needed here. 	 */
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -1771,7 +1768,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -1803,7 +1800,7 @@ case|case
 name|F_DUPFD
 case|:
 comment|/* mtx_assert(&Giant, MA_NOTOWNED); */
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -1889,7 +1886,7 @@ name|FD_CLOEXEC
 else|:
 literal|0
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -1920,7 +1917,7 @@ else|:
 literal|0
 operator|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -1954,7 +1951,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2007,7 +2004,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2158,7 +2155,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2220,7 +2217,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2291,7 +2288,7 @@ operator|!=
 name|DTYPE_VNODE
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2347,7 +2344,7 @@ name|l_start
 operator|)
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2373,7 +2370,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2553,7 +2550,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Check for race with close */
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2579,7 +2576,7 @@ name|fd
 index|]
 condition|)
 block|{
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2631,7 +2628,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2664,7 +2661,7 @@ operator|!=
 name|DTYPE_VNODE
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2705,7 +2702,7 @@ operator|!=
 name|F_UNLCK
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2764,7 +2761,7 @@ name|l_start
 operator|)
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2790,7 +2787,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2830,7 +2827,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3002,7 +2999,7 @@ operator|(
 name|EMFILE
 operator|)
 return|;
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3025,7 +3022,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3052,7 +3049,7 @@ name|retval
 operator|=
 name|new
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3142,7 +3139,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3193,7 +3190,7 @@ argument_list|,
 name|new
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3344,7 +3341,7 @@ argument_list|,
 name|delfp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3364,7 +3361,7 @@ condition|(
 name|holdleaders
 condition|)
 block|{
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3404,7 +3401,7 @@ name|fd_holdleaderscount
 argument_list|)
 expr_stmt|;
 block|}
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3413,7 +3410,7 @@ block|}
 block|}
 else|else
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -4391,7 +4388,7 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -4421,7 +4418,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -4479,7 +4476,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 	 * We now hold the fp reference that used to be owned by the descriptor 	 * array. 	 * We have to unlock the FILEDESC *AFTER* knote_fdclose to prevent a 	 * race of the fd getting opened, a knote added, and deleteing a knote 	 * for the new fd. 	 */
+comment|/* 	 * We now hold the fp reference that used to be owned by the 	 * descriptor array.  We have to unlock the FILEDESC *AFTER* 	 * knote_fdclose to prevent a race of the fd getting opened, a knote 	 * added, and deleteing a knote for the new fd. 	 */
 name|knote_fdclose
 argument_list|(
 name|td
@@ -4504,7 +4501,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -4523,7 +4520,7 @@ condition|(
 name|holdleaders
 condition|)
 block|{
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -4563,7 +4560,7 @@ name|fd_holdleaderscount
 argument_list|)
 expr_stmt|;
 block|}
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -5311,11 +5308,9 @@ name|NDSLOTTYPE
 modifier|*
 name|nmap
 decl_stmt|;
-name|FILEDESC_LOCK_ASSERT
+name|FILEDESC_XLOCK_ASSERT
 argument_list|(
 name|fdp
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -5357,7 +5352,7 @@ condition|)
 comment|/* the table is already large enough */
 return|return;
 comment|/* allocate a new table and (if required) new bitmaps */
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -5432,7 +5427,7 @@ name|nmap
 operator|=
 name|NULL
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -5646,11 +5641,9 @@ literal|1
 decl_stmt|,
 name|maxfd
 decl_stmt|;
-name|FILEDESC_LOCK_ASSERT
+name|FILEDESC_XLOCK_ASSERT
 argument_list|(
 name|fdp
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -5814,7 +5807,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check to see whether n user file descriptors  * are available to the process p.  */
+comment|/*  * Check to see whether n user file descriptors are available to the process  * p.  */
 end_comment
 
 begin_function
@@ -5866,8 +5859,6 @@ decl_stmt|;
 name|FILEDESC_LOCK_ASSERT
 argument_list|(
 name|fdp
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK
@@ -5993,7 +5984,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a new open file structure and allocate  * a file decriptor for the process that refers to it.  * We add one reference to the file for the descriptor table  * and one reference for resultfp. This is to prevent us being  * preempted and the entry in the descriptor table closed after  * we release the FILEDESC lock.  */
+comment|/*  * Create a new open file structure and allocate a file decriptor for the  * process that refers to it.  We add one reference to the file for the  * descriptor table and one reference for resultfp. This is to prevent us  * being preempted and the entry in the descriptor table closed after we  * release the FILEDESC lock.  */
 end_comment
 
 begin_function
@@ -6204,7 +6195,7 @@ name|f_vnode
 operator|=
 name|NULL
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|p
 operator|->
@@ -6273,7 +6264,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|p
 operator|->
@@ -6315,7 +6306,7 @@ index|]
 operator|=
 name|fp
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|p
 operator|->
@@ -6384,20 +6375,12 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|mtx_init
+name|FILEDESC_LOCK_INIT
 argument_list|(
 operator|&
 name|newfdp
 operator|->
 name|fd_fd
-operator|.
-name|fd_mtx
-argument_list|,
-name|FILEDESC_LOCK_DESC
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -6407,7 +6390,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -6493,7 +6476,7 @@ operator|.
 name|fd_jdir
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -6677,12 +6660,9 @@ operator|>
 literal|0
 condition|)
 return|return;
-name|mtx_destroy
+name|FILEDESC_LOCK_DESTROY
 argument_list|(
-operator|&
 name|fdp
-operator|->
-name|fd_mtx
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -6711,7 +6691,7 @@ modifier|*
 name|fdp
 parameter_list|)
 block|{
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -6721,7 +6701,7 @@ operator|->
 name|fd_refcnt
 operator|++
 expr_stmt|;
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -6753,7 +6733,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_XLOCK
 argument_list|(
 name|p
 operator|->
@@ -6776,7 +6756,7 @@ name|filedesc
 modifier|*
 name|tmp
 decl_stmt|;
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|p
 operator|->
@@ -6805,7 +6785,7 @@ name|tmp
 expr_stmt|;
 block|}
 else|else
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|p
 operator|->
@@ -6816,7 +6796,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy a filedesc structure.  * A NULL pointer in returns a NULL reference, this is to ease callers,  * not catch errors.  */
+comment|/*  * Copy a filedesc structure.  A NULL pointer in returns a NULL reference,  * this is to ease callers, not catch errors.  */
 end_comment
 
 begin_function
@@ -6858,7 +6838,7 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -6874,12 +6854,12 @@ operator|->
 name|fd_nfiles
 condition|)
 block|{
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|newfdp
 argument_list|)
@@ -6895,12 +6875,12 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|newfdp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -7015,12 +6995,12 @@ name|i
 expr_stmt|;
 block|}
 block|}
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|newfdp
 argument_list|)
@@ -7058,12 +7038,12 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|newfdp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -7091,7 +7071,7 @@ name|fdp
 operator|->
 name|fd_cmask
 expr_stmt|;
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -7194,7 +7174,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -7291,7 +7271,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -7364,7 +7344,7 @@ argument_list|(
 name|locked
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -7427,17 +7407,17 @@ name|fd_holdleaderswakeup
 operator|=
 literal|1
 expr_stmt|;
-name|msleep
+name|sx_sleep
 argument_list|(
 operator|&
 name|fdp
 operator|->
 name|fd_holdleaderscount
 argument_list|,
-operator|&
+name|FILEDESC_LOCK
+argument_list|(
 name|fdp
-operator|->
-name|fd_mtx
+argument_list|)
 argument_list|,
 name|PLOCK
 argument_list|,
@@ -7459,21 +7439,21 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 				 * Ensure that fdtol->fdl_leader 				 * remains valid in closef(). 				 */
+comment|/* 				 * Ensure that fdtol->fdl_leader remains 				 * valid in closef(). 				 */
 name|fdtol
 operator|->
 name|fdl_wakeup
 operator|=
 literal|1
 expr_stmt|;
-name|msleep
+name|sx_sleep
 argument_list|(
 name|fdtol
 argument_list|,
-operator|&
+name|FILEDESC_LOCK
+argument_list|(
 name|fdp
-operator|->
-name|fd_mtx
+argument_list|)
 argument_list|,
 name|PLOCK
 argument_list|,
@@ -7541,7 +7521,7 @@ name|p_fdtol
 operator|=
 name|NULL
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -7560,7 +7540,7 @@ name|M_FILEDESC_TO_LEADER
 argument_list|)
 expr_stmt|;
 block|}
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -7572,7 +7552,7 @@ name|fdp
 operator|->
 name|fd_refcnt
 expr_stmt|;
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -7625,7 +7605,7 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -7733,7 +7713,7 @@ name|fd_jdir
 operator|=
 name|NULL
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -7919,7 +7899,7 @@ name|NULL
 condition|)
 return|return;
 comment|/* 	 * Note: fdp->fd_ofiles may be reallocated out from under us while 	 * we are blocked in a close.  Be careful! 	 */
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -8014,7 +7994,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -8029,14 +8009,14 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -8045,7 +8025,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If a specific file object occupies a specific file descriptor,  * close the file descriptor entry and drop a reference on the file  * object.  This is a convenience function to handle a subsequent  * error in a function that calls falloc() that handles the race that  * another thread might have closed the file descriptor out from under  * the thread creating the file object.  */
+comment|/*  * If a specific file object occupies a specific file descriptor, close the  * file descriptor entry and drop a reference on the file object.  This is a  * convenience function to handle a subsequent error in a function that calls  * falloc() that handles the race that another thread might have closed the  * file descriptor out from under the thread creating the file object.  */
 end_comment
 
 begin_function
@@ -8071,7 +8051,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -8104,7 +8084,7 @@ argument_list|,
 name|idx
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -8118,13 +8098,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -8166,7 +8144,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -8288,7 +8266,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -8303,14 +8281,14 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -8515,8 +8493,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * Someone may have closed the entry in the 				 * file descriptor table, so check it hasn't 				 * changed before dropping the reference count. 				 */
-name|FILEDESC_LOCK
+comment|/* 				 * Someone may have closed the entry in the 				 * file descriptor table, so check it hasn't 				 * changed before dropping the reference 				 * count. 				 */
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -8553,7 +8531,7 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -8590,6 +8568,11 @@ argument_list|,
 name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
+name|FILE_LOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|fp
 operator|->
 name|f_flag
@@ -8620,6 +8603,12 @@ name|nd
 operator|.
 name|ni_vp
 expr_stmt|;
+name|fp
+operator|->
+name|f_type
+operator|=
+name|DTYPE_VNODE
+expr_stmt|;
 if|if
 condition|(
 name|fp
@@ -8636,11 +8625,10 @@ operator|=
 operator|&
 name|vnops
 expr_stmt|;
+name|FILE_UNLOCK
+argument_list|(
 name|fp
-operator|->
-name|f_type
-operator|=
-name|DTYPE_VNODE
+argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
@@ -8706,7 +8694,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal form of close.  * Decrement reference count on file structure.  * Note: td may be NULL when closing a file that was being passed in a  * message.  *  * XXXRW: Giant is not required for the caller, but often will be held; this  * makes it moderately likely the Giant will be recursed in the VFS case.  */
+comment|/*  * Internal form of close.  Decrement reference count on file structure.  * Note: td may be NULL when closing a file that was being passed in a  * message.  *  * XXXRW: Giant is not required for the caller, but often will be held; this  * makes it moderately likely the Giant will be recursed in the VFS case.  */
 end_comment
 
 begin_function
@@ -8856,7 +8844,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Handle special case where file descriptor table 			 * is shared between multiple process leaders. 			 */
+comment|/* 			 * Handle special case where file descriptor table is 			 * shared between multiple process leaders. 			 */
 name|fdp
 operator|=
 name|td
@@ -8865,7 +8853,7 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -8913,7 +8901,7 @@ operator|->
 name|fdl_holdcount
 operator|++
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -8970,7 +8958,7 @@ argument_list|,
 name|F_POSIX
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -9008,7 +8996,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -9034,7 +9022,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Extract the file pointer associated with the specified descriptor for  * the current user process.  *  * If the descriptor doesn't exist, EBADF is returned.  *  * If the descriptor exists but doesn't match 'flags' then  * return EBADF for read attempts and EINVAL for write attempts.  *  * If 'hold' is set (non-zero) the file's refcount will be bumped on return.  * It should be dropped with fdrop().  * If it is not set, then the refcount will not be bumped however the  * thread's filedesc struct will be returned locked (for fgetsock).  *  * If an error occured the non-zero error is returned and *fpp is set to NULL.  * Otherwise *fpp is set and zero is returned.  */
+comment|/*  * Extract the file pointer associated with the specified descriptor for the  * current user process.  *  * If the descriptor doesn't exist, EBADF is returned.  *  * If the descriptor exists but doesn't match 'flags' then return EBADF for  * read attempts and EINVAL for write attempts.  *  * If 'hold' is set (non-zero) the file's refcount will be bumped on return.  * It should be dropped with fdrop().  If it is not set, then the refcount  * will not be bumped however the thread's filedesc struct will be returned  * locked (for fgetsock).  *  * If an error occured the non-zero error is returned and *fpp is set to  * NULL.  Otherwise *fpp is set and zero is returned.  */
 end_comment
 
 begin_function
@@ -9102,7 +9090,7 @@ operator|(
 name|EBADF
 operator|)
 return|;
-name|FILEDESC_LOCK
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -9130,7 +9118,7 @@ operator|&
 name|badfileops
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -9159,7 +9147,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -9187,7 +9175,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -9208,7 +9196,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -9342,7 +9330,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Like fget() but loads the underlying vnode, or returns an error if  * the descriptor does not represent a vnode.  Note that pipes use vnodes  * but never have VM objects.  The returned vnode will be vref()d.  *  * XXX: what about the unused flags ?  */
+comment|/*  * Like fget() but loads the underlying vnode, or returns an error if the  * descriptor does not represent a vnode.  Note that pipes use vnodes but  * never have VM objects.  The returned vnode will be vref()'d.  *  * XXX: what about the unused flags ?  */
 end_comment
 
 begin_function
@@ -9439,7 +9427,7 @@ name|vpp
 argument_list|)
 expr_stmt|;
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|td
 operator|->
@@ -9576,7 +9564,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Like fget() but loads the underlying socket, or returns an error if  * the descriptor does not represent a socket.  *  * We bump the ref count on the returned socket.  XXX Also obtain the SX  * lock in the future.  *  * XXXRW: fgetsock() and fputsock() are deprecated, as consumers should rely  * on their file descriptor reference to prevent the socket from being  * freed during use.  */
+comment|/*  * Like fget() but loads the underlying socket, or returns an error if the  * descriptor does not represent a socket.  *  * We bump the ref count on the returned socket.  XXX Also obtain the SX lock  * in the future.  *  * XXXRW: fgetsock() and fputsock() are deprecated, as consumers should rely  * on their file descriptor reference to prevent the socket from being free'd  * during use.  */
 end_comment
 
 begin_function
@@ -9709,7 +9697,7 @@ name|spp
 argument_list|)
 expr_stmt|;
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|td
 operator|->
@@ -10304,7 +10292,7 @@ modifier|*
 name|fp
 decl_stmt|;
 comment|/* 	 * If the to-be-dup'd fd number is greater than the allowed number 	 * of file descriptors, or the fd to be dup'd has already been 	 * closed, then reject. 	 */
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -10335,7 +10323,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -10346,7 +10334,7 @@ name|EBADF
 operator|)
 return|;
 block|}
-comment|/* 	 * There are two cases of interest here. 	 * 	 * For ENODEV simply dup (dfd) to file descriptor 	 * (indx) and return. 	 * 	 * For ENXIO steal away the file structure from (dfd) and 	 * store it in (indx).  (dfd) is effectively closed by 	 * this operation. 	 * 	 * Any other error code is just returned. 	 */
+comment|/* 	 * There are two cases of interest here. 	 * 	 * For ENODEV simply dup (dfd) to file descriptor (indx) and return. 	 * 	 * For ENXIO steal away the file structure from (dfd) and store it in 	 * (indx).  (dfd) is effectively closed by this operation. 	 * 	 * Any other error code is just returned. 	 */
 switch|switch
 condition|(
 name|error
@@ -10389,7 +10377,7 @@ argument_list|(
 name|wfp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -10455,7 +10443,7 @@ argument_list|(
 name|wfp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -10558,7 +10546,7 @@ argument_list|,
 name|indx
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -10583,7 +10571,7 @@ literal|0
 operator|)
 return|;
 default|default:
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -10599,7 +10587,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Scan all active processes to see if any of them have a current  * or root directory of `olddp'. If so, replace them with the new  * mount point.  */
+comment|/*  * Scan all active processes to see if any of them have a current or root  * directory of `olddp'. If so, replace them with the new mount point.  */
 end_comment
 
 begin_function
@@ -10669,7 +10657,7 @@ name|nrele
 operator|=
 literal|0
 expr_stmt|;
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -10722,7 +10710,7 @@ name|nrele
 operator|++
 expr_stmt|;
 block|}
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -10851,7 +10839,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|FILEDESC_LOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -10884,7 +10872,7 @@ name|fdl_prev
 operator|=
 name|fdtol
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -11140,7 +11128,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -11272,7 +11260,7 @@ name|error
 condition|)
 break|break;
 block|}
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)

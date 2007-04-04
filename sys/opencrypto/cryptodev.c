@@ -4231,6 +4231,11 @@ operator|)
 return|;
 block|}
 comment|/* falloc automatically provides an extra reference to 'f'. */
+name|FILE_LOCK
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 name|f
 operator|->
 name|f_flag
@@ -4247,16 +4252,21 @@ name|DTYPE_CRYPTO
 expr_stmt|;
 name|f
 operator|->
+name|f_data
+operator|=
+name|fcr
+expr_stmt|;
+name|f
+operator|->
 name|f_ops
 operator|=
 operator|&
 name|cryptofops
 expr_stmt|;
+name|FILE_UNLOCK
+argument_list|(
 name|f
-operator|->
-name|f_data
-operator|=
-name|fcr
+argument_list|)
 expr_stmt|;
 operator|*
 operator|(

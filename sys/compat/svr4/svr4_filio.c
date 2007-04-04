@@ -973,7 +973,7 @@ block|{
 case|case
 name|SVR4_FIOCLEX
 case|:
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -987,7 +987,7 @@ index|]
 operator||=
 name|UF_EXCLOSE
 expr_stmt|;
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -998,7 +998,7 @@ return|;
 case|case
 name|SVR4_FIONCLEX
 case|:
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -1013,7 +1013,7 @@ operator|&=
 operator|~
 name|UF_EXCLOSE
 expr_stmt|;
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)

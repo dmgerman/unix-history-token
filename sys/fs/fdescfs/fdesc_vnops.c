@@ -1958,7 +1958,7 @@ operator|-
 literal|2
 expr_stmt|;
 comment|/* The first two nodes are `.' and `..' */
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2069,7 +2069,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2126,7 +2126,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * And ship to userland 		 */
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2149,7 +2149,7 @@ condition|)
 goto|goto
 name|done
 goto|;
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2161,7 +2161,7 @@ name|fcnt
 operator|++
 expr_stmt|;
 block|}
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)

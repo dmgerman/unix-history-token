@@ -2824,7 +2824,7 @@ block|{
 case|case
 name|FIONCLEX
 case|:
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2839,7 +2839,7 @@ operator|&=
 operator|~
 name|UF_EXCLOSE
 expr_stmt|;
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2850,7 +2850,7 @@ goto|;
 case|case
 name|FIOCLEX
 case|:
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -2864,7 +2864,7 @@ index|]
 operator||=
 name|UF_EXCLOSE
 expr_stmt|;
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3306,7 +3306,7 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
-name|FILEDESC_LOCK_FAST
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3334,7 +3334,7 @@ operator|->
 name|fd_nfiles
 expr_stmt|;
 comment|/* forgiving; slightly wrong */
-name|FILEDESC_UNLOCK_FAST
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -3979,7 +3979,7 @@ name|td_proc
 operator|->
 name|p_fd
 decl_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -4082,7 +4082,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -4146,7 +4146,7 @@ block|}
 block|}
 block|}
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -4839,7 +4839,7 @@ name|n
 init|=
 literal|0
 decl_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -4965,7 +4965,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)

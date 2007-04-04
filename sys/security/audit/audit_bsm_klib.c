@@ -1388,7 +1388,7 @@ name|cisr
 operator|=
 literal|0
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -1492,7 +1492,7 @@ operator|=
 name|path
 expr_stmt|;
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
