@@ -997,10 +997,11 @@ index|[
 name|EVP_MAX_MD_SIZE
 index|]
 decl_stmt|;
+name|u_int
+name|md_len
+decl_stmt|;
 name|int
 name|pos
-decl_stmt|,
-name|md_len
 decl_stmt|;
 endif|#
 directive|endif
@@ -2861,7 +2862,7 @@ name|struct
 name|sockaddr_in
 name|from
 decl_stmt|;
-name|int
+name|socklen_t
 name|fromlen
 decl_stmt|;
 name|fromlen
