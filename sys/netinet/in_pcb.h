@@ -292,7 +292,7 @@ comment|/* list for all PCBs of this proto */
 name|u_int32_t
 name|inp_flow
 decl_stmt|;
-comment|/* local and foreign ports, local and foreign addr */
+comment|/* Local and foreign ports, local and foreign addr. */
 name|struct
 name|in_conninfo
 name|inp_inc
@@ -380,7 +380,7 @@ name|u_char
 name|inp_ip_minttl
 decl_stmt|;
 comment|/* minimum TTL or drop */
-comment|/* protocol dependent part; options */
+comment|/* Protocol dependent part; options. */
 struct|struct
 block|{
 name|u_char

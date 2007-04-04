@@ -338,14 +338,14 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/* flags passed to ip_output as last parameter */
+comment|/*  * Flags passed to ip_output as last parameter.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP_FORWARDING
-value|0x1
+value|0x01
 end_define
 
 begin_comment
@@ -356,7 +356,7 @@ begin_define
 define|#
 directive|define
 name|IP_RAWOUTPUT
-value|0x2
+value|0x02
 end_define
 
 begin_comment
@@ -367,7 +367,7 @@ begin_define
 define|#
 directive|define
 name|IP_SENDONES
-value|0x4
+value|0x04
 end_define
 
 begin_comment
@@ -382,7 +382,7 @@ value|SO_DONTROUTE
 end_define
 
 begin_comment
-comment|/* bypass routing tables */
+comment|/* 0x10 bypass routing tables */
 end_comment
 
 begin_define
@@ -393,11 +393,11 @@ value|SO_BROADCAST
 end_define
 
 begin_comment
-comment|/* can send broadcast packets */
+comment|/* 0x20 can send broadcast packets */
 end_comment
 
 begin_comment
-comment|/* mbuf flag used by ip_fastfwd */
+comment|/*  * mbuf flag used by ip_fastfwd  */
 end_comment
 
 begin_define
