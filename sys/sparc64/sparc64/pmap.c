@@ -1256,6 +1256,13 @@ operator|&
 name|physmem
 argument_list|)
 expr_stmt|;
+name|physmem
+operator|=
+name|btoc
+argument_list|(
+name|physmem
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4416,7 +4423,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize a preallocated and zeroed pmap structure, uch as one in a  * vmspace structure.  */
+comment|/*  * Initialize a preallocated and zeroed pmap structure, such as one in a  * vmspace structure.  */
 end_comment
 
 begin_function
