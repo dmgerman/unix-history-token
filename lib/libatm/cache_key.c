@@ -142,7 +142,9 @@ name|buff
 index|[
 literal|32
 index|]
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|char
 name|digest
 index|[
 literal|16
