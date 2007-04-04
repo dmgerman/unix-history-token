@@ -863,6 +863,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|INP_INFO_UNLOCK_ASSERT
+parameter_list|(
+name|ipi
+parameter_list|)
+value|do {				\ 	mtx_assert(&(ipi)->ipi_mtx, MA_NOTOWNED);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INP_PCBHASH
 parameter_list|(
 name|faddr

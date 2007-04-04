@@ -4290,6 +4290,12 @@ comment|/* XXX: TIME_WAIT was nuked. */
 return|return;
 name|dropwithreset
 label|:
+name|INP_INFO_WLOCK_ASSERT
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 name|tcp_dropwithreset
 argument_list|(
 name|m
@@ -4310,6 +4316,12 @@ expr_stmt|;
 comment|/* mbuf chain got consumed. */
 name|dropunlock
 label|:
+name|INP_INFO_WLOCK_ASSERT
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -4329,6 +4341,12 @@ argument_list|)
 expr_stmt|;
 name|drop
 label|:
+name|INP_INFO_UNLOCK_ASSERT
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
