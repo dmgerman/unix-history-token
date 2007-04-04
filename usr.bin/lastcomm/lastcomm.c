@@ -456,6 +456,23 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|acctfile
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|fp
+operator|=
+name|stdin
+expr_stmt|;
+else|else
+block|{
 comment|/* Open the file. */
 if|if
 condition|(
@@ -492,7 +509,7 @@ argument_list|,
 name|acctfile
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Round off to integral number of accounting records, probably 	 * not necessary, but it doesn't hurt. 	 */
+comment|/* 		 * Round off to integral number of accounting records, 		 * probably not necessary, but it doesn't hurt. 		 */
 name|size
 operator|=
 name|sb
@@ -528,11 +545,19 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 do|do
 block|{
 name|int
 name|rv
 decl_stmt|;
+if|if
+condition|(
+name|fp
+operator|!=
+name|stdin
+condition|)
+block|{
 name|size
 operator|-=
 sizeof|sizeof
@@ -564,6 +589,7 @@ argument_list|,
 name|acctfile
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -588,6 +614,16 @@ operator|)
 operator|!=
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|feof
+argument_list|(
+name|fp
+argument_list|)
+condition|)
+break|break;
+else|else
 name|err
 argument_list|(
 literal|1
@@ -599,6 +635,7 @@ argument_list|,
 name|rv
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ab
