@@ -3869,6 +3869,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+comment|/* listen socket */
 name|inp
 operator|=
 name|sotoinpcb
@@ -3881,43 +3882,13 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+comment|/* new connection */
 name|tp
 operator|=
 name|intotcpcb
 argument_list|(
 name|inp
 argument_list|)
-expr_stmt|;
-comment|/* 				 * This is what would have happened in 				 * tcp_output() when the SYN,ACK was sent. 				 */
-name|tp
-operator|->
-name|snd_up
-operator|=
-name|tp
-operator|->
-name|snd_una
-expr_stmt|;
-name|tp
-operator|->
-name|snd_max
-operator|=
-name|tp
-operator|->
-name|snd_nxt
-operator|=
-name|tp
-operator|->
-name|iss
-operator|+
-literal|1
-expr_stmt|;
-name|tp
-operator|->
-name|last_ack_sent
-operator|=
-name|tp
-operator|->
-name|rcv_nxt
 expr_stmt|;
 comment|/* 				 * Process the segment and the data it 				 * contains.  tcp_do_segment() consumes 				 * the mbuf chain and unlocks the inpcb. 				 * XXX: The potential return value of 				 * TIME_WAIT nuked is supposed to be 				 * handled above. 				 */
 if|if
