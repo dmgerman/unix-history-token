@@ -419,6 +419,10 @@ name|ev
 operator|->
 name|ev_value
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|value
 expr_stmt|;
 block|}
