@@ -1073,6 +1073,9 @@ name|request
 condition|)
 name|bytes_read
 operator|=
+operator|(
+name|ssize_t
+operator|)
 name|request
 expr_stmt|;
 call|(
@@ -1083,6 +1086,9 @@ call|)
 argument_list|(
 name|a
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|bytes_read
 argument_list|)
 expr_stmt|;
@@ -1750,7 +1756,7 @@ condition|(
 name|a
 operator|->
 name|read_data_remaining
-operator|<=
+operator|==
 literal|0
 condition|)
 block|{
