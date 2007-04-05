@@ -141,7 +141,7 @@ name|avail
 decl_stmt|;
 comment|/* Bytes in my buffer. */
 specifier|const
-name|char
+name|void
 modifier|*
 name|client_buff
 decl_stmt|;
@@ -514,11 +514,6 @@ name|state
 operator|->
 name|client_buff
 operator|=
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 name|buff
 expr_stmt|;
 name|state
@@ -897,12 +892,6 @@ name|a
 operator|->
 name|client_data
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|state
 operator|->
