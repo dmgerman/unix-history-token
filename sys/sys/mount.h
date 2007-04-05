@@ -1733,6 +1733,17 @@ begin_comment
 comment|/* stores file names as Unicode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VFCF_JAIL
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* can be mounted from within a jail */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|uint32_t

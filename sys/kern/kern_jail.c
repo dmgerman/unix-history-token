@@ -366,6 +366,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|jail_mount_allowed
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_security_jail
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|mount_allowed
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|jail_mount_allowed
+argument_list|,
+literal|0
+argument_list|,
+literal|"Processes in jail can mount/unmount jail-friendly file systems"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* allprison, lastprid, and prisoncount are protected by allprison_mtx. */
 end_comment
@@ -2736,6 +2765,31 @@ case|:
 if|if
 condition|(
 name|jail_chflags_allowed
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+comment|/* 		 * Depending on the global setting, allow privilege of 		 * mounting/unmounting file systems. 		 */
+case|case
+name|PRIV_VFS_MOUNT
+case|:
+case|case
+name|PRIV_VFS_UNMOUNT
+case|:
+case|case
+name|PRIV_VFS_MOUNT_NONUSER
+case|:
+if|if
+condition|(
+name|jail_mount_allowed
 condition|)
 return|return
 operator|(
