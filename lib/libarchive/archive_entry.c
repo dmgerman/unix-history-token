@@ -1200,7 +1200,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * XXX Need to estimate the number of byte in the 		 * multi-byte form.  Assume that, on average, wcs 		 * chars encode to no more than 3 bytes.  There must 		 * be a better way... XXX 		 */
-name|int
+name|size_t
 name|mbs_length
 init|=
 name|wcslen
@@ -1333,7 +1333,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * No single byte will be more than one wide character, 		 * so this length estimate will always be big enough. 		 */
-name|int
+name|size_t
 name|wcs_length
 init|=
 name|strlen
@@ -5791,7 +5791,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|ARCHIVE_ENTRY_ACL_USER
 case|:
@@ -5816,7 +5816,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|ARCHIVE_ENTRY_ACL_GROUP
 case|:
@@ -7868,7 +7868,7 @@ name|flag
 modifier|*
 name|flag
 decl_stmt|;
-name|int
+name|size_t
 name|length
 decl_stmt|;
 name|bits
