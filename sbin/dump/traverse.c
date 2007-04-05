@@ -4808,9 +4808,14 @@ name|bad
 goto|;
 name|xfer
 operator|=
+name|MIN
+argument_list|(
 name|secsize
 operator|-
 name|base
+argument_list|,
+name|size
+argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
