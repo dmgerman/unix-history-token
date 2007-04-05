@@ -4264,7 +4264,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"postfix-2.3"
+literal|"postfix-2.4"
 argument_list|)
 expr_stmt|;
 name|unsetenv
