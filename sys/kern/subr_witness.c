@@ -1305,6 +1305,13 @@ name|lock_class_sx
 block|}
 block|,
 block|{
+literal|"allprison"
+block|,
+operator|&
+name|lock_class_sx
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
@@ -1362,13 +1369,6 @@ block|}
 block|,
 block|{
 literal|"uidinfo struct"
-block|,
-operator|&
-name|lock_class_mtx_sleep
-block|}
-block|,
-block|{
-literal|"allprison"
 block|,
 operator|&
 name|lock_class_mtx_sleep
