@@ -124,8 +124,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|THR_LOCK
+name|THR_THREAD_LOCK
 argument_list|(
+name|curthread
+argument_list|,
 name|thread
 argument_list|)
 expr_stmt|;
@@ -154,8 +156,10 @@ operator|=
 name|errno
 expr_stmt|;
 block|}
-name|THR_UNLOCK
+name|THR_THREAD_UNLOCK
 argument_list|(
+name|curthread
+argument_list|,
 name|thread
 argument_list|)
 expr_stmt|;
