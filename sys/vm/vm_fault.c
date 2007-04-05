@@ -4170,6 +4170,12 @@ return|return
 literal|1
 return|;
 block|}
+name|cbehind
+operator|=
+name|cahead
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * if the requested page is not available, then give up now 	 */
 if|if
 condition|(
