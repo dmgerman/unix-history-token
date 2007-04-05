@@ -150,6 +150,32 @@ begin_comment
 comment|/* get dev. name */
 end_comment
 
+begin_comment
+comment|/* Handle lseek SEEK_DATA and SEEK_HOLE for holey file knowledge. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIOSEEKDATA
+value|_IOWR('f', 97, off_t)
+end_define
+
+begin_comment
+comment|/* SEEK_DATA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIOSEEKHOLE
+value|_IOWR('f', 98, off_t)
+end_define
+
+begin_comment
+comment|/* SEEK_HOLE */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

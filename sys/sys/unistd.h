@@ -367,6 +367,28 @@ begin_comment
 comment|/* set file offset to EOF plus offset */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SEEK_DATA
+value|3
+end_define
+
+begin_comment
+comment|/* set file offset to next data past offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEEK_HOLE
+value|4
+end_define
+
+begin_comment
+comment|/* set file offset to next hole past offset */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -616,6 +638,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* From OpenSolaris, used by SEEK_DATA/SEEK_HOLE. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PC_MIN_HOLE_SIZE
+value|21
+end_define
 
 begin_if
 if|#
