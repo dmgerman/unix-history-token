@@ -443,6 +443,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|prison
+modifier|*
+name|prison_find
+parameter_list|(
+name|int
+name|prid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|prison_free
 parameter_list|(

@@ -457,18 +457,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|struct
-name|prison
-modifier|*
-name|prison_find
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|sysctl_jail_list
 parameter_list|(
@@ -1360,7 +1348,6 @@ comment|/*  * Returns a locked prison instance, or NULL on failure.  */
 end_comment
 
 begin_function
-specifier|static
 name|struct
 name|prison
 modifier|*
