@@ -423,7 +423,7 @@ name|g_journal_force_switch
 argument_list|,
 literal|0
 argument_list|,
-literal|"Force switch when journal is N%% full"
+literal|"Force switch when journal is N% full"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
