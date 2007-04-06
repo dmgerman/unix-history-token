@@ -850,6 +850,28 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * When we send from ggatec packets larger than 32kB, performance drops  * significantly (eg. to 256kB/s over 1Gbit/s link). This is not a problem  * when data is send from ggated. I don't know why, so for now I limit  * size of packets send from ggatec to 32kB by defining MAX_SEND_SIZE  * in ggatec Makefile.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAX_SEND_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAX_SEND_SIZE
+value|MAXPHYS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|ssize_t
 name|g_gate_send
@@ -899,7 +921,12 @@ name|s
 argument_list|,
 name|p
 argument_list|,
+name|MIN
+argument_list|(
 name|len
+argument_list|,
+name|MAX_SEND_SIZE
+argument_list|)
 argument_list|,
 name|flags
 argument_list|)
