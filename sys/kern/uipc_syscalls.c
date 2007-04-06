@@ -810,7 +810,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * XXXRW: The logic here seems wrong -- shouldn't it be 		 * locking the file, not the filedesc?  Other threads could 		 * already have a reference to the socket by now. 		 */
 name|FILE_LOCK
 argument_list|(
 name|fp
