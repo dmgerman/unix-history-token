@@ -16,43 +16,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* JF moved this here from as.h under the theory that nobody except MACHINE.c    and write.c care about it anyway.  */
-end_comment
-
-begin_struct
-struct|struct
-name|relax_type
-block|{
-comment|/* Forward reach. Signed number.> 0.  */
-name|long
-name|rlx_forward
-decl_stmt|;
-comment|/* Backward reach. Signed number.< 0.  */
-name|long
-name|rlx_backward
-decl_stmt|;
-comment|/* Bytes length of this address.  */
-name|unsigned
-name|char
-name|rlx_length
-decl_stmt|;
-comment|/* Next longer relax-state.  0 means there is no 'next' relax-state.  */
-name|relax_substateT
-name|rlx_more
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|relax_type
-name|relax_typeS
-typedef|;
-end_typedef
-
 begin_decl_stmt
 specifier|extern
 specifier|const
