@@ -31740,6 +31740,14 @@ name|setprd
 operator|=
 name|ata_siiprb_dmasetprd
 expr_stmt|;
+name|ch
+operator|->
+name|dma
+operator|->
+name|flags
+operator||=
+name|ATA_DMA_64BIT
+expr_stmt|;
 block|}
 block|}
 end_function
