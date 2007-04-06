@@ -17677,22 +17677,6 @@ name|setprd
 operator|=
 name|ata_marvell_edma_dmasetprd
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"HW qword=%08x\n"
-argument_list|,
-name|ATA_INL
-argument_list|(
-name|ctlr
-operator|->
-name|r_res1
-argument_list|,
-literal|0x00d00
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ATA_INL
