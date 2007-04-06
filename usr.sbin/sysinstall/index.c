@@ -460,13 +460,13 @@ literal|"sysutils"
 block|,
 literal|"Various system utilities."
 block|,
+literal|"tcl"
+block|,
+literal|"TCL and packages that depend on it."
+block|,
 literal|"tcl80"
 block|,
 literal|"TCL v8.0 and packages that depend on it."
-block|,
-literal|"tcl81"
-block|,
-literal|"TCL v8.1 and packages that depend on it."
 block|,
 literal|"tcl82"
 block|,
@@ -483,6 +483,10 @@ block|,
 literal|"textproc"
 block|,
 literal|"Text processing/search utilities."
+block|,
+literal|"tk"
+block|,
+literal|"Tk and packages that depend on it."
 block|,
 literal|"tk80"
 block|,
