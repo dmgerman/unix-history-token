@@ -424,14 +424,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-name|mboxfile
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|gid_t
 name|hlfs_gid
 decl_stmt|;
