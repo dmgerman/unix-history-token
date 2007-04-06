@@ -20,6 +20,12 @@ begin_comment
 comment|/*  * Machine dependent constants for 386.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PAE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -29,6 +35,11 @@ end_define
 begin_comment
 comment|/* if you can read -- then you can exec */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Virtual memory related constants, all in bytes  */

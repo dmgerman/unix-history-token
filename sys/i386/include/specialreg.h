@@ -259,6 +259,21 @@ comment|/* enable SIMD/MMX2 to use except 16 */
 end_comment
 
 begin_comment
+comment|/*  * Bits in AMD64 special registers.  EFER is 64 bits wide.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EFER_NXE
+value|0x000000800
+end_define
+
+begin_comment
+comment|/* PTE No-Execute bit enable (R/W) */
+end_comment
+
+begin_comment
 comment|/*  * CPUID instruction features register  */
 end_comment
 
@@ -2436,6 +2451,21 @@ end_define
 
 begin_comment
 comment|/* fixed (A0000-FFFFF) range enable */
+end_comment
+
+begin_comment
+comment|/* AMD64 MSR's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_EFER
+value|0xc0000080
+end_define
+
+begin_comment
+comment|/* extended features */
 end_comment
 
 begin_comment

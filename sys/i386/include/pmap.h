@@ -177,6 +177,28 @@ begin_comment
 comment|/* PAT	PAT index		*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PG_NX
+value|(1ull<<63)
+end_define
+
+begin_comment
+comment|/* No-execute */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Our various interpretations of the above */
 end_comment
@@ -199,12 +221,49 @@ name|PG_MANAGED
 value|PG_AVAIL2
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|PG_FRAME
-value|(~((vm_paddr_t)PAGE_MASK))
+value|(0x000ffffffffff000ull)
 end_define
+
+begin_define
+define|#
+directive|define
+name|PG_PS_FRAME
+value|(0x000fffffffe00000ull)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PG_FRAME
+value|(~PAGE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_PS_FRAME
+value|(0xffc00000)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -263,6 +322,17 @@ end_define
 
 begin_comment
 comment|/* access from User mode (UPL) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGEX_I
+value|0x10
+end_define
+
+begin_comment
+comment|/* during an instruction fetch */
 end_comment
 
 begin_comment
@@ -755,22 +825,13 @@ operator|=
 operator|(
 name|pa
 operator|&
-operator|~
-operator|(
-name|NBPDR
-operator|-
-literal|1
-operator|)
+name|PG_PS_FRAME
 operator|)
 operator||
 operator|(
 name|va
 operator|&
-operator|(
-name|NBPDR
-operator|-
-literal|1
-operator|)
+name|PDRMASK
 operator|)
 expr_stmt|;
 block|}
@@ -939,6 +1000,92 @@ operator|)
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|/* XXXRU move to atomic.h? */
+end_comment
+
+begin_function
+unit|static
+name|__inline
+name|int
+name|atomic_cmpset_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|dst
+parameter_list|,
+name|uint64_t
+name|exp
+parameter_list|,
+name|uint64_t
+name|src
+parameter_list|)
+block|{
+name|int64_t
+name|res
+init|=
+name|exp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"	lock ;			"
+literal|"	cmpxchg8b %2 ;		"
+literal|"	setz	%%al ;		"
+literal|"	movzbl	%%al,%0 ;	"
+literal|"# atomic_cmpset_64"
+operator|:
+literal|"+A"
+operator|(
+name|res
+operator|)
+operator|,
+comment|/* 0 (result) */
+literal|"=m"
+operator|(
+operator|*
+name|dst
+operator|)
+comment|/* 1 */
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|dst
+operator|)
+operator|,
+comment|/* 2 */
+literal|"b"
+operator|(
+operator|(
+name|uint32_t
+operator|)
+name|src
+operator|)
+operator|,
+literal|"c"
+operator|(
+call|(
+name|uint32_t
+call|)
+argument_list|(
+name|src
+operator|>>
+literal|32
+argument_list|)
+operator|)
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|res
+operator|)
+return|;
+end_return
+
 begin_define
 unit|}
 define|#
@@ -962,6 +1109,13 @@ parameter_list|)
 value|pte_load_store((ptep), (pt_entry_t)pte)
 end_define
 
+begin_decl_stmt
+unit|extern
+name|pt_entry_t
+name|pg_nx
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -972,7 +1126,7 @@ comment|/* PAE */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|__inline
 name|pt_entry_t
 name|pte_load
