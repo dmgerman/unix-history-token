@@ -2341,6 +2341,11 @@ directive|define
 name|ATA_DMA_ACTIVE
 value|0x04
 comment|/* DMA transfer in progress */
+define|#
+directive|define
+name|ATA_DMA_64BIT
+value|0x10
+comment|/* supports 64bit addressing */
 name|void
 function_decl|(
 modifier|*
