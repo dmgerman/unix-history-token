@@ -507,7 +507,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ndis_strcasecmp
+name|strcasecmp
 argument_list|(
 name|vendstr
 argument_list|,
@@ -518,7 +518,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|ndis_strcasecmp
+name|strcasecmp
 argument_list|(
 name|prodstr
 argument_list|,
@@ -1002,7 +1002,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ndis_strcasecmp
+name|strcasecmp
 argument_list|(
 name|vendstr
 argument_list|,
@@ -1013,7 +1013,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|ndis_strcasecmp
+name|strcasecmp
 argument_list|(
 name|prodstr
 argument_list|,
