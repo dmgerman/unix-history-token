@@ -1202,7 +1202,7 @@ name|entry
 expr_stmt|;
 if|if
 condition|(
-name|ndis_strcasecmp
+name|strcasecmp
 argument_list|(
 name|oidp
 operator|->
