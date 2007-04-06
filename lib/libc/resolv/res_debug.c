@@ -2444,7 +2444,6 @@ comment|/*  * Names of DNS rcodes.  */
 end_comment
 
 begin_decl_stmt
-specifier|static
 specifier|const
 name|struct
 name|res_sym
