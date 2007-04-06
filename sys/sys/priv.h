@@ -1032,6 +1032,43 @@ comment|/* setuse(). */
 end_comment
 
 begin_comment
+comment|/*  * ZFS-specific privileges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_ZFS_POOL_CONFIG
+value|280
+end_define
+
+begin_comment
+comment|/* Can configure ZFS pools. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_ZFS_INJECT
+value|281
+end_define
+
+begin_comment
+comment|/* Can inject faults in the ZFS fault 					   injection framework. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_ZFS_JAIL
+value|282
+end_define
+
+begin_comment
+comment|/* Can attach/detach ZFS file systems 					   to/from jails. */
+end_comment
+
+begin_comment
 comment|/*  * VFS privileges.  */
 end_comment
 
