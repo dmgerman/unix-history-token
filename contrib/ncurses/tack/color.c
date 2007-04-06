@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 59 Temple Place - Suite 330, ** Boston, MA 02111-1307, USA. */
+comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. ** ** This file is part of TACK. ** ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. ** ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. ** ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, ** Boston, MA 02110-1301, USA */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: color.c,v 1.2 2000/03/04 21:05:54 tom Exp $"
+literal|"$Id: color.c,v 1.7 2006/11/26 00:14:25 tom Exp $"
 argument_list|)
 end_macro
 
@@ -628,6 +628,30 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|void
+name|reset_colors
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|tc_putp
+argument_list|(
+name|orig_colors
+argument_list|)
+expr_stmt|;
+name|tc_putp
+argument_list|(
+name|TPARM_0
+argument_list|(
+name|orig_pair
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|color_trans
 parameter_list|(
@@ -720,7 +744,7 @@ condition|)
 block|{
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_4
 argument_list|(
 name|initialize_color
 argument_list|,
@@ -754,7 +778,7 @@ else|else
 block|{
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_4
 argument_list|(
 name|initialize_color
 argument_list|,
@@ -827,7 +851,7 @@ block|{
 comment|/* set ANSI color (setaf) (setab) */
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_a_foreground
 argument_list|,
@@ -837,7 +861,7 @@ argument_list|)
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_a_background
 argument_list|,
@@ -863,7 +887,7 @@ argument_list|)
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_foreground
 argument_list|,
@@ -876,7 +900,7 @@ argument_list|)
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_background
 argument_list|,
@@ -924,7 +948,7 @@ condition|)
 block|{
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_color_pair
 argument_list|,
@@ -978,7 +1002,7 @@ break|break;
 block|}
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_color_pair
 argument_list|,
@@ -1039,7 +1063,7 @@ condition|)
 block|{
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_7
 argument_list|(
 name|initialize_pair
 argument_list|,
@@ -1094,7 +1118,7 @@ else|else
 block|{
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_7
 argument_list|(
 name|initialize_pair
 argument_list|,
@@ -1147,7 +1171,7 @@ expr_stmt|;
 block|}
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_color_pair
 argument_list|,
@@ -1532,7 +1556,7 @@ argument_list|)
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_4
 argument_list|(
 name|initialize_color
 argument_list|,
@@ -1551,7 +1575,7 @@ else|else
 block|{
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_4
 argument_list|(
 name|initialize_color
 argument_list|,
@@ -1653,7 +1677,7 @@ argument_list|)
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_7
 argument_list|(
 name|initialize_pair
 argument_list|,
@@ -1678,7 +1702,7 @@ else|else
 block|{
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_7
 argument_list|(
 name|initialize_pair
 argument_list|,
@@ -2129,7 +2153,7 @@ break|break;
 block|}
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_a_foreground
 argument_list|,
@@ -2139,7 +2163,7 @@ argument_list|)
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_a_background
 argument_list|,
@@ -2165,7 +2189,7 @@ break|break;
 block|}
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_foreground
 argument_list|,
@@ -2175,7 +2199,7 @@ argument_list|)
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_background
 argument_list|,
@@ -2197,7 +2221,7 @@ break|break;
 block|}
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_color_pair
 argument_list|,
@@ -2232,7 +2256,7 @@ condition|)
 block|{
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_a_foreground
 argument_list|,
@@ -2242,7 +2266,7 @@ argument_list|)
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_a_background
 argument_list|,
@@ -2259,7 +2283,7 @@ condition|)
 block|{
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_foreground
 argument_list|,
@@ -2269,7 +2293,7 @@ argument_list|)
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_background
 argument_list|,
@@ -2282,7 +2306,7 @@ else|else
 block|{
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_color_pair
 argument_list|,
@@ -2421,6 +2445,9 @@ name|set_attr
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|reset_colors
+argument_list|()
 expr_stmt|;
 name|put_crlf
 argument_list|()
@@ -2664,7 +2691,7 @@ argument_list|)
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_a_background
 argument_list|,
@@ -2701,7 +2728,7 @@ argument_list|)
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_background
 argument_list|,
@@ -2740,7 +2767,7 @@ argument_list|)
 expr_stmt|;
 name|tc_putp
 argument_list|(
-name|tparm
+name|TPARM_1
 argument_list|(
 name|set_color_pair
 argument_list|,
@@ -2994,24 +3021,8 @@ literal|8
 else|:
 name|max_colors
 expr_stmt|;
-if|if
-condition|(
-name|can_change
-condition|)
-block|{
-name|tc_putp
-argument_list|(
-name|orig_colors
-argument_list|)
-expr_stmt|;
-block|}
-name|tc_putp
-argument_list|(
-name|tparm
-argument_list|(
-name|orig_pair
-argument_list|)
-argument_list|)
+name|reset_colors
+argument_list|()
 expr_stmt|;
 name|new_color
 argument_list|(
@@ -3045,7 +3056,7 @@ literal|8
 else|:
 name|max_colors
 expr_stmt|;
-comment|/* 	   the black on white test is the same as the white on black test. 	*/
+comment|/* 	 * the black on white test is the same as the white on black test. 	 */
 for|for
 control|(
 name|i
@@ -3156,6 +3167,9 @@ name|put_crlf
 argument_list|()
 expr_stmt|;
 block|}
+name|reset_colors
+argument_list|()
+expr_stmt|;
 name|put_crlf
 argument_list|()
 expr_stmt|;
@@ -3360,13 +3374,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|tc_putp
-argument_list|(
-name|tparm
-argument_list|(
-name|orig_pair
-argument_list|)
-argument_list|)
+name|reset_colors
+argument_list|()
 expr_stmt|;
 name|put_crlf
 argument_list|()
@@ -3378,7 +3387,7 @@ condition|)
 block|{
 name|tc_putp
 argument_list|(
-name|exit_standout_mode
+name|exit_attribute_mode
 argument_list|)
 expr_stmt|;
 block|}
@@ -3447,13 +3456,8 @@ literal|"  Hello "
 argument_list|)
 expr_stmt|;
 block|}
-name|tc_putp
-argument_list|(
-name|tparm
-argument_list|(
-name|orig_pair
-argument_list|)
-argument_list|)
+name|reset_colors
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3462,7 +3466,7 @@ condition|)
 block|{
 name|tc_putp
 argument_list|(
-name|exit_standout_mode
+name|exit_attribute_mode
 argument_list|)
 expr_stmt|;
 block|}
@@ -3647,10 +3651,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|tc_putp
-argument_list|(
-name|orig_pair
-argument_list|)
+name|reset_colors
+argument_list|()
 expr_stmt|;
 name|put_crlf
 argument_list|()
@@ -3692,9 +3694,9 @@ parameter_list|)
 block|{
 name|new_color
 argument_list|(
-name|COLOR_BLACK
+name|COLOR_CYAN
 argument_list|,
-name|COLOR_WHITE
+name|COLOR_BLUE
 argument_list|,
 name|FALSE
 argument_list|)
@@ -3707,18 +3709,12 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-name|new_color
-argument_list|(
-name|COLOR_WHITE
-argument_list|,
-name|COLOR_BLACK
-argument_list|,
-name|FALSE
-argument_list|)
+name|reset_colors
+argument_list|()
 expr_stmt|;
 name|ptextln
 argument_list|(
-literal|"If the two lines above are black then back_color_erase (bce) should be false."
+literal|"If the two lines above are blue then back_color_erase (bce) should be true."
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -3801,10 +3797,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|tc_putp
-argument_list|(
-name|orig_colors
-argument_list|)
+name|reset_colors
+argument_list|()
 expr_stmt|;
 name|pairs_used
 operator|=
@@ -3969,18 +3963,8 @@ operator|!=
 literal|'n'
 condition|)
 block|{
-name|tc_putp
-argument_list|(
-name|orig_colors
-argument_list|)
-expr_stmt|;
-name|tc_putp
-argument_list|(
-name|tparm
-argument_list|(
-name|orig_pair
-argument_list|)
-argument_list|)
+name|reset_colors
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -4146,36 +4130,16 @@ operator|!=
 literal|'n'
 condition|)
 block|{
-name|tc_putp
-argument_list|(
-name|orig_colors
-argument_list|)
-expr_stmt|;
-name|tc_putp
-argument_list|(
-name|tparm
-argument_list|(
-name|orig_pair
-argument_list|)
-argument_list|)
+name|reset_colors
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
 name|dump_colors
 argument_list|()
 expr_stmt|;
-name|tc_putp
-argument_list|(
-name|orig_colors
-argument_list|)
-expr_stmt|;
-name|tc_putp
-argument_list|(
-name|tparm
-argument_list|(
-name|orig_pair
-argument_list|)
-argument_list|)
+name|reset_colors
+argument_list|()
 expr_stmt|;
 name|generic_done_message
 argument_list|(

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000,2001,2002 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2002,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tracemse.c,v 1.10 2002/01/12 22:32:25 tom Exp $"
+literal|"$Id: lib_tracemse.c,v 1.12 2005/06/11 19:53:50 tom Exp $"
 argument_list|)
 end_macro
 
@@ -46,11 +46,24 @@ end_macro
 
 begin_block
 block|{
+comment|/*      * hmm - format is no longer than 80 columns, there are 5 numbers that      * could at most have 10 digits, and the mask contains no more than 32 bits      * with each bit representing less than 15 characters.  Usually the whole      * string is less than 80 columns, but this buffer size is an absolute      * limit.      */
 specifier|static
 name|char
 name|buf
 index|[
 literal|80
+operator|+
+operator|(
+literal|5
+operator|*
+literal|10
+operator|)
+operator|+
+operator|(
+literal|32
+operator|*
+literal|15
+operator|)
 index|]
 decl_stmt|;
 operator|(
@@ -78,6 +91,10 @@ name|ep
 operator|->
 name|z
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ep
 operator|->
 name|bstate
@@ -127,6 +144,11 @@ argument_list|,
 literal|"tripleclick-1"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NCURSES_MOUSE_VERSION
+operator|==
+literal|1
 name|SHOW
 argument_list|(
 name|BUTTON1_RESERVED_EVENT
@@ -134,6 +156,8 @@ argument_list|,
 literal|"reserved-1"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|SHOW
 argument_list|(
 name|BUTTON2_RELEASED
@@ -169,6 +193,11 @@ argument_list|,
 literal|"tripleclick-2"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NCURSES_MOUSE_VERSION
+operator|==
+literal|1
 name|SHOW
 argument_list|(
 name|BUTTON2_RESERVED_EVENT
@@ -176,6 +205,8 @@ argument_list|,
 literal|"reserved-2"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|SHOW
 argument_list|(
 name|BUTTON3_RELEASED
@@ -211,6 +242,11 @@ argument_list|,
 literal|"tripleclick-3"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NCURSES_MOUSE_VERSION
+operator|==
+literal|1
 name|SHOW
 argument_list|(
 name|BUTTON3_RESERVED_EVENT
@@ -218,6 +254,8 @@ argument_list|,
 literal|"reserved-3"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|SHOW
 argument_list|(
 name|BUTTON4_RELEASED
@@ -253,6 +291,11 @@ argument_list|,
 literal|"tripleclick-4"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NCURSES_MOUSE_VERSION
+operator|==
+literal|1
 name|SHOW
 argument_list|(
 name|BUTTON4_RESERVED_EVENT
@@ -260,6 +303,50 @@ argument_list|,
 literal|"reserved-4"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|NCURSES_MOUSE_VERSION
+operator|==
+literal|2
+name|SHOW
+argument_list|(
+name|BUTTON5_RELEASED
+argument_list|,
+literal|"release-5"
+argument_list|)
+expr_stmt|;
+name|SHOW
+argument_list|(
+name|BUTTON5_PRESSED
+argument_list|,
+literal|"press-5"
+argument_list|)
+expr_stmt|;
+name|SHOW
+argument_list|(
+name|BUTTON5_CLICKED
+argument_list|,
+literal|"click-5"
+argument_list|)
+expr_stmt|;
+name|SHOW
+argument_list|(
+name|BUTTON5_DOUBLE_CLICKED
+argument_list|,
+literal|"doubleclick-5"
+argument_list|)
+expr_stmt|;
+name|SHOW
+argument_list|(
+name|BUTTON5_TRIPLE_CLICKED
+argument_list|,
+literal|"tripleclick-5"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|SHOW
 argument_list|(
 name|BUTTON_CTRL

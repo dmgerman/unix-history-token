@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -50,7 +50,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: read_termcap.c,v 1.58 2001/10/28 01:11:34 tom Exp $"
+literal|"$Id: read_termcap.c,v 1.71 2006/07/29 12:06:51 tom Exp $"
 argument_list|)
 end_macro
 
@@ -60,42 +60,6 @@ directive|if
 operator|!
 name|PURE_TERMINFO
 end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__EMX__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|is_pathname
-parameter_list|(
-name|s
-parameter_list|)
-value|((((s) != 0)&& ((s)[0] == '/')) \ 		  || (((s)[0] != 0)&& ((s)[1] == ':')))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|is_pathname
-parameter_list|(
-name|s
-parameter_list|)
-value|((s) != 0&& (s)[0] == '/')
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -107,33 +71,38 @@ end_define
 begin_define
 define|#
 directive|define
-name|TC_UNRESOLVED
+name|TC_NOT_FOUND
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|TC_NOT_FOUND
+name|TC_SYS_ERR
 value|-2
 end_define
 
 begin_define
 define|#
 directive|define
-name|TC_SYS_ERR
+name|TC_REF_LOOP
 value|-3
 end_define
 
 begin_define
 define|#
 directive|define
-name|TC_REF_LOOP
+name|TC_UNRESOLVED
 value|-4
 end_define
 
+begin_comment
+comment|/* this is not returned by BSD cgetent */
+end_comment
+
 begin_function
 specifier|static
+name|NCURSES_CONST
 name|char
 modifier|*
 name|get_termpath
@@ -141,6 +110,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|NCURSES_CONST
 name|char
 modifier|*
 name|result
@@ -640,7 +610,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Cgetent extracts the capability record name from the NULL terminated file  * array db_array and returns a pointer to a malloc'd copy of it in buf.  Buf  * must be retained through all subsequent calls to cgetcap, cgetnum, cgetflag,  * and cgetstr, but may then be freed.  *  * Returns:  *  * positive #    on success (i.e., the index in db_array)  * TC_UNRESOLVED if we had too many recurrences to resolve  * TC_NOT_FOUND  if the requested record couldn't be found  * TC_SYS_ERR    if a system error was encountered (e.g.,couldn't open a file)  * TC_REF_LOOP   if a potential reference loop is detected  */
+comment|/*  * Cgetent extracts the capability record name from the NULL terminated file  * array db_array and returns a pointer to a malloc'd copy of it in buf.  Buf  * must be retained through all subsequent calls to cgetcap, cgetnum, cgetflag,  * and cgetstr, but may then be freed.  *  * Returns:  *  * positive #    on success (i.e., the index in db_array)  * TC_NOT_FOUND  if the requested record couldn't be found  * TC_SYS_ERR    if a system error was encountered (e.g.,couldn't open a file)  * TC_REF_LOOP   if a potential reference loop is detected  * TC_UNRESOLVED if we had too many recurrences to resolve  */
 end_comment
 
 begin_function
@@ -2324,8 +2294,11 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+name|UChar
+argument_list|(
 operator|*
 name|s
+argument_list|)
 argument_list|)
 condition|)
 name|s
@@ -2387,7 +2360,10 @@ if|if
 condition|(
 name|isgraph
 argument_list|(
+name|UChar
+argument_list|(
 name|ch
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -2469,8 +2445,11 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+name|UChar
+argument_list|(
 operator|*
 name|src
+argument_list|)
 argument_list|)
 condition|)
 name|src
@@ -2587,6 +2566,7 @@ modifier|*
 name|pvec
 decl_stmt|;
 comment|/* holds usable tail of path vector */
+name|NCURSES_CONST
 name|char
 modifier|*
 name|termpath
@@ -2657,7 +2637,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|is_pathname
+name|_nc_is_abs_path
 argument_list|(
 name|cp
 argument_list|)
@@ -2889,7 +2869,7 @@ expr_stmt|;
 comment|/* mark end of vector */
 if|if
 condition|(
-name|is_pathname
+name|_nc_is_abs_path
 argument_list|(
 name|cp
 argument_list|)
@@ -3134,6 +3114,91 @@ operator|>=
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|HAVE_BSD_CGETENT
+name|char
+name|temp
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+name|_nc_str_init
+argument_list|(
+operator|&
+name|desc
+argument_list|,
+name|temp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|_nc_safe_strcpy
+argument_list|(
+operator|&
+name|desc
+argument_list|,
+name|pathvec
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|_nc_safe_strcat
+argument_list|(
+operator|&
+name|desc
+argument_list|,
+literal|".db"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|_nc_access
+argument_list|(
+name|temp
+argument_list|,
+name|R_OK
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|_nc_safe_strcpy
+argument_list|(
+operator|&
+name|desc
+argument_list|,
+name|pathvec
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|the_source
+operator|=
+name|strdup
+argument_list|(
+name|temp
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+operator|*
+name|sourcename
+operator|=
+name|the_source
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -3155,6 +3220,8 @@ name|sourcename
 operator|=
 name|the_source
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -3331,7 +3398,7 @@ name|_nc_read_termcap_entry
 argument_list|(
 argument|const char *const tn
 argument_list|,
-argument|TERMTYPE * const tp
+argument|TERMTYPE *const tp
 argument_list|)
 end_macro
 
@@ -3340,7 +3407,7 @@ block|{
 name|int
 name|found
 init|=
-name|FALSE
+name|TGETENT_NO
 decl_stmt|;
 name|ENTRY
 modifier|*
@@ -3369,6 +3436,9 @@ index|[
 name|TBUFSIZ
 index|]
 decl_stmt|;
+name|int
+name|status
+decl_stmt|;
 specifier|static
 name|char
 modifier|*
@@ -3389,6 +3459,54 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|strlen
+argument_list|(
+name|tn
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|tn
+argument_list|,
+literal|"."
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|tn
+argument_list|,
+literal|".."
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|_nc_pathlast
+argument_list|(
+name|tn
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|T
+argument_list|(
+operator|(
+literal|"illegal or missing entry name '%s'"
+operator|,
+name|tn
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|TGETENT_NO
+return|;
+block|}
+if|if
+condition|(
 name|use_terminfo_vars
 argument_list|()
 operator|&&
@@ -3404,7 +3522,7 @@ operator|!=
 literal|0
 operator|&&
 operator|!
-name|is_pathname
+name|_nc_is_abs_path
 argument_list|(
 name|p
 argument_list|)
@@ -3457,6 +3575,9 @@ block|{
 comment|/* we're using getcap(3) */
 if|if
 condition|(
+operator|(
+name|status
+operator|=
 name|_nc_tgetent
 argument_list|(
 name|tc
@@ -3469,12 +3590,19 @@ name|lineno
 argument_list|,
 name|tn
 argument_list|)
+operator|)
 operator|<
 literal|0
 condition|)
 return|return
 operator|(
-name|ERR
+name|status
+operator|==
+name|TC_NOT_FOUND
+condition|?
+name|TGETENT_NO
+else|:
+name|TGETENT_ERR
 operator|)
 return|;
 name|_nc_curr_line
@@ -3596,7 +3724,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|is_pathname
+name|_nc_is_abs_path
 argument_list|(
 name|tc
 argument_list|)
@@ -3807,8 +3935,8 @@ expr_stmt|;
 block|}
 block|}
 comment|/*      * Probably /etc/termcap is a symlink to /usr/share/misc/termcap.      * Avoid reading the same file twice.      */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HAVE_LINK
 for|for
 control|(
@@ -4146,13 +4274,15 @@ literal|0
 condition|)
 return|return
 operator|(
-name|ERR
+name|TGETENT_ERR
 operator|)
 return|;
 comment|/* resolve all use references */
-name|_nc_resolve_uses
+name|_nc_resolve_uses2
 argument_list|(
 name|TRUE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* find a terminal matching tn, if we can */
@@ -4207,7 +4337,7 @@ literal|"|:"
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Make a local copy of the terminal capabilities.  Free all 		 * entry storage except the string table for the loaded type 		 * (which we disconnected from the list by NULLing out 		 * ep->tterm.str_table above). 		 */
+comment|/* 		 * Make a local copy of the terminal capabilities, delinked 		 * from the list. 		 */
 operator|*
 name|tp
 operator|=
@@ -4215,17 +4345,22 @@ name|ep
 operator|->
 name|tterm
 expr_stmt|;
+name|_nc_delink_entry
+argument_list|(
+name|_nc_head
+argument_list|,
+operator|&
+operator|(
 name|ep
 operator|->
 name|tterm
-operator|.
-name|str_table
-operator|=
-operator|(
-name|char
-operator|*
 operator|)
-literal|0
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ep
+argument_list|)
 expr_stmt|;
 comment|/* 		 * OK, now try to write the type to user's terminfo directory.  		 * Next time he loads this, it will come through terminfo. 		 * 		 * Advantage:  Second and subsequent fetches of this entry will 		 * be very fast. 		 * 		 * Disadvantage:  After the first time a termcap type is loaded 		 * by its user, editing it in the /etc/termcap file, or in 		 * TERMCAP, or in a local ~/.termcap, will be ineffective 		 * unless the terminfo entry is explicitly removed. 		 */
 if|#
@@ -4243,7 +4378,7 @@ endif|#
 directive|endif
 name|found
 operator|=
-name|TRUE
+name|TGETENT_YES
 expr_stmt|;
 break|break;
 block|}
@@ -4259,11 +4394,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|_nc_free_entries
-argument_list|(
-name|_nc_head
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|found

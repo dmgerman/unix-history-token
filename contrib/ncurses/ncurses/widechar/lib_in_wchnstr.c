@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2002 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2002,2004 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  * Author: Thomas Dickey 2002                                               *  ****************************************************************************/
+comment|/****************************************************************************  * Author: Thomas Dickey 2002,2004                                          *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_in_wchnstr.c,v 1.1 2002/04/13 19:33:57 tom Exp $"
+literal|"$Id: lib_in_wchnstr.c,v 1.3 2004/05/16 00:12:30 tom Exp $"
 argument_list|)
 end_macro
 
@@ -36,7 +36,7 @@ name|win_wchnstr
 argument_list|(
 argument|WINDOW *win
 argument_list|,
-argument|NCURSES_CONST cchar_t * wchstr
+argument|cchar_t * wchstr
 argument_list|,
 argument|int n
 argument_list|)
@@ -51,7 +51,7 @@ name|OK
 decl_stmt|;
 name|TR
 argument_list|(
-name|TRACE_CCALLS
+name|TRACE_CALLS
 argument_list|,
 operator|(
 name|T_CALLED
@@ -78,6 +78,23 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|int
+name|row
+decl_stmt|,
+name|col
+decl_stmt|;
+name|int
+name|j
+decl_stmt|;
+name|getyx
+argument_list|(
+name|win
+argument_list|,
+name|row
+argument_list|,
+name|col
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|n
@@ -100,19 +117,52 @@ name|win
 argument_list|)
 expr_stmt|;
 block|}
-while|while
-condition|(
-name|n
-operator|--
-operator|>
+for|for
+control|(
+name|j
+operator|=
 literal|0
-condition|)
-name|win_wch
-argument_list|(
-name|win
-argument_list|,
-name|wchstr
+init|;
+name|j
+operator|<
+name|n
+condition|;
 operator|++
+name|j
+control|)
+block|{
+name|wchstr
+index|[
+name|j
+index|]
+operator|=
+name|win
+operator|->
+name|_line
+index|[
+name|row
+index|]
+operator|.
+name|text
+index|[
+name|col
+operator|+
+name|j
+index|]
+expr_stmt|;
+block|}
+name|T
+argument_list|(
+operator|(
+literal|"result = %s"
+operator|,
+name|_nc_viscbuf
+argument_list|(
+name|wchstr
+argument_list|,
+name|n
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

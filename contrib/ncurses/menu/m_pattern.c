@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *   Author: Juergen Pfeifer<juergen.pfeifer@gmx.net> 1995,1997            *  ****************************************************************************/
+comment|/****************************************************************************  *   Author:  Juergen Pfeifer, 1995,1997                                    *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_pattern.c,v 1.6 2000/12/10 02:16:48 tom Exp $"
+literal|"$Id: m_pattern.c,v 1.15 2006/11/04 18:46:39 tom Exp $"
 argument_list|)
 end_macro
 
@@ -44,34 +44,49 @@ end_macro
 
 begin_block
 block|{
-return|return
-operator|(
-name|menu
-condition|?
-operator|(
-name|menu
-operator|->
-name|pattern
-condition|?
-name|menu
-operator|->
-name|pattern
-else|:
-literal|""
-operator|)
-else|:
-operator|(
+specifier|static
 name|char
-operator|*
+name|empty
+index|[]
+init|=
+literal|""
+decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"menu_pattern(%p)"
+argument_list|)
+operator|,
+name|menu
 operator|)
+argument_list|)
+expr_stmt|;
+name|returnPtr
+argument_list|(
+name|menu
+condition|?
+operator|(
+name|menu
+operator|->
+name|pattern
+condition|?
+name|menu
+operator|->
+name|pattern
+else|:
+name|empty
+operator|)
+else|:
 literal|0
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int set_menu_pattern(MENU *menu, const char *p) |    |   Description   :  Set the match pattern for a menu and position to the |                    first item that matches. | |   Return Values :  E_OK              - success |                    E_BAD_ARGUMENT    - invalid menu or pattern pointer |                    E_NOT_CONNECTED   - no items connected to menu |                    E_BAD_STATE       - menu in user hook routine |                    E_NO_MATCH        - no item matches pattern +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int set_menu_pattern(MENU *menu, const char *p) |    |   Description   :  Set the match pattern for a menu and position to the |                    first item that matches. | |   Return Values :  E_OK              - success |                    E_BAD_ARGUMENT    - invalid menu or pattern pointer |                    E_BAD_STATE       - menu in user hook routine |                    E_NOT_CONNECTED   - no items connected to menu |                    E_NO_MATCH        - no item matches pattern +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -84,7 +99,7 @@ end_macro
 begin_macro
 name|set_menu_pattern
 argument_list|(
-argument|MENU *menu
+argument|MENU * menu
 argument_list|,
 argument|const char *p
 argument_list|)
@@ -99,6 +114,23 @@ decl_stmt|;
 name|int
 name|matchpos
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"set_menu_pattern(%p,%s)"
+argument_list|)
+operator|,
+name|menu
+operator|,
+name|_nc_visbuf
+argument_list|(
+name|p
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -205,10 +237,7 @@ condition|(
 operator|!
 name|isprint
 argument_list|(
-call|(
-name|unsigned
-name|char
-call|)
+name|UChar
 argument_list|(
 operator|*
 name|p

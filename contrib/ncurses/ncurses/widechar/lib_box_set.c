@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_box_set.c,v 1.2 2002/03/23 21:35:24 tom Exp $"
+literal|"$Id: lib_box_set.c,v 1.4 2003/12/06 18:02:13 tom Exp $"
 argument_list|)
 end_macro
 
@@ -167,7 +167,7 @@ name|ch
 parameter_list|,
 name|def
 parameter_list|)
-value|w ##ch = (ch == 0) ? *def : *ch
+value|w ##ch = _nc_render(win, (ch == 0) ? *(const ARG_CH_T)def : *ch)
 name|RENDER_WITH_DEFAULT
 argument_list|(
 name|ls

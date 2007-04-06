@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (C) 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 59 Temple Place - Suite 330, ** Boston, MA 02111-1307, USA. */
+comment|/* ** Copyright (C) 1997 Free Software Foundation, Inc. ** ** This file is part of TACK. ** ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. ** ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. ** ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, ** Boston, MA 02110-1301, USA */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: edit.c,v 1.8 2001/06/18 18:44:32 tom Exp $"
+literal|"$Id: edit.c,v 1.11 2006/06/24 21:22:42 tom Exp $"
 argument_list|)
 end_macro
 
@@ -331,6 +331,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|test_list
 name|change_pad_list
@@ -420,22 +421,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|test_results
-modifier|*
-name|pads
-index|[
-name|STRCOUNT
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* save pad results here */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|TERMTYPE
 name|original_term
@@ -477,16 +462,22 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|flag_strings
-index|[
-name|STRCOUNT
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* flags for strings */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+modifier|*
+name|label_strings
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -500,6 +491,7 @@ comment|/* Subscript for (xon) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|xon_shadow
 decl_stmt|;
@@ -526,6 +518,57 @@ end_decl_stmt
 begin_comment
 comment|/* number of lines displayed */
 end_comment
+
+begin_function
+specifier|static
+name|void
+name|alloc_arrays
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|flag_strings
+operator|==
+literal|0
+condition|)
+block|{
+name|label_strings
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+name|calloc
+argument_list|(
+name|MAX_STRINGS
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|flag_strings
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|calloc
+argument_list|(
+name|MAX_STRINGS
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/* **	send_info_string(str) ** **	Return the terminfo string prefixed by the correct separator */
@@ -857,7 +900,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|STRCOUNT
+name|MAX_STRINGS
 condition|;
 name|i
 operator|++
@@ -878,10 +921,10 @@ name|buf
 argument_list|,
 literal|"%s=%s"
 argument_list|,
-name|strnames
-index|[
+name|STR_NAME
+argument_list|(
 name|i
-index|]
+argument_list|)
 argument_list|,
 name|print_expand
 argument_list|(
@@ -1256,7 +1299,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|STRCOUNT
+name|MAX_STRINGS
 condition|;
 name|i
 operator|++
@@ -1277,10 +1320,10 @@ name|buf
 argument_list|,
 literal|"%s=%s"
 argument_list|,
-name|strnames
-index|[
+name|STR_NAME
+argument_list|(
 name|i
-index|]
+argument_list|)
 argument_list|,
 name|_nc_tic_expand
 argument_list|(
@@ -2032,7 +2075,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|STRCOUNT
+name|MAX_STRINGS
 condition|;
 name|i
 operator|++
@@ -2314,7 +2357,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|STRCOUNT
+name|MAX_STRINGS
 condition|;
 name|i
 operator|++
@@ -2401,10 +2444,10 @@ literal|"%30s %6s %s"
 argument_list|,
 name|abuf
 argument_list|,
-name|strnames
-index|[
+name|STR_NAME
+argument_list|(
 name|i
-index|]
+argument_list|)
 argument_list|,
 name|_nc_tic_expand
 argument_list|(
@@ -2559,7 +2602,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|STRCOUNT
+name|MAX_STRINGS
 condition|;
 name|i
 operator|++
@@ -2647,6 +2690,9 @@ specifier|const
 modifier|*
 name|nt
 decl_stmt|;
+name|alloc_arrays
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3203,15 +3249,21 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
+modifier|*
 name|nx
-index|[
+init|=
+name|malloc
+argument_list|(
 name|BOOLCOUNT
 operator|+
 name|NUMCOUNT
 operator|+
-name|STRCOUNT
-index|]
+name|MAX_STRINGS
+argument_list|)
 decl_stmt|;
+name|alloc_arrays
+argument_list|()
+expr_stmt|;
 name|flag
 operator|=
 name|t
@@ -3306,7 +3358,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|STRCOUNT
+name|MAX_STRINGS
 condition|;
 name|i
 operator|++
@@ -3328,10 +3380,10 @@ name|nc
 operator|++
 index|]
 operator|=
-name|strnames
-index|[
+name|STR_NAME
+argument_list|(
 name|i
-index|]
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -3499,6 +3551,11 @@ name|ch
 operator|=
 name|REQUEST_PROMPT
 expr_stmt|;
+name|free
+argument_list|(
+name|nx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3530,6 +3587,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|alloc_arrays
+argument_list|()
+expr_stmt|;
 name|ptextln
 argument_list|(
 literal|"Caps that are defined but cannot be tested:"
@@ -3643,7 +3703,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|STRCOUNT
+name|MAX_STRINGS
 condition|;
 name|i
 operator|++
@@ -3671,10 +3731,10 @@ name|temp
 argument_list|,
 literal|"%s "
 argument_list|,
-name|strnames
-index|[
+name|STR_NAME
+argument_list|(
 name|i
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ptext
@@ -3725,12 +3785,9 @@ specifier|const
 modifier|*
 name|nt
 decl_stmt|;
-name|int
-name|label_strings
-index|[
-name|STRCOUNT
-index|]
-decl_stmt|;
+name|alloc_arrays
+argument_list|()
+expr_stmt|;
 name|_nc_copy_termtype
 argument_list|(
 operator|&
@@ -3809,7 +3866,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|STRCOUNT
+name|MAX_STRINGS
 condition|;
 name|i
 operator|++
@@ -3832,10 +3889,10 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
-name|strnames
-index|[
+name|STR_NAME
+argument_list|(
 name|i
-index|]
+argument_list|)
 argument_list|,
 literal|"lf"
 argument_list|,
@@ -3881,19 +3938,26 @@ literal|0
 init|;
 name|i
 operator|<
-name|STRCOUNT
+name|MAX_STRINGS
 condition|;
 name|i
 operator|++
 control|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|this_name
+init|=
+name|STR_NAME
+argument_list|(
+name|i
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 operator|(
-name|strnames
-index|[
-name|i
-index|]
+name|this_name
 index|[
 literal|0
 index|]
@@ -3903,10 +3967,7 @@ operator|)
 operator|&&
 name|strcmp
 argument_list|(
-name|strnames
-index|[
-name|i
-index|]
+name|this_name
 argument_list|,
 literal|"kmous"
 argument_list|)
@@ -3946,26 +4007,15 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-operator|&
-name|strnames
-index|[
-name|i
-index|]
-index|[
-literal|1
-index|]
+name|this_name
 argument_list|,
-operator|&
-name|strnames
-index|[
+name|STR_NAME
+argument_list|(
 name|label_strings
 index|[
 name|j
 index|]
-index|]
-index|[
-literal|1
-index|]
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -3985,7 +4035,7 @@ block|}
 block|}
 name|enter_key
 argument_list|(
-argument|strnames[i]
+argument|this_name
 argument_list|,
 argument|CUR Strings[i]
 argument_list|,
@@ -4097,6 +4147,11 @@ block|}
 name|xon_shadow
 operator|=
 name|xon_xoff
+expr_stmt|;
+name|free
+argument_list|(
+name|label_strings
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -4316,10 +4371,10 @@ name|strcpy
 argument_list|(
 name|pad
 argument_list|,
-name|strnames
-index|[
+name|STR_NAME
+argument_list|(
 name|x
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4404,10 +4459,10 @@ name|temp
 argument_list|,
 literal|"new string value  %s"
 argument_list|,
-name|strnames
-index|[
+name|STR_NAME
+argument_list|(
 name|x
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ptextln
@@ -4986,10 +5041,10 @@ literal|'a'
 operator|+
 name|j
 argument_list|,
-name|strnames
-index|[
+name|STR_NAME
+argument_list|(
 name|k
-index|]
+argument_list|)
 argument_list|,
 name|s
 argument_list|)

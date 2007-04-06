@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2001 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2001-2002,2003 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: varargs.c,v 1.2 2002/06/01 16:16:00 tom Exp $"
+literal|"$Id: varargs.c,v 1.4 2003/05/24 21:10:28 tom Exp $"
 argument_list|)
 end_macro
 
@@ -31,6 +31,13 @@ ifdef|#
 directive|ifdef
 name|TRACE
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAX_PARMS
+value|10
+end_define
 
 begin_typedef
 typedef|typedef
@@ -79,7 +86,7 @@ name|VA_PTR
 parameter_list|(
 name|type
 parameter_list|)
-value|pval = (void *)va_arg(ap, type)
+value|pval = (char *)va_arg(ap, type)
 end_define
 
 begin_define
@@ -135,6 +142,14 @@ name|buffer
 index|[
 name|BUFSIZ
 index|]
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|param
+decl_stmt|;
+name|int
+name|n
 decl_stmt|;
 if|if
 condition|(
@@ -232,6 +247,17 @@ init|=
 literal|0
 decl_stmt|;
 name|ARGTYPE
+name|parm
+index|[
+name|MAX_PARMS
+index|]
+decl_stmt|;
+name|int
+name|parms
+init|=
+literal|0
+decl_stmt|;
+name|ARGTYPE
 name|used
 init|=
 name|atUnknown
@@ -261,11 +287,20 @@ argument_list|(
 name|int
 argument_list|)
 expr_stmt|;
-name|used
+if|if
+condition|(
+name|parms
+operator|<
+name|MAX_PARMS
+condition|)
+name|parm
+index|[
+name|parms
+operator|++
+index|]
 operator|=
 name|atInteger
 expr_stmt|;
-break|break;
 block|}
 elseif|else
 if|if
@@ -475,15 +510,45 @@ condition|(
 name|used
 operator|!=
 name|atUnknown
+operator|&&
+name|parms
+operator|<
+name|MAX_PARMS
 condition|)
 block|{
-specifier|const
-name|char
-modifier|*
+name|parm
+index|[
+name|parms
+operator|++
+index|]
+operator|=
+name|used
+expr_stmt|;
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|parms
+condition|;
+operator|++
+name|n
+control|)
+block|{
+name|used
+operator|=
+name|parm
+index|[
+name|n
+index|]
+expr_stmt|;
 name|param
-init|=
+operator|=
 name|buffer
-decl_stmt|;
+expr_stmt|;
 switch|switch
 condition|(
 name|used
@@ -580,16 +645,17 @@ argument_list|(
 name|result_buf
 argument_list|)
 argument_list|,
-literal|",%s"
+literal|", %s"
 argument_list|,
 name|param
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 name|used
 operator|=
 name|atUnknown
 expr_stmt|;
-block|}
 block|}
 block|}
 else|else

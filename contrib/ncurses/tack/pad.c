@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 59 Temple Place - Suite 330, ** Boston, MA 02111-1307, USA. */
+comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, ** Boston, MA 02110-1301, USA */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: pad.c,v 1.2 2000/03/04 21:04:58 tom Exp $"
+literal|"$Id: pad.c,v 1.6 2005/09/17 19:49:16 tom Exp $"
 argument_list|)
 end_macro
 
@@ -649,14 +649,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|test_menu
-name|change_pad_menu
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*    Any command found in this list, executed from a "Done" prompt    will force the default action to repeat rather than next. */
@@ -1697,22 +1689,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|test_complete
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* counts number of tests completed */
-end_comment
-
 begin_comment
 comment|/* globals */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|hzcc
 decl_stmt|;
@@ -6123,7 +6105,7 @@ if|if
 condition|(
 name|scroll_reverse
 operator|&&
-name|augment
+name|repeats
 operator|==
 literal|1
 condition|)
@@ -6443,7 +6425,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|scroll_reverse
+name|insert_line
 operator|&&
 name|augment
 operator|==
@@ -6615,12 +6597,31 @@ if|if
 condition|(
 operator|!
 name|scroll_forward
-operator|&&
-name|over_strike
 condition|)
 block|{
 name|CAP_NOT_FOUND
 expr_stmt|;
+name|ptext
+argument_list|(
+literal|"(ind) Scroll-forward not present.  "
+argument_list|)
+expr_stmt|;
+name|pad_done_message
+argument_list|(
+name|t
+argument_list|,
+name|state
+argument_list|,
+name|ch
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|over_strike
+condition|)
+block|{
 name|ptext
 argument_list|(
 literal|"(ind) Scroll-forward not tested on overstrike terminals.  "
@@ -6689,10 +6690,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|augment
-operator|>
+name|scroll_forward
+operator|&&
+name|repeats
+operator|==
 literal|1
 condition|)
+block|{
+name|put_ind
+argument_list|()
+expr_stmt|;
+block|}
+else|else
 block|{
 name|tt_putparm
 argument_list|(
@@ -6704,12 +6713,6 @@ name|repeats
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|put_ind
-argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -6726,6 +6729,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|scroll_forward
+operator|&&
 name|augment
 operator|==
 literal|1
@@ -6954,14 +6959,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|i
-operator|&
-literal|0x7f
-operator|)
-operator|==
-literal|0
-operator|&&
 name|augment
 operator|<
 name|lines
@@ -6985,11 +6982,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|repeats
-operator|||
-operator|!
 name|delete_line
+operator|&&
+name|repeats
+operator|==
+literal|1
 condition|)
+block|{
+name|tt_putp
+argument_list|(
+name|delete_line
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|tt_putparm
 argument_list|(
@@ -7000,14 +7006,6 @@ argument_list|,
 name|repeats
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|tt_putp
-argument_list|(
-name|delete_line
 argument_list|)
 expr_stmt|;
 block|}
@@ -7031,29 +7029,12 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|repeats
-operator|||
-operator|!
 name|delete_line
+operator|&&
+name|augment
+operator|==
+literal|1
 condition|)
-block|{
-name|tt_putparm
-argument_list|(
-name|parm_delete_line
-argument_list|,
-name|lines
-operator|-
-literal|1
-argument_list|,
-name|lines
-operator|-
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 for|for
 control|(
@@ -7075,6 +7056,24 @@ name|delete_line
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+name|tt_putparm
+argument_list|(
+name|parm_delete_line
+argument_list|,
+name|lines
+operator|-
+literal|1
+argument_list|,
+name|lines
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 name|sprintf
 argument_list|(
@@ -8210,6 +8209,9 @@ name|lines
 operator|-
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|every_line

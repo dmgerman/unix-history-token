@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *   Author: Juergen Pfeifer<juergen.pfeifer@gmx.net> 1995,1997            *  ****************************************************************************/
+comment|/****************************************************************************  *   Author:  Juergen Pfeifer, 1995,1997                                    *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -16,12 +16,12 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fld_current.c,v 1.5 2000/12/10 02:09:38 tom Exp $"
+literal|"$Id: fld_current.c,v 1.11 2004/12/25 22:40:13 tom Exp $"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int set_current_field(FORM  * form,FIELD * field) |    |   Description   :  Set the current field of the form to the specified one. | |   Return Values :  E_OK              - success |                    E_BAD_ARGUMENT    - invalid form or field pointer |                    E_REQUEST_DENIED  - field not selectable |                    E_BAD_STATE       - called from a hook routine |                    E_INVALID_FIELD   - current field can't be left |                    E_SYSTEM_ERROR    - system error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  int set_current_field(FORM  * form,FIELD * field) | |   Description   :  Set the current field of the form to the specified one. | |   Return Values :  E_OK              - success |                    E_BAD_ARGUMENT    - invalid form or field pointer |                    E_REQUEST_DENIED  - field not selectable |                    E_BAD_STATE       - called from a hook routine |                    E_INVALID_FIELD   - current field can't be left |                    E_SYSTEM_ERROR    - system error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -34,9 +34,9 @@ end_macro
 begin_macro
 name|set_current_field
 argument_list|(
-argument|FORM  * form
+argument|FORM *form
 argument_list|,
-argument|FIELD * field
+argument|FIELD *field
 argument_list|)
 end_macro
 
@@ -47,19 +47,38 @@ name|err
 init|=
 name|E_OK
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"set_current_field(%p,%p)"
+argument_list|)
+operator|,
+name|form
+operator|,
+name|field
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|!
 name|form
+operator|==
+literal|0
 operator|||
-operator|!
 name|field
+operator|==
+literal|0
 condition|)
+block|{
 name|RETURN
 argument_list|(
 name|E_BAD_ARGUMENT
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -75,14 +94,16 @@ argument_list|(
 name|field
 argument_list|)
 condition|)
+block|{
 name|RETURN
 argument_list|(
 name|E_REQUEST_DENIED
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
-operator|!
 operator|(
 name|form
 operator|->
@@ -90,6 +111,8 @@ name|status
 operator|&
 name|_POSTED
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|form
@@ -111,16 +134,22 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
 name|form
 operator|->
 name|status
 operator|&
 name|_IN_DRIVER
+operator|)
+operator|!=
+literal|0
 condition|)
+block|{
 name|err
 operator|=
 name|E_BAD_STATE
 expr_stmt|;
+block|}
 else|else
 block|{
 if|if
@@ -140,10 +169,12 @@ argument_list|(
 name|form
 argument_list|)
 condition|)
+block|{
 name|err
 operator|=
 name|E_INVALID_FIELD
 expr_stmt|;
+block|}
 else|else
 block|{
 name|Call_Hook
@@ -177,6 +208,9 @@ name|_nc_Set_Form_Page
 argument_list|(
 name|form
 argument_list|,
+operator|(
+name|int
+operator|)
 name|field
 operator|->
 name|page
@@ -211,6 +245,9 @@ argument_list|,
 name|fieldinit
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|_nc_Refresh_Current_Field
 argument_list|(
 name|form
@@ -229,7 +266,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  FIELD *current_field(const FORM * form) |    |   Description   :  Return the current field. | |   Return Values :  Pointer to the current field. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  FIELD *current_field(const FORM * form) | |   Description   :  Return the current field. | |   Return Values :  Pointer to the current field. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -242,25 +279,39 @@ end_macro
 begin_macro
 name|current_field
 argument_list|(
-argument|const FORM * form
+argument|const FORM *form
 argument_list|)
 end_macro
 
 begin_block
 block|{
-return|return
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"current_field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnField
+argument_list|(
 name|Normalize_Form
 argument_list|(
 name|form
 argument_list|)
 operator|->
 name|current
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int field_index(const FIELD * field) |    |   Description   :  Return the index of the field in the field-array of |                    the form. | |   Return Values :>= 0   : field index |                    -1     : fieldpointer invalid or field not connected +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  int field_index(const FIELD * field) | |   Description   :  Return the index of the field in the field-array of |                    the form. | |   Return Values :>= 0   : field index |                    -1     : fieldpointer invalid or field not connected +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -273,30 +324,49 @@ end_macro
 begin_macro
 name|field_index
 argument_list|(
-argument|const FIELD * field
+argument|const FIELD *field
 argument_list|)
 end_macro
 
 begin_block
 block|{
-return|return
+name|T
+argument_list|(
 operator|(
+name|T_CALLED
+argument_list|(
+literal|"field_index(%p)"
+argument_list|)
+operator|,
+name|field
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 operator|(
 name|field
+operator|!=
+literal|0
 operator|&&
 name|field
 operator|->
 name|form
+operator|!=
+literal|0
 operator|)
 condition|?
+operator|(
+name|int
+operator|)
 name|field
 operator|->
 name|index
 else|:
 operator|-
 literal|1
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

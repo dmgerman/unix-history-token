@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 59 Temple Place - Suite 330, ** Boston, MA 02111-1307, USA. */
+comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, ** Boston, MA 02110-1301, USA */
 end_comment
 
 begin_comment
@@ -16,12 +16,12 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: scan.c,v 1.2 1999/08/21 23:09:35 tom Exp $"
+literal|"$Id: scan.c,v 1.5 2005/09/17 19:49:16 tom Exp $"
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
+name|unsigned
 name|scan_max
 decl_stmt|;
 end_decl_stmt
@@ -47,13 +47,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|unsigned
 modifier|*
 name|scan_tested
 decl_stmt|,
 modifier|*
 name|scan_length
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
 modifier|*
 name|scan_value
 decl_stmt|;
@@ -119,7 +124,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|int
+name|unsigned
 name|type
 decl_stmt|;
 block|}
@@ -440,6 +445,9 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|unsigned
+name|len
+decl_stmt|;
 name|char
 name|home
 index|[
@@ -668,14 +676,14 @@ expr_stmt|;
 name|scan_tested
 operator|=
 operator|(
-name|int
+name|unsigned
 operator|*
 operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|int
+name|unsigned
 operator|*
 argument_list|)
 operator|*
@@ -685,14 +693,14 @@ expr_stmt|;
 name|scan_length
 operator|=
 operator|(
-name|int
+name|unsigned
 operator|*
 operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|int
+name|unsigned
 operator|*
 argument_list|)
 operator|*
@@ -702,14 +710,14 @@ expr_stmt|;
 name|scan_value
 operator|=
 operator|(
-name|int
+name|unsigned
 operator|*
 operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|int
+name|unsigned
 operator|*
 argument_list|)
 operator|*
@@ -874,7 +882,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|ch
+name|len
 operator|=
 name|strlen
 argument_list|(
@@ -891,19 +899,21 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|ch
+name|len
 operator|>
 name|scan_max
 condition|)
 name|scan_max
 operator|=
-name|ch
+name|len
 expr_stmt|;
 name|scan_value
 index|[
 name|i
 index|]
 operator|=
+name|UChar
+argument_list|(
 name|scan_name
 index|[
 name|i
@@ -911,6 +921,7 @@ index|]
 index|[
 literal|0
 index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1093,9 +1104,10 @@ name|void
 parameter_list|)
 block|{
 comment|/* read a key and translate scan mode to 				   ASCII */
-name|int
+name|unsigned
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|j
 decl_stmt|,
 name|ch

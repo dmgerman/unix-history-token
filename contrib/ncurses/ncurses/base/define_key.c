@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Thomas E. Dickey<dickey@clark.net> 1997                        *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Thomas E. Dickey                    1997-on                     *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: define_key.c,v 1.6 2000/12/10 02:43:26 tom Exp $"
+literal|"$Id: define_key.c,v 1.10 2006/06/17 18:19:48 tom Exp $"
 argument_list|)
 end_macro
 
@@ -30,7 +30,7 @@ end_macro
 begin_macro
 name|define_key
 argument_list|(
-argument|char *str
+argument|const char *str
 argument_list|,
 argument|int keycode
 argument_list|)
@@ -60,6 +60,19 @@ name|keycode
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SP
+operator|==
+literal|0
+condition|)
+block|{
+name|code
+operator|=
+name|ERR
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|keycode
@@ -102,6 +115,9 @@ operator|->
 name|_keytry
 operator|)
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|keycode
 argument_list|)
 condition|)
@@ -114,6 +130,16 @@ if|if
 condition|(
 name|str
 operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|key_defined
+argument_list|(
+name|str
+argument_list|)
+operator|==
 literal|0
 condition|)
 block|{
@@ -131,6 +157,9 @@ operator|)
 argument_list|,
 name|str
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|keycode
 argument_list|)
 expr_stmt|;
@@ -138,6 +167,14 @@ name|code
 operator|=
 name|OK
 expr_stmt|;
+block|}
+else|else
+block|{
+name|code
+operator|=
+name|ERR
+expr_stmt|;
+block|}
 block|}
 block|}
 else|else

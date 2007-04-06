@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *   Author: Juergen Pfeifer<juergen.pfeifer@gmx.net> 1995,1997            *  ****************************************************************************/
+comment|/****************************************************************************  *   Author:  Juergen Pfeifer, 1995,1997                                    *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: frm_def.c,v 1.10 2000/12/10 02:09:38 tom Exp $"
+literal|"$Id: frm_def.c,v 1.20 2006/11/04 16:57:15 tom Exp $"
 argument_list|)
 end_macro
 
@@ -268,7 +268,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* we leave the loop with current pointing to the field after newfield*/
+comment|/* we leave the loop with current pointing to the field after newfield */
 name|newfield
 operator|->
 name|snext
@@ -479,6 +479,20 @@ name|_PAGE
 modifier|*
 name|pg
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"Connect_Fields(%p,%p)"
+argument_list|)
+operator|,
+name|form
+operator|,
+name|fields
+operator|)
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 name|form
@@ -580,6 +594,13 @@ if|if
 condition|(
 name|field_cnt
 operator|==
+literal|0
+operator|||
+operator|(
+name|short
+operator|)
+name|field_cnt
+operator|<
 literal|0
 condition|)
 name|RETURN
@@ -893,11 +914,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Associate_Fields(FORM *form, FIELD **fields) |    |   Description   :  Set association between form and array of fields.  |                    If there are fields, position to first active field. | |   Return Values :  E_OK            - success |                    any other       - error occured +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Associate_Fields(FORM *form, FIELD **fields) |    |   Description   :  Set association between form and array of fields.  |                    If there are fields, position to first active field. | |   Return Values :  E_OK            - success |                    E_BAD_ARGUMENT  - Invalid form pointer or field array |                    E_CONNECTED     - a field is already connected |                    E_SYSTEM_ERROR  - not enough memory +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|INLINE
+name|NCURSES_INLINE
 specifier|static
 name|int
 name|Associate_Fields
@@ -982,7 +1003,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  FORM *new_form( FIELD **fields ) |    |   Description   :  Create new form with given array of fields. | |   Return Values :  Pointer to form. NULL if error occured. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  FORM *new_form( FIELD **fields ) |    |   Description   :  Create new form with given array of fields. | |   Return Values :  Pointer to form. NULL if error occurred. !                    Set errno: |                    E_OK            - success |                    E_BAD_ARGUMENT  - Invalid form pointer or field array |                    E_CONNECTED     - a field is already connected |                    E_SYSTEM_ERROR  - not enough memory +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -995,7 +1016,7 @@ end_macro
 begin_macro
 name|new_form
 argument_list|(
-argument|FIELD ** fields
+argument|FIELD **fields
 argument_list|)
 end_macro
 
@@ -1022,6 +1043,18 @@ name|FORM
 argument_list|)
 argument_list|)
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"new_form(%p)"
+argument_list|)
+operator|,
+name|fields
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|form
@@ -1074,11 +1107,11 @@ argument_list|(
 name|err
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|returnForm
+argument_list|(
 name|form
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -1096,12 +1129,24 @@ end_macro
 begin_macro
 name|free_form
 argument_list|(
-argument|FORM * form
+argument|FORM *form
 argument_list|)
 end_macro
 
 begin_block
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"free_form(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1157,7 +1202,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int set_form_fields( FORM *form, FIELD **fields ) |    |   Description   :  Set a new association of an array of fields to a form | |   Return Values :  E_OK              - no error |                    E_BAD_ARGUMENT    - invalid form pointer |                    E_POSTED          - form is posted +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int set_form_fields( FORM *form, FIELD **fields ) |    |   Description   :  Set a new association of an array of fields to a form | |   Return Values :  E_OK            - no error |                    E_BAD_ARGUMENT  - Invalid form pointer or field array |                    E_CONNECTED     - a field is already connected |                    E_POSTED        - form is posted |                    E_SYSTEM_ERROR  - not enough memory +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -1170,9 +1215,9 @@ end_macro
 begin_macro
 name|set_form_fields
 argument_list|(
-argument|FORM  * form
+argument|FORM *form
 argument_list|,
-argument|FIELD ** fields
+argument|FIELD **fields
 argument_list|)
 end_macro
 
@@ -1186,6 +1231,20 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"set_form_fields(%p,%p)"
+argument_list|)
+operator|,
+name|form
+operator|,
+name|fields
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1264,22 +1323,34 @@ end_macro
 begin_macro
 name|form_fields
 argument_list|(
-argument|const FORM * form
+argument|const FORM *form
 argument_list|)
 end_macro
 
 begin_block
 block|{
-return|return
+name|T
+argument_list|(
 operator|(
+name|T_CALLED
+argument_list|(
+literal|"form_field(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnFieldPtr
+argument_list|(
 name|Normalize_Form
 argument_list|(
 name|form
 argument_list|)
 operator|->
 name|field
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -1297,22 +1368,34 @@ end_macro
 begin_macro
 name|field_count
 argument_list|(
-argument|const FORM * form
+argument|const FORM *form
 argument_list|)
 end_macro
 
 begin_block
 block|{
-return|return
+name|T
+argument_list|(
 operator|(
+name|T_CALLED
+argument_list|(
+literal|"field_count(%p)"
+argument_list|)
+operator|,
+name|form
+operator|)
+argument_list|)
+expr_stmt|;
+name|returnCode
+argument_list|(
 name|Normalize_Form
 argument_list|(
 name|form
 argument_list|)
 operator|->
 name|maxfield
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

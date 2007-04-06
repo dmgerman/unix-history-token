@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *   Author: Juergen Pfeifer<juergen.pfeifer@gmx.net> 1995,1997            *  ****************************************************************************/
+comment|/****************************************************************************  *   Author:  Juergen Pfeifer, 1995,1997                                    *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fld_def.c,v 1.13 2000/12/10 02:09:38 tom Exp $"
+literal|"$Id: fld_def.c,v 1.33 2005/04/16 17:31:17 tom Exp $"
 argument_list|)
 end_macro
 
@@ -32,113 +32,114 @@ init|=
 block|{
 literal|0
 block|,
-comment|/* status */
+comment|/* status  */
 literal|0
 block|,
-comment|/* rows   */
+comment|/* rows    */
 literal|0
 block|,
-comment|/* cols   */
+comment|/* cols    */
 literal|0
 block|,
-comment|/* frow   */
+comment|/* frow    */
 literal|0
 block|,
-comment|/* fcol   */
+comment|/* fcol    */
 literal|0
 block|,
-comment|/* drows  */
+comment|/* drows   */
 literal|0
 block|,
-comment|/* dcols  */
+comment|/* dcols   */
 literal|0
 block|,
-comment|/* maxgrow*/
+comment|/* maxgrow */
 literal|0
 block|,
-comment|/* nrow   */
+comment|/* nrow    */
 literal|0
 block|,
-comment|/* nbuf   */
+comment|/* nbuf    */
 name|NO_JUSTIFICATION
 block|,
-comment|/* just   */
+comment|/* just    */
 literal|0
 block|,
-comment|/* page   */
+comment|/* page    */
 literal|0
 block|,
-comment|/* index  */
+comment|/* index   */
 operator|(
 name|int
 operator|)
 literal|' '
 block|,
-comment|/* pad    */
+comment|/* pad     */
 name|A_NORMAL
 block|,
-comment|/* fore   */
+comment|/* fore    */
 name|A_NORMAL
 block|,
-comment|/* back   */
+comment|/* back    */
 name|ALL_FIELD_OPTS
 block|,
-comment|/* opts   */
+comment|/* opts    */
 operator|(
 name|FIELD
 operator|*
 operator|)
 literal|0
 block|,
-comment|/* snext  */
+comment|/* snext   */
 operator|(
 name|FIELD
 operator|*
 operator|)
 literal|0
 block|,
-comment|/* sprev  */
+comment|/* sprev   */
 operator|(
 name|FIELD
 operator|*
 operator|)
 literal|0
 block|,
-comment|/* link   */
+comment|/* link    */
 operator|(
 name|FORM
 operator|*
 operator|)
 literal|0
 block|,
-comment|/* form   */
+comment|/* form    */
 operator|(
 name|FIELDTYPE
 operator|*
 operator|)
 literal|0
 block|,
-comment|/* type   */
+comment|/* type    */
 operator|(
 name|char
 operator|*
 operator|)
 literal|0
 block|,
-comment|/* arg    */
+comment|/* arg     */
 operator|(
-name|char
+name|FIELD_CELL
 operator|*
 operator|)
 literal|0
 block|,
-comment|/* buf    */
+comment|/* buf     */
 operator|(
 name|char
 operator|*
 operator|)
 literal|0
-comment|/* usrptr */
+comment|/* usrptr  */
+name|NCURSES_FIELD_EXTENSION
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -158,17 +159,14 @@ name|default_field
 expr_stmt|;
 end_expr_stmt
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  TypeArgument *_nc_Make_Argument( |                              const FIELDTYPE *typ, |                              va_list *ap, |                              int *err ) |    |   Description   :  Create an argument structure for the specified type. |                    Use the type-dependant argument list to construct |                    it. | |   Return Values :  Pointer to argument structure. Maybe NULL. |                    In case of an error in *err an errorcounter is increased.  +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  TypeArgument *_nc_Make_Argument( |                              const FIELDTYPE *typ, |                              va_list *ap, |                              int *err ) | |   Description   :  Create an argument structure for the specified type. |                    Use the type-dependent argument list to construct |                    it. | |   Return Values :  Pointer to argument structure. Maybe NULL. |                    In case of an error in *err an error counter is increased. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
 name|NCURSES_EXPORT
 argument_list|(
-argument|TypeArgument*
+argument|TypeArgument *
 argument_list|)
 end_macro
 
@@ -202,6 +200,8 @@ decl_stmt|;
 if|if
 condition|(
 name|typ
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|typ
@@ -210,22 +210,36 @@ name|status
 operator|&
 name|_HAS_ARGS
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|assert
 argument_list|(
 name|err
+operator|!=
+literal|0
 operator|&&
 name|ap
+operator|!=
+operator|(
+name|va_list
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|typ
 operator|->
 name|status
 operator|&
 name|_LINKED_TYPE
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|p
@@ -245,6 +259,8 @@ expr_stmt|;
 if|if
 condition|(
 name|p
+operator|!=
+literal|0
 condition|)
 block|{
 name|p
@@ -282,11 +298,13 @@ name|p
 return|;
 block|}
 else|else
+block|{
 operator|*
 name|err
 operator|+=
 literal|1
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -295,6 +313,12 @@ argument_list|(
 name|typ
 operator|->
 name|makearg
+operator|!=
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -315,11 +339,13 @@ name|ap
 argument_list|)
 operator|)
 condition|)
+block|{
 operator|*
 name|err
 operator|+=
 literal|1
 expr_stmt|;
+block|}
 block|}
 block|}
 return|return
@@ -329,13 +355,13 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  TypeArgument *_nc_Copy_Argument(const FIELDTYPE *typ, |                                                    const TypeArgument *argp, |                                                    int *err ) |    |   Description   :  Create a copy of an argument structure for the specified  |                    type. | |   Return Values :  Pointer to argument structure. Maybe NULL. |                    In case of an error in *err an errorcounter is increased.  +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  TypeArgument *_nc_Copy_Argument(const FIELDTYPE *typ, |                                                    const TypeArgument *argp, |                                                    int *err ) | |   Description   :  Create a copy of an argument structure for the specified |                    type. | |   Return Values :  Pointer to argument structure. Maybe NULL. |                    In case of an error in *err an error counter is increased. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
 name|NCURSES_EXPORT
 argument_list|(
-argument|TypeArgument*
+argument|TypeArgument *
 argument_list|)
 end_macro
 
@@ -369,6 +395,8 @@ decl_stmt|;
 if|if
 condition|(
 name|typ
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|typ
@@ -377,22 +405,32 @@ name|status
 operator|&
 name|_HAS_ARGS
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|assert
 argument_list|(
 name|err
+operator|!=
+literal|0
 operator|&&
 name|argp
+operator|!=
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|typ
 operator|->
 name|status
 operator|&
 name|_LINKED_TYPE
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|p
@@ -412,6 +450,8 @@ expr_stmt|;
 if|if
 condition|(
 name|p
+operator|!=
+literal|0
 condition|)
 block|{
 name|p
@@ -461,6 +501,12 @@ condition|(
 name|typ
 operator|->
 name|copyarg
+operator|!=
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
 condition|)
 block|{
 if|if
@@ -488,13 +534,16 @@ argument_list|)
 operator|)
 operator|)
 condition|)
+block|{
 operator|*
 name|err
 operator|+=
 literal|1
 expr_stmt|;
 block|}
+block|}
 else|else
+block|{
 name|res
 operator|=
 operator|(
@@ -505,6 +554,7 @@ name|argp
 expr_stmt|;
 block|}
 block|}
+block|}
 return|return
 name|res
 return|;
@@ -512,7 +562,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  void _nc_Free_Argument(const FIELDTYPE *typ, |                                           TypeArgument * argp ) |    |   Description   :  Release memory associated with the argument structure |                    for the given fieldtype. | |   Return Values :  - +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  void _nc_Free_Argument(const FIELDTYPE *typ, |                                           TypeArgument * argp ) | |   Description   :  Release memory associated with the argument structure |                    for the given fieldtype. | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -525,9 +575,9 @@ end_macro
 begin_macro
 name|_nc_Free_Argument
 argument_list|(
-argument|const FIELDTYPE * typ
+argument|const FIELDTYPE *typ
 argument_list|,
-argument|TypeArgument * argp
+argument|TypeArgument *argp
 argument_list|)
 end_macro
 
@@ -535,10 +585,10 @@ begin_block
 block|{
 if|if
 condition|(
-operator|!
 name|typ
-operator|||
-operator|!
+operator|!=
+literal|0
+operator|&&
 operator|(
 name|typ
 operator|->
@@ -546,20 +596,28 @@ name|status
 operator|&
 name|_HAS_ARGS
 operator|)
+operator|!=
+literal|0
 condition|)
-return|return;
+block|{
 if|if
 condition|(
+operator|(
 name|typ
 operator|->
 name|status
 operator|&
 name|_LINKED_TYPE
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|assert
 argument_list|(
 name|argp
+operator|!=
+literal|0
 argument_list|)
 expr_stmt|;
 name|_nc_Free_Argument
@@ -597,7 +655,14 @@ condition|(
 name|typ
 operator|->
 name|freearg
+operator|!=
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
 condition|)
+block|{
 name|typ
 operator|->
 name|freearg
@@ -611,10 +676,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  bool _nc_Copy_Type( FIELD *dst, FIELD const *src ) |    |   Description   :  Copy argument structure of field src to field dst | |   Return Values :  TRUE       - copy worked |                    FALSE      - error occured +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  bool _nc_Copy_Type( FIELD *dst, FIELD const *src ) | |   Description   :  Copy argument structure of field src to field dst | |   Return Values :  TRUE       - copy worked |                    FALSE      - error occurred +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -643,8 +710,12 @@ decl_stmt|;
 name|assert
 argument_list|(
 name|dst
+operator|!=
+literal|0
 operator|&&
 name|src
+operator|!=
+literal|0
 argument_list|)
 expr_stmt|;
 name|dst
@@ -686,6 +757,8 @@ expr_stmt|;
 if|if
 condition|(
 name|err
+operator|!=
+literal|0
 condition|)
 block|{
 name|_nc_Free_Argument
@@ -736,7 +809,10 @@ condition|(
 name|dst
 operator|->
 name|type
+operator|!=
+literal|0
 condition|)
+block|{
 name|dst
 operator|->
 name|type
@@ -744,6 +820,7 @@ operator|->
 name|ref
 operator|++
 expr_stmt|;
+block|}
 return|return
 name|TRUE
 return|;
@@ -752,7 +829,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  void _nc_Free_Type( FIELD *field ) |    |   Description   :  Release Argument structure for this field | |   Return Values :  - +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  void _nc_Free_Type( FIELD *field ) | |   Description   :  Release Argument structure for this field | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -774,6 +851,8 @@ block|{
 name|assert
 argument_list|(
 name|field
+operator|!=
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -781,7 +860,10 @@ condition|(
 name|field
 operator|->
 name|type
+operator|!=
+literal|0
 condition|)
+block|{
 name|field
 operator|->
 name|type
@@ -789,6 +871,7 @@ operator|->
 name|ref
 operator|--
 expr_stmt|;
+block|}
 name|_nc_Free_Argument
 argument_list|(
 name|field
@@ -810,7 +893,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  FIELD *new_field( int rows, int cols,  |                                      int frow, int fcol, |                                      int nrow, int nbuf ) |    |   Description   :  Create a new field with this many 'rows' and 'cols', |                    starting at 'frow/fcol' in the subwindow of the form. |                    Allocate 'nrow' off-screen rows and 'nbuf' additional |                    buffers. If an error occurs, errno is set to |                     |                    E_BAD_ARGUMENT - invalid argument |                    E_SYSTEM_ERROR - system error | |   Return Values :  Pointer to the new field or NULL if failure. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  FIELD *new_field( int rows, int cols, |                                      int frow, int fcol, |                                      int nrow, int nbuf ) | |   Description   :  Create a new field with this many 'rows' and 'cols', |                    starting at 'frow/fcol' in the subwindow of the form. |                    Allocate 'nrow' off-screen rows and 'nbuf' additional |                    buffers. If an error occurs, errno is set to | |                    E_BAD_ARGUMENT - invalid argument |                    E_SYSTEM_ERROR - system error | |   Return Values :  Pointer to the new field or NULL if failure. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -839,6 +922,20 @@ end_macro
 
 begin_block
 block|{
+specifier|static
+specifier|const
+name|FIELD_CELL
+name|blank
+init|=
+name|BLANK
+decl_stmt|;
+specifier|static
+specifier|const
+name|FIELD_CELL
+name|zeros
+init|=
+name|ZEROS
+decl_stmt|;
 name|FIELD
 modifier|*
 name|New_Field
@@ -854,6 +951,28 @@ name|err
 init|=
 name|E_BAD_ARGUMENT
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"new_field(%d,%d,%d,%d,%d,%d)"
+argument_list|)
+operator|,
+name|rows
+operator|,
+name|cols
+operator|,
+name|frow
+operator|,
+name|fcol
+operator|,
+name|nrow
+operator|,
+name|nbuf
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rows
@@ -906,6 +1025,8 @@ name|FIELD
 argument_list|)
 argument_list|)
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 operator|*
@@ -969,6 +1090,52 @@ name|link
 operator|=
 name|New_Field
 expr_stmt|;
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+name|New_Field
+operator|->
+name|working
+operator|=
+name|newpad
+argument_list|(
+literal|1
+argument_list|,
+name|Buffer_Length
+argument_list|(
+name|New_Field
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|New_Field
+operator|->
+name|expanded
+operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|calloc
+argument_list|(
+literal|1
+operator|+
+operator|(
+name|unsigned
+operator|)
+name|rows
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|_nc_Copy_Type
@@ -998,7 +1165,7 @@ operator|->
 name|buf
 operator|=
 operator|(
-name|char
+name|FIELD_CELL
 operator|*
 operator|)
 name|malloc
@@ -1008,21 +1175,20 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* Prefill buffers with blanks and insert terminating zeroes 		 between buffers */
+comment|/* Prefill buffers with blanks and insert terminating zeroes 	         between buffers */
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
-name|memset
+name|int
+name|cells
+init|=
+name|Buffer_Length
 argument_list|(
 name|New_Field
-operator|->
-name|buf
-argument_list|,
-literal|' '
-argument_list|,
-name|len
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -1039,37 +1205,61 @@ name|i
 operator|++
 control|)
 block|{
+name|FIELD_CELL
+modifier|*
+name|buffer
+init|=
+operator|&
+operator|(
 name|New_Field
 operator|->
 name|buf
 index|[
 operator|(
-name|New_Field
-operator|->
-name|drows
-operator|*
-name|New_Field
-operator|->
-name|cols
+name|cells
 operator|+
 literal|1
 operator|)
 operator|*
-operator|(
 name|i
-operator|+
-literal|1
+index|]
 operator|)
-operator|-
-literal|1
+decl_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|cells
+condition|;
+operator|++
+name|j
+control|)
+block|{
+name|buffer
+index|[
+name|j
 index|]
 operator|=
-literal|'\0'
+name|blank
 expr_stmt|;
 block|}
-return|return
+name|buffer
+index|[
+name|j
+index|]
+operator|=
+name|zeros
+expr_stmt|;
+block|}
+name|returnField
+argument_list|(
 name|New_Field
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -1087,18 +1277,20 @@ argument_list|(
 name|err
 argument_list|)
 expr_stmt|;
-return|return
+name|returnField
+argument_list|(
 operator|(
 name|FIELD
 operator|*
 operator|)
 literal|0
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int free_field( FIELD *field ) |    |   Description   :  Frees the storage allocated for the field. | |   Return Values :  E_OK           - success |                    E_BAD_ARGUMENT - invalid field pointer |                    E_CONNECTED    - field is connected +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  int free_field( FIELD *field ) | |   Description   :  Frees the storage allocated for the field. | |   Return Values :  E_OK           - success |                    E_BAD_ARGUMENT - invalid field pointer |                    E_CONNECTED    - field is connected +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -1111,33 +1303,53 @@ end_macro
 begin_macro
 name|free_field
 argument_list|(
-argument|FIELD * field
+argument|FIELD *field
 argument_list|)
 end_macro
 
 begin_block
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"free_field(%p)"
+argument_list|)
+operator|,
+name|field
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|field
 condition|)
+block|{
 name|RETURN
 argument_list|(
 name|E_BAD_ARGUMENT
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|field
 operator|->
 name|form
+operator|!=
+literal|0
 condition|)
+block|{
 name|RETURN
 argument_list|(
 name|E_CONNECTED
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|field
@@ -1152,6 +1364,8 @@ condition|(
 name|field
 operator|->
 name|buf
+operator|!=
+literal|0
 condition|)
 name|free
 argument_list|(
@@ -1185,7 +1399,7 @@ name|f
 operator|->
 name|link
 control|)
-block|{}
+block|{ 	}
 name|f
 operator|->
 name|link
@@ -1200,6 +1414,68 @@ argument_list|(
 name|field
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+if|if
+condition|(
+name|field
+operator|->
+name|expanded
+operator|!=
+literal|0
+condition|)
+block|{
+name|int
+name|n
+decl_stmt|;
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<=
+name|field
+operator|->
+name|nbuf
+condition|;
+operator|++
+name|n
+control|)
+block|{
+name|FreeIfNeeded
+argument_list|(
+name|field
+operator|->
+name|expanded
+index|[
+name|n
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|free
+argument_list|(
+name|field
+operator|->
+name|expanded
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|delwin
+argument_list|(
+name|field
+operator|->
+name|working
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|field

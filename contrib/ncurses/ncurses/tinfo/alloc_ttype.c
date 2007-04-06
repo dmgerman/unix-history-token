@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1999,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1999-2003,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Thomas E. Dickey<dickey@clark.net> 1999                        *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Thomas E. Dickey<dickey@clark.net> 1999-on                     *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: alloc_ttype.c,v 1.12 2000/12/10 02:55:07 tom Exp $"
+literal|"$Id: alloc_ttype.c,v 1.16 2006/07/08 19:18:38 tom Exp $"
 argument_list|)
 end_macro
 
@@ -377,7 +377,7 @@ name|Booleans
 operator|=
 name|typeRealloc
 argument_list|(
-name|char
+name|NCURSES_SBOOL
 argument_list|,
 name|to
 operator|->
@@ -1449,6 +1449,9 @@ name|_nc_ext_data_index
 argument_list|(
 name|tp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|j
 argument_list|,
 name|token_type
@@ -1526,6 +1529,9 @@ name|_nc_ext_data_index
 argument_list|(
 name|tp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|j
 argument_list|,
 name|token_type
@@ -1557,7 +1563,7 @@ name|Booleans
 operator|=
 name|typeRealloc
 argument_list|(
-name|char
+name|NCURSES_SBOOL
 argument_list|,
 name|tp
 operator|->
@@ -2001,9 +2007,9 @@ end_macro
 begin_macro
 name|_nc_align_termtype
 argument_list|(
-argument|TERMTYPE * to
+argument|TERMTYPE *to
 argument_list|,
-argument|TERMTYPE * from
+argument|TERMTYPE *from
 argument_list|)
 end_macro
 
@@ -2042,6 +2048,11 @@ decl_stmt|,
 name|ext_Numbers
 decl_stmt|,
 name|ext_Strings
+decl_stmt|;
+name|bool
+name|used_ext_Names
+init|=
+name|FALSE
 decl_stmt|;
 name|DEBUG
 argument_list|(
@@ -2382,6 +2393,10 @@ name|term_names
 operator|)
 argument_list|)
 expr_stmt|;
+name|used_ext_Names
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2471,6 +2486,16 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|used_ext_Names
+condition|)
+name|free
+argument_list|(
+name|ext_Names
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_block
@@ -2490,15 +2515,15 @@ end_macro
 begin_macro
 name|_nc_copy_termtype
 argument_list|(
-argument|TERMTYPE * dst
+argument|TERMTYPE *dst
 argument_list|,
-argument|TERMTYPE * src
+argument|TERMTYPE *src
 argument_list|)
 end_macro
 
 begin_block
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 operator|*
@@ -2514,7 +2539,7 @@ name|Booleans
 operator|=
 name|typeMalloc
 argument_list|(
-name|char
+name|NCURSES_SBOOL
 argument_list|,
 name|NUM_BOOLEANS
 argument_list|(

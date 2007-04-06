@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Juergen Pfeifer                         1997                    *  *     and: Sven Verdoolaege                        2000                    *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_bkgd.c,v 1.26 2001/12/19 01:36:58 tom Exp $"
+literal|"$Id: lib_bkgd.c,v 1.35 2006/05/27 19:20:11 tom Exp $"
 argument_list|)
 end_macro
 
@@ -44,7 +44,7 @@ end_else
 
 begin_function
 specifier|static
-specifier|inline
+name|NCURSES_INLINE
 name|void
 endif|#
 directive|endif
@@ -104,22 +104,79 @@ argument_list|)
 decl_stmt|;
 name|toggle_attr_off
 argument_list|(
+name|WINDOW_ATTRS
+argument_list|(
 name|win
-operator|->
-name|_attrs
+argument_list|)
 argument_list|,
 name|off
 argument_list|)
 expr_stmt|;
 name|toggle_attr_on
 argument_list|(
+name|WINDOW_ATTRS
+argument_list|(
 name|win
-operator|->
-name|_attrs
+argument_list|)
 argument_list|,
 name|on
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NCURSES_EXT_COLORS
+block|{
+name|int
+name|pair
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|pair
+operator|=
+name|GetPair
+argument_list|(
+name|win
+operator|->
+name|_nc_bkgd
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|SET_WINDOW_PAIR
+argument_list|(
+name|win
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pair
+operator|=
+name|GetPair
+argument_list|(
+name|CHDEREF
+argument_list|(
+name|ch
+argument_list|)
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|SET_WINDOW_PAIR
+argument_list|(
+name|win
+argument_list|,
+name|pair
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|CharOf
@@ -135,6 +192,7 @@ argument_list|(
 literal|'\0'
 argument_list|)
 condition|)
+block|{
 name|SetChar
 argument_list|(
 name|win
@@ -152,7 +210,24 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|SetPair
+argument_list|(
+name|win
+operator|->
+name|_nc_bkgd
+argument_list|,
+name|GetPair
+argument_list|(
+name|CHDEREF
+argument_list|(
+name|ch
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|win
 operator|->
 name|_nc_bkgd
@@ -162,6 +237,7 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+block|}
 if|#
 directive|if
 name|USE_WIDEC_SUPPORT
@@ -183,8 +259,11 @@ argument_list|)
 expr_stmt|;
 name|tmp
 operator|=
-name|wctob
+name|_nc_to_char
 argument_list|(
+operator|(
+name|wint_t
+operator|)
 name|CharOf
 argument_list|(
 name|wch
@@ -195,6 +274,7 @@ name|win
 operator|->
 name|_bkgd
 operator|=
+operator|(
 operator|(
 operator|(
 name|tmp
@@ -210,10 +290,23 @@ operator|)
 name|tmp
 operator|)
 operator||
+operator|(
 name|AttrOf
 argument_list|(
 name|wch
 argument_list|)
+operator|&
+name|ALL_BUT_COLOR
+operator|)
+operator||
+name|COLOR_PAIR
+argument_list|(
+name|GET_WINDOW_PAIR
+argument_list|(
+name|win
+argument_list|)
+argument_list|)
+operator|)
 expr_stmt|;
 block|}
 endif|#
@@ -289,7 +382,7 @@ end_else
 
 begin_function
 specifier|static
-specifier|inline
+name|NCURSES_INLINE
 name|int
 undef|#
 directive|undef
@@ -431,6 +524,7 @@ argument_list|,
 name|old_bkgrnd
 argument_list|)
 condition|)
+block|{
 name|win
 operator|->
 name|_line
@@ -447,6 +541,7 @@ name|win
 operator|->
 name|_nc_bkgd
 expr_stmt|;
+block|}
 else|else
 block|{
 name|NCURSES_CH_T
@@ -468,8 +563,14 @@ name|RemAttr
 argument_list|(
 name|wch
 argument_list|,
+operator|(
 operator|~
+operator|(
 name|A_ALTCHARSET
+operator||
+name|A_CHARTEXT
+operator|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|win
@@ -529,7 +630,7 @@ name|wbkgd
 argument_list|(
 argument|WINDOW *win
 argument_list|,
-argument|const chtype ch
+argument|chtype ch
 argument_list|)
 end_macro
 

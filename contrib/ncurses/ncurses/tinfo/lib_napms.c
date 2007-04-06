@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *	lib_napms.c  *  *	The routine napms.  *  */
+comment|/*  *	lib_napms.c  *  *	The routine napms.  *  *	(This file was originally written by Eric Raymond; however except for  *	comments, none of the original code remains - T.Dickey).  */
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_napms.c,v 1.12 2001/12/22 22:20:40 tom Exp $"
+literal|"$Id: lib_napms.c,v 1.15 2005/04/03 13:58:14 tom Exp $"
 argument_list|)
 end_macro
 
@@ -96,9 +96,11 @@ name|HAVE_NANOSLEEP
 block|{
 name|struct
 name|timespec
-name|ts
+name|request
+decl_stmt|,
+name|remaining
 decl_stmt|;
-name|ts
+name|request
 operator|.
 name|tv_sec
 operator|=
@@ -106,7 +108,7 @@ name|ms
 operator|/
 literal|1000
 expr_stmt|;
-name|ts
+name|request
 operator|.
 name|tv_nsec
 operator|=
@@ -118,14 +120,30 @@ operator|)
 operator|*
 literal|1000000
 expr_stmt|;
+while|while
+condition|(
 name|nanosleep
 argument_list|(
 operator|&
-name|ts
+name|request
 argument_list|,
-name|NULL
+operator|&
+name|remaining
 argument_list|)
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EINTR
+condition|)
+block|{
+name|request
+operator|=
+name|remaining
 expr_stmt|;
+block|}
 block|}
 else|#
 directive|else
@@ -140,6 +158,10 @@ name|int
 operator|*
 operator|)
 literal|0
+name|EVENTLIST_2nd
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#

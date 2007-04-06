@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * THIS CODE IS SPECIFICALLY EXEMPTED FROM THE NCURSES PACKAGE COPYRIGHT.  * You may freely copy it for use as a template for your own field types.  * If you develop a field type that might be of general use, please send  * it back to the ncurses maintainers for inclusion in the next version.  */
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*************************************************************************** *                                                                          * *  Author : Juergen Pfeifer, juergen.pfeifer@gmx.net                       * *                                                                          * ***************************************************************************/
+comment|/*************************************************************************** *                                                                          * *  Author : Juergen Pfeifer                                                * *                                                                          * ***************************************************************************/
 end_comment
 
 begin_include
@@ -16,9 +16,16 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fty_alnum.c,v 1.10 2000/12/09 23:46:12 tom Exp $"
+literal|"$Id: fty_alnum.c,v 1.19 2006/04/22 21:33:05 tom Exp $"
 argument_list|)
 end_macro
+
+begin_define
+define|#
+directive|define
+name|thisARG
+value|alnumARG
+end_define
 
 begin_typedef
 typedef|typedef
@@ -28,38 +35,38 @@ name|int
 name|width
 decl_stmt|;
 block|}
-name|alnumARG
+name|thisARG
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void *Make_AlphaNumeric_Type(va_list *ap) |    |   Description   :  Allocate structure for alphanumeric type argument. | |   Return Values :  Pointer to argument structure or NULL on error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static void *Make_This_Type(va_list *ap) | |   Description   :  Allocate structure for alphanumeric type argument. | |   Return Values :  Pointer to argument structure or NULL on error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
 modifier|*
-name|Make_AlphaNumeric_Type
+name|Make_This_Type
 parameter_list|(
 name|va_list
 modifier|*
 name|ap
 parameter_list|)
 block|{
-name|alnumARG
+name|thisARG
 modifier|*
 name|argp
 init|=
 operator|(
-name|alnumARG
+name|thisARG
 operator|*
 operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|alnumARG
+name|thisARG
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -92,14 +99,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void *Copy_AlphaNumericType(const void *argp) |    |   Description   :  Copy structure for alphanumeric type argument.   | |   Return Values :  Pointer to argument structure or NULL on error. +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static void *Copy_ThisType(const void *argp) | |   Description   :  Copy structure for alphanumeric type argument. | |   Return Values :  Pointer to argument structure or NULL on error. +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
 modifier|*
-name|Copy_AlphaNumeric_Type
+name|Copy_This_Type
 parameter_list|(
 specifier|const
 name|void
@@ -108,30 +115,30 @@ name|argp
 parameter_list|)
 block|{
 specifier|const
-name|alnumARG
+name|thisARG
 modifier|*
 name|ap
 init|=
 operator|(
 specifier|const
-name|alnumARG
+name|thisARG
 operator|*
 operator|)
 name|argp
 decl_stmt|;
-name|alnumARG
+name|thisARG
 modifier|*
 name|result
 init|=
 operator|(
-name|alnumARG
+name|thisARG
 operator|*
 operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|alnumARG
+name|thisARG
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -158,13 +165,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void Free_AlphaNumeric_Type(void *argp) |    |   Description   :  Free structure for alphanumeric type argument. | |   Return Values :  - +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static void Free_This_Type(void *argp) | |   Description   :  Free structure for alphanumeric type argument. | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|Free_AlphaNumeric_Type
+name|Free_This_Type
 parameter_list|(
 name|void
 modifier|*
@@ -184,13 +191,68 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static bool Check_AlphaNumeric_Field( |                                      FIELD *field, |                                      const void *argp) |    |   Description   :  Validate buffer content to be a valid alphanumeric value | |   Return Values :  TRUE  - field is valid |                    FALSE - field is invalid +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static bool Check_This_Character( |                                      int c, |                                      const void *argp) | |   Description   :  Check a character for the alphanumeric type. | |   Return Values :  TRUE  - character is valid |                    FALSE - character is invalid +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|bool
-name|Check_AlphaNumeric_Field
+name|Check_This_Character
+parameter_list|(
+name|int
+name|c
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|argp
+name|GCC_UNUSED
+parameter_list|)
+block|{
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+if|if
+condition|(
+name|iswalnum
+argument_list|(
+operator|(
+name|wint_t
+operator|)
+name|c
+argument_list|)
+condition|)
+return|return
+name|TRUE
+return|;
+endif|#
+directive|endif
+return|return
+operator|(
+name|isalnum
+argument_list|(
+name|UChar
+argument_list|(
+name|c
+argument_list|)
+argument_list|)
+condition|?
+name|TRUE
+else|:
+name|FALSE
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static bool Check_This_Field( |                                      FIELD *field, |                                      const void *argp) | |   Description   :  Validate buffer content to be a valid alphanumeric value | |   Return Values :  TRUE  - field is valid |                    FALSE - field is invalid +--------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|Check_This_Field
 parameter_list|(
 name|FIELD
 modifier|*
@@ -208,7 +270,7 @@ init|=
 operator|(
 operator|(
 specifier|const
-name|alnumARG
+name|thisARG
 operator|*
 operator|)
 name|argp
@@ -233,129 +295,29 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
-name|int
-name|l
-init|=
-operator|-
-literal|1
-decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|s
-decl_stmt|;
-while|while
-condition|(
-operator|*
-name|bp
-operator|&&
-operator|*
-name|bp
-operator|==
-literal|' '
-condition|)
-name|bp
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|bp
-condition|)
-block|{
-name|s
-operator|=
-name|bp
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|bp
-operator|&&
-name|isalnum
-argument_list|(
-operator|*
-name|bp
-argument_list|)
-condition|)
-name|bp
-operator|++
-expr_stmt|;
-name|l
-operator|=
-call|(
-name|int
-call|)
-argument_list|(
-name|bp
-operator|-
-name|s
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|bp
-operator|&&
-operator|*
-name|bp
-operator|==
-literal|' '
-condition|)
-name|bp
-operator|++
-expr_stmt|;
-block|}
-return|return
-operator|(
-operator|(
-operator|*
-name|bp
-operator|||
-operator|(
-name|l
-operator|<
-name|width
-operator|)
-operator|)
-condition|?
-name|FALSE
-else|:
-name|TRUE
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static bool Check_AlphaNumeric_Character( |                                      int c,  |                                      const void *argp ) |    |   Description   :  Check a character for the alphanumeric type. | |   Return Values :  TRUE  - character is valid |                    FALSE - character is invalid +--------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-specifier|static
 name|bool
-name|Check_AlphaNumeric_Character
-parameter_list|(
-name|int
-name|c
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|argp
-name|GCC_UNUSED
-parameter_list|)
-block|{
+name|result
+init|=
+operator|(
+name|width
+operator|<
+literal|0
+operator|)
+decl_stmt|;
+name|Check_CTYPE_Field
+argument_list|(
+name|result
+argument_list|,
+name|bp
+argument_list|,
+name|width
+argument_list|,
+name|Check_This_Character
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|isalnum
-argument_list|(
-name|c
-argument_list|)
-condition|?
-name|TRUE
-else|:
-name|FALSE
+name|result
 operator|)
 return|;
 block|}
@@ -364,7 +326,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|FIELDTYPE
-name|typeALNUM
+name|typeTHIS
 init|=
 block|{
 name|_HAS_ARGS
@@ -386,15 +348,15 @@ operator|*
 operator|)
 literal|0
 block|,
-name|Make_AlphaNumeric_Type
+name|Make_This_Type
 block|,
-name|Copy_AlphaNumeric_Type
+name|Copy_This_Type
 block|,
-name|Free_AlphaNumeric_Type
+name|Free_This_Type
 block|,
-name|Check_AlphaNumeric_Field
+name|Check_This_Field
 block|,
-name|Check_AlphaNumeric_Character
+name|Check_This_Character
 block|,
 name|NULL
 block|,
@@ -414,7 +376,7 @@ begin_expr_stmt
 name|TYPE_ALNUM
 operator|=
 operator|&
-name|typeALNUM
+name|typeTHIS
 expr_stmt|;
 end_expr_stmt
 
