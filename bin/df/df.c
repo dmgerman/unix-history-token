@@ -1770,7 +1770,7 @@ name|mwp
 parameter_list|)
 block|{
 specifier|static
-name|u_long
+name|long
 name|blocksize
 decl_stmt|;
 specifier|static
@@ -2368,7 +2368,7 @@ name|sfsp
 parameter_list|)
 block|{
 specifier|static
-name|u_long
+name|long
 name|blocksize
 init|=
 literal|0
