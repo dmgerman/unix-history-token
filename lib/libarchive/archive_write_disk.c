@@ -7493,7 +7493,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|ad
+name|a
 expr_stmt|;
 comment|/* UNUSED */
 operator|(
