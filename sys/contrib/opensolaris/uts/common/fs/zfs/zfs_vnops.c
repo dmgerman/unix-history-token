@@ -416,7 +416,8 @@ name|vnode_t
 modifier|*
 name|vp
 parameter_list|,
-name|int
+name|unsigned
+name|long
 name|cmd
 parameter_list|,
 name|offset_t
@@ -12059,7 +12060,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_pathconf_args
-comment|/* { 		struct vnode *a_vp; 		int a_name; 		int *a_retval; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_name; 		register_t *a_retval; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -12071,7 +12072,7 @@ name|ap
 operator|->
 name|a_name
 decl_stmt|;
-name|int
+name|register_t
 modifier|*
 name|valp
 init|=
