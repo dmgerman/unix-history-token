@@ -508,26 +508,6 @@ value|2
 comment|/* set file offset to EOF plus offset */
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|SEEK_DATA
-define|#
-directive|define
-name|SEEK_DATA
-value|3
-comment|/* set file offset to next data past offset */
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|SEEK_HOLE
-define|#
-directive|define
-name|SEEK_HOLE
-value|4
-comment|/* set file offset to next hole past offset */
-endif|#
-directive|endif
 define|#
 directive|define
 name|stdin

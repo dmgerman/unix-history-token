@@ -367,6 +367,27 @@ begin_comment
 comment|/* set file offset to EOF plus offset */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_XOPEN_SOURCE
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
