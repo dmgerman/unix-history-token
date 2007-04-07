@@ -120,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|SYSTEM_TASKQ_SIZE
-value|64
+value|1
 end_define
 
 begin_decl_stmt
