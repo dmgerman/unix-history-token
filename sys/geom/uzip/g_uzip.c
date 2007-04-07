@@ -2485,6 +2485,9 @@ name|pp2
 operator|->
 name|mediasize
 operator|=
+operator|(
+name|off_t
+operator|)
 name|sc
 operator|->
 name|nblocks
