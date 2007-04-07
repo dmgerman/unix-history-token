@@ -1128,6 +1128,11 @@ decl_stmt|;
 name|ConvDirection
 name|direction
 decl_stmt|;
+name|lip
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|tc
 operator|=
 operator|(
@@ -1569,88 +1574,38 @@ endif|#
 directive|endif
 return|return;
 block|}
+if|if
+condition|(
+name|lip
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|LIBALIAS_DEBUG
 name|fprintf
 argument_list|(
-name|stderr
+argument|stderr
 argument_list|,
-literal|"PacketAlias/Skinny: Received start media trans msg\n"
-argument_list|)
-expr_stmt|;
+literal|"PacketAlias/Skinny: received a"
+literal|" packet,StartMediaTx Message before"
+literal|" packet,OpnRcvChnAckMsg\n"
 endif|#
 directive|endif
-name|startmedia_tx
-operator|=
-operator|(
-expr|struct
-name|StartMediaTransmission
-operator|*
-operator|)
-operator|&
-name|sd
-operator|->
-name|msgId
-expr_stmt|;
-name|alias_skinny_startmedia
-argument_list|(
-name|startmedia_tx
-argument_list|,
-name|pip
-argument_list|,
-name|tc
-argument_list|,
-name|lnk
-argument_list|,
-name|lip
-argument_list|,
-name|direction
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-default|default:
-break|break;
-block|}
+argument|return; 			}
+ifdef|#
+directive|ifdef
+name|LIBALIAS_DEBUG
+argument|fprintf(stderr,
+literal|"PacketAlias/Skinny: Received start media trans msg\n"
+argument|);
+endif|#
+directive|endif
+argument|startmedia_tx = (struct StartMediaTransmission *)&sd->msgId; 			alias_skinny_startmedia(startmedia_tx, pip, tc, lnk, lip, direction); 			break; 		} 		default: 			break; 		}
 comment|/* Place the pointer at the next message in the packet. */
-name|dlen
-operator|-=
-name|len
-operator|+
-operator|(
-name|skinny_hdr_len
-operator|-
-sizeof|sizeof
-argument_list|(
-name|msgId
-argument_list|)
-operator|)
-expr_stmt|;
-name|sd
-operator|=
-operator|(
-expr|struct
-name|skinny_header
-operator|*
-operator|)
-operator|(
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|sd
-operator|->
-name|msgId
-operator|)
-operator|+
-name|len
-operator|)
-expr_stmt|;
-block|}
-block|}
+argument|dlen -= len + (skinny_hdr_len - sizeof(msgId)); 		sd = (struct skinny_header *)(((char *)&sd->msgId) + len); 	} }
 end_function
 
 end_unit
