@@ -33,6 +33,11 @@ modifier|*
 name|a
 parameter_list|)
 block|{
+name|archive_read_support_format_ar
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
 name|archive_read_support_format_cpio
 argument_list|(
 name|a
