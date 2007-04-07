@@ -375,17 +375,7 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_XOPEN_SOURCE
-argument_list|)
+name|__BSD_VISIBLE
 end_if
 
 begin_define
