@@ -146,12 +146,6 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
-name|char
-name|class
-index|[
-literal|64
-index|]
-decl_stmt|;
 name|struct
 name|sbuf
 name|sb
@@ -239,7 +233,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"time %ju.%ld"
+literal|"time=%ju.%ld"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -299,21 +293,17 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" ereport_version %u"
+literal|" ereport_version=%u"
 argument_list|,
 name|FM_EREPORT_VERSION
 argument_list|)
 expr_stmt|;
-name|snprintf
+name|sbuf_printf
 argument_list|(
-name|class
+operator|&
+name|sb
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|class
-argument_list|)
-argument_list|,
-literal|"%s.%s"
+literal|" class=%s.%s"
 argument_list|,
 name|ZFS_ERROR_CLASS
 argument_list|,
@@ -325,17 +315,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" class %s"
-argument_list|,
-name|class
-argument_list|)
-expr_stmt|;
-name|sbuf_printf
-argument_list|(
-operator|&
-name|sb
-argument_list|,
-literal|" zfs_scheme_version %u"
+literal|" zfs_scheme_version=%u"
 argument_list|,
 name|FM_ZFS_SCHEME_VERSION
 argument_list|)
@@ -347,7 +327,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %s"
+literal|" %s=%s"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_POOL
 argument_list|,
@@ -361,7 +341,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %ju"
+literal|" %s=%ju"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_POOL_GUID
 argument_list|,
@@ -376,7 +356,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %u"
+literal|" %s=%u"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_POOL_CONTEXT
 argument_list|,
@@ -405,7 +385,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %ju"
+literal|" %s=%ju"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_VDEV_GUID
 argument_list|,
@@ -419,7 +399,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %s"
+literal|" %s=%s"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_VDEV_TYPE
 argument_list|,
@@ -441,7 +421,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %s"
+literal|" %s=%s"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_VDEV_PATH
 argument_list|,
@@ -461,7 +441,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %s"
+literal|" %s=%s"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_VDEV_DEVID
 argument_list|,
@@ -482,7 +462,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %ju"
+literal|" %s=%ju"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_PARENT_GUID
 argument_list|,
@@ -496,7 +476,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %s"
+literal|" %s=%s"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_PARENT_TYPE
 argument_list|,
@@ -518,7 +498,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %s"
+literal|" %s=%s"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_PARENT_PATH
 argument_list|,
@@ -538,7 +518,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %s"
+literal|" %s=%s"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_PARENT_DEVID
 argument_list|,
@@ -562,7 +542,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %u"
+literal|" %s=%u"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_ZIO_ERR
 argument_list|,
@@ -589,7 +569,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %ju"
+literal|" %s=%ju"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_ZIO_OFFSET
 argument_list|,
@@ -601,7 +581,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %ju"
+literal|" %s=%ju"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_ZIO_SIZE
 argument_list|,
@@ -616,7 +596,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %ju"
+literal|" %s=%ju"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_ZIO_OFFSET
 argument_list|,
@@ -630,7 +610,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %ju"
+literal|" %s=%ju"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_ZIO_SIZE
 argument_list|,
@@ -656,7 +636,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %ju"
+literal|" %s=%ju"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_ZIO_OBJECT
 argument_list|,
@@ -674,7 +654,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %ju"
+literal|" %s=%ju"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_ZIO_LEVEL
 argument_list|,
@@ -692,7 +672,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %ju"
+literal|" %s=%ju"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_ZIO_BLKID
 argument_list|,
@@ -721,7 +701,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %ju"
+literal|" %s=%ju"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_PREV_STATE
 argument_list|,
@@ -751,7 +731,7 @@ name|spa
 operator|->
 name|spa_name
 argument_list|,
-name|class
+name|subclass
 argument_list|,
 name|sbuf_data
 argument_list|(
@@ -850,7 +830,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"time %ju.%ld"
+literal|"time=%ju.%ld"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -887,7 +867,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %hhu"
+literal|" %s=%hhu"
 argument_list|,
 name|FM_VERSION
 argument_list|,
@@ -899,7 +879,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %s"
+literal|" %s=%s"
 argument_list|,
 name|FM_CLASS
 argument_list|,
@@ -911,7 +891,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %ju"
+literal|" %s=%ju"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_POOL_GUID
 argument_list|,
@@ -930,7 +910,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s %ju"
+literal|" %s=%ju"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_VDEV_GUID
 argument_list|,
