@@ -4491,6 +4491,10 @@ operator|->
 name|reg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+literal|0
+condition|)
 name|cmi_midiattach
 argument_list|(
 name|sc
