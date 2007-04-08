@@ -2880,6 +2880,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|root_mounted
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Unit number allocation API. (kern/subr_unit.c)  */
 end_comment

@@ -6844,6 +6844,44 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Return true if root is already mounted.  */
+end_comment
+
+begin_function
+name|int
+name|root_mounted
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|mounted
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|mountlist_mtx
+argument_list|)
+expr_stmt|;
+name|mounted
+operator|=
+name|root_mount_complete
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|mountlist_mtx
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|mounted
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Wait until root is mounted.  */
 end_comment
 
