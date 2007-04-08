@@ -582,7 +582,7 @@ comment|/*  * The location of the pool configuration repository, shared between 
 define|#
 directive|define
 name|ZPOOL_CACHE_DIR
-value|"/etc/zfs"
+value|"/boot/zfs"
 define|#
 directive|define
 name|ZPOOL_CACHE_FILE
