@@ -1636,15 +1636,7 @@ operator|->
 name|dma
 operator|->
 name|flags
-operator|&=
-name|ATA_DMA_READ
-expr_stmt|;
-name|ch
-operator|->
-name|dma
-operator|->
-name|flags
-operator||=
+operator|=
 name|dir
 condition|?
 operator|(
