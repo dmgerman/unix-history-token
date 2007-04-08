@@ -942,7 +942,7 @@ argument_list|)
 expr_stmt|;
 name|MBUF_HEADER_CHECK
 argument_list|(
-name|smh
+name|sm
 argument_list|)
 expr_stmt|;
 name|sm
@@ -1376,7 +1376,7 @@ return|;
 block|}
 name|MBUF_HEADER_CHECK
 argument_list|(
-name|smh
+name|sm
 argument_list|)
 expr_stmt|;
 name|th
