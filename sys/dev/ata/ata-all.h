@@ -2323,6 +2323,10 @@ name|u_int32_t
 name|cur_iosize
 decl_stmt|;
 comment|/* DMA data current IO size */
+name|u_int64_t
+name|max_address
+decl_stmt|;
+comment|/* highest DMA'able address */
 name|int
 name|flags
 decl_stmt|;
@@ -2341,11 +2345,6 @@ directive|define
 name|ATA_DMA_ACTIVE
 value|0x04
 comment|/* DMA transfer in progress */
-define|#
-directive|define
-name|ATA_DMA_64BIT
-value|0x10
-comment|/* supports 64bit addressing */
 name|void
 function_decl|(
 modifier|*
