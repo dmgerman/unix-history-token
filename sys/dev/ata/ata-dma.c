@@ -1629,7 +1629,15 @@ operator|->
 name|dma
 operator|->
 name|flags
-operator|=
+operator|&=
+name|ATA_DMA_READ
+expr_stmt|;
+name|ch
+operator|->
+name|dma
+operator|->
+name|flags
+operator||=
 name|dir
 condition|?
 operator|(
@@ -1715,8 +1723,6 @@ name|flags
 operator|&
 name|ATA_DMA_READ
 operator|)
-operator|!=
-literal|0
 condition|?
 name|BUS_DMASYNC_POSTREAD
 else|:
