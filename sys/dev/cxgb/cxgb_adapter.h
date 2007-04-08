@@ -333,8 +333,9 @@ struct|struct
 name|sge_lro_session
 block|{
 name|struct
-name|t3_mbuf_hdr
-name|mh
+name|mbuf
+modifier|*
+name|m
 decl_stmt|;
 name|uint32_t
 name|seq
@@ -452,8 +453,9 @@ name|bus_dmamap_t
 name|desc_map
 decl_stmt|;
 name|struct
-name|t3_mbuf_hdr
-name|mh
+name|mbuf
+modifier|*
+name|m
 decl_stmt|;
 name|struct
 name|mtx
@@ -1582,9 +1584,9 @@ modifier|*
 name|rq
 parameter_list|,
 name|struct
-name|t3_mbuf_hdr
+name|mbuf
 modifier|*
-name|mh
+name|m
 parameter_list|,
 name|int
 name|ethpad

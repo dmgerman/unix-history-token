@@ -77,24 +77,6 @@ name|sge_rspq
 struct_decl|;
 end_struct_decl
 
-begin_struct
-struct|struct
-name|t3_mbuf_hdr
-block|{
-name|struct
-name|mbuf
-modifier|*
-name|mh_head
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|mh_tail
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_if
 if|#
 directive|if
