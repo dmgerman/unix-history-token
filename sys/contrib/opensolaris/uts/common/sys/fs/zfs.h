@@ -530,6 +530,19 @@ name|ZPOOL_CONFIG_NPARITY
 value|"nparity"
 define|#
 directive|define
+name|ZPOOL_CONFIG_HOSTID
+value|"hostid"
+define|#
+directive|define
+name|ZPOOL_CONFIG_HOSTNAME
+value|"hostname"
+define|#
+directive|define
+name|ZPOOL_CONFIG_TIMESTAMP
+value|"timestamp"
+comment|/* not stored on disk */
+define|#
+directive|define
 name|VDEV_TYPE_ROOT
 value|"root"
 define|#

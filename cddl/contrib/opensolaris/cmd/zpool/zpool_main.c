@@ -4762,6 +4762,22 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ZPOOL_STATUS_HOSTID_MISMATCH
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"status: The pool was last accessed by "
+literal|"another system.\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 comment|/* 		 * No other status can be seen when importing pools. 		 */
 name|assert
@@ -4799,6 +4815,26 @@ literal|"action: The pool can be "
 literal|"imported using its name or numeric identifier, "
 literal|"though\n\tsome features will not be available "
 literal|"without an explicit 'zpool upgrade'.\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|reason
+operator|==
+name|ZPOOL_STATUS_HOSTID_MISMATCH
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"action: The pool can be "
+literal|"imported using its name or numeric "
+literal|"identifier and\n\tthe '-f' flag.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5200,6 +5236,80 @@ operator|!
 name|force
 condition|)
 block|{
+name|uint64_t
+name|hostid
+decl_stmt|;
+if|if
+condition|(
+name|nvlist_lookup_uint64
+argument_list|(
+name|config
+argument_list|,
+name|ZPOOL_CONFIG_HOSTID
+argument_list|,
+operator|&
+name|hostid
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|unsigned
+name|long
+operator|)
+name|hostid
+operator|!=
+name|gethostid
+argument_list|()
+condition|)
+block|{
+name|char
+modifier|*
+name|hostname
+decl_stmt|;
+name|uint64_t
+name|timestamp
+decl_stmt|;
+name|time_t
+name|t
+decl_stmt|;
+name|verify
+argument_list|(
+name|nvlist_lookup_string
+argument_list|(
+name|config
+argument_list|,
+name|ZPOOL_CONFIG_HOSTNAME
+argument_list|,
+operator|&
+name|hostname
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|verify
+argument_list|(
+name|nvlist_lookup_uint64
+argument_list|(
+name|config
+argument_list|,
+name|ZPOOL_CONFIG_TIMESTAMP
+argument_list|,
+operator|&
+name|timestamp
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|t
+operator|=
+name|timestamp
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5209,8 +5319,66 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"cannot import '%s': pool "
-literal|"may be in use from other system\n"
+literal|"cannot import "
+literal|"'%s': pool may be in use from other "
+literal|"system, it was last accessed by %s "
+literal|"(hostid: 0x%lx) on %s"
+argument_list|)
+argument_list|,
+name|name
+argument_list|,
+name|hostname
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|hostid
+argument_list|,
+name|asctime
+argument_list|(
+name|localtime
+argument_list|(
+operator|&
+name|t
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"use '-f' to "
+literal|"import anyway\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"cannot import '%s': "
+literal|"pool may be in use from other system\n"
 argument_list|)
 argument_list|,
 name|name
@@ -5225,7 +5393,8 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"use '-f' to import anyway\n"
+literal|"use '-f' to import "
+literal|"anyway\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5234,6 +5403,7 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(

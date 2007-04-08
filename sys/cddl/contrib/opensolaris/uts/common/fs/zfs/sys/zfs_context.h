@@ -79,9 +79,6 @@ directive|include
 file|<sys/systm.h>
 include|#
 directive|include
-file|<sys/kobj.h>
-include|#
-directive|include
 file|<sys/conf.h>
 include|#
 directive|include
@@ -170,6 +167,9 @@ file|<sys/zone.h>
 include|#
 directive|include
 file|<sys/eventhandler.h>
+include|#
+directive|include
+file|<sys/misc.h>
 include|#
 directive|include
 file|<sys/zfs_debug.h>

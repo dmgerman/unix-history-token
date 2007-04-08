@@ -236,6 +236,9 @@ comment|/* ops not supported for this type of pool */
 name|EZFS_POOL_INVALARG
 block|,
 comment|/* invalid argument for this pool operation */
+name|EZFS_NAMETOOLONG
+block|,
+comment|/* dataset name is too long */
 name|EZFS_UNKNOWN
 block|}
 enum|;
@@ -692,6 +695,9 @@ comment|/* device experiencing errors */
 name|ZPOOL_STATUS_VERSION_NEWER
 block|,
 comment|/* newer on-disk version */
+name|ZPOOL_STATUS_HOSTID_MISMATCH
+block|,
+comment|/* last accessed by another system */
 comment|/* 	 * The following are not faults per se, but still an error possibly 	 * requiring administrative attention.  There is no corresponding 	 * message ID. 	 */
 name|ZPOOL_STATUS_VERSION_OLDER
 block|,

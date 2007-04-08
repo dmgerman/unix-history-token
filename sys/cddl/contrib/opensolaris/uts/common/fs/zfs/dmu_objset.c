@@ -4643,6 +4643,7 @@ name|zap_cursor_t
 name|zc
 decl_stmt|;
 name|zap_attribute_t
+modifier|*
 name|attr
 decl_stmt|;
 name|char
@@ -4690,6 +4691,18 @@ operator|!=
 literal|0
 operator|)
 expr_stmt|;
+name|attr
+operator|=
+name|kmem_alloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|zap_attribute_t
+argument_list|)
+argument_list|,
+name|KM_SLEEP
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Iterate over all children. 	 */
 if|if
 condition|(
@@ -4723,7 +4736,6 @@ argument_list|(
 operator|&
 name|zc
 argument_list|,
-operator|&
 name|attr
 argument_list|)
 operator|==
@@ -4742,7 +4754,7 @@ block|{
 name|ASSERT
 argument_list|(
 name|attr
-operator|.
+operator|->
 name|za_integer_length
 operator|==
 sizeof|sizeof
@@ -4754,7 +4766,7 @@ expr_stmt|;
 name|ASSERT
 argument_list|(
 name|attr
-operator|.
+operator|->
 name|za_num_integers
 operator|==
 literal|1
@@ -4796,7 +4808,7 @@ argument_list|(
 name|child
 argument_list|,
 name|attr
-operator|.
+operator|->
 name|za_name
 argument_list|)
 expr_stmt|;
@@ -4842,6 +4854,16 @@ argument_list|(
 name|dd
 argument_list|,
 name|FTAG
+argument_list|)
+expr_stmt|;
+name|kmem_free
+argument_list|(
+name|attr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|zap_attribute_t
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4915,7 +4937,6 @@ argument_list|(
 operator|&
 name|zc
 argument_list|,
-operator|&
 name|attr
 argument_list|)
 operator|==
@@ -4934,7 +4955,7 @@ block|{
 name|ASSERT
 argument_list|(
 name|attr
-operator|.
+operator|->
 name|za_integer_length
 operator|==
 sizeof|sizeof
@@ -4946,7 +4967,7 @@ expr_stmt|;
 name|ASSERT
 argument_list|(
 name|attr
-operator|.
+operator|->
 name|za_num_integers
 operator|==
 literal|1
@@ -4987,7 +5008,7 @@ argument_list|(
 name|child
 argument_list|,
 name|attr
-operator|.
+operator|->
 name|za_name
 argument_list|)
 expr_stmt|;
@@ -5025,6 +5046,16 @@ argument_list|(
 name|dd
 argument_list|,
 name|FTAG
+argument_list|)
+expr_stmt|;
+name|kmem_free
+argument_list|(
+name|attr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|zap_attribute_t
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

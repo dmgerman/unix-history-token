@@ -944,6 +944,16 @@ name|ZTEST_DIRSIZE
 value|256
 end_define
 
+begin_function_decl
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|boolean_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * These libumem hooks provide a reasonable set of defaults for the allocator's  * debugging facilities.  */
 end_comment
@@ -1216,15 +1226,25 @@ argument_list|(
 name|ends
 argument_list|)
 condition|)
-name|fatal
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|0
+name|stderr
 argument_list|,
-literal|"invalid bytes suffix: %s"
+literal|"ztest: invalid bytes suffix: %s\n"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+name|usage
+argument_list|(
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|buf
@@ -1262,21 +1282,24 @@ name|i
 operator|)
 return|;
 block|}
-name|fatal
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|0
+name|stderr
 argument_list|,
-literal|"invalid bytes suffix: %s"
+literal|"ztest: invalid bytes suffix: %s\n"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+name|usage
+argument_list|(
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -1317,13 +1340,21 @@ operator|==
 name|buf
 condition|)
 block|{
-name|fatal
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|0
+name|stderr
 argument_list|,
-literal|"bad numeric value: %s"
+literal|"ztest: bad numeric value: %s\n"
 argument_list|,
 name|buf
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1367,15 +1398,25 @@ name|fval
 operator|>
 name|UINT64_MAX
 condition|)
-name|fatal
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|0
+name|stderr
 argument_list|,
-literal|"value too large: %s"
+literal|"ztest: value too large: %s\n"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+name|usage
+argument_list|(
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
 name|val
 operator|=
 operator|(
@@ -1410,15 +1451,25 @@ name|shift
 operator|!=
 name|val
 condition|)
-name|fatal
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|0
+name|stderr
 argument_list|,
-literal|"value too large: %s"
+literal|"ztest: value too large: %s\n"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+name|usage
+argument_list|(
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
 name|val
 operator|<<=
 name|shift
@@ -1437,7 +1488,8 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-name|void
+name|boolean_t
+name|requested
 parameter_list|)
 block|{
 name|char
@@ -1451,6 +1503,16 @@ name|nice_gang_bang
 index|[
 literal|10
 index|]
+decl_stmt|;
+name|FILE
+modifier|*
+name|fp
+init|=
+name|requested
+condition|?
+name|stdout
+else|:
+name|stderr
 decl_stmt|;
 name|nicenum
 argument_list|(
@@ -1469,8 +1531,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"Usage: %s\n"
 literal|"\t[-v vdevs (default: %llu)]\n"
 literal|"\t[-s size_of_each_vdev (default: %s)]\n"
@@ -1490,6 +1554,7 @@ literal|"\t[-E(xisting)] (use existing pool instead of creating new one)\n"
 literal|"\t[-T time] total run time (default: %llu sec)\n"
 literal|"\t[-P passtime] time per pass (default: %llu sec)\n"
 literal|"\t[-z zil failure rate (default: fail every 2^%llu allocs)]\n"
+literal|"\t[-h] (print help)\n"
 literal|""
 argument_list|,
 name|cmdname
@@ -1560,6 +1625,10 @@ expr_stmt|;
 comment|/* -z */
 name|exit
 argument_list|(
+name|requested
+condition|?
+literal|0
+else|:
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1706,7 +1775,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"v:s:a:m:r:R:d:t:g:i:k:p:f:VET:P:z:"
+literal|"v:s:a:m:r:R:d:t:g:i:k:p:f:VET:P:z:h"
 argument_list|)
 operator|)
 operator|!=
@@ -1974,11 +2043,22 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'h'
+case|:
+name|usage
+argument_list|(
+name|B_TRUE
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
 name|usage
-argument_list|()
+argument_list|(
+name|B_FALSE
+argument_list|)
 expr_stmt|;
 break|break;
 block|}

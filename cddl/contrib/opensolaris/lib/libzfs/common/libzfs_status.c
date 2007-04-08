@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -33,6 +33,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libzfs_impl.h"
 end_include
 
@@ -44,7 +50,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|msgid_table
+name|zfs_msgid_table
 index|[]
 init|=
 block|{
@@ -67,6 +73,8 @@ block|,
 literal|"ZFS-8000-9P"
 block|,
 literal|"ZFS-8000-A5"
+block|,
+literal|"ZFS-8000-EY"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -79,7 +87,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|msgid_table_active
+name|zfs_msgid_table_active
 index|[]
 init|=
 block|{
@@ -115,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|NMSGID
-value|(sizeof (msgid_table) / sizeof (msgid_table[0]))
+value|(sizeof (zfs_msgid_table) / sizeof (zfs_msgid_table[0]))
 end_define
 
 begin_comment
@@ -462,6 +470,14 @@ decl_stmt|;
 name|uint64_t
 name|version
 decl_stmt|;
+name|uint64_t
+name|stateval
+decl_stmt|;
+name|uint64_t
+name|hostid
+init|=
+literal|0
+decl_stmt|;
 name|verify
 argument_list|(
 name|nvlist_lookup_uint64
@@ -515,6 +531,59 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+name|verify
+argument_list|(
+name|nvlist_lookup_uint64
+argument_list|(
+name|config
+argument_list|,
+name|ZPOOL_CONFIG_POOL_STATE
+argument_list|,
+operator|&
+name|stateval
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|nvlist_lookup_uint64
+argument_list|(
+name|config
+argument_list|,
+name|ZPOOL_CONFIG_HOSTID
+argument_list|,
+operator|&
+name|hostid
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Pool last accessed by another system. 	 */
+if|if
+condition|(
+name|hostid
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|unsigned
+name|long
+operator|)
+name|hostid
+operator|!=
+name|gethostid
+argument_list|()
+operator|&&
+name|stateval
+operator|==
+name|POOL_STATE_ACTIVE
+condition|)
+return|return
+operator|(
+name|ZPOOL_STATUS_HOSTID_MISMATCH
+operator|)
+return|;
 comment|/* 	 * Newer on-disk version. 	 */
 if|if
 condition|(
@@ -789,7 +858,7 @@ else|else
 operator|*
 name|msgid
 operator|=
-name|msgid_table_active
+name|zfs_msgid_table_active
 index|[
 name|ret
 index|]
@@ -841,7 +910,7 @@ else|else
 operator|*
 name|msgid
 operator|=
-name|msgid_table
+name|zfs_msgid_table
 index|[
 name|ret
 index|]
