@@ -4374,9 +4374,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|rootvnode
-operator|!=
-name|NULL
+name|root_mounted
+argument_list|()
 operator|||
 name|g_eli_tries
 operator|==
