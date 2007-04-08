@@ -168,7 +168,7 @@ name|MBUF_HEADER_CHECK
 parameter_list|(
 name|m
 parameter_list|)
-value|do { \ 	if (m->m_len == 0 || m->m_pkthdr.len == 0 \ 	    || (m->m_flags& M_PKTHDR) == 0) 			\ 		panic("lro_flush_session - mbuf len=%d pktlen=%d flags=0x%x\n", \ 		    m->m_len, m->m_pkthdr.len, m->m_flags); \ 	if (m->m_flags& M_PKTHDR) == 0) \ 		panic("first mbuf is not packet header - flags=0x%x\n", \ 		    m->m_flags);  \ 	if (m->m_len< ETHER_HDR_LEN || m->m_pkthdr.len< ETHER_HDR_LEN) \ 		panic("packet too small len=%d pktlen=%d\n", \ 		    m->m_len, m->m_pkthdr.len);\ } while (0)
+value|do { \ 	if ((m->m_len == 0) || (m->m_pkthdr.len == 0)	\ 	    || ((m->m_flags& M_PKTHDR) == 0))				\ 		panic("lro_flush_session - mbuf len=%d pktlen=%d flags=0x%x\n", \ 		    m->m_len, m->m_pkthdr.len, m->m_flags); \ 	if ((m->m_flags& M_PKTHDR) == 0)				\ 		panic("first mbuf is not packet header - flags=0x%x\n", \ 		    m->m_flags);  \ 	if ((m->m_len< ETHER_HDR_LEN) || (m->m_pkthdr.len< ETHER_HDR_LEN)) \ 		panic("packet too small len=%d pktlen=%d\n", \ 		    m->m_len, m->m_pkthdr.len);\ } while (0)
 end_define
 
 begin_else
