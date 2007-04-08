@@ -3,6 +3,18 @@ begin_comment
 comment|/**************************************************************************  *  * Copyright (c) 2007, Kip Macy kmacy@freebsd.org  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  *  ***************************************************************************/
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MVEC_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_MVEC_H_
+end_define
+
 begin_define
 define|#
 directive|define
@@ -133,9 +145,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|mbuf
-modifier|*
+name|int
 name|_m_collapse
 parameter_list|(
 name|struct
@@ -144,6 +154,11 @@ modifier|*
 parameter_list|,
 name|int
 name|maxbufs
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -393,47 +408,43 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
 name|__inline
-expr|struct
-name|mbuf
-operator|*
+name|int
 name|m_collapse
-argument_list|(
-argument|struct mbuf *m
-argument_list|,
-argument|int maxbufs
-argument_list|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|maxbufs
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|mnew
+parameter_list|)
 block|{
-if|if
-condition|(
-name|m
-operator|->
-name|m_next
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|m
-operator|)
-return|;
-end_expr_stmt
-
-begin_return
+comment|/* 	 * Add checks here 	 */
 return|return
 name|_m_collapse
 argument_list|(
 name|m
 argument_list|,
 name|maxbufs
+argument_list|,
+name|mnew
 argument_list|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}   static
+specifier|static
 name|__inline
 name|void
 name|m_freem_vec
@@ -500,6 +511,40 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_function_decl
+name|int
+name|bus_dmamap_load_mvec_sg
+parameter_list|(
+name|bus_dma_tag_t
+name|dmat
+parameter_list|,
+name|bus_dmamap_t
+name|map
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m0
+parameter_list|,
+name|bus_dma_segment_t
+modifier|*
+name|segs
+parameter_list|,
+name|int
+modifier|*
+name|nsegs
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
