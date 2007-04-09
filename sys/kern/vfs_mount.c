@@ -6816,7 +6816,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * No mutex is acquired here because int stores are atomic.  If a 	 * thread is polling root_mount_complete, it may get a spurious 	 * wakeup() but that is fine in the tsleep()/wakeup() model. 	 */
+comment|/* 	 * Use a mutex to prevent the wakeup being missed and waiting for 	 * an extra 1 second sleep. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|mountlist_mtx
+argument_list|)
+expr_stmt|;
 name|root_mount_complete
 operator|=
 literal|1
@@ -6825,6 +6831,12 @@ name|wakeup
 argument_list|(
 operator|&
 name|root_mount_complete
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|mountlist_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -6841,6 +6853,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* No mutex is acquired here because int stores are atomic. */
 return|return
 operator|(
 name|root_mount_complete
@@ -6876,21 +6889,38 @@ literal|"root_mount_wait: cannot be called from the swapper thread"
 operator|)
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|mountlist_mtx
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|!
 name|root_mount_complete
 condition|)
-name|tsleep
+block|{
+name|msleep
 argument_list|(
 operator|&
 name|root_mount_complete
+argument_list|,
+operator|&
+name|mountlist_mtx
 argument_list|,
 name|PZERO
 argument_list|,
 literal|"rootwait"
 argument_list|,
 name|hz
+argument_list|)
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|mountlist_mtx
 argument_list|)
 expr_stmt|;
 block|}
