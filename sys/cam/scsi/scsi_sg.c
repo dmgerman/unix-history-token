@@ -199,9 +199,9 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|SG_RDWR_INPROG
+name|SG_RDWR_FREE
 block|,
-name|SG_RDWR_WAITING
+name|SG_RDWR_INPROG
 block|,
 name|SG_RDWR_DONE
 block|}
@@ -1669,12 +1669,6 @@ name|state
 operator|=
 name|SG_RDWR_DONE
 expr_stmt|;
-if|if
-condition|(
-name|state
-operator|==
-name|SG_RDWR_WAITING
-condition|)
 name|wakeup
 argument_list|(
 name|rdwr
@@ -2201,6 +2195,17 @@ case|case
 name|LINUX_SG_GET_TIMEOUT
 case|:
 comment|/* 		 * XXX This ioctl is highly brain damaged because it requires 		 *     that the value be returned in the syscall return value. 		 *     The linuxolator seems to have a hard time with this, 		 *     so just return 0 and hope that apps can cope. 		 */
+name|td
+operator|->
+name|td_retval
+index|[
+literal|0
+index|]
+operator|=
+literal|60
+operator|*
+name|hz
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -3536,12 +3541,6 @@ name|SG_RDWR_DONE
 operator|)
 condition|)
 block|{
-name|rdwr
-operator|->
-name|state
-operator|=
-name|SG_RDWR_WAITING
-expr_stmt|;
 if|if
 condition|(
 name|tsleep
