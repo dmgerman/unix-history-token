@@ -56,8 +56,10 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-modifier|*
 name|hostuuid
+index|[
+literal|64
+index|]
 decl_stmt|;
 end_decl_stmt
 
