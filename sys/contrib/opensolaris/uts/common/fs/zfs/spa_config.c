@@ -158,9 +158,6 @@ decl_stmt|;
 name|uint64_t
 name|fsize
 decl_stmt|;
-name|root_mount_wait
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Open the configuration file. 	 */
 operator|(
 name|void
