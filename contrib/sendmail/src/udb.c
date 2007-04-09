@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sendmail.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"map.h"
 end_include
 
 begin_if
@@ -18,7 +24,7 @@ end_if
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: udb.c,v 8.161 2005/08/31 21:34:20 ca Exp $ (with USERDB)"
+literal|"@(#)$Id: udb.c,v 8.164 2006/12/19 19:49:51 ca Exp $ (with USERDB)"
 argument_list|)
 end_macro
 
@@ -34,7 +40,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: udb.c,v 8.161 2005/08/31 21:34:20 ca Exp $ (without USERDB)"
+literal|"@(#)$Id: udb.c,v 8.164 2006/12/19 19:49:51 ca Exp $ (without USERDB)"
 argument_list|)
 end_macro
 
@@ -52,6 +58,12 @@ if|#
 directive|if
 name|USERDB
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sm/sendmail.h>
+end_include
 
 begin_if
 if|#
@@ -501,7 +513,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|key
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -512,7 +526,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|info
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -633,7 +649,9 @@ argument_list|(
 name|keybuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|keybuf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -648,7 +666,9 @@ condition|(
 name|keylen
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|keybuf
+argument_list|)
 condition|)
 return|return
 name|EX_OK
@@ -730,12 +750,16 @@ expr_stmt|;
 name|usersize
 operator|=
 sizeof|sizeof
+argument_list|(
 name|userbuf
+argument_list|)
 expr_stmt|;
 name|userleft
 operator|=
 sizeof|sizeof
+argument_list|(
 name|userbuf
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -1517,7 +1541,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|key
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -1528,7 +1554,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|info
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1539,7 +1567,9 @@ argument_list|(
 name|keybuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|keybuf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -1967,7 +1997,9 @@ name|po_host
 argument_list|)
 operator|>
 sizeof|sizeof
+argument_list|(
 name|pobuf
+argument_list|)
 operator|-
 literal|2
 condition|)
@@ -2014,7 +2046,9 @@ argument_list|(
 name|pobuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pobuf
+argument_list|)
 argument_list|,
 literal|"%s@%s"
 argument_list|,
@@ -2275,7 +2309,9 @@ argument_list|(
 name|keybuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|keybuf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -2766,12 +2802,16 @@ condition|(
 name|i
 operator|<
 sizeof|sizeof
-expr|"maildrop"
+argument_list|(
+literal|"maildrop"
+argument_list|)
 condition|)
 name|i
 operator|=
 sizeof|sizeof
-expr|"maildrop"
+argument_list|(
+literal|"maildrop"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2785,7 +2825,9 @@ name|i
 operator|)
 operator|>
 sizeof|sizeof
+argument_list|(
 name|keybuf
+argument_list|)
 operator|-
 literal|4
 condition|)
@@ -2814,7 +2856,9 @@ argument_list|(
 name|keybuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|keybuf
+argument_list|)
 argument_list|,
 literal|3
 argument_list|,
@@ -2870,7 +2914,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|key
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -2881,7 +2927,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|info
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|key
@@ -3194,7 +3242,9 @@ argument_list|(
 name|keybuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|keybuf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -3257,7 +3307,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|key
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -3268,7 +3320,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|info
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|key
@@ -3436,7 +3490,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|key
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -3447,7 +3503,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|info
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|key
@@ -3968,14 +4026,18 @@ condition|(
 name|keysize
 operator|>
 sizeof|sizeof
+argument_list|(
 name|keybuf
+argument_list|)
 operator|-
 literal|1
 condition|)
 name|keysize
 operator|=
 sizeof|sizeof
+argument_list|(
 name|keybuf
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -4845,7 +4907,7 @@ directive|if
 name|HESIOD
 argument|static int hes_udb_get(key, info) 	DBT *key; 	DBT *info; { 	char *name, *type; 	char **hp; 	char kbuf[MAXUDBKEY +
 literal|1
-argument|];  	if (sm_strlcpy(kbuf, key->data, sizeof kbuf)>= sizeof kbuf) 		return
+argument|];  	if (sm_strlcpy(kbuf, key->data, sizeof(kbuf))>= sizeof(kbuf)) 		return
 literal|0
 argument|; 	name = kbuf; 	type = strrchr(name,
 literal|':'

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 2000-2003, 2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: config.c,v 1.30 2003/12/10 03:19:07 gshapiro Exp $"
+literal|"@(#)$Id: config.c,v 1.31 2007/03/14 21:21:49 ca Exp $"
 argument_list|)
 end_macro
 
@@ -791,6 +791,30 @@ block|,
 endif|#
 directive|endif
 comment|/* SM_VA_STD */
+if|#
+directive|if
+name|USEKSTAT
+literal|"USEKSTAT"
+block|,
+endif|#
+directive|endif
+comment|/* USEKSTAT */
+if|#
+directive|if
+name|USEPROCMEMINFO
+literal|"USEPROCMEMINFO"
+block|,
+endif|#
+directive|endif
+comment|/* USEPROCMEMINFO */
+if|#
+directive|if
+name|USESWAPCTL
+literal|"USESWAPCTL"
+block|,
+endif|#
+directive|endif
+comment|/* USESWAPCTL */
 name|NULL
 block|}
 decl_stmt|;

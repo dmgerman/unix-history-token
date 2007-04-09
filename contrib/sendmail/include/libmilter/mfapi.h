@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.61 2006/05/04 17:02:01 ca Exp $  */
+comment|/*  * Copyright (c) 1999-2004, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.77 2006/11/02 02:44:07 ca Exp $  */
 end_comment
 
 begin_comment
@@ -30,11 +30,11 @@ begin_define
 define|#
 directive|define
 name|SMFI_VERSION
-value|2
+value|0x01000000
 end_define
 
 begin_comment
-comment|/* version number */
+comment|/* libmilter version number */
 end_comment
 
 begin_endif
@@ -45,6 +45,36 @@ end_endif
 begin_comment
 comment|/* ! SMFI_VERSION */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_LM_VRS_MAJOR
+parameter_list|(
+name|v
+parameter_list|)
+value|(((v)& 0x7f000000)>> 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SM_LM_VRS_MINOR
+parameter_list|(
+name|v
+parameter_list|)
+value|(((v)& 0x007fff00)>> 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SM_LM_VRS_PLVL
+parameter_list|(
+name|v
+parameter_list|)
+value|((v)& 0x0000007f)
+end_define
 
 begin_include
 include|#
@@ -98,7 +128,7 @@ value|struct sockaddr
 endif|#
 directive|endif
 comment|/* ! _SOCK_ADDR */
-comment|/* **  libmilter functions return one of the following to indicate **  success/failure: */
+comment|/* **  libmilter functions return one of the following to indicate **  success/failure(/continue): */
 define|#
 directive|define
 name|MI_SUCCESS
@@ -107,6 +137,16 @@ define|#
 directive|define
 name|MI_FAILURE
 value|(-1)
+if|#
+directive|if
+name|_FFR_WORKERS_POOL
+define|#
+directive|define
+name|MI_CONTINUE
+value|1
+endif|#
+directive|endif
+comment|/* _FFR_WORKERS_POOL */
 comment|/* "forward" declarations */
 typedef|typedef
 name|struct
@@ -420,11 +460,6 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|SMFI_VERSION
-operator|>
-literal|2
 comment|/* any unrecognized or unimplemented command filter */
 name|sfsistat
 argument_list|(
@@ -436,19 +471,12 @@ operator|(
 name|SMFICTX
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SMFI_VERSION> 2 */
-if|#
-directive|if
-name|SMFI_VERSION
-operator|>
-literal|3
 comment|/* SMTP DATA command filter */
 name|sfsistat
 argument_list|(
@@ -462,9 +490,54 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* negotiation callback */
+name|sfsistat
+argument_list|(
+argument|*xxfi_negotiate
+argument_list|)
+name|SM__P
+argument_list|(
+operator|(
+name|SMFICTX
+operator|*
+operator|,
+name|unsigned
+name|long
+operator|,
+name|unsigned
+name|long
+operator|,
+name|unsigned
+name|long
+operator|,
+name|unsigned
+name|long
+operator|,
+name|unsigned
+name|long
+operator|*
+operator|,
+name|unsigned
+name|long
+operator|*
+operator|,
+name|unsigned
+name|long
+operator|*
+operator|,
+name|unsigned
+name|long
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* signal handler callback, not yet implemented. */
+block|int		(*xxfi_signal) SM__P((int));
 endif|#
 directive|endif
-comment|/* SMFI_VERSION> 3 */
 block|}
 struct|;
 name|LIBMILTER_API
@@ -565,6 +638,26 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* _FFR_MAXDATASIZE */
+name|LIBMILTER_API
+name|int
+name|smfi_version
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* **  What the filter might do -- values to be ORed together for **  smfiDesc.xxfi_flags. */
 define|#
 directive|define
@@ -606,6 +699,67 @@ directive|define
 name|SMFIF_QUARANTINE
 value|0x00000020L
 comment|/* filter may quarantine envelope */
+comment|/* filter may change "from" (envelope sender) */
+define|#
+directive|define
+name|SMFIF_CHGFROM
+value|0x00000040L
+define|#
+directive|define
+name|SMFIF_ADDRCPT_PAR
+value|0x00000080L
+comment|/* add recipients incl. args */
+comment|/* filter can send set of symbols (macros) that it wants */
+define|#
+directive|define
+name|SMFIF_SETSYMLIST
+value|0x00000100L
+comment|/* **  Macro "places"; **  Notes: **  - must be coordinated with libmilter/engine.c and sendmail/milter.c **  - the order MUST NOT be changed as it would break compatibility between **	different versions. It's ok to append new entries however **	(hence the list is not sorted by the SMT protocol steps). */
+define|#
+directive|define
+name|SMFIM_FIRST
+value|0
+comment|/* Do NOT use, internal marker only */
+define|#
+directive|define
+name|SMFIM_CONNECT
+value|0
+comment|/* connect */
+define|#
+directive|define
+name|SMFIM_HELO
+value|1
+comment|/* HELO/EHLO */
+define|#
+directive|define
+name|SMFIM_ENVFROM
+value|2
+comment|/* MAIL From */
+define|#
+directive|define
+name|SMFIM_ENVRCPT
+value|3
+comment|/* RCPT To */
+define|#
+directive|define
+name|SMFIM_DATA
+value|4
+comment|/* DATA */
+define|#
+directive|define
+name|SMFIM_EOM
+value|5
+comment|/* end of message (final dot) */
+define|#
+directive|define
+name|SMFIM_EOH
+value|6
+comment|/* end of header */
+define|#
+directive|define
+name|SMFIM_LAST
+value|6
+comment|/* Do NOT use, internal marker only */
 comment|/* **  Continue processing message/connection. */
 define|#
 directive|define
@@ -631,6 +785,21 @@ define|#
 directive|define
 name|SMFIS_TEMPFAIL
 value|4
+comment|/* **  Do not send a reply to the MTA */
+define|#
+directive|define
+name|SMFIS_NOREPLY
+value|7
+comment|/* **  Skip over rest of same callbacks, e.g., body. */
+define|#
+directive|define
+name|SMFIS_SKIP
+value|8
+comment|/* xxfi_negotiate: use all existing protocol options/actions */
+define|#
+directive|define
+name|SMFIS_ALL_OPTS
+value|10
 if|#
 directive|if
 literal|0
@@ -648,8 +817,8 @@ comment|/* envelope recipient filter */
 block|extern sfsistat	xxfi_envrcpt __P((SMFICTX *, char **));
 comment|/* **  xxfi_envrcpt(ctx, argv) Invoked on each envelope recipient ** **	char **argv; Null-terminated SMTP command arguments; **		argv[0] is guaranteed to be the recipient address. **		Later arguments are the ESMTP arguments. */
 comment|/* unknown command filter */
-block|extern sfsistat	*xxfi_unknown __P((SMFICTX *, char *));
-comment|/* **  xxfi_unknown(ctx, arg) Invoked when SMTP command is not recognized or not **  implemented. **	char *arg; Null-terminated SMTP command */
+block|extern sfsistat	*xxfi_unknown __P((SMFICTX *, const char *));
+comment|/* **  xxfi_unknown(ctx, arg) Invoked when SMTP command is not recognized or not **  implemented. **	const char *arg; Null-terminated SMTP command */
 comment|/* header filter */
 block|extern sfsistat	xxfi_header __P((SMFICTX *, char *, char *));
 comment|/* **  xxfi_header(ctx, headerf, headerv) Invoked on each message header. The **  content of the header may have folded white space (that is, multiple **  lines with following white space) included. ** **	char *headerf; Header field name **	char *headerv; Header field value */
@@ -794,6 +963,24 @@ decl_stmt|;
 comment|/* **  Insert a header into the message.  It is not checked for standards **  compliance; the mail filter must ensure that no protocols are violated **  as a result of adding this header. ** **	SMFICTX *ctx; Opaque context structure **  	int idx; index into the header list where the insertion should happen **	char *headerh; Header field name **	char *headerv; Header field value */
 name|LIBMILTER_API
 name|int
+name|smfi_chgfrom
+name|__P
+argument_list|(
+operator|(
+name|SMFICTX
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* **  Modify envelope sender address ** **	SMFICTX *ctx; Opaque context structure **	char *mail; New envelope sender address **	char *args; ESMTP arguments */
+name|LIBMILTER_API
+name|int
 name|smfi_addrcpt
 name|__P
 argument_list|(
@@ -807,6 +994,24 @@ operator|)
 argument_list|)
 decl_stmt|;
 comment|/* **  Add a recipient to the envelope ** **	SMFICTX *ctx; Opaque context structure **	char *rcpt; Recipient to be added */
+name|LIBMILTER_API
+name|int
+name|smfi_addrcpt_par
+name|__P
+argument_list|(
+operator|(
+name|SMFICTX
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* **  Add a recipient to the envelope ** **	SMFICTX *ctx; Opaque context structure **	char *rcpt; Recipient to be added **	char *args; ESMTP arguments */
 name|LIBMILTER_API
 name|int
 name|smfi_delrcpt
@@ -898,6 +1103,41 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* **  Get the private data pointer ** **	SMFICTX *ctx; Opaque context structure **	void *privatedata; Pointer to private data area */
+name|LIBMILTER_API
+name|int
+name|smfi_setsymlist
+name|__P
+argument_list|(
+operator|(
+name|SMFICTX
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* **  Set list of symbols (macros) to receive ** **	SMFICTX *ctx; Opaque context structure **	int where; where in the SMTP dialogue should the macros be sent **	char *macros; list of macros (space separated) */
+if|#
+directive|if
+name|_FFR_THREAD_MONITOR
+name|LIBMILTER_API
+name|int
+name|smfi_set_max_exec_time
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_THREAD_MONITOR */
 ifdef|#
 directive|ifdef
 name|__cplusplus

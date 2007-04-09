@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: vfscanf.c,v 1.53 2005/06/14 23:07:20 ca Exp $"
+literal|"@(#)$Id: vfscanf.c,v 1.54 2006/10/12 22:03:52 ca Exp $"
 argument_list|)
 end_macro
 
@@ -462,14 +462,26 @@ name|int
 name|base
 decl_stmt|;
 comment|/* base argument to strtoll/strtoull */
-name|ULONGLONG_T
-function_decl|(
-modifier|*
-name|ccfn
-function_decl|)
-parameter_list|()
-function_decl|;
 comment|/* conversion function (strtoll/strtoull) */
+name|ULONGLONG_T
+argument_list|(
+argument|*ccfn
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 name|char
 name|ccltab
 index|[

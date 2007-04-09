@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfdef.h,v 8.22 2005/08/05 21:49:04 ca Exp $  */
+comment|/*  * Copyright (c) 1999-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfdef.h,v 8.38 2007/03/27 18:53:48 ca Exp $  */
 end_comment
 
 begin_comment
@@ -19,6 +19,32 @@ directive|define
 name|_LIBMILTER_MFDEF_H
 value|1
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMFI_PROT_VERSION
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SMFI_PROT_VERSION
+value|6
+end_define
+
+begin_comment
+comment|/* MTA - libmilter protocol version */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMFI_PROT_VERSION */
+end_comment
 
 begin_comment
 comment|/* Shared protocol constants */
@@ -98,11 +124,11 @@ begin_define
 define|#
 directive|define
 name|SMFI_CURR_ACTS
-value|SMFI_V2_ACTS
+value|0x000001FFL
 end_define
 
 begin_comment
-comment|/* The current version */
+comment|/* actions of current version */
 end_comment
 
 begin_comment
@@ -226,6 +252,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SMFIC_QUIT_NC
+value|'K'
+end_define
+
+begin_comment
+comment|/* QUIT but new connection follows */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SMFIC_HEADER
 value|'L'
 end_define
@@ -289,14 +326,6 @@ begin_comment
 comment|/* RCPT to */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|SMFI_VERSION
-operator|>
-literal|3
-end_if
-
 begin_define
 define|#
 directive|define
@@ -308,23 +337,6 @@ begin_comment
 comment|/* DATA */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMFI_VERSION> 3 */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|SMFI_VERSION
-operator|>
-literal|2
-end_if
-
 begin_define
 define|#
 directive|define
@@ -334,15 +346,6 @@ end_define
 
 begin_comment
 comment|/* Any unknown command */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMFI_VERSION> 2 */
 end_comment
 
 begin_comment
@@ -369,6 +372,28 @@ end_define
 
 begin_comment
 comment|/* remove recipient */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIR_ADDRCPT_PAR
+value|'2'
+end_define
+
+begin_comment
+comment|/* add recipient (incl. ESMTP args) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIR_SHUTDOWN
+value|'4'
+end_define
+
+begin_comment
+comment|/* 421: shutdown (internal to MTA) */
 end_comment
 
 begin_define
@@ -418,67 +443,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SMFIR_CHGFROM
+value|'e'
+end_define
+
+begin_comment
+comment|/* change envelope sender (from) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SMFIR_CONN_FAIL
 value|'f'
 end_define
 
 begin_comment
 comment|/* cause a connection failure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFIR_CHGHEADER
-value|'m'
-end_define
-
-begin_comment
-comment|/* change header */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFIR_PROGRESS
-value|'p'
-end_define
-
-begin_comment
-comment|/* progress */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFIR_REJECT
-value|'r'
-end_define
-
-begin_comment
-comment|/* reject */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFIR_TEMPFAIL
-value|'t'
-end_define
-
-begin_comment
-comment|/* tempfail */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFIR_SHUTDOWN
-value|'4'
-end_define
-
-begin_comment
-comment|/* 421: shutdown (internal to MTA) */
 end_comment
 
 begin_define
@@ -506,12 +487,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SMFIR_REPLYCODE
-value|'y'
+name|SMFIR_SETSYMLIST
+value|'l'
 end_define
 
 begin_comment
-comment|/* reply code etc */
+comment|/* set list of symbols (macros) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIR_CHGHEADER
+value|'m'
+end_define
+
+begin_comment
+comment|/* change header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIR_PROGRESS
+value|'p'
+end_define
+
+begin_comment
+comment|/* progress */
 end_comment
 
 begin_define
@@ -523,6 +526,50 @@ end_define
 
 begin_comment
 comment|/* quarantine */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIR_REJECT
+value|'r'
+end_define
+
+begin_comment
+comment|/* reject */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIR_SKIP
+value|'s'
+end_define
+
+begin_comment
+comment|/* skip */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIR_TEMPFAIL
+value|'t'
+end_define
+
+begin_comment
+comment|/* tempfail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIR_REPLYCODE
+value|'y'
+end_define
+
+begin_comment
+comment|/* reply code etc */
 end_comment
 
 begin_comment
@@ -606,16 +653,10 @@ begin_comment
 comment|/* MTA should not send EOH */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_MILTER_NOHDR_RESP
-end_if
-
 begin_define
 define|#
 directive|define
-name|SMFIP_NOHREPL
+name|SMFIP_NR_HDR
 value|0x00000080L
 end_define
 
@@ -623,13 +664,15 @@ begin_comment
 comment|/* No reply for headers */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|SMFIP_NOHREPL
+value|SMFIP_NR_HDR
+end_define
 
 begin_comment
-comment|/* _FFR_MILTER_NOHDR_RESP */
+comment|/* No reply for headers */
 end_comment
 
 begin_define
@@ -640,7 +683,7 @@ value|0x00000100L
 end_define
 
 begin_comment
-comment|/* MTA should not send unknown command */
+comment|/* MTA should not send unknown commands */
 end_comment
 
 begin_define
@@ -652,6 +695,127 @@ end_define
 
 begin_comment
 comment|/* MTA should not send DATA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIP_SKIP
+value|0x00000400L
+end_define
+
+begin_comment
+comment|/* MTA understands SMFIS_SKIP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIP_RCPT_REJ
+value|0x00000800L
+end_define
+
+begin_comment
+comment|/* MTA should also send rejected RCPTs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIP_NR_CONN
+value|0x00001000L
+end_define
+
+begin_comment
+comment|/* No reply for connect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIP_NR_HELO
+value|0x00002000L
+end_define
+
+begin_comment
+comment|/* No reply for HELO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIP_NR_MAIL
+value|0x00004000L
+end_define
+
+begin_comment
+comment|/* No reply for MAIL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIP_NR_RCPT
+value|0x00008000L
+end_define
+
+begin_comment
+comment|/* No reply for RCPT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIP_NR_DATA
+value|0x00010000L
+end_define
+
+begin_comment
+comment|/* No reply for DATA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIP_NR_UNKN
+value|0x00020000L
+end_define
+
+begin_comment
+comment|/* No reply for UNKN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIP_NR_EOH
+value|0x00040000L
+end_define
+
+begin_comment
+comment|/* No reply for eoh */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIP_NR_BODY
+value|0x00080000L
+end_define
+
+begin_comment
+comment|/* No reply for body chunk */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIP_HDR_LEADSPC
+value|0x00100000L
+end_define
+
+begin_comment
+comment|/* header value leading space */
 end_comment
 
 begin_define
@@ -677,46 +841,15 @@ comment|/* The protocol of V2 filter */
 end_comment
 
 begin_comment
-comment|/* Note: the "current" version is now determined dynamically in milter.c */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_MILTER_NOHDR_RESP
-end_if
-
-begin_define
-define|#
-directive|define
-name|SMFI_CURR_PROT
-value|0x000000FFL
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* _FFR_MILTER_NOHDR_RESP */
+comment|/* all defined protocol bits */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SMFI_CURR_PROT
-value|SMFI_V2_PROT
+value|0x001FFFFFL
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_MILTER_NOHDR_RESP */
-end_comment
 
 begin_endif
 endif|#

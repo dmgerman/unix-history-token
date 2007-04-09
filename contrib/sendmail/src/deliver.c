@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.1003.2.1 2006/05/23 01:32:08 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.1012 2007/03/29 21:20:15 ca Exp $"
 argument_list|)
 end_macro
 
@@ -183,21 +183,6 @@ name|ENVELOPE
 operator|*
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|MCI
-modifier|*
-name|mci_new
-name|__P
-argument_list|(
-operator|(
-name|SM_RPOOL_T
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1661,8 +1646,10 @@ operator|->
 name|e_rpool
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|ee
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|STRUCTCOPY
@@ -3716,7 +3703,9 @@ argument_list|(
 name|wbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|wbuf
+argument_list|)
 argument_list|,
 literal|"sendall(%.*s)"
 argument_list|,
@@ -3974,11 +3963,15 @@ argument_list|,
 name|filename
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|dir
+argument_list|)
 argument_list|)
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|dir
+argument_list|)
 condition|)
 return|return;
 name|dir
@@ -4177,7 +4170,9 @@ name|type
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|f1buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4195,7 +4190,9 @@ name|type
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|f2buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Force the df to disk if it's not there yet */
@@ -4602,6 +4599,30 @@ begin_comment
 comment|/* **  SHOULD_TRY_FBSH -- Should try FallbackSmartHost? ** **	Parameters: **		e -- envelope **		tried_fallbacksmarthost -- has been tried already? (in/out) **		hostbuf -- buffer for hostname (expand FallbackSmartHost) (out) **		hbsz -- size of hostbuf **		status -- current delivery status ** **	Returns: **		true iff FallbackSmartHost should be tried. */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|bool
+name|should_try_fbsh
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|,
+name|bool
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|size_t
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|bool
@@ -4980,6 +5001,14 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+name|SM_REQUIRE
+argument_list|(
+name|firstto
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* same as to */
 if|if
 condition|(
 operator|!
@@ -4999,6 +5028,13 @@ name|geteuid
 argument_list|()
 operator|==
 literal|0
+expr_stmt|;
+name|SM_REQUIRE
+argument_list|(
+name|e
+operator|!=
+name|NULL
+argument_list|)
 expr_stmt|;
 name|m
 operator|=
@@ -5189,6 +5225,17 @@ comment|/* rewrite from address, using rewriting rules */
 name|rcode
 operator|=
 name|EX_OK
+expr_stmt|;
+name|SM_ASSERT
+argument_list|(
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|!=
+name|NULL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5471,7 +5518,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -6044,6 +6093,8 @@ argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -6370,7 +6421,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -6655,7 +6708,9 @@ argument_list|,
 literal|"SUCCESS,"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|notify
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6679,7 +6734,9 @@ argument_list|,
 literal|"FAILURE,"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|notify
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6703,7 +6760,9 @@ argument_list|,
 literal|"DELAY,"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|notify
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Set to NEVER or drop trailing comma */
@@ -6726,7 +6785,9 @@ argument_list|,
 literal|"NEVER"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|notify
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -6793,7 +6854,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -7001,7 +7064,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -7174,7 +7239,9 @@ argument_list|(
 name|wbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|wbuf
+argument_list|)
 argument_list|,
 literal|"%s... openmailer(%s)"
 argument_list|,
@@ -7944,7 +8011,9 @@ name|hostnum
 index|]
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hostbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|hostnum
@@ -8118,7 +8187,9 @@ argument_list|,
 name|hostbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hostbuf
+argument_list|)
 argument_list|,
 name|mci
 operator|->
@@ -8462,7 +8533,9 @@ argument_list|,
 name|hostbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hostbuf
+argument_list|)
 argument_list|,
 name|i
 argument_list|)
@@ -9974,7 +10047,9 @@ argument_list|,
 name|cbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|cbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -10582,7 +10657,9 @@ argument_list|,
 name|cbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|cbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -11801,11 +11878,6 @@ argument_list|,
 name|D_NOTLS
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|usetls
-condition|)
-block|{
 name|host
 operator|=
 name|macvalue
@@ -11818,6 +11890,11 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|usetls
+condition|)
+block|{
 name|olderrors
 operator|=
 name|Errors
@@ -11849,6 +11926,8 @@ argument_list|,
 name|host
 argument_list|,
 name|NOQID
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 name|EX_OK
@@ -11857,10 +11936,12 @@ name|Errors
 operator|>
 name|olderrors
 condition|)
+block|{
 name|usetls
 operator|=
 name|false
 expr_stmt|;
+block|}
 name|SuprErrs
 operator|=
 name|saveSuprErrs
@@ -12050,6 +12131,8 @@ argument_list|,
 name|host
 argument_list|,
 name|NOQID
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 name|EX_OK
@@ -12123,7 +12206,9 @@ argument_list|,
 literal|"4.7.0"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|enhsc
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -12253,10 +12338,50 @@ argument_list|,
 name|p
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|SmtpError
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_state
+operator|==
+name|MCIS_CLOSED
+condition|)
+block|{
+comment|/* connection close caused by 421 */
+name|mci
+operator|->
+name|mci_errno
+operator|=
+literal|0
+expr_stmt|;
+name|rcode
+operator|=
+name|EX_TEMPFAIL
+expr_stmt|;
+name|mci_setstat
+argument_list|(
+name|mci
+argument_list|,
+name|rcode
+argument_list|,
+name|NULL
+argument_list|,
+literal|"421"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|rcode
+operator|=
+literal|0
+expr_stmt|;
 name|QuickAbort
 operator|=
 name|saveQuickAbort
@@ -12595,7 +12720,9 @@ argument_list|,
 literal|"Temporary AUTH failure"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|SmtpError
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -12889,7 +13016,9 @@ argument_list|(
 name|SmtpError
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|SmtpError
+argument_list|)
 argument_list|,
 literal|"Message is too large; %ld bytes max"
 argument_list|,
@@ -13128,7 +13257,9 @@ argument_list|(
 name|SmtpError
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|SmtpError
+argument_list|)
 argument_list|,
 literal|"%s mailer (%s) exited with EX_TEMPFAIL"
 argument_list|,
@@ -13289,6 +13420,8 @@ argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -14424,7 +14557,9 @@ argument_list|(
 name|wbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|wbuf
+argument_list|)
 argument_list|,
 literal|"%s... end of deliver(%s)"
 argument_list|,
@@ -14881,7 +15016,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -15103,7 +15240,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|mci
 operator|->
@@ -15641,7 +15780,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%s (%s)"
 argument_list|,
@@ -15679,7 +15820,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"554 5.3.0 unknown mailer error %d"
 argument_list|,
@@ -15969,7 +16112,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%s (%s)"
 argument_list|,
@@ -16019,7 +16164,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%s: %s"
 argument_list|,
@@ -16067,7 +16214,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%s (%s)"
 argument_list|,
@@ -16143,7 +16292,9 @@ argument_list|(
 name|dsnbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|dsnbuf
+argument_list|)
 argument_list|,
 literal|"%.*s"
 argument_list|,
@@ -16246,7 +16397,9 @@ operator|&&
 name|off
 operator|<
 sizeof|sizeof
+argument_list|(
 name|mbuf
+argument_list|)
 operator|-
 literal|4
 condition|)
@@ -16266,7 +16419,9 @@ argument_list|(
 name|dsnbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|dsnbuf
+argument_list|)
 argument_list|,
 literal|"%.*s"
 argument_list|,
@@ -16309,7 +16464,9 @@ argument_list|,
 literal|" %s"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|mbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -16330,7 +16487,9 @@ argument_list|(
 name|mbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|mbuf
+argument_list|)
 argument_list|,
 literal|"%.3s %%s"
 argument_list|,
@@ -17251,7 +17410,9 @@ operator|)
 operator|>
 operator|(
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 operator|(
 operator|(
@@ -17269,7 +17430,9 @@ operator|=
 name|buf
 operator|+
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 operator|(
 operator|(
@@ -18019,7 +18182,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"relay=%.100s"
 argument_list|,
@@ -18160,7 +18325,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -18215,7 +18382,9 @@ argument_list|,
 name|hname
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hname
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -18240,7 +18409,9 @@ argument_list|(
 name|xbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|xbuf
+argument_list|)
 argument_list|,
 literal|"From %.800s  \201d remote from %.100s\n"
 argument_list|,
@@ -18266,7 +18437,9 @@ argument_list|(
 name|xbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|xbuf
+argument_list|)
 argument_list|,
 literal|"From %.800s  \201d remote from %.100s\n"
 argument_list|,
@@ -18288,7 +18461,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -18713,7 +18888,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Content-Type: text/plain; charset=%s"
 argument_list|,
@@ -18977,7 +19154,9 @@ operator|&
 name|buf
 index|[
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|1
 index|]
@@ -18999,7 +19178,9 @@ operator|->
 name|m_linelimit
 operator|<
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|1
 condition|)
@@ -19598,6 +19779,10 @@ name|m_eol
 argument_list|)
 expr_stmt|;
 block|}
+name|pos
+operator|=
+literal|0
+expr_stmt|;
 name|ostate
 operator|=
 name|OSTATE_HEAD
@@ -20674,7 +20859,9 @@ operator|+
 literal|1
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|targetfile
+argument_list|)
 condition|)
 block|{
 name|syserr
@@ -20700,7 +20887,9 @@ argument_list|,
 name|SafeFileEnv
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|targetfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|realfile
@@ -20749,7 +20938,9 @@ argument_list|,
 literal|"/"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|targetfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -20762,7 +20953,9 @@ argument_list|,
 name|filename
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|targetfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -20786,7 +20979,9 @@ argument_list|,
 name|targetfile
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|targetfile
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -20827,7 +21022,9 @@ operator|+
 literal|1
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|targetfile
+argument_list|)
 condition|)
 block|{
 name|syserr
@@ -20870,7 +21067,9 @@ argument_list|,
 literal|"/"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|targetfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -20892,7 +21091,9 @@ operator|+
 literal|1
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|targetfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -20906,7 +21107,9 @@ argument_list|,
 name|filename
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|targetfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -20921,11 +21124,15 @@ argument_list|,
 name|filename
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|targetfile
+argument_list|)
 argument_list|)
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|targetfile
+argument_list|)
 condition|)
 block|{
 name|syserr
@@ -22051,7 +22258,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -22433,7 +22642,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|mcibuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mcibuf
