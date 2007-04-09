@@ -1193,6 +1193,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__sparc64__
+end_ifndef
+
 begin_struct
 struct|struct
 name|mvec_sg_cb_arg
@@ -1607,6 +1613,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__sparc64__ */
+end_comment
 
 end_unit
 
