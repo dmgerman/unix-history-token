@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: control.c,v 8.126 2004/08/04 20:54:00 ca Exp $"
+literal|"@(#)$Id: control.c,v 8.128 2006/08/15 23:24:56 ca Exp $"
 argument_list|)
 end_macro
 
@@ -92,12 +92,6 @@ begin_comment
 comment|/* dump memory, to find memory leaks */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_CONTROL_MSTAT
-end_if
-
 begin_define
 define|#
 directive|define
@@ -107,15 +101,6 @@ end_define
 
 begin_comment
 comment|/* daemon status, more info, tagged data */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_CONTROL_MSTAT */
 end_comment
 
 begin_struct
@@ -173,18 +158,12 @@ block|,
 name|CMDMEMDUMP
 block|}
 block|,
-if|#
-directive|if
-name|_FFR_CONTROL_MSTAT
 block|{
 literal|"mstat"
 block|,
 name|CMDMSTAT
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* _FFR_CONTROL_MSTAT */
 block|{
 name|NULL
 block|,
@@ -273,9 +252,11 @@ name|ControlSocketName
 argument_list|)
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|controladdr
 operator|.
 name|sun_path
+argument_list|)
 condition|)
 block|{
 name|errno
@@ -385,7 +366,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|controladdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|controladdr
@@ -406,9 +389,11 @@ argument_list|,
 name|ControlSocketName
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|controladdr
 operator|.
 name|sun_path
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -426,7 +411,9 @@ operator|&
 name|controladdr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|controladdr
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -1041,7 +1028,9 @@ argument_list|,
 name|inp
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|inp
+argument_list|)
 argument_list|)
 operator|==
 name|NULL
@@ -1147,7 +1136,9 @@ operator|&
 name|cmdbuf
 index|[
 sizeof|sizeof
+argument_list|(
 name|cmdbuf
+argument_list|)
 operator|-
 literal|2
 index|]
@@ -1409,9 +1400,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_CONTROL_MSTAT
 case|case
 name|CMDMSTAT
 case|:
@@ -1460,9 +1448,6 @@ literal|"P:"
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_CONTROL_MSTAT */
 case|case
 name|CMDMEMDUMP
 case|:

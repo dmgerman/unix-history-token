@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mci.c,v 8.217 2006/04/18 01:27:36 ca Exp $"
+literal|"@(#)$Id: mci.c,v 8.218 2006/08/15 23:24:57 ca Exp $"
 argument_list|)
 end_macro
 
@@ -372,8 +372,10 @@ argument_list|(
 name|MaxMciCache
 operator|*
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|MciCache
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -389,8 +391,10 @@ argument_list|,
 name|MaxMciCache
 operator|*
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|MciCache
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1025,7 +1029,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|CurHostAddr
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* clear out any expired connections */
@@ -1305,7 +1311,9 @@ name|SOCKADDR_LEN_T
 name|socklen
 init|=
 sizeof|sizeof
+argument_list|(
 name|CurHostAddr
+argument_list|)
 decl_stmt|;
 operator|(
 name|void
@@ -1591,8 +1599,10 @@ operator|)
 name|sm_malloc_x
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|mci
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1607,8 +1617,10 @@ argument_list|(
 name|rpool
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|mci
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -1622,8 +1634,10 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|mci
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mci
@@ -2629,7 +2643,9 @@ argument_list|,
 name|fname
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|fname
+argument_list|)
 argument_list|,
 name|true
 argument_list|)
@@ -3071,7 +3087,9 @@ argument_list|,
 name|fname
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|fname
+argument_list|)
 argument_list|,
 name|false
 argument_list|)
@@ -3382,7 +3400,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -4307,7 +4327,9 @@ operator|->
 name|d_name
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|newpath
+argument_list|)
 operator|-
 operator|(
 name|newptr
@@ -4757,7 +4779,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|mcib
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4973,7 +4997,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Unknown mailer error %d"
 argument_list|,
@@ -5475,7 +5501,9 @@ name|host
 argument_list|)
 operator|>
 sizeof|sizeof
+argument_list|(
 name|t_host
+argument_list|)
 operator|-
 literal|1
 condition|)
@@ -5504,7 +5532,9 @@ operator|+
 literal|1
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|t_host
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -5518,7 +5548,9 @@ argument_list|,
 name|host
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|t_host
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Delete any trailing dots from the hostname. 	**  Leave 'elem' pointing at the \0. 	*/

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: savemail.c,v 8.308 2006/04/18 01:31:33 ca Exp $"
+literal|"@(#)$Id: savemail.c,v 8.313 2006/11/29 00:20:41 ca Exp $"
 argument_list|)
 end_macro
 
@@ -564,7 +564,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -639,7 +641,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -773,11 +777,15 @@ operator|.
 name|q_paddr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|from
+argument_list|)
 argument_list|)
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|from
+argument_list|)
 condition|)
 block|{
 name|state
@@ -922,7 +930,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -1161,7 +1171,9 @@ argument_list|,
 name|dlbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|dlbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -1402,7 +1414,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|mcibuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mcibuf
@@ -2244,6 +2258,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|ee
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 block|}
@@ -2343,6 +2359,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|ee
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2353,7 +2371,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%s.%ld/%.100s"
 argument_list|,
@@ -2391,7 +2411,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 if|#
 directive|if
@@ -2420,6 +2442,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|ee
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|p
@@ -2486,6 +2510,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|ee
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 block|}
@@ -2512,6 +2538,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|ee
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|p
@@ -2543,6 +2571,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|ee
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|p
@@ -2572,6 +2602,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|ee
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|p
@@ -2598,7 +2630,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Postmaster notify: see transcript for details"
 argument_list|)
@@ -2612,6 +2646,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|ee
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|p
@@ -2629,7 +2665,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Returned mail: see transcript for details"
 argument_list|)
@@ -2643,6 +2681,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|ee
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|p
@@ -2658,7 +2698,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"auto-generated (%s)"
 argument_list|,
@@ -2674,6 +2716,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|ee
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 comment|/* fake up an address header for the from person */
@@ -2684,7 +2728,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -3067,7 +3113,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -3266,7 +3314,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"The original message was received at %s"
 argument_list|,
@@ -3304,7 +3354,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 operator|->
@@ -3346,7 +3398,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -3474,38 +3528,78 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
 condition|)
 block|{
-name|translate_dollars
+name|int
+name|lbs
+decl_stmt|;
+name|bool
+name|putok
+decl_stmt|;
+name|char
+modifier|*
+name|lbp
+decl_stmt|;
+name|lbs
+operator|=
+sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|expand
+name|lbp
+operator|=
+name|translate_dollars
 argument_list|(
 name|buf
 argument_list|,
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
+operator|&
+name|lbs
+argument_list|)
+expr_stmt|;
+name|expand
+argument_list|(
+name|lbp
+argument_list|,
+name|lbp
+argument_list|,
+name|lbs
 argument_list|,
 name|e
+argument_list|)
+expr_stmt|;
+name|putok
+operator|=
+name|putline
+argument_list|(
+name|lbp
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lbp
+operator|!=
+name|buf
+condition|)
+name|sm_free
+argument_list|(
+name|lbp
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|putline
-argument_list|(
-name|buf
-argument_list|,
-name|mci
-argument_list|)
+name|putok
 condition|)
 goto|goto
 name|writeerr
@@ -3545,7 +3639,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -3661,7 +3757,9 @@ name|MAXSHORTSTR
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3694,7 +3792,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"    (reason: %s)"
 argument_list|,
@@ -3742,7 +3842,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"    (expanded from: %s)"
 argument_list|,
@@ -3895,7 +3997,9 @@ name|MAXSHORTSTR
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3928,7 +4032,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"    (expanded from: %s)"
 argument_list|,
@@ -4184,7 +4290,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%s  (%s)"
 argument_list|,
@@ -4230,7 +4338,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"    (expanded from: %s)"
 argument_list|,
@@ -4366,7 +4476,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -4431,7 +4543,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -4500,7 +4614,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Original-Envelope-Id: %.800s"
 argument_list|,
@@ -4537,7 +4653,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Reporting-MTA: dns; %.800s"
 argument_list|,
@@ -4607,7 +4725,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Received-From-MTA: %s; %.800s"
 argument_list|,
@@ -4639,7 +4759,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -4708,7 +4830,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -4979,7 +5103,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Original-Recipient: %.800s"
 argument_list|,
@@ -5082,7 +5208,9 @@ argument_list|(
 name|actual
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|actual
+argument_list|)
 argument_list|,
 literal|"%s; %.700s@%.100s"
 argument_list|,
@@ -5106,7 +5234,9 @@ argument_list|(
 name|actual
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|actual
+argument_list|)
 argument_list|,
 literal|"%s; %.800s"
 argument_list|,
@@ -5182,7 +5312,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Final-Recipient: %s"
 argument_list|,
@@ -5221,9 +5353,6 @@ name|q_finalrcpt
 operator|!=
 name|NULL
 operator|&&
-if|#
-directive|if
-name|_FFR_PRIV_NOACTUALRECIPIENT
 operator|!
 name|bitset
 argument_list|(
@@ -5232,9 +5361,6 @@ argument_list|,
 name|PrivacyFlags
 argument_list|)
 operator|&&
-endif|#
-directive|endif
-comment|/* _FFR_PRIV_NOACTUALRECIPIENT */
 name|strcmp
 argument_list|(
 name|actual
@@ -5255,7 +5381,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"X-Actual-Recipient: %s"
 argument_list|,
@@ -5285,7 +5413,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -5363,7 +5493,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -5427,7 +5559,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Remote-MTA: %s; %.800s"
 argument_list|,
@@ -5519,7 +5653,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Diagnostic-Code: %s; %.800s"
 argument_list|,
@@ -5571,7 +5707,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -5643,7 +5781,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -5769,7 +5909,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -5801,7 +5943,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -5895,7 +6039,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Content-Transfer-Encoding: %s"
 argument_list|,
@@ -6062,7 +6208,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|3
 argument_list|,
@@ -7200,7 +7348,9 @@ condition|(
 name|i
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|hostbuf
+argument_list|)
 condition|)
 return|return
 name|false
@@ -7217,7 +7367,9 @@ operator|+
 literal|1
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hostbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|hostbuf
@@ -7324,7 +7476,9 @@ literal|2
 argument_list|)
 operator|<
 sizeof|sizeof
+argument_list|(
 name|hostbuf
+argument_list|)
 condition|)
 operator|(
 name|void
@@ -7338,7 +7492,9 @@ operator|+
 literal|2
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hostbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.128 2006/01/27 18:43:44 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.132 2007/03/21 23:56:18 ca Exp $  */
 end_comment
 
 begin_comment
-comment|/* **  CONF.H -- All user-configurable parameters for sendmail ** **	Send updates to sendmail@Sendmail.ORG so they will be **	included in the next release. */
+comment|/* **  CONF.H -- All user-configurable parameters for sendmail ** **	Send updates to Sendmail.ORG so they will be **	included in the next release; see **	http://www.sendmail.org/email-addresses.html **	for current e-mail address. */
 end_comment
 
 begin_ifndef
@@ -767,6 +767,18 @@ ifdef|#
 directive|ifdef
 name|_AIX5
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
 
 begin_define
 define|#
@@ -2954,6 +2966,17 @@ end_define
 
 begin_comment
 comment|/* fudge offset for SyslogPrefixLen */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASLDAPGETALIASBYNAME
+value|1
+end_define
+
+begin_comment
+comment|/* added in S8 */
 end_comment
 
 begin_endif
@@ -5876,10 +5899,6 @@ begin_comment
 comment|/* __bsdi__ */
 end_comment
 
-begin_comment
-comment|/* **  QNX 4.2x **	Contributed by Glen McCready<glen@qnx.com>. ** **	Should work with all versions of QNX. */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -5888,6 +5907,200 @@ argument_list|(
 name|__QNX__
 argument_list|)
 end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__QNXNTO__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* QNX 6 */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<unix.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has unsetenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETSID
+value|1
+end_define
+
+begin_comment
+comment|/* has POSIX setsid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USESETEUID
+value|1
+end_define
+
+begin_comment
+comment|/* has usable seteuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASFCHMOD
+value|1
+end_define
+
+begin_comment
+comment|/* has fchmod(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASFCHOWN
+value|1
+end_define
+
+begin_comment
+comment|/* has fchown(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASUNAME
+value|1
+end_define
+
+begin_comment
+comment|/* has uname(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSTRERROR
+value|1
+end_define
+
+begin_comment
+comment|/* has strerror(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSD4_4_SOCKADDR
+end_define
+
+begin_comment
+comment|/* has sa_len */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ERRLIST_PREDEFINED
+end_define
+
+begin_comment
+comment|/* don't declare sys_errlist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETLINK
+value|1
+end_define
+
+begin_comment
+comment|/* supports AF_LINK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|gid_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|QUAD_T
+value|uint64_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASSNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* has snprintf(3) (all versions?) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* **  We have a strrev() that doesn't allocate anything. **  Make sure the one here is used. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|strrev
+value|strrev_sendmail
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* defined(__QNXNTO__) */
+end_comment
+
+begin_comment
+comment|/* **  QNX 4.2x **	Contributed by Glen McCready<glen@qnx.com>. ** **	Should work with all versions of QNX 4. */
+end_comment
 
 begin_include
 include|#
@@ -6072,15 +6285,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|E_PSEUDOBASE
-value|512
-end_define
-
-begin_define
-define|#
-directive|define
 name|_FILE_H_INCLUDED
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__QNXNTO__) */
+end_comment
 
 begin_endif
 endif|#

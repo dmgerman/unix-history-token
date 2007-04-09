@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: stats.c,v 8.56 2002/06/27 22:47:37 gshapiro Exp $"
+literal|"@(#)$Id: stats.c,v 8.57 2006/08/15 23:24:58 ca Exp $"
 argument_list|)
 end_macro
 
@@ -331,7 +331,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|Stat
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|GotStats
@@ -418,7 +420,9 @@ operator|.
 name|stat_size
 operator|=
 sizeof|sizeof
+argument_list|(
 name|Stat
+argument_list|)
 expr_stmt|;
 name|Stat
 operator|.
@@ -526,18 +530,24 @@ operator|&
 name|stats
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|stats
+argument_list|)
 argument_list|)
 operator|==
 sizeof|sizeof
+argument_list|(
 name|stats
+argument_list|)
 operator|&&
 name|stats
 operator|.
 name|stat_size
 operator|==
 sizeof|sizeof
+argument_list|(
 name|stats
+argument_list|)
 operator|&&
 name|stats
 operator|.
@@ -717,7 +727,9 @@ operator|&
 name|Stat
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|stats
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* write out results */
@@ -751,7 +763,9 @@ operator|&
 name|stats
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|stats
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(

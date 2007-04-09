@@ -230,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.1008.2.1 2006/05/23 01:32:07 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.1042 2007/02/27 22:21:13 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -334,6 +334,12 @@ begin_include
 include|#
 directive|include
 file|<sm/shm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/misc.h>
 end_include
 
 begin_ifdef
@@ -1879,6 +1885,8 @@ operator|,
 name|int
 operator|,
 name|int
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2239,6 +2247,87 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_typedef
+typedef|typedef
+name|void
+name|esmtp_args_F
+name|__P
+typedef|((
+name|ADDRESS
+modifier|*
+typedef|,
+name|char
+modifier|*
+typedef|,
+name|char
+modifier|*
+typedef|,
+name|ENVELOPE
+modifier|*
+typedef|));
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|parse_esmtp_args
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|,
+name|ADDRESS
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+name|args
+index|[]
+operator|,
+name|esmtp_args_F
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|esmtp_args_F
+name|mail_esmtp_args
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|esmtp_args_F
+name|rcpt_esmtp_args
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|reset_mail_esmtp_args
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* macro to simplify the common call to rewrite() */
 end_comment
@@ -2256,6 +2345,40 @@ name|env
 parameter_list|)
 value|rewrite(pvp, rs, 0, env, MAXATOM)
 end_define
+
+begin_comment
+comment|/* **  Token Tables for prescan */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|ExtTokenTab
+index|[
+literal|256
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* external strings */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|IntTokenTab
+index|[
+literal|256
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* internal strings */
+end_comment
 
 begin_comment
 comment|/* **  Mailer definition structure. **	Every mailer known to the system is declared in this **	structure.  It defines the pathname of the mailer, some **	flags associated with it, and the argument vector to **	pass to it.  The flags are defined in conf.c ** **	The argument vector is expanded before actual use.  All **	words except the first are passed through the macro **	processor. */
@@ -4875,7 +4998,13 @@ name|int
 argument_list|(
 operator|*
 argument_list|)
-argument_list|()
+argument_list|(
+name|char
+operator|*
+argument_list|,
+name|char
+operator|*
+argument_list|)
 operator|,
 name|char
 operator|*
@@ -5299,6 +5428,8 @@ name|int
 operator|,
 name|ENVELOPE
 operator|*
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5426,6 +5557,8 @@ name|int
 operator|,
 name|ENVELOPE
 operator|*
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5724,7 +5857,7 @@ name|char
 modifier|*
 name|e_message
 decl_stmt|;
-comment|/* error message; readonly; NULL, or 					 * static storage, or allocated from 					 * e_rpool */
+comment|/* error message; readonly; NULL, 					 * or allocated from e_rpool */
 name|char
 modifier|*
 name|e_statmsg
@@ -5806,6 +5939,11 @@ modifier|*
 name|e_rpool
 decl_stmt|;
 comment|/* resource pool for this envelope */
+name|unsigned
+name|int
+name|e_features
+decl_stmt|;
+comment|/* server features */
 block|}
 struct|;
 end_struct
@@ -6453,6 +6591,14 @@ comment|/* **  Special characters in rewriting rules. **	These are used internal
 end_comment
 
 begin_comment
+comment|/* "out of band" indicator */
+end_comment
+
+begin_comment
+comment|/* sm/sendmail.h #define METAQUOTE ((unsigned char)0377) quotes the next octet */
+end_comment
+
+begin_comment
 comment|/* left hand side items */
 end_comment
 
@@ -6508,7 +6654,11 @@ value|((unsigned char)0224)
 end_define
 
 begin_comment
-comment|/* match anything not in class */
+comment|/* match tokens not in class */
+end_comment
+
+begin_comment
+comment|/* right hand side items */
 end_comment
 
 begin_define
@@ -6519,11 +6669,7 @@ value|((unsigned char)0225)
 end_define
 
 begin_comment
-comment|/* replacement on RHS for above */
-end_comment
-
-begin_comment
-comment|/* right hand side items */
+comment|/* RHS replacement for above */
 end_comment
 
 begin_define
@@ -6571,7 +6717,7 @@ comment|/* call another rewriting set */
 end_comment
 
 begin_comment
-comment|/* conditionals in macros */
+comment|/* conditionals in macros (anywhere) */
 end_comment
 
 begin_define
@@ -6608,7 +6754,7 @@ comment|/* conditional fi */
 end_comment
 
 begin_comment
-comment|/* bracket characters for host name lookup */
+comment|/* bracket characters for RHS host name lookup */
 end_comment
 
 begin_define
@@ -6634,7 +6780,7 @@ comment|/* hostname lookup end */
 end_comment
 
 begin_comment
-comment|/* bracket characters for generalized lookup */
+comment|/* bracket characters for RHS generalized lookup */
 end_comment
 
 begin_define
@@ -6660,7 +6806,7 @@ comment|/* generalized lookup end */
 end_comment
 
 begin_comment
-comment|/* macro substitution character */
+comment|/* macro substitution characters (anywhere) */
 end_comment
 
 begin_define
@@ -7021,6 +7167,9 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|ADDRESS
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7097,12 +7246,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|char
+modifier|*
 name|translate_dollars
 name|__P
 argument_list|(
 operator|(
 name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
 operator|*
 operator|)
 argument_list|)
@@ -8194,25 +8350,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|USERDB
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|_udbx_close
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -8231,6 +8368,25 @@ name|int
 operator|,
 name|ENVELOPE
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|USERDB
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_udbx_close
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -10063,6 +10219,17 @@ begin_comment
 comment|/* if EOL not present, don't add one */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PXLF_STRIPMQUOTE
+value|0x0010
+end_define
+
+begin_comment
+comment|/* strip METAQUOTEs */
+end_comment
+
 begin_comment
 comment|/* **  Privacy flags **	These are bit values for the PrivacyFlags word. */
 end_comment
@@ -10221,12 +10388,6 @@ begin_comment
 comment|/* disallow return receipts */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_PRIV_NOACTUALRECIPIENT
-end_if
-
 begin_define
 define|#
 directive|define
@@ -10238,17 +10399,8 @@ begin_comment
 comment|/* no X-Actual-Recipient in DSNs */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* _FFR_PRIV_NOACTUALRECIPIENT */
-end_comment
-
-begin_comment
-comment|/* don't give no info, anyway, anyhow */
+comment|/* don't give no info, anyway, anyhow (in the main SMTP transaction) */
 end_comment
 
 begin_define
@@ -10375,6 +10527,17 @@ directive|define
 name|RF_COPYNONE
 value|0
 end_define
+
+begin_define
+define|#
+directive|define
+name|RF_RM_ADDR
+value|0x040
+end_define
+
+begin_comment
+comment|/* address to be removed */
+end_comment
 
 begin_comment
 comment|/* **  Flags passed to rscheck */
@@ -10697,6 +10860,22 @@ name|SMFTO_NUM_TO
 index|]
 decl_stmt|;
 comment|/* timeouts */
+if|#
+directive|if
+name|_FFR_MILTER_CHECK
+comment|/* for testing only */
+name|mi_int32
+name|mf_mta_prot_version
+decl_stmt|;
+name|mi_int32
+name|mf_mta_prot_flags
+decl_stmt|;
+name|mi_int32
+name|mf_mta_actions
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_CHECK */
 block|}
 struct|;
 end_struct
@@ -10736,87 +10915,6 @@ end_define
 
 begin_comment
 comment|/* 421 connection on failure */
-end_comment
-
-begin_comment
-comment|/* states */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFS_CLOSED
-value|'C'
-end_define
-
-begin_comment
-comment|/* closed for all further actions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFS_OPEN
-value|'O'
-end_define
-
-begin_comment
-comment|/* connected to remote milter filter */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFS_INMSG
-value|'M'
-end_define
-
-begin_comment
-comment|/* currently servicing a message */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFS_DONE
-value|'D'
-end_define
-
-begin_comment
-comment|/* done with current message */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFS_CLOSABLE
-value|'Q'
-end_define
-
-begin_comment
-comment|/* done with current connection */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFS_ERROR
-value|'E'
-end_define
-
-begin_comment
-comment|/* error state */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFS_READY
-value|'R'
-end_define
-
-begin_comment
-comment|/* ready for action */
 end_comment
 
 begin_decl_stmt
@@ -10988,9 +11086,14 @@ decl_stmt|;
 comment|/* turn reverse-video on */
 name|char
 modifier|*
-name|te_rv_off
+name|te_under_on
 decl_stmt|;
-comment|/* turn reverse-video off */
+comment|/* turn underlining on */
+name|char
+modifier|*
+name|te_normal
+decl_stmt|;
+comment|/* revert to normal output */
 block|}
 struct|;
 end_struct
@@ -13558,6 +13661,17 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
+name|EightBitAddrOK
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* we'll let 8-bit addresses through */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
 name|HasEightBits
 decl_stmt|;
 end_decl_stmt
@@ -13791,12 +13905,6 @@ begin_comment
 comment|/* single thread hosts on delivery */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_SOFT_BOUNCE
-end_if
-
 begin_decl_stmt
 name|EXTERN
 name|bool
@@ -13806,15 +13914,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* replace 5xy by 4xy (for testing) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_SOFT_BOUNCE */
 end_comment
 
 begin_decl_stmt
@@ -14497,12 +14596,6 @@ begin_comment
 comment|/* shared memory key */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_SELECT_SHM
-end_if
-
 begin_decl_stmt
 name|EXTERN
 name|char
@@ -14513,15 +14606,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* shared memory key file */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_SELECT_SHM */
 end_comment
 
 begin_endif
@@ -14885,12 +14969,6 @@ begin_comment
 comment|/* path to search for .forward files */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_HELONAME
-end_if
-
 begin_decl_stmt
 name|EXTERN
 name|char
@@ -14901,15 +14979,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* hostname to announce in HELO */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_HELONAME */
 end_comment
 
 begin_decl_stmt
@@ -16683,6 +16752,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -17277,12 +17348,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|_FFR_CONTROL_MSTAT
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|void
@@ -17299,15 +17364,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_CONTROL_MSTAT */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -17390,6 +17446,34 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|SM_HEAP_CHECK
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dumpstab
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SM_HEAP_CHECK */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -17461,6 +17545,7 @@ name|char
 operator|*
 operator|,
 name|int
+operator|*
 operator|,
 name|SM_FILE_T
 operator|*
@@ -17563,6 +17648,7 @@ name|freediskspace
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -18047,6 +18133,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|MCI
+modifier|*
+name|mci_new
+name|__P
+argument_list|(
+operator|(
+name|SM_RPOOL_T
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|munchstring
@@ -18449,6 +18550,19 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|rmexpstab
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -18923,21 +19037,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|str2prt
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|void
 name|stripbackslash
 name|__P
@@ -19006,6 +19105,40 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|STARTTLS
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|tls_set_verify
+name|__P
+argument_list|(
+operator|(
+name|SSL_CTX
+operator|*
+operator|,
+name|SSL
+operator|*
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* STARTTLS */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|bool
@@ -19018,14 +19151,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|_FFR_BESTMX_BETTER_TRUNCATION
-operator|||
-name|_FFR_DNSMAP_MULTI
-end_if
 
 begin_decl_stmt
 specifier|extern
@@ -19044,15 +19169,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_BESTMX_BETTER_TRUNCATION || _FFR_DNSMAP_MULTI */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -19491,6 +19607,12 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|EXTERN
+end_undef
 
 begin_endif
 endif|#

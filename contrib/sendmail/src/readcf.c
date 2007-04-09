@@ -9,10 +9,16 @@ directive|include
 file|<sendmail.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sm/sendmail.h>
+end_include
+
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.651 2006/03/02 19:17:09 ca Exp $"
+literal|"@(#)$Id: readcf.c,v 8.663 2006/10/05 20:58:59 ca Exp $"
 argument_list|)
 end_macro
 
@@ -278,6 +284,9 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+name|int
+name|bufsize
+decl_stmt|;
 name|char
 name|exbuf
 index|[
@@ -493,6 +502,13 @@ directive|endif
 comment|/* XLA */
 while|while
 condition|(
+name|bufsize
+operator|=
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|,
 operator|(
 name|bp
 operator|=
@@ -500,8 +516,8 @@ name|fgetfolded
 argument_list|(
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
+operator|&
+name|bufsize
 argument_list|,
 name|cf
 argument_list|)
@@ -510,6 +526,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|char
+modifier|*
+name|nbp
+decl_stmt|;
 if|if
 condition|(
 name|bp
@@ -535,10 +555,36 @@ comment|/* XXX */
 continue|continue;
 block|}
 comment|/* do macro expansion mappings */
+name|nbp
+operator|=
 name|translate_dollars
 argument_list|(
 name|bp
+argument_list|,
+name|bp
+argument_list|,
+operator|&
+name|bufsize
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nbp
+operator|!=
+name|bp
+operator|&&
+name|bp
+operator|!=
+name|buf
+condition|)
+name|sm_free
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|bp
+operator|=
+name|nbp
 expr_stmt|;
 comment|/* interpret this line */
 name|errno
@@ -645,8 +691,10 @@ operator|)
 name|xalloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|rwp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -664,8 +712,10 @@ operator|)
 name|xalloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|rwp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|rwp
@@ -698,7 +748,9 @@ argument_list|,
 name|exbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|exbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -716,7 +768,9 @@ argument_list|,
 name|pvpbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pvpbuf
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -726,7 +780,7 @@ literal|9
 condition|?
 name|TokTypeNoC
 else|:
-name|NULL
+name|IntTokenTab
 argument_list|,
 name|true
 argument_list|)
@@ -793,9 +847,13 @@ name|NULL
 expr_stmt|;
 switch|switch
 condition|(
-operator|*
-operator|*
 name|ap
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
 operator|&
 literal|0377
 condition|)
@@ -824,7 +882,7 @@ name|MATCHREPL
 case|:
 name|botch
 operator|=
-literal|"$0-$9"
+literal|"$1-$9"
 expr_stmt|;
 break|break;
 case|case
@@ -987,7 +1045,9 @@ argument_list|,
 name|exbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|exbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -1005,7 +1065,9 @@ argument_list|,
 name|pvpbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pvpbuf
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -1015,7 +1077,7 @@ literal|9
 condition|?
 name|TokTypeNoC
 else|:
-name|NULL
+name|IntTokenTab
 argument_list|,
 name|true
 argument_list|)
@@ -1111,9 +1173,13 @@ name|NULL
 expr_stmt|;
 switch|switch
 condition|(
-operator|*
-operator|*
 name|ap
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
 operator|&
 literal|0377
 condition|)
@@ -1123,20 +1189,20 @@ name|MATCHREPL
 case|:
 if|if
 condition|(
-operator|(
-operator|*
 name|ap
-operator|)
+index|[
+literal|0
+index|]
 index|[
 literal|1
 index|]
 operator|<=
 literal|'0'
 operator|||
-operator|(
-operator|*
 name|ap
-operator|)
+index|[
+literal|0
+index|]
 index|[
 literal|1
 index|]
@@ -1148,10 +1214,10 @@ name|syserr
 argument_list|(
 literal|"replacement $%c out of bounds"
 argument_list|,
-operator|(
-operator|*
 name|ap
-operator|)
+index|[
+literal|0
+index|]
 index|[
 literal|1
 index|]
@@ -1236,9 +1302,13 @@ comment|/* see above... */
 if|if
 condition|(
 operator|(
-operator|*
-operator|*
 name|ap
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
 operator|&
 literal|0377
 operator|)
@@ -1271,12 +1341,10 @@ directive|if
 name|_FFR_EXTRA_MAP_CHECK
 if|if
 condition|(
-operator|*
-operator|(
 name|ap
-operator|+
+index|[
 literal|1
-operator|)
+index|]
 operator|==
 name|NULL
 condition|)
@@ -1290,13 +1358,13 @@ break|break;
 block|}
 name|nexttoken
 operator|=
-operator|*
-operator|*
-operator|(
 name|ap
-operator|+
+index|[
 literal|1
-operator|)
+index|]
+index|[
+literal|0
+index|]
 operator|&
 literal|0377
 expr_stmt|;
@@ -1314,6 +1382,7 @@ name|nexttoken
 operator|==
 name|endtoken
 condition|)
+block|)
 block|{
 name|syserr
 argument_list|(
@@ -1324,12 +1393,10 @@ break|break;
 block|}
 if|if
 condition|(
-operator|*
-operator|(
 name|ap
-operator|+
+index|[
 literal|2
-operator|)
+index|]
 operator|==
 name|NULL
 condition|)
@@ -1343,26 +1410,26 @@ break|break;
 block|}
 if|if
 condition|(
-operator|(
-operator|*
-operator|*
 name|ap
-operator|&
-literal|0377
-operator|)
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
 operator|==
 name|HOSTBEGIN
 condition|)
 break|break;
 name|nexttoken
 operator|=
-operator|*
-operator|*
-operator|(
 name|ap
-operator|+
+index|[
 literal|2
-operator|)
+index|]
+index|[
+literal|0
+index|]
 operator|&
 literal|0377
 expr_stmt|;
@@ -1401,9 +1468,13 @@ case|:
 if|if
 condition|(
 operator|(
-operator|*
-operator|*
 name|ap
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
 operator|&
 literal|0377
 operator|)
@@ -1426,7 +1497,7 @@ literal|0
 comment|/* **  This doesn't work yet as there are maps defined *after* the cf **  is read such as host, user, and alias.  So for now, it's removed. **  When it comes back, the RELEASE_NOTES entry will be: **	Emit warnings for unknown maps when reading the .cf file.  Based on **		patch from Robert Harker of Harker Systems. */
 block|case LOOKUPBEGIN:
 comment|/* 						**  Got a database lookup, 						**  check if map is defined. 						*/
-block|ep = *(ap + 1); 						if ((*ep& 0377) != MACRODEXPAND&& 						    stab(ep, ST_MAP, 							 ST_FIND) == NULL) 						{ 							(void) sm_io_fprintf(smioout, 									     SM_TIME_DEFAULT, 									     "Warning: %s: line %d: map %s not found\n", 									     FileName, 									     LineNumber, 									     ep); 						} 						break;
+block|ep = ap[1]; 						if ((ep[0]& 0377) != MACRODEXPAND&& 						    stab(ep, ST_MAP, ST_FIND) == NULL) 						{ 							(void) sm_io_fprintf(smioout, 									     SM_TIME_DEFAULT, 									     "Warning: %s: line %d: map %s not found\n", 									     FileName, 									     LineNumber, 									     ep); 						} 						break;
 endif|#
 directive|endif
 comment|/* 0 */
@@ -1485,7 +1556,9 @@ argument_list|,
 name|exbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|exbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -1702,7 +1775,9 @@ argument_list|,
 name|exbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|exbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -2555,7 +2630,9 @@ argument_list|,
 name|exbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|exbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -2664,6 +2741,9 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX */
 block|}
+end_function
+
+begin_if
 if|if
 condition|(
 name|sm_io_error
@@ -2687,6 +2767,9 @@ name|EX_OSFILE
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -2697,19 +2780,40 @@ argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|FileName
 operator|=
 name|NULL
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* initialize host maps from local service tables */
+end_comment
+
+begin_expr_stmt
 name|inithostmaps
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* initialize daemon (if not defined yet) */
+end_comment
+
+begin_expr_stmt
 name|initdaemon
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* determine if we need to do special name-server frotz */
+end_comment
+
+begin_block
 block|{
 name|int
 name|nmaps
@@ -2795,23 +2899,45 @@ expr_stmt|;
 block|}
 block|}
 block|}
-block|}
-end_function
+end_block
 
 begin_comment
-comment|/* **  TRANSLATE_DOLLARS -- convert $x into internal form ** **	Actually does all appropriate pre-processing of a config line **	to turn it into internal form. ** **	Parameters: **		bp -- the buffer to translate. ** **	Returns: **		None.  The buffer is translated in place.  Since the **		translations always make the buffer shorter, this is **		safe without a size parameter. */
+unit|}
+comment|/* **  TRANSLATE_DOLLARS -- convert $x into internal form ** **	Actually does all appropriate pre-processing of a config line **	to turn it into internal form. ** **	Parameters: **		ibp -- the buffer to translate. **		obp -- where to put the translation; may be the same as obp **		bsp -- a pointer to the size of obp; will be updated if **			the buffer needs to be replaced. ** **	Returns: **		The buffer pointer; may differ from obp if the expansion **		is larger then *bsp, in which case this will point to **		malloc()ed memory which must be free()d by the caller. */
 end_comment
 
-begin_function
-name|void
+begin_expr_stmt
+unit|char
+operator|*
 name|translate_dollars
-parameter_list|(
-name|bp
-parameter_list|)
+argument_list|(
+argument|ibp
+argument_list|,
+argument|obp
+argument_list|,
+argument|bsp
+argument_list|)
+name|char
+operator|*
+name|ibp
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
-name|bp
+name|obp
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|bsp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|char
@@ -2823,6 +2949,50 @@ name|char
 modifier|*
 name|ep
 decl_stmt|;
+name|char
+modifier|*
+name|bp
+decl_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|37
+argument_list|,
+literal|53
+argument_list|)
+condition|)
+block|{
+name|sm_dprintf
+argument_list|(
+literal|"translate_dollars("
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
+name|ibp
+argument_list|)
+expr_stmt|;
+name|sm_dprintf
+argument_list|(
+literal|")\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|bp
+operator|=
+name|quote_internal_chars
+argument_list|(
+name|ibp
+argument_list|,
+name|obp
+argument_list|,
+name|bsp
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -2923,9 +3093,11 @@ name|p
 operator|>
 name|bp
 condition|)
+block|{
 name|p
 operator|--
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -3111,8 +3283,40 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|37
+argument_list|,
+literal|53
+argument_list|)
+condition|)
+block|{
+name|sm_dprintf
+argument_list|(
+literal|"  translate_dollars => "
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+name|sm_dprintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
-end_function
+return|return
+name|bp
+return|;
+block|}
+end_block
 
 begin_comment
 comment|/* **  TOOMANY -- signal too many of some option ** **	Parameters: **		id -- the id of the error line **		maxcnt -- the maximum possible values ** **	Returns: **		none. ** **	Side Effects: **		gives a syserr. */
@@ -3491,7 +3695,9 @@ argument_list|,
 name|jbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|jbuf
+argument_list|)
 argument_list|,
 operator|&
 name|BlankEnvelope
@@ -3517,7 +3723,9 @@ argument_list|,
 literal|"localhost"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|jbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3553,7 +3761,9 @@ argument_list|,
 name|lcbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|lcbuf
+argument_list|)
 argument_list|,
 name|CurEnv
 argument_list|)
@@ -3574,7 +3784,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"-k (&(objectClass=sendmailMTAClass)(sendmailMTAClassName=%s)(|(sendmailMTACluster=%s)(sendmailMTAHost=%s))) -v sendmailMTAClassValue,sendmailMTAClassSearch:FILTER:sendmailMTAClass,sendmailMTAClassURL:URL:sendmailMTAClass"
 argument_list|,
@@ -3590,7 +3802,9 @@ condition|(
 name|n
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 condition|)
 block|{
 name|syserr
@@ -3697,7 +3911,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|map
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|map
@@ -4171,7 +4387,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -4328,8 +4546,10 @@ operator|)
 name|xalloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|m
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -4343,8 +4563,10 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|m
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|errno
@@ -6388,7 +6610,9 @@ operator|&
 name|buf
 index|[
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|1
 index|]
@@ -6612,7 +6836,9 @@ operator|&
 name|buf
 index|[
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|1
 index|]
@@ -6872,8 +7098,10 @@ operator|)
 name|xalloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|avp
+argument_list|)
 operator|*
 name|i
 argument_list|)
@@ -6893,8 +7121,10 @@ operator|)
 name|argv
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|avp
+argument_list|)
 operator|*
 name|i
 argument_list|)
@@ -9054,9 +9284,6 @@ block|,
 name|OI_NONE
 block|}
 block|,
-if|#
-directive|if
-name|_FFR_SOFT_BOUNCE
 define|#
 directive|define
 name|O_SOFTBOUNCE
@@ -9069,12 +9296,6 @@ block|,
 name|OI_NONE
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* _FFR_SOFT_BOUNCE */
-if|#
-directive|if
-name|_FFR_SELECT_SHM
 define|#
 directive|define
 name|O_SHMKEYFILE
@@ -9087,9 +9308,6 @@ block|,
 name|OI_NONE
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* _FFR_SELECT_SHM */
 define|#
 directive|define
 name|O_REJECTLOGINTERVAL
@@ -9180,9 +9398,6 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_CRLPATH */
-if|#
-directive|if
-name|_FFR_HELONAME
 define|#
 directive|define
 name|O_HELONAME
@@ -9195,9 +9410,6 @@ block|,
 name|OI_NONE
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* _FFR_HELONAME */
 if|#
 directive|if
 name|_FFR_MEMSTAT
@@ -9240,9 +9452,6 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_MEMSTAT */
-if|#
-directive|if
-name|_FFR_MAXNOOPCOMMANDS
 define|#
 directive|define
 name|O_MAXNOOPCOMMANDS
@@ -9255,9 +9464,6 @@ block|,
 name|OI_NONE
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* _FFR_MAXNOOPCOMMANDS */
 if|#
 directive|if
 name|_FFR_MSG_ACCEPT
@@ -9294,6 +9500,32 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_QUEUE_RUN_PARANOIA */
+if|#
+directive|if
+name|_FFR_EIGHT_BIT_ADDR_OK
+if|#
+directive|if
+operator|!
+name|ALLOW_255
+empty|#  ERROR FFR_EIGHT_BIT_ADDR_OK requires _ALLOW_255
+endif|#
+directive|endif
+comment|/* !ALLOW_255 */
+define|#
+directive|define
+name|O_EIGHT_BIT_ADDR_OK
+value|0xdf
+block|{
+literal|"EightBitAddrOK"
+block|,
+name|O_EIGHT_BIT_ADDR_OK
+block|,
+name|OI_NONE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_EIGHT_BIT_ADDR_OK */
 block|{
 name|NULL
 block|,
@@ -9342,7 +9574,7 @@ parameter_list|(
 name|str
 parameter_list|)
 define|\
-value|expand(val, exbuf, sizeof exbuf, e);	\ 		newval = sm_pstrdup_x(exbuf);		\ 		if (str != NULL)	\ 			sm_free(str);	\ 		CANONIFY(newval);	\ 		str = newval;		\ 		break
+value|expand(val, exbuf, sizeof(exbuf), e);	\ 		newval = sm_pstrdup_x(exbuf);		\ 		if (str != NULL)	\ 			sm_free(str);	\ 		CANONIFY(newval);	\ 		str = newval;		\ 		break
 end_define
 
 begin_define
@@ -9440,11 +9672,7 @@ if|#
 directive|if
 name|STARTTLS
 operator|||
-operator|(
-name|_FFR_SELECT_SHM
-operator|&&
 name|SM_CONF_SHM
-operator|)
 name|char
 modifier|*
 name|newval
@@ -9457,7 +9685,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* STARTTLS || (_FFR_SELECT_SHM&& SM_CONF_SHM) */
+comment|/* STARTTLS || SM_CONF_SHM */
 name|errno
 operator|=
 literal|0
@@ -12400,9 +12628,6 @@ endif|#
 directive|endif
 comment|/* SM_CONF_SHM */
 break|break;
-if|#
-directive|if
-name|_FFR_SELECT_SHM
 case|case
 name|O_SHMKEYFILE
 case|:
@@ -12436,9 +12661,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* SM_CONF_SHM */
-endif|#
-directive|endif
-comment|/* _FFR_SELECT_SHM */
 if|#
 directive|if
 name|_FFR_MAX_FORWARD_ENTRIES
@@ -12483,7 +12705,9 @@ argument_list|,
 literal|"@,;:\\()[]"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -12494,7 +12718,9 @@ name|val
 argument_list|)
 operator|<
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|10
 condition|)
@@ -12508,7 +12734,9 @@ argument_list|,
 name|val
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -13803,6 +14031,25 @@ argument_list|,
 literal|"Warning: MaxMimeHeaderLength: field length limit set lower than 40\n"
 argument_list|)
 expr_stmt|;
+comment|/* 		**  Headers field values now include leading space, so let's 		**  adjust the values to be "backward compatible". 		*/
+if|if
+condition|(
+name|MaxMimeHeaderLength
+operator|>
+literal|0
+condition|)
+name|MaxMimeHeaderLength
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|MaxMimeFieldLength
+operator|>
+literal|0
+condition|)
+name|MaxMimeFieldLength
+operator|++
+expr_stmt|;
 break|break;
 case|case
 name|O_CONTROLSOCKET
@@ -14774,9 +15021,6 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_SOFT_BOUNCE
 case|case
 name|O_SOFTBOUNCE
 case|:
@@ -14788,9 +15032,6 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_SOFT_BOUNCE */
 case|case
 name|O_REJECTLOGINTERVAL
 case|:
@@ -14860,9 +15101,6 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_HELONAME
 case|case
 name|O_HELONAME
 case|:
@@ -14874,9 +15112,6 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_HELONAME */
 if|#
 directive|if
 name|_FFR_MEMSTAT
@@ -14916,9 +15151,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* _FFR_MEMSTAT */
-if|#
-directive|if
-name|_FFR_MAXNOOPCOMMANDS
 case|case
 name|O_MAXNOOPCOMMANDS
 case|:
@@ -14930,9 +15162,6 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_MAXNOOPCOMMANDS */
 if|#
 directive|if
 name|_FFR_MSG_ACCEPT
@@ -14967,6 +15196,23 @@ break|break;
 endif|#
 directive|endif
 comment|/* _FFR_QUEUE_RUN_PARANOIA */
+if|#
+directive|if
+name|_FFR_EIGHT_BIT_ADDR_OK
+case|case
+name|O_EIGHT_BIT_ADDR_OK
+case|:
+name|EightBitAddrOK
+operator|=
+name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_EIGHT_BIT_ADDR_OK */
 default|default:
 if|if
 condition|(
@@ -15061,8 +15307,10 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
 name|str
+index|[
+literal|0
+index|]
 operator|&
 literal|0377
 operator|)

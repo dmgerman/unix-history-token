@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 8.570 2005/12/09 18:37:27 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 8.574 2006/11/29 00:36:06 ca Exp $  */
 end_comment
 
 begin_comment
@@ -220,6 +220,52 @@ begin_comment
 comment|/* max line length */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|SASL
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAXINPLINE
+value|12288
+end_define
+
+begin_comment
+comment|/* max input line length (for AUTH) */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SASL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXINPLINE
+value|MAXLINE
+end_define
+
+begin_comment
+comment|/* max input line length */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SASL */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -334,12 +380,6 @@ begin_comment
 comment|/* max size of a database key (udb only) */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_MAXKEY
-end_if
-
 begin_define
 define|#
 directive|define
@@ -349,35 +389,6 @@ end_define
 
 begin_comment
 comment|/* max size of a database key */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* _FFR_MAXKEY */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXKEY
-value|(MAXNAME + 1)
-end_define
-
-begin_comment
-comment|/* max size of a database key */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_MAXKEY */
 end_comment
 
 begin_define

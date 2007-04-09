@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001, 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001, 2003, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,9 +12,15 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: macro.c,v 8.88 2003/09/05 23:11:18 ca Exp $"
+literal|"@(#)$Id: macro.c,v 8.102 2006/12/21 23:06:10 ca Exp $"
 argument_list|)
 end_macro
+
+begin_include
+include|#
+directive|include
+file|<sm/sendmail.h>
+end_include
 
 begin_if
 if|#
@@ -66,6 +72,10 @@ end_decl_stmt
 
 begin_comment
 comment|/* codes for long named macros */
+end_comment
+
+begin_comment
+comment|/* see sendmail.h: Special characters in rewriting rules. */
 end_comment
 
 begin_comment
@@ -214,19 +224,16 @@ name|initmacros
 parameter_list|(
 name|e
 parameter_list|)
-specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|metamac
 modifier|*
 name|m
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -363,12 +370,37 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		bufsize -- the size of the buffer. **		e -- envelope in which to work. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  EXPAND/DOEXPAND -- macro expand a string using $x escapes. ** **	After expansion, the expansion will be in external form (that is, **	there will be no sendmail metacharacters and METAQUOTEs will have **	been stripped out). ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		bufsize -- the size of the buffer. **		explevel -- the depth of expansion (doexpand only) **		e -- envelope in which to work. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
-begin_function
+begin_decl_stmt
+specifier|static
 name|void
-name|expand
+name|doexpand
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|size_t
+operator|,
+name|int
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|doexpand
 parameter_list|(
 name|s
 parameter_list|,
@@ -376,14 +408,14 @@ name|buf
 parameter_list|,
 name|bufsize
 parameter_list|,
+name|explevel
+parameter_list|,
 name|e
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|buf
@@ -391,18 +423,18 @@ decl_stmt|;
 name|size_t
 name|bufsize
 decl_stmt|;
-specifier|register
+name|int
+name|explevel
+decl_stmt|;
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|xp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|q
@@ -426,17 +458,15 @@ name|int
 name|iflev
 decl_stmt|;
 comment|/* if nesting level */
+name|bool
+name|quotenext
+decl_stmt|;
+comment|/* quote the following character */
 name|char
 name|xbuf
 index|[
 name|MACBUFSIZE
 index|]
-decl_stmt|;
-specifier|static
-name|int
-name|explevel
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -483,6 +513,10 @@ name|iflev
 operator|=
 literal|0
 expr_stmt|;
+name|quotenext
+operator|=
+name|false
+expr_stmt|;
 if|if
 condition|(
 name|s
@@ -520,12 +554,25 @@ name|c
 operator|=
 operator|*
 name|s
+operator|&
+literal|0377
 expr_stmt|;
+if|if
+condition|(
+name|quotenext
+condition|)
+block|{
+name|quotenext
+operator|=
+name|false
+expr_stmt|;
+goto|goto
+name|simpleinterpolate
+goto|;
+block|}
 switch|switch
 condition|(
 name|c
-operator|&
-literal|0377
 condition|)
 block|{
 case|case
@@ -540,6 +587,8 @@ operator|=
 operator|*
 operator|++
 name|s
+operator|&
+literal|0377
 expr_stmt|;
 if|if
 condition|(
@@ -681,8 +730,19 @@ name|NULL
 condition|)
 continue|continue;
 break|break;
+case|case
+name|METAQUOTE
+case|:
+comment|/* next octet completely quoted */
+name|quotenext
+operator|=
+name|true
+expr_stmt|;
+break|break;
 block|}
 comment|/* 		**  Interpolate q or output one character 		*/
+name|simpleinterpolate
+label|:
 if|if
 condition|(
 name|skipping
@@ -693,7 +753,9 @@ operator|&
 name|xbuf
 index|[
 sizeof|sizeof
+argument_list|(
 name|xbuf
+argument_list|)
 operator|-
 literal|1
 index|]
@@ -714,6 +776,11 @@ expr_stmt|;
 else|else
 block|{
 comment|/* copy to end of q or max space remaining in buf */
+name|bool
+name|hiderecurse
+init|=
+name|false
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -732,7 +799,9 @@ operator|&
 name|xbuf
 index|[
 sizeof|sizeof
+argument_list|(
 name|xbuf
+argument_list|)
 operator|-
 literal|1
 index|]
@@ -741,6 +810,9 @@ block|{
 comment|/* check for any sendmail metacharacters */
 if|if
 condition|(
+operator|!
+name|hiderecurse
+operator|&&
 operator|(
 name|c
 operator|&
@@ -759,6 +831,17 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
+comment|/* give quoted characters a free ride */
+name|hiderecurse
+operator|=
+operator|(
+name|c
+operator|&
+literal|0377
+operator|)
+operator|==
+name|METAQUOTE
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -773,13 +856,15 @@ name|tTd
 argument_list|(
 literal|35
 argument_list|,
-literal|24
+literal|28
 argument_list|)
 condition|)
 block|{
 name|sm_dprintf
 argument_list|(
-literal|"expand ==> "
+literal|"expand(%d) ==> "
+argument_list|,
+name|explevel
 argument_list|)
 expr_stmt|;
 name|xputs
@@ -809,10 +894,7 @@ operator|<
 name|MaxMacroRecursion
 condition|)
 block|{
-name|explevel
-operator|++
-expr_stmt|;
-name|expand
+name|doexpand
 argument_list|(
 name|xbuf
 argument_list|,
@@ -820,11 +902,12 @@ name|buf
 argument_list|,
 name|bufsize
 argument_list|,
+name|explevel
+operator|+
+literal|1
+argument_list|,
 name|e
 argument_list|)
-expr_stmt|;
-name|explevel
-operator|--
 expr_stmt|;
 return|return;
 block|}
@@ -837,6 +920,27 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* copy results out */
+if|if
+condition|(
+name|explevel
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|sm_strlcpy
+argument_list|(
+name|buf
+argument_list|,
+name|xbuf
+argument_list|,
+name|bufsize
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+comment|/* leave in internal form */
 name|i
 operator|=
 name|xp
@@ -870,6 +974,80 @@ name|i
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|35
+argument_list|,
+literal|24
+argument_list|)
+condition|)
+block|{
+name|sm_dprintf
+argument_list|(
+literal|"expand ==> "
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|sm_dprintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|expand
+parameter_list|(
+name|s
+parameter_list|,
+name|buf
+parameter_list|,
+name|bufsize
+parameter_list|,
+name|e
+parameter_list|)
+name|char
+modifier|*
+name|s
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+name|size_t
+name|bufsize
+decl_stmt|;
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+block|{
+name|doexpand
+argument_list|(
+name|s
+argument_list|,
+name|buf
+argument_list|,
+name|bufsize
+argument_list|,
+literal|0
+argument_list|,
+name|e
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1322,7 +1500,6 @@ parameter_list|)
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|ENVELOPE
 modifier|*
 name|e
@@ -1348,7 +1525,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1381,7 +1557,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1432,7 +1607,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MACNAME -- return the name of a macro given its internal id ** **	Parameter: **		n -- the id of the macro ** **	Returns: **		The name of n. ** **	Side Effects: **		none. */
+comment|/* **  MACNAME -- return the name of a macro given its internal id ** **	Parameter: **		n -- the id of the macro ** **	Returns: **		The name of n. ** **	Side Effects: **		none. ** **	WARNING: **		Not thread-safe. */
 end_comment
 
 begin_function
@@ -1455,19 +1630,34 @@ index|]
 decl_stmt|;
 name|n
 operator|=
-name|bitidx
-argument_list|(
+operator|(
+name|int
+operator|)
+operator|(
+name|unsigned
+name|char
+operator|)
 name|n
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bitset
-argument_list|(
-literal|0200
-argument_list|,
 name|n
-argument_list|)
+operator|>
+name|MAXMACROID
+condition|)
+return|return
+literal|"***OUT OF RANGE MACRO***"
+return|;
+comment|/* if not ASCII printable, look up the name */
+if|if
+condition|(
+name|n
+operator|<=
+literal|0x20
+operator|||
+name|n
+operator|>
+literal|0x7f
 condition|)
 block|{
 name|char
@@ -1492,6 +1682,7 @@ return|return
 literal|"***UNDEFINED MACRO***"
 return|;
 block|}
+comment|/* if in the ASCII graphic range, just return the id directly */
 name|mbuf
 index|[
 literal|0
@@ -1513,7 +1704,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MACID_PARSE -- return id of macro identified by its name ** **	Parameters: **		p -- pointer to name string -- either a single **			character or {name}. **		ep -- filled in with the pointer to the byte **			after the name. ** **	Returns: **		0 -- An error was detected. **		1..255 -- The internal id code for this macro. ** **	Side Effects: **		If this is a new macro name, a new id is allocated. **		On error, syserr is called. */
+comment|/* **  MACID_PARSE -- return id of macro identified by its name ** **	Parameters: **		p -- pointer to name string -- either a single **			character or {name}. **		ep -- filled in with the pointer to the byte **			after the name. ** **	Returns: **		0 -- An error was detected. **		1..MAXMACROID -- The internal id code for this macro. ** **	Side Effects: **		If this is a new macro name, a new id is allocated. **		On error, syserr is called. */
 end_comment
 
 begin_function
@@ -1524,7 +1715,6 @@ name|p
 parameter_list|,
 name|ep
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1538,7 +1728,6 @@ block|{
 name|int
 name|mid
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|bp
@@ -1669,17 +1858,42 @@ argument_list|,
 literal|14
 argument_list|)
 condition|)
-name|sm_dprintf
-argument_list|(
-literal|"%c\n"
-argument_list|,
-name|bitidx
-argument_list|(
+block|{
+name|char
+name|buf
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
 operator|*
 name|p
-argument_list|)
+expr_stmt|;
+name|buf
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|xputs
+argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
+name|sm_dprintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|bitidx
 argument_list|(
@@ -1711,7 +1925,9 @@ operator|&
 name|mbuf
 index|[
 sizeof|sizeof
+argument_list|(
 name|mbuf
+argument_list|)
 operator|-
 literal|1
 index|]
@@ -1802,7 +2018,9 @@ name|int
 call|)
 argument_list|(
 sizeof|sizeof
+argument_list|(
 name|mbuf
+argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -1837,7 +2055,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|register
 name|STAB
 modifier|*
 name|s
@@ -2006,7 +2223,6 @@ name|int
 name|cl
 decl_stmt|;
 block|{
-specifier|register
 name|STAB
 modifier|*
 name|s

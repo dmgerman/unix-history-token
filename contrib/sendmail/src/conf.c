@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,9 +12,15 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.1082 2006/03/22 22:49:33 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.1128 2007/04/03 21:32:29 ca Exp $"
 argument_list|)
 end_macro
+
+begin_include
+include|#
+directive|include
+file|<sm/sendmail.h>
+end_include
 
 begin_include
 include|#
@@ -42,6 +48,18 @@ end_endif
 begin_comment
 comment|/* NEWDB */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<daemon.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"map.h"
+end_include
 
 begin_ifdef
 ifdef|#
@@ -730,18 +748,12 @@ block|,
 name|PRIV_GOAWAY
 block|}
 block|,
-if|#
-directive|if
-name|_FFR_PRIV_NOACTUALRECIPIENT
 block|{
 literal|"noactualrecipient"
 block|,
 name|PRIV_NOACTUALRECIPIENT
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* _FFR_PRIV_NOACTUALRECIPIENT */
 block|{
 name|NULL
 block|,
@@ -1706,7 +1718,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ConnectOnlyTo
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|DataFileBufferSize
@@ -1842,7 +1856,9 @@ operator|->
 name|pw_name
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|defuserbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1899,7 +1915,9 @@ argument_list|,
 literal|"mqueue, P=/var/spool/mqueue"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|makequeue
@@ -1938,7 +1956,9 @@ argument_list|,
 literal|"prog, P=/bin/sh, F=lsouDq9, T=X-Unix/X-Unix/X-Unix, A=sh -c \201u"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|makemailer
@@ -1956,7 +1976,9 @@ argument_list|,
 literal|"*file*, P=[FILE], F=lsDFMPEouq9, T=X-Unix/X-Unix/X-Unix, A=FILE \201u"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|makemailer
@@ -1974,7 +1996,9 @@ argument_list|,
 literal|"*include*, P=/dev/null, F=su, A=INCLUDE \201u"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|makemailer
@@ -2779,6 +2803,32 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SOCKETMAP */
+if|#
+directive|if
+name|_FFR_DPRINTF_MAP
+comment|/* dprintf map -- logs information to syslog */
+name|MAPDEF
+argument_list|(
+literal|"dprintf"
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|dprintf_map_parseargs
+argument_list|,
+name|null_map_open
+argument_list|,
+name|null_map_close
+argument_list|,
+name|dprintf_map_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_DPRINTF_MAP */
 if|if
 condition|(
 name|tTd
@@ -2856,43 +2906,6 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-comment|/* 	**  Set up default hosts maps. 	*/
-if|#
-directive|if
-literal|0
-block|nmaps = switch_map_find("hosts", maptype, mapreturn); 	for (i = 0; i< nmaps; i++) 	{ 		if (strcmp(maptype[i], "files") == 0&& 		    stab("hosts.files", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "hosts.files text -k 0 -v 1 /etc/hosts", 				sizeof buf); 			(void) makemapentry(buf); 		}
-if|#
-directive|if
-name|NAMED_BIND
-block|else if (strcmp(maptype[i], "dns") == 0&& 			 stab("hosts.dns", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "hosts.dns dns A", sizeof buf); 			(void) makemapentry(buf); 		}
-endif|#
-directive|endif
-comment|/* NAMED_BIND */
-if|#
-directive|if
-name|NISPLUS
-block|else if (strcmp(maptype[i], "nisplus") == 0&& 			 stab("hosts.nisplus", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "hosts.nisplus nisplus -k name -v address hosts.org_dir", 				sizeof buf); 			(void) makemapentry(buf); 		}
-endif|#
-directive|endif
-comment|/* NISPLUS */
-if|#
-directive|if
-name|NIS
-block|else if (strcmp(maptype[i], "nis") == 0&& 			 stab("hosts.nis", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "hosts.nis nis -k 0 -v 1 hosts.byname", 				sizeof buf); 			(void) makemapentry(buf); 		}
-endif|#
-directive|endif
-comment|/* NIS */
-if|#
-directive|if
-name|NETINFO
-block|else if (strcmp(maptype[i], "netinfo") == 0&& 			 stab("hosts.netinfo", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "hosts.netinfo netinfo -v name /machines", 				sizeof buf); 			(void) makemapentry(buf); 		}
-endif|#
-directive|endif
-comment|/* NETINFO */
-block|}
-endif|#
-directive|endif
-comment|/* 0 */
 comment|/* 	**  Make sure we have a host map. 	*/
 if|if
 condition|(
@@ -2919,7 +2932,9 @@ argument_list|,
 literal|"host host"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|#
@@ -2941,7 +2956,9 @@ argument_list|,
 literal|" -a. -D"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3018,7 +3035,9 @@ argument_list|,
 literal|"aliases.files null"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3070,7 +3089,9 @@ argument_list|,
 literal|"aliases.nisplus nisplus -kalias -vexpansion mail_aliases.org_dir"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3125,7 +3146,9 @@ argument_list|,
 literal|"aliases.nis nis mail.aliases"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3180,7 +3203,9 @@ argument_list|,
 literal|"aliases.netinfo netinfo -z, /aliases"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3235,7 +3260,9 @@ argument_list|,
 literal|"aliases.hesiod hesiod aliases"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3250,6 +3277,74 @@ block|}
 endif|#
 directive|endif
 comment|/* HESIOD */
+if|#
+directive|if
+name|LDAPMAP
+operator|&&
+name|defined
+argument_list|(
+name|SUN_EXTENSIONS
+argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|SUN_SIMPLIFIED_LDAP
+argument_list|)
+operator|&&
+name|HASLDAPGETALIASBYNAME
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|maptype
+index|[
+name|i
+index|]
+argument_list|,
+literal|"ldap"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|stab
+argument_list|(
+literal|"aliases.ldap"
+argument_list|,
+name|ST_MAP
+argument_list|,
+name|ST_FIND
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|buf
+argument_list|,
+literal|"aliases.ldap ldap -b . -h localhost -k mail=%0 -v mailgroup"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|makemapentry
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* LDAPMAP&& defined(SUN_EXTENSIONS)&& ... */
 block|}
 if|if
 condition|(
@@ -3275,7 +3370,9 @@ argument_list|,
 literal|"aliases switch aliases"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3287,37 +3384,6 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* "user" map class is a better choice */
-comment|/* 	**  Set up default users maps. 	*/
-block|nmaps = switch_map_find("passwd", maptype, mapreturn); 	for (i = 0; i< nmaps; i++) 	{ 		if (strcmp(maptype[i], "files") == 0&& 		    stab("users.files", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "users.files text -m -z: -k0 -v6 /etc/passwd", 				sizeof buf); 			(void) makemapentry(buf); 		}
-if|#
-directive|if
-name|NISPLUS
-block|else if (strcmp(maptype[i], "nisplus") == 0&& 		    stab("users.nisplus", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "users.nisplus nisplus -m -kname -vhome passwd.org_dir", 				sizeof buf); 			(void) makemapentry(buf); 		}
-endif|#
-directive|endif
-comment|/* NISPLUS */
-if|#
-directive|if
-name|NIS
-block|else if (strcmp(maptype[i], "nis") == 0&& 		    stab("users.nis", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "users.nis nis -m passwd.byname", 				sizeof buf); 			(void) makemapentry(buf); 		}
-endif|#
-directive|endif
-comment|/* NIS */
-if|#
-directive|if
-name|HESIOD
-block|else if (strcmp(maptype[i], "hesiod") == 0&& 			 stab("users.hesiod", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "users.hesiod hesiod", sizeof buf); 			(void) makemapentry(buf); 		}
-endif|#
-directive|endif
-comment|/* HESIOD */
-block|} 	if (stab("users", ST_MAP, ST_FIND) == NULL) 	{ 		(void) sm_strlcpy(buf, "users switch -m passwd", sizeof buf); 		(void) makemapentry(buf); 	}
-endif|#
-directive|endif
-comment|/* 0 */
 block|}
 end_function
 
@@ -4065,7 +4131,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -5048,6 +5116,70 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SUN_EXTENSIONS
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|init_md_sun
+parameter_list|()
+block|{
+name|struct
+name|stat
+name|sbuf
+decl_stmt|;
+comment|/* Check for large file descriptor */
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|,
+operator|&
+name|sbuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EOVERFLOW
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"stdin"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_NOINPUT
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SUN_EXTENSIONS */
+end_comment
+
 begin_comment
 comment|/* **  INIT_MD -- do machine dependent initializations ** **	Systems that have global modes that should be set should do **	them here rather than in main. */
 end_comment
@@ -5144,9 +5276,18 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* _CONVEX_SOURCE */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__QNX__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__QNXNTO__
+argument_list|)
 comment|/* 	**  Due to QNX's network distributed nature, you can target a tcpip 	**  stack on a different node in the qnx network; this patch lets 	**  this feature work.  The __sock_locate() must be done before the 	**  environment is clear. 	*/
 name|__sock_locate
 argument_list|()
@@ -5888,12 +6029,14 @@ argument_list|,
 name|LA_AVENRUN
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|Nl
 index|[
 name|X_AVENRUN
 index|]
 operator|.
 name|n_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|Nl
@@ -5931,10 +6074,12 @@ argument_list|,
 literal|1
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|Nl
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -8479,7 +8624,9 @@ operator|&
 name|avenrun
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|avenrun
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -9054,7 +9201,9 @@ argument_list|(
 name|labuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|labuf
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -9206,14 +9355,6 @@ return|return
 name|false
 return|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* this code is reported to cause oscillation around RefuseLA */
-block|if (CurrentLA>= RefuseLA&& QueueLA< RefuseLA) 	{ 		if (tTd(3, 30)) 			sm_dprintf("TRUE (CurrentLA>= RefuseLA)\n"); 		return true; 	}
-endif|#
-directive|endif
-comment|/* 0 */
 name|rval
 operator|=
 name|pri
@@ -9257,31 +9398,25 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  REFUSECONNECTIONS -- decide if connections should be refused ** **	Parameters: **		name -- daemon name (for error messages only) **		e -- the current envelope. **		d -- number of daemon **		active -- was this daemon actually active? ** **	Returns: **		true if incoming SMTP connections should be refused **			(for now). **		false if we should accept new work. ** **	Side Effects: **		Sets process title when it is rejecting connections. */
+comment|/* **  REFUSECONNECTIONS -- decide if connections should be refused ** **	Parameters: **		e -- the current envelope. **		dn -- number of daemon. **		active -- was this daemon actually active? ** **	Returns: **		true if incoming SMTP connections should be refused **			(for now). **		false if we should accept new work. ** **	Side Effects: **		Sets process title when it is rejecting connections. */
 end_comment
 
 begin_function
 name|bool
 name|refuseconnections
 parameter_list|(
-name|name
-parameter_list|,
 name|e
 parameter_list|,
-name|d
+name|dn
 parameter_list|,
 name|active
 parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
 name|int
-name|d
+name|dn
 decl_stmt|;
 name|bool
 name|active
@@ -9315,6 +9450,9 @@ index|[
 name|MAXDAEMONS
 index|]
 decl_stmt|;
+name|int
+name|limit
+decl_stmt|;
 if|#
 directive|if
 name|_FFR_MEMSTAT
@@ -9341,14 +9479,14 @@ directive|endif
 comment|/* XLA */
 name|SM_ASSERT
 argument_list|(
-name|d
+name|dn
 operator|>=
 literal|0
 argument_list|)
 expr_stmt|;
 name|SM_ASSERT
 argument_list|(
-name|d
+name|dn
 operator|<
 name|MAXDAEMONS
 argument_list|)
@@ -9379,20 +9517,20 @@ name|now
 operator|!=
 name|lastconn
 index|[
-name|d
+name|dn
 index|]
 condition|)
 block|{
 name|lastconn
 index|[
-name|d
+name|dn
 index|]
 operator|=
 name|now
 expr_stmt|;
 name|conncnt
 index|[
-name|d
+name|dn
 index|]
 operator|=
 literal|1
@@ -9403,7 +9541,7 @@ if|if
 condition|(
 name|conncnt
 index|[
-name|d
+name|dn
 index|]
 operator|++
 operator|>
@@ -9423,7 +9561,12 @@ name|e
 argument_list|,
 name|D_MSG_CRT
 argument_list|,
-name|name
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_name
 argument_list|,
 name|ConnRateThrottle
 argument_list|)
@@ -9442,7 +9585,12 @@ name|NOQID
 argument_list|,
 name|D_MSG_CRT
 argument_list|,
-name|name
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_name
 argument_list|,
 name|ConnRateThrottle
 argument_list|)
@@ -9464,12 +9612,12 @@ name|now
 operator|!=
 name|lastconn
 index|[
-name|d
+name|dn
 index|]
 condition|)
 name|conncnt
 index|[
-name|d
+name|dn
 index|]
 operator|=
 literal|0
@@ -9511,7 +9659,12 @@ name|e
 argument_list|,
 name|R_MSG_LM
 argument_list|,
-name|name
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_name
 argument_list|,
 name|memfree
 argument_list|)
@@ -9530,7 +9683,12 @@ name|NOQID
 argument_list|,
 name|R_MSG_LM
 argument_list|,
-name|name
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_name
 argument_list|,
 name|memfree
 argument_list|)
@@ -9545,15 +9703,37 @@ comment|/* _FFR_MEMSTAT */
 name|sm_getla
 argument_list|()
 expr_stmt|;
+name|limit
+operator|=
+operator|(
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_refuseLA
+operator|!=
+name|DPO_NOTSET
+operator|)
+condition|?
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_refuseLA
+else|:
+name|RefuseLA
+expr_stmt|;
 if|if
 condition|(
-name|RefuseLA
+name|limit
 operator|>
 literal|0
 operator|&&
 name|CurrentLA
 operator|>=
-name|RefuseLA
+name|limit
 condition|)
 block|{
 name|time_t
@@ -9575,7 +9755,12 @@ name|e
 argument_list|,
 name|R_MSG_LA
 argument_list|,
-name|name
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_name
 argument_list|,
 name|CurrentLA
 argument_list|)
@@ -9594,7 +9779,12 @@ name|NOQID
 argument_list|,
 name|R_MSG_LA
 argument_list|,
-name|name
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_name
 argument_list|,
 name|CurrentLA
 argument_list|)
@@ -9608,7 +9798,7 @@ if|if
 condition|(
 name|firstrejtime
 index|[
-name|d
+name|dn
 index|]
 operator|==
 literal|0
@@ -9616,14 +9806,14 @@ condition|)
 block|{
 name|firstrejtime
 index|[
-name|d
+name|dn
 index|]
 operator|=
 name|now
 expr_stmt|;
 name|nextlogtime
 index|[
-name|d
+name|dn
 index|]
 operator|=
 name|now
@@ -9636,7 +9826,7 @@ if|if
 condition|(
 name|nextlogtime
 index|[
-name|d
+name|dn
 index|]
 operator|<
 name|now
@@ -9650,7 +9840,12 @@ name|NOQID
 argument_list|,
 name|R2_MSG_LA
 argument_list|,
-name|name
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_name
 argument_list|,
 name|pintvl
 argument_list|(
@@ -9658,7 +9853,7 @@ name|now
 operator|-
 name|firstrejtime
 index|[
-name|d
+name|dn
 index|]
 argument_list|,
 name|true
@@ -9667,7 +9862,7 @@ argument_list|)
 expr_stmt|;
 name|nextlogtime
 index|[
-name|d
+name|dn
 index|]
 operator|=
 name|now
@@ -9682,20 +9877,42 @@ block|}
 else|else
 name|firstrejtime
 index|[
-name|d
+name|dn
 index|]
 operator|=
 literal|0
 expr_stmt|;
+name|limit
+operator|=
+operator|(
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_delayLA
+operator|!=
+name|DPO_NOTSET
+operator|)
+condition|?
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_delayLA
+else|:
+name|DelayLA
+expr_stmt|;
 if|if
 condition|(
-name|DelayLA
+name|limit
 operator|>
 literal|0
 operator|&&
 name|CurrentLA
 operator|>=
-name|DelayLA
+name|limit
 condition|)
 block|{
 name|time_t
@@ -9728,9 +9945,14 @@ name|e
 argument_list|,
 name|D_MSG_LA
 argument_list|,
-name|name
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_name
 argument_list|,
-name|DelayLA
+name|limit
 argument_list|)
 expr_stmt|;
 if|if
@@ -9757,11 +9979,16 @@ name|NOQID
 argument_list|,
 name|D_MSG_LA
 argument_list|,
-name|name
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_name
 argument_list|,
 name|CurrentLA
 argument_list|,
-name|DelayLA
+name|limit
 argument_list|)
 expr_stmt|;
 name|log_delay
@@ -9780,15 +10007,37 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|limit
+operator|=
+operator|(
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_maxchildren
+operator|!=
+name|DPO_NOTSET
+operator|)
+condition|?
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_maxchildren
+else|:
+name|MaxChildren
+expr_stmt|;
 if|if
 condition|(
-name|MaxChildren
+name|limit
 operator|>
 literal|0
 operator|&&
 name|CurChildren
 operator|>=
-name|MaxChildren
+name|limit
 condition|)
 block|{
 name|proc_list_probe
@@ -9798,7 +10047,7 @@ if|if
 condition|(
 name|CurChildren
 operator|>=
-name|MaxChildren
+name|limit
 condition|)
 block|{
 define|#
@@ -9813,11 +10062,16 @@ name|e
 argument_list|,
 name|R_MSG_CHILD
 argument_list|,
-name|name
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_name
 argument_list|,
 name|CurChildren
 argument_list|,
-name|MaxChildren
+name|limit
 argument_list|)
 expr_stmt|;
 if|if
@@ -9834,11 +10088,16 @@ name|NOQID
 argument_list|,
 name|R_MSG_CHILD
 argument_list|,
-name|name
+name|Daemons
+index|[
+name|dn
+index|]
+operator|.
+name|d_name
 argument_list|,
 name|CurChildren
 argument_list|,
-name|MaxChildren
+name|limit
 argument_list|)
 expr_stmt|;
 return|return
@@ -11346,7 +11605,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|fmt
 argument_list|,
@@ -11389,7 +11650,9 @@ argument_list|,
 name|prefix
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|prefix
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -12039,7 +12302,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -13212,7 +13477,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -13468,6 +13735,7 @@ name|dir
 parameter_list|,
 name|bsize
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|dir
@@ -13638,7 +13906,9 @@ operator|&
 name|fs
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|fs
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -14231,7 +14501,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|lfd
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -15205,25 +15477,12 @@ block|{
 ifdef|#
 directive|ifdef
 name|__QNX__
-name|char
-modifier|*
-name|p
-decl_stmt|;
 comment|/* Makes sure the SOCK environment variable remains */
-if|if
-condition|(
-name|p
-operator|=
-name|getextenv
-argument_list|(
-literal|"SOCK"
-argument_list|)
-condition|)
 name|sm_setuserenv
 argument_list|(
 literal|"SOCK"
 argument_list|,
-name|p
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#
@@ -15468,6 +15727,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NOQID
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 name|EX_OK
@@ -15520,7 +15781,9 @@ argument_list|,
 name|MsgBuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|reject
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -15534,7 +15797,9 @@ argument_list|,
 literal|"Access denied"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|reject
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -16747,7 +17012,9 @@ name|name
 argument_list|)
 operator|>
 sizeof|sizeof
+argument_list|(
 name|hbuf
+argument_list|)
 operator|-
 literal|1
 condition|)
@@ -16770,7 +17037,9 @@ argument_list|,
 name|name
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -17018,7 +17287,9 @@ argument_list|,
 name|buf6
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf6
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|#
@@ -17838,7 +18109,9 @@ argument_list|(
 name|hnb
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hnb
+argument_list|)
 argument_list|,
 literal|"[%s]"
 argument_list|,
@@ -17848,7 +18121,9 @@ name|h_name
 argument_list|)
 operator|<
 sizeof|sizeof
+argument_list|(
 name|hnb
+argument_list|)
 operator|&&
 operator|!
 name|wordinclass
@@ -17957,7 +18232,9 @@ argument_list|(
 name|hnb
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hnb
+argument_list|)
 argument_list|,
 literal|"[%s]"
 argument_list|,
@@ -17966,7 +18243,9 @@ name|ha
 argument_list|)
 operator|<
 sizeof|sizeof
+argument_list|(
 name|hnb
+argument_list|)
 operator|&&
 operator|!
 name|wordinclass
@@ -18602,8 +18881,10 @@ name|i
 operator|)
 operator|<
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|ifr
+argument_list|)
 condition|)
 break|break;
 ifdef|#
@@ -18618,16 +18899,20 @@ operator|.
 name|sa_len
 operator|>
 sizeof|sizeof
+argument_list|(
 name|ifr
 operator|->
 name|lifr_addr
+argument_list|)
 condition|)
 name|i
 operator|+=
 sizeof|sizeof
+argument_list|(
 name|ifr
 operator|->
 name|lifr_name
+argument_list|)
 operator|+
 name|sa
 operator|->
@@ -18646,9 +18931,11 @@ comment|/* fix for IPv6  size differences */
 name|i
 operator|+=
 sizeof|sizeof
+argument_list|(
 name|ifr
 operator|->
 name|ifr_name
+argument_list|)
 operator|+
 name|max
 argument_list|(
@@ -18672,8 +18959,10 @@ comment|/* DEC */
 name|i
 operator|+=
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|ifr
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -18977,7 +19266,9 @@ argument_list|,
 name|buf6
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf6
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|message
@@ -19008,7 +19299,9 @@ argument_list|,
 name|buf6
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf6
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -19025,7 +19318,9 @@ argument_list|(
 name|ip_addr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ip_addr
+argument_list|)
 argument_list|,
 literal|"[%.*s]"
 argument_list|,
@@ -19033,7 +19328,9 @@ operator|(
 name|int
 operator|)
 sizeof|sizeof
+argument_list|(
 name|ip_addr
+argument_list|)
 operator|-
 literal|3
 argument_list|,
@@ -19090,7 +19387,9 @@ argument_list|(
 name|ip_addr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ip_addr
+argument_list|)
 argument_list|,
 literal|"[%.*s]"
 argument_list|,
@@ -19098,7 +19397,9 @@ operator|(
 name|int
 operator|)
 sizeof|sizeof
+argument_list|(
 name|ip_addr
+argument_list|)
 operator|-
 literal|3
 argument_list|,
@@ -19543,8 +19844,10 @@ name|i
 operator|)
 operator|<
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|ifr
+argument_list|)
 condition|)
 break|break;
 ifdef|#
@@ -19559,16 +19862,20 @@ operator|.
 name|sa_len
 operator|>
 sizeof|sizeof
+argument_list|(
 name|ifr
 operator|->
 name|ifr_addr
+argument_list|)
 condition|)
 name|i
 operator|+=
 sizeof|sizeof
+argument_list|(
 name|ifr
 operator|->
 name|ifr_name
+argument_list|)
 operator|+
 name|sa
 operator|->
@@ -19583,8 +19890,10 @@ comment|/* BSD4_4_SOCKADDR */
 name|i
 operator|+=
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|ifr
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -19798,7 +20107,9 @@ argument_list|(
 name|ip_addr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ip_addr
+argument_list|)
 argument_list|,
 literal|"[%.*s]"
 argument_list|,
@@ -19806,7 +20117,9 @@ operator|(
 name|int
 operator|)
 sizeof|sizeof
+argument_list|(
 name|ip_addr
+argument_list|)
 operator|-
 literal|3
 argument_list|,
@@ -19952,7 +20265,9 @@ argument_list|,
 name|buf6
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf6
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|message
@@ -19985,7 +20300,9 @@ argument_list|,
 name|buf6
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf6
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -20002,7 +20319,9 @@ argument_list|(
 name|ip_addr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ip_addr
+argument_list|)
 argument_list|,
 literal|"[%.*s]"
 argument_list|,
@@ -20010,7 +20329,9 @@ operator|(
 name|int
 operator|)
 sizeof|sizeof
+argument_list|(
 name|ip_addr
+argument_list|)
 operator|-
 literal|3
 argument_list|,
@@ -20238,7 +20559,9 @@ operator|(
 name|size_t
 operator|)
 sizeof|sizeof
+argument_list|(
 name|nproc
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -20775,7 +21098,9 @@ expr_stmt|;
 name|bufsize
 operator|=
 sizeof|sizeof
+argument_list|(
 name|buf0
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -20892,11 +21217,50 @@ name|id
 operator|==
 literal|'\0'
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|89
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|newstring
+argument_list|)
+expr_stmt|;
+else|else
 name|syslog
 argument_list|(
 name|level
 argument_list|,
 literal|"%s"
+argument_list|,
+name|newstring
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|89
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"%s: %s\n"
+argument_list|,
+name|id
 argument_list|,
 name|newstring
 argument_list|)
@@ -20913,6 +21277,7 @@ argument_list|,
 name|newstring
 argument_list|)
 expr_stmt|;
+block|}
 else|#
 directive|else
 comment|/* LOG */
@@ -21092,6 +21457,28 @@ expr_stmt|;
 if|#
 directive|if
 name|LOG
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|89
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"%s[%d]: %s ...\n"
+argument_list|,
+name|id
+argument_list|,
+name|seq
+operator|++
+argument_list|,
+name|begin
+argument_list|)
+expr_stmt|;
+else|else
 name|syslog
 argument_list|(
 name|level
@@ -21147,9 +21534,29 @@ name|seq
 operator|>=
 literal|999
 condition|)
+block|{
 if|#
 directive|if
 name|LOG
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|89
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"%s[%d]: log terminated, too many parts\n"
+argument_list|,
+name|id
+argument_list|,
+name|seq
+argument_list|)
+expr_stmt|;
+else|else
 name|syslog
 argument_list|(
 name|level
@@ -21183,6 +21590,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LOG */
+block|}
 elseif|else
 if|if
 condition|(
@@ -21191,9 +21599,31 @@ name|begin
 operator|!=
 literal|'\0'
 condition|)
+block|{
 if|#
 directive|if
 name|LOG
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|89
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"%s[%d]: %s\n"
+argument_list|,
+name|id
+argument_list|,
+name|seq
+argument_list|,
+name|begin
+argument_list|)
+expr_stmt|;
+else|else
 name|syslog
 argument_list|(
 name|level
@@ -21231,6 +21661,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LOG */
+block|}
 if|if
 condition|(
 name|buf
@@ -21355,7 +21786,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|msg
 argument_list|,
@@ -22131,6 +22564,14 @@ directive|endif
 comment|/* SCANF */
 if|#
 directive|if
+name|SM_LDAP_ERROR_ON_MISSING_ARGS
+literal|"SM_LDAP_ERROR_ON_MISSING_ARGS"
+block|,
+endif|#
+directive|endif
+comment|/* SM_LDAP_ERROR_ON_MISSING_ARGS */
+if|#
+directive|if
 name|SMTPDEBUG
 literal|"SMTPDEBUG"
 block|,
@@ -22365,6 +22806,14 @@ directive|endif
 comment|/* HASINITGROUPS */
 if|#
 directive|if
+name|HASLDAPGETALIASBYNAME
+literal|"HASLDAPGETALIASBYNAME"
+block|,
+endif|#
+directive|endif
+comment|/* HASLDAPGETALIASBYNAME */
+if|#
+directive|if
 name|HASLSTAT
 literal|"HASLSTAT"
 block|,
@@ -22560,6 +23009,14 @@ block|,
 endif|#
 directive|endif
 comment|/* O_EXLOCK&& HASFLOCK&& !BOGUS_O_EXCL */
+if|#
+directive|if
+name|MILTER_NO_NAGLE
+literal|"MILTER_NO_NAGLE "
+block|,
+endif|#
+directive|endif
+comment|/* MILTER_NO_NAGLE */
 if|#
 directive|if
 name|NEEDFSYNC
@@ -22815,15 +23272,6 @@ directive|endif
 comment|/* _FFR_BESTMX_BETTER_TRUNCATION */
 if|#
 directive|if
-name|_FFR_BLOCK_PROXIES
-comment|/* 	**  Try to deal with open HTTP proxies that are used to send spam 	**  by recognizing some commands from them. 	*/
-literal|"_FFR_BLOCK_PROXIES"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_BLOCK_PROXIES */
-if|#
-directive|if
 name|_FFR_CATCH_BROKEN_MTAS
 comment|/* Deal with MTAs that send a reply during the DATA phase. */
 literal|"_FFR_CATCH_BROKEN_MTAS"
@@ -22831,15 +23279,6 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_CATCH_BROKEN_MTAS */
-if|#
-directive|if
-name|_FFR_CHECK_EOM
-comment|/* Enable check_eom ruleset */
-literal|"_FFR_CHECK_EOM"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_CHECK_EOM */
 if|#
 directive|if
 name|_FFR_CHK_QUEUE
@@ -22858,15 +23297,6 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_CLIENT_SIZE */
-if|#
-directive|if
-name|_FFR_CONTROL_MSTAT
-comment|/* Extended daemon status. */
-literal|"_FFR_CONTROL_MSTAT"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_CONTROL_MSTAT */
 if|#
 directive|if
 name|_FFR_CRLPATH
@@ -22915,15 +23345,6 @@ directive|endif
 comment|/* _FFR_DIGUNIX_SAFECHOWN */
 if|#
 directive|if
-name|_FFR_DM_PER_DAEMON
-comment|/* DeliveryMode per DaemonPortOptions: 'D' */
-literal|"_FFR_DM_PER_DAEMON"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_DM_PER_DAEMON */
-if|#
-directive|if
 name|_FFR_DNSMAP_ALIASABLE
 comment|/* Allow dns map type to be used for aliases. */
 comment|/* Don Lewis of TDK */
@@ -22932,33 +23353,6 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_DNSMAP_ALIASABLE */
-if|#
-directive|if
-name|_FFR_DNSMAP_BASE
-comment|/* Specify a "base" domain for DNS lookups. */
-literal|"_FFR_DNSMAP_BASE"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_DNSMAP_BASE */
-if|#
-directive|if
-name|_FFR_DNSMAP_MULTI
-comment|/* Allow multiple return values for DNS map. */
-literal|"_FFR_DNSMAP_MULTI"
-block|,
-if|#
-directive|if
-name|_FFR_DNSMAP_MULTILIMIT
-comment|/* Limit number of return values for DNS map. */
-literal|"_FFR_DNSMAP_MULTILIMIT"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_DNSMAP_MULTILIMIT */
-endif|#
-directive|endif
-comment|/* _FFR_DNSMAP_MULTI */
 if|#
 directive|if
 name|_FFR_DONTLOCKFILESFORREAD_OPTION
@@ -22979,6 +23373,15 @@ directive|endif
 comment|/* _FFR_DOTTED_USERNAMES */
 if|#
 directive|if
+name|_FFR_DPO_CS
+comment|/* 	**  Make DaemonPortOptions case sensitive. 	**  For some unknown reasons the code converted every option 	**  to uppercase (first letter only, as that's the only one that 	**  is actually checked). This prevented all new lower case options 	**  from working... 	**  The documentation doesn't say anything about case (in)sensitivity, 	**  which means it should be case sensitive by default, 	**  but it's not a good idea to change this within a patch release, 	**  so let's delay this to 8.15. 	*/
+literal|"_FFR_DPO_CS"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DPO_CS */
+if|#
+directive|if
 name|_FFR_DROP_TRUSTUSER_WARNING
 comment|/* 	**  Don't issue this warning: 	**  "readcf: option TrustedUser may cause problems on systems 	**  which do not support fchown() if UseMSP is not set. 	*/
 literal|"_FFR_DROP_TRUSTUSER_WARNING"
@@ -22988,6 +23391,15 @@ directive|endif
 comment|/* _FFR_DROP_TRUSTUSER_WARNING */
 if|#
 directive|if
+name|_FFR_EIGHT_BIT_ADDR_OK
+comment|/* EightBitAddrOK: allow 8-bit e-mail addresses */
+literal|"_FFR_EIGHT_BIT_ADDR_OK"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_EIGHT_BIT_ADDR_OK */
+if|#
+directive|if
 name|_FFR_EXTRA_MAP_CHECK
 comment|/* perform extra checks on $( $) in R lines */
 literal|"_FFR_EXTRA_MAP_CHECK"
@@ -22995,6 +23407,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_EXTRA_MAP_CHECK */
+if|#
+directive|if
+name|_FFR_GETHBN_ExFILE
+comment|/* 	**  According to Motonori Nakamura some gethostbyname() 	**  implementations (TurboLinux?) may (temporarily) fail 	**  due to a lack of file discriptors. Enabling this FFR 	**  will check errno for EMFILE and ENFILE and in case of a match 	**  cause a temporary error instead of a permanent error. 	**  The right solution is of course to file a bug against those 	**  systems such that they actually set h_errno = TRY_AGAIN. 	*/
+literal|"_FFR_GETHBN_ExFILE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_GETHBN_ExFILE */
 if|#
 directive|if
 name|_FFR_FIX_DASHT
@@ -23024,15 +23445,6 @@ directive|endif
 comment|/* _FFR_GEN_ORCPT */
 if|#
 directive|if
-name|_FFR_LOG_GREET_PAUSE
-comment|/* log time for greet_pause delay; from Nik Clayton */
-literal|"_FFR_LOG_GREET_PAUSE"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_LOG_GREET_PAUSE */
-if|#
-directive|if
 name|_FFR_GROUPREADABLEAUTHINFOFILE
 comment|/* Allow group readable DefaultAuthInfo file. */
 literal|"_FFR_GROUPREADABLEAUTHINFOFILE"
@@ -23050,24 +23462,6 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_HANDLE_ISO8859_GECOS */
-if|#
-directive|if
-name|_FFR_HDR_TYPE
-comment|/* Set 'h' in {addr_type} for headers. */
-literal|"_FFR_HDR_TYPE"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_HDR_TYPE */
-if|#
-directive|if
-name|_FFR_HELONAME
-comment|/* option to set heloname; Nik Clayton of FreeBSD */
-literal|"_FFR_HELONAME"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_HELONAME */
 if|#
 directive|if
 name|_FFR_HPUX_NSSWITCH
@@ -23117,24 +23511,6 @@ directive|endif
 comment|/* _FFR_MAX_FORWARD_ENTRIES */
 if|#
 directive|if
-name|_FFR_MAXKEY
-comment|/* increase key size for LDAP lookups, see conf.h */
-literal|"_FFR_MAXKEY"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_MAXKEY */
-if|#
-directive|if
-name|_FFR_MAXNOOPCOMMANDS
-comment|/* runtime option for "MaxNOOPCommands" */
-literal|"_FFR_MAXNOOPCOMMANDS"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_MAXNOOPCOMMANDS */
-if|#
-directive|if
 name|_FFR_MAX_SLEEP_TIME
 comment|/* Limit sleep(2) time in libsm/clock.c */
 literal|"_FFR_MAX_SLEEP_TIME"
@@ -23153,24 +23529,30 @@ directive|endif
 comment|/* _FFR_MEMSTAT */
 if|#
 directive|if
-name|_FFR_MILTER_NAGLE
-comment|/* milter: turn off Nagle ("cork" on Linux) */
-comment|/* John Gardiner Myers of Proofpoint */
-literal|"_FFR_MILTER_NAGLE "
+name|_FFR_MILTER_CHECK
+literal|"_FFR_MILTER_CHECK"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MILTER_NAGLE */
+comment|/* _FFR_MILTER_CHECK */
 if|#
 directive|if
-name|_FFR_MILTER_NOHDR_RESP
-comment|/* milter: no response expected when sending headers */
-comment|/* John Gardiner Myers of Proofpoint */
-literal|"_FFR_MILTER_NOHDR_RESP"
+name|_FFR_MILTER_CONVERT_ALL_LF_TO_CRLF
+comment|/* 	**  milter_body() uses the same conversion algorithm as putbody() 	**  to translate the "local" df format (\n) to SMTP format (\r\n). 	**  However, putbody() and mime8to7() use different conversion 	**  algorithms. 	**  If the input date does not follow the SMTP standard 	**  (e.g., if it has "naked \r"s), then the output from putbody() 	**  and mime8to7() will most likely be different. 	**  By turning on this FFR milter_body() will try to "imitate" 	**  mime8to7(). 	**  Note: there is no (simple) way to deal with both conversions 	**  in a consistent manner. Moreover, as the "GiGo" principle applies, 	**  it's not really worth to fix it. 	*/
+literal|"_FFR_MILTER_CONVERT_ALL_LF_TO_CRLF"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MILTER_NOHDR_RESP */
+comment|/* _FFR_MILTER_CONVERT_ALL_LF_TO_CRLF */
+if|#
+directive|if
+name|_FFR_MILTER_CHECK_REJECTIONS_TOO
+comment|/* 	**  Also send RCPTs that are rejected by check_rcpt to a milter 	**  (if requested during option negotiation). 	*/
+literal|"_FFR_MILTER_CHECK_REJECTIONS_TOO"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_CHECK_REJECTIONS_TOO */
 if|#
 directive|if
 name|_FFR_MIME7TO8_OLD
@@ -23219,13 +23601,12 @@ directive|endif
 comment|/* _FFR_LOG_NTRIES */
 if|#
 directive|if
-name|_FFR_PRIV_NOACTUALRECIPIENT
-comment|/* 	**  PrivacyOptions=noactualrecipient stops sendmail from putting 	**  X-Actual-Recipient lines in DSNs revealing the actual 	**  account that addresses map to.  Patch from Dan Harkless. 	*/
-literal|"_FFR_PRIV_NOACTUALRECIPIENT"
+name|_FFR_QF_PARANOIA
+literal|"_FFR_QF_PARANOIA"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_PRIV_NOACTUALRECIPIENT */
+comment|/* _FFR_QF_PARANOIA */
 if|#
 directive|if
 name|_FFR_QUEUEDELAY
@@ -23301,15 +23682,6 @@ directive|endif
 comment|/* _FFR_RHS */
 if|#
 directive|if
-name|_FFR_SELECT_SHM
-comment|/* Auto-select of shared memory key */
-literal|"_FFR_SELECT_SHM"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_SELECT_SHM */
-if|#
-directive|if
 name|_FFR_SHM_STATUS
 comment|/* Donated code (unused). */
 literal|"_FFR_SHM_STATUS"
@@ -23344,15 +23716,6 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_SLEEP_USE_SELECT */
-if|#
-directive|if
-name|_FFR_SOFT_BOUNCE
-comment|/* Turn all errors into temporary errors. */
-literal|"_FFR_SOFT_BOUNCE"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_SOFT_BOUNCE */
 if|#
 directive|if
 name|_FFR_SPT_ALIGN

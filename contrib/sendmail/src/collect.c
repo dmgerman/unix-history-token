@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.273 2006/03/31 18:51:47 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.280 2006/11/29 00:20:40 ca Exp $"
 argument_list|)
 end_macro
 
@@ -130,7 +130,9 @@ argument_list|(
 name|hnum
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hnum
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -145,7 +147,9 @@ argument_list|(
 name|hsize
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hsize
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -194,6 +198,8 @@ argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Process the header, 	**  select the queue, open the data file. 	*/
@@ -418,6 +424,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|e
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 break|break;
@@ -433,6 +441,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|e
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 break|break;
@@ -503,6 +513,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|e
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 block|}
@@ -1001,7 +1013,9 @@ expr_stmt|;
 name|buflen
 operator|=
 sizeof|sizeof
+argument_list|(
 name|bufbuf
+argument_list|)
 expr_stmt|;
 name|pbp
 operator|=
@@ -1831,32 +1845,6 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX */
 block|}
-comment|/* 			**  XXX Notice: the logic here is broken. 			**  An input to sendmail that doesn't contain a 			**  header but starts immediately with the body whose 			**  first line contain characters which match the 			**  following "if" will cause problems: those 			**  characters will NOT appear in the output... 			**  Do we care? 			*/
-if|if
-condition|(
-name|c
-operator|>=
-literal|0200
-operator|&&
-name|c
-operator|<=
-literal|0237
-condition|)
-block|{
-if|#
-directive|if
-literal|0
-comment|/* causes complaints -- figure out something for 8.n+1 */
-block|usrerr("Illegal character 0x%x in header", c);
-else|#
-directive|else
-comment|/* 0 */
-comment|/* EMPTY */
-endif|#
-directive|endif
-comment|/* 0 */
-block|}
-elseif|else
 if|if
 condition|(
 name|c
@@ -1963,7 +1951,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"nextstate, istate=%d, mstate=%d, line = \"%s\"\n"
+literal|"nextstate, istate=%d, mstate=%d, line=\"%s\"\n"
 argument_list|,
 name|istate
 argument_list|,

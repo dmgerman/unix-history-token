@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2003, 2005 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: ldap.h,v 1.28 2005/06/23 23:11:21 ca Exp $  */
+comment|/*  * Copyright (c) 2001-2003, 2005, 2006 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: ldap.h,v 1.32 2006/08/30 22:56:58 ca Exp $  */
 end_comment
 
 begin_ifndef
@@ -28,7 +28,7 @@ file|<sm/rpool.h>
 end_include
 
 begin_comment
-comment|/* **  NOTE: These should be changed from LDAPMAP_* to SM_LDAP_* **        in the next major release (8.13) of sendmail. */
+comment|/* **  NOTE: These should be changed from LDAPMAP_* to SM_LDAP_* **	in the next major release (8.x+1) of sendmail. */
 end_comment
 
 begin_ifndef
@@ -102,6 +102,43 @@ if|#
 directive|if
 name|LDAPMAP
 end_if
+
+begin_comment
+comment|/* maximum number of arguments in a map lookup, see sendmail.h: MAX_MAP_ARGS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_LDAP_ARGS
+value|10
+end_define
+
+begin_comment
+comment|/* error codes from sm_ldap_search*() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_LDAP_ERR
+value|(-1)
+end_define
+
+begin_comment
+comment|/* generic error: ldap_search(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_LDAP_ERR_ARG_MISS
+value|(-2)
+end_define
+
+begin_comment
+comment|/* an argument is missing */
+end_comment
 
 begin_comment
 comment|/* Attribute types */
@@ -273,6 +310,9 @@ decl_stmt|;
 name|bool
 name|ldap_attrsonly
 decl_stmt|;
+name|bool
+name|ldap_multi_args
+decl_stmt|;
 comment|/* args for ldap_result */
 name|struct
 name|timeval
@@ -335,16 +375,16 @@ struct|struct
 name|sm_ldap_recurse_list
 block|{
 name|int
-name|lr_size
+name|lrl_size
 decl_stmt|;
 name|int
-name|lr_cnt
+name|lrl_cnt
 decl_stmt|;
 name|struct
 name|sm_ldap_recurse_entry
 modifier|*
 modifier|*
-name|lr_data
+name|lrl_data
 decl_stmt|;
 block|}
 struct|;
@@ -412,6 +452,24 @@ name|SM_LDAP_STRUCT
 operator|*
 operator|,
 name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sm_ldap_search_m
+name|__P
+argument_list|(
+operator|(
+name|SM_LDAP_STRUCT
+operator|*
+operator|,
+name|char
+operator|*
 operator|*
 operator|)
 argument_list|)

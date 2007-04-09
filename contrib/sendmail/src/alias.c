@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: alias.c,v 8.217 2003/07/28 17:47:18 ca Exp $"
+literal|"@(#)$Id: alias.c,v 8.219 2006/10/24 18:04:09 ca Exp $"
 argument_list|)
 end_macro
 
@@ -207,7 +207,9 @@ argument_list|(
 name|obuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|obuf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -321,7 +323,14 @@ name|e
 operator|->
 name|e_message
 operator|=
+name|sm_rpool_strdup_x
+argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|,
 literal|"alias database unavailable"
+argument_list|)
 expr_stmt|;
 comment|/* XXX msg only per recipient? */
 if|if
@@ -568,7 +577,9 @@ name|q_user
 argument_list|)
 operator|>
 sizeof|sizeof
+argument_list|(
 name|obuf
+argument_list|)
 operator|-
 literal|7
 condition|)
@@ -582,7 +593,9 @@ argument_list|,
 literal|"owner-owner"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|obuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -594,7 +607,9 @@ argument_list|(
 name|obuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|obuf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -1038,7 +1053,9 @@ argument_list|,
 literal|"aliases.files sequence"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|AliasFileMap
@@ -1071,7 +1088,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Alias%d"
 argument_list|,
@@ -1103,8 +1122,10 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|map
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|map
@@ -1708,7 +1729,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -1726,7 +1749,9 @@ name|ext
 argument_list|)
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 condition|)
 block|{
 if|if
@@ -2564,7 +2589,9 @@ argument_list|,
 name|line
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|line
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -3035,7 +3062,9 @@ argument_list|,
 name|p
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|line
+argument_list|)
 operator|-
 operator|(
 name|p
@@ -3572,7 +3601,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
