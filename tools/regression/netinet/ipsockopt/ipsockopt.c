@@ -2755,7 +2755,7 @@ name|htonl
 argument_list|(
 operator|(
 name|basegroup
-operator||
+operator|+
 name|i
 operator|)
 argument_list|)
@@ -2862,7 +2862,7 @@ name|htonl
 argument_list|(
 operator|(
 name|basegroup
-operator||
+operator|+
 name|i
 operator|)
 argument_list|)
