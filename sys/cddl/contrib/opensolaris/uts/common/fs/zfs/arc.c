@@ -93,13 +93,6 @@ directive|include
 file|<sys/sdt.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|ARC_FREE_AT_ONCE
-value|4194304
-end_define
-
 begin_decl_stmt
 specifier|static
 name|kmutex_t
