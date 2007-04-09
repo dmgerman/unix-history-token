@@ -1544,6 +1544,40 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|char
+name|hostuuid
+index|[
+literal|64
+index|]
+init|=
+literal|"00000000-0000-0000-0000-000000000000"
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_STRING
+argument_list|(
+name|_kern
+argument_list|,
+name|KERN_HOSTUUID
+argument_list|,
+name|hostuuid
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+name|hostuuid
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hostuuid
+argument_list|)
+argument_list|,
+literal|"Host UUID"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * This is really cheating.  These actually live in the libc, something  * which I'm not quite sure is a good idea anyway, but in order for  * getnext and friends to actually work, we define dummies here.  */
 end_comment

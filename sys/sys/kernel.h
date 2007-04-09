@@ -56,6 +56,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
+modifier|*
+name|hostuuid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
 name|hostname
 index|[
 name|MAXHOSTNAMELEN
