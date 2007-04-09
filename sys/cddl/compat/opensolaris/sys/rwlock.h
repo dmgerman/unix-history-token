@@ -136,8 +136,7 @@ name|type
 parameter_list|,
 name|arg
 parameter_list|)
-define|\
-value|sx_init_flags((lock), "zfs:" #lock, SX_DUPOK)
+value|do {				\ 	KASSERT(((lock)->lock_object.lo_flags& LO_ALLMASK) !=		\ 	    LO_EXPECTED, ("lock %s already initialized", #lock));	\ 	bzero((lock), sizeof(struct sx));				\ 	sx_init_flags((lock), "zfs:" #lock, SX_DUPOK);			\ } while (0)
 end_define
 
 begin_define
