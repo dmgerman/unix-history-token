@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: err.c,v 8.191 2003/01/10 02:16:46 ca Exp $"
+literal|"@(#)$Id: err.c,v 8.196 2006/11/10 23:14:08 ca Exp $"
 argument_list|)
 end_macro
 
@@ -212,7 +212,9 @@ name|char
 name|HeldMessageBuf
 index|[
 sizeof|sizeof
+argument_list|(
 name|MsgBuf
+argument_list|)
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -579,7 +581,9 @@ argument_list|(
 name|ubuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ubuf
+argument_list|)
 argument_list|,
 literal|"UID%d"
 argument_list|,
@@ -975,7 +979,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Postmaster warning: %.*s"
 argument_list|,
@@ -983,7 +989,9 @@ operator|(
 name|int
 operator|)
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|22
 argument_list|,
@@ -1301,7 +1309,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Postmaster warning: %.*s"
 argument_list|,
@@ -1309,7 +1319,9 @@ operator|(
 name|int
 operator|)
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|22
 argument_list|,
@@ -1744,18 +1756,22 @@ name|heldmsg
 decl_stmt|;
 block|{
 name|char
-modifier|*
-name|errtxt
-init|=
-name|msg
-decl_stmt|;
-name|char
 name|msgcode
 init|=
 name|msg
 index|[
 literal|0
 index|]
+decl_stmt|;
+name|char
+modifier|*
+name|errtxt
+init|=
+name|msg
+decl_stmt|;
+name|char
+modifier|*
+name|id
 decl_stmt|;
 comment|/* display for debugging */
 if|if
@@ -1813,6 +1829,20 @@ literal|0
 index|]
 operator|=
 literal|'4'
+expr_stmt|;
+name|id
+operator|=
+operator|(
+name|CurEnv
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|CurEnv
+operator|->
+name|e_id
+else|:
+name|NULL
 expr_stmt|;
 comment|/* output to transcript if serious */
 if|if
@@ -1878,9 +1908,7 @@ name|sm_syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-name|CurEnv
-operator|->
-name|e_id
+name|id
 argument_list|,
 literal|"--- %s%s%s"
 argument_list|,
@@ -1963,7 +1991,9 @@ argument_list|,
 name|msg
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|HeldMessageBuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2203,9 +2233,7 @@ name|sm_syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-name|CurEnv
-operator|->
-name|e_id
+name|id
 argument_list|,
 literal|"SYSERR: putoutmsg (%s): error on output channel sending \"%s\": %s"
 argument_list|,
@@ -2838,7 +2866,9 @@ name|int
 name|spaceleft
 init|=
 sizeof|sizeof
+argument_list|(
 name|MsgBuf
+argument_list|)
 decl_stmt|;
 name|char
 modifier|*
@@ -2880,9 +2910,6 @@ name|del
 operator|=
 literal|' '
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_SOFT_BOUNCE
 if|if
 condition|(
 name|SoftBounce
@@ -2916,9 +2943,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
-comment|/* _FFR_SOFT_BOUNCE */
 operator|(
 name|void
 operator|)
@@ -3058,9 +3082,6 @@ operator|-=
 name|l
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|_FFR_SOFT_BOUNCE
 if|if
 condition|(
 name|SoftBounce
@@ -3084,9 +3105,6 @@ operator|=
 literal|'4'
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_SOFT_BOUNCE */
 name|errtxt
 operator|=
 name|eb
@@ -3514,7 +3532,9 @@ argument_list|(
 name|errbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|errbuf
+argument_list|)
 argument_list|,
 literal|"Error %d"
 argument_list|,
@@ -3754,7 +3774,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Host %s is down"
 argument_list|,
@@ -3787,7 +3809,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -3951,7 +3975,9 @@ argument_list|,
 literal|"Name server: "
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4061,7 +4087,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Error %d"
 argument_list|,
@@ -4102,7 +4130,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Error %d"
 argument_list|,
