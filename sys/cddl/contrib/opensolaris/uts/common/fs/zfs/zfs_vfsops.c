@@ -2940,8 +2940,11 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-return|return
-operator|(
+name|DROP_GIANT
+argument_list|()
+expr_stmt|;
+name|error
+operator|=
 name|zfs_domount
 argument_list|(
 name|vfsp
@@ -2950,6 +2953,13 @@ name|from
 argument_list|,
 name|td
 argument_list|)
+expr_stmt|;
+name|PICKUP_GIANT
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
