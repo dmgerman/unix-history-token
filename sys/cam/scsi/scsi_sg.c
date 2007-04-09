@@ -1167,11 +1167,6 @@ return|;
 block|}
 name|softc
 operator|=
-operator|(
-expr|struct
-name|sg_softc
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -1182,6 +1177,8 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
+name|M_ZERO
+operator||
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
@@ -1203,17 +1200,6 @@ name|CAM_REQ_CMP_ERR
 operator|)
 return|;
 block|}
-name|bzero
-argument_list|(
-name|softc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|softc
 operator|->
 name|state
@@ -2936,6 +2922,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|hdr
@@ -3145,6 +3133,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|error
@@ -3191,6 +3181,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|buf_len
