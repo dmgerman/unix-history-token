@@ -229,6 +229,7 @@ parameter_list|,
 name|int
 name|end
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -276,10 +277,6 @@ condition|)
 operator|*
 name|ep
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|p
 expr_stmt|;
 return|return
@@ -309,6 +306,7 @@ parameter_list|,
 name|int
 name|end
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -359,10 +357,6 @@ condition|)
 operator|*
 name|ep
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|p
 expr_stmt|;
 return|return
