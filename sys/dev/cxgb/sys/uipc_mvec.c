@@ -1193,11 +1193,23 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
 name|__sparc64__
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__sun4v__
+argument_list|)
+operator|)
+end_if
 
 begin_struct
 struct|struct
