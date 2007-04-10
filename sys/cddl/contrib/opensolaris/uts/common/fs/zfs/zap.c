@@ -2023,7 +2023,7 @@ name|zap_leaf_t
 modifier|*
 name|l
 init|=
-name|kmem_zalloc
+name|kmem_alloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2353,7 +2353,7 @@ argument_list|)
 expr_stmt|;
 name|l
 operator|=
-name|kmem_zalloc
+name|kmem_alloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
