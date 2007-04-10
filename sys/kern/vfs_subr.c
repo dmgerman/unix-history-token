@@ -1782,7 +1782,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if a user can access priveledged mount options.  */
+comment|/*  * Check if a user can access privileged mount options.  */
 end_comment
 
 begin_function
