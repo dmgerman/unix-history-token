@@ -29,6 +29,10 @@ directive|include
 file|<sys/libkern.h>
 end_include
 
+begin_comment
+comment|/*  * rindex() is also present as the strrchr() in the kernel; it does exactly the  * same thing as it's userland equivalent.  */
+end_comment
+
 begin_function
 name|char
 modifier|*
