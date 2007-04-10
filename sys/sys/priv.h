@@ -1803,6 +1803,17 @@ begin_comment
 comment|/* Delete protocol addr on interface. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_NET_TRUNK
+value|415
+end_define
+
+begin_comment
+comment|/* Administer trunk. */
+end_comment
+
 begin_comment
 comment|/*  * 802.11-related privileges.  */
 end_comment

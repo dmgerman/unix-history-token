@@ -598,6 +598,11 @@ name|void
 modifier|*
 name|if_pf_kif
 decl_stmt|;
+name|void
+modifier|*
+name|if_trunk
+decl_stmt|;
+comment|/* trunk glue */
 block|}
 struct|;
 end_struct
