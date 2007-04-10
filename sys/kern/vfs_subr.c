@@ -7845,7 +7845,7 @@ index|[
 name|syncer_delayno
 index|]
 expr_stmt|;
-comment|/* 			 * If the worklist has wrapped since the 			 * it was emptied of all but syncer vnodes,  			 * switch to the FINAL_DELAY state and run 			 * for one more second. 			 */
+comment|/* 			 * If the worklist has wrapped since the 			 * it was emptied of all but syncer vnodes, 			 * switch to the FINAL_DELAY state and run 			 * for one more second. 			 */
 if|if
 condition|(
 name|syncer_state
