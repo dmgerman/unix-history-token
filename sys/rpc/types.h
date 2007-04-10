@@ -162,11 +162,22 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<netconfig.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The netbuf structure is defined here, because FreeBSD / NetBSD only use  * it inside the RPC code. It's in<xti.h> on SVR4, but it would be confusing  * to have an xti.h, since FreeBSD / NetBSD does not support XTI/TLI.  */
