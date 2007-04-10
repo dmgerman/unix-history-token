@@ -4612,6 +4612,14 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|saved_nice
