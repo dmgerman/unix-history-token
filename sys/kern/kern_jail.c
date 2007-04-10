@@ -3009,9 +3009,12 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* 		 * Allow jailed root to bind reserved ports. 		 */
+comment|/* 		 * Allow jailed root to bind reserved ports and reuse in-use 		 * ports. 		 */
 case|case
 name|PRIV_NETINET_RESERVEDPORT
+case|:
+case|case
+name|PRIV_NETINET_REUSEPORT
 case|:
 return|return
 operator|(
