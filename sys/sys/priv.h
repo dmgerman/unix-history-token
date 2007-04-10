@@ -2086,6 +2086,17 @@ begin_comment
 comment|/* Administer IPSEC. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_NETINET_REUSEPORT
+value|504
+end_define
+
+begin_comment
+comment|/* Allow [rapid] port/address reuse. */
+end_comment
+
 begin_comment
 comment|/*  * IPX/SPX privileges.  */
 end_comment

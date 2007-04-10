@@ -1794,11 +1794,13 @@ name|s_addr
 argument_list|)
 argument_list|)
 operator|&&
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|so
 operator|->
 name|so_cred
+argument_list|,
+name|PRIV_NETINET_REUSEPORT
 argument_list|,
 name|SUSER_ALLOWJAIL
 argument_list|)
