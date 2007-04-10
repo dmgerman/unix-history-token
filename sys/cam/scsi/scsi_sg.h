@@ -687,6 +687,28 @@ name|SUGGEST_MASK
 value|0xf0
 end_define
 
+begin_comment
+comment|/* Other definitions */
+end_comment
+
+begin_comment
+comment|/* HZ isn't always available, so simulate it */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SG_DEFAULT_HZ
+value|1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG_DEFAULT_TIMEOUT
+value|(60*SG_DEFAULT_HZ)
+end_define
+
 begin_endif
 endif|#
 directive|endif
