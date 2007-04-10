@@ -1057,6 +1057,11 @@ parameter_list|)
 value|umem_free(_b, _s)
 define|#
 directive|define
+name|kmem_size
+parameter_list|()
+value|(physmem * PAGESIZE)
+define|#
+directive|define
 name|kmem_cache_create
 parameter_list|(
 name|_a
