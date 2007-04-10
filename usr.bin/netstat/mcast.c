@@ -159,6 +159,18 @@ directive|include
 file|"netstat.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|__NETSTAT_BURN_BRIDGES
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NETSTAT_BURN_BRIDGES
+end_ifdef
+
 begin_union
 union|union
 name|sockunion
@@ -752,6 +764,14 @@ name|ifmaddrs
 modifier|*
 name|ifmap
 decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"WARNING: This functionality is deprecated, and will be removed\n"
+literal|"in FreeBSD 7.0. Please consider using ifmcstat(8) instead.\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getifmaddrs
@@ -814,6 +834,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __NETSTAT_BURN_BRIDGES */
+end_comment
 
 end_unit
 
