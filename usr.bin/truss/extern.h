@@ -21,12 +21,6 @@ name|int
 name|start_tracing
 parameter_list|(
 name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -37,6 +31,18 @@ name|void
 name|restore_proc
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|waitevent
+parameter_list|(
+name|struct
+name|trussinfo
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -327,13 +333,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|Procfd
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 
