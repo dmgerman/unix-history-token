@@ -676,7 +676,7 @@ comment|/* __NetBSD__ */
 end_comment
 
 begin_comment
-comment|/*  * 8. Test for "privileged" socket opened by superuser.  * FreeBSD tests  ((so)->so_cred != NULL&& suser_cred((so)->so_cred, SUSER_ALLOWJAIL == 0))  * NetBSD (1.6N) tests (so)->so_uid == 0).  * This difference is wrapped inside  the IPSEC_PRIVILEGED_SO() macro.  *  * XXXRW: Why was this suser_allowjail?  */
+comment|/*  * 8. Test for "privileged" socket opened by superuser.  * FreeBSD tests  ((so)->so_cred != NULL&& priv_check_cred((so)->so_cred,  * PRIV_NETINET_IPSEC, SUSER_ALLOWJAIL) == 0).  * NetBSD (1.6N) tests (so)->so_uid == 0).  * This difference is wrapped inside  the IPSEC_PRIVILEGED_SO() macro.  *  * XXXRW: Why was this suser_allowjail?  */
 end_comment
 
 begin_ifdef
