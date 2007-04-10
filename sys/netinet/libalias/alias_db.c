@@ -7856,8 +7856,6 @@ name|deleteAllLinks
 operator|=
 literal|1
 expr_stmt|;
-name|lnk
-operator|=
 name|ReLink
 argument_list|(
 name|lnk
