@@ -3017,6 +3017,8 @@ name|eh
 decl_stmt|;
 name|short
 name|type
+init|=
+literal|0
 decl_stmt|;
 switch|switch
 condition|(
