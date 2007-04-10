@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libgen.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -293,10 +299,13 @@ name|myname
 decl_stmt|;
 name|myname
 operator|=
+name|basename
+argument_list|(
 name|argv
 index|[
 literal|0
 index|]
+argument_list|)
 expr_stmt|;
 name|Aflag
 operator|=
@@ -470,7 +479,6 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-comment|/* -a and -m are default unless one of them or -A is set. */
 if|if
 condition|(
 name|aflag
@@ -478,10 +486,6 @@ operator|==
 literal|0
 operator|&&
 name|mflag
-operator|==
-literal|0
-operator|&&
-name|Aflag
 operator|==
 literal|0
 condition|)
@@ -491,20 +495,60 @@ name|mflag
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * If no -r or -t flag, at least two operands, the first of which 	 * is an 8 or 10 digit number, use the obsolete time specification. 	 */
 if|if
 condition|(
-operator|!
 name|timeset
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+name|Aflag
+condition|)
+block|{
+comment|/* 			 * We're setting the time to an offset from a specified 			 * time.  God knows why, but it means that we can set 			 * that time once and for all here. 			 */
+if|if
+condition|(
+name|aflag
+condition|)
+name|tv
+index|[
+literal|0
+index|]
+operator|.
+name|tv_sec
+operator|+=
+name|Aflag
+expr_stmt|;
+if|if
+condition|(
+name|mflag
+condition|)
+name|tv
+index|[
+literal|1
+index|]
+operator|.
+name|tv_sec
+operator|+=
+name|Aflag
+expr_stmt|;
+name|Aflag
+operator|=
+literal|0
+expr_stmt|;
+comment|/* done our job */
+block|}
+block|}
+else|else
+block|{
+comment|/* 		 * If no -r or -t flag, at least two operands, the first of 		 * which is an 8 or 10 digit number, use the obsolete time 		 * specification, otherwise use the current time. 		 */
+if|if
+condition|(
 name|argc
 operator|>
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|strtol
 argument_list|(
 name|argv
@@ -564,12 +608,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Otherwise use the current time of day. */
-if|if
-condition|(
-operator|!
-name|timeset
-condition|)
+comment|/* Both times default to the same. */
 name|tv
 index|[
 literal|1
@@ -580,6 +619,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -591,6 +631,14 @@ name|usage
 argument_list|(
 name|myname
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Aflag
+condition|)
+name|cflag
+operator|=
+literal|1
 expr_stmt|;
 for|for
 control|(
@@ -687,7 +735,6 @@ block|}
 else|else
 continue|continue;
 block|}
-comment|/* If -a or -m are not set, base time on current file time. */
 if|if
 condition|(
 operator|!
@@ -726,11 +773,31 @@ operator|.
 name|st_mtimespec
 argument_list|)
 expr_stmt|;
+comment|/* 		 * We're adjusting the times based on the file times, not a 		 * specified time (that gets handled above). 		 */
 if|if
 condition|(
 name|Aflag
 condition|)
 block|{
+if|if
+condition|(
+name|aflag
+condition|)
+block|{
+name|TIMESPEC_TO_TIMEVAL
+argument_list|(
+operator|&
+name|tv
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|sb
+operator|.
+name|st_atimespec
+argument_list|)
+expr_stmt|;
 name|tv
 index|[
 literal|0
@@ -739,6 +806,26 @@ operator|.
 name|tv_sec
 operator|+=
 name|Aflag
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|mflag
+condition|)
+block|{
+name|TIMESPEC_TO_TIMEVAL
+argument_list|(
+operator|&
+name|tv
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|sb
+operator|.
+name|st_mtimespec
+argument_list|)
 expr_stmt|;
 name|tv
 index|[
@@ -749,6 +836,7 @@ name|tv_sec
 operator|+=
 name|Aflag
 expr_stmt|;
+block|}
 block|}
 comment|/* Try utimes(2). */
 if|if
