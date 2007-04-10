@@ -554,13 +554,6 @@ name|count
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate memory for building the header, fill it up, 	 * and write it out. 	 */
-name|hdr
-operator|=
-name|malloc
-argument_list|(
-name|hdrsize
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
