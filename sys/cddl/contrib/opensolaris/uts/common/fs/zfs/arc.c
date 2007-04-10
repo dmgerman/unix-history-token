@@ -195,12 +195,6 @@ name|zfs_arc_min
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_expr_stmt
 name|TUNABLE_ULONG
 argument_list|(
@@ -272,11 +266,6 @@ literal|"Minimum ARC size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Note that buffers can be on one of 5 states:  *	ARC_anon	- anonymous (discussed below)  *	ARC_mru		- recently used, currently cached  *	ARC_mru_ghost	- recentely used, no longer in cache  *	ARC_mfu		- frequently used, currently cached  *	ARC_mfu_ghost	- frequently used, no longer in cache  * When there are no active references to the buffer, they  * are linked onto one of the lists in arc.  These are the  * only buffers that can be evicted or deleted.  *  * Anonymous buffers are buffers that are not associated with  * a DVA.  These are buffers that hold dirty block copies  * before they are written to stable storage.  By definition,  * they are "ref'd" and are considered part of arc_mru  * that cannot be freed.  Generally, they will aquire a DVA  * as they are written and migrate onto the arc_mru list.  */
@@ -12000,6 +11989,13 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|kmutex_t
+name|arc_lowmem_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -12012,13 +12008,6 @@ name|eventhandler_tag
 name|arc_event_lowmem
 init|=
 name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|kmutex_t
-name|arc_lowmem_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -12117,9 +12106,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_KERNEL
 name|mutex_init
 argument_list|(
 operator|&
@@ -12132,8 +12118,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Convert seconds to clock ticks */
 name|arc_min_prefetch_lifespan
 operator|=
@@ -12830,6 +12814,12 @@ expr_stmt|;
 name|buf_fini
 argument_list|()
 expr_stmt|;
+name|mutex_destroy
+argument_list|(
+operator|&
+name|arc_lowmem_lock
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -12844,12 +12834,6 @@ argument_list|(
 name|vm_lowmem
 argument_list|,
 name|arc_event_lowmem
-argument_list|)
-expr_stmt|;
-name|mutex_destroy
-argument_list|(
-operator|&
-name|arc_lowmem_lock
 argument_list|)
 expr_stmt|;
 endif|#

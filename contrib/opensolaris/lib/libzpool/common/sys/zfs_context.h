@@ -2024,6 +2024,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|SYSCTL_NODE
+parameter_list|(
+modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYSCTL_INT
 parameter_list|(
 modifier|...
@@ -2033,7 +2042,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYSCTL_NODE
+name|SYSCTL_ULONG
 parameter_list|(
 modifier|...
 parameter_list|)
@@ -2051,6 +2060,12 @@ directive|undef
 name|TUNABLE_INT
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|TUNABLE_ULONG
+end_undef
+
 begin_endif
 endif|#
 directive|endif
@@ -2060,6 +2075,15 @@ begin_define
 define|#
 directive|define
 name|TUNABLE_INT
+parameter_list|(
+modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TUNABLE_ULONG
 parameter_list|(
 modifier|...
 parameter_list|)
