@@ -2744,7 +2744,7 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|VFS_NEEDSGIANT
+name|VFS_NEEDSGIANT_
 parameter_list|(
 name|MP
 parameter_list|)
@@ -2755,11 +2755,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|VFS_NEEDSGIANT
+parameter_list|(
+name|MP
+parameter_list|)
+value|__extension__				\ ({									\ 	struct mount *_mp;						\ 	_mp = (MP);							\ 	VFS_NEEDSGIANT_(_mp);						\ })
+end_define
+
+begin_define
+define|#
+directive|define
 name|VFS_LOCK_GIANT
 parameter_list|(
 name|MP
 parameter_list|)
-value|__extension__				\ ({									\ 	int _locked;							\ 	struct mount *_MP;						\ 	_MP = (MP);							\ 	if (VFS_NEEDSGIANT(_MP)) {					\ 		mtx_lock(&Giant);					\ 		_locked = 1;						\ 	} else								\ 		_locked = 0;						\ 	_locked;							\ })
+value|__extension__				\ ({									\ 	int _locked;							\ 	struct mount *_mp;						\ 	_mp = (MP);							\ 	if (VFS_NEEDSGIANT_(_mp)) {					\ 		mtx_lock(&Giant);					\ 		_locked = 1;						\ 	} else								\ 		_locked = 0;						\ 	_locked;							\ })
 end_define
 
 begin_define
@@ -2779,7 +2789,7 @@ name|VFS_ASSERT_GIANT
 parameter_list|(
 name|MP
 parameter_list|)
-value|do 					\ {									\ 	if (VFS_NEEDSGIANT((MP)))					\ 		mtx_assert(&Giant, MA_OWNED);				\ } while (0)
+value|do 					\ {									\ 	struct mount *_mp;						\ 	_mp = (MP);							\ 	if (VFS_NEEDSGIANT_(_mp))					\ 		mtx_assert(&Giant, MA_OWNED);				\ } while (0)
 end_define
 
 begin_define
