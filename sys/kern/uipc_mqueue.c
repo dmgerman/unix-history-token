@@ -4594,7 +4594,7 @@ name|ucred
 argument_list|,
 name|PRIV_MQ_ADMIN
 argument_list|,
-literal|0
+name|SUSER_ALLOWJAIL
 argument_list|)
 operator|)
 operator|!=
