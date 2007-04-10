@@ -102,7 +102,7 @@ file|<vm/vm_pager.h>
 end_include
 
 begin_comment
-comment|/* prevent concurrant creation races */
+comment|/* prevent concurrent creation races */
 end_comment
 
 begin_decl_stmt
