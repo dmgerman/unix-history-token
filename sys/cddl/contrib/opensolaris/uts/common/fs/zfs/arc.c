@@ -6407,17 +6407,13 @@ else|#
 directive|else
 if|if
 condition|(
-name|kmem_map
-operator|->
-name|size
+name|kmem_used
+argument_list|()
 operator|>
-operator|(
-name|vm_kmem_size
-operator|*
-literal|3
-operator|)
+name|kmem_size
+argument_list|()
 operator|/
-literal|4
+literal|2
 condition|)
 return|return
 operator|(
@@ -12013,16 +12009,23 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|eventhandler_tag
-name|zfs_event_lowmem
+name|arc_event_lowmem
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|kmutex_t
+name|arc_lowmem_lock
 decl_stmt|;
 end_decl_stmt
 
 begin_function
 specifier|static
 name|void
-name|zfs_lowmem
+name|arc_lowmem
 parameter_list|(
 name|void
 modifier|*
@@ -12034,6 +12037,13 @@ name|howto
 name|__unused
 parameter_list|)
 block|{
+comment|/* Serialize access via arc_lowmem_lock. */
+name|mutex_enter
+argument_list|(
+operator|&
+name|arc_lowmem_lock
+argument_list|)
+expr_stmt|;
 name|zfs_needfree
 operator|=
 literal|1
@@ -12060,6 +12070,12 @@ argument_list|,
 name|hz
 operator|/
 literal|5
+argument_list|)
+expr_stmt|;
+name|mutex_exit
+argument_list|(
+operator|&
+name|arc_lowmem_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -12101,6 +12117,23 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|mutex_init
+argument_list|(
+operator|&
+name|arc_lowmem_lock
+argument_list|,
+name|NULL
+argument_list|,
+name|MUTEX_DEFAULT
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Convert seconds to clock ticks */
 name|arc_min_prefetch_lifespan
 operator|=
@@ -12111,9 +12144,8 @@ expr_stmt|;
 comment|/* Start out with 1/8 of all memory */
 name|arc_c
 operator|=
-name|physmem
-operator|*
-name|PAGESIZE
+name|kmem_size
+argument_list|()
 operator|/
 literal|8
 expr_stmt|;
@@ -12129,7 +12161,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* set min cache to 1/32 of all memory, or 64MB, whichever is more */
+comment|/* set min cache to 1/32 of all memory, or 16MB, whichever is more */
 name|arc_c_min
 operator|=
 name|MAX
@@ -12140,10 +12172,10 @@ literal|4
 argument_list|,
 literal|64
 operator|<<
-literal|20
+literal|18
 argument_list|)
 expr_stmt|;
-comment|/* set max to 3/4 of all memory, or all but 1GB, whichever is more */
+comment|/* set max to 1/2 of all memory, or all but 1GB, whichever is more */
 if|if
 condition|(
 name|arc_c
@@ -12179,7 +12211,7 @@ name|MAX
 argument_list|(
 name|arc_c
 operator|*
-literal|6
+literal|4
 argument_list|,
 name|arc_c_max
 argument_list|)
@@ -12187,18 +12219,19 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
-comment|/* 	 * Allow the tunables to override our calculations if they are 	 * reasonable (ie. over 64MB) 	 */
+comment|/* 	 * Allow the tunables to override our calculations if they are 	 * reasonable (ie. over 16MB) 	 */
 if|if
 condition|(
 name|zfs_arc_max
-operator|>
+operator|>=
 literal|64
 operator|<<
-literal|20
+literal|18
 operator|&&
 name|zfs_arc_max
 operator|<
-name|vm_kmem_size
+name|kmem_size
+argument_list|()
 condition|)
 name|arc_c_max
 operator|=
@@ -12207,10 +12240,10 @@ expr_stmt|;
 if|if
 condition|(
 name|zfs_arc_min
-operator|>
+operator|>=
 literal|64
 operator|<<
-literal|20
+literal|18
 operator|&&
 name|zfs_arc_min
 operator|<=
@@ -12550,13 +12583,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
-name|zfs_event_lowmem
+name|arc_event_lowmem
 operator|=
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|vm_lowmem
 argument_list|,
-name|zfs_lowmem
+name|arc_lowmem
 argument_list|,
 name|NULL
 argument_list|,
@@ -12569,6 +12602,70 @@ name|arc_dead
 operator|=
 name|FALSE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
+comment|/* Warn about ZFS memory requirements. */
+if|if
+condition|(
+operator|(
+name|physmem
+operator|*
+name|PAGESIZE
+operator|)
+operator|<
+operator|(
+literal|256
+operator|+
+literal|128
+operator|+
+literal|64
+operator|)
+operator|*
+operator|(
+literal|1
+operator|<<
+literal|20
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ZFS WARNING: Recomended minimum of RAM size is 512MB, "
+literal|"expect unstable behaviour.\n"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|kmem_size
+argument_list|()
+operator|<
+literal|256
+operator|*
+operator|(
+literal|1
+operator|<<
+literal|20
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ZFS WARNING: Recomended minimum of kmem_map size is "
+literal|"256MB, expect unstable behaviour.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"             Consider tunning vm.kmem_size and "
+literal|"vm.kmem_size_max in /boot/loader.conf.\n"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -12738,7 +12835,7 @@ directive|ifdef
 name|_KERNEL
 if|if
 condition|(
-name|zfs_event_lowmem
+name|arc_event_lowmem
 operator|!=
 name|NULL
 condition|)
@@ -12746,7 +12843,13 @@ name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|vm_lowmem
 argument_list|,
-name|zfs_event_lowmem
+name|arc_event_lowmem
+argument_list|)
+expr_stmt|;
+name|mutex_destroy
+argument_list|(
+operator|&
+name|arc_lowmem_lock
 argument_list|)
 expr_stmt|;
 endif|#

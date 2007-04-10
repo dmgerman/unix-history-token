@@ -156,20 +156,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-modifier|*
-name|kmem_zalloc
-parameter_list|(
-name|size_t
-name|size
-parameter_list|,
-name|int
-name|kmflags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|zfs_kmem_free
 parameter_list|(
 name|void
@@ -178,6 +164,24 @@ name|buf
 parameter_list|,
 name|size_t
 name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_long
+name|kmem_size
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_long
+name|kmem_used
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -343,6 +347,18 @@ parameter_list|,
 name|kmflags
 parameter_list|)
 value|zfs_kmem_alloc((size), (kmflags))
+end_define
+
+begin_define
+define|#
+directive|define
+name|kmem_zalloc
+parameter_list|(
+name|size
+parameter_list|,
+name|kmflags
+parameter_list|)
+value|zfs_kmem_alloc((size), (kmflags) | M_ZERO)
 end_define
 
 begin_define

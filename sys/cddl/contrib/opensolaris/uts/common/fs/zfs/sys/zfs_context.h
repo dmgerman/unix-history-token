@@ -232,13 +232,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|physmem
-value|(vm_kmem_size / PAGE_SIZE)
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|int
