@@ -2606,6 +2606,13 @@ block|{
 name|va_list
 name|args
 decl_stmt|;
+comment|/* Temporarily hide too verbose printfs. */
+if|if
+condition|(
+operator|!
+name|bootverbose
+condition|)
+return|return;
 comment|/*      * Removed ModuleName, LineNumber, and acpica version, not needed      * for info output      */
 name|AcpiOsPrintf
 argument_list|(
