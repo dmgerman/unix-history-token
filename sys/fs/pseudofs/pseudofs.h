@@ -954,6 +954,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|pfs_purge
+parameter_list|(
+name|struct
+name|pfs_node
+modifier|*
+name|pn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|pfs_disable
 parameter_list|(

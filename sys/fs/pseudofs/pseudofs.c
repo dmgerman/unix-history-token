@@ -1164,8 +1164,23 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* revoke vnodes and release memory */
-name|pfs_disable
+comment|/* revoke fileno and vnodes and release memory */
+if|if
+condition|(
+name|node
+operator|->
+name|pn_fileno
+condition|)
+name|pfs_fileno_free
+argument_list|(
+name|node
+operator|->
+name|pn_info
+argument_list|,
+name|node
+argument_list|)
+expr_stmt|;
+name|pfs_purge
 argument_list|(
 name|node
 argument_list|)
@@ -1227,11 +1242,28 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_flag
 operator||=
 name|MNT_LOCAL
+expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* not quite ready for this yet */
+block|mp->mnt_kern_flag |= MNTK_MPSAFE;
+endif|#
+directive|endif
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 name|mp
 operator|->
@@ -1719,11 +1751,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|pfs_fileno_uninit
-argument_list|(
-name|pi
-argument_list|)
-expr_stmt|;
 name|pfs_destroy
 argument_list|(
 name|pi
@@ -1736,6 +1763,11 @@ operator|->
 name|pi_root
 operator|=
 name|NULL
+expr_stmt|;
+name|pfs_fileno_uninit
+argument_list|(
+name|pi
+argument_list|)
 expr_stmt|;
 name|mtx_destroy
 argument_list|(
