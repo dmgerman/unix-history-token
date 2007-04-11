@@ -508,6 +508,10 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|m
+operator|=
+name|n
+expr_stmt|;
 block|}
 block|}
 end_function
