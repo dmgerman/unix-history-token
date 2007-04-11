@@ -675,6 +675,15 @@ literal|"Intel 82562EM/EX/GX Pro/100 Ethernet"
 block|}
 block|,
 block|{
+literal|0x1091
+block|,
+operator|-
+literal|1
+block|,
+literal|"Intel 82562GX Pro/100 Ethernet"
+block|}
+block|,
+block|{
 literal|0x1092
 block|,
 operator|-
