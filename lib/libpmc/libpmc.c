@@ -6489,7 +6489,7 @@ name|EV_ALIAS
 argument_list|(
 literal|"ic-misses"
 argument_list|,
-literal|"p6-ifu-ifetch-miss"
+literal|"p6-ifu-fetch-miss"
 argument_list|)
 block|,
 name|EV_ALIAS
