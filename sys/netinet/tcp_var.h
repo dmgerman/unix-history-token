@@ -203,35 +203,11 @@ name|t_dupacks
 decl_stmt|;
 comment|/* consecutive dup acks recd */
 name|struct
-name|callout
+name|tcp_timer
 modifier|*
-name|tt_rexmt
+name|t_timers
 decl_stmt|;
 comment|/* retransmit timer */
-name|struct
-name|callout
-modifier|*
-name|tt_persist
-decl_stmt|;
-comment|/* retransmit persistence */
-name|struct
-name|callout
-modifier|*
-name|tt_keep
-decl_stmt|;
-comment|/* keepalive */
-name|struct
-name|callout
-modifier|*
-name|tt_2msl
-decl_stmt|;
-comment|/* 2*msl TIME_WAIT timer */
-name|struct
-name|callout
-modifier|*
-name|tt_delack
-decl_stmt|;
-comment|/* delayed ACK timer */
 name|struct
 name|inpcb
 modifier|*
@@ -2171,10 +2147,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|tcp_timer_activate
+parameter_list|(
 name|struct
 name|tcpcb
 modifier|*
-name|tcp_timers
+parameter_list|,
+name|int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tcp_timer_active
 parameter_list|(
 name|struct
 name|tcpcb

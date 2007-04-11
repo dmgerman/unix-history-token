@@ -2149,11 +2149,13 @@ operator|->
 name|t_inpcb
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|tcp_timer_activate
 argument_list|(
 name|tp
-operator|->
-name|tt_rexmt
+argument_list|,
+name|TT_REXMT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|tp
