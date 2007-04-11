@@ -613,21 +613,8 @@ name|iov_len
 operator|=
 literal|2
 expr_stmt|;
-comment|/* 	 * -T disables data-on-SYN: compatibility option to finger broken 	 * hosts.  Also, the implicit-open API is broken on IPv6, so do 	 * the explicit connect there, too. 	 */
 if|if
 condition|(
-operator|(
-name|Tflag
-operator|||
-name|ai
-operator|->
-name|ai_addr
-operator|->
-name|sa_family
-operator|==
-name|AF_INET6
-operator|)
-operator|&&
 name|connect
 argument_list|(
 name|s
