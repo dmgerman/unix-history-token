@@ -4574,7 +4574,6 @@ argument_list|,
 name|SX_LOCKED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXXRW: Other instances of the message queue primitive are 	 * allowed in jail? 	 */
 if|if
 condition|(
 name|ucred
