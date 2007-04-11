@@ -1345,7 +1345,7 @@ directive|define
 name|DROP_GIANT
 parameter_list|()
 define|\
-value|do {									\ 	int _giantcnt;							\ 	WITNESS_SAVE_DECL(Giant);					\ 									\ 	if (mtx_owned(&Giant))						\ 		WITNESS_SAVE(&Giant.lock_object, Giant);		\ 	for (_giantcnt = 0; mtx_owned(&Giant); _giantcnt++)		\ 		mtx_unlock(&Giant)
+value|do {									\ 	int _giantcnt = 0;						\ 	WITNESS_SAVE_DECL(Giant);					\ 									\ 	if (mtx_owned(&Giant)) {					\ 		WITNESS_SAVE(&Giant.lock_object, Giant);		\ 		for (_giantcnt = 0; mtx_owned(&Giant); _giantcnt++)	\ 			mtx_unlock(&Giant);				\ 	}
 end_define
 
 begin_define
@@ -1363,7 +1363,7 @@ directive|define
 name|PARTIAL_PICKUP_GIANT
 parameter_list|()
 define|\
-value|mtx_assert(&Giant, MA_NOTOWNED);				\ 	while (_giantcnt--)						\ 		mtx_lock(&Giant);					\ 	if (mtx_owned(&Giant))						\ 		WITNESS_RESTORE(&Giant.lock_object, Giant)
+value|mtx_assert(&Giant, MA_NOTOWNED);				\ 	if (_giantcnt> 0) {						\ 		while (_giantcnt--)					\ 			mtx_lock(&Giant);				\ 		WITNESS_RESTORE(&Giant.lock_object, Giant);		\ 	}
 end_define
 
 begin_endif
