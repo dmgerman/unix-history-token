@@ -6028,7 +6028,7 @@ name|new
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXXRW: Can we avoid caching the privilege decision here, and 	 * instead cache the credential? 	 * 	 * XXXRW: Why is suser_allowjail set here? 	 */
+comment|/* 	 * XXXRW: Can we avoid caching the privilege decision here, and 	 * instead cache the credential? 	 */
 if|if
 condition|(
 name|so
