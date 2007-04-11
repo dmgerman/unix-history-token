@@ -267,6 +267,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Force a time value to be in a certain range.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPT_RANGESET
+parameter_list|(
+name|tv
+parameter_list|,
+name|value
+parameter_list|,
+name|tvmin
+parameter_list|,
+name|tvmax
+parameter_list|)
+value|do { \ 	(tv) = (value) + tcp_rexmit_slop; \ 	if ((u_long)(tv)< (u_long)(tvmin)) \ 		(tv) = (tvmin); \ 	if ((u_long)(tv)> (u_long)(tvmax)) \ 		(tv) = (tvmax); \ } while(0)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct
 struct|struct
 name|tcp_timer
@@ -321,32 +347,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Force a time value to be in a certain range.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPT_RANGESET
-parameter_list|(
-name|tv
-parameter_list|,
-name|value
-parameter_list|,
-name|tvmin
-parameter_list|,
-name|tvmax
-parameter_list|)
-value|do { \ 	(tv) = (value) + tcp_rexmit_slop; \ 	if ((u_long)(tv)< (u_long)(tvmin)) \ 		(tv) = (tvmin); \ 	if ((u_long)(tv)> (u_long)(tvmax)) \ 		(tv) = (tvmax); \ } while(0)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_decl_stmt
 specifier|extern
