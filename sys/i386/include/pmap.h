@@ -327,6 +327,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PGEX_RSV
+value|0x08
+end_define
+
+begin_comment
+comment|/* reserved PTE field is non-zero */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PGEX_I
 value|0x10
 end_define
