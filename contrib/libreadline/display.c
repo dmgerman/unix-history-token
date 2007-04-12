@@ -2249,12 +2249,29 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HANDLE_MULTIBYTE
+argument_list|)
+define|#
+directive|define
+name|CHECK_INV_LBREAKS
+parameter_list|()
+define|\
+value|do { \ 	if (newlines>= (inv_lbsize - 2)) \ 	  { \ 	    inv_lbsize *= 2; \ 	    inv_lbreaks = (int *)xrealloc (inv_lbreaks, inv_lbsize * sizeof (int)); \ 	    _rl_wrapped_line = (int *)xrealloc (_rl_wrapped_line, inv_lbsize * sizeof (int)); \ 	  } \       } while (0)
+else|#
+directive|else
 define|#
 directive|define
 name|CHECK_INV_LBREAKS
 parameter_list|()
 define|\
 value|do { \ 	if (newlines>= (inv_lbsize - 2)) \ 	  { \ 	    inv_lbsize *= 2; \ 	    inv_lbreaks = (int *)xrealloc (inv_lbreaks, inv_lbsize * sizeof (int)); \ 	  } \       } while (0)
+endif|#
+directive|endif
+comment|/* HANDLE_MULTIBYTE */
 if|#
 directive|if
 name|defined
