@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2002, 2006 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: findfp.c,v 1.66 2002/02/20 02:40:24 ca Exp $"
+literal|"@(#)$Id: findfp.c,v 1.67 2006/08/28 21:24:46 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1323,6 +1323,22 @@ block|{
 case|case
 name|SM_IO_WHAT_VECTORS
 case|:
+if|if
+condition|(
+name|valp
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 comment|/* This is the "generic" available for all */
 name|v
 operator|->

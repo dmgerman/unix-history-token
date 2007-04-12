@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: exc.c,v 1.48 2003/12/05 22:45:24 ca Exp $"
+literal|"@(#)$Id: exc.c,v 1.49 2006/12/19 19:28:09 ca Exp $"
 argument_list|)
 end_macro
 
@@ -665,7 +665,27 @@ begin_comment
 comment|/* **  This is an auxiliary function called by sm_exc_new_x and sm_exc_raisenew_x. ** **  If an exception is raised, then to avoid a storage leak, we must: **  (a) Free all storage we have allocated. **  (b) Free all exception arguments in the varargs list. **  Getting this right is tricky. ** **  To see why (b) is required, consider the code fragment **     SM_EXCEPT(exc, "*") **         sm_exc_raisenew_x(&MyEtype, exc); **     SM_END_TRY **  In the normal case, sm_exc_raisenew_x will allocate and raise a new **  exception E that owns exc.  When E is eventually freed, exc is also freed. **  In the exceptional case, sm_exc_raisenew_x must free exc before raising **  an out-of-memory exception so that exc is not leaked. */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|SM_EXC_T
+modifier|*
+name|sm_exc_vnew_x
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|SM_EXC_TYPE_T
+operator|*
+operator|,
+name|va_list
+name|SM_NONVOLATILE
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+specifier|static
 name|SM_EXC_T
 modifier|*
 name|sm_exc_vnew_x
@@ -1289,48 +1309,6 @@ name|SM_VA_END
 argument_list|(
 name|ap
 argument_list|)
-expr_stmt|;
-return|return
-name|exc
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* **  SM_ADDREF -- Add a reference to an exception object. ** **	Parameters: **		exc -- exception object. ** **	Returns: **		exc itself. */
-end_comment
-
-begin_function
-name|SM_EXC_T
-modifier|*
-name|sm_addref
-parameter_list|(
-name|exc
-parameter_list|)
-name|SM_EXC_T
-modifier|*
-name|exc
-decl_stmt|;
-block|{
-name|SM_REQUIRE_ISA
-argument_list|(
-name|exc
-argument_list|,
-name|SmExcMagic
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|exc
-operator|->
-name|exc_refcount
-operator|!=
-literal|0
-condition|)
-operator|++
-name|exc
-operator|->
-name|exc_refcount
 expr_stmt|;
 return|return
 name|exc

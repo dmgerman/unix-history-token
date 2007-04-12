@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2003, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: handler.c,v 8.36 2003/09/08 21:27:14 yuri Exp $"
+literal|"@(#)$Id: handler.c,v 8.38 2006/11/02 02:38:22 ca Exp $"
 argument_list|)
 end_macro
 
@@ -21,6 +21,13 @@ include|#
 directive|include
 file|"libmilter.h"
 end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|_FFR_WORKERS_POOL
+end_if
 
 begin_comment
 comment|/* **  HANDLE_SESSION -- Handle a connected session in its own context ** **	Parameters: **		ctx -- context structure ** **	Returns: **		MI_SUCCESS/MI_FAILURE */
@@ -176,6 +183,15 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_FFR_WORKERS_POOL */
+end_comment
 
 end_unit
 

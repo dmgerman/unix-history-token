@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: usersmtp.c,v 8.467 2006/03/19 06:07:56 ca Exp $"
+literal|"@(#)$Id: usersmtp.c,v 8.469 2006/12/13 20:11:15 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2282,7 +2282,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  INIT_SASL_CLIENT -- initialize client side of Cyrus-SASL ** **	Parameters: **		none. ** **	Returns: **		SASL_OK -- if successful. **		SASL error code -- otherwise. ** **	Side Effects: **		checks/sets sasl_clt_init. */
+comment|/* **  INIT_SASL_CLIENT -- initialize client side of Cyrus-SASL ** **	Parameters: **		none. ** **	Returns: **		SASL_OK -- if successful. **		SASL error code -- otherwise. ** **	Side Effects: **		checks/sets sasl_clt_init. ** **	Note: **	Callbacks are ignored if sasl_client_init() has **	been called before (by a library such as libnss_ldap) */
 end_comment
 
 begin_decl_stmt
@@ -3136,7 +3136,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -6338,6 +6340,7 @@ directive|if
 name|SASL
 operator|>=
 literal|20000
+comment|/* 	**  We provide the callbacks again because global callbacks in 	**  sasl_client_init() are ignored if SASL has been initialized 	**  before, for example, by a library such as libnss-ldap. 	*/
 name|saslresult
 operator|=
 name|sasl_client_new
@@ -6361,7 +6364,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|callbacks
 argument_list|,
 literal|0
 argument_list|,
@@ -6427,7 +6430,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ssp
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX should these be options settable via .cf ? */
@@ -6707,7 +6712,9 @@ argument_list|,
 name|remoteip
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|remoteip
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -6779,7 +6786,9 @@ argument_list|,
 name|localip
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|localip
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -8283,7 +8292,9 @@ argument_list|(
 name|optbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|optbuf
+argument_list|)
 argument_list|,
 literal|" SIZE=%ld"
 argument_list|,
@@ -8931,7 +8942,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -9574,7 +9587,7 @@ name|bufp
 operator|=
 name|optbuf
 expr_stmt|;
-comment|/* 	**  Warning: in the following it is assumed that the free space 	**  in bufp is sizeof optbuf 	*/
+comment|/* 	**  Warning: in the following it is assumed that the free space 	**  in bufp is sizeof(optbuf) 	*/
 if|if
 condition|(
 name|bitset
@@ -9712,7 +9725,9 @@ argument_list|,
 literal|" NOTIFY="
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|optbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -9737,7 +9752,9 @@ argument_list|,
 literal|"SUCCESS"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|optbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|firstone
@@ -9772,7 +9789,9 @@ argument_list|,
 literal|","
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|optbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -9785,7 +9804,9 @@ argument_list|,
 literal|"FAILURE"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|optbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|firstone
@@ -9820,7 +9841,9 @@ argument_list|,
 literal|","
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|optbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -9833,7 +9856,9 @@ argument_list|,
 literal|"DELAY"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|optbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|firstone
@@ -9855,7 +9880,9 @@ argument_list|,
 literal|"NEVER"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|optbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bufp
@@ -12813,7 +12840,9 @@ argument_list|(
 name|SmtpReplyBuffer
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|SmtpReplyBuffer
+argument_list|)
 argument_list|,
 literal|"421 4.4.1 Connection reset by %s"
 argument_list|,
@@ -13281,7 +13310,9 @@ argument_list|,
 name|SmtpReplyBuffer
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|SmtpError
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* reply code 421 is "Service Shutting Down" */
@@ -13402,7 +13433,9 @@ argument_list|(
 name|SmtpMsgBuffer
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|SmtpMsgBuffer
+argument_list|)
 argument_list|,
 name|f
 argument_list|,

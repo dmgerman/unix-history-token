@@ -34,7 +34,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"$Id: sm_resolve.c,v 8.33 2004/08/04 21:17:57 ca Exp $"
+literal|"$Id: sm_resolve.c,v 8.34 2006/08/15 23:24:58 ca Exp $"
 argument_list|)
 end_macro
 
@@ -513,7 +513,9 @@ argument_list|,
 name|host
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|host
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -631,7 +633,9 @@ argument_list|,
 name|host
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|host
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -875,7 +879,9 @@ argument_list|,
 name|host
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|host
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -955,7 +961,9 @@ argument_list|,
 name|host
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|host
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1106,7 +1114,9 @@ argument_list|,
 name|host
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|host
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1660,7 +1670,9 @@ argument_list|,
 name|reply
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|reply
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

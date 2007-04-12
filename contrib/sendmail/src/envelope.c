@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: envelope.c,v 8.296 2006/03/31 18:53:50 ca Exp $"
+literal|"@(#)$Id: envelope.c,v 8.302 2006/11/10 23:12:52 ca Exp $"
 argument_list|)
 end_macro
 
@@ -303,19 +303,10 @@ modifier|*
 name|rpool
 decl_stmt|;
 block|{
-if|#
-directive|if
-name|_FFR_DM_PER_DAEMON
 name|int
 name|sendmode
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_DM_PER_DAEMON */
 comment|/* 	**  This code used to read: 	**	if (e == parent&& e->e_parent != NULL) 	**		parent = e->e_parent; 	**  So if e == parent&& e->e_parent == NULL then we would 	**  set e->e_parent = e, which creates a loop in the e_parent chain. 	**  This meant macvalue() could go into an infinite loop. 	*/
-if|#
-directive|if
-name|_FFR_DM_PER_DAEMON
 if|if
 condition|(
 name|parent
@@ -333,9 +324,6 @@ name|sendmode
 operator|=
 name|DM_NOTSET
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_DM_PER_DAEMON */
 if|if
 condition|(
 name|e
@@ -382,9 +370,11 @@ operator|&
 name|NullAddress
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|e
 operator|->
 name|e_from
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -409,9 +399,11 @@ operator|->
 name|e_from
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|e
 operator|->
 name|e_from
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|e
@@ -548,9 +540,6 @@ argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_DM_PER_DAEMON
 if|if
 condition|(
 name|sendmode
@@ -563,9 +552,6 @@ name|e_sendmode
 operator|=
 name|sendmode
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_DM_PER_DAEMON */
 return|return
 name|e
 return|;
@@ -1285,7 +1271,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"delivery time expired %lds"
 argument_list|,
@@ -1305,7 +1293,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Cannot send message for %s"
 argument_list|,
@@ -1775,7 +1765,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Warning: Delivery time (%lds) exceeded"
 argument_list|,
@@ -1794,7 +1786,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Warning: could not send message for past %s"
 argument_list|,
@@ -2234,7 +2228,9 @@ argument_list|,
 name|pcopy
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pcopy
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -3067,8 +3063,10 @@ argument_list|(
 name|rpool
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|bh
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memmove
@@ -3087,8 +3085,10 @@ operator|)
 name|bh
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|bh
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bh
@@ -3215,7 +3215,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -3248,7 +3250,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -3341,7 +3345,9 @@ argument_list|(
 name|ybuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ybuf
+argument_list|)
 argument_list|,
 name|p
 argument_list|)
@@ -3418,7 +3424,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%ld"
 argument_list|,
@@ -3461,7 +3469,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%04d%02d%02d%02d%02d"
 argument_list|,
@@ -3518,7 +3528,9 @@ name|now
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -4180,7 +4192,9 @@ argument_list|(
 name|ebuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ebuf
+argument_list|)
 argument_list|,
 literal|"%.*s@%.*s"
 argument_list|,
@@ -4311,7 +4325,9 @@ argument_list|,
 name|nbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|nbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -4906,11 +4922,13 @@ argument_list|,
 name|pvpbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pvpbuf
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|IntTokenTab
 argument_list|,
 name|false
 argument_list|)
@@ -5025,11 +5043,15 @@ argument_list|,
 name|bp
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|2
 argument_list|,
 literal|'\0'
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -5065,7 +5087,9 @@ argument_list|,
 literal|">"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|1
 argument_list|)
