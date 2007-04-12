@@ -6466,7 +6466,7 @@ name|Var_Subst
 argument_list|(
 name|line
 argument_list|,
-name|VAR_GLOBAL
+name|VAR_CMD
 argument_list|,
 name|FALSE
 argument_list|)
