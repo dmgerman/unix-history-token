@@ -5042,6 +5042,8 @@ argument_list|,
 name|ifp
 operator|->
 name|if_mtu
+operator|+
+name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
 name|t3_mac_set_address
@@ -6060,6 +6062,8 @@ argument_list|,
 name|ifp
 operator|->
 name|if_mtu
+operator|+
+name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
 name|PORT_UNLOCK
@@ -7431,6 +7435,8 @@ argument_list|,
 name|ifp
 operator|->
 name|if_mtu
+operator|+
+name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
 name|t3_mac_set_address
