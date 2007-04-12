@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: tls.c,v 8.105 2006/05/11 22:59:31 ca Exp $"
+literal|"@(#)$Id: tls.c,v 8.107 2006/10/12 21:35:11 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1120,7 +1120,9 @@ operator|&
 name|st
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|st
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1293,7 +1295,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3053,12 +3057,21 @@ name|who
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|store
+operator|=
+name|NULL
+expr_stmt|;
 if|#
 directive|if
 name|_FFR_CRLPATH
 if|if
 condition|(
 name|CRLPath
+operator|!=
+name|NULL
+operator|&&
+name|store
 operator|!=
 name|NULL
 condition|)
@@ -4503,7 +4516,9 @@ argument_list|(
 name|bitstr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|bitstr
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -4532,7 +4547,9 @@ argument_list|(
 name|bitstr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|bitstr
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -4665,7 +4682,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|macdefine
@@ -4697,7 +4716,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|macdefine
@@ -4731,7 +4752,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|macdefine
@@ -4765,7 +4788,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|macdefine
@@ -6029,7 +6054,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sm_syslog

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sasl.c,v 8.21 2004/11/22 23:09:00 gshapiro Exp $"
+literal|"@(#)$Id: sasl.c,v 8.22 2006/08/15 23:24:57 ca Exp $"
 argument_list|)
 end_macro
 
@@ -720,12 +720,16 @@ argument_list|,
 name|hbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hbuf
+argument_list|)
 argument_list|,
 name|pbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pbuf
+argument_list|)
 argument_list|,
 name|niflags
 argument_list|)
@@ -797,7 +801,9 @@ argument_list|(
 name|pbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pbuf
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,

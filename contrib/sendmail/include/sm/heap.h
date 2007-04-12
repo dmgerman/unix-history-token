@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: heap.h,v 1.22 2001/09/04 22:41:55 ca Exp $  */
+comment|/*  * Copyright (c) 2000-2001, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: heap.h,v 1.23 2006/08/15 00:53:46 ca Exp $  */
 end_comment
 
 begin_comment
@@ -507,6 +507,17 @@ directive|define
 name|sm_heap_newgroup
 parameter_list|()
 value|(SmHeapGroup = ++SmHeapMaxGroup)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SM_FREE
+parameter_list|(
+name|ptr
+parameter_list|)
+define|\
+value|do				\ 	{				\ 		if ((ptr) != NULL)	\ 		{			\ 			sm_free(ptr);	\ 			(ptr) = NULL;	\ 		}			\ 	} while (0)
 end_define
 
 begin_decl_stmt

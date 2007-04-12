@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -9,10 +9,16 @@ directive|include
 file|<sendmail.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"map.h"
+end_include
+
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: daemon.c,v 8.666 2006/04/18 01:23:42 ca Exp $"
+literal|"@(#)$Id: daemon.c,v 8.678 2007/03/08 00:33:40 ca Exp $"
 argument_list|)
 end_macro
 
@@ -294,125 +300,18 @@ directive|include
 file|<sm/fdset.h>
 end_include
 
-begin_comment
-comment|/* structure to describe a daemon or a client */
-end_comment
-
-begin_struct
-struct|struct
-name|daemon
-block|{
-name|int
-name|d_socket
-decl_stmt|;
-comment|/* fd for socket */
-name|SOCKADDR
-name|d_addr
-decl_stmt|;
-comment|/* socket for incoming */
-name|unsigned
-name|short
-name|d_port
-decl_stmt|;
-comment|/* port number */
-name|int
-name|d_listenqueue
-decl_stmt|;
-comment|/* size of listen queue */
-name|int
-name|d_tcprcvbufsize
-decl_stmt|;
-comment|/* size of TCP receive buffer */
-name|int
-name|d_tcpsndbufsize
-decl_stmt|;
-comment|/* size of TCP send buffer */
-name|time_t
-name|d_refuse_connections_until
-decl_stmt|;
-name|bool
-name|d_firsttime
-decl_stmt|;
-name|int
-name|d_socksize
-decl_stmt|;
-name|BITMAP256
-name|d_flags
-decl_stmt|;
-comment|/* flags; see sendmail.h */
-name|char
-modifier|*
-name|d_mflags
-decl_stmt|;
-comment|/* flags for use in macro */
-name|char
-modifier|*
-name|d_name
-decl_stmt|;
-comment|/* user-supplied name */
-if|#
-directive|if
-name|MILTER
-name|char
-modifier|*
-name|d_inputfilterlist
-decl_stmt|;
-name|struct
-name|milter
-modifier|*
-name|d_inputfilters
-index|[
-name|MAXFILTERS
-index|]
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* MILTER */
-if|#
-directive|if
-name|_FFR_SS_PER_DAEMON
-name|int
-name|d_supersafe
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_SS_PER_DAEMON */
-if|#
-directive|if
-name|_FFR_DM_PER_DAEMON
-name|int
-name|d_dm
-decl_stmt|;
-comment|/* DeliveryMode */
-endif|#
-directive|endif
-comment|/* _FFR_DM_PER_DAEMON */
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|daemon
-name|DAEMON_T
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
-name|SAFE_NOTSET
-value|(-1)
+name|DAEMON_C
+value|1
 end_define
 
-begin_comment
-comment|/* SuperSafe (per daemon) option not set */
-end_comment
-
-begin_comment
-comment|/* see also sendmail.h: SuperSafe values */
-end_comment
+begin_include
+include|#
+directive|include
+file|<daemon.h>
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -558,16 +457,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|DAEMON_T
-name|Daemons
-index|[
-name|MAXDAEMONS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|NDaemons
 init|=
@@ -644,7 +533,9 @@ name|SOCKADDR_LEN_T
 name|len
 init|=
 sizeof|sizeof
+argument_list|(
 name|sa
+argument_list|)
 decl_stmt|;
 if|#
 directive|if
@@ -668,24 +559,6 @@ comment|/* NETUNIX */
 specifier|extern
 name|ENVELOPE
 name|BlankEnvelope
-decl_stmt|;
-specifier|extern
-name|bool
-name|refuseconnections
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|ENVELOPE
-operator|*
-operator|,
-name|int
-operator|,
-name|bool
-operator|)
-argument_list|)
 decl_stmt|;
 comment|/* initialize data for function that generates queue ids */
 name|init_qid_alg
@@ -885,7 +758,9 @@ argument_list|,
 name|jbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|jbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -1072,13 +947,6 @@ if|if
 condition|(
 name|refuseconnections
 argument_list|(
-name|Daemons
-index|[
-name|idx
-index|]
-operator|.
-name|d_name
-argument_list|,
 name|e
 argument_list|,
 name|idx
@@ -1241,7 +1109,9 @@ argument_list|,
 name|jbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|jbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -1690,7 +1560,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|RealHostAddr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|t
@@ -1829,7 +1701,9 @@ decl_stmt|;
 name|lotherend
 operator|=
 sizeof|sizeof
+argument_list|(
 name|sa_un
+argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
@@ -1839,7 +1713,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|sa_un
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|t
@@ -2411,8 +2287,10 @@ operator|&
 name|NextDiskSpaceCheck
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|NextDiskSpaceCheck
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|RAND_seed
 argument_list|(
@@ -2424,7 +2302,9 @@ operator|&
 name|now
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|now
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|RAND_seed
@@ -2437,7 +2317,9 @@ operator|&
 name|seed
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|seed
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|#
@@ -2753,7 +2635,9 @@ argument_list|(
 name|status
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|status
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -2900,6 +2784,7 @@ name|QueueIntvl
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 				**  Hack: override global variables if 				**	the corresponding DaemonPortOption 				**	is set. 				*/
 if|#
 directive|if
 name|_FFR_SS_PER_DAEMON
@@ -2912,7 +2797,7 @@ index|]
 operator|.
 name|d_supersafe
 operator|!=
-name|SAFE_NOTSET
+name|DPO_NOTSET
 condition|)
 name|SuperSafe
 operator|=
@@ -2926,9 +2811,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* _FFR_SS_PER_DAEMON */
-if|#
-directive|if
-name|_FFR_DM_PER_DAEMON
 if|if
 condition|(
 name|Daemons
@@ -2952,9 +2834,86 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_DM_PER_DAEMON */
+if|if
+condition|(
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_refuseLA
+operator|!=
+name|DPO_NOTSET
+condition|)
+name|RefuseLA
+operator|=
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_refuseLA
+expr_stmt|;
+if|if
+condition|(
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_queueLA
+operator|!=
+name|DPO_NOTSET
+condition|)
+name|QueueLA
+operator|=
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_queueLA
+expr_stmt|;
+if|if
+condition|(
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_delayLA
+operator|!=
+name|DPO_NOTSET
+condition|)
+name|DelayLA
+operator|=
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_delayLA
+expr_stmt|;
+if|if
+condition|(
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_maxchildren
+operator|!=
+name|DPO_NOTSET
+condition|)
+name|MaxChildren
+operator|=
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_maxchildren
+expr_stmt|;
 name|sm_setproctitle
 argument_list|(
 name|true
@@ -3580,7 +3539,9 @@ argument_list|(
 name|status
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|status
+argument_list|)
 argument_list|,
 literal|"control socket server child"
 argument_list|)
@@ -3612,7 +3573,9 @@ argument_list|(
 name|status
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|status
+argument_list|)
 argument_list|,
 literal|"SMTP server child for %s"
 argument_list|,
@@ -4455,7 +4418,9 @@ operator|&
 name|on
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|on
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4479,7 +4444,9 @@ operator|&
 name|on
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|on
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4503,7 +4470,9 @@ operator|&
 name|on
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|on
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4719,11 +4688,13 @@ case|:
 name|socksize
 operator|=
 sizeof|sizeof
+argument_list|(
 name|d
 operator|->
 name|d_addr
 operator|.
 name|sunix
+argument_list|)
 expr_stmt|;
 break|break;
 endif|#
@@ -4741,11 +4712,13 @@ case|:
 name|socksize
 operator|=
 sizeof|sizeof
+argument_list|(
 name|d
 operator|->
 name|d_addr
 operator|.
 name|sin
+argument_list|)
 expr_stmt|;
 break|break;
 endif|#
@@ -4760,11 +4733,13 @@ case|:
 name|socksize
 operator|=
 sizeof|sizeof
+argument_list|(
 name|d
 operator|->
 name|d_addr
 operator|.
 name|sin6
+argument_list|)
 expr_stmt|;
 break|break;
 endif|#
@@ -4779,11 +4754,13 @@ case|:
 name|socksize
 operator|=
 sizeof|sizeof
+argument_list|(
 name|d
 operator|->
 name|d_addr
 operator|.
 name|siso
+argument_list|)
 expr_stmt|;
 break|break;
 endif|#
@@ -4793,9 +4770,11 @@ default|default:
 name|socksize
 operator|=
 sizeof|sizeof
+argument_list|(
 name|d
 operator|->
 name|d_addr
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -4970,8 +4949,10 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|daemonaddr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|#
@@ -5592,23 +5573,41 @@ name|d
 operator|->
 name|d_supersafe
 operator|=
-name|SAFE_NOTSET
+name|DPO_NOTSET
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* _FFR_SS_PER_DAEMON */
-if|#
-directive|if
-name|_FFR_DM_PER_DAEMON
 name|d
 operator|->
 name|d_dm
 operator|=
 name|DM_NOTSET
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_DM_PER_DAEMON */
+name|d
+operator|->
+name|d_refuseLA
+operator|=
+name|DPO_NOTSET
+expr_stmt|;
+name|d
+operator|->
+name|d_queueLA
+operator|=
+name|DPO_NOTSET
+expr_stmt|;
+name|d
+operator|->
+name|d_delayLA
+operator|=
+name|DPO_NOTSET
+expr_stmt|;
+name|d
+operator|->
+name|d_maxchildren
+operator|=
+name|DPO_NOTSET
+expr_stmt|;
 while|while
 condition|(
 name|p
@@ -5708,29 +5707,6 @@ name|v
 argument_list|)
 condition|)
 continue|continue;
-if|if
-condition|(
-name|isascii
-argument_list|(
-operator|*
-name|f
-argument_list|)
-operator|&&
-name|islower
-argument_list|(
-operator|*
-name|f
-argument_list|)
-condition|)
-operator|*
-name|f
-operator|=
-name|toupper
-argument_list|(
-operator|*
-name|f
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 operator|*
@@ -5741,14 +5717,34 @@ case|case
 literal|'A'
 case|:
 comment|/* address */
+if|#
+directive|if
+operator|!
+name|_FFR_DPO_CS
+case|case
+literal|'a'
+case|:
+endif|#
+directive|endif
+comment|/* !_FFR_DPO_CS */
 name|addr
 operator|=
 name|v
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_DM_PER_DAEMON
+case|case
+literal|'c'
+case|:
+name|d
+operator|->
+name|d_maxchildren
+operator|=
+name|atoi
+argument_list|(
+name|v
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'D'
 case|:
@@ -5791,13 +5787,34 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_DM_PER_DAEMON */
+case|case
+literal|'d'
+case|:
+comment|/* delayLA */
+name|d
+operator|->
+name|d_delayLA
+operator|=
+name|atoi
+argument_list|(
+name|v
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'F'
 case|:
 comment|/* address family */
+if|#
+directive|if
+operator|!
+name|_FFR_DPO_CS
+case|case
+literal|'f'
+case|:
+endif|#
+directive|endif
+comment|/* !_FFR_DPO_CS */
 if|if
 condition|(
 name|isascii
@@ -6023,6 +6040,16 @@ name|MILTER
 case|case
 literal|'I'
 case|:
+if|#
+directive|if
+operator|!
+name|_FFR_DPO_CS
+case|case
+literal|'i'
+case|:
+endif|#
+directive|endif
+comment|/* !_FFR_DPO_CS */
 name|d
 operator|->
 name|d_inputfilterlist
@@ -6037,6 +6064,16 @@ case|case
 literal|'L'
 case|:
 comment|/* listen queue size */
+if|#
+directive|if
+operator|!
+name|_FFR_DPO_CS
+case|case
+literal|'l'
+case|:
+endif|#
+directive|endif
+comment|/* !_FFR_DPO_CS */
 name|d
 operator|->
 name|d_listenqueue
@@ -6051,6 +6088,16 @@ case|case
 literal|'M'
 case|:
 comment|/* modifiers (flags) */
+if|#
+directive|if
+operator|!
+name|_FFR_DPO_CS
+case|case
+literal|'m'
+case|:
+endif|#
+directive|endif
+comment|/* !_FFR_DPO_CS */
 name|d
 operator|->
 name|d_mflags
@@ -6069,6 +6116,16 @@ case|case
 literal|'N'
 case|:
 comment|/* name */
+if|#
+directive|if
+operator|!
+name|_FFR_DPO_CS
+case|case
+literal|'n'
+case|:
+endif|#
+directive|endif
+comment|/* !_FFR_DPO_CS */
 name|d
 operator|->
 name|d_name
@@ -6080,9 +6137,32 @@ case|case
 literal|'P'
 case|:
 comment|/* port */
+if|#
+directive|if
+operator|!
+name|_FFR_DPO_CS
+case|case
+literal|'p'
+case|:
+endif|#
+directive|endif
+comment|/* !_FFR_DPO_CS */
 name|port
 operator|=
 name|v
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|d
+operator|->
+name|d_queueLA
+operator|=
+name|atoi
+argument_list|(
+name|v
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -6100,9 +6180,32 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'r'
+case|:
+name|d
+operator|->
+name|d_refuseLA
+operator|=
+name|atoi
+argument_list|(
+name|v
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'S'
 case|:
 comment|/* send buffer size */
+if|#
+directive|if
+operator|!
+name|_FFR_DPO_CS
+case|case
+literal|'s'
+case|:
+endif|#
+directive|endif
+comment|/* !_FFR_DPO_CS */
 name|d
 operator|->
 name|d_tcpsndbufsize
@@ -7388,7 +7491,9 @@ argument_list|(
 name|num
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|num
+argument_list|)
 argument_list|,
 literal|"Daemon%d"
 argument_list|,
@@ -7548,7 +7653,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|d
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|setsockaddroptions
@@ -7631,7 +7738,9 @@ argument_list|(
 name|num
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|num
+argument_list|)
 argument_list|,
 literal|"Client%d"
 argument_list|,
@@ -8278,7 +8387,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|clt_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* infer the address family from the address itself */
@@ -8384,7 +8495,9 @@ argument_list|(
 name|p6
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|p6
+argument_list|)
 argument_list|,
 literal|"IPv6:::ffff:%s"
 argument_list|,
@@ -8402,7 +8515,9 @@ argument_list|,
 name|p
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|p6
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8626,9 +8741,11 @@ case|:
 name|socksize
 operator|=
 sizeof|sizeof
+argument_list|(
 name|clt_addr
 operator|.
 name|siso
+argument_list|)
 expr_stmt|;
 name|clt_bind
 operator|=
@@ -8660,7 +8777,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|CurHostAddr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -8671,7 +8790,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|SmtpPhase
@@ -8750,7 +8871,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hid6
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -9158,6 +9281,32 @@ name|errno
 operator|==
 name|ETIMEDOUT
 operator|||
+if|#
+directive|if
+name|_FFR_GETHBN_ExFILE
+ifdef|#
+directive|ifdef
+name|EMFILE
+name|errno
+operator|==
+name|EMFILE
+operator|||
+endif|#
+directive|endif
+comment|/* EMFILE */
+ifdef|#
+directive|ifdef
+name|ENFILE
+name|errno
+operator|==
+name|ENFILE
+operator|||
+endif|#
+directive|endif
+comment|/* ENFILE */
+endif|#
+directive|endif
+comment|/* _FFR_GETHBN_ExFILE */
 name|h_errno
 operator|==
 name|TRY_AGAIN
@@ -9327,11 +9476,13 @@ operator|->
 name|h_length
 operator|>
 sizeof|sizeof
+argument_list|(
 name|addr
 operator|.
 name|sa
 operator|.
 name|sa_data
+argument_list|)
 condition|)
 block|{
 name|syserr
@@ -10032,7 +10183,9 @@ operator|&
 name|on
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|on
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -10116,7 +10269,9 @@ operator|&
 name|on
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|on
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10158,7 +10313,9 @@ operator|&
 name|on
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|on
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11087,7 +11244,9 @@ comment|/* find out name for Interface through which we connect */
 name|len
 operator|=
 sizeof|sizeof
+argument_list|(
 name|addr
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11316,9 +11475,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|_FFR_HELONAME
 comment|/* Use the configured HeloName as appropriate */
 if|if
 condition|(
@@ -11342,9 +11498,6 @@ argument_list|(
 name|HeloName
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_HELONAME */
 name|mci_setstat
 argument_list|(
 name|mci
@@ -11505,7 +11658,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|unix_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|unix_addr
@@ -11522,9 +11677,11 @@ name|mux_path
 argument_list|)
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|unix_addr
 operator|.
 name|sun_path
+argument_list|)
 condition|)
 block|{
 name|syserr
@@ -11566,9 +11723,11 @@ argument_list|,
 name|mux_path
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|unix_addr
 operator|.
 name|sun_path
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* initialize domain socket */
@@ -13257,7 +13416,9 @@ expr_stmt|;
 name|falen
 operator|=
 sizeof|sizeof
+argument_list|(
 name|RealHostAddr
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -13328,7 +13489,9 @@ argument_list|(
 name|hbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hbuf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -13555,7 +13718,9 @@ goto|;
 name|lalen
 operator|=
 sizeof|sizeof
+argument_list|(
 name|la
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -13624,7 +13789,9 @@ argument_list|(
 name|ibuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ibuf
+argument_list|)
 argument_list|,
 literal|"%d,%d\r\n"
 argument_list|,
@@ -13785,7 +13952,9 @@ argument_list|(
 name|ibuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ibuf
+argument_list|)
 argument_list|,
 literal|"%d,%d\r\n"
 argument_list|,
@@ -14053,7 +14222,9 @@ expr_stmt|;
 name|nleft
 operator|=
 sizeof|sizeof
+argument_list|(
 name|ibuf
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -14441,7 +14612,9 @@ argument_list|,
 literal|"IDENT:"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cleanstrcpy
@@ -14487,7 +14660,9 @@ name|len
 index|]
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hbuf
+argument_list|)
 operator|-
 name|len
 argument_list|,
@@ -14618,7 +14793,9 @@ argument_list|,
 name|RealHostName
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|postident
@@ -14677,7 +14854,9 @@ decl_stmt|;
 name|ipoptlen
 operator|=
 sizeof|sizeof
+argument_list|(
 name|ipopt
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -14786,7 +14965,9 @@ expr_stmt|;
 name|l
 operator|=
 sizeof|sizeof
+argument_list|(
 name|hbuf
+argument_list|)
 operator|-
 operator|(
 name|hbuf
@@ -15695,7 +15876,9 @@ argument_list|,
 name|name
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -15705,7 +15888,9 @@ argument_list|(
 name|hbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hbuf
+argument_list|)
 operator|-
 literal|1
 argument_list|,
@@ -15936,7 +16121,9 @@ argument_list|,
 name|ans
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|n
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ans
@@ -16911,7 +17098,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"[UNIX: %.64s]"
 argument_list|,
@@ -16933,7 +17122,9 @@ argument_list|,
 literal|"[UNIX: localhost]"
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -16985,7 +17176,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -17015,7 +17208,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"[LINK: %s]"
 argument_list|,
@@ -17053,7 +17248,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Family %d: "
 argument_list|,
@@ -17088,11 +17285,13 @@ control|(
 name|l
 operator|=
 sizeof|sizeof
+argument_list|(
 name|sap
 operator|->
 name|sa
 operator|.
 name|sa_data
+argument_list|)
 init|;
 operator|--
 name|l
@@ -17309,11 +17508,13 @@ operator|.
 name|siso_addr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|sap
 operator|->
 name|siso
 operator|.
 name|siso_addr
+argument_list|)
 argument_list|,
 name|AF_ISO
 argument_list|)
@@ -17348,11 +17549,13 @@ operator|.
 name|sa_data
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|sap
 operator|->
 name|sa
 operator|.
 name|sa_data
+argument_list|)
 argument_list|,
 name|sap
 operator|->
@@ -17484,7 +17687,9 @@ argument_list|,
 name|name
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|n
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|name
@@ -17576,7 +17781,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"[%.200s]"
 argument_list|,

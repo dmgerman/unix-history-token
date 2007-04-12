@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2005-2007 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: memstat.c,v 1.4 2005/12/10 00:38:48 ca Exp $"
+literal|"@(#)$Id: memstat.c,v 1.6 2007/03/20 23:26:12 ca Exp $"
 argument_list|)
 end_macro
 
@@ -20,6 +20,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/misc.h>
 end_include
 
 begin_if
@@ -640,6 +646,18 @@ argument_list|(
 name|resource
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|l
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+return|return
+name|EINVAL
+return|;
 while|while
 condition|(
 name|fgets

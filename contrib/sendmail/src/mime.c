@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mime.c,v 8.142.2.1 2006/05/23 01:32:08 ca Exp $"
+literal|"@(#)$Id: mime.c,v 8.146 2006/08/16 16:52:11 ca Exp $"
 argument_list|)
 end_macro
 
@@ -534,7 +534,9 @@ argument_list|,
 name|pvpbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pvpbuf
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -570,9 +572,13 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|'\0'
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|cte
@@ -646,7 +652,9 @@ argument_list|,
 name|pvpbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pvpbuf
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -919,7 +927,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%.100s/%.100s"
 argument_list|,
@@ -1157,11 +1167,15 @@ argument_list|,
 name|p
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|bbuf
+argument_list|)
 argument_list|)
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|bbuf
+argument_list|)
 condition|)
 block|{
 name|usrerr
@@ -1333,7 +1347,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -1429,7 +1445,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -1569,7 +1587,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|3
 argument_list|,
@@ -1637,7 +1657,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -1990,7 +2012,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -2218,7 +2242,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Content-Transfer-Encoding: %.200s"
 argument_list|,
@@ -2288,7 +2314,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -2397,7 +2425,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"X-MIME-Autoconverted: from 8bit to base64 by %s id %s"
 argument_list|,
@@ -2823,7 +2853,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"X-MIME-Autoconverted: from 8bit to quoted-printable by %s id %s"
 argument_list|,
@@ -3680,7 +3712,9 @@ operator|&
 name|buf
 index|[
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|2
 index|]
@@ -3766,7 +3800,9 @@ operator|&
 name|buf
 index|[
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|2
 index|]
@@ -4808,7 +4844,9 @@ argument_list|,
 name|pvpbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pvpbuf
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -4865,7 +4903,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"Content-Transfer-Encoding: %s"
 argument_list|,
@@ -4919,7 +4959,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -4952,9 +4994,13 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|'\0'
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|cte
@@ -4995,7 +5041,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"X-MIME-Autoconverted: from %.200s to 8bit by %s id %s"
 argument_list|,
@@ -5366,7 +5414,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL

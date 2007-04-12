@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: listener.c,v 8.115 2006/01/24 00:48:39 ca Exp $"
+literal|"@(#)$Id: listener.c,v 8.122 2006/11/02 17:54:44 ca Exp $"
 argument_list|)
 end_macro
 
@@ -67,6 +67,37 @@ begin_comment
 comment|/* NETINET || NETINET6 */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|SM_CONF_POLL
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|SM_FD_OK_SELECT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SM_FD_OK_SELECT
+parameter_list|(
+name|fd
+parameter_list|)
+value|true
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SM_CONF_POLL */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|smutex_t
@@ -118,6 +149,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|_FFR_WORKERS_POOL
+end_if
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -132,6 +170,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_FFR_WORKERS_POOL */
+end_comment
 
 begin_comment
 comment|/* **  MI_OPENSOCKET -- create the socket where this filter and the MTA will meet ** **	Parameters: **		conn -- connection description **		backlog -- listen backlog **		dbg -- debug level **		rmsocket -- if true, try to unlink() the socket first **			(UNIX domain sockets only) **		smfi -- filter structure to use ** **	Return value: **		MI_SUCCESS/MI_FAILURE */
@@ -280,10 +327,6 @@ return|return
 name|MI_FAILURE
 return|;
 block|}
-if|#
-directive|if
-operator|!
-name|SM_CONF_POLL
 if|if
 condition|(
 operator|!
@@ -321,9 +364,6 @@ return|return
 name|MI_FAILURE
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* !SM_CONF_POLL */
 operator|(
 name|void
 operator|)
@@ -2107,6 +2147,13 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+operator|!
+name|_FFR_WORKERS_POOL
+end_if
+
 begin_comment
 comment|/* **  MI_THREAD_HANDLE_WRAPPER -- small wrapper to handle session ** **	Parameters: **		arg -- argument to pass to mi_handle_session() ** **	Returns: **		results from mi_handle_session() */
 end_comment
@@ -2124,6 +2171,7 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
+comment|/* 	**  Note: on some systems this generates a compiler warning: 	**  cast to pointer from integer of different size 	**  You can safely ignore this warning as the result of this function 	**  is not used anywhere. 	*/
 return|return
 operator|(
 name|void
@@ -2136,6 +2184,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_WORKERS_POOL */
+end_comment
 
 begin_comment
 comment|/* **  MI_CLOSENER -- close listen socket ** **	Parameters: **		none. ** **	Returns: **		none. */
@@ -2493,9 +2550,16 @@ name|save_errno
 init|=
 literal|0
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|_FFR_WORKERS_POOL
 name|sthread_t
 name|thread_id
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* !_FFR_WORKERS_POOL */
 name|_SOCK_ADDR
 name|cliaddr
 decl_stmt|;
@@ -2536,6 +2600,22 @@ condition|)
 return|return
 name|MI_FAILURE
 return|;
+if|#
+directive|if
+name|_FFR_WORKERS_POOL
+if|if
+condition|(
+name|mi_pool_controller_init
+argument_list|()
+operator|==
+name|MI_FAILURE
+condition|)
+return|return
+name|MI_FAILURE
+return|;
+endif|#
+directive|endif
+comment|/* _FFR_WORKERS_POOL */
 name|clilen
 operator|=
 name|L_socksize
@@ -2822,7 +2902,7 @@ operator|&
 name|L_Mutex
 argument_list|)
 expr_stmt|;
-comment|/* 		**  If remote side closes before 		**  accept() finishes, sockaddr 		**  might not be fully filled in. 		*/
+comment|/* 		**  If remote side closes before accept() finishes, 		**  sockaddr might not be fully filled in. 		*/
 if|if
 condition|(
 name|ValidSocket
@@ -2876,10 +2956,6 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-if|#
-directive|if
-operator|!
-name|SM_CONF_POLL
 comment|/* check if acceptable for select() */
 if|if
 condition|(
@@ -2912,9 +2988,6 @@ operator|=
 name|ERANGE
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* !SM_CONF_POLL */
 if|if
 condition|(
 operator|!
@@ -3083,18 +3156,11 @@ name|ValidSocket
 argument_list|(
 name|dupfd
 argument_list|)
-if|#
-directive|if
-operator|!
-name|SM_CONF_POLL
 operator|&&
 name|SM_FD_OK_SELECT
 argument_list|(
 name|dupfd
 argument_list|)
-endif|#
-directive|endif
-comment|/* !SM_CONF_POLL */
 condition|)
 block|{
 name|close
@@ -3273,13 +3339,6 @@ name|ctx_smfi
 operator|=
 name|smfi
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (smfi->xxfi_eoh == NULL) 		if (smfi->xxfi_eom == NULL) 		if (smfi->xxfi_abort == NULL) 		if (smfi->xxfi_close == NULL)
-endif|#
-directive|endif
-comment|/* 0 */
 if|if
 condition|(
 name|smfi
@@ -3380,6 +3439,61 @@ name|SMFIP_NOBODY
 expr_stmt|;
 if|if
 condition|(
+name|smfi
+operator|->
+name|xxfi_data
+operator|==
+name|NULL
+condition|)
+name|ctx
+operator|->
+name|ctx_pflags
+operator||=
+name|SMFIP_NODATA
+expr_stmt|;
+if|if
+condition|(
+name|smfi
+operator|->
+name|xxfi_unknown
+operator|==
+name|NULL
+condition|)
+name|ctx
+operator|->
+name|ctx_pflags
+operator||=
+name|SMFIP_NOUNKNOWN
+expr_stmt|;
+if|#
+directive|if
+name|_FFR_WORKERS_POOL
+define|#
+directive|define
+name|LOG_CRT_FAIL
+value|"%s: mi_start_session() failed: %d, %s"
+if|if
+condition|(
+operator|(
+name|r
+operator|=
+name|mi_start_session
+argument_list|(
+name|ctx
+argument_list|)
+operator|)
+operator|!=
+name|MI_SUCCESS
+condition|)
+else|#
+directive|else
+comment|/* _FFR_WORKERS_POOL */
+define|#
+directive|define
+name|LOG_CRT_FAIL
+value|"%s: thread_create() failed: %d, %s"
+if|if
+condition|(
 operator|(
 name|r
 operator|=
@@ -3400,6 +3514,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
+endif|#
+directive|endif
+comment|/* _FFR_WORKERS_POOL */
 block|{
 name|tcnt
 operator|++
@@ -3408,7 +3525,7 @@ name|smi_log
 argument_list|(
 name|SMI_LOG_ERR
 argument_list|,
-literal|"%s: thread_create() failed: %d, %s"
+name|LOG_CRT_FAIL
 argument_list|,
 name|smfi
 operator|->

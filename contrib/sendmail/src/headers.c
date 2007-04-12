@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1998-2004, 2006, 2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -9,10 +9,16 @@ directive|include
 file|<sendmail.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sm/sendmail.h>
+end_include
+
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: headers.c,v 8.291 2006/03/24 01:01:56 ca Exp $"
+literal|"@(#)$Id: headers.c,v 8.310 2007/02/07 22:44:35 ca Exp $"
 argument_list|)
 end_macro
 
@@ -34,6 +40,8 @@ name|int
 operator|,
 name|SM_RPOOL_T
 operator|*
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -160,7 +168,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect, readcf, and readqf to deal with header lines. ** **	Parameters: **		line -- header as a text line. **		pflag -- flags for chompheader() (from sendmail.h) **		hdrp -- a pointer to the place to save the header. **		e -- the envelope including this header. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. **		Contents of 'line' are destroyed. */
+comment|/* **  DOCHOMPHEADER -- process and save a header line. ** **	Called by chompheader. ** **	Parameters: **		line -- header as a text line. **		pflag -- flags for chompheader() (from sendmail.h) **		hdrp -- a pointer to the place to save the header. **		e -- the envelope including this header. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. **		Contents of 'line' are destroyed. */
 end_comment
 
 begin_decl_stmt
@@ -179,10 +187,35 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function
+begin_decl_stmt
+specifier|static
 name|unsigned
 name|long
-name|chompheader
+name|dochompheader
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|HDR
+operator|*
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|unsigned
+name|long
+name|dochompheader
 parameter_list|(
 name|line
 parameter_list|,
@@ -204,7 +237,6 @@ modifier|*
 modifier|*
 name|hdrp
 decl_stmt|;
-specifier|register
 name|ENVELOPE
 modifier|*
 name|e
@@ -267,35 +299,6 @@ decl_stmt|;
 name|BITMAP256
 name|mopts
 decl_stmt|;
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|31
-argument_list|,
-literal|6
-argument_list|)
-condition|)
-block|{
-name|sm_dprintf
-argument_list|(
-literal|"chompheader: "
-argument_list|)
-expr_stmt|;
-name|xputs
-argument_list|(
-name|sm_debug_file
-argument_list|()
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-name|sm_dprintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
 name|headeronly
 operator|=
 name|hdrp
@@ -662,17 +665,6 @@ name|fvalue
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* strip field value on front */
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|' '
-condition|)
-name|p
-operator|++
-expr_stmt|;
 name|fvalue
 operator|=
 name|p
@@ -746,7 +738,9 @@ argument_list|,
 name|hbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -1449,7 +1443,9 @@ argument_list|(
 name|qval
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qval
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -1473,9 +1469,6 @@ argument_list|,
 name|qval
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_HDR_TYPE
 if|if
 condition|(
 name|bitset
@@ -1534,9 +1527,6 @@ literal|"h r"
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
-comment|/* _FFR_HDR_TYPE */
 name|macdefine
 argument_list|(
 operator|&
@@ -1576,6 +1566,8 @@ argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1848,7 +1840,9 @@ operator|->
 name|h_mflags
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|mopts
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1874,8 +1868,10 @@ operator|->
 name|e_rpool
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|h
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|h
@@ -1927,7 +1923,9 @@ operator|)
 name|mopts
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|mopts
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|h
@@ -2093,7 +2091,194 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  ALLOCHEADER -- allocate a header entry ** **	Parameters: **		field -- the name of the header field. **		value -- the value of the field. **		flags -- flags to add to h_flags. **		rp -- resource pool for allocations ** **	Returns: **		Pointer to a newly allocated and populated HDR. */
+comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect, readcf, and readqf to deal with header lines. **	This is just a wrapper for dochompheader(). ** **	Parameters: **		line -- header as a text line. **		pflag -- flags for chompheader() (from sendmail.h) **		hdrp -- a pointer to the place to save the header. **		e -- the envelope including this header. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. **		Contents of 'line' are destroyed. */
+end_comment
+
+begin_function
+name|unsigned
+name|long
+name|chompheader
+parameter_list|(
+name|line
+parameter_list|,
+name|pflag
+parameter_list|,
+name|hdrp
+parameter_list|,
+name|e
+parameter_list|)
+name|char
+modifier|*
+name|line
+decl_stmt|;
+name|int
+name|pflag
+decl_stmt|;
+name|HDR
+modifier|*
+modifier|*
+name|hdrp
+decl_stmt|;
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+block|{
+name|unsigned
+name|long
+name|rval
+decl_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|31
+argument_list|,
+literal|6
+argument_list|)
+condition|)
+block|{
+name|sm_dprintf
+argument_list|(
+literal|"chompheader: "
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+name|sm_dprintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* quote this if user (not config file) input */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|pflag
+argument_list|,
+name|CHHDR_USER
+argument_list|)
+condition|)
+block|{
+name|char
+name|xbuf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|xbp
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|xbufs
+decl_stmt|;
+name|xbufs
+operator|=
+sizeof|sizeof
+argument_list|(
+name|xbuf
+argument_list|)
+expr_stmt|;
+name|xbp
+operator|=
+name|quote_internal_chars
+argument_list|(
+name|line
+argument_list|,
+name|xbuf
+argument_list|,
+operator|&
+name|xbufs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|31
+argument_list|,
+literal|7
+argument_list|)
+condition|)
+block|{
+name|sm_dprintf
+argument_list|(
+literal|"chompheader: quoted: "
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
+name|xbp
+argument_list|)
+expr_stmt|;
+name|sm_dprintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|rval
+operator|=
+name|dochompheader
+argument_list|(
+name|xbp
+argument_list|,
+name|pflag
+argument_list|,
+name|hdrp
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xbp
+operator|!=
+name|xbuf
+condition|)
+name|sm_free
+argument_list|(
+name|xbp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|rval
+operator|=
+name|dochompheader
+argument_list|(
+name|line
+argument_list|,
+name|pflag
+argument_list|,
+name|hdrp
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+return|return
+name|rval
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* **  ALLOCHEADER -- allocate a header entry ** **	Parameters: **		field -- the name of the header field (will not be copied). **		value -- the value of the field (will be copied). **		flags -- flags to add to h_flags. **		rp -- resource pool for allocations **		space -- add leading space? ** **	Returns: **		Pointer to a newly allocated and populated HDR. ** **	Notes: **		o field and value must be in internal format, i.e., **		metacharacters must be "quoted", see quote_internal_chars(). **		o maybe add more flags to decide: **		  - what to copy (field/value) **		  - whether to convert value to an internal format */
 end_comment
 
 begin_function
@@ -2109,6 +2294,8 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|rp
+parameter_list|,
+name|space
 parameter_list|)
 name|char
 modifier|*
@@ -2124,6 +2311,9 @@ decl_stmt|;
 name|SM_RPOOL_T
 modifier|*
 name|rp
+decl_stmt|;
+name|bool
+name|space
 decl_stmt|;
 block|{
 name|HDR
@@ -2158,8 +2348,10 @@ argument_list|(
 name|rp
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|h
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|h
@@ -2168,6 +2360,80 @@ name|h_field
 operator|=
 name|field
 expr_stmt|;
+if|if
+condition|(
+name|space
+condition|)
+block|{
+name|size_t
+name|l
+decl_stmt|;
+name|char
+modifier|*
+name|n
+decl_stmt|;
+name|l
+operator|=
+name|strlen
+argument_list|(
+name|value
+argument_list|)
+expr_stmt|;
+name|SM_ASSERT
+argument_list|(
+name|l
+operator|+
+literal|2
+operator|>
+name|l
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|sm_rpool_malloc_x
+argument_list|(
+name|rp
+argument_list|,
+name|l
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+name|n
+index|[
+literal|0
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+name|n
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|sm_strlcpy
+argument_list|(
+name|n
+operator|+
+literal|1
+argument_list|,
+name|value
+argument_list|,
+name|l
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|h
+operator|->
+name|h_value
+operator|=
+name|n
+expr_stmt|;
+block|}
+else|else
 name|h
 operator|->
 name|h_value
@@ -2221,7 +2487,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  ADDHEADER -- add a header entry to the end of the queue. ** **	This bypasses the special checking of chompheader. ** **	Parameters: **		field -- the name of the header field. **		value -- the value of the field. **		flags -- flags to add to h_flags. **		e -- envelope. ** **	Returns: **		none. ** **	Side Effects: **		adds the field on the list of headers for this envelope. */
+comment|/* **  ADDHEADER -- add a header entry to the end of the queue. ** **	This bypasses the special checking of chompheader. ** **	Parameters: **		field -- the name of the header field (will not be copied). **		value -- the value of the field (will be copied). **		flags -- flags to add to h_flags. **		e -- envelope. **		space -- add leading space? ** **	Returns: **		none. ** **	Side Effects: **		adds the field on the list of headers for this envelope. ** **	Notes: field and value must be in internal format, i.e., **		metacharacters must be "quoted", see quote_internal_chars(). */
 end_comment
 
 begin_function
@@ -2235,6 +2501,8 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|e
+parameter_list|,
+name|space
 parameter_list|)
 name|char
 modifier|*
@@ -2250,6 +2518,9 @@ decl_stmt|;
 name|ENVELOPE
 modifier|*
 name|e
+decl_stmt|;
+name|bool
+name|space
 decl_stmt|;
 block|{
 specifier|register
@@ -2325,6 +2596,8 @@ argument_list|,
 name|e
 operator|->
 name|e_rpool
+argument_list|,
+name|space
 argument_list|)
 expr_stmt|;
 name|h
@@ -2343,7 +2616,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  INSHEADER -- insert a header entry at the specified index ** **	This bypasses the special checking of chompheader. ** **	Parameters: **		idx -- index into the header list at which to insert **		field -- the name of the header field. **		value -- the value of the field. **		flags -- flags to add to h_flags. **		e -- envelope. ** **	Returns: **		none. ** **	Side Effects: **		inserts the field on the list of headers for this envelope. */
+comment|/* **  INSHEADER -- insert a header entry at the specified index **	This bypasses the special checking of chompheader. ** **	Parameters: **		idx -- index into the header list at which to insert **		field -- the name of the header field (will be copied). **		value -- the value of the field (will be copied). **		flags -- flags to add to h_flags. **		e -- envelope. **		space -- add leading space? ** **	Returns: **		none. ** **	Side Effects: **		inserts the field on the list of headers for this envelope. ** **	Notes: **		- field and value must be in internal format, i.e., **		metacharacters must be "quoted", see quote_internal_chars(). **		- the header list contains headers that might not be **		sent "out" (see putheader(): "skip"), hence there is no **		reliable way to insert a header at an exact position **		(except at the front or end). */
 end_comment
 
 begin_function
@@ -2359,6 +2632,8 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|e
+parameter_list|,
+name|space
 parameter_list|)
 name|int
 name|idx
@@ -2377,6 +2652,9 @@ decl_stmt|;
 name|ENVELOPE
 modifier|*
 name|e
+decl_stmt|;
+name|bool
+name|space
 decl_stmt|;
 block|{
 name|HDR
@@ -2405,6 +2683,8 @@ argument_list|,
 name|e
 operator|->
 name|e_rpool
+argument_list|,
+name|space
 argument_list|)
 expr_stmt|;
 comment|/* find insertion position */
@@ -2508,7 +2788,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  HVALUE -- return value of a header. ** **	Only "real" fields (i.e., ones that have not been supplied **	as a default) are used. ** **	Parameters: **		field -- the field name. **		header -- the header list. ** **	Returns: **		pointer to the value part. **		NULL if not found. ** **	Side Effects: **		none. */
+comment|/* **  HVALUE -- return value of a header. ** **	Only "real" fields (i.e., ones that have not been supplied **	as a default) are used. ** **	Parameters: **		field -- the field name. **		header -- the header list. ** **	Returns: **		pointer to the value part (internal format). **		NULL if not found. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -2601,13 +2881,14 @@ modifier|*
 name|h
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|s
-init|=
-name|h
 decl_stmt|;
+name|s
+operator|=
+name|h
+expr_stmt|;
 if|if
 condition|(
 name|s
@@ -2917,7 +3198,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"%s: "
+literal|"%s:"
 argument_list|,
 name|h
 operator|->
@@ -3012,7 +3293,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -3025,6 +3308,22 @@ literal|0
 index|]
 operator|!=
 literal|'\0'
+operator|&&
+operator|(
+name|buf
+index|[
+literal|0
+index|]
+operator|!=
+literal|' '
+operator|||
+name|buf
+index|[
+literal|1
+index|]
+operator|!=
+literal|'\0'
+operator|)
 condition|)
 block|{
 if|if
@@ -3050,7 +3349,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -3342,7 +3643,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -3509,7 +3812,9 @@ argument_list|,
 name|pvpbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pvpbuf
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -4201,14 +4506,18 @@ condition|(
 name|l
 operator|>
 sizeof|sizeof
+argument_list|(
 name|mbuf
+argument_list|)
 operator|-
 literal|1
 condition|)
 name|l
 operator|=
 sizeof|sizeof
+argument_list|(
 name|mbuf
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -4326,7 +4635,9 @@ argument_list|(
 name|hbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hbuf
+argument_list|)
 argument_list|,
 literal|"%.80s"
 argument_list|,
@@ -5059,30 +5370,6 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-comment|/* strip leading spaces */
-while|while
-condition|(
-operator|*
-name|addr
-operator|!=
-literal|'\0'
-operator|&&
-name|isascii
-argument_list|(
-operator|*
-name|addr
-argument_list|)
-operator|&&
-name|isspace
-argument_list|(
-operator|*
-name|addr
-argument_list|)
-condition|)
-name|addr
-operator|++
-expr_stmt|;
-comment|/* 	**  Start by assuming we have no angle brackets.  This will be 	**  adjusted later if we find them. 	*/
 name|buflim
 operator|=
 name|bufend
@@ -5104,6 +5391,42 @@ name|bufhead
 operator|=
 name|buf
 expr_stmt|;
+comment|/* skip over leading spaces but preserve them */
+while|while
+condition|(
+operator|*
+name|addr
+operator|!=
+literal|'\0'
+operator|&&
+name|isascii
+argument_list|(
+operator|*
+name|addr
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|addr
+argument_list|)
+condition|)
+block|{
+name|SM_APPEND_CHAR
+argument_list|(
+operator|*
+name|addr
+argument_list|)
+expr_stmt|;
+name|addr
+operator|++
+expr_stmt|;
+block|}
+name|bufhead
+operator|=
+name|bp
+expr_stmt|;
+comment|/* 	**  Start by assuming we have no angle brackets.  This will be 	**  adjusted later if we find them. 	*/
 name|p
 operator|=
 name|addrhead
@@ -6300,7 +6623,7 @@ condition|)
 block|{
 name|sm_dprintf
 argument_list|(
-literal|"  %s: "
+literal|"  %s:"
 argument_list|,
 name|h
 operator|->
@@ -6925,7 +7248,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -7010,7 +7335,9 @@ argument_list|(
 name|obuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|obuf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -7231,7 +7558,9 @@ argument_list|(
 name|obuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|obuf
+argument_list|)
 argument_list|,
 literal|"Content-Type: text/plain; charset=%s"
 argument_list|,
@@ -7347,6 +7676,8 @@ comment|/* additional length for h_field */
 name|putflags
 operator|=
 name|PXLF_HEADER
+operator||
+name|PXLF_STRIPMQUOTE
 expr_stmt|;
 if|if
 condition|(
@@ -7373,9 +7704,11 @@ argument_list|(
 name|obuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|obuf
+argument_list|)
 argument_list|,
-literal|"%.200s: "
+literal|"%.200s:"
 argument_list|,
 name|h
 operator|->
@@ -7572,7 +7905,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		oldstyle -- true if this is an old style header. **		mci -- the connection information. **		e -- the envelope containing the message. ** **	Returns: **		true iff header field was written successfully ** **	Side Effects: **		outputs "p" to file "fp". */
+comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		oldstyle -- true if this is an old style header. **		mci -- the connection information. **		e -- the envelope containing the message. ** **	Returns: **		true iff header field was written successfully ** **	Side Effects: **		outputs "p" to "mci". */
 end_comment
 
 begin_function
@@ -7620,9 +7953,10 @@ name|obp
 decl_stmt|;
 name|int
 name|opos
-decl_stmt|;
-name|int
+decl_stmt|,
 name|omax
+decl_stmt|,
+name|spaces
 decl_stmt|;
 name|bool
 name|firstone
@@ -7633,6 +7967,8 @@ name|int
 name|putflags
 init|=
 name|PXLF_HEADER
+operator||
+name|PXLF_STRIPMQUOTE
 decl_stmt|;
 name|char
 modifier|*
@@ -7659,7 +7995,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"commaize(%s: %s)\n"
+literal|"commaize(%s:%s)\n"
 argument_list|,
 name|h
 operator|->
@@ -7703,14 +8039,14 @@ argument_list|,
 name|obp
 argument_list|)
 argument_list|,
-literal|"%.200s: "
+literal|"%.200s:"
 argument_list|,
 name|h
 operator|->
 name|h_field
 argument_list|)
 expr_stmt|;
-comment|/* opos = strlen(obp); */
+comment|/* opos = strlen(obp); instead of the next 3 lines? */
 name|opos
 operator|=
 name|strlen
@@ -7720,22 +8056,134 @@ operator|->
 name|h_field
 argument_list|)
 operator|+
-literal|2
+literal|1
 expr_stmt|;
 if|if
 condition|(
 name|opos
 operator|>
-literal|202
+literal|201
 condition|)
 name|opos
 operator|=
-literal|202
+literal|201
 expr_stmt|;
 name|obp
 operator|+=
 name|opos
 expr_stmt|;
+name|spaces
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+operator|&&
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+block|{
+operator|++
+name|spaces
+expr_stmt|;
+operator|++
+name|p
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|spaces
+operator|>
+literal|0
+condition|)
+block|{
+name|SM_ASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|obuf
+argument_list|)
+operator|>
+name|opos
+operator|*
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* 		**  Restrict number of spaces to half the length of buffer 		**  so the header field body can be put in here too. 		**  Note: this is a hack... 		*/
+if|if
+condition|(
+name|spaces
+operator|>
+sizeof|sizeof
+argument_list|(
+name|obuf
+argument_list|)
+operator|/
+literal|2
+condition|)
+name|spaces
+operator|=
+sizeof|sizeof
+argument_list|(
+name|obuf
+argument_list|)
+operator|/
+literal|2
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_snprintf
+argument_list|(
+name|obp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|obuf
+argument_list|,
+name|obp
+argument_list|)
+argument_list|,
+literal|"%*s"
+argument_list|,
+name|spaces
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|opos
+operator|+=
+name|spaces
+expr_stmt|;
+name|obp
+operator|+=
+name|spaces
+expr_stmt|;
+name|SM_ASSERT
+argument_list|(
+name|obp
+operator|<
+operator|&
+name|obuf
+index|[
+name|MAXLINE
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 name|omax
 operator|=
 name|mci
@@ -7854,12 +8302,14 @@ argument_list|,
 name|pvpbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pvpbuf
+argument_list|)
 argument_list|,
 operator|&
 name|oldp
 argument_list|,
-name|NULL
+name|ExtTokenTab
 argument_list|,
 name|false
 argument_list|)
@@ -8252,7 +8702,9 @@ argument_list|,
 literal|"        "
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|obuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|opos
@@ -8347,7 +8799,9 @@ operator|&
 name|obuf
 index|[
 sizeof|sizeof
+argument_list|(
 name|obuf
+argument_list|)
 index|]
 condition|)
 operator|*
@@ -8359,7 +8813,9 @@ else|else
 name|obuf
 index|[
 sizeof|sizeof
+argument_list|(
 name|obuf
+argument_list|)
 operator|-
 literal|1
 index|]
@@ -8448,8 +8904,10 @@ argument_list|(
 name|rpool
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|newhdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|STRUCTCOPY
