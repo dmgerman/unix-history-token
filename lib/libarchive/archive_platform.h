@@ -24,9 +24,28 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_CONFIG_H
+name|PLATFORM_CONFIG_H
 argument_list|)
 end_if
+
+begin_comment
+comment|/* Use hand-built config.h in environments that need it. */
+end_comment
+
+begin_include
+include|#
+directive|include
+include|PLATFORM_CONFIG_H
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_CONFIG_H
+argument_list|)
+end_elif
 
 begin_comment
 comment|/* Most POSIX platforms use the 'configure' script to build config.h */
@@ -36,44 +55,6 @@ begin_include
 include|#
 directive|include
 file|"../config.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_elif
-
-begin_comment
-comment|/* Building as part of FreeBSD system requires a pre-built config.h. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"config_freebsd.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-end_elif
-
-begin_comment
-comment|/* Win32 can't run the 'configure' script. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"config_windows.h"
 end_include
 
 begin_else
