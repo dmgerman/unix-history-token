@@ -1886,8 +1886,8 @@ argument_list|)
 expr_stmt|;
 name|debuglog
 argument_list|(
-literal|"nsm: %d  status: %d  flags: %d  locker: %d"
-literal|"  fd:  %d\n"
+literal|"nsm: %d  status: %d  flags: %d  svid: %x"
+literal|"  client_name: %s\n"
 argument_list|,
 name|fl
 operator|->
@@ -1903,11 +1903,13 @@ name|flags
 argument_list|,
 name|fl
 operator|->
-name|locker
+name|client
+operator|.
+name|svid
 argument_list|,
 name|fl
 operator|->
-name|fd
+name|client_name
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3591,7 +3593,7 @@ decl_stmt|;
 comment|/* Iterator */
 name|debuglog
 argument_list|(
-literal|"Entering lock_matching_unlock\n"
+literal|"Entering get_lock_matching_unlock\n"
 argument_list|)
 expr_stmt|;
 name|debuglog
@@ -3659,7 +3661,7 @@ condition|)
 continue|continue;
 name|debuglog
 argument_list|(
-literal|"matching_unlock: Filehandles match, "
+literal|"get_lock_matching_unlock: Filehandles match, "
 literal|"checking regions\n"
 argument_list|)
 expr_stmt|;
@@ -3697,7 +3699,7 @@ condition|)
 continue|continue;
 name|debuglog
 argument_list|(
-literal|"matching_unlock: Region overlap"
+literal|"get_lock_matching_unlock: Region overlap"
 literal|" found %llu : %llu -- %llu : %llu\n"
 argument_list|,
 name|fl
@@ -3739,7 +3741,7 @@ condition|)
 continue|continue;
 name|debuglog
 argument_list|(
-literal|"matching_unlock: Duplicate lock id.  Granting\n"
+literal|"get_lock_matching_unlock: Duplicate lock id.  Granting\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3750,7 +3752,7 @@ return|;
 block|}
 name|debuglog
 argument_list|(
-literal|"Exiting lock_matching_unlock\n"
+literal|"Exiting bet_lock_matching_unlock\n"
 argument_list|)
 expr_stmt|;
 return|return
