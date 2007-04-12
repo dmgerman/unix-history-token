@@ -2892,7 +2892,7 @@ name|bus_dma_tag_create
 argument_list|(
 name|parent_entry_tag
 argument_list|,
-name|PAGE_SIZE
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -2904,11 +2904,11 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|PAGE_SIZE
+name|TX_MAX_SIZE
 argument_list|,
-literal|1
+name|TX_MAX_SEGS
 argument_list|,
-name|PAGE_SIZE
+name|TX_MAX_SIZE
 argument_list|,
 name|BUS_DMA_ALLOCNOW
 argument_list|,
@@ -4129,7 +4129,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|unsigned
 name|int
 name|busdma_map_mbufs
@@ -4140,9 +4139,10 @@ modifier|*
 modifier|*
 name|m
 parameter_list|,
-name|adapter_t
+name|struct
+name|sge_txq
 modifier|*
-name|sc
+name|txq
 parameter_list|,
 name|struct
 name|tx_sw_desc
@@ -4162,9 +4162,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m0
-decl_stmt|,
-modifier|*
-name|mtmp
 decl_stmt|;
 name|int
 name|err
@@ -4188,9 +4185,9 @@ name|err
 operator|=
 name|bus_dmamap_load_mbuf_sg
 argument_list|(
-name|sc
+name|txq
 operator|->
-name|tx_dmat
+name|entry_tag
 argument_list|,
 name|stx
 operator|->
@@ -4215,10 +4212,13 @@ name|n
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
 name|mtmp
-operator|=
+init|=
 name|m0
-expr_stmt|;
+decl_stmt|;
 while|while
 condition|(
 name|mtmp
@@ -4305,9 +4305,9 @@ name|err
 operator|=
 name|bus_dmamap_load_mbuf_sg
 argument_list|(
-name|sc
+name|txq
 operator|->
-name|tx_dmat
+name|entry_tag
 argument_list|,
 name|stx
 operator|->
@@ -4372,9 +4372,9 @@ return|;
 block|}
 name|bus_dmamap_sync
 argument_list|(
-name|sc
+name|txq
 operator|->
-name|tx_dmat
+name|entry_tag
 argument_list|,
 name|stx
 operator|->
@@ -5391,7 +5391,7 @@ name|busdma_map_mbufs
 argument_list|(
 name|m
 argument_list|,
-name|sc
+name|txq
 argument_list|,
 name|stx
 argument_list|,
