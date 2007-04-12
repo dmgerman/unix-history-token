@@ -3578,7 +3578,8 @@ name|S_IFMT
 condition|)
 block|{
 default|default:
-comment|/* Fall through, as required by POSIX. */
+comment|/* POSIX requires that we fall through here. */
+comment|/* FALLTHROUGH */
 case|case
 name|S_IFREG
 case|:

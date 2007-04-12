@@ -5018,7 +5018,7 @@ literal|'S'
 case|:
 comment|/* GNU sparse files */
 comment|/* 		 * Sparse files are really just regular files with 		 * sparse information in the extended area. 		 */
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 default|default:
 comment|/* Regular file  and non-standard types */
 comment|/* 		 * Per POSIX: non-recognized types should always be 		 * treated as regular files. 		 */
