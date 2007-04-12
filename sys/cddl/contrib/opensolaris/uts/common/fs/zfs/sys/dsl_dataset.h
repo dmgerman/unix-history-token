@@ -416,7 +416,6 @@ function_decl|;
 name|int
 name|dsl_dataset_rename
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|name
@@ -425,6 +424,9 @@ specifier|const
 name|char
 modifier|*
 name|newname
+parameter_list|,
+name|boolean_t
+name|recursive
 parameter_list|)
 function_decl|;
 name|int

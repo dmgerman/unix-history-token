@@ -5838,7 +5838,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|zfs_unmount_snap
 parameter_list|(
@@ -6184,6 +6183,15 @@ modifier|*
 name|zc
 parameter_list|)
 block|{
+name|int
+name|recursive
+init|=
+name|zc
+operator|->
+name|zc_cookie
+operator|&
+literal|1
+decl_stmt|;
 name|zc
 operator|->
 name|zc_value
@@ -6220,8 +6228,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* 	 * Unmount snapshot unless we're doing a recursive rename, 	 * in which case the dataset code figures out which snapshots 	 * to unmount. 	 */
 if|if
 condition|(
+operator|!
+name|recursive
+operator|&&
 name|strchr
 argument_list|(
 name|zc
@@ -6273,6 +6285,8 @@ argument_list|,
 name|zc
 operator|->
 name|zc_value
+argument_list|,
+name|recursive
 argument_list|)
 operator|)
 return|;

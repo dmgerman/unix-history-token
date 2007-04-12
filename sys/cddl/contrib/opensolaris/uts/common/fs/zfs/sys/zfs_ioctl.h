@@ -407,6 +407,17 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+specifier|extern
+name|int
+name|zfs_unmount_snap
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 comment|/* _KERNEL */

@@ -956,6 +956,7 @@ name|gettext
 argument_list|(
 literal|"\trename<filesystem|volume|snapshot> "
 literal|"<filesystem|volume|snapshot>\n"
+literal|"\trename -r<snapshot><snapshot>"
 argument_list|)
 operator|)
 return|;
@@ -6473,7 +6474,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs rename<fs | snap | vol><fs | snap | vol>  *  * Renames the given dataset to another of the same type.  */
+comment|/*  * zfs rename [-r]<fs | snap | vol><fs | snap | vol>  *  * Renames the given dataset to another of the same type.  */
 end_comment
 
 begin_comment
@@ -6499,26 +6500,53 @@ modifier|*
 name|zhp
 decl_stmt|;
 name|int
+name|c
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|;
-comment|/* check options */
-if|if
-condition|(
-name|argc
-operator|>
-literal|1
-operator|&&
-name|argv
-index|[
-literal|1
-index|]
-index|[
+name|int
+name|recurse
+init|=
 literal|0
-index|]
-operator|==
-literal|'-'
+decl_stmt|;
+comment|/* check options */
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
+switch|switch
+condition|(
+name|c
+condition|)
+block|{
+case|case
+literal|'r'
+case|:
+name|recurse
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'?'
+case|:
+default|default:
 operator|(
 name|void
 operator|)
@@ -6531,13 +6559,7 @@ argument_list|(
 literal|"invalid option '%c'\n"
 argument_list|)
 argument_list|,
-name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|1
-index|]
+name|optopt
 argument_list|)
 expr_stmt|;
 name|usage
@@ -6546,12 +6568,21 @@ name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 comment|/* check number of arguments */
 if|if
 condition|(
 name|argc
 operator|<
-literal|2
+literal|1
 condition|)
 block|{
 operator|(
@@ -6578,7 +6609,7 @@ if|if
 condition|(
 name|argc
 operator|<
-literal|3
+literal|2
 condition|)
 block|{
 operator|(
@@ -6605,7 +6636,7 @@ if|if
 condition|(
 name|argc
 operator|>
-literal|3
+literal|2
 condition|)
 block|{
 operator|(
@@ -6629,6 +6660,43 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|recurse
+operator|&&
+name|strchr
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'@'
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"source dataset for recursive "
+literal|"rename must be a snapshot\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|zhp
 operator|=
@@ -6638,7 +6706,7 @@ name|g_zfs
 argument_list|,
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 name|ZFS_TYPE_ANY
@@ -6661,8 +6729,10 @@ name|zhp
 argument_list|,
 name|argv
 index|[
-literal|2
+literal|1
 index|]
+argument_list|,
+name|recurse
 argument_list|)
 operator|!=
 literal|0
@@ -6678,12 +6748,16 @@ argument_list|(
 name|g_zfs
 argument_list|,
 name|argc
+operator|+
+name|optind
 argument_list|,
 name|argv
+operator|-
+name|optind
 argument_list|,
 name|argv
 index|[
-literal|2
+literal|1
 index|]
 argument_list|,
 name|B_FALSE

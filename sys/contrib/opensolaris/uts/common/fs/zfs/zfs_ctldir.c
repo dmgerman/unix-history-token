@@ -1896,7 +1896,7 @@ comment|/* 	 * Cannot move snapshots out of the snapdir. 	 */
 end_comment
 
 begin_endif
-unit|if (sdvp != tdvp) 		return (EINVAL);  	if (strcmp(snm, tnm) == 0) 		return (0);  	err = zfsctl_snapshot_zname(tdvp, tnm, MAXNAMELEN, to); 	if (err) 		return (err);  	mutex_enter(&sdp->sd_lock);  	search.se_name = (char *)snm; 	if ((sep = avl_find(&sdp->sd_snaps,&search,&where)) == NULL) { 		mutex_exit(&sdp->sd_lock); 		return (ENOENT); 	}  	err = dmu_objset_rename(from, to); 	if (err == 0) 		zfsctl_rename_snap(sdp, sep, tnm);  	mutex_exit(&sdp->sd_lock);  	return (err); }
+unit|if (sdvp != tdvp) 		return (EINVAL);  	if (strcmp(snm, tnm) == 0) 		return (0);  	err = zfsctl_snapshot_zname(tdvp, tnm, MAXNAMELEN, to); 	if (err) 		return (err);  	mutex_enter(&sdp->sd_lock);  	search.se_name = (char *)snm; 	if ((sep = avl_find(&sdp->sd_snaps,&search,&where)) == NULL) { 		mutex_exit(&sdp->sd_lock); 		return (ENOENT); 	}  	err = dmu_objset_rename(from, to, B_FALSE); 	if (err == 0) 		zfsctl_rename_snap(sdp, sep, tnm);  	mutex_exit(&sdp->sd_lock);  	return (err); }
 endif|#
 directive|endif
 end_endif

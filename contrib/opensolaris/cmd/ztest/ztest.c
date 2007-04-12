@@ -944,15 +944,16 @@ name|ZTEST_DIRSIZE
 value|256
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
-parameter_list|(
+argument_list|(
 name|boolean_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__NORETURN
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * These libumem hooks provide a reasonable set of defaults for the allocator's  * debugging facilities.  */
