@@ -1,7 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2005 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2001-2006 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
+
+begin_comment
+comment|/* some "deprecated" calls are used, e.g., ldap_get_values() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LDAP_DEPRECATED
+value|1
+end_define
 
 begin_include
 include|#
@@ -12,7 +23,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: ldap.c,v 1.67 2005/12/14 00:08:03 ca Exp $"
+literal|"@(#)$Id: ldap.c,v 1.78 2006/08/30 22:56:59 ca Exp $"
 argument_list|)
 end_macro
 
@@ -454,6 +465,12 @@ operator|->
 name|ldap_pid
 operator|=
 literal|0
+expr_stmt|;
+name|lmap
+operator|->
+name|ldap_multi_args
+operator|=
+name|false
 expr_stmt|;
 block|}
 end_block
@@ -979,16 +996,16 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  SM_LDAP_SEARCH -- initiate LDAP search ** **	Initiate an LDAP search, return the msgid. **	The calling function must collect the results. ** **	Parameters: **		lmap -- LDAP map information **		key -- key to substitute in LDAP filter ** **	Returns: **		-1 on failure, msgid on success ** */
+comment|/* **  SM_LDAP_SEARCH_M -- initiate multi-key LDAP search ** **	Initiate an LDAP search, return the msgid. **	The calling function must collect the results. ** **	Parameters: **		lmap -- LDAP map information **		argv -- key vector of substitutions in LDAP filter **		        NOTE: argv must have SM_LDAP_ARGS elements to prevent **			      out of bound array references ** **	Returns: **<0 on failure (SM_LDAP_ERR*), msgid on success ** */
 end_comment
 
 begin_function
 name|int
-name|sm_ldap_search
+name|sm_ldap_search_m
 parameter_list|(
 name|lmap
 parameter_list|,
-name|key
+name|argv
 parameter_list|)
 name|SM_LDAP_STRUCT
 modifier|*
@@ -996,7 +1013,8 @@ name|lmap
 decl_stmt|;
 name|char
 modifier|*
-name|key
+modifier|*
+name|argv
 decl_stmt|;
 block|{
 name|int
@@ -1020,7 +1038,30 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* substitute key into filter, perhaps multiple times */
+name|SM_REQUIRE
+argument_list|(
+name|lmap
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|SM_REQUIRE
+argument_list|(
+name|argv
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|SM_REQUIRE
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 name|filter
@@ -1057,6 +1098,111 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|char
+modifier|*
+name|key
+decl_stmt|;
+if|if
+condition|(
+name|lmap
+operator|->
+name|ldap_multi_args
+condition|)
+block|{
+if|#
+directive|if
+name|SM_LDAP_ARGS
+operator|<
+literal|10
+empty|# ERROR _SM_LDAP_ARGS must be 10
+endif|#
+directive|endif
+comment|/* SM_LDAP_ARGS< 10 */
+if|if
+condition|(
+name|q
+index|[
+literal|1
+index|]
+operator|==
+literal|'s'
+condition|)
+name|key
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|q
+index|[
+literal|1
+index|]
+operator|>=
+literal|'0'
+operator|&&
+name|q
+index|[
+literal|1
+index|]
+operator|<=
+literal|'9'
+condition|)
+block|{
+name|key
+operator|=
+name|argv
+index|[
+name|q
+index|[
+literal|1
+index|]
+operator|-
+literal|'0'
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|key
+operator|==
+name|NULL
+condition|)
+block|{
+if|#
+directive|if
+name|SM_LDAP_ERROR_ON_MISSING_ARGS
+return|return
+name|SM_LDAP_ERR_ARG_MISS
+return|;
+else|#
+directive|else
+comment|/* SM_LDAP_ERROR_ON_MISSING_ARGS */
+name|key
+operator|=
+literal|""
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SM_LDAP_ERROR_ON_MISSING_ARGS */
+block|}
+block|}
+else|else
+name|key
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+name|key
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|q
@@ -1120,6 +1266,26 @@ literal|1
 index|]
 operator|==
 literal|'0'
+operator|||
+operator|(
+name|lmap
+operator|->
+name|ldap_multi_args
+operator|&&
+name|q
+index|[
+literal|1
+index|]
+operator|>=
+literal|'0'
+operator|&&
+name|q
+index|[
+literal|1
+index|]
+operator|<=
+literal|'9'
+operator|)
 condition|)
 block|{
 name|char
@@ -1430,6 +1596,62 @@ block|}
 end_function
 
 begin_comment
+comment|/* **  SM_LDAP_SEARCH -- initiate LDAP search ** **	Initiate an LDAP search, return the msgid. **	The calling function must collect the results. **	Note this is just a wrapper into sm_ldap_search_m() ** **	Parameters: **		lmap -- LDAP map information **		key -- key to substitute in LDAP filter ** **	Returns: **<0 on failure, msgid on success ** */
+end_comment
+
+begin_function
+name|int
+name|sm_ldap_search
+parameter_list|(
+name|lmap
+parameter_list|,
+name|key
+parameter_list|)
+name|SM_LDAP_STRUCT
+modifier|*
+name|lmap
+decl_stmt|;
+name|char
+modifier|*
+name|key
+decl_stmt|;
+block|{
+name|char
+modifier|*
+name|argv
+index|[
+name|SM_LDAP_ARGS
+index|]
+decl_stmt|;
+name|memset
+argument_list|(
+name|argv
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+name|argv
+argument_list|)
+expr_stmt|;
+name|argv
+index|[
+literal|0
+index|]
+operator|=
+name|key
+expr_stmt|;
+return|return
+name|sm_ldap_search_m
+argument_list|(
+name|lmap
+argument_list|,
+name|argv
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* **  SM_LDAP_HAS_OBJECTCLASS -- determine if an LDAP entry is part of a **			       particular objectClass ** **	Parameters: **		lmap -- pointer to SM_LDAP_STRUCT in use **		entry -- current LDAP entry struct **		ocvalue -- particular objectclass in question. **			   may be of form (fee|foo|fum) meaning **			   any entry can be part of either fee, **			   foo or fum objectclass ** **	Returns: **		true if item has that objectClass */
 end_comment
 
@@ -1723,7 +1945,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_cnt
+name|lrl_cnt
 operator|=
 literal|0
 expr_stmt|;
@@ -1732,7 +1954,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_size
+name|lrl_size
 operator|=
 literal|0
 expr_stmt|;
@@ -1741,7 +1963,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_data
+name|lrl_data
 operator|=
 name|NULL
 expr_stmt|;
@@ -1753,14 +1975,14 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_cnt
+name|lrl_cnt
 operator|>=
 operator|(
 operator|*
 name|top
 operator|)
 operator|->
-name|lr_size
+name|lrl_size
 condition|)
 block|{
 comment|/* Grow the list of SM_LDAP_RECURSE_ENTRY ptrs */
@@ -1771,7 +1993,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_data
+name|lrl_data
 expr_stmt|;
 if|if
 condition|(
@@ -1780,7 +2002,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_size
+name|lrl_size
 operator|==
 literal|0
 condition|)
@@ -1794,7 +2016,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_size
+name|lrl_size
 operator|=
 literal|256
 expr_stmt|;
@@ -1808,7 +2030,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_size
+name|lrl_size
 operator|*
 sizeof|sizeof
 expr|*
@@ -1818,7 +2040,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_data
+name|lrl_data
 operator|)
 expr_stmt|;
 operator|(
@@ -1826,7 +2048,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_size
+name|lrl_size
 operator|*=
 literal|2
 expr_stmt|;
@@ -1836,7 +2058,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_data
+name|lrl_data
 operator|=
 name|sm_rpool_malloc_x
 argument_list|(
@@ -1847,7 +2069,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_size
+name|lrl_size
 operator|*
 sizeof|sizeof
 expr|*
@@ -1857,7 +2079,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_data
+name|lrl_data
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1874,7 +2096,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_data
+name|lrl_data
 argument_list|,
 name|olddata
 argument_list|,
@@ -1894,7 +2116,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_cnt
+name|lrl_cnt
 operator|-
 literal|1
 expr_stmt|;
@@ -1943,7 +2165,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_data
+name|lrl_data
 index|[
 name|p
 index|]
@@ -1966,7 +2188,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_data
+name|lrl_data
 index|[
 name|p
 index|]
@@ -2005,7 +2227,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_data
+name|lrl_data
 index|[
 name|p
 index|]
@@ -2031,7 +2253,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_cnt
+name|lrl_cnt
 condition|)
 name|insertat
 operator|=
@@ -2040,7 +2262,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_cnt
+name|lrl_cnt
 expr_stmt|;
 elseif|else
 if|if
@@ -2083,7 +2305,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_cnt
+name|lrl_cnt
 operator|-
 name|insertat
 operator|)
@@ -2096,7 +2318,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_data
+name|lrl_data
 operator|)
 expr_stmt|;
 if|if
@@ -2114,7 +2336,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_data
+name|lrl_data
 index|[
 name|insertat
 operator|+
@@ -2129,7 +2351,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_data
+name|lrl_data
 index|[
 name|insertat
 index|]
@@ -2179,7 +2401,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_data
+name|lrl_data
 operator|)
 index|[
 name|insertat
@@ -2192,7 +2414,7 @@ operator|*
 name|top
 operator|)
 operator|->
-name|lr_cnt
+name|lrl_cnt
 operator|++
 expr_stmt|;
 block|}
@@ -3900,7 +4122,7 @@ name|rlidx
 operator|<
 name|recurse
 operator|->
-name|lr_cnt
+name|lrl_cnt
 condition|;
 name|rlidx
 operator|++
@@ -3919,7 +4141,7 @@ name|rl
 operator|=
 name|recurse
 operator|->
-name|lr_data
+name|lrl_data
 index|[
 name|rlidx
 index|]

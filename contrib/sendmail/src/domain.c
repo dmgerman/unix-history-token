@@ -9,6 +9,12 @@ directive|include
 file|<sendmail.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"map.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -18,7 +24,7 @@ end_if
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.199 2006/04/18 00:00:34 ca Exp $ (with name server)"
+literal|"@(#)$Id: domain.c,v 8.202 2006/12/19 01:15:07 ca Exp $ (with name server)"
 argument_list|)
 end_macro
 
@@ -34,7 +40,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.199 2006/04/18 00:00:34 ca Exp $ (without name server)"
+literal|"@(#)$Id: domain.c,v 8.202 2006/12/19 01:15:07 ca Exp $ (without name server)"
 argument_list|)
 end_macro
 
@@ -908,12 +914,6 @@ name|sm_dprintf
 argument_list|(
 literal|"getmxrr: res_search(%s) failed (errno=%d, h_errno=%d)\n"
 argument_list|,
-name|host
-operator|==
-name|NULL
-condition|?
-literal|"<NULL>"
-else|:
 name|host
 argument_list|,
 name|errno
@@ -1927,7 +1927,9 @@ name|host
 argument_list|)
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|MXHostBuf
+argument_list|)
 condition|)
 block|{
 operator|*
@@ -1962,7 +1964,9 @@ argument_list|,
 name|host
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|MXHostBuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mxhosts
@@ -2113,7 +2117,9 @@ literal|0
 index|]
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|MXHostBuf
+argument_list|)
 operator|-
 literal|2
 argument_list|,
@@ -2821,7 +2827,9 @@ operator|+
 literal|2
 operator|>
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 condition|)
 break|break;
 if|if
@@ -2856,7 +2864,9 @@ name|i
 index|]
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 name|len
 argument_list|)
@@ -3737,7 +3747,9 @@ operator|)
 name|nbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|nbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3892,7 +3904,9 @@ argument_list|(
 name|ebuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ebuf
+argument_list|)
 argument_list|,
 literal|"Deferred: DNS failure: CNAME loop for %.100s"
 argument_list|,
@@ -4081,7 +4095,9 @@ argument_list|(
 name|nbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|nbuf
+argument_list|)
 argument_list|,
 literal|"%.*s%s%.*s"
 argument_list|,

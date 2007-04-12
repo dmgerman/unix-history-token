@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001, 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: errstring.h,v 1.9 2003/12/10 03:19:06 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2001, 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: errstring.h,v 1.10 2007/03/21 23:56:19 ca Exp $  */
 end_comment
 
 begin_comment
@@ -18,6 +18,31 @@ define|#
 directive|define
 name|SM_ERRSTRING_H
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__QNX__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|E_PSEUDOBASE
+value|512
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__QNX__) */
+end_comment
 
 begin_include
 include|#

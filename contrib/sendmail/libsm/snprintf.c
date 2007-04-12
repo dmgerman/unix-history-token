@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: snprintf.c,v 1.23 2001/09/11 04:04:49 gshapiro Exp $"
+literal|"@(#)$Id: snprintf.c,v 1.24 2006/10/12 21:50:10 ca Exp $"
 argument_list|)
 end_macro
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<sm/io.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/string.h>
 end_include
 
 begin_include

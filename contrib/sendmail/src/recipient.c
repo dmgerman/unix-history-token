@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: recipient.c,v 8.337 2004/08/03 19:57:23 ca Exp $"
+literal|"@(#)$Id: recipient.c,v 8.348 2007/03/19 21:33:09 ca Exp $"
 argument_list|)
 end_macro
 
@@ -603,7 +603,9 @@ condition|(
 name|i
 operator|<=
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 condition|)
 block|{
 name|bufp
@@ -613,7 +615,9 @@ expr_stmt|;
 name|i
 operator|=
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1265,7 +1269,9 @@ condition|(
 name|i
 operator|<=
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 condition|)
 block|{
 name|bufp
@@ -1275,7 +1281,9 @@ expr_stmt|;
 name|i
 operator|=
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1389,6 +1397,8 @@ operator|&
 name|a
 argument_list|,
 name|RF_COPYALL
+operator||
+name|RF_RM_ADDR
 argument_list|,
 name|delimiter
 argument_list|,
@@ -1565,7 +1575,7 @@ comment|/* MILTER */
 end_comment
 
 begin_comment
-comment|/* **  RECIPIENT -- Designate a message recipient ** **	Saves the named person for future mailing. ** **	Parameters: **		new -- the (preparsed) address header for the recipient. **		sendq -- a pointer to the head of a queue to put the **			recipient in.  Duplicate suppression is done **			in this queue. **		aliaslevel -- the current alias nesting depth. **		e -- the current envelope. ** **	Returns: **		The actual address in the queue.  This will be "a" if **		the address is not a duplicate, else the original address. ** */
+comment|/* **  RECIPIENT -- Designate a message recipient **	Saves the named person for future mailing (after some checks). ** **	Parameters: **		new -- the (preparsed) address header for the recipient. **		sendq -- a pointer to the head of a queue to put the **			recipient in.  Duplicate suppression is done **			in this queue. **		aliaslevel -- the current alias nesting depth. **		e -- the current envelope. ** **	Returns: **		The actual address in the queue.  This will be "a" if **		the address is not a duplicate, else the original address. ** */
 end_comment
 
 begin_function
@@ -1873,7 +1883,9 @@ argument_list|(
 name|frbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|frbuf
+argument_list|)
 argument_list|,
 literal|"%s; %.800s"
 argument_list|,
@@ -1912,7 +1924,9 @@ argument_list|(
 name|frbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|frbuf
+argument_list|)
 argument_list|,
 literal|"%s; %.800s"
 argument_list|,
@@ -2007,7 +2021,9 @@ argument_list|(
 name|frbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|frbuf
+argument_list|)
 argument_list|,
 literal|"%s; %.800s"
 argument_list|,
@@ -2042,7 +2058,9 @@ argument_list|(
 name|frbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|frbuf
+argument_list|)
 argument_list|,
 literal|"%s; %.700s@%.100s"
 argument_list|,
@@ -2156,7 +2174,9 @@ argument_list|(
 name|obuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|obuf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -2228,7 +2248,7 @@ argument_list|,
 name|false
 argument_list|)
 argument_list|,
-name|NULL
+literal|"="
 argument_list|)
 expr_stmt|;
 if|if
@@ -2240,11 +2260,15 @@ argument_list|,
 name|p
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|obuf
+argument_list|)
 argument_list|)
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|obuf
+argument_list|)
 condition|)
 block|{
 comment|/* if too big, don't use it */
@@ -2318,6 +2342,70 @@ name|q_status
 operator|=
 literal|"5.4.6"
 expr_stmt|;
+if|if
+condition|(
+name|new
+operator|->
+name|q_alias
+operator|!=
+name|NULL
+condition|)
+block|{
+name|new
+operator|->
+name|q_alias
+operator|->
+name|q_state
+operator|=
+name|QS_BADADDR
+expr_stmt|;
+name|new
+operator|->
+name|q_alias
+operator|->
+name|q_status
+operator|=
+literal|"5.4.6"
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|SuprErrs
+operator|||
+operator|!
+name|LogUsrErrs
+operator|)
+operator|&&
+name|LogLevel
+operator|>
+literal|0
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"aliasing/forwarding loop broken: %s (%d aliases deep; %d max)"
+argument_list|,
+name|FileName
+operator|!=
+name|NULL
+condition|?
+name|FileName
+else|:
+literal|""
+argument_list|,
+name|aliaslevel
+argument_list|,
+name|MaxAliasRecursion
+argument_list|)
+expr_stmt|;
+block|}
 name|usrerrenh
 argument_list|(
 name|new
@@ -2351,7 +2439,9 @@ condition|(
 name|i
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|buf0
+argument_list|)
 condition|)
 block|{
 name|buflen
@@ -2377,7 +2467,9 @@ expr_stmt|;
 name|buflen
 operator|=
 sizeof|sizeof
+argument_list|(
 name|buf0
+argument_list|)
 expr_stmt|;
 block|}
 operator|(
@@ -3481,7 +3573,14 @@ name|e
 operator|->
 name|e_message
 operator|=
+name|sm_rpool_strdup_x
+argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|,
 literal|"Deferred: user database error"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4411,7 +4510,9 @@ argument_list|(
 name|buf0
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf0
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -4826,7 +4927,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -7164,7 +7267,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -7480,6 +7585,25 @@ condition|)
 block|{
 if|if
 condition|(
+name|aliaslevel
+operator|<=
+name|MaxAliasRecursion
+operator|||
+name|ctladdr
+operator|->
+name|q_state
+operator|!=
+name|QS_BADADDR
+condition|)
+block|{
+name|ctladdr
+operator|->
+name|q_state
+operator|=
+name|QS_DONTSEND
+expr_stmt|;
+if|if
+condition|(
 name|tTd
 argument_list|(
 literal|27
@@ -7504,12 +7628,7 @@ name|false
 argument_list|)
 expr_stmt|;
 block|}
-name|ctladdr
-operator|->
-name|q_state
-operator|=
-name|QS_DONTSEND
-expr_stmt|;
+block|}
 block|}
 operator|(
 name|void

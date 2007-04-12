@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: timers.c,v 8.25 2005/06/14 23:07:23 ca Exp $"
+literal|"@(#)$Id: timers.c,v 8.26 2006/08/15 23:24:58 ca Exp $"
 argument_list|)
 end_macro
 
@@ -146,7 +146,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|msg
 argument_list|,
@@ -202,8 +204,10 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|ptimer
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -570,8 +574,10 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|ptimer
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -888,7 +894,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%ld.%06ldr/%ld.%06ldc"
 argument_list|,

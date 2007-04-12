@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001, 2005-2006 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2001, 2005-2007 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: t-sem.c,v 1.15 2006/03/13 20:40:43 msk Exp $"
+literal|"@(#)$Id: t-sem.c,v 1.16 2007/03/21 23:22:10 ca Exp $"
 argument_list|)
 end_macro
 
@@ -75,6 +75,13 @@ include|#
 directive|include
 file|<sm/sem.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|T_SM_SEM_KEY
+value|(4321L)
+end_define
 
 begin_function
 specifier|static
@@ -166,7 +173,7 @@ name|semid
 operator|=
 name|sm_sem_start
 argument_list|(
-name|SM_SEM_KEY
+name|T_SM_SEM_KEY
 argument_list|,
 name|SM_NSEM
 argument_list|,
@@ -426,7 +433,7 @@ name|semid
 operator|=
 name|sm_sem_start
 argument_list|(
-name|SM_SEM_KEY
+name|T_SM_SEM_KEY
 argument_list|,
 literal|1
 argument_list|,

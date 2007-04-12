@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005, 2006 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2005-2007 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -14,9 +14,15 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: t-memstat.c,v 1.6 2006/03/27 22:34:47 ca Exp $"
+literal|"@(#)$Id: t-memstat.c,v 1.9 2007/03/14 21:41:09 ca Exp $"
 argument_list|)
 end_macro
+
+begin_include
+include|#
+directive|include
+file|<sm/misc.h>
+end_include
 
 begin_comment
 comment|/* **  Simple test program for memstat */
@@ -66,6 +72,64 @@ name|int
 name|optind
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|void
+name|usage
+parameter_list|(
+name|prg
+parameter_list|)
+name|char
+modifier|*
+name|prg
+decl_stmt|;
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: %s [options]\n"
+argument_list|,
+name|prg
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"options:\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-l n    loop n times\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-m n    allocate n bytes per iteration\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-r name use name as resource to query\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-s n    sleep n seconds per iteration\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -202,7 +266,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-break|break;
+name|usage
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|r

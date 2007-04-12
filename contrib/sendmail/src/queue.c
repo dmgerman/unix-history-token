@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.954.2.5 2006/07/31 21:44:18 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.972 2007/03/29 22:55:17 ca Exp $"
 argument_list|)
 end_macro
 
@@ -672,6 +672,10 @@ begin_comment
 comment|/* _FFR_RHS */
 end_comment
 
+begin_comment
+comment|/* **  Note: workcmpf?() don't use a prototype because it will cause a conflict **  with the qsort() call (which expects something like **  int (*compar)(const void *, const void *), not (WORK *, WORK *)) */
+end_comment
+
 begin_function_decl
 specifier|static
 name|int
@@ -860,6 +864,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|FSPath
@@ -1405,7 +1410,9 @@ name|NEWQFL_LETTER
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|tf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|tfp
@@ -1439,7 +1446,9 @@ name|ANYQFL_LETTER
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|tf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|OPEN_TF
@@ -2005,7 +2014,9 @@ name|DATAFL_LETTER
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|df
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2340,7 +2351,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|mcibuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mcibuf
@@ -3515,7 +3528,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|nullmailer
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nullmailer
@@ -3551,7 +3566,9 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|mcibuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mcibuf
@@ -3657,7 +3674,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -3667,6 +3686,23 @@ condition|(
 name|buf
 index|[
 literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|' '
+operator|&&
+name|buf
+index|[
+literal|1
 index|]
 operator|==
 literal|'\0'
@@ -3855,7 +3891,7 @@ name|tfp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s:%s\n"
 argument_list|,
 name|h
 operator|->
@@ -3966,7 +4002,7 @@ name|tfp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s:%s\n"
 argument_list|,
 name|h
 operator|->
@@ -4102,7 +4138,9 @@ name|ANYQFL_LETTER
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -7199,16 +7237,6 @@ modifier|*
 name|rpool
 decl_stmt|;
 specifier|extern
-name|void
-name|rmexpstab
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
 name|ENVELOPE
 name|BlankEnvelope
 decl_stmt|;
@@ -9193,7 +9221,9 @@ argument_list|,
 literal|"."
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qd
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -9205,7 +9235,9 @@ argument_list|(
 name|qd
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qd
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -9816,7 +9848,9 @@ argument_list|(
 name|qf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qf
+argument_list|)
 argument_list|,
 literal|3
 argument_list|,
@@ -10306,7 +10340,9 @@ argument_list|,
 name|lbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|lbuf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -11191,8 +11227,10 @@ argument_list|,
 name|wc
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|WorkList
+argument_list|)
 argument_list|,
 name|workcmpf1
 argument_list|)
@@ -11326,8 +11364,10 @@ argument_list|,
 name|wc
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|WorkList
+argument_list|)
 argument_list|,
 name|workcmpf2
 argument_list|)
@@ -11353,8 +11393,10 @@ argument_list|,
 name|wc
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|WorkList
+argument_list|)
 argument_list|,
 name|workcmpf3
 argument_list|)
@@ -11380,8 +11422,10 @@ argument_list|,
 name|wc
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|WorkList
+argument_list|)
 argument_list|,
 name|workcmpf4
 argument_list|)
@@ -11424,8 +11468,10 @@ argument_list|,
 name|wc
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|WorkList
+argument_list|)
 argument_list|,
 name|workcmpf5
 argument_list|)
@@ -11451,8 +11497,10 @@ argument_list|,
 name|wc
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|WorkList
+argument_list|)
 argument_list|,
 name|workcmpf6
 argument_list|)
@@ -11484,8 +11532,10 @@ argument_list|,
 name|wc
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|WorkList
+argument_list|)
 argument_list|,
 name|workcmpf7
 argument_list|)
@@ -11514,8 +11564,10 @@ argument_list|,
 name|wc
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|WorkList
+argument_list|)
 argument_list|,
 name|workcmpf0
 argument_list|)
@@ -11560,8 +11612,10 @@ operator|)
 name|xalloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|w
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|w
@@ -11872,8 +11926,10 @@ name|xalloc
 argument_list|(
 operator|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|WorkList
+argument_list|)
 operator|)
 operator|*
 operator|(
@@ -14262,7 +14318,17 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+name|int
+name|bufsize
+decl_stmt|;
 comment|/* 	**  Read and process the file. 	*/
+name|SM_REQUIRE
+argument_list|(
+name|e
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|bp
 operator|=
 name|NULL
@@ -14282,7 +14348,9 @@ name|ANYQFL_LETTER
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|qfp
@@ -15203,6 +15271,13 @@ literal|1
 expr_stmt|;
 while|while
 condition|(
+name|bufsize
+operator|=
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|,
 operator|(
 name|bp
 operator|=
@@ -15210,8 +15285,8 @@ name|fgetfolded
 argument_list|(
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
+operator|&
+name|bufsize
 argument_list|,
 name|qfp
 argument_list|)
@@ -15898,6 +15973,17 @@ expr_stmt|;
 name|unlockqueue
 argument_list|(
 name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|!=
+name|buf
+condition|)
+name|sm_free
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 return|return
@@ -16595,18 +16681,11 @@ name|bp
 operator|!=
 name|buf
 condition|)
-block|{
-name|sm_free
+name|SM_FREE
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
-name|bp
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 block|}
 comment|/* 	**  If we haven't read any lines, this queue file is empty. 	**  Arrange to remove it without referencing any null pointers. 	*/
 if|if
@@ -16662,6 +16741,46 @@ return|return
 name|false
 return|;
 block|}
+if|#
+directive|if
+name|_FFR_QF_PARANOIA
+comment|/* Check to make sure key fields were read */
+if|if
+condition|(
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"readqf: %s: sender not specified in queue file"
+argument_list|,
+name|qf
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_io_close
+argument_list|(
+name|qfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+comment|/* other checks? */
+endif|#
+directive|endif
+comment|/* _FFR_QF_PARANOIA */
 comment|/* possibly set ${dsn_ret} macro */
 if|if
 condition|(
@@ -16831,7 +16950,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"%ld"
 argument_list|,
@@ -16869,24 +16990,13 @@ if|if
 condition|(
 name|bp
 operator|!=
-name|NULL
-operator|&&
-name|bp
-operator|!=
 name|buf
 condition|)
-block|{
-name|sm_free
+name|SM_FREE
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
-name|bp
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|qfp
@@ -16931,6 +17041,22 @@ end_function
 begin_comment
 comment|/* **  PRTSTR -- print a string, "unprintable" characters are shown as \oct ** **	Parameters: **		s -- string to print **		ml -- maximum length of output ** **	Returns: **		number of entries ** **	Side Effects: **		Prints a string on stdout. */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|prtstr
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -17609,7 +17735,9 @@ argument_list|,
 literal|"."
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qd
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -17622,7 +17750,9 @@ argument_list|,
 literal|"."
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qddf
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -17636,7 +17766,9 @@ argument_list|(
 name|qd
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qd
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -17684,7 +17816,9 @@ argument_list|(
 name|qddf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qddf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -18103,7 +18237,9 @@ argument_list|(
 name|qf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qf
+argument_list|)
 argument_list|,
 literal|3
 argument_list|,
@@ -18216,7 +18352,9 @@ argument_list|(
 name|qf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qf
+argument_list|)
 argument_list|,
 literal|3
 argument_list|,
@@ -18517,7 +18655,9 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|!=
 name|NULL
@@ -18590,12 +18730,16 @@ argument_list|)
 operator|)
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|statmsg
+argument_list|)
 condition|)
 name|i
 operator|=
 sizeof|sizeof
+argument_list|(
 name|statmsg
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -18640,12 +18784,16 @@ argument_list|)
 operator|)
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|quarmsg
+argument_list|)
 condition|)
 name|i
 operator|=
 sizeof|sizeof
+argument_list|(
 name|quarmsg
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -18690,12 +18838,16 @@ argument_list|)
 operator|)
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|bodytype
+argument_list|)
 condition|)
 name|i
 operator|=
 sizeof|sizeof
+argument_list|(
 name|bodytype
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -19557,7 +19709,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -19685,7 +19839,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|4
 argument_list|,
@@ -20081,7 +20237,9 @@ literal|8
 index|]
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|idbuf
+argument_list|)
 operator|-
 literal|8
 argument_list|,
@@ -20421,8 +20579,10 @@ operator|->
 name|e_rpool
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|a
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -20436,8 +20596,10 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|a
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -20817,11 +20979,15 @@ argument_list|,
 name|p
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 condition|)
 return|return;
 if|if
@@ -21084,7 +21250,9 @@ argument_list|(
 name|idbuf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|idbuf
+argument_list|)
 argument_list|,
 literal|"%.32s/%s"
 argument_list|,
@@ -21206,7 +21374,9 @@ argument_list|(
 name|dir
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|dir
+argument_list|)
 argument_list|,
 literal|4
 argument_list|,
@@ -21894,6 +22064,22 @@ begin_comment
 comment|/* **  CHKQDIR -- check a queue directory ** **	Parameters: **		name -- name of queue directory **		sff -- flags for safefile() ** **	Returns: **		is it a queue directory? */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|bool
+name|chkqdir
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|bool
@@ -22468,7 +22654,9 @@ operator|->
 name|qg_qdir
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qpath
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -22476,7 +22664,9 @@ condition|(
 name|len
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|qpath
+argument_list|)
 condition|)
 block|{
 name|syserr
@@ -22491,7 +22681,9 @@ operator|(
 name|int
 operator|)
 sizeof|sizeof
+argument_list|(
 name|qpath
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ExitStat
@@ -22588,11 +22780,15 @@ operator|+
 name|blen
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|prefix
+argument_list|)
 argument_list|)
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|prefix
+argument_list|)
 condition|)
 block|{
 name|syserr
@@ -22607,7 +22803,9 @@ operator|(
 name|int
 operator|)
 sizeof|sizeof
+argument_list|(
 name|qpath
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ExitStat
@@ -22760,7 +22958,9 @@ argument_list|,
 name|qpath
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qpath
+argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -22798,7 +22998,9 @@ argument_list|(
 name|relpath
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|relpath
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -22812,7 +23014,9 @@ argument_list|(
 name|off
 operator|<
 sizeof|sizeof
+argument_list|(
 name|relpath
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -22983,6 +23187,32 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* Skip . and .. directories */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|d
+operator|->
+name|d_name
+argument_list|,
+literal|"."
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|d
+operator|->
+name|d_name
+argument_list|,
+literal|".."
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|i
 operator|=
 name|strlen
@@ -23097,10 +23327,12 @@ name|xalloc
 argument_list|(
 operator|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|qg
 operator|->
 name|qg_qpaths
+argument_list|)
 operator|)
 operator|*
 name|slotsleft
@@ -23141,10 +23373,12 @@ name|qg_qpaths
 argument_list|,
 operator|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|qg
 operator|->
 name|qg_qpaths
+argument_list|)
 operator|)
 operator|*
 operator|(
@@ -23205,7 +23439,7 @@ parameter_list|,
 name|flag
 parameter_list|)
 define|\
-value|(void) sm_strlcpyn(subdir, sizeof subdir, 3, relpath, "/", name); \ 	if (chkqdir(subdir, sff))	\ 		qg->qg_qpaths[qg->qg_numqueues].qp_subdirs |= flag;	\ 	else
+value|(void) sm_strlcpyn(subdir, sizeof(subdir), 3, relpath, "/", name); \ 	if (chkqdir(subdir, sff))	\ 		qg->qg_qpaths[qg->qg_numqueues].qp_subdirs |= flag;	\ 	else
 name|CHKRSUBDIR
 argument_list|(
 literal|"qf"
@@ -23381,10 +23615,12 @@ operator|)
 name|xalloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|qg
 operator|->
 name|qg_qpaths
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* test path to get warning messages */
@@ -23477,7 +23713,7 @@ parameter_list|,
 name|flag
 parameter_list|)
 define|\
-value|(void) sm_strlcpyn(subdir, sizeof subdir, 3, qg->qg_qdir, "/", name); \ 	if (chkqdir(subdir, sff))	\ 		qg->qg_qpaths[0].qp_subdirs |= flag;	\ 	else
+value|(void) sm_strlcpyn(subdir, sizeof(subdir), 3, qg->qg_qdir, "/", name); \ 	if (chkqdir(subdir, sff))	\ 		qg->qg_qpaths[0].qp_subdirs |= flag;	\ 	else
 name|CHKSUBDIR
 argument_list|(
 literal|"qf"
@@ -23624,9 +23860,11 @@ name|filesys_find
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -23668,10 +23906,12 @@ name|path
 parameter_list|,
 name|add
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path
@@ -23937,7 +24177,9 @@ argument_list|(
 name|qddf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|qddf
+argument_list|)
 argument_list|,
 literal|2
 argument_list|,
@@ -24040,6 +24282,7 @@ decl_stmt|;
 if|#
 directive|if
 name|SM_CONF_SHM
+comment|/* 	**  Only the daemon updates the shared memory, i.e., 	**  if shared memory is available but the pid is not the 	**  one of the daemon, then don't do anything. 	*/
 if|if
 condition|(
 name|ShmId
@@ -24313,12 +24556,6 @@ begin_comment
 comment|/* _FFR_ANY_FREE_FS */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_CONTROL_MSTAT
-end_if
-
 begin_comment
 comment|/* **  DISK_STATUS -- show amount of free space in queue directories ** **	Parameters: **		out -- output file pointer. **		prefix -- string to output in front of each line. ** **	Returns: **		none. */
 end_comment
@@ -24443,15 +24680,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_CONTROL_MSTAT */
-end_comment
 
 begin_if
 if|#
@@ -24910,12 +25138,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|_FFR_SELECT_SHM
-end_if
-
 begin_decl_stmt
 specifier|static
 name|bool
@@ -25325,15 +25547,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_SELECT_SHM */
-end_comment
-
 begin_comment
 comment|/* **  INIT_SHM -- initialize shared memory structure ** **	Initialize or attach to shared memory segment. **	Currently it is not a fatal error if this doesn't work. **	However, it causes us to have a "fallback" storage location **	for everything that is supposed to be in the shared memory, **	which makes the code slightly ugly. ** **	Parameters: **		qn -- number of queue directories. **		owner -- owner of shared memory. **		hash -- identifies data that is stored in shared memory. ** **	Returns: **		none. */
 end_comment
@@ -25387,15 +25600,9 @@ decl_stmt|;
 name|int
 name|save_errno
 decl_stmt|;
-if|#
-directive|if
-name|_FFR_SELECT_SHM
 name|bool
 name|keyselect
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_SELECT_SHM */
 name|PtrFileSys
 operator|=
 operator|&
@@ -25409,9 +25616,6 @@ operator|=
 operator|&
 name|Numfilesys
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_SELECT_SHM
 comment|/* if this "key" is specified: select one yourself */
 define|#
 directive|define
@@ -25421,9 +25625,6 @@ define|#
 directive|define
 name|FIRST_SHM_KEY
 value|25
-endif|#
-directive|endif
-comment|/* _FFR_SELECT_SHM */
 comment|/* This allows us to disable shared memory at runtime. */
 if|if
 condition|(
@@ -25447,9 +25648,6 @@ argument_list|(
 name|QUEUE_SHM_T
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_SELECT_SHM
 name|keyselect
 operator|=
 name|ShmKey
@@ -25471,6 +25669,10 @@ name|FIRST_SHM_KEY
 expr_stmt|;
 else|else
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|ShmKey
 operator|=
 name|read_key_file
@@ -25490,14 +25692,25 @@ name|ShmKey
 operator|==
 name|SEL_SHM_KEY
 condition|)
+block|{
+name|save_errno
+operator|=
+operator|(
+name|errno
+operator|!=
+literal|0
+operator|)
+condition|?
+name|errno
+else|:
+name|EINVAL
+expr_stmt|;
 goto|goto
 name|error
 goto|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_SELECT_SHM */
+block|}
 for|for
 control|(
 init|;
@@ -25560,9 +25773,6 @@ operator|>=
 literal|3
 condition|)
 block|{
-if|#
-directive|if
-name|_FFR_SELECT_SHM
 if|if
 condition|(
 name|keyselect
@@ -25581,14 +25791,8 @@ condition|)
 break|break;
 continue|continue;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_SELECT_SHM */
 break|break;
 block|}
-if|#
-directive|if
-name|_FFR_SELECT_SHM
 comment|/* only sleep if we are at the first key */
 if|if
 condition|(
@@ -25599,9 +25803,6 @@ name|ShmKey
 operator|==
 name|SEL_SHM_KEY
 condition|)
-endif|#
-directive|endif
-comment|/* _FFR_SELECT_SHM */
 name|sleep
 argument_list|(
 name|count
@@ -25619,9 +25820,6 @@ name|int
 modifier|*
 name|p
 decl_stmt|;
-if|#
-directive|if
-name|_FFR_SELECT_SHM
 if|if
 condition|(
 name|keyselect
@@ -25639,9 +25837,6 @@ operator|)
 name|ShmKey
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_SELECT_SHM */
 if|if
 condition|(
 name|owner
@@ -25954,7 +26149,7 @@ comment|/* SM_CONF_SHM */
 end_comment
 
 begin_comment
-comment|/* **  SETUP_QUEUES -- setup all queue groups ** **	Parameters: **		owner -- owner of shared memory. ** **	Returns: **		none. ** #if SM_CONF_SHM **	Side Effects: **		attaches shared memory. #endif * SM_CONF_SHM * */
+comment|/* **  SETUP_QUEUES -- set up all queue groups ** **	Parameters: **		owner -- owner of shared memory? ** **	Returns: **		none. ** #if SM_CONF_SHM **	Side Effects: **		attaches shared memory. #endif * SM_CONF_SHM * */
 end_comment
 
 begin_function
@@ -26009,7 +26204,9 @@ argument_list|,
 name|QueueDir
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|basedir
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Provide space for trailing '/' */
@@ -26018,7 +26215,9 @@ condition|(
 name|len
 operator|>=
 sizeof|sizeof
+argument_list|(
 name|basedir
+argument_list|)
 operator|-
 literal|1
 condition|)
@@ -26033,7 +26232,9 @@ operator|(
 name|int
 operator|)
 sizeof|sizeof
+argument_list|(
 name|basedir
+argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -26874,8 +27075,10 @@ operator|)
 name|xalloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|qg
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -26889,8 +27092,10 @@ argument_list|,
 literal|'\0'
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|qg
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -28752,7 +28957,9 @@ name|DATAFL_LETTER
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|opath
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -28770,7 +28977,9 @@ name|DATAFL_LETTER
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|npath
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -28973,7 +29182,9 @@ name|DATAFL_LETTER
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|npath
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -29111,8 +29322,10 @@ operator|->
 name|e_rpool
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|ee
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|STRUCTCOPY
@@ -29584,6 +29797,20 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|static
+name|int
+name|split_across_queue_groups
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -31729,6 +31956,9 @@ name|char
 modifier|*
 name|bp
 decl_stmt|;
+name|int
+name|bufsize
+decl_stmt|;
 name|char
 name|oldqf
 index|[
@@ -31777,7 +32007,9 @@ name|ANYQFL_LETTER
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|oldqf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -31795,7 +32027,9 @@ name|NEWQFL_LETTER
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|tempqf
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Instead of duplicating all the open 	**  and lock code here, tell readqf() to 	**  do that work and return the open 	**  file pointer in e_lockfp.  Note that 	**  we must release the locks properly when 	**  we are done. 	*/
@@ -32070,6 +32304,13 @@ block|}
 comment|/* Copy the data over, changing the quarantine reason */
 while|while
 condition|(
+name|bufsize
+operator|=
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|,
 operator|(
 name|bp
 operator|=
@@ -32077,8 +32318,8 @@ name|fgetfolded
 argument_list|(
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
+operator|&
+name|bufsize
 argument_list|,
 name|oldqfp
 argument_list|)
@@ -32169,7 +32410,6 @@ name|dirty
 operator|=
 name|true
 expr_stmt|;
-continue|continue;
 block|}
 elseif|else
 if|if
@@ -32408,6 +32648,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|bp
+operator|!=
+name|buf
+condition|)
+name|sm_free
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Make sure we read the whole old file */
 name|errno
@@ -32632,7 +32883,9 @@ argument_list|,
 name|oldqf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|newqf
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -32654,7 +32907,9 @@ name|newtype
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|newqf
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

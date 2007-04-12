@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: arpadate.c,v 8.30 2001/09/11 04:05:12 gshapiro Exp $"
+literal|"@(#)$Id: arpadate.c,v 8.31 2006/08/15 23:24:55 ca Exp $"
 argument_list|)
 end_macro
 
@@ -779,7 +779,9 @@ operator|&
 name|b
 index|[
 sizeof|sizeof
+argument_list|(
 name|b
+argument_list|)
 operator|-
 literal|3
 index|]
