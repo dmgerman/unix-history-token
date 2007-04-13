@@ -14056,9 +14056,10 @@ name|pte
 decl_stmt|;
 name|base
 operator|=
+name|trunc_page
+argument_list|(
 name|va
-operator|&
-name|PG_FRAME
+argument_list|)
 expr_stmt|;
 name|offset
 operator|=
