@@ -6385,6 +6385,9 @@ decl_stmt|;
 name|int
 name|iovlen
 decl_stmt|;
+name|int
+name|done
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -6897,6 +6900,10 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Read in the exports file and build the list, calling 	 * nmount() as we go along to push the export rules into the kernel. 	 */
+name|done
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -6949,7 +6956,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_WARNING
 argument_list|,
 literal|"can't open %s"
 argument_list|,
@@ -6959,11 +6966,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
+continue|continue;
 block|}
 name|get_exportlist_one
 argument_list|()
@@ -6971,6 +6974,29 @@ expr_stmt|;
 name|fclose
 argument_list|(
 name|exp_file
+argument_list|)
+expr_stmt|;
+name|done
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|done
+operator|==
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"can't open any exports file"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
