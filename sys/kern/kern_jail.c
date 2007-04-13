@@ -2994,6 +2994,9 @@ case|:
 case|case
 name|PRIV_VFS_MOUNT_NONUSER
 case|:
+case|case
+name|PRIV_VFS_MOUNT_OWNER
+case|:
 if|if
 condition|(
 name|jail_mount_allowed
