@@ -1353,6 +1353,9 @@ name|hsize
 operator|*
 literal|4096
 operator|<
+operator|(
+name|uint64_t
+operator|)
 name|physmem
 operator|*
 name|PAGESIZE

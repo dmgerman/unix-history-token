@@ -2171,6 +2171,9 @@ name|hsize
 operator|*
 literal|65536
 operator|<
+operator|(
+name|uint64_t
+operator|)
 name|physmem
 operator|*
 name|PAGESIZE
@@ -12593,6 +12596,9 @@ comment|/* Warn about ZFS memory requirements. */
 if|if
 condition|(
 operator|(
+operator|(
+name|uint64_t
+operator|)
 name|physmem
 operator|*
 name|PAGESIZE
