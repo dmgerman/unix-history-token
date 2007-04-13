@@ -454,6 +454,36 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Low vnodes event */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|vfs_lowvnodes_handler_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_expr_stmt
+name|EVENTHANDLER_DECLARE
+argument_list|(
+name|vfs_lowvnodes
+argument_list|,
+name|vfs_lowvnodes_handler_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Process events  * process_fork and exit handlers are called without Giant.  * exec handlers are called with Giant, but that is by accident.  */
 end_comment
 
