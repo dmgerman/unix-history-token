@@ -2300,7 +2300,7 @@ name|p_mqnotifier
 expr_stmt|;
 comment|/* (c) mqueue notifiers.*/
 name|struct
-name|auditinfo
+name|auditinfo_addr
 modifier|*
 name|p_au
 decl_stmt|;

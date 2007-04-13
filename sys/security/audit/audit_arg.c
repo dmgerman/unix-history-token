@@ -1273,7 +1273,7 @@ name|ar
 operator|->
 name|k_ar
 operator|.
-name|ar_arg_termid
+name|ar_arg_termid_addr
 operator|=
 name|p
 operator|->
@@ -1307,7 +1307,7 @@ name|ARG_RGID
 operator||
 name|ARG_ASID
 operator||
-name|ARG_TERMID
+name|ARG_TERMID_ADDR
 operator||
 name|ARG_PID
 operator||

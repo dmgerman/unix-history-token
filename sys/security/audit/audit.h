@@ -240,8 +240,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARG_UNUSED1
-value|0x0000000000800000ULL
+name|ARG_TERMID_ADDR
+value|0x0000000000400000ULL
 end_define
 
 begin_define
