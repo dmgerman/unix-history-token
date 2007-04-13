@@ -46,6 +46,21 @@ directive|include
 file|<sys/mkdev.h>
 end_include
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|MAJOR_IN_SYSMACROS
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<sys/sysmacros.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
