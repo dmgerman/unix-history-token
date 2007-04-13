@@ -13518,6 +13518,22 @@ block|}
 case|case
 name|XPT_RESET_DEV
 case|:
+if|if
+condition|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|==
+name|XPT_RESET_BUS
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|xpt_print
 argument_list|(
 name|ccb
@@ -13526,21 +13542,25 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-literal|"reset %s\n"
-argument_list|,
+literal|"reset bus\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|xpt_print
+argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
-name|func_code
-operator|==
-name|XPT_RESET_BUS
-condition|?
-literal|"bus"
-else|:
-literal|"device"
+name|path
+argument_list|,
+literal|"reset device\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|CAMLOCK_2_MPTLOCK
 argument_list|(
 name|mpt
