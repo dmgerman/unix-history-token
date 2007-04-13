@@ -383,7 +383,9 @@ name|type
 init|=
 name|TAG_ANY
 decl_stmt|;
-comment|/* #ifndef BSD4_4 */
+ifndef|#
+directive|ifndef
+name|BSD4_4
 name|set_program_name
 argument_list|(
 name|argv
@@ -392,7 +394,8 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* #endif */
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|CHECKER_ONLY
