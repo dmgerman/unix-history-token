@@ -182,6 +182,15 @@ name|overstrike
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|fmt_flags
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* signal handling routines */
 end_comment
@@ -856,7 +865,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmSCo"
+literal|"\f qh?en#sdkriIutHmSCao"
 decl_stmt|;
 else|#
 directive|else
@@ -865,7 +874,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmSC"
+literal|"\f qh?en#sdkriIutHmSCa"
 decl_stmt|;
 endif|#
 directive|endif
@@ -956,13 +965,17 @@ define|#
 directive|define
 name|CMD_wcputog
 value|19
+define|#
+directive|define
+name|CMD_showargs
+value|20
 ifdef|#
 directive|ifdef
 name|ORDER
 define|#
 directive|define
 name|CMD_order
-value|20
+value|21
 endif|#
 directive|endif
 comment|/* set the buffer for stdout */
@@ -1168,7 +1181,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"CSIHbinquvs:d:U:m:o:t"
+literal|"CSIHabinquvs:d:U:m:o:t"
 argument_list|)
 operator|)
 operator|!=
@@ -1296,6 +1309,14 @@ case|:
 name|interactive
 operator|=
 name|No
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+name|fmt_flags
+operator|^=
+name|FMT_SHOWARGS
 expr_stmt|;
 break|break;
 case|case
@@ -2382,6 +2403,8 @@ argument_list|(
 name|processes
 argument_list|,
 name|get_userid
+argument_list|,
+name|fmt_flags
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3722,6 +3745,14 @@ operator|!
 name|ps
 operator|.
 name|system
+expr_stmt|;
+break|break;
+case|case
+name|CMD_showargs
+case|:
+name|fmt_flags
+operator|^=
+name|FMT_SHOWARGS
 expr_stmt|;
 break|break;
 ifdef|#

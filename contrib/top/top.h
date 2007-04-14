@@ -130,6 +130,17 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/*  * Format modifiers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FMT_SHOWARGS
+value|0x00000001
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|enum
