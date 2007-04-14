@@ -490,7 +490,7 @@ argument_list|(
 name|tmpdir
 argument_list|)
 argument_list|,
-literal|"/tmp/libarchive_test.%Y-%m-%dT%H.%M.%S.XXXXXX"
+literal|"/tmp/libarchive_test.%Y-%m-%dT%H.%M.%S"
 argument_list|,
 name|localtime
 argument_list|(
@@ -501,12 +501,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mkdtemp
+name|mkdir
 argument_list|(
 name|tmpdir
+argument_list|,
+literal|0755
 argument_list|)
-operator|==
-name|NULL
+operator|!=
+literal|0
 condition|)
 block|{
 name|fprintf
