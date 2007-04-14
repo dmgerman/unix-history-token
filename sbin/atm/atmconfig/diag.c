@@ -4682,6 +4682,8 @@ operator|.
 name|ifr_name
 index|[
 name|IFNAMSIZ
+operator|-
+literal|1
 index|]
 operator|=
 literal|'\0'
