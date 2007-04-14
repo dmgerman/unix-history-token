@@ -10113,8 +10113,22 @@ operator|>
 literal|0
 condition|)
 block|{
-name|in_delmulti
+name|KASSERT
 argument_list|(
+name|imo
+operator|->
+name|imo_num_memberships
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"%s: imo_num_memberships != 1"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Our event handler is always called after protocol 		 * domains have been detached from the underlying ifnet. 		 * Do not call in_delmulti(); we held a single reference 		 * which the protocol domain has purged in in_purgemaddrs(). 		 */
 name|imo
 operator|->
 name|imo_membership
@@ -10124,7 +10138,8 @@ name|imo
 operator|->
 name|imo_num_memberships
 index|]
-argument_list|)
+operator|=
+name|NULL
 expr_stmt|;
 name|imo
 operator|->
