@@ -4015,6 +4015,7 @@ name|p
 operator|->
 name|name
 argument_list|,
+operator|&
 name|times
 argument_list|)
 expr_stmt|;
@@ -6335,12 +6336,13 @@ operator|->
 name|mode
 argument_list|)
 operator|&&
-name|utimes
+name|utime
 argument_list|(
 name|a
 operator|->
 name|name
 argument_list|,
+operator|&
 name|times
 argument_list|)
 operator|!=
