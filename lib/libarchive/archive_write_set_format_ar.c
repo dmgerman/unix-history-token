@@ -500,7 +500,7 @@ name|a
 operator|->
 name|archive_format
 operator|=
-name|ARCHIVE_FORMAT_AR_SVR4
+name|ARCHIVE_FORMAT_AR_GNU
 expr_stmt|;
 name|a
 operator|->
@@ -880,7 +880,7 @@ name|a
 operator|->
 name|archive_format
 operator|==
-name|ARCHIVE_FORMAT_AR_SVR4
+name|ARCHIVE_FORMAT_AR_GNU
 condition|)
 block|{
 comment|/* 		 * SVR4/GNU variant use a "/" to mark then end of the filename, 		 * make it possible to have embedded spaces in the filename. 		 * So, the longest filename here (without extension) is 		 * actually 15 bytes. 		 */
