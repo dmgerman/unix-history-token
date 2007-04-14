@@ -1734,7 +1734,8 @@ operator|=
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|buf
 index|[
