@@ -181,6 +181,9 @@ directive|include
 file|<sys/kernel.h>
 include|#
 directive|include
+file|<sys/disk.h>
+include|#
+directive|include
 file|<machine/atomic.h>
 define|#
 directive|define
