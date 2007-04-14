@@ -1602,14 +1602,27 @@ name|pktlen
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 define|#
 directive|define
 name|M_SANITY_ACTION
 parameter_list|(
 name|s
 parameter_list|)
-value|return (0)
-comment|/* #define	M_SANITY_ACTION(s)	panic("mbuf %p: " s, m) */
+value|panic("mbuf %p: " s, m)
+else|#
+directive|else
+define|#
+directive|define
+name|M_SANITY_ACTION
+parameter_list|(
+name|s
+parameter_list|)
+value|printf("mbuf %p: " s, m)
+endif|#
+directive|endif
 for|for
 control|(
 name|m
@@ -1854,42 +1867,6 @@ else|else
 name|M_SANITY_ACTION
 argument_list|(
 literal|"m->m_nextpkt on in-chain mbuf"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* correct type correlations. */
-if|if
-condition|(
-name|m
-operator|->
-name|m_type
-operator|==
-name|MT_HEADER
-operator|&&
-operator|!
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|sanitize
-condition|)
-name|m
-operator|->
-name|m_type
-operator|=
-name|MT_DATA
-expr_stmt|;
-else|else
-name|M_SANITY_ACTION
-argument_list|(
-literal|"MT_HEADER set but not M_PKTHDR"
 argument_list|)
 expr_stmt|;
 block|}
