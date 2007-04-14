@@ -174,6 +174,39 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|M_HDR_PAD
+value|6
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|M_HDR_PAD
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Header present at the beginning of every mbuf.  */
 end_comment
@@ -210,6 +243,13 @@ name|short
 name|mh_type
 decl_stmt|;
 comment|/* type of data in this mbuf */
+name|uint8_t
+name|pad
+index|[
+name|M_HDR_PAD
+index|]
+decl_stmt|;
+comment|/* word align                  */
 block|}
 struct|;
 end_struct
@@ -270,16 +310,16 @@ modifier|*
 name|rcvif
 decl_stmt|;
 comment|/* rcv interface */
-name|int
-name|len
-decl_stmt|;
-comment|/* total packet length */
 comment|/* variables for ip and tcp reassembly */
 name|void
 modifier|*
 name|header
 decl_stmt|;
 comment|/* pointer to packet header */
+name|int
+name|len
+decl_stmt|;
+comment|/* total packet length */
 comment|/* variables for hardware checksum */
 name|int
 name|csum_flags
