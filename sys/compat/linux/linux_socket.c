@@ -4388,6 +4388,27 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 	 * Some Linux applications (ping) define a non-NULL control data 	 * pointer, but a msg_controllen of 0, which is not allowed in the 	 * FreeBSD system call interface.  NULL the msg_control pointer in 	 * order to handle this case.  This should be checked, but allows the 	 * Linux ping to work. 	 */
+if|if
+condition|(
+name|msg
+operator|.
+name|msg_control
+operator|!=
+name|NULL
+operator|&&
+name|msg
+operator|.
+name|msg_controllen
+operator|==
+literal|0
+condition|)
+name|msg
+operator|.
+name|msg_control
+operator|=
+name|NULL
+expr_stmt|;
 name|error
 operator|=
 name|copyiniov
