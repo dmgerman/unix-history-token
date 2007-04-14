@@ -497,7 +497,7 @@ literal|0
 condition|)
 name|nthreads
 operator|=
-name|mp_ncpus
+name|max_ncpus
 expr_stmt|;
 for|for
 control|(
