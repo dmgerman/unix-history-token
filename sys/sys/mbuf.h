@@ -1376,6 +1376,34 @@ name|zone_ext_refcnt
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MBUF_PACKET_ZONE_DISABLE
+end_ifndef
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|mbuf
+operator|*
+name|m_getcl
+argument_list|(
+argument|int how
+argument_list|,
+argument|short type
+argument_list|,
+argument|int flags
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 specifier|static
 name|__inline
@@ -1402,23 +1430,6 @@ argument_list|(
 argument|int how
 argument_list|,
 argument|short type
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|mbuf
-operator|*
-name|m_getcl
-argument_list|(
-argument|int how
-argument_list|,
-argument|short type
-argument_list|,
-argument|int flags
 argument_list|)
 expr_stmt|;
 end_expr_stmt
