@@ -1227,7 +1227,7 @@ if|if
 condition|(
 name|bytes
 operator|<
-name|tab_size
+name|nval
 condition|)
 block|{
 name|archive_set_error
