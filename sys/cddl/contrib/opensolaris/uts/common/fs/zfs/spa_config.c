@@ -197,7 +197,18 @@ operator|)
 operator|-
 literal|1
 condition|)
+block|{
+name|ZFS_LOG
+argument_list|(
+literal|1
+argument_list|,
+literal|"Cannot open %s."
+argument_list|,
+name|pathname
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|kobj_get_filesize
@@ -210,9 +221,20 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|ZFS_LOG
+argument_list|(
+literal|1
+argument_list|,
+literal|"Cannot get size of %s."
+argument_list|,
+name|pathname
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 name|buf
 operator|=
 name|kmem_alloc
@@ -238,9 +260,20 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|ZFS_LOG
+argument_list|(
+literal|1
+argument_list|,
+literal|"Cannot read %s."
+argument_list|,
+name|pathname
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 comment|/* 	 * Unpack the nvlist. 	 */
 if|if
 condition|(
@@ -261,6 +294,15 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|ZFS_LOG
+argument_list|(
+literal|1
+argument_list|,
+literal|"File %s loaded."
+argument_list|,
+name|pathname
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Iterate over all elements in the nvlist, creating a new spa_t for 	 * each one with the specified configuration. 	 */
 name|mutex_enter
 argument_list|(
