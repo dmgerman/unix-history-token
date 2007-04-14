@@ -5215,6 +5215,7 @@ name|io_error
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 				 * If we read parity information (unnecessarily 				 * as it happens since no reconstruction was 				 * needed) regenerate and verify the parity. 				 * We also regenerate parity when resilvering 				 * so we can write it out to the failed device 				 * later. 				 */
 if|if
 condition|(
 name|parity_errors
@@ -5224,6 +5225,14 @@ operator|<
 name|rm
 operator|->
 name|rm_firstdatacol
+operator|||
+operator|(
+name|zio
+operator|->
+name|io_flags
+operator|&
+name|ZIO_FLAG_RESILVER
+operator|)
 condition|)
 block|{
 name|n
@@ -5427,7 +5436,7 @@ operator|&
 name|raidz_corrected_q
 argument_list|)
 expr_stmt|;
-comment|/* 				 * If there's more than one parity disk that 				 * was successfully read, confirm that the 				 * other parity disk produced the correct data. 				 * This routine is suboptimal in that it 				 * regenerates both the parity we wish to test 				 * as well as the parity we just used to 				 * perform the reconstruction, but this should 				 * be a relatively uncommon case, and can be 				 * optimized if it becomes a problem. 				 */
+comment|/* 				 * If there's more than one parity disk that 				 * was successfully read, confirm that the 				 * other parity disk produced the correct data. 				 * This routine is suboptimal in that it 				 * regenerates both the parity we wish to test 				 * as well as the parity we just used to 				 * perform the reconstruction, but this should 				 * be a relatively uncommon case, and can be 				 * optimized if it becomes a problem. 				 * We also regenerate parity when resilvering 				 * so we can write it out to the failed device 				 * later. 				 */
 if|if
 condition|(
 name|parity_errors
@@ -5437,6 +5446,14 @@ operator|->
 name|rm_firstdatacol
 operator|-
 literal|1
+operator|||
+operator|(
+name|zio
+operator|->
+name|io_flags
+operator|&
+name|ZIO_FLAG_RESILVER
+operator|)
 condition|)
 block|{
 name|n
