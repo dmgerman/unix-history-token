@@ -152,10 +152,6 @@ name|void
 name|pfs_fileno_alloc
 parameter_list|(
 name|struct
-name|pfs_info
-modifier|*
-parameter_list|,
-name|struct
 name|pfs_node
 modifier|*
 parameter_list|)
@@ -166,10 +162,6 @@ begin_function_decl
 name|void
 name|pfs_fileno_free
 parameter_list|(
-name|struct
-name|pfs_info
-modifier|*
-parameter_list|,
 name|struct
 name|pfs_node
 modifier|*
