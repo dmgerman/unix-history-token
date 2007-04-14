@@ -2418,10 +2418,9 @@ operator|==
 name|EROFS
 condition|)
 block|{
-comment|/* 		 * FreeBSD: In Solaris there is DS_MODE_PRIMARY instead of 		 * DS_MODE_STANDARD, but it doesn't work on FreeBSD and 		 * I don't know why. It looks like the dataset is opened 		 * on mount DS_MODE_PRIMARY mode and snapshot cannot open 		 * the same dataset in DS_MODE_PRIMARY mode again. 		 */
 name|mode
 operator|=
-name|DS_MODE_STANDARD
+name|DS_MODE_PRIMARY
 operator||
 name|DS_MODE_READONLY
 expr_stmt|;
