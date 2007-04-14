@@ -4677,7 +4677,7 @@ name|uint32_t
 name|update_crc32
 parameter_list|(
 name|uint32_t
-name|crc32
+name|crc32c
 parameter_list|,
 name|unsigned
 name|char
@@ -4701,7 +4701,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|crc32
+name|crc32c
 operator|)
 return|;
 block|}
@@ -4720,7 +4720,7 @@ return|return
 operator|(
 name|sctp_crc32c_sb8_64_bit
 argument_list|(
-name|crc32
+name|crc32c
 argument_list|,
 name|buffer
 argument_list|,
@@ -5273,7 +5273,7 @@ name|uint32_t
 name|old_update_crc32
 parameter_list|(
 name|uint32_t
-name|crc32
+name|crc32c
 parameter_list|,
 name|unsigned
 name|char
@@ -5305,7 +5305,7 @@ control|)
 block|{
 name|SCTP_CRC32C
 argument_list|(
-name|crc32
+name|crc32c
 argument_list|,
 name|buffer
 index|[
@@ -5316,7 +5316,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|crc32
+name|crc32c
 operator|)
 return|;
 block|}
@@ -5327,7 +5327,7 @@ name|uint32_t
 name|sctp_csum_finalize
 parameter_list|(
 name|uint32_t
-name|crc32
+name|crc32c
 parameter_list|)
 block|{
 name|uint32_t
@@ -5353,7 +5353,7 @@ comment|/* Complement the result */
 name|result
 operator|=
 operator|~
-name|crc32
+name|crc32c
 expr_stmt|;
 if|#
 directive|if
@@ -5397,7 +5397,7 @@ operator|)
 operator|&
 literal|0x000000ff
 expr_stmt|;
-name|crc32
+name|crc32c
 operator|=
 operator|(
 operator|(
@@ -5424,7 +5424,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* 	 * For INTEL platforms the result comes out in network order. No 	 * htonl is required or the swap above. So we optimize out both the 	 * htonl and the manual swap above. 	 */
-name|crc32
+name|crc32c
 operator|=
 name|result
 expr_stmt|;
@@ -5432,7 +5432,7 @@ endif|#
 directive|endif
 return|return
 operator|(
-name|crc32
+name|crc32c
 operator|)
 return|;
 block|}

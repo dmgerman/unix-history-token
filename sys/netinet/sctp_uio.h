@@ -2947,6 +2947,9 @@ decl_stmt|;
 name|u_long
 name|sctps_protocol_drains_done
 decl_stmt|;
+name|u_long
+name|sctps_read_peeks
+decl_stmt|;
 block|}
 struct|;
 end_struct

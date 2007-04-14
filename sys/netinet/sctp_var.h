@@ -284,6 +284,92 @@ parameter_list|)
 value|do { \ 	struct mbuf *_m; \ 	_m = (data); \ 	while(_m&& (SCTP_BUF_LEN(_m) == 0)) { \ 		(data)  = SCTP_BUF_NEXT(_m); \ 		SCTP_BUF_NEXT(_m) = NULL; \ 		sctp_m_free(_m); \ 		_m = (data); \ 	} \ } while (0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RANDY_WILL_USE_LATER
+end_ifdef
+
+begin_comment
+comment|/* this will be the non-invarant version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sctp_flight_size_decrease
+parameter_list|(
+name|tp1
+parameter_list|)
+value|do { \ 	if (tp1->whoTo->flight_size>= tp1->book_size) \ 		tp1->whoTo->flight_size -= tp1->book_size; \ 	else \ 		tp1->whoTo->flight_size = 0; \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_total_flight_decrease
+parameter_list|(
+name|stcb
+parameter_list|,
+name|tp1
+parameter_list|)
+value|do { \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		stcb->asoc.total_flight = 0; \ 		stcb->asoc.total_flight_count = 0; \ 	} \ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|sctp_flight_size_decrease
+parameter_list|(
+name|tp1
+parameter_list|)
+value|do { \ 	if (tp1->whoTo->flight_size>= tp1->book_size) \ 		tp1->whoTo->flight_size -= tp1->book_size; \ 	else \ 		panic("flight size corruption"); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_total_flight_decrease
+parameter_list|(
+name|stcb
+parameter_list|,
+name|tp1
+parameter_list|)
+value|do { \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		panic("total flight size corruption"); \ 	} \ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|sctp_flight_size_increase
+parameter_list|(
+name|tp1
+parameter_list|)
+value|do { \        (tp1)->whoTo->flight_size += (tp1)->book_size; \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_total_flight_increase
+parameter_list|(
+name|stcb
+parameter_list|,
+name|tp1
+parameter_list|)
+value|do { \        (stcb)->asoc.total_flight_count++; \        (stcb)->asoc.total_flight += (tp1)->book_size; \ } while (0)
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|sctp_nets

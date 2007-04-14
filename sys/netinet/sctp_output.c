@@ -10912,7 +10912,7 @@ specifier|static
 name|struct
 name|sctp_ifa
 modifier|*
-name|sctp_is_ifa_addr_prefered
+name|sctp_is_ifa_addr_preferred
 parameter_list|(
 name|struct
 name|sctp_ifa
@@ -10934,9 +10934,9 @@ name|dest_is_global
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * is_scope -> dest_is_priv is true if destination is a private 	 * address 	 */
+comment|/* dest_is_priv is true if destination is a private address */
 comment|/* dest_is_loop is true if destination is a loopback addresses */
-comment|/* 	 * Here we determine if its a prefered address. A prefered address 	 * means it is the same scope or higher scope then the destination. 	 * L = loopback, P = private, G = global 	 * ----------------------------------------- src    |  dest | result 	 * ---------------------------------------- L     |    L  |    yes 	 * ----------------------------------------- P     |    L  | 	 * yes-v4 no-v6 ----------------------------------------- G     | 	 * L  |    yes-v4 no-v6 ----------------------------------------- L 	 * |    P  |    no ----------------------------------------- P     | 	 * P  |    yes ----------------------------------------- G     | 	 * P  |    no ----------------------------------------- L     |    G 	 * |    no ----------------------------------------- P     |    G  | 	 * no ----------------------------------------- G     |    G  | 	 * yes ----------------------------------------- 	 */
+comment|/* 	 * Here we determine if its a preferred address. A preferred address 	 * means it is the same scope or higher scope then the destination. 	 * L = loopback, P = private, G = global 	 * ----------------------------------------- src    |  dest | result 	 * ---------------------------------------- L     |    L  |    yes 	 * ----------------------------------------- P     |    L  | 	 * yes-v4 no-v6 ----------------------------------------- G     | 	 * L  |    yes-v4 no-v6 ----------------------------------------- L 	 * |    P  |    no ----------------------------------------- P     | 	 * P  |    yes ----------------------------------------- G     | 	 * P  |    no ----------------------------------------- L     |    G 	 * |    no ----------------------------------------- P     |    G  | 	 * no ----------------------------------------- G     |    G  | 	 * yes ----------------------------------------- 	 */
 if|if
 condition|(
 name|ifa
@@ -10989,7 +10989,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Is destination prefered:"
+literal|"Is destination preferred:"
 argument_list|)
 expr_stmt|;
 name|sctp_print_address
@@ -11330,7 +11330,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* its a prefered address */
+comment|/* its a preferred address */
 return|return
 operator|(
 name|ifa
@@ -11450,7 +11450,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Now that we know what is what, implement or table this could in 	 * theory be done slicker (it used to be), but this is 	 * straightforward and easier to validate :-) 	 */
+comment|/* 	 * Now that we know what is what, implement our table. This could in 	 * theory be done slicker (it used to be), but this is 	 * straightforward and easier to validate :-) 	 */
 if|if
 condition|(
 operator|(
@@ -11458,7 +11458,7 @@ name|ifa
 operator|->
 name|src_is_loop
 operator|==
-literal|0
+literal|1
 operator|)
 operator|&&
 operator|(
@@ -11479,7 +11479,7 @@ name|ifa
 operator|->
 name|src_is_loop
 operator|==
-literal|0
+literal|1
 operator|)
 operator|&&
 operator|(
@@ -11812,13 +11812,13 @@ argument_list|,
 name|ifn_index
 argument_list|)
 expr_stmt|;
-comment|/* 	 * first question, is the ifn we will emit on in our list, if so, we 	 * want such an address. Note that we first looked for a prefered 	 * address. 	 */
+comment|/* 	 * first question, is the ifn we will emit on in our list, if so, we 	 * want such an address. Note that we first looked for a preferred 	 * address. 	 */
 if|if
 condition|(
 name|sctp_ifn
 condition|)
 block|{
-comment|/* is a prefered one on the interface we route out? */
+comment|/* is a preferred one on the interface we route out? */
 name|LIST_FOREACH
 argument_list|(
 argument|sctp_ifa
@@ -11847,7 +11847,7 @@ condition|)
 continue|continue;
 name|sifa
 operator|=
-name|sctp_is_ifa_addr_prefered
+name|sctp_is_ifa_addr_preferred
 argument_list|(
 name|sctp_ifa
 argument_list|,
@@ -11893,7 +11893,7 @@ return|;
 block|}
 block|}
 block|}
-comment|/* 	 * ok, now we now need to find one on the list of the addresses. We 	 * can't get one on the emitting interface so lets find first a 	 * prefered one. If not that a acceptable one otherwise... we return 	 * NULL. 	 */
+comment|/* 	 * ok, now we now need to find one on the list of the addresses. We 	 * can't get one on the emitting interface so let's find first a 	 * preferred one. If not that an acceptable one otherwise... we 	 * return NULL. 	 */
 name|starting_point
 operator|=
 name|inp
@@ -11962,7 +11962,7 @@ continue|continue;
 block|}
 name|sifa
 operator|=
-name|sctp_is_ifa_addr_prefered
+name|sctp_is_ifa_addr_preferred
 argument_list|(
 name|laddr
 operator|->
@@ -12274,13 +12274,13 @@ argument_list|,
 name|ifn_index
 argument_list|)
 expr_stmt|;
-comment|/* 	 * first question, is the ifn we will emit on in our list, if so, we 	 * want that one.. First we look for a prefered. Second we go for an 	 * acceptable. 	 */
+comment|/* 	 * first question, is the ifn we will emit on in our list?  If so, 	 * we want that one. First we look for a preferred. Second, we go 	 * for an acceptable. 	 */
 if|if
 condition|(
 name|sctp_ifn
 condition|)
 block|{
-comment|/* first try for a prefered address on the ep */
+comment|/* first try for a preferred address on the ep */
 name|LIST_FOREACH
 argument_list|(
 argument|sctp_ifa
@@ -12319,7 +12319,7 @@ condition|)
 block|{
 name|sifa
 operator|=
-name|sctp_is_ifa_addr_prefered
+name|sctp_is_ifa_addr_preferred
 argument_list|(
 name|sctp_ifa
 argument_list|,
@@ -12471,7 +12471,7 @@ return|;
 block|}
 block|}
 block|}
-comment|/* 	 * if we can't find one like that then we must look at all addresses 	 * bound to pick one at first prefereable then secondly acceptable. 	 */
+comment|/* 	 * if we can't find one like that then we must look at all addresses 	 * bound to pick one at first preferable then secondly acceptable. 	 */
 name|starting_point
 operator|=
 name|stcb
@@ -12549,7 +12549,7 @@ continue|continue;
 block|}
 name|sifa
 operator|=
-name|sctp_is_ifa_addr_prefered
+name|sctp_is_ifa_addr_preferred
 argument_list|(
 name|laddr
 operator|->
@@ -12812,7 +12812,7 @@ specifier|static
 name|struct
 name|sctp_ifa
 modifier|*
-name|sctp_select_nth_prefered_addr_from_ifn_boundall
+name|sctp_select_nth_preferred_addr_from_ifn_boundall
 parameter_list|(
 name|struct
 name|sctp_ifn
@@ -12881,7 +12881,7 @@ condition|)
 continue|continue;
 name|sifa
 operator|=
-name|sctp_is_ifa_addr_prefered
+name|sctp_is_ifa_addr_preferred
 argument_list|(
 name|ifa
 argument_list|,
@@ -12952,7 +12952,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|sctp_count_num_prefered_boundall
+name|sctp_count_num_preferred_boundall
 parameter_list|(
 name|struct
 name|sctp_ifn
@@ -13020,7 +13020,7 @@ continue|continue;
 block|}
 name|sifa
 operator|=
-name|sctp_is_ifa_addr_prefered
+name|sctp_is_ifa_addr_preferred
 argument_list|(
 name|ifa
 argument_list|,
@@ -13124,7 +13124,7 @@ name|cur_addr_num
 init|=
 literal|0
 decl_stmt|,
-name|num_prefered
+name|num_preferred
 init|=
 literal|0
 decl_stmt|;
@@ -13161,7 +13161,7 @@ name|sctp_vrf
 modifier|*
 name|vrf
 decl_stmt|;
-comment|/* 	 * For boundall  we can use  any address in the association. If 	 * non_asoc_addr_ok is set we can use any address (at least in 	 * theory). So we look for prefered addresses first. If we find one, 	 * we use it. Otherwise we next try to get an address on the 	 * interface, which we should be able to do (unless non_asoc_addr_ok 	 * is false and we are routed out that way). In these cases where we 	 * can't use the address of the interface we go through all the 	 * ifn's looking for an address we can use and fill that in. Punting 	 * means we send back address 0, which will probably cause problems 	 * actually since then IP will fill in the address of the route ifn, 	 * which means we probably already rejected it.. i.e. here comes an 	 * abort :-<. 	 */
+comment|/* 	 * For boundall  we can use any address in the association. If 	 * non_asoc_addr_ok is set we can use any address (at least in 	 * theory). So we look for preferred addresses first. If we find 	 * one, we use it. Otherwise we next try to get an address on the 	 * interface, which we should be able to do (unless non_asoc_addr_ok 	 * is false and we are routed out that way). In these cases where we 	 * can't use the address of the interface we go through all the 	 * ifn's looking for an address we can use and fill that in. Punting 	 * means we send back address 0, which will probably cause problems 	 * actually since then IP will fill in the address of the route ifn, 	 * which means we probably already rejected it.. i.e. here comes an 	 * abort :-<. 	 */
 name|vrf
 operator|=
 name|sctp_find_vrf
@@ -13233,9 +13233,9 @@ operator|->
 name|indx_of_eligible_next_to_use
 expr_stmt|;
 block|}
-name|num_prefered
+name|num_preferred
 operator|=
-name|sctp_count_num_prefered_boundall
+name|sctp_count_num_preferred_boundall
 argument_list|(
 name|sctp_ifn
 argument_list|,
@@ -13262,9 +13262,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Found %d prefered source addresses\n"
+literal|"Found %d preferred source addresses\n"
 argument_list|,
-name|num_prefered
+name|num_preferred
 argument_list|)
 expr_stmt|;
 block|}
@@ -13272,7 +13272,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|num_prefered
+name|num_preferred
 operator|==
 literal|0
 condition|)
@@ -13287,7 +13287,7 @@ if|if
 condition|(
 name|cur_addr_num
 operator|>=
-name|num_prefered
+name|num_preferred
 condition|)
 block|{
 name|cur_addr_num
@@ -13318,7 +13318,7 @@ endif|#
 directive|endif
 name|sctp_ifa
 operator|=
-name|sctp_select_nth_prefered_addr_from_ifn_boundall
+name|sctp_select_nth_preferred_addr_from_ifn_boundall
 argument_list|(
 name|sctp_ifn
 argument_list|,
@@ -13372,7 +13372,7 @@ name|sctp_ifa
 operator|)
 return|;
 block|}
-comment|/* 	 * plan_b: Look at all interfaces and find a prefered address. If no 	 * prefered fall through to plan_c. 	 */
+comment|/* 	 * plan_b: Look at all interfaces and find a preferred address. If 	 * no preferred fall through to plan_c. 	 */
 name|bound_all_plan_b
 label|:
 ifdef|#
@@ -13429,9 +13429,9 @@ name|looked_at
 condition|)
 comment|/* already looked at this guy */
 continue|continue;
-name|num_prefered
+name|num_preferred
 operator|=
-name|sctp_count_num_prefered_boundall
+name|sctp_count_num_preferred_boundall
 argument_list|(
 name|sctp_ifn
 argument_list|,
@@ -13458,11 +13458,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Found ifn:%p %d prefered source addresses\n"
+literal|"Found ifn:%p %d preferred source addresses\n"
 argument_list|,
 name|ifn
 argument_list|,
-name|num_prefered
+name|num_preferred
 argument_list|)
 expr_stmt|;
 block|}
@@ -13470,7 +13470,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|num_prefered
+name|num_preferred
 operator|==
 literal|0
 condition|)
@@ -13490,9 +13490,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"num prefered:%d on interface:%p cur_addr_num:%d\n"
+literal|"num preferred:%d on interface:%p cur_addr_num:%d\n"
 argument_list|,
-name|num_prefered
+name|num_preferred
 argument_list|,
 name|sctp_ifn
 argument_list|,
@@ -13507,7 +13507,7 @@ if|if
 condition|(
 name|cur_addr_num
 operator|>=
-name|num_prefered
+name|num_preferred
 condition|)
 block|{
 name|cur_addr_num
@@ -13517,7 +13517,7 @@ expr_stmt|;
 block|}
 name|sifa
 operator|=
-name|sctp_select_nth_prefered_addr_from_ifn_boundall
+name|sctp_select_nth_preferred_addr_from_ifn_boundall
 argument_list|(
 name|sctp_ifn
 argument_list|,
@@ -13636,7 +13636,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Plan C no prefered for Dest, acceptable for?\n"
+literal|"Plan C no preferred for Dest, acceptable for?\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -13729,7 +13729,7 @@ name|sifa
 operator|)
 return|;
 block|}
-comment|/* 	 * plan_d: We are in trouble. No prefered address on the emit 	 * interface. And not even a perfered address on all interfaces. Go 	 * out and see if we can find an acceptable address somewhere 	 * amongst all interfaces. 	 */
+comment|/* 	 * plan_d: We are in trouble. No preferred address on the emit 	 * interface. And not even a perfered address on all interfaces. Go 	 * out and see if we can find an acceptable address somewhere 	 * amongst all interfaces. 	 */
 ifdef|#
 directive|ifdef
 name|SCTP_DEBUG
@@ -13965,7 +13965,7 @@ decl_stmt|;
 name|sa_family_t
 name|fam
 decl_stmt|;
-comment|/* 	 * Rules: - Find the route if needed, cache if I can. - Look at 	 * interface address in route, Is it in the bound list. If so we 	 * have the best source. - If not we must rotate amongst the 	 * addresses. 	 *  	 * Cavets and issues 	 *  	 * Do we need to pay attention to scope. We can have a private address 	 * or a global address we are sourcing or sending to. So if we draw 	 * it out zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 	 * For V4 ------------------------------------------ source     * 	 * dest  *  result -----------------------------------------<a> 	 * Private    *    Global  *	NAT 	 * -----------------------------------------<b>  Private    * 	 * Private *  No problem ----------------------------------------- 	 *<c>  Global     *    Private *  Huh, How will this work? 	 * -----------------------------------------<d>  Global     * 	 * Global  *  No Problem ------------------------------------------ 	 * zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz For V6 	 * ------------------------------------------ source     *      dest  * 	 * result -----------------------------------------<a>  Linklocal  * 	 * Global  *	-----------------------------------------<b> 	 * Linklocal  * Linklocal  *  No problem 	 * -----------------------------------------<c>  Global     * 	 * Linklocal  *  Huh, How will this work? 	 * -----------------------------------------<d>  Global     * 	 * Global  *  No Problem ------------------------------------------ 	 * zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 	 *  	 * And then we add to that what happens if there are multiple addresses 	 * assigned to an interface. Remember the ifa on a ifn is a linked 	 * list of addresses. So one interface can have more than one IP 	 * address. What happens if we have both a private and a global 	 * address? Do we then use context of destination to sort out which 	 * one is best? And what about NAT's sending P->G may get you a NAT 	 * translation, or should you select the G thats on the interface in 	 * preference. 	 *  	 * Decisions: 	 *  	 * - count the number of addresses on the interface. - if its one, no 	 * problem except case<c>. For<a> we will assume a NAT out there. 	 * - if there are more than one, then we need to worry about scope P 	 * or G. We should prefer G -> G and P -> P if possible. Then as a 	 * secondary fall back to mixed types G->P being a last ditch one. - 	 * The above all works for bound all, but bound specific we need to 	 * use the same concept but instead only consider the bound 	 * addresses. If the bound set is NOT assigned to the interface then 	 * we must use rotation amongst the bound addresses.. 	 *  	 */
+comment|/* 	 * Rules: - Find the route if needed, cache if I can. - Look at 	 * interface address in route, Is it in the bound list. If so we 	 * have the best source. - If not we must rotate amongst the 	 * addresses. 	 *  	 * Cavets and issues 	 *  	 * Do we need to pay attention to scope. We can have a private address 	 * or a global address we are sourcing or sending to. So if we draw 	 * it out zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 	 * For V4 ------------------------------------------ source     * 	 * dest  *  result -----------------------------------------<a> 	 * Private    *    Global  *	NAT 	 * -----------------------------------------<b>  Private    * 	 * Private *  No problem ----------------------------------------- 	 *<c>  Global     *    Private *  Huh, How will this work? 	 * -----------------------------------------<d>  Global     * 	 * Global  *  No Problem ------------------------------------------ 	 * zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz For V6 	 * ------------------------------------------ source     *      dest  * 	 * result -----------------------------------------<a>  Linklocal  * 	 * Global  *	-----------------------------------------<b> 	 * Linklocal  * Linklocal  *  No problem 	 * -----------------------------------------<c>  Global     * 	 * Linklocal  *  Huh, How will this work? 	 * -----------------------------------------<d>  Global     * 	 * Global  *  No Problem ------------------------------------------ 	 * zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 	 *  	 * And then we add to that what happens if there are multiple addresses 	 * assigned to an interface. Remember the ifa on a ifn is a linked 	 * list of addresses. So one interface can have more than one IP 	 * address. What happens if we have both a private and a global 	 * address? Do we then use context of destination to sort out which 	 * one is best? And what about NAT's sending P->G may get you a NAT 	 * translation, or should you select the G thats on the interface in 	 * preference. 	 *  	 * Decisions: 	 *  	 * - count the number of addresses on the interface. - if its one, no 	 * problem except case<c>. For<a> we will assume a NAT out there. 	 * - if there are more than one, then we need to worry about scope P 	 * or G. We should prefer G -> G and P -> P if possible. Then as a 	 * secondary fall back to mixed types G->P being a last ditch one. - 	 * The above all works for bound all, but bound specific we need to 	 * use the same concept but instead only consider the bound 	 * addresses. If the bound set is NOT assigned to the interface then 	 * we must use rotation amongst the bound addresses.. 	 */
 if|if
 condition|(
 name|ro
@@ -13975,7 +13975,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Need a route to cache. 		 *  		 */
+comment|/* 		 * Need a route to cache. 		 */
 name|rtalloc_ign
 argument_list|(
 name|ro
@@ -15640,7 +15640,7 @@ name|out_of_asoc_ok
 parameter_list|)
 comment|/* nofragment_flag to tell if IP_DF should be set (IPv4 only) */
 block|{
-comment|/* 	 * Given a mbuf chain (via SCTP_BUF_NEXT()) that holds a packet 	 * header WITH a SCTPHDR but no IP header, endpoint inp and sa 	 * structure. - fill in the HMAC digest of any AUTH chunk in the 	 * packet - calculate SCTP checksum and fill in - prepend a IP 	 * address header - if boundall use INADDR_ANY - if boundspecific do 	 * source address selection - set fragmentation option for ipV4 - On 	 * return from IP output, check/adjust mtu size - of output 	 * interface and smallest_mtu size as well. 	 */
+comment|/* 	 * Given a mbuf chain (via SCTP_BUF_NEXT()) that holds a packet 	 * header WITH an SCTPHDR but no IP header, endpoint inp and sa 	 * structure: - fill in the HMAC digest of any AUTH chunk in the 	 * packet. - calculate and fill in the SCTP checksum. - prepend an 	 * IP address header. - if boundall use INADDR_ANY. - if 	 * boundspecific do source address selection. - set fragmentation 	 * option for ipV4. - On return from IP output, check/adjust mtu 	 * size of output interface and smallest_mtu size as well. 	 */
 comment|/* Will need ifdefs around this */
 name|struct
 name|mbuf
@@ -18269,7 +18269,7 @@ modifier|*
 name|m_at
 decl_stmt|,
 modifier|*
-name|m_last
+name|mp_last
 decl_stmt|;
 name|struct
 name|sctp_nets
@@ -18323,7 +18323,7 @@ name|int
 name|p_len
 decl_stmt|;
 comment|/* INIT's always go to the primary (and usually ONLY address) */
-name|m_last
+name|mp_last
 operator|=
 name|NULL
 expr_stmt|;
@@ -19880,7 +19880,7 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|m_last
+name|mp_last
 operator|=
 name|m_at
 expr_stmt|;
@@ -19928,11 +19928,11 @@ name|padval
 operator|)
 operator|&&
 operator|(
-name|m_last
+name|mp_last
 operator|)
 condition|)
 block|{
-comment|/* 		 * The compiler worries that m_last may not be set even 		 * though I think it is impossible :-> however we add m_last 		 * here just in case. 		 */
+comment|/* 		 * The compiler worries that mp_last may not be set even 		 * though I think it is impossible :-> however we add 		 * mp_last here just in case. 		 */
 name|int
 name|ret
 decl_stmt|;
@@ -19940,7 +19940,7 @@ name|ret
 operator|=
 name|sctp_add_pad_tombuf
 argument_list|(
-name|m_last
+name|mp_last
 argument_list|,
 operator|(
 literal|4
@@ -21881,7 +21881,7 @@ modifier|*
 name|op_err
 decl_stmt|,
 modifier|*
-name|m_last
+name|mp_last
 decl_stmt|;
 name|struct
 name|sctp_init_msg
@@ -22010,7 +22010,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|m_last
+name|mp_last
 operator|=
 name|NULL
 expr_stmt|;
@@ -25150,7 +25150,7 @@ name|NULL
 condition|)
 block|{
 comment|/* m_tmp should now point to last one */
-name|m_last
+name|mp_last
 operator|=
 name|m_tmp
 expr_stmt|;
@@ -25171,11 +25171,11 @@ name|padval
 operator|)
 operator|&&
 operator|(
-name|m_last
+name|mp_last
 operator|)
 condition|)
 block|{
-comment|/* see my previous comments on m_last */
+comment|/* see my previous comments on mp_last */
 name|int
 name|ret
 decl_stmt|;
@@ -25183,7 +25183,7 @@ name|ret
 operator|=
 name|sctp_add_pad_tombuf
 argument_list|(
-name|m_last
+name|mp_last
 argument_list|,
 operator|(
 literal|4
@@ -29417,7 +29417,12 @@ argument_list|,
 operator|(
 name|uintptr_t
 operator|)
-name|stcb
+name|data_list
+index|[
+name|i
+index|]
+operator|->
+name|whoTo
 argument_list|,
 name|data_list
 index|[
@@ -29433,32 +29438,23 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|net
-operator|->
-name|flight_size
-operator|+=
+name|sctp_flight_size_increase
+argument_list|(
 name|data_list
 index|[
 name|i
 index|]
-operator|->
-name|book_size
+argument_list|)
 expr_stmt|;
-name|asoc
-operator|->
-name|total_flight
-operator|+=
+name|sctp_total_flight_increase
+argument_list|(
+name|stcb
+argument_list|,
 name|data_list
 index|[
 name|i
 index|]
-operator|->
-name|book_size
-expr_stmt|;
-name|asoc
-operator|->
-name|total_flight_count
-operator|++
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -40139,13 +40135,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sctp_ucount_incr
-argument_list|(
-name|asoc
-operator|->
-name|total_flight_count
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SCTP_LOG_RWND
@@ -40200,7 +40189,7 @@ directive|ifdef
 name|SCTP_FLIGHT_LOGGING
 name|sctp_misc_ints
 argument_list|(
-name|SCTP_FLIGHT_LOG_UP
+name|SCTP_FLIGHT_LOG_UP_RSND
 argument_list|,
 name|data_list
 index|[
@@ -40221,7 +40210,12 @@ argument_list|,
 operator|(
 name|uintptr_t
 operator|)
-name|stcb
+name|data_list
+index|[
+name|i
+index|]
+operator|->
+name|whoTo
 argument_list|,
 name|data_list
 index|[
@@ -40237,27 +40231,23 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|net
-operator|->
-name|flight_size
-operator|+=
+name|sctp_flight_size_increase
+argument_list|(
 name|data_list
 index|[
 name|i
 index|]
-operator|->
-name|book_size
+argument_list|)
 expr_stmt|;
-name|asoc
-operator|->
-name|total_flight
-operator|+=
+name|sctp_total_flight_increase
+argument_list|(
+name|stcb
+argument_list|,
 name|data_list
 index|[
 name|i
 index|]
-operator|->
-name|book_size
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -51040,6 +51030,81 @@ modifier|*
 name|new_tail
 parameter_list|)
 block|{
+comment|/*#if defined(__FreeBSD__)&& __FreeBSD_version>= 602000*/
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_NOT_YET_
+argument_list|)
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+comment|/* take out max_hdr */
+name|m
+operator|=
+name|m_uiotombuf
+argument_list|(
+name|uio
+argument_list|,
+name|M_WAITOK
+argument_list|,
+name|max_send_len
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|M_PKTHDR
+operator||
+operator|(
+name|user_marks_eor
+condition|?
+name|M_EOR
+else|:
+literal|0
+operator|)
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+operator|*
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
+else|else
+operator|*
+name|sndout
+operator|=
+name|m_length
+argument_list|(
+name|m
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+operator|*
+name|new_tail
+operator|=
+name|m_last
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|m
+operator|)
+return|;
+else|#
+directive|else
 name|int
 name|left
 decl_stmt|,
@@ -51330,6 +51395,8 @@ operator|(
 name|head
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -51354,7 +51421,82 @@ parameter_list|)
 block|{
 name|int
 name|left
-decl_stmt|,
+decl_stmt|;
+comment|/*#if defined(__FreeBSD__)&& __FreeBSD_version>= 602000*/
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_NOT_YET_
+argument_list|)
+name|left
+operator|=
+name|sp
+operator|->
+name|length
+expr_stmt|;
+name|sp
+operator|->
+name|data
+operator|=
+name|m_uiotombuf
+argument_list|(
+name|uio
+argument_list|,
+name|M_WAITOK
+argument_list|,
+literal|0
+argument_list|,
+name|resv_upfront
+argument_list|,
+name|M_PKTHDR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|data
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+name|sp
+operator|->
+name|length
+operator|=
+name|m_length
+argument_list|(
+name|sp
+operator|->
+name|data
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|tail_mbuf
+operator|=
+name|m_last
+argument_list|(
+name|sp
+operator|->
+name|data
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|#
+directive|else
+name|int
 name|cancpy
 decl_stmt|,
 name|willcpy
@@ -51599,6 +51741,8 @@ operator|(
 literal|0
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
