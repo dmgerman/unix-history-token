@@ -460,9 +460,9 @@ condition|(
 name|r2
 operator|!=
 name|ARCHIVE_OK
-operator|&&
+operator|||
 name|r
-operator|==
+operator|!=
 name|ARCHIVE_OK
 condition|)
 name|archive_set_error
