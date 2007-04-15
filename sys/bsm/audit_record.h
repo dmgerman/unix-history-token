@@ -331,6 +331,13 @@ name|AUT_EXIT
 value|0x52
 end_define
 
+begin_define
+define|#
+directive|define
+name|AUT_ZONENAME
+value|0x60
+end_define
+
 begin_comment
 comment|/* XXXRW: OpenBSM AUT_HOST 0x70? */
 end_comment
@@ -2303,6 +2310,18 @@ name|au_to_trailer
 parameter_list|(
 name|int
 name|rec_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|token_t
+modifier|*
+name|au_to_zonename
+parameter_list|(
+name|char
+modifier|*
+name|zonename
 parameter_list|)
 function_decl|;
 end_function_decl
