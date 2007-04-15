@@ -212,8 +212,6 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-name|GIANT_REQUIRED
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -304,6 +302,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -779,6 +783,12 @@ condition|)
 name|vm_map_unlock_read
 argument_list|(
 name|map
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
