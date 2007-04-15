@@ -1034,6 +1034,12 @@ operator|->
 name|client_data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|state
+operator|->
+name|buffer
+condition|)
 name|free
 argument_list|(
 name|state
