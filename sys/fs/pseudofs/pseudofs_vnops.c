@@ -499,6 +499,11 @@ name|pn_name
 operator|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|pvd
+expr_stmt|;
 name|error
 operator|=
 name|VOP_GETATTR
