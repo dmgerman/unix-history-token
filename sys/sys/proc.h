@@ -3277,6 +3277,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|PROC_ASSERT_HELD
+parameter_list|(
+name|p
+parameter_list|)
+value|do {					\ 	KASSERT((p)->p_lock> 0, ("process not held"));			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PRELE
 parameter_list|(
 name|p
@@ -3292,6 +3302,16 @@ parameter_list|(
 name|p
 parameter_list|)
 value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	(--(p)->p_lock);						\ 	if (((p)->p_flag& P_WEXIT)&& (p)->p_lock == 0)		\ 		wakeup(&(p)->p_lock);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_ASSERT_NOT_HELD
+parameter_list|(
+name|p
+parameter_list|)
+value|do {					\ 	KASSERT((p)->p_lock == 0, ("process held"));			\ } while (0)
 end_define
 
 begin_comment
