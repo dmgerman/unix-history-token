@@ -1376,12 +1376,6 @@ name|zone_ext_refcnt
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MBUF_PACKET_ZONE_DISABLE
-end_ifndef
-
 begin_expr_stmt
 specifier|static
 name|__inline
@@ -1398,11 +1392,6 @@ argument|int flags
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 specifier|static
@@ -1912,12 +1901,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MBUF_PACKET_ZONE_DISABLE
-end_ifndef
-
 begin_expr_stmt
 specifier|static
 name|__inline
@@ -1970,30 +1953,6 @@ operator|)
 return|;
 block|}
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|m_getcl
-parameter_list|(
-name|how
-parameter_list|,
-name|type
-parameter_list|,
-name|flags
-parameter_list|)
-value|m_getjcl(how, type, flags, MCLBYTES)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * m_getjcl() returns an mbuf with a cluster of the specified size attached.  * For size it takes MCLBYTES, MJUMPAGESIZE, MJUM9BYTES, MJUM16BYTES.  *  * XXX: This is rather large, should be real function maybe.  */
