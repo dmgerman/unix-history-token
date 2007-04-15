@@ -184,6 +184,11 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
 comment|/* A regular file. */
 name|assert
 argument_list|(
@@ -317,6 +322,11 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
 comment|/* A file in the directory. */
 name|assert
 argument_list|(
@@ -356,6 +366,11 @@ name|a
 argument_list|,
 name|ae
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
 argument_list|)
 expr_stmt|;
 comment|/* A file in a dir that is not already in the archive. */
@@ -399,6 +414,11 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
 comment|/* A dir with a trailing /. */
 name|assert
 argument_list|(
@@ -440,6 +460,11 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
 comment|/* Multiple dirs with a single entry. */
 name|assert
 argument_list|(
@@ -479,6 +504,11 @@ name|a
 argument_list|,
 name|ae
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
 argument_list|)
 expr_stmt|;
 comment|/* A symlink. */
@@ -527,6 +557,11 @@ name|a
 argument_list|,
 name|ae
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
 argument_list|)
 expr_stmt|;
 comment|/* Close out the archive. */

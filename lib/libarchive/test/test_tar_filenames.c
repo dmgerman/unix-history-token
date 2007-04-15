@@ -288,6 +288,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* 	 * Write a dir to it (without trailing '/'). 	 */
 end_comment
@@ -352,6 +360,14 @@ name|a
 argument_list|,
 name|ae
 argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|archive_entry_free
+argument_list|(
+name|ae
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -434,6 +450,14 @@ name|a
 argument_list|,
 name|ae
 argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|archive_entry_free
+argument_list|(
+name|ae
 argument_list|)
 expr_stmt|;
 end_expr_stmt

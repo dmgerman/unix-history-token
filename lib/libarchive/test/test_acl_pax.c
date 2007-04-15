@@ -15317,6 +15317,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Number of ACLs not matched should == 0 */
+name|free
+argument_list|(
+name|marker
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -15585,6 +15590,11 @@ name|a
 argument_list|,
 name|ae
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
 argument_list|)
 expr_stmt|;
 comment|/* Close out the archive. */

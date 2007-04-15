@@ -111,6 +111,11 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 literal|0
@@ -286,6 +291,11 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 literal|0
@@ -409,6 +419,11 @@ name|a
 argument_list|,
 name|ae
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
 argument_list|)
 expr_stmt|;
 name|assert

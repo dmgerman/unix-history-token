@@ -411,6 +411,11 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
 comment|/* Write a regular file, then write over it. */
 comment|/* For files, the perms should get updated. */
 name|assert
@@ -451,6 +456,11 @@ name|a
 argument_list|,
 name|ae
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
 argument_list|)
 expr_stmt|;
 name|assert
@@ -540,6 +550,11 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 literal|0
@@ -589,6 +604,11 @@ name|a
 argument_list|,
 name|ae
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
 argument_list|)
 expr_stmt|;
 name|assert
@@ -690,6 +710,11 @@ name|a
 argument_list|,
 name|ae
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
 argument_list|)
 expr_stmt|;
 name|assert
@@ -1444,6 +1469,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
 comment|/* Test the entries on disk. */
 name|assert
 argument_list|(

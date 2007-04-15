@@ -964,6 +964,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Number of ACLs not matched should == 0 */
+name|free
+argument_list|(
+name|marker
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1311,6 +1316,11 @@ literal|0777
 operator|)
 operator|==
 literal|0142
+argument_list|)
+expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
 argument_list|)
 expr_stmt|;
 block|}
