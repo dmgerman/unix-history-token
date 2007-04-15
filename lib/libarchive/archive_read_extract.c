@@ -426,10 +426,36 @@ expr_stmt|;
 if|if
 condition|(
 name|r
-operator|==
+operator|!=
 name|ARCHIVE_OK
 condition|)
-comment|/* If there's an FD, pour data into it. */
+comment|/* If _write_header failed, copy the error. */
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|archive_errno
+argument_list|(
+name|extract
+operator|->
+name|ad
+argument_list|)
+argument_list|,
+literal|"%s"
+argument_list|,
+name|archive_error_string
+argument_list|(
+name|extract
+operator|->
+name|ad
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* Otherwise, pour data into the entry. */
 name|r
 operator|=
 name|copy_data
@@ -460,9 +486,9 @@ condition|(
 name|r2
 operator|!=
 name|ARCHIVE_OK
-operator|||
+operator|&&
 name|r
-operator|!=
+operator|==
 name|ARCHIVE_OK
 condition|)
 name|archive_set_error
