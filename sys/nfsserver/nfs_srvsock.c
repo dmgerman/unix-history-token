@@ -2183,9 +2183,6 @@ argument_list|()
 expr_stmt|;
 continue|continue;
 block|}
-name|NFSD_LOCK
-argument_list|()
-expr_stmt|;
 name|nfs_realign
 argument_list|(
 operator|&
@@ -2195,6 +2192,9 @@ literal|10
 operator|*
 name|NFSX_UNSIGNED
 argument_list|)
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 name|rec
 operator|->
