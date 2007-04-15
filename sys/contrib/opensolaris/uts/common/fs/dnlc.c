@@ -3156,7 +3156,7 @@ name|SYSINIT
 argument_list|(
 name|dnlc
 argument_list|,
-name|SI_SUB_DRIVERS
+name|SI_SUB_VFS
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
@@ -3172,7 +3172,7 @@ name|SYSUNINIT
 argument_list|(
 name|dnlc
 argument_list|,
-name|SI_SUB_DRIVERS
+name|SI_SUB_VFS
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
