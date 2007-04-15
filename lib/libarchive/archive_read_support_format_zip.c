@@ -583,31 +583,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Largest 32-bit unsigned value, stored in a 64-bit constant. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|uint64_t
-name|max_uint32
-init|=
-operator|(
-operator|(
-operator|(
-name|uint64_t
-operator|)
-literal|1
-operator|)
-operator|<<
-literal|32
-operator|)
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|archive_read_support_format_zip
@@ -2283,7 +2258,7 @@ name|zip
 operator|->
 name|uncompressed_size
 operator|&
-name|max_uint32
+name|UINT32_MAX
 operator|)
 operator|!=
 operator|(
@@ -2291,7 +2266,7 @@ name|zip
 operator|->
 name|entry_uncompressed_bytes_read
 operator|&
-name|max_uint32
+name|UINT32_MAX
 operator|)
 condition|)
 block|{

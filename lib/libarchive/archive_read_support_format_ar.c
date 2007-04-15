@@ -2592,17 +2592,6 @@ name|unsigned
 name|char_cnt
 parameter_list|)
 block|{
-specifier|static
-specifier|const
-name|uint64_t
-name|max_uint64
-init|=
-operator|~
-operator|(
-name|uint64_t
-operator|)
-literal|0
-decl_stmt|;
 name|uint64_t
 name|l
 decl_stmt|,
@@ -2622,13 +2611,13 @@ literal|8
 expr_stmt|;
 name|limit
 operator|=
-name|max_uint64
+name|UINT64_MAX
 operator|/
 name|base
 expr_stmt|;
 name|last_digit_limit
 operator|=
-name|max_uint64
+name|UINT64_MAX
 operator|%
 name|base
 expr_stmt|;
@@ -2701,7 +2690,7 @@ condition|)
 block|{
 name|l
 operator|=
-name|max_uint64
+name|UINT64_MAX
 expr_stmt|;
 comment|/* Truncate on overflow. */
 break|break;
@@ -2747,17 +2736,6 @@ name|unsigned
 name|char_cnt
 parameter_list|)
 block|{
-specifier|static
-specifier|const
-name|uint64_t
-name|max_uint64
-init|=
-operator|~
-operator|(
-name|uint64_t
-operator|)
-literal|0
-decl_stmt|;
 name|uint64_t
 name|l
 decl_stmt|,
@@ -2777,13 +2755,13 @@ literal|10
 expr_stmt|;
 name|limit
 operator|=
-name|max_uint64
+name|UINT64_MAX
 operator|/
 name|base
 expr_stmt|;
 name|last_digit_limit
 operator|=
-name|max_uint64
+name|UINT64_MAX
 operator|%
 name|base
 expr_stmt|;
@@ -2856,7 +2834,7 @@ condition|)
 block|{
 name|l
 operator|=
-name|max_uint64
+name|UINT64_MAX
 expr_stmt|;
 comment|/* Truncate on overflow. */
 break|break;
