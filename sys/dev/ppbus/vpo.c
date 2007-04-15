@@ -44,6 +44,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -568,6 +580,9 @@ name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 comment|/*untagged*/
 literal|1

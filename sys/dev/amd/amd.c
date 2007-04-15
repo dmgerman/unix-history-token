@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -11608,6 +11614,9 @@ argument_list|,
 name|amd
 operator|->
 name|unit
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 literal|1
 argument_list|,

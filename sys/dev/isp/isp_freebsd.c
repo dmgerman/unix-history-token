@@ -612,6 +612,9 @@ operator|->
 name|isp_dev
 argument_list|)
 argument_list|,
+operator|&
+name|Giant
+argument_list|,
 literal|1
 argument_list|,
 name|isp
@@ -1077,6 +1080,9 @@ name|isp
 operator|->
 name|isp_dev
 argument_list|)
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 literal|1
 argument_list|,
@@ -11291,7 +11297,13 @@ comment|/* 	 * Allocate a CCB, create a wildcard path for this bus, 	 * and sche
 name|ccb
 operator|=
 name|xpt_alloc_ccb_nowait
-argument_list|()
+argument_list|(
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|sim
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

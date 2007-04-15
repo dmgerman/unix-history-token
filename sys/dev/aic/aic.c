@@ -38,6 +38,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -8498,6 +8516,9 @@ argument_list|,
 name|aic
 operator|->
 name|unit
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 literal|2
 argument_list|,

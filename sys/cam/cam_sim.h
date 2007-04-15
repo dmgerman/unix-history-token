@@ -123,6 +123,11 @@ parameter_list|,
 name|u_int32_t
 name|unit
 parameter_list|,
+name|struct
+name|mtx
+modifier|*
+name|mtx
+parameter_list|,
 name|int
 name|max_dev_transactions
 parameter_list|,
@@ -303,6 +308,11 @@ name|void
 modifier|*
 name|softc
 decl_stmt|;
+name|struct
+name|mtx
+modifier|*
+name|mtx
+decl_stmt|;
 name|u_int32_t
 name|path_id
 decl_stmt|;
@@ -326,9 +336,13 @@ define|#
 directive|define
 name|CAM_SIM_REL_TIMEOUT_PENDING
 value|0x01
+define|#
+directive|define
+name|CAM_SIM_MPSAFE
+value|0x02
 name|struct
-name|callout_handle
-name|c_handle
+name|callout
+name|callout
 decl_stmt|;
 name|struct
 name|cam_devq
@@ -336,9 +350,45 @@ modifier|*
 name|devq
 decl_stmt|;
 comment|/* Device Queue to use for this SIM */
+comment|/* "Pool" of inactive ccbs managed by xpt_alloc_ccb and xpt_free_ccb */
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|ccb_hdr
+argument_list|)
+name|ccb_freeq
+expr_stmt|;
+comment|/* 	 * Maximum size of ccb pool.  Modified as devices are added/removed 	 * or have their * opening counts changed. 	 */
+name|u_int
+name|max_ccbs
+decl_stmt|;
+comment|/* Current count of allocated ccbs */
+name|u_int
+name|ccb_count
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|CAM_SIM_LOCK
+parameter_list|(
+name|sim
+parameter_list|)
+value|mtx_lock((sim)->mtx);
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAM_SIM_UNLOCK
+parameter_list|(
+name|sim
+parameter_list|)
+value|mtx_unlock((sim)->mtx);
+end_define
 
 begin_function
 specifier|static

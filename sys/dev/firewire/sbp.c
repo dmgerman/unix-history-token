@@ -8948,7 +8948,7 @@ argument|SBP_NUM_OCB); 	if (devq == NULL) 		return (ENXIO);  	for( i =
 literal|0
 argument|; i< SBP_NUM_TARGETS ; i++){ 		sbp->targets[i].fwdev = NULL; 		sbp->targets[i].luns = NULL; 	}  	sbp->sim = cam_sim_alloc(sbp_action, sbp_poll,
 literal|"sbp"
-argument|, sbp, 				 device_get_unit(dev),
+argument|, sbp, 				 device_get_unit(dev),&Giant,
 comment|/*untagged*/
 literal|1
 argument|,

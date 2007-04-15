@@ -272,6 +272,9 @@ operator|->
 name|bus_dev
 argument_list|)
 argument_list|,
+operator|&
+name|Giant
+argument_list|,
 name|TW_OSLI_MAX_NUM_IOS
 operator|-
 literal|1

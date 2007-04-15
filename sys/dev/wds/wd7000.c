@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bio.h>
 end_include
 
@@ -2824,6 +2830,9 @@ argument_list|,
 name|wp
 operator|->
 name|unit
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 literal|1
 argument_list|,

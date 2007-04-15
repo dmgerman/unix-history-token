@@ -60,6 +60,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -9470,6 +9482,9 @@ operator|->
 name|sc_dev
 argument_list|)
 comment|/*unit number*/
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 literal|1
 comment|/*maximum device openings*/

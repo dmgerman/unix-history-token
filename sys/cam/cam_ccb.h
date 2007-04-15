@@ -793,24 +793,7 @@ name|bytes
 index|[
 sizeof|sizeof
 argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|>
-sizeof|sizeof
-argument_list|(
-name|u_long
-argument_list|)
-condition|?
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
-else|:
-sizeof|sizeof
-argument_list|(
-name|u_long
+name|uintptr_t
 argument_list|)
 index|]
 decl_stmt|;
@@ -950,11 +933,11 @@ name|u_int32_t
 name|timeout
 decl_stmt|;
 comment|/* Timeout value */
+comment|/* 	 * Deprecated, only for use by non-MPSAFE SIMs.  All others must 	 * allocate and initialize their own callout storage. 	 */
 name|struct
 name|callout_handle
 name|timeout_ch
 decl_stmt|;
-comment|/* Callout handle used for timeouts */
 block|}
 struct|;
 end_struct

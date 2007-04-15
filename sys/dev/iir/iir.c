@@ -2740,6 +2740,9 @@ name|gdt
 operator|->
 name|sc_hanum
 argument_list|,
+operator|&
+name|Giant
+argument_list|,
 comment|/*untagged*/
 literal|1
 argument_list|,

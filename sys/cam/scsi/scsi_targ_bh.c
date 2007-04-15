@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cam/cam_sim.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/scsi/scsi_all.h>
 end_include
 
@@ -1975,9 +1981,15 @@ case|:
 comment|/* FALLTHROUGH */
 default|default:
 comment|/* XXX Wait for callback of targbhdislun() */
-name|tsleep
+name|msleep
 argument_list|(
 name|softc
+argument_list|,
+name|periph
+operator|->
+name|sim
+operator|->
+name|mtx
 argument_list|,
 name|PRIBIO
 argument_list|,
@@ -2044,9 +2056,6 @@ decl_stmt|;
 name|ccb_flags
 name|flags
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|softc
 operator|=
 operator|(
@@ -2057,11 +2066,6 @@ operator|)
 name|periph
 operator|->
 name|softc
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 name|ccbh
 operator|=
@@ -2117,11 +2121,6 @@ name|immediate_priority
 operator|=
 name|CAM_PRIORITY_NONE
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|wakeup
 argument_list|(
 operator|&
@@ -2139,11 +2138,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|xpt_release_ccb
 argument_list|(
 name|start_ccb
@@ -2178,11 +2172,6 @@ argument_list|,
 name|periph_links
 operator|.
 name|tqe
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|atio
@@ -2437,11 +2426,6 @@ operator|~
 name|CAM_DEV_QFRZN
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|ccbh
 operator|=
 name|TAILQ_FIRST
@@ -2450,11 +2434,6 @@ operator|&
 name|softc
 operator|->
 name|work_queue
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}

@@ -50,7 +50,10 @@ name|ccb
 modifier|*
 name|xpt_alloc_ccb
 parameter_list|(
-name|void
+name|struct
+name|cam_sim
+modifier|*
+name|sim
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -61,7 +64,10 @@ name|ccb
 modifier|*
 name|xpt_alloc_ccb_nowait
 parameter_list|(
-name|void
+name|struct
+name|cam_sim
+modifier|*
+name|sim
 parameter_list|)
 function_decl|;
 end_function_decl

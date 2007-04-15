@@ -1063,6 +1063,9 @@ name|scp
 argument_list|,
 name|unit
 argument_list|,
+operator|&
+name|Giant
+argument_list|,
 literal|1
 argument_list|,
 literal|1

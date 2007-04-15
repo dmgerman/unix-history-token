@@ -7342,6 +7342,9 @@ name|dpt
 operator|->
 name|unit
 argument_list|,
+operator|&
+name|Giant
+argument_list|,
 comment|/*untagged*/
 literal|2
 argument_list|,

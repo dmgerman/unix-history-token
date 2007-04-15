@@ -2430,6 +2430,9 @@ name|aha
 operator|->
 name|unit
 argument_list|,
+operator|&
+name|Giant
+argument_list|,
 literal|2
 argument_list|,
 name|tagged_dev_openings

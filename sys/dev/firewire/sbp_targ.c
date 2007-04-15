@@ -8461,6 +8461,9 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
+operator|&
+name|Giant
+argument_list|,
 comment|/*untagged*/
 literal|1
 argument_list|,

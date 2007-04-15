@@ -8786,6 +8786,9 @@ operator|->
 name|mly_dev
 argument_list|)
 argument_list|,
+operator|&
+name|Giant
+argument_list|,
 name|sc
 operator|->
 name|mly_controllerinfo
@@ -8902,6 +8905,9 @@ name|sc
 operator|->
 name|mly_dev
 argument_list|)
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 name|sc
 operator|->

@@ -817,6 +817,9 @@ operator|->
 name|dev_softc
 argument_list|)
 argument_list|,
+operator|&
+name|Giant
+argument_list|,
 literal|1
 argument_list|,
 name|AHC_MAX_QUEUE
@@ -995,6 +998,9 @@ name|ahc
 operator|->
 name|dev_softc
 argument_list|)
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 literal|1
 argument_list|,

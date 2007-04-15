@@ -6020,6 +6020,9 @@ name|vbus_ext
 argument_list|,
 literal|0
 argument_list|,
+operator|&
+name|Giant
+argument_list|,
 name|os_max_queue_comm
 argument_list|,
 comment|/*tagged*/
