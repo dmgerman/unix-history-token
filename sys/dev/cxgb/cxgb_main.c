@@ -817,6 +817,13 @@ name|SGE_MSIX_COUNT
 value|(SGE_QSETS + 1)
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|collapse_mbufs
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * The driver uses the best interrupt scheme available on a platform in the  * order MSI-X, MSI, legacy pin interrupts.  This parameter determines which  * of these schemes the driver may consider as follows:  *  * msi = 2: choose from among all three options  * msi = 1 : only consider MSI and pin interrupts  * msi = 0: force pin interrupts  */
 end_comment
@@ -6763,6 +6770,8 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|collapse_mbufs
+operator|&&
 name|m
 operator|->
 name|m_pkthdr
