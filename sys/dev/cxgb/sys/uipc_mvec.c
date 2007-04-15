@@ -3222,10 +3222,13 @@ argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
-literal|"%d: addr=0x%lx len=%ld\n"
+literal|"%d: addr=0x%jx len=%ju\n"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|segs
 index|[
 name|i
@@ -3233,6 +3236,9 @@ index|]
 operator|.
 name|ds_addr
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|segs
 index|[
 name|i
