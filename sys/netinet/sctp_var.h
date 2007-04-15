@@ -187,7 +187,7 @@ name|_stcb
 parameter_list|,
 name|_strmoq
 parameter_list|)
-value|{ \ 	if (TAILQ_EMPTY(&(_stcb)->asoc.free_strmoq))  { \ 		(_strmoq) = SCTP_ZONE_GET(sctppcbinfo.ipi_zone_strmoq, struct sctp_stream_queue_pending); \ 		if ((_strmoq)) { \ 			SCTP_INCR_STRMOQ_COUNT(); \ 		} \ 	} else { \ 		(_strmoq) = TAILQ_FIRST(&(_stcb)->asoc.free_strmoq); \ 		TAILQ_REMOVE(&(_stcb)->asoc.free_strmoq, (_strmoq), next); \ 		atomic_subtract_int(&sctppcbinfo.ipi_free_strmoq, 1); \ 		(_stcb)->asoc.free_strmoq_cnt--; \ 	} \ }
+value|{ \ 	if (TAILQ_EMPTY(&(_stcb)->asoc.free_strmoq))  { \ 		(_strmoq) = SCTP_ZONE_GET(sctppcbinfo.ipi_zone_strmoq, struct sctp_stream_queue_pending); \ 		if ((_strmoq)) { \ 			SCTP_INCR_STRMOQ_COUNT(); \ 		} \ 	} else { \ 		(_strmoq) = TAILQ_FIRST(&(_stcb)->asoc.free_strmoq); \ 		TAILQ_REMOVE(&(_stcb)->asoc.free_strmoq, (_strmoq), next); \ 		atomic_subtract_int(&sctppcbinfo.ipi_free_strmoq, 1); \                 SCTP_STAT_INCR(sctps_cached_strmoq); \ 		(_stcb)->asoc.free_strmoq_cnt--; \ 	} \ }
 end_define
 
 begin_define
@@ -211,7 +211,7 @@ name|_stcb
 parameter_list|,
 name|_chk
 parameter_list|)
-value|{ \ 	if (TAILQ_EMPTY(&(_stcb)->asoc.free_chunks))  { \ 		(_chk) = SCTP_ZONE_GET(sctppcbinfo.ipi_zone_chunk, struct sctp_tmit_chunk); \ 		if ((_chk)) { \ 			SCTP_INCR_CHK_COUNT(); \ 		} \ 	} else { \ 		(_chk) = TAILQ_FIRST(&(_stcb)->asoc.free_chunks); \ 		TAILQ_REMOVE(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 		atomic_subtract_int(&sctppcbinfo.ipi_free_chunks, 1); \ 		(_stcb)->asoc.free_chunk_cnt--; \ 	} \ }
+value|{ \ 	if (TAILQ_EMPTY(&(_stcb)->asoc.free_chunks))  { \ 		(_chk) = SCTP_ZONE_GET(sctppcbinfo.ipi_zone_chunk, struct sctp_tmit_chunk); \ 		if ((_chk)) { \ 			SCTP_INCR_CHK_COUNT(); \ 		} \ 	} else { \ 		(_chk) = TAILQ_FIRST(&(_stcb)->asoc.free_chunks); \ 		TAILQ_REMOVE(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 		atomic_subtract_int(&sctppcbinfo.ipi_free_chunks, 1); \                 SCTP_STAT_INCR(sctps_cached_chk); \ 		(_stcb)->asoc.free_chunk_cnt--; \ 	} \ }
 end_define
 
 begin_define

@@ -2580,6 +2580,7 @@ comment|/* total input datagrams      */
 name|u_long
 name|sctps_recvpktwithdata
 decl_stmt|;
+comment|/* total packets that had data */
 name|u_long
 name|sctps_recvsacks
 decl_stmt|;
@@ -2656,7 +2657,7 @@ comment|/* total output fast retransmitted 					 * DATA chunks */
 name|u_long
 name|sctps_sendmultfastretrans
 decl_stmt|;
-comment|/* U-del */
+comment|/* total FR's that happened 						 * more than once to same 						 * chunk (u-del multi-fr 						 * algo). */
 name|u_long
 name|sctps_sendheartbeat
 decl_stmt|;
@@ -2677,132 +2678,132 @@ comment|/* PCKDROPREP statistics: */
 name|u_long
 name|sctps_pdrpfmbox
 decl_stmt|;
-comment|/* */
+comment|/* Packet drop from middle box */
 name|u_long
 name|sctps_pdrpfehos
 decl_stmt|;
-comment|/* */
+comment|/* P-drop from end host */
 name|u_long
 name|sctps_pdrpmbda
 decl_stmt|;
-comment|/* */
+comment|/* P-drops with data */
 name|u_long
 name|sctps_pdrpmbct
 decl_stmt|;
-comment|/* */
+comment|/* P-drops, non-data, non-endhost */
 name|u_long
 name|sctps_pdrpbwrpt
 decl_stmt|;
-comment|/* */
+comment|/* P-drop, non-endhost, bandwidth rep only */
 name|u_long
 name|sctps_pdrpcrupt
 decl_stmt|;
-comment|/* */
+comment|/* P-drop, not enough for chunk header */
 name|u_long
 name|sctps_pdrpnedat
 decl_stmt|;
-comment|/* */
+comment|/* P-drop, not enough data to confirm */
 name|u_long
 name|sctps_pdrppdbrk
 decl_stmt|;
-comment|/* */
+comment|/* P-drop, where process_chunk_drop said break */
 name|u_long
 name|sctps_pdrptsnnf
 decl_stmt|;
-comment|/* */
+comment|/* P-drop, could not find TSN */
 name|u_long
 name|sctps_pdrpdnfnd
 decl_stmt|;
-comment|/* */
+comment|/* P-drop, attempt reverse TSN lookup */
 name|u_long
 name|sctps_pdrpdiwnp
 decl_stmt|;
-comment|/* */
+comment|/* P-drop, e-host confirms zero-rwnd */
 name|u_long
 name|sctps_pdrpdizrw
 decl_stmt|;
-comment|/* */
+comment|/* P-drop, midbox confirms no space */
 name|u_long
 name|sctps_pdrpbadd
 decl_stmt|;
-comment|/* */
+comment|/* P-drop, data did not match TSN */
 name|u_long
 name|sctps_pdrpmark
 decl_stmt|;
-comment|/* */
+comment|/* P-drop, TSN's marked for Fast Retran */
 comment|/* timeouts */
 name|u_long
 name|sctps_timoiterator
 decl_stmt|;
-comment|/* */
+comment|/* Number of iterator timers that 					 * fired */
 name|u_long
 name|sctps_timodata
 decl_stmt|;
-comment|/* */
+comment|/* Number of T3 data time outs */
 name|u_long
 name|sctps_timowindowprobe
 decl_stmt|;
-comment|/* */
+comment|/* Number of window probe (T3) timers 					 * that fired */
 name|u_long
 name|sctps_timoinit
 decl_stmt|;
-comment|/* */
+comment|/* Number of INIT timers that fired */
 name|u_long
 name|sctps_timosack
 decl_stmt|;
-comment|/* */
+comment|/* Number of sack timers that fired */
 name|u_long
 name|sctps_timoshutdown
 decl_stmt|;
-comment|/* */
+comment|/* Number of shutdown timers that 					 * fired */
 name|u_long
 name|sctps_timoheartbeat
 decl_stmt|;
-comment|/* */
+comment|/* Number of heartbeat timers that 					 * fired */
 name|u_long
 name|sctps_timocookie
 decl_stmt|;
-comment|/* */
+comment|/* Number of times a cookie timeout fired */
 name|u_long
 name|sctps_timosecret
 decl_stmt|;
-comment|/* */
+comment|/* Number of times an endpoint changed its 				 * cookie secret */
 name|u_long
 name|sctps_timopathmtu
 decl_stmt|;
-comment|/* */
+comment|/* Number of PMTU timers that fired */
 name|u_long
 name|sctps_timoshutdownack
 decl_stmt|;
-comment|/* */
+comment|/* Number of shutdown ack timers that 					 * fired */
 name|u_long
 name|sctps_timoshutdownguard
 decl_stmt|;
-comment|/* */
+comment|/* Number of shutdown guard timers 					 * that fired */
 name|u_long
 name|sctps_timostrmrst
 decl_stmt|;
-comment|/* */
+comment|/* Number of stream reset timers that 					 * fired */
 name|u_long
 name|sctps_timoearlyfr
 decl_stmt|;
-comment|/* */
+comment|/* Number of early FR timers that 					 * fired */
 name|u_long
 name|sctps_timoasconf
 decl_stmt|;
-comment|/* */
+comment|/* Number of times an asconf timer fired */
 name|u_long
 name|sctps_timoautoclose
 decl_stmt|;
-comment|/* */
+comment|/* Number of times auto close timer 					 * fired */
 name|u_long
 name|sctps_timoassockill
 decl_stmt|;
-comment|/* */
+comment|/* Number of asoc free timers expired */
 name|u_long
 name|sctps_timoinpkill
 decl_stmt|;
-comment|/* */
+comment|/* Number of inp free timers expired */
 comment|/* Early fast retransmission counters */
 name|u_long
 name|sctps_earlyfrstart
@@ -2884,7 +2885,7 @@ comment|/* max burst dosn't allow sending */
 name|u_long
 name|sctps_ifnomemqueued
 decl_stmt|;
-comment|/* */
+comment|/* look ahead tells us no memory in 					 * interface ring buffer OR we had a 					 * send error and are queuing one 					 * send. */
 name|u_long
 name|sctps_windowprobed
 decl_stmt|;
@@ -2892,18 +2893,23 @@ comment|/* total number of window probes sent */
 name|u_long
 name|sctps_lowlevelerr
 decl_stmt|;
+comment|/* total times an output error causes 					 * us to clamp down on next user send. */
 name|u_long
 name|sctps_lowlevelerrusr
 decl_stmt|;
+comment|/* total times sctp_senderrors were 					 * caused from a user send from a user 					 * invoked send not a sack response */
 name|u_long
 name|sctps_datadropchklmt
 decl_stmt|;
+comment|/* Number of in data drops due to 					 * chunk limit reached */
 name|u_long
 name|sctps_datadroprwnd
 decl_stmt|;
+comment|/* Number of in data drops due to rwnd 					 * limit reached */
 name|u_long
 name|sctps_ecnereducedcwnd
 decl_stmt|;
+comment|/* Number of times a ECN reduced the 					 * cwnd */
 name|u_long
 name|sctps_vtagexpress
 decl_stmt|;
@@ -2934,22 +2940,36 @@ decl_stmt|;
 comment|/* number of sends with sinfo_flags 					 * !=0 */
 name|u_long
 name|sctps_sends_with_unord
+comment|/* number of undordered sends */
 decl_stmt|;
 name|u_long
 name|sctps_sends_with_eof
 decl_stmt|;
+comment|/* number of sends with EOF flag set */
 name|u_long
 name|sctps_sends_with_abort
 decl_stmt|;
+comment|/* number of sends with ABORT flag set */
 name|u_long
 name|sctps_protocol_drain_calls
 decl_stmt|;
+comment|/* number of times protocol 						 * drain called */
 name|u_long
 name|sctps_protocol_drains_done
 decl_stmt|;
+comment|/* number of times we did a 						 * protocol drain */
 name|u_long
 name|sctps_read_peeks
 decl_stmt|;
+comment|/* Number of times recv was called with peek */
+name|u_long
+name|sctps_cached_chk
+decl_stmt|;
+comment|/* Number of cached chunks used */
+name|u_long
+name|sctps_cached_strmoq
+decl_stmt|;
+comment|/* Number of cached stream oq's used */
 block|}
 struct|;
 end_struct

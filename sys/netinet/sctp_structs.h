@@ -1048,6 +1048,9 @@ decl_stmt|;
 name|uint8_t
 name|pr_sctp_on
 decl_stmt|;
+name|uint8_t
+name|sender_all_done
+decl_stmt|;
 block|}
 struct|;
 end_struct
