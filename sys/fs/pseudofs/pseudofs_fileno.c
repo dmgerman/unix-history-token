@@ -212,25 +212,44 @@ modifier|*
 name|pn
 parameter_list|)
 block|{
-comment|/* make sure our parent has a file number */
 if|if
 condition|(
 name|pn
 operator|->
 name|pn_parent
-operator|&&
-operator|!
+condition|)
+name|PFS_TRACE
+argument_list|(
+operator|(
+literal|"%s/%s"
+operator|,
 name|pn
 operator|->
 name|pn_parent
 operator|->
-name|pn_fileno
-condition|)
-name|pfs_fileno_alloc
+name|pn_name
+operator|,
+name|pn
+operator|->
+name|pn_name
+operator|)
+argument_list|)
+expr_stmt|;
+else|else
+name|PFS_TRACE
+argument_list|(
+operator|(
+literal|"%s"
+operator|,
+name|pn
+operator|->
+name|pn_name
+operator|)
+argument_list|)
+expr_stmt|;
+name|pfs_assert_not_owned
 argument_list|(
 name|pn
-operator|->
-name|pn_parent
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -289,7 +308,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"pfstype_this node has no parent"
+literal|"%s(): pfstype_this node has no parent"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -316,7 +337,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"pfstype_parent node has no parent"
+literal|"%s(): pfstype_parent node has no parent"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -325,12 +348,10 @@ condition|(
 name|pn
 operator|->
 name|pn_parent
+operator|->
+name|pn_type
 operator|==
-name|pn
-operator|->
-name|pn_info
-operator|->
-name|pi_root
+name|pfstype_root
 condition|)
 block|{
 name|pn
@@ -356,7 +377,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"pfstype_parent node has no grandparent"
+literal|"%s(): pfstype_parent node has no grandparent"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -381,7 +404,9 @@ argument_list|(
 literal|0
 argument_list|,
 operator|(
-literal|"pfs_fileno_alloc() called for pfstype_none node"
+literal|"%s(): pfstype_none node"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -390,7 +415,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|printf("pfs_fileno_alloc(): %s: ", pn->pn_info->pi_name); 	if (pn->pn_parent) { 		if (pn->pn_parent->pn_parent) { 			printf("%s/", pn->pn_parent->pn_parent->pn_name); 		} 		printf("%s/", pn->pn_parent->pn_name); 	} 	printf("%s -> %d\n", pn->pn_name, pn->pn_fileno);
+block|printf("%s(): %s: ", __func__, pn->pn_info->pi_name); 	if (pn->pn_parent) { 		if (pn->pn_parent->pn_parent) { 			printf("%s/", pn->pn_parent->pn_parent->pn_name); 		} 		printf("%s/", pn->pn_parent->pn_name); 	} 	printf("%s -> %d\n", pn->pn_name, pn->pn_fileno);
 endif|#
 directive|endif
 block|}
@@ -410,6 +435,11 @@ modifier|*
 name|pn
 parameter_list|)
 block|{
+name|pfs_assert_not_owned
+argument_list|(
+name|pn
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|pn

@@ -207,17 +207,6 @@ begin_comment
 comment|/* process-dependent */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PFS_DISABLED
-value|0x8000
-end_define
-
-begin_comment
-comment|/* node is disabled */
-end_comment
-
 begin_comment
 comment|/*  * Data structures  */
 end_comment
@@ -255,6 +244,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|PFS_INIT_ARGNAMES
+define|\
+value|pi, vfc
+end_define
+
+begin_define
+define|#
+directive|define
 name|PFS_INIT_PROTO
 parameter_list|(
 name|name
@@ -277,7 +274,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Filler callback  */
+comment|/*  * Filler callback  * Called with proc held but unlocked  */
 end_comment
 
 begin_define
@@ -286,6 +283,14 @@ directive|define
 name|PFS_FILL_ARGS
 define|\
 value|struct thread *td, struct proc *p, struct pfs_node *pn, \ 	struct sbuf *sb, struct uio *uio
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_FILL_ARGNAMES
+define|\
+value|td, p, pn, sb, uio
 end_define
 
 begin_define
@@ -313,7 +318,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Attribute callback  */
+comment|/*  * Attribute callback  * Called with proc locked  */
 end_comment
 
 begin_struct_decl
@@ -328,6 +333,14 @@ directive|define
 name|PFS_ATTR_ARGS
 define|\
 value|struct thread *td, struct proc *p, struct pfs_node *pn, \ 	struct vattr *vap
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_ATTR_ARGNAMES
+define|\
+value|td, p, pn, vap
 end_define
 
 begin_define
@@ -365,7 +378,7 @@ comment|/* opaque */
 end_comment
 
 begin_comment
-comment|/*  * Visibility callback  */
+comment|/*  * Visibility callback  * Called with proc locked  */
 end_comment
 
 begin_define
@@ -374,6 +387,14 @@ directive|define
 name|PFS_VIS_ARGS
 define|\
 value|struct thread *td, struct proc *p, struct pfs_node *pn
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_VIS_ARGNAMES
+define|\
+value|td, p, pn
 end_define
 
 begin_define
@@ -401,7 +422,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Ioctl callback  */
+comment|/*  * Ioctl callback  * Called with proc locked  */
 end_comment
 
 begin_define
@@ -410,6 +431,14 @@ directive|define
 name|PFS_IOCTL_ARGS
 define|\
 value|struct thread *td, struct proc *p, struct pfs_node *pn, \ 	unsigned long cmd, void *data
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_IOCTL_ARGNAMES
+define|\
+value|td, p, pn, cmd, data
 end_define
 
 begin_define
@@ -437,7 +466,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Getextattr callback  */
+comment|/*  * Getextattr callback  * Called with proc locked  */
 end_comment
 
 begin_define
@@ -446,6 +475,14 @@ directive|define
 name|PFS_GETEXTATTR_ARGS
 define|\
 value|struct thread *td, struct proc *p, struct pfs_node *pn, \ 	int attrnamespace, const char *name, struct uio *uio,	\ 	size_t *size, struct ucred *cred
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_GETEXTATTR_ARGNAMES
+define|\
+value|td, p, pn, attrnamespace, name, uio, size, cred
 end_define
 
 begin_define
@@ -479,7 +516,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Last-close callback  */
+comment|/*  * Last-close callback  * Called with proc locked  */
 end_comment
 
 begin_define
@@ -488,6 +525,14 @@ directive|define
 name|PFS_CLOSE_ARGS
 define|\
 value|struct thread *td, struct proc *p, struct pfs_node *pn
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_CLOSE_ARGNAMES
+define|\
+value|td, p, pn
 end_define
 
 begin_define
@@ -524,6 +569,14 @@ directive|define
 name|PFS_DESTROY_ARGS
 define|\
 value|struct pfs_node *pn
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_DESTROY_ARGNAMES
+define|\
+value|pn
 end_define
 
 begin_define
@@ -590,7 +643,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * pfs_node: describes a node (file or directory) within a pseudofs  */
+comment|/*  * pfs_node: describes a node (file or directory) within a pseudofs  *  * - Fields marked (o) are protected by the node's own mutex.  * - Fields marked (p) are protected by the node's parent's mutex.  * - Remaining fields are not protected by any lock and are assumed to be  *   immutable once the node has been created.  *  * To prevent deadlocks, if a node's mutex is to be held at the same time  * as its parent's (e.g. when adding or removing nodes to a directory),  * the parent's mutex must always be acquired first.  Unfortunately, this  * is not enforcable by WITNESS.  */
 end_comment
 
 begin_struct
@@ -606,31 +659,21 @@ decl_stmt|;
 name|pfs_type_t
 name|pn_type
 decl_stmt|;
-union|union
-block|{
-name|void
-modifier|*
-name|_pn_dummy
-decl_stmt|;
-name|pfs_fill_t
-name|_pn_func
+name|int
+name|pn_flags
 decl_stmt|;
 name|struct
-name|pfs_node
-modifier|*
-name|_pn_nodes
+name|mtx
+name|pn_mutex
 decl_stmt|;
-block|}
-name|u1
-union|;
-define|#
-directive|define
-name|pn_func
-value|u1._pn_func
-define|#
-directive|define
-name|pn_nodes
-value|u1._pn_nodes
+name|void
+modifier|*
+name|pn_data
+decl_stmt|;
+comment|/* (o) */
+name|pfs_fill_t
+name|pn_fill
+decl_stmt|;
 name|pfs_ioctl_t
 name|pn_ioctl
 decl_stmt|;
@@ -649,31 +692,33 @@ decl_stmt|;
 name|pfs_destroy_t
 name|pn_destroy
 decl_stmt|;
-name|void
-modifier|*
-name|pn_data
-decl_stmt|;
-name|int
-name|pn_flags
-decl_stmt|;
 name|struct
 name|pfs_info
 modifier|*
 name|pn_info
 decl_stmt|;
+name|u_int32_t
+name|pn_fileno
+decl_stmt|;
+comment|/* (o) */
 name|struct
 name|pfs_node
 modifier|*
 name|pn_parent
 decl_stmt|;
+comment|/* (o) */
+name|struct
+name|pfs_node
+modifier|*
+name|pn_nodes
+decl_stmt|;
+comment|/* (o) */
 name|struct
 name|pfs_node
 modifier|*
 name|pn_next
 decl_stmt|;
-name|u_int32_t
-name|pn_fileno
-decl_stmt|;
+comment|/* (p) */
 block|}
 struct|;
 end_struct
@@ -955,30 +1000,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|pfs_purge
-parameter_list|(
-name|struct
-name|pfs_node
-modifier|*
-name|pn
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pfs_disable
-parameter_list|(
-name|struct
-name|pfs_node
-modifier|*
-name|pn
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pfs_enable
 parameter_list|(
 name|struct
 name|pfs_node

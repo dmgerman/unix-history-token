@@ -978,7 +978,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Purge the cache of dead / disabled entries  *  * This is extremely inefficient due to the fact that vgone() not only  * indirectly modifies the vnode cache, but may also sleep.  We can  * neither hold pfs_vncache_mutex across a vgone() call, nor make any  * assumptions about the state of the cache after vgone() returns.  In  * consequence, we must start over after every vgone() call, and keep  * trying until we manage to traverse the entire cache.  *  * The only way to improve this situation is to change the data structure  * used to implement the cache.  */
+comment|/*  * Purge the cache of dead entries  *  * This is extremely inefficient due to the fact that vgone() not only  * indirectly modifies the vnode cache, but may also sleep.  We can  * neither hold pfs_vncache_mutex across a vgone() call, nor make any  * assumptions about the state of the cache after vgone() returns.  In  * consequence, we must start over after every vgone() call, and keep  * trying until we manage to traverse the entire cache.  *  * The only way to improve this situation is to change the data structure  * used to implement the cache.  */
 end_comment
 
 begin_function
@@ -1217,81 +1217,6 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Disable a pseudofs node, and free all vnodes associated with it  */
-end_comment
-
-begin_function
-name|int
-name|pfs_disable
-parameter_list|(
-name|struct
-name|pfs_node
-modifier|*
-name|pn
-parameter_list|)
-block|{
-if|if
-condition|(
-name|pn
-operator|->
-name|pn_flags
-operator|&
-name|PFS_DISABLED
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|pn
-operator|->
-name|pn_flags
-operator||=
-name|PFS_DISABLED
-expr_stmt|;
-name|pfs_purge
-argument_list|(
-name|pn
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Re-enable a disabled pseudofs node  */
-end_comment
-
-begin_function
-name|int
-name|pfs_enable
-parameter_list|(
-name|struct
-name|pfs_node
-modifier|*
-name|pn
-parameter_list|)
-block|{
-name|pn
-operator|->
-name|pn_flags
-operator|&=
-operator|~
-name|PFS_DISABLED
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
