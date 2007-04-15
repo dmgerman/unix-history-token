@@ -874,14 +874,6 @@ name|tcbinfo
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|mtx
-modifier|*
-name|tcbinfo_mtx
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
