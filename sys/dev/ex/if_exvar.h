@@ -435,7 +435,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EX_LOCK_DESTORY
+name|EX_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)

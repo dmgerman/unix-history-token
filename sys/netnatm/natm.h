@@ -164,7 +164,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* destory as soon as inq == 0 */
+comment|/* destroy as soon as inq == 0 */
 end_comment
 
 begin_comment

@@ -350,7 +350,7 @@ argument_list|(
 literal|"fwdma_malloc: failed(2)\n"
 argument_list|)
 expr_stmt|;
-comment|/* XXX destory tag */
+comment|/* XXX destroy tag */
 return|return
 operator|(
 name|NULL
