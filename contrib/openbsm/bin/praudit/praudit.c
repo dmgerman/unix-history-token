@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/praudit/praudit.c#9 $  */
+comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * Copyright (c) 2006 Martin Voros  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/praudit/praudit.c#11 $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Tool used to parse audit records conforming to the BSM structure. 
 end_comment
 
 begin_comment
-comment|/*  * praudit [-lrs] [-ddel] [filenames]  */
+comment|/*  * praudit [-lpx] [-r | -s] [-d del] [file ...]  */
 end_comment
 
 begin_include
@@ -106,17 +106,29 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|xml
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: praudit [-lrs] [-ddel] [filenames]\n"
+literal|"usage: praudit [-lpx] [-r | -s] [-d del] "
+literal|"[file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -241,6 +253,25 @@ name|bytesread
 argument_list|)
 condition|)
 break|break;
+if|if
+condition|(
+name|xml
+condition|)
+name|au_print_tok_xml
+argument_list|(
+name|stdout
+argument_list|,
+operator|&
+name|tok
+argument_list|,
+name|del
+argument_list|,
+name|raw
+argument_list|,
+name|shortfrm
+argument_list|)
+expr_stmt|;
+else|else
 name|au_print_tok
 argument_list|(
 name|stdout
@@ -265,6 +296,12 @@ if|if
 condition|(
 name|oneline
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|xml
+condition|)
 name|printf
 argument_list|(
 literal|"%s"
@@ -272,6 +309,7 @@ argument_list|,
 name|del
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|printf
 argument_list|(
@@ -336,7 +374,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lprsd:"
+literal|"d:lprsx"
 argument_list|)
 operator|)
 operator|!=
@@ -350,9 +388,25 @@ name|ch
 condition|)
 block|{
 case|case
+literal|'d'
+case|:
+name|del
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'l'
 case|:
 name|oneline
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|partial
 operator|=
 literal|1
 expr_stmt|;
@@ -390,17 +444,9 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'d'
+literal|'x'
 case|:
-name|del
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'p'
-case|:
-name|partial
+name|xml
 operator|=
 literal|1
 expr_stmt|;
@@ -414,6 +460,15 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|xml
+condition|)
+name|au_print_xml_header
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 comment|/* For each of the files passed as arguments dump the contents. */
 if|if
 condition|(
@@ -497,6 +552,15 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|xml
+condition|)
+name|au_print_xml_footer
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
