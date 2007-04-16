@@ -8026,7 +8026,9 @@ condition|(
 name|spa_busy
 argument_list|()
 operator|||
-comment|/* zfs_busy() || */
+name|zfs_busy
+argument_list|()
+operator|||
 name|zvol_busy
 argument_list|()
 operator|||
