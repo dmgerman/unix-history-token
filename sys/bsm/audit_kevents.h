@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/audit3/sys/bsm/audit_kevents.h#29 $  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2005 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/audit3/sys/bsm/audit_kevents.h#32 $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -3567,6 +3567,248 @@ begin_comment
 comment|/* Linux. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AUE_MAC_GET_PROC
+value|43121
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_SET_PROC
+value|43122
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_GET_FD
+value|43123
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_GET_FILE
+value|43124
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_SET_FD
+value|43125
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_SET_FILE
+value|43126
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_SYSCALL
+value|43127
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_GET_PID
+value|43128
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_GET_LINK
+value|43129
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_SET_LINK
+value|43130
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_EXECVE
+value|43131
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_GETPATH_FROMFD
+value|43132
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_GETPATH_FROMADDR
+value|43133
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MQ_OPEN
+value|43134
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MQ_SETATTR
+value|43135
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MQ_TIMEDRECEIVE
+value|43136
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MQ_TIMEDSEND
+value|43137
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MQ_NOTIFY
+value|43138
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MQ_UNLINK
+value|43139
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_LISTEN
+value|43140
+end_define
+
+begin_comment
+comment|/* FreeBSD/Darwin/Linux. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MLOCKALL
+value|43141
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MUNLOCKALL
+value|43142
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
 begin_comment
 comment|/*  * Darwin BSM uses a number of AUE_O_* definitions, which are aliased to the  * normal Solaris BSM identifiers.  _O_ refers to it being an old, or compat  * interface.  In most cases, Darwin has never implemented these system calls  * but picked up the fields in their system call table from their FreeBSD  * import.  Happily, these have different names than the AUE_O* definitions  * in Solaris BSM.  */
 end_comment
@@ -4402,13 +4644,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_LISTEN
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
 name|AUE_LSTATV
 value|AUE_NULL
 end_define
@@ -4437,13 +4672,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_MLOCKALL
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
 name|AUE_MODWATCH
 value|AUE_NULL
 end_define
@@ -4459,13 +4687,6 @@ begin_define
 define|#
 directive|define
 name|AUE_MSYNC
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUE_MUNLOCKALL
 value|AUE_NULL
 end_define
 
