@@ -3404,17 +3404,16 @@ literal|"can't remove sysctl context\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 name|disk_destroy
 argument_list|(
 name|softc
 operator|->
 name|disk
-argument_list|)
-expr_stmt|;
-comment|/* 	 * XXX Gotta drop the periph lock so that the drain can complete with 	 * deadlocking on the lock.  Hopefully dropping here is safe. 	 */
-name|cam_periph_unlock
-argument_list|(
-name|periph
 argument_list|)
 expr_stmt|;
 name|callout_drain
