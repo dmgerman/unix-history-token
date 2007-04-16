@@ -896,14 +896,14 @@ name|destroy_dev
 argument_list|(
 name|softc
 operator|->
-name|dev
+name|devalias
 argument_list|)
 expr_stmt|;
 name|destroy_dev
 argument_list|(
 name|softc
 operator|->
-name|devalias
+name|dev
 argument_list|)
 expr_stmt|;
 if|if
