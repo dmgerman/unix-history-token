@@ -885,8 +885,8 @@ name|bsdtar
 operator|->
 name|option_stdout
 condition|)
-block|{
-comment|/* TODO: Catch/recover any errors here. */
+name|r
+operator|=
 name|archive_read_data_into_fd
 argument_list|(
 name|a
@@ -894,10 +894,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
+else|else
+name|r
+operator|=
 name|archive_read_extract
 argument_list|(
 name|a
@@ -908,6 +907,12 @@ name|bsdtar
 operator|->
 name|extract_flags
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|!=
+name|ARCHIVE_OK
 condition|)
 block|{
 if|if
@@ -955,7 +960,6 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* 				 * TODO: Decide how to handle 				 * extraction error...<sigh> 				 */
 name|bsdtar
 operator|->
 name|return_value
@@ -976,6 +980,13 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+name|ARCHIVE_FATAL
+condition|)
+break|break;
 block|}
 block|}
 if|if
