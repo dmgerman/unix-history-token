@@ -27022,7 +27022,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"only one of keep-state and"
+literal|"only one of keep-state and "
 literal|"limit is allowed"
 argument_list|)
 expr_stmt|;
