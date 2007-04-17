@@ -597,36 +597,6 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-specifier|extern
-name|struct
-name|mount
-modifier|*
-name|vfs_mount_alloc
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-name|struct
-name|vfsconf
-modifier|*
-name|vfsp
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fspath
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|domount
@@ -859,6 +829,11 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * Set the mount level flags. 	 */
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fsflags
@@ -891,6 +866,11 @@ name|MNT_FORCE
 operator||
 name|MNT_ROOTFS
 operator|)
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Mount the filesystem. 	 * XXX The final recipients of VFS_MOUNT just overwrite the ndp they 	 * get.  No freeing of cn_pnbuf. 	 */
 name|error
@@ -966,7 +946,16 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Put the new filesystem on the mount list after root. 	 */
-comment|//	cache_purge(vp);
+ifdef|#
+directive|ifdef
+name|FREEBSD_NAMECACHE
+name|cache_purge
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
