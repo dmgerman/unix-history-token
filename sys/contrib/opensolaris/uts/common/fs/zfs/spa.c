@@ -2648,6 +2648,7 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 		 * hostid is set after the root file system is mounted, so 		 * ignore the check until it's done. 		 */
 if|if
 condition|(
 name|nvlist_lookup_uint64
@@ -2661,6 +2662,9 @@ name|hostid
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|root_mounted
+argument_list|()
 condition|)
 block|{
 name|char
