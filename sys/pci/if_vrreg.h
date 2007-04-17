@@ -2426,14 +2426,6 @@ comment|/* interface info */
 name|device_t
 name|vr_dev
 decl_stmt|;
-name|bus_space_handle_t
-name|vr_bhandle
-decl_stmt|;
-comment|/* bus space handle */
-name|bus_space_tag_t
-name|vr_btag
-decl_stmt|;
-comment|/* bus space tag */
 name|struct
 name|resource
 modifier|*
@@ -2560,8 +2552,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_4(sc->vr_btag, sc->vr_bhandle, reg, val)
+value|bus_write_4(sc->vr_res, reg, val)
 end_define
 
 begin_define
@@ -2575,8 +2566,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_2(sc->vr_btag, sc->vr_bhandle, reg, val)
+value|bus_write_2(sc->vr_res, reg, val)
 end_define
 
 begin_define
@@ -2590,8 +2580,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_1(sc->vr_btag, sc->vr_bhandle, reg, val)
+value|bus_write_1(sc->vr_res, reg, val)
 end_define
 
 begin_define
@@ -2603,8 +2592,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_4(sc->vr_btag, sc->vr_bhandle, reg)
+value|bus_read_4(sc->vr_res, reg)
 end_define
 
 begin_define
@@ -2616,8 +2604,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_2(sc->vr_btag, sc->vr_bhandle, reg)
+value|bus_read_2(sc->vr_res, reg)
 end_define
 
 begin_define
@@ -2629,8 +2616,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_1(sc->vr_btag, sc->vr_bhandle, reg)
+value|bus_read_1(sc->vr_res, reg)
 end_define
 
 begin_define
