@@ -369,9 +369,6 @@ name|u_int
 name|io
 parameter_list|)
 block|{
-name|u_long
-name|l
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -927,10 +924,9 @@ operator|(
 name|error
 operator|)
 return|;
-name|ahc_list_lock
+name|ahc_lock
 argument_list|(
-operator|&
-name|l
+name|ahc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Link this softc in with all other ahc instances. 	 */
@@ -949,10 +945,9 @@ argument_list|,
 name|ENABLE
 argument_list|)
 expr_stmt|;
-name|ahc_list_unlock
+name|ahc_unlock
 argument_list|(
-operator|&
-name|l
+name|ahc
 argument_list|)
 expr_stmt|;
 return|return

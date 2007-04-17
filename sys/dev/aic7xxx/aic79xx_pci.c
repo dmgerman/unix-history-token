@@ -1079,9 +1079,6 @@ name|scb_data
 modifier|*
 name|shared_scb_data
 decl_stmt|;
-name|u_long
-name|l
-decl_stmt|;
 name|u_int
 name|command
 decl_stmt|;
@@ -1534,10 +1531,9 @@ operator|(
 name|error
 operator|)
 return|;
-name|ahd_list_lock
+name|ahd_lock
 argument_list|(
-operator|&
-name|l
+name|ahd
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Link this softc in with all other ahd instances. 	 */
@@ -1546,10 +1542,9 @@ argument_list|(
 name|ahd
 argument_list|)
 expr_stmt|;
-name|ahd_list_unlock
+name|ahd_unlock
 argument_list|(
-operator|&
-name|l
+name|ahd
 argument_list|)
 expr_stmt|;
 return|return

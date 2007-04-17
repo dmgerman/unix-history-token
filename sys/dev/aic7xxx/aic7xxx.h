@@ -1399,6 +1399,9 @@ name|u_int
 name|sg_count
 decl_stmt|;
 comment|/* How full ahc_dma_seg is */
+name|aic_timer_t
+name|io_timer
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3331,20 +3334,6 @@ parameter_list|(
 name|struct
 name|ahc_softc
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|ahc_softc
-modifier|*
-name|ahc_find_softc
-parameter_list|(
-name|struct
-name|ahc_softc
-modifier|*
-name|ahc
 parameter_list|)
 function_decl|;
 end_function_decl
