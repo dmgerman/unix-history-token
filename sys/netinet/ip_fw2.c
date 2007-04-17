@@ -21441,7 +21441,7 @@ name|ipfw_dyn_rule_zone
 operator|=
 name|uma_zcreate
 argument_list|(
-literal|"IPFW dynamic rule zone"
+literal|"IPFW dynamic rule"
 argument_list|,
 sizeof|sizeof
 argument_list|(
