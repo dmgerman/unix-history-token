@@ -37,6 +37,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_function
 name|main
 parameter_list|(

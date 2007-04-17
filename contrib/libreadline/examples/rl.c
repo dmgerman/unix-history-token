@@ -39,11 +39,35 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|"posixstat.h"
+file|<stdlib.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|extern
+name|void
+name|exit
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -53,6 +77,12 @@ argument_list|(
 name|READLINE_LIBRARY
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|"posixstat.h"
+end_include
 
 begin_include
 include|#
@@ -70,6 +100,12 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
 
 begin_include
 include|#

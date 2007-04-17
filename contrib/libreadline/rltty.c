@@ -4,7 +4,7 @@ comment|/* rltty.c -- functions to prepare and restore the terminal for readline
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1992-2005 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -609,9 +609,22 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|NEW_TTY_DRIVER
+name|NO_TTY_DRIVER
 argument_list|)
 end_if
+
+begin_comment
+comment|/* Nothing */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|NEW_TTY_DRIVER
+argument_list|)
+end_elif
 
 begin_comment
 comment|/* Values for the `flags' field of a struct bsdtty.  This tells which    elements of the struct bsdtty have been fetched from the system and    are valid. */
@@ -1053,6 +1066,10 @@ operator|=
 name|tiop
 operator|->
 name|lflag
+operator|=
+literal|0
+expr_stmt|;
+name|errno
 operator|=
 literal|0
 expr_stmt|;
@@ -2535,6 +2552,10 @@ argument_list|(
 name|tty
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|_get_tty_settings
@@ -2980,11 +3001,53 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NEW_TTY_DRIVER */
+comment|/* !NEW_TTY_DRIVER */
 end_comment
 
 begin_comment
 comment|/* Put the terminal in CBREAK mode so that we can detect key presses. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NO_TTY_DRIVER
+argument_list|)
+end_if
+
+begin_function
+name|void
+name|rl_prep_terminal
+parameter_list|(
+name|meta_flag
+parameter_list|)
+name|int
+name|meta_flag
+decl_stmt|;
+block|{
+name|readline_echoing_p
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|rl_deprep_terminal
+parameter_list|()
+block|{ }
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! NO_TTY_DRIVER */
 end_comment
 
 begin_function
@@ -3032,6 +3095,38 @@ operator|<
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENOTSUP
+argument_list|)
+comment|/* MacOS X, at least, lies about the value of errno if tcgetattr fails. */
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOTTY
+operator|||
+name|errno
+operator|==
+name|ENOTSUP
+condition|)
+else|#
+directive|else
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOTTY
+condition|)
+endif|#
+directive|endif
+name|readline_echoing_p
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX */
 name|release_sigint
 argument_list|()
 expr_stmt|;
@@ -3041,11 +3136,38 @@ name|otio
 operator|=
 name|tio
 expr_stmt|;
+if|if
+condition|(
+name|_rl_bind_stty_chars
+condition|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VI_MODE
+argument_list|)
+comment|/* If editing in vi mode, make sure we restore the bindings in the 	 insertion keymap no matter what keymap we ended up in. */
+if|if
+condition|(
+name|rl_editing_mode
+operator|==
+name|vi_mode
+condition|)
+name|rl_tty_unset_default_bindings
+argument_list|(
+name|vi_insertion_keymap
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|rl_tty_unset_default_bindings
 argument_list|(
 name|_rl_keymap
 argument_list|)
 expr_stmt|;
+block|}
 name|save_tty_chars
 argument_list|(
 operator|&
@@ -3057,6 +3179,34 @@ argument_list|(
 name|RL_STATE_TTYCSAVED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|_rl_bind_stty_chars
+condition|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VI_MODE
+argument_list|)
+comment|/* If editing in vi mode, make sure we set the bindings in the 	 insertion keymap no matter what keymap we ended up in. */
+if|if
+condition|(
+name|rl_editing_mode
+operator|==
+name|vi_mode
+condition|)
+name|_rl_bind_tty_special_chars
+argument_list|(
+name|vi_insertion_keymap
+argument_list|,
+name|tio
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|_rl_bind_tty_special_chars
 argument_list|(
 name|_rl_keymap
@@ -3064,6 +3214,7 @@ argument_list|,
 name|tio
 argument_list|)
 expr_stmt|;
+block|}
 name|prepare_terminal_settings
 argument_list|(
 name|meta_flag
@@ -3197,6 +3348,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !NO_TTY_DRIVER */
+end_comment
+
 begin_escape
 end_escape
 
@@ -3234,6 +3394,18 @@ decl_stmt|,
 name|key
 decl_stmt|;
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+return|return
+literal|0
+return|;
+else|#
+directive|else
+comment|/* !__MING32__ */
 name|int
 name|fildes
 init|=
@@ -3354,6 +3526,9 @@ comment|/* !TIOCSTART */
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
+comment|/* !__MINGW32__ */
 block|}
 end_function
 
@@ -3371,6 +3546,17 @@ decl_stmt|,
 name|key
 decl_stmt|;
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+return|return
+literal|0
+return|;
+else|#
+directive|else
 name|int
 name|fildes
 init|=
@@ -3473,6 +3659,9 @@ comment|/* !TIOCSTOP */
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
+comment|/* !__MINGW32__ */
 block|}
 end_function
 
@@ -3496,6 +3685,16 @@ begin_comment
 comment|/* **************************************************************** */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_TTY_DRIVER
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -3508,14 +3707,48 @@ parameter_list|)
 value|set_special_char(kmap,&ttybuff, sc, func)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|NEW_TTY_DRIVER
+name|NO_TTY_DRIVER
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|SET_SPECIAL
+parameter_list|(
+name|sc
+parameter_list|,
+name|func
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RESET_SPECIAL
+parameter_list|(
+name|c
+parameter_list|)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|NEW_TTY_DRIVER
+argument_list|)
+end_elif
 
 begin_function
 specifier|static
@@ -3894,17 +4127,18 @@ name|Keymap
 name|kmap
 decl_stmt|;
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_TTY_DRIVER
+argument_list|)
 name|TIOTYPE
 name|ttybuff
 decl_stmt|;
 name|int
 name|tty
-decl_stmt|;
-specifier|static
-name|int
-name|called
-init|=
-literal|0
 decl_stmt|;
 name|tty
 operator|=
@@ -3932,6 +4166,8 @@ argument_list|,
 name|ttybuff
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4056,6 +4292,11 @@ directive|if
 name|defined
 argument_list|(
 name|NEW_TTY_DRIVER
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NO_TTY_DRIVER
 argument_list|)
 end_if
 

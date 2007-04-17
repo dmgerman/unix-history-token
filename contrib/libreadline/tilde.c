@@ -144,11 +144,25 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_PWD_H
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<pwd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -213,6 +227,15 @@ name|HAVE_GETPW_DECLS
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_GETPWUID
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -227,6 +250,20 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_GETPWNAM
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -244,6 +281,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1361,6 +1403,22 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Public function to scan a string (FNAME) beginning with a tilde and find    the portion of the string that should be passed to the tilde expansion    function.  Right now, it just calls tilde_find_suffix and allocates new    memory, but it can be expanded to do different things later. */
+end_comment
+
+begin_endif
+unit|char * tilde_find_word (fname, flags, lenp)      const char *fname;      int flags, *lenp; {   int x;   char *r;    x = tilde_find_suffix (fname);   if (x == 0)     {       r = savestring (fname);       if (lenp) 	*lenp = 0;     }   else     {       r = (char *)xmalloc (1 + x);       strncpy (r, fname, x);       r[x] = '\0';       if (lenp) 	*lenp = x;     }    return r; }
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Return a string that is PREFIX concatenated with SUFFIX starting at    SUFFIND. */
 end_comment
@@ -1650,6 +1708,12 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_GETPWNAM
+argument_list|)
 name|user_entry
 operator|=
 name|getpwnam
@@ -1657,6 +1721,14 @@ argument_list|(
 name|username
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|user_entry
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|user_entry
@@ -1703,11 +1775,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|free
-argument_list|(
-name|username
-argument_list|)
-expr_stmt|;
 comment|/* If we don't have a failure hook, or if the failure hook did not 	 expand the tilde, return a copy of what we were passed. */
 if|if
 condition|(
@@ -1723,13 +1790,13 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|free
+if|#
+directive|if
+name|defined
 argument_list|(
-name|username
+name|HAVE_GETPWENT
 argument_list|)
-expr_stmt|;
+else|else
 name|dirname
 operator|=
 name|glue_prefix_and_suffix
@@ -1743,10 +1810,24 @@ argument_list|,
 name|user_len
 argument_list|)
 expr_stmt|;
-block|}
+endif|#
+directive|endif
+name|free
+argument_list|(
+name|username
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_GETPWENT
+argument_list|)
 name|endpwent
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|dirname

@@ -176,17 +176,6 @@ typedef|));
 end_typedef
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|rl_byte_oriented
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* declared in mbutil.c */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|char
 name|error_pointer
@@ -719,6 +708,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|#
 directive|if
 name|defined
@@ -755,7 +745,7 @@ name|mbstate_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* These produce warnings because we're passing a const string to a 	   function that takes a non-const string. */
+comment|/* These produce warnings because we're passing a const string to a 	     function that takes a non-const string. */
 name|_rl_adjust_point
 argument_list|(
 operator|(
@@ -802,7 +792,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-elseif|else
 endif|#
 directive|endif
 comment|/* HANDLE_MULTIBYTE */
@@ -861,6 +850,7 @@ literal|'?'
 operator|)
 condition|)
 break|break;
+block|}
 name|which
 operator|=
 name|i
@@ -2300,7 +2290,7 @@ literal|0
 condition|)
 block|{
 name|int
-name|c
+name|ch
 decl_stmt|,
 name|l
 decl_stmt|;
@@ -2315,7 +2305,7 @@ argument_list|,
 name|MB_FIND_ANY
 argument_list|)
 expr_stmt|;
-name|c
+name|ch
 operator|=
 name|string
 index|[
@@ -2328,18 +2318,18 @@ condition|(
 name|i
 operator|&&
 operator|(
-name|c
+name|ch
 operator|==
 literal|'\''
 operator|||
-name|c
+name|ch
 operator|==
 literal|'"'
 operator|)
 condition|)
 name|quoted_search_delimiter
 operator|=
-name|c
+name|ch
 expr_stmt|;
 block|}
 elseif|else
@@ -5573,6 +5563,25 @@ literal|2
 index|]
 operator|==
 literal|'-'
+condition|)
+name|i
+operator|++
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|peek
+operator|==
+literal|'<'
+operator|&&
+name|string
+index|[
+name|i
+operator|+
+literal|2
+index|]
+operator|==
+literal|'<'
 condition|)
 name|i
 operator|++

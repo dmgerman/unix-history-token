@@ -8,7 +8,7 @@ comment|/* complete.c -- filename completion for readline. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1987-2004 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1987-2005 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -166,11 +166,25 @@ begin_comment
 comment|/* !errno */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_PWD_H
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<pwd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -313,6 +327,12 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|HAVE_GETPWENT
+argument_list|)
+operator|&&
+operator|(
 operator|!
 name|defined
 argument_list|(
@@ -323,6 +343,7 @@ name|defined
 argument_list|(
 name|_POSIX_SOURCE
 argument_list|)
+operator|)
 end_if
 
 begin_decl_stmt
@@ -346,7 +367,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !HAVE_GETPW_DECLS || _POSIX_SOURCE */
+comment|/* HAVE_GETPWENT&& (!HAVE_GETPW_DECLS || _POSIX_SOURCE) */
 end_comment
 
 begin_comment
@@ -1003,7 +1024,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Up to this many items will be displayed in response to a    possible-completions call.  After that, we ask the user if    she is sure she wants to see them all. */
+comment|/* Up to this many items will be displayed in response to a    possible-completions call.  After that, we ask the user if    she is sure she wants to see them all.  A negative value means    don't ask. */
 end_comment
 
 begin_decl_stmt
@@ -2517,6 +2538,14 @@ decl_stmt|;
 name|size_t
 name|tlen
 decl_stmt|;
+name|int
+name|width
+decl_stmt|,
+name|w
+decl_stmt|;
+name|wchar_t
+name|wc
+decl_stmt|;
 name|end
 operator|=
 name|to_print
@@ -2675,8 +2704,11 @@ name|HANDLE_MULTIBYTE
 argument_list|)
 name|tlen
 operator|=
-name|mbrlen
+name|mbrtowc
 argument_list|(
+operator|&
+name|wc
+argument_list|,
 name|s
 argument_list|,
 name|end
@@ -2696,6 +2728,10 @@ argument_list|)
 condition|)
 block|{
 name|tlen
+operator|=
+literal|1
+expr_stmt|;
+name|width
 operator|=
 literal|1
 expr_stmt|;
@@ -2722,6 +2758,28 @@ name|tlen
 argument_list|)
 condition|)
 break|break;
+else|else
+block|{
+name|w
+operator|=
+name|wcwidth
+argument_list|(
+name|wc
+argument_list|)
+expr_stmt|;
+name|width
+operator|=
+operator|(
+name|w
+operator|>=
+literal|0
+operator|)
+condition|?
+name|w
+else|:
+literal|1
+expr_stmt|;
+block|}
 name|fwrite
 argument_list|(
 name|s
@@ -2737,6 +2795,10 @@ name|s
 operator|+=
 name|tlen
 expr_stmt|;
+name|printed_len
+operator|+=
+name|width
+expr_stmt|;
 else|#
 directive|else
 name|putc
@@ -2750,11 +2812,11 @@ expr_stmt|;
 name|s
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 name|printed_len
 operator|++
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 return|return
@@ -2804,6 +2866,9 @@ name|c
 decl_stmt|,
 modifier|*
 name|new_full_pathname
+decl_stmt|,
+modifier|*
+name|dn
 decl_stmt|;
 name|extension_char
 operator|=
@@ -2869,18 +2934,82 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* If setting the last slash in full_pathname to a NUL results in 	     full_pathname being the empty string, we are trying to complete 	     files in the root directory.  If we pass a null string to the 	     bash directory completion hook, for example, it will expand it 	     to the current directory.  We just want the `/'. */
+if|if
+condition|(
+name|full_pathname
+operator|==
+literal|0
+operator|||
+operator|*
+name|full_pathname
+operator|==
+literal|0
+condition|)
+name|dn
+operator|=
+literal|"/"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|full_pathname
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
+condition|)
+name|dn
+operator|=
+name|full_pathname
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|full_pathname
+index|[
+literal|1
+index|]
+operator|==
+literal|0
+condition|)
+name|dn
+operator|=
+literal|"//"
+expr_stmt|;
+comment|/* restore trailing slash to `//' */
+elseif|else
+if|if
+condition|(
+name|full_pathname
+index|[
+literal|1
+index|]
+operator|==
+literal|'/'
+operator|&&
+name|full_pathname
+index|[
+literal|2
+index|]
+operator|==
+literal|0
+condition|)
+name|dn
+operator|=
+literal|"/"
+expr_stmt|;
+comment|/* don't turn /// into // */
+else|else
+name|dn
+operator|=
+name|full_pathname
+expr_stmt|;
 name|s
 operator|=
 name|tilde_expand
 argument_list|(
-name|full_pathname
-operator|&&
-operator|*
-name|full_pathname
-condition|?
-name|full_pathname
-else|:
-literal|"/"
+name|dn
 argument_list|)
 expr_stmt|;
 if|if
@@ -2931,6 +3060,28 @@ name|new_full_pathname
 argument_list|,
 name|s
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+index|[
+name|slen
+operator|-
+literal|1
+index|]
+operator|==
+literal|'/'
+condition|)
+name|slen
+operator|--
+expr_stmt|;
+else|else
+name|new_full_pathname
+index|[
+name|slen
+index|]
+operator|=
+literal|'/'
 expr_stmt|;
 name|new_full_pathname
 index|[
@@ -3228,12 +3379,6 @@ condition|)
 block|{
 comment|/* We have a list of characters which can be used in pairs to 	 quote substrings for the completer.  Try to find the start 	 of an unclosed quoted substring. */
 comment|/* FOUND_QUOTE is set so we know what kind of quotes we found. */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HANDLE_MULTIBYTE
-argument_list|)
 for|for
 control|(
 name|scan
@@ -3248,22 +3393,7 @@ name|end
 condition|;
 name|scan
 operator|=
-operator|(
-operator|(
-name|MB_CUR_MAX
-operator|==
-literal|1
-operator|||
-name|rl_byte_oriented
-operator|)
-condition|?
-operator|(
-name|scan
-operator|+
-literal|1
-operator|)
-else|:
-name|_rl_find_next_mbchar
+name|MB_NEXTCHAR
 argument_list|(
 name|rl_line_buffer
 argument_list|,
@@ -3273,27 +3403,7 @@ literal|1
 argument_list|,
 name|MB_FIND_ANY
 argument_list|)
-operator|)
 control|)
-else|#
-directive|else
-for|for
-control|(
-name|scan
-operator|=
-name|pass_next
-operator|=
-literal|0
-init|;
-name|scan
-operator|<
-name|end
-condition|;
-name|scan
-operator|++
-control|)
-endif|#
-directive|endif
 block|{
 if|if
 condition|(
@@ -3430,17 +3540,11 @@ literal|'\0'
 condition|)
 block|{
 comment|/* We didn't find an unclosed quoted substring upon which to do          completion, so use the word break characters to find the          substring on which to complete. */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HANDLE_MULTIBYTE
-argument_list|)
 while|while
 condition|(
 name|rl_point
 operator|=
-name|_rl_find_prev_mbchar
+name|MB_PREVCHAR
 argument_list|(
 name|rl_line_buffer
 argument_list|,
@@ -3449,15 +3553,6 @@ argument_list|,
 name|MB_FIND_ANY
 argument_list|)
 condition|)
-else|#
-directive|else
-while|while
-condition|(
-operator|--
-name|rl_point
-condition|)
-endif|#
-directive|endif
 block|{
 name|scan
 operator|=
@@ -3677,9 +3772,6 @@ name|char
 modifier|*
 modifier|*
 name|matches
-decl_stmt|,
-modifier|*
-name|temp
 decl_stmt|;
 name|rl_completion_found_quote
 operator|=
@@ -3727,45 +3819,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* Beware -- we're stripping the quotes here.  Do this only if we know      we are doing filename completion and the application has defined a      filename dequoting function. */
-name|temp
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|found_quote
-operator|&&
-name|our_func
-operator|==
-name|rl_filename_completion_function
-operator|&&
-name|rl_filename_dequoting_function
-condition|)
-block|{
-comment|/* delete single and double quotes */
-name|temp
-operator|=
-call|(
-modifier|*
-name|rl_filename_dequoting_function
-call|)
-argument_list|(
-name|text
-argument_list|,
-name|quote_char
-argument_list|)
-expr_stmt|;
-name|text
-operator|=
-name|temp
-expr_stmt|;
-comment|/* not freeing text is not a memory leak */
-block|}
+comment|/* XXX -- filename dequoting moved into rl_filename_completion_function */
 name|matches
 operator|=
 name|rl_completion_matches
@@ -3773,11 +3827,6 @@ argument_list|(
 name|text
 argument_list|,
 name|our_func
-argument_list|)
-expr_stmt|;
-name|FREE
-argument_list|(
-name|temp
 argument_list|)
 expr_stmt|;
 return|return
@@ -4491,9 +4540,11 @@ condition|)
 block|{
 name|mbstate_t
 name|ps_back
-init|=
-name|ps1
 decl_stmt|;
+name|ps_back
+operator|=
+name|ps1
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4671,6 +4722,10 @@ modifier|*
 name|rl_filename_dequoting_function
 call|)
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|text
 argument_list|,
 name|rl_completion_quote_character
@@ -5631,6 +5686,10 @@ block|}
 comment|/* If there are many items, then ask the user if she really wants to      see them all. */
 if|if
 condition|(
+name|rl_completion_query_items
+operator|>
+literal|0
+operator|&&
 name|len
 operator|>=
 name|rl_completion_query_items
@@ -6157,6 +6216,7 @@ block|{
 if|if
 condition|(
 name|_rl_complete_mark_directories
+comment|/*&& rl_completion_suppress_append == 0 */
 condition|)
 block|{
 comment|/* This is clumsy.  Avoid putting in a double slash if point 		 is at the end of the line and the previous character is a 		 slash. */
@@ -7290,6 +7350,12 @@ name|setpwent
 argument_list|()
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_GETPWENT
+argument_list|)
 while|while
 condition|(
 name|entry
@@ -7320,6 +7386,8 @@ operator|)
 condition|)
 break|break;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|entry
@@ -7327,9 +7395,17 @@ operator|==
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_GETPWENT
+argument_list|)
 name|endpwent
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|(
@@ -7745,6 +7821,7 @@ operator|&
 name|dirname
 argument_list|)
 expr_stmt|;
+comment|/* The directory completion hook should perform any necessary 	 dequoting. */
 if|if
 condition|(
 name|rl_directory_completion_hook
@@ -7772,6 +7849,37 @@ name|dirname
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|rl_completion_found_quote
+operator|&&
+name|rl_filename_dequoting_function
+condition|)
+block|{
+comment|/* delete single and double quotes */
+name|temp
+operator|=
+call|(
+modifier|*
+name|rl_filename_dequoting_function
+call|)
+argument_list|(
+name|users_dirname
+argument_list|,
+name|rl_completion_quote_character
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|users_dirname
+argument_list|)
+expr_stmt|;
+name|users_dirname
+operator|=
+name|temp
+expr_stmt|;
+block|}
 name|directory
 operator|=
 name|opendir
@@ -7779,6 +7887,42 @@ argument_list|(
 name|dirname
 argument_list|)
 expr_stmt|;
+comment|/* Now dequote a non-null filename. */
+if|if
+condition|(
+name|filename
+operator|&&
+operator|*
+name|filename
+operator|&&
+name|rl_completion_found_quote
+operator|&&
+name|rl_filename_dequoting_function
+condition|)
+block|{
+comment|/* delete single and double quotes */
+name|temp
+operator|=
+call|(
+modifier|*
+name|rl_filename_dequoting_function
+call|)
+argument_list|(
+name|filename
+argument_list|,
+name|rl_completion_quote_character
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|filename
+argument_list|)
+expr_stmt|;
+name|filename
+operator|=
+name|temp
+expr_stmt|;
+block|}
 name|filename_len
 operator|=
 name|strlen
@@ -8569,14 +8713,8 @@ operator|)
 return|;
 block|}
 name|match_list_index
-operator|=
-operator|(
-name|match_list_index
-operator|+
+operator|+=
 name|count
-operator|)
-operator|%
-name|match_list_size
 expr_stmt|;
 if|if
 condition|(
@@ -8586,6 +8724,11 @@ literal|0
 condition|)
 name|match_list_index
 operator|+=
+name|match_list_size
+expr_stmt|;
+else|else
+name|match_list_index
+operator|%=
 name|match_list_size
 expr_stmt|;
 if|if

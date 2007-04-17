@@ -4,7 +4,7 @@ comment|/* input.c -- character input functions for readline. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1994 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1994-2005 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -710,6 +710,10 @@ name|timeout
 decl_stmt|;
 endif|#
 directive|endif
+name|chars_avail
+operator|=
+literal|0
+expr_stmt|;
 name|tty
 operator|=
 name|fileno
@@ -939,6 +943,31 @@ block|}
 endif|#
 directive|endif
 comment|/* O_NDELAY */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+comment|/* Use getch/_kbhit to check for available console input, in the same way      that we read it normally. */
+name|chars_avail
+operator|=
+name|isatty
+argument_list|(
+name|tty
+argument_list|)
+condition|?
+name|_kbhit
+argument_list|()
+else|:
+literal|0
+expr_stmt|;
+name|result
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* If there's nothing available, don't waste time trying to read      something. */
 if|if
 condition|(
@@ -1055,7 +1084,7 @@ expr_stmt|;
 if|if
 condition|(
 name|u
-operator|>
+operator|>=
 literal|0
 condition|)
 name|_keyboard_input_timeout
@@ -1225,6 +1254,27 @@ operator|)
 return|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+if|if
+condition|(
+name|isatty
+argument_list|(
+name|tty
+argument_list|)
+condition|)
+return|return
+operator|(
+name|_kbhit
+argument_list|()
+operator|)
+return|;
 endif|#
 directive|endif
 return|return
@@ -1685,6 +1735,30 @@ condition|(
 literal|1
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+if|if
+condition|(
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|stream
+argument_list|)
+argument_list|)
+condition|)
+return|return
+operator|(
+name|getch
+argument_list|()
+operator|)
+return|;
+endif|#
+directive|endif
 name|result
 operator|=
 name|read
@@ -1827,6 +1901,13 @@ name|EINTR
 condition|)
 return|return
 operator|(
+name|RL_ISSTATE
+argument_list|(
+name|RL_STATE_READCMD
+argument_list|)
+condition|?
+name|READERR
+else|:
 name|EOF
 operator|)
 return|;
@@ -1985,6 +2066,28 @@ elseif|else
 if|if
 condition|(
 name|mbchar_bytes_length
+operator|==
+literal|0
+condition|)
+block|{
+name|mbchar
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* null wide character */
+name|mb_len
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+name|mbchar_bytes_length
 operator|>
 call|(
 name|size_t
@@ -2002,7 +2105,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read a multibyte-character string whose first character is FIRST into    the buffer MB of length MBLEN.  Returns the last character read, which    may be FIRST.  Used by the search functions, among others.  Very similar    to _rl_read_mbchar. */
+comment|/* Read a multibyte-character string whose first character is FIRST into    the buffer MB of length MLEN.  Returns the last character read, which    may be FIRST.  Used by the search functions, among others.  Very similar    to _rl_read_mbchar. */
 end_comment
 
 begin_function
@@ -2013,7 +2116,7 @@ name|first
 parameter_list|,
 name|mb
 parameter_list|,
-name|mblen
+name|mlen
 parameter_list|)
 name|int
 name|first
@@ -2023,7 +2126,7 @@ modifier|*
 name|mb
 decl_stmt|;
 name|int
-name|mblen
+name|mlen
 decl_stmt|;
 block|{
 name|int
@@ -2044,7 +2147,7 @@ name|mb
 argument_list|,
 literal|0
 argument_list|,
-name|mblen
+name|mlen
 argument_list|)
 expr_stmt|;
 for|for
@@ -2055,7 +2158,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|mblen
+name|mlen
 condition|;
 name|i
 operator|++

@@ -72,7 +72,7 @@ name|PREFIX_META_HACK
 end_define
 
 begin_comment
-comment|/* The final, last-ditch effort file name for an init file. */
+comment|/* The next-to-last-ditch effort file name for a user-specific init file. */
 end_comment
 
 begin_define
@@ -80,6 +80,17 @@ define|#
 directive|define
 name|DEFAULT_INPUTRC
 value|"~/.inputrc"
+end_define
+
+begin_comment
+comment|/* The ultimate last-ditch filenname for an init file -- system-wide. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS_INPUTRC
+value|"/etc/inputrc"
 end_define
 
 begin_comment

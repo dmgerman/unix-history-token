@@ -444,6 +444,10 @@ directive|undef
 name|ISPRINT
 end_undef
 
+begin_comment
+comment|/* Beware:  these only work with single-byte ASCII characters. */
+end_comment
+
 begin_define
 define|#
 directive|define
