@@ -415,7 +415,12 @@ name|start
 condition|;
 name|start
 operator|+=
+name|MAX
+argument_list|(
 name|align
+argument_list|,
+literal|1
+argument_list|)
 control|)
 block|{
 name|bus_set_resource
