@@ -253,36 +253,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|struct
-name|mount
-modifier|*
-name|vfs_mount_alloc
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|dvp
-parameter_list|,
-name|struct
-name|vfsconf
-modifier|*
-name|vfsp
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fspath
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|vfs_mountroot_ask
 parameter_list|(
@@ -2050,7 +2020,6 @@ comment|/*  * Allocate and initialize the mount point struct.  */
 end_comment
 
 begin_function
-specifier|static
 name|struct
 name|mount
 modifier|*
