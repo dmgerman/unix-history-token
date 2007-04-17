@@ -3997,6 +3997,9 @@ operator|.
 name|tcps_sc_zonefail
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|sc
 operator|=
 name|TAILQ_LAST
@@ -4008,7 +4011,10 @@ name|sch_bucket
 argument_list|,
 name|sch_head
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+name|NULL
+condition|)
 name|syncache_drop
 argument_list|(
 name|sc
