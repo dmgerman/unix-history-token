@@ -1981,6 +1981,14 @@ parameter_list|()
 value|do { } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|root_mounted
+parameter_list|()
+value|(1)
+end_define
+
 begin_struct
 struct|struct
 name|file
