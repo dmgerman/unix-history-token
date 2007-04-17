@@ -865,7 +865,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmSCao"
+literal|"\f qh?en#sdkriIutHmSCajo"
 decl_stmt|;
 else|#
 directive|else
@@ -874,7 +874,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmSCa"
+literal|"\f qh?en#sdkriIutHmSCaj"
 decl_stmt|;
 endif|#
 directive|endif
@@ -969,13 +969,17 @@ define|#
 directive|define
 name|CMD_showargs
 value|20
+define|#
+directive|define
+name|CMD_jidtog
+value|21
 ifdef|#
 directive|ifdef
 name|ORDER
 define|#
 directive|define
 name|CMD_order
-value|21
+value|22
 endif|#
 directive|endif
 comment|/* set the buffer for stdout */
@@ -1101,6 +1105,12 @@ literal|1
 expr_stmt|;
 name|ps
 operator|.
+name|jail
+operator|=
+name|No
+expr_stmt|;
+name|ps
+operator|.
 name|command
 operator|=
 name|NULL
@@ -1181,7 +1191,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"CSIHabinquvs:d:U:m:o:t"
+literal|"CSIHabijnquvs:d:U:m:o:t"
 argument_list|)
 operator|)
 operator|!=
@@ -1581,6 +1591,19 @@ operator|!
 name|ps
 operator|.
 name|thread
+expr_stmt|;
+break|break;
+case|case
+literal|'j'
+case|:
+name|ps
+operator|.
+name|jail
+operator|=
+operator|!
+name|ps
+operator|.
+name|jail
 expr_stmt|;
 break|break;
 default|default:
@@ -3840,6 +3863,51 @@ block|}
 break|break;
 endif|#
 directive|endif
+case|case
+name|CMD_jidtog
+case|:
+name|ps
+operator|.
+name|jail
+operator|=
+operator|!
+name|ps
+operator|.
+name|jail
+expr_stmt|;
+name|new_message
+argument_list|(
+name|MT_standout
+operator||
+name|MT_delayed
+argument_list|,
+literal|" %sisplaying jail id."
+argument_list|,
+name|ps
+operator|.
+name|jail
+condition|?
+literal|"D"
+else|:
+literal|"Not d"
+argument_list|)
+expr_stmt|;
+name|header_text
+operator|=
+name|format_header
+argument_list|(
+name|uname_field
+argument_list|)
+expr_stmt|;
+name|reset_display
+argument_list|()
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|new_message
 argument_list|(

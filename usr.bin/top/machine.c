@@ -346,7 +346,7 @@ name|char
 name|io_header
 index|[]
 init|=
-literal|"  PID %-*.*s   VCSW  IVCSW   READ  WRITE  FAULT  TOTAL PERCENT COMMAND"
+literal|"  PID%s %-*.*s   VCSW  IVCSW   READ  WRITE  FAULT  TOTAL PERCENT COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -355,7 +355,7 @@ define|#
 directive|define
 name|io_Proc_format
 define|\
-value|"%5d %-*.*s %6ld %6ld %6ld %6ld %6ld %6ld %6.2f%% %.*s"
+value|"%5d%s %-*.*s %6ld %6ld %6ld %6ld %6ld %6ld %6.2f%% %.*s"
 end_define
 
 begin_decl_stmt
@@ -364,7 +364,7 @@ name|char
 name|smp_header_thr
 index|[]
 init|=
-literal|"  PID %-*.*s  THR PRI NICE   SIZE    RES STATE  C   TIME %6s COMMAND"
+literal|"  PID%s %-*.*s  THR PRI NICE   SIZE    RES STATE  C   TIME %6s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -374,7 +374,7 @@ name|char
 name|smp_header
 index|[]
 init|=
-literal|"  PID %-*.*s "
+literal|"  PID%s %-*.*s "
 literal|"PRI NICE   SIZE    RES STATE  C   TIME %6s COMMAND"
 decl_stmt|;
 end_decl_stmt
@@ -384,7 +384,7 @@ define|#
 directive|define
 name|smp_Proc_format
 define|\
-value|"%5d %-*.*s %s%3d %4s%7s %6s %-6.6s %1x%7s %5.2f%% %.*s"
+value|"%5d%s %-*.*s %s%3d %4s%7s %6s %-6.6s %1x%7s %5.2f%% %.*s"
 end_define
 
 begin_decl_stmt
@@ -393,7 +393,7 @@ name|char
 name|up_header_thr
 index|[]
 init|=
-literal|"  PID %-*.*s  THR PRI NICE   SIZE    RES STATE    TIME %6s COMMAND"
+literal|"  PID%s %-*.*s  THR PRI NICE   SIZE    RES STATE    TIME %6s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,7 +403,7 @@ name|char
 name|up_header
 index|[]
 init|=
-literal|"  PID %-*.*s "
+literal|"  PID%s %-*.*s "
 literal|"PRI NICE   SIZE    RES STATE    TIME %6s COMMAND"
 decl_stmt|;
 end_decl_stmt
@@ -413,7 +413,7 @@ define|#
 directive|define
 name|up_Proc_format
 define|\
-value|"%5d %-*.*s %s%3d %4s%7s %6s %-6.6s%.0d%7s %5.2f%% %.*s"
+value|"%5d%s %-*.*s %s%3d %4s%7s %6s %-6.6s%.0d%7s %5.2f%% %.*s"
 end_define
 
 begin_comment
@@ -861,6 +861,8 @@ literal|"vcsw"
 block|,
 literal|"ivcsw"
 block|,
+literal|"jid"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -870,6 +872,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+specifier|static
+name|int
+name|compare_jid
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1277,6 +1297,14 @@ argument_list|)
 argument_list|,
 name|prehead
 argument_list|,
+name|ps
+operator|.
+name|jail
+condition|?
+literal|" JID"
+else|:
+literal|""
+argument_list|,
 name|namelength
 argument_list|,
 name|namelength
@@ -1310,6 +1338,14 @@ name|Header
 argument_list|)
 argument_list|,
 name|prehead
+argument_list|,
+name|ps
+operator|.
+name|jail
+condition|?
+literal|" JID"
+else|:
+literal|""
 argument_list|,
 name|namelength
 argument_list|,
@@ -3112,6 +3148,11 @@ name|thr_buf
 index|[
 literal|6
 index|]
+decl_stmt|,
+name|jid_buf
+index|[
+literal|6
+index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -3773,6 +3814,45 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ps
+operator|.
+name|jail
+operator|==
+literal|0
+condition|)
+name|jid_buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+else|else
+name|snprintf
+argument_list|(
+name|jid_buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|jid_buf
+argument_list|)
+argument_list|,
+literal|" %*d"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|jid_buf
+argument_list|)
+operator|-
+literal|3
+argument_list|,
+name|pp
+operator|->
+name|ki_jid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|displaymode
 operator|==
 name|DISP_IO
@@ -3930,6 +4010,8 @@ name|pp
 operator|->
 name|ki_pid
 argument_list|,
+name|jid_buf
+argument_list|,
 name|namelength
 argument_list|,
 name|namelength
@@ -4064,6 +4146,8 @@ argument_list|,
 name|pp
 operator|->
 name|ki_pid
+argument_list|,
+name|jid_buf
 argument_list|,
 name|namelength
 argument_list|,
@@ -4673,6 +4757,18 @@ parameter_list|)
 value|do { \ 	long diff = (long)PROCSIZE((b)) - (long)PROCSIZE((a)); \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ORDERKEY_JID
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|do { \ 	int diff = (int)(b)->ki_jid - (int)(a)->ki_jid; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
+end_define
+
 begin_comment
 comment|/* compare_cpu - the comparison function for sorting by cpu percentage */
 end_comment
@@ -4873,6 +4969,8 @@ operator|,
 function_decl|compare_vcsw
 operator|,
 function_decl|compare_ivcsw
+operator|,
+function_decl|compare_jid
 operator|,
 function_decl|NULL
 end_function_decl
@@ -5304,6 +5402,111 @@ operator|)
 name|arg2
 decl_stmt|;
 name|ORDERKEY_THREADS
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_PCTCPU
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_CPTICKS
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_STATE
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_PRIO
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_RSSIZE
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_MEM
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* compare_jid - the comparison function for sorting by jid */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|compare_jid
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|arg2
+parameter_list|)
+block|{
+name|struct
+name|kinfo_proc
+modifier|*
+name|p1
+init|=
+operator|*
+operator|(
+expr|struct
+name|kinfo_proc
+operator|*
+operator|*
+operator|)
+name|arg1
+decl_stmt|;
+name|struct
+name|kinfo_proc
+modifier|*
+name|p2
+init|=
+operator|*
+operator|(
+expr|struct
+name|kinfo_proc
+operator|*
+operator|*
+operator|)
+name|arg2
+decl_stmt|;
+name|ORDERKEY_JID
 argument_list|(
 name|p1
 argument_list|,
