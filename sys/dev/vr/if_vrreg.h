@@ -2174,7 +2174,7 @@ begin_define
 define|#
 directive|define
 name|VR_TX_LIST_CNT
-value|128
+value|256
 end_define
 
 begin_define
@@ -2322,6 +2322,9 @@ name|vr_vid
 decl_stmt|;
 name|u_int16_t
 name|vr_did
+decl_stmt|;
+name|int
+name|vr_quirks
 decl_stmt|;
 name|char
 modifier|*
@@ -2486,6 +2489,9 @@ name|int
 name|suspended
 decl_stmt|;
 comment|/* if 1, sleeping/detaching */
+name|int
+name|vr_quirks
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
