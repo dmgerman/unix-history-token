@@ -188,7 +188,7 @@ name|ICEE_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_lock_spin(&(_sc)->sc_mtx)
+value|mtx_lock(&(_sc)->sc_mtx)
 end_define
 
 begin_define
@@ -198,7 +198,7 @@ name|ICEE_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_unlock_spin(&(_sc)->sc_mtx)
+value|mtx_unlock(&(_sc)->sc_mtx)
 end_define
 
 begin_define
@@ -209,7 +209,7 @@ parameter_list|(
 name|_sc
 parameter_list|)
 define|\
-value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->sc_dev), "icee", MTX_SPIN)
+value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->sc_dev), "icee", MTX_DEF)
 end_define
 
 begin_define
