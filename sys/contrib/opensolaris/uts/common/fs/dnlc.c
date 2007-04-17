@@ -877,12 +877,6 @@ literal|1
 condition|)
 block|{
 comment|/* calculate a reasonable size for the low water */
-if|#
-directive|if
-literal|0
-block|dnlc_nentries_low_water = 4 * (v.v_proc + maxusers) + 320;
-else|#
-directive|else
 name|dnlc_nentries_low_water
 operator|=
 operator|(
@@ -893,8 +887,6 @@ operator|)
 operator|/
 literal|100
 expr_stmt|;
-endif|#
-directive|endif
 name|ncsize
 operator|=
 name|dnlc_nentries_low_water
