@@ -409,7 +409,7 @@ begin_function_decl
 name|void
 function_decl|(
 modifier|*
-name|trunk_linkstate_p
+name|lagg_linkstate_p
 function_decl|)
 parameter_list|(
 name|struct
@@ -6478,23 +6478,23 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_trunk
+name|if_lagg
 condition|)
 block|{
 name|KASSERT
 argument_list|(
-name|trunk_linkstate_p
+name|lagg_linkstate_p
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"if_trunk not loaded!"
+literal|"if_lagg not loaded!"
 operator|)
 argument_list|)
 expr_stmt|;
 call|(
 modifier|*
-name|trunk_linkstate_p
+name|lagg_linkstate_p
 call|)
 argument_list|(
 name|ifp

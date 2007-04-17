@@ -473,9 +473,9 @@ modifier|*
 name|lp_lsc
 decl_stmt|;
 name|struct
-name|trunk_port
+name|lagg_port
 modifier|*
-name|lp_trunk
+name|lp_lagg
 decl_stmt|;
 name|struct
 name|ifnet
@@ -582,9 +582,9 @@ struct|struct
 name|lacp_softc
 block|{
 name|struct
-name|trunk_softc
+name|lagg_softc
 modifier|*
-name|lsc_trunk
+name|lsc_lagg
 decl_stmt|;
 name|struct
 name|lacp_aggregator
@@ -784,9 +784,9 @@ define|#
 directive|define
 name|LACP_PORT
 parameter_list|(
-name|_tp
+name|_lp
 parameter_list|)
-value|((struct lacp_port *)(_tp)->tp_psc)
+value|((struct lacp_port *)(_lp)->lp_psc)
 end_define
 
 begin_define
@@ -794,9 +794,9 @@ define|#
 directive|define
 name|LACP_SOFTC
 parameter_list|(
-name|_tr
+name|_sc
 parameter_list|)
-value|((struct lacp_softc *)(_tr)->tr_psc)
+value|((struct lacp_softc *)(_sc)->sc_psc)
 end_define
 
 begin_function_decl
@@ -804,7 +804,7 @@ name|int
 name|lacp_input
 parameter_list|(
 name|struct
-name|trunk_port
+name|lagg_port
 modifier|*
 parameter_list|,
 name|struct
@@ -819,7 +819,7 @@ name|int
 name|lacp_marker_input
 parameter_list|(
 name|struct
-name|trunk_port
+name|lagg_port
 modifier|*
 parameter_list|,
 name|struct
@@ -831,12 +831,12 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|trunk_port
+name|lagg_port
 modifier|*
 name|lacp_select_tx_port
 parameter_list|(
 name|struct
-name|trunk_softc
+name|lagg_softc
 modifier|*
 parameter_list|,
 name|struct
@@ -851,7 +851,7 @@ name|int
 name|lacp_attach
 parameter_list|(
 name|struct
-name|trunk_softc
+name|lagg_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -862,7 +862,7 @@ name|int
 name|lacp_detach
 parameter_list|(
 name|struct
-name|trunk_softc
+name|lagg_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -873,7 +873,7 @@ name|void
 name|lacp_init
 parameter_list|(
 name|struct
-name|trunk_softc
+name|lagg_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -884,7 +884,7 @@ name|void
 name|lacp_stop
 parameter_list|(
 name|struct
-name|trunk_softc
+name|lagg_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -895,7 +895,7 @@ name|int
 name|lacp_port_create
 parameter_list|(
 name|struct
-name|trunk_port
+name|lagg_port
 modifier|*
 parameter_list|)
 function_decl|;
@@ -906,7 +906,7 @@ name|void
 name|lacp_port_destroy
 parameter_list|(
 name|struct
-name|trunk_port
+name|lagg_port
 modifier|*
 parameter_list|)
 function_decl|;
@@ -917,7 +917,7 @@ name|void
 name|lacp_linkstate
 parameter_list|(
 name|struct
-name|trunk_port
+name|lagg_port
 modifier|*
 parameter_list|)
 function_decl|;
@@ -928,7 +928,7 @@ name|int
 name|lacp_port_isactive
 parameter_list|(
 name|struct
-name|trunk_port
+name|lagg_port
 modifier|*
 parameter_list|)
 function_decl|;

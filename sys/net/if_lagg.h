@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NET_TRUNK_H
+name|_NET_LAGG_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NET_TRUNK_H
+name|_NET_LAGG_H
 end_define
 
 begin_comment
@@ -26,7 +26,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_MAX_PORTS
+name|LAGG_MAX_PORTS
 value|32
 end_define
 
@@ -37,7 +37,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_MAX_NAMESIZE
+name|LAGG_MAX_NAMESIZE
 value|32
 end_define
 
@@ -48,12 +48,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_MAX_STACKING
+name|LAGG_MAX_STACKING
 value|4
 end_define
 
 begin_comment
-comment|/* maximum number of stacked trunks */
+comment|/* maximum number of stacked laggs */
 end_comment
 
 begin_comment
@@ -63,7 +63,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_PORT_SLAVE
+name|LAGG_PORT_SLAVE
 value|0x00000000
 end_define
 
@@ -74,7 +74,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_PORT_MASTER
+name|LAGG_PORT_MASTER
 value|0x00000001
 end_define
 
@@ -85,18 +85,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_PORT_STACK
+name|LAGG_PORT_STACK
 value|0x00000002
 end_define
 
 begin_comment
-comment|/* stacked trunk port */
+comment|/* stacked lagg port */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TRUNK_PORT_ACTIVE
+name|LAGG_PORT_ACTIVE
 value|0x00000004
 end_define
 
@@ -107,7 +107,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_PORT_COLLECTING
+name|LAGG_PORT_COLLECTING
 value|0x00000008
 end_define
 
@@ -118,7 +118,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_PORT_DISTRIBUTING
+name|LAGG_PORT_DISTRIBUTING
 value|0x00000010
 end_define
 
@@ -129,7 +129,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_PORT_GLOBAL
+name|LAGG_PORT_GLOBAL
 value|0x80000000
 end_define
 
@@ -140,29 +140,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_PORT_BITS
+name|LAGG_PORT_BITS
 value|"\20\01MASTER\02STACK\03ACTIVE\04COLLECTING" \ 				  "\05DISTRIBUTING"
 end_define
 
 begin_comment
-comment|/* Supported trunk PROTOs */
+comment|/* Supported lagg PROTOs */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TRUNK_PROTO_NONE
+name|LAGG_PROTO_NONE
 value|0
 end_define
 
 begin_comment
-comment|/* no trunk protocol defined */
+comment|/* no lagg protocol defined */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TRUNK_PROTO_ROUNDROBIN
+name|LAGG_PROTO_ROUNDROBIN
 value|1
 end_define
 
@@ -173,7 +173,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_PROTO_FAILOVER
+name|LAGG_PROTO_FAILOVER
 value|2
 end_define
 
@@ -184,7 +184,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_PROTO_LOADBALANCE
+name|LAGG_PROTO_LOADBALANCE
 value|3
 end_define
 
@@ -195,7 +195,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_PROTO_LACP
+name|LAGG_PROTO_LACP
 value|4
 end_define
 
@@ -206,7 +206,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_PROTO_ETHERCHANNEL
+name|LAGG_PROTO_ETHERCHANNEL
 value|5
 end_define
 
@@ -217,13 +217,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_PROTO_MAX
+name|LAGG_PROTO_MAX
 value|6
 end_define
 
 begin_struct
 struct|struct
-name|trunk_protos
+name|lagg_protos
 block|{
 specifier|const
 name|char
@@ -240,28 +240,28 @@ end_struct
 begin_define
 define|#
 directive|define
-name|TRUNK_PROTO_DEFAULT
-value|TRUNK_PROTO_FAILOVER
+name|LAGG_PROTO_DEFAULT
+value|LAGG_PROTO_FAILOVER
 end_define
 
 begin_define
 define|#
 directive|define
-name|TRUNK_PROTOS
-value|{						\ 	{ "failover",		TRUNK_PROTO_FAILOVER },			\ 	{ "fec",		TRUNK_PROTO_ETHERCHANNEL },		\ 	{ "lacp",		TRUNK_PROTO_LACP },			\ 	{ "loadbalance",	TRUNK_PROTO_LOADBALANCE },		\ 	{ "roundrobin",		TRUNK_PROTO_ROUNDROBIN },		\ 	{ "none",		TRUNK_PROTO_NONE },			\ 	{ "default",		TRUNK_PROTO_DEFAULT }			\ }
+name|LAGG_PROTOS
+value|{						\ 	{ "failover",		LAGG_PROTO_FAILOVER },			\ 	{ "fec",		LAGG_PROTO_ETHERCHANNEL },		\ 	{ "lacp",		LAGG_PROTO_LACP },			\ 	{ "loadbalance",	LAGG_PROTO_LOADBALANCE },		\ 	{ "roundrobin",		LAGG_PROTO_ROUNDROBIN },		\ 	{ "none",		LAGG_PROTO_NONE },			\ 	{ "default",		LAGG_PROTO_DEFAULT }			\ }
 end_define
 
 begin_comment
-comment|/*  * Trunk ioctls.  */
+comment|/*  * lagg ioctls.  */
 end_comment
 
 begin_comment
-comment|/* Trunk port settings */
+comment|/* lagg port settings */
 end_comment
 
 begin_struct
 struct|struct
-name|trunk_reqport
+name|lagg_reqport
 block|{
 name|char
 name|rp_ifname
@@ -269,7 +269,7 @@ index|[
 name|IFNAMSIZ
 index|]
 decl_stmt|;
-comment|/* name of the trunk */
+comment|/* name of the lagg */
 name|char
 name|rp_portname
 index|[
@@ -292,31 +292,31 @@ end_struct
 begin_define
 define|#
 directive|define
-name|SIOCGTRUNKPORT
-value|_IOWR('i', 140, struct trunk_reqport)
+name|SIOCGLAGGPORT
+value|_IOWR('i', 140, struct lagg_reqport)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SIOCSTRUNKPORT
-value|_IOW('i', 141, struct trunk_reqport)
+name|SIOCSLAGGPORT
+value|_IOW('i', 141, struct lagg_reqport)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SIOCSTRUNKDELPORT
-value|_IOW('i', 142, struct trunk_reqport)
+name|SIOCSLAGGDELPORT
+value|_IOW('i', 142, struct lagg_reqport)
 end_define
 
 begin_comment
-comment|/* Trunk, ports and options */
+comment|/* lagg, ports and options */
 end_comment
 
 begin_struct
 struct|struct
-name|trunk_reqall
+name|lagg_reqall
 block|{
 name|char
 name|ra_ifname
@@ -324,17 +324,17 @@ index|[
 name|IFNAMSIZ
 index|]
 decl_stmt|;
-comment|/* name of the trunk */
+comment|/* name of the lagg */
 name|u_int
 name|ra_proto
 decl_stmt|;
-comment|/* trunk protocol */
+comment|/* lagg protocol */
 name|size_t
 name|ra_size
 decl_stmt|;
 comment|/* size of buffer */
 name|struct
-name|trunk_reqport
+name|lagg_reqport
 modifier|*
 name|ra_port
 decl_stmt|;
@@ -350,15 +350,15 @@ end_struct
 begin_define
 define|#
 directive|define
-name|SIOCGTRUNK
-value|_IOWR('i', 143, struct trunk_reqall)
+name|SIOCGLAGG
+value|_IOWR('i', 143, struct lagg_reqall)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SIOCSTRUNK
-value|_IOW('i', 144, struct trunk_reqall)
+name|SIOCSLAGG
+value|_IOW('i', 144, struct lagg_reqall)
 end_define
 
 begin_ifdef
@@ -374,8 +374,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|tp_ifname
-value|tp_ifp->if_xname
+name|lp_ifname
+value|lp_ifp->if_xname
 end_define
 
 begin_comment
@@ -385,8 +385,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|tp_link_state
-value|tp_ifp->if_link_state
+name|lp_link_state
+value|lp_ifp->if_link_state
 end_define
 
 begin_comment
@@ -396,8 +396,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|tp_capabilities
-value|tp_ifp->if_capabilities
+name|lp_capabilities
+value|lp_ifp->if_capabilities
 end_define
 
 begin_comment
@@ -407,11 +407,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_PORTACTIVE
+name|LAGG_PORTACTIVE
 parameter_list|(
 name|_tp
 parameter_list|)
-value|(					\ 	((_tp)->tp_link_state == LINK_STATE_UP)&&			\ 	((_tp)->tp_ifp->if_flags& IFF_UP)					\ )
+value|(					\ 	((_tp)->lp_link_state == LINK_STATE_UP)&&			\ 	((_tp)->lp_ifp->if_flags& IFF_UP)					\ )
 end_define
 
 begin_define
@@ -423,7 +423,7 @@ end_define
 
 begin_struct
 struct|struct
-name|trunk_ifreq
+name|lagg_ifreq
 block|{
 union|union
 block|{
@@ -456,8 +456,8 @@ end_struct
 begin_define
 define|#
 directive|define
-name|tr_ifflags
-value|tr_ifp->if_flags
+name|sc_ifflags
+value|sc_ifp->if_flags
 end_define
 
 begin_comment
@@ -467,8 +467,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|tr_ifname
-value|tr_ifp->if_xname
+name|sc_ifname
+value|sc_ifp->if_xname
 end_define
 
 begin_comment
@@ -478,8 +478,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|tr_capabilities
-value|tr_ifp->if_capabilities
+name|sc_capabilities
+value|sc_ifp->if_capabilities
 end_define
 
 begin_comment
@@ -489,7 +489,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFCAP_TRUNK_MASK
+name|IFCAP_LAGG_MASK
 value|0xffff0000
 end_define
 
@@ -500,7 +500,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFCAP_TRUNK_FULLDUPLEX
+name|IFCAP_LAGG_FULLDUPLEX
 value|0x00010000
 end_define
 
@@ -515,23 +515,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUNK_LB_MAXKEYS
+name|LAGG_LB_MAXKEYS
 value|8
 end_define
 
 begin_struct
 struct|struct
-name|trunk_lb
+name|lagg_lb
 block|{
 name|u_int32_t
 name|lb_key
 decl_stmt|;
 name|struct
-name|trunk_port
+name|lagg_port
 modifier|*
 name|lb_ports
 index|[
-name|TRUNK_MAX_PORTS
+name|LAGG_MAX_PORTS
 index|]
 decl_stmt|;
 block|}
@@ -540,7 +540,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|trunk_mc
+name|lagg_mc
 block|{
 union|union
 block|{
@@ -558,7 +558,7 @@ name|mc_addr
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|trunk_mc
+argument|lagg_mc
 argument_list|)
 name|mc_entries
 expr_stmt|;
@@ -568,85 +568,85 @@ end_struct
 
 begin_struct
 struct|struct
-name|trunk_softc
+name|lagg_softc
 block|{
 name|struct
 name|ifnet
 modifier|*
-name|tr_ifp
+name|sc_ifp
 decl_stmt|;
 comment|/* virtual interface */
 name|struct
 name|mtx
-name|tr_mtx
+name|sc_mtx
 decl_stmt|;
 name|int
-name|tr_proto
+name|sc_proto
 decl_stmt|;
-comment|/* trunk protocol */
+comment|/* lagg protocol */
 name|u_int
-name|tr_count
+name|sc_count
 decl_stmt|;
 comment|/* number of ports */
 name|struct
-name|trunk_port
+name|lagg_port
 modifier|*
-name|tr_primary
+name|sc_primary
 decl_stmt|;
 comment|/* primary port */
 name|struct
 name|ifmedia
-name|tr_media
+name|sc_media
 decl_stmt|;
 comment|/* media config */
 name|caddr_t
-name|tr_psc
+name|sc_psc
 decl_stmt|;
 comment|/* protocol data */
 name|SLIST_HEAD
 argument_list|(
 argument|__tplhd
 argument_list|,
-argument|trunk_port
+argument|lagg_port
 argument_list|)
-name|tr_ports
+name|sc_ports
 expr_stmt|;
 comment|/* list of interfaces */
 name|SLIST_ENTRY
 argument_list|(
-argument|trunk_softc
+argument|lagg_softc
 argument_list|)
-name|tr_entries
+name|sc_entries
 expr_stmt|;
 name|SLIST_HEAD
 argument_list|(
 argument|__mclhd
 argument_list|,
-argument|trunk_mc
+argument|lagg_mc
 argument_list|)
-name|tr_mc_head
+name|sc_mc_head
 expr_stmt|;
 comment|/* multicast addresses */
-comment|/* Trunk protocol callbacks */
+comment|/* lagg protocol callbacks */
 name|int
 function_decl|(
 modifier|*
-name|tr_detach
+name|sc_detach
 function_decl|)
 parameter_list|(
 name|struct
-name|trunk_softc
+name|lagg_softc
 modifier|*
 parameter_list|)
 function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|tr_start
+name|sc_start
 function_decl|)
 parameter_list|(
 name|struct
-name|trunk_softc
+name|lagg_softc
 modifier|*
 parameter_list|,
 name|struct
@@ -659,15 +659,15 @@ name|mbuf
 modifier|*
 function_decl|(
 modifier|*
-name|tr_input
+name|sc_input
 function_decl|)
 parameter_list|(
 name|struct
-name|trunk_softc
+name|lagg_softc
 modifier|*
 parameter_list|,
 name|struct
-name|trunk_port
+name|lagg_port
 modifier|*
 parameter_list|,
 name|struct
@@ -678,66 +678,66 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|tr_port_create
+name|sc_port_create
 function_decl|)
 parameter_list|(
 name|struct
-name|trunk_port
+name|lagg_port
 modifier|*
 parameter_list|)
 function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|tr_port_destroy
+name|sc_port_destroy
 function_decl|)
 parameter_list|(
 name|struct
-name|trunk_port
+name|lagg_port
 modifier|*
 parameter_list|)
 function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|tr_linkstate
+name|sc_linkstate
 function_decl|)
 parameter_list|(
 name|struct
-name|trunk_port
+name|lagg_port
 modifier|*
 parameter_list|)
 function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|tr_init
+name|sc_init
 function_decl|)
 parameter_list|(
 name|struct
-name|trunk_softc
+name|lagg_softc
 modifier|*
 parameter_list|)
 function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|tr_stop
+name|sc_stop
 function_decl|)
 parameter_list|(
 name|struct
-name|trunk_softc
+name|lagg_softc
 modifier|*
 parameter_list|)
 function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|tr_lladdr
+name|sc_lladdr
 function_decl|)
 parameter_list|(
 name|struct
-name|trunk_softc
+name|lagg_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -747,40 +747,40 @@ end_struct
 
 begin_struct
 struct|struct
-name|trunk_port
+name|lagg_port
 block|{
 name|struct
 name|ifnet
 modifier|*
-name|tp_ifp
+name|lp_ifp
 decl_stmt|;
 comment|/* physical interface */
 name|struct
-name|trunk_softc
+name|lagg_softc
 modifier|*
-name|tp_trunk
+name|lp_lagg
 decl_stmt|;
-comment|/* parent trunk */
+comment|/* parent lagg */
 name|uint8_t
-name|tp_lladdr
+name|lp_lladdr
 index|[
 name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 name|u_char
-name|tp_iftype
+name|lp_iftype
 decl_stmt|;
 comment|/* interface type */
 name|uint32_t
-name|tp_prio
+name|lp_prio
 decl_stmt|;
 comment|/* port priority */
 name|uint32_t
-name|tp_flags
+name|lp_flags
 decl_stmt|;
 comment|/* port flags */
 name|int
-name|tp_ifflags
+name|lp_ifflags
 decl_stmt|;
 comment|/* saved ifp flags */
 name|void
@@ -789,14 +789,14 @@ name|lh_cookie
 decl_stmt|;
 comment|/* if state hook */
 name|caddr_t
-name|tp_psc
+name|lp_psc
 decl_stmt|;
 comment|/* protocol data */
 comment|/* Redirected callbacks */
 name|int
 function_decl|(
 modifier|*
-name|tp_ioctl
+name|lp_ioctl
 function_decl|)
 parameter_list|(
 name|struct
@@ -811,7 +811,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|tp_output
+name|lp_output
 function_decl|)
 parameter_list|(
 name|struct
@@ -833,9 +833,9 @@ parameter_list|)
 function_decl|;
 name|SLIST_ENTRY
 argument_list|(
-argument|trunk_port
+argument|lagg_port
 argument_list|)
-name|tp_entries
+name|lp_entries
 expr_stmt|;
 block|}
 struct|;
@@ -844,61 +844,61 @@ end_struct
 begin_define
 define|#
 directive|define
-name|TRUNK_LOCK_INIT
+name|LAGG_LOCK_INIT
 parameter_list|(
 name|_tr
 parameter_list|)
-value|mtx_init(&(_tr)->tr_mtx, "if_trunk", NULL, \ 				    MTX_DEF)
+value|mtx_init(&(_tr)->sc_mtx, "if_lagg", NULL, \ 				    MTX_DEF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TRUNK_LOCK_DESTROY
+name|LAGG_LOCK_DESTROY
 parameter_list|(
 name|_tr
 parameter_list|)
-value|mtx_destroy(&(_tr)->tr_mtx)
+value|mtx_destroy(&(_tr)->sc_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TRUNK_LOCK
+name|LAGG_LOCK
 parameter_list|(
 name|_tr
 parameter_list|)
-value|mtx_lock(&(_tr)->tr_mtx)
+value|mtx_lock(&(_tr)->sc_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TRUNK_UNLOCK
+name|LAGG_UNLOCK
 parameter_list|(
 name|_tr
 parameter_list|)
-value|mtx_unlock(&(_tr)->tr_mtx)
+value|mtx_unlock(&(_tr)->sc_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TRUNK_LOCKED
+name|LAGG_LOCKED
 parameter_list|(
 name|_tr
 parameter_list|)
-value|mtx_owned(&(_tr)->tr_mtx)
+value|mtx_owned(&(_tr)->sc_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TRUNK_LOCK_ASSERT
+name|LAGG_LOCK_ASSERT
 parameter_list|(
 name|_tr
 parameter_list|)
-value|mtx_assert(&(_tr)->tr_mtx, MA_OWNED)
+value|mtx_assert(&(_tr)->sc_mtx, MA_OWNED)
 end_define
 
 begin_function_decl
@@ -908,7 +908,7 @@ name|mbuf
 modifier|*
 function_decl|(
 modifier|*
-name|trunk_input_p
+name|lagg_input_p
 function_decl|)
 parameter_list|(
 name|struct
@@ -927,7 +927,7 @@ specifier|extern
 name|void
 function_decl|(
 modifier|*
-name|trunk_linkstate_p
+name|lagg_linkstate_p
 function_decl|)
 parameter_list|(
 name|struct
@@ -941,7 +941,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|trunk_enqueue
+name|lagg_enqueue
 parameter_list|(
 name|struct
 name|ifnet
@@ -956,7 +956,7 @@ end_function_decl
 
 begin_function_decl
 name|uint32_t
-name|trunk_hashmbuf
+name|lagg_hashmbuf
 parameter_list|(
 name|struct
 name|mbuf
@@ -982,7 +982,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _NET_TRUNK_H */
+comment|/* _NET_LAGG_H */
 end_comment
 
 end_unit

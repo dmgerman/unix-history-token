@@ -1806,12 +1806,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_NET_TRUNK
+name|PRIV_NET_LAGG
 value|415
 end_define
 
 begin_comment
-comment|/* Administer trunk. */
+comment|/* Administer lagg interface. */
 end_comment
 
 begin_comment

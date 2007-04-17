@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_trunk.h>
+file|<net/if_lagg.h>
 end_include
 
 begin_include
@@ -140,7 +140,7 @@ end_include
 begin_function
 specifier|static
 name|void
-name|settrunkport
+name|setlaggport
 parameter_list|(
 specifier|const
 name|char
@@ -161,7 +161,7 @@ name|afp
 parameter_list|)
 block|{
 name|struct
-name|trunk_reqport
+name|lagg_reqport
 name|rp
 decl_stmt|;
 name|bzero
@@ -213,7 +213,7 @@ name|ioctl
 argument_list|(
 name|s
 argument_list|,
-name|SIOCSTRUNKPORT
+name|SIOCSLAGGPORT
 argument_list|,
 operator|&
 name|rp
@@ -223,7 +223,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"SIOCSTRUNKPORT"
+literal|"SIOCSLAGGPORT"
 argument_list|)
 expr_stmt|;
 block|}
@@ -232,7 +232,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|unsettrunkport
+name|unsetlaggport
 parameter_list|(
 specifier|const
 name|char
@@ -253,7 +253,7 @@ name|afp
 parameter_list|)
 block|{
 name|struct
-name|trunk_reqport
+name|lagg_reqport
 name|rp
 decl_stmt|;
 name|bzero
@@ -305,7 +305,7 @@ name|ioctl
 argument_list|(
 name|s
 argument_list|,
-name|SIOCSTRUNKDELPORT
+name|SIOCSLAGGDELPORT
 argument_list|,
 operator|&
 name|rp
@@ -315,7 +315,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"SIOCSTRUNKDELPORT"
+literal|"SIOCSLAGGDELPORT"
 argument_list|)
 expr_stmt|;
 block|}
@@ -324,7 +324,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|settrunkproto
+name|setlaggproto
 parameter_list|(
 specifier|const
 name|char
@@ -345,14 +345,14 @@ name|afp
 parameter_list|)
 block|{
 name|struct
-name|trunk_protos
+name|lagg_protos
 name|tpr
 index|[]
 init|=
-name|TRUNK_PROTOS
+name|LAGG_PROTOS
 decl_stmt|;
 name|struct
-name|trunk_reqall
+name|lagg_reqall
 name|ra
 decl_stmt|;
 name|int
@@ -373,7 +373,7 @@ name|ra
 operator|.
 name|ra_proto
 operator|=
-name|TRUNK_PROTO_MAX
+name|LAGG_PROTO_MAX
 expr_stmt|;
 for|for
 control|(
@@ -439,13 +439,13 @@ name|ra
 operator|.
 name|ra_proto
 operator|==
-name|TRUNK_PROTO_MAX
+name|LAGG_PROTO_MAX
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Invalid trunk protocol: %s"
+literal|"Invalid aggregation protocol: %s"
 argument_list|,
 name|val
 argument_list|)
@@ -472,7 +472,7 @@ name|ioctl
 argument_list|(
 name|s
 argument_list|,
-name|SIOCSTRUNK
+name|SIOCSLAGG
 argument_list|,
 operator|&
 name|ra
@@ -484,7 +484,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"SIOCSTRUNK"
+literal|"SIOCSLAGG"
 argument_list|)
 expr_stmt|;
 block|}
@@ -493,30 +493,30 @@ end_function
 begin_function
 specifier|static
 name|void
-name|trunk_status
+name|lagg_status
 parameter_list|(
 name|int
 name|s
 parameter_list|)
 block|{
 name|struct
-name|trunk_protos
+name|lagg_protos
 name|tpr
 index|[]
 init|=
-name|TRUNK_PROTOS
+name|LAGG_PROTOS
 decl_stmt|;
 name|struct
-name|trunk_reqport
+name|lagg_reqport
 name|rp
 decl_stmt|,
 name|rpbuf
 index|[
-name|TRUNK_MAX_PORTS
+name|LAGG_MAX_PORTS
 index|]
 decl_stmt|;
 name|struct
-name|trunk_reqall
+name|lagg_reqall
 name|ra
 decl_stmt|;
 specifier|const
@@ -593,7 +593,7 @@ name|ioctl
 argument_list|(
 name|s
 argument_list|,
-name|SIOCGTRUNKPORT
+name|SIOCGLAGGPORT
 argument_list|,
 operator|&
 name|rp
@@ -642,7 +642,7 @@ name|ioctl
 argument_list|(
 name|s
 argument_list|,
-name|SIOCGTRUNK
+name|SIOCGLAGG
 argument_list|,
 operator|&
 name|ra
@@ -706,7 +706,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"\ttrunk: trunkproto %s"
+literal|"\tlagg: laggproto %s"
 argument_list|,
 name|proto
 argument_list|)
@@ -717,7 +717,7 @@ name|isport
 condition|)
 name|printf
 argument_list|(
-literal|" trunkdev %s"
+literal|" laggdev %s"
 argument_list|,
 name|rp
 operator|.
@@ -747,7 +747,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"\t\ttrunkport %s "
+literal|"\t\tlaggport %s "
 argument_list|,
 name|rpbuf
 index|[
@@ -768,7 +768,7 @@ index|]
 operator|.
 name|rp_flags
 argument_list|,
-name|TRUNK_PORT_BITS
+name|LAGG_PORT_BITS
 argument_list|)
 expr_stmt|;
 name|putchar
@@ -785,7 +785,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\tsupported trunk protocols:\n"
+literal|"\tsupported aggregation protocols:\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -816,7 +816,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\t\ttrunkproto %s\n"
+literal|"\t\tlaggproto %s\n"
 argument_list|,
 name|tpr
 index|[
@@ -835,7 +835,7 @@ name|isport
 condition|)
 name|printf
 argument_list|(
-literal|"\ttrunk: trunkdev %s\n"
+literal|"\tlagg: laggdev %s\n"
 argument_list|,
 name|rp
 operator|.
@@ -849,29 +849,29 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|cmd
-name|trunk_cmds
+name|lagg_cmds
 index|[]
 init|=
 block|{
 name|DEF_CMD_ARG
 argument_list|(
-literal|"trunkport"
+literal|"laggport"
 argument_list|,
-name|settrunkport
+name|setlaggport
 argument_list|)
 block|,
 name|DEF_CMD_ARG
 argument_list|(
-literal|"-trunkport"
+literal|"-laggport"
 argument_list|,
-name|unsettrunkport
+name|unsetlaggport
 argument_list|)
 block|,
 name|DEF_CMD_ARG
 argument_list|(
-literal|"trunkproto"
+literal|"laggproto"
 argument_list|,
-name|settrunkproto
+name|setlaggproto
 argument_list|)
 block|, }
 decl_stmt|;
@@ -881,13 +881,13 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|afswtch
-name|af_trunk
+name|af_lagg
 init|=
 block|{
 operator|.
 name|af_name
 operator|=
-literal|"af_trunk"
+literal|"af_lagg"
 block|,
 operator|.
 name|af_af
@@ -897,7 +897,7 @@ block|,
 operator|.
 name|af_other_status
 operator|=
-name|trunk_status
+name|lagg_status
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -906,7 +906,7 @@ begin_function
 specifier|static
 name|__constructor
 name|void
-name|trunk_ctor
+name|lagg_ctor
 parameter_list|(
 name|void
 parameter_list|)
@@ -931,7 +931,7 @@ name|i
 operator|<
 name|N
 argument_list|(
-name|trunk_cmds
+name|lagg_cmds
 argument_list|)
 condition|;
 name|i
@@ -940,7 +940,7 @@ control|)
 name|cmd_register
 argument_list|(
 operator|&
-name|trunk_cmds
+name|lagg_cmds
 index|[
 name|i
 index|]
@@ -949,7 +949,7 @@ expr_stmt|;
 name|af_register
 argument_list|(
 operator|&
-name|af_trunk
+name|af_lagg
 argument_list|)
 expr_stmt|;
 undef|#

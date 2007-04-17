@@ -591,7 +591,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* if_trunk(4) support */
+comment|/* if_lagg(4) support */
 end_comment
 
 begin_function_decl
@@ -600,7 +600,7 @@ name|mbuf
 modifier|*
 function_decl|(
 modifier|*
-name|trunk_input_p
+name|lagg_input_p
 function_decl|)
 parameter_list|(
 name|struct
@@ -2828,7 +2828,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Handle input from a trunk(4) port */
+comment|/* Handle input from a lagg(4) port */
 if|if
 condition|(
 name|ifp
@@ -2840,12 +2840,12 @@ condition|)
 block|{
 name|KASSERT
 argument_list|(
-name|trunk_input_p
+name|lagg_input_p
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: if_trunk not loaded!"
+literal|"%s: if_lagg not loaded!"
 operator|,
 name|__func__
 operator|)
@@ -2855,7 +2855,7 @@ name|m
 operator|=
 call|(
 modifier|*
-name|trunk_input_p
+name|lagg_input_p
 call|)
 argument_list|(
 name|ifp

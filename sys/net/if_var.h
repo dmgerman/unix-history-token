@@ -600,9 +600,9 @@ name|if_pf_kif
 decl_stmt|;
 name|void
 modifier|*
-name|if_trunk
+name|if_lagg
 decl_stmt|;
-comment|/* trunk glue */
+comment|/* lagg glue */
 block|}
 struct|;
 end_struct
