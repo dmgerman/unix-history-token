@@ -115,6 +115,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -347,10 +353,10 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|bool
 name|write_text
 init|=
-literal|0
+name|false
 decl_stmt|;
 name|acctfile
 operator|=
@@ -404,9 +410,9 @@ literal|'w'
 case|:
 name|write_text
 operator|=
-literal|1
+name|true
 expr_stmt|;
-comment|/* user time */
+comment|/* export */
 break|break;
 case|case
 literal|'s'
@@ -1017,6 +1023,20 @@ operator|>
 literal|0
 condition|)
 do|;
+if|if
+condition|(
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"stdout"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
