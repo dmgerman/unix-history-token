@@ -2565,7 +2565,7 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-comment|/* make it run */
+comment|/* 	 * Make this runnable after we are finished with it. 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2786,7 +2786,7 @@ name|ff
 operator||=
 name|RFSIGSHARE
 expr_stmt|;
-comment|/* 	 * XXX: In Linux, sharing of fs info (chroot/cwd/umask) 	 * and open files is independant.  In FreeBSD, its in one 	 * structure but in reality it does not make any problems 	 * because both of these flags are set at once usually. 	 */
+comment|/* 	 * XXX: In Linux, sharing of fs info (chroot/cwd/umask) 	 * and open files is independant.  In FreeBSD, its in one 	 * structure but in reality it does not cause any problems 	 * because both of these flags are usually set together. 	 */
 if|if
 condition|(
 operator|!
@@ -4151,7 +4151,7 @@ operator|&
 name|LINUX_MAP_GROWSDOWN
 condition|)
 block|{
-comment|/* 		 * The Linux MAP_GROWSDOWN option does not limit auto 		 * growth of the region.  Linux mmap with this option 		 * takes as addr the inital BOS, and as len, the initial 		 * region size.  It can then grow down from addr without 		 * limit.  However, Linux threads has an implicit internal 		 * limit to stack size of STACK_SIZE.  Its just not 		 * enforced explicitly in Linux.  But, here we impose 		 * a limit of (STACK_SIZE - GUARD_SIZE) on the stack 		 * region, since we can do this with our mmap. 		 * 		 * Our mmap with MAP_STACK takes addr as the maximum 		 * downsize limit on BOS, and as len the max size of 		 * the region.  It them maps the top SGROWSIZ bytes, 		 * and auto grows the region down, up to the limit 		 * in addr. 		 * 		 * If we don't use the MAP_STACK option, the effect 		 * of this code is to allocate a stack region of a 		 * fixed size of (STACK_SIZE - GUARD_SIZE). 		 */
+comment|/* 		 * The Linux MAP_GROWSDOWN option does not limit auto 		 * growth of the region.  Linux mmap with this option 		 * takes as addr the inital BOS, and as len, the initial 		 * region size.  It can then grow down from addr without 		 * limit.  However, Linux threads has an implicit internal 		 * limit to stack size of STACK_SIZE.  Its just not 		 * enforced explicitly in Linux.  But, here we impose 		 * a limit of (STACK_SIZE - GUARD_SIZE) on the stack 		 * region, since we can do this with our mmap. 		 * 		 * Our mmap with MAP_STACK takes addr as the maximum 		 * downsize limit on BOS, and as len the max size of 		 * the region.  It then maps the top SGROWSIZ bytes, 		 * and auto grows the region down, up to the limit 		 * in addr. 		 * 		 * If we don't use the MAP_STACK option, the effect 		 * of this code is to allocate a stack region of a 		 * fixed size of (STACK_SIZE - GUARD_SIZE). 		 */
 if|if
 condition|(
 operator|(
@@ -6359,7 +6359,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Semantics of Linux version: every thread in the system has array 	 * of three TLS descriptors. 1st is GLIBC TLS, 2nd is WINE, 3rd unknown. 	 * This syscall loads one of the selected TLS decriptors with a value 	 * and also loads GDT descriptors 6, 7 and 8 with the content of 	 * the per-thread descriptors. 	 * 	 * Semantics of FreeBSD version: I think we can ignore that Linux has 	 * three per-thread descriptors and use just the first one. 	 * The tls_array[] is used only in [gs]et_thread_area() syscalls and 	 * for loading the GDT descriptors. We use just one GDT descriptor 	 * for TLS, so we will load just one. 	 * XXX: This doesnt work when user-space process tries to use more 	 * than one TLS segment. Comment in the Linux source says wine might 	 * do that. 	 */
+comment|/* 	 * Semantics of Linux version: every thread in the system has array 	 * of three TLS descriptors. 1st is GLIBC TLS, 2nd is WINE, 3rd unknown. 	 * This syscall loads one of the selected TLS decriptors with a value 	 * and also loads GDT descriptors 6, 7 and 8 with the content of 	 * the per-thread descriptors. 	 * 	 * Semantics of FreeBSD version: I think we can ignore that Linux has 	 * three per-thread descriptors and use just the first one. 	 * The tls_array[] is used only in [gs]et_thread_area() syscalls and 	 * for loading the GDT descriptors. We use just one GDT descriptor 	 * for TLS, so we will load just one. 	 * 	 * XXX: This doesn't work when a user space process tries to use more 	 * than one TLS segment. Comment in the Linux source says wine might 	 * do this. 	 */
 comment|/* 	 * GLIBC reads current %gs and call set_thread_area() with it. 	 * We should let GUDATA_SEL and GUGS32_SEL proceed as well because 	 * we use these segments. 	 */
 switch|switch
 condition|(
@@ -6395,7 +6395,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * We have to copy out the GDT entry we use. 	 * XXX: What if userspace program does not check return value and 	 * tries to use 6, 7 or 8? 	 */
+comment|/* 	 * We have to copy out the GDT entry we use. 	 * 	 * XXX: What if a user space program does not check the return value 	 * and tries to use 6, 7 or 8? 	 */
 name|error
 operator|=
 name|copyout
