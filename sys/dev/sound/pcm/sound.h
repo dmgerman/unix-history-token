@@ -374,14 +374,14 @@ begin_define
 define|#
 directive|define
 name|SOUND_MODVER
-value|1
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|SOUND_MINVER
-value|1
+value|SOUND_MODVER
 end_define
 
 begin_define
@@ -395,7 +395,7 @@ begin_define
 define|#
 directive|define
 name|SOUND_MAXVER
-value|1
+value|SOUND_MODVER
 end_define
 
 begin_comment
