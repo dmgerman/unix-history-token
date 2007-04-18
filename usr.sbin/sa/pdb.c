@@ -1685,7 +1685,7 @@ name|totalcip
 condition|)
 name|printf
 argument_list|(
-literal|" %4.2f%%  "
+literal|" %4.1f%%  "
 argument_list|,
 name|cip
 operator|->
@@ -1697,6 +1697,8 @@ operator|)
 name|totalcip
 operator|->
 name|ci_calls
+operator|*
+literal|100
 argument_list|)
 expr_stmt|;
 else|else
@@ -1759,7 +1761,7 @@ name|totalcip
 condition|)
 name|printf
 argument_list|(
-literal|" %4.2f%%  "
+literal|" %4.1f%%  "
 argument_list|,
 name|cip
 operator|->
@@ -1771,6 +1773,8 @@ operator|)
 name|totalcip
 operator|->
 name|ci_etime
+operator|*
+literal|100
 argument_list|)
 expr_stmt|;
 else|else
@@ -1829,22 +1833,22 @@ name|totalcip
 condition|)
 name|printf
 argument_list|(
-literal|" %4.2f%%  "
+literal|" %4.1f%%  "
 argument_list|,
-operator|(
-name|cip
-operator|->
-name|ci_utime
-operator|+
-name|cip
-operator|->
-name|ci_stime
-operator|)
-operator|/
 call|(
 name|double
 call|)
 argument_list|(
+name|cip
+operator|->
+name|ci_utime
+operator|+
+name|cip
+operator|->
+name|ci_stime
+argument_list|)
+operator|/
+operator|(
 name|totalcip
 operator|->
 name|ci_utime
@@ -1852,7 +1856,9 @@ operator|+
 name|totalcip
 operator|->
 name|ci_stime
-argument_list|)
+operator|)
+operator|*
+literal|100
 argument_list|)
 expr_stmt|;
 else|else
@@ -1918,7 +1924,7 @@ name|totalcip
 condition|)
 name|printf
 argument_list|(
-literal|" %4.2f%%  "
+literal|" %4.1f%%  "
 argument_list|,
 name|cip
 operator|->
@@ -1930,6 +1936,8 @@ operator|)
 name|totalcip
 operator|->
 name|ci_utime
+operator|*
+literal|100
 argument_list|)
 expr_stmt|;
 else|else
@@ -1992,7 +2000,7 @@ name|totalcip
 condition|)
 name|printf
 argument_list|(
-literal|" %4.2f%%  "
+literal|" %4.1f%%  "
 argument_list|,
 name|cip
 operator|->
@@ -2004,6 +2012,8 @@ operator|)
 name|totalcip
 operator|->
 name|ci_stime
+operator|*
+literal|100
 argument_list|)
 expr_stmt|;
 else|else
