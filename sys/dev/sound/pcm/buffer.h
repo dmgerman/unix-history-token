@@ -143,6 +143,9 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|dmatag
 decl_stmt|;
+name|int
+name|dmaflags
+decl_stmt|;
 name|u_int32_t
 name|buf_addr
 decl_stmt|;
@@ -232,6 +235,9 @@ name|b
 parameter_list|,
 name|bus_dma_tag_t
 name|dmatag
+parameter_list|,
+name|int
+name|dmaflags
 parameter_list|,
 name|unsigned
 name|int

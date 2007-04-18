@@ -275,6 +275,9 @@ parameter_list|,
 name|bus_dma_tag_t
 name|dmatag
 parameter_list|,
+name|int
+name|dmaflags
+parameter_list|,
 name|unsigned
 name|int
 name|size
@@ -288,6 +291,14 @@ operator|->
 name|dmatag
 operator|=
 name|dmatag
+expr_stmt|;
+name|b
+operator|->
+name|dmaflags
+operator|=
+name|dmaflags
+operator||
+name|BUS_DMA_NOWAIT
 expr_stmt|;
 name|b
 operator|->
@@ -333,7 +344,9 @@ name|b
 operator|->
 name|buf
 argument_list|,
-name|BUS_DMA_NOWAIT
+name|b
+operator|->
+name|dmaflags
 argument_list|,
 operator|&
 name|b

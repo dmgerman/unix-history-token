@@ -1223,6 +1223,8 @@ name|aui
 operator|->
 name|aui_dmat
 argument_list|,
+literal|0
+argument_list|,
 name|aui
 operator|->
 name|aui_bufsize

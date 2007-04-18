@@ -5543,6 +5543,8 @@ name|buffer
 argument_list|,
 name|dmat
 argument_list|,
+literal|0
+argument_list|,
 name|sc
 operator|->
 name|sc_bufsz

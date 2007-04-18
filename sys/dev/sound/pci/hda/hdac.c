@@ -13284,6 +13284,8 @@ name|sc
 operator|->
 name|chan_dmat
 argument_list|,
+literal|0
+argument_list|,
 name|sc
 operator|->
 name|chan_size

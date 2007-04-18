@@ -2717,6 +2717,8 @@ name|tr
 operator|->
 name|parent_dmat
 argument_list|,
+literal|0
+argument_list|,
 name|tr
 operator|->
 name|bufsz
@@ -3275,6 +3277,8 @@ argument_list|,
 name|tr
 operator|->
 name|parent_dmat
+argument_list|,
+literal|0
 argument_list|,
 name|tr
 operator|->

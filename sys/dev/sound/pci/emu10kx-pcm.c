@@ -3007,6 +3007,8 @@ operator|->
 name|card
 argument_list|)
 argument_list|,
+literal|0
+argument_list|,
 name|sc
 operator|->
 name|bufsz
@@ -3889,6 +3891,8 @@ name|sc
 operator|->
 name|card
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 name|sc
 operator|->
