@@ -1038,8 +1038,10 @@ argument_list|(
 name|iovlen
 operator|+
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|uio
+argument_list|)
 argument_list|,
 name|M_IOV
 argument_list|,
