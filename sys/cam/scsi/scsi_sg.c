@@ -3016,11 +3016,7 @@ goto|;
 name|ccb
 operator|=
 name|xpt_alloc_ccb
-argument_list|(
-name|periph
-operator|->
-name|sim
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

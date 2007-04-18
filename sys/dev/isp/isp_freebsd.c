@@ -11297,13 +11297,7 @@ comment|/* 	 * Allocate a CCB, create a wildcard path for this bus, 	 * and sche
 name|ccb
 operator|=
 name|xpt_alloc_ccb_nowait
-argument_list|(
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|sim
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

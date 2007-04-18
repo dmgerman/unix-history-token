@@ -4841,9 +4841,7 @@ modifier|*
 name|ccb
 init|=
 name|xpt_alloc_ccb
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 decl_stmt|;
 name|cam_status
 name|status
