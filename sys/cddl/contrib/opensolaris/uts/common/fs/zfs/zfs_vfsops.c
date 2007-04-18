@@ -2886,27 +2886,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* TODO: For now deny user mounts. */
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|priv_check
-argument_list|(
-name|td
-argument_list|,
-name|PRIV_VFS_MOUNT
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 comment|/* 	 * When doing a remount, we simply refresh our temporary properties 	 * according to those options set in the current VFS options. 	 */
 if|if
 condition|(
