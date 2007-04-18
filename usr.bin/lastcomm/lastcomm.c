@@ -222,7 +222,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|write_record
+name|export_record
 parameter_list|(
 name|struct
 name|acct
@@ -354,7 +354,7 @@ init|=
 literal|0
 decl_stmt|;
 name|bool
-name|write_text
+name|export_text
 init|=
 name|false
 decl_stmt|;
@@ -373,7 +373,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:uwsecSE"
+literal|"f:usecSEX"
 argument_list|)
 operator|)
 operator|!=
@@ -406,9 +406,9 @@ expr_stmt|;
 comment|/* user time */
 break|break;
 case|case
-literal|'w'
+literal|'X'
 case|:
-name|write_text
+name|export_text
 operator|=
 name|true
 expr_stmt|;
@@ -474,7 +474,7 @@ operator|!
 name|flags
 operator|&&
 operator|!
-name|write_text
+name|export_text
 condition|)
 name|flags
 operator|=
@@ -486,7 +486,7 @@ if|if
 condition|(
 name|flags
 operator|&&
-name|write_text
+name|export_text
 condition|)
 name|usage
 argument_list|()
@@ -601,7 +601,7 @@ operator|!=
 name|stdin
 operator|&&
 operator|!
-name|write_text
+name|export_text
 condition|)
 block|{
 name|size
@@ -773,10 +773,10 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|write_text
+name|export_text
 condition|)
 block|{
-name|write_record
+name|export_record
 argument_list|(
 operator|&
 name|ab
@@ -1370,7 +1370,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lastcomm [[-EScesu] | [-w]] [-f file] [command ...] [user ...] [terminal ...]\n"
+literal|"usage: lastcomm [[-EScesu] | [-X]] [-f file] [command ...] [user ...] [terminal ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1384,7 +1384,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|write_record
+name|export_record
 parameter_list|(
 name|struct
 name|acct
