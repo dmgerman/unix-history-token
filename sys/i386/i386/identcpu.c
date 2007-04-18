@@ -1634,6 +1634,30 @@ literal|"K6-III"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|0x5a0
+case|:
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"Geode LX"
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Make sure the TSC runs through suspension, 			 * otherwise we can't use it as timecounter 			 */
+name|wrmsr
+argument_list|(
+literal|0x1900
+argument_list|,
+name|rdmsr
+argument_list|(
+literal|0x1900
+argument_list|)
+operator||
+literal|0x20ULL
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|strcat
 argument_list|(
