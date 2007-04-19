@@ -351,6 +351,14 @@ operator|->
 name|ccb_freeq
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|sim
+operator|->
+name|sim_doneq
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|sim
