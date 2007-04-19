@@ -156,7 +156,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-cf:p:u:"
+literal|"-cfp:u:"
 argument_list|)
 operator|)
 operator|!=
