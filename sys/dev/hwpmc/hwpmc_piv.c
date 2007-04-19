@@ -2157,7 +2157,7 @@ name|pc_mtx
 argument_list|,
 literal|"p4-pcpu"
 argument_list|,
-literal|"pmc"
+literal|"pmc-leaf"
 argument_list|,
 name|MTX_SPIN
 argument_list|)

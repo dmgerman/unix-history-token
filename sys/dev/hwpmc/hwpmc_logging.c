@@ -4265,7 +4265,7 @@ name|pmc_bufferlist_mtx
 argument_list|,
 literal|"pmc-buffer-list"
 argument_list|,
-literal|"pmc"
+literal|"pmc-leaf"
 argument_list|,
 name|MTX_SPIN
 argument_list|)
@@ -4277,7 +4277,7 @@ name|pmc_kthread_mtx
 argument_list|,
 literal|"pmc-kthread"
 argument_list|,
-literal|"pmc"
+literal|"pmc-sleep"
 argument_list|,
 name|MTX_DEF
 argument_list|)
