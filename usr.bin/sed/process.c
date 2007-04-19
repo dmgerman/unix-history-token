@@ -1308,7 +1308,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|(a)->type == AT_RE ? regexec_e((a)->u.r, ps, 0, 1, psl) :	\ 	    (a)->type == AT_LINE ? linenum == (a)->u.l : lastline()
+value|((a)->type == AT_RE ? regexec_e((a)->u.r, ps, 0, 1, psl) :	\ 	    (a)->type == AT_LINE ? linenum == (a)->u.l : lastline())
 end_define
 
 begin_comment
@@ -3567,7 +3567,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * aspace --  *	Append the source space to the destination space, allocating new  *	space as necessary.  */
+comment|/*  * cspace --  *	Concatenate space: append the source space to the destination space,  *	allocating new space as necessary.  */
 end_comment
 
 begin_function
