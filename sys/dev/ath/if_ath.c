@@ -28235,6 +28235,11 @@ operator|->
 name|sc_invalid
 condition|)
 block|{
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -28311,6 +28316,11 @@ operator|->
 name|if_drv_flags
 operator||=
 name|IFF_DRV_OACTIVE
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
