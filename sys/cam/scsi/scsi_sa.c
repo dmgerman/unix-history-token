@@ -6328,6 +6328,11 @@ argument_list|,
 name|DEVSTAT_PRIORITY_TAPE
 argument_list|)
 expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 name|softc
 operator|->
 name|devs
@@ -6693,6 +6698,11 @@ name|periph
 expr_stmt|;
 block|}
 block|}
+name|cam_periph_lock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Add an async callback so that we get 	 * notified if this device goes away. 	 */
 name|xpt_setup_ccb
 argument_list|(

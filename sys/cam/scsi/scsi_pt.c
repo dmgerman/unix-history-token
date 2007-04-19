@@ -1249,6 +1249,11 @@ argument_list|,
 name|DEVSTAT_PRIORITY_OTHER
 argument_list|)
 expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 name|softc
 operator|->
 name|dev
@@ -1277,6 +1282,11 @@ argument_list|,
 name|periph
 operator|->
 name|unit_number
+argument_list|)
+expr_stmt|;
+name|cam_periph_lock
+argument_list|(
+name|periph
 argument_list|)
 expr_stmt|;
 name|softc
