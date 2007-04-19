@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -226,7 +232,13 @@ parameter_list|(
 name|int
 name|signum
 parameter_list|)
-block|{  }
+block|{
+operator|(
+name|void
+operator|)
+name|signum
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -327,7 +339,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"read"
@@ -335,6 +346,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|len
 operator|<
 sizeof|sizeof
@@ -344,10 +358,9 @@ argument_list|)
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
-literal|"read: %d"
+literal|"read: %zd"
 argument_list|,
 name|len
 argument_list|)
@@ -373,7 +386,6 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"test_th: bad"
@@ -411,7 +423,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"read"
@@ -439,7 +450,6 @@ name|length
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"receive_test: expected (%d, %d) received %d"
@@ -537,7 +547,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"socket"
@@ -613,7 +622,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"connect"
@@ -759,7 +767,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"lseek"
@@ -773,10 +780,9 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
-literal|"lseek: %d"
+literal|"lseek: %zd"
 argument_list|,
 name|len
 argument_list|)
@@ -816,7 +822,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"send"
@@ -833,10 +838,9 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
-literal|"send: %d"
+literal|"send: %zd"
 argument_list|,
 name|len
 argument_list|)
@@ -863,7 +867,6 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"malloc"
@@ -969,7 +972,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"sendfile"
@@ -1000,7 +1002,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"fstat"
@@ -1022,17 +1023,17 @@ condition|)
 block|{
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
-literal|"sendfile: off(%llu) != length(%llu)"
+literal|"sendfile: off(%ju) != length(%ju)"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|off
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|length
 argument_list|)
@@ -1325,13 +1326,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|char
@@ -1375,7 +1370,6 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"malloc"
@@ -1409,7 +1403,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"socket"
@@ -1506,7 +1499,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"write"
@@ -1531,7 +1523,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"lseek"
@@ -1545,10 +1536,9 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
-literal|"lseek: %d"
+literal|"lseek: %zd"
 argument_list|,
 name|len
 argument_list|)
@@ -1577,7 +1567,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"bind"
@@ -1597,7 +1586,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"listen"
@@ -1621,7 +1609,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"fork"
