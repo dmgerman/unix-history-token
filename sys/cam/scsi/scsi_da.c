@@ -7951,7 +7951,14 @@ operator|&
 name|DA_Q_NO_SYNC_CACHE
 operator|)
 condition|)
+block|{
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 name|xpt_setup_ccb
 argument_list|(
 operator|&
