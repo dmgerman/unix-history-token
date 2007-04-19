@@ -24215,11 +24215,16 @@ name|init_level
 operator|++
 expr_stmt|;
 comment|/* Perform initial CCB allocation */
+while|while
+condition|(
 name|ahd_alloc_scbs
 argument_list|(
 name|ahd
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+empty_stmt|;
 if|if
 condition|(
 name|scb_data
@@ -25370,11 +25375,20 @@ operator|(
 name|NULL
 operator|)
 return|;
+if|if
+condition|(
 name|ahd_alloc_scbs
 argument_list|(
 name|ahd
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 goto|goto
 name|look_again
 goto|;
@@ -25673,7 +25687,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|ahd_alloc_scbs
 parameter_list|(
 name|struct
@@ -25751,7 +25765,11 @@ operator|>=
 name|AHD_SCB_MAX_ALLOC
 condition|)
 comment|/* Can't allocate any more */
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|scb_data
@@ -25847,7 +25865,11 @@ name|hscb_map
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* Allocate the next batch of hardware SCBs */
 if|if
 condition|(
@@ -25887,7 +25909,11 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|SLIST_INSERT_HEAD
 argument_list|(
@@ -26047,7 +26073,11 @@ name|sg_map
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* Allocate the next batch of S/G lists */
 if|if
 condition|(
@@ -26087,7 +26117,11 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|SLIST_INSERT_HEAD
 argument_list|(
@@ -26250,7 +26284,11 @@ name|sense_map
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* Allocate the next batch of sense buffers */
 if|if
 condition|(
@@ -26290,7 +26328,11 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|SLIST_INSERT_HEAD
 argument_list|(
@@ -26791,6 +26833,11 @@ name|numscbs
 operator|++
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|i
+operator|)
+return|;
 block|}
 end_function
 

@@ -3366,7 +3366,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ahc_alloc_scbs
 parameter_list|(
 name|struct

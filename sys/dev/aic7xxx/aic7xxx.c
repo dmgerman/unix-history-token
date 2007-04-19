@@ -18969,11 +18969,16 @@ name|hardware_scb
 argument_list|)
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
 name|ahc_alloc_scbs
 argument_list|(
 name|ahc
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+empty_stmt|;
 if|if
 condition|(
 name|scb_data
@@ -19294,7 +19299,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|ahc_alloc_scbs
 parameter_list|(
 name|struct
@@ -19347,7 +19352,11 @@ operator|>=
 name|AHC_SCB_MAX_ALLOC
 condition|)
 comment|/* Can't allocate any more */
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|next_scb
 operator|=
 operator|&
@@ -19381,7 +19390,11 @@ name|sg_map
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* Allocate S/G space for the next batch of SCBS */
 if|if
 condition|(
@@ -19421,7 +19434,11 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|SLIST_INSERT_HEAD
 argument_list|(
@@ -19712,6 +19729,11 @@ name|numscbs
 operator|++
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|i
+operator|)
+return|;
 block|}
 end_function
 
