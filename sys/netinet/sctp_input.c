@@ -2632,6 +2632,16 @@ name|sctps_currestab
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SCTP_ASOCLOG_OF_TSNS
+name|sctp_print_out_track_log
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sctp_free_assoc
 argument_list|(
 name|stcb

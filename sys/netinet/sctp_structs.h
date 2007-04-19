@@ -1051,6 +1051,9 @@ decl_stmt|;
 name|uint8_t
 name|sender_all_done
 decl_stmt|;
+name|uint8_t
+name|put_last_out
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1225,6 +1228,12 @@ decl_stmt|;
 name|uint16_t
 name|seq
 decl_stmt|;
+name|uint16_t
+name|sz
+decl_stmt|;
+name|uint16_t
+name|flgs
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1317,11 +1326,6 @@ comment|/* Free chunk list */
 name|struct
 name|sctpchunk_listhead
 name|free_chunks
-decl_stmt|;
-comment|/* Free stream output control list */
-name|struct
-name|sctp_streamhead
-name|free_strmoq
 decl_stmt|;
 comment|/* Control chunk queue */
 name|struct
@@ -1583,6 +1587,12 @@ name|tsn_in_at
 decl_stmt|;
 name|uint16_t
 name|tsn_out_at
+decl_stmt|;
+name|uint16_t
+name|tsn_in_wrapped
+decl_stmt|;
+name|uint16_t
+name|tsn_out_wrapped
 decl_stmt|;
 endif|#
 directive|endif
@@ -1862,9 +1872,6 @@ name|ecn_echo_cnt_onq
 decl_stmt|;
 name|uint16_t
 name|free_chunk_cnt
-decl_stmt|;
-name|uint16_t
-name|free_strmoq_cnt
 decl_stmt|;
 name|uint8_t
 name|stream_locked

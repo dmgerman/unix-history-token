@@ -175,7 +175,7 @@ name|_stcb
 parameter_list|,
 name|_strmoq
 parameter_list|)
-value|{ \ 	if (((_stcb)->asoc.free_strmoq_cnt> sctp_asoc_free_resc_limit) || \ 	    (sctppcbinfo.ipi_free_strmoq> sctp_system_free_resc_limit)) { \ 		SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_strmoq, (_strmoq)); \ 		SCTP_DECR_STRMOQ_COUNT(); \ 	} else { \ 		TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_strmoq, (_strmoq), next); \ 		(_stcb)->asoc.free_strmoq_cnt++; \ 		atomic_add_int(&sctppcbinfo.ipi_free_strmoq, 1); \ 	} \ }
+value|{ \ 	SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_strmoq, (_strmoq)); \ 	SCTP_DECR_STRMOQ_COUNT(); \ }
 end_define
 
 begin_define
@@ -187,7 +187,7 @@ name|_stcb
 parameter_list|,
 name|_strmoq
 parameter_list|)
-value|{ \ 	if (TAILQ_EMPTY(&(_stcb)->asoc.free_strmoq))  { \ 		(_strmoq) = SCTP_ZONE_GET(sctppcbinfo.ipi_zone_strmoq, struct sctp_stream_queue_pending); \ 		if ((_strmoq)) { \ 			SCTP_INCR_STRMOQ_COUNT(); \ 		} \ 	} else { \ 		(_strmoq) = TAILQ_FIRST(&(_stcb)->asoc.free_strmoq); \ 		TAILQ_REMOVE(&(_stcb)->asoc.free_strmoq, (_strmoq), next); \ 		atomic_subtract_int(&sctppcbinfo.ipi_free_strmoq, 1); \                 SCTP_STAT_INCR(sctps_cached_strmoq); \ 		(_stcb)->asoc.free_strmoq_cnt--; \ 	} \ }
+value|{ \ 	(_strmoq) = SCTP_ZONE_GET(sctppcbinfo.ipi_zone_strmoq, struct sctp_stream_queue_pending); \ 	if ((_strmoq)) { \ 		SCTP_INCR_STRMOQ_COUNT(); \  	} \ }
 end_define
 
 begin_define

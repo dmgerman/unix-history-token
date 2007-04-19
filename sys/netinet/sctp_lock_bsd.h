@@ -682,7 +682,7 @@ directive|define
 name|SCTP_DECR_EP_COUNT
 parameter_list|()
 define|\
-value|do { \ 		       atomic_add_int(&sctppcbinfo.ipi_count_ep,-1); \ 	        } while (0)
+value|do { \ 		       atomic_subtract_int(&sctppcbinfo.ipi_count_ep, 1); \ 	        } while (0)
 end_define
 
 begin_define
@@ -700,7 +700,7 @@ directive|define
 name|SCTP_DECR_ASOC_COUNT
 parameter_list|()
 define|\
-value|do { \ 	               atomic_add_int(&sctppcbinfo.ipi_count_asoc, -1); \ 	        } while (0)
+value|do { \ 	               atomic_subtract_int(&sctppcbinfo.ipi_count_asoc, 1); \ 	        } while (0)
 end_define
 
 begin_define
@@ -718,7 +718,7 @@ directive|define
 name|SCTP_DECR_LADDR_COUNT
 parameter_list|()
 define|\
-value|do { \ 	               atomic_add_int(&sctppcbinfo.ipi_count_laddr, -1); \ 	        } while (0)
+value|do { \ 	               atomic_subtract_int(&sctppcbinfo.ipi_count_laddr, 1); \ 	        } while (0)
 end_define
 
 begin_define
@@ -727,7 +727,7 @@ directive|define
 name|SCTP_INCR_RADDR_COUNT
 parameter_list|()
 define|\
-value|do { \  	               atomic_add_int(&sctppcbinfo.ipi_count_raddr,1); \ 	        } while (0)
+value|do { \  	               atomic_add_int(&sctppcbinfo.ipi_count_raddr, 1); \ 	        } while (0)
 end_define
 
 begin_define
@@ -736,7 +736,7 @@ directive|define
 name|SCTP_DECR_RADDR_COUNT
 parameter_list|()
 define|\
-value|do { \  	               atomic_add_int(&sctppcbinfo.ipi_count_raddr,-1); \ 	        } while (0)
+value|do { \  	               atomic_subtract_int(&sctppcbinfo.ipi_count_raddr,1); \ 	        } while (0)
 end_define
 
 begin_define
@@ -754,7 +754,7 @@ directive|define
 name|SCTP_DECR_CHK_COUNT
 parameter_list|()
 define|\
-value|do { \                        if(sctppcbinfo.ipi_count_chunk == 0) \                              panic("chunk count to 0?");    \   	               atomic_add_int(&sctppcbinfo.ipi_count_chunk,-1); \ 	        } while (0)
+value|do { \                        if(sctppcbinfo.ipi_count_chunk == 0) \                              panic("chunk count to 0?");    \   	               atomic_subtract_int(&sctppcbinfo.ipi_count_chunk, 1); \ 	        } while (0)
 end_define
 
 begin_define
@@ -772,7 +772,7 @@ directive|define
 name|SCTP_DECR_READQ_COUNT
 parameter_list|()
 define|\
-value|do { \ 		       atomic_add_int(&sctppcbinfo.ipi_count_readq, -1); \ 	        } while (0)
+value|do { \ 		       atomic_subtract_int(&sctppcbinfo.ipi_count_readq, 1); \ 	        } while (0)
 end_define
 
 begin_define
@@ -790,7 +790,7 @@ directive|define
 name|SCTP_DECR_STRMOQ_COUNT
 parameter_list|()
 define|\
-value|do { \ 		       atomic_add_int(&sctppcbinfo.ipi_count_strmoq,-1); \ 	        } while (0)
+value|do { \ 		       atomic_subtract_int(&sctppcbinfo.ipi_count_strmoq, 1); \ 	        } while (0)
 end_define
 
 begin_endif

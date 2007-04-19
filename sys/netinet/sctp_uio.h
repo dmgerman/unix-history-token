@@ -2970,6 +2970,10 @@ name|u_long
 name|sctps_cached_strmoq
 decl_stmt|;
 comment|/* Number of cached stream oq's used */
+name|u_long
+name|sctps_left_abandon
+decl_stmt|;
+comment|/* Number of unread message abandonded 					 * by close */
 block|}
 struct|;
 end_struct
