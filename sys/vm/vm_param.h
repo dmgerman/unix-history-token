@@ -114,7 +114,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* cnt.v_cache_max */
+comment|/* cnt.v_cache_min */
 end_comment
 
 begin_define
@@ -125,7 +125,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* cnt.v_cache_min */
+comment|/* cnt.v_cache_max */
 end_comment
 
 begin_define
