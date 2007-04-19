@@ -21322,6 +21322,8 @@ argument_list|)
 argument_list|,
 name|M_CAMXPT
 argument_list|,
+name|M_ZERO
+operator||
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
@@ -21357,6 +21359,8 @@ argument_list|)
 argument_list|,
 name|M_CAMXPT
 argument_list|,
+name|M_ZERO
+operator||
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
