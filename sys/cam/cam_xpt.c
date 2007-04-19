@@ -4930,7 +4930,7 @@ break|break;
 block|}
 break|break;
 block|}
-comment|/* 	 * This is the getpassthru ioctl. It takes a XPT_GDEVLIST ccb as input, 	 * with the periphal driver name and unit name filled in.  The other 	 * fields don't really matter as input.  The passthrough driver name 	 * ("pass"), and unit number are passed back in the ccb.  The current 	 * device generation number, and the index into the device peripheral 	 * driver list, and the status are also passed back.  Note that 	 * since we do everything in one pass, unlike the XPT_GDEVLIST ccb, 	 * we never return a status of CAM_GDEVLIST_LIST_CHANGED.  It is 	 * (or rather should be) impossible for the device peripheral driver 	 * list to change since we look at the whole thing in one pass, and 	 * we do it with splcam protection. 	 *  	 */
+comment|/* 	 * This is the getpassthru ioctl. It takes a XPT_GDEVLIST ccb as input, 	 * with the periphal driver name and unit name filled in.  The other 	 * fields don't really matter as input.  The passthrough driver name 	 * ("pass"), and unit number are passed back in the ccb.  The current 	 * device generation number, and the index into the device peripheral 	 * driver list, and the status are also passed back.  Note that 	 * since we do everything in one pass, unlike the XPT_GDEVLIST ccb, 	 * we never return a status of CAM_GDEVLIST_LIST_CHANGED.  It is 	 * (or rather should be) impossible for the device peripheral driver 	 * list to change since we look at the whole thing in one pass, and 	 * we do it with lock protection. 	 *  	 */
 case|case
 name|CAMGETPASSTHRU
 case|:
@@ -4967,9 +4967,6 @@ decl_stmt|;
 name|int
 name|splbreaknum
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|ccb
 operator|=
 operator|(
@@ -4995,7 +4992,7 @@ name|cgdl
 operator|.
 name|periph_name
 expr_stmt|;
-comment|/* 		 * Every 100 devices, we want to drop our spl protection to 		 * give the software interrupt handler a chance to run. 		 * Most systems won't run into this check, but this should 		 * avoid starvation in the software interrupt handler in 		 * large systems. 		 */
+comment|/* 		 * Every 100 devices, we want to drop our lock protection to 		 * give the software interrupt handler a chance to run. 		 * Most systems won't run into this check, but this should 		 * avoid starvation in the software interrupt handler in 		 * large systems. 		 */
 name|splbreaknum
 operator|=
 literal|100
@@ -5033,10 +5030,13 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Keep the list from changing while we traverse it */
-name|s
-operator|=
-name|splcam
-argument_list|()
+name|mtx_lock
+argument_list|(
+operator|&
+name|xsoftc
+operator|.
+name|xpt_topo_lock
+argument_list|)
 expr_stmt|;
 name|ptstartover
 label|:
@@ -5086,9 +5086,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|splx
+name|mtx_unlock
 argument_list|(
-name|s
+operator|&
+name|xsoftc
+operator|.
+name|xpt_topo_lock
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -5180,15 +5183,21 @@ operator|==
 literal|0
 condition|)
 block|{
-name|splx
+name|mtx_unlock
 argument_list|(
-name|s
+operator|&
+name|xsoftc
+operator|.
+name|xpt_topo_lock
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
+name|mtx_lock
+argument_list|(
+operator|&
+name|xsoftc
+operator|.
+name|xpt_topo_lock
+argument_list|)
 expr_stmt|;
 name|splbreaknum
 operator|=
@@ -5473,9 +5482,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|splx
+name|mtx_unlock
 argument_list|(
-name|s
+operator|&
+name|xsoftc
+operator|.
+name|xpt_topo_lock
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6409,15 +6421,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|int
-name|s
-decl_stmt|;
 comment|/* 		 * Make room for this peripheral 		 * so it will fit in the queue 		 * when it's scheduled to run 		 */
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
-expr_stmt|;
 name|status
 operator|=
 name|camq_resize
@@ -6450,20 +6454,26 @@ argument_list|,
 name|periph_links
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
-name|atomic_add_int
+name|mtx_lock
 argument_list|(
 operator|&
 name|xsoftc
 operator|.
+name|xpt_topo_lock
+argument_list|)
+expr_stmt|;
+name|xsoftc
+operator|.
 name|xpt_generation
-argument_list|,
-literal|1
+operator|++
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|xsoftc
+operator|.
+name|xpt_topo_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -6515,9 +6525,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|periph_list
 modifier|*
@@ -6531,11 +6538,6 @@ operator|->
 name|periphs
 expr_stmt|;
 comment|/* Release the slot for this peripheral */
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
-expr_stmt|;
 name|camq_resize
 argument_list|(
 operator|&
@@ -6568,20 +6570,26 @@ argument_list|,
 name|periph_links
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
-name|atomic_add_int
+name|mtx_lock
 argument_list|(
 operator|&
 name|xsoftc
 operator|.
+name|xpt_topo_lock
+argument_list|)
+expr_stmt|;
+name|xsoftc
+operator|.
 name|xpt_generation
-argument_list|,
-literal|1
+operator|++
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|xsoftc
+operator|.
+name|xpt_topo_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -6623,9 +6631,6 @@ decl_stmt|;
 name|u_int
 name|mb
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|mtx_assert
 argument_list|(
 name|periph
@@ -6644,11 +6649,6 @@ operator|->
 name|path
 expr_stmt|;
 comment|/* 	 * To ensure that this is printed in one piece, 	 * mask out CAM interrupts. 	 */
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s%d at %s%d bus %d target %d lun %d\n"
@@ -7370,11 +7370,6 @@ operator|->
 name|unit_number
 argument_list|,
 name|announce_string
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -12598,9 +12593,6 @@ modifier|*
 name|start_ccb
 parameter_list|)
 block|{
-name|int
-name|iopl
-decl_stmt|;
 name|CAM_DEBUG
 argument_list|(
 name|start_ccb
@@ -12623,11 +12615,6 @@ operator|.
 name|status
 operator|=
 name|CAM_REQ_INPROG
-expr_stmt|;
-name|iopl
-operator|=
-name|splsoftcam
-argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
@@ -12838,9 +12825,6 @@ modifier|*
 name|sim
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|runq
 decl_stmt|;
 name|path
@@ -12850,11 +12834,6 @@ operator|->
 name|ccb_h
 operator|.
 name|path
-expr_stmt|;
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
 expr_stmt|;
 name|sim
 operator|=
@@ -12899,11 +12878,6 @@ operator|,
 name|start_ccb
 operator|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 name|cam_ccbq_insert_ccb
@@ -12945,11 +12919,6 @@ else|else
 name|runq
 operator|=
 literal|0
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -13120,9 +13089,6 @@ name|ccb
 modifier|*
 name|abort_ccb
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|abort_ccb
 operator|=
 name|start_ccb
@@ -13198,19 +13164,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|xpt_done
 argument_list|(
 name|abort_ccb
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|start_ccb
@@ -13441,9 +13397,6 @@ name|cam_ed
 modifier|*
 name|dev
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|dev
 operator|=
 name|start_ccb
@@ -13453,11 +13406,6 @@ operator|.
 name|path
 operator|->
 name|device
-expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -13583,11 +13531,6 @@ name|serial_num_len
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 case|case
@@ -13599,9 +13542,6 @@ name|cam_ed
 modifier|*
 name|dev
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|dev
 operator|=
 name|start_ccb
@@ -13611,11 +13551,6 @@ operator|.
 name|path
 operator|->
 name|device
-expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -13797,11 +13732,6 @@ operator|=
 name|CAM_REQ_CMP
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 case|case
@@ -13826,9 +13756,6 @@ decl_stmt|;
 name|u_int
 name|i
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|cam_ed
 modifier|*
@@ -13842,11 +13769,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 		 * Don't want anyone mucking with our data. 		 */
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|device
 operator|=
 name|start_ccb
@@ -13898,11 +13820,6 @@ operator|->
 name|status
 operator|=
 name|CAM_GDEVLIST_LIST_CHANGED
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -13996,11 +13913,6 @@ name|status
 operator|=
 name|CAM_GDEVLIST_ERROR
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 if|if
@@ -14035,11 +13947,6 @@ name|device
 operator|->
 name|generation
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|cgdl
 operator|->
 name|ccb_h
@@ -14054,9 +13961,6 @@ case|case
 name|XPT_DEV_MATCH
 case|:
 block|{
-name|int
-name|s
-decl_stmt|;
 name|dev_pos_type
 name|position_type
 decl_stmt|;
@@ -14071,12 +13975,6 @@ operator|&
 name|start_ccb
 operator|->
 name|cdm
-expr_stmt|;
-comment|/* 		 * Prevent EDT changes while we traverse it. 		 */
-name|s
-operator|=
-name|splcam
-argument_list|()
 expr_stmt|;
 comment|/* 		 * There are two ways of getting at information in the EDT. 		 * The first way is via the primary EDT tree.  It starts 		 * with a list of busses, then a list of targets on a bus, 		 * then devices/luns on a target, and then peripherals on a 		 * device/lun.  The "other" way is by the peripheral driver 		 * lists.  The peripheral driver lists are organized by 		 * peripheral driver.  (obviously)  So it makes sense to 		 * use the peripheral driver list if the user is looking 		 * for something like "da1", or all "da" devices.  If the 		 * user is looking for something on a particular bus/target 		 * or lun, it's generally better to go through the EDT tree. 		 */
 if|if
@@ -14216,11 +14114,6 @@ name|CAM_DEV_MATCH_ERROR
 expr_stmt|;
 break|break;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|cdm
@@ -14603,9 +14496,6 @@ name|cam_ed
 modifier|*
 name|dev
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|crs
 operator|=
 operator|&
@@ -14640,11 +14530,6 @@ name|CAM_DEV_NOT_THERE
 expr_stmt|;
 break|break;
 block|}
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -14920,11 +14805,6 @@ name|CAM_DEV_QFREEZE
 expr_stmt|;
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -15029,14 +14909,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|CAMDEBUG
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CAM_DEBUG_DELAY
@@ -15158,11 +15030,6 @@ operator|=
 name|CAM_REQ_CMP
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 else|#
 directive|else
 comment|/* !CAMDEBUG */
@@ -15237,11 +15104,6 @@ name|CAM_PROVIDE_FAIL
 expr_stmt|;
 break|break;
 block|}
-name|splx
-argument_list|(
-name|iopl
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -15255,9 +15117,6 @@ modifier|*
 name|start_ccb
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|u_int32_t
 name|timeout
 decl_stmt|;
@@ -15320,11 +15179,6 @@ name|mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Steal an opening so that no other queued requests 	 * can get it before us while we simulate interrupts. 	 */
 name|dev
@@ -15503,11 +15357,6 @@ operator|=
 name|CAM_RESRC_UNAVAIL
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -15537,9 +15386,6 @@ name|union
 name|ccb
 modifier|*
 name|work_ccb
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 name|int
 name|runq
@@ -15575,11 +15421,6 @@ operator|->
 name|path
 operator|->
 name|device
-expr_stmt|;
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -15663,11 +15504,6 @@ operator|->
 name|path
 operator|->
 name|device
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -15775,11 +15611,6 @@ name|device
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|runq
@@ -15814,7 +15645,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Schedule a device to run on a given queue.  * If the device was inserted as a new entry on the queue,  * return 1 meaning the device queue should be run. If we  * were already queued, implying someone else has already  * started the queue, return 0 so the caller doesn't attempt  * to run the queue.  Must be run at either splsoftcam  * (or splcam since that encompases splsoftcam).  */
+comment|/*  * Schedule a device to run on a given queue.  * If the device was inserted as a new entry on the queue,  * return 1 meaning the device queue should be run. If we  * were already queued, implying someone else has already  * started the queue, return 0 so the caller doesn't attempt  * to run the queue.  */
 end_comment
 
 begin_function
@@ -15971,9 +15802,6 @@ name|cam_devq
 modifier|*
 name|devq
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
 name|CAM_DEBUG_XPT
@@ -16020,11 +15848,6 @@ operator|->
 name|alloc_active
 operator|)
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
 expr_stmt|;
 name|devq
 operator|->
@@ -16189,11 +16012,6 @@ argument_list|,
 name|CAMQ_HEAD
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|xpt_setup_ccb
 argument_list|(
 operator|&
@@ -16237,12 +16055,6 @@ comment|/* 			 * Malloc failure in alloc_ccb 			 */
 comment|/* 			 * XXX add us to a list to be run from free_ccb 			 * if we don't have any ccbs active on this 			 * device queue otherwise we may never get run 			 * again. 			 */
 break|break;
 block|}
-comment|/* Raise IPL for possible insertion and test at top of loop */
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|drvq
@@ -16269,11 +16081,6 @@ operator|.
 name|qfrozen_cnt
 operator|--
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -16293,9 +16100,6 @@ name|cam_devq
 modifier|*
 name|devq
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
 name|CAM_DEBUG_XPT
@@ -16313,27 +16117,12 @@ name|sim
 operator|->
 name|devq
 expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|devq
 operator|->
 name|send_queue
 operator|.
 name|qfrozen_cnt
 operator|++
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -16376,14 +16165,6 @@ name|cam_sim
 modifier|*
 name|sim
 decl_stmt|;
-name|int
-name|ospl
-decl_stmt|;
-name|ospl
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|devq
@@ -16395,11 +16176,6 @@ operator|>
 literal|1
 condition|)
 block|{
-name|splx
-argument_list|(
-name|ospl
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 name|qinfo
@@ -16435,11 +16211,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|splx
-argument_list|(
-name|ospl
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 name|CAM_DEBUG_PRINT
@@ -16475,11 +16246,6 @@ block|{
 name|printf
 argument_list|(
 literal|"device on run queue with no ccbs???\n"
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|ospl
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -16539,11 +16305,6 @@ operator|.
 name|stqe
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|ospl
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 else|else
@@ -16588,11 +16349,6 @@ operator|->
 name|ccbq
 argument_list|,
 name|work_ccb
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|ospl
 argument_list|)
 expr_stmt|;
 name|devq
@@ -16642,27 +16398,12 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * The client wants to freeze the queue 			 * after this CCB is sent. 			 */
-name|ospl
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|device
 operator|->
 name|qfrozen_cnt
 operator|++
 expr_stmt|;
-name|splx
-argument_list|(
-name|ospl
-argument_list|)
-expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 comment|/* In Target mode, the peripheral driver knows best... */
 if|if
 condition|(
@@ -16742,50 +16483,19 @@ operator|,
 name|work_ccb
 operator|)
 expr_stmt|;
-name|ospl
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|devq
 operator|->
 name|active_dev
 operator|=
 name|NULL
 expr_stmt|;
-name|splx
-argument_list|(
-name|ospl
-argument_list|)
-expr_stmt|;
-comment|/* Raise IPL for possible insertion and test at top of loop */
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
-expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|devq
 operator|->
 name|send_queue
 operator|.
 name|qfrozen_cnt
 operator|--
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -17356,9 +17066,6 @@ decl_stmt|;
 name|cam_status
 name|status
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|status
 operator|=
 name|CAM_REQ_CMP
@@ -17375,11 +17082,6 @@ name|NULL
 expr_stmt|;
 comment|/* Wildcarded */
 comment|/* 	 * We will potentially modify the EDT, so block interrupts 	 * that may attempt to create cam paths. 	 */
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|bus
 operator|=
 name|xpt_find_bus
@@ -17514,11 +17216,6 @@ block|}
 block|}
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Only touch the user's data if we are successful. 	 */
 if|if
 condition|(
@@ -18593,9 +18290,6 @@ modifier|*
 name|free_ccb
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|cam_path
 modifier|*
@@ -18650,11 +18344,6 @@ operator|=
 name|bus
 operator|->
 name|sim
-expr_stmt|;
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
 expr_stmt|;
 name|mtx_assert
 argument_list|(
@@ -18724,11 +18413,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|sim
@@ -18776,11 +18460,6 @@ name|device
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dev_allocq_is_runnable
@@ -18832,9 +18511,6 @@ decl_stmt|;
 name|struct
 name|ccb_pathinq
 name|cpi
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 name|mtx_assert
 argument_list|(
@@ -18968,11 +18644,6 @@ name|generation
 operator|=
 literal|0
 expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -19053,11 +18724,6 @@ operator|&
 name|xsoftc
 operator|.
 name|xpt_topo_lock
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 comment|/* Notify interested parties */
@@ -19857,9 +19523,6 @@ decl_stmt|,
 modifier|*
 name|next_device
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|mtx_assert
 argument_list|(
 name|path
@@ -19884,12 +19547,7 @@ literal|"xpt_async\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Most async events come from a CAM interrupt context.  In 	 * a few cases, the error recovery code at the peripheral layer, 	 * which may run from our SWI or a process context, may signal 	 * deferred events with a call to xpt_async. Ensure async 	 * notifications are serialized by blocking cam interrupts. 	 */
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
+comment|/* 	 * Most async events come from a CAM interrupt context.  In 	 * a few cases, the error recovery code at the peripheral layer, 	 * which may run from our SWI or a process context, may signal 	 * deferred events with a call to xpt_async. 	 */
 name|bus
 operator|=
 name|path
@@ -19903,14 +19561,6 @@ operator|==
 name|AC_BUS_RESET
 condition|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splclock
-argument_list|()
-expr_stmt|;
 comment|/* Update our notion of when the last reset occurred */
 name|microtime
 argument_list|(
@@ -19918,11 +19568,6 @@ operator|&
 name|bus
 operator|->
 name|last_reset
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -19986,15 +19631,7 @@ operator|==
 name|AC_SENT_BDR
 condition|)
 block|{
-name|int
-name|s
-decl_stmt|;
 comment|/* Update our notion of when the last reset occurred */
-name|s
-operator|=
-name|splclock
-argument_list|()
-expr_stmt|;
 name|microtime
 argument_list|(
 operator|&
@@ -20003,11 +19640,6 @@ operator|->
 name|target
 operator|->
 name|last_reset
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -20120,11 +19752,6 @@ argument_list|,
 name|path
 argument_list|,
 name|async_arg
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -20443,9 +20070,6 @@ name|u_int
 name|count
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|ccb_hdr
 modifier|*
@@ -20464,11 +20088,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|path
 operator|->
 name|device
@@ -20477,7 +20096,7 @@ name|qfrozen_cnt
 operator|+=
 name|count
 expr_stmt|;
-comment|/* 	 * Mark the last CCB in the queue as needing 	 * to be requeued if the driver hasn't 	 * changed it's state yet.  This fixes a race 	 * where a ccb is just about to be queued to 	 * a controller driver when it's interrupt routine 	 * freezes the queue.  To completly close the 	 * hole, controller drives must check to see 	 * if a ccb's status is still CAM_REQ_INPROG 	 * under spl protection just before they queue 	 * the CCB.  See ahc_action/ahc_freeze_devq for 	 * an example. 	 */
+comment|/* 	 * Mark the last CCB in the queue as needing 	 * to be requeued if the driver hasn't 	 * changed it's state yet.  This fixes a race 	 * where a ccb is just about to be queued to 	 * a controller driver when it's interrupt routine 	 * freezes the queue.  To completly close the 	 * hole, controller drives must check to see 	 * if a ccb's status is still CAM_REQ_INPROG 	 * just before they queue 	 * the CCB.  See ahc_action/ahc_freeze_devq for 	 * an example. 	 */
 name|ccbh
 operator|=
 name|TAILQ_LAST
@@ -20509,11 +20128,6 @@ operator|->
 name|status
 operator|=
 name|CAM_REQUEUE_REQ
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -20725,24 +20339,9 @@ block|{
 name|int
 name|rundevq
 decl_stmt|;
-name|int
-name|s0
-decl_stmt|,
-name|s1
-decl_stmt|;
 name|rundevq
 operator|=
 literal|0
-expr_stmt|;
-name|s0
-operator|=
-name|splsoftcam
-argument_list|()
-expr_stmt|;
-name|s1
-operator|=
-name|splcam
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -20864,11 +20463,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|splx
-argument_list|(
-name|s1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rundevq
@@ -20882,11 +20476,6 @@ operator|->
 name|target
 operator|->
 name|bus
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s0
 argument_list|)
 expr_stmt|;
 block|}
@@ -20905,9 +20494,6 @@ name|int
 name|run_queue
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|camq
 modifier|*
@@ -20932,11 +20518,6 @@ name|devq
 operator|->
 name|send_queue
 operator|)
-expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -21005,11 +20586,6 @@ operator|->
 name|path_id
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|run_queue
@@ -21028,19 +20604,7 @@ name|bus
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
-else|else
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -21098,14 +20662,6 @@ name|cam_sim
 modifier|*
 name|sim
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|CAM_DEBUG
 argument_list|(
 name|done_ccb
@@ -21278,11 +20834,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -21411,14 +20962,6 @@ name|cam_sim
 modifier|*
 name|sim
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
-expr_stmt|;
 name|sim
 operator|=
 name|device
@@ -21459,11 +21002,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -21535,11 +21073,6 @@ operator|.
 name|sle
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|new_ccb
@@ -21559,14 +21092,6 @@ modifier|*
 name|bus
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -21624,11 +21149,6 @@ operator|.
 name|xpt_topo_lock
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|bus
@@ -21637,12 +21157,6 @@ name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -21839,14 +21353,6 @@ modifier|*
 name|target
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -21888,11 +21394,6 @@ operator|->
 name|generation
 operator|++
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|target
@@ -21906,12 +21407,6 @@ name|bus
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -22469,14 +21964,6 @@ modifier|*
 name|device
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -22616,11 +22103,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|camq_fini
 argument_list|(
 operator|&
@@ -22654,12 +22136,6 @@ name|target
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -22678,9 +22154,6 @@ name|newopenings
 parameter_list|)
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|diff
 decl_stmt|;
 name|int
@@ -22696,11 +22169,6 @@ operator|=
 name|path
 operator|->
 name|device
-expr_stmt|;
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
 expr_stmt|;
 name|diff
 operator|=
@@ -22788,11 +22256,6 @@ operator|->
 name|max_ccbs
 operator|+=
 name|diff
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -23670,8 +23133,6 @@ modifier|*
 name|target
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|phl
 decl_stmt|;
 comment|/* 			 * If we already probed lun 0 successfully, or 			 * we have additional configured luns on this 			 * target that might have "gone away", go onto 			 * the next lun. 			 */
@@ -23689,11 +23150,6 @@ comment|/* 			 * We may touch devices that we don't 			 * hold references too, s
 name|phl
 operator|=
 literal|0
-expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
 expr_stmt|;
 name|device
 operator|=
@@ -23737,11 +23193,6 @@ name|links
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -24382,9 +23833,6 @@ name|cam_periph
 modifier|*
 name|old_periph
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|CAM_DEBUG
 argument_list|(
 name|request_ccb
@@ -24681,11 +24129,6 @@ operator|=
 name|flags
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -24795,11 +24238,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
