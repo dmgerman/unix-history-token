@@ -2412,58 +2412,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wait interruptibly for an exclusive lock.  */
-end_comment
-
-begin_function
-name|void
-name|cam_periph_lock
-parameter_list|(
-name|struct
-name|cam_periph
-modifier|*
-name|periph
-parameter_list|)
-block|{
-name|mtx_lock
-argument_list|(
-name|periph
-operator|->
-name|sim
-operator|->
-name|mtx
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Unlock and wake up any waiters.  */
-end_comment
-
-begin_function
-name|void
-name|cam_periph_unlock
-parameter_list|(
-name|struct
-name|cam_periph
-modifier|*
-name|periph
-parameter_list|)
-block|{
-name|mtx_unlock
-argument_list|(
-name|periph
-operator|->
-name|sim
-operator|->
-name|mtx
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Map user virtual pointers into kernel virtual address space, so we can  * access the memory.  This won't work on physical pointers, for now it's  * up to the caller to check for that.  (XXX KDM -- should we do that here  * instead?)  This also only works for up to MAXPHYS memory.  Since we use  * buffers to map stuff in and out, we're limited to the buffer size.  */
 end_comment
 
