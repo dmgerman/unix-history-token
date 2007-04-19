@@ -9398,7 +9398,9 @@ name|vnp
 operator|.
 name|vnp_size
 operator|-
-name|off
+name|uap
+operator|->
+name|offset
 operator|-
 name|sbytes
 operator|-
@@ -9434,7 +9436,9 @@ name|vnp
 operator|.
 name|vnp_size
 operator|-
-name|off
+name|uap
+operator|->
+name|offset
 operator|-
 name|sbytes
 operator|-
