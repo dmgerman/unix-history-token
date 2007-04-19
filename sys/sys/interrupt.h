@@ -218,9 +218,13 @@ name|ie_count
 decl_stmt|;
 comment|/* Loop counter. */
 name|int
-name|ie_warned
+name|ie_warncnt
 decl_stmt|;
-comment|/* Warned about interrupt storm. */
+comment|/* Rate-check interrupt storm warns. */
+name|struct
+name|timeval
+name|ie_warntm
+decl_stmt|;
 block|}
 struct|;
 end_struct
