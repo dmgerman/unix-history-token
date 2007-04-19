@@ -771,8 +771,10 @@ else|:
 literal|"disabled"
 argument_list|)
 expr_stmt|;
-name|value
-operator|=
+name|printf
+argument_list|(
+literal|"revision %d\n"
+argument_list|,
 name|pci_read_config
 argument_list|(
 name|dev
@@ -781,12 +783,6 @@ name|PCI_REVID_SMB
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"revision %d\n"
-argument_list|,
-name|value
 argument_list|)
 expr_stmt|;
 if|if
