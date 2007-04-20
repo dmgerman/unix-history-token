@@ -227,6 +227,12 @@ name|int
 name|cmtime
 decl_stmt|;
 comment|/* Modification time of its youngest child */
+name|struct
+name|GNode
+modifier|*
+name|cmtime_gn
+decl_stmt|;
+comment|/* Youngest child */
 comment|/* 	 * Links to parents for which this is an implied source, if any. (nodes 	 * that depend on this, as gleaned from the transformation rules. 	 */
 name|Lst
 name|iParents

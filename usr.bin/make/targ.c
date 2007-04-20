@@ -264,6 +264,12 @@ name|cmtime
 operator|=
 literal|0
 expr_stmt|;
+name|gn
+operator|->
+name|cmtime_gn
+operator|=
+name|NULL
+expr_stmt|;
 name|Lst_Init
 argument_list|(
 operator|&
