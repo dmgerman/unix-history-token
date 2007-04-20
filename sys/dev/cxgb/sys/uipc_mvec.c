@@ -2064,7 +2064,11 @@ name|mi_base
 decl_stmt|;
 if|if
 condition|(
-name|refcnt
+operator|(
+name|type
+operator|!=
+name|EXT_MBUF
+operator|)
 operator|&&
 operator|*
 name|refcnt
