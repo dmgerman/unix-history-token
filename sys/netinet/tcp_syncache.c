@@ -3876,11 +3876,21 @@ block|}
 comment|/* 		 * Update timestamp if present. 		 */
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|sc_flags
 operator|&
 name|SCF_TIMESTAMP
+operator|)
+operator|&&
+operator|(
+name|to
+operator|->
+name|to_flags
+operator|&
+name|TOF_TS
+operator|)
 condition|)
 name|sc
 operator|->
@@ -3889,6 +3899,14 @@ operator|=
 name|to
 operator|->
 name|to_tsval
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|sc_flags
+operator|&=
+operator|~
+name|SCF_TIMESTAMP
 expr_stmt|;
 ifdef|#
 directive|ifdef
