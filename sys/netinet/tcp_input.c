@@ -3820,12 +3820,7 @@ name|m
 argument_list|)
 condition|)
 block|{
-comment|/* 					 * No syncache entry, or ACK was not 					 * for our SYN/ACK.  Send a RST. 					 */
-name|tcpstat
-operator|.
-name|tcps_badsyn
-operator|++
-expr_stmt|;
+comment|/* 					 * No syncache entry or ACK was not 					 * for our SYN/ACK.  Send a RST. 					 */
 name|rstreason
 operator|=
 name|BANDLIM_RST_OPENPORT
@@ -3841,19 +3836,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 					 * Could not complete 3-way handshake, 					 * connection is being closed down, and 					 * syncache has free'd mbuf. 					 */
-name|INP_UNLOCK
-argument_list|(
-name|inp
-argument_list|)
+comment|/* 					 * We completed the 3-way handshake 					 * but could not allocate a socket 					 * either due to memory shortage, 					 * listen queue length limits or 					 * global socket limits. 					 */
+name|rstreason
+operator|=
+name|BANDLIM_UNLIMITED
 expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|tcbinfo
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|dropwithreset
+goto|;
 block|}
 comment|/* 				 * Socket is created in state SYN_RECEIVED. 				 * Continue processing segment. 				 */
 name|INP_UNLOCK
