@@ -8886,6 +8886,15 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+name|m_tag_copy_chain
+argument_list|(
+name|n
+argument_list|,
+name|m
+argument_list|,
+name|M_DONTWAIT
+argument_list|)
+expr_stmt|;
 name|m
 operator|=
 name|n
