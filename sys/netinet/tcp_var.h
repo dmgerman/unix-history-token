@@ -729,25 +729,20 @@ define|#
 directive|define
 name|TOF_SIGNATURE
 value|0x0040
-comment|/* signature option present */
-define|#
-directive|define
-name|TOF_SIGLEN
-value|0x0080
-comment|/* signature length valid (RFC2385) */
+comment|/* TCP-MD5 signature option (RFC2385) */
 define|#
 directive|define
 name|TOF_SACK
-value|0x0100
+value|0x0080
 comment|/* Peer sent SACK option */
 define|#
 directive|define
 name|TOF_MAXOPT
-value|0x0200
+value|0x0100
 name|u_int32_t
 name|to_tsval
 decl_stmt|;
-comment|/* our new timestamp */
+comment|/* new timestamp */
 name|u_int32_t
 name|to_tsecr
 decl_stmt|;
@@ -773,7 +768,7 @@ name|u_char
 modifier|*
 name|to_signature
 decl_stmt|;
-comment|/* pointer to the MD5 signature */
+comment|/* pointer to the TCP-MD5 signature */
 block|}
 struct|;
 end_struct
