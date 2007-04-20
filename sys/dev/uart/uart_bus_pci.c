@@ -284,6 +284,20 @@ block|,
 block|{
 literal|0x103c
 block|,
+literal|0x1048
+block|,
+literal|0x103c
+block|,
+literal|0x1301
+block|,
+literal|"HP Diva RMP3"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x103c
+block|,
 literal|0x1290
 block|,
 literal|0xffff
