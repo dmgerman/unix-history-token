@@ -8010,6 +8010,7 @@ operator|=
 name|cpuid
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|pick_pri
