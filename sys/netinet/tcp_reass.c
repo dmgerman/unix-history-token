@@ -3673,6 +3673,22 @@ name|struct
 name|in_conninfo
 name|inc
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_state
+operator|==
+name|TCPS_LISTEN
+argument_list|,
+operator|(
+literal|"%s: so accepting but "
+literal|"tp not listening"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -9874,6 +9890,12 @@ literal|"%s: check_delack: head locked"
 operator|,
 name|__func__
 operator|)
+argument_list|)
+expr_stmt|;
+name|INP_INFO_UNLOCK_ASSERT
+argument_list|(
+operator|&
+name|tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_LOCK_ASSERT
