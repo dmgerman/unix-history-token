@@ -3504,7 +3504,7 @@ comment|/*  * Given a LISTEN socket and an inbound SYN request, add  * this to t
 end_comment
 
 begin_function
-name|int
+name|void
 name|syncache_add
 parameter_list|(
 name|struct
@@ -4472,11 +4472,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 end_function
 

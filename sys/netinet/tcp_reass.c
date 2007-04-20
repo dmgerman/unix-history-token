@@ -4159,17 +4159,6 @@ name|dropunlock
 goto|;
 block|}
 comment|/* 		 * SYN appears to be valid.  Create compressed TCP state 		 * for syncache. 		 */
-if|if
-condition|(
-name|so
-operator|->
-name|so_qlen
-operator|<=
-name|so
-operator|->
-name|so_qlimit
-condition|)
-block|{
 ifdef|#
 directive|ifdef
 name|TCPDEBUG
@@ -4215,9 +4204,6 @@ argument_list|,
 name|TO_SYN
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
 name|syncache_add
 argument_list|(
 operator|&
@@ -4235,17 +4221,9 @@ name|so
 argument_list|,
 name|m
 argument_list|)
-condition|)
-goto|goto
-name|dropunlock
-goto|;
-comment|/* 			 * Entry added to syncache, mbuf used to 			 * send SYN-ACK packet.  Everything unlocked 			 * already. 			 */
+expr_stmt|;
+comment|/* 		 * Entry added to syncache and mbuf consumed. 		 * Everything unlocked already by syncache_add(). 		 */
 return|return;
-block|}
-comment|/* Catch all.  Everthing that makes it down here is junk. */
-goto|goto
-name|dropunlock
-goto|;
 block|}
 comment|/* 	 * Segment belongs to a connection in SYN_SENT, ESTABLISHED or 	 * later state.  tcp_do_segment() always consumes the mbuf chain 	 * and unlocks the inpcb. 	 */
 if|if
