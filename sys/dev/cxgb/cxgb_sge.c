@@ -2194,7 +2194,15 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
-comment|/* 				 * XXX free cluster 				 */
+name|uma_zfree
+argument_list|(
+name|q
+operator|->
+name|zone
+argument_list|,
+name|cl
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
