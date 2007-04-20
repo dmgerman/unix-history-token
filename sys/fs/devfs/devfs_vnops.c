@@ -2131,7 +2131,7 @@ parameter_list|(
 name|aa
 parameter_list|)
 define|\
-value|do {							\ 		if ((aa).tv_sec == 0) {				\ 			(aa).tv_sec = boottime.tv_sec;		\ 			(aa).tv_nsec = boottime.tv_usec * 1000; \ 		}						\ 	} while (0)
+value|do {							\ 		if ((aa).tv_sec<= 3600) {			\ 			(aa).tv_sec = boottime.tv_sec;		\ 			(aa).tv_nsec = boottime.tv_usec * 1000; \ 		}						\ 	} while (0)
 if|if
 condition|(
 name|vp
