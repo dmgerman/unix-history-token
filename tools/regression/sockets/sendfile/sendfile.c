@@ -1012,6 +1012,8 @@ operator|=
 name|sb
 operator|.
 name|st_size
+operator|-
+name|offset
 expr_stmt|;
 block|}
 if|if
