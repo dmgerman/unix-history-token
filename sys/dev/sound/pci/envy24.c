@@ -13315,11 +13315,11 @@ name|snd_envy24
 argument_list|,
 name|snd_spicds
 argument_list|,
-name|SOUND_MINVER
+literal|1
 argument_list|,
-name|SOUND_PREFVER
+literal|1
 argument_list|,
-name|SOUND_MAXVER
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
