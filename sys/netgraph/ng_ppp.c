@@ -470,6 +470,17 @@ value|(hz/2)
 end_define
 
 begin_comment
+comment|/* Average link overhead. XXX: Should be given by user-level */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MP_AVERAGE_LINK_OVERHEAD
+value|16
+end_define
+
+begin_comment
 comment|/* Keep this equal to ng_ppp_hook_names lower! */
 end_comment
 
@@ -5869,12 +5880,15 @@ operator|->
 name|allLinksEqual
 condition|)
 block|{
+comment|/* If queue was empty, then mark this time. */
+if|if
+condition|(
 name|link
 operator|->
 name|bytesInQueue
-operator|+=
-name|len
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|getmicrouptime
 argument_list|(
 operator|&
@@ -5882,6 +5896,33 @@ name|link
 operator|->
 name|lastWrite
 argument_list|)
+expr_stmt|;
+name|link
+operator|->
+name|bytesInQueue
+operator|+=
+name|len
+operator|+
+name|MP_AVERAGE_LINK_OVERHEAD
+expr_stmt|;
+comment|/* Limit max queue length to 50 pkts. BW can be defined 		       incorrectly and link may not signal overload. */
+if|if
+condition|(
+name|link
+operator|->
+name|bytesInQueue
+operator|>
+literal|50
+operator|*
+literal|1600
+condition|)
+name|link
+operator|->
+name|bytesInQueue
+operator|=
+literal|50
+operator|*
+literal|1600
 expr_stmt|;
 block|}
 block|}
@@ -9296,6 +9337,13 @@ operator|->
 name|lastWrite
 argument_list|)
 expr_stmt|;
+comment|/* alink->bytesInQueue will be changed, mark change time. */
+name|alink
+operator|->
+name|lastWrite
+operator|=
+name|now
+expr_stmt|;
 if|if
 condition|(
 name|now
@@ -9329,6 +9377,8 @@ operator|->
 name|conf
 operator|.
 name|bandwidth
+operator|*
+literal|10
 operator|*
 name|diff
 operator|.
@@ -10436,8 +10486,26 @@ block|{
 name|int
 name|hdrBytes
 decl_stmt|;
+if|if
+condition|(
+name|priv
+operator|->
+name|links
+index|[
+name|i
+index|]
+operator|.
+name|conf
+operator|.
+name|bandwidth
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|hdrBytes
 operator|=
+name|MP_AVERAGE_LINK_OVERHEAD
+operator|+
 operator|(
 name|priv
 operator|->
@@ -10505,9 +10573,8 @@ operator|.
 name|latency
 operator|+
 operator|(
-operator|(
 name|hdrBytes
-operator|*
+operator|/
 name|priv
 operator|->
 name|links
@@ -10518,7 +10585,6 @@ operator|.
 name|conf
 operator|.
 name|bandwidth
-operator|)
 operator|+
 literal|50
 operator|)
