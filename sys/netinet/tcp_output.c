@@ -5200,7 +5200,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|MAX_TCPOPTLEN
+name|TCP_MAXOLEN
 operator|-
 name|optlen
 operator|<
@@ -5293,7 +5293,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|MAX_TCPOPTLEN
+name|TCP_MAXOLEN
 operator|-
 name|optlen
 operator|<
@@ -5321,7 +5321,7 @@ operator|->
 name|to_nsacks
 argument_list|,
 operator|(
-name|MAX_TCPOPTLEN
+name|TCP_MAXOLEN
 operator|-
 name|optlen
 operator|)
@@ -5478,7 +5478,7 @@ name|KASSERT
 argument_list|(
 name|optlen
 operator|<=
-name|MAX_TCPOPTLEN
+name|TCP_MAXOLEN
 argument_list|,
 operator|(
 literal|"%s: TCP options too long"

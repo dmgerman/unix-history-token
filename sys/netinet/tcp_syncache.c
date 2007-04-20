@@ -4609,7 +4609,7 @@ name|max_linkhdr
 operator|+
 name|tlen
 operator|+
-name|MAX_TCPOPTLEN
+name|TCP_MAXOLEN
 operator|<=
 name|MHLEN
 argument_list|,

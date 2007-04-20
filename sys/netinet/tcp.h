@@ -294,25 +294,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPOPT_TSTAMP_HDR
-define|\
-value|(TCPOPT_NOP<<24|TCPOPT_NOP<<16|TCPOPT_TIMESTAMP<<8|TCPOLEN_TIMESTAMP)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_TCPOPTLEN
-value|40
-end_define
-
-begin_comment
-comment|/* Absolute maximum TCP options len */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TCPOPT_SIGNATURE
 value|19
 end_define
@@ -326,25 +307,6 @@ define|#
 directive|define
 name|TCPOLEN_SIGNATURE
 value|18
-end_define
-
-begin_comment
-comment|/* Option definitions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPOPT_SACK_PERMIT_HDR
-define|\
-value|(TCPOPT_NOP<<24|TCPOPT_NOP<<16|TCPOPT_SACK_PERMITTED<<8|TCPOLEN_SACK_PERMITTED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCPOPT_SACK_HDR
-value|(TCPOPT_NOP<<24|TCPOPT_NOP<<16|TCPOPT_SACK<<8)
 end_define
 
 begin_comment
