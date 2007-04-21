@@ -30,6 +30,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_comment
+comment|/* needed by<sys/mutex.h> */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -55,6 +65,26 @@ end_include
 
 begin_comment
 comment|/* mbuf(9) */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_comment
+comment|/* mutex(9) */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_comment
+comment|/* queue(3) to keep the list of interfaces */
 end_comment
 
 begin_include
@@ -156,6 +186,13 @@ name|sc_ifp
 decl_stmt|;
 comment|/* ptr to generic interface configuration */
 comment|/* 	 * A non-null driver can keep various things here, for instance, 	 * the hardware revision, cached values of write-only registers, etc. 	 */
+name|LIST_ENTRY
+argument_list|(
+argument|edsc_softc
+argument_list|)
+name|sc_list
+expr_stmt|;
+comment|/* for MOD_UNLOAD handler */
 block|}
 struct|;
 end_struct
@@ -174,8 +211,6 @@ name|if_clone
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-name|caddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -262,6 +297,29 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * We have to keep the list of interface instances  * so that we can destroy all of them upon unloading this driver.  * The list is protected by the mutex so that different threads  * won't try to modify it at the same time.  */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|edsc_softc
+argument_list|)
+name|edsc_softc_list
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|edsc_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Attach to the interface cloning framework under the name of "edsc".  * The second argument is the number of units to be created from  * the outset.  It's also the minimum number of units allowed.  * We don't want any units created as soon as the driver is loaded.  */
 end_comment
 
@@ -291,9 +349,6 @@ name|ifc
 parameter_list|,
 name|int
 name|unit
-parameter_list|,
-name|caddr_t
-name|params
 parameter_list|)
 block|{
 name|struct
@@ -401,11 +456,7 @@ name|IFCAP_VLAN_MTU
 operator||
 name|IFCAP_VLAN_HWTAGGING
 operator||
-name|IFCAP_VLAN_HWCSUM
-operator||
 name|IFCAP_HWCSUM
-operator||
-name|IFCAP_TSO
 operator||
 name|IFCAP_JUMBO_MTU
 expr_stmt|;
@@ -452,6 +503,29 @@ argument_list|,
 name|eaddr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Insert this interface in the list we have to keep. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|edsc_mtx
+argument_list|)
+expr_stmt|;
+name|LIST_INSERT_HEAD
+argument_list|(
+operator|&
+name|edsc_softc_list
+argument_list|,
+name|sc
+argument_list|,
+name|sc_list
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|edsc_mtx
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Now we can mark the interface as running, i.e., ready 	 * for operation. 	 */
 name|ifp
 operator|->
@@ -464,6 +538,47 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Code shared by the handlers for clone destruction and MOD_UNLOAD.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|edsc_destroy
+parameter_list|(
+name|struct
+name|edsc_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+comment|/* 	 * Detach from the network interface framework. 	 */
+name|ether_ifdetach
+argument_list|(
+name|sc
+operator|->
+name|sc_ifp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Free memory occupied by ifnet and softc. 	 */
+name|if_free
+argument_list|(
+name|sc
+operator|->
+name|sc_ifp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sc
+argument_list|,
+name|M_EDSC
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -491,23 +606,28 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-comment|/* 	 * Detach from the network interface framework. 	 */
-name|ether_ifdetach
+name|mtx_lock
 argument_list|(
-name|ifp
+operator|&
+name|edsc_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Free memory occupied by ifnet and softc. 	 */
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|free
+name|LIST_REMOVE
 argument_list|(
 name|sc
 argument_list|,
-name|M_EDSC
+name|sc_list
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|edsc_mtx
+argument_list|)
+expr_stmt|;
+name|edsc_destroy
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -756,6 +876,11 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+name|struct
+name|edsc_softc
+modifier|*
+name|sc
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -764,6 +889,24 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+name|mtx_init
+argument_list|(
+operator|&
+name|edsc_mtx
+argument_list|,
+literal|"edsc_mtx"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|edsc_softc_list
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Connect to the network interface cloning framework. 		 */
 name|if_clone_attach
 argument_list|(
@@ -775,11 +918,71 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-comment|/* 		 * Disconnect from the cloning framework. 		 * Existing interfaces will be disposed of properly. 		 */
+comment|/* 		 * First of all, disconnect from the cloning framework 		 * so that no new interfaces can appear. 		 */
 name|if_clone_detach
 argument_list|(
 operator|&
 name|edsc_cloner
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Now we have to destroy the interfaces by ourselves. 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|edsc_mtx
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|sc
+operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|edsc_softc_list
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|LIST_REMOVE
+argument_list|(
+name|sc
+argument_list|,
+name|sc_list
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|edsc_mtx
+argument_list|)
+expr_stmt|;
+name|edsc_destroy
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|edsc_mtx
+argument_list|)
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|edsc_mtx
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Don't forget to destroy our mutex. 		 */
+name|mtx_destroy
+argument_list|(
+operator|&
+name|edsc_mtx
 argument_list|)
 expr_stmt|;
 break|break;
