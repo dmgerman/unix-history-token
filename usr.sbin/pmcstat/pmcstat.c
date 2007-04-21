@@ -2993,7 +2993,7 @@ operator|(
 operator|(
 name|args
 operator|.
-name|pa_required
+name|pa_flags
 operator|&
 name|FLAG_HAS_OUTPUT_LOGFILE
 operator|)
