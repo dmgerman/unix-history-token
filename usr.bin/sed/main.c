@@ -312,8 +312,19 @@ begin_comment
 comment|/* Exit status */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ispan
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Current file and line number; line numbers restart across compilation  * units, but span across input files.  */
+comment|/* Whether inplace editing spans across files */
+end_comment
+
+begin_comment
+comment|/*  * Current file and line number; line numbers restart across compilation  * units, but span across input files.  The latter is optional if editing  * in place.  */
 end_comment
 
 begin_decl_stmt
@@ -472,7 +483,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Eae:f:i:ln"
+literal|"EI:ae:f:i:ln"
 argument_list|)
 operator|)
 operator|!=
@@ -491,6 +502,19 @@ name|rflags
 operator|=
 name|REG_EXTENDED
 expr_stmt|;
+break|break;
+case|case
+literal|'I'
+case|:
+name|inplace
+operator|=
+name|optarg
+expr_stmt|;
+name|ispan
+operator|=
+literal|1
+expr_stmt|;
+comment|/* span across input files */
 break|break;
 case|case
 literal|'a'
@@ -576,6 +600,11 @@ name|inplace
 operator|=
 name|optarg
 expr_stmt|;
+name|ispan
+operator|=
+literal|0
+expr_stmt|;
+comment|/* don't span across input files */
 break|break;
 case|case
 literal|'l'
@@ -1291,7 +1320,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-i may not be used with stdin"
+literal|"-I or -i may not be used with stdin"
 argument_list|)
 expr_stmt|;
 name|infile
@@ -1729,6 +1758,20 @@ name|outfname
 operator|=
 name|tmpfname
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ispan
+condition|)
+block|{
+name|linenum
+operator|=
+literal|0
+expr_stmt|;
+name|resetranges
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2014,6 +2057,14 @@ operator|->
 name|next
 operator|!=
 name|NULL
+operator|&&
+operator|(
+name|inplace
+operator|==
+name|NULL
+operator|||
+name|ispan
+operator|)
 condition|)
 return|return
 operator|(
