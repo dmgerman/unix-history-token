@@ -11196,11 +11196,14 @@ name|error
 condition|)
 name|fatal
 argument_list|(
-literal|"Failed to open pool '%s': errno = %d\n"
+literal|"Failed to open pool '%s': %s"
 argument_list|,
 name|spa_name
 argument_list|,
+name|strerror
+argument_list|(
 name|error
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|spa
@@ -12250,14 +12253,17 @@ name|error
 condition|)
 name|fatal
 argument_list|(
-literal|"can't open %s: error %d"
+literal|"can't open %s: %s"
 argument_list|,
 name|argv
 index|[
 literal|0
 index|]
 argument_list|,
+name|strerror
+argument_list|(
 name|error
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|argv

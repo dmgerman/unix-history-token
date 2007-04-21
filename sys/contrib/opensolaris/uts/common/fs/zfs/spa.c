@@ -2273,24 +2273,22 @@ name|pool_guid
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Try to open all vdevs, loading each label in the process. 	 */
-if|if
-condition|(
+name|error
+operator|=
 name|vdev_open
 argument_list|(
 name|rvd
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|error
-operator|=
-name|ENXIO
-expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
 comment|/* 	 * Validate the labels for all leaf vdevs.  We need to grab the config 	 * lock because all label I/O is done with the ZIO_FLAG_CONFIG_HELD 	 * flag. 	 */
 name|spa_config_enter
 argument_list|(
@@ -2321,15 +2319,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|error
-operator|=
-name|EBADF
-expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
 if|if
 condition|(
 name|rvd

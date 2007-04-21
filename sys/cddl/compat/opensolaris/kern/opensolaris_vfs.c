@@ -847,7 +847,7 @@ operator||
 name|MNT_ROOTFS
 operator|)
 expr_stmt|;
-comment|/* 	 * Unprivileged user can trigger mounting a snapshot, but we don't want 	 * him to unmount it, so we switch to privileged credential. 	 */
+comment|/* 	 * Unprivileged user can trigger mounting a snapshot, but we don't want 	 * him to unmount it, so we switch to privileged credentials. 	 */
 name|crfree
 argument_list|(
 name|mp

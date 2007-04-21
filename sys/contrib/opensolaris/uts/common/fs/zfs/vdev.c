@@ -4181,8 +4181,7 @@ literal|0
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|EBADF
 operator|)
 return|;
 comment|/* 	 * If the device has already failed, or was marked offline, don't do 	 * any further validation.  Otherwise, label I/O will fail and we will 	 * overwrite the previous state. 	 */
@@ -4375,8 +4374,7 @@ name|POOL_STATE_ACTIVE
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|EBADF
 operator|)
 return|;
 block|}

@@ -3041,10 +3041,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|DIR
-modifier|*
-name|dirp
-decl_stmt|;
 name|char
 name|path
 index|[
