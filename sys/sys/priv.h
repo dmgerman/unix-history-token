@@ -111,17 +111,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_NFSD
-value|7
-end_define
-
-begin_comment
-comment|/* Can become NFS daemon. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PRIV_REBOOT
 value|8
 end_define
@@ -1066,6 +1055,32 @@ end_define
 
 begin_comment
 comment|/* Can attach/detach ZFS file systems 					   to/from jails. */
+end_comment
+
+begin_comment
+comment|/*  * NFS-specific privileges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NFS_DAEMON
+value|290
+end_define
+
+begin_comment
+comment|/* Can become the NFS daemon. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NFS_LOCKD
+value|291
+end_define
+
+begin_comment
+comment|/* Can become NFS lock daemon. */
 end_comment
 
 begin_comment

@@ -547,7 +547,7 @@ name|priv_check
 argument_list|(
 name|td
 argument_list|,
-name|PRIV_NFSD
+name|PRIV_NFS_DAEMON
 argument_list|)
 expr_stmt|;
 if|if
