@@ -7279,6 +7279,17 @@ index|]
 expr_stmt|;
 name|vap
 operator|->
+name|va_rdev
+operator|=
+name|zfs_cmpldev
+argument_list|(
+name|pzp
+operator|->
+name|zp_rdev
+argument_list|)
+expr_stmt|;
+name|vap
+operator|->
 name|va_seq
 operator|=
 name|zp
