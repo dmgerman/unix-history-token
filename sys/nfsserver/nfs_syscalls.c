@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -230,12 +224,6 @@ begin_include
 include|#
 directive|include
 file|<nfsserver/nfsrvcache.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<security/mac/mac_framework.h>
 end_include
 
 begin_expr_stmt
@@ -518,29 +506,6 @@ literal|"nfssvc(): called with Giant"
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MAC
-name|error
-operator|=
-name|mac_check_system_nfsd
-argument_list|(
-name|td
-operator|->
-name|td_ucred
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|priv_check

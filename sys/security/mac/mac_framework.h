@@ -2158,18 +2158,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_kld_unload
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|mac_check_mount_stat
 parameter_list|(
 name|struct
@@ -2888,18 +2876,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysarch_ioperm
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|mac_check_system_acct
 parameter_list|(
 name|struct
@@ -2968,18 +2944,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_system_nfsd
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|mac_check_system_reboot
 parameter_list|(
 name|struct
@@ -2989,18 +2953,6 @@ name|cred
 parameter_list|,
 name|int
 name|howto
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|mac_check_system_settime
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
 parameter_list|)
 function_decl|;
 end_function_decl
