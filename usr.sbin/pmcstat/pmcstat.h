@@ -228,6 +228,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|NSOCKPAIRFD
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PARENTSOCKET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHILDSOCKET
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|PMCSTAT_OPEN_FOR_READ
 value|0
 end_define
@@ -317,53 +338,53 @@ argument|pmcstat_ev
 argument_list|)
 name|ev_next
 expr_stmt|;
-name|char
-modifier|*
-name|ev_spec
-decl_stmt|;
-comment|/* event specification */
-name|char
-modifier|*
-name|ev_name
-decl_stmt|;
-comment|/* (derived) event name */
-name|enum
-name|pmc_mode
-name|ev_mode
-decl_stmt|;
-comment|/* desired mode */
 name|int
 name|ev_count
 decl_stmt|;
 comment|/* associated count if in sampling mode */
-name|int
+name|uint32_t
 name|ev_cpu
 decl_stmt|;
-comment|/* specific cpu if requested */
-name|int
-name|ev_flags
-decl_stmt|;
-comment|/* PMC_F_* */
+comment|/* cpus for this event */
 name|int
 name|ev_cumulative
 decl_stmt|;
 comment|/* show cumulative counts */
 name|int
-name|ev_fieldwidth
+name|ev_flags
 decl_stmt|;
-comment|/* print width */
+comment|/* PMC_F_* */
 name|int
 name|ev_fieldskip
 decl_stmt|;
 comment|/* #leading spaces */
-name|pmc_value_t
-name|ev_saved
+name|int
+name|ev_fieldwidth
 decl_stmt|;
-comment|/* saved value for incremental counts */
+comment|/* print width */
+name|enum
+name|pmc_mode
+name|ev_mode
+decl_stmt|;
+comment|/* desired mode */
+name|char
+modifier|*
+name|ev_name
+decl_stmt|;
+comment|/* (derived) event name */
 name|pmc_id_t
 name|ev_pmcid
 decl_stmt|;
 comment|/* allocated ID */
+name|pmc_value_t
+name|ev_saved
+decl_stmt|;
+comment|/* for incremental counts */
+name|char
+modifier|*
+name|ev_spec
+decl_stmt|;
+comment|/* event specification */
 block|}
 struct|;
 end_struct
@@ -465,6 +486,18 @@ end_comment
 
 begin_function_decl
 name|void
+name|pmcstat_attach_pmcs
+parameter_list|(
+name|struct
+name|pmcstat_args
+modifier|*
+name|_a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmcstat_cleanup
 parameter_list|(
 name|struct
@@ -476,8 +509,40 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|pmcstat_clone_event_descriptor
+parameter_list|(
+name|struct
+name|pmcstat_args
+modifier|*
+name|_a
+parameter_list|,
+name|struct
+name|pmcstat_ev
+modifier|*
+name|_ev
+parameter_list|,
+name|uint32_t
+name|_cpumask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|pmcstat_close_log
+parameter_list|(
+name|struct
+name|pmcstat_args
+modifier|*
+name|_a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmcstat_create_process
 parameter_list|(
 name|struct
 name|pmcstat_args
@@ -552,18 +617,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pmcstat_setup_process
-parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|pmcstat_show_usage
 parameter_list|(
 name|void
@@ -599,10 +652,7 @@ begin_function_decl
 name|void
 name|pmcstat_start_process
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -613,6 +663,18 @@ name|pmcstat_process_log
 parameter_list|(
 name|struct
 name|pmcstat_args
+modifier|*
+name|_a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|pmcstat_get_cpumask
+parameter_list|(
+specifier|const
+name|char
 modifier|*
 name|_a
 parameter_list|)
