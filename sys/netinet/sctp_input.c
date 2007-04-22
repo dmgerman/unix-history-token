@@ -1344,7 +1344,6 @@ operator|.
 name|inqueue
 argument_list|)
 expr_stmt|;
-comment|/* 		 * we are not on any wheel, pr-sctp streams will go on the 		 * wheel when they have data waiting for reorder. 		 */
 name|asoc
 operator|->
 name|strmin
@@ -1352,22 +1351,7 @@ index|[
 name|i
 index|]
 operator|.
-name|next_spoke
-operator|.
-name|tqe_next
-operator|=
-literal|0
-expr_stmt|;
-name|asoc
-operator|->
-name|strmin
-index|[
-name|i
-index|]
-operator|.
-name|next_spoke
-operator|.
-name|tqe_prev
+name|delivery_started
 operator|=
 literal|0
 expr_stmt|;

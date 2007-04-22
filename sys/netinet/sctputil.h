@@ -1142,6 +1142,9 @@ name|error
 parameter_list|,
 name|int
 name|no_lock
+parameter_list|,
+name|uint32_t
+name|strseq
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -312,20 +312,27 @@ begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_EXT_RCVINFO
-value|0x00000004
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_DONOT_HEARTBEAT
-value|0x00000008
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_FRAG_INTERLEAVE
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_INTERLEAVE_STRMS
 value|0x00000010
 end_define
 
@@ -442,7 +449,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_EXPLICIT_EOR
-value|0x00200000
+value|0x00400000
 end_define
 
 begin_define

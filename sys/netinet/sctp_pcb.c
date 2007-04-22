@@ -16284,6 +16284,9 @@ argument_list|)
 condition|)
 block|{
 comment|/* 						 * Need to add a PD-API 						 * aborted indication. 						 * Setting the control_pdapi 						 * assures that it will be 						 * added right after this 						 * msg. 						 */
+name|uint32_t
+name|strseq
+decl_stmt|;
 name|stcb
 operator|->
 name|asoc
@@ -16292,6 +16295,20 @@ name|control_pdapi
 operator|=
 name|sq
 expr_stmt|;
+name|strseq
+operator|=
+operator|(
+name|sq
+operator|->
+name|sinfo_stream
+operator|<<
+literal|16
+operator|)
+operator||
+name|sq
+operator|->
+name|sinfo_ssn
+expr_stmt|;
 name|sctp_notify_partial_delivery_indication
 argument_list|(
 name|stcb
@@ -16299,6 +16316,8 @@ argument_list|,
 name|SCTP_PARTIAL_DELIVERY_ABORTED
 argument_list|,
 literal|1
+argument_list|,
+name|strseq
 argument_list|)
 expr_stmt|;
 name|stcb

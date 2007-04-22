@@ -973,7 +973,7 @@ name|uint8_t
 name|pdapi_aborted
 decl_stmt|;
 name|uint8_t
-name|resv
+name|some_taken
 decl_stmt|;
 block|}
 struct|;
@@ -1080,12 +1080,6 @@ name|struct
 name|sctp_readhead
 name|inqueue
 decl_stmt|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|sctp_stream_in
-argument_list|)
-name|next_spoke
-expr_stmt|;
 name|uint16_t
 name|stream_no
 decl_stmt|;
@@ -1093,6 +1087,9 @@ name|uint16_t
 name|last_sequence_delivered
 decl_stmt|;
 comment|/* used for re-order */
+name|uint8_t
+name|delivery_started
+decl_stmt|;
 block|}
 struct|;
 end_struct

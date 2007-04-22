@@ -677,6 +677,31 @@ value|0x00009f00
 end_define
 
 begin_comment
+comment|/* fragment interleave constants  * setting must be one of these or  * EINVAL returned.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_FRAG_LEVEL_0
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_FRAG_LEVEL_1
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_FRAG_LEVEL_2
+value|0x00000002
+end_define
+
+begin_comment
 comment|/*  * user state values  */
 end_comment
 
