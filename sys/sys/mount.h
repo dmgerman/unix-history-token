@@ -571,13 +571,7 @@ comment|/* export list */
 name|struct
 name|label
 modifier|*
-name|mnt_mntlabel
-decl_stmt|;
-comment|/* MAC label for the mount */
-name|struct
-name|label
-modifier|*
-name|mnt_fslabel
+name|mnt_label
 decl_stmt|;
 comment|/* MAC label for the fs */
 name|u_int

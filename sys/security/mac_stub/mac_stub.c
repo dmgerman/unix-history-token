@@ -461,7 +461,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|fslabel
+name|mntlabel
 parameter_list|,
 name|struct
 name|devfs_dirent
@@ -499,7 +499,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|fslabel
+name|mntlabel
 parameter_list|,
 name|struct
 name|vnode
@@ -533,7 +533,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|fslabel
+name|mntlabel
 parameter_list|,
 name|struct
 name|vnode
@@ -680,7 +680,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|fslabel
+name|mntlabel
 parameter_list|,
 name|struct
 name|vnode
@@ -735,11 +735,6 @@ name|struct
 name|label
 modifier|*
 name|mntlabel
-parameter_list|,
-name|struct
-name|label
-modifier|*
-name|fslabel
 parameter_list|)
 block|{  }
 end_function
@@ -5322,11 +5317,6 @@ operator|=
 name|stub_init_label
 block|,
 operator|.
-name|mpo_init_mount_fs_label
-operator|=
-name|stub_init_label
-block|,
-operator|.
 name|mpo_init_pipe_label
 operator|=
 name|stub_init_label
@@ -5408,11 +5398,6 @@ name|stub_destroy_label
 block|,
 operator|.
 name|mpo_destroy_mount_label
-operator|=
-name|stub_destroy_label
-block|,
-operator|.
-name|mpo_destroy_mount_fs_label
 operator|=
 name|stub_destroy_label
 block|,

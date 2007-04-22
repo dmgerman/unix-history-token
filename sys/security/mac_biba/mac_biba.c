@@ -3811,11 +3811,6 @@ name|struct
 name|label
 modifier|*
 name|mntlabel
-parameter_list|,
-name|struct
-name|label
-modifier|*
-name|fslabel
 parameter_list|)
 block|{
 name|struct
@@ -3840,20 +3835,6 @@ operator|=
 name|SLOT
 argument_list|(
 name|mntlabel
-argument_list|)
-expr_stmt|;
-name|mac_biba_copy_effective
-argument_list|(
-name|source
-argument_list|,
-name|dest
-argument_list|)
-expr_stmt|;
-name|dest
-operator|=
-name|SLOT
-argument_list|(
-name|fslabel
 argument_list|)
 expr_stmt|;
 name|mac_biba_copy_effective
@@ -4000,7 +3981,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|fslabel
+name|mntlabel
 parameter_list|,
 name|struct
 name|devfs_dirent
@@ -4068,7 +4049,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|fslabel
+name|mntlabel
 parameter_list|,
 name|struct
 name|vnode
@@ -4100,7 +4081,7 @@ name|source
 operator|=
 name|SLOT
 argument_list|(
-name|fslabel
+name|mntlabel
 argument_list|)
 expr_stmt|;
 name|dest
@@ -4161,7 +4142,7 @@ operator|==
 name|EOPNOTSUPP
 condition|)
 block|{
-comment|/* Fall back to the fslabel. */
+comment|/* Fall back to the mntlabel. */
 name|mac_biba_copy_effective
 argument_list|(
 name|source
@@ -4283,7 +4264,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|fslabel
+name|mntlabel
 parameter_list|,
 name|struct
 name|vnode
@@ -4308,7 +4289,7 @@ name|source
 operator|=
 name|SLOT
 argument_list|(
-name|fslabel
+name|mntlabel
 argument_list|)
 expr_stmt|;
 name|dest
@@ -4346,7 +4327,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|fslabel
+name|mntlabel
 parameter_list|,
 name|struct
 name|vnode
@@ -13995,11 +13976,6 @@ operator|=
 name|mac_biba_init_label
 block|,
 operator|.
-name|mpo_init_mount_fs_label
-operator|=
-name|mac_biba_init_label
-block|,
-operator|.
 name|mpo_init_pipe_label
 operator|=
 name|mac_biba_init_label
@@ -14091,11 +14067,6 @@ name|mac_biba_destroy_label
 block|,
 operator|.
 name|mpo_destroy_mount_label
-operator|=
-name|mac_biba_destroy_label
-block|,
-operator|.
-name|mpo_destroy_mount_fs_label
 operator|=
 name|mac_biba_destroy_label
 block|,
