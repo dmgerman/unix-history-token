@@ -409,7 +409,7 @@ name|mtx
 name|vr_mtx
 decl_stmt|;
 name|int
-name|suspended
+name|vr_suspended
 decl_stmt|;
 comment|/* if 1, sleeping/detaching */
 name|int
@@ -463,7 +463,7 @@ name|int
 name|vr_newbuf
 parameter_list|(
 name|struct
-name|vr_chain_onefrag
+name|vr_chain
 modifier|*
 parameter_list|,
 name|struct
@@ -3621,7 +3621,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|suspended
+name|vr_suspended
 operator|=
 literal|0
 expr_stmt|;
@@ -3773,7 +3773,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|suspended
+name|vr_suspended
 operator|=
 literal|1
 expr_stmt|;
@@ -4137,11 +4137,6 @@ index|]
 operator|.
 name|vr_ptr
 operator|=
-operator|(
-expr|struct
-name|vr_desc
-operator|*
-operator|)
 operator|&
 name|ld
 operator|->
@@ -4207,7 +4202,7 @@ index|[
 name|i
 index|]
 operator|.
-name|vr_next
+name|vr_nextphys
 operator|=
 name|vtophys
 argument_list|(
@@ -4249,7 +4244,7 @@ index|[
 name|i
 index|]
 operator|.
-name|vr_next
+name|vr_nextphys
 operator|=
 name|vtophys
 argument_list|(
@@ -4296,7 +4291,7 @@ name|int
 name|vr_newbuf
 parameter_list|(
 name|struct
-name|vr_chain_onefrag
+name|vr_chain
 modifier|*
 name|c
 parameter_list|,
@@ -4499,7 +4494,7 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|vr_chain_onefrag
+name|vr_chain
 modifier|*
 name|cur_rx
 decl_stmt|;
@@ -5817,7 +5812,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|suspended
+name|vr_suspended
 condition|)
 block|{
 comment|/* 		 * Forcibly disable interrupts. 		 * XXX: Mobile VIA based platforms may need 		 * interrupt re-enable on resume. 		 */
@@ -6626,7 +6621,7 @@ name|vr_nextdesc
 expr_stmt|;
 name|f
 operator|->
-name|vr_next
+name|vr_nextphys
 operator|=
 name|vtophys
 argument_list|(
@@ -6641,17 +6636,17 @@ operator|!
 operator|(
 name|f
 operator|->
-name|vr_next
+name|vr_nextphys
 operator|&
 literal|0xf
 operator|)
 argument_list|,
 operator|(
-literal|"vr_next not 16 byte aligned 0x%x"
+literal|"vr_nextphys not 16 byte aligned 0x%x"
 operator|,
 name|f
 operator|->
-name|vr_next
+name|vr_nextphys
 operator|)
 argument_list|)
 expr_stmt|;
