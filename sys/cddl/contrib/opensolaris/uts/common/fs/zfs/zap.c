@@ -60,6 +60,12 @@ directive|include
 file|<sys/zap_leaf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/zfs_znode.h>
+end_include
+
 begin_decl_stmt
 name|int
 name|fzap_default_block_shift
@@ -5029,9 +5035,12 @@ control|)
 block|{
 if|if
 condition|(
+name|ZFS_DIRENT_OBJ
+argument_list|(
 name|za
 operator|->
 name|za_first_integer
+argument_list|)
 operator|==
 name|value
 condition|)
