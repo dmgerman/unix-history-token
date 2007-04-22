@@ -1662,12 +1662,12 @@ parameter_list|(
 name|struct
 name|ucred
 modifier|*
-name|u1
+name|cr1
 parameter_list|,
 name|struct
 name|ucred
 modifier|*
-name|u2
+name|cr2
 parameter_list|)
 block|{
 name|int
@@ -1677,9 +1677,9 @@ name|MAC_CHECK
 argument_list|(
 name|check_cred_visible
 argument_list|,
-name|u1
+name|cr1
 argument_list|,
-name|u2
+name|cr2
 argument_list|)
 expr_stmt|;
 return|return
@@ -1702,7 +1702,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|)
 block|{
 name|int
@@ -1710,7 +1710,7 @@ name|error
 decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
-name|proc
+name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -1721,7 +1721,7 @@ name|check_proc_debug
 argument_list|,
 name|cred
 argument_list|,
-name|proc
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1744,7 +1744,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|)
 block|{
 name|int
@@ -1752,7 +1752,7 @@ name|error
 decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
-name|proc
+name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -1763,7 +1763,7 @@ name|check_proc_sched
 argument_list|,
 name|cred
 argument_list|,
-name|proc
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1786,7 +1786,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|int
 name|signum
@@ -1797,7 +1797,7 @@ name|error
 decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
-name|proc
+name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -1808,7 +1808,7 @@ name|check_proc_signal
 argument_list|,
 name|cred
 argument_list|,
-name|proc
+name|p
 argument_list|,
 name|signum
 argument_list|)
@@ -1828,7 +1828,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -1844,7 +1844,7 @@ name|error
 decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
-name|proc
+name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -1873,7 +1873,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -1889,7 +1889,7 @@ name|error
 decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
-name|proc
+name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -1918,7 +1918,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -1934,7 +1934,7 @@ name|error
 decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
-name|proc
+name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -1963,7 +1963,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -1979,7 +1979,7 @@ name|error
 decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
-name|proc
+name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -2008,7 +2008,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -2028,7 +2028,7 @@ name|error
 decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
-name|proc
+name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -2059,7 +2059,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -2078,7 +2078,7 @@ name|error
 decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
-name|proc
+name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -2159,7 +2159,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -2181,7 +2181,7 @@ name|error
 decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
-name|proc
+name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -2214,7 +2214,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -2236,7 +2236,7 @@ name|error
 decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
-name|proc
+name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -2274,7 +2274,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|)
 block|{
 name|int
@@ -2282,7 +2282,7 @@ name|error
 decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
-name|proc
+name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -2293,7 +2293,7 @@ name|check_proc_wait
 argument_list|,
 name|cred
 argument_list|,
-name|proc
+name|p
 argument_list|)
 expr_stmt|;
 return|return

@@ -301,7 +301,6 @@ name|inpcb
 modifier|*
 parameter_list|,
 name|int
-name|flag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -359,7 +358,6 @@ name|ipq
 modifier|*
 parameter_list|,
 name|int
-name|flag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -373,7 +371,6 @@ name|socket
 modifier|*
 parameter_list|,
 name|int
-name|flag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -407,10 +404,8 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|mbuf
 parameter_list|,
 name|int
-name|flag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -424,7 +419,6 @@ name|m_tag
 modifier|*
 parameter_list|,
 name|int
-name|flag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -469,12 +463,10 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m_from
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|m_to
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -505,7 +497,6 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -715,7 +706,6 @@ parameter_list|(
 name|struct
 name|label
 modifier|*
-name|label
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -738,7 +728,6 @@ parameter_list|(
 name|struct
 name|label
 modifier|*
-name|label
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1007,7 +996,7 @@ parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|socket
+name|so
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1019,12 +1008,12 @@ parameter_list|(
 name|struct
 name|socket
 modifier|*
-name|oldsocket
+name|oldso
 parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|newsocket
+name|newso
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1036,12 +1025,12 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|mbuf
+name|m
 parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|socket
+name|so
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1053,12 +1042,12 @@ parameter_list|(
 name|struct
 name|socket
 modifier|*
-name|oldsocket
+name|oldso
 parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|newsocket
+name|newso
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1194,7 +1183,7 @@ parameter_list|,
 name|struct
 name|bpf_d
 modifier|*
-name|bpf_d
+name|d
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1235,7 +1224,7 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|fragment
+name|m
 parameter_list|,
 name|struct
 name|ipq
@@ -1257,7 +1246,7 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|datagram
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1269,12 +1258,12 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|datagram
+name|m
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|fragment
+name|frag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1303,7 +1292,7 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|,
 name|struct
 name|mbuf
@@ -1320,7 +1309,7 @@ parameter_list|(
 name|struct
 name|bpf_d
 modifier|*
-name|bpf_d
+name|d
 parameter_list|,
 name|struct
 name|mbuf
@@ -1337,7 +1326,7 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|,
 name|struct
 name|mbuf
@@ -1354,17 +1343,17 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|oldmbuf
+name|m
 parameter_list|,
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|newmbuf
+name|mnew
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1376,12 +1365,12 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|oldmbuf
+name|m
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|newmbuf
+name|mnew
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1393,7 +1382,7 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|fragment
+name|m
 parameter_list|,
 name|struct
 name|ipq
@@ -1434,7 +1423,7 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|fragment
+name|m
 parameter_list|,
 name|struct
 name|ipq
@@ -1481,7 +1470,7 @@ name|struct
 name|label
 modifier|*
 modifier|*
-name|label
+name|l
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1494,7 +1483,7 @@ name|struct
 name|label
 modifier|*
 modifier|*
-name|label
+name|l
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1506,7 +1495,7 @@ parameter_list|(
 name|struct
 name|label
 modifier|*
-name|label
+name|l
 parameter_list|,
 name|struct
 name|inpcb
@@ -1523,7 +1512,7 @@ parameter_list|(
 name|struct
 name|label
 modifier|*
-name|sc_label
+name|l
 parameter_list|,
 name|struct
 name|mbuf
@@ -1590,12 +1579,12 @@ parameter_list|(
 name|struct
 name|ucred
 modifier|*
-name|old
+name|oldcred
 parameter_list|,
 name|struct
 name|ucred
 modifier|*
-name|new
+name|newcred
 parameter_list|,
 name|struct
 name|vnode
@@ -1622,7 +1611,7 @@ parameter_list|(
 name|struct
 name|ucred
 modifier|*
-name|old
+name|cred
 parameter_list|,
 name|struct
 name|vnode
@@ -1741,12 +1730,12 @@ parameter_list|(
 name|struct
 name|bpf_d
 modifier|*
-name|bpf_d
+name|d
 parameter_list|,
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1758,12 +1747,12 @@ parameter_list|(
 name|struct
 name|ucred
 modifier|*
-name|u1
+name|cr1
 parameter_list|,
 name|struct
 name|ucred
 modifier|*
-name|u2
+name|cr2
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1775,7 +1764,7 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|,
 name|struct
 name|mbuf
@@ -2380,7 +2369,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2397,7 +2386,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2441,7 +2430,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -2461,7 +2450,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -2481,7 +2470,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -2501,7 +2490,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -2521,7 +2510,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -2545,7 +2534,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -2568,7 +2557,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -2591,7 +2580,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -2617,7 +2606,7 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|struct
 name|ucred
@@ -2648,7 +2637,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|int
 name|signum
@@ -2668,7 +2657,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2707,7 +2696,7 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
-name|sockaddr
+name|sa
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2729,7 +2718,7 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
-name|sockaddr
+name|sa
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2750,7 +2739,7 @@ name|int
 name|type
 parameter_list|,
 name|int
-name|protocol
+name|proto
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3777,7 +3766,7 @@ parameter_list|,
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3799,7 +3788,7 @@ parameter_list|,
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
