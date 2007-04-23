@@ -2196,7 +2196,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -2232,7 +2232,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -2268,7 +2268,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -2304,7 +2304,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -2340,7 +2340,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 name|acc_mode
@@ -2379,7 +2379,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|)
 block|{
 return|return
@@ -2415,7 +2415,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|)
 block|{
 return|return
@@ -2451,7 +2451,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|,
 name|struct
 name|componentname
@@ -2497,7 +2497,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|,
 name|struct
 name|vnode
@@ -2507,7 +2507,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|struct
 name|componentname
@@ -2571,7 +2571,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|acl_type_t
 name|type
@@ -2610,7 +2610,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 name|attrnamespace
@@ -2654,7 +2654,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|struct
 name|image_params
@@ -2702,7 +2702,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|acl_type_t
 name|type
@@ -2741,7 +2741,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 name|attrnamespace
@@ -2790,7 +2790,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|,
 name|struct
 name|vnode
@@ -2877,7 +2877,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 name|attrnamespace
@@ -2916,7 +2916,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|,
 name|struct
 name|componentname
@@ -2957,7 +2957,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|filelabel
+name|vplabel
 parameter_list|,
 name|int
 name|acc_mode
@@ -2996,7 +2996,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|)
 block|{
 return|return
@@ -3032,7 +3032,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -3068,7 +3068,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|,
 name|struct
 name|vnode
@@ -3078,7 +3078,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|struct
 name|componentname
@@ -3146,7 +3146,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|,
 name|struct
 name|vnode
@@ -3156,7 +3156,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 name|samedir
@@ -3233,7 +3233,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -3269,7 +3269,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|acl_type_t
 name|type
@@ -3313,7 +3313,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 name|attrnamespace
@@ -3362,7 +3362,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|u_long
 name|flags
@@ -3401,7 +3401,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|mode_t
 name|mode
@@ -3440,7 +3440,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|uid_t
 name|uid
@@ -3482,7 +3482,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|struct
 name|timespec
@@ -3531,7 +3531,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|)
 block|{
 return|return

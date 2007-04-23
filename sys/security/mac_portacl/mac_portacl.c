@@ -1527,12 +1527,12 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
-name|sockaddr
+name|sa
 parameter_list|)
 block|{
 name|struct
@@ -1616,13 +1616,13 @@ return|;
 comment|/* Reject addresses we don't understand; fail closed. */
 if|if
 condition|(
-name|sockaddr
+name|sa
 operator|->
 name|sa_family
 operator|!=
 name|AF_INET
 operator|&&
-name|sockaddr
+name|sa
 operator|->
 name|sa_family
 operator|!=
@@ -1656,7 +1656,7 @@ expr|struct
 name|sockaddr_in
 operator|*
 operator|)
-name|sockaddr
+name|sa
 expr_stmt|;
 name|port
 operator|=

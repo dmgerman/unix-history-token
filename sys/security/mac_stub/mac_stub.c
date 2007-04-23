@@ -461,7 +461,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|mntlabel
+name|mplabel
 parameter_list|,
 name|struct
 name|devfs_dirent
@@ -481,7 +481,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|vlabel
+name|vplabel
 parameter_list|)
 block|{  }
 end_function
@@ -499,7 +499,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|mntlabel
+name|mplabel
 parameter_list|,
 name|struct
 name|vnode
@@ -509,7 +509,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|vlabel
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -533,7 +533,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|mntlabel
+name|mplabel
 parameter_list|,
 name|struct
 name|vnode
@@ -543,7 +543,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|vlabel
+name|vplabel
 parameter_list|)
 block|{  }
 end_function
@@ -584,12 +584,12 @@ parameter_list|,
 name|struct
 name|devfs_dirent
 modifier|*
-name|devfs_dirent
+name|de
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|delabel
 parameter_list|)
 block|{  }
 end_function
@@ -614,12 +614,12 @@ parameter_list|,
 name|struct
 name|devfs_dirent
 modifier|*
-name|devfs_dirent
+name|de
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|delabel
 parameter_list|)
 block|{  }
 end_function
@@ -690,7 +690,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|,
 name|struct
 name|vnode
@@ -700,7 +700,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|vlabel
+name|vplabel
 parameter_list|,
 name|struct
 name|componentname
@@ -734,7 +734,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|mntlabel
+name|mplabel
 parameter_list|)
 block|{  }
 end_function
@@ -757,7 +757,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|vnodelabel
+name|vplabel
 parameter_list|,
 name|struct
 name|label
@@ -785,7 +785,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|vlabel
+name|vplabel
 parameter_list|,
 name|struct
 name|label
@@ -814,12 +814,12 @@ parameter_list|,
 name|struct
 name|devfs_dirent
 modifier|*
-name|devfs_dirent
+name|de
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|direntlabel
+name|delabel
 parameter_list|,
 name|struct
 name|vnode
@@ -829,7 +829,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|vnodelabel
+name|vplabel
 parameter_list|)
 block|{  }
 end_function
@@ -851,7 +851,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|,
 name|struct
 name|mbuf
@@ -861,7 +861,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|mbuflabel
+name|mlabel
 parameter_list|)
 block|{  }
 end_function
@@ -879,12 +879,12 @@ parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|socket
+name|so
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|)
 block|{  }
 end_function
@@ -907,7 +907,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|pipelabel
+name|pplabel
 parameter_list|)
 block|{  }
 end_function
@@ -943,22 +943,22 @@ parameter_list|(
 name|struct
 name|socket
 modifier|*
-name|oldsocket
+name|oldso
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|oldsocketlabel
+name|oldsolabel
 parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|newsocket
+name|newso
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|newsocketlabel
+name|newsolabel
 parameter_list|)
 block|{  }
 end_function
@@ -976,12 +976,12 @@ parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|socket
+name|so
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|,
 name|struct
 name|label
@@ -1009,7 +1009,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|pipelabel
+name|pplabel
 parameter_list|,
 name|struct
 name|label
@@ -1027,22 +1027,22 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|mbuf
+name|m
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|mbuflabel
+name|mlabel
 parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|socket
+name|so
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketpeerlabel
+name|sopeerlabel
 parameter_list|)
 block|{  }
 end_function
@@ -1055,22 +1055,22 @@ parameter_list|(
 name|struct
 name|socket
 modifier|*
-name|oldsocket
+name|oldso
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|oldsocketlabel
+name|oldsolabel
 parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|newsocket
+name|newso
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|newsocketpeerlabel
+name|newsopeerlabel
 parameter_list|)
 block|{  }
 end_function
@@ -1092,12 +1092,12 @@ parameter_list|,
 name|struct
 name|bpf_d
 modifier|*
-name|bpf_d
+name|d
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|bpflabel
+name|dlabel
 parameter_list|)
 block|{  }
 end_function
@@ -1120,12 +1120,12 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|datagram
+name|m
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|datagramlabel
+name|mlabel
 parameter_list|)
 block|{  }
 end_function
@@ -1138,22 +1138,22 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|datagram
+name|m
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|datagramlabel
+name|mlabel
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|fragment
+name|frag
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|fragmentlabel
+name|fraglabel
 parameter_list|)
 block|{  }
 end_function
@@ -1166,12 +1166,12 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ifnetlabel
+name|ifplabel
 parameter_list|)
 block|{  }
 end_function
@@ -1332,12 +1332,12 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|fragment
+name|m
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|fragmentlabel
+name|mlabel
 parameter_list|,
 name|struct
 name|ipq
@@ -1398,7 +1398,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|mbuf_label
+name|mlabel
 parameter_list|)
 block|{  }
 end_function
@@ -1421,12 +1421,12 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|mbuf
+name|m
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|mbuflabel
+name|mlabel
 parameter_list|)
 block|{  }
 end_function
@@ -1439,22 +1439,22 @@ parameter_list|(
 name|struct
 name|bpf_d
 modifier|*
-name|bpf_d
+name|d
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|bpflabel
+name|dlabel
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|mbuf
+name|m
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|mbuflabel
+name|mlabel
 parameter_list|)
 block|{  }
 end_function
@@ -1467,12 +1467,12 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ifnetlabel
+name|ifplabel
 parameter_list|,
 name|struct
 name|mbuf
@@ -1482,7 +1482,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|mbuflabel
+name|mlabel
 parameter_list|)
 block|{  }
 end_function
@@ -1495,32 +1495,32 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|oldmbuf
+name|m
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|oldmbuflabel
+name|mlabel
 parameter_list|,
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ifnetlabel
+name|ifplabel
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|newmbuf
+name|mnew
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|newmbuflabel
+name|mnewlabel
 parameter_list|)
 block|{  }
 end_function
@@ -1533,22 +1533,22 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|oldmbuf
+name|m
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|oldmbuflabel
+name|mlabel
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|newmbuf
+name|mnew
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|newmbuflabel
+name|mnewlabel
 parameter_list|)
 block|{  }
 end_function
@@ -1566,7 +1566,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|mlabel
 parameter_list|)
 block|{  }
 end_function
@@ -1579,12 +1579,12 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|fragment
+name|m
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|fragmentlabel
+name|mlabel
 parameter_list|,
 name|struct
 name|ipq
@@ -1654,12 +1654,12 @@ parameter_list|,
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ifnetlabel
+name|ifplabel
 parameter_list|,
 name|struct
 name|label
@@ -1677,12 +1677,12 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|fragment
+name|m
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|fragmentlabel
+name|mlabel
 parameter_list|,
 name|struct
 name|ipq
@@ -1752,7 +1752,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|vnodelabel
+name|vplabel
 parameter_list|,
 name|struct
 name|label
@@ -1790,7 +1790,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|vnodelabel
+name|vplabel
 parameter_list|,
 name|struct
 name|label
@@ -1941,22 +1941,22 @@ parameter_list|(
 name|struct
 name|bpf_d
 modifier|*
-name|bpf_d
+name|d
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|bpflabel
+name|dlabel
 parameter_list|,
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ifnet_label
+name|ifplabel
 parameter_list|)
 block|{
 return|return
@@ -1999,12 +1999,12 @@ parameter_list|(
 name|struct
 name|ucred
 modifier|*
-name|u1
+name|cr1
 parameter_list|,
 name|struct
 name|ucred
 modifier|*
-name|u2
+name|cr2
 parameter_list|)
 block|{
 return|return
@@ -2028,12 +2028,12 @@ parameter_list|,
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ifnetlabel
+name|ifplabel
 parameter_list|,
 name|struct
 name|label
@@ -2057,12 +2057,12 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ifnetlabel
+name|ifplabel
 parameter_list|,
 name|struct
 name|mbuf
@@ -2072,7 +2072,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|mbuflabel
+name|mlabel
 parameter_list|)
 block|{
 return|return
@@ -2661,7 +2661,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|vlabel
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -2709,7 +2709,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|mntlabel
+name|mplabel
 parameter_list|)
 block|{
 return|return
@@ -2738,7 +2738,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|pipelabel
+name|pplabel
 parameter_list|,
 name|unsigned
 name|long
@@ -2776,7 +2776,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|pipelabel
+name|pplabel
 parameter_list|)
 block|{
 return|return
@@ -2805,7 +2805,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|pipelabel
+name|pplabel
 parameter_list|)
 block|{
 return|return
@@ -2834,7 +2834,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|pipelabel
+name|pplabel
 parameter_list|,
 name|struct
 name|label
@@ -2868,7 +2868,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|pipelabel
+name|pplabel
 parameter_list|)
 block|{
 return|return
@@ -2897,7 +2897,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|pipelabel
+name|pplabel
 parameter_list|)
 block|{
 return|return
@@ -3095,7 +3095,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|)
 block|{
 return|return
@@ -3119,7 +3119,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|)
 block|{
 return|return
@@ -3143,7 +3143,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|int
 name|signum
@@ -3170,7 +3170,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|)
 block|{
 return|return
@@ -3460,12 +3460,12 @@ parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|socket
+name|so
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|)
 block|{
 return|return
@@ -3489,17 +3489,17 @@ parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|socket
+name|so
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
-name|sockaddr
+name|sa
 parameter_list|)
 block|{
 return|return
@@ -3523,17 +3523,17 @@ parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|socket
+name|so
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
-name|sockaddr
+name|sa
 parameter_list|)
 block|{
 return|return
@@ -3561,7 +3561,7 @@ name|int
 name|type
 parameter_list|,
 name|int
-name|protocol
+name|proto
 parameter_list|)
 block|{
 return|return
@@ -3585,7 +3585,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|,
 name|struct
 name|mbuf
@@ -3595,7 +3595,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|mbuflabel
+name|mlabel
 parameter_list|)
 block|{
 return|return
@@ -3624,7 +3624,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|)
 block|{
 return|return
@@ -3653,7 +3653,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|)
 block|{
 return|return
@@ -3682,7 +3682,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|)
 block|{
 return|return
@@ -3706,12 +3706,12 @@ parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|socket
+name|so
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|,
 name|struct
 name|label
@@ -3745,7 +3745,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|)
 block|{
 return|return
@@ -3774,7 +3774,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|)
 block|{
 return|return
@@ -3798,12 +3798,12 @@ parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|socket
+name|so
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|)
 block|{
 return|return
@@ -3832,7 +3832,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|vlabel
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -3887,7 +3887,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|vlabel
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -3960,7 +3960,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -3989,7 +3989,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -4054,7 +4054,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 name|acc_mode
@@ -4086,7 +4086,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|)
 block|{
 return|return
@@ -4115,7 +4115,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|)
 block|{
 return|return
@@ -4144,7 +4144,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|,
 name|struct
 name|componentname
@@ -4183,7 +4183,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|,
 name|struct
 name|vnode
@@ -4193,7 +4193,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|struct
 name|componentname
@@ -4227,7 +4227,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|acl_type_t
 name|type
@@ -4259,7 +4259,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 name|attrnamespace
@@ -4296,7 +4296,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|struct
 name|image_params
@@ -4335,7 +4335,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|acl_type_t
 name|type
@@ -4367,7 +4367,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 name|attrnamespace
@@ -4409,7 +4409,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|,
 name|struct
 name|vnode
@@ -4419,7 +4419,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|struct
 name|componentname
@@ -4453,7 +4453,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 name|attrnamespace
@@ -4485,7 +4485,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|,
 name|struct
 name|componentname
@@ -4519,7 +4519,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 name|prot
@@ -4554,7 +4554,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 modifier|*
@@ -4581,7 +4581,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 name|prot
@@ -4613,7 +4613,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|filelabel
+name|vplabel
 parameter_list|,
 name|int
 name|acc_mode
@@ -4650,7 +4650,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -4684,7 +4684,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -4713,7 +4713,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|)
 block|{
 return|return
@@ -4742,7 +4742,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|vnodelabel
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -4771,7 +4771,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|vnodelabel
+name|vplabel
 parameter_list|,
 name|struct
 name|label
@@ -4805,7 +4805,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|,
 name|struct
 name|vnode
@@ -4815,7 +4815,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|struct
 name|componentname
@@ -4849,7 +4849,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|dlabel
+name|dvplabel
 parameter_list|,
 name|struct
 name|vnode
@@ -4859,7 +4859,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 name|samedir
@@ -4896,7 +4896,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -4925,7 +4925,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|acl_type_t
 name|type
@@ -4962,7 +4962,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|int
 name|attrnamespace
@@ -5004,7 +5004,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|u_long
 name|flags
@@ -5036,7 +5036,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|mode_t
 name|mode
@@ -5068,7 +5068,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|uid_t
 name|uid
@@ -5103,7 +5103,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|struct
 name|timespec
@@ -5145,7 +5145,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|)
 block|{
 return|return
@@ -5179,7 +5179,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|)
 block|{
 return|return

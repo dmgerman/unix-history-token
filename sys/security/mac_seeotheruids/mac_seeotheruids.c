@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1999-2002, 2007 Robert N. M. Watson  * Copyright (c
 end_comment
 
 begin_comment
-comment|/*  * Developed by the TrustedBSD Project.  * Prevent processes owned by a particular uid from seeing various transient  * kernel objects associated with other uids.  */
+comment|/*  * Developed by the TrustedBSD Project.  *  * Prevent processes owned by a particular uid from seeing various transient  * kernel objects associated with other uids.  */
 end_comment
 
 begin_include
@@ -259,12 +259,12 @@ parameter_list|(
 name|struct
 name|ucred
 modifier|*
-name|u1
+name|cr1
 parameter_list|,
 name|struct
 name|ucred
 modifier|*
-name|u2
+name|cr2
 parameter_list|)
 block|{
 if|if
@@ -284,11 +284,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|u1
+name|cr1
 operator|->
 name|cr_rgid
 operator|==
-name|u2
+name|cr2
 operator|->
 name|cr_rgid
 condition|)
@@ -305,7 +305,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|u1
+name|cr1
 operator|->
 name|cr_rgid
 operator|==
@@ -315,7 +315,7 @@ name|groupmember
 argument_list|(
 name|specificgid
 argument_list|,
-name|u1
+name|cr1
 argument_list|)
 condition|)
 return|return
@@ -326,11 +326,11 @@ return|;
 block|}
 if|if
 condition|(
-name|u1
+name|cr1
 operator|->
 name|cr_ruid
 operator|==
-name|u2
+name|cr2
 operator|->
 name|cr_ruid
 condition|)
@@ -348,7 +348,7 @@ if|if
 condition|(
 name|priv_check_cred
 argument_list|(
-name|u1
+name|cr1
 argument_list|,
 name|PRIV_SEEOTHERUIDS
 argument_list|,
@@ -379,21 +379,21 @@ parameter_list|(
 name|struct
 name|ucred
 modifier|*
-name|u1
+name|cr1
 parameter_list|,
 name|struct
 name|ucred
 modifier|*
-name|u2
+name|cr2
 parameter_list|)
 block|{
 return|return
 operator|(
 name|mac_seeotheruids_check
 argument_list|(
-name|u1
+name|cr1
 argument_list|,
-name|u2
+name|cr2
 argument_list|)
 operator|)
 return|;
@@ -413,7 +413,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|int
 name|signum
@@ -425,7 +425,7 @@ name|mac_seeotheruids_check
 argument_list|(
 name|cred
 argument_list|,
-name|proc
+name|p
 operator|->
 name|p_ucred
 argument_list|)
@@ -447,7 +447,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|)
 block|{
 return|return
@@ -456,7 +456,7 @@ name|mac_seeotheruids_check
 argument_list|(
 name|cred
 argument_list|,
-name|proc
+name|p
 operator|->
 name|p_ucred
 argument_list|)
@@ -478,7 +478,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|)
 block|{
 return|return
@@ -487,7 +487,7 @@ name|mac_seeotheruids_check
 argument_list|(
 name|cred
 argument_list|,
-name|proc
+name|p
 operator|->
 name|p_ucred
 argument_list|)
@@ -509,12 +509,12 @@ parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|socket
+name|so
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|)
 block|{
 return|return
@@ -523,7 +523,7 @@ name|mac_seeotheruids_check
 argument_list|(
 name|cred
 argument_list|,
-name|socket
+name|so
 operator|->
 name|so_cred
 argument_list|)

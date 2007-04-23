@@ -585,12 +585,12 @@ parameter_list|(
 name|struct
 name|ucred
 modifier|*
-name|u1
+name|cr1
 parameter_list|,
 name|struct
 name|ucred
 modifier|*
-name|u2
+name|cr2
 parameter_list|)
 block|{
 name|int
@@ -600,11 +600,11 @@ name|error
 operator|=
 name|label_on_label
 argument_list|(
-name|u1
+name|cr1
 operator|->
 name|cr_label
 argument_list|,
-name|u2
+name|cr2
 operator|->
 name|cr_label
 argument_list|)
@@ -636,7 +636,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|)
 block|{
 name|int
@@ -650,7 +650,7 @@ name|cred
 operator|->
 name|cr_label
 argument_list|,
-name|proc
+name|p
 operator|->
 name|p_ucred
 operator|->
@@ -682,7 +682,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|)
 block|{
 name|int
@@ -696,7 +696,7 @@ name|cred
 operator|->
 name|cr_label
 argument_list|,
-name|proc
+name|p
 operator|->
 name|p_ucred
 operator|->
@@ -728,7 +728,7 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|proc
+name|p
 parameter_list|,
 name|int
 name|signum
@@ -745,7 +745,7 @@ name|cred
 operator|->
 name|cr_label
 argument_list|,
-name|proc
+name|p
 operator|->
 name|p_ucred
 operator|->
@@ -777,12 +777,12 @@ parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|socket
+name|so
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|socketlabel
+name|solabel
 parameter_list|)
 block|{
 name|int
@@ -796,7 +796,7 @@ name|cred
 operator|->
 name|cr_label
 argument_list|,
-name|socketlabel
+name|solabel
 argument_list|)
 expr_stmt|;
 return|return
@@ -829,7 +829,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|vplabel
 parameter_list|,
 name|struct
 name|image_params
