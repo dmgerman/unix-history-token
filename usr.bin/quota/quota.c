@@ -1796,7 +1796,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%8lu%c%7lu%8lu"
+literal|" %7lu%c %6lu %7lu"
 argument_list|,
 call|(
 name|u_long
@@ -1904,7 +1904,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8s%8lu%c%7lu%8lu%8s\n"
+literal|" %7s %7lu%c %6lu %7lu %7s\n"
 argument_list|,
 operator|(
 name|msgb
@@ -2290,7 +2290,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%15s%8s %7s%8s%8s%8s %7s%8s%8s\n"
+literal|"%15s %7s  %6s %7s %7s %7s  %6s %7s %7s\n"
 argument_list|,
 literal|"Filesystem"
 argument_list|,
