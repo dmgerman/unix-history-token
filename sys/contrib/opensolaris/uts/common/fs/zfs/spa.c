@@ -168,6 +168,12 @@ directive|include
 file|<sys/callb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sunddi.h>
+end_include
+
 begin_decl_stmt
 name|int
 name|zio_taskq_threads

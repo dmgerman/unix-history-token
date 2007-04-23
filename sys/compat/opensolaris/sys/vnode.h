@@ -79,6 +79,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|void
+name|caller_context_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|struct
 name|vop_vector
 name|vnodeops_t
@@ -221,6 +228,58 @@ end_define
 begin_define
 define|#
 directive|define
+name|VOP_REALVP
+parameter_list|(
+name|vp
+parameter_list|,
+name|vpp
+parameter_list|)
+value|(*(vpp) = (vp), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vnevent_remove
+parameter_list|(
+name|vp
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vnevent_rmdir
+parameter_list|(
+name|vp
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vnevent_rename_src
+parameter_list|(
+name|vp
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vnevent_rename_dest
+parameter_list|(
+name|vp
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_DEVVP
 parameter_list|(
 name|vp
@@ -234,6 +293,78 @@ define|#
 directive|define
 name|MODEMASK
 value|ALLPERMS
+end_define
+
+begin_define
+define|#
+directive|define
+name|specvp
+parameter_list|(
+name|vp
+parameter_list|,
+name|rdev
+parameter_list|,
+name|type
+parameter_list|,
+name|cr
+parameter_list|)
+value|(VN_HOLD(vp), (vp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MANDMODE
+parameter_list|(
+name|mode
+parameter_list|)
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|chklock
+parameter_list|(
+name|vp
+parameter_list|,
+name|op
+parameter_list|,
+name|offset
+parameter_list|,
+name|size
+parameter_list|,
+name|mode
+parameter_list|,
+name|ct
+parameter_list|)
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cleanlocks
+parameter_list|(
+name|vp
+parameter_list|,
+name|pid
+parameter_list|,
+name|foo
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cleanshares
+parameter_list|(
+name|vp
+parameter_list|,
+name|pid
+parameter_list|)
+value|do { } while (0)
 end_define
 
 begin_comment
@@ -281,6 +412,20 @@ define|#
 directive|define
 name|va_seq
 value|va_gen
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXOFFSET_T
+value|OFF_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCL
+value|0
 end_define
 
 begin_define
@@ -386,6 +531,13 @@ define|#
 directive|define
 name|AT_SEQ
 value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT_NOSET
+value|(AT_NLINK|AT_RDEV|AT_FSID|AT_NODEID|AT_TYPE|\ 			 AT_BLKSIZE|AT_NBLOCKS|AT_SEQ)
 end_define
 
 begin_define
@@ -543,15 +695,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_enum
-enum|enum
-name|create
-block|{
-name|CRCREAT
-block|}
-enum|;
-end_enum
-
 begin_define
 define|#
 directive|define
@@ -569,9 +712,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|FDSYNC
+value|FFSYNC
+end_define
+
+begin_define
+define|#
+directive|define
+name|FRSYNC
+value|FFSYNC
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSYNC
+value|FFSYNC
+end_define
+
+begin_define
+define|#
+directive|define
 name|FOFFMAX
 value|0x00
 end_define
+
+begin_enum
+enum|enum
+name|create
+block|{
+name|CRCREAT
+block|}
+enum|;
+end_enum
 
 begin_function
 specifier|static
@@ -1005,13 +1178,6 @@ define|\
 value|zfs_vn_rdwr((rw), (vp), (base), (len), (offset), (seg), (ioflag), (ulimit), (cr), (residp))
 end_define
 
-begin_define
-define|#
-directive|define
-name|FSYNC
-value|MNT_WAIT
-end_define
-
 begin_function
 specifier|static
 name|__inline
@@ -1103,7 +1269,7 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|flag
+name|MNT_WAIT
 argument_list|,
 name|td
 argument_list|)

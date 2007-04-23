@@ -17,6 +17,12 @@ end_pragma
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -72,6 +78,12 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/buf.h>
 end_include
 
 begin_include
@@ -162,6 +174,24 @@ begin_include
 include|#
 directive|include
 file|<sys/dsl_prop.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sunddi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/policy.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/zone.h>
 end_include
 
 begin_include

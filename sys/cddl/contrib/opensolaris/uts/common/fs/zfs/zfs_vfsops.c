@@ -149,6 +149,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/policy.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/atomic.h>
 end_include
 
@@ -162,6 +168,12 @@ begin_include
 include|#
 directive|include
 file|<sys/zfs_ctldir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sunddi.h>
 end_include
 
 begin_include

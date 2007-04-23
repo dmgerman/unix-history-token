@@ -89,6 +89,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/policy.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -1140,7 +1146,7 @@ if|if
 condition|(
 name|ioflag
 operator|&
-name|IO_SYNC
+name|FDSYNC
 condition|)
 name|write_state
 operator|=

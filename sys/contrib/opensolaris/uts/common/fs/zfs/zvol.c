@@ -25,6 +25,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -50,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<sys/bio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/buf.h>
 end_include
 
 begin_include
@@ -103,13 +115,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/dkio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/byteorder.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<sys/sunddi.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/policy.h>
 end_include
 
 begin_include

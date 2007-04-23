@@ -6,79 +6,71 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_OPENSOLARIS_SYS_MISC_H_
+name|_OPENSOLARIS_SYS_SUNDDI_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_OPENSOLARIS_SYS_MISC_H_
+name|_OPENSOLARIS_SYS_SUNDDI_H_
 end_define
 
 begin_define
 define|#
 directive|define
-name|_FIOFFS
-value|(INT_MIN)
+name|ddi_copyin
+parameter_list|(
+name|from
+parameter_list|,
+name|to
+parameter_list|,
+name|size
+parameter_list|,
+name|flag
+parameter_list|)
+value|(bcopy((from), (to), (size)), 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|_FIOGDIO
-value|(INT_MIN+1)
+name|ddi_copyout
+parameter_list|(
+name|from
+parameter_list|,
+name|to
+parameter_list|,
+name|size
+parameter_list|,
+name|flag
+parameter_list|)
+value|(bcopy((from), (to), (size)), 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|_FIOSDIO
-value|(INT_MIN+2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_FIO_SEEK_DATA
-value|FIOSEEKDATA
-end_define
-
-begin_define
-define|#
-directive|define
-name|_FIO_SEEK_HOLE
-value|FIOSEEKHOLE
-end_define
-
-begin_struct
-struct|struct
-name|opensolaris_utsname
-block|{
+begin_function_decl
+name|int
+name|ddi_strtoul
+parameter_list|(
+specifier|const
 name|char
 modifier|*
-name|nodename
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
+name|str
+parameter_list|,
 name|char
-name|hw_serial
-index|[
-literal|11
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|opensolaris_utsname
-name|utsname
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+name|nptr
+parameter_list|,
+name|int
+name|base
+parameter_list|,
+name|unsigned
+name|long
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -86,7 +78,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _OPENSOLARIS_SYS_MISC_H_ */
+comment|/* _OPENSOLARIS_SYS_SUNDDI_H_ */
 end_comment
 
 end_unit
