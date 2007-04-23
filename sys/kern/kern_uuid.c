@@ -355,7 +355,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the current time as a 60 bit count of 100-nanosecond intervals  * since 00:00:00.00, October 15,1582. We apply a magic offset to convert  * the Unix time since 00:00:00.00, Januari 1, 1970 to the date of the  * Gregorian reform to the Christian calendar.  */
+comment|/*  * Get the current time as a 60 bit count of 100-nanosecond intervals  * since 00:00:00.00, October 15,1582. We apply a magic offset to convert  * the Unix time since 00:00:00.00, January 1, 1970 to the date of the  * Gregorian reform to the Christian calendar.  */
 end_comment
 
 begin_function
