@@ -5146,6 +5146,26 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
+comment|/* And the global one. */
+name|priv
+operator|->
+name|stats
+operator|.
+name|xmitPackets
+operator|++
+expr_stmt|;
+name|priv
+operator|->
+name|stats
+operator|.
+name|xmitOctets
+operator|+=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
 comment|/* Send packet */
 name|NG_FWD_NEW_DATA
 argument_list|(
