@@ -6072,6 +6072,8 @@ argument_list|,
 name|ISOPEN
 operator||
 name|FOLLOW
+operator||
+name|AUDITVNODE1
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
@@ -6606,6 +6608,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|AUDITVNODE1
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
