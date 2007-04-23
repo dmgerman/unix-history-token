@@ -24505,7 +24505,7 @@ name|asoc
 operator|.
 name|strmin
 index|[
-name|ctl
+name|control
 operator|->
 name|sinfo_stream
 index|]
@@ -25482,7 +25482,7 @@ name|asoc
 operator|.
 name|strmin
 index|[
-name|ctl
+name|control
 operator|->
 name|sinfo_stream
 index|]
@@ -26656,7 +26656,7 @@ name|asoc
 operator|.
 name|strmin
 index|[
-name|ctl
+name|control
 operator|->
 name|sinfo_stream
 index|]
@@ -26688,7 +26688,7 @@ name|asoc
 operator|.
 name|strmin
 index|[
-name|ctl
+name|control
 operator|->
 name|sinfo_stream
 index|]
@@ -26889,7 +26889,7 @@ name|asoc
 operator|.
 name|strmin
 index|[
-name|ctl
+name|control
 operator|->
 name|sinfo_stream
 index|]
@@ -27232,7 +27232,7 @@ name|asoc
 operator|.
 name|strmin
 index|[
-name|ctl
+name|control
 operator|->
 name|sinfo_stream
 index|]
