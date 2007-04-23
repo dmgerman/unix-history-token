@@ -12621,8 +12621,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS WARNING: Recomended minimum of RAM size is 512MB, "
-literal|"expect unstable behaviour.\n"
+literal|"ZFS WARNING: Recommended minimum RAM size is 512MB; "
+literal|"expect unstable behavior.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -12643,14 +12643,19 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS WARNING: Recomended minimum of kmem_map size is "
-literal|"256MB, expect unstable behaviour.\n"
+literal|"ZFS WARNING: Recommended minimum kmem_size is 256MB; "
+literal|"expect unstable behavior.\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"             Consider tunning vm.kmem_size and "
-literal|"vm.kmem_size_max in /boot/loader.conf.\n"
+literal|"             Consider tuning vm.kmem_size or "
+literal|"vm.kmem_size_min\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"             in /boot/loader.conf.\n"
 argument_list|)
 expr_stmt|;
 block|}
