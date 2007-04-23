@@ -524,6 +524,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|max_chan
+init|=
+literal|11
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|unsigned
 name|char
 modifier|*
@@ -705,7 +713,7 @@ begin_define
 define|#
 directive|define
 name|INCR
-value|30000
+value|10000
 end_define
 
 begin_decl_stmt
@@ -5560,6 +5568,27 @@ expr_stmt|;
 name|state
 operator|=
 name|GOT_ASSOC
+expr_stmt|;
+return|return;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|sc
+operator|==
+literal|12
+condition|)
+block|{
+name|time_print
+argument_list|(
+literal|"Assoc rejected..."
+literal|" trying to spoof mac.\n"
+argument_list|)
+expr_stmt|;
+name|state
+operator|=
+name|SPOOF_MAC
 expr_stmt|;
 return|return;
 block|}
@@ -10912,7 +10941,7 @@ decl_stmt|;
 name|char
 name|k
 index|[
-literal|32
+literal|64
 index|]
 decl_stmt|;
 name|int
@@ -10921,6 +10950,18 @@ decl_stmt|;
 name|int
 name|rd
 decl_stmt|;
+name|assert
+argument_list|(
+name|len
+operator|*
+literal|3
+operator|<
+sizeof|sizeof
+argument_list|(
+name|k
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|k
 index|[
 literal|0
@@ -11268,23 +11309,6 @@ argument_list|,
 literal|"gettimeofday"
 argument_list|)
 expr_stmt|;
-comment|// XXX lame...
-if|if
-condition|(
-name|wep_thresh
-operator|==
-literal|3000000
-condition|)
-block|{
-name|crack_dur
-operator|*=
-literal|10
-expr_stmt|;
-name|thresh_incr
-operator|*=
-literal|10
-expr_stmt|;
-block|}
 name|wep_thresh
 operator|+=
 name|thresh_incr
@@ -13752,7 +13776,7 @@ if|if
 condition|(
 name|chan
 operator|>
-literal|11
+name|max_chan
 condition|)
 name|chan
 operator|=
@@ -14101,6 +14125,16 @@ argument_list|(
 literal|"-v\t\tvictim mac\n"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"-t\t\t<crack thresh>\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"-f\t\t<max chan>\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -14366,7 +14400,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"hi:s:m:r:a:n:cp:4v:"
+literal|"hi:s:m:r:a:n:cp:4v:t:f:"
 argument_list|)
 operator|)
 operator|!=
@@ -14491,6 +14525,30 @@ case|case
 literal|'p'
 case|:
 name|min_prga
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|thresh_incr
+operator|=
+name|wep_thresh
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|max_chan
 operator|=
 name|atoi
 argument_list|(
