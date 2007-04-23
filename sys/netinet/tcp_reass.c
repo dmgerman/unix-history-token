@@ -3477,6 +3477,7 @@ argument_list|,
 name|TO_SYN
 argument_list|)
 expr_stmt|;
+comment|/* NB: tcp_timewait unlocks the INP and frees the mbuf. */
 if|if
 condition|(
 name|tcp_timewait
@@ -3496,7 +3497,6 @@ condition|)
 goto|goto
 name|findpcb
 goto|;
-comment|/* tcp_timewait unlocks inp. */
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
@@ -3520,11 +3520,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|INP_UNLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 name|rstreason
 operator|=
 name|BANDLIM_RST_CLOSEDPORT
@@ -3816,6 +3811,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 				 * NB: syncache_expand() doesn't unlock 				 * inp and tcpinfo locks. 				 */
 if|if
 condition|(
 operator|!
@@ -3999,15 +3995,6 @@ name|IN6_IFF_DEPRECATED
 operator|)
 condition|)
 block|{
-name|INP_UNLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
-name|tp
-operator|=
-name|NULL
-expr_stmt|;
 name|rstreason
 operator|=
 name|BANDLIM_RST_OPENPORT
@@ -4300,7 +4287,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tp
+name|inp
 operator|!=
 name|NULL
 condition|)
