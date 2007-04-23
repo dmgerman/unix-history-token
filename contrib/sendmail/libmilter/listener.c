@@ -3441,6 +3441,12 @@ if|if
 condition|(
 name|smfi
 operator|->
+name|xxfi_version
+operator|<=
+literal|3
+operator|||
+name|smfi
+operator|->
 name|xxfi_data
 operator|==
 name|NULL
@@ -3453,6 +3459,12 @@ name|SMFIP_NODATA
 expr_stmt|;
 if|if
 condition|(
+name|smfi
+operator|->
+name|xxfi_version
+operator|<=
+literal|2
+operator|||
 name|smfi
 operator|->
 name|xxfi_unknown
