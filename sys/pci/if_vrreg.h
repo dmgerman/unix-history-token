@@ -2248,7 +2248,7 @@ begin_define
 define|#
 directive|define
 name|VR_RXLEN
-value|1520
+value|1524
 end_define
 
 begin_struct
