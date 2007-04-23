@@ -2339,7 +2339,7 @@ directive|endif
 comment|/* PC98 */
 name|printf
 argument_list|(
-literal|"No known reset method did work, attempting CPU shutdown\n"
+literal|"No known reset method worked, attempting CPU shutdown\n"
 argument_list|)
 expr_stmt|;
 name|DELAY
