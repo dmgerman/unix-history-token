@@ -412,7 +412,7 @@ name|vnode_t
 modifier|*
 name|vp
 parameter_list|,
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|offset_t
@@ -581,7 +581,7 @@ name|vnode_t
 modifier|*
 name|vp
 parameter_list|,
-name|int
+name|u_long
 name|com
 parameter_list|,
 name|intptr_t
@@ -12665,9 +12665,6 @@ name|ap
 operator|->
 name|a_vp
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ap
 operator|->
 name|a_command
