@@ -71,25 +71,16 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<sys/devicestat.h>
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
+file|<sys/devicestat.h>
 end_include
 
 begin_include
@@ -113,26 +104,17 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<geom/geom_disk.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_ifndef
 ifndef|#
