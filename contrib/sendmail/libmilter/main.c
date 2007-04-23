@@ -184,6 +184,24 @@ operator|->
 name|xxfi_version
 operator|!=
 name|SMFI_VERSION
+operator|&&
+name|smfi
+operator|->
+name|xxfi_version
+operator|!=
+literal|2
+operator|&&
+name|smfi
+operator|->
+name|xxfi_version
+operator|!=
+literal|3
+operator|&&
+name|smfi
+operator|->
+name|xxfi_version
+operator|!=
+literal|4
 condition|)
 block|{
 comment|/* hard failure for now! */
