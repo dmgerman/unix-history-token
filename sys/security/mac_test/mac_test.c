@@ -547,7 +547,7 @@ end_function
 begin_expr_stmt
 name|COUNTER_DECL
 argument_list|(
-name|init_devfsdirent_label
+name|init_devfs_label
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -555,7 +555,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|void
-name|mac_test_init_devfsdirent_label
+name|mac_test_init_devfs_label
 parameter_list|(
 name|struct
 name|label
@@ -572,7 +572,7 @@ argument_list|)
 expr_stmt|;
 name|COUNTER_INC
 argument_list|(
-name|init_devfsdirent_label
+name|init_devfs_label
 argument_list|)
 expr_stmt|;
 block|}
@@ -1304,7 +1304,7 @@ end_function
 begin_expr_stmt
 name|COUNTER_DECL
 argument_list|(
-name|destroy_devfsdirent_label
+name|destroy_devfs_label
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1312,7 +1312,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|void
-name|mac_test_destroy_devfsdirent_label
+name|mac_test_destroy_devfs_label
 parameter_list|(
 name|struct
 name|label
@@ -1329,7 +1329,7 @@ argument_list|)
 expr_stmt|;
 name|COUNTER_INC
 argument_list|(
-name|destroy_devfsdirent_label
+name|destroy_devfs_label
 argument_list|)
 expr_stmt|;
 block|}
@@ -2898,7 +2898,7 @@ end_function
 begin_expr_stmt
 name|COUNTER_DECL
 argument_list|(
-name|update_devfsdirent
+name|update_devfs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2906,7 +2906,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|void
-name|mac_test_update_devfsdirent
+name|mac_test_update_devfs
 parameter_list|(
 name|struct
 name|mount
@@ -2950,7 +2950,7 @@ argument_list|)
 expr_stmt|;
 name|COUNTER_INC
 argument_list|(
-name|update_devfsdirent
+name|update_devfs
 argument_list|)
 expr_stmt|;
 block|}
@@ -11040,9 +11040,9 @@ operator|=
 name|mac_test_init_cred_label
 block|,
 operator|.
-name|mpo_init_devfsdirent_label
+name|mpo_init_devfs_label
 operator|=
-name|mac_test_init_devfsdirent_label
+name|mac_test_init_devfs_label
 block|,
 operator|.
 name|mpo_init_ifnet_label
@@ -11130,9 +11130,9 @@ operator|=
 name|mac_test_destroy_cred_label
 block|,
 operator|.
-name|mpo_destroy_devfsdirent_label
+name|mpo_destroy_devfs_label
 operator|=
-name|mac_test_destroy_devfsdirent_label
+name|mac_test_destroy_devfs_label
 block|,
 operator|.
 name|mpo_destroy_ifnet_label
@@ -11345,9 +11345,9 @@ operator|=
 name|mac_test_setlabel_vnode_extattr
 block|,
 operator|.
-name|mpo_update_devfsdirent
+name|mpo_update_devfs
 operator|=
-name|mac_test_update_devfsdirent
+name|mac_test_update_devfs
 block|,
 operator|.
 name|mpo_create_mbuf_from_socket

@@ -846,7 +846,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_devfsdirent
+name|mac_init_devfs
 argument_list|(
 name|de
 argument_list|)
@@ -1320,7 +1320,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_destroy_devfsdirent
+name|mac_destroy_devfs
 argument_list|(
 name|de
 argument_list|)

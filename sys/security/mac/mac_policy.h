@@ -357,7 +357,7 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|mpo_init_devfsdirent_label_t
+name|mpo_init_devfs_label_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -660,7 +660,7 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|mpo_destroy_devfsdirent_label_t
+name|mpo_destroy_devfs_label_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -1776,7 +1776,7 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|mpo_update_devfsdirent_t
+name|mpo_update_devfs_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -6057,8 +6057,8 @@ decl_stmt|;
 name|mpo_init_cred_label_t
 name|mpo_init_cred_label
 decl_stmt|;
-name|mpo_init_devfsdirent_label_t
-name|mpo_init_devfsdirent_label
+name|mpo_init_devfs_label_t
+name|mpo_init_devfs_label
 decl_stmt|;
 name|mpo_placeholder_t
 name|_mpo_placeholder0
@@ -6114,8 +6114,8 @@ decl_stmt|;
 name|mpo_destroy_cred_label_t
 name|mpo_destroy_cred_label
 decl_stmt|;
-name|mpo_destroy_devfsdirent_label_t
-name|mpo_destroy_devfsdirent_label
+name|mpo_destroy_devfs_label_t
+name|mpo_destroy_devfs_label
 decl_stmt|;
 name|mpo_placeholder_t
 name|_mpo_placeholder1
@@ -6271,8 +6271,8 @@ decl_stmt|;
 name|mpo_setlabel_vnode_extattr_t
 name|mpo_setlabel_vnode_extattr
 decl_stmt|;
-name|mpo_update_devfsdirent_t
-name|mpo_update_devfsdirent
+name|mpo_update_devfs_t
+name|mpo_update_devfs
 decl_stmt|;
 comment|/* 	 * Labeling event operations: IPC objects. 	 */
 name|mpo_create_mbuf_from_socket_t

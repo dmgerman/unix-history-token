@@ -208,7 +208,7 @@ specifier|static
 name|struct
 name|label
 modifier|*
-name|mac_devfsdirent_label_alloc
+name|mac_devfs_label_alloc
 parameter_list|(
 name|void
 parameter_list|)
@@ -227,7 +227,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|init_devfsdirent_label
+name|init_devfs_label
 argument_list|,
 name|label
 argument_list|)
@@ -242,7 +242,7 @@ end_function
 
 begin_function
 name|void
-name|mac_init_devfsdirent
+name|mac_init_devfs
 parameter_list|(
 name|struct
 name|devfs_dirent
@@ -254,7 +254,7 @@ name|de
 operator|->
 name|de_label
 operator|=
-name|mac_devfsdirent_label_alloc
+name|mac_devfs_label_alloc
 argument_list|()
 expr_stmt|;
 block|}
@@ -376,7 +376,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_devfsdirent_label_free
+name|mac_devfs_label_free
 parameter_list|(
 name|struct
 name|label
@@ -386,7 +386,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_devfsdirent_label
+name|destroy_devfs_label
 argument_list|,
 name|label
 argument_list|)
@@ -401,7 +401,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_devfsdirent
+name|mac_destroy_devfs
 parameter_list|(
 name|struct
 name|devfs_dirent
@@ -409,7 +409,7 @@ modifier|*
 name|de
 parameter_list|)
 block|{
-name|mac_devfsdirent_label_free
+name|mac_devfs_label_free
 argument_list|(
 name|de
 operator|->
@@ -636,7 +636,7 @@ end_function
 
 begin_function
 name|void
-name|mac_update_devfsdirent
+name|mac_update_devfs
 parameter_list|(
 name|struct
 name|mount
@@ -656,7 +656,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|update_devfsdirent
+name|update_devfs
 argument_list|,
 name|mp
 argument_list|,

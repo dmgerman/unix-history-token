@@ -3908,7 +3908,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_biba_update_devfsdirent
+name|mac_biba_update_devfs
 parameter_list|(
 name|struct
 name|mount
@@ -13913,7 +13913,7 @@ operator|=
 name|mac_biba_init_label
 block|,
 operator|.
-name|mpo_init_devfsdirent_label
+name|mpo_init_devfs_label
 operator|=
 name|mac_biba_init_label
 block|,
@@ -14008,7 +14008,7 @@ operator|=
 name|mac_biba_destroy_label
 block|,
 operator|.
-name|mpo_destroy_devfsdirent_label
+name|mpo_destroy_devfs_label
 operator|=
 name|mac_biba_destroy_label
 block|,
@@ -14198,9 +14198,9 @@ operator|=
 name|mac_biba_relabel_vnode
 block|,
 operator|.
-name|mpo_update_devfsdirent
+name|mpo_update_devfs
 operator|=
-name|mac_biba_update_devfsdirent
+name|mac_biba_update_devfs
 block|,
 operator|.
 name|mpo_associate_vnode_devfs

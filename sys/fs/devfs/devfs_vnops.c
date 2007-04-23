@@ -6252,7 +6252,7 @@ operator|->
 name|a_label
 argument_list|)
 expr_stmt|;
-name|mac_update_devfsdirent
+name|mac_update_devfs
 argument_list|(
 name|vp
 operator|->

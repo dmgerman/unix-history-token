@@ -272,7 +272,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_devfsdirent
+name|mac_init_devfs
 parameter_list|(
 name|struct
 name|devfs_dirent
@@ -525,7 +525,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_devfsdirent
+name|mac_destroy_devfs
 parameter_list|(
 name|struct
 name|devfs_dirent
@@ -943,7 +943,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_update_devfsdirent
+name|mac_update_devfs
 parameter_list|(
 name|struct
 name|mount

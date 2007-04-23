@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001
 end_comment
 
 begin_comment
-comment|/*  * Developed by the TrustedBSD Project.  * MLS fixed label mandatory confidentiality policy.  */
+comment|/*  * Developed by the TrustedBSD Project.  *  * MLS fixed label mandatory confidentiality policy.  */
 end_comment
 
 begin_include
@@ -3718,7 +3718,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_update_devfsdirent
+name|mac_mls_update_devfs
 parameter_list|(
 name|struct
 name|mount
@@ -12751,7 +12751,7 @@ operator|=
 name|mac_mls_init_label
 block|,
 operator|.
-name|mpo_init_devfsdirent_label
+name|mpo_init_devfs_label
 operator|=
 name|mac_mls_init_label
 block|,
@@ -12841,7 +12841,7 @@ operator|=
 name|mac_mls_destroy_label
 block|,
 operator|.
-name|mpo_destroy_devfsdirent_label
+name|mpo_destroy_devfs_label
 operator|=
 name|mac_mls_destroy_label
 block|,
@@ -13031,9 +13031,9 @@ operator|=
 name|mac_mls_relabel_vnode
 block|,
 operator|.
-name|mpo_update_devfsdirent
+name|mpo_update_devfs
 operator|=
-name|mac_mls_update_devfsdirent
+name|mac_mls_update_devfs
 block|,
 operator|.
 name|mpo_associate_vnode_devfs

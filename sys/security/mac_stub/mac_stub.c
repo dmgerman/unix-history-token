@@ -804,7 +804,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|stub_update_devfsdirent
+name|stub_update_devfs
 parameter_list|(
 name|struct
 name|mount
@@ -5267,7 +5267,7 @@ operator|=
 name|stub_init_label
 block|,
 operator|.
-name|mpo_init_devfsdirent_label
+name|mpo_init_devfs_label
 operator|=
 name|stub_init_label
 block|,
@@ -5352,7 +5352,7 @@ operator|=
 name|stub_destroy_label
 block|,
 operator|.
-name|mpo_destroy_devfsdirent_label
+name|mpo_destroy_devfs_label
 operator|=
 name|stub_destroy_label
 block|,
@@ -5587,9 +5587,9 @@ operator|=
 name|stub_setlabel_vnode_extattr
 block|,
 operator|.
-name|mpo_update_devfsdirent
+name|mpo_update_devfs
 operator|=
-name|stub_update_devfsdirent
+name|stub_update_devfs
 block|,
 operator|.
 name|mpo_create_mbuf_from_socket
