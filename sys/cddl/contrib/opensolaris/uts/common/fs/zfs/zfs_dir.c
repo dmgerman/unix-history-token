@@ -113,6 +113,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/policy.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kcondvar.h>
 end_include
 
