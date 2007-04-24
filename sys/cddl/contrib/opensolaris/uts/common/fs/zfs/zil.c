@@ -134,7 +134,7 @@ name|OID_AUTO
 argument_list|,
 name|zil_disable
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zil_disable
