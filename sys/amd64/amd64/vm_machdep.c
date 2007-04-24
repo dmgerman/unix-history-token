@@ -1551,6 +1551,12 @@ name|void
 name|cpu_reset_real
 parameter_list|()
 block|{
+name|int
+name|b
+decl_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Attempt to do a CPU reset via the keyboard controller, 	 * do not turn off GateA20, as any machine that fails 	 * to do the reset here would then end up in no man's land. 	 */
 name|outb
 argument_list|(
@@ -1567,9 +1573,80 @@ literal|500000
 argument_list|)
 expr_stmt|;
 comment|/* wait 0.5 sec to see if that did it */
+comment|/* 	 * Attempt to force a reset via the Reset Control register at 	 * I/O port 0xcf9.  Bit 2 forces a system reset when it is 	 * written as 1.  Bit 1 selects the type of reset to attempt: 	 * 0 selects a "soft" reset, and 1 selects a "hard" reset.  We 	 * try to do a "soft" reset first, and then a "hard" reset. 	 */
+name|outb
+argument_list|(
+literal|0xcf9
+argument_list|,
+literal|0x2
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+literal|0xcf9
+argument_list|,
+literal|0x6
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|500000
+argument_list|)
+expr_stmt|;
+comment|/* wait 0.5 sec to see if that did it */
+comment|/* 	 * Attempt to force a reset via the Fast A20 and Init register 	 * at I/O port 0x92.  Bit 1 serves as an alternate A20 gate. 	 * Bit 0 asserts INIT# when set to 1.  We are careful to only 	 * preserve bit 1 while setting bit 0.  We also must clear bit 	 * 0 before setting it if it isn't already clear. 	 */
+name|b
+operator|=
+name|inb
+argument_list|(
+literal|0x92
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|b
+operator|!=
+literal|0xff
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|b
+operator|&
+literal|0x1
+operator|)
+operator|!=
+literal|0
+condition|)
+name|outb
+argument_list|(
+literal|0x92
+argument_list|,
+name|b
+operator|&
+literal|0xfe
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+literal|0x92
+argument_list|,
+name|b
+operator||
+literal|0x1
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|500000
+argument_list|)
+expr_stmt|;
+comment|/* wait 0.5 sec to see if that did it */
+block|}
 name|printf
 argument_list|(
-literal|"Keyboard reset did not work, attempting CPU shutdown\n"
+literal|"No known reset method worked, attempting CPU shutdown\n"
 argument_list|)
 expr_stmt|;
 name|DELAY
