@@ -2141,6 +2141,10 @@ name|void
 name|cpu_reset_real
 parameter_list|()
 block|{
+name|struct
+name|region_descriptor
+name|null_idt
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|PC98
@@ -2347,19 +2351,27 @@ literal|1000000
 argument_list|)
 expr_stmt|;
 comment|/* wait 1 sec for printf to complete */
-comment|/* Force a shutdown by unmapping entire address space. */
-name|bzero
+comment|/* Wipe the IDT. */
+name|null_idt
+operator|.
+name|rd_limit
+operator|=
+literal|0
+expr_stmt|;
+name|null_idt
+operator|.
+name|rd_base
+operator|=
+literal|0
+expr_stmt|;
+name|lidt
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|PTD
-argument_list|,
-name|NBPTD
+operator|&
+name|null_idt
 argument_list|)
 expr_stmt|;
 comment|/* "good night, sweet prince ....<THUNK!>" */
-name|invltlb
+name|breakpoint
 argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
