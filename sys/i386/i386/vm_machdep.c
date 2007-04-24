@@ -2262,7 +2262,7 @@ expr_stmt|;
 comment|/* wait 0.5 sec to see if that did it */
 endif|#
 directive|endif
-comment|/* Try the PCI reset */
+comment|/* 	 * Attempt to force a reset via the Reset Control register at 	 * I/O port 0xcf9.  Bit 2 forces a system reset when it is 	 * written as 1.  Bit 1 selects the type of reset to attempt: 	 * 0 selects a "soft" reset, and 1 selects a "hard" reset.  We 	 * try to do a "soft" reset first, and then a "hard" reset. 	 */
 name|outb
 argument_list|(
 literal|0xcf9
@@ -2283,7 +2283,7 @@ literal|500000
 argument_list|)
 expr_stmt|;
 comment|/* wait 0.5 sec to see if that did it */
-comment|/* Try port 0x92 fast reset */
+comment|/* 	 * Attempt to force a reset via the Fast A20 and Init register 	 * at I/O port 0x92.  Bit 1 serves as an alternate A20 gate. 	 * Bit 0 asserts INIT# when set to 1.  We are careful to only 	 * preserve bit 1 while setting bit 0.  We also must clear bit 	 * 0 before setting it if it isn't already clear. 	 */
 name|b
 operator|=
 name|inb
@@ -2291,7 +2291,6 @@ argument_list|(
 literal|0x92
 argument_list|)
 expr_stmt|;
-comment|/* Check the the hardware actually has the port in question */
 if|if
 condition|(
 name|b
