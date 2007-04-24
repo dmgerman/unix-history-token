@@ -5602,17 +5602,6 @@ name|vdev_top
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
-argument_list|(
-operator|&
-name|smlock
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|smlock
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|mutex_init
 argument_list|(
 operator|&
