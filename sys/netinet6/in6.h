@@ -2525,8 +2525,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPV6CTL_MAXID
+name|IPV6CTL_RTHDR0_ALLOWED
 value|46
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_MAXID
+value|47
 end_define
 
 begin_endif
