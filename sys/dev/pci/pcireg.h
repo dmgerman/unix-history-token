@@ -3338,6 +3338,17 @@ begin_comment
 comment|/* 11000 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_X86_ENCODING
+value|0xc800
+end_define
+
+begin_comment
+comment|/* 11001 */
+end_comment
+
 begin_comment
 comment|/* HT MSI Mapping Capability definitions. */
 end_comment
@@ -3347,6 +3358,13 @@ define|#
 directive|define
 name|PCIM_HTCMD_MSI_ENABLE
 value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCMD_MSI_FIXED
+value|0x0002
 end_define
 
 begin_define
