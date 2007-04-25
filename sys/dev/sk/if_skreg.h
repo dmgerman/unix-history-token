@@ -8342,6 +8342,13 @@ name|callout
 name|sk_tick_ch
 decl_stmt|;
 name|struct
+name|callout
+name|sk_watchdog_ch
+decl_stmt|;
+name|int
+name|sk_watchdog_timer
+decl_stmt|;
+name|struct
 name|sk_chain_data
 name|sk_cdata
 decl_stmt|;
