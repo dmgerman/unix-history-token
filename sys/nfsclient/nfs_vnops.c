@@ -15095,6 +15095,11 @@ goto|goto
 name|loop
 goto|;
 block|}
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/*  		 * Wait for all the async IO requests to drain  		 */
 while|while
 condition|(
@@ -15171,6 +15176,7 @@ block|}
 block|}
 block|}
 block|}
+else|else
 name|VI_UNLOCK
 argument_list|(
 name|vp
