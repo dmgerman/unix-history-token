@@ -315,6 +315,9 @@ decl_stmt|;
 name|int
 name|n_directio_opens
 decl_stmt|;
+name|int
+name|n_directio_asyncwr
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -473,6 +476,17 @@ end_define
 
 begin_comment
 comment|/* Node marked as noncacheable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSYNCWAIT
+value|0x8000
+end_define
+
+begin_comment
+comment|/* fsync waiting for all directio async writes  				   to drain */
 end_comment
 
 begin_comment
