@@ -5015,17 +5015,13 @@ block|}
 comment|/*      * If this is an allocation of a specific range, see if we can satisfy      * the request from our system resource regions.  If we can't, pass the      * request up to the parent.      */
 if|if
 condition|(
-operator|!
-operator|(
 name|start
+operator|+
+name|count
+operator|-
+literal|1
 operator|==
-literal|0UL
-operator|&&
 name|end
-operator|==
-operator|~
-literal|0UL
-operator|)
 operator|&&
 name|rm
 operator|!=
