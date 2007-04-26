@@ -3774,6 +3774,9 @@ name|int
 name|rl_testmode
 decl_stmt|;
 name|int
+name|rl_if_flags
+decl_stmt|;
+name|int
 name|suspended
 decl_stmt|;
 comment|/* 0 = normal  1 = suspended */
