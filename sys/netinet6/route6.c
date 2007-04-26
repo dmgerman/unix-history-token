@@ -90,6 +90,13 @@ file|<netinet/icmp6.h>
 end_include
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|ip6_rthdr0_allowed
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|ip6_rthdr0
@@ -309,6 +316,16 @@ block|{
 case|case
 name|IPV6_RTHDR_TYPE_0
 case|:
+if|if
+condition|(
+operator|!
+name|ip6_rthdr0_allowed
+condition|)
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 name|rhlen
 operator|=
 operator|(
