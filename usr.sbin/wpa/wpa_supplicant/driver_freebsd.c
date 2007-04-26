@@ -1584,6 +1584,17 @@ argument_list|,
 name|seq_len
 argument_list|)
 expr_stmt|;
+name|wk
+operator|.
+name|ik_keyrsc
+operator|=
+name|le64toh
+argument_list|(
+name|wk
+operator|.
+name|ik_keyrsc
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|wk
