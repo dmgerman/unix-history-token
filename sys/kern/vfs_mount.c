@@ -5752,8 +5752,6 @@ argument_list|(
 name|coveredvp
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
 name|vn_lock
 argument_list|(
 name|coveredvp
@@ -5761,6 +5759,8 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
+operator||
+name|LK_RETRY
 argument_list|,
 name|td
 argument_list|)
@@ -5771,15 +5771,6 @@ name|coveredvp
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Check for mp being unmounted while waiting for the 		 * covered vnode lock. 		 */
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 if|if
 condition|(
 name|coveredvp
