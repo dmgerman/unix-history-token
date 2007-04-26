@@ -179,6 +179,20 @@ name|SALTSIZE
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|LOCKED_PREFIX
+value|"*LOCKED*"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCKED_PREFIX_LEN
+value|(sizeof(LOCKED_PREFIX) - 1)
+end_define
+
 begin_function_decl
 specifier|static
 name|void
@@ -728,6 +742,26 @@ condition|)
 return|return
 operator|(
 name|PAM_NEW_AUTHTOK_REQD
+operator|)
+return|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|pwd
+operator|->
+name|pw_passwd
+argument_list|,
+name|LOCKED_PREFIX
+argument_list|,
+name|LOCKED_PREFIX_LEN
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|PAM_AUTH_ERR
 operator|)
 return|;
 name|lc
