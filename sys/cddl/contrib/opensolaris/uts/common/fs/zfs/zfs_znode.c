@@ -1667,7 +1667,7 @@ argument_list|)
 expr_stmt|;
 name|nzp
 operator|=
-name|dmu_buf_set_user
+name|dmu_buf_set_user_ie
 argument_list|(
 name|db
 argument_list|,
