@@ -548,6 +548,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_int32_t
+name|ac97_getsubvendor
+parameter_list|(
+name|struct
+name|ac97_info
+modifier|*
+name|codec
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int16_t
 name|ac97_rdcd
 parameter_list|(

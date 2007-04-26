@@ -87,6 +87,52 @@ end_function
 
 begin_function
 name|void
+name|ad1981b_patch
+parameter_list|(
+name|struct
+name|ac97_info
+modifier|*
+name|codec
+parameter_list|)
+block|{
+comment|/* 	 * Enable headphone jack sensing. 	 */
+switch|switch
+condition|(
+name|ac97_getsubvendor
+argument_list|(
+name|codec
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0x02d91014
+case|:
+comment|/* IBM Thinkcentre */
+name|ac97_wrcd
+argument_list|(
+name|codec
+argument_list|,
+name|AC97_AD_JACK_SPDIF
+argument_list|,
+name|ac97_rdcd
+argument_list|(
+name|codec
+argument_list|,
+name|AC97_AD_JACK_SPDIF
+argument_list|)
+operator||
+literal|0x0800
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
 name|cmi9739_patch
 parameter_list|(
 name|struct
@@ -95,7 +141,19 @@ modifier|*
 name|codec
 parameter_list|)
 block|{
-comment|/* 	 * Few laptops (notably ASUS W1000N) need extra register 	 * initialization to power up the internal speakers. 	 */
+comment|/* 	 * Few laptops need extra register initialization 	 * to power up the internal speakers. 	 */
+switch|switch
+condition|(
+name|ac97_getsubvendor
+argument_list|(
+name|codec
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0x18431043
+case|:
+comment|/* ASUS W1000N */
 name|ac97_wrcd
 argument_list|(
 name|codec
@@ -123,6 +181,68 @@ argument_list|,
 literal|0x7110
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|alc655_patch
+parameter_list|(
+name|struct
+name|ac97_info
+modifier|*
+name|codec
+parameter_list|)
+block|{
+comment|/* 	 * MSI (Micro-Star International) specific EAPD quirk. 	 */
+switch|switch
+condition|(
+name|ac97_getsubvendor
+argument_list|(
+name|codec
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0x00611462
+case|:
+comment|/* MSI S250 */
+case|case
+literal|0x01311462
+case|:
+comment|/* MSI S270 */
+case|case
+literal|0x01611462
+case|:
+comment|/* LG K1 Express */
+case|case
+literal|0x03511462
+case|:
+comment|/* MSI L725 */
+name|ac97_wrcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x7a
+argument_list|,
+name|ac97_rdcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x7a
+argument_list|)
+operator|&
+literal|0xfffd
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 block|}
 end_function
 
