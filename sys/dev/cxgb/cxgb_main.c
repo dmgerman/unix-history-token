@@ -887,6 +887,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Multiple queues need further tuning  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|singleq
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_enum
 enum|enum
 block|{
@@ -2174,11 +2187,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|singleq
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
 name|sc
 operator|->
 name|flags
 operator|&
 name|USING_MSIX
+operator|)
 condition|)
 name|port_qsets
 operator|=
