@@ -10005,26 +10005,6 @@ name|timestamp
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Do not inherit the MAP_WIREFUTURE property. */
-if|if
-condition|(
-operator|(
-name|new_map
-operator|->
-name|flags
-operator|&
-name|MAP_WIREFUTURE
-operator|)
-operator|==
-name|MAP_WIREFUTURE
-condition|)
-name|new_map
-operator|->
-name|flags
-operator|&=
-operator|~
-name|MAP_WIREFUTURE
-expr_stmt|;
 name|old_entry
 operator|=
 name|old_map
