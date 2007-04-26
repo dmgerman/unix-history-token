@@ -1628,6 +1628,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|int
+name|ip6_rthdr0_allowed
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Disallow use of routing header 0 */
+end_comment
+
+begin_comment
+comment|/* by default. */
+end_comment
+
 begin_comment
 comment|/* icmp6 */
 end_comment
@@ -2696,6 +2712,27 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet6_ip6
+argument_list|,
+name|IPV6CTL_RTHDR0_ALLOWED
+argument_list|,
+name|rthdr0_allowed
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ip6_rthdr0_allowed
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* net.inet6.icmp6 */
