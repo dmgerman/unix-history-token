@@ -4603,7 +4603,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|zfs_ioc_pool_props_set
+name|zfs_ioc_pool_set_props
 parameter_list|(
 name|zfs_cmd_t
 modifier|*
@@ -5021,7 +5021,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|zfs_ioc_pool_props_get
+name|zfs_ioc_pool_get_props
 parameter_list|(
 name|zfs_cmd_t
 modifier|*
@@ -7602,7 +7602,7 @@ name|no_name
 block|}
 block|,
 block|{
-name|zfs_ioc_pool_props_set
+name|zfs_ioc_pool_set_props
 block|,
 name|zfs_secpolicy_config
 block|,
@@ -7610,7 +7610,7 @@ name|pool_name
 block|}
 block|,
 block|{
-name|zfs_ioc_pool_props_get
+name|zfs_ioc_pool_get_props
 block|,
 name|zfs_secpolicy_read
 block|,
