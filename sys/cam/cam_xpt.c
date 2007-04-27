@@ -30878,6 +30878,13 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|busses_to_config
+operator|==
+literal|0
+condition|)
+block|{
 name|task
 operator|=
 name|malloc
@@ -30924,6 +30931,7 @@ operator|->
 name|task
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
