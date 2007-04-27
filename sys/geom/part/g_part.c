@@ -148,7 +148,7 @@ name|g_part_scheme
 name|g_part_null_scheme
 init|=
 block|{
-name|NULL
+literal|"n/a"
 block|,
 name|g_part_null_methods
 block|,
@@ -6481,6 +6481,21 @@ block|}
 else|else
 block|{
 comment|/* Geom configuration. */
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"%s<scheme>%s</scheme>\n"
+argument_list|,
+name|indent
+argument_list|,
+name|table
+operator|->
+name|gpt_scheme
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|sbuf_printf
 argument_list|(
 name|sb
