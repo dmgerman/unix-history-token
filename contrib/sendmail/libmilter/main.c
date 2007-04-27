@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2003, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2003, 2006, 2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -184,6 +184,24 @@ operator|->
 name|xxfi_version
 operator|!=
 name|SMFI_VERSION
+operator|&&
+name|smfi
+operator|->
+name|xxfi_version
+operator|!=
+literal|2
+operator|&&
+name|smfi
+operator|->
+name|xxfi_version
+operator|!=
+literal|3
+operator|&&
+name|smfi
+operator|->
+name|xxfi_version
+operator|!=
+literal|4
 condition|)
 block|{
 comment|/* hard failure for now! */
