@@ -36,7 +36,7 @@ end_ifdef
 begin_warning
 warning|#
 directive|warning
-literal|"Old BSD tty API used, please upgrade"
+literal|"Old BSD tty API used and depends on COMPAT_43TTY. Use termios.h instead"
 end_warning
 
 begin_endif
