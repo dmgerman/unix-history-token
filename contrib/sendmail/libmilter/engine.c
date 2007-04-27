@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2004, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2004, 2006, 2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -3884,6 +3884,16 @@ name|ctx_smfi
 operator|!=
 name|NULL
 operator|&&
+name|g
+operator|->
+name|a_ctx
+operator|->
+name|ctx_smfi
+operator|->
+name|xxfi_version
+operator|>
+literal|4
+operator|&&
 operator|(
 name|fi_negotiate
 operator|=
@@ -5113,6 +5123,16 @@ name|ctx_smfi
 operator|!=
 name|NULL
 operator|&&
+name|g
+operator|->
+name|a_ctx
+operator|->
+name|ctx_smfi
+operator|->
+name|xxfi_version
+operator|>
+literal|3
+operator|&&
 operator|(
 name|fi_data
 operator|=
@@ -5508,6 +5528,16 @@ operator|->
 name|ctx_smfi
 operator|!=
 name|NULL
+operator|&&
+name|g
+operator|->
+name|a_ctx
+operator|->
+name|ctx_smfi
+operator|->
+name|xxfi_version
+operator|>
+literal|2
 operator|&&
 operator|(
 name|fi_unknown
