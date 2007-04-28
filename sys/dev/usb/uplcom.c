@@ -943,6 +943,18 @@ block|,
 name|TYPE_PL2303
 block|}
 block|,
+comment|/* Sagem USB-Serial Controller */
+block|{
+name|USB_VENDOR_SAGEM
+block|,
+name|USB_PRODUCT_SAGEM_USBSERIAL
+block|,
+operator|-
+literal|1
+block|,
+name|TYPE_PL2303X
+block|}
+block|,
 comment|/* Sony Ericsson USB Cable */
 block|{
 name|USB_VENDOR_SONYERICSSON
