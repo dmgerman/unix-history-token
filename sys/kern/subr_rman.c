@@ -525,10 +525,6 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * NB: this interface is not robust against programming errors which  * add multiple copies of the same region.  */
-end_comment
-
 begin_function
 name|int
 name|rman_manage_region
