@@ -2591,7 +2591,10 @@ operator|&&
 operator|!
 operator|(
 name|m
-operator|->
+index|[
+name|i
+index|]
+operator|.
 name|flags
 operator|&
 name|PG_ZERO
