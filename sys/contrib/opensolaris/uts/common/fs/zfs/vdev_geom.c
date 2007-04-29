@@ -304,11 +304,6 @@ operator|->
 name|ace
 argument_list|)
 expr_stmt|;
-name|g_detach
-argument_list|(
-name|cp
-argument_list|)
-expr_stmt|;
 name|ZFS_LOG
 argument_list|(
 literal|1
@@ -320,6 +315,11 @@ operator|->
 name|provider
 operator|->
 name|name
+argument_list|)
+expr_stmt|;
+name|g_detach
+argument_list|(
+name|cp
 argument_list|)
 expr_stmt|;
 name|g_destroy_consumer
@@ -352,9 +352,7 @@ argument_list|)
 expr_stmt|;
 name|g_wither_geom
 argument_list|(
-name|cp
-operator|->
-name|geom
+name|gp
 argument_list|,
 name|error
 argument_list|)
