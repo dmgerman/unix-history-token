@@ -7064,6 +7064,10 @@ name|zp
 operator|->
 name|z_id
 expr_stmt|;
+name|type
+operator|=
+name|DT_DIR
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -7092,6 +7096,10 @@ operator|->
 name|z_phys
 operator|->
 name|zp_parent
+expr_stmt|;
+name|type
+operator|=
+name|DT_DIR
 expr_stmt|;
 block|}
 elseif|else
@@ -7122,6 +7130,10 @@ expr_stmt|;
 name|objnum
 operator|=
 name|ZFSCTL_INO_ROOT
+expr_stmt|;
+name|type
+operator|=
+name|DT_DIR
 expr_stmt|;
 block|}
 else|else

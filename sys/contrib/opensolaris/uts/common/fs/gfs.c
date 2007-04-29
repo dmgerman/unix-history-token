@@ -334,6 +334,7 @@ name|d_namlen
 operator|=
 name|namlen
 expr_stmt|;
+comment|/* TODO: d_type */
 if|if
 condition|(
 name|uiomove
@@ -489,6 +490,7 @@ operator|->
 name|grd_namlen
 argument_list|)
 expr_stmt|;
+comment|/* TODO: d_type */
 comment|/* 	 * Inter-entry offsets are invalid, so we assume a record size of 	 * grd_ureclen and explicitly set the offset appropriately. 	 */
 return|return
 operator|(
