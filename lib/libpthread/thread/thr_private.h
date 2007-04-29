@@ -238,7 +238,7 @@ parameter_list|(
 name|sym
 parameter_list|)
 define|\
-value|LT10_COMPAT(sym);				\ 	WEAK_REF(sym, SYM_FBP10(sym));			\ 	SYM_DEFAULT(sym, SYM_FBP10(sym), FBSDprivate)
+value|LT10_COMPAT(sym);				\ 	WEAK_REF(sym, SYM_FBP10(sym));			\ 	SYM_DEFAULT(sym, SYM_FBP10(sym), FBSDprivate_1.0)
 end_define
 
 begin_else
