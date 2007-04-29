@@ -7572,6 +7572,11 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|&&
+operator|*
+name|cookies
+operator|!=
+name|NULL
 condition|)
 block|{
 name|free
