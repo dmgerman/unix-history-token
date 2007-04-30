@@ -1361,41 +1361,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Postpone to later retry.  */
-end_comment
-
-begin_function
-name|void
-name|fw_asybusy
-parameter_list|(
-name|struct
-name|fw_xfer
-modifier|*
-name|xfer
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"fw_asybusy\n"
-argument_list|)
-expr_stmt|;
-comment|/* 	xfer->ch =  timeout((timeout_t *)fw_asystart, (void *)xfer, 20000); */
-if|#
-directive|if
-literal|0
-block|DELAY(20000);
-endif|#
-directive|endif
-name|fw_asystart
-argument_list|(
-name|xfer
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Async. request with given xfer structure.  */
 end_comment
 

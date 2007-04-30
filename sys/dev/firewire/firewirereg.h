@@ -1243,17 +1243,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|fw_asybusy
-parameter_list|(
-name|struct
-name|fw_xfer
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|fw_bindadd
 parameter_list|(
