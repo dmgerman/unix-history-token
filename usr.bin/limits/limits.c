@@ -2214,9 +2214,6 @@ condition|(
 operator|*
 name|argv
 operator|&&
-operator|(
-name|p
-operator|=
 name|strchr
 argument_list|(
 operator|*
@@ -2224,21 +2221,20 @@ name|argv
 argument_list|,
 literal|'='
 argument_list|)
-operator|)
+operator|!=
+name|NULL
 condition|)
 operator|(
 name|void
 operator|)
-name|setenv
+name|putenv
+argument_list|(
+name|strdup
 argument_list|(
 operator|*
 name|argv
 operator|++
-argument_list|,
-operator|++
-name|p
-argument_list|,
-literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Set limits */
