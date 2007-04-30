@@ -516,7 +516,10 @@ literal|'h'
 case|:
 name|putenv
 argument_list|(
+name|strdup
+argument_list|(
 literal|"BLOCKSIZE=512"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|hflag
@@ -533,7 +536,10 @@ literal|0
 expr_stmt|;
 name|putenv
 argument_list|(
+name|strdup
+argument_list|(
 literal|"BLOCKSIZE=1024"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -546,7 +552,10 @@ literal|0
 expr_stmt|;
 name|putenv
 argument_list|(
+name|strdup
+argument_list|(
 literal|"BLOCKSIZE=1048576"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
