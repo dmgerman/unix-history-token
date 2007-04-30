@@ -68,7 +68,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Common structure pcb for internet protocol implementation.  * Here are stored pointers to local and foreign host table  * entries, local and foreign socket numbers, and pointers  * up (to a socket structure) and down (to a protocol-specific)  * control block.  */
+comment|/*  * Struct inpcb is the ommon structure pcb for the Internet Protocol  * implementation.  *  * Pointers to local and foreign host table entries, local and foreign socket  * numbers, and pointers up (to a socket structure) and down (to a  * protocol-specific control block) are stored here.  */
 end_comment
 
 begin_expr_stmt
@@ -99,7 +99,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * PCB with AF_INET6 null bind'ed laddr can receive AF_INET input packet.  * So, AF_INET6 null laddr is also used as AF_INET null laddr,  * by utilize following structure. (At last, same as INRIA)  */
+comment|/*  * PCB with AF_INET6 null bind'ed laddr can receive AF_INET input packet.  * So, AF_INET6 null laddr is also used as AF_INET null laddr, by utilizing  * the following structure.  */
 end_comment
 
 begin_struct
@@ -121,7 +121,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * NOTE: ipv6 addrs should be 64-bit aligned, per RFC 2553.  * in_conninfo has some extra padding to accomplish this.  */
+comment|/*  * NOTE: ipv6 addrs should be 64-bit aligned, per RFC 2553.  in_conninfo has  * some extra padding to accomplish this.  */
 end_comment
 
 begin_struct
@@ -186,7 +186,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * XXX  * the defines for inc_* are hacks and should be changed to direct references  */
+comment|/*  * XXX The defines for inc_* are hacks and should be changed to direct  * references.  */
 end_comment
 
 begin_struct
@@ -380,7 +380,7 @@ name|u_char
 name|inp_ip_minttl
 decl_stmt|;
 comment|/* minimum TTL or drop */
-comment|/* Protocol dependent part; options. */
+comment|/* Protocol-dependent part; options. */
 struct|struct
 block|{
 name|u_char
@@ -565,11 +565,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The range of the generation count, as used in this implementation,  * is 9e19.  We would have to create 300 billion connections per  * second for this number to roll over in a year.  This seems sufficiently  * unlikely that we simply don't concern ourselves with that possibility.  */
+comment|/*  * The range of the generation count, as used in this implementation, is 9e19.  * We would have to create 300 billion connections per second for this number  * to roll over in a year.  This seems sufficiently unlikely that we simply  * don't concern ourselves with that possibility.  */
 end_comment
 
 begin_comment
-comment|/*  * Interface exported to userland by various protocols which use  * inpcbs.  Hack alert -- only define if struct xsocket is in scope.  */
+comment|/*  * Interface exported to userland by various protocols which use inpcbs.  Hack  * alert -- only define if struct xsocket is in scope.  */
 end_comment
 
 begin_ifdef
@@ -655,55 +655,61 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Global data structure for each high-level protocol (UDP, TCP, ...) in both  * IPv4 and IPv6.  Holds inpcb lists and information for managing them.  */
+end_comment
+
 begin_struct
 struct|struct
 name|inpcbinfo
 block|{
-comment|/* XXX documentation, prefixes */
+comment|/* 	 * Global list of inpcbs on the protocol. 	 */
 name|struct
 name|inpcbhead
 modifier|*
-name|hashbase
+name|ipi_listhead
+decl_stmt|;
+name|u_int
+name|ipi_count
+decl_stmt|;
+comment|/* 	 * Global hash of inpcbs, hashed by local and foreign addresses and 	 * port numbers. 	 */
+name|struct
+name|inpcbhead
+modifier|*
+name|ipi_hashbase
 decl_stmt|;
 name|u_long
-name|hashmask
+name|ipi_hashmask
 decl_stmt|;
+comment|/* 	 * Global hash of inpcbs, hashed by only local port number. 	 */
 name|struct
 name|inpcbporthead
 modifier|*
-name|porthashbase
+name|ipi_porthashbase
 decl_stmt|;
 name|u_long
-name|porthashmask
+name|ipi_porthashmask
 decl_stmt|;
-name|struct
-name|inpcbhead
-modifier|*
-name|listhead
+comment|/* 	 * Fields associated with port lookup and allocation. 	 */
+name|u_short
+name|ipi_lastport
 decl_stmt|;
 name|u_short
-name|lastport
+name|ipi_lastlow
 decl_stmt|;
 name|u_short
-name|lastlow
+name|ipi_lasthi
 decl_stmt|;
-name|u_short
-name|lasthi
-decl_stmt|;
+comment|/* 	 * UMA zone from which inpcbs are allocated for this protocol. 	 */
 name|struct
 name|uma_zone
 modifier|*
 name|ipi_zone
 decl_stmt|;
-comment|/* zone to allocate pcbs from */
-name|u_int
-name|ipi_count
-decl_stmt|;
-comment|/* number of pcbs in this list */
+comment|/* 	 * Generation count--incremented each time a connection is allocated 	 * or freed. 	 */
 name|u_quad_t
 name|ipi_gencnt
 decl_stmt|;
-comment|/* current generation count */
 name|struct
 name|mtx
 name|ipi_mtx

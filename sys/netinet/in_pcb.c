@@ -1099,7 +1099,7 @@ name|LIST_INSERT_HEAD
 argument_list|(
 name|pcbinfo
 operator|->
-name|listhead
+name|ipi_listhead
 argument_list|,
 name|inp
 argument_list|,
@@ -2152,7 +2152,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|lasthi
+name|ipi_lasthi
 expr_stmt|;
 block|}
 elseif|else
@@ -2198,7 +2198,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|lastlow
+name|ipi_lastlow
 expr_stmt|;
 block|}
 else|else
@@ -2217,7 +2217,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|lastport
+name|ipi_lastport
 expr_stmt|;
 block|}
 comment|/* 		 * For UDP, use random port allocation as long as the user 		 * allows it.  For TCP (and as of yet unknown) connections, 		 * use random port allocation only if the user allows it AND 		 * ipport_tick() allows it. 		 */
@@ -4068,7 +4068,7 @@ name|head
 operator|=
 name|pcbinfo
 operator|->
-name|listhead
+name|ipi_listhead
 expr_stmt|;
 for|for
 control|(
@@ -4218,7 +4218,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|inp
 argument_list|,
-argument|pcbinfo->listhead
+argument|pcbinfo->ipi_listhead
 argument_list|,
 argument|inp_list
 argument_list|)
@@ -4445,7 +4445,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|hashbase
+name|ipi_hashbase
 index|[
 name|INP_PCBHASH
 argument_list|(
@@ -4457,7 +4457,7 @@ literal|0
 argument_list|,
 name|pcbinfo
 operator|->
-name|hashmask
+name|ipi_hashmask
 argument_list|)
 index|]
 expr_stmt|;
@@ -4555,7 +4555,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|porthashbase
+name|ipi_porthashbase
 index|[
 name|INP_PCBPORTHASH
 argument_list|(
@@ -4563,7 +4563,7 @@ name|lport
 argument_list|,
 name|pcbinfo
 operator|->
-name|porthashmask
+name|ipi_porthashmask
 argument_list|)
 index|]
 expr_stmt|;
@@ -4816,7 +4816,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|hashbase
+name|ipi_hashbase
 index|[
 name|INP_PCBHASH
 argument_list|(
@@ -4830,7 +4830,7 @@ name|fport
 argument_list|,
 name|pcbinfo
 operator|->
-name|hashmask
+name|ipi_hashmask
 argument_list|)
 index|]
 expr_stmt|;
@@ -4931,7 +4931,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|hashbase
+name|ipi_hashbase
 index|[
 name|INP_PCBHASH
 argument_list|(
@@ -4943,7 +4943,7 @@ literal|0
 argument_list|,
 name|pcbinfo
 operator|->
-name|hashmask
+name|ipi_hashmask
 argument_list|)
 index|]
 expr_stmt|;
@@ -5190,7 +5190,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|hashbase
+name|ipi_hashbase
 index|[
 name|INP_PCBHASH
 argument_list|(
@@ -5206,7 +5206,7 @@ name|inp_fport
 argument_list|,
 name|pcbinfo
 operator|->
-name|hashmask
+name|ipi_hashmask
 argument_list|)
 index|]
 expr_stmt|;
@@ -5215,7 +5215,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|porthashbase
+name|ipi_porthashbase
 index|[
 name|INP_PCBPORTHASH
 argument_list|(
@@ -5225,7 +5225,7 @@ name|inp_lport
 argument_list|,
 name|pcbinfo
 operator|->
-name|porthashmask
+name|ipi_porthashmask
 argument_list|)
 index|]
 expr_stmt|;
@@ -5434,7 +5434,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|hashbase
+name|ipi_hashbase
 index|[
 name|INP_PCBHASH
 argument_list|(
@@ -5450,7 +5450,7 @@ name|inp_fport
 argument_list|,
 name|pcbinfo
 operator|->
-name|hashmask
+name|ipi_hashmask
 argument_list|)
 index|]
 expr_stmt|;

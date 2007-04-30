@@ -427,7 +427,7 @@ argument_list|)
 expr_stmt|;
 name|divcbinfo
 operator|.
-name|listhead
+name|ipi_listhead
 operator|=
 operator|&
 name|divcb
@@ -435,7 +435,7 @@ expr_stmt|;
 comment|/* 	 * XXX We don't use the hash list for divert IP, but it's easier 	 * to allocate a one entry hash list than it is to check all 	 * over the place for hashbase == NULL. 	 */
 name|divcbinfo
 operator|.
-name|hashbase
+name|ipi_hashbase
 operator|=
 name|hashinit
 argument_list|(
@@ -446,12 +446,12 @@ argument_list|,
 operator|&
 name|divcbinfo
 operator|.
-name|hashmask
+name|ipi_hashmask
 argument_list|)
 expr_stmt|;
 name|divcbinfo
 operator|.
-name|porthashbase
+name|ipi_porthashbase
 operator|=
 name|hashinit
 argument_list|(
@@ -462,7 +462,7 @@ argument_list|,
 operator|&
 name|divcbinfo
 operator|.
-name|porthashmask
+name|ipi_porthashmask
 argument_list|)
 expr_stmt|;
 name|divcbinfo
@@ -2349,7 +2349,7 @@ name|LIST_FIRST
 argument_list|(
 name|divcbinfo
 operator|.
-name|listhead
+name|ipi_listhead
 argument_list|)
 operator|,
 name|i

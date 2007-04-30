@@ -540,7 +540,7 @@ argument_list|)
 expr_stmt|;
 name|ripcbinfo
 operator|.
-name|listhead
+name|ipi_listhead
 operator|=
 operator|&
 name|ripcb
@@ -548,7 +548,7 @@ expr_stmt|;
 comment|/* 	 * XXX We don't use the hash list for raw IP, but it's easier 	 * to allocate a one entry hash list than it is to check all 	 * over the place for hashbase == NULL. 	 */
 name|ripcbinfo
 operator|.
-name|hashbase
+name|ipi_hashbase
 operator|=
 name|hashinit
 argument_list|(
@@ -559,12 +559,12 @@ argument_list|,
 operator|&
 name|ripcbinfo
 operator|.
-name|hashmask
+name|ipi_hashmask
 argument_list|)
 expr_stmt|;
 name|ripcbinfo
 operator|.
-name|porthashbase
+name|ipi_porthashbase
 operator|=
 name|hashinit
 argument_list|(
@@ -575,7 +575,7 @@ argument_list|,
 operator|&
 name|ripcbinfo
 operator|.
-name|porthashmask
+name|ipi_porthashmask
 argument_list|)
 expr_stmt|;
 name|ripcbinfo
@@ -3896,7 +3896,7 @@ name|LIST_FIRST
 argument_list|(
 name|ripcbinfo
 operator|.
-name|listhead
+name|ipi_listhead
 argument_list|)
 operator|,
 name|i

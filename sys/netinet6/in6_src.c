@@ -3190,7 +3190,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|lasthi
+name|ipi_lasthi
 expr_stmt|;
 block|}
 elseif|else
@@ -3236,7 +3236,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|lastlow
+name|ipi_lastlow
 expr_stmt|;
 block|}
 else|else
@@ -3255,7 +3255,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|lastport
+name|ipi_lastport
 expr_stmt|;
 block|}
 comment|/* 	 * Simple check to ensure all ports are not used up causing 	 * a deadlock here. 	 * 	 * We split the two cases (up and down) so that the direction 	 * is not being tested on each round of the loop. 	 */

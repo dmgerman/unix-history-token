@@ -1423,7 +1423,7 @@ argument_list|)
 expr_stmt|;
 name|tcbinfo
 operator|.
-name|listhead
+name|ipi_listhead
 operator|=
 operator|&
 name|tcb
@@ -1462,7 +1462,7 @@ name|hashsize
 expr_stmt|;
 name|tcbinfo
 operator|.
-name|hashbase
+name|ipi_hashbase
 operator|=
 name|hashinit
 argument_list|(
@@ -1473,12 +1473,12 @@ argument_list|,
 operator|&
 name|tcbinfo
 operator|.
-name|hashmask
+name|ipi_hashmask
 argument_list|)
 expr_stmt|;
 name|tcbinfo
 operator|.
-name|porthashbase
+name|ipi_porthashbase
 operator|=
 name|hashinit
 argument_list|(
@@ -1489,7 +1489,7 @@ argument_list|,
 operator|&
 name|tcbinfo
 operator|.
-name|porthashmask
+name|ipi_porthashmask
 argument_list|)
 expr_stmt|;
 name|tcbinfo
@@ -4029,7 +4029,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|inpb
 argument_list|,
-argument|tcbinfo.listhead
+argument|tcbinfo.ipi_listhead
 argument_list|,
 argument|inp_list
 argument_list|)
@@ -4544,7 +4544,7 @@ name|LIST_FIRST
 argument_list|(
 name|tcbinfo
 operator|.
-name|listhead
+name|ipi_listhead
 argument_list|)
 operator|,
 name|i

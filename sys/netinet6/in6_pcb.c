@@ -2851,7 +2851,7 @@ name|head
 operator|=
 name|pcbinfo
 operator|->
-name|listhead
+name|ipi_listhead
 expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
@@ -3206,7 +3206,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|hashbase
+name|ipi_hashbase
 index|[
 name|INP_PCBHASH
 argument_list|(
@@ -3218,7 +3218,7 @@ literal|0
 argument_list|,
 name|pcbinfo
 operator|->
-name|hashmask
+name|ipi_hashmask
 argument_list|)
 index|]
 expr_stmt|;
@@ -3311,7 +3311,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|porthashbase
+name|ipi_porthashbase
 index|[
 name|INP_PCBPORTHASH
 argument_list|(
@@ -3319,7 +3319,7 @@ name|lport
 argument_list|,
 name|pcbinfo
 operator|->
-name|porthashmask
+name|ipi_porthashmask
 argument_list|)
 index|]
 expr_stmt|;
@@ -3524,7 +3524,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|in6p
 argument_list|,
-argument|pcbinfo->listhead
+argument|pcbinfo->ipi_listhead
 argument_list|,
 argument|inp_list
 argument_list|)
@@ -3814,7 +3814,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|hashbase
+name|ipi_hashbase
 index|[
 name|INP_PCBHASH
 argument_list|(
@@ -3832,7 +3832,7 @@ name|fport
 argument_list|,
 name|pcbinfo
 operator|->
-name|hashmask
+name|ipi_hashmask
 argument_list|)
 index|]
 expr_stmt|;
@@ -3918,7 +3918,7 @@ operator|=
 operator|&
 name|pcbinfo
 operator|->
-name|hashbase
+name|ipi_hashbase
 index|[
 name|INP_PCBHASH
 argument_list|(
@@ -3930,7 +3930,7 @@ literal|0
 argument_list|,
 name|pcbinfo
 operator|->
-name|hashmask
+name|ipi_hashmask
 argument_list|)
 index|]
 expr_stmt|;
