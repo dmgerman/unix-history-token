@@ -502,9 +502,15 @@ name|l
 operator|==
 name|ULONG_MAX
 operator|||
+operator|(
 name|l
 operator|==
 literal|0
+operator|&&
+name|endptr
+operator|==
+name|c
+operator|)
 condition|)
 return|return
 operator|(
