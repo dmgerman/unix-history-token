@@ -9219,7 +9219,7 @@ operator|->
 name|recv
 operator|.
 name|spd
-operator|-=
+operator|=
 name|rb
 operator|->
 name|spd
