@@ -442,7 +442,7 @@ decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|tlabel
+argument|fw_xfer
 argument_list|)
 name|tlabels
 index|[
@@ -917,25 +917,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|tlabel
-block|{
-name|struct
-name|fw_xfer
-modifier|*
-name|xfer
-decl_stmt|;
-name|STAILQ_ENTRY
-argument_list|(
-argument|tlabel
-argument_list|)
-name|link
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|fw_bind
 block|{
 name|u_int64_t
@@ -1040,7 +1021,7 @@ value|10
 name|uint8_t
 name|state
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|tl
 decl_stmt|;
 name|void
@@ -1085,6 +1066,12 @@ argument_list|(
 argument|fw_xfer
 argument_list|)
 name|link
+expr_stmt|;
+name|STAILQ_ENTRY
+argument_list|(
+argument|fw_xfer
+argument_list|)
+name|tlabel
 expr_stmt|;
 name|struct
 name|malloc_type
