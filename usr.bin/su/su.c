@@ -2538,12 +2538,16 @@ operator|*
 name|pp
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|putenv
 argument_list|(
 operator|*
 name|pp
 argument_list|)
 expr_stmt|;
+else|else
 name|free
 argument_list|(
 operator|*
