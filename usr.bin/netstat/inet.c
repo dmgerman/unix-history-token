@@ -3249,47 +3249,116 @@ specifier|const
 name|char
 modifier|*
 name|icmpnames
-index|[]
+index|[
+name|ICMP_MAXTYPE
+operator|+
+literal|1
+index|]
 init|=
 block|{
 literal|"echo reply"
 block|,
+comment|/* RFC 792 */
 literal|"#1"
 block|,
 literal|"#2"
 block|,
 literal|"destination unreachable"
 block|,
+comment|/* RFC 792 */
 literal|"source quench"
 block|,
+comment|/* RFC 792 */
 literal|"routing redirect"
 block|,
+comment|/* RFC 792 */
 literal|"#6"
 block|,
 literal|"#7"
 block|,
 literal|"echo"
 block|,
+comment|/* RFC 792 */
 literal|"router advertisement"
 block|,
+comment|/* RFC 1256 */
 literal|"router solicitation"
 block|,
+comment|/* RFC 1256 */
 literal|"time exceeded"
 block|,
+comment|/* RFC 792 */
 literal|"parameter problem"
 block|,
+comment|/* RFC 792 */
 literal|"time stamp"
 block|,
+comment|/* RFC 792 */
 literal|"time stamp reply"
 block|,
+comment|/* RFC 792 */
 literal|"information request"
 block|,
+comment|/* RFC 792 */
 literal|"information request reply"
 block|,
+comment|/* RFC 792 */
 literal|"address mask request"
 block|,
+comment|/* RFC 950 */
 literal|"address mask reply"
-block|, }
+block|,
+comment|/* RFC 950 */
+literal|"#19"
+block|,
+literal|"#20"
+block|,
+literal|"#21"
+block|,
+literal|"#22"
+block|,
+literal|"#23"
+block|,
+literal|"#24"
+block|,
+literal|"#25"
+block|,
+literal|"#26"
+block|,
+literal|"#27"
+block|,
+literal|"#28"
+block|,
+literal|"#29"
+block|,
+literal|"icmp traceroute"
+block|,
+comment|/* RFC 1393 */
+literal|"datagram conversion error"
+block|,
+comment|/* RFC 1475 */
+literal|"mobile host redirect"
+block|,
+literal|"IPv6 where-are-you"
+block|,
+literal|"IPv6 i-am-here"
+block|,
+literal|"mobile registration req"
+block|,
+literal|"mobile registration reply"
+block|,
+literal|"domain name request"
+block|,
+comment|/* RFC 1788 */
+literal|"domain name reply"
+block|,
+comment|/* RFC 1788 */
+literal|"icmp SKIP"
+block|,
+literal|"icmp photuris"
+block|,
+comment|/* RFC 2521 */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -3515,6 +3584,15 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|icmpnames
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|)
 name|printf
 argument_list|(
 literal|"\t\t%s: %lu\n"
@@ -3523,6 +3601,21 @@ name|icmpnames
 index|[
 name|i
 index|]
+argument_list|,
+name|icmpstat
+operator|.
+name|icps_outhist
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\t\tunknown ICMP #%d: %lu\n"
+argument_list|,
+name|i
 argument_list|,
 name|icmpstat
 operator|.
@@ -3621,6 +3714,15 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|icmpnames
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|)
 name|printf
 argument_list|(
 literal|"\t\t%s: %lu\n"
@@ -3629,6 +3731,21 @@ name|icmpnames
 index|[
 name|i
 index|]
+argument_list|,
+name|icmpstat
+operator|.
+name|icps_inhist
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\t\tunknown ICMP #%d: %lu\n"
+argument_list|,
+name|i
 argument_list|,
 name|icmpstat
 operator|.
