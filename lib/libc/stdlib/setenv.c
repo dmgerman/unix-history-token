@@ -75,6 +75,18 @@ directive|include
 file|<string.h>
 end_include
 
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|__alloced
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if allocated space before */
+end_comment
+
 begin_function_decl
 name|char
 modifier|*
@@ -124,13 +136,6 @@ modifier|*
 modifier|*
 name|environ
 decl_stmt|;
-specifier|static
-name|char
-modifier|*
-modifier|*
-name|alloced
-decl_stmt|;
-comment|/* if allocated space before */
 name|char
 modifier|*
 name|c
@@ -268,7 +273,7 @@ control|)
 empty_stmt|;
 if|if
 condition|(
-name|alloced
+name|__alloced
 operator|==
 name|environ
 condition|)
@@ -318,12 +323,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|alloced
-operator|=
-name|environ
-operator|=
-name|p
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -331,6 +330,11 @@ comment|/* get new space */
 comment|/* copy old entries into it */
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|malloc
 argument_list|(
 call|(
@@ -377,13 +381,13 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|alloced
+block|}
+name|__alloced
 operator|=
 name|environ
 operator|=
 name|p
 expr_stmt|;
-block|}
 name|environ
 index|[
 name|cnt
@@ -408,6 +412,10 @@ name|offset
 index|]
 operator|=
 comment|/* name + `=' + value */
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 call|(

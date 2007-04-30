@@ -86,7 +86,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * __findenv --  *	Returns pointer to value associated with name, if any, else NULL.  *	Sets offset to be the offset of the name/value combination in the  *	environmental array, for use by setenv(3) and unsetenv(3).  *  *	This routine *should* be a static; don't use it.  */
+comment|/*  * __findenv --  *	Returns pointer to value associated with name, if any, else NULL.  *	Sets offset to be the offset of the name/value combination in the  *      environmental array, for use by putenv(3), setenv(3) and unsetenv(3).  *	Explicitly removes '=' in argument name.  *  *	This routine *should* be a static; don't use it.  */
 end_comment
 
 begin_function
@@ -144,12 +144,29 @@ operator|(
 name|NULL
 operator|)
 return|;
+for|for
+control|(
+name|np
+operator|=
+name|name
+init|;
+operator|*
+name|np
+operator|&&
+operator|*
+name|np
+operator|!=
+literal|'='
+condition|;
+operator|++
+name|np
+control|)
+continue|continue;
 name|len
 operator|=
-name|strlen
-argument_list|(
+name|np
+operator|-
 name|name
-argument_list|)
 expr_stmt|;
 for|for
 control|(
