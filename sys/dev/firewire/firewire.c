@@ -2382,6 +2382,12 @@ name|resp
 operator|=
 name|EAGAIN
 expr_stmt|;
+name|xfer
+operator|->
+name|state
+operator|=
+name|FWXF_SENTERR
+expr_stmt|;
 name|fw_xfer_done
 argument_list|(
 name|xfer
@@ -9893,15 +9899,11 @@ argument_list|(
 literal|"no use...\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|err
-goto|;
+return|return;
 block|}
 else|#
 directive|else
-goto|goto
-name|err
-goto|;
+return|return;
 endif|#
 directive|endif
 block|}
@@ -10129,9 +10131,7 @@ argument_list|(
 literal|"fw_rcv: cannot respond(bus reset)!\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|err
-goto|;
+return|return;
 block|}
 name|rb
 operator|->
@@ -10364,9 +10364,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-goto|goto
-name|err
-goto|;
+return|return;
 block|}
 name|len
 operator|=
@@ -10419,14 +10417,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|#
+directive|if
+literal|1
 name|printf
 argument_list|(
 literal|"Discard a packet for this bind.\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|err
-goto|;
+endif|#
+directive|endif
+return|return;
 block|}
 name|STAILQ_REMOVE_HEAD
 argument_list|(
@@ -10466,11 +10467,11 @@ literal|0
 block|printf("stream rcv dma %d len %d off %d spd %d\n", 			sub, len, off, spd);
 endif|#
 directive|endif
-block|if(xferq->queued>= xferq->maxq) { 			printf("receive queue is full\n"); 			goto err; 		}
+block|if(xferq->queued>= xferq->maxq) { 			printf("receive queue is full\n"); 			return; 		}
 comment|/* XXX get xfer from xfer queue, we don't need copy for  			per packet mode */
 block|rb->xfer = fw_xfer_alloc_buf(M_FWXFER, 0,
 comment|/* XXX */
-block|vec[0].iov_len); 		if (rb->xfer == NULL) goto err; 		fw_rcv_copy(rb) 		s = splfw(); 		xferq->queued++; 		STAILQ_INSERT_TAIL(&xferq->q, rb->xfer, link); 		splx(s); 		sc = device_get_softc(rb->fc->bdev);
+block|vec[0].iov_len); 		if (rb->xfer == NULL) 			return; 		fw_rcv_copy(rb) 		s = splfw(); 		xferq->queued++; 		STAILQ_INSERT_TAIL(&xferq->q, rb->xfer, link); 		splx(s); 		sc = device_get_softc(rb->fc->bdev);
 if|#
 directive|if
 name|defined
@@ -10500,9 +10501,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|err
-label|:
-return|return;
 block|}
 end_function
 
