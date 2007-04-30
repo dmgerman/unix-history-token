@@ -2255,7 +2255,7 @@ name|optarg
 argument_list|,
 literal|"wait time"
 argument_list|,
-literal|2
+literal|1
 argument_list|,
 literal|24
 operator|*
