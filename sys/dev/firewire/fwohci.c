@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -226,6 +232,44 @@ undef|#
 directive|undef
 name|OHCI_DEBUG
 end_undef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nocyclemaster
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_firewire
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_firewire
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nocyclemaster
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nocyclemaster
+argument_list|,
+literal|0
+argument_list|,
+literal|"Do not send cycle start packets"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -11645,6 +11689,7 @@ literal|31
 argument_list|)
 expr_stmt|;
 comment|/* XXX insecure ?? */
+comment|/* allow from all nodes */
 name|OWRITE
 argument_list|(
 name|sc
@@ -11663,6 +11708,7 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
+comment|/* 0 to 4GB regison */
 name|OWRITE
 argument_list|(
 name|sc
@@ -11765,9 +11811,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|node_id
 operator|&
 name|OHCI_NODE_ROOT
+operator|)
+operator|&&
+operator|!
+name|nocyclemaster
 condition|)
 block|{
 name|printf
