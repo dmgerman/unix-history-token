@@ -524,7 +524,7 @@ name|in_addr_t
 operator|)
 name|l
 expr_stmt|;
-comment|/*  		 * If the whole string is invalid, endptr will equal 		 * c.. this way we can make sure someone hasn't 		 * gone '.12' or something which would get past 		 * the next check. 		 */
+comment|/* 		 * If the whole string is invalid, endptr will equal 		 * c.. this way we can make sure someone hasn't 		 * gone '.12' or something which would get past 		 * the next check. 		 */
 if|if
 condition|(
 name|endptr
