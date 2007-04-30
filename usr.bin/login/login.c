@@ -3204,12 +3204,7 @@ operator|*
 name|pp
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-operator|*
-name|pp
-argument_list|)
-expr_stmt|;
+comment|/* Don't free putenv() memory! */
 block|}
 block|}
 block|}
