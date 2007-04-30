@@ -2644,7 +2644,7 @@ if|if
 condition|(
 operator|*
 operator|*
-name|argv
+name|argvp
 operator|!=
 literal|'\0'
 condition|)
@@ -2673,6 +2673,7 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+comment|/* The argv array ends up NULL-terminated here. */
 comment|/* Make sure the above loop works as expected. */
 if|if
 condition|(
