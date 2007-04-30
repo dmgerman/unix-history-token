@@ -171,17 +171,6 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
-condition|(
-operator|*
-name|value
-operator|==
-literal|'='
-condition|)
-comment|/* no `=' in value */
-operator|++
-name|value
-expr_stmt|;
 name|l_value
 operator|=
 name|strlen
