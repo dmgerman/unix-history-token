@@ -3195,16 +3195,21 @@ name|pp
 operator|++
 control|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+operator|!
 name|export
 argument_list|(
 operator|*
 name|pp
 argument_list|)
+condition|)
+name|free
+argument_list|(
+operator|*
+name|pp
+argument_list|)
 expr_stmt|;
-comment|/* Don't free putenv() memory! */
 block|}
 block|}
 block|}
