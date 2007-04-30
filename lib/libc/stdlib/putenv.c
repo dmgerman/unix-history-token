@@ -54,6 +54,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -69,7 +75,6 @@ name|putenv
 parameter_list|(
 name|str
 parameter_list|)
-specifier|const
 name|char
 modifier|*
 name|str
@@ -84,6 +89,8 @@ name|equal
 decl_stmt|;
 name|int
 name|rval
+decl_stmt|,
+name|serrno
 decl_stmt|;
 if|if
 condition|(
@@ -128,6 +135,10 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -153,6 +164,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|serrno
+operator|=
+name|errno
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -160,6 +175,10 @@ name|free
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|serrno
 expr_stmt|;
 return|return
 operator|(
