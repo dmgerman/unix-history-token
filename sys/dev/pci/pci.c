@@ -2736,6 +2736,16 @@ block|{
 case|case
 name|PCIM_HTCAP_MSI_MAPPING
 case|:
+if|if
+condition|(
+operator|!
+operator|(
+name|val
+operator|&
+name|PCIM_HTCMD_MSI_FIXED
+operator|)
+condition|)
+block|{
 comment|/* Sanity check the mapping window. */
 name|addr
 operator|=
@@ -2794,6 +2804,7 @@ operator|)
 name|addr
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Enable MSI -> HT mapping. */
 name|val
 operator||=

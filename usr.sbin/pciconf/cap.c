@@ -1052,7 +1052,15 @@ name|PCIM_HTCAP_MSI_MAPPING
 case|:
 name|printf
 argument_list|(
-literal|"MSI address window %s at 0x"
+literal|"MSI %saddress window %s at 0x"
+argument_list|,
+name|command
+operator|&
+name|PCIM_HTCMD_MSI_FIXED
+condition|?
+literal|"fixed "
+else|:
+literal|""
 argument_list|,
 name|command
 operator|&
@@ -1063,6 +1071,19 @@ else|:
 literal|"disabled"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|command
+operator|&
+name|PCIM_HTCMD_MSI_FIXED
+condition|)
+name|printf
+argument_list|(
+literal|"fee00000"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|reg
 operator|=
 name|read_config
@@ -1119,6 +1140,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|PCIM_HTCAP_DIRECT_ROUTE
