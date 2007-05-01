@@ -1331,7 +1331,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Private functionw which takes care of processing  */
+comment|/*  * Private function which takes care of processing  */
 end_comment
 
 begin_function
