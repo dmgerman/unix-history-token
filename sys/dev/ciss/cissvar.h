@@ -561,7 +561,7 @@ modifier|*
 name|ciss_notify_thread
 decl_stmt|;
 name|struct
-name|callout_handle
+name|callout
 name|ciss_periodic
 decl_stmt|;
 comment|/* periodic event handling */
@@ -571,6 +571,10 @@ modifier|*
 name|ciss_periodic_notify
 decl_stmt|;
 comment|/* notify callback request */
+name|struct
+name|mtx
+name|ciss_mtx
+decl_stmt|;
 name|struct
 name|ciss_ldrive
 modifier|*
