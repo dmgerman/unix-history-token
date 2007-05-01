@@ -1058,6 +1058,7 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+comment|/* 				 * The uiomove() above could have been partially 				 * successful, that's why we call dmu_write() 				 * below unconditionally. The page was marked 				 * non-dirty above and we would lose the changes 				 * without doing so. If the uiomove() failed 				 * entirely, well, we just write what we got 				 * before one more time. 				 */
 name|dmu_write
 argument_list|(
 name|os
