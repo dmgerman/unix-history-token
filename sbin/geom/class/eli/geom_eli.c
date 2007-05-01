@@ -5314,7 +5314,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 name|filefd
 operator|=
@@ -5396,7 +5398,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 name|sector
 operator|=
@@ -5419,7 +5423,9 @@ argument_list|,
 literal|"Cannot allocate memory."
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* Read metadata from the provider. */
 if|if
@@ -5783,7 +5789,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 name|mediasize
 operator|=
@@ -5824,7 +5832,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 name|sector
 operator|=
@@ -5847,7 +5857,9 @@ argument_list|,
 literal|"Cannot allocate memory."
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* Read metadata from the backup file. */
 if|if
