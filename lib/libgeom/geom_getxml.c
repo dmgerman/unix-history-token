@@ -127,7 +127,7 @@ name|sysctlbyname
 argument_list|(
 literal|"kern.geom.confxml"
 argument_list|,
-name|p
+name|NULL
 argument_list|,
 operator|&
 name|l
