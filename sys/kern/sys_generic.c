@@ -196,18 +196,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_page.h>
-end_include
-
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
