@@ -3844,11 +3844,6 @@ name|sockaddr
 modifier|*
 modifier|*
 name|nam
-parameter_list|,
-name|struct
-name|inpcbinfo
-modifier|*
-name|pcbinfo
 parameter_list|)
 block|{
 name|struct
@@ -3938,11 +3933,6 @@ name|sockaddr
 modifier|*
 modifier|*
 name|nam
-parameter_list|,
-name|struct
-name|inpcbinfo
-modifier|*
-name|pcbinfo
 parameter_list|)
 block|{
 name|struct

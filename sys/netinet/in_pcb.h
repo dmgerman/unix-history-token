@@ -1658,11 +1658,6 @@ name|sockaddr
 modifier|*
 modifier|*
 name|nam
-parameter_list|,
-name|struct
-name|inpcbinfo
-modifier|*
-name|pcbinfo
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1681,11 +1676,6 @@ name|sockaddr
 modifier|*
 modifier|*
 name|nam
-parameter_list|,
-name|struct
-name|inpcbinfo
-modifier|*
-name|pcbinfo
 parameter_list|)
 function_decl|;
 end_function_decl

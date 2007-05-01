@@ -4190,9 +4190,6 @@ argument_list|(
 name|so
 argument_list|,
 name|nam
-argument_list|,
-operator|&
-name|ripcbinfo
 argument_list|)
 operator|)
 return|;
@@ -4227,9 +4224,6 @@ argument_list|(
 name|so
 argument_list|,
 name|nam
-argument_list|,
-operator|&
-name|ripcbinfo
 argument_list|)
 operator|)
 return|;
