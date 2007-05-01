@@ -165,9 +165,24 @@ name|ival
 decl_stmt|;
 endif|#
 directive|endif
-name|PROC_LOCK
+name|KASSERT
 argument_list|(
 name|p
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s() called without a process"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|error
@@ -463,6 +478,11 @@ literal|0
 condition|)
 block|{
 comment|/* sleep until p stops */
+name|_PHOLD
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|msleep
@@ -484,6 +504,11 @@ argument_list|,
 literal|"pioctl"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|_PRELE
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -589,6 +614,11 @@ literal|0
 condition|)
 block|{
 comment|/* sleep until p stops */
+name|_PHOLD
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|msleep
@@ -610,6 +640,11 @@ argument_list|,
 literal|"pioctl"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|_PRELE
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -829,11 +864,6 @@ name|ENOTTY
 operator|)
 expr_stmt|;
 block|}
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
