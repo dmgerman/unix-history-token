@@ -4285,7 +4285,7 @@ argument_list|,
 name|cnp
 argument_list|)
 expr_stmt|;
-comment|/*          * Insert name into cache if appropriate.          */
+comment|/* 	 * Insert name into cache if appropriate. 	 */
 if|if
 condition|(
 name|error
@@ -13872,7 +13872,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* {                 struct vnode *a_vp;                 struct thread *a_td;         } */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
