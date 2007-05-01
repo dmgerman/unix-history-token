@@ -495,17 +495,10 @@ name|struct
 name|callout_handle
 name|axe_stat_ch
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|struct
 name|mtx
 name|axe_mtx
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|sx
 name|axe_sleeplock
