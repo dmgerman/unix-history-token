@@ -830,7 +830,7 @@ block|,
 comment|/* 0x10 - 0x17 */
 literal|0x61
 block|,
-literal|0x6e
+literal|0x6f
 block|,
 literal|0x70
 block|,
@@ -885,7 +885,7 @@ literal|0x71
 block|,
 literal|0x53
 block|,
-literal|0x72
+literal|0x74
 block|,
 literal|0x5e
 block|,
@@ -932,7 +932,7 @@ block|,
 comment|/* 0x40 - 0x47 */
 literal|0x73
 block|,
-literal|0x74
+literal|0x72
 block|,
 literal|0x63
 block|,
