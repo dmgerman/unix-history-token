@@ -167,6 +167,10 @@ name|int
 name|wcpu
 decl_stmt|;
 comment|/* show weighted cpu */
+name|int
+name|jail
+decl_stmt|;
+comment|/* show jail id */
 name|char
 modifier|*
 name|command

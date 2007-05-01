@@ -856,7 +856,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmSCo"
+literal|"\f qh?en#sdkriIutHmSCjo"
 decl_stmt|;
 else|#
 directive|else
@@ -865,7 +865,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmSC"
+literal|"\f qh?en#sdkriIutHmSCj"
 decl_stmt|;
 endif|#
 directive|endif
@@ -956,13 +956,17 @@ define|#
 directive|define
 name|CMD_wcputog
 value|19
+define|#
+directive|define
+name|CMD_jidtog
+value|20
 ifdef|#
 directive|ifdef
 name|ORDER
 define|#
 directive|define
 name|CMD_order
-value|20
+value|21
 endif|#
 directive|endif
 comment|/* set the buffer for stdout */
@@ -1088,6 +1092,12 @@ literal|1
 expr_stmt|;
 name|ps
 operator|.
+name|jail
+operator|=
+name|No
+expr_stmt|;
+name|ps
+operator|.
 name|command
 operator|=
 name|NULL
@@ -1168,7 +1178,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"CSIHbinquvs:d:U:m:o:t"
+literal|"CSIHbijnquvs:d:U:m:o:t"
 argument_list|)
 operator|)
 operator|!=
@@ -1562,13 +1572,26 @@ operator|.
 name|thread
 expr_stmt|;
 break|break;
+case|case
+literal|'j'
+case|:
+name|ps
+operator|.
+name|jail
+operator|=
+operator|!
+name|ps
+operator|.
+name|jail
+expr_stmt|;
+break|break;
 default|default:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"Top version %s\n"
-literal|"Usage: %s [-bCHIinqStuv] [-d count] [-m io | cpu] [-o field] [-s time]\n"
+literal|"Usage: %s [-bCHIijnqStuv] [-d count] [-m io | cpu] [-o field] [-s time]\n"
 literal|"       [-U username] [number]\n"
 argument_list|,
 name|version_string
@@ -3809,6 +3832,51 @@ block|}
 break|break;
 endif|#
 directive|endif
+case|case
+name|CMD_jidtog
+case|:
+name|ps
+operator|.
+name|jail
+operator|=
+operator|!
+name|ps
+operator|.
+name|jail
+expr_stmt|;
+name|new_message
+argument_list|(
+name|MT_standout
+operator||
+name|MT_delayed
+argument_list|,
+literal|" %sisplaying jail id."
+argument_list|,
+name|ps
+operator|.
+name|jail
+condition|?
+literal|"D"
+else|:
+literal|"Not d"
+argument_list|)
+expr_stmt|;
+name|header_text
+operator|=
+name|format_header
+argument_list|(
+name|uname_field
+argument_list|)
+expr_stmt|;
+name|reset_display
+argument_list|()
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|new_message
 argument_list|(
