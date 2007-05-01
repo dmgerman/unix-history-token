@@ -526,10 +526,7 @@ literal|'g'
 case|:
 name|putenv
 argument_list|(
-name|strdup
-argument_list|(
 literal|"BLOCKSIZE=1G"
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -546,10 +543,7 @@ literal|'k'
 case|:
 name|putenv
 argument_list|(
-name|strdup
-argument_list|(
 literal|"BLOCKSIZE=1K"
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -558,10 +552,7 @@ literal|'m'
 case|:
 name|putenv
 argument_list|(
-name|strdup
-argument_list|(
 literal|"BLOCKSIZE=1M"
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

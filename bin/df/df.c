@@ -542,10 +542,7 @@ condition|)
 break|break;
 name|putenv
 argument_list|(
-name|strdup
-argument_list|(
 literal|"BLOCKSIZE=512"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|hflag
@@ -566,10 +563,7 @@ literal|'g'
 case|:
 name|putenv
 argument_list|(
-name|strdup
-argument_list|(
 literal|"BLOCKSIZE=1g"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|hflag
@@ -609,10 +603,7 @@ operator|++
 expr_stmt|;
 name|putenv
 argument_list|(
-name|strdup
-argument_list|(
 literal|"BLOCKSIZE=1024"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|hflag
@@ -654,10 +645,7 @@ literal|'m'
 case|:
 name|putenv
 argument_list|(
-name|strdup
-argument_list|(
 literal|"BLOCKSIZE=1m"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|hflag

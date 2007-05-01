@@ -874,7 +874,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|unsetenv
 parameter_list|(
 specifier|const
@@ -1139,6 +1139,7 @@ begin_function_decl
 name|int
 name|putenv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

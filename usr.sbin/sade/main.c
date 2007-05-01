@@ -119,15 +119,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|putenv
 argument_list|(
-name|strdup
-argument_list|(
 literal|"TERM=cons25w"
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

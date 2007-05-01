@@ -1233,15 +1233,9 @@ argument_list|,
 literal|1024
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putenv
 argument_list|(
-name|strdup
-argument_list|(
 name|tmp
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
