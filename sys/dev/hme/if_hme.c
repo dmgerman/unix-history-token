@@ -960,7 +960,7 @@ literal|1
 argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|busdma_lock_mutex
 argument_list|,
