@@ -524,6 +524,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|assumeutf8
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Assume that server file names are in UTF-8 */
+end_comment
+
+begin_decl_stmt
+name|int
 name|guest
 decl_stmt|;
 end_decl_stmt
@@ -1686,7 +1698,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46a:AdDEhlmMoOp:P:rRSt:T:u:UvW"
+literal|"468a:AdDEhlmMoOp:P:rRSt:T:u:UvW"
 argument_list|)
 operator|)
 operator|!=
@@ -1729,6 +1741,14 @@ condition|?
 name|AF_UNSPEC
 else|:
 name|AF_INET6
+expr_stmt|;
+break|break;
+case|case
+literal|'8'
+case|:
+name|assumeutf8
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
