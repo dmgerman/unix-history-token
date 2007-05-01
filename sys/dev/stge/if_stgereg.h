@@ -2954,6 +2954,9 @@ decl_stmt|;
 name|int
 name|sc_watchdog_timer
 decl_stmt|;
+name|int
+name|sc_link
+decl_stmt|;
 name|struct
 name|task
 name|sc_link_task
