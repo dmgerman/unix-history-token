@@ -59,7 +59,7 @@ file|"mathimpl.h"
 end_include
 
 begin_comment
-comment|/* METHOD:  * x< 0: Use reflection formula, G(x) = pi/(sin(pi*x)*x*G(x))  * 	At negative integers, return +Inf and raise divide-by-zero.  *  * x< 6.5:  *	Use argument reduction G(x+1) = xG(x) to reach the  *	range [1.066124,2.066124].  Use a rational  *	approximation centered at the minimum (x0+1) to  *	ensure monotonicity.  *  * x>= 6.5: Use the asymptotic approximation (Stirling's formula)  *	adjusted for equal-ripples:  *  *	log(G(x)) ~= (x-.5)*(log(x)-1) + .5(log(2*pi)-1) + 1/x*P(1/(x*x))  *  *	Keep extra precision in multiplying (x-.5)(log(x)-1), to  *	avoid premature round-off.  *  * Special values:  *	-Inf:			return +Inf (without raising any exception!);  *	negative integer:	return +Inf and raise divide-by-zero;  *	other x ~< 177.79:	return +-0 and raise underflow;  *	+-0:			return +-Inf and raise divide-by-zero;  *	finite x ~> 171.63:	return +Inf and raise divide-by-zero(!);  *	+Inf:			return +Inf and raise divide-by-zero(!);  *	NaN: 			return NaN.  *  * Accuracy: tgamma(x) is accurate to within  *	x> 0:  error provably< 0.9ulp.  *	Maximum observed in 1,000,000 trials was .87ulp.  *	x< 0:  *	Maximum observed error< 4ulp in 1,000,000 trials.  */
+comment|/* METHOD:  * x< 0: Use reflection formula, G(x) = pi/(sin(pi*x)*x*G(x))  * 	At negative integers, return NaN and raise invalid.  *  * x< 6.5:  *	Use argument reduction G(x+1) = xG(x) to reach the  *	range [1.066124,2.066124].  Use a rational  *	approximation centered at the minimum (x0+1) to  *	ensure monotonicity.  *  * x>= 6.5: Use the asymptotic approximation (Stirling's formula)  *	adjusted for equal-ripples:  *  *	log(G(x)) ~= (x-.5)*(log(x)-1) + .5(log(2*pi)-1) + 1/x*P(1/(x*x))  *  *	Keep extra precision in multiplying (x-.5)(log(x)-1), to  *	avoid premature round-off.  *  * Special values:  *	-Inf:			return NaN and raise invalid;  *	negative integer:	return NaN and raise invalid;  *	other x ~< 177.79:	return +-0 and raise underflow;  *	+-0:			return +-Inf and raise divide-by-zero;  *	finite x ~> 171.63:	return +Inf and raise overflow;  *	+Inf:			return +Inf;  *	NaN: 			return NaN.  *  * Accuracy: tgamma(x) is accurate to within  *	x> 0:  error provably< 0.9ulp.  *	Maximum observed in 1,000,000 trials was .87ulp.  *	x< 0:  *	Maximum observed error< 4ulp in 1,000,000 trials.  */
 end_comment
 
 begin_function_decl
@@ -375,7 +375,7 @@ literal|171.63
 condition|)
 return|return
 operator|(
-name|one
+name|x
 operator|/
 name|zero
 operator|)
@@ -448,21 +448,18 @@ block|{
 if|if
 condition|(
 name|x
-operator|==
+operator|!=
 literal|0.0
 condition|)
-return|return
-operator|(
+name|u
+operator|.
+name|a
+operator|=
 name|one
-operator|/
-name|x
-operator|)
-return|;
-name|one
-operator|+
-literal|1e-20
+operator|-
+name|tiny
 expr_stmt|;
-comment|/* Raise inexact flag. */
+comment|/* raise inexact */
 return|return
 operator|(
 name|one
@@ -483,11 +480,11 @@ condition|)
 return|return
 operator|(
 name|x
-operator|*
+operator|-
 name|x
 operator|)
 return|;
-comment|/* x = NaN, -Inf */
+comment|/* x is NaN or -Inf */
 else|else
 return|return
 operator|(
@@ -1541,11 +1538,9 @@ name|z
 decl_stmt|;
 name|y
 operator|=
-name|floor
+name|ceil
 argument_list|(
 name|x
-operator|+
-literal|.5
 argument_list|)
 expr_stmt|;
 if|if
@@ -1557,28 +1552,38 @@ condition|)
 comment|/* Negative integer. */
 return|return
 operator|(
-name|one
+operator|(
+name|x
+operator|-
+name|x
+operator|)
 operator|/
 name|zero
 operator|)
 return|;
 name|z
 operator|=
-name|fabs
-argument_list|(
-name|x
-operator|-
 name|y
-argument_list|)
+operator|-
+name|x
+expr_stmt|;
+if|if
+condition|(
+name|z
+operator|>
+literal|0.5
+condition|)
+name|z
+operator|=
+name|one
+operator|-
+name|z
 expr_stmt|;
 name|y
 operator|=
-literal|.5
+literal|0.5
 operator|*
-name|ceil
-argument_list|(
-name|x
-argument_list|)
+name|y
 expr_stmt|;
 if|if
 condition|(
