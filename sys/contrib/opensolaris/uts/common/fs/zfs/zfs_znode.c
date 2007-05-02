@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/* Portions Copyright 2007 Jeremy Teo */
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -3741,6 +3745,10 @@ operator|&&
 name|size
 operator|==
 name|off
+operator|&&
+name|off
+operator|!=
+literal|0
 condition|)
 block|{
 name|zfs_range_unlock

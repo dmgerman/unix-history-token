@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/* Portions Copyright 2007 Jeremy Teo */
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -4932,16 +4936,6 @@ operator|->
 name|v_type
 operator|==
 name|VREG
-operator|)
-operator|&&
-operator|(
-name|zp
-operator|->
-name|z_phys
-operator|->
-name|zp_size
-operator|!=
-literal|0
 operator|)
 operator|&&
 operator|(
