@@ -3268,9 +3268,7 @@ argument_list|(
 operator|*
 name|vpp
 argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
+name|flags
 argument_list|,
 name|td
 argument_list|)
@@ -3700,9 +3698,7 @@ argument_list|(
 operator|*
 name|vpp
 argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
+name|flags
 argument_list|,
 name|curthread
 argument_list|)
@@ -4119,6 +4115,7 @@ argument_list|(
 name|zfsvfs
 argument_list|)
 expr_stmt|;
+comment|/* XXX: LK_RETRY? */
 name|vn_lock
 argument_list|(
 operator|*
@@ -4254,6 +4251,7 @@ argument_list|(
 name|zp
 argument_list|)
 expr_stmt|;
+comment|/* XXX: LK_RETRY? */
 name|vn_lock
 argument_list|(
 operator|*
