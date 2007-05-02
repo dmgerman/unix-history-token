@@ -4232,7 +4232,9 @@ argument_list|(
 operator|*
 name|vpp
 argument_list|,
-name|LK_EXCLUSIVE
+name|cnp
+operator|->
+name|cn_lkflags
 argument_list|,
 name|td
 argument_list|)
