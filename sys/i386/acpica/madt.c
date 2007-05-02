@@ -997,7 +997,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* 	 * Map in the RSDP.  Since ACPI uses AcpiOsMapMemory() which in turn 	 * calls pmap_mapdev() to find the RSDP, we assume that we can use 	 * pmap_mapdev() to map the RSDP. 	 */
+comment|/* 	 * Map in the RSDP.  Since ACPI uses AcpiOsMapMemory() which in turn 	 * calls pmap_mapbios() to find the RSDP, we assume that we can use 	 * pmap_mapbios() to map the RSDP. 	 */
 if|if
 condition|(
 name|AcpiOsGetRootPointer
@@ -1037,7 +1037,7 @@ endif|#
 directive|endif
 name|rsdp
 operator|=
-name|pmap_mapdev
+name|pmap_mapbios
 argument_list|(
 name|rsdp_ptr
 operator|.
@@ -1289,7 +1289,7 @@ name|rsdt
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_unmapdev
+name|pmap_unmapbios
 argument_list|(
 operator|(
 name|vm_offset_t
@@ -1586,7 +1586,7 @@ parameter_list|)
 block|{
 name|madt
 operator|=
-name|pmap_mapdev
+name|pmap_mapbios
 argument_list|(
 name|madt_physaddr
 argument_list|,

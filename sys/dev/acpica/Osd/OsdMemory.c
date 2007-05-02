@@ -125,7 +125,7 @@ block|{
 operator|*
 name|LogicalAddress
 operator|=
-name|pmap_mapdev
+name|pmap_mapbios
 argument_list|(
 operator|(
 name|vm_offset_t
@@ -167,7 +167,7 @@ name|ACPI_SIZE
 name|Length
 parameter_list|)
 block|{
-name|pmap_unmapdev
+name|pmap_unmapbios
 argument_list|(
 operator|(
 name|vm_offset_t

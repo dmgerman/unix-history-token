@@ -1472,7 +1472,7 @@ decl_stmt|;
 comment|/* BIOS address 0xffff5 contains the date in the format mm/dd/yy. */
 name|va
 operator|=
-name|pmap_mapdev
+name|pmap_mapbios
 argument_list|(
 literal|0xffff0
 argument_list|,
@@ -1491,7 +1491,7 @@ operator|&
 name|year
 argument_list|)
 expr_stmt|;
-name|pmap_unmapdev
+name|pmap_unmapbios
 argument_list|(
 operator|(
 name|vm_offset_t
