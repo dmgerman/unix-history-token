@@ -122,7 +122,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|<
-literal|700020
+literal|602110
 end_if
 
 begin_define
