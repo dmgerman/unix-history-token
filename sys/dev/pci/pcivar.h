@@ -247,6 +247,9 @@ name|uint16_t
 name|msi_data
 decl_stmt|;
 comment|/* Contents of data register. */
+name|u_int
+name|msi_handlers
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -257,24 +260,54 @@ end_comment
 
 begin_struct
 struct|struct
+name|msix_vector
+block|{
+name|uint64_t
+name|mv_address
+decl_stmt|;
+comment|/* Contents of address register. */
+name|uint32_t
+name|mv_data
+decl_stmt|;
+comment|/* Contents of data register. */
+name|int
+name|mv_irq
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|msix_table_entry
+block|{
+name|u_int
+name|mte_vector
+decl_stmt|;
+comment|/* 1-based index into msix_vectors array. */
+name|u_int
+name|mte_handlers
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|pcicfg_msix
 block|{
 name|uint16_t
 name|msix_ctrl
 decl_stmt|;
 comment|/* Message Control */
-name|uint8_t
-name|msix_location
-decl_stmt|;
-comment|/* Offset of MSI-X capability registers. */
 name|uint16_t
 name|msix_msgnum
 decl_stmt|;
 comment|/* Number of messages */
-name|int
-name|msix_alloc
+name|uint8_t
+name|msix_location
 decl_stmt|;
-comment|/* Number of allocated messages. */
+comment|/* Offset of MSI-X capability registers. */
 name|uint8_t
 name|msix_table_bar
 decl_stmt|;
@@ -289,6 +322,26 @@ decl_stmt|;
 name|uint32_t
 name|msix_pba_offset
 decl_stmt|;
+name|int
+name|msix_alloc
+decl_stmt|;
+comment|/* Number of allocated vectors. */
+name|int
+name|msix_table_len
+decl_stmt|;
+comment|/* Length of virtual table. */
+name|struct
+name|msix_table_entry
+modifier|*
+name|msix_table
+decl_stmt|;
+comment|/* Virtual table. */
+name|struct
+name|msix_vector
+modifier|*
+name|msix_vectors
+decl_stmt|;
+comment|/* Array of allocated vectors. */
 name|struct
 name|resource
 modifier|*
@@ -1600,9 +1653,13 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+name|int
+name|count
+parameter_list|,
+specifier|const
 name|u_int
 modifier|*
-name|indices
+name|vectors
 parameter_list|)
 block|{
 return|return
@@ -1616,7 +1673,9 @@ argument_list|)
 argument_list|,
 name|dev
 argument_list|,
-name|indices
+name|count
+argument_list|,
+name|vectors
 argument_list|)
 operator|)
 return|;
@@ -1726,73 +1785,29 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Used by MD code to program MSI and MSI-X registers. */
+comment|/*  * Can be used by MD code to request the PCI bus to re-map an MSI or  * MSI-X message.  */
 end_comment
 
 begin_function_decl
-name|void
-name|pci_enable_msi
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|uint64_t
-name|address
-parameter_list|,
-name|uint16_t
-name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pci_enable_msix
+name|int
+name|pci_remap_msi_irq
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
 name|u_int
-name|index
-parameter_list|,
-name|uint64_t
-name|address
-parameter_list|,
-name|uint32_t
-name|data
+name|irq
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|pci_mask_msix
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|u_int
-name|index
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* Can be used by drivers to manage the MSI-X table. */
+end_comment
 
 begin_function_decl
 name|int
 name|pci_pending_msix
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|u_int
-name|index
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pci_unmask_msix
 parameter_list|(
 name|device_t
 name|dev
