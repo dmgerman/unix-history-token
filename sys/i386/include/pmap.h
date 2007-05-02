@@ -114,6 +114,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PG_PTE_PAT
+value|0x080
+end_define
+
+begin_comment
+comment|/* PAT	PAT index		*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PG_G
 value|0x100
 end_define
@@ -153,6 +164,17 @@ end_define
 
 begin_comment
 comment|/*    \				*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_PDE_PAT
+value|0x1000
+end_define
+
+begin_comment
+comment|/* PAT	PAT index		*/
 end_comment
 
 begin_comment
@@ -1480,6 +1502,15 @@ parameter_list|(
 name|vm_paddr_t
 parameter_list|,
 name|vm_paddr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_init_pat
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

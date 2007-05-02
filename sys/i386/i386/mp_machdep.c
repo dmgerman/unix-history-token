@@ -2373,6 +2373,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Initialize the PAT MSR if present. */
+name|pmap_init_pat
+argument_list|()
+expr_stmt|;
 comment|/* set up CPU registers and state */
 name|cpu_setregs
 argument_list|()
