@@ -58,14 +58,8 @@ directive|include
 file|"mathimpl.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
 begin_comment
-comment|/* METHOD:  * x< 0: Use reflection formula, G(x) = pi/(sin(pi*x)*x*G(x))  * 	At negative integers, return +Inf, and set errno.  *  * x< 6.5:  *	Use argument reduction G(x+1) = xG(x) to reach the  *	range [1.066124,2.066124].  Use a rational  *	approximation centered at the minimum (x0+1) to  *	ensure monotonicity.  *  * x>= 6.5: Use the asymptotic approximation (Stirling's formula)  *	adjusted for equal-ripples:  *  *	log(G(x)) ~= (x-.5)*(log(x)-1) + .5(log(2*pi)-1) + 1/x*P(1/(x*x))  *  *	Keep extra precision in multiplying (x-.5)(log(x)-1), to  *	avoid premature round-off.  *  * Special values:  *	non-positive integer:	Set overflow trap; return +Inf;  *	x> 171.63:		Set overflow trap; return +Inf;  *	NaN: 			Set invalid trap;  return NaN  *  * Accuracy: Gamma(x) is accurate to within  *	x> 0:  error provably< 0.9ulp.  *	Maximum observed in 1,000,000 trials was .87ulp.  *	x< 0:  *	Maximum observed error< 4ulp in 1,000,000 trials.  */
+comment|/* METHOD:  * x< 0: Use reflection formula, G(x) = pi/(sin(pi*x)*x*G(x))  * 	At negative integers, return +Inf and raise divide-by-zero.  *  * x< 6.5:  *	Use argument reduction G(x+1) = xG(x) to reach the  *	range [1.066124,2.066124].  Use a rational  *	approximation centered at the minimum (x0+1) to  *	ensure monotonicity.  *  * x>= 6.5: Use the asymptotic approximation (Stirling's formula)  *	adjusted for equal-ripples:  *  *	log(G(x)) ~= (x-.5)*(log(x)-1) + .5(log(2*pi)-1) + 1/x*P(1/(x*x))  *  *	Keep extra precision in multiplying (x-.5)(log(x)-1), to  *	avoid premature round-off.  *  * Special values:  *	-Inf:			return +Inf (without raising any exception!);  *	negative integer:	return +Inf and raise divide-by-zero;  *	other x ~< 177.79:	return +-0 and raise underflow;  *	+-0:			return +-Inf and raise divide-by-zero;  *	finite x ~> 171.63:	return +Inf and raise divide-by-zero(!);  *	+Inf:			return +Inf and raise divide-by-zero(!);  *	NaN: 			return NaN.  *  * Accuracy: tgamma(x) is accurate to within  *	x> 0:  error provably< 0.9ulp.  *	Maximum observed in 1,000,000 trials was .87ulp.  *	x< 0:  *	Maximum observed error< 4ulp in 1,000,000 trials.  */
 end_comment
 
 begin_function_decl
