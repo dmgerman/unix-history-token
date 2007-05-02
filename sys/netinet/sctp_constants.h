@@ -939,8 +939,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_LOG_MAX_TYPES
+name|SCTP_SACK_LOG_NORMAL
 value|116
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SACK_LOG_EXPRESS
+value|117
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LOG_MAX_TYPES
+value|118
 end_define
 
 begin_comment

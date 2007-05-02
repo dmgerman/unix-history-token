@@ -1042,6 +1042,13 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* For BSD/MAC this does nothing */
+name|SCTP_RELEASE_PAK
+argument_list|(
+operator|*
+name|i_pak
+argument_list|)
+expr_stmt|;
 return|return
 name|IPPROTO_DONE
 return|;

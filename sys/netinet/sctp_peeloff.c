@@ -344,6 +344,8 @@ argument_list|,
 name|n_inp
 argument_list|,
 name|stcb
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|SCTP_TCB_UNLOCK
@@ -823,6 +825,8 @@ argument_list|,
 name|n_inp
 argument_list|,
 name|stcb
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|SCTP_TCB_UNLOCK

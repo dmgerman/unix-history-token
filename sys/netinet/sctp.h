@@ -1492,6 +1492,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_PCB_FLAGS_LISTENING
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_PCB_FLAGS_CLOSE_IP
 value|0x00040000
 end_define

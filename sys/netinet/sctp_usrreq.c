@@ -15327,6 +15327,8 @@ expr_stmt|;
 if|if
 condition|(
 name|stcb
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -15354,6 +15356,11 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -15362,11 +15369,6 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-name|SCTP_TCB_UNLOCK
-argument_list|(
-name|stcb
-argument_list|)
-expr_stmt|;
 block|}
 break|break;
 case|case
@@ -16657,6 +16659,11 @@ block|{
 name|SOCK_UNLOCK
 argument_list|(
 name|so
+argument_list|)
+expr_stmt|;
+name|SCTP_INP_RUNLOCK
+argument_list|(
+name|inp
 argument_list|)
 expr_stmt|;
 return|return

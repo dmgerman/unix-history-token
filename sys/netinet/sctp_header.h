@@ -152,6 +152,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * This is the maximum padded size of a s-a-p  * so paramheadr + 3 address types (6 bytes) + 2 byte pad = 12  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_MAX_ADDR_PARAMS_SIZE
+value|12
+end_define
+
+begin_comment
 comment|/* supported address type */
 end_comment
 
@@ -314,6 +325,13 @@ comment|/* max storage size */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SCTP_MAX_SUPPORTED_EXT
+value|256
+end_define
 
 begin_struct
 struct|struct
@@ -1468,6 +1486,17 @@ end_comment
 begin_comment
 comment|/*  * Authenticated chunks support draft-ietf-tsvwg-sctp-auth  */
 end_comment
+
+begin_comment
+comment|/* Should we make the max be 32? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_RANDOM_MAX_SIZE
+value|256
+end_define
 
 begin_struct
 struct|struct

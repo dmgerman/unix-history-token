@@ -929,6 +929,15 @@ parameter_list|)
 value|sctp_get_mbuf_for_msg(len, 1, M_DONTWAIT, 1, MT_DATA)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_RELEASE_PAK
+parameter_list|(
+name|i_pak
+parameter_list|)
+end_define
+
 begin_comment
 comment|/* Attach the chain of data into the sendable packet. */
 end_comment
@@ -976,16 +985,6 @@ end_define
 begin_comment
 comment|/* This converts any input packet header  * into the chain of data holders, for BSD  * its a NOP.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_PAK_TO_BUF
-parameter_list|(
-name|i_pak
-parameter_list|)
-value|(i_pak)
-end_define
 
 begin_comment
 comment|/* Macro's for getting length from V6/V4 header */
@@ -1137,6 +1136,31 @@ name|route
 name|sctp_route_t
 typedef|;
 end_typedef
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|sctp_get_mbuf_for_msg
+parameter_list|(
+name|unsigned
+name|int
+name|space_needed
+parameter_list|,
+name|int
+name|want_header
+parameter_list|,
+name|int
+name|how
+parameter_list|,
+name|int
+name|allonebuf
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * SCTP AUTH  */

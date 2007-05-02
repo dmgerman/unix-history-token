@@ -1175,6 +1175,9 @@ name|addr
 parameter_list|,
 name|uint32_t
 name|ifa_flags
+parameter_list|,
+name|int
+name|dynamic_add
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1192,9 +1195,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|sctp_ifa
-modifier|*
+name|void
 name|sctp_del_addr_from_vrf
 parameter_list|(
 name|uint32_t
