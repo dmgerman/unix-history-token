@@ -2044,9 +2044,9 @@ condition|(
 operator|(
 name|media
 operator|&
-name|IFM_HDX
+name|IFM_FDX
 operator|)
-operator|!=
+operator|==
 literal|0
 operator|||
 name|ifp
