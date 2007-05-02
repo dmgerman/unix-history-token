@@ -3266,9 +3266,9 @@ name|sc
 operator|->
 name|sc_primary
 condition|)
-name|lp
+name|rp
 operator|->
-name|lp_flags
+name|rp_flags
 operator||=
 name|LAGG_PORT_MASTER
 expr_stmt|;
