@@ -145,6 +145,12 @@ decl_stmt|,
 comment|/* TLB shootdowns - page range */
 name|IDTVEC
 argument_list|(
+name|invlcache
+argument_list|)
+decl_stmt|,
+comment|/* Write back and invalidate cache */
+name|IDTVEC
+argument_list|(
 name|ipi_intr_bitmap_handler
 argument_list|)
 decl_stmt|,
@@ -267,6 +273,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|mp_topology
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|smp_cache_flush
 parameter_list|(
 name|void
 parameter_list|)

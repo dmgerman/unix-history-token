@@ -134,8 +134,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPI_LAZYPMAP
+name|IPI_INVLCACHE
 value|(APIC_IPI_INTS + 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_LAZYPMAP
+value|(APIC_IPI_INTS + 5)
 end_define
 
 begin_comment
@@ -150,7 +157,7 @@ begin_define
 define|#
 directive|define
 name|IPI_BITMAP_VECTOR
-value|(APIC_IPI_INTS + 5)
+value|(APIC_IPI_INTS + 6)
 end_define
 
 begin_comment
@@ -196,7 +203,7 @@ begin_define
 define|#
 directive|define
 name|IPI_STOP
-value|(APIC_IPI_INTS + 6)
+value|(APIC_IPI_INTS + 7)
 end_define
 
 begin_comment
