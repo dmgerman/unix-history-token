@@ -300,7 +300,7 @@ specifier|static
 name|int
 name|intr_storm_threshold
 init|=
-literal|500
+literal|1000
 decl_stmt|;
 end_decl_stmt
 
@@ -3197,29 +3197,33 @@ operator|>=
 name|intr_storm_threshold
 condition|)
 block|{
+comment|/* Report the message only once every second. */
 if|if
 condition|(
+name|ppsratecheck
+argument_list|(
+operator|&
 name|ie
 operator|->
-name|ie_warned
-operator|==
-literal|0
+name|ie_warntm
+argument_list|,
+operator|&
+name|ie
+operator|->
+name|ie_warncnt
+argument_list|,
+literal|1
+argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Interrupt storm detected on \"%s\"; throttling interrupt source\n"
+literal|"interrupt storm detected on \"%s\"; throttling interrupt source\n"
 argument_list|,
 name|ie
 operator|->
 name|ie_name
 argument_list|)
-expr_stmt|;
-name|ie
-operator|->
-name|ie_warned
-operator|=
-literal|1
 expr_stmt|;
 block|}
 name|tsleep
