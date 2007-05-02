@@ -4208,6 +4208,11 @@ literal|'\0'
 operator|)
 condition|)
 block|{
+name|int
+name|ltype
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|cnp
@@ -4216,6 +4221,16 @@ name|cn_flags
 operator|&
 name|ISDOTDOT
 condition|)
+block|{
+name|ltype
+operator|=
+name|VOP_ISLOCKED
+argument_list|(
+name|dvp
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|dvp
@@ -4225,6 +4240,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|vn_lock
@@ -4251,7 +4267,7 @@ name|vn_lock
 argument_list|(
 name|dvp
 argument_list|,
-name|LK_EXCLUSIVE
+name|ltype
 operator||
 name|LK_RETRY
 argument_list|,
