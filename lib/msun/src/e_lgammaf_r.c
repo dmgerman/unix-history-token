@@ -704,10 +704,11 @@ name|r
 decl_stmt|,
 name|w
 decl_stmt|;
+name|int32_t
+name|hx
+decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|hx
 decl_stmt|,
 name|ix
 decl_stmt|;
@@ -718,7 +719,7 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-comment|/* purge off +-inf, NaN, +-0, and negative arguments */
+comment|/* purge off +-inf, NaN, +-0, tiny and negative arguments */
 operator|*
 name|signgamp
 operator|=
