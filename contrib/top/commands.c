@@ -191,7 +191,7 @@ endif|#
 directive|endif
 name|fputs
 argument_list|(
-literal|"\ r       - renice a process\n\ s       - change number of seconds to delay between updates\n\ S       - toggle the displaying of system processes\n\ t       - toggle the display of this process\n\ u       - display processes for only one user (+ selects all users)\n\ \n\ \n"
+literal|"\ r       - renice a process\n\ s       - change number of seconds to delay between updates\n\ S       - toggle the displaying of system processes\n\ a       - toggle the displaying of process titles\n\ t       - toggle the display of this process\n\ u       - display processes for only one user (+ selects all users)\n\ \n\ \n"
 argument_list|,
 name|stdout
 argument_list|)
