@@ -112,7 +112,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* port is active */
+comment|/* port is receiving frames */
 end_comment
 
 begin_define
@@ -123,7 +123,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/* port is active */
+comment|/* port is sending frames */
 end_comment
 
 begin_define
