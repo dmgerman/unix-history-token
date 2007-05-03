@@ -3278,7 +3278,7 @@ name|flags
 operator|=
 name|request_flags
 expr_stmt|;
-comment|/* 	 * no retries are to be performed at the ATA level; any retries 	 * will be done by CAM . 	 */
+comment|/* 	 * no retries are to be performed at the ATA level; any retries 	 * will be done by CAM. 	 */
 name|request
 operator|->
 name|retries
@@ -3728,7 +3728,9 @@ name|u
 operator|.
 name|atapi
 operator|.
-name|saved_cmd
+name|sense
+operator|.
+name|key
 operator|!=
 literal|0
 operator|&&
