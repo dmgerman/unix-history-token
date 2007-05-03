@@ -5046,7 +5046,7 @@ name|EBUSY
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"softdep_waitidle: Failed to flush worklist for %p"
+literal|"softdep_waitidle: Failed to flush worklist for %p\n"
 argument_list|,
 name|mp
 argument_list|)
