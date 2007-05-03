@@ -109,6 +109,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -510,10 +516,21 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|fp
 operator|=
 name|stdin
 expr_stmt|;
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|acct
+argument_list|)
+expr_stmt|;
+comment|/* Always one more to read. */
+block|}
 else|else
 block|{
 comment|/* Open the file. */
