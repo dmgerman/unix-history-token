@@ -47,6 +47,12 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_sx.h>
+end_include
+
 begin_comment
 comment|/*  * Kernel structure per socket.  * Contains send and receive buffer queues,  * handle on protocol and pointer to protocol  * private data and error information.  */
 end_comment
@@ -183,6 +189,11 @@ name|mtx
 name|sb_mtx
 decl_stmt|;
 comment|/* sockbuf lock */
+name|struct
+name|sx
+name|sb_sx
+decl_stmt|;
+comment|/* prevent I/O interlacing */
 name|short
 name|sb_state
 decl_stmt|;
@@ -263,16 +274,6 @@ name|SB_MAX
 value|(256*1024)
 comment|/* default for max chars in sockbuf */
 comment|/*  * Constants for sb_flags field of struct sockbuf.  */
-define|#
-directive|define
-name|SB_LOCK
-value|0x01
-comment|/* lock on data queue */
-define|#
-directive|define
-name|SB_WANT
-value|0x02
-comment|/* someone is waiting to lock */
 define|#
 directive|define
 name|SB_WAIT
@@ -966,36 +967,6 @@ parameter_list|,
 name|m
 parameter_list|)
 value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_OOBDATA) \ 		(sb)->sb_ctl -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt -= (m)->m_ext.ext_size; \ 	if ((sb)->sb_sndptr == (m)) { \ 		(sb)->sb_sndptr = NULL; \ 		(sb)->sb_sndptroff = 0; \ 	} \ 	if ((sb)->sb_sndptroff != 0) \ 		(sb)->sb_sndptroff -= (m)->m_len; \ }
-end_define
-
-begin_comment
-comment|/*  * Set lock on sockbuf sb; sleep if lock is already held.  * Unless SB_NOINTR is set on sockbuf, sleep is interruptible.  * Returns error without lock if sleep is interrupted.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sblock
-parameter_list|(
-name|sb
-parameter_list|,
-name|wf
-parameter_list|)
-value|((sb)->sb_flags& SB_LOCK ? \ 		(((wf) == M_WAITOK) ? sb_lock(sb) : EWOULDBLOCK) : \ 		((sb)->sb_flags |= SB_LOCK), 0)
-end_define
-
-begin_comment
-comment|/* release lock on sockbuf sb */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sbunlock
-parameter_list|(
-name|sb
-parameter_list|)
-value|do { \ 	SOCKBUF_LOCK_ASSERT(sb); \ 	(sb)->sb_flags&= ~SB_LOCK; \ 	if ((sb)->sb_flags& SB_WANT) { \ 		(sb)->sb_flags&= ~SB_WANT; \ 		wakeup(&(sb)->sb_flags); \ 	} \ } while (0)
 end_define
 
 begin_comment
@@ -1879,7 +1850,22 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sb_lock
+name|sblock
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbunlock
 parameter_list|(
 name|struct
 name|sockbuf
