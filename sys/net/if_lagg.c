@@ -5303,6 +5303,14 @@ operator|)
 operator|==
 literal|0
 operator|||
+operator|(
+name|lp
+operator|->
+name|lp_flags
+operator|&
+name|LAGG_PORT_DISABLED
+operator|)
+operator|||
 name|sc
 operator|->
 name|sc_proto

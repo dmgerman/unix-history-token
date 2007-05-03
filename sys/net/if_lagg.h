@@ -129,6 +129,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LAGG_PORT_DISABLED
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* port is disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LAGG_PORT_GLOBAL
 value|0x80000000
 end_define
@@ -141,7 +152,7 @@ begin_define
 define|#
 directive|define
 name|LAGG_PORT_BITS
-value|"\20\01MASTER\02STACK\03ACTIVE\04COLLECTING" \ 				  "\05DISTRIBUTING"
+value|"\20\01MASTER\02STACK\03ACTIVE\04COLLECTING" \ 				  "\05DISTRIBUTING\06DISABLED"
 end_define
 
 begin_comment
