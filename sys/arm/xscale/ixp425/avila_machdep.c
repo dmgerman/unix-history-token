@@ -441,13 +441,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
-name|sa1_cache_clean_addr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 modifier|*
 name|end
