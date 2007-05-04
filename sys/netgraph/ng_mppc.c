@@ -337,6 +337,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MPPC_CCOUNT_INC
+parameter_list|(
+name|d
+parameter_list|)
+value|((d) = (((d) + 1)& MPPC_CCOUNT_MASK))
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPPE_UPDATE_MASK
 value|0xff
 end_define
@@ -2569,11 +2579,13 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* Update sequence number */
+comment|/* Update coherency count for next time (12 bit arithmetic) */
+name|MPPC_CCOUNT_INC
+argument_list|(
 name|d
 operator|->
 name|cc
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* Install header */
 operator|*
@@ -2979,10 +2991,12 @@ name|rc4
 argument_list|)
 expr_stmt|;
 block|}
+name|MPPC_CCOUNT_INC
+argument_list|(
 name|d
 operator|->
 name|cc
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Reset key (except in stateless mode, see below) */
@@ -3197,10 +3211,12 @@ goto|;
 block|}
 block|}
 comment|/* Update coherency count for next time (12 bit arithmetic) */
+name|MPPC_CCOUNT_INC
+argument_list|(
 name|d
 operator|->
 name|cc
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* Check for unexpected compressed packet */
 if|if
