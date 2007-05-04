@@ -2200,6 +2200,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|SCTP_INP_WUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|sctp_inpcb_free
 argument_list|(
 name|inp
@@ -2207,6 +2212,14 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|SCTP_INP_WUNLOCK
+argument_list|(
+name|inp
 argument_list|)
 expr_stmt|;
 block|}
