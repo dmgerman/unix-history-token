@@ -3702,17 +3702,6 @@ decl_stmt|;
 name|int
 name|k
 decl_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|hash
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hash
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|SHA1Init
 argument_list|(
 operator|&
