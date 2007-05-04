@@ -4088,7 +4088,7 @@ name|strpbrk
 argument_list|(
 name|line
 argument_list|,
-literal|" \t\r\n"
+literal|"\r\n"
 argument_list|)
 operator|)
 operator|!=
