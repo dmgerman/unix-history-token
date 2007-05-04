@@ -3850,7 +3850,7 @@ name|MT_standout
 operator||
 name|MT_delayed
 argument_list|,
-literal|" %sisplaying jail id."
+literal|" %sisplaying jail ID."
 argument_list|,
 name|ps
 operator|.

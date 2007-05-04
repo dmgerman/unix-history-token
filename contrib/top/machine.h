@@ -170,7 +170,7 @@ comment|/* show weighted cpu */
 name|int
 name|jail
 decl_stmt|;
-comment|/* show jail id */
+comment|/* show jail ID */
 name|char
 modifier|*
 name|command
