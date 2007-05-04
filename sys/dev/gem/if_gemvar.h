@@ -332,10 +332,18 @@ name|sc_wdog_timer
 decl_stmt|;
 comment|/* watchdog timer */
 comment|/* The following bus handles are to be provided by the bus front-end */
-name|bus_space_tag_t
-name|sc_bustag
+name|void
+modifier|*
+name|sc_ih
 decl_stmt|;
-comment|/* bus tag */
+name|struct
+name|resource
+modifier|*
+name|sc_res
+index|[
+literal|2
+index|]
+decl_stmt|;
 name|bus_dma_tag_t
 name|sc_pdmatag
 decl_stmt|;
@@ -356,10 +364,6 @@ name|bus_dmamap_t
 name|sc_dmamap
 decl_stmt|;
 comment|/* bus dma handle */
-name|bus_space_handle_t
-name|sc_h
-decl_stmt|;
-comment|/* bus space handle for all regs */
 name|int
 name|sc_phys
 index|[
