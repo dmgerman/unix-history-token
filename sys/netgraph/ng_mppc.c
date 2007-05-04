@@ -2082,11 +2082,26 @@ name|d
 operator|->
 name|cc
 expr_stmt|;
+comment|/* Always set the flushed bit in stateless mode */
 if|if
 condition|(
 name|d
 operator|->
 name|flushed
+operator|||
+operator|(
+operator|(
+name|d
+operator|->
+name|cfg
+operator|.
+name|bits
+operator|&
+name|MPPE_STATELESS
+operator|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 name|header
@@ -2429,25 +2444,6 @@ name|inbuf
 argument_list|,
 name|M_NETGRAPH_MPPC
 argument_list|)
-expr_stmt|;
-comment|/* Always set the flushed bit in stateless mode */
-if|if
-condition|(
-operator|(
-name|d
-operator|->
-name|cfg
-operator|.
-name|bits
-operator|&
-name|MPPE_STATELESS
-operator|)
-operator|!=
-literal|0
-condition|)
-name|header
-operator||=
-name|MPPC_FLAG_FLUSHED
 expr_stmt|;
 comment|/* Now encrypt packet (if encryption enabled) */
 ifdef|#
