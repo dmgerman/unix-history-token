@@ -2173,9 +2173,9 @@ begin_function_decl
 name|void
 name|tcp_trace
 parameter_list|(
-name|int
+name|short
 parameter_list|,
-name|int
+name|short
 parameter_list|,
 name|struct
 name|tcpcb

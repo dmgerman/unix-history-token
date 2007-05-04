@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_debug.c	8.1 (Berkeley) 6/10/93  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_debug.c	8.1 (Berkeley) 6/10/93  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -92,7 +92,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -204,6 +222,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Global ring buffer of TCP debugging state.  Each entry captures a snapshot  * of TCP connection state at any given moment.  tcp_debx addresses at the  * next available slot.  There is no explicit export of this data structure;  * it will be read via /dev/kmem by debugging tools.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -223,47 +245,62 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Tcp debug routines  */
+comment|/*  * All global state is protected by tcp_debug_mtx; tcp_trace() is split into  * two parts, one of which saves connection and other state into the global  * array (locked by tcp_debug_mtx).  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|tcp_debug_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|tcp_debug_mtx
+argument_list|,
+operator|&
+name|tcp_debug_mtx
+argument_list|,
+literal|"tcp_debug_mtx"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Save TCP state at a given moment; optionally, both tcpcb and TCP packet  * header state will be saved.  */
 end_comment
 
 begin_function
 name|void
 name|tcp_trace
 parameter_list|(
-name|act
-parameter_list|,
-name|ostate
-parameter_list|,
-name|tp
-parameter_list|,
-name|ipgen
-parameter_list|,
-name|th
-parameter_list|,
-name|req
-parameter_list|)
 name|short
 name|act
-decl_stmt|,
+parameter_list|,
+name|short
 name|ostate
-decl_stmt|;
+parameter_list|,
 name|struct
 name|tcpcb
 modifier|*
 name|tp
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|ipgen
-decl_stmt|;
+parameter_list|,
 name|struct
 name|tcphdr
 modifier|*
 name|th
-decl_stmt|;
+parameter_list|,
 name|int
 name|req
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -288,14 +325,22 @@ name|struct
 name|tcp_debug
 modifier|*
 name|td
-init|=
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|tcp_debug_mtx
+argument_list|)
+expr_stmt|;
+name|td
+operator|=
 operator|&
 name|tcp_debug
 index|[
 name|tcp_debx
 operator|++
 index|]
-decl_stmt|;
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -798,6 +843,12 @@ operator|->
 name|td_req
 operator|=
 name|req
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|tcp_debug_mtx
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
