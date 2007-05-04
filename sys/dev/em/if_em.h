@@ -1,11 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2001-2006, Intel Corporation All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Intel Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
+comment|/**************************************************************************  Copyright (c) 2001-2007, Intel Corporation All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Intel Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
 end_comment
 
-begin_comment
-comment|/*$FreeBSD$*/
-end_comment
+begin_macro
+name|$FreeBSD$
+end_macro
 
 begin_ifndef
 ifndef|#
@@ -24,7 +24,7 @@ comment|/* Tunables */
 end_comment
 
 begin_comment
-comment|/*  * EM_TXD: Maximum number of Transmit Descriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of transmit descriptors allocated by the driver.  *   Increasing this value allows the driver to queue more transmits. Each  *   descriptor is 16 bytes.  *   Since TDLEN should be multiple of 128bytes, the number of transmit  *   desscriptors should meet the following condition.  *      (num_tx_desc * sizeof(struct em_tx_desc)) % 128 == 0  */
+comment|/*  * EM_TXD: Maximum number of Transmit Descriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of transmit descriptors allocated by the driver.  *   Increasing this value allows the driver to queue more transmits. Each  *   descriptor is 16 bytes.  *   Since TDLEN should be multiple of 128bytes, the number of transmit  *   desscriptors should meet the following condition.  *      (num_tx_desc * sizeof(struct e1000_tx_desc)) % 128 == 0  */
 end_comment
 
 begin_define
@@ -56,7 +56,7 @@ value|EM_MAX_TXD_82543
 end_define
 
 begin_comment
-comment|/*  * EM_RXD - Maximum number of receive Descriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *   Since TDLEN should be multiple of 128bytes, the number of transmit  *   desscriptors should meet the following condition.  *      (num_tx_desc * sizeof(struct em_tx_desc)) % 128 == 0  */
+comment|/*  * EM_RXD - Maximum number of receive Descriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *   Since TDLEN should be multiple of 128bytes, the number of transmit  *   desscriptors should meet the following condition.  *      (num_tx_desc * sizeof(struct e1000_tx_desc)) % 128 == 0  */
 end_comment
 
 begin_define
@@ -179,6 +179,13 @@ name|EM_TX_CLEANUP_THRESHOLD
 value|(adapter->num_tx_desc / 8)
 end_define
 
+begin_define
+define|#
+directive|define
+name|EM_TX_OP_THRESHOLD
+value|(adapter->num_tx_desc / 32)
+end_define
+
 begin_comment
 comment|/*  * This parameter controls whether or not autonegotation is enabled.  *              0 - Disable autonegotiation  *              1 - Enable  autonegotiation  */
 end_comment
@@ -202,25 +209,6 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * EM_MASTER_SLAVE is only defined to enable a workaround for a known compatibility issue  * with 82541/82547 devices and some switches.  See the "Known Limitations" section of  * the README file for a complete description and a list of affected switches.  *  *              0 = Hardware default  *              1 = Master mode  *              2 = Slave mode  *              3 = Auto master/slave  */
-end_comment
-
-begin_comment
-comment|/* #define EM_MASTER_SLAVE      2 */
-end_comment
-
-begin_comment
-comment|/*  * Limitation of some PCIe chipsets when using TSO  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_TSO_PCIE_SEGMENT_SIZE
-value|4096
-end_define
-
-begin_comment
 comment|/* Tunables -- End */
 end_comment
 
@@ -228,8 +216,30 @@ begin_define
 define|#
 directive|define
 name|AUTONEG_ADV_DEFAULT
-value|(ADVERTISE_10_HALF | ADVERTISE_10_FULL | \                                          ADVERTISE_100_HALF | ADVERTISE_100_FULL | \                                          ADVERTISE_1000_FULL)
+value|(ADVERTISE_10_HALF | ADVERTISE_10_FULL | \ 				ADVERTISE_100_HALF | ADVERTISE_100_FULL | \ 				ADVERTISE_1000_FULL)
 end_define
+
+begin_define
+define|#
+directive|define
+name|AUTO_ALL_MODES
+value|0
+end_define
+
+begin_comment
+comment|/* PHY master/slave setting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_MASTER_SLAVE
+value|e1000_ms_hw_default
+end_define
+
+begin_comment
+comment|/*  * Micellaneous constants  */
+end_comment
 
 begin_define
 define|#
@@ -244,10 +254,6 @@ directive|define
 name|EM_FLASH
 value|0x0014
 end_define
-
-begin_comment
-comment|/* Flash memory on ICH8 */
-end_comment
 
 begin_define
 define|#
@@ -280,6 +286,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|EM_MAX_INTR
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_TSO_SEG_SIZE
+value|4096
+end_define
+
+begin_comment
+comment|/* Max dma seg size */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MAX_NUM_MULTICAST_ADDRESSES
 value|128
 end_define
@@ -296,6 +320,27 @@ define|#
 directive|define
 name|ETHER_ALIGN
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_TX_BUFFER_SIZE
+value|((uint32_t) 1514)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_FC_PAUSE_TIME
+value|0x0680
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_EEPROM_APME
+value|0x400;
 end_define
 
 begin_comment
@@ -353,6 +398,13 @@ define|#
 directive|define
 name|EM_BAR_TYPE_IO
 value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_BAR_TYPE_FLASH
+value|0x0014
 end_define
 
 begin_define
@@ -519,38 +571,6 @@ parameter_list|)
 value|if (DEBUG_HW) printf(S "\n", A, B)
 end_define
 
-begin_comment
-comment|/* Supported RX Buffer Sizes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_RXBUFFER_2048
-value|2048
-end_define
-
-begin_define
-define|#
-directive|define
-name|EM_RXBUFFER_4096
-value|4096
-end_define
-
-begin_define
-define|#
-directive|define
-name|EM_RXBUFFER_8192
-value|8192
-end_define
-
-begin_define
-define|#
-directive|define
-name|EM_RXBUFFER_16384
-value|16384
-end_define
-
 begin_define
 define|#
 directive|define
@@ -565,20 +585,34 @@ name|EM_TSO_SIZE
 value|65535
 end_define
 
-begin_typedef
-typedef|typedef
-enum|enum
-name|_XSUM_CONTEXT_T
-block|{
-name|OFFLOAD_NONE
-block|,
-name|OFFLOAD_TCP_IP
-block|,
-name|OFFLOAD_UDP_IP
-block|}
-name|XSUM_CONTEXT_T
-typedef|;
-end_typedef
+begin_comment
+comment|/* maxsize of a dma transfer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_TSO_SEG_SIZE
+value|4096
+end_define
+
+begin_comment
+comment|/* Max dma segment size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETH_ZLEN
+value|60
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETH_ADDR_LEN
+value|6
+end_define
 
 begin_struct_decl
 struct_decl|struct
@@ -609,7 +643,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Bus dma allocation structure used by  * em_dma_malloc() and em_dma_free().  */
+comment|/*  * Bus dma allocation structure used by  * e1000_dma_malloc and e1000_dma_free.  */
 end_comment
 
 begin_struct
@@ -639,7 +673,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Driver softc. */
+comment|/* Our adapter structure */
 end_comment
 
 begin_struct
@@ -652,12 +686,12 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|em_hw
+name|e1000_hw
 name|hw
 decl_stmt|;
 comment|/* FreeBSD operating-system-specific structures. */
 name|struct
-name|em_osdep
+name|e1000_osdep
 name|osdep
 decl_stmt|;
 name|struct
@@ -734,6 +768,13 @@ modifier|*
 name|tq
 decl_stmt|;
 comment|/* private task queue */
+comment|/* Management and WOL features */
+name|int
+name|wol
+decl_stmt|;
+name|int
+name|has_manage
+decl_stmt|;
 comment|/* Info about the board itself */
 name|uint32_t
 name|part_num
@@ -766,9 +807,6 @@ name|struct
 name|em_int_delay_info
 name|rx_abs_int_delay
 decl_stmt|;
-name|XSUM_CONTEXT_T
-name|active_checksum_context
-decl_stmt|;
 comment|/* 	 * Transmit definitions 	 * 	 * We have an array of num_tx_desc descriptors (handled 	 * by the controller) paired with an array of tx_buffers 	 * (at tx_buffer_area). 	 * The index of the next available descriptor is next_avail_tx_desc. 	 * The number of remaining tx_desc is num_tx_desc_avail. 	 */
 name|struct
 name|em_dma_alloc
@@ -776,7 +814,7 @@ name|txdma
 decl_stmt|;
 comment|/* bus_dma glue for tx desc */
 name|struct
-name|em_tx_desc
+name|e1000_tx_desc
 modifier|*
 name|tx_desc_base
 decl_stmt|;
@@ -809,6 +847,25 @@ name|uint32_t
 name|tx_tso
 decl_stmt|;
 comment|/* last tx was tso */
+comment|/* 	 * Transmit function pointer: 	 *      legacy or advanced (82575 and later) 	 */
+name|int
+function_decl|(
+modifier|*
+name|em_xmit
+function_decl|)
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|m_headp
+parameter_list|)
+function_decl|;
 comment|/*  	 * Receive definitions 	 * 	 * we have an array of num_rx_desc rx_desc (handled by the 	 * controller), and paired with an array of rx_buffers 	 * (at rx_buffer_area). 	 * The next pair to check on receive is at offset next_rx_desc_to_check 	 */
 name|struct
 name|em_dma_alloc
@@ -816,7 +873,7 @@ name|rxdma
 decl_stmt|;
 comment|/* bus_dma glue for rx desc */
 name|struct
-name|em_rx_desc
+name|e1000_rx_desc
 modifier|*
 name|rx_desc_base
 decl_stmt|;
@@ -843,7 +900,7 @@ decl_stmt|;
 name|bus_dmamap_t
 name|rx_sparemap
 decl_stmt|;
-comment|/* First/last mbuf pointers, for collecting multisegment RX packets. */
+comment|/* 	 * First/last mbuf pointers, for 	 * collecting multisegment RX packets. 	 */
 name|struct
 name|mbuf
 modifier|*
@@ -855,6 +912,10 @@ modifier|*
 name|lmp
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
+name|unsigned
+name|long
+name|dropped_pkts
+decl_stmt|;
 name|unsigned
 name|long
 name|mbuf_alloc_failed
@@ -934,7 +995,7 @@ name|boolean_t
 name|in_detach
 decl_stmt|;
 name|struct
-name|em_hw_stats
+name|e1000_hw_stats
 name|stats
 decl_stmt|;
 block|}
