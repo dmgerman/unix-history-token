@@ -316,6 +316,20 @@ name|EXT_DSTOPTS
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXT_RTHDR0
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT_RTHDR2
+value|0x80
+end_define
+
 begin_comment
 comment|/*  * Template for instructions.  *  * ipfw_insn is used for all instructions which require no operands,  * a single 16-bit value (arg1), or a couple of 8-bit values.  *  * For other instructions which require different/larger arguments  * we have derived structures, ipfw_insn_*.  *  * The size of the instruction (in 32-bit words) is in the low  * 6 bits of "len". The 2 remaining bits are used to implement  * NOT and OR on individual instructions. Given a type, you can  * compute the length to be put in "len" using F_INSN_SIZE(t)  *  * F_NOT	negates the match result of the instruction.  *  * F_OR		is used to build or blocks. By default, instructions  *		are evaluated as part of a logical AND. An "or" block  *		{ X or Y or Z } contains F_OR set in all but the last  *		instruction of the block. A match will cause the code  *		to skip past the last instruction of the block.  *  * NOTA BENE: in a couple of places we assume that  *	sizeof(ipfw_insn) == sizeof(u_int32_t)  * this needs to be fixed.  *  */
 end_comment
