@@ -3740,7 +3740,7 @@ name|pad1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pad2
+name|pad1
 argument_list|)
 argument_list|)
 expr_stmt|;
