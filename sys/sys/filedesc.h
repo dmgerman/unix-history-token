@@ -203,6 +203,17 @@ begin_comment
 comment|/* auto-close on exec */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UF_OPENING
+value|0x02
+end_define
+
+begin_comment
+comment|/* file is being opened */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
