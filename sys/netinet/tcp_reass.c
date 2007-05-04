@@ -4228,7 +4228,7 @@ expr_stmt|;
 comment|/* 		 * Entry added to syncache and mbuf consumed. 		 * Everything unlocked already by syncache_add(). 		 */
 return|return;
 block|}
-comment|/* 	 * Segment belongs to a connection in SYN_SENT, ESTABLISHED or 	 * later state.  tcp_do_segment() always consumes the mbuf chain 	 * and unlocks the inpcb. 	 */
+comment|/* 	 * Segment belongs to a connection in SYN_SENT, ESTABLISHED or late 	 * state.  tcp_do_segment() always consumes the mbuf chain, unlocks the 	 * inpcb, and unlocks the pcbinfo. 	 */
 if|if
 condition|(
 name|tcp_do_segment
