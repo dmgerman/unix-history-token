@@ -898,6 +898,9 @@ decl_stmt|;
 name|uint32_t
 name|quirks
 decl_stmt|;
+name|uint32_t
+name|gpio
+decl_stmt|;
 name|int
 name|ossidx
 decl_stmt|;
@@ -976,6 +979,10 @@ name|blkcnt
 decl_stmt|,
 name|blksz
 decl_stmt|;
+name|uint32_t
+modifier|*
+name|dmapos
+decl_stmt|;
 name|int
 name|active
 decl_stmt|;
@@ -1038,6 +1045,9 @@ name|uint32_t
 name|pci_subvendor
 decl_stmt|;
 name|int
+name|nocache
+decl_stmt|;
+name|int
 name|num_iss
 decl_stmt|;
 name|int
@@ -1073,6 +1083,10 @@ name|int
 name|rirb_rp
 decl_stmt|;
 name|struct
+name|hdac_dma
+name|pos_dma
+decl_stmt|;
+name|struct
 name|hdac_chan
 name|play
 decl_stmt|,
@@ -1094,6 +1108,9 @@ decl_stmt|;
 name|int
 name|poll_ticks
 decl_stmt|;
+name|int
+name|poll_ival
+decl_stmt|;
 name|struct
 name|callout
 name|poll_hda
@@ -1101,6 +1118,10 @@ decl_stmt|;
 name|struct
 name|callout
 name|poll_hdac
+decl_stmt|;
+name|struct
+name|callout
+name|poll_jack
 decl_stmt|;
 define|#
 directive|define
