@@ -39,6 +39,12 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/disk.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|disk
@@ -208,6 +214,12 @@ decl_stmt|;
 name|u_int
 name|d_stripesize
 decl_stmt|;
+name|char
+name|d_ident
+index|[
+name|DISK_IDENT_SIZE
+index|]
+decl_stmt|;
 comment|/* Fields private to the driver */
 name|void
 modifier|*
@@ -305,8 +317,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|DISK_VERSION_01
+value|0x5856105a
+end_define
+
+begin_define
+define|#
+directive|define
 name|DISK_VERSION
-value|DISK_VERSION_00
+value|DISK_VERSION_01
 end_define
 
 begin_endif
