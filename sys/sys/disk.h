@@ -158,6 +158,54 @@ begin_comment
 comment|/*- 	 * Many disk formats have some amount of space reserved at the 	 * start of the disk to hold bootblocks, various disklabels and 	 * similar stuff.  This ioctl returns the number of such bytes 	 * which may apply to the device. 	 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DIOCGFLUSH
+value|_IO('d', 135)
+end_define
+
+begin_comment
+comment|/* Flush write cache */
+end_comment
+
+begin_comment
+comment|/*- 	 * Flush write cache of the device. 	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIOCGDELETE
+value|_IOW('d', 136, off_t[2])
+end_define
+
+begin_comment
+comment|/* Delete data */
+end_comment
+
+begin_comment
+comment|/*- 	 * Mark data on the device as unused. 	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DISK_IDENT_SIZE
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIOCGIDENT
+value|_IOR('d', 137, char[DISK_IDENT_SIZE])
+end_define
+
+begin_comment
+comment|/*- 	 * Get the ident of the given provider. Ident is (most of the time) 	 * a uniqe and fixed provider's identifier. Ident's properties are as 	 * follow: 	 * - ident value is preserved between reboots, 	 * - provider can be detached/attached and ident is preserved, 	 * - provider's name can change - ident can't, 	 * - ident value should not be based on on-disk metadata; in other 	 *   words copying whole data from one disk to another should not 	 *   yield the same ident for the other disk, 	 * - there could be more than one provider with the same ident, but 	 *   only if they point at exactly the same physical storage, this is 	 *   the case for multipathing for example, 	 * - GEOM classes that consumes single providers and provide single 	 *   providers, like geli, gbde, should just attach class name to the 	 *   ident of the underlying provider, 	 * - ident is an ASCII string (is printable), 	 * - ident is optional and applications can't relay on its presence. 	 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
