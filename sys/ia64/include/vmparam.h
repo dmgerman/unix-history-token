@@ -240,6 +240,16 @@ name|UMA_MD_SMALL_ALLOC
 end_define
 
 begin_comment
+comment|/*  * The physical address space is sparsely populated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_PHYSSEG_SPARSE
+end_define
+
+begin_comment
 comment|/*  * Manipulating region bits of an address.  */
 end_comment
 

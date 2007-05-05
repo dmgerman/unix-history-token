@@ -167,6 +167,16 @@ name|UMA_MD_SMALL_ALLOC
 end_define
 
 begin_comment
+comment|/*  * The physical address space is densely populated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_PHYSSEG_DENSE
+end_define
+
+begin_comment
 comment|/*  * Virtual addresses of things.  Derived from the page directory and  * page table indexes from pmap.h for precision.  * Because of the page that is both a PD and PT, it looks a little  * messy at times, but hey, we'll do anything to save a page :-)  */
 end_comment
 

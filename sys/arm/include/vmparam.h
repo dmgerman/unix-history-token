@@ -75,6 +75,16 @@ name|VM_PHYSSEG_NOADD
 end_define
 
 begin_comment
+comment|/*  * The physical address space is densely populated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_PHYSSEG_DENSE
+end_define
+
+begin_comment
 comment|/*  * we support 2 free lists:  *  *	- DEFAULT for all systems  *	- ISADMA for the ISA DMA range on Sharks only  */
 end_comment
 

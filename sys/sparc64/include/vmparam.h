@@ -163,6 +163,16 @@ value|20
 end_define
 
 begin_comment
+comment|/*  * The physical address space is sparsely populated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_PHYSSEG_SPARSE
+end_define
+
+begin_comment
 comment|/*  * Address space layout.  *  * UltraSPARC I and II implement a 44 bit virtual address space.  The address  * space is split into 2 regions at each end of the 64 bit address space, with  * an out of range "hole" in the middle.  UltraSPARC III implements the full  * 64 bit virtual address space, but we don't really have any use for it and  * 43 bits of user address space is considered to be "enough", so we ignore it.  *  * Upper region:	0xffffffffffffffff  * 			0xfffff80000000000  *   * Hole:		0xfffff7ffffffffff  * 			0x0000080000000000  *  * Lower region:	0x000007ffffffffff  * 			0x0000000000000000  *  * In general we ignore the upper region, and use the lower region as mappable  * space.  *  * We define some interesting address constants:  *  * VM_MIN_ADDRESS and VM_MAX_ADDRESS define the start and of the entire 64 bit  * address space, mostly just for convenience.  *  * VM_MIN_DIRECT_ADDRESS and VM_MAX_DIRECT_ADDRESS define the start and end  * of the direct mapped region.  This maps virtual addresses to physical  * addresses directly using 4mb tlb entries, with the physical address encoded  * in the lower 43 bits of virtual address.  These mappings are convenient  * because they do not require page tables, and because they never change they  * do not require tlb flushes.  However, since these mappings are cacheable,  * we must ensure that all pages accessed this way are either not double  * mapped, or that all other mappings have virtual color equal to physical  * color, in order to avoid creating illegal aliases in the data cache.  *  * VM_MIN_KERNEL_ADDRESS and VM_MAX_KERNEL_ADDRESS define the start and end of  * mappable kernel virtual address space.  VM_MIN_KERNEL_ADDRESS is basically  * arbitrary, a convenient address is chosen which allows both the kernel text  * and data and the prom's address space to be mapped with 1 4mb tsb page.  * VM_MAX_KERNEL_ADDRESS is variable, computed at startup time based on the  * amount of physical memory available.  Each 4mb tsb page provides 1g of  * virtual address space, with the only practical limit being available  * phsyical memory.  *  * VM_MIN_PROM_ADDRESS and VM_MAX_PROM_ADDRESS define the start and end of the  * prom address space.  On startup the prom's mappings are duplicated in the  * kernel tsb, to allow prom memory to be accessed normally by the kernel.  *  * VM_MIN_USER_ADDRESS and VM_MAX_USER_ADDRESS define the start and end of the  * user address space.  There are some hardware errata about using addresses  * at the boundary of the va hole, so we allow just under 43 bits of user  * address space.  Note that the kernel and user address spaces overlap, but  * this doesn't matter because they use different tlb contexts, and because  * the kernel address space is not mapped into each process' address space.  */
 end_comment
 
