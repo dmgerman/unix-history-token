@@ -1681,6 +1681,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|g_delete_data
+parameter_list|(
+name|struct
+name|g_consumer
+modifier|*
+name|cp
+parameter_list|,
+name|off_t
+name|offset
+parameter_list|,
+name|off_t
+name|length
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|g_print_bio
 parameter_list|(
