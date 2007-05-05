@@ -93,12 +93,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<net80211/ieee80211.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net80211/ieee80211_var.h>
 end_include
 
@@ -636,6 +630,22 @@ begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
 name|wlan_amrr
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|wlan_amrr
+argument_list|,
+name|wlan
+argument_list|,
+literal|1
+argument_list|,
+literal|1
 argument_list|,
 literal|1
 argument_list|)
