@@ -1917,7 +1917,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We only allow [a-zA-Z0-9-_@#%.] characters, the rest is converted to 'x<HH>'.  */
+comment|/*  * We only allow [a-zA-Z0-9-_@#%.:] characters, the rest is converted to 'x<HH>'.  */
 end_comment
 
 begin_function
@@ -2086,6 +2086,9 @@ literal|'%'
 case|:
 case|case
 literal|'.'
+case|:
+case|case
+literal|':'
 case|:
 name|newid
 index|[
