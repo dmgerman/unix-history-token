@@ -3544,6 +3544,7 @@ decl_stmt|,
 modifier|*
 name|m_hold_next
 decl_stmt|;
+comment|/* 		 * reset the ln_hold in advance, to explicitly 		 * prevent a ln_hold lookup in nd6_output() 		 * (wouldn't happen, though...) 		 */
 for|for
 control|(
 name|m_hold
