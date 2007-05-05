@@ -1175,6 +1175,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|g_handleattr_str
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|attribute
+parameter_list|,
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|g_consumer
 modifier|*
