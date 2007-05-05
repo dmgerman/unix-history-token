@@ -391,12 +391,10 @@ parameter_list|(
 name|struct
 name|mpt_softc
 modifier|*
-name|mpt
 parameter_list|,
 name|struct
 name|mpt_raid_volume
 modifier|*
-name|mpt_vol
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -409,20 +407,40 @@ parameter_list|(
 name|struct
 name|mpt_softc
 modifier|*
-name|mpt
 parameter_list|,
 name|struct
 name|mpt_raid_volume
 modifier|*
-name|mpt_vol
 parameter_list|,
 name|struct
 name|cam_path
 modifier|*
-name|path
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
+begin_define
+define|#
+directive|define
+name|mpt_raid_sysctl_attach
+parameter_list|(
+name|x
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_function_decl
 specifier|static
@@ -432,10 +450,14 @@ parameter_list|(
 name|struct
 name|mpt_softc
 modifier|*
-name|mpt
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1063,6 +1085,36 @@ operator|->
 name|raid_timer
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|mpt_spawn_raid_thread
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|mpt_prt
+argument_list|(
+name|mpt
+argument_list|,
+literal|"Unable to spawn RAID thread!\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
+block|}
+name|MPT_LOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|handler
 operator|.
 name|reply_handler
@@ -1095,31 +1147,6 @@ argument_list|(
 name|mpt
 argument_list|,
 literal|"Unable to register RAID haandler!\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|cleanup
-goto|;
-block|}
-name|error
-operator|=
-name|mpt_spawn_raid_thread
-argument_list|(
-name|mpt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-name|mpt_prt
-argument_list|(
-name|mpt
-argument_list|,
-literal|"Unable to spawn RAID thread!\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1166,11 +1193,6 @@ name|callback_arg
 operator|=
 name|mpt
 expr_stmt|;
-name|MPTLOCK_2_CAMLOCK
-argument_list|(
-name|mpt
-argument_list|)
-expr_stmt|;
 name|xpt_action
 argument_list|(
 operator|(
@@ -1180,11 +1202,6 @@ operator|*
 operator|)
 operator|&
 name|csa
-argument_list|)
-expr_stmt|;
-name|CAMLOCK_2_MPTLOCK
-argument_list|(
-name|mpt
 argument_list|)
 expr_stmt|;
 if|if
@@ -1207,6 +1224,11 @@ literal|"CAM async handler.\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|mpt_raid_sysctl_attach
 argument_list|(
 name|mpt
@@ -1219,6 +1241,11 @@ operator|)
 return|;
 name|cleanup
 label|:
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|mpt_raid_detach
 argument_list|(
 name|mpt
@@ -1273,6 +1300,11 @@ operator|&
 name|mpt
 operator|->
 name|raid_timer
+argument_list|)
+expr_stmt|;
+name|MPT_LOCK
+argument_list|(
+name|mpt
 argument_list|)
 expr_stmt|;
 name|mpt_terminate_raid_thread
@@ -1338,11 +1370,6 @@ name|callback_arg
 operator|=
 name|mpt
 expr_stmt|;
-name|MPTLOCK_2_CAMLOCK
-argument_list|(
-name|mpt
-argument_list|)
-expr_stmt|;
 name|xpt_action
 argument_list|(
 operator|(
@@ -1354,7 +1381,7 @@ operator|&
 name|csa
 argument_list|)
 expr_stmt|;
-name|CAMLOCK_2_MPTLOCK
+name|MPT_UNLOCK
 argument_list|(
 name|mpt
 argument_list|)
@@ -2576,6 +2603,11 @@ name|int
 name|error
 decl_stmt|;
 comment|/* 	 * Freeze out any CAM transactions until our thread 	 * is able to run at least once.  We need to update 	 * our RAID pages before acception I/O or we may 	 * reject I/O to an ID we later determine is for a 	 * hidden physdisk. 	 */
+name|MPT_LOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|xpt_freeze_simq
 argument_list|(
 name|mpt
@@ -2583,6 +2615,11 @@ operator|->
 name|phydisk_sim
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
 argument_list|)
 expr_stmt|;
 name|error
@@ -2617,6 +2654,12 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|MPT_LOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|xpt_release_simq
 argument_list|(
 name|mpt
@@ -2627,6 +2670,12 @@ comment|/*run_queue*/
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
@@ -2743,19 +2792,6 @@ decl_stmt|;
 name|int
 name|firstrun
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|mpt
 operator|=
 operator|(
@@ -3023,19 +3059,6 @@ argument_list|(
 name|mpt
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|kthread_exit
 argument_list|(
 literal|0
@@ -3085,7 +3108,7 @@ comment|/*wait*/
 end_comment
 
 begin_if
-unit|FALSE); 		if (rv != 0) 			return (CAM_REQ_CMP_ERR);  		ccb->ccb_h.timeout_ch = 			timeout(mpt_raid_quiesce_timeout, (caddr_t)ccb, 5 * hz);
+unit|FALSE); 		if (rv != 0) 			return (CAM_REQ_CMP_ERR);  		mpt_req_timeout(req, mpt_raid_quiesce_timeout, ccb, 5 * hz);
 if|#
 directive|if
 literal|0
@@ -6897,6 +6920,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
 begin_function
 specifier|static
 name|int
@@ -7717,11 +7748,6 @@ modifier|*
 name|mpt
 parameter_list|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|struct
 name|sysctl_ctx_list
 modifier|*
@@ -7855,10 +7881,13 @@ argument_list|,
 literal|"number of nonoptimal volumes"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

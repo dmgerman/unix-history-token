@@ -2506,6 +2506,11 @@ argument_list|,
 literal|"enter mpt_intr\n"
 argument_list|)
 expr_stmt|;
+name|MPT_LOCK_ASSERT
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -4337,16 +4342,9 @@ literal|"freeing locked request"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|MPT_OWNED
+name|MPT_LOCK_ASSERT
 argument_list|(
 name|mpt
-argument_list|)
-argument_list|,
-operator|(
-literal|"mpt_free_request: mpt not locked\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -4626,16 +4624,9 @@ name|req
 decl_stmt|;
 name|retry
 label|:
-name|KASSERT
-argument_list|(
-name|MPT_OWNED
+name|MPT_LOCK_ASSERT
 argument_list|(
 name|mpt
-argument_list|)
-argument_list|,
-operator|(
-literal|"mpt_get_request: mpt not locked\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|req
@@ -8897,6 +8888,8 @@ parameter_list|)
 block|{
 name|int
 name|val
+decl_stmt|,
+name|error
 decl_stmt|;
 name|LIST_INIT
 argument_list|(
@@ -8929,6 +8922,11 @@ operator|&
 name|mpt
 operator|->
 name|request_timeout_list
+argument_list|)
+expr_stmt|;
+name|MPT_LOCK
+argument_list|(
+name|mpt
 argument_list|)
 expr_stmt|;
 for|for
@@ -8974,6 +8972,11 @@ name|req
 argument_list|)
 expr_stmt|;
 block|}
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|val
@@ -9077,8 +9080,13 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|MPT_LOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|mpt_configure_ioc
 argument_list|(
 name|mpt
@@ -9087,6 +9095,15 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -9103,6 +9120,11 @@ name|mpt
 parameter_list|)
 block|{
 comment|/* 	 * We enter with the IOC enabled, but async events 	 * not enabled, ports not enabled and interrupts 	 * not enabled. 	 */
+name|MPT_LOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Enable asynchronous event reporting- all personalities 	 * have attached so that they should be able to now field 	 * async events. 	 */
 name|mpt_send_event_request
 argument_list|(
@@ -9149,12 +9171,22 @@ argument_list|,
 literal|"failed to enable port 0\n"
 argument_list|)
 expr_stmt|;
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
 block|}
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

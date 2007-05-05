@@ -87,6 +87,12 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/devicestat.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -782,7 +788,7 @@ parameter_list|,		\
 name|dma_tagp
 parameter_list|)
 define|\
-value|bus_dma_tag_create(parent_tag, alignment, boundary,		\ 			   lowaddr, highaddr, filter, filterarg,	\ 			   maxsize, nsegments, maxsegsz, flags,		\ 			   busdma_lock_mutex,&Giant,			\ 			   dma_tagp)
+value|bus_dma_tag_create(parent_tag, alignment, boundary,		\ 			   lowaddr, highaddr, filter, filterarg,	\ 			   maxsize, nsegments, maxsegsz, flags,		\ 			   busdma_lock_mutex,&(mpt)->mpt_lock,		\ 			   dma_tagp)
 end_define
 
 begin_else
@@ -1000,7 +1006,7 @@ name|c
 parameter_list|)
 value|callout_init(c,
 comment|/*mpsafe*/
-value|0);
+value|1);
 end_define
 
 begin_else
@@ -1351,6 +1357,11 @@ modifier|*
 name|chain
 decl_stmt|;
 comment|/* for SGE overallocations */
+name|struct
+name|callout
+name|callout
+decl_stmt|;
+comment|/* Timeout for the request */
 block|}
 struct|;
 end_struct
@@ -2577,6 +2588,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPT_LOCK_ASSERT
+parameter_list|(
+name|mpt
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPTLOCK_2_CAMLOCK
 value|MPT_UNLOCK
 end_define
@@ -2849,22 +2869,59 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|mpt_req_timeout
+parameter_list|(
+name|req
+parameter_list|,
+name|ticks
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|callout_reset(&(req)->callout, (ticks), (func), (arg));
+end_define
+
+begin_define
+define|#
+directive|define
+name|mpt_req_untimeout
+parameter_list|(
+name|req
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|callout_stop(&(req)->callout)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mpt_req_timeout_init
+parameter_list|(
+name|req
+parameter_list|)
+define|\
+value|callout_init(&(req)->callout)
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOCKING_WORKED_AS_IT_SHOULD
-end_ifdef
-
-begin_error
-error|#
-directive|error
-literal|"Shouldn't Be Here!"
-end_error
+begin_if
+if|#
+directive|if
+literal|1
+end_if
 
 begin_define
 define|#
@@ -2928,12 +2985,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPT_LOCK_ASSERT
+parameter_list|(
+name|mpt
+parameter_list|)
+value|mtx_assert(&(mpt)->mpt_lock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPTLOCK_2_CAMLOCK
 parameter_list|(
 name|mpt
 parameter_list|)
-define|\
-value|mtx_unlock(&(mpt)->mpt_lock); mtx_lock(&Giant)
 end_define
 
 begin_define
@@ -2943,8 +3008,6 @@ name|CAMLOCK_2_MPTLOCK
 parameter_list|(
 name|mpt
 parameter_list|)
-define|\
-value|mtx_unlock(&Giant); mtx_lock(&(mpt)->mpt_lock)
 end_define
 
 begin_define
@@ -2964,6 +3027,49 @@ name|timo
 parameter_list|)
 define|\
 value|msleep(ident,&(mpt)->mpt_lock, priority, wmesg, timo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mpt_req_timeout
+parameter_list|(
+name|req
+parameter_list|,
+name|ticks
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|callout_reset(&(req)->callout, (ticks), (func), (arg));
+end_define
+
+begin_define
+define|#
+directive|define
+name|mpt_req_untimeout
+parameter_list|(
+name|req
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|callout_stop(&(req)->callout)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mpt_req_timeout_init
+parameter_list|(
+name|req
+parameter_list|)
+define|\
+value|callout_init(&(req)->callout, 1)
 end_define
 
 begin_else
@@ -2998,11 +3104,15 @@ parameter_list|)
 value|do { } while (0)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_define
+define|#
+directive|define
+name|MPT_LOCK_ASSERT
+parameter_list|(
+name|mpt
+parameter_list|)
+value|mtx_assert(&Giant, MA_OWNED)
+end_define
 
 begin_define
 define|#
@@ -3011,8 +3121,7 @@ name|MPT_LOCK
 parameter_list|(
 name|mpt
 parameter_list|)
-define|\
-value|device_printf(mpt->dev, "LOCK %s:%d\n", __FILE__, __LINE__); 	\ 	KASSERT(mpt->mpt_locksetup == 0,				\ 	    ("recursive lock acquire at %s:%d", __FILE__, __LINE__));	\ 	mpt->mpt_locksetup = 1
+value|mtx_lock(&Giant)
 end_define
 
 begin_define
@@ -3022,50 +3131,7 @@ name|MPT_UNLOCK
 parameter_list|(
 name|mpt
 parameter_list|)
-define|\
-value|device_printf(mpt->dev, "UNLK %s:%d\n", __FILE__, __LINE__); 	\ 	KASSERT(mpt->mpt_locksetup == 1,				\ 	    ("release unowned lock at %s:%d", __FILE__, __LINE__));	\ 	mpt->mpt_locksetup = 0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MPT_LOCK
-parameter_list|(
-name|mpt
-parameter_list|)
-define|\
-value|KASSERT(mpt->mpt_locksetup == 0,				\ 	    ("recursive lock acquire at %s:%d", __FILE__, __LINE__));	\ 	mpt->mpt_locksetup = 1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPT_UNLOCK
-parameter_list|(
-name|mpt
-parameter_list|)
-define|\
-value|KASSERT(mpt->mpt_locksetup == 1,				\ 	    ("release unowned lock at %s:%d", __FILE__, __LINE__));	\ 	mpt->mpt_locksetup = 0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|MPT_OWNED
-parameter_list|(
-name|mpt
-parameter_list|)
-value|mpt->mpt_locksetup
+value|mtx_unlock(&Giant)
 end_define
 
 begin_define
@@ -3075,7 +3141,6 @@ name|MPTLOCK_2_CAMLOCK
 parameter_list|(
 name|mpt
 parameter_list|)
-value|MPT_UNLOCK(mpt)
 end_define
 
 begin_define
@@ -3085,7 +3150,6 @@ name|CAMLOCK_2_MPTLOCK
 parameter_list|(
 name|mpt
 parameter_list|)
-value|MPT_LOCK(mpt)
 end_define
 
 begin_function_decl
@@ -3111,6 +3175,49 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|mpt_ccb_timeout
+parameter_list|(
+name|ccb
+parameter_list|,
+name|ticks
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|do {	\ 		(ccb)->ccb_h.timeout_ch = timeout((func), (arg), (ticks)); \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mpt_ccb_untimeout
+parameter_list|(
+name|ccb
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|untimeout((func), (arg), (ccb)->ccb_h.timeout_ch)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mpt_ccb_timeout_init
+parameter_list|(
+name|ccb
+parameter_list|)
+define|\
+value|callout_handle_init(&(ccb)->ccb_h.timeout_ch)
+end_define
 
 begin_function
 specifier|static
@@ -3142,11 +3249,6 @@ block|{
 name|int
 name|r
 decl_stmt|;
-name|MPT_UNLOCK
-argument_list|(
-name|mpt
-argument_list|)
-expr_stmt|;
 name|r
 operator|=
 name|tsleep
@@ -3158,11 +3260,6 @@ argument_list|,
 name|w
 argument_list|,
 name|t
-argument_list|)
-expr_stmt|;
-name|MPT_LOCK
-argument_list|(
-name|mpt
 argument_list|)
 expr_stmt|;
 return|return
