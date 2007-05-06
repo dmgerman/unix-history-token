@@ -8045,12 +8045,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"requested_s_scale: %u   ts_recent: %u   ts_recent_age: "
-literal|"%lu\n"
-argument_list|,
-name|tp
-operator|->
-name|requested_s_scale
+literal|"ts_recent: %u   ts_recent_age: %lu\n"
 argument_list|,
 name|tp
 operator|->
