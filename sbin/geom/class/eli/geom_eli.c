@@ -5081,8 +5081,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * How '-a' option combine with a list of providers: 	 * Delete Master Keys from all attached providers: 	 * geli kill -a 	 * Delete Master Keys from all attached provider and from 	 * detached da0 and da1: 	 * geli kill -a da0 da1 	 * Delete Master Keys from (attached or detached) da0 and da1: 	 * geli kill da0 da1 	 */
-comment|/* First detached provider. */
+comment|/* 	 * How '-a' option combine with a list of providers: 	 * Delete Master Keys from all attached providers: 	 * geli kill -a 	 * Delete Master Keys from all attached providers and from 	 * detached da0 and da1: 	 * geli kill -a da0 da1 	 * Delete Master Keys from (attached or detached) da0 and da1: 	 * geli kill da0 da1 	 */
+comment|/* First detached providers. */
 for|for
 control|(
 name|i
