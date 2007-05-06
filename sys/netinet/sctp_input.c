@@ -18715,6 +18715,15 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|locked_tcb
+condition|)
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
 operator|*
 name|offset
 operator|=
@@ -18898,6 +18907,15 @@ name|abort_now
 condition|)
 block|{
 comment|/* ABORT signal from sack processing */
+if|if
+condition|(
+name|locked_tcb
+condition|)
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
 operator|*
 name|offset
 operator|=
@@ -18997,6 +19015,15 @@ argument_list|)
 condition|)
 block|{
 comment|/* Its not ours */
+if|if
+condition|(
+name|locked_tcb
+condition|)
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
 operator|*
 name|offset
 operator|=
@@ -19123,6 +19150,15 @@ operator|*
 name|offset
 operator|=
 name|length
+expr_stmt|;
+if|if
+condition|(
+name|locked_tcb
+condition|)
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -19884,6 +19920,15 @@ argument_list|)
 condition|)
 block|{
 comment|/* Its not ours */
+if|if
+condition|(
+name|locked_tcb
+condition|)
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
 operator|*
 name|offset
 operator|=
@@ -19951,6 +19996,15 @@ argument_list|)
 condition|)
 block|{
 comment|/* Its not ours */
+if|if
+condition|(
+name|locked_tcb
+condition|)
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
 operator|*
 name|offset
 operator|=
@@ -20156,6 +20210,15 @@ argument_list|)
 condition|)
 block|{
 comment|/* Its not ours */
+if|if
+condition|(
+name|locked_tcb
+condition|)
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
 operator|*
 name|offset
 operator|=
@@ -20231,6 +20294,15 @@ argument_list|)
 condition|)
 block|{
 comment|/* Its not ours */
+if|if
+condition|(
+name|locked_tcb
+condition|)
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
 operator|*
 name|offset
 operator|=
@@ -20393,6 +20465,15 @@ argument_list|)
 condition|)
 block|{
 comment|/* Its not ours */
+if|if
+condition|(
+name|locked_tcb
+condition|)
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
 operator|*
 name|offset
 operator|=
@@ -20522,6 +20603,15 @@ argument_list|)
 condition|)
 block|{
 comment|/* Its not ours */
+if|if
+condition|(
+name|locked_tcb
+condition|)
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
 operator|*
 name|offset
 operator|=
@@ -20661,6 +20751,15 @@ operator|)
 condition|)
 block|{
 comment|/* Its not ours */
+if|if
+condition|(
+name|locked_tcb
+condition|)
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
 operator|*
 name|offset
 operator|=
