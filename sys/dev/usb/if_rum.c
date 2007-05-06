@@ -6894,6 +6894,9 @@ name|m_pkthdr
 operator|.
 name|len
 operator|+
+operator|(
+name|int
+operator|)
 name|RT2573_TX_DESC_SIZE
 operator|,
 name|rate
@@ -7776,6 +7779,9 @@ name|m_pkthdr
 operator|.
 name|len
 operator|+
+operator|(
+name|int
+operator|)
 name|RT2573_TX_DESC_SIZE
 operator|,
 name|rate
