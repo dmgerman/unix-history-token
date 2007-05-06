@@ -895,7 +895,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|tcp_do_segment
 parameter_list|(
 name|struct
@@ -3884,9 +3884,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Process the segment and the data it 				 * contains.  tcp_do_segment() consumes 				 * the mbuf chain and unlocks the inpcb. 				 * XXX: The potential return value of 				 * TIME_WAIT nuked is supposed to be 				 * handled above. 				 */
-if|if
-condition|(
+comment|/* 				 * Process the segment and the data it 				 * contains.  tcp_do_segment() consumes 				 * the mbuf chain and unlocks the inpcb. 				 */
 name|tcp_do_segment
 argument_list|(
 name|m
@@ -3901,11 +3899,13 @@ name|drop_hdrlen
 argument_list|,
 name|tlen
 argument_list|)
-condition|)
-goto|goto
-name|findpcb
-goto|;
-comment|/* TIME_WAIT nuked */
+expr_stmt|;
+name|INP_INFO_UNLOCK_ASSERT
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -4229,8 +4229,6 @@ comment|/* 		 * Entry added to syncache and mbuf consumed. 		 * Everything unloc
 return|return;
 block|}
 comment|/* 	 * Segment belongs to a connection in SYN_SENT, ESTABLISHED or late 	 * state.  tcp_do_segment() always consumes the mbuf chain, unlocks the 	 * inpcb, and unlocks the pcbinfo. 	 */
-if|if
-condition|(
 name|tcp_do_segment
 argument_list|(
 name|m
@@ -4245,11 +4243,13 @@ name|drop_hdrlen
 argument_list|,
 name|tlen
 argument_list|)
-condition|)
-goto|goto
-name|findpcb
-goto|;
-comment|/* XXX: TIME_WAIT was nuked. */
+expr_stmt|;
+name|INP_INFO_UNLOCK_ASSERT
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 return|return;
 name|dropwithreset
 label|:
@@ -4327,7 +4327,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|tcp_do_segment
 parameter_list|(
 name|struct
@@ -4437,6 +4437,21 @@ name|TCPS_LISTEN
 argument_list|,
 operator|(
 literal|"%s: TCPS_LISTEN"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_state
+operator|!=
+name|TCPS_TIME_WAIT
+argument_list|,
+operator|(
+literal|"%s: TCPS_TIME_WAIT"
 operator|,
 name|__func__
 operator|)
@@ -6240,24 +6255,6 @@ case|:
 case|case
 name|TCPS_CLOSING
 case|:
-case|case
-name|TCPS_TIME_WAIT
-case|:
-name|KASSERT
-argument_list|(
-name|tp
-operator|->
-name|t_state
-operator|!=
-name|TCPS_TIME_WAIT
-argument_list|,
-operator|(
-literal|"%s: timewait"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 break|break;
 comment|/* continue normal processing */
 block|}
@@ -6467,25 +6464,6 @@ operator|=
 name|tcp_close
 argument_list|(
 name|tp
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|TCPS_TIME_WAIT
-case|:
-name|KASSERT
-argument_list|(
-name|tp
-operator|->
-name|t_state
-operator|!=
-name|TCPS_TIME_WAIT
-argument_list|,
-operator|(
-literal|"%s: timewait"
-operator|,
-name|__func__
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6872,72 +6850,6 @@ name|tcps_rcvbyteafterwin
 operator|+=
 name|tlen
 expr_stmt|;
-comment|/* 			 * If a new connection request is received 			 * while in TIME_WAIT, drop the old connection 			 * and start over if the sequence numbers 			 * are above the previous ones. 			 */
-name|KASSERT
-argument_list|(
-name|tp
-operator|->
-name|t_state
-operator|!=
-name|TCPS_TIME_WAIT
-argument_list|,
-operator|(
-literal|"%s: timewait"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|thflags
-operator|&
-name|TH_SYN
-operator|&&
-name|tp
-operator|->
-name|t_state
-operator|==
-name|TCPS_TIME_WAIT
-operator|&&
-name|SEQ_GT
-argument_list|(
-name|th
-operator|->
-name|th_seq
-argument_list|,
-name|tp
-operator|->
-name|rcv_nxt
-argument_list|)
-condition|)
-block|{
-name|KASSERT
-argument_list|(
-name|headlocked
-argument_list|,
-operator|(
-literal|"%s: trimthenstep6: "
-literal|"tcp_close.4: head not locked"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
-name|tp
-operator|=
-name|tcp_close
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-comment|/* XXX: Shouldn't be possible. */
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 comment|/* 			 * If window is closed can only take segments at 			 * window edge, and have to drop data and PUSH from 			 * incoming segments.  Continue processing, but 			 * remember to ack.  Otherwise, drop segment 			 * and ack. 			 */
 if|if
 condition|(
@@ -7330,24 +7242,6 @@ case|:
 case|case
 name|TCPS_LAST_ACK
 case|:
-case|case
-name|TCPS_TIME_WAIT
-case|:
-name|KASSERT
-argument_list|(
-name|tp
-operator|->
-name|t_state
-operator|!=
-name|TCPS_TIME_WAIT
-argument_list|,
-operator|(
-literal|"%s: timewait"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|SEQ_GT
@@ -8936,11 +8830,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 break|break;
 comment|/* 		 * In LAST_ACK, we may still be waiting for data to drain 		 * and/or to be acked, as well as for the ack of our FIN. 		 * If our FIN is now acknowledged, delete the TCB, 		 * enter the closed state and return. 		 */
@@ -8976,39 +8866,6 @@ name|drop
 goto|;
 block|}
 break|break;
-comment|/* 		 * In TIME_WAIT state the only thing that should arrive 		 * is a retransmission of the remote FIN.  Acknowledge 		 * it and restart the finack timer. 		 */
-case|case
-name|TCPS_TIME_WAIT
-case|:
-name|KASSERT
-argument_list|(
-name|tp
-operator|->
-name|t_state
-operator|!=
-name|TCPS_TIME_WAIT
-argument_list|,
-operator|(
-literal|"%s: timewait"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
-name|tcp_timer_activate
-argument_list|(
-name|tp
-argument_list|,
-name|TT_2MSL
-argument_list|,
-literal|2
-operator|*
-name|tcp_msl
-argument_list|)
-expr_stmt|;
-goto|goto
-name|dropafterack
-goto|;
 block|}
 block|}
 name|step6
@@ -9762,42 +9619,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* 		 * In TIME_WAIT state restart the 2 MSL time_wait timer. 		 */
-case|case
-name|TCPS_TIME_WAIT
-case|:
-name|KASSERT
-argument_list|(
-name|tp
-operator|->
-name|t_state
-operator|!=
-name|TCPS_TIME_WAIT
-argument_list|,
-operator|(
-literal|"%s: timewait"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
-name|tcp_timer_activate
-argument_list|(
-name|tp
-argument_list|,
-name|TT_2MSL
-argument_list|,
-literal|2
-operator|*
-name|tcp_msl
-argument_list|)
-expr_stmt|;
-break|break;
+return|return;
 block|}
 block|}
 name|INP_INFO_WUNLOCK
@@ -9925,11 +9747,7 @@ operator|->
 name|t_inpcb
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|dropafterack
 label|:
 name|KASSERT
@@ -10067,11 +9885,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|dropwithreset
 label|:
 name|KASSERT
@@ -10121,11 +9935,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|drop
 label|:
 comment|/* 	 * Drop space held by incoming segment and return. 	 */
@@ -10200,11 +10010,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
