@@ -3454,29 +3454,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-operator|(
-name|pde
-operator|&
-name|PG_FRAME
-operator|&
-name|PDRMASK
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"pmap_extract: bad pde"
-operator|)
-argument_list|)
-expr_stmt|;
 name|rtval
 operator|=
 operator|(
 name|pde
 operator|&
-name|PG_FRAME
+name|PG_PS_FRAME
 operator|)
 operator||
 operator|(
@@ -3622,23 +3605,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-operator|(
-name|pde
-operator|&
-name|PG_FRAME
-operator|&
-name|PDRMASK
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"pmap_extract_and_hold: bad pde"
-operator|)
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|PHYS_TO_VM_PAGE
@@ -3646,7 +3612,7 @@ argument_list|(
 operator|(
 name|pde
 operator|&
-name|PG_FRAME
+name|PG_PS_FRAME
 operator|)
 operator||
 operator|(
@@ -3790,22 +3756,13 @@ operator|(
 operator|*
 name|pde
 operator|&
-operator|~
-operator|(
-name|NBPDR
-operator|-
-literal|1
-operator|)
+name|PG_PS_FRAME
 operator|)
 operator||
 operator|(
 name|va
 operator|&
-operator|(
-name|NBPDR
-operator|-
-literal|1
-operator|)
+name|PDRMASK
 operator|)
 expr_stmt|;
 block|}
@@ -7090,7 +7047,7 @@ name|PG_RW
 operator|)
 argument_list|,
 operator|(
-literal|"pmap_remove_pte: modified page not writable: va: 0x%lx, pte: 0x%lx"
+literal|"pmap_remove_pte: modified page not writable: va: %#lx, pte: %#lx"
 operator|,
 name|va
 operator|,
@@ -7806,7 +7763,7 @@ name|PG_RW
 operator|)
 argument_list|,
 operator|(
-literal|"pmap_remove_all: modified page not writable: va: 0x%lx, pte: 0x%lx"
+literal|"pmap_remove_all: modified page not writable: va: %#lx, pte: %#lx"
 operator|,
 name|pv
 operator|->
@@ -9035,7 +8992,7 @@ name|PG_RW
 operator|)
 argument_list|,
 operator|(
-literal|"pmap_enter: modified page not writable: va: 0x%lx, pte: 0x%lx"
+literal|"pmap_enter: modified page not writable: va: %#lx, pte: %#lx"
 operator|,
 name|va
 operator|,
