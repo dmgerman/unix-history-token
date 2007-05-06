@@ -3252,10 +3252,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * FreeBSD: Should be called from ->vop_reclaim().  */
-end_comment
-
 begin_function
 name|void
 name|zfs_znode_free
@@ -4558,6 +4554,14 @@ argument_list|(
 name|error
 operator|==
 literal|0
+argument_list|)
+expr_stmt|;
+name|mutex_destroy
+argument_list|(
+operator|&
+name|zfsvfs
+operator|.
+name|z_znodes_lock
 argument_list|)
 expr_stmt|;
 name|kmem_cache_free

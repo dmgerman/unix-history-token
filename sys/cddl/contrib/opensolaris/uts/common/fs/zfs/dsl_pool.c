@@ -567,6 +567,14 @@ operator|->
 name|dp_dirty_dirs
 argument_list|)
 expr_stmt|;
+name|txg_list_destroy
+argument_list|(
+operator|&
+name|dp
+operator|->
+name|dp_sync_tasks
+argument_list|)
+expr_stmt|;
 name|list_destroy
 argument_list|(
 operator|&

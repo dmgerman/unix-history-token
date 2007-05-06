@@ -1439,19 +1439,6 @@ argument_list|,
 name|KM_SLEEP
 argument_list|)
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|dnode_cons
-argument_list|(
-name|dn
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|dn
 operator|->
 name|dn_objset
