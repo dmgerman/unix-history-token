@@ -3596,6 +3596,12 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Flush write cache so we don't overwrite data N times in cache 		 * and only once on disk. 		 */
+name|g_io_flush
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
 block|}
 name|bzero
 argument_list|(
