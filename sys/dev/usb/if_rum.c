@@ -6886,7 +6886,7 @@ argument_list|(
 literal|10
 argument_list|,
 operator|(
-literal|"sending mgt frame len=%u rate=%u xfer len=%u\n"
+literal|"sending mgt frame len=%d rate=%d xfer len=%d\n"
 operator|,
 name|m0
 operator|->
@@ -7768,7 +7768,7 @@ argument_list|(
 literal|10
 argument_list|,
 operator|(
-literal|"sending frame len=%u rate=%u xfer len=%u\n"
+literal|"sending frame len=%d rate=%d xfer len=%d\n"
 operator|,
 name|m0
 operator|->
