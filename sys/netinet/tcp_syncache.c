@@ -3134,20 +3134,12 @@ name|sc_flags
 operator|&
 name|SCF_SACK
 condition|)
-block|{
-name|tp
-operator|->
-name|sack_enable
-operator|=
-literal|1
-expr_stmt|;
 name|tp
 operator|->
 name|t_flags
 operator||=
 name|TF_SACK_PERMIT
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Set up MSS and get cached values from tcp_hostcache. 	 * This might overwrite some of the defaults we just set. 	 */
 name|tcp_mss

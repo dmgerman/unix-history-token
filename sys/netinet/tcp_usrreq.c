@@ -5399,7 +5399,9 @@ if|if
 condition|(
 name|tp
 operator|->
-name|sack_enable
+name|t_flags
+operator|&
+name|TF_SACK_PERMIT
 condition|)
 name|ti
 operator|->
@@ -8112,11 +8114,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"sack_enable: %d   snd_numholes: %d  snd_holes first: %p\n"
-argument_list|,
-name|tp
-operator|->
-name|sack_enable
+literal|"snd_numholes: %d  snd_holes first: %p\n"
 argument_list|,
 name|tp
 operator|->

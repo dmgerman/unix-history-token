@@ -835,9 +835,13 @@ label|:
 comment|/* 	 * If we've recently taken a timeout, snd_max will be greater than 	 * snd_nxt.  There may be SACK information that allows us to avoid 	 * resending already delivered data.  Adjust snd_nxt accordingly. 	 */
 if|if
 condition|(
+operator|(
 name|tp
 operator|->
-name|sack_enable
+name|t_flags
+operator|&
+name|TF_SACK_PERMIT
+operator|)
 operator|&&
 name|SEQ_LT
 argument_list|(
@@ -922,9 +926,13 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|tp
 operator|->
-name|sack_enable
+name|t_flags
+operator|&
+name|TF_SACK_PERMIT
+operator|)
 operator|&&
 name|IN_FASTRECOVERY
 argument_list|(
@@ -2035,9 +2043,13 @@ goto|;
 comment|/* 	 * In SACK, it is possible for tcp_output to fail to send a segment 	 * after the retransmission timer has been turned off.  Make sure 	 * that the retransmission timer is set. 	 */
 if|if
 condition|(
+operator|(
 name|tp
 operator|->
-name|sack_enable
+name|t_flags
+operator|&
+name|TF_SACK_PERMIT
+operator|)
 operator|&&
 name|SEQ_GT
 argument_list|(
@@ -2356,7 +2368,9 @@ if|if
 condition|(
 name|tp
 operator|->
-name|sack_enable
+name|t_flags
+operator|&
+name|TF_SACK_PERMIT
 condition|)
 block|{
 if|if

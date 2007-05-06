@@ -543,10 +543,6 @@ decl_stmt|;
 comment|/* segments limited transmitted */
 comment|/* SACK related state */
 name|int
-name|sack_enable
-decl_stmt|;
-comment|/* enable SACK for this connection */
-name|int
 name|snd_numholes
 decl_stmt|;
 comment|/* number of holes seen by sender */
