@@ -22,7 +22,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/disk.h>
 end_include
 
 begin_include
@@ -33,7 +39,16 @@ end_include
 
 begin_typedef
 typedef|typedef
-name|int
+struct|struct
+name|ddi_devid
+block|{
+name|char
+name|devid
+index|[
+name|DISK_IDENT_SIZE
+index|]
+decl_stmt|;
+block|}
 name|ddi_devid_t
 typedef|;
 end_typedef
@@ -44,8 +59,10 @@ struct|struct
 name|devid_nmlist
 block|{
 name|char
-modifier|*
 name|devname
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 name|dev_t
 name|dev
@@ -55,9 +72,7 @@ name|devid_nmlist_t
 typedef|;
 end_typedef
 
-begin_function
-specifier|static
-specifier|inline
+begin_function_decl
 name|int
 name|devid_str_decode
 parameter_list|(
@@ -74,16 +89,10 @@ modifier|*
 modifier|*
 name|retminor_name
 parameter_list|)
-block|{
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
-specifier|static
-specifier|inline
+begin_function_decl
 name|int
 name|devid_deviceid_to_nmlist
 parameter_list|(
@@ -103,16 +112,10 @@ modifier|*
 modifier|*
 name|retlist
 parameter_list|)
-block|{
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
-specifier|static
-specifier|inline
+begin_function_decl
 name|void
 name|devid_str_free
 parameter_list|(
@@ -120,32 +123,20 @@ name|char
 modifier|*
 name|str
 parameter_list|)
-block|{
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
-specifier|static
-specifier|inline
+begin_function_decl
 name|void
 name|devid_free
 parameter_list|(
 name|ddi_devid_t
 name|devid
 parameter_list|)
-block|{
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
-specifier|static
-specifier|inline
+begin_function_decl
 name|void
 name|devid_free_nmlist
 parameter_list|(
@@ -153,16 +144,10 @@ name|devid_nmlist_t
 modifier|*
 name|list
 parameter_list|)
-block|{
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
-specifier|static
-specifier|inline
+begin_function_decl
 name|int
 name|devid_get
 parameter_list|(
@@ -173,17 +158,10 @@ name|ddi_devid_t
 modifier|*
 name|retdevid
 parameter_list|)
-block|{
-return|return
-operator|-
-literal|1
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
-specifier|static
-specifier|inline
+begin_function_decl
 name|int
 name|devid_get_minor_name
 parameter_list|(
@@ -195,16 +173,10 @@ modifier|*
 modifier|*
 name|retminor_name
 parameter_list|)
-block|{
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
-specifier|static
-specifier|inline
+begin_function_decl
 name|char
 modifier|*
 name|devid_str_encode
@@ -216,12 +188,8 @@ name|char
 modifier|*
 name|minor_name
 parameter_list|)
-block|{
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
