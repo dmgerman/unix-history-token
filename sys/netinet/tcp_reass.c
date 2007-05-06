@@ -5372,14 +5372,6 @@ name|tp
 operator|->
 name|snd_una
 operator|&&
-name|LIST_EMPTY
-argument_list|(
-operator|&
-name|tp
-operator|->
-name|t_segq
-argument_list|)
-operator|&&
 name|tlen
 operator|<=
 name|sbspace
@@ -5894,30 +5886,22 @@ goto|;
 block|}
 if|if
 condition|(
-name|thflags
-operator|&
-name|TH_RST
-condition|)
-block|{
-if|if
-condition|(
-name|thflags
-operator|&
-name|TH_ACK
-condition|)
-block|{
-name|KASSERT
-argument_list|(
-name|headlocked
-argument_list|,
 operator|(
-literal|"%s: after_listen: "
-literal|"tcp_drop.2: head not locked"
-operator|,
-name|__func__
+name|thflags
+operator|&
+operator|(
+name|TH_ACK
+operator||
+name|TH_RST
 operator|)
-argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+operator|(
+name|TH_ACK
+operator||
+name|TH_RST
+operator|)
+condition|)
 name|tp
 operator|=
 name|tcp_drop
@@ -5927,20 +5911,23 @@ argument_list|,
 name|ECONNREFUSED
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|thflags
+operator|&
+name|TH_RST
+condition|)
 goto|goto
 name|drop
 goto|;
-block|}
 if|if
 condition|(
+operator|!
 operator|(
 name|thflags
 operator|&
 name|TH_SYN
 operator|)
-operator|==
-literal|0
 condition|)
 goto|goto
 name|drop
@@ -10023,7 +10010,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Issue RST on TCP segment.  The mbuf must still include the original  * packet header.  */
+comment|/*  * Issue RST and make ACK acceptable to originator of segment.  * The mbuf must still include the original packet header.  * tp may be NULL.  */
 end_comment
 
 begin_function
@@ -10068,7 +10055,7 @@ name|ip6
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Generate a RST, dropping incoming segment. 	 * Make ACK acceptable to originator of segment. 	 * Don't bother to respond if destination was broadcast/multicast. 	 * tp may be NULL. 	 */
+comment|/* Don't bother if destination was broadcast/multicast. */
 if|if
 condition|(
 operator|(
