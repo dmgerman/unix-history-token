@@ -399,7 +399,7 @@ value|SOUND_MODVER
 end_define
 
 begin_comment
-comment|/* PROPOSAL: each unit needs: status, mixer, dsp, dspW, audio, sequencer, midi-in, seq2, sndproc = 9 devices dspW and audio are deprecated. dsp needs min 64 channels, will give it 256  minor = (unit<< 20) + (dev<< 16) + channel currently minor = (channel<< 16) + (unit<< 4) + dev  nomenclature: 	/dev/pcmX/dsp.(0..255) 	/dev/pcmX/dspW 	/dev/pcmX/audio 	/dev/pcmX/status 	/dev/pcmX/mixer 	[etc.] */
+comment|/*  * We're abusing the fact that MAXMINOR still have enough room  * for our bit twiddling and nobody ever need 2048 unique soundcards,  * 32 unique device types and 256 unique cloneable devices for the  * next 100 years... or until the NextPCM.  *  * MAXMINOR 0xffff00ff  *             |    |  *             |    +--- PCMMAXCHAN  *             |  *             +-------- ((PCMMAXUNIT<< 5) | PCMMAXDEV)<< 16  */
 end_comment
 
 begin_define
@@ -413,14 +413,14 @@ begin_define
 define|#
 directive|define
 name|PCMMAXDEV
-value|0x0f
+value|0x1f
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCMMAXUNIT
-value|0x0f
+value|0x7ff
 end_define
 
 begin_define
@@ -430,7 +430,7 @@ name|PCMMINOR
 parameter_list|(
 name|x
 parameter_list|)
-value|(minor(x))
+value|minor(x)
 end_define
 
 begin_define
@@ -440,7 +440,7 @@ name|PCMCHAN
 parameter_list|(
 name|x
 parameter_list|)
-value|((PCMMINOR(x)>> 16)& PCMMAXCHAN)
+value|(PCMMINOR(x)& PCMMAXCHAN)
 end_define
 
 begin_define
@@ -450,7 +450,7 @@ name|PCMUNIT
 parameter_list|(
 name|x
 parameter_list|)
-value|((PCMMINOR(x)>> 4)& PCMMAXUNIT)
+value|((PCMMINOR(x)>> 21)& PCMMAXUNIT)
 end_define
 
 begin_define
@@ -460,7 +460,7 @@ name|PCMDEV
 parameter_list|(
 name|x
 parameter_list|)
-value|(PCMMINOR(x)& PCMMAXDEV)
+value|((PCMMINOR(x)>> 16)& PCMMAXDEV)
 end_define
 
 begin_define
@@ -474,7 +474,7 @@ name|d
 parameter_list|,
 name|c
 parameter_list|)
-value|((((c)& PCMMAXCHAN)<< 16) | \ 				(((u)& PCMMAXUNIT)<< 4) | ((d)& PCMMAXDEV))
+value|((((u)& PCMMAXUNIT)<< 21) | 	\ 				(((d)& PCMMAXDEV)<< 16) | ((c)& PCMMAXCHAN))
 end_define
 
 begin_define
