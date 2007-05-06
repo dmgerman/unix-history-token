@@ -974,6 +974,12 @@ literal|"IBM JFS"
 block|}
 block|,
 block|{
+literal|0xAF
+block|,
+literal|"HFS+"
+block|}
+block|,
+block|{
 literal|0xB7
 block|,
 literal|"BSDI BSD/386 file system"
