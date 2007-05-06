@@ -2133,7 +2133,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* tcp_close() */
+comment|/* tcp_close */
 block|}
 else|else
 block|{
@@ -2170,7 +2170,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* tcp_close( */
+comment|/* tcp_close */
 block|}
 ifdef|#
 directive|ifdef
