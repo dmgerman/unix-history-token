@@ -472,17 +472,9 @@ argument_list|)
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|hand
-expr_stmt|;
-name|xfer
-operator|->
-name|retry_req
-operator|=
-name|fw_asybusy
 expr_stmt|;
 name|xfer
 operator|->

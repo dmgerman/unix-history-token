@@ -1017,8 +1017,6 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|==
 name|NULL
@@ -1026,7 +1024,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"act.hand == NULL\n"
+literal|"hand == NULL\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1327,12 +1325,6 @@ name|q
 operator|=
 name|xferq
 expr_stmt|;
-name|xfer
-operator|->
-name|retry_req
-operator|=
-name|fw_asybusy
-expr_stmt|;
 name|fw_asystart
 argument_list|(
 name|xfer
@@ -1429,55 +1421,11 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-if|if
-condition|(
-name|xfer
-operator|->
-name|retry
-operator|++
-operator|>=
-name|fc
-operator|->
-name|max_asyretry
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|fc
-operator|->
-name|bdev
-argument_list|,
-literal|"max_asyretry exceeded\n"
-argument_list|)
-expr_stmt|;
-name|xfer
-operator|->
-name|resp
-operator|=
-name|EBUSY
-expr_stmt|;
-name|xfer
-operator|->
-name|state
-operator|=
-name|FWXF_BUSY
-expr_stmt|;
-name|xfer
-operator|->
-name|act
-operator|.
-name|hand
-argument_list|(
-name|xfer
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 if|#
 directive|if
 literal|0
 comment|/* XXX allow bus explore packets only after bus rest */
-block|if (fc->status< FWBUSEXPLORE) { 		xfer->resp = EAGAIN; 		xfer->state = FWXF_BUSY; 		if (xfer->act.hand != NULL) 			xfer->act.hand(xfer); 		return; 	}
+block|if (fc->status< FWBUSEXPLORE) { 		xfer->resp = EAGAIN; 		xfer->state = FWXF_BUSY; 		if (xfer->hand != NULL) 			xfer->hand(xfer); 		return; 	}
 endif|#
 directive|endif
 name|microtime
@@ -2003,16 +1951,6 @@ name|sc
 operator|->
 name|fc
 operator|->
-name|retry_probe_callout
-argument_list|)
-expr_stmt|;
-name|CALLOUT_INIT
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|fc
-operator|->
 name|busprobe_callout
 argument_list|)
 expr_stmt|;
@@ -2302,16 +2240,6 @@ operator|->
 name|fc
 operator|->
 name|bmr_callout
-argument_list|)
-expr_stmt|;
-name|callout_stop
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|fc
-operator|->
-name|retry_probe_callout
 argument_list|)
 expr_stmt|;
 name|callout_stop
@@ -3675,12 +3603,6 @@ endif|#
 directive|endif
 name|fc
 operator|->
-name|max_asyretry
-operator|=
-name|FW_MAXASYRTY
-expr_stmt|;
-name|fc
-operator|->
 name|arq
 operator|->
 name|queued
@@ -4298,8 +4220,6 @@ return|return;
 block|}
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fw_vmaccess
@@ -5243,8 +5163,6 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|==
 name|NULL
@@ -5252,7 +5170,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"act.hand == NULL\n"
+literal|"hand == NULL\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5272,8 +5190,6 @@ argument_list|)
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 argument_list|(
 name|xfer
@@ -5397,12 +5313,6 @@ expr_stmt|;
 name|xfer
 operator|->
 name|resp
-operator|=
-literal|0
-expr_stmt|;
-name|xfer
-operator|->
-name|retry
 operator|=
 literal|0
 expr_stmt|;
@@ -5632,14 +5542,6 @@ name|fc
 expr_stmt|;
 name|xfer
 operator|->
-name|retry_req
-operator|=
-name|fw_asybusy
-expr_stmt|;
-name|xfer
-operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fw_asy_callback_free
@@ -6699,12 +6601,6 @@ name|status
 operator|=
 name|FWBUSEXPLORE
 expr_stmt|;
-name|fc
-operator|->
-name|retry_count
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Invalidate all devices, just after bus reset. */
 name|STAILQ_FOREACH
 argument_list|(
@@ -7557,8 +7453,6 @@ name|addr
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fw_bus_explore_callback
@@ -7838,8 +7732,6 @@ name|addr_lo
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|hand
@@ -7974,7 +7866,7 @@ name|fc
 operator|->
 name|bdev
 argument_list|,
-literal|"bus_explore node=%d addr=0x%x resp=%d retry=%d\n"
+literal|"bus_explore node=%d addr=0x%x resp=%d\n"
 argument_list|,
 name|fc
 operator|->
@@ -7987,30 +7879,8 @@ argument_list|,
 name|xfer
 operator|->
 name|resp
-argument_list|,
-name|xfer
-operator|->
-name|retry
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|xfer
-operator|->
-name|retry
-operator|<
-name|fc
-operator|->
-name|max_asyretry
-condition|)
-block|{
-name|fw_asystart
-argument_list|(
-name|xfer
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 goto|goto
 name|errnode
 goto|;
@@ -8872,11 +8742,6 @@ expr_stmt|;
 return|return;
 name|errnode
 label|:
-name|fc
-operator|->
-name|retry_count
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|fc
@@ -9215,35 +9080,6 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fc
-operator|->
-name|retry_count
-operator|>
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|fc
-operator|->
-name|bdev
-argument_list|,
-literal|"bus_explore failed for %d nodes\n"
-argument_list|,
-name|fc
-operator|->
-name|retry_count
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|callout_reset(&fc->retry_probe_callout, hz*2, 					(void *)fc->ibr, (void *)fc);
-endif|#
-directive|endif
-block|}
 return|return;
 block|}
 end_function
@@ -10520,13 +10356,11 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			rb->xfer->act.hand = fw_asy_callback; */
+comment|/* 			rb->xfer->hand = fw_asy_callback; */
 name|rb
 operator|->
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fw_xfer_free
@@ -10651,8 +10485,6 @@ name|rb
 operator|->
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 argument_list|(
 name|rb
@@ -11260,8 +11092,6 @@ argument_list|)
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fw_try_bmr_callback
@@ -11924,17 +11754,9 @@ argument_list|)
 expr_stmt|;
 name|xfer
 operator|->
-name|act
-operator|.
 name|hand
 operator|=
 name|fw_xfer_free
-expr_stmt|;
-name|xfer
-operator|->
-name|retry_req
-operator|=
-name|fw_asybusy
 expr_stmt|;
 name|sfp
 operator|->
