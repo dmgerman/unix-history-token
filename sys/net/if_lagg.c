@@ -1768,12 +1768,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Remove any multicast groups that we may have joined. */
-name|lagg_ether_purgemulti
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|LAGG_UNLOCK
 argument_list|(
 name|sc
