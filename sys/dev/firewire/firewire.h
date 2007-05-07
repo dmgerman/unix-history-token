@@ -1552,7 +1552,7 @@ name|struct
 name|fw_eui64
 name|eui
 decl_stmt|;
-name|int
+name|uint32_t
 name|len
 decl_stmt|;
 name|void
