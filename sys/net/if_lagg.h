@@ -553,19 +553,10 @@ begin_struct
 struct|struct
 name|lagg_mc
 block|{
-union|union
-block|{
 name|struct
-name|ether_multi
+name|ifmultiaddr
 modifier|*
-name|mcu_enm
-decl_stmt|;
-block|}
-name|mc_u
-union|;
-name|struct
-name|sockaddr_storage
-name|mc_addr
+name|mc_ifma
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
@@ -629,15 +620,6 @@ argument|lagg_softc
 argument_list|)
 name|sc_entries
 expr_stmt|;
-name|SLIST_HEAD
-argument_list|(
-argument|__mclhd
-argument_list|,
-argument|lagg_mc
-argument_list|)
-name|sc_mc_head
-expr_stmt|;
-comment|/* multicast addresses */
 comment|/* lagg protocol callbacks */
 name|int
 function_decl|(
@@ -803,6 +785,15 @@ name|caddr_t
 name|lp_psc
 decl_stmt|;
 comment|/* protocol data */
+name|SLIST_HEAD
+argument_list|(
+argument|__mclhd
+argument_list|,
+argument|lagg_mc
+argument_list|)
+name|lp_mc_head
+expr_stmt|;
+comment|/* multicast addresses */
 comment|/* Redirected callbacks */
 name|int
 function_decl|(

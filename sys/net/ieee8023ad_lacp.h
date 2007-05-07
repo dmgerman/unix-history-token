@@ -527,6 +527,11 @@ name|LACP_NTIMER
 index|]
 decl_stmt|;
 name|struct
+name|ifmultiaddr
+modifier|*
+name|lp_ifma
+decl_stmt|;
+name|struct
 name|lacp_aggregator
 modifier|*
 name|lp_aggregator
