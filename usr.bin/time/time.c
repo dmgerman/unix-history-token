@@ -142,6 +142,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -230,7 +236,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|timeval
-name|before
+name|before_tv
 decl_stmt|;
 end_decl_stmt
 
@@ -472,7 +478,7 @@ block|}
 name|gettimeofday
 argument_list|(
 operator|&
-name|before
+name|before_tv
 argument_list|,
 operator|(
 expr|struct
@@ -636,7 +642,7 @@ argument_list|(
 name|out
 argument_list|,
 operator|&
-name|before
+name|before_tv
 argument_list|,
 operator|&
 name|after
@@ -1284,8 +1290,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"real %ld%c%02ld\n"
+literal|"real %jd%c%02ld\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|after
 operator|->
 name|tv_sec
@@ -1303,8 +1312,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"user %ld%c%02ld\n"
+literal|"user %jd%c%02ld\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ru
 operator|->
 name|ru_utime
@@ -1326,8 +1338,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"sys %ld%c%02ld\n"
+literal|"sys %jd%c%02ld\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ru
 operator|->
 name|ru_stime
@@ -1433,8 +1448,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"%9ld%c%02ld real "
+literal|"%9jd%c%02ld real "
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|after
 operator|->
 name|tv_sec
@@ -1452,8 +1470,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"%9ld%c%02ld user "
+literal|"%9jd%c%02ld user "
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ru
 operator|->
 name|ru_utime
@@ -1475,8 +1496,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"%9ld%c%02ld sys\n"
+literal|"%9jd%c%02ld sys\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ru
 operator|->
 name|ru_stime
@@ -1542,7 +1566,7 @@ argument_list|(
 name|stdout
 argument_list|,
 operator|&
-name|before
+name|before_tv
 argument_list|,
 operator|&
 name|after
