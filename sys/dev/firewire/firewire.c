@@ -2055,6 +2055,13 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* bus_reset */
+name|fw_busreset
+argument_list|(
+name|fc
+argument_list|,
+name|FWBUSNOTREADY
+argument_list|)
+expr_stmt|;
 name|fc
 operator|->
 name|ibr
@@ -3369,6 +3376,9 @@ name|struct
 name|firewire_comm
 modifier|*
 name|fc
+parameter_list|,
+name|uint32_t
+name|new_status
 parameter_list|)
 block|{
 name|struct
@@ -3420,7 +3430,7 @@ name|fc
 operator|->
 name|status
 operator|=
-name|FWBUSRESET
+name|new_status
 expr_stmt|;
 name|fw_reset_csr
 argument_list|(

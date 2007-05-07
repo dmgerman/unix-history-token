@@ -11191,6 +11191,8 @@ directive|endif
 name|fw_busreset
 argument_list|(
 name|fc
+argument_list|,
+name|FWBUSRESET
 argument_list|)
 expr_stmt|;
 name|OWRITE
