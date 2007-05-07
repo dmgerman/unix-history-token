@@ -568,6 +568,35 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* List of interfaces to have the MAC address modified */
+end_comment
+
+begin_struct
+struct|struct
+name|lagg_llq
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|llq_ifp
+decl_stmt|;
+name|uint8_t
+name|llq_lladdr
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+name|SLIST_ENTRY
+argument_list|(
+argument|lagg_llq
+argument_list|)
+name|llq_entries
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|lagg_softc
@@ -620,6 +649,19 @@ argument|lagg_softc
 argument_list|)
 name|sc_entries
 expr_stmt|;
+name|struct
+name|task
+name|sc_lladdr_task
+decl_stmt|;
+name|SLIST_HEAD
+argument_list|(
+argument|__llqhd
+argument_list|,
+argument|lagg_llq
+argument_list|)
+name|sc_llq_head
+expr_stmt|;
+comment|/* interfaces to program 							   the lladdr on */
 comment|/* lagg protocol callbacks */
 name|int
 function_decl|(
