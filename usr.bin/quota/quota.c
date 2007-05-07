@@ -180,6 +180,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -258,10 +264,6 @@ name|timeprt
 parameter_list|(
 name|time_t
 name|seconds
-parameter_list|,
-name|int
-modifier|*
-name|needfree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1295,11 +1297,6 @@ modifier|*
 name|igrace
 decl_stmt|;
 name|int
-name|bfree
-decl_stmt|,
-name|ifree
-decl_stmt|;
-name|int
 name|lines
 init|=
 literal|0
@@ -1796,10 +1793,10 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|" %7lu%c %6lu %7lu"
+literal|" %7ju%c %6ju %7ju"
 argument_list|,
 call|(
-name|u_long
+name|uintmax_t
 call|)
 argument_list|(
 name|dbtob
@@ -1817,11 +1814,7 @@ argument_list|,
 operator|(
 name|msgb
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 condition|?
 literal|' '
@@ -1829,7 +1822,7 @@ else|:
 literal|'*'
 argument_list|,
 call|(
-name|u_long
+name|uintmax_t
 call|)
 argument_list|(
 name|dbtob
@@ -1845,7 +1838,7 @@ literal|1024
 argument_list|)
 argument_list|,
 call|(
-name|u_long
+name|uintmax_t
 call|)
 argument_list|(
 name|dbtob
@@ -1877,9 +1870,6 @@ operator|->
 name|dqblk
 operator|.
 name|dqb_btime
-argument_list|,
-operator|&
-name|bfree
 argument_list|)
 expr_stmt|;
 if|if
@@ -1897,23 +1887,16 @@ operator|->
 name|dqblk
 operator|.
 name|dqb_itime
-argument_list|,
-operator|&
-name|ifree
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %7s %7lu%c %6lu %7lu %7s\n"
+literal|" %7s %7ju%c %6ju %7ju %7s\n"
 argument_list|,
 operator|(
 name|msgb
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 condition|?
 literal|""
@@ -1921,7 +1904,7 @@ else|:
 name|bgrace
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|qup
 operator|->
@@ -1932,11 +1915,7 @@ argument_list|,
 operator|(
 name|msgi
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 condition|?
 literal|' '
@@ -1944,7 +1923,7 @@ else|:
 literal|'*'
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|qup
 operator|->
@@ -1953,7 +1932,7 @@ operator|.
 name|dqb_isoftlimit
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|qup
 operator|->
@@ -1964,11 +1943,7 @@ argument_list|,
 operator|(
 name|msgi
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 condition|?
 literal|""
@@ -1981,8 +1956,6 @@ condition|(
 name|msgb
 operator|!=
 name|NULL
-operator|&&
-name|bfree
 condition|)
 name|free
 argument_list|(
@@ -1994,8 +1967,6 @@ condition|(
 name|msgi
 operator|!=
 name|NULL
-operator|&&
-name|ifree
 condition|)
 name|free
 argument_list|(
@@ -2080,8 +2051,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"block hard limit:     %lu\n"
+literal|"block hard limit:     %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|qup
 operator|->
 name|dqblk
@@ -2091,8 +2065,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"block soft limit:     %lu\n"
+literal|"block soft limit:     %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|qup
 operator|->
 name|dqblk
@@ -2102,8 +2079,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"current block count:  %lu\n"
+literal|"current block count:  %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|qup
 operator|->
 name|dqblk
@@ -2113,8 +2093,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"i-node hard limit:    %lu\n"
+literal|"i-node hard limit:    %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|qup
 operator|->
 name|dqblk
@@ -2124,8 +2107,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"i-node soft limit:    %lu\n"
+literal|"i-node soft limit:    %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|qup
 operator|->
 name|dqblk
@@ -2135,8 +2121,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"current i-node count: %lu\n"
+literal|"current i-node count: %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|qup
 operator|->
 name|dqblk
@@ -2146,8 +2135,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"block grace time:     %ld"
+literal|"block grace time:     %jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|qup
 operator|->
 name|dqblk
@@ -2188,8 +2180,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"i-node grace time:    %ld"
+literal|"i-node grace time:    %jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|qup
 operator|->
 name|dqblk
@@ -2327,10 +2322,6 @@ name|timeprt
 parameter_list|(
 name|time_t
 name|seconds
-parameter_list|,
-name|int
-modifier|*
-name|needfree
 parameter_list|)
 block|{
 name|time_t
@@ -2365,15 +2356,11 @@ operator|>
 name|seconds
 condition|)
 block|{
-operator|*
-name|needfree
-operator|=
-literal|0
-expr_stmt|;
 return|return
-operator|(
+name|strdup
+argument_list|(
 literal|"none"
-operator|)
+argument_list|)
 return|;
 block|}
 name|seconds
@@ -2437,11 +2424,6 @@ argument_list|,
 literal|"asprintf failed in timeprt(1)"
 argument_list|)
 expr_stmt|;
-operator|*
-name|needfree
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 name|buf
@@ -2488,11 +2470,6 @@ argument_list|,
 literal|"asprintf failed in timeprt(2)"
 argument_list|)
 expr_stmt|;
-operator|*
-name|needfree
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 name|buf
@@ -2522,11 +2499,6 @@ literal|1
 argument_list|,
 literal|"asprintf failed in timeprt(3)"
 argument_list|)
-expr_stmt|;
-operator|*
-name|needfree
-operator|=
-literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -2583,9 +2555,6 @@ name|int
 name|nfst
 decl_stmt|,
 name|i
-decl_stmt|;
-name|int
-name|len
 decl_stmt|;
 name|struct
 name|statfs
