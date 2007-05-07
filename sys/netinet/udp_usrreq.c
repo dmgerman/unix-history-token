@@ -608,9 +608,11 @@ name|struct
 name|inpcb
 modifier|*
 name|inp
-init|=
-name|mem
 decl_stmt|;
+name|inp
+operator|=
+name|mem
+expr_stmt|;
 name|INP_LOCK_INIT
 argument_list|(
 name|inp
@@ -631,7 +633,9 @@ end_function
 begin_function
 name|void
 name|udp_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|INP_INFO_LOCK_INIT
 argument_list|(
@@ -967,7 +971,7 @@ name|ip
 operator|->
 name|ip_src
 expr_stmt|;
-comment|/* 	 * Make mbuf data length reflect UDP length. 	 * If not enough data to reflect UDP length, drop. 	 */
+comment|/* 	 * Make mbuf data length reflect UDP length.  If not enough data to 	 * reflect UDP length, drop. 	 */
 name|len
 operator|=
 name|ntohs
@@ -2469,7 +2473,7 @@ name|PRC_HOSTDEAD
 condition|)
 name|ip
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 elseif|else
 if|if
@@ -2492,6 +2496,8 @@ return|return;
 if|if
 condition|(
 name|ip
+operator|!=
+name|NULL
 condition|)
 block|{
 name|uh
