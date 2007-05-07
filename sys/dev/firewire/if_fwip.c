@@ -1839,14 +1839,6 @@ operator|+
 literal|16384
 expr_stmt|;
 comment|/* S3200 packet size */
-name|fwip
-operator|->
-name|fwb
-operator|.
-name|act_type
-operator|=
-name|FWACT_XFER
-expr_stmt|;
 comment|/* pre-allocate xfer */
 name|STAILQ_INIT
 argument_list|(

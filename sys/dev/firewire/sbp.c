@@ -8874,7 +8874,7 @@ endif|#
 directive|endif
 argument|return;  }  static void sbp_recv(struct fw_xfer *xfer) { 	int s;  	s = splcam(); 	sbp_recv1(xfer); 	splx(s); }
 comment|/*  * sbp_attach()  */
-argument|static int sbp_attach(device_t dev) { 	struct sbp_softc *sbp; 	struct cam_devq *devq; 	struct fw_xfer *xfer; 	int i
+argument|static int sbp_attach(device_t dev) { 	struct sbp_softc *sbp; 	struct cam_devq *devq; 	int i
 argument_list|,
 argument|s
 argument_list|,
@@ -8965,25 +8965,16 @@ argument|,
 literal|0
 argument|); 	sbp->fwb.end = sbp->fwb.start +
 literal|0xffff
-argument|; 	sbp->fwb.act_type = FWACT_XFER;
+argument|;
 comment|/* pre-allocate xfer */
-argument|STAILQ_INIT(&sbp->fwb.xferlist); 	for (i =
-literal|0
-argument|; i< SBP_NUM_OCB/
-literal|2
-argument|; i ++) { 		xfer = fw_xfer_alloc_buf(M_SBP,
-comment|/* send */
+argument|STAILQ_INIT(&sbp->fwb.xferlist); 	fw_xferlist_add(&sbp->fwb.xferlist, M_SBP,
+comment|/*send*/
 literal|0
 argument|,
-comment|/* recv */
-argument|SBP_RECV_LEN); 		xfer->hand = sbp_recv;
-if|#
-directive|if
-name|NEED_RESPONSE
-argument|xfer->fc = sbp->fd.fc;
-endif|#
-directive|endif
-argument|xfer->sc = (caddr_t)sbp; 		STAILQ_INSERT_TAIL(&sbp->fwb.xferlist, xfer, link); 	} 	fw_bindadd(sbp->fd.fc,&sbp->fwb);  	sbp->fd.post_busreset = sbp_post_busreset; 	sbp->fd.post_explore = sbp_post_explore;  	if (sbp->fd.fc->status != -
+comment|/*recv*/
+argument|SBP_RECV_LEN, SBP_NUM_OCB/
+literal|2
+argument|, 	    sbp->fd.fc, (void *)sbp, sbp_recv); 	fw_bindadd(sbp->fd.fc,&sbp->fwb);  	sbp->fd.post_busreset = sbp_post_busreset; 	sbp->fd.post_explore = sbp_post_explore;  	if (sbp->fd.fc->status != -
 literal|1
 argument|) { 		s = splfw(); 		sbp_post_busreset((void *)sbp); 		sbp_post_explore((void *)sbp); 		splx(s); 	} 	xpt_async(AC_BUS_RESET, sbp->path,
 comment|/*arg*/
@@ -9013,9 +9004,7 @@ argument|*next; 	int i;  	if (target->luns == NULL) 		return; 	callout_stop(&tar
 literal|0
 argument|; i< target->num_lun; i++) 		sbp_free_sdev(target->luns[i]);  	for (xfer = STAILQ_FIRST(&target->xferlist); 			xfer != NULL; xfer = next) { 		next = STAILQ_NEXT(xfer, link); 		fw_xfer_free_buf(xfer); 	} 	STAILQ_INIT(&target->xferlist); 	free(target->luns, M_SBP); 	target->num_lun =
 literal|0
-argument|;; 	target->luns = NULL; 	target->fwdev = NULL; }  static int sbp_detach(device_t dev) { 	struct sbp_softc *sbp = ((struct sbp_softc *)device_get_softc(dev)); 	struct firewire_comm *fc = sbp->fd.fc; 	struct fw_xfer *xfer
-argument_list|,
-argument|*next; 	int i;  SBP_DEBUG(
+argument|;; 	target->luns = NULL; 	target->fwdev = NULL; }  static int sbp_detach(device_t dev) { 	struct sbp_softc *sbp = ((struct sbp_softc *)device_get_softc(dev)); 	struct firewire_comm *fc = sbp->fd.fc; 	int i;  SBP_DEBUG(
 literal|0
 argument|) 	printf(
 literal|"sbp_detach\n"
@@ -9033,7 +9022,7 @@ argument|, hz/
 literal|2
 argument|);  	for (i =
 literal|0
-argument|; i< SBP_NUM_TARGETS ; i ++) 		sbp_free_target(&sbp->targets[i]);  	for (xfer = STAILQ_FIRST(&sbp->fwb.xferlist); 				xfer != NULL; xfer = next) { 		next = STAILQ_NEXT(xfer, link); 		fw_xfer_free_buf(xfer); 	} 	STAILQ_INIT(&sbp->fwb.xferlist); 	fw_bindremove(fc,&sbp->fwb);  	bus_dma_tag_destroy(sbp->dmat);  	return (
+argument|; i< SBP_NUM_TARGETS ; i ++) 		sbp_free_target(&sbp->targets[i]);  	fw_bindremove(fc,&sbp->fwb); 	fw_xferlist_remove(&sbp->fwb.xferlist);  	bus_dma_tag_destroy(sbp->dmat);  	return (
 literal|0
 argument|); }  static void sbp_cam_detach_sdev(struct sbp_dev *sdev) { 	if (sdev == NULL) 		return; 	if (sdev->status == SBP_DEV_DEAD) 		return; 	if (sdev->status == SBP_DEV_RESET) 		return; 	if (sdev->path) { 		xpt_release_devq(sdev->path, 				 sdev->freeze, TRUE); 		sdev->freeze =
 literal|0
