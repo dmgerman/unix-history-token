@@ -2013,6 +2013,10 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+name|lp
+operator|->
+name|lp_detaching
+operator|||
 name|memcmp
 argument_list|(
 name|lladdr
@@ -2588,7 +2592,15 @@ argument_list|(
 name|lp
 argument_list|)
 expr_stmt|;
-comment|/* Remove multicast addresses and interface flags from this port */
+comment|/* 	 * Remove multicast addresses and interface flags from this port and 	 * reset the MAC address, skip if the interface is being detached. 	 */
+if|if
+condition|(
+operator|!
+name|lp
+operator|->
+name|lp_detaching
+condition|)
+block|{
 name|lagg_ether_cmdmulti
 argument_list|(
 name|lp
@@ -2603,6 +2615,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|lagg_port_lladdr
+argument_list|(
+name|lp
+argument_list|,
+name|lp
+operator|->
+name|lp_lladdr
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Restore interface */
 name|ifp
 operator|->
@@ -2740,16 +2762,6 @@ name|lladdr
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Reset the port lladdr */
-name|lagg_port_lladdr
-argument_list|(
-name|lp
-argument_list|,
-name|lp
-operator|->
-name|lp_lladdr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|lp
@@ -3152,6 +3164,12 @@ name|LAGG_LOCK
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|lp
+operator|->
+name|lp_detaching
+operator|=
+literal|1
 expr_stmt|;
 name|lagg_port_destroy
 argument_list|(

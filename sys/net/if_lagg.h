@@ -785,6 +785,10 @@ name|caddr_t
 name|lp_psc
 decl_stmt|;
 comment|/* protocol data */
+name|int
+name|lp_detaching
+decl_stmt|;
+comment|/* ifnet is detaching */
 name|SLIST_HEAD
 argument_list|(
 argument|__mclhd

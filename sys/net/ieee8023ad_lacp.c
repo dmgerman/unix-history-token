@@ -2609,6 +2609,14 @@ operator|&=
 operator|~
 name|LAGG_PORT_DISABLED
 expr_stmt|;
+comment|/* The address may have already been removed by if_purgemaddrs() */
+if|if
+condition|(
+operator|!
+name|lgp
+operator|->
+name|lp_detaching
+condition|)
 name|if_delmulti_ifma
 argument_list|(
 name|lp
