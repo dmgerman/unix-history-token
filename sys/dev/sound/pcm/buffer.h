@@ -143,11 +143,11 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|dmatag
 decl_stmt|;
+name|bus_addr_t
+name|buf_addr
+decl_stmt|;
 name|int
 name|dmaflags
-decl_stmt|;
-name|u_int32_t
-name|buf_addr
 decl_stmt|;
 name|struct
 name|selinfo
