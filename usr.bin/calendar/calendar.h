@@ -60,9 +60,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|int
 modifier|*
-name|optarg
+name|cumdays
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fixs
+name|neaster
+decl_stmt|,
+name|npaskha
 decl_stmt|;
 end_decl_stmt
 
