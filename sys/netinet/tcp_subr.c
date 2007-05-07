@@ -8638,11 +8638,6 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|tw
 operator|->
 name|tw_cred
@@ -8652,6 +8647,11 @@ argument_list|(
 name|so
 operator|->
 name|so_cred
+argument_list|)
+expr_stmt|;
+name|SOCK_LOCK
+argument_list|(
+name|so
 argument_list|)
 expr_stmt|;
 name|tw
