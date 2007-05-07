@@ -9017,7 +9017,7 @@ name|run
 condition|)
 name|printf
 argument_list|(
-literal|"%d"
+literal|"-%d"
 argument_list|,
 name|irqs
 index|[
