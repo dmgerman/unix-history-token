@@ -164,6 +164,32 @@ begin_comment
 comment|/* connect blocks until accepted */
 end_comment
 
+begin_comment
+comment|/*  * These flags are used to handle non-atomicity in connect() and bind()  * operations on a socket: in particular, to avoid races between multiple  * threads or processes operating simultaneously on the same socket.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNP_CONNECTING
+value|0x010
+end_define
+
+begin_comment
+comment|/* Currently connecting. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNP_BINDING
+value|0x020
+end_define
+
+begin_comment
+comment|/* Currently binding. */
+end_comment
+
 begin_define
 define|#
 directive|define
