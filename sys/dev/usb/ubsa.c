@@ -986,6 +986,13 @@ name|ubsa_products
 index|[]
 init|=
 block|{
+comment|/* AnyData ADU-E100A/H */
+block|{
+name|USB_VENDOR_ANYDATA
+block|,
+name|USB_PRODUCT_ANYDATA_ADU_E100X
+block|}
+block|,
 comment|/* BELKIN F5U103 */
 block|{
 name|USB_VENDOR_BELKIN
