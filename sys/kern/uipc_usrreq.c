@@ -2608,24 +2608,6 @@ name|error
 condition|)
 break|break;
 block|}
-else|else
-block|{
-if|if
-condition|(
-name|unp
-operator|->
-name|unp_conn
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOTCONN
-expr_stmt|;
-break|break;
-block|}
-block|}
 comment|/* 		 * Because connect() and send() are non-atomic in a sendto() 		 * with a target address, it's possible that the socket will 		 * have disconnected before the send() can run.  In that case 		 * return the slightly counter-intuitive but otherwise 		 * correct error that the socket is not connected. 		 */
 if|if
 condition|(
