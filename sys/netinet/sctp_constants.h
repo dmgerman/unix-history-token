@@ -4014,6 +4014,46 @@ begin_comment
 comment|/* we use the size of a IP6 header here this 				 * detracts a small amount for ipv4 but it 				 * simplifies the ipv6 addition */
 end_comment
 
+begin_comment
+comment|/* Argument magic number for sctp_inpcb_free() */
+end_comment
+
+begin_comment
+comment|/* third argument */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_CALLED_DIRECTLY_NOCMPSET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CALLED_AFTER_CMPSET_OFCLOSE
+value|1
+end_define
+
+begin_comment
+comment|/* second argument */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_FREE_SHOULD_USE_ABORT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_FREE_SHOULD_USE_GRACEFUL_CLOSE
+value|0
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

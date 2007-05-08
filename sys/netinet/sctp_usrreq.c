@@ -1932,9 +1932,9 @@ name|sctp_inpcb_free
 argument_list|(
 name|inp
 argument_list|,
-literal|1
+name|SCTP_FREE_SHOULD_USE_ABORT
 argument_list|,
-literal|1
+name|SCTP_CALLED_AFTER_CMPSET_OFCLOSE
 argument_list|)
 expr_stmt|;
 name|SOCK_LOCK
@@ -2239,9 +2239,9 @@ name|sctp_inpcb_free
 argument_list|(
 name|inp
 argument_list|,
-literal|1
+name|SCTP_FREE_SHOULD_USE_ABORT
 argument_list|,
-literal|1
+name|SCTP_CALLED_AFTER_CMPSET_OFCLOSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2499,9 +2499,9 @@ name|sctp_inpcb_free
 argument_list|(
 name|inp
 argument_list|,
-literal|1
+name|SCTP_FREE_SHOULD_USE_ABORT
 argument_list|,
-literal|1
+name|SCTP_CALLED_AFTER_CMPSET_OFCLOSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2525,9 +2525,9 @@ name|sctp_inpcb_free
 argument_list|(
 name|inp
 argument_list|,
-literal|0
+name|SCTP_FREE_SHOULD_USE_GRACEFUL_CLOSE
 argument_list|,
-literal|1
+name|SCTP_CALLED_AFTER_CMPSET_OFCLOSE
 argument_list|)
 expr_stmt|;
 block|}

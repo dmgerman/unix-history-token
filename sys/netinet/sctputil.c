@@ -9429,9 +9429,9 @@ name|sctp_inpcb_free
 argument_list|(
 name|inp
 argument_list|,
-literal|1
+name|SCTP_FREE_SHOULD_USE_ABORT
 argument_list|,
-literal|0
+name|SCTP_CALLED_DIRECTLY_NOCMPSET
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -18038,9 +18038,9 @@ name|sctp_inpcb_free
 argument_list|(
 name|inp
 argument_list|,
-literal|1
+name|SCTP_FREE_SHOULD_USE_ABORT
 argument_list|,
-literal|0
+name|SCTP_CALLED_DIRECTLY_NOCMPSET
 argument_list|)
 expr_stmt|;
 block|}
@@ -18576,9 +18576,9 @@ name|sctp_inpcb_free
 argument_list|(
 name|inp
 argument_list|,
-literal|1
+name|SCTP_FREE_SHOULD_USE_ABORT
 argument_list|,
-literal|0
+name|SCTP_CALLED_DIRECTLY_NOCMPSET
 argument_list|)
 expr_stmt|;
 block|}
@@ -18770,9 +18770,9 @@ name|sctp_inpcb_free
 argument_list|(
 name|inp
 argument_list|,
-literal|1
+name|SCTP_FREE_SHOULD_USE_ABORT
 argument_list|,
-literal|0
+name|SCTP_CALLED_DIRECTLY_NOCMPSET
 argument_list|)
 expr_stmt|;
 block|}

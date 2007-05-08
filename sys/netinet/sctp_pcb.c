@@ -11002,7 +11002,7 @@ if|if
 condition|(
 name|from
 operator|==
-literal|1
+name|SCTP_CALLED_AFTER_CMPSET_OFCLOSE
 condition|)
 block|{
 comment|/* 		 * Once we are in we can remove the flag from = 1 is only 		 * passed from the actual closing routines that are called 		 * via the sockets layer. 		 */
@@ -11092,7 +11092,7 @@ if|if
 condition|(
 name|immediate
 operator|==
-literal|0
+name|SCTP_FREE_SHOULD_USE_GRACEFUL_CLOSE
 condition|)
 block|{
 name|int
@@ -19154,9 +19154,9 @@ name|sctp_inpcb_free
 argument_list|(
 name|inp
 argument_list|,
-literal|0
+name|SCTP_FREE_SHOULD_USE_GRACEFUL_CLOSE
 argument_list|,
-literal|0
+name|SCTP_CALLED_DIRECTLY_NOCMPSET
 argument_list|)
 expr_stmt|;
 name|SCTP_INP_DECR_REF
