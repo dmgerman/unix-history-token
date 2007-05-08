@@ -599,6 +599,11 @@ block|,
 name|MXGEFW_CMD_SET_STATS_DMA_V2
 block|,
 comment|/* data0, data1 = bus addr,      data2 = sizeof(struct mcp_irq_data) from driver point of view, allows      adding new stuff to mcp_irq_data without changing the ABI */
+name|MXGEFW_CMD_UNALIGNED_TEST
+block|,
+comment|/* same than DMA_TEST (same args) but abort with UNALIGNED on unaligned      chipset */
+name|MXGEFW_CMD_UNALIGNED_STATUS
+comment|/* return data = boolean, true if the chipset is known to be unaligned */
 block|}
 enum|;
 end_enum
@@ -636,6 +641,8 @@ block|,
 name|MXGEFW_CMD_ERROR_RESOURCES
 block|,
 name|MXGEFW_CMD_ERROR_MULTICAST
+block|,
+name|MXGEFW_CMD_ERROR_UNALIGNED
 block|}
 enum|;
 end_enum
@@ -663,8 +670,20 @@ comment|/* add new counters at the beginning */
 name|uint32_t
 name|future_use
 index|[
-literal|5
+literal|1
 index|]
+decl_stmt|;
+name|uint32_t
+name|dropped_pause
+decl_stmt|;
+name|uint32_t
+name|dropped_unicast_filtered
+decl_stmt|;
+name|uint32_t
+name|dropped_bad_crc32
+decl_stmt|;
+name|uint32_t
+name|dropped_bad_phy
 decl_stmt|;
 name|uint32_t
 name|dropped_multicast_filtered
@@ -673,6 +692,22 @@ comment|/* 40 Bytes */
 name|uint32_t
 name|send_done_count
 decl_stmt|;
+define|#
+directive|define
+name|MXGEFW_LINK_DOWN
+value|0
+define|#
+directive|define
+name|MXGEFW_LINK_UP
+value|1
+define|#
+directive|define
+name|MXGEFW_LINK_MYRINET
+value|2
+define|#
+directive|define
+name|MXGEFW_LINK_UNKNOWN
+value|3
 name|uint32_t
 name|link_up
 decl_stmt|;
