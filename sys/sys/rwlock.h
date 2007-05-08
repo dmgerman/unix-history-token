@@ -134,6 +134,13 @@ name|RW_UNLOCKED
 value|RW_READERS_LOCK(0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|RW_DESTROYED
+value|(RW_LOCK_READ_WAITERS | RW_LOCK_WRITE_WAITERS)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

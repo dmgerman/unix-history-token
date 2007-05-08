@@ -136,6 +136,14 @@ name|SX_LOCK_UNLOCKED
 value|SX_SHARERS_LOCK(0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SX_LOCK_DESTROYED
+define|\
+value|(SX_LOCK_SHARED_WAITERS | SX_LOCK_EXCLUSIVE_WAITERS)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
