@@ -171,6 +171,9 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* an early FR is occuring. */
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -2043,6 +2046,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * figure out how long a data chunk must be pending before we can 	 * mark it .. 	 */
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -4068,6 +4074,9 @@ name|unsigned
 name|int
 name|ms_goneby
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -4127,6 +4136,9 @@ operator|)
 condition|)
 block|{
 comment|/* 					 * no recent feed back in an RTO or 					 * more, request a RTT update 					 */
+operator|(
+name|void
+operator|)
 name|sctp_send_hb
 argument_list|(
 name|stcb
@@ -7071,6 +7083,9 @@ decl_stmt|;
 name|int
 name|ticks_gone_by
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -7388,6 +7403,9 @@ comment|/* stopping the callout is not needed, in theory */
 name|SCTP_INP_INFO_WUNLOCK
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&

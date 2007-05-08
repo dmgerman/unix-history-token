@@ -283,7 +283,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sctp_send_cookie_ack
 parameter_list|(
 name|struct
@@ -317,7 +317,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sctp_send_shutdown
 parameter_list|(
 name|struct
@@ -332,7 +332,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sctp_send_shutdown_ack
 parameter_list|(
 name|struct
@@ -347,7 +347,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sctp_send_shutdown_complete
 parameter_list|(
 name|struct
@@ -362,7 +362,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sctp_send_shutdown_complete2
 parameter_list|(
 name|struct
@@ -383,7 +383,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sctp_send_asconf
 parameter_list|(
 name|struct
@@ -398,7 +398,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sctp_send_asconf_ack
 parameter_list|(
 name|struct
@@ -517,7 +517,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sctp_chunk_output
 parameter_list|(
 name|struct

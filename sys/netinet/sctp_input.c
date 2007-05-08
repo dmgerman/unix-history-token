@@ -2945,6 +2945,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* reset time */
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -4711,6 +4714,9 @@ name|overall_error_count
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -9200,6 +9206,9 @@ operator|)
 condition|)
 block|{
 comment|/* it's the old cookie */
+operator|(
+name|void
+operator|)
 name|sctp_hmac_m
 argument_list|(
 name|SCTP_HMAC
@@ -9233,6 +9242,9 @@ block|}
 else|else
 block|{
 comment|/* it's the current cookie */
+operator|(
+name|void
+operator|)
 name|sctp_hmac_m
 argument_list|(
 name|SCTP_HMAC
@@ -9355,6 +9367,9 @@ operator|)
 condition|)
 block|{
 comment|/* compute digest with old */
+operator|(
+name|void
+operator|)
 name|sctp_hmac_m
 argument_list|(
 name|SCTP_HMAC
@@ -9494,6 +9509,9 @@ operator|)
 return|;
 block|}
 comment|/* 	 * check the cookie timestamps to be sure it's not stale 	 */
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -10969,6 +10987,9 @@ name|time_entered
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -12669,6 +12690,9 @@ case|case
 name|SCTP_HEARTBEAT_REQUEST
 case|:
 comment|/* resend a demand HB */
+operator|(
+name|void
+operator|)
 name|sctp_send_hb
 argument_list|(
 name|stcb
@@ -17195,11 +17219,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -17496,11 +17522,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -17585,11 +17613,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -17621,11 +17651,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 name|sctp_handle_ootb
 argument_list|(
 name|m
@@ -17700,11 +17732,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|offset
 operator|=
@@ -17855,11 +17889,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -17931,11 +17967,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -18006,11 +18044,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -18154,11 +18194,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -18207,11 +18249,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -18381,11 +18425,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|offset
 operator|=
@@ -18432,11 +18478,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -18493,11 +18541,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -18555,11 +18605,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -18622,11 +18674,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|offset
 operator|=
@@ -18692,11 +18746,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -18776,11 +18832,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -18874,11 +18932,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -19165,11 +19225,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -19296,11 +19358,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -19421,6 +19485,10 @@ directive|endif
 comment|/* SCTP_DEBUG */
 if|if
 condition|(
+operator|(
+name|stcb
+operator|)
+operator|&&
 name|sctp_handle_error
 argument_list|(
 name|ch
@@ -19974,11 +20042,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -20040,6 +20110,11 @@ return|;
 block|}
 block|}
 comment|/* He's alive so give him credit */
+if|if
+condition|(
+name|stcb
+condition|)
+block|{
 name|stcb
 operator|->
 name|asoc
@@ -20063,6 +20138,7 @@ operator|*
 name|netp
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SCTP_ECN_ECHO
@@ -20103,11 +20179,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|offset
 operator|=
@@ -20119,6 +20197,11 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|stcb
+condition|)
+block|{
 name|stcb
 operator|->
 name|asoc
@@ -20139,6 +20222,7 @@ argument_list|,
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SCTP_ECN_CWR
@@ -20179,11 +20263,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|offset
 operator|=
@@ -20195,6 +20281,11 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|stcb
+condition|)
+block|{
 name|stcb
 operator|->
 name|asoc
@@ -20215,6 +20306,7 @@ argument_list|,
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SCTP_SHUTDOWN_COMPLETE
@@ -20269,17 +20361,24 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|stcb
+condition|)
+block|{
 name|sctp_handle_shutdown_complete
 argument_list|(
 operator|(
@@ -20295,6 +20394,7 @@ operator|*
 name|netp
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|offset
 operator|=
@@ -20329,6 +20429,11 @@ endif|#
 directive|endif
 comment|/* SCTP_DEBUG */
 comment|/* He's alive so give him credit */
+if|if
+condition|(
+name|stcb
+condition|)
+block|{
 name|stcb
 operator|->
 name|asoc
@@ -20354,6 +20459,7 @@ argument_list|,
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SCTP_ASCONF_ACK
@@ -20393,11 +20499,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|offset
 operator|=
@@ -20409,6 +20517,11 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|stcb
+condition|)
+block|{
 comment|/* He's alive so give him credit */
 name|stcb
 operator|->
@@ -20438,6 +20551,7 @@ operator|*
 name|netp
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SCTP_FORWARD_CUM_TSN
@@ -20477,11 +20591,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|offset
 operator|=
@@ -20494,6 +20610,10 @@ operator|)
 return|;
 block|}
 comment|/* He's alive so give him credit */
+if|if
+condition|(
+name|stcb
+condition|)
 block|{
 name|int
 name|abort_flag
@@ -20648,11 +20768,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|offset
 operator|=
@@ -20701,6 +20823,11 @@ block|}
 if|if
 condition|(
 name|stcb
+condition|)
+block|{
+if|if
+condition|(
+name|stcb
 operator|->
 name|asoc
 operator|.
@@ -20709,7 +20836,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * hmm, peer should have announced this, but 				 * we will turn it on since he is sending us 				 * a stream reset. 				 */
+comment|/* 					 * hmm, peer should have announced 					 * this, but we will turn it on 					 * since he is sending us a stream 					 * reset. 					 */
 name|stcb
 operator|->
 name|asoc
@@ -20745,6 +20872,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
 block|}
 break|break;
 case|case
@@ -20786,11 +20914,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|offset
 operator|=
@@ -20821,6 +20951,18 @@ argument_list|,
 name|chunk_buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|stcb
+operator|)
+operator|&&
+operator|(
+operator|*
+name|netp
+operator|)
+condition|)
+block|{
 name|sctp_handle_packet_dropped
 argument_list|(
 operator|(
@@ -20836,6 +20978,7 @@ operator|*
 name|netp
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SCTP_AUTHENTICATION
@@ -20934,11 +21077,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|offset
 operator|=
@@ -21263,11 +21408,13 @@ if|if
 condition|(
 name|locked_tcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|offset
 operator|=
@@ -21519,7 +21666,7 @@ comment|/*  * common input chunk processing (v4 and v6)  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|sctp_common_input_processing
 parameter_list|(
 name|struct
@@ -21770,11 +21917,7 @@ argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -21803,11 +21946,7 @@ argument_list|,
 name|table_id
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -21836,11 +21975,7 @@ argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 block|}
 if|if
@@ -21851,11 +21986,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * no valid TCB for this packet, or we found it's a bad 		 * packet while processing control, or we're done with this 		 * packet (done or skip rest of data), so we drop it... 		 */
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 comment|/* 	 * DATA chunk processing 	 */
 comment|/* plow through the data chunks while length> offset */
@@ -21999,11 +22130,7 @@ argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 break|break;
 case|case
 name|SCTP_STATE_EMPTY
@@ -22026,11 +22153,7 @@ argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 break|break;
 case|case
 name|SCTP_STATE_OPEN
@@ -22104,11 +22227,7 @@ literal|2
 condition|)
 block|{
 comment|/* 			 * The association aborted, NO UNLOCK needed since 			 * the association is destroyed. 			 */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 name|data_processed
 operator|=
@@ -22218,11 +22337,7 @@ name|abort_flag
 condition|)
 block|{
 comment|/* Again, we aborted so NO UNLOCK needed */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 block|}
 comment|/* trigger send of any chunks in queue... */
@@ -22429,11 +22544,7 @@ argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 

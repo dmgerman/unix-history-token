@@ -14976,6 +14976,9 @@ name|sig_offset
 operator|)
 expr_stmt|;
 comment|/* Time to sign the cookie */
+operator|(
+name|void
+operator|)
 name|sctp_hmac_m
 argument_list|(
 name|SCTP_HMAC
@@ -19774,6 +19777,9 @@ argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -22341,6 +22347,9 @@ name|sctp_init_msg
 argument_list|)
 expr_stmt|;
 comment|/* the time I built cookie */
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -26238,6 +26247,9 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -26635,6 +26647,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -34774,6 +34789,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -34856,6 +34874,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -35972,6 +35993,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -36080,6 +36104,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -37304,7 +37331,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|sctp_send_cookie_ack
 parameter_list|(
 name|struct
@@ -37365,12 +37392,7 @@ name|NULL
 condition|)
 block|{
 comment|/* no mbuf's */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|SCTP_BUF_RESV_UF
 argument_list|(
@@ -37399,12 +37421,7 @@ argument_list|(
 name|cookie_ack
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|chk
 operator|->
@@ -37586,16 +37603,12 @@ operator|->
 name|ctrl_queue_cnt
 operator|++
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|sctp_send_shutdown_ack
 parameter_list|(
 name|struct
@@ -37652,12 +37665,7 @@ name|NULL
 condition|)
 block|{
 comment|/* no mbuf's */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|SCTP_BUF_RESV_UF
 argument_list|(
@@ -37686,12 +37694,7 @@ argument_list|(
 name|m_shutdown_ack
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|chk
 operator|->
@@ -37848,16 +37851,12 @@ operator|->
 name|ctrl_queue_cnt
 operator|++
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|sctp_send_shutdown
 parameter_list|(
 name|struct
@@ -37914,12 +37913,7 @@ name|NULL
 condition|)
 block|{
 comment|/* no mbuf's */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|SCTP_BUF_RESV_UF
 argument_list|(
@@ -37948,12 +37942,7 @@ argument_list|(
 name|m_shutdown
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|chk
 operator|->
@@ -38123,16 +38112,12 @@ operator|->
 name|ctrl_queue_cnt
 operator|++
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|sctp_send_asconf
 parameter_list|(
 name|struct
@@ -38188,12 +38173,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|acp
 operator|=
@@ -38226,12 +38206,7 @@ argument_list|(
 name|m_asconf
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|chk
 operator|->
@@ -38341,16 +38316,12 @@ operator|->
 name|ctrl_queue_cnt
 operator|++
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|sctp_send_asconf_ack
 parameter_list|(
 name|struct
@@ -38393,12 +38364,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 comment|/* copy the asconf_ack */
 name|m_ack
@@ -38426,12 +38392,7 @@ name|NULL
 condition|)
 block|{
 comment|/* couldn't copy it */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|sctp_alloc_a_chunk
 argument_list|(
@@ -38457,12 +38418,7 @@ argument_list|(
 name|m_ack
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|chk
 operator|->
@@ -38737,11 +38693,7 @@ operator|->
 name|ctrl_queue_cnt
 operator|++
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
@@ -39434,7 +39386,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 		 * We don't want to mark the net->sent time here since this 		 * we use this for HB and retrans cannot measure RTT 		 */
-comment|/* SCTP_GETTIME_TIMEVAL(&chk->whoTo->last_sent_time); */
+comment|/* (void)SCTP_GETTIME_TIMEVAL(&chk->whoTo->last_sent_time); */
 operator|*
 name|cnt_out
 operator|+=
@@ -40509,7 +40461,7 @@ literal|0
 expr_stmt|;
 comment|/* For HB's */
 comment|/* 			 * We don't want to mark the net->sent time here 			 * since this we use this for HB and retrans cannot 			 * measure RTT 			 */
-comment|/* SCTP_GETTIME_TIMEVAL(&net->last_sent_time); */
+comment|/* (void)SCTP_GETTIME_TIMEVAL(&net->last_sent_time); */
 comment|/* For auto-close */
 name|cnt_thru
 operator|++
@@ -40522,6 +40474,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -41149,7 +41104,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|sctp_chunk_output
 parameter_list|(
 name|struct
@@ -41336,11 +41291,7 @@ operator|)
 condition|)
 block|{
 comment|/* Nothing to do unless there is something to be sent left */
-return|return
-operator|(
-name|error
-operator|)
-return|;
+return|return;
 block|}
 comment|/* 	 * Do we have something to send, data or control AND a sack timer 	 * running, if so piggy-back the sack. 	 */
 if|if
@@ -41425,11 +41376,7 @@ argument_list|,
 name|frag_point
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 elseif|else
 if|if
@@ -41543,8 +41490,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return
-operator|(
 name|sctp_timer_validation
 argument_list|(
 name|inp
@@ -41555,8 +41500,8 @@ name|asoc
 argument_list|,
 name|ret
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+return|return;
 block|}
 if|if
 condition|(
@@ -41589,12 +41534,7 @@ operator|==
 name|SCTP_RETRAN_EXIT
 condition|)
 block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 break|break;
 block|}
@@ -41656,11 +41596,7 @@ argument_list|,
 name|frag_point
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -41672,11 +41608,7 @@ name|max_burst
 condition|)
 block|{
 comment|/* Hit FR burst limit */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -42336,11 +42268,7 @@ argument_list|(
 name|asoc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
@@ -44939,7 +44867,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|sctp_send_shutdown_complete
 parameter_list|(
 name|struct
@@ -44991,12 +44919,7 @@ name|NULL
 condition|)
 block|{
 comment|/* no mbuf's */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|comp_cp
 operator|=
@@ -45144,16 +45067,12 @@ argument_list|(
 name|sctps_outcontrolchunks
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|sctp_send_shutdown_complete2
 parameter_list|(
 name|struct
@@ -45254,12 +45173,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|SCTP_BUF_LEN
 argument_list|(
@@ -45579,12 +45493,7 @@ block|}
 else|else
 block|{
 comment|/* Currently not supported. */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -45600,12 +45509,7 @@ argument_list|(
 name|mout
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 comment|/* Now copy in and fill in the ABORT tags etc. */
 name|comp_cp
@@ -45912,11 +45816,7 @@ argument_list|(
 name|sctps_outcontrolchunks
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
@@ -45955,6 +45855,9 @@ name|state_overide
 init|=
 literal|0
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 name|now
@@ -46399,6 +46302,9 @@ literal|0
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -52168,6 +52074,9 @@ name|strseq
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -53712,6 +53621,9 @@ name|state
 operator|=
 name|SCTP_STATE_COOKIE_WAIT
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&

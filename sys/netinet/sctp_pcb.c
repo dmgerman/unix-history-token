@@ -411,6 +411,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|SCTP_FREE
+argument_list|(
+name|vrf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -453,6 +458,22 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|SCTP_HASH_FREE
+argument_list|(
+name|vrf
+operator|->
+name|vrf_addr_hash
+argument_list|,
+name|vrf
+operator|->
+name|vrf_addr_hashmark
+argument_list|)
+expr_stmt|;
+name|SCTP_FREE
+argument_list|(
+name|vrf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -2018,13 +2039,6 @@ name|localifa_flags
 operator||=
 name|SCTP_BEING_DELETED
 expr_stmt|;
-name|sctp_ifap
-operator|->
-name|ifn_p
-operator|->
-name|ifa_count
-operator|--
-expr_stmt|;
 name|vrf
 operator|->
 name|total_ifa_count
@@ -2051,6 +2065,13 @@ operator|->
 name|ifn_p
 condition|)
 block|{
+name|sctp_ifap
+operator|->
+name|ifn_p
+operator|->
+name|ifa_count
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|SCTP_LIST_EMPTY
@@ -8493,6 +8514,9 @@ operator|+=
 name|SCTP_SIGNATURE_SIZE
 expr_stmt|;
 comment|/* Setup the initial secret */
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -12344,6 +12368,9 @@ name|cnt
 condition|)
 block|{
 comment|/* Ok we have someone out there that will kill us */
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -12405,6 +12432,9 @@ name|SCTP_PCB_FLAGS_CLOSE_IP
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -12460,6 +12490,9 @@ endif|#
 directive|endif
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -12502,6 +12535,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -13755,6 +13791,9 @@ name|net
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -15063,15 +15102,10 @@ if|if
 condition|(
 name|firstaddr
 condition|)
+block|{
 name|sctp_print_address
 argument_list|(
 name|firstaddr
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"None\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -15091,6 +15125,13 @@ operator|)
 operator|->
 name|sin_port
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"None\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -16110,6 +16151,9 @@ name|set
 decl_stmt|,
 name|i
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -16791,6 +16835,9 @@ return|;
 block|}
 block|}
 comment|/* now clean up any other timers */
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -16809,6 +16856,9 @@ name|self
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -16827,6 +16877,9 @@ name|self
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -16856,6 +16909,9 @@ name|self
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -16874,6 +16930,9 @@ name|self
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -16892,6 +16951,9 @@ name|self
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -16910,6 +16972,9 @@ name|self
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -16937,6 +17002,9 @@ argument_list|,
 argument|sctp_next
 argument_list|)
 block|{
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -16955,6 +17023,9 @@ name|self
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -16973,6 +17044,9 @@ name|self
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -17600,6 +17674,9 @@ name|SCTP_TIME_WAIT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now restop the timers to be sure - this is paranoia at is finest! 	 */
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -17610,6 +17687,9 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -17620,6 +17700,9 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -17630,6 +17713,9 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -17640,6 +17726,9 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -17650,6 +17739,9 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -17660,6 +17752,9 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -17670,6 +17765,9 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -17689,6 +17787,9 @@ argument_list|,
 argument|sctp_next
 argument_list|)
 block|{
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -17699,6 +17800,9 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -17709,6 +17813,9 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -20431,6 +20538,9 @@ name|sctpstat
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -22369,6 +22479,11 @@ operator|*
 operator|)
 name|phdr
 expr_stmt|;
+if|if
+condition|(
+name|aip
+condition|)
+block|{
 name|sctp_ulp_notify
 argument_list|(
 name|SCTP_NOTIFY_ADAPTATION_INDICATION
@@ -22385,6 +22500,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else
@@ -23226,6 +23342,9 @@ name|i
 operator|++
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_auth_add_hmacid
 argument_list|(
 name|stcb
@@ -23383,6 +23502,9 @@ name|i
 operator|++
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_auth_add_chunk
 argument_list|(
 name|chunks
@@ -25184,6 +25306,9 @@ name|last_revoke_count
 operator|=
 name|cnt
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&

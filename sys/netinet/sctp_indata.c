@@ -13616,6 +13616,9 @@ name|overall_error_count
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -15328,6 +15331,9 @@ operator|.
 name|peer_supports_prsctp
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -16666,6 +16672,9 @@ operator|!
 name|now_filled
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&

@@ -43,7 +43,7 @@ argument_list|)
 end_if
 
 begin_function_decl
-name|int
+name|void
 name|sctp_common_input_processing
 parameter_list|(
 name|struct

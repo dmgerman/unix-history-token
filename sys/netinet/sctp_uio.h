@@ -3010,7 +3010,7 @@ name|_x
 parameter_list|,
 name|_d
 parameter_list|)
-value|atomic_add_long(&sctpstat._x, -(_d))
+value|atomic_subtract_long(&sctpstat._x, _d)
 end_define
 
 begin_comment

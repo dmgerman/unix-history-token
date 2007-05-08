@@ -555,6 +555,9 @@ modifier|*
 name|list
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_auth_add_chunk
 argument_list|(
 name|SCTP_ASCONF
@@ -562,6 +565,9 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sctp_auth_add_chunk
 argument_list|(
 name|SCTP_ASCONF_ACK
@@ -861,6 +867,9 @@ name|i
 operator|++
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_auth_add_chunk
 argument_list|(
 operator|*
@@ -926,6 +935,9 @@ name|offset
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_auth_add_chunk
 argument_list|(
 operator|(
@@ -2885,6 +2897,9 @@ operator|(
 name|NULL
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|sctp_auth_add_hmacid
 argument_list|(
 name|new_list
@@ -2892,6 +2907,9 @@ argument_list|,
 name|SCTP_AUTH_HMAC_ID_SHA1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sctp_auth_add_hmacid
 argument_list|(
 name|new_list
@@ -6387,6 +6405,9 @@ name|i
 operator|++
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_auth_add_hmacid
 argument_list|(
 name|stcb
@@ -6526,6 +6547,9 @@ name|i
 operator|++
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_auth_add_chunk
 argument_list|(
 name|chunks

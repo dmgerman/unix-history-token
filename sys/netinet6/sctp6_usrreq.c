@@ -989,9 +989,6 @@ argument_list|)
 operator|+
 name|iphlen
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sctp_common_input_processing
 argument_list|(
 operator|&

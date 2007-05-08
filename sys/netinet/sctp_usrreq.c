@@ -1934,7 +1934,7 @@ name|inp
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|SOCK_LOCK
@@ -2241,7 +2241,7 @@ name|inp
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -6174,6 +6174,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -12927,6 +12930,9 @@ name|delayed_connection
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -13775,6 +13781,9 @@ name|SPP_HB_DEMAND
 condition|)
 block|{
 comment|/* on demand HB */
+operator|(
+name|void
+operator|)
 name|sctp_send_hb
 argument_list|(
 name|stcb
@@ -16305,6 +16314,9 @@ name|state
 operator|=
 name|SCTP_STATE_COOKIE_WAIT
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
