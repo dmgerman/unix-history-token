@@ -310,49 +310,49 @@ end_define
 begin_define
 define|#
 directive|define
-name|G_PART_PARM_PROVIDER
+name|G_PART_PARM_OUTPUT
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|G_PART_PARM_REQUEST
+name|G_PART_PARM_PROVIDER
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|G_PART_PARM_RESPONSE
+name|G_PART_PARM_SCHEME
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|G_PART_PARM_SCHEME
+name|G_PART_PARM_SIZE
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|G_PART_PARM_SIZE
+name|G_PART_PARM_START
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|G_PART_PARM_START
+name|G_PART_PARM_TYPE
 value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
-name|G_PART_PARM_TYPE
+name|G_PART_PARM_VERSION
 value|0x0800
 end_define
 
@@ -392,11 +392,6 @@ name|g_provider
 modifier|*
 name|gpp_provider
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|gpp_request
-decl_stmt|;
 name|struct
 name|g_part_scheme
 modifier|*
@@ -412,6 +407,10 @@ specifier|const
 name|char
 modifier|*
 name|gpp_type
+decl_stmt|;
+name|unsigned
+name|int
+name|gpp_version
 decl_stmt|;
 block|}
 struct|;
