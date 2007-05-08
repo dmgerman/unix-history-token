@@ -8482,8 +8482,7 @@ argument_list|,
 argument|sctp_next
 argument_list|)
 block|{
-name|struct
-name|rtentry
+name|sctp_rtentry_t
 modifier|*
 name|rt
 decl_stmt|;

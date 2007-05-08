@@ -2957,6 +2957,14 @@ name|u_long
 name|sctps_left_abandon
 decl_stmt|;
 comment|/* Number of unread message abandonded 					 * by close */
+name|u_long
+name|sctps_send_burst_avoid
+decl_stmt|;
+comment|/* Send burst avoidance, already max 					 * burst inflight to net */
+name|u_long
+name|sctps_send_cwnd_avoid
+decl_stmt|;
+comment|/* Send cwnd full  avoidance, already 					 * max burst inflight to net */
 block|}
 struct|;
 end_struct
@@ -3148,6 +3156,9 @@ decl_stmt|;
 name|uint32_t
 name|total_nospaces
 decl_stmt|;
+name|uint32_t
+name|fragmentation_point
+decl_stmt|;
 comment|/* add more endpoint specific data here */
 block|}
 struct|;
@@ -3240,6 +3251,9 @@ decl_stmt|;
 name|uint32_t
 name|cumulative_tsn_ack
 decl_stmt|;
+name|uint32_t
+name|mtu
+decl_stmt|;
 comment|/* add more association specific data here */
 name|uint16_t
 name|number_local_addresses
@@ -3315,6 +3329,10 @@ name|uint32_t
 name|RemAddrFlightSize
 decl_stmt|;
 comment|/* */
+name|uint32_t
+name|RemAddrMTU
+decl_stmt|;
+comment|/* */
 name|struct
 name|timeval
 name|RemAddrStartTime
@@ -3360,7 +3378,7 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|top
+name|i_pak
 parameter_list|,
 name|struct
 name|mbuf

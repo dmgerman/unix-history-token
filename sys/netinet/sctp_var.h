@@ -578,17 +578,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|sctp_assoc_t
-name|sctp_getassocid
-parameter_list|(
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|sctp_ingetaddr
 parameter_list|(

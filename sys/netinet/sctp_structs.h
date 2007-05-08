@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/sctp_uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/sctp_auth.h>
 end_include
 
@@ -444,26 +438,9 @@ end_struct
 
 begin_struct
 struct|struct
-name|sctp_nets
+name|sctp_net_route
 block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|sctp_nets
-argument_list|)
-name|sctp_next
-expr_stmt|;
-comment|/* next link */
-comment|/* 	 * Things on the top half may be able to be split into a common 	 * structure shared by all. 	 */
-name|struct
-name|sctp_timer
-name|pmtu_timer
-decl_stmt|;
-comment|/* 	 * The following two in combination equate to a route entry for v6 	 * or v4. 	 */
-struct|struct
-name|sctp_route
-block|{
-name|struct
-name|rtentry
+name|sctp_rtentry_t
 modifier|*
 name|ro_rt
 decl_stmt|;
@@ -479,8 +456,30 @@ name|_s_addr
 decl_stmt|;
 comment|/* our selected src addr */
 block|}
-name|ro
 struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sctp_nets
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|sctp_nets
+argument_list|)
+name|sctp_next
+expr_stmt|;
+comment|/* next link */
+comment|/* 	 * Things on the top half may be able to be split into a common 	 * structure shared by all. 	 */
+name|struct
+name|sctp_timer
+name|pmtu_timer
+decl_stmt|;
+comment|/* 	 * The following two in combination equate to a route entry for v6 	 * or v4. 	 */
+name|struct
+name|sctp_net_route
+name|ro
+decl_stmt|;
 comment|/* mtu discovered so far */
 name|uint32_t
 name|mtu
@@ -944,6 +943,12 @@ modifier|*
 name|tail_mbuf
 decl_stmt|;
 comment|/* used for multi-part data */
+name|struct
+name|mbuf
+modifier|*
+name|aux_data
+decl_stmt|;
+comment|/* used to hold/cache  control if o/s does not 				 * take it from us */
 name|struct
 name|sctp_tcb
 modifier|*
@@ -1438,6 +1443,9 @@ name|pending_reply_queue
 decl_stmt|;
 name|uint32_t
 name|vrf_id
+decl_stmt|;
+name|uint32_t
+name|table_id
 decl_stmt|;
 name|uint32_t
 name|cookie_preserve_req

@@ -150,12 +150,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/sctp_uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/sctp_auth.h>
 end_include
 
@@ -200,6 +194,11 @@ name|vrf_addr_hash
 decl_stmt|;
 name|struct
 name|sctp_ifnlist
+modifier|*
+name|vrf_ifn_hash
+decl_stmt|;
+name|struct
+name|sctp_ifnlist
 name|ifnlist
 decl_stmt|;
 name|uint32_t
@@ -209,7 +208,10 @@ name|uint32_t
 name|total_ifa_count
 decl_stmt|;
 name|u_long
-name|vrf_hashmark
+name|vrf_addr_hashmark
+decl_stmt|;
+name|u_long
+name|vrf_ifn_hashmark
 decl_stmt|;
 block|}
 struct|;
@@ -234,11 +236,20 @@ argument|sctp_ifn
 argument_list|)
 name|next_ifn
 expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|sctp_ifn
+argument_list|)
+name|next_bucket
+expr_stmt|;
 name|void
 modifier|*
 name|ifn_p
 decl_stmt|;
 comment|/* never access without appropriate lock */
+name|uint32_t
+name|ifn_mtu
+decl_stmt|;
 name|uint32_t
 name|ifn_type
 decl_stmt|;
@@ -359,7 +370,7 @@ name|uint8_t
 name|src_is_glob
 decl_stmt|;
 name|uint8_t
-name|in_ifa_list
+name|resv
 decl_stmt|;
 block|}
 struct|;
@@ -561,6 +572,18 @@ decl_stmt|;
 comment|/* socket queue zone info */
 name|uint32_t
 name|ipi_count_strmoq
+decl_stmt|;
+comment|/* Number of vrfs */
+name|uint32_t
+name|ipi_count_vrfs
+decl_stmt|;
+comment|/* Number of ifns */
+name|uint32_t
+name|ipi_count_ifns
+decl_stmt|;
+comment|/* Number of ifas */
+name|uint32_t
+name|ipi_count_ifas
 decl_stmt|;
 comment|/* system wide number of free chunks hanging around */
 name|uint32_t
@@ -943,6 +966,9 @@ name|uint32_t
 name|def_vrf_id
 decl_stmt|;
 name|uint32_t
+name|def_table_id
+decl_stmt|;
+name|uint32_t
 name|total_sends
 decl_stmt|;
 name|uint32_t
@@ -1178,6 +1204,34 @@ name|ifa_flags
 parameter_list|,
 name|int
 name|dynamic_add
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sctp_update_ifn_mtu
+parameter_list|(
+name|uint32_t
+name|vrf_id
+parameter_list|,
+name|uint32_t
+name|ifn_index
+parameter_list|,
+name|uint32_t
+name|mtu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sctp_free_ifn
+parameter_list|(
+name|struct
+name|sctp_ifn
+modifier|*
+name|sctp_ifnp
 parameter_list|)
 function_decl|;
 end_function_decl

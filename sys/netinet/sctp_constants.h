@@ -3169,6 +3169,17 @@ name|SCTP_INITIAL_CWND
 value|4380
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_MTU
+value|1500
+end_define
+
+begin_comment
+comment|/* emegency default MTU */
+end_comment
+
 begin_comment
 comment|/* amount peer is obligated to have in rwnd or I will abort */
 end_comment
@@ -3804,6 +3815,13 @@ define|#
 directive|define
 name|SCTP_LOC_32
 value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LOC_33
+value|0x00000021
 end_define
 
 begin_comment
