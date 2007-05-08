@@ -137,12 +137,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NAPICID
-value|32
+name|MAX_LAPIC_ID
+value|31
 end_define
 
 begin_comment
-comment|/* Max number of APIC's */
+comment|/* Max local APIC ID for HTT fixup */
 end_comment
 
 begin_ifdef
@@ -611,7 +611,9 @@ name|void
 modifier|*
 name|ioapics
 index|[
-name|NAPICID
+name|MAX_APIC_ID
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1821,8 +1823,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|NAPICID
+operator|<=
+name|MAX_APIC_ID
 condition|;
 name|i
 operator|++
@@ -2102,6 +2104,15 @@ operator|&
 name|PROCENTRY_FLAG_BP
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|proc
+operator|->
+name|apic_id
+operator|<
+name|MAX_LAPIC_ID
+condition|)
+block|{
 name|cpu_mask
 operator|=
 operator|(
@@ -2114,13 +2125,14 @@ operator|*
 name|cpu_mask
 operator||=
 operator|(
-literal|1
+literal|1ul
 operator|<<
 name|proc
 operator|->
 name|apic_id
 operator|)
 expr_stmt|;
+block|}
 block|}
 break|break;
 block|}
@@ -2457,8 +2469,8 @@ condition|(
 name|apic
 operator|->
 name|apic_id
-operator|>=
-name|NAPICID
+operator|>
+name|MAX_APIC_ID
 condition|)
 name|panic
 argument_list|(
@@ -3045,8 +3057,8 @@ block|}
 if|if
 condition|(
 name|apic_id
-operator|>=
-name|NAPICID
+operator|>
+name|MAX_APIC_ID
 condition|)
 block|{
 name|printf
@@ -3887,8 +3899,8 @@ operator|=
 literal|0
 init|;
 name|id
-operator|<
-name|NAPICID
+operator|<=
+name|MAX_LAPIC_ID
 condition|;
 name|id
 operator|++

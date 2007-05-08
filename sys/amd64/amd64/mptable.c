@@ -131,12 +131,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NAPICID
-value|32
+name|MAX_LAPIC_ID
+value|63
 end_define
 
 begin_comment
-comment|/* Max number of APIC's */
+comment|/* Max local APIC ID for HTT fixup */
 end_comment
 
 begin_define
@@ -575,7 +575,9 @@ name|void
 modifier|*
 name|ioapics
 index|[
-name|NAPICID
+name|MAX_APIC_ID
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -725,7 +727,7 @@ specifier|static
 name|void
 name|mptable_hyperthread_fixup
 parameter_list|(
-name|u_int
+name|u_long
 name|id_mask
 parameter_list|)
 function_decl|;
@@ -1540,7 +1542,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|u_long
 name|cpu_mask
 decl_stmt|;
 comment|/* Is this a pre-defined config? */
@@ -1785,8 +1787,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|NAPICID
+operator|<=
+name|MAX_APIC_ID
 condition|;
 name|i
 operator|++
@@ -2024,7 +2026,7 @@ block|{
 name|proc_entry_ptr
 name|proc
 decl_stmt|;
-name|u_int
+name|u_long
 modifier|*
 name|cpu_mask
 decl_stmt|;
@@ -2066,10 +2068,19 @@ operator|&
 name|PROCENTRY_FLAG_BP
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|proc
+operator|->
+name|apic_id
+operator|<
+name|MAX_LAPIC_ID
+condition|)
+block|{
 name|cpu_mask
 operator|=
 operator|(
-name|u_int
+name|u_long
 operator|*
 operator|)
 name|arg
@@ -2078,13 +2089,14 @@ operator|*
 name|cpu_mask
 operator||=
 operator|(
-literal|1
+literal|1ul
 operator|<<
 name|proc
 operator|->
 name|apic_id
 operator|)
 expr_stmt|;
+block|}
 block|}
 break|break;
 block|}
@@ -2421,8 +2433,8 @@ condition|(
 name|apic
 operator|->
 name|apic_id
-operator|>=
-name|NAPICID
+operator|>
+name|MAX_APIC_ID
 condition|)
 name|panic
 argument_list|(
@@ -2999,8 +3011,8 @@ block|}
 if|if
 condition|(
 name|apic_id
-operator|>=
-name|NAPICID
+operator|>
+name|MAX_APIC_ID
 condition|)
 block|{
 name|printf
@@ -3793,7 +3805,7 @@ specifier|static
 name|void
 name|mptable_hyperthread_fixup
 parameter_list|(
-name|u_int
+name|u_long
 name|id_mask
 parameter_list|)
 block|{
@@ -3841,8 +3853,8 @@ operator|=
 literal|0
 init|;
 name|id
-operator|<
-name|NAPICID
+operator|<=
+name|MAX_LAPIC_ID
 condition|;
 name|id
 operator|++
@@ -3908,7 +3920,7 @@ condition|(
 operator|(
 name|id
 operator|=
-name|ffs
+name|ffsl
 argument_list|(
 name|id_mask
 argument_list|)

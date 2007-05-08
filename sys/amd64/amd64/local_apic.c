@@ -171,17 +171,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * We can handle up to 60 APICs via our logical cluster IDs, but currently  * the physical IDs on Intel processors up to the Pentium 4 are limited to  * 16.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_APICID
-value|16
-end_define
-
-begin_comment
 comment|/* Sanity checks on IDT vectors. */
 end_comment
 
@@ -358,7 +347,9 @@ block|}
 decl|static
 name|lapics
 index|[
-name|MAX_APICID
+name|MAX_APIC_ID
+operator|+
+literal|1
 index|]
 struct|;
 end_struct
@@ -1036,8 +1027,8 @@ decl_stmt|;
 if|if
 condition|(
 name|apic_id
-operator|>=
-name|MAX_APICID
+operator|>
+name|MAX_APIC_ID
 condition|)
 block|{
 name|printf
