@@ -223,7 +223,7 @@ operator|&&
 name|s0
 index|[
 name|ndigits
-operator|-
+operator|+
 literal|1
 index|]
 operator|&
