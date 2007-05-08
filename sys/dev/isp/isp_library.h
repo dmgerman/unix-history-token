@@ -936,6 +936,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|ISP_HANDLE_MASK
+value|0x7fff
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
