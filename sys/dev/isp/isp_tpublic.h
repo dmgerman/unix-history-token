@@ -78,6 +78,9 @@ comment|/* the argument is a pointer to a info_t */
 name|QIN_SETINFO
 block|,
 comment|/* the argument is a pointer to a info_t */
+name|QIN_GETDLIST
+block|,
+comment|/* the argument is a pointer to a fc_dlist_t */
 name|QIN_ENABLE
 block|,
 comment|/* the argument is a pointer to a enadis_t */
@@ -109,7 +112,7 @@ begin_define
 define|#
 directive|define
 name|QR_VERSION
-value|15
+value|16
 end_define
 
 begin_typedef
@@ -169,7 +172,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * An information structure that is used to get or set per-channel  * transport layer parameters.  */
+comment|/*  * An information structure that is used to get or set per-channel transport layer parameters.  */
 end_comment
 
 begin_typedef
@@ -226,6 +229,36 @@ name|i_id
 union|;
 block|}
 name|info_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * An information structure to return a list of logged in WWPNs. FC specific.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|void
+modifier|*
+name|d_identity
+decl_stmt|;
+name|int
+name|d_channel
+decl_stmt|;
+name|int
+name|d_error
+decl_stmt|;
+name|int
+name|d_count
+decl_stmt|;
+name|uint64_t
+modifier|*
+name|d_wwpns
+decl_stmt|;
+block|}
+name|fc_dlist_t
 typedef|;
 end_typedef
 
@@ -701,7 +734,7 @@ parameter_list|,
 name|lun
 parameter_list|)
 define|\
-value|(lptr)[1] = lun;                                \     if (sizeof (lun) == 1) {                        \         (lptr)[0] = 0;                              \     } else {                                        \         int nl = (lun);                             \         if (nl< 256) {                             \             (lptr)[0] = 0;                          \         } else {                                    \             (lptr)[0] = 0x40 | ((nl>> 8)& 0x3f);  \         }                                           \     }                                               \     memset(&(lptr)[2], 0, 6)
+value|(lptr)[1] = lun& 0xff;                         \     if (sizeof (lun) == 1) {                        \         (lptr)[0] = 0;                              \     } else {                                        \         uint16_t nl = lun;                          \         if (nl == LUN_ANY) {                        \             (lptr)[0] = (nl>> 8)& 0xff;           \         } else if (nl< 256) {                      \             (lptr)[0] = 0;                          \         } else {                                    \             (lptr)[0] = 0x40 | ((nl>> 8)& 0x3f);  \         }                                           \     }                                               \     memset(&(lptr)[2], 0, 6)
 end_define
 
 begin_comment
