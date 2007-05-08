@@ -5191,38 +5191,6 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_function
-name|void
-name|unp_abort
-parameter_list|(
-name|struct
-name|unpcb
-modifier|*
-name|unp
-parameter_list|)
-block|{
-name|unp_detach
-argument_list|(
-name|unp
-argument_list|)
-expr_stmt|;
-name|UNP_UNLOCK_ASSERT
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * unp_pcblist() assumes that UNIX domain socket memory is never reclaimed  * by the zone (UMA_ZONE_NOFREE), and as such potentially stale pointers  * are safe to reference.  It first scans the list of struct unpcb's to  * generate a pointer list, then it rescans its list one entry at a time to  * externalize and copyout.  It checks the generation number to see if a  * struct unpcb has been reused, and will skip it if so.  */
 end_comment
@@ -5969,26 +5937,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_function
-name|void
-name|unp_drain
-parameter_list|(
-name|void
-parameter_list|)
-block|{  }
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
