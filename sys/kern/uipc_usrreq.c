@@ -722,7 +722,7 @@ name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-comment|/* 	 * Pass back name of connected socket, 	 * if it was bound and we are still connected 	 * (our peer may have closed already!). 	 */
+comment|/* 	 * Pass back name of connected socket, if it was bound and we are 	 * still connected (our peer may have closed already!). 	 */
 operator|*
 name|nam
 operator|=
@@ -1570,7 +1570,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Adjust backpressure on sender 		 * and wakeup any waiting to write. 		 */
+comment|/* 		 * Adjust backpressure on sender and wakeup any waiting to 		 * write. 		 */
 name|so2
 operator|->
 name|so_snd
@@ -2034,8 +2034,7 @@ block|}
 case|case
 name|SOCK_STREAM
 case|:
-comment|/* Connect if not connected yet. */
-comment|/* 		 * Note: A better implementation would complain 		 * if not equal to the peer's address. 		 */
+comment|/* 		 * Connect if not connected yet. 		 * 		 * Note: A better implementation would complain if not equal 		 * to the peer's address. 		 */
 if|if
 condition|(
 operator|(
@@ -2187,7 +2186,7 @@ name|control
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Send to paired receive port, and then reduce 		 * send buffer hiwater marks to maintain backpressure. 		 * Wake up readers. 		 */
+comment|/* 		 * Send to paired receive port, and then reduce send buffer 		 * hiwater marks to maintain backpressure.  Wake up readers. 		 */
 if|if
 condition|(
 name|control
@@ -3174,7 +3173,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Both send and receive buffers are allocated PIPSIZ bytes of buffering  * for stream sockets, although the total for sender and receiver is  * actually only PIPSIZ.  * Datagram sockets really use the sendspace as the maximum datagram size,  * and don't really want to reserve the sendspace.  Their recvspace should  * be large enough for at least one max-size datagram plus address.  */
+comment|/*  * Both send and receive buffers are allocated PIPSIZ bytes of buffering  * for stream sockets, although the total for sender and receiver is  * actually only PIPSIZ.  *  * Datagram sockets really use the sendspace as the maximum datagram size,  * and don't really want to reserve the sendspace.  Their recvspace should  * be large enough for at least one max-size datagram plus address.  */
 end_comment
 
 begin_ifndef
@@ -3866,7 +3865,7 @@ decl_stmt|;
 name|UNP_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
-comment|/* 	 * XXXRW: This test-and-set of unp_vnode is non-atomic; the 	 * unlocked read here is fine, but the value of unp_vnode needs 	 * to be tested again after we do all the lookups to see if the 	 * pcb is still unbound? 	 */
+comment|/* 	 * XXXRW: This test-and-set of unp_vnode is non-atomic; the unlocked 	 * read here is fine, but the value of unp_vnode needs to be tested 	 * again after we do all the lookups to see if the pcb is still 	 * unbound? 	 */
 if|if
 condition|(
 name|unp
@@ -4653,7 +4652,7 @@ operator|&
 name|SO_ACCEPTCONN
 condition|)
 block|{
-comment|/* 			 * NB: drop locks here so unp_attach is entered 			 *     w/o locks; this avoids a recursive lock 			 *     of the head and holding sleep locks across 			 *     a (potentially) blocking malloc. 			 */
+comment|/* 			 * NB: drop locks here so unp_attach is entered w/o 			 * locks; this avoids a recursive lock of the head 			 * and holding sleep locks across a (potentially) 			 * blocking malloc. 			 */
 name|UNP_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -4751,7 +4750,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 		 * unp_peercred management: 		 * 		 * The connecter's (client's) credentials are copied 		 * from its process structure at the time of connect() 		 * (which is now). 		 */
+comment|/* 		 * unp_peercred management: 		 * 		 * The connecter's (client's) credentials are copied from its 		 * process structure at the time of connect() (which is now). 		 */
 name|cru2x
 argument_list|(
 name|td
@@ -4770,7 +4769,7 @@ name|unp_flags
 operator||=
 name|UNP_HAVEPC
 expr_stmt|;
-comment|/* 		 * The receiver's (server's) credentials are copied 		 * from the unp_peercred member of socket on which the 		 * former called listen(); unp_listen() cached that 		 * process's credentials at that time so we can use 		 * them now. 		 */
+comment|/* 		 * The receiver's (server's) credentials are copied from the 		 * unp_peercred member of socket on which the former called 		 * listen(); unp_listen() cached that process's credentials 		 * at that time so we can use them now. 		 */
 name|KASSERT
 argument_list|(
 name|unp2
@@ -5192,7 +5191,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * unp_pcblist() assumes that UNIX domain socket memory is never reclaimed  * by the zone (UMA_ZONE_NOFREE), and as such potentially stale pointers  * are safe to reference.  It first scans the list of struct unpcb's to  * generate a pointer list, then it rescans its list one entry at a time to  * externalize and copyout.  It checks the generation number to see if a  * struct unpcb has been reused, and will skip it if so.  */
+comment|/*  * unp_pcblist() assumes that UNIX domain socket memory is never reclaimed by  * the zone (UMA_ZONE_NOFREE), and as such potentially stale pointers are  * safe to reference.  It first scans the list of struct unpcb's to generate  * a pointer list, then it rescans its list one entry at a time to  * externalize and copyout.  It checks the generation number to see if a  * struct unpcb has been reused, and will skip it if so.  */
 end_comment
 
 begin_function
@@ -5500,7 +5499,7 @@ name|n
 operator|=
 name|i
 expr_stmt|;
-comment|/* in case we lost some during malloc */
+comment|/* In case we lost some during malloc. */
 name|error
 operator|=
 literal|0
@@ -5732,7 +5731,7 @@ operator|!
 name|error
 condition|)
 block|{
-comment|/* 		 * Give the user an updated idea of our state. 		 * If the generation differs from what we told 		 * her before, she knows that something happened 		 * while we were processing this request, and it 		 * might be necessary to retry. 		 */
+comment|/* 		 * Give the user an updated idea of our state.  If the 		 * generation differs from what we told her before, she knows 		 * that something happened while we were processing this 		 * request, and it might be necessary to retry. 		 */
 name|xug
 operator|->
 name|xug_gen
@@ -5980,7 +5979,7 @@ operator|=
 operator|*
 name|rp
 expr_stmt|;
-comment|/* 		 * zero the pointer before calling 		 * unp_discard since it may end up 		 * in unp_gc().. 		 */
+comment|/* 		 * Zero the pointer before calling unp_discard since it may 		 * end up in unp_gc().. 		 */
 operator|*
 name|rp
 operator|++
@@ -6244,7 +6243,7 @@ goto|goto
 name|next
 goto|;
 block|}
-comment|/* 			 * now change each pointer to an fd in the global 			 * table to an integer that is the index to the 			 * local fd table entry that we set up to point 			 * to the global one we are transferring. 			 */
+comment|/* 			 * Now change each pointer to an fd in the global 			 * table to an integer that is the index to the local 			 * fd table entry that we set up to point to the 			 * global one we are transferring. 			 */
 name|newlen
 operator|=
 name|newfds
@@ -6406,7 +6405,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* We can just copy anything else across */
+comment|/* We can just copy anything else across. */
 if|if
 condition|(
 name|error
@@ -7000,7 +6999,7 @@ argument_list|(
 name|int
 argument_list|)
 expr_stmt|;
-comment|/* 			 * check that all the FDs passed in refer to legal files 			 * If not, reject the entire operation. 			 */
+comment|/* 			 * Check that all the FDs passed in refer to legal 			 * files.  If not, reject the entire operation. 			 */
 name|fdp
 operator|=
 name|data
@@ -7101,7 +7100,7 @@ name|out
 goto|;
 block|}
 block|}
-comment|/* 			 * Now replace the integer FDs with pointers to 			 * the associated global file table entry.. 			 */
+comment|/* 			 * Now replace the integer FDs with pointers to the 			 * associated global file table entry.. 			 */
 name|newlen
 operator|=
 name|oldfds
@@ -7561,7 +7560,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* 	 * Unlink SCM_CREDS control messages (struct cmsgcred), since 	 * just created SCM_CREDS control message (struct sockcred) has 	 * another format. 	 */
+comment|/* 	 * Unlink SCM_CREDS control messages (struct cmsgcred), since just 	 * created SCM_CREDS control message (struct sockcred) has another 	 * format. 	 */
 if|if
 condition|(
 name|control
@@ -7792,7 +7791,7 @@ name|unp_defer
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * before going through all this, set all FDs to 	 * be NOT deferred and NOT externally accessible 	 */
+comment|/* 	 * Before going through all this, set all FDs to be NOT deferred and 	 * NOT externally accessible 	 */
 name|sx_slock
 argument_list|(
 operator|&
@@ -7873,7 +7872,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * If we already marked it as 'defer' in a 			 * previous pass, then try to process it this 			 * time and un-mark it 			 */
+comment|/* 			 * If we already marked it as 'defer' in a previous 			 * pass, then try to process it this time and un-mark 			 * it. 			 */
 if|if
 condition|(
 name|fp
@@ -7913,7 +7912,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 				 * If all references are from messages 				 * in transit, then skip it. it's not 				 * externally accessible. 				 */
+comment|/* 				 * If all references are from messages in 				 * transit, then skip it. it's not externally 				 * accessible. 				 */
 if|if
 condition|(
 name|fp
@@ -7940,7 +7939,7 @@ operator||=
 name|FMARK
 expr_stmt|;
 block|}
-comment|/* 			 * either it was deferred, or it is externally 			 * accessible and not already marked so. 			 * Now check if it is possibly one of OUR sockets. 			 */
+comment|/* 			 * Either it was deferred, or it is externally 			 * accessible and not already marked so.  Now check 			 * if it is possibly one of OUR sockets. 			 */
 if|if
 condition|(
 name|fp
@@ -8010,7 +8009,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* 			 * So, Ok, it's one of our sockets and it IS externally 			 * accessible (or was deferred). Now we look 			 * to see if we hold any file descriptors in its 			 * message buffers. Follow those links and mark them 			 * as accessible too. 			 */
+comment|/* 			 * So, Ok, it's one of our sockets and it IS 			 * externally accessible (or was deferred).  Now we 			 * look to see if we hold any file descriptors in its 			 * message buffers. Follow those links and mark them 			 * as accessible too. 			 */
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
@@ -8077,7 +8076,7 @@ operator|&
 name|filelist_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXXRW: The following comments need updating for a post-SMPng and 	 * deferred unp_gc() world, but are still generally accurate. 	 * 	 * We grab an extra reference to each of the file table entries 	 * that are not otherwise accessible and then free the rights 	 * that are stored in messages on them. 	 * 	 * The bug in the orginal code is a little tricky, so I'll describe 	 * what's wrong with it here. 	 * 	 * It is incorrect to simply unp_discard each entry for f_msgcount 	 * times -- consider the case of sockets A and B that contain 	 * references to each other.  On a last close of some other socket, 	 * we trigger a gc since the number of outstanding rights (unp_rights) 	 * is non-zero.  If during the sweep phase the gc code unp_discards, 	 * we end up doing a (full) closef on the descriptor.  A closef on A 	 * results in the following chain.  Closef calls soo_close, which 	 * calls soclose.   Soclose calls first (through the switch 	 * uipc_usrreq) unp_detach, which re-invokes unp_gc.  Unp_gc simply 	 * returns because the previous instance had set unp_gcing, and 	 * we return all the way back to soclose, which marks the socket 	 * with SS_NOFDREF, and then calls sofree.  Sofree calls sorflush 	 * to free up the rights that are queued in messages on the socket A, 	 * i.e., the reference on B.  The sorflush calls via the dom_dispose 	 * switch unp_dispose, which unp_scans with unp_discard.  This second 	 * instance of unp_discard just calls closef on B. 	 * 	 * Well, a similar chain occurs on B, resulting in a sorflush on B, 	 * which results in another closef on A.  Unfortunately, A is already 	 * being closed, and the descriptor has already been marked with 	 * SS_NOFDREF, and soclose panics at this point. 	 * 	 * Here, we first take an extra reference to each inaccessible 	 * descriptor.  Then, we call sorflush ourself, since we know 	 * it is a Unix domain socket anyhow.  After we destroy all the 	 * rights carried in messages, we do a last closef to get rid 	 * of our extra reference.  This is the last close, and the 	 * unp_detach etc will shut down the socket. 	 * 	 * 91/09/19, bsy@cs.cmu.edu 	 */
+comment|/* 	 * XXXRW: The following comments need updating for a post-SMPng and 	 * deferred unp_gc() world, but are still generally accurate. 	 * 	 * We grab an extra reference to each of the file table entries that 	 * are not otherwise accessible and then free the rights that are 	 * stored in messages on them. 	 * 	 * The bug in the orginal code is a little tricky, so I'll describe 	 * what's wrong with it here. 	 * 	 * It is incorrect to simply unp_discard each entry for f_msgcount 	 * times -- consider the case of sockets A and B that contain 	 * references to each other.  On a last close of some other socket, 	 * we trigger a gc since the number of outstanding rights (unp_rights) 	 * is non-zero.  If during the sweep phase the gc code unp_discards, 	 * we end up doing a (full) closef on the descriptor.  A closef on A 	 * results in the following chain.  Closef calls soo_close, which 	 * calls soclose.   Soclose calls first (through the switch 	 * uipc_usrreq) unp_detach, which re-invokes unp_gc.  Unp_gc simply 	 * returns because the previous instance had set unp_gcing, and we 	 * return all the way back to soclose, which marks the socket with 	 * SS_NOFDREF, and then calls sofree.  Sofree calls sorflush to free 	 * up the rights that are queued in messages on the socket A, i.e., 	 * the reference on B.  The sorflush calls via the dom_dispose switch 	 * unp_dispose, which unp_scans with unp_discard.  This second 	 * instance of unp_discard just calls closef on B. 	 * 	 * Well, a similar chain occurs on B, resulting in a sorflush on B, 	 * which results in another closef on A.  Unfortunately, A is already 	 * being closed, and the descriptor has already been marked with 	 * SS_NOFDREF, and soclose panics at this point. 	 * 	 * Here, we first take an extra reference to each inaccessible 	 * descriptor.  Then, we call sorflush ourself, since we know it is a 	 * Unix domain socket anyhow.  After we destroy all the rights 	 * carried in messages, we do a last closef to get rid of our extra 	 * reference.  This is the last close, and the unp_detach etc will 	 * shut down the socket. 	 * 	 * 91/09/19, bsy@cs.cmu.edu 	 */
 name|again
 label|:
 name|nfiles_snap
@@ -8197,7 +8196,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * If all refs are from msgs, and it's not marked accessible 		 * then it must be referenced from some unreachable cycle 		 * of (shut-down) FDs, so include it in our 		 * list of FDs to remove 		 */
+comment|/* 		 * If all refs are from msgs, and it's not marked accessible 		 * then it must be referenced from some unreachable cycle of 		 * (shut-down) FDs, so include it in our list of FDs to 		 * remove. 		 */
 if|if
 condition|(
 name|fp
@@ -8245,7 +8244,7 @@ operator|&
 name|filelist_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * for each FD on our hit list, do the following two things 	 */
+comment|/* 	 * For each FD on our hit list, do the following two things: 	 */
 for|for
 control|(
 name|i
