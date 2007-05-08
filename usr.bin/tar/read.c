@@ -823,6 +823,12 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bsdtar
+operator|->
+name|return_value
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 block|}
 name|fprintf
