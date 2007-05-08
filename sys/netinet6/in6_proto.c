@@ -1708,12 +1708,12 @@ begin_decl_stmt
 name|int
 name|ip6_hdrnestlimit
 init|=
-literal|50
+literal|15
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* appropriate? */
+comment|/* How many header options will we process? */
 end_comment
 
 begin_decl_stmt
