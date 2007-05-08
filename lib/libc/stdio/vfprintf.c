@@ -3620,6 +3620,11 @@ name|size
 operator|=
 literal|3
 expr_stmt|;
+name|flags
+operator|&=
+operator|~
+name|ZEROPAD
+expr_stmt|;
 break|break;
 block|}
 name|flags
