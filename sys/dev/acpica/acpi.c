@@ -1821,6 +1821,20 @@ name|NULL
 condition|)
 name|return_VOID
 expr_stmt|;
+name|snprintf
+argument_list|(
+name|acpi_ca_version
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|acpi_ca_version
+argument_list|)
+argument_list|,
+literal|"%x"
+argument_list|,
+name|ACPI_CA_VERSION
+argument_list|)
+expr_stmt|;
 comment|/* Initialize root tables. */
 if|if
 condition|(
@@ -1839,20 +1853,6 @@ expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
-name|snprintf
-argument_list|(
-name|acpi_ca_version
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|acpi_ca_version
-argument_list|)
-argument_list|,
-literal|"%x"
-argument_list|,
-name|ACPI_CA_VERSION
-argument_list|)
-expr_stmt|;
 comment|/* Attach the actual ACPI device. */
 if|if
 condition|(
