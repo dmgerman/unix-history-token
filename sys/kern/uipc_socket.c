@@ -5455,13 +5455,6 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-goto|goto
-name|release
-goto|;
 name|SOCKBUF_UNLOCK
 argument_list|(
 operator|&
@@ -5470,6 +5463,13 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|release
+goto|;
 goto|goto
 name|restart
 goto|;
