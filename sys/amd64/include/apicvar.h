@@ -471,6 +471,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|apic_disable_vector
+parameter_list|(
+name|u_int
+name|vector
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|apic_enable_vector
 parameter_list|(
 name|u_int

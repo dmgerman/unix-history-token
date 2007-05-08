@@ -408,7 +408,7 @@ parameter_list|,
 name|imenptr
 parameter_list|)
 define|\
-value|{ { atpic_enable_source, atpic_disable_source, (eoi),		\ 	    atpic_enable_intr, atpic_vector, atpic_source_pending, NULL, \ 	    atpic_resume, atpic_config_intr, atpic_assign_cpu }, (io),  \ 	    (base), IDT_IO_INTS + (base), (imenptr) }
+value|{ { atpic_enable_source, atpic_disable_source, (eoi),		\ 	    atpic_enable_intr, atpic_disable_intr, atpic_vector,	\ 	    atpic_source_pending, NULL,	atpic_resume, atpic_config_intr,\ 	    atpic_assign_cpu }, (io), (base), IDT_IO_INTS + (base),	\ 	    (imenptr) }
 end_define
 
 begin_define
@@ -536,6 +536,19 @@ begin_function_decl
 specifier|static
 name|void
 name|atpic_enable_intr
+parameter_list|(
+name|struct
+name|intsrc
+modifier|*
+name|isrc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|atpic_disable_intr
 parameter_list|(
 name|struct
 name|intsrc
@@ -1205,6 +1218,19 @@ begin_function
 specifier|static
 name|void
 name|atpic_enable_intr
+parameter_list|(
+name|struct
+name|intsrc
+modifier|*
+name|isrc
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|atpic_disable_intr
 parameter_list|(
 name|struct
 name|intsrc
