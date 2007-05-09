@@ -3,19 +3,9 @@ begin_comment
 comment|/**************************************************************************  Copyright (c) 2001-2007, Intel Corporation All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Intel Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/*$FreeBSD$*/
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -1668,6 +1658,22 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|boolean_t
+name|em_tx_adv_ctx_setup
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|boolean_t
 name|em_tso_setup
 parameter_list|(
 name|struct
@@ -1821,22 +1827,6 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|em_tx_adv_ctx_setup
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
@@ -5013,7 +5003,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Send a copy of the frame to the BPF listener */
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
@@ -6195,6 +6185,48 @@ operator|.
 name|addr
 argument_list|,
 name|ETHER_ADDR_LEN
+argument_list|)
+expr_stmt|;
+comment|/* Put the address into the Receive Address Array */
+name|e1000_rar_set
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|addr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * With 82571 controllers, LAA may be overwritten 	 * due to controller reset from the other port. 	 */
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_82571
+condition|)
+name|e1000_set_laa_state_82571
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the hardware */
@@ -9042,6 +9074,17 @@ begin_comment
 comment|/*********************************************************************  *  *  This routine maps the mbufs to Advanced TX descriptors.  *  used by the 82575 adapter. It also needs no workarounds.  *    **********************************************************************/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CSUM_OFFLOAD
+value|7
+end_define
+
+begin_comment
+comment|/* Checksum bits */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -9098,8 +9141,6 @@ init|=
 literal|0
 decl_stmt|;
 name|u32
-name|do_tso
-decl_stmt|,
 name|paylen
 init|=
 literal|0
@@ -9123,22 +9164,6 @@ name|m_head
 operator|=
 operator|*
 name|m_headp
-expr_stmt|;
-name|do_tso
-operator|=
-operator|(
-operator|(
-name|m_head
-operator|->
-name|m_pkthdr
-operator|.
-name|csum_flags
-operator|&
-name|CSUM_TSO
-operator|)
-operator|!=
-literal|0
-operator|)
 expr_stmt|;
 comment|/* Set basic descriptor constants */
 name|cmd_type_len
@@ -9452,29 +9477,9 @@ operator|*
 name|m_headp
 expr_stmt|;
 comment|/*          * Set up the context descriptor:          * used when any hardware offload is done. 	 * This includes CSUM, VLAN, and TSO. It 	 * will use the first descriptor.          */
-if|if
-condition|(
-name|m_head
-operator|->
-name|m_pkthdr
-operator|.
-name|csum_flags
-condition|)
-block|{
-comment|/* All offloads set this */
-name|olinfo_status
-operator||=
-name|E1000_TXD_POPTS_TXSM
-operator|<<
-literal|8
-expr_stmt|;
 comment|/* First try TSO */
 if|if
 condition|(
-operator|(
-name|do_tso
-operator|)
-operator|&&
 name|em_tso_adv_setup
 argument_list|(
 name|adapter
@@ -9498,19 +9503,43 @@ literal|8
 expr_stmt|;
 name|olinfo_status
 operator||=
+name|E1000_TXD_POPTS_TXSM
+operator|<<
+literal|8
+expr_stmt|;
+name|olinfo_status
+operator||=
 name|paylen
 operator|<<
 name|E1000_ADVTXD_PAYLEN_SHIFT
 expr_stmt|;
 block|}
-else|else
-comment|/* Just checksum offload */
+elseif|else
+if|if
+condition|(
+name|m_head
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_OFFLOAD
+condition|)
+block|{
+if|if
+condition|(
 name|em_tx_adv_ctx_setup
 argument_list|(
 name|adapter
 argument_list|,
 name|m_head
 argument_list|)
+condition|)
+name|olinfo_status
+operator||=
+name|E1000_TXD_POPTS_TXSM
+operator|<<
+literal|8
 expr_stmt|;
 block|}
 comment|/* Set up our transmit descriptors */
@@ -16430,6 +16459,21 @@ name|th
 decl_stmt|;
 if|if
 condition|(
+operator|(
+operator|(
+name|mp
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_TSO
+operator|)
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
 name|mp
 operator|->
 name|m_pkthdr
@@ -16437,6 +16481,7 @@ operator|.
 name|len
 operator|<=
 name|EM_TX_BUFFER_SIZE
+operator|)
 condition|)
 return|return
 name|FALSE
@@ -16809,7 +16854,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|boolean_t
 name|em_tx_adv_ctx_setup
 parameter_list|(
 name|struct
@@ -17039,7 +17084,9 @@ name|ehdrlen
 operator|+
 name|ip_hlen
 condition|)
-return|return;
+return|return
+name|FALSE
+return|;
 comment|/* failure */
 name|ipproto
 operator|=
@@ -17088,7 +17135,9 @@ name|ehdrlen
 operator|+
 name|ip_hlen
 condition|)
-return|return;
+return|return
+name|FALSE
+return|;
 comment|/* failure */
 name|ipproto
 operator|=
@@ -17102,7 +17151,9 @@ name|E1000_ADVTXD_TUCMD_IPV6
 expr_stmt|;
 break|break;
 default|default:
-return|return;
+return|return
+name|FALSE
+return|;
 block|}
 name|vlan_macip_lens
 operator||=
@@ -17231,7 +17282,9 @@ name|adapter
 operator|->
 name|num_tx_desc_avail
 expr_stmt|;
-return|return;
+return|return
+name|TRUE
+return|;
 block|}
 end_function
 
