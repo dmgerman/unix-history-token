@@ -469,7 +469,7 @@ name|void
 name|stge_watchdog
 parameter_list|(
 name|struct
-name|ifnet
+name|stge_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3566,9 +3566,15 @@ name|stge_start
 expr_stmt|;
 name|ifp
 operator|->
+name|if_timer
+operator|=
+literal|0
+expr_stmt|;
+name|ifp
+operator|->
 name|if_watchdog
 operator|=
-name|stge_watchdog
+name|NULL
 expr_stmt|;
 name|ifp
 operator|->
@@ -6510,9 +6516,9 @@ name|DMAC_TxDMAPollNow
 argument_list|)
 expr_stmt|;
 comment|/* Set a timeout in case the chip goes out to lunch. */
-name|ifp
+name|sc
 operator|->
-name|if_timer
+name|sc_watchdog_timer
 operator|=
 literal|5
 expr_stmt|;
@@ -6521,7 +6527,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * stge_watchdog:	[ifnet interface function]  *  *	Watchdog timer handler.  */
+comment|/*  * stge_watchdog:  *  *	Watchdog timer handler.  */
 end_comment
 
 begin_function
@@ -6530,26 +6536,40 @@ name|void
 name|stge_watchdog
 parameter_list|(
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-block|{
-name|struct
 name|stge_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|sc
-operator|=
+parameter_list|)
+block|{
+name|struct
+name|ifnet
+modifier|*
 name|ifp
-operator|->
-name|if_softc
-expr_stmt|;
-name|STGE_LOCK
+decl_stmt|;
+name|STGE_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_watchdog_timer
+operator|==
+literal|0
+operator|||
+operator|--
+name|sc
+operator|->
+name|sc_watchdog_timer
+condition|)
+return|return;
+name|ifp
+operator|=
+name|sc
+operator|->
+name|sc_ifp
 expr_stmt|;
 name|if_printf
 argument_list|(
@@ -6566,11 +6586,6 @@ name|if_oerrors
 operator|++
 expr_stmt|;
 name|stge_init_locked
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|STGE_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -8005,9 +8020,9 @@ name|stge_tx_cnt
 operator|==
 literal|0
 condition|)
-name|ifp
+name|sc
 operator|->
-name|if_timer
+name|sc_watchdog_timer
 operator|=
 literal|0
 expr_stmt|;
@@ -9225,6 +9240,11 @@ operator|!=
 literal|0
 condition|)
 name|stge_txeof
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|stge_watchdog
 argument_list|(
 name|sc
 argument_list|)
@@ -10590,6 +10610,12 @@ operator|->
 name|sc_tick_ch
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_watchdog_timer
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Reset the chip to a known state. 	 */
 name|stge_reset
 argument_list|(
@@ -10859,12 +10885,6 @@ name|IFF_DRV_RUNNING
 operator||
 name|IFF_DRV_OACTIVE
 operator|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function
