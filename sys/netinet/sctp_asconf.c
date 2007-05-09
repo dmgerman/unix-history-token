@@ -90,7 +90,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|sctp_asconf_get_source_ip
 parameter_list|(
 name|struct
@@ -199,9 +199,7 @@ name|ip_src
 operator|.
 name|s_addr
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 ifdef|#
 directive|ifdef
@@ -287,18 +285,13 @@ name|ip6
 operator|->
 name|ip6_src
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 endif|#
 directive|endif
 comment|/* INET6 */
 else|else
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 block|}
 end_function
 
@@ -359,25 +352,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"asconf_success_response: couldn't get mbuf!\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return
 name|NULL
 return|;
@@ -532,25 +513,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"asconf_error_response: couldn't get mbuf!\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return
 name|NULL
 return|;
@@ -644,27 +613,15 @@ operator|>
 name|MLEN
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"asconf_error_response: tlv_length (%xh) too big\n"
 argument_list|,
 name|tlv_length
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 name|sctp_m_freem
 argument_list|(
 name|m_reply
@@ -997,30 +954,20 @@ name|zero_address
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_add_ip: adding "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 break|break;
 case|case
 name|SCTP_IPV6_ADDRESS
@@ -1124,30 +1071,20 @@ name|zero_address
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_add_ip: adding "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 else|#
 directive|else
 comment|/* IPv6 not enabled! */
@@ -1171,36 +1108,25 @@ argument_list|,
 name|aparam_length
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_add_ip: v6 disabled- skipping "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return
 name|m_reply
 return|;
 endif|#
 directive|endif
-comment|/* INET6 */
 break|break;
 default|default:
 name|m_reply
@@ -1252,30 +1178,20 @@ argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_add_ip: using source addr "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 block|}
 comment|/* add the address */
 if|if
@@ -1294,25 +1210,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_add_ip: error adding address\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 name|m_reply
 operator|=
 name|sctp_asconf_error_response
@@ -1471,23 +1375,17 @@ argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"asconf_del_remote_addrs_except: deleting "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 operator|(
 expr|struct
 name|sockaddr
@@ -1501,9 +1399,6 @@ operator|.
 name|_l_addr
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* notify upper layer */
 name|sctp_ulp_notify
 argument_list|(
@@ -1801,30 +1696,20 @@ name|zero_address
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_delete_ip: deleting "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 break|break;
 case|case
 name|SCTP_IPV6_ADDRESS
@@ -1925,64 +1810,43 @@ name|zero_address
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_delete_ip: deleting "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 else|#
 directive|else
 comment|/* IPv6 not enabled!  No "action" needed; just ack it */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_delete_ip: v6 disabled- ignoring: "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* just respond with a "success" ASCONF-ACK */
 return|return
 name|NULL
 return|;
 endif|#
 directive|endif
-comment|/* INET6 */
 break|break;
 default|default:
 name|m_reply
@@ -2026,25 +1890,13 @@ argument_list|)
 condition|)
 block|{
 comment|/* trying to delete the source address! */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_delete_ip: tried to delete source addr\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 name|m_reply
 operator|=
 name|sctp_asconf_error_response
@@ -2097,25 +1949,13 @@ name|result
 condition|)
 block|{
 comment|/* src address did not exist? */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_delete_ip: src addr does not exist?\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* what error to reply with?? */
 name|m_reply
 operator|=
@@ -2177,25 +2017,13 @@ literal|1
 condition|)
 block|{
 comment|/* only one address in the asoc */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_delete_ip: tried to delete last IP addr!\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 name|m_reply
 operator|=
 name|sctp_asconf_error_response
@@ -2494,30 +2322,20 @@ name|zero_address
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_set_primary: "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 break|break;
 case|case
 name|SCTP_IPV6_ADDRESS
@@ -2613,64 +2431,43 @@ name|zero_address
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_set_primary: "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 else|#
 directive|else
 comment|/* IPv6 not enabled!  No "action" needed; just ack it */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_set_primary: v6 disabled- ignoring: "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* just respond with a "success" ASCONF-ACK */
 return|return
 name|NULL
 return|;
 endif|#
 directive|endif
-comment|/* INET6 */
 break|break;
 default|default:
 name|m_reply
@@ -2721,30 +2518,20 @@ argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_set_primary: using source addr "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 block|}
 comment|/* set the primary address */
 if|if
@@ -2761,25 +2548,13 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_set_primary: primary address set\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* notify upper layer */
 name|sctp_ulp_notify
 argument_list|(
@@ -2811,25 +2586,13 @@ block|}
 else|else
 block|{
 comment|/* couldn't set the requested primary address! */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_asconf_set_primary: set primary failed!\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* must have been an invalid address, so report */
 name|m_reply
 operator|=
@@ -2958,18 +2721,10 @@ name|sctp_asconf_chunk
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf: chunk too small = %xh\n"
 argument_list|,
 name|ntohs
@@ -2982,10 +2737,6 @@ name|chunk_length
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return;
 block|}
 name|asoc
@@ -3014,27 +2765,15 @@ name|asconf_seq_in
 condition|)
 block|{
 comment|/* got a duplicate ASCONF */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf: got duplicate serial number = %xh\n"
 argument_list|,
 name|serial_num
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* resend last ASCONF-ACK... */
 name|sctp_send_asconf_ack
 argument_list|(
@@ -3059,18 +2798,10 @@ literal|1
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf: incorrect serial number = %xh (expected next = %xh)\n"
 argument_list|,
 name|serial_num
@@ -3082,10 +2813,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return;
 block|}
 comment|/* it's the expected "next" sequence number, so process it */
@@ -3110,18 +2837,10 @@ operator|.
 name|chunk_length
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf: asconf_limit=%u, sequence=%xh\n"
 argument_list|,
 name|asconf_limit
@@ -3129,10 +2848,6 @@ argument_list|,
 name|serial_num
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 if|if
 condition|(
 name|asoc
@@ -3183,25 +2898,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf: couldn't get mbuf!\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return;
 block|}
 name|m_tail
@@ -3313,25 +3016,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf: couldn't get lookup addr!\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* respond with a missing/invalid mandatory parameter error */
 return|return;
 block|}
@@ -3378,16 +3069,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"Gak in asconf2\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 comment|/* get pointer to first asconf param in ASCONF */
@@ -3425,16 +3113,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"Empty ASCONF received?\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 goto|goto
 name|send_reply
 goto|;
@@ -3506,27 +3191,15 @@ name|aparam_buf
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf: param length (%u) larger than buffer size!\n"
 argument_list|,
 name|param_length
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 name|sctp_m_freem
 argument_list|(
 name|m_ack
@@ -3545,27 +3218,15 @@ name|sctp_paramhdr
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf: param length (%u) too short\n"
 argument_list|,
 name|param_length
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 name|sctp_m_freem
 argument_list|(
 name|m_ack
@@ -3598,16 +3259,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-name|printf
+name|SCTPDBG
 argument_list|(
-literal|"Gag\n"
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
+literal|"handle_asconf: couldn't get entire param\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sctp_m_freem
 argument_list|(
 name|m_ack
@@ -3831,29 +3489,16 @@ name|NULL
 condition|)
 block|{
 comment|/* can't get an asconf paramhdr */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf: can't get asconf param hdr!\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* FIX ME - add error here... */
 block|}
 block|}
-comment|/* while */
 name|send_reply
 label|:
 name|ack_cp
@@ -3918,23 +3563,13 @@ operator|)
 operator|&
 name|from_store
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf: looking up net for IP source address\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* pullup already done, IP options already stripped */
 name|iph
 operator|=
@@ -4160,30 +3795,20 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"Looking for IP source: "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 name|from
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* look up the from address */
 name|stcb
 operator|->
@@ -4203,7 +3828,6 @@ directive|ifdef
 name|SCTP_DEBUG
 if|if
 condition|(
-operator|(
 name|stcb
 operator|->
 name|asoc
@@ -4211,22 +3835,16 @@ operator|.
 name|last_control_chunk_from
 operator|==
 name|NULL
-operator|)
-operator|&&
-operator|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-operator|)
 condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf: IP source address not found?!\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* SCTP_DEBUG */
 block|}
 block|}
 comment|/* and send it (a new one) out... */
@@ -4786,25 +4404,13 @@ name|NULL
 condition|)
 block|{
 comment|/* didn't get memory */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"asconf_queue_add: failed to get memory!\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return
 operator|(
 operator|-
@@ -5081,6 +4687,11 @@ block|}
 else|else
 block|{
 comment|/* invalid family! */
+name|SCTP_FREE
+argument_list|(
+name|aa
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -5118,30 +4729,20 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF2
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF2
+argument_list|,
 literal|"asconf_queue_add: appended asconf ADD_IP_ADDRESS: "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF2
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 block|}
 else|else
 block|{
@@ -5166,7 +4767,7 @@ name|SCTP_DEBUG
 if|if
 condition|(
 name|sctp_debug_on
-operator|&
+operator|&&
 name|SCTP_DEBUG_ASCONF2
 condition|)
 block|{
@@ -5177,26 +4778,30 @@ operator|==
 name|SCTP_DEL_IP_ADDRESS
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"asconf_queue_add: inserted asconf DEL_IP_ADDRESS: "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF2
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"asconf_queue_add: inserted asconf SET_PRIM_ADDR: "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF2
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
@@ -5204,7 +4809,6 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* SCTP_DEBUG */
 block|}
 return|return
 operator|(
@@ -5253,6 +4857,20 @@ decl_stmt|;
 name|uint32_t
 name|vrf_id
 decl_stmt|;
+if|if
+condition|(
+name|stcb
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* see if peer supports ASCONF */
 if|if
 condition|(
@@ -5551,25 +5169,13 @@ name|NULL
 condition|)
 block|{
 comment|/* didn't get memory */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"asconf_queue_add_sa: failed to get memory!\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return
 operator|(
 operator|-
@@ -6038,25 +5644,13 @@ argument_list|)
 condition|)
 block|{
 comment|/* invalid error cause length */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"asconf_process_error: cause element too long\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return;
 block|}
 if|if
@@ -6083,25 +5677,13 @@ argument_list|)
 condition|)
 block|{
 comment|/* invalid included TLV length */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"asconf_process_error: included TLV too long\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return;
 block|}
 comment|/* which error code ? */
@@ -6224,25 +5806,13 @@ block|{
 case|case
 name|SCTP_ADD_IP_ADDRESS
 case|:
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_param_ack: added IP address\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 name|sctp_asconf_addr_mgmt_ack
 argument_list|(
 name|stcb
@@ -6260,25 +5830,13 @@ break|break;
 case|case
 name|SCTP_DEL_IP_ADDRESS
 case|:
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"process_param_ack: deleted IP address\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* nothing really to do... lists already updated */
 break|break;
 case|case
@@ -6454,18 +6012,10 @@ name|sctp_asconf_ack_chunk
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf_ack: chunk too small = %xh\n"
 argument_list|,
 name|ntohs
@@ -6478,10 +6028,6 @@ name|chunk_length
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return;
 block|}
 name|asoc
@@ -6515,25 +6061,13 @@ literal|1
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf_ack: got unexpected next serial number! Aborting asoc!\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 name|sctp_abort_an_association
 argument_list|(
 name|stcb
@@ -6559,18 +6093,10 @@ name|asconf_seq_out
 condition|)
 block|{
 comment|/* got a duplicate/unexpected ASCONF-ACK */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf_ack: got duplicate/unexpected serial number = %xh (expected = %xh)\n"
 argument_list|,
 name|serial_num
@@ -6580,10 +6106,6 @@ operator|->
 name|asconf_seq_out
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return;
 block|}
 if|if
@@ -6598,27 +6120,15 @@ literal|0
 condition|)
 block|{
 comment|/* got a unexpected ASCONF-ACK for serial not in flight */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"handle_asconf_ack: got serial number = %xh but not in flight\n"
 argument_list|,
 name|serial_num
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* nothing to do... duplicate ACK received */
 return|return;
 block|}
@@ -6787,27 +6297,15 @@ name|aparam_buf
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"param length (%u) larger than buffer size!\n"
 argument_list|,
 name|param_length
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 name|sctp_asconf_ack_clear
 argument_list|(
 name|stcb
@@ -8933,61 +8431,41 @@ name|primary_destination
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"set_primary_ip_address_sa: queued on tcb=%p, "
 argument_list|,
 name|stcb
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
-block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"set_primary_ip_address_sa: failed to add to queue on tcb=%p, "
 argument_list|,
 name|stcb
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return
 operator|(
 operator|-
@@ -9089,25 +8567,19 @@ name|primary_destination
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"set_primary_ip_address: queued on stcb=%p, "
 argument_list|,
 name|stcb
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 operator|&
 name|ifa
 operator|->
@@ -9116,10 +8588,6 @@ operator|.
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 block|}
 block|}
 comment|/* for each stcb */
@@ -9169,6 +8637,19 @@ operator|.
 name|vrf_id
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vrf
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|LIST_FOREACH
 argument_list|(
 argument|sctp_ifn
@@ -9624,23 +9105,13 @@ name|NULL
 condition|)
 block|{
 comment|/* no mbuf's */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"compose_asconf: couldn't get chunk mbuf!\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return
 operator|(
 name|NULL
@@ -9670,23 +9141,13 @@ name|NULL
 condition|)
 block|{
 comment|/* no mbuf's */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"compose_asconf: couldn't get mbuf!\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 name|sctp_m_freem
 argument_list|(
 name|m_asconf_chk
@@ -10348,23 +9809,13 @@ block|}
 else|else
 block|{
 comment|/* uh oh... don't have any address?? */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"compose_asconf: no lookup addr!\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* for now, we send a IPv4 address of 0.0.0.0 */
 name|lookup
 operator|->
@@ -10543,25 +9994,21 @@ decl_stmt|;
 name|uint32_t
 name|vrf_id
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF2
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF2
+argument_list|,
 literal|"processing init-ack addresses\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
+if|if
+condition|(
+name|stcb
+operator|==
+name|NULL
+condition|)
+comment|/* Un-needed check for SA */
+return|return;
 comment|/* convert to upper bound */
 name|length
 operator|+=
@@ -11005,10 +10452,7 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"process_initack_addrs: bad len (%d) type=%xh\n"
 argument_list|,
@@ -11017,8 +10461,6 @@ argument_list|,
 name|ptype
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 comment|/* get next parameter */
@@ -11186,30 +10628,20 @@ operator|(
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF2
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF2
+argument_list|,
 literal|"find_initack_addr: starting search for "
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_ASCONF2
+argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* convert to upper bound */
 name|length
 operator|+=
@@ -11230,25 +10662,13 @@ operator|>
 name|length
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"find_initack_addr: invalid offset?\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return
 operator|(
 literal|0
@@ -11362,9 +10782,17 @@ expr|struct
 name|sctp_ipv6addr_param
 argument_list|)
 operator|||
+operator|(
 name|ph
 operator|==
 name|NULL
+operator|)
+operator|||
+operator|(
+name|a6p
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 return|return
@@ -11508,9 +10936,17 @@ expr|struct
 name|sctp_ipv4addr_param
 argument_list|)
 operator|||
+operator|(
 name|ph
 operator|==
 name|NULL
+operator|)
+operator|||
+operator|(
+name|a4p
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 return|return
@@ -11668,25 +11104,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"check_addr_list_ep: laddr->ifa is NULL"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 continue|continue;
 block|}
 if|if
@@ -11698,25 +11122,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_ASCONF1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
 literal|"check_addr_list_ep: laddr->ifa->ifa_addr is NULL"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 continue|continue;
 block|}
 comment|/* do i have it implicitly? */
@@ -11864,10 +11276,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|vrf_id
-operator|=
-name|SCTP_DEFAULT_VRFID
-expr_stmt|;
+return|return;
 block|}
 name|vrf
 operator|=
@@ -12386,6 +11795,9 @@ argument_list|,
 name|sctp_nxt_addr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sctp_initiate_iterator
 argument_list|(
 name|sctp_iterator_ep

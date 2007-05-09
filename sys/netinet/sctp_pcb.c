@@ -1822,25 +1822,13 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Gak, what can we do? We have lost an address 			 * change can you say HOSED? 			 */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"Lost and address change ???\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* Opps, must decrement the count */
 name|sctp_del_addr_from_vrf
 argument_list|(
@@ -1993,18 +1981,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Can't find vrf_id:%d\n"
 argument_list|,
 name|vrf_id
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 goto|goto
 name|out_now
 goto|;
@@ -2115,15 +2098,19 @@ directive|ifdef
 name|SCTP_DEBUG
 else|else
 block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"Del Addr-ifn:%d Could not find address:"
 argument_list|,
 name|ifn_index
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
@@ -2165,25 +2152,13 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Gak, what can we do? We have lost an address 			 * change can you say HOSED? 			 */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"Lost and address change ???\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* Opps, must decrement the count */
 name|sctp_free_ifa
 argument_list|(
@@ -2567,24 +2542,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
-literal|"An ounce of prevention is worth a pound of cure\n"
+name|SCTP_DEBUG_PCB1
+argument_list|,
+literal|"%s: NULL ifa\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 continue|continue;
 block|}
 if|if
@@ -2598,24 +2564,13 @@ operator|&
 name|SCTP_BEING_DELETED
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"ifa being deleted\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 continue|continue;
 block|}
 if|if
@@ -4831,38 +4786,21 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
-literal|"An ounce of prevention is worth a pound of cure\n"
+name|SCTP_DEBUG_PCB1
+argument_list|,
+literal|"%s: NULL ifa\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 continue|continue;
 block|}
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"Ok laddr->ifa:%p is possible, "
 argument_list|,
 name|laddr
@@ -4870,9 +4808,6 @@ operator|->
 name|ifa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|laddr
@@ -4884,24 +4819,13 @@ operator|&
 name|SCTP_BEING_DELETED
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"Huh IFA being deleted\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 continue|continue;
 block|}
 if|if
@@ -6221,6 +6145,10 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* unknown */
+if|if
+condition|(
+name|inp_p
+condition|)
 operator|*
 name|inp_p
 operator|=
@@ -6924,18 +6852,10 @@ name|vrf_id
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"retval:%p inp:%p\n"
 argument_list|,
 name|retval
@@ -6943,9 +6863,6 @@ argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|retval
@@ -7037,26 +6954,15 @@ expr_stmt|;
 block|}
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"retval is %p\n"
 argument_list|,
 name|retval
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 return|return
 operator|(
 name|retval
@@ -7351,25 +7257,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INPUT3
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
-literal|"findassociation_ep_asconf: failed to get asconf lookup addr\n"
+name|SCTP_DEBUG_INPUT3
+argument_list|,
+literal|"%s: failed to get asconf lookup addr\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return
 name|NULL
 return|;
@@ -7465,25 +7361,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INPUT3
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
-literal|"findassociation_ep_asconf: failed to get asconf v6 lookup addr\n"
+name|SCTP_DEBUG_INPUT3
+argument_list|,
+literal|"%s: failed to get asconf v6 lookup addr\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return
 operator|(
 name|NULL
@@ -7632,25 +7518,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INPUT3
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
-literal|"findassociation_ep_asconf: failed to get asconf v4 lookup addr\n"
+name|SCTP_DEBUG_INPUT3
+argument_list|,
+literal|"%s: failed to get asconf v4 lookup addr\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 return|return
 operator|(
 name|NULL
@@ -7869,7 +7745,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Out of SCTP-INPCB structures - no resources\n"
 argument_list|)
@@ -8139,7 +8015,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Out of SCTP-INPCB->hashinit - no resources\n"
 argument_list|)
@@ -8985,25 +8861,13 @@ name|NULL
 condition|)
 block|{
 comment|/* 				 * Gak, what can we do? This assoc is really 				 * HOSED. We probably should send an abort 				 * here. 				 */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"Association hosed in TCP model, out of laddr memory\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 continue|continue;
 block|}
 name|SCTP_INCR_LADDR_COUNT
@@ -9493,18 +9357,13 @@ directive|ifdef
 name|SCTP_DEBUG
 if|if
 condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-if|if
-condition|(
 name|addr
 condition|)
 block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"Bind called port:%d\n"
 argument_list|,
 name|ntohs
@@ -9522,21 +9381,23 @@ name|sin_port
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"Addr :"
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 endif|#
 directive|endif
-comment|/* SCTP_DEBUG */
 if|if
 condition|(
 operator|(
@@ -10664,18 +10525,10 @@ argument_list|,
 name|sctp_hash
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"Main hash to bind at head:%p, bound port:%d\n"
 argument_list|,
 name|head
@@ -10686,9 +10539,6 @@ name|lport
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* set in the port */
 name|inp
 operator|->
@@ -10960,7 +10810,7 @@ name|SCTP_PCB_FLAGS_SOCKET_ALLGONE
 condition|)
 block|{
 comment|/* been here before.. eeks.. get out of here */
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"This conflict in free SHOULD not be happening!\n"
 argument_list|)
@@ -10997,7 +10847,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * First time through we have the socket lock, after that no more. 	 */
+comment|/* First time through we have the socket lock, after that no more. */
 if|if
 condition|(
 name|from
@@ -11706,7 +11556,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Error, sp is NULL, locked on sending is %p strm:%d\n"
 argument_list|,
@@ -13103,10 +12953,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * add's a remote endpoint address, done with the INIT/INIT-ACK as well as  * when a ASCONF arrives that adds it. It will also initialize all the cwnd  * stats of stuff.  */
-end_comment
-
 begin_function
 name|int
 name|sctp_is_address_on_local_host
@@ -13241,6 +13087,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * add's a remote endpoint address, done with the INIT/INIT-ACK as well as  * when a ASCONF arrives that adds it. It will also initialize all the cwnd  * stats of stuff.  */
+end_comment
+
 begin_function
 name|int
 name|sctp_add_remote_addr
@@ -13274,31 +13124,22 @@ decl_stmt|;
 name|int
 name|addr_inscope
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"Adding an address (from:%d) to the peer: "
 argument_list|,
 name|from
 argument_list|)
 expr_stmt|;
-name|sctp_print_address
+name|SCTPDBG_ADDR
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 name|newaddr
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|netfirst
 operator|=
 name|sctp_findnet
@@ -14313,7 +14154,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|SCTP_PRINT_FOR_B_AND_M
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"We have found an interface mtu of %d\n"
 argument_list|,
@@ -14375,7 +14216,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SCTP_PRINT_FOR_B_AND_M
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"The route mtu is %d\n"
 argument_list|,
@@ -14436,7 +14277,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SCTP_PRINT_FOR_B_AND_M
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"New assoc sets mtu to :%d\n"
 argument_list|,
@@ -14488,7 +14329,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SCTP_PRINT_FOR_B_AND_M
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"new address mtu:%d smaller than smallest:%d\n"
 argument_list|,
@@ -15052,6 +14893,24 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|firstaddr
+operator|==
+name|NULL
+condition|)
+block|{
+operator|*
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|SCTP_INP_RLOCK
 argument_list|(
 name|inp
@@ -15083,33 +14942,32 @@ name|NULL
 operator|)
 return|;
 block|}
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_PCB3
+argument_list|,
+literal|"Allocate an association for peer:"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SCTP_DEBUG
 if|if
 condition|(
-name|sctp_debug_on
-operator|&
+name|firstaddr
+condition|)
+block|{
+name|SCTPDBG_ADDR
+argument_list|(
 name|SCTP_DEBUG_PCB3
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Allocate an association for peer:"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|firstaddr
-condition|)
-block|{
-name|sctp_print_address
-argument_list|(
+argument_list|,
 name|firstaddr
 argument_list|)
 expr_stmt|;
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB3
+argument_list|,
 literal|"Port:%d\n"
 argument_list|,
 name|ntohs
@@ -15129,8 +14987,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+block|{
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB3
+argument_list|,
 literal|"None\n"
 argument_list|)
 expr_stmt|;
@@ -15801,26 +15662,15 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"Association %p now allocated\n"
 argument_list|,
 name|stcb
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 return|return
 operator|(
 name|stcb
@@ -19383,25 +19233,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
-literal|"An ounce of prevention is worth a pound of cure\n"
+name|SCTP_DEBUG_PCB1
+argument_list|,
+literal|"%s: NULL ifa\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 continue|continue;
 block|}
 if|if
@@ -19479,7 +19319,7 @@ comment|/*  * Add the address to the endpoint local address list There is nothin
 end_comment
 
 begin_function
-name|int
+name|void
 name|sctp_add_local_addr_ep
 parameter_list|(
 name|struct
@@ -19505,6 +19345,8 @@ name|int
 name|fnd
 decl_stmt|,
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|fnd
 operator|=
@@ -19520,11 +19362,7 @@ name|SCTP_PCB_FLAGS_BOUNDALL
 condition|)
 block|{
 comment|/* You are already bound to all. You have it already */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -19549,12 +19387,7 @@ name|SCTP_ADDR_IFA_UNUSEABLE
 condition|)
 block|{
 comment|/* Can't bind a non-useable addr. */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 block|}
 comment|/* first, is it already present? */
@@ -19611,11 +19444,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+return|return;
 name|inp
 operator|->
 name|laddr_count
@@ -19672,11 +19501,7 @@ name|INP_IPV4
 expr_stmt|;
 block|}
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
@@ -19759,7 +19584,7 @@ comment|/*  * Delete the address from the endpoint local address list There is n
 end_comment
 
 begin_function
-name|int
+name|void
 name|sctp_del_local_addr_ep
 parameter_list|(
 name|struct
@@ -19795,11 +19620,7 @@ name|SCTP_PCB_FLAGS_BOUNDALL
 condition|)
 block|{
 comment|/* You are already bound to all. You have it already */
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
+return|return;
 block|}
 name|LIST_FOREACH
 argument_list|(
@@ -19840,12 +19661,7 @@ operator|)
 condition|)
 block|{
 comment|/* can't delete unless there are at LEAST 2 addresses */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -20031,11 +19847,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
@@ -20044,7 +19856,7 @@ comment|/*  * Add the addr to the TCB local address list For the BOUNDALL or dyn
 end_comment
 
 begin_function
-name|int
+name|void
 name|sctp_add_local_addr_assoc
 parameter_list|(
 name|struct
@@ -20075,9 +19887,6 @@ name|struct
 name|sctpladdr
 modifier|*
 name|list
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 comment|/* 	 * Assumes TCB is locked.. and possibly the INP. May need to 	 * confirm/fix that if we need it and is not the case. 	 */
 name|list
@@ -20118,12 +19927,7 @@ name|SCTP_ADDR_IFA_UNUSEABLE
 condition|)
 block|{
 comment|/* Can't bind a non-existent addr. */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 block|}
 comment|/* does the address already exist? */
@@ -20145,17 +19949,13 @@ operator|==
 name|ifa
 condition|)
 block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 block|}
 comment|/* add to the list */
-name|error
-operator|=
+operator|(
+name|void
+operator|)
 name|sctp_insert_laddr
 argument_list|(
 name|list
@@ -20165,22 +19965,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
@@ -20340,7 +20125,7 @@ comment|/*  * Remove an address from the TCB local address list  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|sctp_del_local_addr_assoc
 parameter_list|(
 name|struct
@@ -20410,12 +20195,7 @@ literal|2
 condition|)
 block|{
 comment|/* can't delete last address */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 block|}
 name|LIST_FOREACH
@@ -20451,20 +20231,11 @@ argument_list|(
 name|laddr
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 block|}
 comment|/* address not found! */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
@@ -22639,7 +22410,7 @@ name|sctp_asconf_addrv4_param
 argument_list|)
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Sizeof setprim in init/init ack not %d but %d - ignored\n"
 argument_list|,
@@ -22710,7 +22481,7 @@ name|sctp_asconf_addr_param
 argument_list|)
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Sizeof setprim (v6) in init/init ack not %d but %d - ignored\n"
 argument_list|,
@@ -22770,6 +22541,9 @@ condition|(
 name|lsa
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_set_primary_addr
 argument_list|(
 name|stcb
@@ -23136,22 +22910,13 @@ operator|!=
 name|SCTP_AUTH_RANDOM_SIZE_REQUIRED
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_AUTH1
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP: invalid RANDOM len\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 operator|-
@@ -25104,28 +24869,21 @@ directive|ifdef
 name|SCTP_DEBUG
 if|if
 condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-if|if
-condition|(
 name|cnt
 condition|)
 block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"Freed %d chunks from reneg harvest\n"
 argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 endif|#
 directive|endif
-comment|/* SCTP_DEBUG */
 if|if
 condition|(
 name|cnt
@@ -25187,7 +24945,7 @@ operator|)
 condition|)
 block|{
 comment|/* 			 * Something bad happened or cum-ack and high were 			 * behind the base, but if so earlier checks should 			 * have found NO data... wierd... we will start at 			 * end of mapping array. 			 */
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Gap was larger than array?? %d set to max:%d maparraymax:%x\n"
 argument_list|,
@@ -25669,6 +25427,7 @@ name|it
 operator|->
 name|inp
 condition|)
+block|{
 name|SCTP_INP_INCR_REF
 argument_list|(
 name|it
@@ -25676,6 +25435,7 @@ operator|->
 name|inp
 argument_list|)
 expr_stmt|;
+block|}
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&

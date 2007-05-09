@@ -1494,7 +1494,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Gak log of NULL?\n"
 argument_list|)
@@ -4119,7 +4119,7 @@ name|cnt
 operator|=
 literal|0
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -4143,7 +4143,7 @@ name|cnt
 operator|=
 literal|0
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -4177,7 +4177,7 @@ literal|0x01
 operator|)
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -4187,7 +4187,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"%2.2x%2.2x "
 argument_list|,
@@ -4227,7 +4227,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -4278,7 +4278,7 @@ name|cnt
 operator|=
 literal|0
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -4302,7 +4302,7 @@ name|cnt
 operator|=
 literal|0
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -4336,7 +4336,7 @@ literal|0x01
 operator|)
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -4346,7 +4346,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"%2.2x%2.2x "
 argument_list|,
@@ -4386,13 +4386,13 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -4713,7 +4713,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"resend_cnt:%d asoc-tot:%d\n"
 argument_list|,
@@ -4832,7 +4832,7 @@ name|rep
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"tot_flt:%d asoc_tot:%d\n"
 argument_list|,
@@ -4907,7 +4907,7 @@ name|rep
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"tot_flt_book:%d\n"
 argument_list|,
@@ -4993,7 +4993,7 @@ name|rep
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"real flight:%d net total was %d\n"
 argument_list|,
@@ -5065,7 +5065,7 @@ operator|!=
 name|tot_out
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"net:%x flight was %d corrected to %d\n"
 argument_list|,
@@ -5439,6 +5439,9 @@ name|store_at
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sctp_hmac
 argument_list|(
 name|SCTP_HMAC
@@ -5911,6 +5914,15 @@ name|vrf_id
 operator|=
 name|vrf_id
 expr_stmt|;
+comment|/* Save the table id as well from the inp */
+name|asoc
+operator|->
+name|table_id
+operator|=
+name|m
+operator|->
+name|def_table_id
+expr_stmt|;
 if|if
 condition|(
 name|sctp_is_feature_on
@@ -6317,7 +6329,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SCTP_PRINT_FOR_B_AND_M
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"smallest_mtu init'd with asoc to :%d\n"
 argument_list|,
@@ -6872,7 +6884,7 @@ name|NULL
 condition|)
 block|{
 comment|/* can't get more, forget it */
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"No memory for expansion of SCTP mapping array %d\n"
 argument_list|,
@@ -6974,6 +6986,7 @@ name|it
 operator|->
 name|inp
 condition|)
+block|{
 name|SCTP_INP_DECR_REF
 argument_list|(
 name|it
@@ -6981,6 +6994,7 @@ operator|->
 name|inp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|it
@@ -7954,6 +7968,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_initiate_iterator
 argument_list|(
 name|sctp_iterator_ep
@@ -8115,7 +8132,7 @@ operator|)
 name|tmr
 condition|)
 block|{
-comment|/* 		 * printf("Stale SCTP timer fired (%p), ignoring...\n", 		 * tmr); 		 */
+comment|/* 		 * SCTP_PRINTF("Stale SCTP timer fired (%p), ignoring...\n", 		 * tmr); 		 */
 return|return;
 block|}
 name|tmr
@@ -8135,7 +8152,7 @@ name|type
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * printf("SCTP timer fired with invalid type: 0x%x\n", 		 * tmr->type); 		 */
+comment|/* 		 * SCTP_PRINTF("SCTP timer fired with invalid type: 0x%x\n", 		 * tmr->type); 		 */
 return|return;
 block|}
 name|tmr
@@ -8331,18 +8348,10 @@ name|stopped_from
 operator|=
 literal|0xa005
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_TIMER1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_TIMER1
+argument_list|,
 literal|"Timer type %d goes off\n"
 argument_list|,
 name|tmr
@@ -8350,10 +8359,6 @@ operator|->
 name|type
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 if|if
 condition|(
 operator|!
@@ -8492,6 +8497,23 @@ break|break;
 case|case
 name|SCTP_TIMER_TYPE_SEND
 case|:
+if|if
+condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_timodata
@@ -8632,6 +8654,23 @@ break|break;
 case|case
 name|SCTP_TIMER_TYPE_INIT
 case|:
+if|if
+condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_timoinit
@@ -8670,6 +8709,23 @@ break|break;
 case|case
 name|SCTP_TIMER_TYPE_RECV
 case|:
+if|if
+condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_timosack
@@ -8716,6 +8772,23 @@ break|break;
 case|case
 name|SCTP_TIMER_TYPE_SHUTDOWN
 case|:
+if|if
+condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
 if|if
 condition|(
 name|sctp_shutdown_timer
@@ -8785,6 +8858,23 @@ name|cnt_of_unconf
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_timoheartbeat
@@ -8902,6 +8992,23 @@ name|SCTP_TIMER_TYPE_COOKIE
 case|:
 if|if
 condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
+if|if
+condition|(
 name|sctp_cookie_timer
 argument_list|(
 name|inp
@@ -8969,6 +9076,15 @@ name|i
 decl_stmt|,
 name|secret
 decl_stmt|;
+if|if
+condition|(
+name|inp
+operator|==
+name|NULL
+condition|)
+block|{
+break|break;
+block|}
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_timosecret
@@ -9108,6 +9224,23 @@ break|break;
 case|case
 name|SCTP_TIMER_TYPE_PATHMTURAISE
 case|:
+if|if
+condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_timopathmtu
@@ -9130,6 +9263,23 @@ break|break;
 case|case
 name|SCTP_TIMER_TYPE_SHUTDOWNACK
 case|:
+if|if
+condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
 if|if
 condition|(
 name|sctp_shutdownack_timer
@@ -9188,6 +9338,23 @@ break|break;
 case|case
 name|SCTP_TIMER_TYPE_SHUTDOWNGUARD
 case|:
+if|if
+condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_timoshutdownguard
@@ -9208,10 +9375,26 @@ comment|/* no need to unlock on tcb its gone */
 goto|goto
 name|out_decr
 goto|;
-break|break;
 case|case
 name|SCTP_TIMER_TYPE_STRRESET
 case|:
+if|if
+condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
 if|if
 condition|(
 name|sctp_strreset_timer
@@ -9248,6 +9431,23 @@ case|case
 name|SCTP_TIMER_TYPE_EARLYFR
 case|:
 comment|/* Need to do FR of things for net */
+if|if
+condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_timoearlyfr
@@ -9266,6 +9466,23 @@ break|break;
 case|case
 name|SCTP_TIMER_TYPE_ASCONF
 case|:
+if|if
+condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
 if|if
 condition|(
 name|sctp_asconf_timer
@@ -9317,6 +9534,23 @@ break|break;
 case|case
 name|SCTP_TIMER_TYPE_AUTOCLOSE
 case|:
+if|if
+condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_timoautoclose
@@ -9348,6 +9582,23 @@ break|break;
 case|case
 name|SCTP_TIMER_TYPE_ASOCKILL
 case|:
+if|if
+condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_timoassockill
@@ -9395,7 +9646,6 @@ expr_stmt|;
 goto|goto
 name|out_no_decr
 goto|;
-break|break;
 case|case
 name|SCTP_TIMER_TYPE_INPKILL
 case|:
@@ -9404,6 +9654,15 @@ argument_list|(
 name|sctps_timoinpkill
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|inp
+operator|==
+name|NULL
+condition|)
+block|{
+break|break;
+block|}
 comment|/* 		 * special case, take away our increment since WE are the 		 * killer 		 */
 name|SCTP_INP_DECR_REF
 argument_list|(
@@ -9437,20 +9696,11 @@ expr_stmt|;
 goto|goto
 name|out_no_decr
 goto|;
-break|break;
 default|default:
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_TIMER1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_TIMER1
+argument_list|,
 literal|"sctp_timeout_handler:unknown timer %d\n"
 argument_list|,
 name|tmr
@@ -9458,10 +9708,6 @@ operator|->
 name|type
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 break|break;
 block|}
 empty_stmt|;
@@ -9544,18 +9790,10 @@ expr_stmt|;
 block|}
 name|out_no_decr
 label|:
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_TIMER1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_TIMER1
+argument_list|,
 literal|"Timer now complete (type %d)\n"
 argument_list|,
 name|tmr
@@ -9563,10 +9801,6 @@ operator|->
 name|type
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 if|if
 condition|(
 name|inp
@@ -9576,7 +9810,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|sctp_timer_start
 parameter_list|(
 name|int
@@ -9620,11 +9854,7 @@ operator|==
 name|NULL
 operator|)
 condition|)
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 name|to_ticks
 operator|=
 literal|0
@@ -9719,11 +9949,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 name|tmr
 operator|=
@@ -9787,11 +10013,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 name|tmr
 operator|=
@@ -9845,11 +10067,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 name|tmr
 operator|=
@@ -9891,11 +10109,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -9944,17 +10158,22 @@ case|:
 comment|/* 		 * the net is used here so that we can add in the RTO. Even 		 * though we use a different timer. We also add the HB timer 		 * PLUS a random jitter. 		 */
 if|if
 condition|(
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|stcb
 operator|==
 name|NULL
+operator|)
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
+else|else
 block|{
 name|uint32_t
 name|rndval
@@ -10014,6 +10233,9 @@ name|lnet
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sctp_heartbeat_timer
 argument_list|(
 name|inp
@@ -10125,11 +10347,7 @@ literal|0
 operator|)
 condition|)
 block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -10312,11 +10530,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -10363,6 +10577,15 @@ case|case
 name|SCTP_TIMER_TYPE_NEWCOOKIE
 case|:
 comment|/* 		 * nothing needed but the endpoint here ususually about 60 		 * minutes. 		 */
+if|if
+condition|(
+name|inp
+operator|==
+name|NULL
+condition|)
+block|{
+return|return;
+block|}
 name|tmr
 operator|=
 operator|&
@@ -10394,11 +10617,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 name|tmr
 operator|=
@@ -10421,6 +10640,15 @@ case|case
 name|SCTP_TIMER_TYPE_INPKILL
 case|:
 comment|/* 		 * The inp is setup to die. We re-use the signature_chage 		 * timer since that has stopped and we are in the GONE 		 * state. 		 */
+if|if
+condition|(
+name|inp
+operator|==
+name|NULL
+condition|)
+block|{
+return|return;
+block|}
 name|tmr
 operator|=
 operator|&
@@ -10444,16 +10672,20 @@ case|:
 comment|/* 		 * Here we use the value found in the EP for PMTU ususually 		 * about 10 minutes. 		 */
 if|if
 condition|(
+operator|(
 name|stcb
 operator|==
 name|NULL
+operator|)
+operator|||
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -10462,11 +10694,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 name|to_ticks
 operator|=
@@ -10506,11 +10734,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -10559,16 +10783,20 @@ case|:
 comment|/* 		 * Here we use the endpoints shutdown guard timer usually 		 * about 3 minutes. 		 */
 if|if
 condition|(
+operator|(
+name|inp
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|stcb
 operator|==
 name|NULL
+operator|)
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 name|to_ticks
 operator|=
@@ -10610,11 +10838,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -10682,11 +10906,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -10700,11 +10920,7 @@ name|cwnd
 condition|)
 block|{
 comment|/* no need to start */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 name|SCTP_STAT_INCR
 argument_list|(
@@ -10812,11 +11028,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -10871,11 +11083,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -10889,11 +11097,7 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Really an error since stcb is NOT set to 			 * autoclose 			 */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 name|to_ticks
 operator|=
@@ -10914,32 +11118,18 @@ name|autoclose_timer
 expr_stmt|;
 break|break;
 default|default:
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_TIMER1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
-literal|"sctp_timer_start:Unknown timer type %d\n"
+name|SCTP_DEBUG_TIMER1
+argument_list|,
+literal|"%s: Unknown timer type %d\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|t_type
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 break|break;
 block|}
 empty_stmt|;
@@ -10958,19 +11148,13 @@ name|NULL
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_TIMER1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
-literal|"sctp_timer_start:%d:software error to_ticks:%d tmr:%p not set ??\n"
+name|SCTP_DEBUG_TIMER1
+argument_list|,
+literal|"%s: %d:software error to_ticks:%d tmr:%p not set ??\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|t_type
 argument_list|,
@@ -10979,15 +11163,7 @@ argument_list|,
 name|tmr
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -11001,11 +11177,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * we do NOT allow you to have it already running. if it is 		 * we leave the current one up unchanged 		 */
-return|return
-operator|(
-name|EALREADY
-operator|)
-return|;
+return|return;
 block|}
 comment|/* At this point we can proceed */
 if|if
@@ -11081,6 +11253,9 @@ name|ticks
 operator|=
 name|ticks
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_START
 argument_list|(
 operator|&
@@ -11095,11 +11270,7 @@ argument_list|,
 name|tmr
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
@@ -11593,27 +11764,17 @@ name|autoclose_timer
 expr_stmt|;
 break|break;
 default|default:
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_TIMER1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
-literal|"sctp_timer_stop:Unknown timer type %d\n"
+name|SCTP_DEBUG_TIMER1
+argument_list|,
+literal|"%s: Unknown timer type %d\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|t_type
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 break|break;
 block|}
 empty_stmt|;
@@ -11646,9 +11807,17 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
 name|t_type
 operator|==
 name|SCTP_TIMER_TYPE_SEND
+operator|)
+operator|&&
+operator|(
+name|stcb
+operator|!=
+name|NULL
+operator|)
 condition|)
 block|{
 name|stcb
@@ -12429,7 +12598,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SCTP_PRINT_FOR_B_AND_M
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"sctp_mtu_size_reset(%p, asoc:%p mtu:%d\n"
 argument_list|,
@@ -13715,6 +13884,12 @@ if|if
 condition|(
 operator|(
 name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|stcb
 operator|->
 name|sctp_ep
 operator|->
@@ -14123,6 +14298,13 @@ name|control
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|sctp_is_feature_off
 argument_list|(
 name|stcb
@@ -14131,6 +14313,7 @@ name|sctp_ep
 argument_list|,
 name|SCTP_PCB_FLAGS_RECVPADDREVNT
 argument_list|)
+operator|)
 condition|)
 comment|/* event not enabled */
 return|return;
@@ -14471,6 +14654,13 @@ name|length
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|sctp_is_feature_off
 argument_list|(
 name|stcb
@@ -14479,6 +14669,7 @@ name|sctp_ep
 argument_list|,
 name|SCTP_PCB_FLAGS_RECVSENDFAILEVNT
 argument_list|)
+operator|)
 condition|)
 comment|/* event not enabled */
 return|return;
@@ -14831,6 +15022,13 @@ name|length
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|sctp_is_feature_off
 argument_list|(
 name|stcb
@@ -14839,6 +15037,7 @@ name|sctp_ep
 argument_list|,
 name|SCTP_PCB_FLAGS_RECVSENDFAILEVNT
 argument_list|)
+operator|)
 condition|)
 comment|/* event not enabled */
 return|return;
@@ -15163,6 +15362,13 @@ name|control
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|sctp_is_feature_off
 argument_list|(
 name|stcb
@@ -15171,6 +15377,7 @@ name|sctp_ep
 argument_list|,
 name|SCTP_PCB_FLAGS_ADAPTATIONEVNT
 argument_list|)
+operator|)
 condition|)
 comment|/* event not enabled */
 return|return;
@@ -15407,6 +15614,12 @@ name|sb
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|stcb
+operator|==
+name|NULL
+operator|)
+operator|||
 name|sctp_is_feature_off
 argument_list|(
 name|stcb
@@ -15830,6 +16043,15 @@ decl_stmt|;
 comment|/* 	 * For TCP model AND UDP connected sockets we will send an error up 	 * when an SHUTDOWN completes 	 */
 if|if
 condition|(
+name|stcb
+operator|==
+name|NULL
+condition|)
+block|{
+return|return;
+block|}
+if|if
+condition|(
 operator|(
 name|stcb
 operator|->
@@ -16087,6 +16309,15 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+if|if
+condition|(
+name|stcb
+operator|==
+name|NULL
+condition|)
+block|{
+return|return;
+block|}
 if|if
 condition|(
 name|sctp_is_feature_off
@@ -17141,29 +17372,19 @@ endif|#
 directive|endif
 comment|/* not yet? remove? */
 default|default:
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_UTIL1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
-literal|"NOTIFY: unknown notification %xh (%u)\n"
+name|SCTP_DEBUG_UTIL1
+argument_list|,
+literal|"%s: unknown notification %xh (%u)\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|notification
 argument_list|,
 name|notification
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 break|break;
 block|}
 comment|/* end switch */
@@ -17215,6 +17436,15 @@ name|asoc
 expr_stmt|;
 if|if
 condition|(
+name|stcb
+operator|==
+name|NULL
+condition|)
+block|{
+return|return;
+block|}
+if|if
+condition|(
 operator|(
 name|stcb
 operator|->
@@ -17255,11 +17485,13 @@ name|holds_lock
 operator|==
 literal|0
 condition|)
+block|{
 name|SCTP_TCB_SEND_LOCK
 argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -17762,11 +17994,13 @@ name|holds_lock
 operator|==
 literal|0
 condition|)
+block|{
 name|SCTP_TCB_SEND_UNLOCK
 argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -17783,6 +18017,15 @@ name|int
 name|error
 parameter_list|)
 block|{
+if|if
+condition|(
+name|stcb
+operator|==
+name|NULL
+condition|)
+block|{
+return|return;
+block|}
 if|if
 condition|(
 operator|(
@@ -18068,7 +18311,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Last ep reason:%x\n"
 argument_list|,
@@ -18079,7 +18322,7 @@ operator|->
 name|last_abort_code
 argument_list|)
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"IN bound TSN log-aaa\n"
 argument_list|)
@@ -18107,7 +18350,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"None rcvd\n"
 argument_list|)
@@ -18143,7 +18386,7 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"TSN:%x strm:%d seq:%d flags:%x sz:%d\n"
 argument_list|,
@@ -18232,7 +18475,7 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"TSN:%x strm:%d seq:%d flags:%x sz:%d\n"
 argument_list|,
@@ -18296,7 +18539,7 @@ block|}
 block|}
 name|none_in
 label|:
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"OUT bound TSN log-aaa\n"
 argument_list|)
@@ -18324,7 +18567,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"None sent\n"
 argument_list|)
@@ -18357,7 +18600,7 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"TSN:%x strm:%d seq:%d flags:%x sz:%d\n"
 argument_list|,
@@ -18446,7 +18689,7 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"TSN:%x strm:%d seq:%d flags:%x sz:%d\n"
 argument_list|,
@@ -19539,6 +19782,19 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+name|ip6buf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|sa
@@ -19553,12 +19809,6 @@ name|sockaddr_in6
 modifier|*
 name|sin6
 decl_stmt|;
-name|char
-name|ip6buf
-index|[
-name|INET6_ADDRSTRLEN
-index|]
-decl_stmt|;
 name|sin6
 operator|=
 operator|(
@@ -19568,7 +19818,7 @@ operator|*
 operator|)
 name|sa
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"IPv6 address: %s:port:%d scope:%u\n"
 argument_list|,
@@ -19636,7 +19886,7 @@ name|sin
 operator|->
 name|sin_addr
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"IPv4 address: %u.%u.%u.%u:%d\n"
 argument_list|,
@@ -19671,7 +19921,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"?\n"
 argument_list|)
@@ -19794,7 +20044,7 @@ name|sh
 operator|->
 name|dest_port
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"src: "
 argument_list|)
@@ -19810,7 +20060,7 @@ operator|&
 name|lsa
 argument_list|)
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"dest: "
 argument_list|)
@@ -19945,7 +20195,7 @@ name|sh
 operator|->
 name|dest_port
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"src: "
 argument_list|)
@@ -19961,7 +20211,7 @@ operator|&
 name|lsa6
 argument_list|)
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"dest: "
 argument_list|)
@@ -21063,6 +21313,9 @@ block|{
 comment|/* message is complete */
 if|if
 condition|(
+name|stcb
+operator|&&
+operator|(
 name|control
 operator|==
 name|stcb
@@ -21070,6 +21323,7 @@ operator|->
 name|asoc
 operator|.
 name|control_pdapi
+operator|)
 condition|)
 block|{
 name|stcb
@@ -21162,6 +21416,20 @@ operator|->
 name|tail_mbuf
 operator|=
 name|tail
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|stcb
+operator|==
+name|NULL
+condition|)
+block|{
+name|control
+operator|->
+name|do_not_ref_stcb
+operator|=
+literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * When we are appending in partial delivery, the cum-ack is used 	 * for the actual pd-api highest tsn on this mbuf. The true cum-ack 	 * is populated in the outbound sinfo structure from the true cumack 	 * if the association exists... 	 */
@@ -21832,7 +22100,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"hmm, nothing on the send queue and no EOM?\n"
 argument_list|)
@@ -21882,11 +22150,13 @@ name|holds_lock
 operator|==
 literal|0
 condition|)
+block|{
 name|SCTP_INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+block|}
 name|LIST_FOREACH
 argument_list|(
 argument|laddr
@@ -21966,11 +22236,13 @@ name|holds_lock
 operator|==
 literal|0
 condition|)
+block|{
 name|SCTP_INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|laddr
@@ -22027,11 +22299,13 @@ name|holds_lock
 operator|==
 literal|0
 condition|)
+block|{
 name|SCTP_INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|laddr
@@ -22049,11 +22323,13 @@ name|holds_lock
 operator|==
 literal|0
 condition|)
+block|{
 name|SCTP_INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -22312,7 +22588,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"hash_of_addr:%x mask:%x table:%x - "
 argument_list|,
@@ -22345,7 +22621,7 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"No such bucket for address\n"
 argument_list|)
@@ -26048,7 +26324,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Strange, data left in the control buffer .. invarients would panic?\n"
 argument_list|)

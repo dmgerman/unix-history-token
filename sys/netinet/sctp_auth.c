@@ -166,25 +166,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_AUTH_DEBUG
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"sctp_alloc_chunklist: failed to get memory!\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 block|}
 else|else
 block|{
@@ -378,15 +366,10 @@ operator|->
 name|num_chunks
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|SCTP_AUTH_DEBUG
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP: added chunk %u (0x%02x) to Auth list\n"
 argument_list|,
 name|chunk
@@ -394,8 +377,6 @@ argument_list|,
 name|chunk
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 return|return
 operator|(
@@ -482,15 +463,10 @@ operator|->
 name|num_chunks
 operator|--
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|SCTP_AUTH_DEBUG
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP: deleted chunk %u (0x%02x) from Auth list\n"
 argument_list|,
 name|chunk
@@ -498,8 +474,6 @@ argument_list|,
 name|chunk
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 return|return
 operator|(
@@ -2251,15 +2225,10 @@ name|keyid
 condition|)
 block|{
 comment|/* replace the existing key */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|SCTP_AUTH_DEBUG
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"replacing shared key id %u\n"
 argument_list|,
 name|new_skey
@@ -2267,8 +2236,6 @@ operator|->
 name|keyid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|LIST_INSERT_BEFORE
 argument_list|(
 name|skey
@@ -2649,22 +2616,15 @@ operator|->
 name|max_algo
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|SCTP_AUTH_DEBUG
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP: HMAC id list full, ignoring add %u\n"
 argument_list|,
 name|hmac_id
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 operator|-
@@ -2728,22 +2688,15 @@ literal|1
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|SCTP_AUTH_DEBUG
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP: add HMAC id %u to list\n"
 argument_list|,
 name|hmac_id
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|list
 operator|->
 name|hmac
@@ -3034,15 +2987,10 @@ continue|continue;
 endif|#
 directive|endif
 comment|/* found the "best" one */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|SCTP_AUTH_DEBUG
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP: negotiated peer HMAC id %u\n"
 argument_list|,
 name|peer
@@ -3053,8 +3001,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|peer
@@ -5823,6 +5769,7 @@ if|if
 condition|(
 name|using_ep_key
 condition|)
+block|{
 name|SCTP_INP_RUNLOCK
 argument_list|(
 name|stcb
@@ -5830,6 +5777,7 @@ operator|->
 name|sctp_ep
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 operator|-
@@ -5934,6 +5882,7 @@ if|if
 condition|(
 name|using_ep_key
 condition|)
+block|{
 name|SCTP_INP_RUNLOCK
 argument_list|(
 name|stcb
@@ -5941,6 +5890,7 @@ operator|->
 name|sctp_ep
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -7121,16 +7071,10 @@ argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|SCTP_AUTH_DEBUG
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"caching key id %u\n"
 argument_list|,
 name|stcb
@@ -7142,6 +7086,13 @@ operator|.
 name|assoc_keyid
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SCTP_DEBUG
+if|if
+condition|(
+name|SCTP_AUTH_DEBUG
+condition|)
 name|sctp_print_key
 argument_list|(
 name|stcb
@@ -7155,7 +7106,6 @@ argument_list|,
 literal|"Assoc Key"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -7485,15 +7435,10 @@ operator|->
 name|hmac_id
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|SCTP_AUTH_DEBUG
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP AUTH Chunk: shared key %u, HMAC id %u\n"
 argument_list|,
 name|shared_key_id
@@ -7501,8 +7446,6 @@ argument_list|,
 name|hmac_id
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* is the indicated HMAC supported? */
 if|if
 condition|(
@@ -7534,22 +7477,15 @@ argument_list|(
 name|sctps_recvivalhmacid
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|SCTP_AUTH_DEBUG
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP Auth: unsupported HMAC id %u\n"
 argument_list|,
 name|hmac_id
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * report this in an Error Chunk: Unsupported HMAC 		 * Identifier 		 */
 name|m_err
 operator|=
@@ -7755,22 +7691,15 @@ argument_list|(
 name|sctps_recvivalkeyid
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|SCTP_AUTH_DEBUG
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP Auth: unknown key id %u\n"
 argument_list|,
 name|shared_key_id
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 operator|-
@@ -7926,20 +7855,13 @@ argument_list|(
 name|sctps_recvauthfailed
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|SCTP_AUTH_DEBUG
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP Auth: chunk too short for HMAC\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 operator|-
@@ -8019,20 +7941,13 @@ argument_list|(
 name|sctps_recvauthfailed
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|SCTP_AUTH_DEBUG
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP Auth: HMAC digest check failed\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 operator|-
@@ -8576,22 +8491,13 @@ name|SCTP_AUTH_RANDOM_SIZE_REQUIRED
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_AUTH1
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP: invalid RANDOM len\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 operator|-
@@ -8712,22 +8618,13 @@ name|num_hmacs
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_AUTH1
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP: invalid HMAC param\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 operator|-
@@ -8822,22 +8719,13 @@ operator|&&
 name|got_chklist
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_AUTH1
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP: peer sent chunk list w/o AUTH\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 operator|-
@@ -8856,22 +8744,13 @@ operator|!
 name|peer_supports_auth
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_AUTH1
-condition|)
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_AUTH1
+argument_list|,
 literal|"SCTP: peer supports ASCONF but not AUTH\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 operator|-
@@ -9327,6 +9206,9 @@ operator|*
 name|ph
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sctp_serialize_hmaclist
 argument_list|(
 name|stcb

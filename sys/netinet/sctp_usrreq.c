@@ -339,7 +339,7 @@ comment|/* now off to subtract IP_DF flag if needed */
 ifdef|#
 directive|ifdef
 name|SCTP_PRINT_FOR_B_AND_M
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"sctp_pathmtu_adjust called inp:%p stcb:%p net:%p nxtsz:%d\n"
 argument_list|,
@@ -593,11 +593,13 @@ name|stcb
 operator|!=
 name|NULL
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 comment|/* First job is to verify the vtag matches what I would send */
@@ -785,7 +787,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SCTP_PRINT_FOR_B_AND_M
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"notify_mbuf (ICMP) calls sctp_pathmtu_adjust mtu:%d\n"
 argument_list|,
@@ -977,7 +979,7 @@ name|SCTP_ADDR_REACHABLE
 condition|)
 block|{
 comment|/* Ok that destination is NOT reachable */
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"ICMP (thresh %d/%d) takes interface %p down\n"
 argument_list|,
@@ -1035,11 +1037,13 @@ if|if
 condition|(
 name|stcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1074,11 +1078,13 @@ if|if
 condition|(
 name|stcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|inp
@@ -2840,7 +2846,7 @@ operator|->
 name|control
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"huh? control set?\n"
 argument_list|)
@@ -3532,7 +3538,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Error, sp is NULL, locked on sending is non-null strm:%d\n"
 argument_list|,
@@ -3817,11 +3823,6 @@ operator|)
 return|;
 block|}
 comment|/* not reached */
-name|printf
-argument_list|(
-literal|"Not reached reached?\n"
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -4170,7 +4171,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Error, sp is NULL, locked on sending is non-null strm:%d\n"
 argument_list|,
@@ -5656,25 +5657,13 @@ name|sctp_assoc_t
 modifier|*
 name|a_id
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PCB1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PCB1
+argument_list|,
 literal|"Connectx called\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 if|if
 condition|(
 operator|(
@@ -6259,8 +6248,7 @@ name|stcb
 parameter_list|,
 name|assoc_id
 parameter_list|)
-define|\
-value|if (inp->sctp_flags& SCTP_PCB_FLAGS_CONNECTED) { \ 		SCTP_INP_RLOCK(inp); \ 		stcb = LIST_FIRST(&inp->sctp_asoc_list); \ 		if (stcb) \ 			SCTP_TCB_LOCK(stcb); \ 		SCTP_INP_RUNLOCK(inp); \ 	} else if (assoc_id != 0) { \ 		stcb = sctp_findassociation_ep_asocid(inp, assoc_id, 1); \ 		if (stcb == NULL) { \ 			error = ENOENT; \ 			break; \ 		} \ 	} else { \ 		stcb = NULL; \ 	}
+value|{ \ 	if (inp->sctp_flags& SCTP_PCB_FLAGS_CONNECTED) { \ 		SCTP_INP_RLOCK(inp); \ 		stcb = LIST_FIRST(&inp->sctp_asoc_list); \ 		if (stcb) \ 			SCTP_TCB_LOCK(stcb); \ 		SCTP_INP_RUNLOCK(inp); \ 	} else if (assoc_id != 0) { \ 		stcb = sctp_findassociation_ep_asocid(inp, assoc_id, 1); \ 		if (stcb == NULL) { \ 			error = ENOENT; \ 			break; \ 		} \ 	} else { \ 		stcb = NULL; \         } \   }
 end_define
 
 begin_define
@@ -6276,8 +6264,7 @@ name|type
 parameter_list|,
 name|size
 parameter_list|)
-define|\
-value|if (size< sizeof(type)) { \ 		error = EINVAL; \ 		break; \ 	} else { \ 		destp = (type *)srcp; \ 	}
+value|{\ 	if (size< sizeof(type)) { \ 		error = EINVAL; \ 		break; \ 	} else { \ 		destp = (type *)srcp; \ 	} \       }
 end_define
 
 begin_function
@@ -10687,6 +10674,9 @@ block|}
 else|else
 block|{
 comment|/* copy in the chunks */
+operator|(
+name|void
+operator|)
 name|sctp_serialize_auth_chunks
 argument_list|(
 name|chklist
@@ -10751,6 +10741,9 @@ block|}
 else|else
 block|{
 comment|/* copy in the chunks */
+operator|(
+name|void
+operator|)
 name|sctp_serialize_auth_chunks
 argument_list|(
 name|chklist
@@ -10870,6 +10863,9 @@ block|}
 else|else
 block|{
 comment|/* copy in the chunks */
+operator|(
+name|void
+operator|)
 name|sctp_serialize_auth_chunks
 argument_list|(
 name|chklist
@@ -10983,7 +10979,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"optval is NULL\n"
 argument_list|)
@@ -11012,7 +11008,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"inp is NULL?\n"
 argument_list|)
@@ -11764,12 +11760,15 @@ argument_list|)
 expr_stmt|;
 name|SCTP_FIND_STCB
 argument_list|(
-argument|inp
+name|inp
 argument_list|,
-argument|stcb
+name|stcb
 argument_list|,
-argument|sca->sca_assoc_id
+name|sca
+operator|->
+name|sca_assoc_id
 argument_list|)
+expr_stmt|;
 name|size
 operator|=
 name|optsize
@@ -13898,7 +13897,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SCTP_PRINT_FOR_B_AND_M
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"SCTP_PMTU_DISABLE calls sctp_pathmtu_adjustment:%d\n"
 argument_list|,
@@ -15578,6 +15577,9 @@ literal|0
 condition|)
 block|{
 comment|/* delete the address */
+operator|(
+name|void
+operator|)
 name|sctp_addr_mgmt_ep_sa
 argument_list|(
 name|inp
@@ -16353,11 +16355,13 @@ if|if
 condition|(
 name|create_lock_on
 condition|)
+block|{
 name|SCTP_ASOC_CREATE_UNLOCK
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+block|}
 name|SCTP_INP_DECR_REF
 argument_list|(
 name|inp
@@ -17765,11 +17769,13 @@ if|if
 condition|(
 name|stcb
 condition|)
+block|{
 name|SCTP_TCB_LOCK
 argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 name|SCTP_INP_RUNLOCK
 argument_list|(
 name|inp

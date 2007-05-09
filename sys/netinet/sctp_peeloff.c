@@ -398,25 +398,13 @@ name|sctp_tcb
 modifier|*
 name|stcb
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PEEL1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_PEEL1
+argument_list|,
 literal|"SCTP peel-off called\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 name|inp
 operator|=
 operator|(
@@ -491,25 +479,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_PEEL1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
-literal|"sctp_peeloff:sonewconn failed err\n"
+name|SCTP_DEBUG_PEEL1
+argument_list|,
+literal|"sctp_peeloff:sonewconn failed\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 operator|*
 name|error
 operator|=

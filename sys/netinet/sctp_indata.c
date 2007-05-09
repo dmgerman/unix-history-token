@@ -1473,6 +1473,13 @@ decl_stmt|,
 modifier|*
 name|ctlat
 decl_stmt|;
+if|if
+condition|(
+name|stcb
+operator|==
+name|NULL
+condition|)
+return|return;
 name|cntDel
 operator|=
 name|stream_no
@@ -1481,9 +1488,6 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|stcb
-operator|&&
-operator|(
 operator|(
 name|stcb
 operator|->
@@ -1502,7 +1506,6 @@ operator|.
 name|state
 operator|&
 name|SCTP_STATE_CLOSED_SOCKET
-operator|)
 operator|)
 condition|)
 block|{
@@ -1857,6 +1860,7 @@ block|{
 comment|/* 				 * something is very wrong, either 				 * control_pdapi is NULL, or the tail_mbuf 				 * is corrupt, or there is a EOM already on 				 * the mbuf chain. 				 */
 if|if
 condition|(
+operator|(
 name|stcb
 operator|->
 name|asoc
@@ -1864,16 +1868,9 @@ operator|.
 name|control_pdapi
 operator|==
 name|NULL
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"This should not happen control_pdapi NULL?"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
+operator|)
+operator|||
+operator|(
 name|stcb
 operator|->
 name|asoc
@@ -1883,11 +1880,12 @@ operator|->
 name|tail_mbuf
 operator|==
 name|NULL
+operator|)
 condition|)
 block|{
 name|panic
 argument_list|(
-literal|"This should not happen, tail_mbuf not being maintained?"
+literal|"This should not happen control_pdapi NULL?"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1897,6 +1895,7 @@ argument_list|(
 literal|"Bad chunking ??"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 name|cntDel
 operator|++
@@ -2385,18 +2384,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"queue to stream called for ssn:%u lastdel:%u nxt:%u\n"
 argument_list|,
 operator|(
@@ -2419,9 +2410,6 @@ operator|)
 name|nxt_todel
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|compare_with_wrap
@@ -2449,18 +2437,10 @@ operator|)
 condition|)
 block|{
 comment|/* The incoming sseq is behind where we last delivered? */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Duplicate S-SEQ:%d delivered:%d from peer, Abort  association\n"
 argument_list|,
 name|control
@@ -2472,9 +2452,6 @@ operator|->
 name|last_sequence_delivered
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* 		 * throw it in the stream so it gets cleaned up in 		 * association destruction 		 */
 name|TAILQ_INSERT_HEAD
 argument_list|(
@@ -3635,24 +3612,13 @@ name|SCTP_DATA_FIRST_FRAG
 condition|)
 block|{
 comment|/* 				 * An empty queue, no delivery inprogress, 				 * we hit the next one and it does NOT have 				 * a FIRST fragment mark. 				 */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Gak, Evil plot, its not first, no fragmented delivery in progress\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|oper
 operator|=
 name|sctp_get_mbuf_for_msg
@@ -3864,24 +3830,13 @@ name|SCTP_DATA_FIRST_FRAG
 condition|)
 block|{
 comment|/* 				 * We are doing a partial delivery and the 				 * NEXT chunk MUST be either the LAST or 				 * MIDDLE fragment NOT a FIRST 				 */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Gak, Evil plot, it IS a first and fragmented delivery in progress\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|oper
 operator|=
 name|sctp_get_mbuf_for_msg
@@ -4095,18 +4050,10 @@ name|str_of_pdapi
 condition|)
 block|{
 comment|/* Got to be the right STR No */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Gak, Evil plot, it IS not same stream number %d vs %d\n"
 argument_list|,
 name|chk
@@ -4122,9 +4069,6 @@ operator|->
 name|str_of_pdapi
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|oper
 operator|=
 name|sctp_get_mbuf_for_msg
@@ -4340,18 +4284,10 @@ name|ssn_of_pdapi
 condition|)
 block|{
 comment|/* Got to be the right STR Seq */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Gak, Evil plot, it IS not same stream seq %d vs %d\n"
 argument_list|,
 name|chk
@@ -4367,9 +4303,6 @@ operator|->
 name|ssn_of_pdapi
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|oper
 operator|=
 name|sctp_get_mbuf_for_msg
@@ -4841,29 +4774,20 @@ operator|==
 name|SCTP_DATA_FIRST_FRAG
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Prev check - It can be a midlle or last but not a first\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Gak, Evil plot, it's a FIRST!\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|oper
 operator|=
 name|sctp_get_mbuf_for_msg
@@ -5073,17 +4997,7 @@ name|stream_number
 condition|)
 block|{
 comment|/* 					 * Huh, need the correct STR here, 					 * they must be the same. 					 */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Prev check - Gak, Evil plot, ssn:%d not the same as at:%d\n"
 argument_list|,
@@ -5104,9 +5018,6 @@ operator|.
 name|stream_number
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|oper
 operator|=
 name|sctp_get_mbuf_for_msg
@@ -5330,18 +5241,10 @@ name|stream_seq
 condition|)
 block|{
 comment|/* 					 * Huh, need the correct STR here, 					 * they must be the same. 					 */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Prev check - Gak, Evil plot, sseq:%d not the same as at:%d\n"
 argument_list|,
 name|chk
@@ -5361,9 +5264,6 @@ operator|.
 name|stream_seq
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|oper
 operator|=
 name|sctp_get_mbuf_for_msg
@@ -5590,24 +5490,13 @@ operator|!=
 name|SCTP_DATA_FIRST_FRAG
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Prev check - Gak, evil plot, its not FIRST and it must be!\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|oper
 operator|=
 name|sctp_get_mbuf_for_msg
@@ -5862,29 +5751,20 @@ operator|!=
 name|SCTP_DATA_LAST_FRAG
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Next chk - Next is FIRST, we must be LAST\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Gak, Evil plot, its not a last!\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|oper
 operator|=
 name|sctp_get_mbuf_for_msg
@@ -6125,29 +6005,20 @@ operator|==
 name|SCTP_DATA_LAST_FRAG
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Next chk - Next is a MIDDLE/LAST\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Gak, Evil plot, new prev chunk is a LAST\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|oper
 operator|=
 name|sctp_get_mbuf_for_msg
@@ -6357,18 +6228,10 @@ name|stream_number
 condition|)
 block|{
 comment|/* 					 * Huh, need the correct STR here, 					 * they must be the same. 					 */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Next chk - Gak, Evil plot, ssn:%d not the same as at:%d\n"
 argument_list|,
 name|chk
@@ -6388,9 +6251,6 @@ operator|.
 name|stream_number
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|oper
 operator|=
 name|sctp_get_mbuf_for_msg
@@ -6614,18 +6474,10 @@ name|stream_seq
 condition|)
 block|{
 comment|/* 					 * Huh, need the correct STR here, 					 * they must be the same. 					 */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Next chk - Gak, Evil plot, sseq:%d not the same as at:%d\n"
 argument_list|,
 name|chk
@@ -6645,9 +6497,6 @@ operator|.
 name|stream_seq
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|oper
 operator|=
 name|sctp_get_mbuf_for_msg
@@ -7222,6 +7071,19 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|stcb
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|compare_with_wrap
 argument_list|(
 name|asoc
@@ -7444,8 +7306,6 @@ block|}
 comment|/* 	 * Check to see about the GONE flag, duplicates would cause a sack 	 * to be sent up above 	 */
 if|if
 condition|(
-name|stcb
-operator|&&
 operator|(
 operator|(
 name|stcb
@@ -7593,18 +7453,10 @@ argument_list|)
 condition|)
 block|{
 comment|/* Nope not in the valid range dump it */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"My rwnd overrun1:tsn:%lx rwnd %lu sbspace:%ld\n"
 argument_list|,
 operator|(
@@ -7635,9 +7487,6 @@ name|so_rcv
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|sctp_set_rwnd
 argument_list|(
 name|stcb
@@ -8084,18 +7933,10 @@ operator|)
 condition|)
 block|{
 comment|/* The incoming sseq is behind where we last delivered? */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"EVIL/Broken-Dup S-SEQ:%d delivered:%d from peer, Abort!\n"
 argument_list|,
 name|strmseq
@@ -8110,9 +7951,6 @@ operator|.
 name|last_sequence_delivered
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|oper
 operator|=
 name|sctp_get_mbuf_for_msg
@@ -8837,7 +8675,7 @@ name|so_rcv
 argument_list|)
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Append fails end:%d\n"
 argument_list|,
@@ -11523,7 +11361,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"huh, cumack greater than high-tsn in map - should panic?\n"
 argument_list|)
@@ -12166,6 +12004,9 @@ block|}
 else|else
 block|{
 comment|/* 					 * Ok we must build a SACK since the 					 * timer is pending, we got our 					 * first packet OR there are gaps or 					 * duplicates. 					 */
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -13754,6 +13595,9 @@ name|timer
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
@@ -15498,6 +15342,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_release_pr_sctp_chunk
 argument_list|(
 name|stcb
@@ -15575,6 +15422,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_release_pr_sctp_chunk
 argument_list|(
 name|stcb
@@ -15658,6 +15508,10 @@ condition|(
 name|tp1
 operator|->
 name|whoTo
+operator|&&
+name|tp1
+operator|->
+name|whoTo
 operator|->
 name|saw_newack
 operator|==
@@ -15679,6 +15533,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|tp1
+operator|->
+name|whoTo
+operator|&&
 name|compare_with_wrap
 argument_list|(
 name|tp1
@@ -16262,7 +16120,28 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|alt
+operator|==
+name|NULL
+condition|)
+block|{
+name|alt
+operator|=
+name|tp1
+operator|->
+name|whoTo
+expr_stmt|;
+block|}
 comment|/* 				 * CUCv2: If a different dest is picked for 				 * the retransmission, then new 				 * (rtx-)pseudo_cumack needs to be tracked 				 * for orig dest. Let CUCv2 track new (rtx-) 				 * pseudo-cumack always. 				 */
+if|if
+condition|(
+name|tp1
+operator|->
+name|whoTo
+condition|)
+block|{
 name|tp1
 operator|->
 name|whoTo
@@ -16279,6 +16158,7 @@ name|find_rtx_pseudo_cumack
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -16436,6 +16316,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|tp1
+operator|->
+name|whoTo
+condition|)
+block|{
 name|tp1
 operator|->
 name|whoTo
@@ -16448,6 +16335,7 @@ argument_list|(
 name|tp1
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|SCTP_LOG_RWND
@@ -16743,6 +16631,9 @@ operator|->
 name|data
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_release_pr_sctp_chunk
 argument_list|(
 name|stcb
@@ -18417,6 +18308,9 @@ operator|&
 name|SCTP_ADDR_WAS_PRIMARY
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_set_primary_addr
 argument_list|(
 name|stcb
@@ -19033,7 +18927,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Flight size-express incorrect inflight:%d inbetween:%d\n"
 argument_list|,
@@ -20695,6 +20589,9 @@ block|}
 name|j
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_OS_TIMER_START
 argument_list|(
 operator|&
@@ -21824,7 +21721,7 @@ block|}
 block|}
 else|else
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Size invalid offset to dups:%d number dups:%d sack_len:%d num gaps:%d\n"
 argument_list|,
@@ -23111,7 +23008,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Warning flight size incorrect should be 0 is %d\n"
 argument_list|,
@@ -25812,24 +25709,13 @@ name|sctp_forward_tsn_chunk
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INDATA1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Bad size too small/big fwd-tsn\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 return|return;
 block|}
 name|m_size

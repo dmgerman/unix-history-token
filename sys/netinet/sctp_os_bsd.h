@@ -438,12 +438,16 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_PRINTF
+name|SCTPDBG_PKT
 parameter_list|(
-name|params
-modifier|...
+name|level
+parameter_list|,
+name|iph
+parameter_list|,
+name|sh
 parameter_list|)
-value|printf(params)
+define|\
+value|{									\     do {								\ 	    if (sctp_debug_on& level) {				\ 		    sctp_print_address_pkt(iph, sh);			\ 	    }								\     } while (0);							\ }
 end_define
 
 begin_else
@@ -477,10 +481,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_PRINTF
+name|SCTPDBG_PKT
 parameter_list|(
-name|params
-modifier|...
+name|level
+parameter_list|,
+name|iph
+parameter_list|,
+name|sh
 parameter_list|)
 end_define
 
@@ -488,6 +495,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SCTP_PRINTF
+parameter_list|(
+name|params
+modifier|...
+parameter_list|)
+value|printf(params)
+end_define
 
 begin_comment
 comment|/*  * Local address and interface list handling  */

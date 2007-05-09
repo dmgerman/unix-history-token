@@ -1594,7 +1594,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sctp_add_local_addr_ep
 parameter_list|(
 name|struct
@@ -1639,7 +1639,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sctp_del_local_addr_ep
 parameter_list|(
 name|struct
@@ -1728,7 +1728,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sctp_add_local_addr_assoc
 parameter_list|(
 name|struct
@@ -1745,7 +1745,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sctp_del_local_addr_assoc
 parameter_list|(
 name|struct

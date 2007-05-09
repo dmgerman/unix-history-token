@@ -441,18 +441,10 @@ argument_list|(
 name|sctps_inpackets
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INPUT1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INPUT1
+argument_list|,
 literal|"V6 input gets a packet iphlen:%d pktlen:%d\n"
 argument_list|,
 name|iphlen
@@ -466,9 +458,6 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|IN6_IS_ADDR_MULTICAST
@@ -581,18 +570,10 @@ operator|!=
 name|check
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_INPUT1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INPUT1
+argument_list|,
 literal|"Bad CSUM on SCTP packet calc_check:%x check:%x  m:%p mlen:%d iphlen:%d\n"
 argument_list|,
 name|calc_check
@@ -606,9 +587,6 @@ argument_list|,
 name|iphlen
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|stcb
 operator|=
 name|sctp_findassociation_addr
@@ -819,6 +797,10 @@ operator|&
 name|chunk_buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|init_chk
+condition|)
 name|sh
 operator|->
 name|v_tag
@@ -828,6 +810,13 @@ operator|->
 name|init
 operator|.
 name|initiate_tag
+expr_stmt|;
+else|else
+name|sh
+operator|->
+name|v_tag
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
@@ -1063,11 +1052,13 @@ if|if
 condition|(
 name|stcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1101,19 +1092,6 @@ condition|)
 name|sctp_m_freem
 argument_list|(
 name|m
-argument_list|)
-expr_stmt|;
-comment|/* For BSD/MAC this does nothing */
-name|SCTP_DETACH_HEADER_FROM_CHAIN
-argument_list|(
-operator|*
-name|i_pak
-argument_list|)
-expr_stmt|;
-name|SCTP_RELEASE_HEADER
-argument_list|(
-operator|*
-name|i_pak
 argument_list|)
 expr_stmt|;
 return|return
@@ -1455,11 +1433,13 @@ if|if
 condition|(
 name|stcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3950,7 +3930,7 @@ operator|->
 name|control
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"huh? control set?\n"
 argument_list|)
@@ -4443,11 +4423,13 @@ if|if
 condition|(
 name|stcb
 condition|)
+block|{
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 name|SCTP_INP_RUNLOCK
 argument_list|(
 name|inp
@@ -4612,6 +4594,9 @@ name|state
 operator|=
 name|SCTP_STATE_COOKIE_WAIT
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|SCTP_GETTIME_TIMEVAL
 argument_list|(
 operator|&
@@ -5270,11 +5255,13 @@ if|if
 condition|(
 name|stcb
 condition|)
+block|{
 name|SCTP_TCB_LOCK
 argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 name|SCTP_INP_RUNLOCK
 argument_list|(
 name|inp

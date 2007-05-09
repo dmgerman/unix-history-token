@@ -656,18 +656,10 @@ name|sctp_tmit_chunk
 modifier|*
 name|chk
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_TIMER4
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_TIMER4
+argument_list|,
 literal|"Audit invoked on send queue cnt:%d onqueue:%d\n"
 argument_list|,
 name|asoc
@@ -679,10 +671,6 @@ operator|->
 name|sent_queue_cnt
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 name|asoc
 operator|->
 name|sent_queue_retran_cnt
@@ -754,18 +742,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_TIMER4
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_TIMER4
+argument_list|,
 literal|"Audit completes retran:%d onqueue:%d\n"
 argument_list|,
 name|asoc
@@ -777,10 +757,6 @@ operator|->
 name|sent_queue_cnt
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 block|}
 end_function
 
@@ -817,18 +793,10 @@ operator|->
 name|error_count
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_TIMER4
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_TIMER4
+argument_list|,
 literal|"Error count for %p now %d thresh:%d\n"
 argument_list|,
 name|net
@@ -842,10 +810,6 @@ operator|->
 name|failure_threshold
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 if|if
 condition|(
 name|net
@@ -973,18 +937,10 @@ name|overall_error_count
 operator|++
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_TIMER4
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_TIMER4
+argument_list|,
 literal|"Overall error count for %p now %d thresh:%u state:%x\n"
 argument_list|,
 operator|&
@@ -1024,10 +980,6 @@ name|dest_state
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 comment|/* 	 * We specifically do not do>= to give the assoc one more change 	 * before we fail it. 	 */
 if|if
 condition|(
@@ -2363,7 +2315,7 @@ operator|)
 condition|)
 block|{
 comment|/* Strange case our list got out of order? */
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Our list is out of order?\n"
 argument_list|)
@@ -2633,6 +2585,9 @@ operator|->
 name|data
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_release_pr_sctp_chunk
 argument_list|(
 name|stcb
@@ -2692,6 +2647,9 @@ operator|->
 name|data
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sctp_release_pr_sctp_chunk
 argument_list|(
 name|stcb
@@ -3145,25 +3103,22 @@ directive|ifdef
 name|SCTP_DEBUG
 if|if
 condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_TIMER1
-condition|)
-block|{
-if|if
-condition|(
 name|num_mk
 condition|)
 block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_TIMER1
+argument_list|,
 literal|"LAST TSN marked was %x\n"
 argument_list|,
 name|tsnlast
 argument_list|)
 expr_stmt|;
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_TIMER1
+argument_list|,
 literal|"Num marked for retransmission was %d peer-rwd:%ld\n"
 argument_list|,
 name|num_mk
@@ -3178,15 +3133,19 @@ operator|.
 name|peers_rwnd
 argument_list|)
 expr_stmt|;
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_TIMER1
+argument_list|,
 literal|"LAST TSN marked was %x\n"
 argument_list|,
 name|tsnlast
 argument_list|)
 expr_stmt|;
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_TIMER1
+argument_list|,
 literal|"Num marked for retransmission was %d peer-rwd:%d\n"
 argument_list|,
 name|num_mk
@@ -3201,7 +3160,6 @@ operator|.
 name|peers_rwnd
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 endif|#
 directive|endif
@@ -3261,7 +3219,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|INVARIANTS
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Local Audit says there are %d for retran asoc cnt:%d\n"
 argument_list|,
@@ -3378,27 +3336,15 @@ condition|(
 name|audit_tf
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_TIMER4
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_TIMER4
+argument_list|,
 literal|"Audit total flight due to negative value net:%p\n"
 argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 name|stcb
 operator|->
 name|asoc
@@ -3431,18 +3377,10 @@ name|flight_size
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_TIMER4
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_TIMER4
+argument_list|,
 literal|"Net:%p c-f cwnd:%d ssthresh:%d\n"
 argument_list|,
 name|lnets
@@ -3456,10 +3394,6 @@ operator|->
 name|ssthresh
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 block|}
 name|TAILQ_FOREACH
 argument_list|(
@@ -3956,6 +3890,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|sctp_mark_all_for_resend
 argument_list|(
 name|stcb
@@ -4915,7 +4852,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Strange in state %d not cookie-echoed yet c-e timer expires?\n"
 argument_list|,
@@ -5128,6 +5065,9 @@ operator|)
 return|;
 block|}
 comment|/* find the existing STRRESET, we use the seq number we sent out on */
+operator|(
+name|void
+operator|)
 name|sctp_find_stream_reset
 argument_list|(
 name|stcb
@@ -5521,25 +5461,13 @@ name|max_send_times
 condition|)
 block|{
 comment|/* 			 * Something is rotten, peer is not responding to 			 * ASCONFs but maybe is to data etc.  e.g. it is not 			 * properly handling the chunk type upper bits Mark 			 * this peer as ASCONF incapable and cleanup 			 */
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-if|if
-condition|(
-name|sctp_debug_on
-operator|&
-name|SCTP_DEBUG_TIMER1
-condition|)
-block|{
-name|printf
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_TIMER1
+argument_list|,
 literal|"asconf_timer: Peer has not responded to our repeated ASCONFs\n"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SCTP_DEBUG */
 name|sctp_asconf_cleanup
 argument_list|(
 name|stcb
@@ -6002,7 +5930,7 @@ operator|.
 name|sent_queue_retran_cnt
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Hmm, sent_queue_retran_cnt is non-zero %d\n"
 argument_list|,
@@ -6118,7 +6046,7 @@ name|cnt
 condition|)
 block|{
 comment|/* yep, we lost a spoke or two */
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Found an additional %d streams NOT on outwheel, corrected\n"
 argument_list|,
@@ -6207,7 +6135,7 @@ operator|.
 name|stream_queue_cnt
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Hmm, stream queue cnt at %d I counted %d in stream out wheel\n"
 argument_list|,
@@ -6271,7 +6199,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Still nothing moved %d chunks are stuck\n"
 argument_list|,
@@ -6283,7 +6211,7 @@ block|}
 block|}
 else|else
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Found no chunks on any queue tot:%lu\n"
 argument_list|,
@@ -6894,7 +6822,7 @@ operator|->
 name|ro
 operator|.
 name|_s_addr
-operator|==
+operator|!=
 name|NULL
 operator|)
 operator|&&
@@ -6935,6 +6863,18 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|net
+operator|->
+name|ro
+operator|.
+name|_s_addr
+operator|==
+name|NULL
+condition|)
+block|{
 name|net
 operator|->
 name|ro
@@ -6967,6 +6907,7 @@ operator|.
 name|vrf_id
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|net
@@ -7598,7 +7539,7 @@ name|it
 operator|)
 condition|)
 block|{
-name|printf
+name|SCTP_PRINTF
 argument_list|(
 literal|"Iterator collision, waiting for one at %p\n"
 argument_list|,
