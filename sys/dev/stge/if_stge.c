@@ -6480,6 +6480,22 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|IFQ_DRV_IS_EMPTY
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
+condition|)
+name|stge_start_locked
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
