@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004-05 Applied Micro Circuits Corporation.  * Copyright (c) 2004-05 Vinod Kashyap  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*  * Copyright (c) 2004-07 Applied Micro Circuits Corporation.  * Copyright (c) 2004-05 Vinod Kashyap  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  */
+comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  * Modifications by: Adam Radford  */
 end_comment
 
 begin_ifndef
@@ -22,13 +22,6 @@ end_define
 begin_comment
 comment|/*  * Macros, structures and functions shared between OSL and CL,  * and defined by CL.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TW_CL_VERSION_STRING
-value|"1.00.01.011"
-end_define
 
 begin_define
 define|#
@@ -82,6 +75,17 @@ end_define
 
 begin_comment
 comment|/* 9000 PCI-X series device id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TW_CL_DEVICE_ID_9K_E
+value|0x1004
+end_define
+
+begin_comment
+comment|/* 9000 PCIe series device id */
 end_comment
 
 begin_define
@@ -147,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|TW_CL_MAX_NUM_UNITS
-value|16
+value|32
 end_define
 
 begin_comment
@@ -273,17 +277,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TW_CL_FLASH_FIRMWARE
-value|(1<<4)
-end_define
-
-begin_comment
-comment|/* Flash firmware */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TW_CL_DEFERRED_INTR_USED
 value|(1<<5)
 end_define
@@ -356,27 +349,12 @@ begin_comment
 comment|/* Possible values of req_pkt->flags */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|TW_CL_REQ_RETRY_ON_BUSY
 value|(1<<0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST */
-end_comment
 
 begin_define
 define|#
@@ -685,29 +663,6 @@ name|num_sgl_entries
 parameter_list|)
 function_decl|;
 comment|/* OSL callback to get SG list. */
-ifdef|#
-directive|ifdef
-name|TW_OSL_DMA_MEM_ALLOC_PER_REQUEST
-name|TW_VOID
-modifier|*
-name|dma_mem
-decl_stmt|;
-name|TW_UINT64
-name|dma_mem_phys
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_DMA_MEM_ALLOC_PER_REQUEST */
-ifdef|#
-directive|ifdef
-name|TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST
-name|TW_VOID
-modifier|*
-name|non_dma_mem
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST */
 union|union
 block|{
 name|struct
@@ -1840,149 +1795,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|tw_osl_sync_io_block
-end_ifndef
-
-begin_comment
-comment|/* Block new I/O requests from being sent by the OS Layer. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|TW_VOID
-name|tw_osl_sync_io_block
-parameter_list|(
-name|struct
-name|tw_cl_ctlr_handle
-modifier|*
-name|ctlr_handle
-parameter_list|,
-name|TW_SYNC_HANDLE
-modifier|*
-name|sync_handle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|tw_osl_sync_io_unblock
-end_ifndef
-
-begin_comment
-comment|/* Allow new I/O requests from the OS Layer. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|TW_VOID
-name|tw_osl_sync_io_unblock
-parameter_list|(
-name|struct
-name|tw_cl_ctlr_handle
-modifier|*
-name|ctlr_handle
-parameter_list|,
-name|TW_SYNC_HANDLE
-modifier|*
-name|sync_handle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|tw_osl_sync_isr_block
-end_ifndef
-
-begin_comment
-comment|/* Block the ISR from being called by the OS Layer. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|TW_VOID
-name|tw_osl_sync_isr_block
-parameter_list|(
-name|struct
-name|tw_cl_ctlr_handle
-modifier|*
-name|ctlr_handle
-parameter_list|,
-name|TW_SYNC_HANDLE
-modifier|*
-name|sync_handle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|tw_osl_sync_isr_unblock
-end_ifndef
-
-begin_comment
-comment|/* Allow calls to the ISR from the OS Layer. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|TW_VOID
-name|tw_osl_sync_isr_unblock
-parameter_list|(
-name|struct
-name|tw_cl_ctlr_handle
-modifier|*
-name|ctlr_handle
-parameter_list|,
-name|TW_SYNC_HANDLE
-modifier|*
-name|sync_handle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2304,36 +2116,6 @@ parameter_list|,
 name|TW_UINT32
 modifier|*
 name|dma_mem_size
-ifdef|#
-directive|ifdef
-name|TW_OSL_FLASH_FIRMWARE
-parameter_list|,
-name|TW_UINT32
-modifier|*
-name|flash_dma_mem_size
-endif|#
-directive|endif
-comment|/* TW_OSL_FLASH_FIRMWARE */
-ifdef|#
-directive|ifdef
-name|TW_OSL_DMA_MEM_ALLOC_PER_REQUEST
-parameter_list|,
-name|TW_UINT32
-modifier|*
-name|per_req_dma_mem_size
-endif|#
-directive|endif
-comment|/* TW_OSL_DMA_MEM_ALLOC_PER_REQUEST */
-ifdef|#
-directive|ifdef
-name|TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST
-parameter_list|,
-name|TW_UINT32
-modifier|*
-name|per_req_non_dma_mem_size
-endif|#
-directive|endif
-comment|/* TW_OSL_N0N_DMA_MEM_ALLOC_PER_REQUEST */
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2404,19 +2186,6 @@ name|dma_mem
 parameter_list|,
 name|TW_UINT64
 name|dma_mem_phys
-ifdef|#
-directive|ifdef
-name|TW_OSL_FLASH_FIRMWARE
-parameter_list|,
-name|TW_VOID
-modifier|*
-name|flash_dma_mem
-parameter_list|,
-name|TW_UINT64
-name|flash_dma_mem_phys
-endif|#
-directive|endif
-comment|/* TW_OSL_FLASH_FIRMWARE */
 parameter_list|)
 function_decl|;
 end_function_decl

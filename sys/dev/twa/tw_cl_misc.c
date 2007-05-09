@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004-05 Applied Micro Circuits Corporation.  * Copyright (c) 2004-05 Vinod Kashyap  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*  * Copyright (c) 2004-07 Applied Micro Circuits Corporation.  * Copyright (c) 2004-05 Vinod Kashyap  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  */
+comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  * Modifications by: Adam Radford  */
 end_comment
 
 begin_comment
@@ -795,14 +795,6 @@ operator|=
 name|tw_cli_get_request
 argument_list|(
 name|ctlr
-ifdef|#
-directive|ifdef
-name|TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST
-argument_list|,
-name|TW_CL_NULL
-endif|#
-directive|endif
-comment|/* TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST */
 argument_list|)
 operator|)
 operator|==
@@ -815,44 +807,6 @@ name|TW_OSL_EBUSY
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|TW_OSL_DMA_MEM_ALLOC_PER_REQUEST
-name|req
-operator|->
-name|cmd_pkt
-operator|=
-name|ctlr
-operator|->
-name|cmd_pkt_buf
-expr_stmt|;
-name|req
-operator|->
-name|cmd_pkt_phys
-operator|=
-name|ctlr
-operator|->
-name|cmd_pkt_phys
-expr_stmt|;
-name|tw_osl_memzero
-argument_list|(
-name|req
-operator|->
-name|cmd_pkt
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|tw_cl_command_header
-argument_list|)
-operator|+
-literal|28
-comment|/* max bytes before sglist */
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_DMA_MEM_ALLOC_PER_REQUEST */
 name|req
 operator|->
 name|flags
@@ -1729,17 +1683,6 @@ name|struct
 name|tw_cli_ctlr_context
 modifier|*
 name|ctlr
-ifdef|#
-directive|ifdef
-name|TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST
-parameter_list|,
-name|struct
-name|tw_cl_req_packet
-modifier|*
-name|req_pkt
-endif|#
-directive|endif
-comment|/* TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST */
 parameter_list|)
 block|{
 name|struct
@@ -1761,100 +1704,6 @@ argument_list|,
 literal|"entered"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST
-if|if
-condition|(
-name|req_pkt
-condition|)
-block|{
-if|if
-condition|(
-name|ctlr
-operator|->
-name|num_free_req_ids
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|TW_CL_NULL
-operator|)
-return|;
-name|ctlr
-operator|->
-name|num_free_req_ids
-operator|--
-expr_stmt|;
-name|req
-operator|=
-operator|(
-expr|struct
-name|tw_cli_req_context
-operator|*
-operator|)
-operator|(
-name|req_pkt
-operator|->
-name|non_dma_mem
-operator|)
-expr_stmt|;
-name|req
-operator|->
-name|ctlr
-operator|=
-name|ctlr
-expr_stmt|;
-name|req
-operator|->
-name|request_id
-operator|=
-name|ctlr
-operator|->
-name|free_req_ids
-index|[
-name|ctlr
-operator|->
-name|free_req_head
-index|]
-expr_stmt|;
-name|ctlr
-operator|->
-name|busy_reqs
-index|[
-name|req
-operator|->
-name|request_id
-index|]
-operator|=
-name|req
-expr_stmt|;
-name|ctlr
-operator|->
-name|free_req_head
-operator|=
-operator|(
-name|ctlr
-operator|->
-name|free_req_head
-operator|+
-literal|1
-operator|)
-operator|%
-operator|(
-name|ctlr
-operator|->
-name|max_simult_reqs
-operator|-
-literal|1
-operator|)
-expr_stmt|;
-block|}
-else|else
-endif|#
-directive|endif
-comment|/* TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST */
 block|{
 comment|/* Get a free request packet. */
 name|req
@@ -1928,9 +1777,6 @@ name|tw_cli_callback
 operator|=
 name|TW_CL_NULL
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|TW_OSL_DMA_MEM_ALLOC_PER_REQUEST
 comment|/* 		 * Look at the status field in the command packet to see how 		 * it completed the last time it was used, and zero out only 		 * the portions that might have changed.  Note that we don't 		 * care to zero out the sglist. 		 */
 if|if
 condition|(
@@ -1976,9 +1822,6 @@ literal|28
 comment|/* max bytes before sglist */
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_DMA_MEM_ALLOC_PER_REQUEST */
 block|}
 return|return
 operator|(
@@ -2628,6 +2471,14 @@ operator|&
 name|TWA_STATUS_QUEUE_ERROR_INTERRUPT
 condition|)
 block|{
+if|if
+condition|(
+name|ctlr
+operator|->
+name|device_id
+operator|!=
+name|TW_CL_DEVICE_ID_9K_E
+condition|)
 name|tw_cl_create_event
 argument_list|(
 name|ctlr_handle

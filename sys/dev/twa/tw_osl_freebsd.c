@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004-05 Applied Micro Circuits Corporation.  * Copyright (c) 2004-05 Vinod Kashyap.  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*  * Copyright (c) 2004-07 Applied Micro Circuits Corporation.  * Copyright (c) 2004-05 Vinod Kashyap.  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  */
+comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  * Modifications by: Adam Radford  */
 end_comment
 
 begin_comment
@@ -711,7 +711,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|twa
 argument_list|,
-name|pci
+name|cam
 argument_list|,
 literal|1
 argument_list|,
@@ -727,7 +727,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|twa
 argument_list|,
-name|cam
+name|pci
 argument_list|,
 literal|1
 argument_list|,
@@ -1491,20 +1491,6 @@ argument_list|,
 name|sc
 operator|->
 name|dma_mem_phys
-ifdef|#
-directive|ifdef
-name|TW_OSL_FLASH_FIRMWARE
-argument_list|,
-name|sc
-operator|->
-name|flash_dma_mem
-argument_list|,
-name|sc
-operator|->
-name|flash_dma_mem_phys
-endif|#
-directive|endif
-comment|/* TW_OSL_FLASH_FIRMWARE */
 argument_list|)
 operator|)
 condition|)
@@ -1537,73 +1523,6 @@ name|error
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|TW_OSL_FLASH_FIRMWARE
-comment|/* Free any memory allocated for firmware flashing. */
-if|if
-condition|(
-name|sc
-operator|->
-name|flash_dma_mem
-condition|)
-block|{
-name|bus_dmamap_unload
-argument_list|(
-name|sc
-operator|->
-name|flash_tag
-argument_list|,
-name|sc
-operator|->
-name|flash_map
-argument_list|)
-expr_stmt|;
-name|bus_dmamem_free
-argument_list|(
-name|sc
-operator|->
-name|flash_tag
-argument_list|,
-name|sc
-operator|->
-name|flash_dma_mem
-argument_list|,
-name|sc
-operator|->
-name|flash_map
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|sc
-operator|->
-name|flash_tag
-condition|)
-name|bus_dma_tag_destroy
-argument_list|(
-name|sc
-operator|->
-name|flash_tag
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Set flash_tag and flash_dma_mem to 0, so we don't try freeing them 	 * again, later. 	 */
-name|sc
-operator|->
-name|flash_tag
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|flash_dma_mem
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_FLASH_FIRMWARE */
 comment|/* Create the control device. */
 name|sc
 operator|->
@@ -1724,24 +1643,6 @@ decl_stmt|;
 name|TW_UINT32
 name|dma_mem_size
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TW_OSL_FLASH_FIRMWARE
-name|TW_UINT32
-name|flash_dma_mem_size
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_FLASH_FIRMWARE */
-ifdef|#
-directive|ifdef
-name|TW_OSL_DMA_MEM_ALLOC_PER_REQUEST
-name|TW_UINT32
-name|per_req_dma_mem_size
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_DMA_MEM_ALLOC_PER_REQUEST */
 name|TW_INT32
 name|error
 decl_stmt|;
@@ -1791,18 +1692,6 @@ name|TW_CL_64BIT_SG_LENGTH
 else|:
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TW_OSL_FLASH_FIRMWARE
-name|sc
-operator|->
-name|flags
-operator||=
-name|TW_CL_FLASH_FIRMWARE
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_FLASH_FIRMWARE */
 ifdef|#
 directive|ifdef
 name|TW_OSLI_DEFERRED_INTR_USED
@@ -1873,24 +1762,6 @@ name|non_dma_mem_size
 argument_list|,
 operator|&
 name|dma_mem_size
-ifdef|#
-directive|ifdef
-name|TW_OSL_FLASH_FIRMWARE
-argument_list|,
-operator|&
-name|flash_dma_mem_size
-endif|#
-directive|endif
-comment|/* TW_OSL_FLASH_FIRMWARE */
-ifdef|#
-directive|ifdef
-name|TW_OSL_DMA_MEM_ALLOC_PER_REQUEST
-argument_list|,
-operator|&
-name|per_req_dma_mem_size
-endif|#
-directive|endif
-comment|/* TW_OSL_DMA_MEM_ALLOC_PER_REQUEST */
 argument_list|)
 operator|)
 condition|)
@@ -2066,18 +1937,6 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-ifdef|#
-directive|ifdef
-name|TW_OSL_DMA_MEM_ALLOC_PER_REQUEST
-operator|(
-name|TW_OSLI_MAX_NUM_IOS
-operator|*
-name|per_req_dma_mem_size
-operator|)
-operator|+
-endif|#
-directive|endif
-comment|/* TW_OSL_DMA_MEM_ALLOC_PER_REQUEST */
 name|dma_mem_size
 argument_list|,
 comment|/* maxsize */
@@ -2224,163 +2083,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TW_OSL_FLASH_FIRMWARE
-comment|/* 	 * Create a dma tag for Common Layer's DMA'able memory, 	 * used to flash firmware (flash_dma_mem). 	 */
-if|if
-condition|(
-name|bus_dma_tag_create
-argument_list|(
-name|sc
-operator|->
-name|parent_tag
-argument_list|,
-comment|/* parent */
-name|sc
-operator|->
-name|alignment
-argument_list|,
-comment|/* alignment */
-literal|0
-argument_list|,
-comment|/* boundary */
-name|BUS_SPACE_MAXADDR
-argument_list|,
-comment|/* lowaddr */
-name|BUS_SPACE_MAXADDR
-argument_list|,
-comment|/* highaddr */
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-comment|/* filter, filterarg */
-name|flash_dma_mem_size
-argument_list|,
-comment|/* maxsize */
-literal|1
-argument_list|,
-comment|/* nsegments */
-name|flash_dma_mem_size
-argument_list|,
-comment|/* maxsegsize */
-literal|0
-argument_list|,
-comment|/* flags */
-name|NULL
-argument_list|,
-comment|/* lockfunc */
-name|NULL
-argument_list|,
-comment|/* lockfuncarg */
-operator|&
-name|sc
-operator|->
-name|flash_tag
-comment|/* tag */
-argument_list|)
-condition|)
-block|{
-name|tw_osli_printf
-argument_list|(
-name|sc
-argument_list|,
-literal|"error = %d"
-argument_list|,
-name|TW_CL_SEVERITY_ERROR_STRING
-argument_list|,
-name|TW_CL_MESSAGE_SOURCE_FREEBSD_DRIVER
-argument_list|,
-literal|0x200D
-argument_list|,
-literal|"Can't allocate DMA tag for Common Layer's "
-literal|"firmware flash memory"
-argument_list|,
-name|ENOMEM
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|bus_dmamem_alloc
-argument_list|(
-name|sc
-operator|->
-name|flash_tag
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|flash_dma_mem
-argument_list|,
-name|BUS_DMA_NOWAIT
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|flash_map
-argument_list|)
-condition|)
-block|{
-name|tw_osli_printf
-argument_list|(
-name|sc
-argument_list|,
-literal|"error = %d"
-argument_list|,
-name|TW_CL_SEVERITY_ERROR_STRING
-argument_list|,
-name|TW_CL_MESSAGE_SOURCE_FREEBSD_DRIVER
-argument_list|,
-literal|0x200E
-argument_list|,
-literal|"Can't allocate DMA'able memory for Common Layer's "
-literal|"firmware flash"
-argument_list|,
-name|ENOMEM
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
-name|bus_dmamap_load
-argument_list|(
-name|sc
-operator|->
-name|flash_tag
-argument_list|,
-name|sc
-operator|->
-name|flash_map
-argument_list|,
-name|sc
-operator|->
-name|flash_dma_mem
-argument_list|,
-name|flash_dma_mem_size
-argument_list|,
-name|twa_map_load_callback
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|flash_dma_mem_phys
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_FLASH_FIRMWARE */
 comment|/* 	 * Create a dma tag for data buffers; size will be the maximum 	 * possible I/O size (128kB). 	 */
 if|if
 condition|(
@@ -2742,52 +2444,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|TW_OSL_DMA_MEM_ALLOC_PER_REQUEST
-name|req
-operator|->
-name|req_pkt
-operator|.
-name|dma_mem
-operator|=
-operator|(
-operator|(
-name|TW_INT8
-operator|*
-operator|)
-operator|(
-name|sc
-operator|->
-name|dma_mem
-operator|)
-operator|)
-operator|+
-operator|(
-name|i
-operator|*
-name|per_req_dma_mem_size
-operator|)
-expr_stmt|;
-name|req
-operator|->
-name|req_pkt
-operator|.
-name|dma_mem_phys
-operator|=
-name|sc
-operator|->
-name|dma_mem_phys
-operator|+
-operator|(
-name|i
-operator|*
-name|per_req_dma_mem_size
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_DMA_MEM_ALLOC_PER_REQUEST */
 comment|/* Insert request into the free queue. */
 name|tw_osli_req_q_insert_tail
 argument_list|(
@@ -2797,44 +2453,6 @@ name|TW_OSLI_FREE_Q
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|TW_OSL_DMA_MEM_ALLOC_PER_REQUEST
-name|sc
-operator|->
-name|dma_mem
-operator|=
-operator|(
-operator|(
-name|TW_INT8
-operator|*
-operator|)
-operator|(
-name|sc
-operator|->
-name|dma_mem
-operator|)
-operator|)
-operator|+
-operator|(
-name|TW_OSLI_MAX_NUM_IOS
-operator|*
-name|per_req_dma_mem_size
-operator|)
-expr_stmt|;
-name|sc
-operator|->
-name|dma_mem_phys
-operator|+=
-operator|(
-name|TW_OSLI_MAX_NUM_IOS
-operator|*
-name|per_req_dma_mem_size
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_DMA_MEM_ALLOC_PER_REQUEST */
 return|return
 operator|(
 literal|0
@@ -3069,77 +2687,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TW_OSL_FLASH_FIRMWARE
-if|if
-condition|(
-name|sc
-operator|->
-name|flash_dma_mem
-condition|)
-block|{
-comment|/* In case this piece of memory has already been freed. */
-name|bus_dmamap_unload
-argument_list|(
-name|sc
-operator|->
-name|flash_tag
-argument_list|,
-name|sc
-operator|->
-name|flash_map
-argument_list|)
-expr_stmt|;
-name|bus_dmamem_free
-argument_list|(
-name|sc
-operator|->
-name|flash_tag
-argument_list|,
-name|sc
-operator|->
-name|flash_dma_mem
-argument_list|,
-name|sc
-operator|->
-name|flash_map
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|sc
-operator|->
-name|flash_tag
-condition|)
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|bus_dma_tag_destroy
-argument_list|(
-name|sc
-operator|->
-name|flash_tag
-argument_list|)
-operator|)
-condition|)
-name|tw_osli_dbg_dprintf
-argument_list|(
-literal|1
-argument_list|,
-name|sc
-argument_list|,
-literal|"dma_tag_destroy(flash) returned %d"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_FLASH_FIRMWARE */
 if|if
 condition|(
 name|sc
@@ -4849,66 +4396,6 @@ name|orig_req
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TW_OSL_DMA_MEM_ALLOC_PER_REQUEST
-comment|/* Don't zero dma_mem& dma_mem_phys in req_pkt. */
-name|req
-operator|->
-name|req_pkt
-operator|.
-name|cmd
-operator|=
-literal|0
-expr_stmt|;
-name|req
-operator|->
-name|req_pkt
-operator|.
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|req
-operator|->
-name|req_pkt
-operator|.
-name|status
-operator|=
-literal|0
-expr_stmt|;
-name|req
-operator|->
-name|req_pkt
-operator|.
-name|tw_osl_callback
-operator|=
-name|NULL
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-operator|(
-name|req
-operator|->
-name|req_pkt
-operator|.
-name|gen_req_pkt
-operator|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|req
-operator|->
-name|req_pkt
-operator|.
-name|gen_req_pkt
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* TW_OSL_DMA_MEM_ALLOC_PER_REQUEST */
 name|bzero
 argument_list|(
 operator|&
@@ -4925,9 +4412,6 @@ name|tw_cl_req_packet
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_DMA_MEM_ALLOC_PER_REQUEST */
 block|}
 return|return
 operator|(

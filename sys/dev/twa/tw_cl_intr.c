@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004-05 Applied Micro Circuits Corporation.  * Copyright (c) 2004-05 Vinod Kashyap  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*  * Copyright (c) 2004-07 Applied Micro Circuits Corporation.  * Copyright (c) 2004-05 Vinod Kashyap  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  */
+comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  * Modifications by: Adam Radford  */
 end_comment
 
 begin_comment
@@ -103,6 +103,16 @@ argument_list|,
 literal|"entered"
 argument_list|)
 expr_stmt|;
+comment|/* If we don't have controller context, bail */
+if|if
+condition|(
+name|ctlr
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* 	 * Synchronize access between writes to command and control registers 	 * in 64-bit environments, on G66. 	 */
 if|if
 condition|(
@@ -139,7 +149,7 @@ name|status_reg
 argument_list|)
 condition|)
 goto|goto
-name|out
+name|out_unlock
 goto|;
 comment|/* Clear the interrupt. */
 if|if
@@ -295,7 +305,7 @@ name|TW_CL_TRUE
 expr_stmt|;
 comment|/* request for a deferred isr call */
 block|}
-name|out
+name|out_unlock
 label|:
 if|if
 condition|(
@@ -314,6 +324,8 @@ operator|->
 name|io_lock
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 return|return
 operator|(
 name|rc
@@ -762,34 +774,6 @@ operator|->
 name|ctlr_handle
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST
-if|if
-condition|(
-name|GET_RESP_ID
-argument_list|(
-name|resp
-argument_list|)
-operator|>=
-literal|1
-condition|)
-name|req
-operator|=
-name|ctlr
-operator|->
-name|busy_reqs
-index|[
-name|GET_RESP_ID
-argument_list|(
-name|resp
-argument_list|)
-index|]
-expr_stmt|;
-else|else
-endif|#
-directive|endif
-comment|/* TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST */
 block|{
 name|req
 operator|=
@@ -901,48 +885,6 @@ argument_list|,
 name|TW_CLI_COMPLETE_Q
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST
-name|tw_osl_free_lock
-argument_list|(
-name|ctlr
-operator|->
-name|ctlr_handle
-argument_list|,
-name|ctlr
-operator|->
-name|intr_lock
-argument_list|)
-expr_stmt|;
-comment|/* Call the CL internal callback, if there's one. */
-if|if
-condition|(
-name|req
-operator|->
-name|tw_cli_callback
-condition|)
-name|req
-operator|->
-name|tw_cli_callback
-argument_list|(
-name|req
-argument_list|)
-expr_stmt|;
-name|tw_osl_get_lock
-argument_list|(
-name|ctlr
-operator|->
-name|ctlr_handle
-argument_list|,
-name|ctlr
-operator|->
-name|intr_lock
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST */
 block|}
 comment|/* Unmask the response interrupt. */
 name|TW_CLI_WRITE_CONTROL_REGISTER
@@ -965,18 +907,12 @@ operator|->
 name|intr_lock
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST
 comment|/* Complete this, and other requests in the complete queue. */
 name|tw_cli_process_complete_queue
 argument_list|(
 name|ctlr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* TW_OSL_NON_DMA_MEM_ALLOC_PER_REQUEST */
 return|return
 operator|(
 name|error
