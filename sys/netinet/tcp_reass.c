@@ -3599,13 +3599,14 @@ name|tp
 operator|->
 name|t_state
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|INET6
 name|bcopy
 argument_list|(
 operator|(
@@ -3627,10 +3628,10 @@ name|ip6
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
 endif|#
 directive|endif
-comment|/* INET6 */
+block|}
+else|else
 name|bcopy
 argument_list|(
 operator|(
