@@ -1894,7 +1894,7 @@ condition|)
 block|{
 name|ZFS_LOG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Searching by ID [%s]."
 argument_list|,
