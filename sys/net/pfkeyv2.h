@@ -1167,6 +1167,17 @@ value|12
 end_define
 
 begin_comment
+comment|/* private allocations - based on RFC4312/IANA assignment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SADB_X_EALG_CAMELLIACBC
+value|22
+end_define
+
+begin_comment
 comment|/* private allocations should use 249-255 (RFC2407) */
 end_comment
 

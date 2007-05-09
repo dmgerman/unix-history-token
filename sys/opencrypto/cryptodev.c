@@ -844,6 +844,15 @@ operator|&
 name|enc_xform_arc4
 expr_stmt|;
 break|break;
+case|case
+name|CRYPTO_CAMELLIA_CBC
+case|:
+name|txform
+operator|=
+operator|&
+name|enc_xform_camellia
+expr_stmt|;
+break|break;
 default|default:
 return|return
 operator|(

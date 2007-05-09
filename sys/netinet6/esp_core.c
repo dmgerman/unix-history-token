@@ -214,6 +214,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet6/esp_camellia.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet6/esp_aesctr.h>
 end_include
 
@@ -1062,6 +1068,34 @@ name|esp_aesctr_encrypt
 block|,
 name|esp_aesctr_schedule
 block|}
+block|,
+block|{
+literal|16
+block|,
+literal|16
+block|,
+name|esp_cbc_mature
+block|,
+literal|128
+block|,
+literal|256
+block|,
+name|esp_camellia_schedlen
+block|,
+literal|"camellia-cbc"
+block|,
+name|esp_common_ivlen
+block|,
+name|esp_cbc_decrypt
+block|,
+name|esp_cbc_encrypt
+block|,
+name|esp_camellia_schedule
+block|,
+name|esp_camellia_blockdecrypt
+block|,
+name|esp_camellia_blockencrypt
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1152,6 +1186,16 @@ operator|&
 name|esp_algorithms
 index|[
 literal|6
+index|]
+return|;
+case|case
+name|SADB_X_EALG_CAMELLIACBC
+case|:
+return|return
+operator|&
+name|esp_algorithms
+index|[
+literal|7
 index|]
 return|;
 default|default:
@@ -2338,6 +2382,9 @@ case|:
 break|break;
 case|case
 name|SADB_X_EALG_RIJNDAELCBC
+case|:
+case|case
+name|SADB_X_EALG_CAMELLIACBC
 case|:
 comment|/* allows specific key sizes only */
 if|if

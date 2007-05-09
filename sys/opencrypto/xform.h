@@ -345,6 +345,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
+name|enc_xform
+name|enc_xform_camellia
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
 name|auth_hash
 name|auth_hash_null
 decl_stmt|;

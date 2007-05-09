@@ -381,6 +381,13 @@ return|return
 operator|&
 name|enc_xform_null
 return|;
+case|case
+name|SADB_X_EALG_CAMELLIACBC
+case|:
+return|return
+operator|&
+name|enc_xform_camellia
+return|;
 block|}
 return|return
 name|NULL
@@ -4816,6 +4823,12 @@ name|enc_xform_null
 argument_list|)
 expr_stmt|;
 comment|/* SADB_EALG_NULL */
+name|MAXIV
+argument_list|(
+name|enc_xform_camellia
+argument_list|)
+expr_stmt|;
+comment|/* SADB_X_EALG_CAMELLIACBC */
 name|xform_register
 argument_list|(
 operator|&
