@@ -349,6 +349,22 @@ block|,
 literal|"LSI MegaSAS 1064R"
 block|}
 block|,
+comment|/* Brocton IOP */
+block|{
+literal|0x1000
+block|,
+literal|0x0413
+block|,
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"LSI MegaSAS 1064R"
+block|}
+block|,
+comment|/* Verde ZCR */
 block|{
 literal|0x1028
 block|,
