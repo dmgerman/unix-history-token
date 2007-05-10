@@ -4032,7 +4032,7 @@ name|tcp_timer_active
 argument_list|(
 name|tp
 argument_list|,
-name|TT_PERSIST
+name|TT_REXMT
 argument_list|)
 operator|&&
 operator|(
