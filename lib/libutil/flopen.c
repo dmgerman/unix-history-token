@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -39,6 +45,18 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_function

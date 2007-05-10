@@ -190,8 +190,7 @@ parameter_list|,
 name|int
 name|_flags
 parameter_list|,
-name|mode_t
-name|_mode
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
