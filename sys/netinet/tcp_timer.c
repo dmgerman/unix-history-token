@@ -631,7 +631,9 @@ end_comment
 begin_function
 name|void
 name|tcp_slowtimo
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tcp_maxidle
 operator|=

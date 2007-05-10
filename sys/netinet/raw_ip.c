@@ -522,7 +522,9 @@ end_function
 begin_function
 name|void
 name|rip_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|INP_INFO_LOCK_INIT
 argument_list|(

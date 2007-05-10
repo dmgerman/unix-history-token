@@ -737,13 +737,11 @@ begin_function
 name|void
 name|tcp_clean_sackreport
 parameter_list|(
-name|tp
-parameter_list|)
 name|struct
 name|tcpcb
 modifier|*
 name|tp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
