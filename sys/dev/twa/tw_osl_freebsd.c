@@ -1339,8 +1339,6 @@ operator|->
 name|irq_res
 argument_list|,
 name|INTR_TYPE_CAM
-operator||
-name|INTR_MPSAFE
 argument_list|,
 ifdef|#
 directive|ifdef
