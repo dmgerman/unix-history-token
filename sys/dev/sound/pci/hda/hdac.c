@@ -29341,11 +29341,6 @@ operator|->
 name|poll_jack
 argument_list|)
 expr_stmt|;
-name|hdac_lock
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|hdac_irq_free
 argument_list|(
 name|sc
