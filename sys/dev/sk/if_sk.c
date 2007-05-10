@@ -7276,6 +7276,8 @@ specifier|const
 name|char
 modifier|*
 name|pname
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -7824,8 +7826,9 @@ case|case
 name|DEVICEID_DLINK_DGE530T_B1
 case|:
 comment|/* Stay with VPD PN. */
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|pci_get_vpd_ident
 argument_list|(
 name|dev
@@ -7833,10 +7836,7 @@ argument_list|,
 operator|&
 name|pname
 argument_list|)
-condition|)
-goto|goto
-name|vpdfailed
-goto|;
+expr_stmt|;
 break|break;
 case|case
 name|DEVICEID_SK_V2
@@ -7853,8 +7853,9 @@ case|case
 name|SK_GENESIS
 case|:
 comment|/* Stay with VPD PN. */
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|pci_get_vpd_ident
 argument_list|(
 name|dev
@@ -7862,10 +7863,7 @@ argument_list|,
 operator|&
 name|pname
 argument_list|)
-condition|)
-goto|goto
-name|vpdfailed
-goto|;
+expr_stmt|;
 break|break;
 case|case
 name|SK_YUKON
@@ -7986,8 +7984,6 @@ block|}
 block|}
 break|break;
 default|default:
-name|vpdfailed
-label|:
 name|device_printf
 argument_list|(
 name|dev
@@ -8078,6 +8074,12 @@ literal|""
 expr_stmt|;
 block|}
 comment|/* Announce the product name and more VPD data if there. */
+if|if
+condition|(
+name|pname
+operator|!=
+name|NULL
+condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -8085,12 +8087,6 @@ argument_list|,
 literal|"%s rev. %s(0x%x)\n"
 argument_list|,
 name|pname
-operator|!=
-name|NULL
-condition|?
-name|pname
-else|:
-literal|"<unknown>"
 argument_list|,
 name|revstr
 argument_list|,
