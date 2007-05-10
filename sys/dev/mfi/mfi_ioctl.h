@@ -306,6 +306,43 @@ name|__packed
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|mfi_query_disk
+block|{
+name|uint8_t
+name|array_id
+decl_stmt|;
+name|uint8_t
+name|present
+decl_stmt|;
+name|uint8_t
+name|open
+decl_stmt|;
+name|uint8_t
+name|reserved
+decl_stmt|;
+comment|/* reserved for future use */
+name|char
+name|devname
+index|[
+name|SPECNAMELEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|MFIIO_QUERY_DISK
+value|_IOWR('Q', 102, struct mfi_query_disk)
+end_define
+
 begin_comment
 comment|/*  * Create a second set so the FreeBSD native ioctl doesn't  * conflict in FreeBSD ioctl handler.  Translate in mfi_linux.c.  */
 end_comment
