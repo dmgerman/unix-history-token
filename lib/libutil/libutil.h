@@ -179,6 +179,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|flopen
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|_path
+parameter_list|,
+name|int
+name|_flags
+parameter_list|,
+name|mode_t
+name|_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|login
 parameter_list|(
