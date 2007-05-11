@@ -1450,11 +1450,11 @@ name|unp_refcount
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * uipc_attach() may be called indirectly from within the UNIX domain 	 * socket code via sonewconn() in unp_connect().  Since rwlocks can 	 * not be recursed, we do the closest thing. 	 */
 name|locked
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * uipc_attach() may be called indirectly from within the UNIX domain 	 * socket code via sonewconn() in unp_connect().  Since rwlocks can 	 * not be recursed, we do the closest thing. 	 */
 if|if
 condition|(
 operator|!
@@ -1624,7 +1624,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 	 * We don't allow simultaneous bind() calls on a single UNIX domain 	 * socket, so flag in-progress operations, and return an error if an 	 * operation is already in progress. 	 * 	 * Historically, we have not allowed a socket to be rebound, so this 	 * also returns an error.  Not allowing re-binding certainly 	 * simplifies the implementation and avoids a great many possible 	 * failure modes. 	 */
+comment|/* 	 * We don't allow simultaneous bind() calls on a single UNIX domain 	 * socket, so flag in-progress operations, and return an error if an 	 * operation is already in progress. 	 * 	 * Historically, we have not allowed a socket to be rebound, so this 	 * also returns an error.  Not allowing re-binding simplifies the 	 * implementation and avoids a great many possible failure modes. 	 */
 name|UNP_PCB_LOCK
 argument_list|(
 name|unp
@@ -3166,7 +3166,7 @@ argument_list|(
 literal|"uipc_rcvd unknown socktype"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Adjust backpressure on sender and wakeup any waiting to write. 	 * 	 * The consistency requirements here are a bit complex: we must 	 * acquire the lock for our own unpcb in order to prevent it from 	 * disconnecting while in use, changing the unp_conn peer.  We do not 	 * need unp2's lock, since the unp2->unp_socket pointer will remain 	 * static as long as the unp2 pcb is valid, which it will be until we 	 * release unp's lock to allow a disconnect.  We do need socket 	 * mutexes for both socket endpoints since we manipulate fields in 	 * both; we hold both locks at once since we access both 	 * simultaneously. 	 */
+comment|/* 	 * Adjust backpressure on sender and wakeup any waiting to write. 	 * 	 * The unp lock is acquired to maintain the validity of the unp_conn 	 * pointer; no lock on unp2 is required as unp2->unp_socket will be 	 * static as long as we don't permit unp2 to disconnect from unp, 	 * which is prevented by the lock on unp.  We cache values from 	 * so_rcv to avoid holding the so_rcv lock over the entire 	 * transaction on the remote so_snd. 	 */
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
@@ -3529,22 +3529,6 @@ operator|->
 name|unp_conn
 expr_stmt|;
 block|}
-else|else
-block|{
-if|if
-condition|(
-name|unp2
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOTCONN
-expr_stmt|;
-break|break;
-block|}
-block|}
 comment|/* 		 * Because connect() and send() are non-atomic in a sendto() 		 * with a target address, it's possible that the socket will 		 * have disconnected before the send() can run.  In that case 		 * return the slightly counter-intuitive but otherwise 		 * correct error that the socket is not connected. 		 */
 if|if
 condition|(
@@ -3774,7 +3758,7 @@ name|EPIPE
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Because connect() and send() are non-atomic in a sendto() 		 * with a target address, it's possible that the socket will 		 * have disconnected before the send() can run.  In that case 		 * return the slightly counter-intuitive but otherwise 		 * correct error that the socket is not connected. 		 * 		 * Lock order here has to be handled carefully: we hold the 		 * global lock, so acquiring two unpcb locks is OK.  We must 		 * acquire both before acquiring any socket mutexes.  We must 		 * also acquire the local socket send mutex before the remote 		 * socket receive mutex.  The only tricky thing is making 		 * sure to acquire the unp2 lock before the local socket send 		 * lock, or we will experience deadlocks. 		 */
+comment|/* 		 * Because connect() and send() are non-atomic in a sendto() 		 * with a target address, it's possible that the socket will 		 * have disconnected before the send() can run.  In that case 		 * return the slightly counter-intuitive but otherwise 		 * correct error that the socket is not connected. 		 * 		 * Locking here must be done carefully: the global lock 		 * prevents interconnections between unpcbs from changing, so 		 * we can traverse from unp to unp2 without acquiring unp's 		 * lock.  Socket buffer locks follow unpcb locks, so we can 		 * acquire both remote and lock socket buffer locks. 		 */
 name|unp2
 operator|=
 name|unp
@@ -5268,7 +5252,7 @@ operator|&
 name|SO_ACCEPTCONN
 condition|)
 block|{
-comment|/* 			 * We can't drop the global lock here or 'so2' may 			 * become invalid, meaning that we will later recurse 			 * back into the UNIX domain socket code while 			 * holding the global lock. 			 */
+comment|/* 			 * We can't drop the global lock here or 'so2' may 			 * become invalid.  As a result, we need to handle 			 * possibly lock recursion in uipc_attach. 			 */
 name|so3
 operator|=
 name|sonewconn
@@ -5944,7 +5928,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * unp_pcblist() assumes that UNIX domain socket memory is never reclaimed by  * the zone (UMA_ZONE_NOFREE), and as such potentially stale pointers are  * safe to reference.  It first scans the list of struct unpcb's to generate  * a pointer list, then it rescans its list one entry at a time to  * externalize and copyout.  It checks the generation number to see if a  * struct unpcb has been reused, and will skip it if so.  */
+comment|/*  * unp_pcblist() walks the global list of struct unpcb's to generate a  * pointer list, bumping the refcount on each unpcb.  It then copies them out  * sequentially, validating the generation number on each to see if it has  * been detached.  All of this is necessary because copyout() may sleep on  * disk I/O.  */
 end_comment
 
 begin_function
@@ -6270,7 +6254,6 @@ operator|=
 name|i
 expr_stmt|;
 comment|/* In case we lost some during malloc. */
-comment|/* 	 * XXXRW: The logic below asumes that it is OK to lock a mutex in 	 * an unpcb that may have been freed. 	 */
 name|error
 operator|=
 literal|0
