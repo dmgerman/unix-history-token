@@ -8,7 +8,7 @@ comment|/*-  * Copyright 1998 Niels Provos<provos@citi.umich.edu>  * All rights 
 end_comment
 
 begin_comment
-comment|/*  * seed = random 15bit  * n = prime, g0 = generator to n,  * j = random so that gcd(j,n-1) == 1  * g = g0^j mod n will be a generator again.  *  * X[0] = random seed.  * X[n] = a*X[n-1]+b mod m is a Linear Congruential Generator  * with a = 7^(even random) mod m,  *      b = random with gcd(b,m) == 1  *      m = 31104 and a maximal period of m-1.  *  * The transaction id is determined by:  * id[n] = seed xor (g^X[n] mod n)  *  * Effectivly the id is restricted to the lower 15 bits, thus  * yielding two different cycles by toggling the msb on and off.  * This avoids reuse issues caused by reseeding.  */
+comment|/*-  * seed = random 15bit  * n = prime, g0 = generator to n,  * j = random so that gcd(j,n-1) == 1  * g = g0^j mod n will be a generator again.  *  * X[0] = random seed.  * X[n] = a*X[n-1]+b mod m is a Linear Congruential Generator  * with a = 7^(even random) mod m,  *      b = random with gcd(b,m) == 1  *      m = 31104 and a maximal period of m-1.  *  * The transaction id is determined by:  * id[n] = seed xor (g^X[n] mod n)  *  * Effectivly the id is restricted to the lower 15 bits, thus yielding two  * different cycles by toggling the msb on and off.  This avoids reuse issues  * caused by reseeding.  */
 end_comment
 
 begin_include
@@ -235,14 +235,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Do a fast modular exponation, returned value will be in the range  * of 0 - (mod-1)  */
+comment|/*  * Do a fast modular exponation, returned value will be in the range of 0 -  * (mod-1).  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_function
 specifier|static
@@ -258,25 +252,6 @@ parameter_list|,
 name|u_int16_t
 name|mod
 parameter_list|)
-else|#
-directive|else
-function|static u_int16_t pmod
-parameter_list|(
-name|gen
-parameter_list|,
-name|exp
-parameter_list|,
-name|mod
-parameter_list|)
-name|u_int16_t
-name|gen
-decl_stmt|,
-name|exp
-decl_stmt|,
-name|mod
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|u_int16_t
 name|s
@@ -342,7 +317,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initalizes the seed and chooses a suitable generator. Also toggles  * the msb flag. The msb flag is used to generate two distinct  * cycles of random numbers and thus avoiding reuse of ids.  *  * This function is called from id_randomid() when needed, an  * application does not have to worry about it.  */
+comment|/*  * Initalizes the seed and chooses a suitable generator.  Also toggles the  * msb flag.  The msb flag is used to generate two distinct cycles of random  * numbers and thus avoiding reuse of ids.  *  * This function is called from id_randomid() when needed, an application  * does not have to worry about it.  */
 end_comment
 
 begin_function
@@ -398,7 +373,7 @@ operator|)
 operator|%
 name|RU_M
 expr_stmt|;
-comment|/* 15 bits of random seed */
+comment|/* 15 bits of random seed. */
 name|ru_seed
 operator|=
 operator|(
@@ -445,7 +420,7 @@ name|tmp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Determine the LCG we use */
+comment|/* Determine the LCG we use. */
 name|ru_b
 operator|=
 operator|(
@@ -512,7 +487,7 @@ name|tmp
 operator|>>
 literal|16
 expr_stmt|;
-comment|/* 	 * Do a fast gcd(j,RU_N-1), so we can find a j with 	 * gcd(j, RU_N-1) == 1, giving a new generator for 	 * RU_GEN^j mod RU_N 	 */
+comment|/* 	 * Do a fast gcd(j,RU_N-1), so we can find a j with gcd(j, RU_N-1) == 	 * 1, giving a new generator for RU_GEN^j mod RU_N. 	 */
 while|while
 condition|(
 name|noprime
@@ -659,7 +634,7 @@ name|tmp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Skip a random number of ids */
+comment|/* Skip a random number of ids. */
 name|n
 operator|=
 name|tmp
@@ -696,7 +671,7 @@ condition|;
 name|i
 operator|++
 control|)
-comment|/* Linear Congruential Generator */
+comment|/* Linear Congruential Generator. */
 name|ru_x
 operator|=
 operator|(
