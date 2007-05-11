@@ -1253,6 +1253,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|ISP_PCD
+parameter_list|(
+name|isp
+parameter_list|)
+value|((struct isp_pcisoftc *)isp)->pci_dev
+end_define
+
 begin_struct
 struct|struct
 name|isp_pcisoftc
@@ -8442,16 +8452,10 @@ name|isp_dma_tag_create
 argument_list|(
 name|BUS_DMA_ROOTARG
 argument_list|(
-operator|(
-operator|(
-expr|struct
-name|isp_pcisoftc
-operator|*
-operator|)
+name|ISP_PCD
+argument_list|(
 name|isp
-operator|)
-operator|->
-name|pci_dev
+argument_list|)
 argument_list|)
 argument_list|,
 literal|1
