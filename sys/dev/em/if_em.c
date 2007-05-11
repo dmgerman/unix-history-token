@@ -11620,6 +11620,7 @@ expr_stmt|;
 comment|/* Only older adapters use IO mapping */
 if|if
 condition|(
+operator|(
 name|adapter
 operator|->
 name|hw
@@ -11627,8 +11628,21 @@ operator|.
 name|mac
 operator|.
 name|type
-operator|<=
-name|e1000_82543
+operator|>
+name|e1000_82542
+operator|)
+operator|&&
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|<
+name|e1000_82571
+operator|)
 condition|)
 block|{
 comment|/* Figure our where our IO BAR is ? */
