@@ -881,6 +881,10 @@ comment|/* user credentials */
 name|u_long
 name|t_recent
 decl_stmt|;
+name|u_int32_t
+name|ts_offset
+decl_stmt|;
+comment|/* our timestamp offset */
 name|u_long
 name|t_starttime
 decl_stmt|;
