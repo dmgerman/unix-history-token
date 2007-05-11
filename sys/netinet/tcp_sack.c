@@ -1,11 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_sack.c	8.12 (Berkeley) 5/24/95  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994, 1995  *	The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_sack.c	8.12 (Berkeley) 5/24/95  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@@(#)COPYRIGHT	1.1 (NRL) 17 January 1995  *  * NRL grants permission for redistribution and use in source and binary  * forms, with or without modification, of the software and documentation  * created at NRL provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgements:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  *	This product includes software developed at the Information  *	Technology Division, US Naval Research Laboratory.  * 4. Neither the name of the NRL nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THE SOFTWARE PROVIDED BY NRL IS PROVIDED BY NRL AND CONTRIBUTORS ``AS  * IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL NRL OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation  * are those of the authors and should not be interpreted as representing  * official policies, either expressed or implied, of the US Naval  * Research Laboratory (NRL).  */
+comment|/*-  *	@@(#)COPYRIGHT	1.1 (NRL) 17 January 1995  *  * NRL grants permission for redistribution and use in source and binary  * forms, with or without modification, of the software and documentation  * created at NRL provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgements:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  *	This product includes software developed at the Information  *	Technology Division, US Naval Research Laboratory.  * 4. Neither the name of the NRL nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THE SOFTWARE PROVIDED BY NRL IS PROVIDED BY NRL AND CONTRIBUTORS ``AS  * IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL NRL OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation  * are those of the authors and should not be interpreted as representing  * official policies, either expressed or implied, of the US Naval  * Research Laboratory (NRL).  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -422,7 +436,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This function is called upon receipt of new valid data (while not in header  * prediction mode), and it updates the ordered list of sacks.  */
+comment|/*  * This function is called upon receipt of new valid data (while not in  * header prediction mode), and it updates the ordered list of sacks.  */
 end_comment
 
 begin_function
@@ -465,7 +479,7 @@ operator|->
 name|t_inpcb
 argument_list|)
 expr_stmt|;
-comment|/* Check arguments */
+comment|/* Check arguments. */
 name|KASSERT
 argument_list|(
 name|SEQ_LT
@@ -493,7 +507,7 @@ name|end
 operator|=
 name|rcv_end
 expr_stmt|;
-comment|/* 	 * Merge updated SACK blocks into head_blk, and 	 * save unchanged SACK blocks into saved_blks[]. 	 * num_saved will have the number of the saved SACK blocks. 	 */
+comment|/* 	 * Merge updated SACK blocks into head_blk, and save unchanged SACK 	 * blocks into saved_blks[].  num_saved will have the number of the 	 * saved SACK blocks. 	 */
 name|num_saved
 operator|=
 literal|0
@@ -581,7 +595,7 @@ name|start
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Merge this SACK block into head_blk. 			 * This SACK block itself will be discarded. 			 */
+comment|/* 			 * Merge this SACK block into head_blk.  This SACK 			 * block itself will be discarded. 			 */
 if|if
 condition|(
 name|SEQ_GT
@@ -662,7 +676,7 @@ name|rcv_nxt
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * The received data segment is an out-of-order segment. 		 * Put head_blk at the top of SACK list. 		 */
+comment|/* 		 * The received data segment is an out-of-order segment.  Put 		 * head_blk at the top of SACK list. 		 */
 name|tp
 operator|->
 name|sackblks
@@ -1016,7 +1030,7 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* Insert the new SACK hole into scoreboard */
+comment|/* Insert the new SACK hole into scoreboard. */
 if|if
 condition|(
 name|after
@@ -1249,7 +1263,7 @@ operator|=
 name|th_ack
 expr_stmt|;
 block|}
-comment|/* 	 * Append received valid SACK blocks to sack_blocks[], but only 	 * if we received new blocks from the other side. 	 */
+comment|/* 	 * Append received valid SACK blocks to sack_blocks[], but only if we 	 * received new blocks from the other side. 	 */
 if|if
 condition|(
 name|to
@@ -1394,7 +1408,7 @@ name|sack
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Return if SND.UNA is not advanced and no valid SACK block 	 * is received. 	 */
+comment|/* 	 * Return if SND.UNA is not advanced and no valid SACK block is 	 * received. 	 */
 if|if
 condition|(
 name|num_sack_blks
@@ -1402,7 +1416,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * Sort the SACK blocks so we can update the scoreboard 	 * with just one pass. The overhead of sorting upto 4+1 elements 	 * is less than making upto 4+1 passes over the scoreboard. 	 */
+comment|/* 	 * Sort the SACK blocks so we can update the scoreboard with just one 	 * pass. The overhead of sorting upto 4+1 elements is less than 	 * making upto 4+1 passes over the scoreboard. 	 */
 for|for
 control|(
 name|i
@@ -1490,7 +1504,7 @@ operator|->
 name|snd_holes
 argument_list|)
 condition|)
-comment|/* 		 * Empty scoreboard. Need to initialize snd_fack (it may be 		 * uninitialized or have a bogus value). Scoreboard holes 		 * (from the sack blocks received) are created later below (in 		 * the logic that adds holes to the tail of the scoreboard). 		 */
+comment|/* 		 * Empty scoreboard. Need to initialize snd_fack (it may be 		 * uninitialized or have a bogus value). Scoreboard holes 		 * (from the sack blocks received) are created later below 		 * (in the logic that adds holes to the tail of the 		 * scoreboard). 		 */
 name|tp
 operator|->
 name|snd_fack
@@ -1504,7 +1518,7 @@ argument_list|,
 name|th_ack
 argument_list|)
 expr_stmt|;
-comment|/* 	 * In the while-loop below, incoming SACK blocks (sack_blocks[]) 	 * and SACK holes (snd_holes) are traversed from their tails with 	 * just one pass in order to reduce the number of compares especially 	 * when the bandwidth-delay product is large. 	 * Note: Typically, in the first RTT of SACK recovery, the highest 	 * three or four SACK blocks with the same ack number are received. 	 * In the second RTT, if retransmitted data segments are not lost, 	 * the highest three or four SACK blocks with ack number advancing 	 * are received. 	 */
+comment|/* 	 * In the while-loop below, incoming SACK blocks (sack_blocks[]) and 	 * SACK holes (snd_holes) are traversed from their tails with just 	 * one pass in order to reduce the number of compares especially when 	 * the bandwidth-delay product is large. 	 * 	 * Note: Typically, in the first RTT of SACK recovery, the highest 	 * three or four SACK blocks with the same ack number are received. 	 * In the second RTT, if retransmitted data segments are not lost, 	 * the highest three or four SACK blocks with ack number advancing 	 * are received. 	 */
 name|sblkp
 operator|=
 operator|&
@@ -1530,7 +1544,7 @@ name|start
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * The highest SACK block is beyond fack. 		 * Append new SACK hole at the tail. 		 * If the second or later highest SACK blocks are also 		 * beyond the current fack, they will be inserted by 		 * way of hole splitting in the while-loop below. 		 */
+comment|/* 		 * The highest SACK block is beyond fack.  Append new SACK 		 * hole at the tail.  If the second or later highest SACK 		 * blocks are also beyond the current fack, they will be 		 * inserted by way of hole splitting in the while-loop below. 		 */
 name|temp
 operator|=
 name|tcp_sackhole_insert
@@ -1570,7 +1584,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  			 * We failed to add a new hole based on the current  			 * sack block.  Skip over all the sack blocks that  			 * fall completely to the right of snd_fack and proceed 			 * to trim the scoreboard based on the remaining sack 			 * blocks. This also trims the scoreboard for th_ack  			 * (which is sack_blocks[0]). 			 */
+comment|/*  			 * We failed to add a new hole based on the current  			 * sack block.  Skip over all the sack blocks that  			 * fall completely to the right of snd_fack and 			 * proceed to trim the scoreboard based on the 			 * remaining sack blocks.  This also trims the 			 * scoreboard for th_ack (which is sack_blocks[0]). 			 */
 while|while
 condition|(
 name|sblkp
@@ -1641,7 +1655,7 @@ name|sblkp
 operator|->
 name|end
 expr_stmt|;
-comment|/* We must have at least one SACK hole in scoreboard */
+comment|/* We must have at least one SACK hole in scoreboard. */
 name|KASSERT
 argument_list|(
 operator|!
@@ -1670,7 +1684,7 @@ argument_list|,
 name|sackhole_head
 argument_list|)
 expr_stmt|;
-comment|/* Last SACK hole */
+comment|/* Last SACK hole. */
 comment|/* 	 * Since the incoming sack blocks are sorted, we can process them 	 * making one sweep of the scoreboard. 	 */
 while|while
 condition|(
@@ -1697,7 +1711,7 @@ name|end
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * SACKs data beyond the current hole. 			 * Go to the previous sack block. 			 */
+comment|/* 			 * SACKs data beyond the current hole.  Go to the 			 * previous sack block. 			 */
 name|sblkp
 operator|--
 expr_stmt|;
@@ -1717,7 +1731,7 @@ name|start
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * SACKs data before the current hole. 			 * Go to the previous hole. 			 */
+comment|/* 			 * SACKs data before the current hole.  Go to the 			 * previous hole. 			 */
 name|cur
 operator|=
 name|TAILQ_PREV
@@ -1776,7 +1790,7 @@ name|start
 argument_list|)
 condition|)
 block|{
-comment|/* Data acks at least the beginning of hole */
+comment|/* Data acks at least the beginning of hole. */
 if|if
 condition|(
 name|SEQ_GEQ
@@ -1791,7 +1805,7 @@ name|end
 argument_list|)
 condition|)
 block|{
-comment|/* Acks entire hole, so delete hole */
+comment|/* Acks entire hole, so delete hole. */
 name|temp
 operator|=
 name|cur
@@ -1814,12 +1828,12 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-comment|/* 				 * The sack block may ack all or part of the next 				 * hole too, so continue onto the next hole. 				 */
+comment|/* 				 * The sack block may ack all or part of the 				 * next hole too, so continue onto the next 				 * hole. 				 */
 continue|continue;
 block|}
 else|else
 block|{
-comment|/* Move start of hole forward */
+comment|/* Move start of hole forward. */
 name|cur
 operator|->
 name|start
@@ -1847,7 +1861,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Data acks at least the end of hole */
+comment|/* Data acks at least the end of hole. */
 if|if
 condition|(
 name|SEQ_GEQ
@@ -1862,7 +1876,7 @@ name|end
 argument_list|)
 condition|)
 block|{
-comment|/* Move end of hole backward */
+comment|/* Move end of hole backward. */
 name|cur
 operator|->
 name|end
@@ -1889,7 +1903,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * ACKs some data in middle of a hole; need to 				 * split current hole 				 */
+comment|/* 				 * ACKs some data in middle of a hole; need 				 * to split current hole 				 */
 name|temp
 operator|=
 name|tcp_sackhole_insert
@@ -2117,7 +2131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Partial ack handling within a sack recovery episode.   * Keeping this very simple for now. When a partial ack  * is received, force snd_cwnd to a value that will allow  * the sender to transmit no more than 2 segments.  * If necessary, a better scheme can be adopted at a   * later point, but for now, the goal is to prevent the  * sender from bursting a large amount of data in the midst  * of sack recovery.  */
+comment|/*  * Partial ack handling within a sack recovery episode.  Keeping this very  * simple for now.  When a partial ack is received, force snd_cwnd to a value  * that will allow the sender to transmit no more than 2 segments.  If  * necessary, a better scheme can be adopted at a later point, but for now,  * the goal is to prevent the sender from bursting a large amount of data in  * the midst of sack recovery.  */
 end_comment
 
 begin_function
@@ -2162,7 +2176,7 @@ name|t_rtttime
 operator|=
 literal|0
 expr_stmt|;
-comment|/* send one or 2 segments based on how much new data was acked */
+comment|/* Send one or 2 segments based on how much new data was acked. */
 if|if
 condition|(
 operator|(
@@ -2257,7 +2271,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Debug version of tcp_sack_output() that walks the scoreboard. Used for  * now to sanity check the hint.  */
+comment|/*  * Debug version of tcp_sack_output() that walks the scoreboard.  Used for  * now to sanity check the hint.  */
 end_comment
 
 begin_comment
@@ -2272,7 +2286,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Returns the next hole to retransmit and the number of retransmitted bytes  * from the scoreboard. We store both the next hole and the number of  * retransmitted bytes as hints (and recompute these on the fly upon SACK/ACK  * reception). This avoids scoreboard traversals completely.  *  * The loop here will traverse *at most* one link. Here's the argument.  * For the loop to traverse more than 1 link before finding the next hole to  * retransmit, we would need to have at least 1 node following the current hint  * with (rxmit == end). But, for all holes following the current hint,  * (start == rxmit), since we have not yet retransmitted from them. Therefore,  * in order to traverse more 1 link in the loop below, we need to have at least  * one node following the current hint with (start == rxmit == end).  * But that can't happen, (start == end) means that all the data in that hole  * has been sacked, in which case, the hole would have been removed from the  * scoreboard.  */
+comment|/*  * Returns the next hole to retransmit and the number of retransmitted bytes  * from the scoreboard.  We store both the next hole and the number of  * retransmitted bytes as hints (and recompute these on the fly upon SACK/ACK  * reception).  This avoids scoreboard traversals completely.  *  * The loop here will traverse *at most* one link.  Here's the argument.  For  * the loop to traverse more than 1 link before finding the next hole to  * retransmit, we would need to have at least 1 node following the current  * hint with (rxmit == end).  But, for all holes following the current hint,  * (start == rxmit), since we have not yet retransmitted from them.  * Therefore, in order to traverse more 1 link in the loop below, we need to  * have at least one node following the current hint with (start == rxmit ==  * end).  But that can't happen, (start == end) means that all the data in  * that hole has been sacked, in which case, the hole would have been removed  * from the scoreboard.  */
 end_comment
 
 begin_function
@@ -2453,7 +2467,7 @@ argument_list|)
 condition|)
 return|return;
 comment|/* We're already beyond any SACKed blocks */
-comment|/* 	 * Two cases for which we want to advance snd_nxt: 	 * i) snd_nxt lies between end of one hole and beginning of another 	 * ii) snd_nxt lies between end of last hole and snd_fack 	 */
+comment|/*- 	 * Two cases for which we want to advance snd_nxt: 	 * i) snd_nxt lies between end of one hole and beginning of another 	 * ii) snd_nxt lies between end of last hole and snd_fack 	 */
 while|while
 condition|(
 operator|(
