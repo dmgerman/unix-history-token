@@ -157,6 +157,17 @@ begin_comment
 comment|/* handler returns with mtx unlocked */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CALLOUT_NETGIANT
+value|0x0020
+end_define
+
+begin_comment
+comment|/* XXX: obtain Giant before mutex */
+end_comment
+
 begin_struct
 struct|struct
 name|callout_handle
