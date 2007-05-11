@@ -6154,7 +6154,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXXRW: Note, this code relies very explicitly in pcb's being type 	 * stable. 	 */
 name|UNP_GLOBAL_RLOCK
 argument_list|()
 expr_stmt|;
