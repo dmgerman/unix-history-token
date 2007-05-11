@@ -1343,7 +1343,7 @@ end_function
 
 begin_function
 name|void
-name|ipx_setsockaddr
+name|ipx_getsockaddr
 parameter_list|(
 name|ipxp
 parameter_list|,
@@ -1442,7 +1442,7 @@ end_function
 
 begin_function
 name|void
-name|ipx_setpeeraddr
+name|ipx_getpeeraddr
 parameter_list|(
 name|ipxp
 parameter_list|,

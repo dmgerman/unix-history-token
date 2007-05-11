@@ -1994,7 +1994,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ng_setsockaddr
+name|ng_getsockaddr
 parameter_list|(
 name|struct
 name|socket
@@ -4486,7 +4486,7 @@ block|,
 operator|.
 name|pru_sockaddr
 operator|=
-name|ng_setsockaddr
+name|ng_getsockaddr
 block|,
 operator|.
 name|pru_close
@@ -4551,7 +4551,7 @@ block|,
 operator|.
 name|pru_sockaddr
 operator|=
-name|ng_setsockaddr
+name|ng_getsockaddr
 block|,
 operator|.
 name|pru_close

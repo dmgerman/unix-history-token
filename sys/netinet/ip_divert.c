@@ -2694,7 +2694,7 @@ block|,
 operator|.
 name|pru_peeraddr
 operator|=
-name|in_setpeeraddr
+name|in_getpeeraddr
 block|,
 operator|.
 name|pru_send
@@ -2709,7 +2709,7 @@ block|,
 operator|.
 name|pru_sockaddr
 operator|=
-name|in_setsockaddr
+name|in_getsockaddr
 block|,
 operator|.
 name|pru_sosetlabel

@@ -368,7 +368,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|in6_setpeeraddr
+name|in6_getpeeraddr
 name|__P
 argument_list|(
 operator|(
@@ -389,7 +389,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|in6_setsockaddr
+name|in6_getsockaddr
 name|__P
 argument_list|(
 operator|(

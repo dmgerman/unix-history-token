@@ -2408,7 +2408,7 @@ literal|"ipx_peeraddr: ipxp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|ipx_setpeeraddr
+name|ipx_getpeeraddr
 argument_list|(
 name|ipxp
 argument_list|,
@@ -2754,7 +2754,7 @@ literal|"ipx_sockaddr: ipxp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|ipx_setsockaddr
+name|ipx_getsockaddr
 argument_list|(
 name|ipxp
 argument_list|,

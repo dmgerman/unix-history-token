@@ -1646,7 +1646,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|in_setpeeraddr
+name|in_getpeeraddr
 parameter_list|(
 name|struct
 name|socket
@@ -1664,7 +1664,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|in_setsockaddr
+name|in_getsockaddr
 parameter_list|(
 name|struct
 name|socket

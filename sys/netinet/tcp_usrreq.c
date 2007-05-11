@@ -2727,7 +2727,7 @@ expr_stmt|;
 name|TCPDEBUG1
 argument_list|()
 expr_stmt|;
-comment|/* 	 * We inline in_setpeeraddr and COMMON_END here, so that we can 	 * copy the data of interest and defer the malloc until after we 	 * release the lock. 	 */
+comment|/* 	 * We inline in_getpeeraddr and COMMON_END here, so that we can 	 * copy the data of interest and defer the malloc until after we 	 * release the lock. 	 */
 name|port
 operator|=
 name|inp
@@ -4511,7 +4511,7 @@ block|,
 operator|.
 name|pru_peeraddr
 operator|=
-name|in_setpeeraddr
+name|in_getpeeraddr
 block|,
 operator|.
 name|pru_rcvd
@@ -4536,7 +4536,7 @@ block|,
 operator|.
 name|pru_sockaddr
 operator|=
-name|in_setsockaddr
+name|in_getsockaddr
 block|,
 operator|.
 name|pru_sosetlabel

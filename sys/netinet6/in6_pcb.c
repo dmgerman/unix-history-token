@@ -2216,13 +2216,9 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * The calling convention of in6_setsockaddr() and in6_setpeeraddr() was  * modified to match the pru_sockaddr() and pru_peeraddr() entry points  * in struct pr_usrreqs, so that protocols can just reference then directly  * without the need for a wrapper function.  The socket must have a valid  * (i.e., non-nil) PCB, but it should be impossible to get an invalid one  * except through a kernel programming error, so it is acceptable to panic  * (or in this case trap) if the PCB is invalid.  (Actually, we don't trap  * because there actually /is/ a programming error somewhere... XXX)  */
-end_comment
-
 begin_function
 name|int
-name|in6_setsockaddr
+name|in6_getsockaddr
 parameter_list|(
 name|so
 parameter_list|,
@@ -2267,7 +2263,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"in6_setsockaddr: inp == NULL"
+literal|"in6_getsockaddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2312,7 +2308,7 @@ end_function
 
 begin_function
 name|int
-name|in6_setpeeraddr
+name|in6_getpeeraddr
 parameter_list|(
 name|so
 parameter_list|,
@@ -2356,7 +2352,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"in6_setpeeraddr: inp == NULL"
+literal|"in6_getpeeraddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2460,7 +2456,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|in_setsockaddr
+name|in_getsockaddr
 argument_list|(
 name|so
 argument_list|,
@@ -2481,10 +2477,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* scope issues will be handled in in6_setsockaddr(). */
+comment|/* scope issues will be handled in in6_getsockaddr(). */
 name|error
 operator|=
-name|in6_setsockaddr
+name|in6_getsockaddr
 argument_list|(
 name|so
 argument_list|,
@@ -2559,7 +2555,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|in_setpeeraddr
+name|in_getpeeraddr
 argument_list|(
 name|so
 argument_list|,
@@ -2579,10 +2575,10 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* scope issues will be handled in in6_setpeeraddr(). */
+comment|/* scope issues will be handled in in6_getpeeraddr(). */
 name|error
 operator|=
-name|in6_setpeeraddr
+name|in6_getpeeraddr
 argument_list|(
 name|so
 argument_list|,

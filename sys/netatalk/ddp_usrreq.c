@@ -1068,7 +1068,7 @@ end_endif
 begin_function
 specifier|static
 name|int
-name|at_setpeeraddr
+name|at_getpeeraddr
 parameter_list|(
 name|struct
 name|socket
@@ -1093,7 +1093,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|at_setsockaddr
+name|at_getsockaddr
 parameter_list|(
 name|struct
 name|socket
@@ -1126,7 +1126,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"at_setsockaddr: ddp == NULL"
+literal|"at_getsockaddr: ddp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1199,7 +1199,7 @@ block|,
 operator|.
 name|pru_peeraddr
 operator|=
-name|at_setpeeraddr
+name|at_getpeeraddr
 block|,
 operator|.
 name|pru_send
@@ -1214,7 +1214,7 @@ block|,
 operator|.
 name|pru_sockaddr
 operator|=
-name|at_setsockaddr
+name|at_getsockaddr
 block|,
 operator|.
 name|pru_close

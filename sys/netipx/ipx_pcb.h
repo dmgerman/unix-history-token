@@ -387,7 +387,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ipx_setpeeraddr
+name|ipx_getpeeraddr
 parameter_list|(
 name|struct
 name|ipxpcb
@@ -405,7 +405,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ipx_setsockaddr
+name|ipx_getsockaddr
 parameter_list|(
 name|struct
 name|ipxpcb

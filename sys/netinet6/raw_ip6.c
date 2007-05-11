@@ -3806,7 +3806,7 @@ block|,
 operator|.
 name|pru_peeraddr
 operator|=
-name|in6_setpeeraddr
+name|in6_getpeeraddr
 block|,
 operator|.
 name|pru_send
@@ -3821,7 +3821,7 @@ block|,
 operator|.
 name|pru_sockaddr
 operator|=
-name|in6_setsockaddr
+name|in6_getsockaddr
 block|,
 operator|.
 name|pru_close

@@ -3747,6 +3747,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Common routines to return the socket addresses associated with inpcbs.  */
+end_comment
+
 begin_function
 name|struct
 name|sockaddr
@@ -3826,13 +3830,9 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * The wrapper function will pass down the pcbinfo for this function to lock.  * The socket must have a valid  * (i.e., non-nil) PCB, but it should be impossible to get an invalid one  * except through a kernel programming error, so it is acceptable to panic  * (or in this case trap) if the PCB is invalid.  (Actually, we don't trap  * because there actually /is/ a programming error somewhere... XXX)  */
-end_comment
-
 begin_function
 name|int
-name|in_setsockaddr
+name|in_getsockaddr
 parameter_list|(
 name|struct
 name|socket
@@ -3872,7 +3872,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"in_setsockaddr: inp == NULL"
+literal|"in_getsockaddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3915,13 +3915,9 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * The wrapper function will pass down the pcbinfo for this function to lock.  */
-end_comment
-
 begin_function
 name|int
-name|in_setpeeraddr
+name|in_getpeeraddr
 parameter_list|(
 name|struct
 name|socket
@@ -3961,7 +3957,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"in_setpeeraddr: inp == NULL"
+literal|"in_getpeeraddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
