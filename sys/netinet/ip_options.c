@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *      The Regents of the University of California.  All rights reserved.  * Copyright (c) 2005  *      Andre Oppermann, Internet Business Solutions AG.  All right reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *      The Regents of the University of California.  * Copyright (c) 2005 Andre Oppermann, Internet Business Solutions AG.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -32,10 +32,6 @@ include|#
 directive|include
 file|<sys/mbuf.h>
 end_include
-
-begin_comment
-comment|/* #include<sys/malloc.h> */
-end_comment
 
 begin_include
 include|#
@@ -294,7 +290,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Do option processing on a datagram,  * possibly discarding it if bad options are encountered,  * or forwarding it if source-routed.  * The pass argument is used when operating in the IPSTEALTH  * mode to tell what options to process:  * [LS]SRR (pass 0) or the others (pass 1).  * The reason for as many as two passes is that when doing IPSTEALTH,  * non-routing options should be processed only if the packet is for us.  * Returns 1 if packet has been forwarded/freed,  * 0 if the packet should be processed further.  */
+comment|/*  * Do option processing on a datagram, possibly discarding it if bad options  * are encountered, or forwarding it if source-routed.  *  * The pass argument is used when operating in the IPSTEALTH mode to tell  * what options to process: [LS]SRR (pass 0) or the others (pass 1).  The  * reason for as many as two passes is that when doing IPSTEALTH, non-routing  * options should be processed only if the packet is for us.  *  * Returns 1 if packet has been forwarded/freed, 0 if the packet should be  * processed further.  */
 end_comment
 
 begin_function
@@ -375,7 +371,7 @@ block|,
 name|AF_INET
 block|}
 decl_stmt|;
-comment|/* ignore or reject packets with IP options */
+comment|/* Ignore or reject packets with IP options. */
 if|if
 condition|(
 name|ip_doopts
@@ -562,7 +558,7 @@ condition|)
 block|{
 default|default:
 break|break;
-comment|/* 		 * Source routing with record. 		 * Find interface with current destination address. 		 * If none on this machine then drop if strictly routed, 		 * or do nothing if loosely routed. 		 * Record interface address and bring up next address 		 * component.  If strictly routed make sure next 		 * address is on directly accessible net. 		 */
+comment|/* 		 * Source routing with record.  Find interface with current 		 * destination address.  If none on this machine then drop if 		 * strictly routed, or do nothing if loosely routed.  Record 		 * interface address and bring up next address component.  If 		 * strictly routed make sure next address is on directly 		 * accessible net. 		 */
 case|case
 name|IPOPT_LSRR
 case|:
@@ -781,7 +777,7 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* aaa.bbb.ccc.ddd\0 */
-comment|/* 					 * Acting as a router, so generate ICMP 					 */
+comment|/* 					 * Acting as a router, so generate 					 * ICMP 					 */
 name|nosourcerouting
 label|:
 name|strcpy
@@ -826,7 +822,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 					 * Not acting as a router, so silently drop. 					 */
+comment|/* 					 * Not acting as a router, so 					 * silently drop. 					 */
 ifdef|#
 directive|ifdef
 name|IPSTEALTH
@@ -1139,7 +1135,7 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * locate outgoing interface; if we're the destination, 			 * use the incoming interface (should be same). 			 */
+comment|/* 			 * Locate outgoing interface; if we're the 			 * destination, use the incoming interface (should be 			 * same). 			 */
 if|if
 condition|(
 operator|(
@@ -1725,7 +1721,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Save incoming source route for use in replies,  * to be picked up later by ip_srcroute if the receiver is interested.  */
+comment|/*  * Save incoming source route for use in replies, to be picked up later by  * ip_srcroute if the receiver is interested.  */
 end_comment
 
 begin_function
@@ -1877,7 +1873,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Retrieve incoming source route for use in replies,  * in the same form used by setsockopt.  * The first hop is placed before the options, will be removed later.  */
+comment|/*  * Retrieve incoming source route for use in replies, in the same form used  * by setsockopt.  The first hop is placed before the options, will be  * removed later.  */
 end_comment
 
 begin_function
@@ -1892,7 +1888,6 @@ modifier|*
 name|m0
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|in_addr
 modifier|*
@@ -1901,7 +1896,6 @@ decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -1999,7 +1993,7 @@ argument_list|)
 operator|+
 name|OPTSIZ
 expr_stmt|;
-comment|/* 	 * First save first hop for return route 	 */
+comment|/* 	 * First, save first hop for return route. 	 */
 name|p
 operator|=
 operator|&
@@ -2111,7 +2105,7 @@ expr_stmt|;
 undef|#
 directive|undef
 name|OPTSIZ
-comment|/* 	 * Record return path as an IP source route, 	 * reversing the path (pointers are now aligned). 	 */
+comment|/* 	 * Record return path as an IP source route, reversing the path 	 * (pointers are now aligned). 	 */
 while|while
 condition|(
 name|p
@@ -2163,7 +2157,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Strip out IP options, at higher  * level protocol in the kernel.  * Second argument is buffer to which options  * will be moved, and return value is their length.  * XXX should be deleted; last arg currently ignored.  */
+comment|/*  * Strip out IP options, at higher level protocol in the kernel.  Second  * argument is buffer to which options will be moved, and return value is  * their length.  *  * XXX should be deleted; last arg currently ignored.  */
 end_comment
 
 begin_function
@@ -2181,7 +2175,6 @@ modifier|*
 name|mopt
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2199,7 +2192,6 @@ name|ip
 operator|*
 argument_list|)
 decl_stmt|;
-specifier|register
 name|caddr_t
 name|opts
 decl_stmt|;
@@ -2307,7 +2299,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Insert IP options into preformed packet.  * Adjust IP destination as required for IP source routing,  * as indicated by a non-zero in_addr at the start of the options.  *  * XXX This routine assumes that the packet has no options in place.  */
+comment|/*  * Insert IP options into preformed packet.  Adjust IP destination as  * required for IP source routing, as indicated by a non-zero in_addr at the  * start of the options.  *  * XXX This routine assumes that the packet has no options in place.  */
 end_comment
 
 begin_function
@@ -2331,7 +2323,6 @@ modifier|*
 name|phlen
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ipoption
 modifier|*
@@ -2351,7 +2342,6 @@ name|mbuf
 modifier|*
 name|n
 decl_stmt|;
-specifier|register
 name|struct
 name|ip
 modifier|*
@@ -2677,7 +2667,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy options from ip to jp,  * omitting those not copied during fragmentation.  */
+comment|/*  * Copy options from ip to jp, omitting those not copied during  * fragmentation.  */
 end_comment
 
 begin_function
@@ -2695,7 +2685,6 @@ modifier|*
 name|jp
 parameter_list|)
 block|{
-specifier|register
 name|u_char
 modifier|*
 name|cp
@@ -2845,7 +2834,7 @@ literal|"ip_optcopy: malformed ipv4 option"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* bogus lengths should have been caught by ip_dooptions */
+comment|/* Bogus lengths should have been caught by ip_dooptions. */
 if|if
 condition|(
 name|optlen
@@ -2917,7 +2906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set up IP options in pcb for insertion in output packets.  * Store in mbuf with pointer in pcbopt, adding pseudo-option  * with destination address if source routed.  */
+comment|/*  * Set up IP options in pcb for insertion in output packets.  Store in mbuf  * with pointer in pcbopt, adding pseudo-option with destination address if  * source routed.  */
 end_comment
 
 begin_function
@@ -2938,13 +2927,11 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|cnt
 decl_stmt|,
 name|optlen
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|cp
@@ -3038,7 +3025,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* 	 * IP first-hop destination address will be stored before 	 * actual options; move other options back 	 * and clear it when none present. 	 */
+comment|/* 	 * IP first-hop destination address will be stored before actual 	 * options; move other options back and clear it when none present. 	 */
 if|if
 condition|(
 name|m
@@ -3230,7 +3217,7 @@ case|:
 case|case
 name|IPOPT_SSRR
 case|:
-comment|/* 			 * user process specifies route as: 			 *	->A->B->C->D 			 * D must be our final destination (but we can't 			 * check that since we may not have connected yet). 			 * A is first hop destination, which doesn't appear in 			 * actual IP option, but is stored before the options. 			 */
+comment|/* 			 * User process specifies route as: 			 * 			 *	->A->B->C->D 			 * 			 * D must be our final destination (but we can't 			 * check that since we may not have connected yet). 			 * A is first hop destination, which doesn't appear 			 * in actual IP option, but is stored before the 			 * options. 			 */
 if|if
 condition|(
 name|optlen
