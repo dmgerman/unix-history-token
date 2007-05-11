@@ -188,10 +188,10 @@ begin_function_decl
 name|void
 name|spx_trace
 parameter_list|(
-name|int
+name|short
 name|act
 parameter_list|,
-name|int
+name|u_char
 name|ostate
 parameter_list|,
 name|struct

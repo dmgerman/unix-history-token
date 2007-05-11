@@ -376,7 +376,7 @@ name|ipx_addr
 modifier|*
 name|faddr
 parameter_list|,
-name|int
+name|u_short
 name|lport
 parameter_list|,
 name|int
