@@ -15,24 +15,38 @@ directive|define
 name|_MACHINE_PROFILE_H_
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_SYS_CDEFS_H_
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|FUNCTION_ALIGNMENT
 value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|_MCOUNT_DECL
-value|void mcount
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCOUNT
 end_define
 
 begin_typedef
@@ -54,6 +68,25 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|_MCOUNT_DECL
+value|void mcount
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCOUNT
+end_define
+
 begin_define
 define|#
 directive|define
@@ -71,7 +104,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|s = rdpr(pil); wrpr(pil, 0, 14)
+value|s = rdpr(pil); wrpr(pil, 0, PIL_TICK)
 end_define
 
 begin_define
@@ -170,6 +203,55 @@ name|u_long
 name|uintfptr_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|_MCOUNT_DECL
+value|static __inline void __mcount
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MCOUNT
+define|\
+value|void									\ _mcount()								\ {									\ 	uintfptr_t frompc, selfpc;					\ 									\
+comment|/*								\ 	 * Find the return address for mcount,				\ 	 * and the return address for mcount's caller.			\ 	 *								\ 	 * selfpc = pc pushed by call to mcount				\ 	 */
+value|\ 	__asm("add %%o7, 8, %0" : "=r" (selfpc));			\
+comment|/*								\ 	 * frompc = pc pushed by call to mcount's caller.		\ 	 */
+value|\ 	__asm("add %%i7, 8, %0" : "=r" (frompc));			\ 	__mcount(frompc, selfpc);					\ }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !__GNUCLIKE_ASM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCOUNT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GNUCLIKE_ASM */
+end_comment
 
 begin_endif
 endif|#
