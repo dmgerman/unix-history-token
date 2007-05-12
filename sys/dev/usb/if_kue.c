@@ -2155,6 +2155,7 @@ name|ifp
 operator|!=
 name|NULL
 condition|)
+block|{
 name|ether_ifdetach
 argument_list|(
 name|ifp
@@ -2165,6 +2166,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
