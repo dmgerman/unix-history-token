@@ -312,10 +312,6 @@ condition|)
 block|{
 while|while
 condition|(
-name|cp
-operator|!=
-name|NULL
-operator|&&
 operator|*
 name|cp
 condition|)
@@ -325,8 +321,8 @@ operator|=
 name|cp
 expr_stmt|;
 name|cp
-operator|=
-name|strpbrk
+operator|+=
+name|strcspn
 argument_list|(
 name|cp
 argument_list|,
@@ -335,10 +331,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cp
-operator|!=
-name|NULL
-operator|&&
 operator|*
 name|cp
 operator|!=
