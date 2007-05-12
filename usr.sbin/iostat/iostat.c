@@ -2495,13 +2495,45 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"device     r/s   w/s    kr/s    kw/s wait svc_t  %%b  "
+literal|"%s%s%s%s%s%s%s%s"
+argument_list|,
+literal|"device"
+argument_list|,
+literal|"     r/s"
+argument_list|,
+literal|"   w/s"
+argument_list|,
+literal|"    kr/s"
+argument_list|,
+literal|"    kw/s"
+argument_list|,
+literal|" wait"
+argument_list|,
+literal|" svc_t"
+argument_list|,
+literal|"  %b  "
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"device     r/i   w/i    kr/i    kw/i wait svc_t  %%b  "
+literal|"%s%s%s%s%s%s%s%s"
+argument_list|,
+literal|"device"
+argument_list|,
+literal|"     r/i"
+argument_list|,
+literal|"   w/i"
+argument_list|,
+literal|"    kr/i"
+argument_list|,
+literal|"    kw/i"
+argument_list|,
+literal|" wait"
+argument_list|,
+literal|" svc_t"
+argument_list|,
+literal|"  %b  "
 argument_list|)
 expr_stmt|;
 if|if
