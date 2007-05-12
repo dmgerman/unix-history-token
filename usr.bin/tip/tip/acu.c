@@ -312,6 +312,10 @@ condition|)
 block|{
 while|while
 condition|(
+name|cp
+operator|!=
+name|NULL
+operator|&&
 operator|*
 name|cp
 condition|)
@@ -331,6 +335,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|cp
+operator|!=
+name|NULL
+operator|&&
 operator|*
 name|cp
 operator|!=
