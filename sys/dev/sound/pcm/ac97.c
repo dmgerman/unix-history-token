@@ -3287,7 +3287,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX For the sake of debugging purposes */
-block|ac97_wrcd(codec, AC97_MIX_PCM, 0); 	bzero(&codec->mix[SOUND_MIXER_PCM], 		sizeof(codec->mix[SOUND_MIXER_PCM])); 	codec->flags |= AC97_F_SOFTVOL; 	if (d) 		d->flags |= SD_F_SOFTVOL; 	return;
+block|ac97_wrcd(codec, AC97_MIX_PCM, 0); 	bzero(&codec->mix[SOUND_MIXER_PCM], 		sizeof(codec->mix[SOUND_MIXER_PCM])); 	if (d) 		d->flags |= SD_F_SOFTPCMVOL; 	return;
 endif|#
 directive|endif
 switch|switch
@@ -3352,12 +3352,6 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|codec
-operator|->
-name|flags
-operator||=
-name|AC97_F_SOFTVOL
-expr_stmt|;
 if|if
 condition|(
 name|d
@@ -3366,7 +3360,7 @@ name|d
 operator|->
 name|flags
 operator||=
-name|SD_F_SOFTVOL
+name|SD_F_SOFTPCMVOL
 expr_stmt|;
 block|}
 end_function
@@ -4443,23 +4437,6 @@ operator|->
 name|dev
 argument_list|,
 literal|"Buggy AC97 Codec: aggressive ac97_rdcd() workaround enabled\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|codec
-operator|->
-name|flags
-operator|&
-name|AC97_F_SOFTVOL
-condition|)
-name|device_printf
-argument_list|(
-name|codec
-operator|->
-name|dev
-argument_list|,
-literal|"Soft PCM volume\n"
 argument_list|)
 expr_stmt|;
 name|device_printf
