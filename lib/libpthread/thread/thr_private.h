@@ -127,15 +127,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|SYMBOL_VERSIONING
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|PIC
-argument_list|)
+literal|0
 end_if
 
 begin_define
