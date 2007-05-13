@@ -6,16 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ipfw.h"
-end_include
-
-begin_comment
-comment|/* for ipfw_fwd	*/
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -23,18 +13,6 @@ begin_include
 include|#
 directive|include
 file|"opt_inet6.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_ipsec.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_mac.h"
 end_include
 
 begin_include
@@ -70,28 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_comment
-comment|/* for proc0 declaration */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signalvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -118,16 +74,6 @@ include|#
 directive|include
 file|<sys/systm.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_comment
-comment|/* before tcp_seq.h, for tcp_random18() */
-end_comment
 
 begin_include
 include|#
@@ -180,26 +126,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ip_icmp.h>
-end_include
-
-begin_comment
-comment|/* required for icmp_var.h */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<netinet/icmp_var.h>
-end_include
-
-begin_comment
-comment|/* for ICMP_BANDLIM */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_var.h>
 end_include
 
@@ -213,12 +139,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip6.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/icmp6.h>
 end_include
 
 begin_include
@@ -301,78 +221,6 @@ end_endif
 begin_comment
 comment|/* TCPDEBUG */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FAST_IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netipsec/ipsec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netipsec/ipsec6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*FAST_IPSEC*/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec6.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netkey/key.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*IPSEC*/
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/in_cksum.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<security/mac/mac_framework.h>
-end_include
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -511,29 +359,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-specifier|static
-name|int
-name|tcp_reass
-parameter_list|(
-name|struct
-name|tcpcb
-modifier|*
-parameter_list|,
-name|struct
-name|tcphdr
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Initialize TCP reassembly queue */
 end_comment
@@ -638,7 +463,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|tcp_reass
 parameter_list|(
