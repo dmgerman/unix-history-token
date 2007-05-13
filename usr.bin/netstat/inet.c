@@ -986,7 +986,7 @@ name|printf
 argument_list|(
 literal|"%-8.8s "
 argument_list|,
-literal|"Socket"
+literal|"Tcpcb"
 argument_list|)
 expr_stmt|;
 if|if
