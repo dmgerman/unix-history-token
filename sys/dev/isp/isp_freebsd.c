@@ -657,6 +657,11 @@ name|ich_arg
 operator|=
 name|isp
 expr_stmt|;
+name|ISP_UNLOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|config_intrhook_establish
@@ -672,6 +677,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ISP_LOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 name|cam_sim_free
 argument_list|(
 name|sim
@@ -690,6 +700,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|ISP_LOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xpt_bus_register
