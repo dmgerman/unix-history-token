@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * ethernet address conversion and lookup routines  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Center for Telecommunications Research  * Columbia University, New York City  */
+comment|/*  * Copyright (c) 1995 Bill Paul<wpaul@ctr.columbia.edu>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * ethernet address conversion and lookup routines  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Center for Telecommunications Research  * Columbia University, New York City  */
 end_comment
 
 begin_include
@@ -20,31 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
@@ -94,6 +70,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -113,33 +113,27 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Parse a string of text containing an ethernet address and hostname  * and separate it into its component parts.  */
+comment|/*  * Parse a string of text containing an ethernet address and hostname and  * separate it into its component parts.  */
 end_comment
 
 begin_function
 name|int
 name|ether_line
 parameter_list|(
-name|l
-parameter_list|,
-name|e
-parameter_list|,
-name|hostname
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|l
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ether_addr
 modifier|*
 name|e
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|hostname
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -241,7 +235,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert an ASCII representation of an ethernet address to  * binary form.  */
+comment|/*  * Convert an ASCII representation of an ethernet address to binary form.  */
 end_comment
 
 begin_function
@@ -250,13 +244,11 @@ name|ether_addr
 modifier|*
 name|ether_aton
 parameter_list|(
-name|a
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|a
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -387,7 +379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a binary representation of an ethernet address to  * an ASCII string.  */
+comment|/*  * Convert a binary representation of an ethernet address to an ASCII string.  */
 end_comment
 
 begin_function
@@ -395,14 +387,12 @@ name|char
 modifier|*
 name|ether_ntoa
 parameter_list|(
-name|n
-parameter_list|)
 specifier|const
 name|struct
 name|ether_addr
 modifier|*
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -490,27 +480,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map an ethernet address to a hostname. Use either /etc/ethers or  * NIS/YP.  */
+comment|/*  * Map an ethernet address to a hostname. Use either /etc/ethers or NIS/YP.  */
 end_comment
 
 begin_function
 name|int
 name|ether_ntohost
 parameter_list|(
-name|hostname
-parameter_list|,
-name|e
-parameter_list|)
 name|char
 modifier|*
 name|hostname
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|struct
 name|ether_addr
 modifier|*
 name|e
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -721,7 +707,7 @@ literal|6
 argument_list|)
 condition|)
 block|{
-comment|/* We have a match */
+comment|/* We have a match. */
 name|strcpy
 argument_list|(
 name|hostname
@@ -756,27 +742,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map a hostname to an ethernet address using /etc/ethers or  * NIS/YP.  */
+comment|/*  * Map a hostname to an ethernet address using /etc/ethers or NIS/YP.  */
 end_comment
 
 begin_function
 name|int
 name|ether_hostton
 parameter_list|(
-name|hostname
-parameter_list|,
-name|e
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|hostname
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ether_addr
 modifier|*
 name|e
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -954,7 +936,7 @@ name|local_host
 argument_list|)
 condition|)
 block|{
-comment|/* We have a match */
+comment|/* We have a match. */
 name|bcopy
 argument_list|(
 operator|(
