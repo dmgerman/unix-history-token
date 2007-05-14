@@ -1700,6 +1700,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_SCSIDA
+argument_list|,
+literal|"scsi_da"
+argument_list|,
+literal|"scsi_da buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -5190,7 +5202,7 @@ operator|*
 name|rcap
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_SCSIDA
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -5288,7 +5300,7 @@ operator|*
 name|rcaplong
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_SCSIDA
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -6131,7 +6143,7 @@ name|free
 argument_list|(
 name|rdcap
 argument_list|,
-name|M_TEMP
+name|M_SCSIDA
 argument_list|)
 expr_stmt|;
 name|xpt_release_ccb
@@ -6639,7 +6651,7 @@ name|csio
 operator|->
 name|data_ptr
 argument_list|,
-name|M_TEMP
+name|M_SCSIDA
 argument_list|)
 expr_stmt|;
 if|if
@@ -7215,7 +7227,7 @@ operator|*
 name|rcaplong
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_SCSIDA
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -7524,7 +7536,7 @@ name|free
 argument_list|(
 name|rcap
 argument_list|,
-name|M_TEMP
+name|M_SCSIDA
 argument_list|)
 expr_stmt|;
 return|return

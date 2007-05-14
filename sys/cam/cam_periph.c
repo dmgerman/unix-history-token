@@ -442,7 +442,7 @@ argument_list|)
 operator|*
 name|ndrivers
 argument_list|,
-name|M_TEMP
+name|M_CAMPERIPH
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -503,7 +503,7 @@ name|free
 argument_list|(
 name|old
 argument_list|,
-name|M_TEMP
+name|M_CAMPERIPH
 argument_list|)
 expr_stmt|;
 name|nperiph_drivers

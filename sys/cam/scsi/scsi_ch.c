@@ -704,6 +704,18 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_SCSICH
+argument_list|,
+literal|"scsi_ch"
+argument_list|,
+literal|"scsi_ch buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
@@ -1899,7 +1911,7 @@ name|malloc
 argument_list|(
 name|mode_buffer_len
 argument_list|,
-name|M_TEMP
+name|M_SCSICH
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -2546,7 +2558,7 @@ name|free
 argument_list|(
 name|mode_header
 argument_list|,
-name|M_TEMP
+name|M_SCSICH
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Since our peripheral may be invalidated by an error 		 * above or an external event, we must release our CCB 		 * before releasing the probe lock on the peripheral. 		 * The peripheral will only go away once the last lock 		 * is removed, and we need it around for the CCB release 		 * operation. 		 */
@@ -5577,7 +5589,7 @@ name|malloc
 argument_list|(
 name|mode_buffer_len
 argument_list|,
-name|M_TEMP
+name|M_SCSICH
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -5781,7 +5793,7 @@ name|free
 argument_list|(
 name|mode_buffer
 argument_list|,
-name|M_TEMP
+name|M_SCSICH
 argument_list|)
 expr_stmt|;
 return|return
@@ -6084,7 +6096,7 @@ name|free
 argument_list|(
 name|mode_buffer
 argument_list|,
-name|M_TEMP
+name|M_SCSICH
 argument_list|)
 expr_stmt|;
 return|return
@@ -6199,7 +6211,7 @@ name|free
 argument_list|(
 name|mode_buffer
 argument_list|,
-name|M_TEMP
+name|M_SCSICH
 argument_list|)
 expr_stmt|;
 return|return

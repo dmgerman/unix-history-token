@@ -8303,7 +8303,7 @@ name|malloc
 argument_list|(
 literal|8192
 argument_list|,
-name|M_TEMP
+name|M_SCSISA
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -9514,7 +9514,7 @@ name|free
 argument_list|(
 name|rblim
 argument_list|,
-name|M_TEMP
+name|M_SCSISA
 argument_list|)
 expr_stmt|;
 if|if
@@ -10848,7 +10848,7 @@ name|malloc
 argument_list|(
 name|mode_buffer_len
 argument_list|,
-name|M_TEMP
+name|M_SCSISA
 argument_list|,
 name|M_WAITOK
 operator||
@@ -10987,7 +10987,7 @@ name|free
 argument_list|(
 name|mode_buffer
 argument_list|,
-name|M_TEMP
+name|M_SCSISA
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -11459,7 +11459,7 @@ name|free
 argument_list|(
 name|mode_buffer
 argument_list|,
-name|M_TEMP
+name|M_SCSISA
 argument_list|)
 expr_stmt|;
 return|return
@@ -11579,7 +11579,7 @@ argument_list|(
 name|sa_comp_t
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_SCSISA
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -11636,7 +11636,7 @@ name|free
 argument_list|(
 name|ccomp
 argument_list|,
-name|M_TEMP
+name|M_SCSISA
 argument_list|)
 expr_stmt|;
 return|return
@@ -11678,7 +11678,7 @@ name|malloc
 argument_list|(
 name|mode_buffer_len
 argument_list|,
-name|M_TEMP
+name|M_SCSISA
 argument_list|,
 name|M_WAITOK
 operator||
@@ -12171,7 +12171,7 @@ name|free
 argument_list|(
 name|mode_buffer
 argument_list|,
-name|M_TEMP
+name|M_SCSISA
 argument_list|)
 expr_stmt|;
 name|xpt_release_ccb
@@ -12497,7 +12497,7 @@ name|free
 argument_list|(
 name|ccomp
 argument_list|,
-name|M_TEMP
+name|M_SCSISA
 argument_list|)
 expr_stmt|;
 if|if
@@ -12555,7 +12555,7 @@ name|free
 argument_list|(
 name|mode_buffer
 argument_list|,
-name|M_TEMP
+name|M_SCSISA
 argument_list|)
 expr_stmt|;
 return|return
