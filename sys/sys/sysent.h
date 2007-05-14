@@ -23,7 +23,7 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|rlimit
 struct_decl|;
 end_struct_decl
 
@@ -387,12 +387,14 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|sv_fixlimits
+name|sv_fixlimit
 function_decl|)
 parameter_list|(
 name|struct
-name|proc
+name|rlimit
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 block|}

@@ -3652,22 +3652,6 @@ argument_list|,
 name|imgp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Here is as good a place as any to do any resource limit cleanups. 	 * This is needed if a 64 bit binary exec's a 32 bit binary - the 	 * data size limit may need to be changed to a value that makes 	 * sense for the 32 bit binary. 	 */
-if|if
-condition|(
-name|sv
-operator|->
-name|sv_fixlimits
-operator|!=
-name|NULL
-condition|)
-name|sv
-operator|->
-name|sv_fixlimits
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Blow away entire process VM, if address space not shared, 	 * otherwise, create a new VM space so that other threads are 	 * not disrupted 	 */
 name|map
 operator|=
