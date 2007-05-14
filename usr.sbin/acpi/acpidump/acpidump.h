@@ -899,11 +899,9 @@ name|block_pcivendor
 range|:
 literal|16
 decl_stmt|;
-name|u_int32_t
-name|base_addr
-decl_stmt|;
-name|u_int64_t
-name|reserved1
+name|struct
+name|ACPIgas
+name|genaddr
 decl_stmt|;
 name|u_int8_t
 name|hpet_number
