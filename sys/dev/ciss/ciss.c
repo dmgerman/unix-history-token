@@ -11262,7 +11262,7 @@ expr|union
 name|ccb
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|CISS_MALLOC_CLASS
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -11320,7 +11320,7 @@ name|free
 argument_list|(
 name|ccb
 argument_list|,
-name|M_TEMP
+name|CISS_MALLOC_CLASS
 argument_list|)
 expr_stmt|;
 return|return;
@@ -11469,7 +11469,7 @@ name|free
 argument_list|(
 name|ccb
 argument_list|,
-name|M_TEMP
+name|CISS_MALLOC_CLASS
 argument_list|)
 expr_stmt|;
 block|}
