@@ -2456,7 +2456,7 @@ name|hbh
 operator|->
 name|ip6h_nxt
 expr_stmt|;
-comment|/* 		 * accept the packet if a router alert option is included 		 * and we act as an IPv6 router. 		 */
+comment|/* 		 * If we are acting as a router and the packet contains a 		 * router alert option, see if we know the option value. 		 * Currently, we only support the option value for MLD, in which 		 * case we should pass the packet to the multicast routing 		 * daemon. 		 */
 if|if
 condition|(
 name|rtalert
@@ -2466,10 +2466,25 @@ literal|0
 operator|&&
 name|ip6_forwarding
 condition|)
+block|{
+switch|switch
+condition|(
+name|rtalert
+condition|)
+block|{
+case|case
+name|IP6OPT_RTALERT_MLD
+case|:
 name|ours
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+default|default:
+comment|/* 				 * RFC2711 requires unrecognized values must be 				 * silently ignored. 				 */
+break|break;
+block|}
+block|}
 block|}
 else|else
 name|nxt
