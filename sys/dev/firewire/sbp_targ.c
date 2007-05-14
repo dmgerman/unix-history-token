@@ -6135,6 +6135,12 @@ return|;
 block|}
 name|login
 operator|->
+name|id
+operator|=
+name|i
+expr_stmt|;
+name|login
+operator|->
 name|fwdev
 operator|=
 name|fwdev
@@ -8420,7 +8426,9 @@ operator|=
 name|cam_simq_alloc
 argument_list|(
 comment|/*maxopenings*/
-literal|1
+name|MAX_LUN
+operator|*
+name|MAX_INITIATORS
 argument_list|)
 expr_stmt|;
 if|if
