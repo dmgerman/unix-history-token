@@ -23,8 +23,6 @@ name|MMC_IVAR_DSR_IMP
 block|,
 name|MMC_IVAR_MEDIA_SIZE
 block|,
-name|MMC_IVAR_MODE
-block|,
 name|MMC_IVAR_RCA
 block|,
 name|MMC_IVAR_SECTOR_SIZE
@@ -72,17 +70,6 @@ argument_list|(
 argument|media_size
 argument_list|,
 argument|MEDIA_SIZE
-argument_list|,
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|MMC_ACCESSOR
-argument_list|(
-argument|mode
-argument_list|,
-argument|MODE
 argument_list|,
 argument|int
 argument_list|)
