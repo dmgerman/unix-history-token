@@ -114,6 +114,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/taskqueue.h>
 end_include
 
@@ -1696,7 +1708,7 @@ name|lagg_port
 modifier|*
 name|lp
 decl_stmt|;
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -1756,7 +1768,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -1929,7 +1941,7 @@ literal|0
 decl_stmt|,
 name|priv
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -2052,7 +2064,7 @@ name|pending
 init|=
 literal|0
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -2228,7 +2240,7 @@ name|int
 name|error
 decl_stmt|;
 comment|/* Grab a local reference of the queue and remove it from the softc */
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -2253,7 +2265,7 @@ argument_list|)
 operator|=
 name|NULL
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -2360,7 +2372,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -2737,7 +2749,7 @@ name|m
 init|=
 literal|0
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -2839,7 +2851,7 @@ name|lp
 operator|->
 name|lp_ifp
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -3212,7 +3224,7 @@ block|{
 case|case
 name|SIOCGLAGGPORT
 case|:
-name|LAGG_LOCK
+name|LAGG_RLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -3266,7 +3278,7 @@ argument_list|,
 name|rp
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_RUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -3486,7 +3498,7 @@ name|lp
 operator|->
 name|lp_lagg
 expr_stmt|;
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -3504,7 +3516,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -3707,7 +3719,7 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 return|return;
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -3755,7 +3767,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -3783,7 +3795,7 @@ name|sc
 operator|->
 name|sc_ifp
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -3926,7 +3938,7 @@ name|unlock
 init|=
 literal|1
 decl_stmt|;
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4566,7 +4578,7 @@ operator|)
 condition|)
 block|{
 comment|/* 			 * If interface is marked up and it is stopped, then 			 * start it. 			 */
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4607,7 +4619,7 @@ case|:
 case|case
 name|SIOCGIFMEDIA
 case|:
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4634,7 +4646,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4662,7 +4674,7 @@ if|if
 condition|(
 name|unlock
 condition|)
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4691,7 +4703,7 @@ name|lagg_port
 modifier|*
 name|lp
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -4793,7 +4805,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -5090,7 +5102,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -5283,6 +5295,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|LAGG_RLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -5324,12 +5341,6 @@ name|sc_proto
 operator|!=
 name|LAGG_PROTO_NONE
 condition|)
-block|{
-name|LAGG_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 call|(
@@ -5344,12 +5355,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 name|m_free
 argument_list|(
@@ -5374,6 +5379,11 @@ name|if_oerrors
 operator|++
 expr_stmt|;
 block|}
+name|LAGG_RUNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -5461,7 +5471,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|LAGG_LOCK
+name|LAGG_RLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5527,7 +5537,7 @@ operator|.
 name|len
 expr_stmt|;
 block|}
-name|LAGG_UNLOCK
+name|LAGG_RUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5638,7 +5648,7 @@ name|IFM_ETHER
 operator||
 name|IFM_AUTO
 expr_stmt|;
-name|LAGG_LOCK
+name|LAGG_RLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5666,7 +5676,7 @@ operator||=
 name|IFM_ACTIVE
 expr_stmt|;
 block|}
-name|LAGG_UNLOCK
+name|LAGG_RUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5728,7 +5738,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5751,7 +5761,7 @@ argument_list|(
 name|lp
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5787,7 +5797,7 @@ init|=
 name|NULL
 decl_stmt|;
 comment|// int new_link = LINK_STATE_DOWN;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -7728,7 +7738,7 @@ name|lp
 argument_list|)
 expr_stmt|;
 comment|/* unlocking is safe here */
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -7740,7 +7750,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -7897,9 +7907,6 @@ decl_stmt|;
 name|u_short
 name|etype
 decl_stmt|;
-name|uint8_t
-name|subtype
-decl_stmt|;
 name|eh
 operator|=
 name|mtod
@@ -7928,64 +7935,6 @@ operator|==
 name|ETHERTYPE_SLOW
 condition|)
 block|{
-if|if
-condition|(
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|<
-sizeof|sizeof
-argument_list|(
-operator|*
-name|eh
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-name|subtype
-argument_list|)
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-name|m_copydata
-argument_list|(
-name|m
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|eh
-argument_list|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|subtype
-argument_list|)
-argument_list|,
-operator|&
-name|subtype
-argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|subtype
-condition|)
-block|{
-case|case
-name|SLOWPROTOCOLS_SUBTYPE_LACP
-case|:
 name|lacp_input
 argument_list|(
 name|lp
@@ -7993,27 +7942,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|SLOWPROTOCOLS_SUBTYPE_MARKER
-case|:
-name|lacp_marker_input
-argument_list|(
-name|lp
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-comment|/* Unknown LACP packet type */
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 return|return
 operator|(
 name|NULL

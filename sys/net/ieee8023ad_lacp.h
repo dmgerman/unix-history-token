@@ -624,6 +624,15 @@ expr_stmt|;
 name|u_int32_t
 name|lsc_hashkey
 decl_stmt|;
+name|struct
+name|task
+name|lsc_qtask
+decl_stmt|;
+name|struct
+name|ifqueue
+name|lsc_queue
+decl_stmt|;
+comment|/* pdu input queue */
 block|}
 struct|;
 end_struct
@@ -805,23 +814,8 @@ value|((struct lacp_softc *)(_sc)->sc_psc)
 end_define
 
 begin_function_decl
-name|int
+name|void
 name|lacp_input
-parameter_list|(
-name|struct
-name|lagg_port
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|lacp_marker_input
 parameter_list|(
 name|struct
 name|lagg_port

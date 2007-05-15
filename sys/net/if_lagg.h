@@ -608,7 +608,7 @@ name|sc_ifp
 decl_stmt|;
 comment|/* virtual interface */
 name|struct
-name|mtx
+name|rwlock
 name|sc_mtx
 decl_stmt|;
 name|int
@@ -894,9 +894,9 @@ define|#
 directive|define
 name|LAGG_LOCK_INIT
 parameter_list|(
-name|_tr
+name|_sc
 parameter_list|)
-value|mtx_init(&(_tr)->sc_mtx, "if_lagg", NULL, \ 				    MTX_DEF)
+value|rw_init(&(_sc)->sc_mtx, "if_lagg rwlock")
 end_define
 
 begin_define
@@ -904,49 +904,69 @@ define|#
 directive|define
 name|LAGG_LOCK_DESTROY
 parameter_list|(
-name|_tr
+name|_sc
 parameter_list|)
-value|mtx_destroy(&(_tr)->sc_mtx)
+value|rw_destroy(&(_sc)->sc_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LAGG_LOCK
+name|LAGG_RLOCK
 parameter_list|(
-name|_tr
+name|_sc
 parameter_list|)
-value|mtx_lock(&(_tr)->sc_mtx)
+value|rw_rlock(&(_sc)->sc_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LAGG_UNLOCK
+name|LAGG_WLOCK
 parameter_list|(
-name|_tr
+name|_sc
 parameter_list|)
-value|mtx_unlock(&(_tr)->sc_mtx)
+value|rw_wlock(&(_sc)->sc_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LAGG_LOCKED
+name|LAGG_RUNLOCK
 parameter_list|(
-name|_tr
+name|_sc
 parameter_list|)
-value|mtx_owned(&(_tr)->sc_mtx)
+value|rw_runlock(&(_sc)->sc_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LAGG_LOCK_ASSERT
+name|LAGG_WUNLOCK
 parameter_list|(
-name|_tr
+name|_sc
 parameter_list|)
-value|mtx_assert(&(_tr)->sc_mtx, MA_OWNED)
+value|rw_wunlock(&(_sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_RLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|rw_assert(&(_sc)->sc_mtx, RA_RLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_WLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|rw_assert(&(_sc)->sc_mtx, RA_WLOCKED)
 end_define
 
 begin_function_decl
