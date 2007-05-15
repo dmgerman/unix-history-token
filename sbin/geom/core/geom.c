@@ -341,6 +341,8 @@ block|,
 name|G_NULL_OPTS
 block|,
 name|NULL
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -351,6 +353,8 @@ block|,
 name|std_list
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"[name ...]"
 block|}
@@ -376,6 +380,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-s] [name ...]"
 block|}
 block|,
@@ -391,6 +397,8 @@ block|,
 name|G_NULL_OPTS
 block|,
 name|NULL
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -401,6 +409,8 @@ block|,
 name|std_unload
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 name|NULL
 block|}
@@ -604,6 +614,23 @@ literal|"]"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|cmd
+operator|->
+name|gc_argname
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" %s"
+argument_list|,
+name|cmd
+operator|->
+name|gc_argname
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -1690,6 +1717,19 @@ operator|==
 name|G_TYPE_STRING
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+operator|(
+name|char
+operator|*
+operator|)
+name|opt
+operator|->
+name|go_val
+operator|!=
+literal|'\0'
+condition|)
 name|gctl_ro_param
 argument_list|(
 name|req
@@ -1719,7 +1759,16 @@ block|}
 block|}
 block|}
 block|}
-comment|/* 	 * Add rest of given arguments. 	 */
+if|if
+condition|(
+name|cmd
+operator|->
+name|gc_argname
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Add rest of given arguments. 		 */
 name|gctl_ro_param
 argument_list|(
 name|req
@@ -1787,6 +1836,40 @@ name|argv
 operator|)
 index|[
 name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|*
+name|argc
+operator|!=
+literal|1
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|gctl_ro_param
+argument_list|(
+name|req
+argument_list|,
+name|cmd
+operator|->
+name|gc_argname
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|(
+operator|*
+name|argv
+operator|)
+index|[
+literal|0
 index|]
 argument_list|)
 expr_stmt|;

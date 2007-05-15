@@ -233,6 +233,8 @@ name|mirror_main
 block|,
 name|G_NULL_OPTS
 block|,
+name|NULL
+block|,
 literal|"[-v] name prov ..."
 block|}
 block|,
@@ -244,6 +246,8 @@ block|,
 name|mirror_main
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"[-v] prov ..."
 block|}
@@ -340,6 +344,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-adfFhnv] [-b balance] [-s slice] name"
 block|}
 block|,
@@ -351,6 +357,8 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"[-v] name prov ..."
 block|}
@@ -364,6 +372,8 @@ name|mirror_main
 block|,
 name|G_NULL_OPTS
 block|,
+name|NULL
+block|,
 literal|"prov ..."
 block|}
 block|,
@@ -375,6 +385,8 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"name ..."
 block|}
@@ -441,6 +453,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-Fhnv] [-b balance] [-s slice] name prov ..."
 block|}
 block|,
@@ -486,6 +500,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-hiv] [-p priority] name prov ..."
 block|}
 block|,
@@ -498,6 +514,8 @@ name|NULL
 block|,
 name|G_NULL_OPTS
 block|,
+name|NULL
+block|,
 literal|"[-v] name prov ..."
 block|}
 block|,
@@ -509,6 +527,8 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"[-v] name prov ..."
 block|}
@@ -533,6 +553,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+name|NULL
 block|,
 literal|"[-fv] name ..."
 block|}

@@ -198,6 +198,8 @@ name|journal_main
 block|,
 name|G_NULL_OPTS
 block|,
+name|NULL
+block|,
 literal|"[-v] prov ..."
 block|}
 block|,
@@ -209,6 +211,8 @@ block|,
 name|journal_main
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"prov ..."
 block|}
@@ -265,6 +269,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-cfhv] [-s jsize] dataprov [jprov]"
 block|}
 block|,
@@ -289,6 +295,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-fv] name ..."
 block|}
 block|,
@@ -300,6 +308,8 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"[-v]"
 block|}

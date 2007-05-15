@@ -191,6 +191,8 @@ name|stripe_main
 block|,
 name|G_NULL_OPTS
 block|,
+name|NULL
+block|,
 literal|"[-v] prov ..."
 block|}
 block|,
@@ -218,6 +220,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-hv] [-s stripesize] name prov prov ..."
 block|}
 block|,
@@ -242,6 +246,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-fv] name ..."
 block|}
 block|,
@@ -253,6 +259,8 @@ block|,
 name|stripe_main
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"dump prov ..."
 block|}
@@ -291,6 +299,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-hv] [-s stripesize] name prov prov ..."
 block|}
 block|,
@@ -314,6 +324,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+name|NULL
 block|,
 literal|"[-fv] name ..."
 block|}

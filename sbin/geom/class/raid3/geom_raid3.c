@@ -182,6 +182,8 @@ name|raid3_main
 block|,
 name|G_NULL_OPTS
 block|,
+name|NULL
+block|,
 literal|"[-v] prov ..."
 block|}
 block|,
@@ -296,6 +298,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-adfFhnrRvwW] name"
 block|}
 block|,
@@ -307,6 +311,8 @@ block|,
 name|raid3_main
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"prov ..."
 block|}
@@ -341,6 +347,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+name|NULL
 block|,
 literal|"[-hv]<-n number> name prov"
 block|}
@@ -406,6 +414,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-hFnrvw] name prov prov prov ..."
 block|}
 block|,
@@ -417,6 +427,8 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"[-v] name prov"
 block|}
@@ -442,6 +454,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-v]<-n number> name"
 block|}
 block|,
@@ -465,6 +479,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+name|NULL
 block|,
 literal|"[-fv] name ..."
 block|}

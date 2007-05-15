@@ -194,6 +194,8 @@ name|cache_main
 block|,
 name|G_NULL_OPTS
 block|,
+name|NULL
+block|,
 literal|"[-v] prov ..."
 block|}
 block|,
@@ -229,6 +231,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+name|NULL
 block|,
 literal|"[-v] [-b blocksize] [-s size] name"
 block|}
@@ -268,6 +272,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-v] [-b blocksize] [-s size] name prov"
 block|}
 block|,
@@ -292,6 +298,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-fv] name ..."
 block|}
 block|,
@@ -303,6 +311,8 @@ block|,
 name|cache_main
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"prov ..."
 block|}
@@ -342,6 +352,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-v] [-b blocksize] [-s size] name prov"
 block|}
 block|,
@@ -353,6 +365,8 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"[-v] name ..."
 block|}
@@ -377,6 +391,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+name|NULL
 block|,
 literal|"[-fv] name ..."
 block|}

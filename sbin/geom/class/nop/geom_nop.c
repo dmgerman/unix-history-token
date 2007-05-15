@@ -206,8 +206,10 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"[-v] [-e error] [-o offset] [-r rfailprob] [-s size] [-S secsize] "
-literal|"[-w wfailprob] dev ..."
+name|NULL
+block|,
+literal|"[-v] [-e error] [-o offset] [-r rfailprob] [-s size] "
+literal|"[-S secsize] [-w wfailprob] dev ..."
 block|}
 block|,
 block|{
@@ -254,6 +256,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-v] [-e error] [-r rfailprob] [-w wfailprob] prov ..."
 block|}
 block|,
@@ -278,6 +282,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-fv] prov ..."
 block|}
 block|,
@@ -289,6 +295,8 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"[-v] prov ..."
 block|}

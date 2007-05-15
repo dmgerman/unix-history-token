@@ -477,6 +477,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-bPv] [-a aalgo] [-e ealgo] [-i iterations] [-l keylen] [-K newkeyfile] [-s sectorsize] prov"
 block|}
 block|,
@@ -574,6 +576,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"- an alias for 'init'"
 block|}
 block|,
@@ -630,6 +634,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-dprv] [-k keyfile] prov"
 block|}
 block|,
@@ -664,6 +670,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-fl] prov ..."
 block|}
 block|,
@@ -697,6 +705,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+name|NULL
 block|,
 literal|"- an alias for 'detach'"
 block|}
@@ -766,6 +776,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-d] [-a aalgo] [-e ealgo] [-l keylen] [-s sectorsize] prov ..."
 block|}
 block|,
@@ -799,6 +811,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+name|NULL
 block|,
 literal|"[-bB] prov ..."
 block|}
@@ -876,6 +890,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-pPv] [-n keyno] [-i iterations] [-k keyfile] [-K newkeyfile] prov"
 block|}
 block|,
@@ -921,6 +937,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-afv] [-n keyno] prov"
 block|}
 block|,
@@ -945,6 +963,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-av] [prov ...]"
 block|}
 block|,
@@ -956,6 +976,8 @@ block|,
 name|eli_main
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"[-v] prov file"
 block|}
@@ -969,6 +991,8 @@ name|eli_main
 block|,
 name|G_NULL_OPTS
 block|,
+name|NULL
+block|,
 literal|"[-v] file prov"
 block|}
 block|,
@@ -981,6 +1005,8 @@ name|eli_main
 block|,
 name|G_NULL_OPTS
 block|,
+name|NULL
+block|,
 literal|"[-v] prov ..."
 block|}
 block|,
@@ -992,6 +1018,8 @@ block|,
 name|eli_main
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"[-v] prov ..."
 block|}

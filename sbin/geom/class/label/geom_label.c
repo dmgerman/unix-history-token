@@ -170,6 +170,8 @@ name|label_main
 block|,
 name|G_NULL_OPTS
 block|,
+name|NULL
+block|,
 literal|"[-v] dev ..."
 block|}
 block|,
@@ -183,6 +185,8 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"[-v] name dev"
 block|}
@@ -208,6 +212,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
+name|NULL
+block|,
 literal|"[-fv] name ..."
 block|}
 block|,
@@ -219,6 +225,8 @@ block|,
 name|label_main
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"dev ..."
 block|}
@@ -233,6 +241,8 @@ block|,
 name|label_main
 block|,
 name|G_NULL_OPTS
+block|,
+name|NULL
 block|,
 literal|"[-v] name dev"
 block|}
@@ -257,6 +267,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+name|NULL
 block|,
 literal|"[-fv] name ..."
 block|}
