@@ -2636,8 +2636,6 @@ case|:
 name|request_flags
 operator||=
 name|ATA_R_READ
-operator||
-name|ATA_R_DMA
 expr_stmt|;
 break|break;
 case|case
@@ -2646,8 +2644,6 @@ case|:
 name|request_flags
 operator||=
 name|ATA_R_WRITE
-operator||
-name|ATA_R_DMA
 expr_stmt|;
 break|break;
 case|case
@@ -2669,24 +2665,6 @@ goto|goto
 name|action_invalid
 goto|;
 block|}
-if|if
-condition|(
-name|softc
-operator|->
-name|atadev
-index|[
-name|tid
-index|]
-operator|->
-name|mode
-operator|<
-name|ATA_DMA
-condition|)
-name|request_flags
-operator|&=
-operator|~
-name|ATA_R_DMA
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3152,6 +3130,40 @@ literal|1
 index|]
 operator|=
 literal|0
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|READ_10
+case|:
+comment|/* FALLTHROUGH */
+case|case
+name|WRITE_10
+case|:
+comment|/* FALLTHROUGH */
+case|case
+name|READ_12
+case|:
+comment|/* FALLTHROUGH */
+case|case
+name|WRITE_12
+case|:
+comment|/* 	     * Enable DMA (if target supports it) for READ and WRITE commands 	     * only, as some combinations of drive, controller and chipset do 	     * not behave correctly when DMA is enabled for other commands. 	     */
+if|if
+condition|(
+name|softc
+operator|->
+name|atadev
+index|[
+name|tid
+index|]
+operator|->
+name|mode
+operator|>=
+name|ATA_DMA
+condition|)
+name|request_flags
+operator||=
+name|ATA_R_DMA
 expr_stmt|;
 break|break;
 block|}
