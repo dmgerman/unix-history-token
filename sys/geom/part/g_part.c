@@ -6091,7 +6091,7 @@ block|{
 name|KASSERT
 argument_list|(
 name|gpp
-operator|->
+operator|.
 name|gpp_parms
 operator|&
 name|G_PART_PARM_GEOM
