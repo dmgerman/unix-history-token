@@ -6012,8 +6012,6 @@ name|uint16_t
 name|etype
 decl_stmt|;
 name|uint32_t
-name|flow
-decl_stmt|,
 name|p
 init|=
 literal|0
@@ -6063,6 +6061,9 @@ decl_stmt|;
 name|struct
 name|ip6_hdr
 name|ip6buf
+decl_stmt|;
+name|uint32_t
+name|flow
 decl_stmt|;
 endif|#
 directive|endif
