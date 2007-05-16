@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_ifndef
@@ -330,6 +330,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_82571EB_SERDES_DUAL
+value|0x10D9
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82571EB_SERDES_QUAD
+value|0x10DA
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_82571EB_QUAD_COPPER
 value|0x10A4
 end_define
@@ -645,6 +659,7 @@ block|,
 name|e1000_82575
 block|,
 name|e1000_num_macs
+comment|/* List is 1-based, so subtract 1 for true count. */
 block|}
 name|e1000_mac_type
 typedef|;

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_ifndef
@@ -215,6 +215,10 @@ end_define
 
 begin_comment
 comment|/* Tx Underrun */
+end_comment
+
+begin_comment
+comment|/* Extended desc bits for Linksec and timesync */
 end_comment
 
 begin_comment

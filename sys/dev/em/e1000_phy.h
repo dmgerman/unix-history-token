@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_ifndef
@@ -52,12 +52,6 @@ block|}
 name|e1000_smart_speed
 typedef|;
 end_typedef
-
-begin_include
-include|#
-directive|include
-file|"e1000_api.h"
-end_include
 
 begin_function_decl
 name|s32
@@ -511,6 +505,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|e1000_phy_type
+name|e1000_get_phy_type_from_id
+parameter_list|(
+name|u32
+name|phy_id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|E1000_MAX_PHY_ADDR
+value|4
+end_define
+
 begin_comment
 comment|/* IGP01E1000 Specific Registers */
 end_comment
@@ -602,6 +613,80 @@ end_define
 begin_comment
 comment|/* Page Select */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP4_PHY_PAGE_SELECT
+value|22
+end_define
+
+begin_comment
+comment|/* Page Select for IGP 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP_PAGE_SHIFT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHY_REG_MASK
+value|0x1F
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP4_WUC_PAGE
+value|800
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP4_WUC_ADDRESS_OPCODE
+value|0x11
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP4_WUC_DATA_OPCODE
+value|0x12
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP4_WUC_ENABLE_PAGE
+value|769
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP4_WUC_ENABLE_REG
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP4_WUC_ENABLE_BIT
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP4_WUC_HOST_WU_BIT
+value|(1<< 4)
+end_define
 
 begin_define
 define|#

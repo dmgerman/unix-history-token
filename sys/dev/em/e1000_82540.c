@@ -3,19 +3,9 @@ begin_comment
 comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/*$FreeBSD$*/
+end_comment
 
 begin_comment
 comment|/* e1000_82540  * e1000_82545  * e1000_82546  * e1000_82545_rev_3  * e1000_82546_rev_3  */
@@ -183,7 +173,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * e1000_init_phy_params_82540 - Init PHY func ptrs.  * @hw - pointer to the HW structure  *  * This is a function pointer entry point called by the api module.  **/
+comment|/**  * e1000_init_phy_params_82540 - Init PHY func ptrs.  * @hw: pointer to the HW structure  *  * This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -370,7 +360,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * e1000_init_nvm_params_82540 - Init NVM func ptrs.  * @hw - pointer to the HW structure  *  * This is a function pointer entry point called by the api module.  **/
+comment|/**  * e1000_init_nvm_params_82540 - Init NVM func ptrs.  * @hw: pointer to the HW structure  *  * This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -553,7 +543,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * e1000_init_mac_params_82540 - Init MAC func ptrs.  * @hw - pointer to the HW structure  *  * This is a function pointer entry point called by the api module.  **/
+comment|/**  * e1000_init_mac_params_82540 - Init MAC func ptrs.  * @hw: pointer to the HW structure  *  * This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -843,7 +833,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * e1000_init_function_pointers_82540 - Init func ptrs.  * @hw - pointer to the HW structure  *  * The only function explicitly called by the api module to initialize  * all function pointers and parameters.  **/
+comment|/**  * e1000_init_function_pointers_82540 - Init func ptrs.  * @hw: pointer to the HW structure  *  * The only function explicitly called by the api module to initialize  * all function pointers and parameters.  **/
 end_comment
 
 begin_function
@@ -889,7 +879,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_hw_82540 - Reset hardware  *  @hw - pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_reset_hw_82540 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1074,7 +1064,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_hw_82540 - Initialize hardware  *  @hw - pointer to the HW structure  *  *  This inits the hardware readying it for operation.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_hw_82540 - Initialize hardware  *  @hw: pointer to the HW structure  *  *  This inits the hardware readying it for operation.  This is a  *  function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1326,7 +1316,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_copper_link_82540 - Configure copper link settings  *  @hw - pointer to the HW structure  *  *  Calls the appropriate function to configure the link for auto-neg or forced  *  speed and duplex.  Then we check for link, once link is established calls  *  to configure collision distance and flow control are called.  If link is  *  not established, we return -E1000_ERR_PHY (-2).  This is a function  *  pointer entry point called by the api module.  **/
+comment|/**  *  e1000_setup_copper_link_82540 - Configure copper link settings  *  @hw: pointer to the HW structure  *  *  Calls the appropriate function to configure the link for auto-neg or forced  *  speed and duplex.  Then we check for link, once link is established calls  *  to configure collision distance and flow control are called.  If link is  *  not established, we return -E1000_ERR_PHY (-2).  This is a function  *  pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1492,7 +1482,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_fiber_serdes_link_82540 - Setup link for fiber/serdes  *  @hw - pointer to the HW structure  *  *  Set the output amplitude to the value in the EEPROM and adjust the VCO  *  speed to improve Bit Error Rate (BER) performance.  Configures collision  *  distance and flow control for fiber and serdes links.  Upon successful  *  setup, poll for link.  This is a function pointer entry point called by  *  the api module.  **/
+comment|/**  *  e1000_setup_fiber_serdes_link_82540 - Setup link for fiber/serdes  *  @hw: pointer to the HW structure  *  *  Set the output amplitude to the value in the EEPROM and adjust the VCO  *  speed to improve Bit Error Rate (BER) performance.  Configures collision  *  distance and flow control for fiber and serdes links.  Upon successful  *  setup, poll for link.  This is a function pointer entry point called by  *  the api module.  **/
 end_comment
 
 begin_function
@@ -1598,7 +1588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_adjust_serdes_amplitude_82540 - Adjust amplitude based on EEPROM  *  @hw - pointer to the HW structure  *  *  Adjust the SERDES ouput amplitude based on the EEPROM settings.  **/
+comment|/**  *  e1000_adjust_serdes_amplitude_82540 - Adjust amplitude based on EEPROM  *  @hw: pointer to the HW structure  *  *  Adjust the SERDES ouput amplitude based on the EEPROM settings.  **/
 end_comment
 
 begin_function
@@ -1688,7 +1678,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_vco_speed_82540 - Set VCO speed for better performance  *  @hw - pointer to the HW structure  *  *  Set the VCO speed to improve Bit Error Rate (BER) performance.  **/
+comment|/**  *  e1000_set_vco_speed_82540 - Set VCO speed for better performance  *  @hw: pointer to the HW structure  *  *  Set the VCO speed to improve Bit Error Rate (BER) performance.  **/
 end_comment
 
 begin_function
@@ -1880,7 +1870,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_phy_mode_82540 - Set PHY to class A mode  *  @hw - pointer to the HW structure  *  *  Sets the PHY to class A mode and assumes the following operations will  *  follow to enable the new class mode:  *    1.  Do a PHY soft reset.  *    2.  Restart auto-negotiation or force link.  **/
+comment|/**  *  e1000_set_phy_mode_82540 - Set PHY to class A mode  *  @hw: pointer to the HW structure  *  *  Sets the PHY to class A mode and assumes the following operations will  *  follow to enable the new class mode:  *    1.  Do a PHY soft reset.  *    2.  Restart auto-negotiation or force link.  **/
 end_comment
 
 begin_function
@@ -2039,7 +2029,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_clear_hw_cntrs_82540 - Clear device specific hardware counters  *  @hw - pointer to the HW structure  *  *  Clears the hardware counters by reading the counter registers.  **/
+comment|/**  *  e1000_clear_hw_cntrs_82540 - Clear device specific hardware counters  *  @hw: pointer to the HW structure  *  *  Clears the hardware counters by reading the counter registers.  **/
 end_comment
 
 begin_function

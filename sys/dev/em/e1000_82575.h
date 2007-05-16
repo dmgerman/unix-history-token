@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_ifndef
@@ -18,12 +18,6 @@ define|#
 directive|define
 name|_E1000_82575_H_
 end_define
-
-begin_include
-include|#
-directive|include
-file|"e1000_api.h"
-end_include
 
 begin_comment
 comment|/* Receive Address Register Count  * Number of high/low register pairs in the RAR.  The RAR (Receive Address  * Registers) holds the directed and multicast addresses that we monitor.  * These entries are also used for MAC-based filtering.  */
@@ -157,17 +151,6 @@ end_define
 
 begin_comment
 comment|/* Descriptor extension (0 = legacy) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ADV_TUCMD_SNAP
-value|0x1
-end_define
-
-begin_comment
-comment|/* SNAP indication */
 end_comment
 
 begin_define
@@ -558,7 +541,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_IMIREX_SIZE_BP
+name|E1000_IMIREXT_SIZE_BP
 value|0x00001000
 end_define
 
@@ -569,7 +552,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_IMIREX_CTRL_URG
+name|E1000_IMIREXT_CTRL_URG
 value|0x00002000
 end_define
 
@@ -580,7 +563,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_IMIREX_CTRL_ACK
+name|E1000_IMIREXT_CTRL_ACK
 value|0x00004000
 end_define
 
@@ -591,7 +574,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_IMIREX_CTRL_PSH
+name|E1000_IMIREXT_CTRL_PSH
 value|0x00008000
 end_define
 
@@ -602,7 +585,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_IMIREX_CTRL_RST
+name|E1000_IMIREXT_CTRL_RST
 value|0x00010000
 end_define
 
@@ -613,7 +596,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_IMIREX_CTRL_SYN
+name|E1000_IMIREXT_CTRL_SYN
 value|0x00020000
 end_define
 
@@ -624,7 +607,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_IMIREX_CTRL_FIN
+name|E1000_IMIREXT_CTRL_FIN
 value|0x00040000
 end_define
 
@@ -635,7 +618,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_IMIREX_CTRL_BP
+name|E1000_IMIREXT_CTRL_BP
 value|0x00080000
 end_define
 
@@ -794,35 +777,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_RXDADV_RSSTYPE_IPV4
+name|E1000_RXDADV_RSSTYPE_IPV4_TCP
 value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_RXDADV_RSSTYPE_IPV4_TCP
+name|E1000_RXDADV_RSSTYPE_IPV4
 value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_RXDADV_RSSTYPE_IPV6
+name|E1000_RXDADV_RSSTYPE_IPV6_TCP
 value|0x00000003
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_RXDADV_RSSTYPE_IPV6_TCP
+name|E1000_RXDADV_RSSTYPE_IPV6_EX
 value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_RXDADV_RSSTYPE_IPV6_EX
+name|E1000_RXDADV_RSSTYPE_IPV6
 value|0x00000005
 end_define
 
@@ -1013,7 +996,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_ADV_MAC_LINKSEC
+name|E1000_ADVTXD_MAC_LINKSEC
 value|0x00040000
 end_define
 
@@ -1024,7 +1007,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_ADV_MAC_TSTAMP
+name|E1000_ADVTXD_MAC_TSTAMP
 value|0x00080000
 end_define
 
@@ -1112,6 +1095,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_ADVTXD_POPTS_IPSEC
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* IPSec offload request */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_ADVTXD_PAYLEN_SHIFT
 value|14
 end_define
@@ -1169,17 +1163,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_ADVTXD_TUCMD_SNAP
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* SNAP indication */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_ADVTXD_TUCMD_IPV4
 value|0x00000400
 end_define
@@ -1224,6 +1207,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_ADVTXD_TUCMD_IPSEC_TYPE_ESP
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* IPSec Type ESP */
+end_comment
+
+begin_comment
+comment|/* IPSec Encrypt Enable for ESP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ADVTXD_TUCMD_IPSEC_ENCRYPT_EN
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_ADVTXD_TUCMD_MKRREQ
 value|0x00002000
 end_define
@@ -1253,6 +1258,28 @@ end_define
 begin_comment
 comment|/* Adv ctxt MSS shift */
 end_comment
+
+begin_comment
+comment|/* Adv ctxt IPSec SA IDX mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ADVTXD_IPSEC_SA_INDEX_MASK
+value|0x000000FF
+end_define
+
+begin_comment
+comment|/* Adv ctxt IPSec ESP len mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ADVTXD_IPSEC_ESP_LEN_MASK
+value|0x000000FF
+end_define
 
 begin_comment
 comment|/* Additional Transmit Descriptor Control definitions */
@@ -1324,9 +1351,68 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_DCA_CTRL_DCA_ENABLE
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* DCA Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DCA_CTRL_DCA_DISABLE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* DCA Disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DCA_CTRL_DCA_MODE_CB1
+value|0x00
+end_define
+
+begin_comment
+comment|/* DCA Mode CB1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DCA_CTRL_DCA_MODE_CB2
+value|0x02
+end_define
+
+begin_comment
+comment|/* DCA Mode CB2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DCA_RXCTRL_CPUID_MASK
+value|0x0000001F
+end_define
+
+begin_comment
+comment|/* Rx CPUID Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_DCA_RXCTRL_DESC_DCA_EN
 value|(1<< 5)
 end_define
+
+begin_comment
+comment|/* DCA Rx Desc enable */
+end_comment
 
 begin_define
 define|#
@@ -1335,6 +1421,10 @@ name|E1000_DCA_RXCTRL_HEAD_DCA_EN
 value|(1<< 6)
 end_define
 
+begin_comment
+comment|/* DCA Rx Desc header enable */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1342,12 +1432,31 @@ name|E1000_DCA_RXCTRL_DATA_DCA_EN
 value|(1<< 7)
 end_define
 
+begin_comment
+comment|/* DCA Rx Desc payload enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DCA_TXCTRL_CPUID_MASK
+value|0x0000001F
+end_define
+
+begin_comment
+comment|/* Tx CPUID Mask */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|E1000_DCA_TXCTRL_DESC_DCA_EN
 value|(1<< 5)
 end_define
+
+begin_comment
+comment|/* DCA Tx Desc enable */
+end_comment
 
 begin_endif
 endif|#

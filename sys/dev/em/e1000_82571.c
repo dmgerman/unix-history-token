@@ -3,23 +3,19 @@ begin_comment
 comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/*$FreeBSD$*/
+end_comment
 
 begin_comment
 comment|/* e1000_82571  * e1000_82572  * e1000_82573  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"e1000_api.h"
+end_include
 
 begin_include
 include|#
@@ -319,6 +315,19 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|s32
+name|e1000_get_hw_semaphore_82571
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|s32
 name|e1000_fix_nvm_checksum_82571
 parameter_list|(
 name|struct
@@ -333,6 +342,19 @@ begin_function_decl
 specifier|static
 name|s32
 name|e1000_get_phy_id_82571
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|e1000_put_hw_semaphore_82571
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -390,7 +412,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  *  e1000_init_phy_params_82571 - Init PHY func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_phy_params_82571 - Init PHY func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -475,7 +497,7 @@ name|func
 operator|->
 name|acquire_phy
 operator|=
-name|e1000_get_hw_semaphore_generic
+name|e1000_get_hw_semaphore_82571
 expr_stmt|;
 name|func
 operator|->
@@ -493,7 +515,7 @@ name|func
 operator|->
 name|release_phy
 operator|=
-name|e1000_put_hw_semaphore_generic
+name|e1000_put_hw_semaphore_82571
 expr_stmt|;
 name|func
 operator|->
@@ -719,7 +741,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_nvm_params_82571 - Init NVM func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_nvm_params_82571 - Init NVM func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1005,7 +1027,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_mac_params_82571 - Init MAC func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_mac_params_82571 - Init MAC func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1075,6 +1097,12 @@ expr_stmt|;
 break|break;
 case|case
 name|E1000_DEV_ID_82571EB_SERDES
+case|:
+case|case
+name|E1000_DEV_ID_82571EB_SERDES_DUAL
+case|:
+case|case
+name|E1000_DEV_ID_82571EB_SERDES_QUAD
 case|:
 case|case
 name|E1000_DEV_ID_82572EI_SERDES
@@ -1362,7 +1390,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_function_pointers_82571 - Init func ptrs.  *  @hw - pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
+comment|/**  *  e1000_init_function_pointers_82571 - Init func ptrs.  *  @hw: pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
 end_comment
 
 begin_function
@@ -1408,7 +1436,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_phy_id_82571 - Retrieve the PHY ID and revision  *  @hw - pointer to the HW structure  *  *  Reads the PHY registers and stores the PHY ID and possibly the PHY  *  revision in the hardware structure.  **/
+comment|/**  *  e1000_get_phy_id_82571 - Retrieve the PHY ID and revision  *  @hw: pointer to the HW structure  *  *  Reads the PHY registers and stores the PHY ID and possibly the PHY  *  revision in the hardware structure.  **/
 end_comment
 
 begin_function
@@ -1491,7 +1519,187 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_acquire_nvm_82571 - Request for access to the EEPROM  *  @hw - pointer to the HW structure  *  *  To gain access to the EEPROM, first we must obtain a hardware semaphore.  *  Then for non-82573 hardware, set the EEPROM access request bit and wait  *  for EEPROM access grant bit.  If the access grant bit is not set, release  *  hardware semaphore.  **/
+comment|/**  *  e1000_get_hw_semaphore_82571 - Acquire hardware semaphore  *  @hw: pointer to the HW structure  *  *  Acquire the HW semaphore to access the PHY or NVM  **/
+end_comment
+
+begin_function
+name|s32
+name|e1000_get_hw_semaphore_82571
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|u32
+name|swsm
+decl_stmt|;
+name|s32
+name|ret_val
+init|=
+name|E1000_SUCCESS
+decl_stmt|;
+name|s32
+name|timeout
+init|=
+name|hw
+operator|->
+name|nvm
+operator|.
+name|word_size
+operator|+
+literal|1
+decl_stmt|;
+name|s32
+name|i
+init|=
+literal|0
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_get_hw_semaphore_82571"
+argument_list|)
+expr_stmt|;
+comment|/* Get the FW semaphore. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|timeout
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|swsm
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_SWSM
+argument_list|)
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_SWSM
+argument_list|,
+name|swsm
+operator||
+name|E1000_SWSM_SWESMBI
+argument_list|)
+expr_stmt|;
+comment|/* Semaphore acquired if bit latched */
+if|if
+condition|(
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_SWSM
+argument_list|)
+operator|&
+name|E1000_SWSM_SWESMBI
+condition|)
+break|break;
+name|usec_delay
+argument_list|(
+literal|50
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|i
+operator|==
+name|timeout
+condition|)
+block|{
+comment|/* Release semaphores */
+name|e1000_put_hw_semaphore_generic
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+name|DEBUGOUT
+argument_list|(
+literal|"Driver can't access the NVM\n"
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+operator|-
+name|E1000_ERR_NVM
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+name|out
+label|:
+return|return
+name|ret_val
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_put_hw_semaphore_82571 - Release hardware semaphore  *  @hw: pointer to the HW structure  *  *  Release hardware semaphore used to access the PHY or NVM  **/
+end_comment
+
+begin_function
+name|void
+name|e1000_put_hw_semaphore_82571
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|u32
+name|swsm
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_put_hw_semaphore_82571"
+argument_list|)
+expr_stmt|;
+name|swsm
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_SWSM
+argument_list|)
+expr_stmt|;
+name|swsm
+operator|&=
+operator|~
+name|E1000_SWSM_SWESMBI
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_SWSM
+argument_list|,
+name|swsm
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_acquire_nvm_82571 - Request for access to the EEPROM  *  @hw: pointer to the HW structure  *  *  To gain access to the EEPROM, first we must obtain a hardware semaphore.  *  Then for non-82573 hardware, set the EEPROM access request bit and wait  *  for EEPROM access grant bit.  If the access grant bit is not set, release  *  hardware semaphore.  **/
 end_comment
 
 begin_function
@@ -1515,7 +1723,7 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_get_hw_semaphore_generic
+name|e1000_get_hw_semaphore_82571
 argument_list|(
 name|hw
 argument_list|)
@@ -1548,7 +1756,7 @@ if|if
 condition|(
 name|ret_val
 condition|)
-name|e1000_put_hw_semaphore_generic
+name|e1000_put_hw_semaphore_82571
 argument_list|(
 name|hw
 argument_list|)
@@ -1562,7 +1770,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_release_nvm_82571 - Release exclusive access to EEPROM  *  @hw - pointer to the HW structure  *  *  Stop any current commands to the EEPROM and clear the EEPROM request bit.  **/
+comment|/**  *  e1000_release_nvm_82571 - Release exclusive access to EEPROM  *  @hw: pointer to the HW structure  *  *  Stop any current commands to the EEPROM and clear the EEPROM request bit.  **/
 end_comment
 
 begin_function
@@ -1586,7 +1794,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|e1000_put_hw_semaphore_generic
+name|e1000_put_hw_semaphore_82571
 argument_list|(
 name|hw
 argument_list|)
@@ -1595,7 +1803,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_nvm_82571 - Write to EEPROM using appropriate interface  *  @hw - pointer to the HW structure  *  @offset - offset within the EEPROM to be written to  *  @words - number of words to write  *  @data - 16 bit word(s) to be written to the EEPROM  *  *  For non-82573 silicon, write data to EEPROM at offset using SPI interface.  *  *  If e1000_update_nvm_checksum is not called after this function, the  *  EEPROM will most likley contain an invalid checksum.  **/
+comment|/**  *  e1000_write_nvm_82571 - Write to EEPROM using appropriate interface  *  @hw: pointer to the HW structure  *  @offset: offset within the EEPROM to be written to  *  @words: number of words to write  *  @data: 16 bit word(s) to be written to the EEPROM  *  *  For non-82573 silicon, write data to EEPROM at offset using SPI interface.  *  *  If e1000_update_nvm_checksum is not called after this function, the  *  EEPROM will most likley contain an invalid checksum.  **/
 end_comment
 
 begin_function
@@ -1690,7 +1898,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_update_nvm_checksum_82571 - Update EEPROM checksum  *  @hw - pointer to the HW structure  *  *  Updates the EEPROM checksum by reading/adding each word of the EEPROM  *  up to the checksum.  Then calculates the EEPROM checksum and writes the  *  value to the EEPROM.  **/
+comment|/**  *  e1000_update_nvm_checksum_82571 - Update EEPROM checksum  *  @hw: pointer to the HW structure  *  *  Updates the EEPROM checksum by reading/adding each word of the EEPROM  *  up to the checksum.  Then calculates the EEPROM checksum and writes the  *  value to the EEPROM.  **/
 end_comment
 
 begin_function
@@ -1923,7 +2131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_validate_nvm_checksum_82571 - Validate EEPROM checksum  *  @hw - pointer to the HW structure  *  *  Calculates the EEPROM checksum by reading/adding each word of the EEPROM  *  and then verifies that the sum of the EEPROM is equal to 0xBABA.  **/
+comment|/**  *  e1000_validate_nvm_checksum_82571 - Validate EEPROM checksum  *  @hw: pointer to the HW structure  *  *  Calculates the EEPROM checksum by reading/adding each word of the EEPROM  *  and then verifies that the sum of the EEPROM is equal to 0xBABA.  **/
 end_comment
 
 begin_function
@@ -1967,7 +2175,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_nvm_eewr_82571 - Write to EEPROM for 82573 silicon  *  @hw - pointer to the HW structure  *  @offset - offset within the EEPROM to be written to  *  @words - number of words to write  *  @data - 16 bit word(s) to be written to the EEPROM  *  *  After checking for invalid values, poll the EEPROM to ensure the previous  *  command has completed before trying to write the next word.  After write  *  poll for completion.  *  *  If e1000_update_nvm_checksum is not called after this function, the  *  EEPROM will most likley contain an invalid checksum.  **/
+comment|/**  *  e1000_write_nvm_eewr_82571 - Write to EEPROM for 82573 silicon  *  @hw: pointer to the HW structure  *  @offset: offset within the EEPROM to be written to  *  @words: number of words to write  *  @data: 16 bit word(s) to be written to the EEPROM  *  *  After checking for invalid values, poll the EEPROM to ensure the previous  *  command has completed before trying to write the next word.  After write  *  poll for completion.  *  *  If e1000_update_nvm_checksum is not called after this function, the  *  EEPROM will most likley contain an invalid checksum.  **/
 end_comment
 
 begin_function
@@ -2146,7 +2354,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_cfg_done_82571 - Poll for configuration done  *  @hw - pointer to the HW structure  *  *  Reads the management control register for the config done bit to be set.  **/
+comment|/**  *  e1000_get_cfg_done_82571 - Poll for configuration done  *  @hw: pointer to the HW structure  *  *  Reads the management control register for the config done bit to be set.  **/
 end_comment
 
 begin_function
@@ -2230,7 +2438,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_d0_lplu_state_82571 - Set Low Power Linkup D0 state  *  @hw - pointer to the HW structure  *  @active - TRUE to enable LPLU, FALSE to disable  *  *  Sets the LPLU D0 state according to the active flag.  When activating LPLU  *  this function also disables smart speed and vice versa.  LPLU will not be  *  activated unless the device autonegotiation advertisement meets standards  *  of either 10 or 10/100 or 10/100/1000 at all duplexes.  This is a function  *  pointer entry point only called by PHY setup routines.  **/
+comment|/**  *  e1000_set_d0_lplu_state_82571 - Set Low Power Linkup D0 state  *  @hw: pointer to the HW structure  *  @active: TRUE to enable LPLU, FALSE to disable  *  *  Sets the LPLU D0 state according to the active flag.  When activating LPLU  *  this function also disables smart speed and vice versa.  LPLU will not be  *  activated unless the device autonegotiation advertisement meets standards  *  of either 10 or 10/100 or 10/100/1000 at all duplexes.  This is a function  *  pointer entry point only called by PHY setup routines.  **/
 end_comment
 
 begin_function
@@ -2484,7 +2692,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_hw_82571 - Reset hardware  *  @hw - pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_reset_hw_82571 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -2782,7 +2990,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_hw_82571 - Initialize hardware  *  @hw - pointer to the HW structure  *  *  This inits the hardware readying it for operation.  **/
+comment|/**  *  e1000_init_hw_82571 - Initialize hardware  *  @hw: pointer to the HW structure  *  *  This inits the hardware readying it for operation.  **/
 end_comment
 
 begin_function
@@ -3044,7 +3252,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_initialize_hw_bits_82571 - Initialize hardware-dependent bits  *  @hw - pointer to the HW structure  *  *  Initializes required hardware-dependent bits needed for normal operation.  **/
+comment|/**  *  e1000_initialize_hw_bits_82571 - Initialize hardware-dependent bits  *  @hw: pointer to the HW structure  *  *  Initializes required hardware-dependent bits needed for normal operation.  **/
 end_comment
 
 begin_function
@@ -3252,6 +3460,12 @@ operator||=
 operator|(
 literal|1
 operator|<<
+literal|22
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
 literal|24
 operator|)
 operator||
@@ -3404,7 +3618,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_clear_vfta_82571 - Clear VLAN filter table  *  @hw - pointer to the HW structure  *  *  Clears the register array which contains the VLAN filter table by  *  setting all the values to 0.  **/
+comment|/**  *  e1000_clear_vfta_82571 - Clear VLAN filter table  *  @hw: pointer to the HW structure  *  *  Clears the register array which contains the VLAN filter table by  *  setting all the values to 0.  **/
 end_comment
 
 begin_function
@@ -3542,7 +3756,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_mc_addr_list_update_82571 - Update Multicast addresses  *  @hw - pointer to the HW structure  *  @mc_addr_list - array of multicast addresses to program  *  @mc_addr_count - number of multicast addresses to program  *  @rar_used_count - the first RAR register free to program  *  @rar_count - total number of supported Receive Address Registers  *  *  Updates the Receive Address Registers and Multicast Table Array.  *  The caller must have a packed mc_addr_list of multicast addresses.  *  The parameter rar_count will usually be hw->mac.rar_entry_count  *  unless there are workarounds that change this.  **/
+comment|/**  *  e1000_mc_addr_list_update_82571 - Update Multicast addresses  *  @hw: pointer to the HW structure  *  @mc_addr_list: array of multicast addresses to program  *  @mc_addr_count: number of multicast addresses to program  *  @rar_used_count: the first RAR register free to program  *  @rar_count: total number of supported Receive Address Registers  *  *  Updates the Receive Address Registers and Multicast Table Array.  *  The caller must have a packed mc_addr_list of multicast addresses.  *  The parameter rar_count will usually be hw->mac.rar_entry_count  *  unless there are workarounds that change this.  **/
 end_comment
 
 begin_function
@@ -3601,7 +3815,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_link_82571 - Setup flow control and link settings  *  @hw - pointer to the HW structure  *  *  Determines which flow control settings to use, then configures flow  *  control.  Calls the appropriate media-specific link configuration  *  function.  Assuming the adapter has a valid link partner, a valid link  *  should be established.  Assumes the hardware has previously been reset  *  and the transmitter and receiver are not enabled.  **/
+comment|/**  *  e1000_setup_link_82571 - Setup flow control and link settings  *  @hw: pointer to the HW structure  *  *  Determines which flow control settings to use, then configures flow  *  control.  Calls the appropriate media-specific link configuration  *  function.  Assuming the adapter has a valid link partner, a valid link  *  should be established.  Assumes the hardware has previously been reset  *  and the transmitter and receiver are not enabled.  **/
 end_comment
 
 begin_function
@@ -3649,7 +3863,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_copper_link_82571 - Configure copper link settings  *  @hw - pointer to the HW structure  *  *  Configures the link for auto-neg or forced speed and duplex.  Then we check  *  for link, once link is established calls to configure collision distance  *  and flow control are called.  **/
+comment|/**  *  e1000_setup_copper_link_82571 - Configure copper link settings  *  @hw: pointer to the HW structure  *  *  Configures the link for auto-neg or forced speed and duplex.  Then we check  *  for link, once link is established calls to configure collision distance  *  and flow control are called.  **/
 end_comment
 
 begin_function
@@ -3800,7 +4014,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_fiber_serdes_link_82571 - Setup link for fiber/serdes  *  @hw - pointer to the HW structure  *  *  Configures collision distance and flow control for fiber and serdes links.  *  Upon successful setup, poll for link.  **/
+comment|/**  *  e1000_setup_fiber_serdes_link_82571 - Setup link for fiber/serdes  *  @hw: pointer to the HW structure  *  *  Configures collision distance and flow control for fiber and serdes links.  *  Upon successful setup, poll for link.  **/
 end_comment
 
 begin_function
@@ -3858,7 +4072,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_valid_led_default_82571 - Verify a valid default LED config  *  @hw - pointer to the HW structure  *  @data - pointer to the NVM (EEPROM)  *  *  Read the EEPROM for the current default LED configuration.  If the  *  LED configuration is not valid, set to a valid LED configuration.  **/
+comment|/**  *  e1000_valid_led_default_82571 - Verify a valid default LED config  *  @hw: pointer to the HW structure  *  @data: pointer to the NVM (EEPROM)  *  *  Read the EEPROM for the current default LED configuration.  If the  *  LED configuration is not valid, set to a valid LED configuration.  **/
 end_comment
 
 begin_function
@@ -3958,7 +4172,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_laa_state_82571 - Get locally administered address state  *  @hw - pointer to the HW structure  *  *  Retrieve and return the current locally administed address state.  **/
+comment|/**  *  e1000_get_laa_state_82571 - Get locally administered address state  *  @hw: pointer to the HW structure  *  *  Retrieve and return the current locally administed address state.  **/
 end_comment
 
 begin_function
@@ -4025,7 +4239,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_laa_state_82571 - Set locally administered address state  *  @hw - pointer to the HW structure  *  @state - enable/disable locally administered address  *  *  Enable/Disable the current locally administed address state.  **/
+comment|/**  *  e1000_set_laa_state_82571 - Set locally administered address state  *  @hw: pointer to the HW structure  *  @state: enable/disable locally administered address  *  *  Enable/Disable the current locally administed address state.  **/
 end_comment
 
 begin_function
@@ -4117,7 +4331,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_fix_nvm_checksum_82571 - Fix EEPROM checksum  *  @hw - pointer to the HW structure  *  *  Verifies that the EEPROM has completed the update.  After updating the  *  EEPROM, we need to check bit 15 in work 0x23 for the checksum fix.  If  *  the checksum fix is not implemented, we need to set the bit and update  *  the checksum.  Otherwise, if bit 15 is set and the checksum is incorrect,  *  we need to return bad checksum.  **/
+comment|/**  *  e1000_fix_nvm_checksum_82571 - Fix EEPROM checksum  *  @hw: pointer to the HW structure  *  *  Verifies that the EEPROM has completed the update.  After updating the  *  EEPROM, we need to check bit 15 in work 0x23 for the checksum fix.  If  *  the checksum fix is not implemented, we need to set the bit and update  *  the checksum.  Otherwise, if bit 15 is set and the checksum is incorrect,  *  we need to return bad checksum.  **/
 end_comment
 
 begin_function
@@ -4272,7 +4486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_clear_hw_cntrs_82571 - Clear device specific hardware counters  *  @hw - pointer to the HW structure  *  *  Clears the hardware counters by reading the counter registers.  **/
+comment|/**  *  e1000_clear_hw_cntrs_82571 - Clear device specific hardware counters  *  @hw: pointer to the HW structure  *  *  Clears the hardware counters by reading the counter registers.  **/
 end_comment
 
 begin_function

@@ -3,23 +3,19 @@ begin_comment
 comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/*$FreeBSD$*/
+end_comment
 
 begin_comment
 comment|/* e1000_ich8lan  * e1000_ich9lan  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"e1000_api.h"
+end_include
 
 begin_include
 include|#
@@ -853,7 +849,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  *  e1000_init_phy_params_ich8lan - Initialize PHY function pointers  *  @hw - pointer to the HW structure  *  *  Initialize family-specific PHY parameters and function pointers.  **/
+comment|/**  *  e1000_init_phy_params_ich8lan - Initialize PHY function pointers  *  @hw: pointer to the HW structure  *  *  Initialize family-specific PHY parameters and function pointers.  **/
 end_comment
 
 begin_function
@@ -891,6 +887,11 @@ name|s32
 name|ret_val
 init|=
 name|E1000_SUCCESS
+decl_stmt|;
+name|u16
+name|i
+init|=
+literal|0
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -987,6 +988,38 @@ name|write_phy_reg
 operator|=
 name|e1000_write_phy_reg_igp
 expr_stmt|;
+name|phy
+operator|->
+name|id
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|e1000_phy_unknown
+operator|==
+name|e1000_get_phy_type_from_id
+argument_list|(
+name|phy
+operator|->
+name|id
+argument_list|)
+operator|)
+operator|&&
+operator|(
+name|i
+operator|++
+operator|<
+literal|100
+operator|)
+condition|)
+block|{
+name|msec_delay
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|ret_val
 operator|=
 name|e1000_get_phy_id
@@ -1001,6 +1034,7 @@ condition|)
 goto|goto
 name|out
 goto|;
+block|}
 comment|/* Verify phy id */
 switch|switch
 condition|(
@@ -1066,7 +1100,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_nvm_params_ich8lan - Initialize NVM function pointers  *  @hw - pointer to the HW structure  *  *  Initialize family-specific NVM parameters and function  *  pointers.  **/
+comment|/**  *  e1000_init_nvm_params_ich8lan - Initialize NVM function pointers  *  @hw: pointer to the HW structure  *  *  Initialize family-specific NVM parameters and function  *  pointers.  **/
 end_comment
 
 begin_function
@@ -1352,7 +1386,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_mac_params_ich8lan - Initialize MAC function pointers  *  @hw - pointer to the HW structure  *  *  Initialize family-specific MAC parameters and function  *  pointers.  **/
+comment|/**  *  e1000_init_mac_params_ich8lan - Initialize MAC function pointers  *  @hw: pointer to the HW structure  *  *  Initialize family-specific MAC parameters and function  *  pointers.  **/
 end_comment
 
 begin_function
@@ -1617,7 +1651,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_function_pointers_ich8lan - Initialize ICH8 function pointers  *  @hw - pointer to the HW structure  *  *  Initialize family-specific function pointers for PHY, MAC, and NVM.  **/
+comment|/**  *  e1000_init_function_pointers_ich8lan - Initialize ICH8 function pointers  *  @hw: pointer to the HW structure  *  *  Initialize family-specific function pointers for PHY, MAC, and NVM.  **/
 end_comment
 
 begin_function
@@ -1663,7 +1697,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_acquire_swflag_ich8lan - Acquire software control flag  *  @hw - pointer to the HW structure  *  *  Acquires the software control flag for performing NVM and PHY  *  operations.  This is a function pointer entry point only called by  *  read/write routines for the PHY and NVM parts.  **/
+comment|/**  *  e1000_acquire_swflag_ich8lan - Acquire software control flag  *  @hw: pointer to the HW structure  *  *  Acquires the software control flag for performing NVM and PHY  *  operations.  This is a function pointer entry point only called by  *  read/write routines for the PHY and NVM parts.  **/
 end_comment
 
 begin_function
@@ -1775,7 +1809,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_release_swflag_ich8lan - Release software control flag  *  @hw - pointer to the HW structure  *  *  Releases the software control flag for performing NVM and PHY operations.  *  This is a function pointer entry point only called by read/write  *  routines for the PHY and NVM parts.  **/
+comment|/**  *  e1000_release_swflag_ich8lan - Release software control flag  *  @hw: pointer to the HW structure  *  *  Releases the software control flag for performing NVM and PHY operations.  *  This is a function pointer entry point only called by read/write  *  routines for the PHY and NVM parts.  **/
 end_comment
 
 begin_function
@@ -1825,7 +1859,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_mng_mode_ich8lan - Checks management mode  *  @hw - pointer to the HW structure  *  *  This checks if the adapter has manageability enabled.  *  This is a function pointer entry point only called by read/write  *  routines for the PHY and NVM parts.  **/
+comment|/**  *  e1000_check_mng_mode_ich8lan - Checks management mode  *  @hw: pointer to the HW structure  *  *  This checks if the adapter has manageability enabled.  *  This is a function pointer entry point only called by read/write  *  routines for the PHY and NVM parts.  **/
 end_comment
 
 begin_function
@@ -1875,7 +1909,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_reset_block_ich8lan - Check if PHY reset is blocked  *  @hw - pointer to the HW structure  *  *  Checks if firmware is blocking the reset of the PHY.  *  This is a function pointer entry point only called by  *  reset routines.  **/
+comment|/**  *  e1000_check_reset_block_ich8lan - Check if PHY reset is blocked  *  @hw: pointer to the HW structure  *  *  Checks if firmware is blocking the reset of the PHY.  *  This is a function pointer entry point only called by  *  reset routines.  **/
 end_comment
 
 begin_function
@@ -1921,7 +1955,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_phy_force_speed_duplex_ich8lan - Force PHY speed& duplex  *  @hw - pointer to the HW structure  *  *  Forces the speed and duplex settings of the PHY.  *  This is a function pointer entry point only called by  *  PHY setup routines.  **/
+comment|/**  *  e1000_phy_force_speed_duplex_ich8lan - Force PHY speed& duplex  *  @hw: pointer to the HW structure  *  *  Forces the speed and duplex settings of the PHY.  *  This is a function pointer entry point only called by  *  PHY setup routines.  **/
 end_comment
 
 begin_function
@@ -2161,7 +2195,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_phy_hw_reset_ich8lan - Performs a PHY reset  *  @hw - pointer to the HW structure  *  *  Resets the PHY  *  This is a function pointer entry point called by drivers  *  or other shared routines.  **/
+comment|/**  *  e1000_phy_hw_reset_ich8lan - Performs a PHY reset  *  @hw: pointer to the HW structure  *  *  Resets the PHY  *  This is a function pointer entry point called by drivers  *  or other shared routines.  **/
 end_comment
 
 begin_function
@@ -2559,7 +2593,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_phy_info_ich8lan - Calls appropriate PHY type get_phy_info  *  @hw - pointer to the HW structure  *  *  Wrapper for calling the get_phy_info routines for the appropriate phy type.  *  This is a function pointer entry point called by drivers  *  or other shared routines.  **/
+comment|/**  *  e1000_get_phy_info_ich8lan - Calls appropriate PHY type get_phy_info  *  @hw: pointer to the HW structure  *  *  Wrapper for calling the get_phy_info routines for the appropriate phy type.  *  This is a function pointer entry point called by drivers  *  or other shared routines.  **/
 end_comment
 
 begin_function
@@ -2625,7 +2659,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_phy_info_ife_ich8lan - Retrieves various IFE PHY states  *  @hw - pointer to the HW structure  *  *  Populates "phy" structure with various feature states.  *  This function is only called by other family-specific  *  routines.  **/
+comment|/**  *  e1000_get_phy_info_ife_ich8lan - Retrieves various IFE PHY states  *  @hw: pointer to the HW structure  *  *  Populates "phy" structure with various feature states.  *  This function is only called by other family-specific  *  routines.  **/
 end_comment
 
 begin_function
@@ -2838,7 +2872,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_polarity_ife_ich8lan - Check cable polarity for IFE PHY  *  @hw - pointer to the HW structure  *  *  Polarity is determined on the polarity reveral feature being enabled.  *  This function is only called by other family-specific  *  routines.  **/
+comment|/**  *  e1000_check_polarity_ife_ich8lan - Check cable polarity for IFE PHY  *  @hw: pointer to the HW structure  *  *  Polarity is determined on the polarity reveral feature being enabled.  *  This function is only called by other family-specific  *  routines.  **/
 end_comment
 
 begin_function
@@ -2943,7 +2977,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_d0_lplu_state_ich8lan - Set Low Power Linkup D0 state  *  @hw - pointer to the HW structure  *  @active - TRUE to enable LPLU, FALSE to disable  *  *  Sets the LPLU D0 state according to the active flag.  When  *  activating LPLU this function also disables smart speed  *  and vice versa.  LPLU will not be activated unless the  *  device autonegotiation advertisement meets standards of  *  either 10 or 10/100 or 10/100/1000 at all duplexes.  *  This is a function pointer entry point only called by  *  PHY setup routines.  **/
+comment|/**  *  e1000_set_d0_lplu_state_ich8lan - Set Low Power Linkup D0 state  *  @hw: pointer to the HW structure  *  @active: TRUE to enable LPLU, FALSE to disable  *  *  Sets the LPLU D0 state according to the active flag.  When  *  activating LPLU this function also disables smart speed  *  and vice versa.  LPLU will not be activated unless the  *  device autonegotiation advertisement meets standards of  *  either 10 or 10/100 or 10/100/1000 at all duplexes.  *  This is a function pointer entry point only called by  *  PHY setup routines.  **/
 end_comment
 
 begin_function
@@ -3220,7 +3254,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_d3_lplu_state_ich8lan - Set Low Power Linkup D3 state  *  @hw - pointer to the HW structure  *  @active - TRUE to enable LPLU, FALSE to disable  *  *  Sets the LPLU D3 state according to the active flag.  When  *  activating LPLU this function also disables smart speed  *  and vice versa.  LPLU will not be activated unless the  *  device autonegotiation advertisement meets standards of  *  either 10 or 10/100 or 10/100/1000 at all duplexes.  *  This is a function pointer entry point only called by  *  PHY setup routines.  **/
+comment|/**  *  e1000_set_d3_lplu_state_ich8lan - Set Low Power Linkup D3 state  *  @hw: pointer to the HW structure  *  @active: TRUE to enable LPLU, FALSE to disable  *  *  Sets the LPLU D3 state according to the active flag.  When  *  activating LPLU this function also disables smart speed  *  and vice versa.  LPLU will not be activated unless the  *  device autonegotiation advertisement meets standards of  *  either 10 or 10/100 or 10/100/1000 at all duplexes.  *  This is a function pointer entry point only called by  *  PHY setup routines.  **/
 end_comment
 
 begin_function
@@ -3513,7 +3547,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_read_nvm_ich8lan - Read word(s) from the NVM  *  @hw - pointer to the HW structure  *  @offset - The offset (in bytes) of the word(s) to read.  *  @words - Size of data to read in words  *  @data - Pointer to the word(s) to read at offset.  *  *  Reads a word(s) from the NVM using the flash access registers.  **/
+comment|/**  *  e1000_read_nvm_ich8lan - Read word(s) from the NVM  *  @hw: pointer to the HW structure  *  @offset: The offset (in bytes) of the word(s) to read.  *  @words: Size of data to read in words  *  @data: Pointer to the word(s) to read at offset.  *  *  Reads a word(s) from the NVM using the flash access registers.  **/
 end_comment
 
 begin_function
@@ -3782,7 +3816,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_flash_cycle_init_ich8lan - Initialize flash  *  @hw - pointer to the HW structure  *  *  This function does initial flash setup so that a new read/write/erase cycle  *  can be started.  **/
+comment|/**  *  e1000_flash_cycle_init_ich8lan - Initialize flash  *  @hw: pointer to the HW structure  *  *  This function does initial flash setup so that a new read/write/erase cycle  *  can be started.  **/
 end_comment
 
 begin_function
@@ -4012,7 +4046,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_flash_cycle_ich8lan - Starts flash cycle (read/write/erase)  *  @hw - pointer to the HW structure  *  @timeout - maximum time to wait for completion  *  *  This function starts a flash cycle and waits for its completion.  **/
+comment|/**  *  e1000_flash_cycle_ich8lan - Starts flash cycle (read/write/erase)  *  @hw: pointer to the HW structure  *  @timeout: maximum time to wait for completion  *  *  This function starts a flash cycle and waits for its completion.  **/
 end_comment
 
 begin_function
@@ -4152,7 +4186,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_read_flash_word_ich8lan - Read word from flash  *  @hw - pointer to the HW structure  *  @offset - offset to data location  *  @data - pointer to the location for storing the data  *  *  Reads the flash word at offset into data.  Offset is converted  *  to bytes before read.  **/
+comment|/**  *  e1000_read_flash_word_ich8lan - Read word from flash  *  @hw: pointer to the HW structure  *  @offset: offset to data location  *  @data: pointer to the location for storing the data  *  *  Reads the flash word at offset into data.  Offset is converted  *  to bytes before read.  **/
 end_comment
 
 begin_function
@@ -4224,7 +4258,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_read_flash_data_ich8lan - Read byte or word from NVM  *  @hw - pointer to the HW structure  *  @offset - The offset (in bytes) of the byte or word to read.  *  @size - Size of data to read, 1=byte 2=word  *  @data - Pointer to the word to store the value read.  *  *  Reads a byte or word from the NVM using the flash access registers.  **/
+comment|/**  *  e1000_read_flash_data_ich8lan - Read byte or word from NVM  *  @hw: pointer to the HW structure  *  @offset: The offset (in bytes) of the byte or word to read.  *  @size: Size of data to read, 1=byte 2=word  *  @data: Pointer to the word to store the value read.  *  *  Reads a byte or word from the NVM using the flash access registers.  **/
 end_comment
 
 begin_function
@@ -4523,7 +4557,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_nvm_ich8lan - Write word(s) to the NVM  *  @hw - pointer to the HW structure  *  @offset - The offset (in bytes) of the word(s) to write.  *  @words - Size of data to write in words  *  @data - Pointer to the word(s) to write at offset.  *  *  Writes a byte or word to the NVM using the flash access registers.  **/
+comment|/**  *  e1000_write_nvm_ich8lan - Write word(s) to the NVM  *  @hw: pointer to the HW structure  *  @offset: The offset (in bytes) of the word(s) to write.  *  @words: Size of data to write in words  *  @data: Pointer to the word(s) to write at offset.  *  *  Writes a byte or word to the NVM using the flash access registers.  **/
 end_comment
 
 begin_function
@@ -4720,7 +4754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_update_nvm_checksum_ich8lan - Update the checksum for NVM  *  @hw - pointer to the HW structure  *  *  The NVM checksum is updated by calling the generic update_nvm_checksum,  *  which writes the checksum to the shadow ram.  The changes in the shadow  *  ram are then committed to the EEPROM by processing each bank at a time  *  checking for the modified bit and writing only the pending changes.  *  After a succesful commit, the shadow ram is cleared and is ready for  *  future writes.  **/
+comment|/**  *  e1000_update_nvm_checksum_ich8lan - Update the checksum for NVM  *  @hw: pointer to the HW structure  *  *  The NVM checksum is updated by calling the generic update_nvm_checksum,  *  which writes the checksum to the shadow ram.  The changes in the shadow  *  ram are then committed to the EEPROM by processing each bank at a time  *  checking for the modified bit and writing only the pending changes.  *  After a succesful commit, the shadow ram is cleared and is ready for  *  future writes.  **/
 end_comment
 
 begin_function
@@ -5185,7 +5219,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_validate_nvm_checksum_ich8lan - Validate EEPROM checksum  *  @hw - pointer to the HW structure  *  *  Check to see if checksum needs to be fixed by reading bit 6 in word 0x19.  *  If the bit is 0, that the EEPROM had been modified, but the checksum was not  *  calculated, in which case we need to calculate the checksum and set bit 6.  **/
+comment|/**  *  e1000_validate_nvm_checksum_ich8lan - Validate EEPROM checksum  *  @hw: pointer to the HW structure  *  *  Check to see if checksum needs to be fixed by reading bit 6 in word 0x19.  *  If the bit is 0, that the EEPROM had been modified, but the checksum was not  *  calculated, in which case we need to calculate the checksum and set bit 6.  **/
 end_comment
 
 begin_function
@@ -5301,7 +5335,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_flash_data_ich8lan - Writes bytes to the NVM  *  @hw - pointer to the HW structure  *  @offset - The offset (in bytes) of the byte/word to read.  *  @size - Size of data to read, 1=byte 2=word  *  @data - The byte(s) to write to the NVM.  *  *  Writes one/two bytes to the NVM using the flash access registers.  **/
+comment|/**  *  e1000_write_flash_data_ich8lan - Writes bytes to the NVM  *  @hw: pointer to the HW structure  *  @offset: The offset (in bytes) of the byte/word to read.  *  @size: Size of data to read, 1=byte 2=word  *  @data: The byte(s) to write to the NVM.  *  *  Writes one/two bytes to the NVM using the flash access registers.  **/
 end_comment
 
 begin_function
@@ -5583,7 +5617,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_flash_byte_ich8lan - Write a single byte to NVM  *  @hw - pointer to the HW structure  *  @offset - The index of the byte to read.  *  @data - The byte to write to the NVM.  *  *  Writes a single byte to the NVM using the flash access registers.  **/
+comment|/**  *  e1000_write_flash_byte_ich8lan - Write a single byte to NVM  *  @hw: pointer to the HW structure  *  @offset: The index of the byte to read.  *  @data: The byte to write to the NVM.  *  *  Writes a single byte to the NVM using the flash access registers.  **/
 end_comment
 
 begin_function
@@ -5632,7 +5666,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_retry_write_flash_byte_ich8lan - Writes a single byte to NVM  *  @hw - pointer to the HW structure  *  @offset - The offset of the byte to write.  *  @byte - The byte to write to the NVM.  *  *  Writes a single byte to the NVM using the flash access registers.  *  Goes through a retry algorithm before giving up.  **/
+comment|/**  *  e1000_retry_write_flash_byte_ich8lan - Writes a single byte to NVM  *  @hw: pointer to the HW structure  *  @offset: The offset of the byte to write.  *  @byte: The byte to write to the NVM.  *  *  Writes a single byte to the NVM using the flash access registers.  *  Goes through a retry algorithm before giving up.  **/
 end_comment
 
 begin_function
@@ -5758,7 +5792,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_erase_flash_bank_ich8lan - Erase a bank (4k) from NVM  *  @hw - pointer to the HW structure  *  @bank - 0 for first bank, 1 for second bank, etc.  *  *  Erases the bank specified. Each bank is a 4k block. Banks are 0 based.  *  bank N is 4096 * N + flash_reg_addr.  **/
+comment|/**  *  e1000_erase_flash_bank_ich8lan - Erase a bank (4k) from NVM  *  @hw: pointer to the HW structure  *  @bank: 0 for first bank, 1 for second bank, etc.  *  *  Erases the bank specified. Each bank is a 4k block. Banks are 0 based.  *  bank N is 4096 * N + flash_reg_addr.  **/
 end_comment
 
 begin_function
@@ -6123,7 +6157,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_valid_led_default_ich8lan - Set the default LED settings  *  @hw - pointer to the HW structure  *  @data - Pointer to the LED settings  *  *  Reads the LED default settings from the NVM to data.  If the NVM LED  *  settings is all 0's or F's, set the LED default to a valid LED default  *  setting.  **/
+comment|/**  *  e1000_valid_led_default_ich8lan - Set the default LED settings  *  @hw: pointer to the HW structure  *  @data: Pointer to the LED settings  *  *  Reads the LED default settings from the NVM to data.  If the NVM LED  *  settings is all 0's or F's, set the LED default to a valid LED default  *  setting.  **/
 end_comment
 
 begin_function
@@ -6202,7 +6236,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_bus_info_ich8lan - Get/Set the bus type and width  *  @hw - pointer to the HW structure  *  *  ICH8 use the PCI Express bus, but does not contain a PCI Express Capability  *  register, so the the bus width is hard coded.  **/
+comment|/**  *  e1000_get_bus_info_ich8lan - Get/Set the bus type and width  *  @hw: pointer to the HW structure  *  *  ICH8 use the PCI Express bus, but does not contain a PCI Express Capability  *  register, so the the bus width is hard coded.  **/
 end_comment
 
 begin_function
@@ -6263,7 +6297,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_hw_ich8lan - Reset the hardware  *  @hw - pointer to the HW structure  *  *  Does a full reset of the hardware which includes a reset of the PHY and  *  MAC.  **/
+comment|/**  *  e1000_reset_hw_ich8lan - Reset the hardware  *  @hw: pointer to the HW structure  *  *  Does a full reset of the hardware which includes a reset of the PHY and  *  MAC.  **/
 end_comment
 
 begin_function
@@ -6460,7 +6494,7 @@ condition|(
 name|ret_val
 condition|)
 block|{
-comment|/*  		 * When auto config read does not complete, do not 		 * return with an error. This can happen in situations 		 * where there is no eeprom and prevents getting link. 		 */
+comment|/* 		 * When auto config read does not complete, do not 		 * return with an error. This can happen in situations 		 * where there is no eeprom and prevents getting link. 		 */
 name|DEBUGOUT
 argument_list|(
 literal|"Auto Read Done did not complete\n"
@@ -6514,7 +6548,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_hw_ich8lan - Initialize the hardware  *  @hw - pointer to the HW structure  *  *  Prepares the hardware for transmit and receive by doing the following:  *   - initialize hardware bits  *   - initialize LED identification  *   - setup receive address registers  *   - setup flow control  *   - setup transmit discriptors  *   - clear statistics  **/
+comment|/**  *  e1000_init_hw_ich8lan - Initialize the hardware  *  @hw: pointer to the HW structure  *  *  Prepares the hardware for transmit and receive by doing the following:  *   - initialize hardware bits  *   - initialize LED identification  *   - setup receive address registers  *   - setup flow control  *   - setup transmit discriptors  *   - clear statistics  **/
 end_comment
 
 begin_function
@@ -6782,7 +6816,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_initialize_hw_bits_ich8lan - Initialize required hardware bits  *  @hw - pointer to the HW structure  *  *  Sets/Clears required hardware bits necessary for correctly setting up the  *  hardware for transmit and receive.  **/
+comment|/**  *  e1000_initialize_hw_bits_ich8lan - Initialize required hardware bits  *  @hw: pointer to the HW structure  *  *  Sets/Clears required hardware bits necessary for correctly setting up the  *  hardware for transmit and receive.  **/
 end_comment
 
 begin_function
@@ -7080,7 +7114,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_link_ich8lan - Setup flow control and link settings  *  @hw - pointer to the HW structure  *  *  Determines which flow control settings to use, then configures flow  *  control.  Calls the appropriate media-specific link configuration  *  function.  Assuming the adapter has a valid link partner, a valid link  *  should be established.  Assumes the hardware has previously been reset  *  and the transmitter and receiver are not enabled.  **/
+comment|/**  *  e1000_setup_link_ich8lan - Setup flow control and link settings  *  @hw: pointer to the HW structure  *  *  Determines which flow control settings to use, then configures flow  *  control.  Calls the appropriate media-specific link configuration  *  function.  Assuming the adapter has a valid link partner, a valid link  *  should be established.  Assumes the hardware has previously been reset  *  and the transmitter and receiver are not enabled.  **/
 end_comment
 
 begin_function
@@ -7210,7 +7244,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_copper_link_ich8lan - Configure MAC/PHY interface  *  @hw - pointer to the HW structure  *  *  Configures the kumeran interface to the PHY to wait the appropriate time  *  when polling the PHY, then call the generic setup_copper_link to finish  *  configuring the copper link.  **/
+comment|/**  *  e1000_setup_copper_link_ich8lan - Configure MAC/PHY interface  *  @hw: pointer to the HW structure  *  *  Configures the kumeran interface to the PHY to wait the appropriate time  *  when polling the PHY, then call the generic setup_copper_link to finish  *  configuring the copper link.  **/
 end_comment
 
 begin_function
@@ -7386,7 +7420,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_link_up_info_ich8lan - Get current link speed and duplex  *  @hw - pointer to the HW structure  *  @speed - pointer to store current link speed  *  @duplex - pointer to store the current link duplex  *  *  Calls the generic get_speed_and_duplex to retreive the current link  *  information and then calls the Kumeran lock loss workaround for links at  *  gigabit speeds.  **/
+comment|/**  *  e1000_get_link_up_info_ich8lan - Get current link speed and duplex  *  @hw: pointer to the HW structure  *  @speed: pointer to store current link speed  *  @duplex: pointer to store the current link duplex  *  *  Calls the generic get_speed_and_duplex to retreive the current link  *  information and then calls the Kumeran lock loss workaround for links at  *  gigabit speeds.  **/
 end_comment
 
 begin_function
@@ -7481,7 +7515,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_kmrn_lock_loss_workaround_ich8lan - Kumeran workaround  *  @hw - pointer to the HW structure  *  *  Work-around for 82566 Kumeran PCS lock loss:  *  On link status change (i.e. PCI reset, speed change) and link is up and  *  speed is gigabit-  *    0) if workaround is optionally disabled do nothing  *    1) wait 1ms for Kumeran link to come up  *    2) check Kumeran Diagnostic register PCS lock loss bit  *    3) if not set the link is locked (all is good), otherwise...  *    4) reset the PHY  *    5) repeat up to 10 times  *  Note: this is only called for IGP3 copper when speed is 1gb.  **/
+comment|/**  *  e1000_kmrn_lock_loss_workaround_ich8lan - Kumeran workaround  *  @hw: pointer to the HW structure  *  *  Work-around for 82566 Kumeran PCS lock loss:  *  On link status change (i.e. PCI reset, speed change) and link is up and  *  speed is gigabit-  *    0) if workaround is optionally disabled do nothing  *    1) wait 1ms for Kumeran link to come up  *    2) check Kumeran Diagnostic register PCS lock loss bit  *    3) if not set the link is locked (all is good), otherwise...  *    4) reset the PHY  *    5) repeat up to 10 times  *  Note: this is only called for IGP3 copper when speed is 1gb.  **/
 end_comment
 
 begin_function
@@ -7726,7 +7760,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_kmrn_lock_loss_workaound_ich8lan - Set Kumeran workaround state  *  @hw - pointer to the HW structure  *  @state - boolean value used to set the current Kumaran workaround state  *  *  If ICH8, set the current Kumeran workaround state (enabled - TRUE  *  /disabled - FALSE).  **/
+comment|/**  *  e1000_set_kmrn_lock_loss_workaound_ich8lan - Set Kumeran workaround state  *  @hw: pointer to the HW structure  *  @state: boolean value used to set the current Kumaran workaround state  *  *  If ICH8, set the current Kumeran workaround state (enabled - TRUE  *  /disabled - FALSE).  **/
 end_comment
 
 begin_function
@@ -7812,7 +7846,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_ipg3_phy_powerdown_workaround_ich8lan - Power down workaround on D3  *  @hw - pointer to the HW structure  *  *  Workaround for 82566 power-down on D3 entry:  *    1) disable gigabit link  *    2) write VR power-down enable  *    3) read it back  *  Continue if successful, else issue LCD reset and repeat  **/
+comment|/**  *  e1000_ipg3_phy_powerdown_workaround_ich8lan - Power down workaround on D3  *  @hw: pointer to the HW structure  *  *  Workaround for 82566 power-down on D3 entry:  *    1) disable gigabit link  *    2) write VR power-down enable  *    3) read it back  *  Continue if successful, else issue LCD reset and repeat  **/
 end_comment
 
 begin_function
@@ -7938,11 +7972,15 @@ operator|&
 name|data
 argument_list|)
 expr_stmt|;
+name|data
+operator|&=
+name|IGP3_VR_CTRL_DEV_POWERDOWN_MODE_MASK
+expr_stmt|;
 if|if
 condition|(
 operator|(
 name|data
-operator|&
+operator|==
 name|IGP3_VR_CTRL_MODE_SHUTDOWN
 operator|)
 operator|||
@@ -7986,7 +8024,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_gig_downshift_workaround_ich8lan - WoL from S5 stops working  *  @hw - pointer to the HW structure  *  *  Steps to take when dropping from 1Gb/s (eg. link cable removal (LSC),  *  LPLU, Giga disable, MDIC PHY reset):  *    1) Set Kumeran Near-end loopback  *    2) Clear Kumeran Near-end loopback  *  Should only be called for ICH8[m] devices with IGP_3 Phy.  **/
+comment|/**  *  e1000_gig_downshift_workaround_ich8lan - WoL from S5 stops working  *  @hw: pointer to the HW structure  *  *  Steps to take when dropping from 1Gb/s (eg. link cable removal (LSC),  *  LPLU, Giga disable, MDIC PHY reset):  *    1) Set Kumeran Near-end loopback  *    2) Clear Kumeran Near-end loopback  *  Should only be called for ICH8[m] devices with IGP_3 Phy.  **/
 end_comment
 
 begin_function
@@ -8101,7 +8139,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_cleanup_led_ich8lan - Restore the default LED operation  *  @hw - pointer to the HW structure  *  *  Return the LED back to the default configuration.  **/
+comment|/**  *  e1000_cleanup_led_ich8lan - Restore the default LED operation  *  @hw: pointer to the HW structure  *  *  Return the LED back to the default configuration.  **/
 end_comment
 
 begin_function
@@ -8167,7 +8205,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_on_ich8lan - Turn LED's on  *  @hw - pointer to the HW structure  *  *  Turn on the LED's.  **/
+comment|/**  *  e1000_led_on_ich8lan - Turn LED's on  *  @hw: pointer to the HW structure  *  *  Turn on the LED's.  **/
 end_comment
 
 begin_function
@@ -8237,7 +8275,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_off_ich8lan - Turn LED's off  *  @hw - pointer to the HW structure  *  *  Turn off the LED's.  **/
+comment|/**  *  e1000_led_off_ich8lan - Turn LED's off  *  @hw: pointer to the HW structure  *  *  Turn off the LED's.  **/
 end_comment
 
 begin_function
@@ -8307,7 +8345,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_cfg_done_ich8lan - Read config done bit  *  @hw - pointer to the HW structure  *  *  Read the management control register for the config done bit for  *  completion status.  NOTE: silicon which is EEPROM-less will fail trying  *  to read the config done bit, so an error is *ONLY* logged and returns  *  E1000_SUCCESS.  If we were to return with error, EEPROM-less silicon  *  would not be able to be reset or change link.  **/
+comment|/**  *  e1000_get_cfg_done_ich8lan - Read config done bit  *  @hw: pointer to the HW structure  *  *  Read the management control register for the config done bit for  *  completion status.  NOTE: silicon which is EEPROM-less will fail trying  *  to read the config done bit, so an error is *ONLY* logged and returns  *  E1000_SUCCESS.  If we were to return with error, EEPROM-less silicon  *  would not be able to be reset or change link.  **/
 end_comment
 
 begin_function
@@ -8368,7 +8406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_clear_hw_cntrs_ich8lan - Clear statistical counters  *  @hw - pointer to the HW structure  *  *  Clears hardware counters specific to the silicon family and calls  *  clear_hw_cntrs_generic to clear all general purpose counters.  **/
+comment|/**  *  e1000_clear_hw_cntrs_ich8lan - Clear statistical counters  *  @hw: pointer to the HW structure  *  *  Clears hardware counters specific to the silicon family and calls  *  clear_hw_cntrs_generic to clear all general purpose counters.  **/
 end_comment
 
 begin_function

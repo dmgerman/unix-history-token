@@ -3,19 +3,15 @@ begin_comment
 comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
+begin_comment
+comment|/*$FreeBSD$*/
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"e1000_api.h"
 end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -39,7 +35,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  *  e1000_calculate_checksum - Calculate checksum for buffer  *  @buffer - pointer to EEPROM  *  @length - size of EEPROM to calculate a checksum for  *  *  Calculates the checksum for some buffer on a specified length.  The  *  checksum calculated is returned.  **/
+comment|/**  *  e1000_calculate_checksum - Calculate checksum for buffer  *  @buffer: pointer to EEPROM  *  @length: size of EEPROM to calculate a checksum for  *  *  Calculates the checksum for some buffer on a specified length.  The  *  checksum calculated is returned.  **/
 end_comment
 
 begin_function
@@ -110,7 +106,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_mng_enable_host_if_generic - Checks host interface is enabled  *  @hw - pointer to the HW structure  *  *  Returns E1000_success upon success, else E1000_ERR_HOST_INTERFACE_COMMAND  *  *  This function checks whether the HOST IF is enabled for command operaton  *  and also checks whether the previous command is completed.  It busy waits  *  in case of previous command is not completed.  **/
+comment|/**  *  e1000_mng_enable_host_if_generic - Checks host interface is enabled  *  @hw: pointer to the HW structure  *  *  Returns E1000_success upon success, else E1000_ERR_HOST_INTERFACE_COMMAND  *  *  This function checks whether the HOST IF is enabled for command operaton  *  and also checks whether the previous command is completed.  It busy waits  *  in case of previous command is not completed.  **/
 end_comment
 
 begin_function
@@ -244,7 +240,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_mng_mode_generic - Generic check managament mode  *  @hw - pointer to the HW structure  *  *  Reads the firmware semaphore register and returns true (>0) if  *  manageability is enabled, else false (0).  **/
+comment|/**  *  e1000_check_mng_mode_generic - Generic check managament mode  *  @hw: pointer to the HW structure  *  *  Reads the firmware semaphore register and returns true (>0) if  *  manageability is enabled, else false (0).  **/
 end_comment
 
 begin_function
@@ -293,7 +289,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_enable_tx_pkt_filtering_generic - Enable packet filtering on TX  *  @hw - pointer to the HW structure  *  *  Enables packet filtering on transmit packets if manageability is enabled  *  and host interface is enabled.  **/
+comment|/**  *  e1000_enable_tx_pkt_filtering_generic - Enable packet filtering on TX  *  @hw: pointer to the HW structure  *  *  Enables packet filtering on transmit packets if manageability is enabled  *  and host interface is enabled.  **/
 end_comment
 
 begin_function
@@ -520,7 +516,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_mng_write_dhcp_info_generic - Writes DHCP info to host interface  *  @hw - pointer to the HW structure  *  @buffer - pointer to the host interface  *  @length - size of the buffer  *  *  Writes the DHCP information to the host interface.  **/
+comment|/**  *  e1000_mng_write_dhcp_info_generic - Writes DHCP info to host interface  *  @hw: pointer to the HW structure  *  @buffer: pointer to the host interface  *  @length: size of the buffer  *  *  Writes the DHCP information to the host interface.  **/
 end_comment
 
 begin_function
@@ -679,7 +675,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_mng_write_cmd_header_generic - Writes manageability command header  *  @hw - pointer to the HW structure  *  @hdr - pointer to the host interface command header  *  *  Writes the command header after does the checksum calculation.  **/
+comment|/**  *  e1000_mng_write_cmd_header_generic - Writes manageability command header  *  @hw: pointer to the HW structure  *  @hdr: pointer to the host interface command header  *  *  Writes the command header after does the checksum calculation.  **/
 end_comment
 
 begin_function
@@ -781,7 +777,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_mng_host_if_write_generic - Writes to the manageability host interface  *  @hw - pointer to the HW structure  *  @buffer - pointer to the host interface buffer  *  @length - size of the buffer  *  @offset - location in the buffer to write to  *  @sum - sum of the data (not checksum)  *  *  This function writes the buffer content at the offset given on the host if.  *  It also does alignment considerations to do the writes in most efficient  *  way.  Also fills up the sum of the buffer in *buffer parameter.  **/
+comment|/**  *  e1000_mng_host_if_write_generic - Writes to the manageability host interface  *  @hw: pointer to the HW structure  *  @buffer: pointer to the host interface buffer  *  @length: size of the buffer  *  @offset: location in the buffer to write to  *  @sum: sum of the data (not checksum)  *  *  This function writes the buffer content at the offset given on the host if.  *  It also does alignment considerations to do the writes in most efficient  *  way.  Also fills up the sum of the buffer in *buffer parameter.  **/
 end_comment
 
 begin_function
@@ -1126,7 +1122,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_enable_mng_pass_thru - Enable processing of ARP's  *  @hw - pointer to the HW structure  *  *  Verifies the hardware needs to allow ARPs to be processed by the host.  **/
+comment|/**  *  e1000_enable_mng_pass_thru - Enable processing of ARP's  *  @hw: pointer to the HW structure  *  *  Verifies the hardware needs to allow ARPs to be processed by the host.  **/
 end_comment
 
 begin_function

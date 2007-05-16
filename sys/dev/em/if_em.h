@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_ifndef
@@ -129,28 +129,6 @@ define|#
 directive|define
 name|EM_RADV
 value|64
-end_define
-
-begin_comment
-comment|/*  * Inform the stack about transmit checksum offload capabilities.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_CHECKSUM_FEATURES
-value|(CSUM_TCP | CSUM_UDP)
-end_define
-
-begin_comment
-comment|/*  * Inform the stack about transmit segmentation offload capabilities.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_TCPSEG_FEATURES
-value|CSUM_TSO
 end_define
 
 begin_comment
@@ -613,6 +591,17 @@ directive|define
 name|ETH_ADDR_LEN
 value|6
 end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_OFFLOAD
+value|7
+end_define
+
+begin_comment
+comment|/* Offload bits in csum flags */
+end_comment
 
 begin_struct_decl
 struct_decl|struct

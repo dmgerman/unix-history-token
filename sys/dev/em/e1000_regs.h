@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_ifndef
@@ -3637,177 +3637,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_IMIR0
-value|0x05A80
+name|E1000_IMIR
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x05A80 + ((_i) * 4))
 end_define
 
 begin_comment
-comment|/* Immediate Interrupt RX 0 - RW */
+comment|/* Immediate Interrupt */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|E1000_IMIR1
-value|0x05A84
+name|E1000_IMIREXT
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x05AA0 + ((_i) * 4))
 end_define
 
 begin_comment
-comment|/* Immediate Interrupt RX 1 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMIR2
-value|0x05A88
-end_define
-
-begin_comment
-comment|/* Immediate Interrupt RX 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMIR3
-value|0x05A8C
-end_define
-
-begin_comment
-comment|/* Immediate Interrupt RX 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMIR4
-value|0x05A90
-end_define
-
-begin_comment
-comment|/* Immediate Interrupt RX 4 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMIR5
-value|0x05A94
-end_define
-
-begin_comment
-comment|/* Immediate Interrupt RX 5 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMIR6
-value|0x05A98
-end_define
-
-begin_comment
-comment|/* Immediate Interrupt RX 6 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMIR7
-value|0x05A9C
-end_define
-
-begin_comment
-comment|/* Immediate Interrupt RX 7 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMIREX0
-value|0x05AA0
-end_define
-
-begin_comment
-comment|/* Immediate Interrupt RX Extended 0 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMIREX1
-value|0x05AA4
-end_define
-
-begin_comment
-comment|/* Immediate Interrupt RX Extended 1 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMIREX2
-value|0x05AA8
-end_define
-
-begin_comment
-comment|/* Immediate Interrupt RX Extended 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMIREX3
-value|0x05AAC
-end_define
-
-begin_comment
-comment|/* Immediate Interrupt RX Extended 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMIREX4
-value|0x05AB0
-end_define
-
-begin_comment
-comment|/* Immediate Interrupt RX Extended 4 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMIREX5
-value|0x05AB4
-end_define
-
-begin_comment
-comment|/* Immediate Interrupt RX Extended 5 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMIREX6
-value|0x05AB8
-end_define
-
-begin_comment
-comment|/* Immediate Interrupt RX Extended 6 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMIREX7
-value|0x05ABC
-end_define
-
-begin_comment
-comment|/* Immediate Interrupt RX Extended 7 - RW */
+comment|/* Immediate Interrupt Ext*/
 end_comment
 
 begin_define

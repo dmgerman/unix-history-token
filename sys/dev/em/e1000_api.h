@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_ifndef
@@ -981,16 +981,6 @@ name|struct
 name|e1000_hw
 modifier|*
 name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u32
-name|e1000_translate_register_adoram
-parameter_list|(
-name|u32
-name|reg
 parameter_list|)
 function_decl|;
 end_function_decl

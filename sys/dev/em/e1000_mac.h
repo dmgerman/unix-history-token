@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_ifndef
@@ -18,12 +18,6 @@ define|#
 directive|define
 name|_E1000_MAC_H_
 end_define
-
-begin_include
-include|#
-directive|include
-file|"e1000_api.h"
-end_include
 
 begin_comment
 comment|/* Functions that should not be called directly from drivers but can be used  * by other files in this 'shared code'  */

@@ -3,19 +3,15 @@ begin_comment
 comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
+begin_comment
+comment|/*$FreeBSD$*/
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"e1000_api.h"
 end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -24,7 +20,7 @@ file|"e1000_mac.h"
 end_include
 
 begin_comment
-comment|/**  *  e1000_remove_device_generic - Free device specific structure  *  @hw - pointer to the HW structure  *  *  If a device specific structure was allocated, this function will  *  free it.  **/
+comment|/**  *  e1000_remove_device_generic - Free device specific structure  *  @hw: pointer to the HW structure  *  *  If a device specific structure was allocated, this function will  *  free it.  **/
 end_comment
 
 begin_function
@@ -52,7 +48,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_bus_info_pci_generic - Get PCI(x) bus information  *  @hw - pointer to the HW structure  *  *  Determines and stores the system bus information for a particular  *  network interface.  The following bus information is determined and stored:  *  bus speed, bus width, type (PCI/PCIx), and PCI(-x) function.  **/
+comment|/**  *  e1000_get_bus_info_pci_generic - Get PCI(x) bus information  *  @hw: pointer to the HW structure  *  *  Determines and stores the system bus information for a particular  *  network interface.  The following bus information is determined and stored:  *  bus speed, bus width, type (PCI/PCIx), and PCI(-x) function.  **/
 end_comment
 
 begin_function
@@ -245,7 +241,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_bus_info_pcie_generic - Get PCIe bus information  *  @hw - pointer to the HW structure  *  *  Determines and stores the system bus information for a particular  *  network interface.  The following bus information is determined and stored:  *  bus speed, bus width, type (PCIe), and PCIe function.  **/
+comment|/**  *  e1000_get_bus_info_pcie_generic - Get PCIe bus information  *  @hw: pointer to the HW structure  *  *  Determines and stores the system bus information for a particular  *  network interface.  The following bus information is determined and stored:  *  bus speed, bus width, type (PCIe), and PCIe function.  **/
 end_comment
 
 begin_function
@@ -389,7 +385,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_clear_vfta_generic - Clear VLAN filter table  *  @hw - pointer to the HW structure  *  *  Clears the register array which contains the VLAN filter table by  *  setting all the values to 0.  **/
+comment|/**  *  e1000_clear_vfta_generic - Clear VLAN filter table  *  @hw: pointer to the HW structure  *  *  Clears the register array which contains the VLAN filter table by  *  setting all the values to 0.  **/
 end_comment
 
 begin_function
@@ -445,7 +441,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_vfta_generic - Write value to VLAN filter table  *  @hw - pointer to the HW structure  *  @offset - register offset in VLAN filter table  *  @value - register value written to VLAN filter table  *  *  Writes value at the given offset in the register array which stores  *  the VLAN filter table.  **/
+comment|/**  *  e1000_write_vfta_generic - Write value to VLAN filter table  *  @hw: pointer to the HW structure  *  @offset: register offset in VLAN filter table  *  @value: register value written to VLAN filter table  *  *  Writes value at the given offset in the register array which stores  *  the VLAN filter table.  **/
 end_comment
 
 begin_function
@@ -489,7 +485,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_rx_addrs_generic - Initialize receive address's  *  @hw - pointer to the HW structure  *  @rar_count - receive address registers  *  *  Setups the receive address registers by setting the base receive address  *  register to the devices MAC address and clearing all the other receive  *  address registers to 0.  **/
+comment|/**  *  e1000_init_rx_addrs_generic - Initialize receive address's  *  @hw: pointer to the HW structure  *  @rar_count: receive address registers  *  *  Setups the receive address registers by setting the base receive address  *  register to the devices MAC address and clearing all the other receive  *  address registers to 0.  **/
 end_comment
 
 begin_function
@@ -605,7 +601,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_rar_set_generic - Set receive address register  *  @hw - pointer to the HW structure  *  @addr - pointer to the receive address  *  @index - receive address array register  *  *  Sets the receive address array register at index to the address passed  *  in by addr.  **/
+comment|/**  *  e1000_rar_set_generic - Set receive address register  *  @hw: pointer to the HW structure  *  @addr: pointer to the receive address  *  @index: receive address array register  *  *  Sets the receive address array register at index to the address passed  *  in by addr.  **/
 end_comment
 
 begin_function
@@ -759,7 +755,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_mta_set_generic - Set multicast filter table address  *  @hw - pointer to the HW structure  *  @hash_value - determines the MTA register and bit to set  *  *  The multicast table address is a register array of 32-bit registers.  *  The hash_value is used to determine what register the bit is in, the  *  current value is read, the new bit is OR'd in and the new value is  *  written back into the register.  **/
+comment|/**  *  e1000_mta_set_generic - Set multicast filter table address  *  @hw: pointer to the HW structure  *  @hash_value: determines the MTA register and bit to set  *  *  The multicast table address is a register array of 32-bit registers.  *  The hash_value is used to determine what register the bit is in, the  *  current value is read, the new bit is OR'd in and the new value is  *  written back into the register.  **/
 end_comment
 
 begin_function
@@ -851,7 +847,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_mc_addr_list_update_generic - Update Multicast addresses  *  @hw - pointer to the HW structure  *  @mc_addr_list - array of multicast addresses to program  *  @mc_addr_count - number of multicast addresses to program  *  @rar_used_count - the first RAR register free to program  *  @rar_count - total number of supported Receive Address Registers  *  *  Updates the Receive Address Registers and Multicast Table Array.  *  The caller must have a packed mc_addr_list of multicast addresses.  *  The parameter rar_count will usually be hw->mac.rar_entry_count  *  unless there are workarounds that change this.  **/
+comment|/**  *  e1000_mc_addr_list_update_generic - Update Multicast addresses  *  @hw: pointer to the HW structure  *  @mc_addr_list: array of multicast addresses to program  *  @mc_addr_count: number of multicast addresses to program  *  @rar_used_count: the first RAR register free to program  *  @rar_count: total number of supported Receive Address Registers  *  *  Updates the Receive Address Registers and Multicast Table Array.  *  The caller must have a packed mc_addr_list of multicast addresses.  *  The parameter rar_count will usually be hw->mac.rar_entry_count  *  unless there are workarounds that change this.  **/
 end_comment
 
 begin_function
@@ -1054,7 +1050,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_hash_mc_addr_generic - Generate a multicast hash value  *  @hw - pointer to the HW structure  *  @mc_addr - pointer to a multicast address  *  *  Generates a multicast address hash value which is used to determine  *  the multicast filter table array address and new table value.  See  *  e1000_mta_set_generic()  **/
+comment|/**  *  e1000_hash_mc_addr_generic - Generate a multicast hash value  *  @hw: pointer to the HW structure  *  @mc_addr: pointer to a multicast address  *  *  Generates a multicast address hash value which is used to determine  *  the multicast filter table array address and new table value.  See  *  e1000_mta_set_generic()  **/
 end_comment
 
 begin_function
@@ -1196,7 +1192,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_pcix_mmrbc_workaround_generic - Fix incorrect MMRBC value  *  @hw - pointer to the HW structure  *  *  In certain situations, a system BIOS may report that the PCIx maximum  *  memory read byte count (MMRBC) value is higher than than the actual  *  value. We check the PCIx command regsiter with the current PCIx status  *  regsiter.  **/
+comment|/**  *  e1000_pcix_mmrbc_workaround_generic - Fix incorrect MMRBC value  *  @hw: pointer to the HW structure  *  *  In certain situations, a system BIOS may report that the PCIx maximum  *  memory read byte count (MMRBC) value is higher than than the actual  *  value. We check the PCIx command regsiter with the current PCIx status  *  regsiter.  **/
 end_comment
 
 begin_function
@@ -1321,7 +1317,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_clear_hw_cntrs_base_generic - Clear base hardware counters  *  @hw - pointer to the HW structure  *  *  Clears the base hardware counters by reading the counter registers.  **/
+comment|/**  *  e1000_clear_hw_cntrs_base_generic - Clear base hardware counters  *  @hw: pointer to the HW structure  *  *  Clears the base hardware counters by reading the counter registers.  **/
 end_comment
 
 begin_function
@@ -1680,7 +1676,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_for_copper_link_generic - Check for link (Copper)  *  @hw - pointer to the HW structure  *  *  Checks to see of the link status of the hardware has changed.  If a  *  change in link status has been detected, then we read the PHY registers  *  to get the current speed/duplex if link exists.  **/
+comment|/**  *  e1000_check_for_copper_link_generic - Check for link (Copper)  *  @hw: pointer to the HW structure  *  *  Checks to see of the link status of the hardware has changed.  If a  *  change in link status has been detected, then we read the PHY registers  *  to get the current speed/duplex if link exists.  **/
 end_comment
 
 begin_function
@@ -1826,7 +1822,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_for_fiber_link_generic - Check for link (Fiber)  *  @hw - pointer to the HW structure  *  *  Checks for link up on the hardware.  If link is not up and we have  *  a signal, then we need to force link up.  **/
+comment|/**  *  e1000_check_for_fiber_link_generic - Check for link (Fiber)  *  @hw: pointer to the HW structure  *  *  Checks for link up on the hardware.  If link is not up and we have  *  a signal, then we need to force link up.  **/
 end_comment
 
 begin_function
@@ -2078,7 +2074,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_for_serdes_link_generic - Check for link (Serdes)  *  @hw - pointer to the HW structure  *  *  Checks for link up on the hardware.  If link is not up and we have  *  a signal, then we need to force link up.  **/
+comment|/**  *  e1000_check_for_serdes_link_generic - Check for link (Serdes)  *  @hw: pointer to the HW structure  *  *  Checks for link up on the hardware.  If link is not up and we have  *  a signal, then we need to force link up.  **/
 end_comment
 
 begin_function
@@ -2433,7 +2429,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_link_generic - Setup flow control and link settings  *  @hw - pointer to the HW structure  *  *  Determines which flow control settings to use, then configures flow  *  control.  Calls the appropriate media-specific link configuration  *  function.  Assuming the adapter has a valid link partner, a valid link  *  should be established.  Assumes the hardware has previously been reset  *  and the transmitter and receiver are not enabled.  **/
+comment|/**  *  e1000_setup_link_generic - Setup flow control and link settings  *  @hw: pointer to the HW structure  *  *  Determines which flow control settings to use, then configures flow  *  control.  Calls the appropriate media-specific link configuration  *  function.  Assuming the adapter has a valid link partner, a valid link  *  should be established.  Assumes the hardware has previously been reset  *  and the transmitter and receiver are not enabled.  **/
 end_comment
 
 begin_function
@@ -2596,7 +2592,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_fiber_serdes_link_generic - Setup link for fiber/serdes  *  @hw - pointer to the HW structure  *  *  Configures collision distance and flow control for fiber and serdes  *  links.  Upon successful setup, poll for link.  **/
+comment|/**  *  e1000_setup_fiber_serdes_link_generic - Setup link for fiber/serdes  *  @hw: pointer to the HW structure  *  *  Configures collision distance and flow control for fiber and serdes  *  links.  Upon successful setup, poll for link.  **/
 end_comment
 
 begin_function
@@ -2727,7 +2723,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_config_collision_dist_generic - Configure collision distance  *  @hw - pointer to the HW structure  *  *  Configures the collision distance to the default value and is used  *  during link setup. Currently no func pointer exists and all  *  implementations are handled in the generic version of this function.  **/
+comment|/**  *  e1000_config_collision_dist_generic - Configure collision distance  *  @hw: pointer to the HW structure  *  *  Configures the collision distance to the default value and is used  *  during link setup. Currently no func pointer exists and all  *  implementations are handled in the generic version of this function.  **/
 end_comment
 
 begin_function
@@ -2786,7 +2782,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_poll_fiber_serdes_link_generic - Poll for link up  *  @hw - pointer to the HW structure  *  *  Polls for link up by reading the status register, if link fails to come  *  up with auto-negotiation, then the link is forced if a signal is detected.  **/
+comment|/**  *  e1000_poll_fiber_serdes_link_generic - Poll for link up  *  @hw: pointer to the HW structure  *  *  Polls for link up by reading the status register, if link fails to come  *  up with auto-negotiation, then the link is forced if a signal is detected.  **/
 end_comment
 
 begin_function
@@ -2931,7 +2927,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_commit_fc_settings_generic - Configure flow control  *  @hw - pointer to the HW structure  *  *  Write the flow control settings to the Transmit Config Word Register (TXCW)  *  base on the flow control settings in e1000_mac_info.  **/
+comment|/**  *  e1000_commit_fc_settings_generic - Configure flow control  *  @hw: pointer to the HW structure  *  *  Write the flow control settings to the Transmit Config Word Register (TXCW)  *  base on the flow control settings in e1000_mac_info.  **/
 end_comment
 
 begin_function
@@ -3073,7 +3069,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_fc_watermarks_generic - Set flow control high/low watermarks  *  @hw - pointer to the HW structure  *  *  Sets the flow control high/low threshold (watermark) registers.  If  *  flow control XON frame transmission is enabled, then set XON frame  *  tansmission as well.  **/
+comment|/**  *  e1000_set_fc_watermarks_generic - Set flow control high/low watermarks  *  @hw: pointer to the HW structure  *  *  Sets the flow control high/low threshold (watermark) registers.  If  *  flow control XON frame transmission is enabled, then set XON frame  *  tansmission as well.  **/
 end_comment
 
 begin_function
@@ -3174,7 +3170,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_default_fc_generic - Set flow control default values  *  @hw - pointer to the HW structure  *  *  Read the EEPROM for the default values for flow control and store the  *  values.  **/
+comment|/**  *  e1000_set_default_fc_generic - Set flow control default values  *  @hw: pointer to the HW structure  *  *  Read the EEPROM for the default values for flow control and store the  *  values.  **/
 end_comment
 
 begin_function
@@ -3299,7 +3295,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_force_mac_fc_generic - Force the MAC's flow control settings  *  @hw - pointer to the HW structure  *  *  Force the MAC's flow control settings.  Sets the TFCE and RFCE bits in the  *  device control register to reflect the adapter settings.  TFCE and RFCE  *  need to be explicitly set by software when a copper PHY is used because  *  autonegotiation is managed by the PHY rather than the MAC.  Software must  *  also configure these bits when link is forced on a fiber connection.  **/
+comment|/**  *  e1000_force_mac_fc_generic - Force the MAC's flow control settings  *  @hw: pointer to the HW structure  *  *  Force the MAC's flow control settings.  Sets the TFCE and RFCE bits in the  *  device control register to reflect the adapter settings.  TFCE and RFCE  *  need to be explicitly set by software when a copper PHY is used because  *  autonegotiation is managed by the PHY rather than the MAC.  Software must  *  also configure these bits when link is forced on a fiber connection.  **/
 end_comment
 
 begin_function
@@ -3451,7 +3447,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_config_fc_after_link_up_generic - Configures flow control after link  *  @hw - pointer to the HW structure  *  *  Checks the status of auto-negotiation after link up to ensure that the  *  speed and duplex were not forced.  If the link needed to be forced, then  *  flow control needs to be forced also.  If auto-negotiation is enabled  *  and did not fail, then we configure flow control based on our link  *  partner.  **/
+comment|/**  *  e1000_config_fc_after_link_up_generic - Configures flow control after link  *  @hw: pointer to the HW structure  *  *  Checks the status of auto-negotiation after link up to ensure that the  *  speed and duplex were not forced.  If the link needed to be forced, then  *  flow control needs to be forced also.  If auto-negotiation is enabled  *  and did not fail, then we configure flow control based on our link  *  partner.  **/
 end_comment
 
 begin_function
@@ -3932,7 +3928,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_speed_and_duplex_copper_generic - Retreive current speed/duplex  *  @hw - pointer to the HW structure  *  @speed - stores the current speed  *  @duplex - stores the current duplex  *  *  Read the status register for the current speed/duplex and store the current  *  speed and duplex for copper connections.  **/
+comment|/**  *  e1000_get_speed_and_duplex_copper_generic - Retreive current speed/duplex  *  @hw: pointer to the HW structure  *  @speed: stores the current speed  *  @duplex: stores the current duplex  *  *  Read the status register for the current speed/duplex and store the current  *  speed and duplex for copper connections.  **/
 end_comment
 
 begin_function
@@ -4058,7 +4054,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_speed_and_duplex_fiber_generic - Retreive current speed/duplex  *  @hw - pointer to the HW structure  *  @speed - stores the current speed  *  @duplex - stores the current duplex  *  *  Sets the speed and duplex to gigabit full duplex (the only possible option)  *  for fiber/serdes links.  **/
+comment|/**  *  e1000_get_speed_and_duplex_fiber_generic - Retreive current speed/duplex  *  @hw: pointer to the HW structure  *  @speed: stores the current speed  *  @duplex: stores the current duplex  *  *  Sets the speed and duplex to gigabit full duplex (the only possible option)  *  for fiber/serdes links.  **/
 end_comment
 
 begin_function
@@ -4101,7 +4097,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_hw_semaphore_generic - Acquire hardware semaphore  *  @hw - pointer to the HW structure  *  *  Request a hardware semaphore by setting the firmware semaphore bit, once  *  bit has been set, semaphore has been acquired.  **/
+comment|/**  *  e1000_get_hw_semaphore_generic - Acquire hardware semaphore  *  @hw: pointer to the HW structure  *  *  Acquire the HW semaphore to access the PHY or NVM  **/
 end_comment
 
 begin_function
@@ -4143,6 +4139,63 @@ argument_list|(
 literal|"e1000_get_hw_semaphore_generic"
 argument_list|)
 expr_stmt|;
+comment|/* Get the SW semaphore */
+while|while
+condition|(
+name|i
+operator|<
+name|timeout
+condition|)
+block|{
+name|swsm
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_SWSM
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|swsm
+operator|&
+name|E1000_SWSM_SMBI
+operator|)
+condition|)
+break|break;
+name|usec_delay
+argument_list|(
+literal|50
+argument_list|)
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|i
+operator|==
+name|timeout
+condition|)
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"Driver can't access device - SMBI bit is set.\n"
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+operator|-
+name|E1000_ERR_NVM
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* Get the FW semaphore. */
 for|for
 control|(
@@ -4233,7 +4286,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_put_hw_semaphore_generic - Release hardware semaphore  *  @hw - pointer to the HW structure  *  *  Release hardware semaphore by clearing in the firmware semaphore bit.  **/
+comment|/**  *  e1000_put_hw_semaphore_generic - Release hardware semaphore  *  @hw: pointer to the HW structure  *  *  Release hardware semaphore used to access the PHY or NVM  **/
 end_comment
 
 begin_function
@@ -4266,7 +4319,11 @@ expr_stmt|;
 name|swsm
 operator|&=
 operator|~
+operator|(
+name|E1000_SWSM_SMBI
+operator||
 name|E1000_SWSM_SWESMBI
+operator|)
 expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
@@ -4281,7 +4338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_auto_rd_done_generic - Check for auto read completion  *  @hw - pointer to the HW structure  *  *  Check EEPROM for Auto Read done bit.  **/
+comment|/**  *  e1000_get_auto_rd_done_generic - Check for auto read completion  *  @hw: pointer to the HW structure  *  *  Check EEPROM for Auto Read done bit.  **/
 end_comment
 
 begin_function
@@ -4367,7 +4424,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_valid_led_default_generic - Verify a valid default LED config  *  @hw - pointer to the HW structure  *  @data - pointer to the NVM (EEPROM)  *  *  Read the EEPROM for the current default LED configuration.  If the  *  LED configuration is not valid, set to a valid LED configuration.  **/
+comment|/**  *  e1000_valid_led_default_generic - Verify a valid default LED config  *  @hw: pointer to the HW structure  *  @data: pointer to the NVM (EEPROM)  *  *  Read the EEPROM for the current default LED configuration.  If the  *  LED configuration is not valid, set to a valid LED configuration.  **/
 end_comment
 
 begin_function
@@ -4445,7 +4502,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_id_led_init_generic -  *  @hw - pointer to the HW structure  *  **/
+comment|/**  *  e1000_id_led_init_generic -  *  @hw: pointer to the HW structure  *  **/
 end_comment
 
 begin_function
@@ -4759,7 +4816,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_led_generic - Configures SW controllable LED  *  @hw - pointer to the HW structure  *  *  This prepares the SW controllable LED for use and saves the current state  *  of the LED so it can be later restored.  **/
+comment|/**  *  e1000_setup_led_generic - Configures SW controllable LED  *  @hw: pointer to the HW structure  *  *  This prepares the SW controllable LED for use and saves the current state  *  of the LED so it can be later restored.  **/
 end_comment
 
 begin_function
@@ -4894,7 +4951,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_cleanup_led_generic - Set LED config to default operation  *  @hw - pointer to the HW structure  *  *  Remove the current LED configuration and set the LED configuration  *  to the default value, saved from the EEPROM.  **/
+comment|/**  *  e1000_cleanup_led_generic - Set LED config to default operation  *  @hw: pointer to the HW structure  *  *  Remove the current LED configuration and set the LED configuration  *  to the default value, saved from the EEPROM.  **/
 end_comment
 
 begin_function
@@ -4959,7 +5016,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_blink_led_generic - Blink LED  *  @hw - pointer to the HW structure  *  *  Blink the led's which are set to be on.  **/
+comment|/**  *  e1000_blink_led_generic - Blink LED  *  @hw: pointer to the HW structure  *  *  Blink the led's which are set to be on.  **/
 end_comment
 
 begin_function
@@ -5081,7 +5138,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_on_generic - Turn LED on  *  @hw - pointer to the HW structure  *  *  Turn LED on.  **/
+comment|/**  *  e1000_led_on_generic - Turn LED on  *  @hw: pointer to the HW structure  *  *  Turn LED on.  **/
 end_comment
 
 begin_function
@@ -5167,7 +5224,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_off_generic - Turn LED off  *  @hw - pointer to the HW structure  *  *  Turn LED off.  **/
+comment|/**  *  e1000_led_off_generic - Turn LED off  *  @hw: pointer to the HW structure  *  *  Turn LED off.  **/
 end_comment
 
 begin_function
@@ -5252,7 +5309,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_pcie_no_snoop_generic - Set PCI-express capabilities  *  @hw - pointer to the HW structure  *  @no_snoop - bitmap of snoop events  *  *  Set the PCI-express register to snoop for events enabled in 'no_snoop'.  **/
+comment|/**  *  e1000_set_pcie_no_snoop_generic - Set PCI-express capabilities  *  @hw: pointer to the HW structure  *  @no_snoop: bitmap of snoop events  *  *  Set the PCI-express register to snoop for events enabled in 'no_snoop'.  **/
 end_comment
 
 begin_function
@@ -5331,7 +5388,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_disable_pcie_master_generic - Disables PCI-express master access  *  @hw - pointer to the HW structure  *  *  Returns 0 (E1000_SUCCESS) if successful, else returns -10  *  (-E1000_ERR_MASTER_REQUESTS_PENDING) if master disable bit has not casued  *  the master requests to be disabled.  *  *  Disables PCI-Express master access and verifies there are no pending  *  requests.  **/
+comment|/**  *  e1000_disable_pcie_master_generic - Disables PCI-express master access  *  @hw: pointer to the HW structure  *  *  Returns 0 (E1000_SUCCESS) if successful, else returns -10  *  (-E1000_ERR_MASTER_REQUESTS_PENDING) if master disable bit has not casued  *  the master requests to be disabled.  *  *  Disables PCI-Express master access and verifies there are no pending  *  requests.  **/
 end_comment
 
 begin_function
@@ -5455,7 +5512,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_adaptive_generic - Reset Adaptive Interframe Spacing  *  @hw - pointer to the HW structure  *  *  Reset the Adaptive Interframe Spacing throttle to default values.  **/
+comment|/**  *  e1000_reset_adaptive_generic - Reset Adaptive Interframe Spacing  *  @hw: pointer to the HW structure  *  *  Reset the Adaptive Interframe Spacing throttle to default values.  **/
 end_comment
 
 begin_function
@@ -5561,7 +5618,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_update_adaptive_generic - Update Adaptive Interframe Spacing  *  @hw - pointer to the HW structure  *  *  Update the Adaptive Interframe Spacing Throttle value based on the  *  time between transmitted packets and time between collisions.  **/
+comment|/**  *  e1000_update_adaptive_generic - Update Adaptive Interframe Spacing  *  @hw: pointer to the HW structure  *  *  Update the Adaptive Interframe Spacing Throttle value based on the  *  time between transmitted packets and time between collisions.  **/
 end_comment
 
 begin_function
@@ -5734,7 +5791,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_validate_mdi_setting_generic - Verify MDI/MDIx settings  *  @hw - pointer to the HW structure  *  *  Verify that when not using auto-negotitation that MDI/MDIx is correctly  *  set, which is forced to MDI mode only.  **/
+comment|/**  *  e1000_validate_mdi_setting_generic - Verify MDI/MDIx settings  *  @hw: pointer to the HW structure  *  *  Verify that when not using auto-negotitation that MDI/MDIx is correctly  *  set, which is forced to MDI mode only.  **/
 end_comment
 
 begin_function
@@ -5816,7 +5873,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_8bit_ctrl_reg_generic - Write a 8bit CTRL register  *  @hw - pointer to the HW structure  *  @reg - 32bit register offset such as E1000_SCTL  *  @offset - register offset to write to  *  @data - data to write at register offset  *  *  Writes an address/data control type register.  There are several of these  *  and they all have the format address<< 8 | data and bit 31 is polled for  *  completion.  **/
+comment|/**  *  e1000_write_8bit_ctrl_reg_generic - Write a 8bit CTRL register  *  @hw: pointer to the HW structure  *  @reg: 32bit register offset such as E1000_SCTL  *  @offset: register offset to write to  *  @data: data to write at register offset  *  *  Writes an address/data control type register.  There are several of these  *  and they all have the format address<< 8 | data and bit 31 is polled for  *  completion.  **/
 end_comment
 
 begin_function

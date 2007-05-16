@@ -3,23 +3,19 @@ begin_comment
 comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/*$FreeBSD$*/
+end_comment
 
 begin_comment
 comment|/* e1000_80003es2lan  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"e1000_api.h"
+end_include
 
 begin_include
 include|#
@@ -364,34 +360,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|s32
-name|e1000_get_hw_semaphore_80003es2lan
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|e1000_initialize_hw_bits_80003es2lan
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|e1000_put_hw_semaphore_80003es2lan
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -463,7 +433,7 @@ value|(sizeof(e1000_gg82563_cable_length_table) / \                  sizeof(e100
 end_define
 
 begin_comment
-comment|/**  *  e1000_init_phy_params_80003es2lan - Init ESB2 PHY func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_phy_params_80003es2lan - Init ESB2 PHY func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -664,7 +634,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_nvm_params_80003es2lan - Init ESB2 NVM func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_nvm_params_80003es2lan - Init ESB2 NVM func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -878,7 +848,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_mac_params_80003es2lan - Init ESB2 MAC func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_mac_params_80003es2lan - Init ESB2 MAC func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1184,7 +1154,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_function_pointers_80003es2lan - Init ESB2 func ptrs.  *  @hw - pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
+comment|/**  *  e1000_init_function_pointers_80003es2lan - Init ESB2 func ptrs.  *  @hw: pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
 end_comment
 
 begin_function
@@ -1230,7 +1200,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_acquire_phy_80003es2lan - Acquire rights to access PHY  *  @hw - pointer to the HW structure  *  *  A wrapper to acquire access rights to the correct PHY.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_acquire_phy_80003es2lan - Acquire rights to access PHY  *  @hw: pointer to the HW structure  *  *  A wrapper to acquire access rights to the correct PHY.  This is a  *  function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1276,7 +1246,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_release_phy_80003es2lan - Release rights to access PHY  *  @hw - pointer to the HW structure  *  *  A wrapper to release access rights to the correct PHY.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_release_phy_80003es2lan - Release rights to access PHY  *  @hw: pointer to the HW structure  *  *  A wrapper to release access rights to the correct PHY.  This is a  *  function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1321,7 +1291,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_acquire_nvm_80003es2lan - Acquire rights to access NVM  *  @hw - pointer to the HW structure  *  *  Acquire the semaphore to access the EEPROM.  This is a function  *  pointer entry point called by the api module.  **/
+comment|/**  *  e1000_acquire_nvm_80003es2lan - Acquire rights to access NVM  *  @hw: pointer to the HW structure  *  *  Acquire the semaphore to access the EEPROM.  This is a function  *  pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1386,7 +1356,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_release_nvm_80003es2lan - Relinquish rights to access NVM  *  @hw - pointer to the HW structure  *  *  Release the semaphore used to access the EEPROM.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_release_nvm_80003es2lan - Relinquish rights to access NVM  *  @hw: pointer to the HW structure  *  *  Release the semaphore used to access the EEPROM.  This is a  *  function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1421,193 +1391,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_hw_semaphore_80003es2lan - Acquire HW semaphore for PHY/NVM access  *  @hw - pointer to the HW structure  *  *  Acquire the HW semaphore to access the PHY or NVM  **/
-end_comment
-
-begin_function
-specifier|static
-name|s32
-name|e1000_get_hw_semaphore_80003es2lan
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-block|{
-name|u32
-name|swsm
-decl_stmt|;
-name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
-decl_stmt|;
-name|s32
-name|timeout
-init|=
-name|hw
-operator|->
-name|nvm
-operator|.
-name|word_size
-operator|+
-literal|1
-decl_stmt|;
-name|s32
-name|i
-init|=
-literal|0
-decl_stmt|;
-name|DEBUGFUNC
-argument_list|(
-literal|"e1000_get_hw_semaphore_80003es2lan"
-argument_list|)
-expr_stmt|;
-comment|/* Get the SW semaphore. */
-while|while
-condition|(
-name|i
-operator|<
-name|timeout
-condition|)
-block|{
-name|swsm
-operator|=
-name|E1000_READ_REG
-argument_list|(
-name|hw
-argument_list|,
-name|E1000_SWSM
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|swsm
-operator|&
-name|E1000_SWSM_SMBI
-operator|)
-condition|)
-break|break;
-name|msec_delay_irq
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|i
-operator|==
-name|timeout
-condition|)
-block|{
-name|DEBUGOUT
-argument_list|(
-literal|"Driver can't access device "
-literal|"- SMBI bit is set.\n"
-argument_list|)
-expr_stmt|;
-name|ret_val
-operator|=
-operator|-
-name|E1000_ERR_NVM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-comment|/* Get the FW semaphore. */
-name|ret_val
-operator|=
-name|e1000_get_hw_semaphore_generic
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret_val
-condition|)
-block|{
-comment|/* Release 80003es2lan semaphores */
-name|e1000_put_hw_semaphore_80003es2lan
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-name|out
-label|:
-return|return
-name|ret_val
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/**  *  e1000_put_hw_semaphore_80003es2lan - Release HW semaphore for PHY/NVM access  *  @hw - pointer to the HW structure  *  *  Release the HW semaphore used to access the PHY or NVM  **/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|e1000_put_hw_semaphore_80003es2lan
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-block|{
-name|u32
-name|swsm
-decl_stmt|;
-name|DEBUGFUNC
-argument_list|(
-literal|"e1000_put_hw_semaphore_80003es2lan"
-argument_list|)
-expr_stmt|;
-name|swsm
-operator|=
-name|E1000_READ_REG
-argument_list|(
-name|hw
-argument_list|,
-name|E1000_SWSM
-argument_list|)
-expr_stmt|;
-name|swsm
-operator|&=
-operator|~
-operator|(
-name|E1000_SWSM_SMBI
-operator||
-name|E1000_SWSM_SWESMBI
-operator|)
-expr_stmt|;
-name|E1000_WRITE_REG
-argument_list|(
-name|hw
-argument_list|,
-name|E1000_SWSM
-argument_list|,
-name|swsm
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/**  *  e1000_acquire_swfw_sync_80003es2lan - Acquire SW/FW semaphore  *  @hw - pointer to the HW structure  *  @mask - specifies which semaphore to acquire  *  *  Acquire the SW/FW semaphore to access the PHY or NVM.  The mask  *  will also specify which port we're acquiring the lock for.  **/
+comment|/**  *  e1000_acquire_swfw_sync_80003es2lan - Acquire SW/FW semaphore  *  @hw: pointer to the HW structure  *  @mask: specifies which semaphore to acquire  *  *  Acquire the SW/FW semaphore to access the PHY or NVM.  The mask  *  will also specify which port we're acquiring the lock for.  **/
 end_comment
 
 begin_function
@@ -1667,7 +1451,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|e1000_get_hw_semaphore_80003es2lan
+name|e1000_get_hw_semaphore_generic
 argument_list|(
 name|hw
 argument_list|)
@@ -1706,7 +1490,7 @@ operator|)
 condition|)
 break|break;
 comment|/* Firmware currently using resource (fwmask) 		 * or other software thread using resource (swmask) */
-name|e1000_put_hw_semaphore_80003es2lan
+name|e1000_put_hw_semaphore_generic
 argument_list|(
 name|hw
 argument_list|)
@@ -1754,7 +1538,7 @@ argument_list|,
 name|swfw_sync
 argument_list|)
 expr_stmt|;
-name|e1000_put_hw_semaphore_80003es2lan
+name|e1000_put_hw_semaphore_generic
 argument_list|(
 name|hw
 argument_list|)
@@ -1768,7 +1552,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_release_swfw_sync_80003es2lan - Release SW/FW semaphore  *  @hw - pointer to the HW structure  *  @mask - specifies which semaphore to acquire  *  *  Release the SW/FW semaphore used to access the PHY or NVM.  The mask  *  will also specify which port we're releasing the lock for.  **/
+comment|/**  *  e1000_release_swfw_sync_80003es2lan - Release SW/FW semaphore  *  @hw: pointer to the HW structure  *  @mask: specifies which semaphore to acquire  *  *  Release the SW/FW semaphore used to access the PHY or NVM.  The mask  *  will also specify which port we're releasing the lock for.  **/
 end_comment
 
 begin_function
@@ -1795,7 +1579,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|e1000_get_hw_semaphore_80003es2lan
+name|e1000_get_hw_semaphore_generic
 argument_list|(
 name|hw
 argument_list|)
@@ -1827,7 +1611,7 @@ argument_list|,
 name|swfw_sync
 argument_list|)
 expr_stmt|;
-name|e1000_put_hw_semaphore_80003es2lan
+name|e1000_put_hw_semaphore_generic
 argument_list|(
 name|hw
 argument_list|)
@@ -1836,7 +1620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_read_phy_reg_gg82563_80003es2lan - Read GG82563 PHY register  *  @hw - pointer to the HW structure  *  @offset - offset of the register to read  *  @data - pointer to the data returned from the operation  *  *  Read the GG82563 PHY register.  This is a function pointer entry  *  point called by the api module.  **/
+comment|/**  *  e1000_read_phy_reg_gg82563_80003es2lan - Read GG82563 PHY register  *  @hw: pointer to the HW structure  *  @offset: offset of the register to read  *  @data: pointer to the data returned from the operation  *  *  Read the GG82563 PHY register.  This is a function pointer entry  *  point called by the api module.  **/
 end_comment
 
 begin_function
@@ -2000,7 +1784,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_phy_reg_gg82563_80003es2lan - Write GG82563 PHY register  *  @hw - pointer to the HW structure  *  @offset - offset of the register to read  *  @data - value to write to the register  *  *  Write to the GG82563 PHY register.  This is a function pointer entry  *  point called by the api module.  **/
+comment|/**  *  e1000_write_phy_reg_gg82563_80003es2lan - Write GG82563 PHY register  *  @hw: pointer to the HW structure  *  @offset: offset of the register to read  *  @data: value to write to the register  *  *  Write to the GG82563 PHY register.  This is a function pointer entry  *  point called by the api module.  **/
 end_comment
 
 begin_function
@@ -2163,7 +1947,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_nvm_80003es2lan - Write to ESB2 NVM  *  @hw - pointer to the HW structure  *  @offset - offset of the register to read  *  @words - number of words to write  *  @data - buffer of data to write to the NVM  *  *  Write "words" of data to the ESB2 NVM.  This is a function  *  pointer entry point called by the api module.  **/
+comment|/**  *  e1000_write_nvm_80003es2lan - Write to ESB2 NVM  *  @hw: pointer to the HW structure  *  @offset: offset of the register to read  *  @words: number of words to write  *  @data: buffer of data to write to the NVM  *  *  Write "words" of data to the ESB2 NVM.  This is a function  *  pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -2208,7 +1992,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_cfg_done_80003es2lan - Wait for configuration to complete  *  @hw - pointer to the HW structure  *  *  Wait a specific amount of time for manageability processes to complete.  *  This is a function pointer entry point called by the phy module.  **/
+comment|/**  *  e1000_get_cfg_done_80003es2lan - Wait for configuration to complete  *  @hw: pointer to the HW structure  *  *  Wait a specific amount of time for manageability processes to complete.  *  This is a function pointer entry point called by the phy module.  **/
 end_comment
 
 begin_function
@@ -2311,7 +2095,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_phy_force_speed_duplex_80003es2lan - Force PHY speed and duplex  *  @hw - pointer to the HW structure  *  *  Force the speed and duplex settings onto the PHY.  This is a  *  function pointer entry point called by the phy module.  **/
+comment|/**  *  e1000_phy_force_speed_duplex_80003es2lan - Force PHY speed and duplex  *  @hw: pointer to the HW structure  *  *  Force the speed and duplex settings onto the PHY.  This is a  *  function pointer entry point called by the phy module.  **/
 end_comment
 
 begin_function
@@ -2594,7 +2378,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_cable_length_80003es2lan - Set approximate cable length  *  @hw - pointer to the HW structure  *  *  Find the approximate cable length as measured by the GG82563 PHY.  *  This is a function pointer entry point called by the phy module.  **/
+comment|/**  *  e1000_get_cable_length_80003es2lan - Set approximate cable length  *  @hw: pointer to the HW structure  *  *  Find the approximate cable length as measured by the GG82563 PHY.  *  This is a function pointer entry point called by the phy module.  **/
 end_comment
 
 begin_function
@@ -2701,7 +2485,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_link_up_info_80003es2lan - Report speed and duplex  *  @hw - pointer to the HW structure  *  @speed - pointer to speed buffer  *  @duplex - pointer to duplex buffer  *  *  Retrieve the current speed and duplex configuration.  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_get_link_up_info_80003es2lan - Report speed and duplex  *  @hw: pointer to the HW structure  *  @speed: pointer to speed buffer  *  @duplex: pointer to duplex buffer  *  *  Retrieve the current speed and duplex configuration.  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -2805,7 +2589,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_hw_80003es2lan - Reset the ESB2 controller  *  @hw - pointer to the HW structure  *  *  Perform a global reset to the ESB2 controller.  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_reset_hw_80003es2lan - Reset the ESB2 controller  *  @hw: pointer to the HW structure  *  *  Perform a global reset to the ESB2 controller.  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -2961,7 +2745,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_hw_80003es2lan - Initialize the ESB2 controller  *  @hw - pointer to the HW structure  *  *  Initialize the hw bits, LED, VFTA, MTA, link and hw counters.  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_hw_80003es2lan - Initialize the ESB2 controller  *  @hw: pointer to the HW structure  *  *  Initialize the hw bits, LED, VFTA, MTA, link and hw counters.  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -3272,7 +3056,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_initialize_hw_bits_80003es2lan - Init hw bits of ESB2  *  @hw - pointer to the HW structure  *  *  Initializes required hardware-dependent bits needed for normal operation.  **/
+comment|/**  *  e1000_initialize_hw_bits_80003es2lan - Init hw bits of ESB2  *  @hw: pointer to the HW structure  *  *  Initializes required hardware-dependent bits needed for normal operation.  **/
 end_comment
 
 begin_function
@@ -3460,7 +3244,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_copper_link_setup_gg82563_80003es2lan - Configure GG82563 Link  *  @hw - pointer to the HW structure  *  *  Setup some GG82563 PHY registers for obtaining link  **/
+comment|/**  *  e1000_copper_link_setup_gg82563_80003es2lan - Configure GG82563 Link  *  @hw: pointer to the HW structure  *  *  Setup some GG82563 PHY registers for obtaining link  **/
 end_comment
 
 begin_function
@@ -3904,7 +3688,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_copper_link_80003es2lan - Setup Copper Link for ESB2  *  @hw - pointer to the HW structure  *  *  Essentially a wrapper for setting up all things "copper" related.  *  This is a function pointer entry point called by the mac module.  **/
+comment|/**  *  e1000_setup_copper_link_80003es2lan - Setup Copper Link for ESB2  *  @hw: pointer to the HW structure  *  *  Essentially a wrapper for setting up all things "copper" related.  *  This is a function pointer entry point called by the mac module.  **/
 end_comment
 
 begin_function
@@ -4109,7 +3893,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_cfg_kmrn_10_100_80003es2lan - Apply "quirks" for 10/100 operation  *  @hw - pointer to the HW structure  *  @duplex - current duplex setting  *  *  Configure the KMRN interface by applying last minute quirks for  *  10/100 operation.  **/
+comment|/**  *  e1000_cfg_kmrn_10_100_80003es2lan - Apply "quirks" for 10/100 operation  *  @hw: pointer to the HW structure  *  @duplex: current duplex setting  *  *  Configure the KMRN interface by applying last minute quirks for  *  10/100 operation.  **/
 end_comment
 
 begin_function
@@ -4134,8 +3918,15 @@ decl_stmt|;
 name|u32
 name|tipg
 decl_stmt|;
+name|u32
+name|i
+init|=
+literal|0
+decl_stmt|;
 name|u16
 name|reg_data
+decl_stmt|,
+name|reg_data2
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -4192,6 +3983,8 @@ argument_list|,
 name|tipg
 argument_list|)
 expr_stmt|;
+do|do
+block|{
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -4211,6 +4004,44 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|ret_val
+operator|=
+name|e1000_read_phy_reg
+argument_list|(
+name|hw
+argument_list|,
+name|GG82563_PHY_KMRN_MODE_CTRL
+argument_list|,
+operator|&
+name|reg_data2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+name|i
+operator|++
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|(
+name|reg_data
+operator|!=
+name|reg_data2
+operator|)
+operator|&&
+operator|(
+name|i
+operator|<
+name|GG82563_MAX_KMRN_RETRY
+operator|)
+condition|)
+do|;
 if|if
 condition|(
 name|duplex
@@ -4247,7 +4078,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_cfg_kmrn_1000_80003es2lan - Apply "quirks" for gigabit operation  *  @hw - pointer to the HW structure  *  *  Configure the KMRN interface by applying last minute quirks for  *  gigabit operation.  **/
+comment|/**  *  e1000_cfg_kmrn_1000_80003es2lan - Apply "quirks" for gigabit operation  *  @hw: pointer to the HW structure  *  *  Configure the KMRN interface by applying last minute quirks for  *  gigabit operation.  **/
 end_comment
 
 begin_function
@@ -4268,9 +4099,16 @@ name|E1000_SUCCESS
 decl_stmt|;
 name|u16
 name|reg_data
+decl_stmt|,
+name|reg_data2
 decl_stmt|;
 name|u32
 name|tipg
+decl_stmt|;
+name|u32
+name|i
+init|=
+literal|0
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -4327,6 +4165,8 @@ argument_list|,
 name|tipg
 argument_list|)
 expr_stmt|;
+do|do
+block|{
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -4346,6 +4186,44 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|ret_val
+operator|=
+name|e1000_read_phy_reg
+argument_list|(
+name|hw
+argument_list|,
+name|GG82563_PHY_KMRN_MODE_CTRL
+argument_list|,
+operator|&
+name|reg_data2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+name|i
+operator|++
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|(
+name|reg_data
+operator|!=
+name|reg_data2
+operator|)
+operator|&&
+operator|(
+name|i
+operator|<
+name|GG82563_MAX_KMRN_RETRY
+operator|)
+condition|)
+do|;
 name|reg_data
 operator|&=
 operator|~
@@ -4371,7 +4249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_clear_hw_cntrs_80003es2lan - Clear device specific hardware counters  *  @hw - pointer to the HW structure  *  *  Clears the hardware counters by reading the counter registers.  **/
+comment|/**  *  e1000_clear_hw_cntrs_80003es2lan - Clear device specific hardware counters  *  @hw: pointer to the HW structure  *  *  Clears the hardware counters by reading the counter registers.  **/
 end_comment
 
 begin_function

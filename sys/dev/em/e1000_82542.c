@@ -3,19 +3,9 @@ begin_comment
 comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/*$FreeBSD$*/
+end_comment
 
 begin_comment
 comment|/* e1000_82542 (rev 1& 2)  */
@@ -181,7 +171,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  *  e1000_init_phy_params_82542 - Init PHY func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_phy_params_82542 - Init PHY func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -228,7 +218,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_nvm_params_82542 - Init NVM func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_nvm_params_82542 - Init NVM func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -335,7 +325,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_mac_params_82542 - Init MAC func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_mac_params_82542 - Init MAC func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -534,7 +524,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_function_pointers_82542 - Init func ptrs.  *  @hw - pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
+comment|/**  *  e1000_init_function_pointers_82542 - Init func ptrs.  *  @hw: pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
 end_comment
 
 begin_function
@@ -580,7 +570,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_bus_info_82542 - Obtain bus information for adapter  *  @hw - pointer to the HW structure  *  *  This will obtain information about the HW bus for which the  *  adaper is attached and stores it in the hw structure.  This is a function  *  pointer entry point called by the api module.  **/
+comment|/**  *  e1000_get_bus_info_82542 - Obtain bus information for adapter  *  @hw: pointer to the HW structure  *  *  This will obtain information about the HW bus for which the  *  adaper is attached and stores it in the hw structure.  This is a function  *  pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -630,7 +620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_hw_82542 - Reset hardware  *  @hw - pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_reset_hw_82542 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -815,7 +805,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_hw_82542 - Initialize hardware  *  @hw - pointer to the HW structure  *  *  This inits the hardware readying it for operation.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_hw_82542 - Initialize hardware  *  @hw: pointer to the HW structure  *  *  This inits the hardware readying it for operation.  This is a  *  function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1063,7 +1053,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_link_82542 - Setup flow control and link settings  *  @hw - pointer to the HW structure  *  *  Determines which flow control settings to use, then configures flow  *  control.  Calls the appropriate media-specific link configuration  *  function.  Assuming the adapter has a valid link partner, a valid link  *  should be established.  Assumes the hardware has previously been reset  *  and the transmitter and receiver are not enabled.  This is a function  *  pointer entry point called by the api module.  **/
+comment|/**  *  e1000_setup_link_82542 - Setup flow control and link settings  *  @hw: pointer to the HW structure  *  *  Determines which flow control settings to use, then configures flow  *  control.  Calls the appropriate media-specific link configuration  *  function.  Assuming the adapter has a valid link partner, a valid link  *  should be established.  Assumes the hardware has previously been reset  *  and the transmitter and receiver are not enabled.  This is a function  *  pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1238,7 +1228,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_on_82542 - Turn on SW controllable LED  *  @hw - pointer to the HW structure  *  *  Turns the SW defined LED on.  This is a function pointer entry point  *  called by the api module.  **/
+comment|/**  *  e1000_led_on_82542 - Turn on SW controllable LED  *  @hw: pointer to the HW structure  *  *  Turns the SW defined LED on.  This is a function pointer entry point  *  called by the api module.  **/
 end_comment
 
 begin_function
@@ -1291,7 +1281,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_off_82542 - Turn off SW controllable LED  *  @hw - pointer to the HW structure  *  *  Turns the SW defined LED off.  This is a function pointer entry point  *  called by the api module.  **/
+comment|/**  *  e1000_led_off_82542 - Turn off SW controllable LED  *  @hw: pointer to the HW structure  *  *  Turns the SW defined LED off.  This is a function pointer entry point  *  called by the api module.  **/
 end_comment
 
 begin_function
@@ -1345,7 +1335,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_translate_register_82542 - Translate the proper regiser offset  *  @reg - e1000 register to be read  *  *  Registers in 82542 are located in different offsets than other adapters  *  even though they function in the same manner.  This function takes in  *  the name of the register to read and returns the correct offset for  *  82542 silicon.  **/
+comment|/**  *  e1000_translate_register_82542 - Translate the proper regiser offset  *  @reg: e1000 register to be read  *  *  Registers in 82542 are located in different offsets than other adapters  *  even though they function in the same manner.  This function takes in  *  the name of the register to read and returns the correct offset for  *  82542 silicon.  **/
 end_comment
 
 begin_function
@@ -1564,7 +1554,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_clear_hw_cntrs_82542 - Clear device specific hardware counters  *  @hw - pointer to the HW structure  *  *  Clears the hardware counters by reading the counter registers.  **/
+comment|/**  *  e1000_clear_hw_cntrs_82542 - Clear device specific hardware counters  *  @hw: pointer to the HW structure  *  *  Clears the hardware counters by reading the counter registers.  **/
 end_comment
 
 begin_function

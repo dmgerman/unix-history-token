@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_ifndef
@@ -18,12 +18,6 @@ define|#
 directive|define
 name|_E1000_80003ES2LAN_H_
 end_define
-
-begin_include
-include|#
-directive|include
-file|"e1000_api.h"
-end_include
 
 begin_define
 define|#
@@ -261,6 +255,17 @@ define|#
 directive|define
 name|GG82563_KMCR_PASS_FALSE_CARRIER
 value|0x0800
+end_define
+
+begin_comment
+comment|/* Max number of times Kumeran read/write should be validated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GG82563_MAX_KMRN_RETRY
+value|0x5
 end_define
 
 begin_comment

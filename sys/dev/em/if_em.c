@@ -267,7 +267,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"Version - 6.5.0"
+literal|"Version - 6.5.2"
 decl_stmt|;
 end_decl_stmt
 
@@ -6297,7 +6297,11 @@ name|ifp
 operator|->
 name|if_hwassist
 operator||=
-name|EM_CHECKSUM_FEATURES
+operator|(
+name|CSUM_TCP
+operator||
+name|CSUM_UDP
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -6305,13 +6309,13 @@ name|ifp
 operator|->
 name|if_capenable
 operator|&
-name|IFCAP_TSO
+name|IFCAP_TSO4
 condition|)
 name|ifp
 operator|->
 name|if_hwassist
 operator||=
-name|EM_TCPSEG_FEATURES
+name|CSUM_TSO
 expr_stmt|;
 block|}
 comment|/* Configure for OS presence */
@@ -7810,15 +7814,6 @@ modifier|*
 name|m_headp
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|adapter
-operator|->
-name|ifp
-decl_stmt|;
 name|bus_dma_segment_t
 name|segs
 index|[
@@ -8290,17 +8285,6 @@ expr_stmt|;
 comment|/* Do hardware assists */
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_hwassist
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|do_tso
-operator|&&
 name|em_tso_setup
 argument_list|(
 name|adapter
@@ -8314,14 +8298,22 @@ operator|&
 name|txd_lower
 argument_list|)
 condition|)
-block|{
 comment|/* we need to make a final sentinel transmit desc */
 name|tso_desc
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|m_head
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_OFFLOAD
+condition|)
 name|em_transmit_checksum_setup
 argument_list|(
 name|adapter
@@ -8335,7 +8327,6 @@ operator|&
 name|txd_lower
 argument_list|)
 expr_stmt|;
-block|}
 name|i
 operator|=
 name|adapter
@@ -9072,17 +9063,6 @@ end_function
 
 begin_comment
 comment|/*********************************************************************  *  *  This routine maps the mbufs to Advanced TX descriptors.  *  used by the 82575 adapter. It also needs no workarounds.  *    **********************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CSUM_OFFLOAD
-value|7
-end_define
-
-begin_comment
-comment|/* Checksum bits */
 end_comment
 
 begin_function
@@ -12897,32 +12877,18 @@ operator||
 name|IFCAP_VLAN_HWCSUM
 expr_stmt|;
 block|}
-comment|/* Enable TSO if available */
+comment|/* Enable TSO for PCI Express adapters */
 if|if
 condition|(
-operator|(
 name|adapter
 operator|->
 name|hw
 operator|.
-name|mac
+name|bus
 operator|.
 name|type
-operator|>
-name|e1000_82544
-operator|)
-operator|&&
-operator|(
-name|adapter
-operator|->
-name|hw
-operator|.
-name|mac
-operator|.
-name|type
-operator|!=
-name|e1000_82547
-operator|)
+operator|==
+name|e1000_bus_type_pci_express
 condition|)
 block|{
 name|ifp
@@ -15753,6 +15719,21 @@ decl_stmt|;
 comment|/* 	 * XXX: This is not really correct as the stack would not have 	 * set up all checksums. 	 * XXX: Return FALSE is not sufficient as we may have to return 	 * in true failure cases as well.  Should do -1 (failure), 0 (no) 	 * and 1 (success). 	 */
 if|if
 condition|(
+operator|(
+operator|(
+name|mp
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_TSO
+operator|)
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
 name|mp
 operator|->
 name|m_pkthdr
@@ -15760,11 +15741,11 @@ operator|.
 name|len
 operator|<=
 name|EM_TX_BUFFER_SIZE
+operator|)
 condition|)
 return|return
 name|FALSE
 return|;
-comment|/* 0 */
 comment|/* 	 * This function could/should be extended to support IP/IPv6 	 * fragmentation as well.  But as they say, one step at a time. 	 */
 comment|/* 	 * Determine where frame payload starts. 	 * Jump over vlan headers if already present, 	 * helpful for QinQ too. 	 */
 name|eh

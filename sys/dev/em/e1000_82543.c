@@ -3,23 +3,19 @@ begin_comment
 comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/*$FreeBSD$*/
+end_comment
 
 begin_comment
 comment|/* e1000_82543  * e1000_82544  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"e1000_api.h"
+end_include
 
 begin_include
 include|#
@@ -460,7 +456,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  *  e1000_init_phy_params_82543 - Init PHY func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_phy_params_82543 - Init PHY func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -763,7 +759,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_nvm_params_82543 - Init NVM func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_nvm_params_82543 - Init NVM func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -870,7 +866,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_mac_params_82543 - Init MAC func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_mac_params_82543 - Init MAC func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1157,7 +1153,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_function_pointers_82543 - Init func ptrs.  *  @hw - pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
+comment|/**  *  e1000_init_function_pointers_82543 - Init func ptrs.  *  @hw: pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
 end_comment
 
 begin_function
@@ -1203,7 +1199,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_tbi_compatibility_enabled_82543 - Returns TBI compat status  *  @hw - pointer to the HW structure  *  *  Returns the curent status of 10-bit Interface (TBI) compatibility  *  (enabled/disabled).  **/
+comment|/**  *  e1000_tbi_compatibility_enabled_82543 - Returns TBI compat status  *  @hw: pointer to the HW structure  *  *  Returns the curent status of 10-bit Interface (TBI) compatibility  *  (enabled/disabled).  **/
 end_comment
 
 begin_function
@@ -1302,7 +1298,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_tbi_compatibility_82543 - Set TBI compatibility  *  @hw - pointer to the HW structure  *  @state - enable/disable TBI compatibility  *  *  Enables or disabled 10-bit Interface (TBI) compatibility.  **/
+comment|/**  *  e1000_set_tbi_compatibility_82543 - Set TBI compatibility  *  @hw: pointer to the HW structure  *  @state: enable/disable TBI compatibility  *  *  Enables or disabled 10-bit Interface (TBI) compatibility.  **/
 end_comment
 
 begin_function
@@ -1400,7 +1396,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_tbi_sbp_enabled_82543 - Returns TBI SBP status  *  @hw - pointer to the HW structure  *  *  Returns the curent status of 10-bit Interface (TBI) store bad packet (SBP)  *  (enabled/disabled).  **/
+comment|/**  *  e1000_tbi_sbp_enabled_82543 - Returns TBI SBP status  *  @hw: pointer to the HW structure  *  *  Returns the curent status of 10-bit Interface (TBI) store bad packet (SBP)  *  (enabled/disabled).  **/
 end_comment
 
 begin_function
@@ -1498,7 +1494,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_tbi_sbp_82543 - Set TBI SBP  *  @hw - pointer to the HW structure  *  @state - enable/disable TBI store bad packet  *  *  Enables or disabled 10-bit Interface (TBI) store bad packet (SBP).  **/
+comment|/**  *  e1000_set_tbi_sbp_82543 - Set TBI SBP  *  @hw: pointer to the HW structure  *  @state: enable/disable TBI store bad packet  *  *  Enables or disabled 10-bit Interface (TBI) store bad packet (SBP).  **/
 end_comment
 
 begin_function
@@ -1564,7 +1560,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_phy_disabled_82543 - Returns init PHY status  *  @hw - pointer to the HW structure  *  *  Returns the current status of whether PHY initialization is disabled.  *  True if PHY initialization is disabled else false.  **/
+comment|/**  *  e1000_init_phy_disabled_82543 - Returns init PHY status  *  @hw: pointer to the HW structure  *  *  Returns the current status of whether PHY initialization is disabled.  *  True if PHY initialization is disabled else false.  **/
 end_comment
 
 begin_function
@@ -1656,7 +1652,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_tbi_adjust_stats_82543 - Adjust stats when TBI enabled  *  @hw - pointer to the HW structure  *  @stats - Struct containing statistic register values  *  @frame_len - The length of the frame in question  *  @mac_addr - The Ethernet destination address of the frame in question  *  *  Adjusts the statistic counters when a frame is accepted by TBI_ACCEPT  **/
+comment|/**  *  e1000_tbi_adjust_stats_82543 - Adjust stats when TBI enabled  *  @hw: pointer to the HW structure  *  @stats: Struct containing statistic register values  *  @frame_len: The length of the frame in question  *  @mac_addr: The Ethernet destination address of the frame in question  *  *  Adjusts the statistic counters when a frame is accepted by TBI_ACCEPT  **/
 end_comment
 
 begin_function
@@ -1933,7 +1929,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_read_phy_reg_82543 - Read PHY register  *  @hw - pointer to the HW structure  *  @offset - register offset to be read  *  @data - pointer to the read data  *  *  Reads the PHY at offset and stores the information read to data.  **/
+comment|/**  *  e1000_read_phy_reg_82543 - Read PHY register  *  @hw: pointer to the HW structure  *  @offset: register offset to be read  *  @data: pointer to the read data  *  *  Reads the PHY at offset and stores the information read to data.  **/
 end_comment
 
 begin_function
@@ -2056,7 +2052,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_phy_reg_82543 - Write PHY register  *  @hw - pointer to the HW structure  *  @offset - register offset to be written  *  @data - pointer to the data to be written at offset  *  *  Writes data to the PHY at offset.  **/
+comment|/**  *  e1000_write_phy_reg_82543 - Write PHY register  *  @hw: pointer to the HW structure  *  @offset: register offset to be written  *  @data: pointer to the data to be written at offset  *  *  Writes data to the PHY at offset.  **/
 end_comment
 
 begin_function
@@ -2188,7 +2184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_raise_mdi_clk_82543 - Raise Management Data Input clock  *  @hw - pointer to the HW structure  *  @ctrl - pointer to the control register  *  *  Raise the management data input clock by setting the MDC bit in the control  *  register.  **/
+comment|/**  *  e1000_raise_mdi_clk_82543 - Raise Management Data Input clock  *  @hw: pointer to the HW structure  *  @ctrl: pointer to the control register  *  *  Raise the management data input clock by setting the MDC bit in the control  *  register.  **/
 end_comment
 
 begin_function
@@ -2235,7 +2231,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_lower_mdi_clk_82543 - Lower Management Data Input clock  *  @hw - pointer to the HW structure  *  @ctrl - pointer to the control register  *  *  Lower the management data input clock by clearing the MDC bit in the control  *  register.  **/
+comment|/**  *  e1000_lower_mdi_clk_82543 - Lower Management Data Input clock  *  @hw: pointer to the HW structure  *  @ctrl: pointer to the control register  *  *  Lower the management data input clock by clearing the MDC bit in the control  *  register.  **/
 end_comment
 
 begin_function
@@ -2283,7 +2279,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_shift_out_mdi_bits_82543 - Shift data bits our to the PHY  *  @hw - pointer to the HW structure  *  @data - data to send to the PHY  *  @count - number of bits to shift out  *  *  We need to shift 'count' bits out to the PHY.  So, the value in the  *  "data" parameter will be shifted out to the PHY one bit at a time.  *  In order to do this, "data" must be broken down into bits.  **/
+comment|/**  *  e1000_shift_out_mdi_bits_82543 - Shift data bits our to the PHY  *  @hw: pointer to the HW structure  *  @data: data to send to the PHY  *  @count: number of bits to shift out  *  *  We need to shift 'count' bits out to the PHY.  So, the value in the  *  "data" parameter will be shifted out to the PHY one bit at a time.  *  In order to do this, "data" must be broken down into bits.  **/
 end_comment
 
 begin_function
@@ -2405,7 +2401,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_shift_in_mdi_bits_82543 - Shift data bits in from the PHY  *  @hw - pointer to the HW structure  *  *  In order to read a register from the PHY, we need to shift 18 bits  *  in from the PHY.  Bits are "shifted in" by raising the clock input to  *  the PHY (setting the MDC bit), and then reading the value of the data out  *  MDIO bit.  **/
+comment|/**  *  e1000_shift_in_mdi_bits_82543 - Shift data bits in from the PHY  *  @hw: pointer to the HW structure  *  *  In order to read a register from the PHY, we need to shift 18 bits  *  in from the PHY.  Bits are "shifted in" by raising the clock input to  *  the PHY (setting the MDC bit), and then reading the value of the data out  *  MDIO bit.  **/
 end_comment
 
 begin_function
@@ -2564,7 +2560,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_phy_force_speed_duplex_82543 - Force speed/duplex for PHY  *  @hw - pointer to the HW structure  *  *  Calls the function to force speed and duplex for the m88 PHY, and  *  if the PHY is not auto-negotiating and the speed is forced to 10Mbit,  *  then call the function for polarity reversal workaround.  **/
+comment|/**  *  e1000_phy_force_speed_duplex_82543 - Force speed/duplex for PHY  *  @hw: pointer to the HW structure  *  *  Calls the function to force speed and duplex for the m88 PHY, and  *  if the PHY is not auto-negotiating and the speed is forced to 10Mbit,  *  then call the function for polarity reversal workaround.  **/
 end_comment
 
 begin_function
@@ -2635,7 +2631,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_polarity_reversal_workaround_82543 - Workaround polarity reversal  *  @hw - pointer to the HW structure  *  *  When forcing link to 10 Full or 10 Half, the PHY can reverse the polarity  *  inadvertantly.  To workaround the issue, we disable the transmitter on  *  the PHY until we have established the link partner's link parameters.  **/
+comment|/**  *  e1000_polarity_reversal_workaround_82543 - Workaround polarity reversal  *  @hw: pointer to the HW structure  *  *  When forcing link to 10 Full or 10 Half, the PHY can reverse the polarity  *  inadvertantly.  To workaround the issue, we disable the transmitter on  *  the PHY until we have established the link partner's link parameters.  **/
 end_comment
 
 begin_function
@@ -2932,7 +2928,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_phy_hw_reset_82543 - PHY hardware reset  *  @hw - pointer to the HW structure  *  *  Sets the PHY_RESET_DIR bit in the extended device control register  *  to put the PHY into a reset and waits for completion.  Once the reset  *  has been accomplished, clear the PHY_RESET_DIR bit to take the PHY out  *  of reset.  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_phy_hw_reset_82543 - PHY hardware reset  *  @hw: pointer to the HW structure  *  *  Sets the PHY_RESET_DIR bit in the extended device control register  *  to put the PHY into a reset and waits for completion.  Once the reset  *  has been accomplished, clear the PHY_RESET_DIR bit to take the PHY out  *  of reset.  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -3045,7 +3041,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_hw_82543 - Reset hardware  *  @hw - pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_reset_hw_82543 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -3213,7 +3209,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_hw_82543 - Initialize hardware  *  @hw - pointer to the HW structure  *  *  This inits the hardware readying it for operation.  **/
+comment|/**  *  e1000_init_hw_82543 - Initialize hardware  *  @hw: pointer to the HW structure  *  *  This inits the hardware readying it for operation.  **/
 end_comment
 
 begin_function
@@ -3417,7 +3413,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_link_82543 - Setup flow control and link settings  *  @hw - pointer to the HW structure  *  *  Read the EEPROM to determine the initial polarity value and write the  *  extended device control register with the information before calling  *  the generic setup link function, which does the following:  *  Determines which flow control settings to use, then configures flow  *  control.  Calls the appropriate media-specific link configuration  *  function.  Assuming the adapter has a valid link partner, a valid link  *  should be established.  Assumes the hardware has previously been reset  *  and the transmitter and receiver are not enabled.  **/
+comment|/**  *  e1000_setup_link_82543 - Setup flow control and link settings  *  @hw: pointer to the HW structure  *  *  Read the EEPROM to determine the initial polarity value and write the  *  extended device control register with the information before calling  *  the generic setup link function, which does the following:  *  Determines which flow control settings to use, then configures flow  *  control.  Calls the appropriate media-specific link configuration  *  function.  Assuming the adapter has a valid link partner, a valid link  *  should be established.  Assumes the hardware has previously been reset  *  and the transmitter and receiver are not enabled.  **/
 end_comment
 
 begin_function
@@ -3528,7 +3524,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_copper_link_82543 - Configure copper link settings  *  @hw - pointer to the HW structure  *  *  Configures the link for auto-neg or forced speed and duplex.  Then we check  *  for link, once link is established calls to configure collision distance  *  and flow control are called.  **/
+comment|/**  *  e1000_setup_copper_link_82543 - Configure copper link settings  *  @hw: pointer to the HW structure  *  *  Configures the link for auto-neg or forced speed and duplex.  Then we check  *  for link, once link is established calls to configure collision distance  *  and flow control are called.  **/
 end_comment
 
 begin_function
@@ -3800,7 +3796,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_fiber_link_82543 - Setup link for fiber  *  @hw - pointer to the HW structure  *  *  Configures collision distance and flow control for fiber links.  Upon  *  successful setup, poll for link.  **/
+comment|/**  *  e1000_setup_fiber_link_82543 - Setup link for fiber  *  @hw: pointer to the HW structure  *  *  Configures collision distance and flow control for fiber links.  Upon  *  successful setup, poll for link.  **/
 end_comment
 
 begin_function
@@ -3924,7 +3920,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_for_copper_link_82543 - Check for link (Copper)  *  @hw - pointer to the HW structure  *  *  Checks the phy for link, if link exists, do the following:  *   - check for downshift  *   - do polarity workaround (if necessary)  *   - configure collision distance  *   - configure flow control after link up  *   - configure tbi compatibility  **/
+comment|/**  *  e1000_check_for_copper_link_82543 - Check for link (Copper)  *  @hw: pointer to the HW structure  *  *  Checks the phy for link, if link exists, do the following:  *   - check for downshift  *   - do polarity workaround (if necessary)  *   - configure collision distance  *   - configure flow control after link up  *   - configure tbi compatibility  **/
 end_comment
 
 begin_function
@@ -4298,7 +4294,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_for_fiber_link_82543 - Check for link (Fiber)  *  @hw - pointer to the HW structure  *  *  Checks for link up on the hardware.  If link is not up and we have  *  a signal, then we need to force link up.  **/
+comment|/**  *  e1000_check_for_fiber_link_82543 - Check for link (Fiber)  *  @hw: pointer to the HW structure  *  *  Checks for link up on the hardware.  If link is not up and we have  *  a signal, then we need to force link up.  **/
 end_comment
 
 begin_function
@@ -4556,7 +4552,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_config_mac_to_phy_82543 - Configure MAC to PHY settings  *  @hw - pointer to the HW structure  *  *  For the 82543 silicon, we need to set the MAC to match the settings  *  of the PHY, even if the PHY is auto-negotiating.  **/
+comment|/**  *  e1000_config_mac_to_phy_82543 - Configure MAC to PHY settings  *  @hw: pointer to the HW structure  *  *  For the 82543 silicon, we need to set the MAC to match the settings  *  of the PHY, even if the PHY is auto-negotiating.  **/
 end_comment
 
 begin_function
@@ -4699,7 +4695,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_vfta_82543 - Write value to VLAN filter table  *  @hw - pointer to the HW structure  *  @offset - the 32-bit offset in which to write the value to.  *  @value - the 32-bit value to write at location offset.  *  *  This writes a 32-bit value to a 32-bit offset in the VLAN filter  *  table.  **/
+comment|/**  *  e1000_write_vfta_82543 - Write value to VLAN filter table  *  @hw: pointer to the HW structure  *  @offset: the 32-bit offset in which to write the value to.  *  @value: the 32-bit value to write at location offset.  *  *  This writes a 32-bit value to a 32-bit offset in the VLAN filter  *  table.  **/
 end_comment
 
 begin_function
@@ -4808,7 +4804,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_mta_set_82543 - Set multicast filter table address  *  @hw - pointer to the HW structure  *  @hash_value - determines the MTA register and bit to set  *  *  The multicast table address is a register array of 32-bit registers.  *  The hash_value is used to determine what register the bit is in, the  *  current value is read, the new bit is OR'd in and the new value is  *  written back into the register.  **/
+comment|/**  *  e1000_mta_set_82543 - Set multicast filter table address  *  @hw: pointer to the HW structure  *  @hash_value: determines the MTA register and bit to set  *  *  The multicast table address is a register array of 32-bit registers.  *  The hash_value is used to determine what register the bit is in, the  *  current value is read, the new bit is OR'd in and the new value is  *  written back into the register.  **/
 end_comment
 
 begin_function
@@ -4964,7 +4960,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_on_82543 - Turn on SW controllable LED  *  @hw - pointer to the HW structure  *  *  Turns the SW defined LED on.  This is a function pointer entry point  *  called by the api module.  **/
+comment|/**  *  e1000_led_on_82543 - Turn on SW controllable LED  *  @hw: pointer to the HW structure  *  *  Turns the SW defined LED on.  This is a function pointer entry point  *  called by the api module.  **/
 end_comment
 
 begin_function
@@ -5049,7 +5045,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_off_82543 - Turn off SW controllable LED  *  @hw - pointer to the HW structure  *  *  Turns the SW defined LED off.  This is a function pointer entry point  *  called by the api module.  **/
+comment|/**  *  e1000_led_off_82543 - Turn off SW controllable LED  *  @hw: pointer to the HW structure  *  *  Turns the SW defined LED off.  This is a function pointer entry point  *  called by the api module.  **/
 end_comment
 
 begin_function
@@ -5133,7 +5129,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_clear_hw_cntrs_82543 - Clear device specific hardware counters  *  @hw - pointer to the HW structure  *  *  Clears the hardware counters by reading the counter registers.  **/
+comment|/**  *  e1000_clear_hw_cntrs_82543 - Clear device specific hardware counters  *  @hw: pointer to the HW structure  *  *  Clears the hardware counters by reading the counter registers.  **/
 end_comment
 
 begin_function

@@ -3,23 +3,19 @@ begin_comment
 comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/*$FreeBSD$*/
+end_comment
 
 begin_comment
 comment|/* e1000_82541  * e1000_82547  * e1000_82541_rev_2  * e1000_82547_rev_2  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"e1000_api.h"
+end_include
 
 begin_include
 include|#
@@ -557,7 +553,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  *  e1000_init_phy_params_82541 - Init PHY func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_phy_params_82541 - Init PHY func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -722,7 +718,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_nvm_params_82541 - Init NVM func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_nvm_params_82541 - Init NVM func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1104,7 +1100,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_mac_params_82541 - Init MAC func ptrs.  *  @hw - pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_mac_params_82541 - Init MAC func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1322,7 +1318,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_function_pointers_82541 - Init func ptrs.  *  @hw - pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
+comment|/**  *  e1000_init_function_pointers_82541 - Init func ptrs.  *  @hw: pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
 end_comment
 
 begin_function
@@ -1368,7 +1364,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_hw_82541 - Reset hardware  *  @hw - pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_reset_hw_82541 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1660,7 +1656,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_hw_82541 - Initialize hardware  *  @hw - pointer to the HW structure  *  *  This inits the hardware readying it for operation.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_hw_82541 - Initialize hardware  *  @hw: pointer to the HW structure  *  *  This inits the hardware readying it for operation.  This is a  *  function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -1832,7 +1828,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * e1000_get_link_up_info_82541 - Report speed and duplex  * @hw - pointer to the HW structure  * @speed - pointer to speed buffer  * @duplex - pointer to duplex buffer  *  * Retrieve the current speed and duplex configuration.  * This is a function pointer entry point called by the api module.  **/
+comment|/**  * e1000_get_link_up_info_82541 - Report speed and duplex  * @hw: pointer to the HW structure  * @speed: pointer to speed buffer  * @duplex: pointer to duplex buffer  *  * Retrieve the current speed and duplex configuration.  * This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -2015,7 +2011,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_phy_hw_reset_82541 - PHY hardware reset  *  @hw - pointer to the HW structure  *  *  Verify the reset block is not blocking us from resetting.  Acquire  *  semaphore (if necessary) and read/set/write the device control reset  *  bit in the PHY.  Wait the appropriate delay time for the device to  *  reset and relase the semaphore (if necessary).  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_phy_hw_reset_82541 - PHY hardware reset  *  @hw: pointer to the HW structure  *  *  Verify the reset block is not blocking us from resetting.  Acquire  *  semaphore (if necessary) and read/set/write the device control reset  *  bit in the PHY.  Wait the appropriate delay time for the device to  *  reset and relase the semaphore (if necessary).  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -2123,7 +2119,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_copper_link_82541 - Configure copper link settings  *  @hw - pointer to the HW structure  *  *  Calls the appropriate function to configure the link for auto-neg or forced  *  speed and duplex.  Then we check for link, once link is established calls  *  to configure collision distance and flow control are called.  If link is  *  not established, we return -E1000_ERR_PHY (-2).  This is a function  *  pointer entry point called by the api module.  **/
+comment|/**  *  e1000_setup_copper_link_82541 - Configure copper link settings  *  @hw: pointer to the HW structure  *  *  Calls the appropriate function to configure the link for auto-neg or forced  *  speed and duplex.  Then we check for link, once link is established calls  *  to configure collision distance and flow control are called.  If link is  *  not established, we return -E1000_ERR_PHY (-2).  This is a function  *  pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -2340,7 +2336,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_for_link_82541 - Check/Store link connection  *  @hw - pointer to the HW structure  *  *  This checks the link condition of the adapter and stores the  *  results in the hw->mac structure. This is a function pointer entry  *  point called by the api module.  **/
+comment|/**  *  e1000_check_for_link_82541 - Check/Store link connection  *  @hw: pointer to the HW structure  *  *  This checks the link condition of the adapter and stores the  *  results in the hw->mac structure. This is a function pointer entry  *  point called by the api module.  **/
 end_comment
 
 begin_function
@@ -2507,7 +2503,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_config_dsp_after_link_change_82541 - Config DSP after link  *  @hw - pointer to the HW structure  *  @link_up - boolean flag for link up status  *  *  Return E1000_ERR_PHY when failing to read/write the PHY, else E1000_SUCCESS  *  at any other case.  *  *  82541_rev_2& 82547_rev_2 have the capability to configure the DSP when a  *  gigabit link is achieved to improve link quality.  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_config_dsp_after_link_change_82541 - Config DSP after link  *  @hw: pointer to the HW structure  *  @link_up: boolean flag for link up status  *  *  Return E1000_ERR_PHY when failing to read/write the PHY, else E1000_SUCCESS  *  at any other case.  *  *  82541_rev_2& 82547_rev_2 have the capability to configure the DSP when a  *  gigabit link is achieved to improve link quality.  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -3223,7 +3219,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_cable_length_igp_82541 - Determine cable length for igp PHY  *  @hw - pointer to the HW structure  *  *  The automatic gain control (agc) normalizes the amplitude of the  *  received signal, adjusting for the attenuation produced by the  *  cable.  By reading the AGC registers, which reperesent the  *  cobination of course and fine gain value, the value can be put  *  into a lookup table to obtain the approximate cable length  *  for each channel.  This is a function pointer entry point called by the  *  api module.  **/
+comment|/**  *  e1000_get_cable_length_igp_82541 - Determine cable length for igp PHY  *  @hw: pointer to the HW structure  *  *  The automatic gain control (agc) normalizes the amplitude of the  *  received signal, adjusting for the attenuation produced by the  *  cable.  By reading the AGC registers, which reperesent the  *  cobination of course and fine gain value, the value can be put  *  into a lookup table to obtain the approximate cable length  *  for each channel.  This is a function pointer entry point called by the  *  api module.  **/
 end_comment
 
 begin_function
@@ -3467,7 +3463,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_d3_lplu_state_82541 - Sets low power link up state for D3  *  @hw - pointer to the HW structure  *  @active boolean used to enable/disable lplu  *  *  Success returns 0, Failure returns 1  *  *  The low power link up (lplu) state is set to the power management level D3  *  and SmartSpeed is disabled when active is true, else clear lplu for D3  *  and enable Smartspeed.  LPLU and Smartspeed are mutually exclusive.  LPLU  *  is used during Dx states where the power conservation is most important.  *  During driver activity, SmartSpeed should be enabled so performance is  *  maintained.  This is a function pointer entry point called by the  *  api module.  **/
+comment|/**  *  e1000_set_d3_lplu_state_82541 - Sets low power link up state for D3  *  @hw: pointer to the HW structure  *  @active: boolean used to enable/disable lplu  *  *  Success returns 0, Failure returns 1  *  *  The low power link up (lplu) state is set to the power management level D3  *  and SmartSpeed is disabled when active is true, else clear lplu for D3  *  and enable Smartspeed.  LPLU and Smartspeed are mutually exclusive.  LPLU  *  is used during Dx states where the power conservation is most important.  *  During driver activity, SmartSpeed should be enabled so performance is  *  maintained.  This is a function pointer entry point called by the  *  api module.  **/
 end_comment
 
 begin_function
@@ -3786,7 +3782,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_led_82541 - Configures SW controllable LED  *  @hw - pointer to the HW structure  *  *  This prepares the SW controllable LED for use and saves the current state  *  of the LED so it can be later restored.  This is a function pointer entry  *  point called by the api module.  **/
+comment|/**  *  e1000_setup_led_82541 - Configures SW controllable LED  *  @hw: pointer to the HW structure  *  *  This prepares the SW controllable LED for use and saves the current state  *  of the LED so it can be later restored.  This is a function pointer entry  *  point called by the api module.  **/
 end_comment
 
 begin_function
@@ -3895,7 +3891,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_cleanup_led_82541 - Set LED config to default operation  *  @hw - pointer to the HW structure  *  *  Remove the current LED configuration and set the LED configuration  *  to the default value, saved from the EEPROM.  This is a function pointer  *  entry point called by the api module.  **/
+comment|/**  *  e1000_cleanup_led_82541 - Set LED config to default operation  *  @hw: pointer to the HW structure  *  *  Remove the current LED configuration and set the LED configuration  *  to the default value, saved from the EEPROM.  This is a function pointer  *  entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -3975,7 +3971,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_phy_init_script_82541 - Initialize GbE PHY  *  @hw - pointer to the HW structure  *  *  Initializes the IGP PHY.  **/
+comment|/**  *  e1000_phy_init_script_82541 - Initialize GbE PHY  *  @hw: pointer to the HW structure  *  *  Initializes the IGP PHY.  **/
 end_comment
 
 begin_function
@@ -4357,7 +4353,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_script_state_82541 - Enable/Disable PHY init script  *  @hw - pointer to the HW structure  *  @state - boolean value used to enable/disable PHY init script  *  *  Allows the driver to enable/disable the PHY init script, if the PHY is an  *  IGP PHY.  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_script_state_82541 - Enable/Disable PHY init script  *  @hw: pointer to the HW structure  *  @state: boolean value used to enable/disable PHY init script  *  *  Allows the driver to enable/disable the PHY init script, if the PHY is an  *  IGP PHY.  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -4443,7 +4439,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_clear_hw_cntrs_82541 - Clear device specific hardware counters  *  @hw - pointer to the HW structure  *  *  Clears the hardware counters by reading the counter registers.  **/
+comment|/**  *  e1000_clear_hw_cntrs_82541 - Clear device specific hardware counters  *  @hw: pointer to the HW structure  *  *  Clears the hardware counters by reading the counter registers.  **/
 end_comment
 
 begin_function
