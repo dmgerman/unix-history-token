@@ -1272,15 +1272,7 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait for the thread to die.  kthread_exit will do a wakeup 	 * on the event thread's struct thread * so that we know it is 	 * save to proceed.  IF the thread is running, set the please 	 * die flag and wait for it to comply.  Since the wakeup on 	 * the event thread happens only in kthread_exit, we don't 	 * need to loop here. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mtx
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Wait for the thread to die.  kthread_exit will do a wakeup 	 * on the event thread's struct thread * so that we know it is 	 * safe to proceed.  IF the thread is running, set the please 	 * die flag and wait for it to comply.  Since the wakeup on 	 * the event thread happens only in kthread_exit, we don't 	 * need to loop here. 	 */
 name|bus_teardown_intr
 argument_list|(
 name|brdev
@@ -1292,6 +1284,14 @@ argument_list|,
 name|sc
 operator|->
 name|intrhand
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mtx
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1943,14 +1943,6 @@ name|flags
 operator||=
 name|CBB_KTHREAD_RUNNING
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mtx
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1964,6 +1956,14 @@ operator|==
 literal|0
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mtx
+argument_list|)
+expr_stmt|;
 comment|/* 		 * We take out Giant here because we need it deep, 		 * down in the bowels of the vm system for mapping the 		 * memory we need to read the CIS.  In addition, since 		 * we are adding/deleting devices from the dev tree, 		 * and that code isn't MP safe, we have to hold Giant. 		 */
 name|mtx_lock
 argument_list|(
@@ -2149,14 +2149,6 @@ operator|/
 literal|4
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mtx
-argument_list|)
-expr_stmt|;
 block|}
 name|DEVPRINTF
 argument_list|(
@@ -2167,14 +2159,6 @@ name|dev
 operator|,
 literal|"Thread terminating\n"
 operator|)
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 name|sc
