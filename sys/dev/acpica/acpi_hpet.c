@@ -227,6 +227,16 @@ begin_comment
 comment|/* Location of actual timer value */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DEV_HPET
+parameter_list|(
+name|x
+parameter_list|)
+value|(acpi_get_magic(x) == (int)&acpi_hpet_devclass)
+end_define
+
 begin_decl_stmt
 name|struct
 name|timecounter
@@ -294,15 +304,9 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|DEV_HPET
-parameter_list|(
-name|x
-parameter_list|)
-value|(acpi_get_magic(x) == (int)&acpi_hpet_devclass)
-end_define
+begin_comment
+comment|/* Discover the HPET via the ACPI table of the same name. */
+end_comment
 
 begin_function
 name|void
@@ -326,7 +330,7 @@ decl_stmt|;
 name|device_t
 name|child
 decl_stmt|;
-comment|/*Currently, id and minimam clock tick info. is discarded.*/
+comment|/* Currently, ID and minimum clock tick info is unused. */
 name|status
 operator|=
 name|AcpiGetTable
@@ -352,6 +356,7 @@ name|status
 argument_list|)
 condition|)
 return|return;
+comment|/* 	 * The unit number could be derived from hdr->Sequence but we only 	 * support one HPET device. 	 */
 name|hpet
 operator|=
 operator|(
@@ -360,16 +365,17 @@ operator|*
 operator|)
 name|hdr
 expr_stmt|;
-comment|/*unit No.hdr->Sequence*/
 if|if
 condition|(
 name|hpet
 operator|->
 name|Sequence
+operator|!=
+literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"HPET TABLE:Sequense is non zero %d\n"
+literal|"ACPI HPET table warning: Sequence is non-zero (%d)\n"
 argument_list|,
 name|hpet
 operator|->
@@ -405,6 +411,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Record a magic value so we can detect this device later. */
 name|acpi_set_magic
 argument_list|(
 name|child
@@ -479,13 +486,21 @@ name|acpi_disabled
 argument_list|(
 literal|"hpet"
 argument_list|)
-operator|||
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
 operator|!
 name|DEV_HPET
 argument_list|(
 name|dev
 argument_list|)
-operator|||
+operator|&&
+operator|(
 name|ACPI_ID_PROBE
 argument_list|(
 name|device_get_parent
@@ -506,6 +521,7 @@ name|dev
 argument_list|)
 operator|!=
 literal|0
+operator|)
 condition|)
 return|return
 operator|(
