@@ -665,7 +665,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|socket_args
 comment|/* { 		int	domain; 		int	type; 		int	protocol; 	} */
@@ -890,7 +889,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|bind_args
 comment|/* { 		int	s; 		caddr_t	name; 		int	namelen; 	} */
@@ -1122,7 +1120,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|listen_args
 comment|/* { 		int	s; 		int	backlog; 	} */
@@ -1271,7 +1268,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|accept_args
 comment|/* { 		int	s; 		struct sockaddr	* __restrict name; 		socklen_t	* __restrict anamelen; 	} */
@@ -2383,7 +2379,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|connect_args
 comment|/* { 		int	s; 		caddr_t	name; 		int	namelen; 	} */
@@ -2776,7 +2771,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|socketpair_args
 comment|/* { 		int	domain; 		int	type; 		int	protocol; 		int	*rsv; 	} */
@@ -2784,7 +2778,6 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|filedesc
 modifier|*
@@ -3253,7 +3246,6 @@ name|mp
 parameter_list|,
 name|flags
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -3262,7 +3254,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-specifier|register
 name|struct
 name|msghdr
 modifier|*
@@ -3413,7 +3404,6 @@ operator|==
 name|MSG_COMPAT
 condition|)
 block|{
-specifier|register
 name|struct
 name|cmsghdr
 modifier|*
@@ -3998,7 +3988,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|sendto_args
 comment|/* { 		int	s; 		caddr_t	buf; 		size_t	len; 		int	flags; 		caddr_t	to; 		int	tolen; 	} */
@@ -4124,7 +4113,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|osend_args
 comment|/* { 		int	s; 		caddr_t	buf; 		int	len; 		int	flags; 	} */
@@ -5462,7 +5450,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|recvfrom_args
 comment|/* { 		int	s; 		caddr_t	buf; 		size_t	len; 		int	flags; 		struct sockaddr * __restrict	from; 		socklen_t * __restrict fromlenaddr; 	} */
@@ -5673,7 +5660,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|orecv_args
 comment|/* { 		int	s; 		caddr_t	buf; 		int	len; 		int	flags; 	} */
@@ -6149,7 +6135,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|shutdown_args
 comment|/* { 		int	s; 		int	how; 	} */
@@ -6253,7 +6238,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|setsockopt_args
 comment|/* { 		int	s; 		int	level; 		int	name; 		caddr_t	val; 		int	valsize; 	} */
@@ -6526,7 +6510,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|getsockopt_args
 comment|/* { 		int	s; 		int	level; 		int	name; 		void * __restrict	val; 		socklen_t * __restrict avalsize; 	} */
@@ -6886,7 +6869,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|getsockname_args
 comment|/* { 		int	fdes; 		struct sockaddr * __restrict asa; 		socklen_t * __restrict alen; 	} */
@@ -7344,7 +7326,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|getpeername_args
 comment|/* { 		int	fdes; 		struct sockaddr * __restrict	asa; 		socklen_t * __restrict	alen; 	} */
@@ -7838,13 +7819,11 @@ decl_stmt|,
 name|type
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
