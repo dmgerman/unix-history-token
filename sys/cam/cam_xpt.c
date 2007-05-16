@@ -4928,6 +4928,11 @@ name|ENOTSUP
 expr_stmt|;
 break|break;
 block|}
+name|xpt_release_bus
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 comment|/* 	 * This is the getpassthru ioctl. It takes a XPT_GDEVLIST ccb as input, 	 * with the periphal driver name and unit name filled in.  The other 	 * fields don't really matter as input.  The passthrough driver name 	 * ("pass"), and unit number are passed back in the ccb.  The current 	 * device generation number, and the index into the device peripheral 	 * driver list, and the status are also passed back.  Note that 	 * since we do everything in one pass, unlike the XPT_GDEVLIST ccb, 	 * we never return a status of CAM_GDEVLIST_LIST_CHANGED.  It is 	 * (or rather should be) impossible for the device peripheral driver 	 * list to change since we look at the whole thing in one pass, and 	 * we do it with lock protection. 	 *  	 */
