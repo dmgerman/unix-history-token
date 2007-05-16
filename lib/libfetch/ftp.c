@@ -1104,6 +1104,7 @@ name|i
 decl_stmt|,
 name|len
 decl_stmt|;
+comment|/* If no slashes in name, no need to change dirs. */
 if|if
 condition|(
 operator|(
@@ -1183,7 +1184,7 @@ argument_list|(
 name|pwd
 argument_list|)
 expr_stmt|;
-comment|/* look for a common prefix */
+comment|/* Look for a common prefix between PWD and dir to fetch. */
 for|for
 control|(
 name|i
@@ -1222,6 +1223,7 @@ literal|0
 block|DEBUG(fprintf(stderr, "have: [%.*s|%s]\n", i, pwd, pwd + i)); 		DEBUG(fprintf(stderr, "want: [%.*s|%s]\n", i, file, file + i));
 endif|#
 directive|endif
+comment|/* Keep going up a dir until we have a matching prefix. */
 if|if
 condition|(
 name|pwd
@@ -1310,6 +1312,83 @@ operator|)
 return|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|FTP_COMBINE_CWDS
+comment|/* Skip leading slashes, even "////". */
+for|for
+control|(
+name|beg
+operator|=
+name|file
+operator|+
+name|i
+init|;
+name|beg
+operator|<
+name|end
+operator|&&
+operator|*
+name|beg
+operator|==
+literal|'/'
+condition|;
+operator|++
+name|beg
+operator|,
+operator|++
+name|i
+control|)
+comment|/* nothing */
+empty_stmt|;
+comment|/* If there is no trailing dir, we're already there. */
+if|if
+condition|(
+name|beg
+operator|>=
+name|end
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* Change to the directory all in one chunk (e.g., foo/bar/baz). */
+name|e
+operator|=
+name|_ftp_cmd
+argument_list|(
+name|conn
+argument_list|,
+literal|"CWD %.*s"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|end
+operator|-
+name|beg
+argument_list|)
+argument_list|,
+name|beg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|==
+name|FTP_FILE_ACTION_OK
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* FTP_COMBINE_CWDS */
+comment|/* That didn't work so go back to legacy behavior (multiple CWDs). */
 for|for
 control|(
 name|beg
@@ -5124,6 +5203,7 @@ condition|)
 goto|goto
 name|fouch
 goto|;
+comment|/* TODO: Request extended features supported, if any (RFC 3659). */
 comment|/* done */
 return|return
 operator|(
