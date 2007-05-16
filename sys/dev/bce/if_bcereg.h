@@ -101,6 +101,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/bpf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -113,12 +125,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -126,12 +132,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_media.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bpf.h>
 end_include
 
 begin_include
@@ -161,7 +161,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/if_ether.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/udp.h>
 end_include
 
 begin_include
@@ -26043,13 +26067,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BCE_TX_SLACK_SPACE
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
 name|RX_PAGES
 value|2
 end_define
@@ -26087,13 +26104,6 @@ define|#
 directive|define
 name|MAX_RX_BD
 value|(TOTAL_RX_BD - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCE_RX_SLACK_SPACE
-value|(MAX_RX_BD - 8)
 end_define
 
 begin_define
@@ -26561,7 +26571,21 @@ begin_define
 define|#
 directive|define
 name|BCE_MAX_SEGMENTS
-value|8
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TSO_MAX_SIZE
+value|65536
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TSO_MAX_SEG_SIZE
+value|4096
 end_define
 
 begin_define
@@ -26808,7 +26832,7 @@ comment|/* Interface number */
 name|struct
 name|resource
 modifier|*
-name|bce_res
+name|bce_res_mem
 decl_stmt|;
 comment|/* Device resource handle */
 name|struct
@@ -26831,7 +26855,7 @@ comment|/* Device virtual memory handle */
 name|struct
 name|resource
 modifier|*
-name|bce_irq
+name|bce_res_irq
 decl_stmt|;
 comment|/* IRQ Resource Handle */
 name|struct
@@ -26881,6 +26905,7 @@ define|#
 directive|define
 name|BCE_MFW_ENABLE_FLAG
 value|0x40
+comment|/* Management F/W is enabled */
 comment|/* PHY specific flags. */
 name|u32
 name|bce_phy_flags
@@ -26888,19 +26913,19 @@ decl_stmt|;
 define|#
 directive|define
 name|BCE_PHY_SERDES_FLAG
-value|1
+value|0x001
 define|#
 directive|define
 name|BCE_PHY_CRC_FIX_FLAG
-value|2
+value|0x002
 define|#
 directive|define
 name|BCE_PHY_PARALLEL_DETECT_FLAG
-value|4
+value|0x004
 define|#
 directive|define
 name|BCE_PHY_2_5G_CAPABLE_FLAG
-value|8
+value|0x008
 define|#
 directive|define
 name|BCE_PHY_INT_MODE_MASK_FLAG
@@ -27212,7 +27237,13 @@ name|u16
 name|free_rx_bd
 decl_stmt|;
 name|u16
+name|max_rx_bd
+decl_stmt|;
+name|u16
 name|used_tx_bd
+decl_stmt|;
+name|u16
+name|max_tx_bd
 decl_stmt|;
 comment|/* Provides access to hardware statistics through sysctl. */
 name|u64
@@ -27409,9 +27440,17 @@ name|rx_low_watermark
 decl_stmt|;
 comment|/* Lowest number of rx_bd's free. */
 name|u32
+name|rx_empty_count
+decl_stmt|;
+comment|/* Number of times the RX chain was empty. */
+name|u32
 name|tx_hi_watermark
 decl_stmt|;
 comment|/* Greatest number of tx_bd's used. */
+name|u32
+name|tx_full_count
+decl_stmt|;
+comment|/* Number of times the TX chain was full. */
 name|u32
 name|mbuf_alloc_failed
 decl_stmt|;
@@ -27425,6 +27464,10 @@ decl_stmt|;
 name|u32
 name|lost_status_block_updates
 decl_stmt|;
+name|u32
+name|requested_tso_frames
+decl_stmt|;
+comment|/* Number of TSO frames enqueued. */
 endif|#
 directive|endif
 block|}

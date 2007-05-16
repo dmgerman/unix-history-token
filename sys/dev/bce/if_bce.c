@@ -2135,6 +2135,126 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/* Tunable device values                                                    */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bce_tso_enable
+init|=
+name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bce_msi_enable
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Allowable values are TRUE or FALSE */
+end_comment
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.bce.tso_enable"
+argument_list|,
+operator|&
+name|bce_tso_enable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Allowable values are 0 (IRQ only) and 1 (IRQ or MSI) */
+end_comment
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.bce.msi_enable"
+argument_list|,
+operator|&
+name|bce_msi_enable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bce
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"bce driver parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_bce
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tso_enable
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|bce_tso_enable
+argument_list|,
+literal|0
+argument_list|,
+literal|"TSO Enable/Disable"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_bce
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|msi_enable
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|bce_msi_enable
+argument_list|,
+literal|0
+argument_list|,
+literal|"MSI | INTx selector"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
 comment|/* Device probe function.                                                   */
 end_comment
 
@@ -2576,6 +2696,19 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* Set initial device and PHY flags */
+name|sc
+operator|->
+name|bce_flags
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|bce_phy_flags
+operator|=
+literal|0
+expr_stmt|;
 name|sc
 operator|->
 name|bce_unit
@@ -2597,31 +2730,27 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|bce_res
+name|bce_res_mem
 operator|=
 name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
-comment|/* dev */
 name|SYS_RES_MEMORY
 argument_list|,
-comment|/* type */
 operator|&
 name|rid
 argument_list|,
-comment|/* rid */
 name|RF_ACTIVE
 operator||
 name|PCI_RF_DENSE
 argument_list|)
 expr_stmt|;
-comment|/* flags */
 if|if
 condition|(
 name|sc
 operator|->
-name|bce_res
+name|bce_res_mem
 operator|==
 name|NULL
 condition|)
@@ -2652,7 +2781,7 @@ name|rman_get_bustag
 argument_list|(
 name|sc
 operator|->
-name|bce_res
+name|bce_res_mem
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2663,7 +2792,7 @@ name|rman_get_bushandle
 argument_list|(
 name|sc
 operator|->
-name|bce_res
+name|bce_res_mem
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2677,17 +2806,22 @@ name|rman_get_virtual
 argument_list|(
 name|sc
 operator|->
-name|bce_res
+name|bce_res_mem
 argument_list|)
 expr_stmt|;
-comment|/* Allocate PCI IRQ resources. */
+comment|/* If MSI is enabled in the driver, get the vector count. */
 name|count
 operator|=
+name|bce_msi_enable
+condition|?
 name|pci_msi_count
 argument_list|(
 name|dev
 argument_list|)
+else|:
+literal|0
 expr_stmt|;
+comment|/* Allocate PCI IRQ resources. */
 if|if
 condition|(
 name|count
@@ -2703,6 +2837,10 @@ name|count
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|count
+operator|==
+literal|1
 condition|)
 block|{
 name|rid
@@ -2715,15 +2853,37 @@ name|bce_flags
 operator||=
 name|BCE_USING_MSI_FLAG
 expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO
+argument_list|,
+literal|"Allocating %d MSI interrupt(s).\n"
+argument_list|,
+name|count
+argument_list|)
+expr_stmt|;
 block|}
 else|else
+block|{
 name|rid
 operator|=
 literal|0
 expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO
+argument_list|,
+literal|"Allocating IRQ interrupt.\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|sc
 operator|->
-name|bce_irq
+name|bce_res_irq
 operator|=
 name|bus_alloc_resource_any
 argument_list|(
@@ -2743,14 +2903,14 @@ if|if
 condition|(
 name|sc
 operator|->
-name|bce_irq
+name|bce_res_irq
 operator|==
 name|NULL
 condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): PCI map interrupt failed\n"
+literal|"%s(%d): PCI map interrupt failed!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -2947,19 +3107,6 @@ name|sc
 operator|->
 name|bce_shmem_base
 argument_list|)
-expr_stmt|;
-comment|/* Set initial device and PHY flags */
-name|sc
-operator|->
-name|bce_flags
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|bce_phy_flags
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Get PCI bus information (speed and type). */
 name|val
@@ -3553,6 +3700,30 @@ name|if_mtu
 operator|=
 name|ETHERMTU
 expr_stmt|;
+if|if
+condition|(
+name|bce_tso_enable
+condition|)
+block|{
+name|ifp
+operator|->
+name|if_hwassist
+operator|=
+name|BCE_IF_HWASSIST
+operator||
+name|CSUM_TSO
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capabilities
+operator|=
+name|BCE_IF_CAPABILITIES
+operator||
+name|IFCAP_TSO4
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ifp
 operator|->
 name|if_hwassist
@@ -3565,6 +3736,7 @@ name|if_capabilities
 operator|=
 name|BCE_IF_CAPABILITIES
 expr_stmt|;
+block|}
 name|ifp
 operator|->
 name|if_capenable
@@ -3734,7 +3906,7 @@ name|dev
 argument_list|,
 name|sc
 operator|->
-name|bce_irq
+name|bce_res_irq
 argument_list|,
 name|INTR_TYPE_NET
 operator||
@@ -5128,6 +5300,229 @@ operator|->
 name|bce_miibus
 argument_list|)
 expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO
+argument_list|,
+literal|"mii_media_active = 0x%08X\n"
+argument_list|,
+name|mii
+operator|->
+name|mii_media_active
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_DEBUG
+comment|/* Decode the interface media flags. */
+name|BCE_PRINTF
+argument_list|(
+literal|"Media: ( "
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|IFM_TYPE
+argument_list|(
+name|mii
+operator|->
+name|mii_media_active
+argument_list|)
+condition|)
+block|{
+case|case
+name|IFM_ETHER
+case|:
+name|printf
+argument_list|(
+literal|"Ethernet )"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown )"
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|" Media Options: ( "
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|IFM_SUBTYPE
+argument_list|(
+name|mii
+operator|->
+name|mii_media_active
+argument_list|)
+condition|)
+block|{
+case|case
+name|IFM_AUTO
+case|:
+name|printf
+argument_list|(
+literal|"Autoselect )"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IFM_MANUAL
+case|:
+name|printf
+argument_list|(
+literal|"Manual )"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IFM_NONE
+case|:
+name|printf
+argument_list|(
+literal|"None )"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IFM_10_T
+case|:
+name|printf
+argument_list|(
+literal|"10Base-T )"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IFM_100_TX
+case|:
+name|printf
+argument_list|(
+literal|"100Base-TX )"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IFM_1000_SX
+case|:
+name|printf
+argument_list|(
+literal|"1000Base-SX )"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IFM_1000_T
+case|:
+name|printf
+argument_list|(
+literal|"1000Base-T )"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Other )"
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|" Global Options: ("
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mii
+operator|->
+name|mii_media_active
+operator|&
+name|IFM_FDX
+condition|)
+name|printf
+argument_list|(
+literal|" FullDuplex"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mii
+operator|->
+name|mii_media_active
+operator|&
+name|IFM_HDX
+condition|)
+name|printf
+argument_list|(
+literal|" HalfDuplex"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mii
+operator|->
+name|mii_media_active
+operator|&
+name|IFM_LOOP
+condition|)
+name|printf
+argument_list|(
+literal|" Loopback"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mii
+operator|->
+name|mii_media_active
+operator|&
+name|IFM_FLAG0
+condition|)
+name|printf
+argument_list|(
+literal|" Flag0"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mii
+operator|->
+name|mii_media_active
+operator|&
+name|IFM_FLAG1
+condition|)
+name|printf
+argument_list|(
+literal|" Flag1"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mii
+operator|->
+name|mii_media_active
+operator|&
+name|IFM_FLAG2
+condition|)
+name|printf
+argument_list|(
+literal|" Flag2"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" )\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|BCE_CLRBIT
 argument_list|(
 name|sc
@@ -5137,7 +5532,7 @@ argument_list|,
 name|BCE_EMAC_MODE_PORT
 argument_list|)
 expr_stmt|;
-comment|/* Set MII or GMII inerface based on the speed negotiated by the PHY. */
+comment|/* Set MII or GMII interface based on the speed negotiated by the PHY. */
 if|if
 condition|(
 name|IFM_SUBTYPE
@@ -9398,6 +9793,14 @@ decl_stmt|;
 name|bus_addr_t
 name|busaddr
 decl_stmt|;
+name|bus_size_t
+name|max_size
+decl_stmt|,
+name|max_seg_size
+decl_stmt|;
+name|int
+name|max_segments
+decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -9423,45 +9826,32 @@ name|bus_dma_tag_create
 argument_list|(
 name|NULL
 argument_list|,
-comment|/* parent     */
 literal|1
 argument_list|,
-comment|/* alignment  */
 name|BCE_DMA_BOUNDARY
 argument_list|,
-comment|/* boundary   */
 name|sc
 operator|->
 name|max_bus_addr
 argument_list|,
-comment|/* lowaddr    */
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* highaddr   */
 name|NULL
 argument_list|,
-comment|/* filterfunc */
 name|NULL
 argument_list|,
-comment|/* filterarg  */
 name|MAXBSIZE
 argument_list|,
-comment|/* maxsize    */
 name|BUS_SPACE_UNRESTRICTED
 argument_list|,
-comment|/* nsegments  */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-comment|/* maxsegsize */
 literal|0
 argument_list|,
-comment|/* flags      */
 name|NULL
 argument_list|,
-comment|/* locfunc    */
 name|NULL
 argument_list|,
-comment|/* lockarg    */
 operator|&
 name|sc
 operator|->
@@ -9495,45 +9885,32 @@ name|sc
 operator|->
 name|parent_tag
 argument_list|,
-comment|/* parent      */
 name|BCE_DMA_ALIGN
 argument_list|,
-comment|/* alignment   */
 name|BCE_DMA_BOUNDARY
 argument_list|,
-comment|/* boundary    */
 name|sc
 operator|->
 name|max_bus_addr
 argument_list|,
-comment|/* lowaddr     */
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* highaddr    */
 name|NULL
 argument_list|,
-comment|/* filterfunc  */
 name|NULL
 argument_list|,
-comment|/* filterarg   */
 name|BCE_STATUS_BLK_SZ
 argument_list|,
-comment|/* maxsize     */
 literal|1
 argument_list|,
-comment|/* nsegments   */
 name|BCE_STATUS_BLK_SZ
 argument_list|,
-comment|/* maxsegsize  */
 literal|0
 argument_list|,
-comment|/* flags       */
 name|NULL
 argument_list|,
-comment|/* lockfunc    */
 name|NULL
 argument_list|,
-comment|/* lockarg     */
 operator|&
 name|sc
 operator|->
@@ -9566,7 +9943,6 @@ name|sc
 operator|->
 name|status_tag
 argument_list|,
-comment|/* dmat        */
 operator|(
 name|void
 operator|*
@@ -9577,10 +9953,8 @@ name|sc
 operator|->
 name|status_block
 argument_list|,
-comment|/* vaddr       */
 name|BUS_DMA_NOWAIT
 argument_list|,
-comment|/* flags       */
 operator|&
 name|sc
 operator|->
@@ -9626,31 +10000,24 @@ name|sc
 operator|->
 name|status_tag
 argument_list|,
-comment|/* dmat        */
 name|sc
 operator|->
 name|status_map
 argument_list|,
-comment|/* map         */
 name|sc
 operator|->
 name|status_block
 argument_list|,
-comment|/* buf         */
 name|BCE_STATUS_BLK_SZ
 argument_list|,
-comment|/* buflen      */
 name|bce_dma_map_addr
 argument_list|,
-comment|/* callback    */
 operator|&
 name|busaddr
 argument_list|,
-comment|/* callbackarg */
 name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
-comment|/* flags       */
 if|if
 condition|(
 name|error
@@ -9705,45 +10072,32 @@ name|sc
 operator|->
 name|parent_tag
 argument_list|,
-comment|/* parent      */
 name|BCE_DMA_ALIGN
 argument_list|,
-comment|/* alignment   */
 name|BCE_DMA_BOUNDARY
 argument_list|,
-comment|/* boundary    */
 name|sc
 operator|->
 name|max_bus_addr
 argument_list|,
-comment|/* lowaddr     */
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* highaddr    */
 name|NULL
 argument_list|,
-comment|/* filterfunc  */
 name|NULL
 argument_list|,
-comment|/* filterarg   */
 name|BCE_STATS_BLK_SZ
 argument_list|,
-comment|/* maxsize     */
 literal|1
 argument_list|,
-comment|/* nsegments   */
 name|BCE_STATS_BLK_SZ
 argument_list|,
-comment|/* maxsegsize  */
 literal|0
 argument_list|,
-comment|/* flags       */
 name|NULL
 argument_list|,
-comment|/* lockfunc    */
 name|NULL
 argument_list|,
-comment|/* lockarg     */
 operator|&
 name|sc
 operator|->
@@ -9776,7 +10130,6 @@ name|sc
 operator|->
 name|stats_tag
 argument_list|,
-comment|/* dmat        */
 operator|(
 name|void
 operator|*
@@ -9787,10 +10140,8 @@ name|sc
 operator|->
 name|stats_block
 argument_list|,
-comment|/* vaddr       */
 name|BUS_DMA_NOWAIT
 argument_list|,
-comment|/* flags       */
 operator|&
 name|sc
 operator|->
@@ -9836,31 +10187,24 @@ name|sc
 operator|->
 name|stats_tag
 argument_list|,
-comment|/* dmat        */
 name|sc
 operator|->
 name|stats_map
 argument_list|,
-comment|/* map         */
 name|sc
 operator|->
 name|stats_block
 argument_list|,
-comment|/* buf         */
 name|BCE_STATS_BLK_SZ
 argument_list|,
-comment|/* buflen      */
 name|bce_dma_map_addr
 argument_list|,
-comment|/* callback    */
 operator|&
 name|busaddr
 argument_list|,
-comment|/* callbackarg */
 name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
-comment|/* flags       */
 if|if
 condition|(
 name|error
@@ -9915,45 +10259,32 @@ name|sc
 operator|->
 name|parent_tag
 argument_list|,
-comment|/* parent      */
 name|BCM_PAGE_SIZE
 argument_list|,
-comment|/* alignment   */
 name|BCE_DMA_BOUNDARY
 argument_list|,
-comment|/* boundary    */
 name|sc
 operator|->
 name|max_bus_addr
 argument_list|,
-comment|/* lowaddr     */
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* highaddr    */
 name|NULL
 argument_list|,
-comment|/* filterfunc  */
 name|NULL
 argument_list|,
-comment|/* filterarg   */
 name|BCE_TX_CHAIN_PAGE_SZ
 argument_list|,
-comment|/* maxsize     */
 literal|1
 argument_list|,
-comment|/* nsegments   */
 name|BCE_TX_CHAIN_PAGE_SZ
 argument_list|,
-comment|/* maxsegsize  */
 literal|0
 argument_list|,
-comment|/* flags       */
 name|NULL
 argument_list|,
-comment|/* lockfunc    */
 name|NULL
 argument_list|,
-comment|/* lockarg     */
 operator|&
 name|sc
 operator|->
@@ -10000,7 +10331,6 @@ name|sc
 operator|->
 name|tx_bd_chain_tag
 argument_list|,
-comment|/* tag   */
 operator|(
 name|void
 operator|*
@@ -10014,10 +10344,8 @@ index|[
 name|i
 index|]
 argument_list|,
-comment|/* vaddr */
 name|BUS_DMA_NOWAIT
 argument_list|,
-comment|/* flags */
 operator|&
 name|sc
 operator|->
@@ -10054,7 +10382,6 @@ name|sc
 operator|->
 name|tx_bd_chain_tag
 argument_list|,
-comment|/* dmat        */
 name|sc
 operator|->
 name|tx_bd_chain_map
@@ -10062,7 +10389,6 @@ index|[
 name|i
 index|]
 argument_list|,
-comment|/* map         */
 name|sc
 operator|->
 name|tx_bd_chain
@@ -10070,21 +10396,16 @@ index|[
 name|i
 index|]
 argument_list|,
-comment|/* buf         */
 name|BCE_TX_CHAIN_PAGE_SZ
 argument_list|,
-comment|/* buflen      */
 name|bce_dma_map_addr
 argument_list|,
-comment|/* callback    */
 operator|&
 name|busaddr
 argument_list|,
-comment|/* callbackarg */
 name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
-comment|/* flags       */
 if|if
 condition|(
 name|error
@@ -10139,6 +10460,42 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Check the required size before mapping to conserve resources. */
+if|if
+condition|(
+name|bce_tso_enable
+condition|)
+block|{
+name|max_size
+operator|=
+name|BCE_TSO_MAX_SIZE
+expr_stmt|;
+name|max_segments
+operator|=
+name|BCE_MAX_SEGMENTS
+expr_stmt|;
+name|max_seg_size
+operator|=
+name|BCE_TSO_MAX_SEG_SIZE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|max_size
+operator|=
+name|MCLBYTES
+operator|*
+name|BCE_MAX_SEGMENTS
+expr_stmt|;
+name|max_segments
+operator|=
+name|BCE_MAX_SEGMENTS
+expr_stmt|;
+name|max_seg_size
+operator|=
+name|MCLBYTES
+expr_stmt|;
+block|}
 comment|/* Create a DMA tag for TX mbufs. */
 if|if
 condition|(
@@ -10148,47 +10505,32 @@ name|sc
 operator|->
 name|parent_tag
 argument_list|,
-comment|/* parent      */
 literal|1
 argument_list|,
-comment|/* alignment   */
 name|BCE_DMA_BOUNDARY
 argument_list|,
-comment|/* boundary    */
 name|sc
 operator|->
 name|max_bus_addr
 argument_list|,
-comment|/* lowaddr     */
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* highaddr    */
 name|NULL
 argument_list|,
-comment|/* filterfunc  */
 name|NULL
 argument_list|,
-comment|/* filterarg   */
-name|MCLBYTES
-operator|*
-name|BCE_MAX_SEGMENTS
+name|max_size
 argument_list|,
-comment|/* maxsize     */
-name|BCE_MAX_SEGMENTS
+name|max_segments
 argument_list|,
-comment|/* nsegments   */
-name|MCLBYTES
+name|max_seg_size
 argument_list|,
-comment|/* maxsegsize  */
 literal|0
 argument_list|,
-comment|/* flags       */
 name|NULL
 argument_list|,
-comment|/* lockfunc    */
 name|NULL
 argument_list|,
-comment|/* lockarg     */
 operator|&
 name|sc
 operator|->
@@ -10275,45 +10617,32 @@ name|sc
 operator|->
 name|parent_tag
 argument_list|,
-comment|/* parent      */
 name|BCM_PAGE_SIZE
 argument_list|,
-comment|/* alignment   */
 name|BCE_DMA_BOUNDARY
 argument_list|,
-comment|/* boundary    */
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* lowaddr     */
 name|sc
 operator|->
 name|max_bus_addr
 argument_list|,
-comment|/* lowaddr     */
 name|NULL
 argument_list|,
-comment|/* filter      */
 name|NULL
 argument_list|,
-comment|/* filterarg   */
 name|BCE_RX_CHAIN_PAGE_SZ
 argument_list|,
-comment|/* maxsize     */
 literal|1
 argument_list|,
-comment|/* nsegments   */
 name|BCE_RX_CHAIN_PAGE_SZ
 argument_list|,
-comment|/* maxsegsize  */
 literal|0
 argument_list|,
-comment|/* flags       */
 name|NULL
 argument_list|,
-comment|/* lockfunc    */
 name|NULL
 argument_list|,
-comment|/* lockarg     */
 operator|&
 name|sc
 operator|->
@@ -10360,7 +10689,6 @@ name|sc
 operator|->
 name|rx_bd_chain_tag
 argument_list|,
-comment|/* tag   */
 operator|(
 name|void
 operator|*
@@ -10374,10 +10702,8 @@ index|[
 name|i
 index|]
 argument_list|,
-comment|/* vaddr */
 name|BUS_DMA_NOWAIT
 argument_list|,
-comment|/* flags */
 operator|&
 name|sc
 operator|->
@@ -10430,7 +10756,6 @@ name|sc
 operator|->
 name|rx_bd_chain_tag
 argument_list|,
-comment|/* dmat        */
 name|sc
 operator|->
 name|rx_bd_chain_map
@@ -10438,7 +10763,6 @@ index|[
 name|i
 index|]
 argument_list|,
-comment|/* map         */
 name|sc
 operator|->
 name|rx_bd_chain
@@ -10446,21 +10770,16 @@ index|[
 name|i
 index|]
 argument_list|,
-comment|/* buf         */
 name|BCE_RX_CHAIN_PAGE_SZ
 argument_list|,
-comment|/* buflen      */
 name|bce_dma_map_addr
 argument_list|,
-comment|/* callback    */
 operator|&
 name|busaddr
 argument_list|,
-comment|/* callbackarg */
 name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
-comment|/* flags       */
 if|if
 condition|(
 name|error
@@ -10524,45 +10843,32 @@ name|sc
 operator|->
 name|parent_tag
 argument_list|,
-comment|/* parent      */
 literal|1
 argument_list|,
-comment|/* alignment   */
 name|BCE_DMA_BOUNDARY
 argument_list|,
-comment|/* boundary    */
 name|sc
 operator|->
 name|max_bus_addr
 argument_list|,
-comment|/* lowaddr     */
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* highaddr    */
 name|NULL
 argument_list|,
-comment|/* filterfunc  */
 name|NULL
 argument_list|,
-comment|/* filterarg   */
 name|MJUM9BYTES
 argument_list|,
-comment|/* maxsize     */
 name|BCE_MAX_SEGMENTS
 argument_list|,
-comment|/* nsegments   */
 name|MJUM9BYTES
 argument_list|,
-comment|/* maxsegsize  */
 literal|0
 argument_list|,
-comment|/* flags       */
 name|NULL
 argument_list|,
-comment|/* lockfunc    */
 name|NULL
 argument_list|,
-comment|/* lockarg     */
 operator|&
 name|sc
 operator|->
@@ -10741,27 +11047,48 @@ name|bce_intrhand
 operator|!=
 name|NULL
 condition|)
+block|{
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO_RESET
+argument_list|,
+literal|"Removing interrupt handler.\n"
+argument_list|)
+expr_stmt|;
 name|bus_teardown_intr
 argument_list|(
 name|dev
 argument_list|,
 name|sc
 operator|->
-name|bce_irq
+name|bce_res_irq
 argument_list|,
 name|sc
 operator|->
 name|bce_intrhand
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
 operator|->
-name|bce_irq
+name|bce_res_irq
 operator|!=
 name|NULL
 condition|)
+block|{
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO_RESET
+argument_list|,
+literal|"Releasing IRQ.\n"
+argument_list|)
+expr_stmt|;
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -10780,9 +11107,10 @@ literal|0
 argument_list|,
 name|sc
 operator|->
-name|bce_irq
+name|bce_res_irq
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
@@ -10791,19 +11119,40 @@ name|bce_flags
 operator|&
 name|BCE_USING_MSI_FLAG
 condition|)
+block|{
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO_RESET
+argument_list|,
+literal|"Releasing MSI vector.\n"
+argument_list|)
+expr_stmt|;
 name|pci_release_msi
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
 operator|->
-name|bce_res
+name|bce_res_mem
 operator|!=
 name|NULL
 condition|)
+block|{
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO_RESET
+argument_list|,
+literal|"Releasing PCI memory.\n"
+argument_list|)
+expr_stmt|;
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -10817,9 +11166,10 @@ argument_list|)
 argument_list|,
 name|sc
 operator|->
-name|bce_res
+name|bce_res_mem
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
@@ -10828,6 +11178,16 @@ name|bce_ifp
 operator|!=
 name|NULL
 condition|)
+block|{
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO_RESET
+argument_list|,
+literal|"Releasing IF.\n"
+argument_list|)
+expr_stmt|;
 name|if_free
 argument_list|(
 name|sc
@@ -10835,6 +11195,7 @@ operator|->
 name|bce_ifp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|mtx_initialized
@@ -13898,8 +14259,7 @@ argument_list|,
 name|BCE_PCICFG_INT_ACK_CMD_MASK_INT
 argument_list|)
 expr_stmt|;
-comment|/* Initialize DMA byte/word swapping, configure the number of DMA  */
-comment|/* channels and PCI clock compensation delay.                      */
+comment|/*  	 * Initialize DMA byte/word swapping, configure the number of DMA 	 * channels and PCI clock compensation delay. 	 */
 name|val
 operator|=
 name|BCE_DMA_CONFIG_DATA_BYTE_SWAP
@@ -15274,6 +15634,7 @@ name|USABLE_RX_BD
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Update some debug statistic counters */
 name|DBRUNIF
 argument_list|(
 operator|(
@@ -15293,6 +15654,22 @@ operator|=
 name|sc
 operator|->
 name|free_rx_bd
+argument_list|)
+expr_stmt|;
+name|DBRUNIF
+argument_list|(
+operator|(
+name|sc
+operator|->
+name|free_rx_bd
+operator|==
+literal|0
+operator|)
+argument_list|,
+name|sc
+operator|->
+name|rx_empty_count
+operator|++
 argument_list|)
 expr_stmt|;
 comment|/* Setup the rx_bd for the first segment. */
@@ -15674,6 +16051,12 @@ name|used_tx_bd
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|max_tx_bd
+operator|=
+name|USABLE_TX_BD
+expr_stmt|;
 name|DBRUNIF
 argument_list|(
 literal|1
@@ -15683,6 +16066,17 @@ operator|->
 name|tx_hi_watermark
 operator|=
 name|USABLE_TX_BD
+argument_list|)
+expr_stmt|;
+name|DBRUNIF
+argument_list|(
+literal|1
+argument_list|,
+name|sc
+operator|->
+name|tx_full_count
+operator|=
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The NetXtreme II supports a linked-list structre called 	 * a Buffer Descriptor Chain (or BD chain).  A BD chain 	 * consists of a series of 1 or more chain pages, each of which 	 * consists of a fixed number of BD entries. 	 * The last BD entry on each page is a pointer to the next page 	 * in the chain, and the last pointer in the BD chain 	 * points back to the beginning of the chain. 	 */
@@ -15774,7 +16168,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Initialize the context ID for an L2 TX chain. 	 */
+comment|/* Initialize the context ID for an L2 TX chain. */
 name|val
 operator|=
 name|BCE_L2CTX_TYPE_TYPE_L2
@@ -16197,7 +16591,13 @@ name|sc
 operator|->
 name|free_rx_bd
 operator|=
-name|BCE_RX_SLACK_SPACE
+name|USABLE_RX_BD
+expr_stmt|;
+name|sc
+operator|->
+name|max_rx_bd
+operator|=
+name|USABLE_RX_BD
 expr_stmt|;
 name|DBRUNIF
 argument_list|(
@@ -16208,6 +16608,17 @@ operator|->
 name|rx_low_watermark
 operator|=
 name|USABLE_RX_BD
+argument_list|)
+expr_stmt|;
+name|DBRUNIF
+argument_list|(
+literal|1
+argument_list|,
+name|sc
+operator|->
+name|rx_empty_count
+operator|=
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the RX next pointer chain entries. */
@@ -16392,7 +16803,7 @@ while|while
 condition|(
 name|prod
 operator|<
-name|BCE_RX_SLACK_SPACE
+name|TOTAL_RX_BD
 condition|)
 block|{
 name|chain_prod
@@ -16821,6 +17232,30 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Set media options.                                                       */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
 
 begin_function
 specifier|static
@@ -17370,6 +17805,7 @@ argument_list|,
 name|BUS_SPACE_BARRIER_READ
 argument_list|)
 expr_stmt|;
+comment|/* Update some debug statistics counters */
 name|DBRUNIF
 argument_list|(
 operator|(
@@ -17391,7 +17827,23 @@ operator|->
 name|free_rx_bd
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Scan through the receive chain as long  	 * as there is work to do. 	 */
+name|DBRUNIF
+argument_list|(
+operator|(
+name|sc
+operator|->
+name|free_rx_bd
+operator|==
+literal|0
+operator|)
+argument_list|,
+name|sc
+operator|->
+name|rx_empty_count
+operator|++
+argument_list|)
+expr_stmt|;
+comment|/* Scan through the receive chain as long as there is work to do */
 while|while
 condition|(
 name|sw_cons
@@ -17522,10 +17974,7 @@ literal|"%s(%d): Unexpected mbuf found in rx_bd[0x%04X]!\n"
 argument|, 				__FILE__, __LINE__, sw_chain_cons); 				bce_breakpoint(sc)
 argument_list|)
 empty_stmt|;
-comment|/* DRC - ToDo: If the received packet is small, say less */
-comment|/*             than 128 bytes, allocate a new mbuf here, */
-comment|/*             copy the data to that mbuf, and recycle   */
-comment|/*             the mapped jumbo frame.                   */
+comment|/* 			 * ToDo: If the received packet is small enough 			 * to fit into a single, non-M_EXT mbuf, 			 * allocate a new mbuf here, copy the data to  			 * that mbuf, and recycle the mapped jumbo frame. 			 */
 comment|/* Unmap the mbuf from DMA space. */
 name|bus_dmamap_sync
 argument_list|(
@@ -17576,7 +18025,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 			 * Frames received on the NetXteme II are prepended  			 * with the l2_fhdr structure which provides status 			 * information about the received frame (including 			 * VLAN tags and checksum info) and are also 			 * automatically adjusted to align the IP header 			 * (i.e. two null bytes are inserted before the  			 * Ethernet header). 			 */
+comment|/* 			 * Frames received on the NetXteme II are prepended  			 * with an l2_fhdr structure which provides status 			 * information about the received frame (including 			 * VLAN tags and checksum info).  The frames are also 			 * automatically adjusted to align the IP header 			 * (i.e. two null bytes are inserted before the  			 * Ethernet header). 			 */
 name|l2fhdr
 operator|=
 name|mtod
@@ -17886,7 +18335,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_WARN_SEND
+name|BCE_WARN_RECV
 argument_list|,
 literal|"%s(): Invalid IP checksum = 0x%04X!\n"
 argument_list|,
@@ -17954,7 +18403,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_WARN_SEND
+name|BCE_WARN_RECV
 argument_list|,
 literal|"%s(): Invalid TCP/UDP checksum = 0x%04X!\n"
 argument_list|,
@@ -18489,7 +18938,7 @@ argument_list|,
 argument|BCE_PRINTF(
 literal|"%s(%d): TX chain consumer out of range! "
 literal|" 0x%04X> 0x%04X\n"
-argument|, 				__FILE__, __LINE__, sw_tx_chain_cons,  				(int) MAX_TX_BD); 			bce_breakpoint(sc)
+argument|, __FILE__, __LINE__, sw_tx_chain_cons,  				(int) MAX_TX_BD); 			bce_breakpoint(sc)
 argument_list|)
 empty_stmt|;
 name|DBRUNIF
@@ -18689,18 +19138,45 @@ expr_stmt|;
 comment|/* Clear the tx hardware queue full flag. */
 if|if
 condition|(
-operator|(
 name|sc
 operator|->
 name|used_tx_bd
-operator|+
-name|BCE_TX_SLACK_SPACE
-operator|)
 operator|<
-name|USABLE_TX_BD
+name|sc
+operator|->
+name|max_tx_bd
 condition|)
 block|{
-comment|/*		DBRUNIF((ifp->if_drv_flags& IFF_DRV_OACTIVE), 			BCE_PRINTF("%s(): TX chain is open for business! Used tx_bd = %d\n",  				__FUNCTION__, sc->used_tx_bd)); */
+name|DBRUNIF
+argument_list|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_OACTIVE
+operator|)
+argument_list|,
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_WARN_SEND
+argument_list|,
+literal|"%s(): Open TX chain! %d/%d (used/total)\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|sc
+operator|->
+name|used_tx_bd
+argument_list|,
+name|sc
+operator|->
+name|max_tx_bd
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
@@ -19072,7 +19548,12 @@ name|sc
 argument_list|,
 name|BCE_EMAC_RX_MTU_SIZE
 argument_list|,
+name|min
+argument_list|(
 name|ether_mtu
+argument_list|,
+name|BCE_MAX_JUMBO_ETHER_MTU
+argument_list|)
 operator||
 name|BCE_EMAC_RX_MTU_SIZE_JUMBO_ENA
 argument_list|)
@@ -19553,7 +20034,32 @@ name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
+name|struct
+name|ether_vlan_header
+modifier|*
+name|eh
+decl_stmt|;
+name|struct
+name|ip
+modifier|*
+name|ip
+decl_stmt|;
+name|struct
+name|tcphdr
+modifier|*
+name|th
+decl_stmt|;
 name|u16
+name|prod
+decl_stmt|,
+name|chain_prod
+decl_stmt|,
+name|etype
+decl_stmt|,
+name|mss
+init|=
+literal|0
+decl_stmt|,
 name|vlan_tag
 init|=
 literal|0
@@ -19562,13 +20068,29 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
-name|u16
-name|chain_prod
-decl_stmt|,
-name|prod
-decl_stmt|;
 name|u32
 name|prod_bseq
+decl_stmt|;
+name|int
+name|hdr_len
+init|=
+literal|0
+decl_stmt|,
+name|e_hlen
+init|=
+literal|0
+decl_stmt|,
+name|ip_hlen
+init|=
+literal|0
+decl_stmt|,
+name|tcp_hlen
+init|=
+literal|0
+decl_stmt|,
+name|ip_len
+init|=
+literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -19636,6 +20158,284 @@ name|flags
 operator||=
 name|TX_BD_FLAGS_TCP_UDP_CKSUM
 expr_stmt|;
+if|if
+condition|(
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_TSO
+condition|)
+block|{
+comment|/* For TSO the controller needs two pieces of info, */
+comment|/* the MSS and the IP+TCP options length.           */
+name|mss
+operator|=
+name|htole16
+argument_list|(
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|tso_segsz
+argument_list|)
+expr_stmt|;
+comment|/* Map the header and find the Ethernet type& header length */
+name|eh
+operator|=
+name|mtod
+argument_list|(
+name|m0
+argument_list|,
+expr|struct
+name|ether_vlan_header
+operator|*
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|eh
+operator|->
+name|evl_encap_proto
+operator|==
+name|htons
+argument_list|(
+name|ETHERTYPE_VLAN
+argument_list|)
+condition|)
+block|{
+name|etype
+operator|=
+name|ntohs
+argument_list|(
+name|eh
+operator|->
+name|evl_proto
+argument_list|)
+expr_stmt|;
+name|e_hlen
+operator|=
+name|ETHER_HDR_LEN
+operator|+
+name|ETHER_VLAN_ENCAP_LEN
+expr_stmt|;
+block|}
+else|else
+block|{
+name|etype
+operator|=
+name|ntohs
+argument_list|(
+name|eh
+operator|->
+name|evl_encap_proto
+argument_list|)
+expr_stmt|;
+name|e_hlen
+operator|=
+name|ETHER_HDR_LEN
+expr_stmt|;
+block|}
+comment|/* Check for supported TSO Ethernet types (only IPv4 for now) */
+switch|switch
+condition|(
+name|etype
+condition|)
+block|{
+case|case
+name|ETHERTYPE_IP
+case|:
+name|ip
+operator|=
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+operator|(
+name|m0
+operator|->
+name|m_data
+operator|+
+name|e_hlen
+operator|)
+expr_stmt|;
+comment|/* TSO only supported for TCP protocol */
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_p
+operator|!=
+name|IPPROTO_TCP
+condition|)
+block|{
+name|BCE_PRINTF
+argument_list|(
+literal|"%s(%d): TSO enabled for non-TCP frame!.\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bce_tx_encap_skip_tso
+goto|;
+block|}
+comment|/* Get IP header length in bytes (min 20) */
+name|ip_hlen
+operator|=
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+expr_stmt|;
+comment|/* Get the TCP header length in bytes (min 20) */
+name|th
+operator|=
+operator|(
+expr|struct
+name|tcphdr
+operator|*
+operator|)
+operator|(
+operator|(
+name|caddr_t
+operator|)
+name|ip
+operator|+
+name|ip_hlen
+operator|)
+expr_stmt|;
+name|tcp_hlen
+operator|=
+operator|(
+name|th
+operator|->
+name|th_off
+operator|<<
+literal|2
+operator|)
+expr_stmt|;
+comment|/* IP header length and checksum will be calc'd by hardware */
+name|ip_len
+operator|=
+name|ip
+operator|->
+name|ip_len
+expr_stmt|;
+name|ip
+operator|->
+name|ip_len
+operator|=
+literal|0
+expr_stmt|;
+name|ip
+operator|->
+name|ip_sum
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|ETHERTYPE_IPV6
+case|:
+name|BCE_PRINTF
+argument_list|(
+literal|"%s(%d): TSO over IPv6 not supported!.\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bce_tx_encap_skip_tso
+goto|;
+default|default:
+name|BCE_PRINTF
+argument_list|(
+literal|"%s(%d): TSO enabled for unsupported protocol!.\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bce_tx_encap_skip_tso
+goto|;
+block|}
+name|hdr_len
+operator|=
+name|e_hlen
+operator|+
+name|ip_hlen
+operator|+
+name|tcp_hlen
+expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_EXCESSIVE_SEND
+argument_list|,
+literal|"%s(): hdr_len = %d, e_hlen = %d, ip_hlen = %d, tcp_hlen = %d, ip_len = %d\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|hdr_len
+argument_list|,
+name|e_hlen
+argument_list|,
+name|ip_hlen
+argument_list|,
+name|tcp_hlen
+argument_list|,
+name|ip_len
+argument_list|)
+expr_stmt|;
+comment|/* Set the LSO flag in the TX BD */
+name|flags
+operator||=
+name|TX_BD_FLAGS_SW_LSO
+expr_stmt|;
+comment|/* Set the length of IP + TCP options (in 32 bit words) */
+name|flags
+operator||=
+operator|(
+operator|(
+operator|(
+name|ip_hlen
+operator|+
+name|tcp_hlen
+operator|-
+literal|40
+operator|)
+operator|>>
+literal|2
+operator|)
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
+name|bce_tx_encap_skip_tso
+label|:
+name|DBRUNIF
+argument_list|(
+literal|1
+argument_list|,
+name|sc
+operator|->
+name|requested_tso_frames
+operator|++
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* Transfer any VLAN tags to the bd. */
 if|if
@@ -19704,6 +20504,7 @@ argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
+comment|/* Check if the DMA mapping was successful */
 if|if
 condition|(
 name|error
@@ -19711,7 +20512,6 @@ operator|==
 name|EFBIG
 condition|)
 block|{
-comment|/* Try to defrag the mbuf if there are too many segments. */
 name|DBPRINT
 argument_list|(
 name|sc
@@ -19725,6 +20525,14 @@ argument_list|,
 name|nsegs
 argument_list|)
 expr_stmt|;
+name|DBRUNIF
+argument_list|(
+literal|1
+argument_list|,
+argument|bce_dump_mbuf(sc, m0);
+argument_list|)
+empty_stmt|;
+comment|/* Try to defrag the mbuf if there are too many segments. */
 name|m0
 operator|=
 name|m_defrag
@@ -19742,6 +20550,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* Defrag was unsuccessful */
 name|m_freem
 argument_list|(
 operator|*
@@ -19759,6 +20568,7 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
+comment|/* Defrag was successful, try mapping again */
 operator|*
 name|m_head
 operator|=
@@ -19808,7 +20618,7 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): Error mapping mbuf into TX chain!\n"
+literal|"%s(%d): Unknown error mapping mbuf into TX chain!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -19870,19 +20680,19 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * The chip seems to require that at least 16 descriptors be kept 	 * empty at all times.  Make sure we honor that. 	 * XXX Would it be faster to assume worst case scenario for nsegs 	 * and do this calculation higher up? 	 */
+comment|/* Make sure there's room in the chain */
 if|if
 condition|(
 name|nsegs
 operator|>
 operator|(
-name|USABLE_TX_BD
+name|sc
+operator|->
+name|max_tx_bd
 operator|-
 name|sc
 operator|->
 name|used_tx_bd
-operator|-
-name|BCE_TX_SLACK_SPACE
 operator|)
 condition|)
 block|{
@@ -20014,6 +20824,13 @@ name|txbd
 operator|->
 name|tx_bd_mss_nbytes
 operator|=
+name|htole32
+argument_list|(
+name|mss
+operator|<<
+literal|16
+argument_list|)
+operator||
 name|htole16
 argument_list|(
 name|segs
@@ -20086,7 +20903,7 @@ argument_list|)
 expr_stmt|;
 name|DBRUN
 argument_list|(
-name|BCE_INFO_SEND
+name|BCE_EXCESSIVE_SEND
 argument_list|,
 name|bce_dump_tx_chain
 argument_list|(
@@ -20132,6 +20949,7 @@ name|used_tx_bd
 operator|+=
 name|nsegs
 expr_stmt|;
+comment|/* Update some debug statistic counters */
 name|DBRUNIF
 argument_list|(
 operator|(
@@ -20151,6 +20969,24 @@ operator|=
 name|sc
 operator|->
 name|used_tx_bd
+argument_list|)
+expr_stmt|;
+name|DBRUNIF
+argument_list|(
+operator|(
+name|sc
+operator|->
+name|used_tx_bd
+operator|==
+name|sc
+operator|->
+name|max_tx_bd
+operator|)
+argument_list|,
+name|sc
+operator|->
+name|tx_full_count
+operator|++
 argument_list|)
 expr_stmt|;
 name|DBRUNIF
@@ -20325,16 +21161,16 @@ operator|->
 name|tx_prod_bseq
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Keep adding entries while there is space in the ring.  We keep 	 * BCE_TX_SLACK_SPACE entries unused at all times. 	 */
+comment|/* 	 * Keep adding entries while there is space in the ring. 	 */
 while|while
 condition|(
 name|sc
 operator|->
 name|used_tx_bd
 operator|<
-name|USABLE_TX_BD
-operator|-
-name|BCE_TX_SLACK_SPACE
+name|sc
+operator|->
+name|max_tx_bd
 condition|)
 block|{
 comment|/* Check for any frames to send. */
@@ -21179,6 +22015,46 @@ operator|->
 name|if_capenable
 operator|^=
 name|IFCAP_RXCSUM
+expr_stmt|;
+if|if
+condition|(
+name|IFCAP_RXCSUM
+operator|&
+name|ifp
+operator|->
+name|if_capenable
+condition|)
+name|ifp
+operator|->
+name|if_hwassist
+operator|=
+name|BCE_IF_HWASSIST
+expr_stmt|;
+else|else
+name|ifp
+operator|->
+name|if_hwassist
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* Toggle the TSO capabilities enable flag. */
+if|if
+condition|(
+name|bce_tso_enable
+operator|&&
+operator|(
+name|mask
+operator|&
+name|IFCAP_TSO4
+operator|)
+condition|)
+block|{
+name|ifp
+operator|->
+name|if_capenable
+operator|^=
+name|IFCAP_TSO4
 expr_stmt|;
 if|if
 condition|(
@@ -24105,6 +24981,148 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/* Provides a sysctl interface to allow reading arbitrary PHY registers in  */
+end_comment
+
+begin_comment
+comment|/* the device.  DO NOT ENABLE ON PRODUCTION SYSTEMS!                        */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   0 for success, positive value for failure.                             */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|bce_sysctl_phy_read
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|device_t
+name|dev
+decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|result
+decl_stmt|;
+name|u16
+name|val
+decl_stmt|;
+name|result
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|result
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|||
+operator|(
+name|req
+operator|->
+name|newptr
+operator|==
+name|NULL
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* Make sure the register is accessible. */
+if|if
+condition|(
+name|result
+operator|<
+literal|0x20
+condition|)
+block|{
+name|sc
+operator|=
+operator|(
+expr|struct
+name|bce_softc
+operator|*
+operator|)
+name|arg1
+expr_stmt|;
+name|dev
+operator|=
+name|sc
+operator|->
+name|bce_dev
+expr_stmt|;
+name|val
+operator|=
+name|bce_miibus_read_reg
+argument_list|(
+name|dev
+argument_list|,
+name|sc
+operator|->
+name|bce_phy_addr
+argument_list|,
+name|result
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"phy 0x%02X = 0x%04X\n"
+argument_list|,
+name|result
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
 comment|/* Provides a sysctl interface to forcing the driver to dump state and      */
 end_comment
 
@@ -24312,6 +25330,28 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
+literal|"rx_empty_count"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rx_empty_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of times the RX chain was empty"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
 literal|"tx_hi_watermark"
 argument_list|,
 name|CTLFLAG_RD
@@ -24324,6 +25364,28 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Highest level of used tx_bd's"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tx_full_count"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|tx_full_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of times the TX chain was full"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT
@@ -24412,6 +25474,28 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"mbuf cluster allocation failures"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"requested_tso_frames"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|requested_tso_frames
+argument_list|,
+literal|0
+argument_list|,
+literal|"The number of TSO frames received"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -25780,7 +26864,36 @@ name|bce_sysctl_reg_read
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Register Read"
+literal|"Register read"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_PROC
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"phy_read"
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|bce_sysctl_phy_read
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"PHY register read"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -25805,6 +26918,136 @@ ifdef|#
 directive|ifdef
 name|BCE_DEBUG
 end_ifdef
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Freezes the controller to allow for a cohesive state dump.               */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bce_freeze_controller
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|u32
+name|val
+decl_stmt|;
+name|val
+operator|=
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_MISC_COMMAND
+argument_list|)
+expr_stmt|;
+name|val
+operator||=
+name|BCE_MISC_COMMAND_DISABLE_ALL
+expr_stmt|;
+name|REG_WR
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_MISC_COMMAND
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Unfreezes the controller after a freeze operation.  This may not always  */
+end_comment
+
+begin_comment
+comment|/* work and the controller will require a reset!                            */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bce_unfreeze_controller
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|u32
+name|val
+decl_stmt|;
+name|val
+operator|=
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_MISC_COMMAND
+argument_list|)
+expr_stmt|;
+name|val
+operator||=
+name|BCE_MISC_COMMAND_ENABLE_ALL
+expr_stmt|;
+name|REG_WR
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_MISC_COMMAND
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/****************************************************************************/
@@ -25865,10 +27108,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* Index out of range. */
-name|printf
+name|BCE_PRINTF
 argument_list|(
-literal|"mbuf ptr is null!\n"
+literal|"mbuf: null pointer\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -25894,7 +27136,7 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"mbuf: vaddr = 0x%08X:%08X, m_len = %d, m_flags = "
+literal|"mbuf: vaddr = 0x%08X:%08X, m_len = %d, m_flags = ( "
 argument_list|,
 name|val_hi
 argument_list|,
@@ -25931,11 +27173,310 @@ argument_list|(
 literal|"M_PKTHDR "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flags
+operator|&
+name|M_EOR
+condition|)
 name|printf
 argument_list|(
-literal|"\n"
+literal|"M_EOR "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flags
+operator|&
+name|M_RDONLY
+condition|)
+name|printf
+argument_list|(
+literal|"M_RDONLY "
+argument_list|)
+expr_stmt|;
+name|val_hi
+operator|=
+name|BCE_ADDR_HI
+argument_list|(
+name|mp
+operator|->
+name|m_data
+argument_list|)
+expr_stmt|;
+name|val_lo
+operator|=
+name|BCE_ADDR_LO
+argument_list|(
+name|mp
+operator|->
+name|m_data
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|") m_data = 0x%08X:%08X\n"
+argument_list|,
+name|val_hi
+argument_list|,
+name|val_lo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flags
+operator|&
+name|M_PKTHDR
+condition|)
+block|{
+name|BCE_PRINTF
+argument_list|(
+literal|"- m_pkthdr: flags = ( "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flags
+operator|&
+name|M_BCAST
+condition|)
+name|printf
+argument_list|(
+literal|"M_BCAST "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flags
+operator|&
+name|M_MCAST
+condition|)
+name|printf
+argument_list|(
+literal|"M_MCAST "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flags
+operator|&
+name|M_FRAG
+condition|)
+name|printf
+argument_list|(
+literal|"M_FRAG "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flags
+operator|&
+name|M_FIRSTFRAG
+condition|)
+name|printf
+argument_list|(
+literal|"M_FIRSTFRAG "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flags
+operator|&
+name|M_LASTFRAG
+condition|)
+name|printf
+argument_list|(
+literal|"M_LASTFRAG "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flags
+operator|&
+name|M_VLANTAG
+condition|)
+name|printf
+argument_list|(
+literal|"M_VLANTAG "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flags
+operator|&
+name|M_PROMISC
+condition|)
+name|printf
+argument_list|(
+literal|"M_PROMISC "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|") csum_flags = ( "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_IP
+condition|)
+name|printf
+argument_list|(
+literal|"CSUM_IP "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_TCP
+condition|)
+name|printf
+argument_list|(
+literal|"CSUM_TCP "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_UDP
+condition|)
+name|printf
+argument_list|(
+literal|"CSUM_UDP "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_IP_FRAGS
+condition|)
+name|printf
+argument_list|(
+literal|"CSUM_IP_FRAGS "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_FRAGMENT
+condition|)
+name|printf
+argument_list|(
+literal|"CSUM_FRAGMENT "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_TSO
+condition|)
+name|printf
+argument_list|(
+literal|"CSUM_TSO "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_IP_CHECKED
+condition|)
+name|printf
+argument_list|(
+literal|"CSUM_IP_CHECKED "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_IP_VALID
+condition|)
+name|printf
+argument_list|(
+literal|"CSUM_IP_VALID "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_DATA_VALID
+condition|)
+name|printf
+argument_list|(
+literal|"CSUM_DATA_VALID "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|")\n"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|mp
@@ -25969,7 +27510,7 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"- m_ext: vaddr = 0x%08X:%08X, ext_size = 0x%04X\n"
+literal|"- m_ext: vaddr = 0x%08X:%08X, ext_size = %d, type = "
 argument_list|,
 name|val_hi
 argument_list|,
@@ -25982,6 +27523,112 @@ operator|.
 name|ext_size
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|mp
+operator|->
+name|m_ext
+operator|.
+name|ext_type
+condition|)
+block|{
+case|case
+name|EXT_CLUSTER
+case|:
+name|printf
+argument_list|(
+literal|"EXT_CLUSTER\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EXT_SFBUF
+case|:
+name|printf
+argument_list|(
+literal|"EXT_SFBUF\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EXT_JUMBO9
+case|:
+name|printf
+argument_list|(
+literal|"EXT_JUMBO9\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EXT_JUMBO16
+case|:
+name|printf
+argument_list|(
+literal|"EXT_JUMBO16\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EXT_PACKET
+case|:
+name|printf
+argument_list|(
+literal|"EXT_PACKET\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EXT_MBUF
+case|:
+name|printf
+argument_list|(
+literal|"EXT_MBUF\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EXT_NET_DRV
+case|:
+name|printf
+argument_list|(
+literal|"EXT_NET_DRV\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EXT_MOD_TYPE
+case|:
+name|printf
+argument_list|(
+literal|"EXT_MDD_TYPE\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EXT_DISPOSABLE
+case|:
+name|printf
+argument_list|(
+literal|"EXT_DISPOSABLE\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EXT_EXTREF
+case|:
+name|printf
+argument_list|(
+literal|"EXT_EXTREF\n"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"UNKNOWN\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|mp
 operator|=
@@ -26442,6 +28089,19 @@ name|txbd
 operator|->
 name|tx_bd_flags
 operator|&
+name|TX_BD_FLAGS_SW_LSO
+condition|)
+name|printf
+argument_list|(
+literal|" LSO"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txbd
+operator|->
+name|tx_bd_flags
+operator|&
 name|TX_BD_FLAGS_SW_OPTION_WORD
 condition|)
 name|printf
@@ -26473,19 +28133,6 @@ condition|)
 name|printf
 argument_list|(
 literal|" SNAP"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|txbd
-operator|->
-name|tx_bd_flags
-operator|&
-name|TX_BD_FLAGS_SW_LSO
-condition|)
-name|printf
-argument_list|(
-literal|" LSO"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -26783,7 +28430,7 @@ name|BCE_PRINTF
 argument_list|(
 literal|""
 literal|"----------------------------"
-literal|"    tx_bd data    "
+literal|"   tx_bd data   "
 literal|"----------------------------\n"
 argument_list|)
 expr_stmt|;
@@ -27073,37 +28720,63 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"attn_bits  = 0x%08X, attn_bits_ack = 0x%08X, index = 0x%04X\n"
+literal|"    0x%08X - attn_bits\n"
 argument_list|,
 name|sblk
 operator|->
 name|status_attn_bits
-argument_list|,
-name|sblk
-operator|->
-name|status_attn_bits_ack
-argument_list|,
-name|sblk
-operator|->
-name|status_idx
 argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"rx_cons0   = 0x%08X, tx_cons0      = 0x%08X\n"
+literal|"    0x%08X - attn_bits_ack\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_attn_bits_ack
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%04X(0x%04X) - rx_cons0\n"
 argument_list|,
 name|sblk
 operator|->
 name|status_rx_quick_consumer_index0
 argument_list|,
+operator|(
+name|u16
+operator|)
+name|RX_CHAIN_IDX
+argument_list|(
 name|sblk
 operator|->
-name|status_tx_quick_consumer_index0
+name|status_rx_quick_consumer_index0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"status_idx = 0x%04X\n"
+literal|"0x%04X(0x%04X) - tx_cons0\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_tx_quick_consumer_index0
+argument_list|,
+operator|(
+name|u16
+operator|)
+name|TX_CHAIN_IDX
+argument_list|(
+name|sblk
+operator|->
+name|status_tx_quick_consumer_index0
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"        0x%04X - status_idx\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27116,45 +28789,99 @@ condition|(
 name|sblk
 operator|->
 name|status_rx_quick_consumer_index1
-operator|||
-name|sblk
-operator|->
-name|status_tx_quick_consumer_index1
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"rx_cons1  = 0x%08X, tx_cons1      = 0x%08X\n"
+literal|"0x%04X(0x%04X) - rx_cons1\n"
 argument_list|,
 name|sblk
 operator|->
 name|status_rx_quick_consumer_index1
 argument_list|,
+operator|(
+name|u16
+operator|)
+name|RX_CHAIN_IDX
+argument_list|(
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index1
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|status_tx_quick_consumer_index1
+condition|)
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%04X(0x%04X) - tx_cons1\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_tx_quick_consumer_index1
+argument_list|,
+operator|(
+name|u16
+operator|)
+name|TX_CHAIN_IDX
+argument_list|(
 name|sblk
 operator|->
 name|status_tx_quick_consumer_index1
 argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|sblk
 operator|->
 name|status_rx_quick_consumer_index2
-operator|||
+condition|)
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%04X(0x%04X)- rx_cons2\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index2
+argument_list|,
+operator|(
+name|u16
+operator|)
+name|RX_CHAIN_IDX
+argument_list|(
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index2
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|sblk
 operator|->
 name|status_tx_quick_consumer_index2
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"rx_cons2  = 0x%08X, tx_cons2      = 0x%08X\n"
-argument_list|,
-name|sblk
-operator|->
-name|status_rx_quick_consumer_index2
+literal|"0x%04X(0x%04X) - tx_cons2\n"
 argument_list|,
 name|sblk
 operator|->
 name|status_tx_quick_consumer_index2
+argument_list|,
+operator|(
+name|u16
+operator|)
+name|TX_CHAIN_IDX
+argument_list|(
+name|sblk
+operator|->
+name|status_tx_quick_consumer_index2
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -27162,22 +28889,49 @@ condition|(
 name|sblk
 operator|->
 name|status_rx_quick_consumer_index3
-operator|||
+condition|)
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%04X(0x%04X) - rx_cons3\n"
+argument_list|,
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index3
+argument_list|,
+operator|(
+name|u16
+operator|)
+name|RX_CHAIN_IDX
+argument_list|(
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index3
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|sblk
 operator|->
 name|status_tx_quick_consumer_index3
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"rx_cons3  = 0x%08X, tx_cons3      = 0x%08X\n"
-argument_list|,
-name|sblk
-operator|->
-name|status_rx_quick_consumer_index3
+literal|"0x%04X(0x%04X) - tx_cons3\n"
 argument_list|,
 name|sblk
 operator|->
 name|status_tx_quick_consumer_index3
+argument_list|,
+operator|(
+name|u16
+operator|)
+name|TX_CHAIN_IDX
+argument_list|(
+name|sblk
+operator|->
+name|status_tx_quick_consumer_index3
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -27399,15 +29153,25 @@ name|stats_block
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"----------------------------"
-literal|"  Stats  Block  "
-literal|"----------------------------\n"
+literal|"---------------"
+literal|" Stats Block  (All Stats Not Shown Are 0) "
+literal|"---------------\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_IfHCInOctets_hi
+operator|||
+name|sblk
+operator|->
+name|stat_IfHCInOctets_lo
+condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"IfHcInOctets         = 0x%08X:%08X, "
-literal|"IfHcInBadOctets      = 0x%08X:%08X\n"
+literal|"0x%08X:%08X : "
+literal|"IfHcInOctets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27416,6 +29180,22 @@ argument_list|,
 name|sblk
 operator|->
 name|stat_IfHCInOctets_lo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_IfHCInBadOctets_hi
+operator|||
+name|sblk
+operator|->
+name|stat_IfHCInBadOctets_lo
+condition|)
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X:%08X : "
+literal|"IfHcInBadOctets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27426,10 +29206,20 @@ operator|->
 name|stat_IfHCInBadOctets_lo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_IfHCOutOctets_hi
+operator|||
+name|sblk
+operator|->
+name|stat_IfHCOutOctets_lo
+condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"IfHcOutOctets        = 0x%08X:%08X, "
-literal|"IfHcOutBadOctets     = 0x%08X:%08X\n"
+literal|"0x%08X:%08X : "
+literal|"IfHcOutOctets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27438,6 +29228,22 @@ argument_list|,
 name|sblk
 operator|->
 name|stat_IfHCOutOctets_lo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_IfHCOutBadOctets_hi
+operator|||
+name|sblk
+operator|->
+name|stat_IfHCOutBadOctets_lo
+condition|)
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X:%08X : "
+literal|"IfHcOutBadOctets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27448,10 +29254,20 @@ operator|->
 name|stat_IfHCOutBadOctets_lo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_IfHCInUcastPkts_hi
+operator|||
+name|sblk
+operator|->
+name|stat_IfHCInUcastPkts_lo
+condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"IfHcInUcastPkts      = 0x%08X:%08X, "
-literal|"IfHcInMulticastPkts  = 0x%08X:%08X\n"
+literal|"0x%08X:%08X : "
+literal|"IfHcInUcastPkts\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27460,6 +29276,46 @@ argument_list|,
 name|sblk
 operator|->
 name|stat_IfHCInUcastPkts_lo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_IfHCInBroadcastPkts_hi
+operator|||
+name|sblk
+operator|->
+name|stat_IfHCInBroadcastPkts_lo
+condition|)
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X:%08X : "
+literal|"IfHcInBroadcastPkts\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCInBroadcastPkts_hi
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCInBroadcastPkts_lo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_IfHCInMulticastPkts_hi
+operator|||
+name|sblk
+operator|->
+name|stat_IfHCInMulticastPkts_lo
+condition|)
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X:%08X : "
+literal|"IfHcInMulticastPkts\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27470,18 +29326,20 @@ operator|->
 name|stat_IfHCInMulticastPkts_lo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_IfHCOutUcastPkts_hi
+operator|||
+name|sblk
+operator|->
+name|stat_IfHCOutUcastPkts_lo
+condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"IfHcInBroadcastPkts  = 0x%08X:%08X, "
-literal|"IfHcOutUcastPkts     = 0x%08X:%08X\n"
-argument_list|,
-name|sblk
-operator|->
-name|stat_IfHCInBroadcastPkts_hi
-argument_list|,
-name|sblk
-operator|->
-name|stat_IfHCInBroadcastPkts_lo
+literal|"0x%08X:%08X : "
+literal|"IfHcOutUcastPkts\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27492,17 +29350,20 @@ operator|->
 name|stat_IfHCOutUcastPkts_lo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
+name|stat_IfHCOutBroadcastPkts_hi
+operator|||
+name|sblk
+operator|->
+name|stat_IfHCOutBroadcastPkts_lo
+condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"IfHcOutMulticastPkts = 0x%08X:%08X, IfHcOutBroadcastPkts = 0x%08X:%08X\n"
-argument_list|,
-name|sblk
-operator|->
-name|stat_IfHCOutMulticastPkts_hi
-argument_list|,
-name|sblk
-operator|->
-name|stat_IfHCOutMulticastPkts_lo
+literal|"0x%08X:%08X : "
+literal|"IfHcOutBroadcastPkts\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27517,11 +29378,35 @@ if|if
 condition|(
 name|sblk
 operator|->
+name|stat_IfHCOutMulticastPkts_hi
+operator|||
+name|sblk
+operator|->
+name|stat_IfHCOutMulticastPkts_lo
+condition|)
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X:%08X : "
+literal|"IfHcOutMulticastPkts\n"
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCOutMulticastPkts_hi
+argument_list|,
+name|sblk
+operator|->
+name|stat_IfHCOutMulticastPkts_lo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblk
+operator|->
 name|stat_emac_tx_stat_dot3statsinternalmactransmiterrors
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : "
+literal|"         0x%08X : "
 literal|"emac_tx_stat_dot3statsinternalmactransmiterrors\n"
 argument_list|,
 name|sblk
@@ -27537,7 +29422,7 @@ name|stat_Dot3StatsCarrierSenseErrors
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : Dot3StatsCarrierSenseErrors\n"
+literal|"         0x%08X : Dot3StatsCarrierSenseErrors\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27552,7 +29437,7 @@ name|stat_Dot3StatsFCSErrors
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : Dot3StatsFCSErrors\n"
+literal|"         0x%08X : Dot3StatsFCSErrors\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27567,7 +29452,7 @@ name|stat_Dot3StatsAlignmentErrors
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : Dot3StatsAlignmentErrors\n"
+literal|"         0x%08X : Dot3StatsAlignmentErrors\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27582,7 +29467,7 @@ name|stat_Dot3StatsSingleCollisionFrames
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : Dot3StatsSingleCollisionFrames\n"
+literal|"         0x%08X : Dot3StatsSingleCollisionFrames\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27597,7 +29482,7 @@ name|stat_Dot3StatsMultipleCollisionFrames
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : Dot3StatsMultipleCollisionFrames\n"
+literal|"         0x%08X : Dot3StatsMultipleCollisionFrames\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27612,7 +29497,7 @@ name|stat_Dot3StatsDeferredTransmissions
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : Dot3StatsDeferredTransmissions\n"
+literal|"         0x%08X : Dot3StatsDeferredTransmissions\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27627,7 +29512,7 @@ name|stat_Dot3StatsExcessiveCollisions
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : Dot3StatsExcessiveCollisions\n"
+literal|"         0x%08X : Dot3StatsExcessiveCollisions\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27642,7 +29527,7 @@ name|stat_Dot3StatsLateCollisions
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : Dot3StatsLateCollisions\n"
+literal|"         0x%08X : Dot3StatsLateCollisions\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27657,7 +29542,7 @@ name|stat_EtherStatsCollisions
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsCollisions\n"
+literal|"         0x%08X : EtherStatsCollisions\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27672,7 +29557,7 @@ name|stat_EtherStatsFragments
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsFragments\n"
+literal|"         0x%08X : EtherStatsFragments\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27687,7 +29572,7 @@ name|stat_EtherStatsJabbers
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsJabbers\n"
+literal|"         0x%08X : EtherStatsJabbers\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27702,7 +29587,7 @@ name|stat_EtherStatsUndersizePkts
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsUndersizePkts\n"
+literal|"         0x%08X : EtherStatsUndersizePkts\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27717,7 +29602,7 @@ name|stat_EtherStatsOverrsizePkts
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsOverrsizePkts\n"
+literal|"         0x%08X : EtherStatsOverrsizePkts\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27732,7 +29617,7 @@ name|stat_EtherStatsPktsRx64Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsPktsRx64Octets\n"
+literal|"         0x%08X : EtherStatsPktsRx64Octets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27747,7 +29632,7 @@ name|stat_EtherStatsPktsRx65Octetsto127Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsPktsRx65Octetsto127Octets\n"
+literal|"         0x%08X : EtherStatsPktsRx65Octetsto127Octets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27762,7 +29647,7 @@ name|stat_EtherStatsPktsRx128Octetsto255Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsPktsRx128Octetsto255Octets\n"
+literal|"         0x%08X : EtherStatsPktsRx128Octetsto255Octets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27777,7 +29662,7 @@ name|stat_EtherStatsPktsRx256Octetsto511Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsPktsRx256Octetsto511Octets\n"
+literal|"         0x%08X : EtherStatsPktsRx256Octetsto511Octets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27792,7 +29677,7 @@ name|stat_EtherStatsPktsRx512Octetsto1023Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsPktsRx512Octetsto1023Octets\n"
+literal|"         0x%08X : EtherStatsPktsRx512Octetsto1023Octets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27807,7 +29692,7 @@ name|stat_EtherStatsPktsRx1024Octetsto1522Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsPktsRx1024Octetsto1522Octets\n"
+literal|"         0x%08X : EtherStatsPktsRx1024Octetsto1522Octets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27822,7 +29707,7 @@ name|stat_EtherStatsPktsRx1523Octetsto9022Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsPktsRx1523Octetsto9022Octets\n"
+literal|"         0x%08X : EtherStatsPktsRx1523Octetsto9022Octets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27837,7 +29722,7 @@ name|stat_EtherStatsPktsTx64Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsPktsTx64Octets\n"
+literal|"         0x%08X : EtherStatsPktsTx64Octets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27852,7 +29737,7 @@ name|stat_EtherStatsPktsTx65Octetsto127Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsPktsTx65Octetsto127Octets\n"
+literal|"         0x%08X : EtherStatsPktsTx65Octetsto127Octets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27867,7 +29752,7 @@ name|stat_EtherStatsPktsTx128Octetsto255Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsPktsTx128Octetsto255Octets\n"
+literal|"         0x%08X : EtherStatsPktsTx128Octetsto255Octets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27882,7 +29767,7 @@ name|stat_EtherStatsPktsTx256Octetsto511Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsPktsTx256Octetsto511Octets\n"
+literal|"         0x%08X : EtherStatsPktsTx256Octetsto511Octets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27897,7 +29782,7 @@ name|stat_EtherStatsPktsTx512Octetsto1023Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsPktsTx512Octetsto1023Octets\n"
+literal|"         0x%08X : EtherStatsPktsTx512Octetsto1023Octets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27912,7 +29797,7 @@ name|stat_EtherStatsPktsTx1024Octetsto1522Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsPktsTx1024Octetsto1522Octets\n"
+literal|"         0x%08X : EtherStatsPktsTx1024Octetsto1522Octets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27927,7 +29812,7 @@ name|stat_EtherStatsPktsTx1523Octetsto9022Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : EtherStatsPktsTx1523Octetsto9022Octets\n"
+literal|"         0x%08X : EtherStatsPktsTx1523Octetsto9022Octets\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27942,7 +29827,7 @@ name|stat_XonPauseFramesReceived
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : XonPauseFramesReceived\n"
+literal|"         0x%08X : XonPauseFramesReceived\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27957,7 +29842,7 @@ name|stat_XoffPauseFramesReceived
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : XoffPauseFramesReceived\n"
+literal|"          0x%08X : XoffPauseFramesReceived\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27972,7 +29857,7 @@ name|stat_OutXonSent
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : OutXonSent\n"
+literal|"         0x%08X : OutXonSent\n"
 argument_list|,
 name|sblk
 operator|->
@@ -27987,7 +29872,7 @@ name|stat_OutXoffSent
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : OutXoffSent\n"
+literal|"         0x%08X : OutXoffSent\n"
 argument_list|,
 name|sblk
 operator|->
@@ -28002,7 +29887,7 @@ name|stat_FlowControlDone
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : FlowControlDone\n"
+literal|"         0x%08X : FlowControlDone\n"
 argument_list|,
 name|sblk
 operator|->
@@ -28017,7 +29902,7 @@ name|stat_MacControlFramesReceived
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : MacControlFramesReceived\n"
+literal|"         0x%08X : MacControlFramesReceived\n"
 argument_list|,
 name|sblk
 operator|->
@@ -28032,7 +29917,7 @@ name|stat_XoffStateEntered
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : XoffStateEntered\n"
+literal|"         0x%08X : XoffStateEntered\n"
 argument_list|,
 name|sblk
 operator|->
@@ -28047,7 +29932,7 @@ name|stat_IfInFramesL2FilterDiscards
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : IfInFramesL2FilterDiscards\n"
+literal|"         0x%08X : IfInFramesL2FilterDiscards\n"
 argument_list|,
 name|sblk
 operator|->
@@ -28062,7 +29947,7 @@ name|stat_IfInRuleCheckerDiscards
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : IfInRuleCheckerDiscards\n"
+literal|"         0x%08X : IfInRuleCheckerDiscards\n"
 argument_list|,
 name|sblk
 operator|->
@@ -28077,7 +29962,7 @@ name|stat_IfInFTQDiscards
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : IfInFTQDiscards\n"
+literal|"         0x%08X : IfInFTQDiscards\n"
 argument_list|,
 name|sblk
 operator|->
@@ -28092,7 +29977,7 @@ name|stat_IfInMBUFDiscards
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : IfInMBUFDiscards\n"
+literal|"         0x%08X : IfInMBUFDiscards\n"
 argument_list|,
 name|sblk
 operator|->
@@ -28107,7 +29992,7 @@ name|stat_IfInRuleCheckerP4Hit
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : IfInRuleCheckerP4Hit\n"
+literal|"         0x%08X : IfInRuleCheckerP4Hit\n"
 argument_list|,
 name|sblk
 operator|->
@@ -28122,7 +30007,7 @@ name|stat_CatchupInRuleCheckerDiscards
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : CatchupInRuleCheckerDiscards\n"
+literal|"         0x%08X : CatchupInRuleCheckerDiscards\n"
 argument_list|,
 name|sblk
 operator|->
@@ -28137,7 +30022,7 @@ name|stat_CatchupInFTQDiscards
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : CatchupInFTQDiscards\n"
+literal|"         0x%08X : CatchupInFTQDiscards\n"
 argument_list|,
 name|sblk
 operator|->
@@ -28152,7 +30037,7 @@ name|stat_CatchupInMBUFDiscards
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : CatchupInMBUFDiscards\n"
+literal|"         0x%08X : CatchupInMBUFDiscards\n"
 argument_list|,
 name|sblk
 operator|->
@@ -28167,7 +30052,7 @@ name|stat_CatchupInRuleCheckerP4Hit
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : CatchupInRuleCheckerP4Hit\n"
+literal|"         0x%08X : CatchupInRuleCheckerP4Hit\n"
 argument_list|,
 name|sblk
 operator|->
@@ -28481,20 +30366,40 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"         0x%08X - (sc->tx_prod) tx producer index\n"
+literal|"     0x%04X(0x%04X) - (sc->tx_prod) tx producer index\n"
 argument_list|,
 name|sc
 operator|->
 name|tx_prod
+argument_list|,
+operator|(
+name|u16
+operator|)
+name|TX_CHAIN_IDX
+argument_list|(
+name|sc
+operator|->
+name|tx_prod
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"         0x%08X - (sc->tx_cons) tx consumer index\n"
+literal|"     0x%04X(0x%04X) - (sc->tx_cons) tx consumer index\n"
 argument_list|,
 name|sc
 operator|->
 name|tx_cons
+argument_list|,
+operator|(
+name|u16
+operator|)
+name|TX_CHAIN_IDX
+argument_list|(
+name|sc
+operator|->
+name|tx_cons
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
@@ -28508,20 +30413,40 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"         0x%08X - (sc->rx_prod) rx producer index\n"
+literal|"     0x%04X(0x%04X) - (sc->rx_prod) rx producer index\n"
 argument_list|,
 name|sc
 operator|->
 name|rx_prod
+argument_list|,
+operator|(
+name|u16
+operator|)
+name|RX_CHAIN_IDX
+argument_list|(
+name|sc
+operator|->
+name|rx_prod
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"         0x%08X - (sc->rx_cons) rx consumer index\n"
+literal|"     0x%04X(0x%04X) - (sc->rx_cons) rx consumer index\n"
 argument_list|,
 name|sc
 operator|->
 name|rx_cons
+argument_list|,
+operator|(
+name|u16
+operator|)
+name|RX_CHAIN_IDX
+argument_list|(
+name|sc
+operator|->
+name|rx_cons
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
@@ -28559,10 +30484,9 @@ name|sc
 operator|->
 name|rx_low_watermark
 argument_list|,
-operator|(
-name|u32
-operator|)
-name|USABLE_RX_BD
+name|sc
+operator|->
+name|max_rx_bd
 argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
@@ -28600,10 +30524,9 @@ name|sc
 operator|->
 name|tx_hi_watermark
 argument_list|,
-operator|(
-name|u32
-operator|)
-name|USABLE_TX_BD
+name|sc
+operator|->
+name|max_tx_bd
 argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
@@ -28676,7 +30599,7 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : bootcode version\n"
+literal|"0x%08X - bootcode version\n"
 argument_list|,
 name|sc
 operator|->
@@ -28694,7 +30617,7 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : (0x%04X) misc_enable_status_bits\n"
+literal|"0x%08X - (0x%06X) misc_enable_status_bits\n"
 argument_list|,
 name|val1
 argument_list|,
@@ -28712,7 +30635,7 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : (0x%04X) dma_status\n"
+literal|"0x%08X - (0x%06X) dma_status\n"
 argument_list|,
 name|val1
 argument_list|,
@@ -28730,7 +30653,7 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : (0x%04X) ctx_status\n"
+literal|"0x%08X - (0x%06X) ctx_status\n"
 argument_list|,
 name|val1
 argument_list|,
@@ -28748,7 +30671,7 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : (0x%04X) emac_status\n"
+literal|"0x%08X - (0x%06X) emac_status\n"
 argument_list|,
 name|val1
 argument_list|,
@@ -28766,7 +30689,7 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : (0x%04X) rpm_status\n"
+literal|"0x%08X - (0x%06X) rpm_status\n"
 argument_list|,
 name|val1
 argument_list|,
@@ -28784,7 +30707,7 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : (0x%04X) tbdr_status\n"
+literal|"0x%08X - (0x%06X) tbdr_status\n"
 argument_list|,
 name|val1
 argument_list|,
@@ -28802,7 +30725,7 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : (0x%04X) tdma_status\n"
+literal|"0x%08X - (0x%06X) tdma_status\n"
 argument_list|,
 name|val1
 argument_list|,
@@ -28820,11 +30743,119 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"0x%08X : (0x%04X) hc_status\n"
+literal|"0x%08X - (0x%06X) hc_status\n"
 argument_list|,
 name|val1
 argument_list|,
 name|BCE_HC_STATUS
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_TXP_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) txp_cpu_state\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_TXP_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_TPAT_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) tpat_cpu_state\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_TPAT_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_RXP_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) rxp_cpu_state\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_RXP_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_COM_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) com_cpu_state\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_COM_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_MCP_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) mcp_cpu_state\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_MCP_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_CP_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) cp_cpu_state\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_CP_CPU_STATE
 argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
@@ -28912,6 +30943,561 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/* Prints out the TXP state.                                                */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bce_dump_txp_state
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|u32
+name|val1
+decl_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"----------------------------"
+literal|"   TXP  State   "
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_TXP_CPU_MODE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) txp_cpu_mode\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_TXP_CPU_MODE
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_TXP_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) txp_cpu_state\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_TXP_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_TXP_CPU_EVENT_MASK
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) txp_cpu_event_mask\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_TXP_CPU_EVENT_MASK
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"----------------------------"
+literal|" Register  Dump "
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|int
+name|i
+init|=
+name|BCE_TXP_CPU_MODE
+init|;
+name|i
+operator|<
+literal|0x68000
+condition|;
+name|i
+operator|+=
+literal|0x10
+control|)
+block|{
+comment|/* Skip the big blank spaces */
+if|if
+condition|(
+name|i
+operator|<
+literal|0x454000
+operator|&&
+name|i
+operator|>
+literal|0x5ffff
+condition|)
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%04X: 0x%08X 0x%08X 0x%08X 0x%08X\n"
+argument_list|,
+name|i
+argument_list|,
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|i
+argument_list|)
+argument_list|,
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|i
+operator|+
+literal|0x4
+argument_list|)
+argument_list|,
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|i
+operator|+
+literal|0x8
+argument_list|)
+argument_list|,
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|i
+operator|+
+literal|0xC
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|BCE_PRINTF
+argument_list|(
+literal|"----------------------------"
+literal|"----------------"
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Prints out the RXP state.                                                */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bce_dump_rxp_state
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|u32
+name|val1
+decl_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"----------------------------"
+literal|"   RXP  State   "
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_RXP_CPU_MODE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) rxp_cpu_mode\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_RXP_CPU_MODE
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_RXP_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) rxp_cpu_state\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_RXP_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_RXP_CPU_EVENT_MASK
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) rxp_cpu_event_mask\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_RXP_CPU_EVENT_MASK
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"----------------------------"
+literal|" Register  Dump "
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|int
+name|i
+init|=
+name|BCE_RXP_CPU_MODE
+init|;
+name|i
+operator|<
+literal|0xe8fff
+condition|;
+name|i
+operator|+=
+literal|0x10
+control|)
+block|{
+comment|/* Skip the big blank sapces */
+if|if
+condition|(
+name|i
+operator|<
+literal|0xc5400
+operator|&&
+name|i
+operator|>
+literal|0xdffff
+condition|)
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%04X: 0x%08X 0x%08X 0x%08X 0x%08X\n"
+argument_list|,
+name|i
+argument_list|,
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|i
+argument_list|)
+argument_list|,
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|i
+operator|+
+literal|0x4
+argument_list|)
+argument_list|,
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|i
+operator|+
+literal|0x8
+argument_list|)
+argument_list|,
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|i
+operator|+
+literal|0xC
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|BCE_PRINTF
+argument_list|(
+literal|"----------------------------"
+literal|"----------------"
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Prints out the TPAT state.                                               */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bce_dump_tpat_state
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|u32
+name|val1
+decl_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"----------------------------"
+literal|"   TPAT State   "
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_TPAT_CPU_MODE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) tpat_cpu_mode\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_TPAT_CPU_MODE
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_TPAT_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) tpat_cpu_state\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_TPAT_CPU_STATE
+argument_list|)
+expr_stmt|;
+name|val1
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_TPAT_CPU_EVENT_MASK
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) tpat_cpu_event_mask\n"
+argument_list|,
+name|val1
+argument_list|,
+name|BCE_TPAT_CPU_EVENT_MASK
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"----------------------------"
+literal|" Register  Dump "
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|int
+name|i
+init|=
+name|BCE_TPAT_CPU_MODE
+init|;
+name|i
+operator|<
+literal|0xa3fff
+condition|;
+name|i
+operator|+=
+literal|0x10
+control|)
+block|{
+comment|/* Skip the big blank spaces */
+if|if
+condition|(
+name|i
+operator|<
+literal|0x854000
+operator|&&
+name|i
+operator|>
+literal|0x9ffff
+condition|)
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%04X: 0x%08X 0x%08X 0x%08X 0x%08X\n"
+argument_list|,
+name|i
+argument_list|,
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|i
+argument_list|)
+argument_list|,
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|i
+operator|+
+literal|0x4
+argument_list|)
+argument_list|,
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|i
+operator|+
+literal|0x8
+argument_list|)
+argument_list|,
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|i
+operator|+
+literal|0xC
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|BCE_PRINTF
+argument_list|(
+literal|"----------------------------"
+literal|"----------------"
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
 comment|/* Prints out the driver state and then enters the debugger.                */
 end_comment
 
@@ -28948,6 +31534,16 @@ condition|(
 literal|0
 condition|)
 block|{
+name|bce_freeze_controller
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|bce_unfreeze_controller
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|bce_dump_txbd
 argument_list|(
 name|sc
@@ -29031,7 +31627,23 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|bce_dump_txp_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|bce_dump_rxp_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|bce_dump_tpat_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
+comment|/*	bce_freeze_controller(sc); */
 name|bce_dump_driver_state
 argument_list|(
 name|sc
@@ -29042,6 +31654,26 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|bce_dump_tx_chain
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|TOTAL_TX_BD
+argument_list|)
+expr_stmt|;
+name|bce_dump_hw_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|bce_dump_txp_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/*	bce_unfreeze_controller(sc); */
 comment|/* Call the debugger. */
 name|breakpoint
 argument_list|()
