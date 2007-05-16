@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/errno.h>
 end_include
 
 begin_include
@@ -28,31 +28,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syslog.h>
+file|<sys/mbuf.h>
 end_include
 
 begin_include
@@ -124,7 +106,7 @@ comment|/* commited token bucket counter */
 name|int64_t
 name|te
 decl_stmt|;
-comment|/* exceeded / peak token bucket counter */
+comment|/* exceeded/peak token bucket counter */
 name|struct
 name|timeval
 name|lastRefill
@@ -619,13 +601,11 @@ block|{
 name|priv_p
 name|priv
 decl_stmt|;
-comment|/* Initialize private descriptor */
-name|MALLOC
-argument_list|(
+comment|/* Initialize private descriptor. */
 name|priv
-argument_list|,
-name|priv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -975,7 +955,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a hook  */
+comment|/*  * Add a hook.  */
 end_comment
 
 begin_function
@@ -1136,7 +1116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Data has arrived  */
+comment|/*  * Data has arrived.  */
 end_comment
 
 begin_function
@@ -1247,12 +1227,12 @@ name|a
 parameter_list|)
 define|\
 value|do {						\ 		switch (a) {				\ 		case NG_CAR_ACTION_FORWARD:		\
-comment|/* Do nothing */
+comment|/* Do nothing. */
 value|\ 			break;				\ 		case NG_CAR_ACTION_MARK:		\
 comment|/* XXX find a way to mark packets (mbuf tag?) */
 value|\ 			++hinfo->stats.errors;		\ 			break;				\ 		case NG_CAR_ACTION_DROP:		\ 		default:				\
-comment|/* Drop packet and return */
-value|\ 			NG_FREE_ITEM(item);		\ 			++hinfo->stats.droped_pkts;	\ 			return 0;			\ 		}					\ 	}						\ 	while (0)
+comment|/* Drop packet and return. */
+value|\ 			NG_FREE_ITEM(item);		\ 			++hinfo->stats.droped_pkts;	\ 			return (0);			\ 		}					\ 	} while (0)
 comment|/* Check commited token bucket. */
 if|if
 condition|(
@@ -1269,7 +1249,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-comment|/* This packet is green */
+comment|/* This packet is green. */
 operator|++
 name|hinfo
 operator|->
@@ -1416,7 +1396,7 @@ operator|.
 name|ebs
 condition|)
 block|{
-comment|/* This packet is definitely red */
+comment|/* This packet is definitely red. */
 operator|++
 name|hinfo
 operator|->
@@ -1439,7 +1419,7 @@ operator|.
 name|red_action
 argument_list|)
 expr_stmt|;
-comment|/* Use token bucket to simulate RED-like drop probability. */
+comment|/* Use token bucket to simulate RED-like drop 			   probability. */
 block|}
 elseif|else
 if|if
@@ -1489,6 +1469,7 @@ name|hinfo
 operator|->
 name|tc
 expr_stmt|;
+comment|/* Go to negative tokens. */
 name|hinfo
 operator|->
 name|tc
@@ -1499,7 +1480,6 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-comment|/* go to negative tokens */
 name|NG_CAR_PERFORM_MATCH_ACTION
 argument_list|(
 name|hinfo
@@ -1512,7 +1492,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* This packet is probaly red */
+comment|/* This packet is probaly red. */
 operator|++
 name|hinfo
 operator|->
@@ -1639,13 +1619,15 @@ operator|.
 name|passed_pkts
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Receive a control message  */
+comment|/*  * Receive a control message.  */
 end_comment
 
 begin_function
@@ -2338,13 +2320,6 @@ operator|.
 name|q_mtx
 argument_list|)
 expr_stmt|;
-name|NG_NODE_SET_PRIVATE
-argument_list|(
-name|node
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|NG_NODE_UNREF
 argument_list|(
 name|priv
@@ -2352,7 +2327,7 @@ operator|->
 name|node
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -2872,7 +2847,6 @@ name|lastRefill
 operator|=
 name|newt
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3043,7 +3017,6 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-block|{
 name|NG_FWD_ITEM_HOOK
 argument_list|(
 name|error
@@ -3055,7 +3028,6 @@ operator|->
 name|dest
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Get next one. */
 name|hinfo
 operator|->
@@ -3123,14 +3095,12 @@ name|hinfo
 operator|->
 name|q_last
 condition|)
-block|{
-comment|/* schedule queue processing. */
+comment|/* Schedule queue processing. */
 name|ng_car_schedule
 argument_list|(
 name|hinfo
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -3172,7 +3142,7 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
-comment|/* Lock queue mutex */
+comment|/* Lock queue mutex. */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3181,7 +3151,7 @@ operator|->
 name|q_mtx
 argument_list|)
 expr_stmt|;
-comment|/* Calculate used queue length */
+comment|/* Calculate used queue length. */
 name|len
 operator|=
 name|hinfo
@@ -3202,7 +3172,7 @@ name|len
 operator|+=
 name|NG_CAR_QUEUE_SIZE
 expr_stmt|;
-comment|/* If queue is overflowed or we have no RED tokens */
+comment|/* If queue is overflowed or we have no RED tokens. */
 if|if
 condition|(
 operator|(
@@ -3226,7 +3196,7 @@ name|NG_CAR_QUEUE_SIZE
 operator|)
 condition|)
 block|{
-comment|/* drop packet. */
+comment|/* Drop packet. */
 operator|++
 name|hinfo
 operator|->
@@ -3302,7 +3272,7 @@ name|len
 operator|-
 name|NG_CAR_QUEUE_MIN_TH
 expr_stmt|;
-comment|/* If this is a first packet it the queue */
+comment|/* If this is a first packet in the queue. */
 if|if
 condition|(
 name|len
@@ -3320,7 +3290,7 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-comment|/* schedule queue processing. */
+comment|/* Schedule queue processing. */
 name|ng_car_schedule
 argument_list|(
 name|hinfo
@@ -3328,7 +3298,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Unlock queue mutex */
+comment|/* Unlock queue mutex. */
 name|mtx_unlock
 argument_list|(
 operator|&
