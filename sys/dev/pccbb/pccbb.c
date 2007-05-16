@@ -4988,7 +4988,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cbb alloc res fail\n"
+literal|"cbb alloc res fail type %d rid %x\n"
+argument_list|,
+name|type
+argument_list|,
+operator|*
+name|rid
 argument_list|)
 expr_stmt|;
 return|return
