@@ -1828,7 +1828,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a struct ifnet and in index for an interface.  */
+comment|/*  * Allocate a struct ifnet and an index for an interface.  A layer 2  * common structure will also be allocated if an allocation routine is  * registered for the passed type.  */
 end_comment
 
 begin_function
@@ -2018,6 +2018,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Free the struct ifnet, the associated index, and the layer 2 common  * structure if needed.  All the work is done in if_free_type().  *  * Do not add code to this function!  Add it to if_free_type().  */
+end_comment
+
 begin_function
 name|void
 name|if_free
@@ -2028,7 +2032,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-comment|/* Do not add code to this function!  Add it to if_free_type(). */
 name|if_free_type
 argument_list|(
 name|ifp
@@ -2040,6 +2043,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Do the actual work of freeing a struct ifnet, associated index, and  * layer 2 common structure.  This version should only be called by  * intefaces that switch their type after calling if_alloc().  */
+end_comment
 
 begin_function
 name|void
@@ -2144,7 +2151,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/*  * Attach an interface to the  * list of "active" interfaces.  */
+comment|/*  * Perform generic interface initalization tasks and attach the interface  * to the list of "active" interfaces.  *  * XXX:  *  - The decision to return void and thus require this function to  *    succeed is questionable.  *  - We do more initialization here then is probably a good idea.  *    Some of this should probably move to if_alloc().  *  - We should probably do more sanity checking.  For instance we don't  *    do anything to insure if_xname is unique or non-empty.  */
 end_comment
 
 begin_function
@@ -2242,7 +2249,6 @@ name|if_afdata_initialized
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * XXX - 	 * The old code would work if the interface passed a pre-existing 	 * chain of ifaddrs to this code.  We don't trust our callers to 	 * properly initialize the tailq, however, so we no longer allow 	 * this unlikely case. 	 */
 name|TAILQ_INIT
 argument_list|(
 operator|&
