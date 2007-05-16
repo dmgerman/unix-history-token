@@ -2527,7 +2527,7 @@ name|space
 condition|)
 block|{
 case|case
-name|PCIM_CIS_ASI_TUPLE
+name|PCIM_CIS_ASI_CONFIG
 case|:
 if|if
 condition|(

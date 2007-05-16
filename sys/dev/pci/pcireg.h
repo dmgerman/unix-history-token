@@ -556,11 +556,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_MAX_BAR_0
+value|5
+end_define
+
+begin_comment
+comment|/* Number of standard bars */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_RID2BAR
 parameter_list|(
 name|rid
 parameter_list|)
-value|(((rid)-PCIR_BARS)/4)
+value|(((rid) - PCIR_BARS) / 4)
 end_define
 
 begin_define
@@ -681,7 +692,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCIM_CIS_ASI_TUPLE
+name|PCIM_CIS_ASI_CONFIG
 value|0
 end_define
 
@@ -746,6 +757,13 @@ define|#
 directive|define
 name|PCIM_CIS_ROM_MASK
 value|0xf0000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_CIS_CONFIG_MASK
+value|0xff
 end_define
 
 begin_define
