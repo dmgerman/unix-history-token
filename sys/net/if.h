@@ -177,13 +177,13 @@ name|ifi_link_state
 decl_stmt|;
 comment|/* current link state */
 name|u_char
-name|ifi_recvquota
+name|ifi_spare_char1
 decl_stmt|;
-comment|/* polling quota for receive intrs */
+comment|/* spare byte */
 name|u_char
-name|ifi_xmitquota
+name|ifi_spare_char2
 decl_stmt|;
-comment|/* polling quota for xmit intrs */
+comment|/* spare byte */
 name|u_char
 name|ifi_datalen
 decl_stmt|;

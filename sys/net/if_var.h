@@ -772,20 +772,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|if_recvquota
-value|if_data.ifi_recvquota
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_xmitquota
-value|if_data.ifi_xmitquota
-end_define
-
-begin_define
-define|#
-directive|define
 name|if_rawoutput
 parameter_list|(
 define|if, m, sa) if_output(if, m, sa, (struct rtentry *)NULL)
