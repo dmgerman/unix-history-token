@@ -774,5 +774,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Work around a vendor issue where config_f.h is #undef'ing this setting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSMALLOC
+end_define
+
 end_unit
 

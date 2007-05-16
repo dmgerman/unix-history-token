@@ -140,16 +140,6 @@ name|BSD_STYLE_COLORLS
 end_define
 
 begin_comment
-comment|/* we want to use the system malloc when we install as /bin/csh */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SYSMALLOC
-end_define
-
-begin_comment
 comment|/* Use LC_MESSAGES locale category to open the message catalog */
 end_comment
 
