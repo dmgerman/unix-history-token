@@ -15551,10 +15551,6 @@ name|child
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pci_do_power_nodriver
-condition|)
 name|pci_cfg_save
 argument_list|(
 name|child
