@@ -480,22 +480,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|tcptw
-modifier|*
-name|tcp_timer_2msl_tw
-parameter_list|(
-name|int
-name|_reuse
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* XXX temporary */
-end_comment
-
-begin_function_decl
 name|void
 name|tcp_timer_2msl_reset
 parameter_list|(
@@ -521,6 +505,22 @@ name|_tw
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|struct
+name|tcptw
+modifier|*
+name|tcp_tw_2msl_scan
+parameter_list|(
+name|int
+name|_reuse
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX temporary */
+end_comment
 
 begin_endif
 endif|#

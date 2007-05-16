@@ -1379,9 +1379,6 @@ argument_list|,
 name|maxsockets
 argument_list|)
 expr_stmt|;
-name|tcp_timer_init
-argument_list|()
-expr_stmt|;
 name|tcp_tw_init
 argument_list|()
 expr_stmt|;
