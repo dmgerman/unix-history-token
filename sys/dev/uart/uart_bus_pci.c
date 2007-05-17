@@ -292,7 +292,7 @@ literal|0x1301
 block|,
 literal|"HP Diva RMP3"
 block|,
-literal|0x10
+literal|0x14
 block|}
 block|,
 block|{
