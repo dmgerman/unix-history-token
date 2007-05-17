@@ -75,6 +75,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -1816,31 +1822,14 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|MAX_ASOC_IDS_RET
-value|255
-end_define
-
 begin_struct
 struct|struct
 name|sctp_assoc_ids
 block|{
-name|uint16_t
-name|asls_assoc_start
-decl_stmt|;
-comment|/* array of index's start at 0 */
-name|uint8_t
-name|asls_numb_present
-decl_stmt|;
-name|uint8_t
-name|asls_more_to_get
-decl_stmt|;
 name|sctp_assoc_t
-name|asls_assoc_id
+name|gaids_assoc_id
 index|[
-name|MAX_ASOC_IDS_RET
+literal|0
 index|]
 decl_stmt|;
 block|}
@@ -3158,6 +3147,10 @@ name|total_nospaces
 decl_stmt|;
 name|uint32_t
 name|fragmentation_point
+decl_stmt|;
+name|struct
+name|xsocket
+name|xsocket
 decl_stmt|;
 comment|/* add more endpoint specific data here */
 block|}

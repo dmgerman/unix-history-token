@@ -16159,6 +16159,11 @@ block|}
 block|}
 block|}
 block|}
+name|sctp_m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EHOSTUNREACH
@@ -20772,6 +20777,11 @@ argument_list|,
 name|MT_DATA
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|op_err
+condition|)
+block|{
 name|SCTP_BUF_LEN
 argument_list|(
 name|op_err
@@ -20812,6 +20822,7 @@ name|sctp_chunkhdr
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -29968,6 +29979,7 @@ name|asoc
 expr_stmt|;
 name|one_more_time
 label|:
+comment|/* sa_ignore FREED_MEMORY */
 name|sp
 operator|=
 name|TAILQ_FIRST
@@ -52286,7 +52298,7 @@ name|NULL
 operator|)
 operator|&&
 operator|(
-name|top
+name|i_pak
 operator|==
 name|NULL
 operator|)

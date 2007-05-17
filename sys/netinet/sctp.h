@@ -389,6 +389,28 @@ name|SCTP_LOCAL_AUTH_CHUNKS
 value|0x00000103
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_GET_ASSOC_NUMBER
+value|0x00000104
+end_define
+
+begin_comment
+comment|/* ro */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_GET_ASSOC_ID_LIST
+value|0x00000105
+end_define
+
+begin_comment
+comment|/* ro */
+end_comment
+
 begin_comment
 comment|/*  * user socket options: BSD implementation specific  */
 end_comment
@@ -469,26 +491,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_GET_ASOC_ID_LIST
-value|0x00001104
-end_define
-
-begin_comment
-comment|/* ro */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SCTP_PCB_STATUS
-value|0x00001105
+value|0x00001104
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_GET_NONCE_VALUES
-value|0x00001106
+value|0x00001105
 end_define
 
 begin_comment

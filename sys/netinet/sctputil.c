@@ -7766,6 +7766,7 @@ expr_stmt|;
 name|SCTP_IPI_ITERATOR_WQ_LOCK
 argument_list|()
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|it
 operator|=
 name|TAILQ_FIRST
@@ -10229,6 +10230,8 @@ condition|(
 name|cnt_of_unconf
 condition|)
 block|{
+name|net
+operator|=
 name|lnet
 operator|=
 name|NULL
@@ -13957,7 +13960,7 @@ operator|||
 operator|(
 name|event
 operator|==
-name|SCTP_SHUTDOWN_COMP
+name|SCTP_CANT_STR_ASSOC
 operator|)
 operator|)
 condition|)
@@ -17638,6 +17641,7 @@ argument_list|,
 name|sp
 argument_list|)
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|sp
 operator|=
 name|TAILQ_FIRST
@@ -17807,6 +17811,7 @@ argument_list|,
 name|chk
 argument_list|)
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|chk
 operator|=
 name|TAILQ_FIRST
@@ -17976,6 +17981,7 @@ argument_list|,
 name|chk
 argument_list|)
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|chk
 operator|=
 name|TAILQ_FIRST
@@ -24174,6 +24180,7 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* we possibly have data we can read */
+comment|/* sa_ignore FREED_MEMORY */
 name|control
 operator|=
 name|TAILQ_FIRST

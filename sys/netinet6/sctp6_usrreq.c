@@ -978,6 +978,7 @@ argument_list|)
 operator|+
 name|iphlen
 expr_stmt|;
+comment|/* sa_ignore NO_NULL_CHK */
 name|sctp_common_input_processing
 argument_list|(
 operator|&

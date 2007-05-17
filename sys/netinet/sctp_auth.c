@@ -3493,13 +3493,13 @@ name|HAVE_SHA224
 case|case
 name|SCTP_AUTH_HMAC_ID_SHA224
 case|:
+endif|#
+directive|endif
 return|return
 operator|(
 literal|64
 operator|)
 return|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|HAVE_SHA2

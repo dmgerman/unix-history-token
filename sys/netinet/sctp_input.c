@@ -975,6 +975,7 @@ argument_list|,
 name|sp
 argument_list|)
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|sp
 operator|=
 name|TAILQ_FIRST
@@ -1351,6 +1352,7 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * load_address_from_init will put the addresses into the 	 * association when the COOKIE is processed or the INIT-ACK is 	 * processed. Both types of COOKIE's existing and new call this 	 * routine. It will remove addresses that are no longer in the 	 * association (for the restarting case where addresses are 	 * removed). Up front when the INIT arrives we will discard it if it 	 * is a restart and new addresses have been added. 	 */
+comment|/* sa_ignore MEMLEAK */
 return|return
 operator|(
 literal|0
@@ -9250,9 +9252,12 @@ name|time_entered
 operator|.
 name|tv_sec
 operator|+
+name|TICKS_TO_SEC
+argument_list|(
 name|cookie
 operator|->
 name|cookie_life
+argument_list|)
 expr_stmt|;
 name|time_expires
 operator|.
@@ -21468,6 +21473,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* process the control portion of the SCTP packet */
+comment|/* sa_ignore NO_NULL_CHK */
 name|stcb
 operator|=
 name|sctp_process_control
@@ -23016,6 +23022,7 @@ name|ip
 operator|->
 name|ip_tos
 expr_stmt|;
+comment|/* sa_ignore NO_NULL_CHK */
 name|sctp_common_input_processing
 argument_list|(
 operator|&

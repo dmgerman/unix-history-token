@@ -1563,6 +1563,7 @@ operator|!=
 name|NULL
 operator|)
 operator|&&
+comment|/* sa_ignore NO_NULL_CHK */
 operator|(
 operator|!
 operator|(
@@ -1650,6 +1651,7 @@ name|nets
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* sa_ignore NO_NULL_CHK */
 if|if
 condition|(
 operator|(

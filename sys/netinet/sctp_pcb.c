@@ -8453,7 +8453,10 @@ name|m
 operator|->
 name|def_cookie_life
 operator|=
+name|MSEC_TO_TICKS
+argument_list|(
 name|sctp_valid_cookie_life_default
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize authentication parameters 	 */
 name|m
@@ -9602,7 +9605,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Setup a vrf_id to be the default for the non-bind-all case. 	 */
+comment|/* Setup a vrf_id to be the default for the non-bind-all case. */
 name|vrf_id
 operator|=
 name|inp
@@ -9919,6 +9922,10 @@ operator|+=
 name|IPPORT_RESERVED
 expr_stmt|;
 block|}
+name|not_found
+operator|=
+literal|1
+expr_stmt|;
 name|vrf_id
 operator|=
 name|inp
@@ -9947,7 +9954,6 @@ name|not_found
 operator|=
 literal|0
 expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(
@@ -10001,6 +10007,10 @@ operator|+=
 name|IPPORT_RESERVED
 expr_stmt|;
 block|}
+name|not_found
+operator|=
+literal|1
+expr_stmt|;
 name|vrf_id
 operator|=
 name|inp
@@ -10029,7 +10039,6 @@ name|not_found
 operator|=
 literal|0
 expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(
@@ -10090,6 +10099,10 @@ operator|+=
 name|IPPORT_RESERVED
 expr_stmt|;
 block|}
+name|not_found
+operator|=
+literal|1
+expr_stmt|;
 name|vrf_id
 operator|=
 name|inp
@@ -10118,7 +10131,6 @@ name|not_found
 operator|=
 literal|0
 expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(
@@ -10421,7 +10433,7 @@ operator|&=
 operator|~
 name|SCTP_PCB_FLAGS_BOUNDALL
 expr_stmt|;
-comment|/* set the automatic addr changes from kernel flag */
+comment|/* allow bindx() to send ASCONF's for binding changes */
 name|sctp_feature_on
 argument_list|(
 name|inp
@@ -10429,6 +10441,7 @@ argument_list|,
 name|SCTP_PCB_FLAGS_DO_ASCONF
 argument_list|)
 expr_stmt|;
+comment|/* set the automatic addr changes from kernel flag */
 if|if
 condition|(
 name|sctp_auto_asconf
@@ -10446,7 +10459,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * allow bindx() to send ASCONF's for binding 			 * changes 			 */
 name|sctp_feature_on
 argument_list|(
 name|inp
@@ -12411,6 +12423,7 @@ operator|=
 name|SCTP_TIMER_TYPE_NONE
 expr_stmt|;
 comment|/* Clear the read queue */
+comment|/* sa_ignore FREED_MEMORY */
 while|while
 condition|(
 operator|(
@@ -12688,6 +12701,7 @@ argument_list|(
 name|shared_key
 argument_list|)
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|shared_key
 operator|=
 name|LIST_FIRST
@@ -17806,6 +17820,7 @@ expr_stmt|;
 name|SCTP_DECR_STRMOQ_COUNT
 argument_list|()
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|sp
 operator|=
 name|TAILQ_FIRST
@@ -17818,6 +17833,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* sa_ignore FREED_MEMORY */
 while|while
 condition|(
 operator|(
@@ -17933,6 +17949,7 @@ expr_stmt|;
 name|SCTP_DECR_READQ_COUNT
 argument_list|()
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|sq
 operator|=
 name|TAILQ_FIRST
@@ -18022,6 +18039,7 @@ operator|->
 name|free_chunk_cnt
 operator|--
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|chk
 operator|=
 name|TAILQ_FIRST
@@ -18116,6 +18134,7 @@ expr_stmt|;
 name|SCTP_DECR_CHK_COUNT
 argument_list|()
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|chk
 operator|=
 name|TAILQ_FIRST
@@ -18212,6 +18231,7 @@ expr_stmt|;
 name|SCTP_DECR_CHK_COUNT
 argument_list|()
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|chk
 operator|=
 name|TAILQ_FIRST
@@ -18308,6 +18328,7 @@ expr_stmt|;
 name|SCTP_DECR_CHK_COUNT
 argument_list|()
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|chk
 operator|=
 name|TAILQ_FIRST
@@ -18403,6 +18424,7 @@ expr_stmt|;
 name|SCTP_DECR_CHK_COUNT
 argument_list|()
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|chk
 operator|=
 name|TAILQ_FIRST
@@ -18639,6 +18661,7 @@ name|nets
 argument_list|)
 condition|)
 block|{
+comment|/* sa_ignore FREED_MEMORY */
 name|net
 operator|=
 name|TAILQ_FIRST
@@ -18713,6 +18736,7 @@ name|sctp_restricted_addrs
 argument_list|)
 condition|)
 block|{
+comment|/* sa_ignore FREED_MEMORY */
 name|laddr
 operator|=
 name|LIST_FIRST
@@ -18742,6 +18766,7 @@ name|asconf_queue
 argument_list|)
 condition|)
 block|{
+comment|/* sa_ignore FREED_MEMORY */
 name|aparam
 operator|=
 name|TAILQ_FIRST
@@ -18881,6 +18906,7 @@ argument_list|(
 name|shared_key
 argument_list|)
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|shared_key
 operator|=
 name|LIST_FIRST
@@ -25518,6 +25544,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* sa_ignore MEMLEAK {memory is put on the tailq for the iterator} */
 return|return
 operator|(
 literal|0

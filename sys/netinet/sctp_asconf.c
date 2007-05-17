@@ -9890,14 +9890,6 @@ expr_stmt|;
 operator|*
 name|retlen
 operator|=
-name|acp
-operator|->
-name|ch
-operator|.
-name|chunk_length
-operator|=
-name|ntohs
-argument_list|(
 name|SCTP_BUF_LEN
 argument_list|(
 name|m_asconf_chk
@@ -9907,6 +9899,17 @@ name|SCTP_BUF_LEN
 argument_list|(
 name|m_asconf
 argument_list|)
+expr_stmt|;
+name|acp
+operator|->
+name|ch
+operator|.
+name|chunk_length
+operator|=
+name|ntohs
+argument_list|(
+operator|*
+name|retlen
 argument_list|)
 expr_stmt|;
 comment|/* update "sent" flag */
@@ -11716,6 +11719,22 @@ name|sctp_laddr
 modifier|*
 name|laddr
 decl_stmt|;
+if|if
+condition|(
+name|inp
+operator|->
+name|laddr_count
+operator|<
+literal|2
+condition|)
+block|{
+comment|/* can't delete the last local address */
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|LIST_FOREACH
 argument_list|(
 argument|laddr

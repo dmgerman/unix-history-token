@@ -1595,6 +1595,7 @@ argument_list|,
 name|chk
 argument_list|)
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|chk
 operator|=
 name|TAILQ_FIRST
@@ -2261,6 +2262,7 @@ block|}
 block|}
 break|break;
 block|}
+comment|/* sa_ignore FREED_MEMORY */
 name|chk
 operator|=
 name|TAILQ_FIRST
@@ -10265,6 +10267,7 @@ argument_list|(
 name|liste
 argument_list|)
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|liste
 operator|=
 name|TAILQ_FIRST
@@ -16109,6 +16112,7 @@ name|tp1
 operator|->
 name|whoTo
 expr_stmt|;
+comment|/* sa_ignore NO_NULL_CHK */
 name|alt
 operator|=
 name|sctp_find_alternate_net
@@ -16394,6 +16398,7 @@ operator|->
 name|whoTo
 argument_list|)
 expr_stmt|;
+comment|/* sa_ignore FREED_MEMORY */
 name|tp1
 operator|->
 name|whoTo
@@ -20511,6 +20516,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 			 * Find first chunk that was used with window probe 			 * and clear the sent 			 */
+comment|/* sa_ignore FREED_MEMORY */
 name|TAILQ_FOREACH
 argument_list|(
 argument|tp1

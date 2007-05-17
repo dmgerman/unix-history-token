@@ -2192,14 +2192,14 @@ value|5
 end_define
 
 begin_comment
-comment|/* How long a cookie lives in seconds */
+comment|/* How long a cookie lives in milli-seconds */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTP_DEFAULT_COOKIE_LIFE
-value|60
+value|60000
 end_define
 
 begin_comment
