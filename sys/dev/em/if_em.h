@@ -416,6 +416,17 @@ name|EM_BAR_MEM_TYPE_64BIT
 value|0x00000004
 end_define
 
+begin_define
+define|#
+directive|define
+name|EM_MSIX_BAR
+value|3
+end_define
+
+begin_comment
+comment|/* On 82575 */
+end_comment
+
 begin_comment
 comment|/* Defines for printing debug information */
 end_comment
@@ -697,6 +708,11 @@ name|struct
 name|resource
 modifier|*
 name|flash_mem
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|msix_mem
 decl_stmt|;
 name|struct
 name|resource
