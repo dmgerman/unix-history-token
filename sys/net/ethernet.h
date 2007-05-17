@@ -2340,6 +2340,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ETHERTYPE_SLOW
+value|0x8809
+end_define
+
+begin_comment
+comment|/* 802.3ad link aggregation (LACP) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ETHERTYPE_PPP
 value|0x880B
 end_define
