@@ -1898,6 +1898,23 @@ operator|->
 name|srclistsize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dbt
+operator|->
+name|name
+condition|)
+name|free
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|dbt
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
