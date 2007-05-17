@@ -651,8 +651,6 @@ end_extern
 begin_expr_stmt
 unit|)
 name|dtab
-operator|,
-name|rmdtab
 expr_stmt|;
 end_expr_stmt
 
