@@ -616,8 +616,6 @@ name|ferror
 argument_list|(
 name|ifp
 argument_list|)
-operator|||
-literal|1
 condition|)
 name|err
 argument_list|(
