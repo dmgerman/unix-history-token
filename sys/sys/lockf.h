@@ -71,7 +71,7 @@ modifier|*
 modifier|*
 name|lf_head
 decl_stmt|;
-comment|/* Back pointer to the head of the locf list */
+comment|/* Back pointer to the head of the lockf list */
 name|struct
 name|inode
 modifier|*
