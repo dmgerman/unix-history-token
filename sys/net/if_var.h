@@ -475,9 +475,9 @@ parameter_list|)
 function_decl|;
 name|void
 modifier|*
-name|if_spare1
+name|if_lagg
 decl_stmt|;
-comment|/* spare pointer 1 */
+comment|/* lagg glue */
 name|void
 modifier|*
 name|if_spare2

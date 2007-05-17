@@ -553,10 +553,19 @@ begin_struct
 struct|struct
 name|lagg_mc
 block|{
+union|union
+block|{
 name|struct
-name|ifmultiaddr
+name|ether_multi
 modifier|*
-name|mc_ifma
+name|mcu_enm
+decl_stmt|;
+block|}
+name|mc_u
+union|;
+name|struct
+name|sockaddr_storage
+name|mc_addr
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
@@ -608,7 +617,7 @@ name|sc_ifp
 decl_stmt|;
 comment|/* virtual interface */
 name|struct
-name|rwlock
+name|mtx
 name|sc_mtx
 decl_stmt|;
 name|int
@@ -649,6 +658,15 @@ argument|lagg_softc
 argument_list|)
 name|sc_entries
 expr_stmt|;
+name|SLIST_HEAD
+argument_list|(
+argument|__mclhd
+argument_list|,
+argument|lagg_mc
+argument_list|)
+name|sc_mc_head
+expr_stmt|;
+comment|/* multicast addresses */
 name|struct
 name|task
 name|sc_lladdr_task
@@ -831,15 +849,6 @@ name|int
 name|lp_detaching
 decl_stmt|;
 comment|/* ifnet is detaching */
-name|SLIST_HEAD
-argument_list|(
-argument|__mclhd
-argument_list|,
-argument|lagg_mc
-argument_list|)
-name|lp_mc_head
-expr_stmt|;
-comment|/* multicast addresses */
 comment|/* Redirected callbacks */
 name|int
 function_decl|(
@@ -894,9 +903,9 @@ define|#
 directive|define
 name|LAGG_LOCK_INIT
 parameter_list|(
-name|_sc
+name|_tr
 parameter_list|)
-value|rw_init(&(_sc)->sc_mtx, "if_lagg rwlock")
+value|mtx_init(&(_tr)->sc_mtx, "if_lagg", NULL, \ 				    MTX_DEF)
 end_define
 
 begin_define
@@ -904,69 +913,49 @@ define|#
 directive|define
 name|LAGG_LOCK_DESTROY
 parameter_list|(
-name|_sc
+name|_tr
 parameter_list|)
-value|rw_destroy(&(_sc)->sc_mtx)
+value|mtx_destroy(&(_tr)->sc_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LAGG_RLOCK
+name|LAGG_LOCK
 parameter_list|(
-name|_sc
+name|_tr
 parameter_list|)
-value|rw_rlock(&(_sc)->sc_mtx)
+value|mtx_lock(&(_tr)->sc_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LAGG_WLOCK
+name|LAGG_UNLOCK
 parameter_list|(
-name|_sc
+name|_tr
 parameter_list|)
-value|rw_wlock(&(_sc)->sc_mtx)
+value|mtx_unlock(&(_tr)->sc_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LAGG_RUNLOCK
+name|LAGG_LOCKED
 parameter_list|(
-name|_sc
+name|_tr
 parameter_list|)
-value|rw_runlock(&(_sc)->sc_mtx)
+value|mtx_owned(&(_tr)->sc_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LAGG_WUNLOCK
+name|LAGG_LOCK_ASSERT
 parameter_list|(
-name|_sc
+name|_tr
 parameter_list|)
-value|rw_wunlock(&(_sc)->sc_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LAGG_RLOCK_ASSERT
-parameter_list|(
-name|_sc
-parameter_list|)
-value|rw_assert(&(_sc)->sc_mtx, RA_RLOCKED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LAGG_WLOCK_ASSERT
-parameter_list|(
-name|_sc
-parameter_list|)
-value|rw_assert(&(_sc)->sc_mtx, RA_WLOCKED)
+value|mtx_assert(&(_tr)->sc_mtx, MA_OWNED)
 end_define
 
 begin_function_decl
