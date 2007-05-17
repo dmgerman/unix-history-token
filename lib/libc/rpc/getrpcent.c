@@ -5091,7 +5091,7 @@ name|NULL
 argument_list|,
 name|dtab
 argument_list|,
-name|NSDB_SERVICES
+name|NSDB_RPC
 argument_list|,
 literal|"endrpcent"
 argument_list|,
