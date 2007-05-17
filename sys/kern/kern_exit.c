@@ -1389,6 +1389,25 @@ operator|&
 name|allproc_lock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Call machine-dependent code to release any 	 * machine-dependent resources other than the address space. 	 * The address space is released by "vmspace_exitfree(p)" in 	 * vm_waitproc(). 	 */
+name|cpu_exit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|WITNESS_WARN
+argument_list|(
+name|WARN_PANIC
+argument_list|,
+name|NULL
+argument_list|,
+literal|"process (pid %d) exiting"
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|)
+expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
@@ -1703,11 +1722,10 @@ operator|->
 name|p_sigparent
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
+name|sx_xunlock
 argument_list|(
-name|p
-operator|->
-name|p_pptr
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If this is a kthread, then wakeup anyone waiting for it to exit. 	 */
@@ -1722,51 +1740,6 @@ condition|)
 name|wakeup
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Finally, call machine-dependent code to release the remaining 	 * resources including address space. 	 * The address space is released by "vmspace_exitfree(p)" in 	 * vm_waitproc(). 	 */
-name|cpu_exit
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-name|WITNESS_WARN
-argument_list|(
-name|WARN_PANIC
-argument_list|,
-operator|&
-name|proctree_lock
-operator|.
-name|sx_object
-argument_list|,
-literal|"process (pid %d) exiting"
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|)
-expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-operator|->
-name|p_pptr
-argument_list|)
-expr_stmt|;
-name|sx_xunlock
-argument_list|(
-operator|&
-name|proctree_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We have to wait until after acquiring all locks before 	 * changing p_state.  We need to avoid all possible context 	 * switches (including ones from blocking on a mutex) while 	 * marked as a zombie.  We also have to set the zombie state 	 * before we release the parent process' proc lock to avoid 	 * a lost wakeup.  So, we first call wakeup, then we grab the 	 * sched lock, update the state, and release the parent process' 	 * proc lock. 	 */
