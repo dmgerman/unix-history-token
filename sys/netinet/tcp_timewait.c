@@ -1384,6 +1384,9 @@ condition|(
 name|isipv6
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|ip6_hdr
 modifier|*
@@ -1422,6 +1425,8 @@ condition|)
 goto|goto
 name|drop
 goto|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
