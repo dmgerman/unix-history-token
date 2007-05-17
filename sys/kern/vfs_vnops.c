@@ -3336,26 +3336,6 @@ name|vap
 operator|->
 name|va_gen
 expr_stmt|;
-if|#
-directive|if
-operator|(
-name|S_BLKSIZE
-operator|==
-literal|512
-operator|)
-comment|/* Optimize this case */
-name|sb
-operator|->
-name|st_blocks
-operator|=
-name|vap
-operator|->
-name|va_bytes
-operator|>>
-literal|9
-expr_stmt|;
-else|#
-directive|else
 name|sb
 operator|->
 name|st_blocks
@@ -3366,8 +3346,6 @@ name|va_bytes
 operator|/
 name|S_BLKSIZE
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
