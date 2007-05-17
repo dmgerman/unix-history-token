@@ -2114,7 +2114,7 @@ name|NG_CAR_RED
 operator|||
 name|priv
 operator|->
-name|lower
+name|upper
 operator|.
 name|conf
 operator|.
