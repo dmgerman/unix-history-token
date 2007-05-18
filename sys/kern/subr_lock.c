@@ -1120,6 +1120,15 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
+name|lock_profile_object_init
+argument_list|(
+name|lock
+argument_list|,
+name|class
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1145,6 +1154,11 @@ literal|"lock %p is not initialized"
 operator|,
 name|lock
 operator|)
+argument_list|)
+expr_stmt|;
+name|lock_profile_object_destroy
+argument_list|(
+name|lock
 argument_list|)
 expr_stmt|;
 name|WITNESS_DESTROY
