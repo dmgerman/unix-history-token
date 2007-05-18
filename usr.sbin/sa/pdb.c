@@ -196,7 +196,7 @@ name|saved_pacct_db
 operator|=
 name|dbopen
 argument_list|(
-name|_PATH_SAVACCT
+name|pdb_file
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -685,7 +685,7 @@ name|saved_pacct_db
 operator|=
 name|dbopen
 argument_list|(
-name|_PATH_SAVACCT
+name|pdb_file
 argument_list|,
 name|O_RDWR
 operator||

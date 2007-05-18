@@ -308,6 +308,18 @@ name|sa_cmp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|pdb_file
+decl_stmt|,
+modifier|*
+name|usrdb_file
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* some #defines to help with db's stupidity */
 end_comment

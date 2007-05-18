@@ -337,6 +337,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|pdb_file
+init|=
+name|_PATH_SAVACCT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|usrdb_file
+init|=
+name|_PATH_USRACCT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
@@ -423,7 +443,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abcdDfijkKlmnqrstuv:"
+literal|"abcdDfijkKlmnP:qrstuU:v:"
 argument_list|)
 operator|)
 operator|!=
@@ -573,6 +593,15 @@ name|cmp_calls
 expr_stmt|;
 break|break;
 case|case
+literal|'P'
+case|:
+comment|/* specify program database summary file */
+name|pdb_file
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'q'
 case|:
 comment|/* quiet; error messages only */
@@ -615,6 +644,15 @@ comment|/* first, print uid and command name */
 name|uflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'U'
+case|:
+comment|/* specify user database summary file */
+name|usrdb_file
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -1066,7 +1104,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: sa [-abcdDfijkKlmnqrstu] [-v cutoff] [file ...]\n"
+literal|"usage: sa [-abcdDfijkKlmnqrstu] [-P file] [-U file] [-v cutoff] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

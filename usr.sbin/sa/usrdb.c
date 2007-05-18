@@ -201,7 +201,7 @@ name|saved_usracct_db
 operator|=
 name|dbopen
 argument_list|(
-name|_PATH_USRACCT
+name|usrdb_file
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -744,7 +744,7 @@ name|saved_usracct_db
 operator|=
 name|dbopen
 argument_list|(
-name|_PATH_USRACCT
+name|usrdb_file
 argument_list|,
 name|O_RDWR
 operator||
