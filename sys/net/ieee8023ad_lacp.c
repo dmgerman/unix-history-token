@@ -3951,7 +3951,7 @@ decl_stmt|;
 name|int
 name|nports
 decl_stmt|;
-name|LAGG_WLOCK_ASSERT
+name|LAGG_RLOCK_ASSERT
 argument_list|(
 name|lgs
 argument_list|)

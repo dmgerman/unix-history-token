@@ -5797,7 +5797,7 @@ init|=
 name|NULL
 decl_stmt|;
 comment|// int new_link = LINK_STATE_DOWN;
-name|LAGG_WLOCK_ASSERT
+name|LAGG_RLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
