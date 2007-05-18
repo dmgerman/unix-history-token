@@ -168,7 +168,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|_vop_lock_t
+name|vop_lock1_t
 name|coda_lock
 decl_stmt|;
 end_decl_stmt

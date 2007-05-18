@@ -255,7 +255,7 @@ operator|=
 name|VOP_NULL
 block|,
 operator|.
-name|_vop_lock
+name|vop_lock1
 operator|=
 name|vop_stdlock
 block|,
@@ -702,7 +702,7 @@ parameter_list|(
 name|ap
 parameter_list|)
 name|struct
-name|_vop_lock_args
+name|vop_lock1_args
 comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 		char *file; 		int line; 	} */
 modifier|*
 name|ap

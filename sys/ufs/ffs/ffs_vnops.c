@@ -251,7 +251,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|_vop_lock_t
+name|vop_lock1_t
 name|ffs_lock
 decl_stmt|;
 end_decl_stmt
@@ -407,7 +407,7 @@ operator|=
 name|ffs_getpages
 block|,
 operator|.
-name|_vop_lock
+name|vop_lock1
 operator|=
 name|ffs_lock
 block|,
@@ -492,7 +492,7 @@ operator|=
 name|ffs_getpages
 block|,
 operator|.
-name|_vop_lock
+name|vop_lock1
 operator|=
 name|ffs_lock
 block|,
@@ -567,7 +567,7 @@ operator|=
 name|ffs_fsync
 block|,
 operator|.
-name|_vop_lock
+name|vop_lock1
 operator|=
 name|ffs_lock
 block|,
@@ -1305,7 +1305,7 @@ parameter_list|(
 name|ap
 parameter_list|)
 name|struct
-name|_vop_lock_args
+name|vop_lock1_args
 comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 		char *file; 		int line; 	} */
 modifier|*
 name|ap
@@ -1492,7 +1492,7 @@ break|break;
 default|default:
 name|result
 operator|=
-name|_VOP_LOCK_APV
+name|VOP_LOCK1_APV
 argument_list|(
 operator|&
 name|ufs_vnodeops
@@ -1510,7 +1510,7 @@ else|#
 directive|else
 return|return
 operator|(
-name|_VOP_LOCK_APV
+name|VOP_LOCK1_APV
 argument_list|(
 operator|&
 name|ufs_vnodeops

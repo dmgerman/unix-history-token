@@ -13646,7 +13646,7 @@ name|sync_reclaim
 block|,
 comment|/* reclaim */
 operator|.
-name|_vop_lock
+name|vop_lock1
 operator|=
 name|vop_stdlock
 block|,
@@ -15808,7 +15808,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG_VFS_LOCKS
 name|struct
-name|_vop_lock_args
+name|vop_lock1_args
 modifier|*
 name|a
 init|=
@@ -15866,7 +15866,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG_VFS_LOCKS
 name|struct
-name|_vop_lock_args
+name|vop_lock1_args
 modifier|*
 name|a
 init|=

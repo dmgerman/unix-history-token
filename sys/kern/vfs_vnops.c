@@ -3797,7 +3797,7 @@ block|}
 comment|/* 		 * lockmgr drops interlock before it will return for 		 * any reason.  So force the code above to relock it. 		 */
 name|error
 operator|=
-name|_VOP_LOCK
+name|VOP_LOCK1
 argument_list|(
 name|vp
 argument_list|,

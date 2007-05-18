@@ -7843,7 +7843,7 @@ name|int
 name|unionfs_lock
 parameter_list|(
 name|struct
-name|_vop_lock_args
+name|vop_lock1_args
 modifier|*
 name|ap
 parameter_list|)
@@ -10899,7 +10899,7 @@ operator|=
 name|unionfs_listextattr
 block|,
 operator|.
-name|_vop_lock
+name|vop_lock1
 operator|=
 name|unionfs_lock
 block|,

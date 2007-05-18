@@ -130,7 +130,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vop_lock_t
+name|vop_lock1_t
 name|umap_lock
 decl_stmt|;
 end_decl_stmt
@@ -1388,7 +1388,7 @@ parameter_list|(
 name|ap
 parameter_list|)
 name|struct
-name|vop_lock_args
+name|vop_lock1_args
 comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
@@ -1920,7 +1920,7 @@ operator|=
 name|umap_inactive
 block|,
 operator|.
-name|vop_lock
+name|vop_lock1
 operator|=
 name|umap_lock
 block|,

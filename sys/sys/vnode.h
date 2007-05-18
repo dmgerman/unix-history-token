@@ -3605,7 +3605,7 @@ name|int
 name|vop_stdlock
 parameter_list|(
 name|struct
-name|_vop_lock_args
+name|vop_lock1_args
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4012,7 +4012,7 @@ name|flags
 parameter_list|,
 name|td
 parameter_list|)
-value|_VOP_LOCK(vp, flags, td, __FILE__, __LINE__)
+value|VOP_LOCK1(vp, flags, td, __FILE__, __LINE__)
 end_define
 
 begin_function_decl
