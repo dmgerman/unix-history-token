@@ -3152,10 +3152,6 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-name|td
-operator|=
-name|curthread
-expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
