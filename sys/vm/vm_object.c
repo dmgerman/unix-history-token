@@ -2296,10 +2296,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|cnt
-operator|.
-name|v_pfree
-operator|++
+name|VMCNT_ADD
+argument_list|(
+name|pfree
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 else|else

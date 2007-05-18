@@ -4796,12 +4796,9 @@ operator|->
 name|wire_count
 operator|--
 expr_stmt|;
-name|atomic_subtract_int
+name|VMCNT_DEC
 argument_list|(
-operator|&
-name|cnt
-operator|.
-name|v_wire_count
+name|wire_count
 argument_list|,
 literal|1
 argument_list|)

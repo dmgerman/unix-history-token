@@ -991,9 +991,10 @@ argument_list|(
 operator|(
 name|uintmax_t
 operator|)
-name|cnt
-operator|.
-name|v_free_count
+name|VMCNT_GET
+argument_list|(
+name|free_count
+argument_list|)
 argument_list|)
 argument_list|,
 name|ptoa
@@ -1001,9 +1002,10 @@ argument_list|(
 operator|(
 name|uintmax_t
 operator|)
-name|cnt
-operator|.
-name|v_free_count
+name|VMCNT_GET
+argument_list|(
+name|free_count
+argument_list|)
 argument_list|)
 operator|/
 literal|1048576

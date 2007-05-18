@@ -901,9 +901,10 @@ name|ctob
 argument_list|(
 name|physmem
 operator|-
-name|cnt
-operator|.
-name|v_wire_count
+name|VMCNT_GET
+argument_list|(
+name|wire_count
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

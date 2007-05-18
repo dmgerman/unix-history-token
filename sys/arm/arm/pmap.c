@@ -6663,9 +6663,10 @@ name|shpgperproc
 operator|*
 name|maxproc
 operator|+
-name|cnt
-operator|.
-name|v_page_count
+name|VMCNT_GET
+argument_list|(
+name|page_count
+argument_list|)
 expr_stmt|;
 name|pv_entry_high_water
 operator|=

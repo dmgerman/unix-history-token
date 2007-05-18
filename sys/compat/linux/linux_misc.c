@@ -586,9 +586,10 @@ name|sysinfo
 operator|.
 name|totalram
 operator|-
-name|cnt
-operator|.
-name|v_wire_count
+name|VMCNT_GET
+argument_list|(
+name|wire_count
+argument_list|)
 operator|*
 name|PAGE_SIZE
 expr_stmt|;

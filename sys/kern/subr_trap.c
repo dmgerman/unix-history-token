@@ -630,15 +630,17 @@ operator||
 name|TDF_INTERRUPT
 operator|)
 expr_stmt|;
-name|cnt
-operator|.
-name|v_trap
-operator|++
-expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|)
+expr_stmt|;
+name|VMCNT_ADD
+argument_list|(
+name|trap
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXXKSE While the fact that we owe a user profiling 	 * tick is stored per thread in this code, the statistics 	 * themselves are still stored per process. 	 * This should probably change, by which I mean that 	 * possibly the location of both might change. 	 */

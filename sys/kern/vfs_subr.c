@@ -1270,9 +1270,10 @@ name|min
 argument_list|(
 name|maxproc
 operator|+
-name|cnt
-operator|.
-name|v_page_count
+name|VMCNT_GET
+argument_list|(
+name|page_count
+argument_list|)
 operator|/
 literal|4
 argument_list|,
@@ -2462,9 +2463,10 @@ literal|1
 expr_stmt|;
 name|trigger
 operator|=
-name|cnt
-operator|.
-name|v_page_count
+name|VMCNT_GET
+argument_list|(
+name|page_count
+argument_list|)
 operator|*
 literal|2
 operator|/

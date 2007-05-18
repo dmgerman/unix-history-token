@@ -3775,9 +3775,10 @@ if|if
 condition|(
 name|npages
 operator|+
-name|cnt
-operator|.
-name|v_wire_count
+name|VMCNT_GET
+argument_list|(
+name|wire_count
+argument_list|)
 operator|>
 name|vm_page_max_wired
 condition|)

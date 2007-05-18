@@ -1689,10 +1689,12 @@ name|TDF_ASTPENDING
 expr_stmt|;
 block|}
 comment|/* 	 * Finish up stats for outgoing thread. 	 */
-name|cnt
-operator|.
-name|v_swtch
-operator|++
+name|VMCNT_ADD
+argument_list|(
+name|swtch
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
