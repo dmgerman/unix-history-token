@@ -186,7 +186,7 @@ value|do {						\ 	if (_giantcnt> 0) {						\ 		mtx_assert(&Giant, MA_NOTOWNED);
 end_define
 
 begin_comment
-comment|/*  * Returns true if an exclusive lock is recursed.  It curthread  * currently has an exclusive lock.  */
+comment|/*  * Returns true if an exclusive lock is recursed.  It assumes  * curthread currently has an exclusive lock.  */
 end_comment
 
 begin_define
