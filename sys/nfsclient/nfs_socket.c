@@ -9020,6 +9020,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|rep
+operator|!=
+name|NULL
+condition|)
+block|{
 name|mtx_lock
 argument_list|(
 operator|&
@@ -9028,10 +9035,6 @@ operator|->
 name|r_mtx
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rep
-condition|)
 name|rep
 operator|->
 name|r_flags
@@ -9046,6 +9049,7 @@ operator|->
 name|r_mtx
 argument_list|)
 expr_stmt|;
+block|}
 name|nfs_msg
 argument_list|(
 name|td
