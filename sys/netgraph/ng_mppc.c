@@ -557,6 +557,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETGRAPH_MPPC_ENCRYPTION
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -600,6 +606,11 @@ name|rc4
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -3716,6 +3727,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETGRAPH_MPPC_ENCRYPTION
+end_ifdef
+
 begin_comment
 comment|/*  * Generate a new encryption key  */
 end_comment
@@ -4024,6 +4041,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
