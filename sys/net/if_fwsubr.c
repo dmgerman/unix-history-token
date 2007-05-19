@@ -2163,6 +2163,13 @@ name|uint32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return;
 name|enc
 operator|=
 name|mtod
