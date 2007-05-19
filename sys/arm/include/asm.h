@@ -236,7 +236,7 @@ define|#
 directive|define
 name|_PROF_PROLOGUE
 define|\
-value|mov ip, lr; bl _mcount
+value|mov ip, lr; bl __mcount
 end_define
 
 begin_else
