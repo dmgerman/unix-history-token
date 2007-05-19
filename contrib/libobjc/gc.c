@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Basic data types for Objective C.    Copyright (C) 1998, 2002 Free Software Foundation, Inc.    Contributed by Ovidiu Predescu.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Basic data types for Objective C.    Copyright (C) 1998, 2002, 2004, 2005, 2006 Free Software Foundation, Inc.    Contributed by Ovidiu Predescu.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -16,13 +16,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"objc.h"
+file|"objc/objc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"encoding.h"
+file|"objc/encoding.h"
 end_include
 
 begin_include
@@ -839,8 +839,10 @@ argument_list|,
 literal|"{"
 argument_list|)
 expr_stmt|;
+operator|(
 operator|*
 name|current
+operator|)
 operator|++
 expr_stmt|;
 return|return;
@@ -1458,6 +1460,9 @@ name|char
 modifier|*
 name|new_type
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 if|if
 condition|(
 name|gc_invisible
@@ -1470,7 +1475,7 @@ argument_list|)
 condition|)
 return|return;
 comment|/* The type of the variable already matches the 			   requested gc_invisible type */
-comment|/* The variable is gc_invisible and we have to reverse it */
+comment|/* The variable is gc_invisible so we make it gc visible.  */
 name|new_type
 operator|=
 name|objc_atomic_malloc
@@ -1483,7 +1488,17 @@ name|ivar_type
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|len
+operator|=
+operator|(
+name|type
+operator|-
+name|ivar
+operator|->
+name|ivar_type
+operator|)
+expr_stmt|;
+name|memcpy
 argument_list|(
 name|new_type
 argument_list|,
@@ -1491,17 +1506,15 @@ name|ivar
 operator|->
 name|ivar_type
 argument_list|,
-call|(
-name|size_t
-call|)
-argument_list|(
-name|type
-operator|-
-name|ivar
-operator|->
-name|ivar_type
+name|len
 argument_list|)
-argument_list|)
+expr_stmt|;
+name|new_type
+index|[
+name|len
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|strcat
 argument_list|(
@@ -1525,6 +1538,9 @@ name|char
 modifier|*
 name|new_type
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1538,7 +1554,7 @@ argument_list|)
 condition|)
 return|return;
 comment|/* The type of the variable already matches the 			   requested gc_invisible type */
-comment|/* The variable is gc visible and we have to make it gc_invisible */
+comment|/* The variable is gc visible so we make it gc_invisible.  */
 name|new_type
 operator|=
 name|objc_malloc
@@ -1553,7 +1569,17 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|len
+operator|=
+operator|(
+name|type
+operator|-
+name|ivar
+operator|->
+name|ivar_type
+operator|)
+expr_stmt|;
+name|memcpy
 argument_list|(
 name|new_type
 argument_list|,
@@ -1561,17 +1587,15 @@ name|ivar
 operator|->
 name|ivar_type
 argument_list|,
-call|(
-name|size_t
-call|)
-argument_list|(
-name|type
-operator|-
-name|ivar
-operator|->
-name|ivar_type
+name|len
 argument_list|)
-argument_list|)
+expr_stmt|;
+name|new_type
+index|[
+name|len
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|strcat
 argument_list|(

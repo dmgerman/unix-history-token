@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime message lookup     Copyright (C) 1993, 1995, 1996, 1997, 1998,    2001, 2002 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime message lookup     Copyright (C) 1993, 1995, 1996, 1997, 1998,    2001, 2002, 2004 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -9,6 +9,10 @@ end_comment
 
 begin_comment
 comment|/* FIXME: This file has no business including tm.h.  */
+end_comment
+
+begin_comment
+comment|/* FIXME: This should be using libffi instead of __builtin_apply    and friends.  */
 end_comment
 
 begin_include
@@ -32,19 +36,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"runtime.h"
+file|"objc/runtime.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sarray.h"
+file|"objc/sarray.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"encoding.h"
+file|"objc/encoding.h"
 end_include
 
 begin_include
@@ -54,7 +58,7 @@ file|"runtime-info.h"
 end_include
 
 begin_comment
-comment|/* this is how we hack STRUCT_VALUE to be 1 or 0 */
+comment|/* This is how we hack STRUCT_VALUE to be 1 or 0.   */
 end_comment
 
 begin_define
@@ -327,7 +331,7 @@ comment|/* Given a selector, return the proper forwarding implementation. */
 end_comment
 
 begin_function
-name|__inline__
+specifier|inline
 name|IMP
 name|__objc_get_forward_imp
 parameter_list|(
@@ -450,7 +454,7 @@ comment|/* Given a class and selector, return the selector's implementation.  */
 end_comment
 
 begin_function
-name|__inline__
+specifier|inline
 name|IMP
 name|get_imp
 parameter_list|(
@@ -584,7 +588,7 @@ comment|/* Query if an object can respond to a selector, returns YES if the obje
 end_comment
 
 begin_function
-name|__inline__
+specifier|inline
 name|BOOL
 name|__objc_responds_to
 parameter_list|(
@@ -675,7 +679,7 @@ comment|/* This is the lookup function.  All entries in the table are either a  
 end_comment
 
 begin_function
-name|__inline__
+specifier|inline
 name|IMP
 name|objc_msg_lookup
 parameter_list|(
@@ -1616,9 +1620,6 @@ name|MethodList_t
 name|list
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 comment|/* Passing of a linked list is not allowed.  Do multiple calls.  */
 name|assert
 argument_list|(
@@ -1628,65 +1629,11 @@ operator|->
 name|method_next
 argument_list|)
 expr_stmt|;
-comment|/* Check for duplicates.  */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|list
-operator|->
-name|method_count
-condition|;
-operator|++
-name|i
-control|)
-block|{
-name|Method_t
-name|method
-init|=
-operator|&
-name|list
-operator|->
-name|method_list
-index|[
-name|i
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|method
-operator|->
-name|method_name
-condition|)
-comment|/* Sometimes these are NULL */
-block|{
-comment|/* This is where selector names are transmogrified to SEL's */
-name|method
-operator|->
-name|method_name
-operator|=
-name|sel_register_typed_name
+name|__objc_register_selectors_from_list
 argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-name|method
-operator|->
-name|method_name
-argument_list|,
-name|method
-operator|->
-name|method_types
+name|list
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 comment|/* Add the methods to the class's method list.  */
 name|list
 operator|->
@@ -2557,7 +2504,7 @@ comment|/* Returns the uninstalled dispatch table indicator.  If a class' dispat
 end_comment
 
 begin_function
-name|__inline__
+specifier|inline
 name|struct
 name|sarray
 modifier|*

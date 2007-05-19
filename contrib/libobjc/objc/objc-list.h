@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic single linked list to keep various information     Copyright (C) 1993, 1994, 1996 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic single linked list to keep various information     Copyright (C) 1993, 1994, 1996 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -19,7 +19,19 @@ directive|define
 name|__GNU_OBJC_LIST_H
 end_define
 
-begin_struct
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/* __cplusplus */
 struct|struct
 name|objc_list
 block|{
@@ -34,13 +46,7 @@ name|tail
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/* Return a cons cell produced from (head . tail) */
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|struct
@@ -95,13 +101,7 @@ return|return
 name|cell
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Return the length of a list, list_length(NULL) returns zero */
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|int
@@ -138,13 +138,7 @@ return|return
 name|i
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Return the Nth element of LIST, where N count from zero.  If N     larger than the list length, NULL is returned  */
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|void
@@ -191,13 +185,7 @@ operator|->
 name|head
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Remove the element at the head by replacing it by its successor */
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|void
@@ -268,13 +256,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* Remove the element with `car' set to ELEMENT */
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|void
@@ -327,13 +309,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* Map FUNCTION over all elements in LIST */
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|void
@@ -378,13 +354,7 @@ name|tail
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* Return element that has ELEM as car */
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|struct
@@ -441,13 +411,7 @@ return|return
 name|NULL
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Free list (backwards recursive) */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|list_free
@@ -477,7 +441,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __cplusplus */
+end_comment
 
 begin_endif
 endif|#

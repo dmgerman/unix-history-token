@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Hash tables for Objective C method dispatch.    Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Hash tables for Objective C method dispatch.    Copyright (C) 1993, 1995, 1996, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -34,14 +34,23 @@ end_include
 begin_include
 include|#
 directive|include
-file|<objc/objc.h>
+file|"objc.h"
 end_include
 
-begin_comment
-comment|/*  * This data structure is used to hold items  *  stored in a hash table.  Each node holds   *  a key/value pair.  *  * Items in the cache are really of type void *.  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
 
-begin_typedef
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/* __cplusplus */
+comment|/*  * This data structure is used to hold items  *  stored in a hash table.  Each node holds   *  a key/value pair.  *  * Items in the cache are really of type void *.  */
 typedef|typedef
 struct|struct
 name|cache_node
@@ -67,13 +76,7 @@ block|}
 typedef|*
 name|node_ptr
 typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * This data type is the function that computes a hash code given a key.  * Therefore, the key can be a pointer to anything and the function specific  * to the key type.   *  * Unfortunately there is a mutual data structure reference problem with this  * typedef.  Therefore, to remove compiler warnings the functions passed to  * hash_new will have to be casted to this type.   */
-end_comment
-
-begin_typedef
+comment|/*  * This data type is the function that computes a hash code given a key.  * Therefore, the key can be a pointer to anything and the function specific  * to the key type.   *  * Unfortunately there is a mutual data structure reference problem with this  * typedef.  Therefore, to remove compiler warnings the functions passed to  * objc_hash_new will have to be casted to this type.   */
 typedef|typedef
 name|unsigned
 name|int
@@ -90,13 +93,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-end_typedef
-
-begin_comment
 comment|/*  * This data type is the function that compares two hash keys and returns an  * integer greater than, equal to, or less than 0, according as the first  * parameter is lexicographically greater than, equal to, or less than the  * second.   */
-end_comment
-
-begin_typedef
 typedef|typedef
 name|int
 function_decl|(
@@ -113,13 +110,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-end_typedef
-
-begin_comment
 comment|/*  * This data structure is the cache.  *  * It must be passed to all of the hashing routines  *   (except for new).  */
-end_comment
-
-begin_typedef
 typedef|typedef
 struct|struct
 name|cache
@@ -164,28 +155,16 @@ block|}
 typedef|*
 name|cache_ptr
 typedef|;
-end_typedef
-
-begin_comment
 comment|/* Two important hash tables.  */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|cache_ptr
 name|module_hash_table
 decl_stmt|,
 name|class_hash_table
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Allocate and initialize a hash table.  */
-end_comment
-
-begin_function_decl
 name|cache_ptr
-name|hash_new
+name|objc_hash_new
 parameter_list|(
 name|unsigned
 name|int
@@ -198,29 +177,17 @@ name|compare_func_type
 name|compare_func
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Deallocate all of the hash nodes and the cache itself.  */
-end_comment
-
-begin_function_decl
 name|void
-name|hash_delete
+name|objc_hash_delete
 parameter_list|(
 name|cache_ptr
 name|cache
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Add the key/value pair to the hash table.  If the    hash table reaches a level of fullness then it will be resized.                                                         assert if the key is already in the hash.  */
-end_comment
-
-begin_function_decl
 name|void
-name|hash_add
+name|objc_hash_add
 parameter_list|(
 name|cache_ptr
 modifier|*
@@ -236,15 +203,9 @@ modifier|*
 name|value
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Remove the key/value pair from the hash table.      assert if the key isn't in the table.  */
-end_comment
-
-begin_function_decl
 name|void
-name|hash_remove
+name|objc_hash_remove
 parameter_list|(
 name|cache_ptr
 name|cache
@@ -255,15 +216,9 @@ modifier|*
 name|key
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Used to index through the hash table.  Start with NULL    to get the first entry.                                                       Successive calls pass the value returned previously.    ** Don't modify the hash during this operation ***                                                        Cache nodes are returned such that key or value can    be extracted.  */
-end_comment
-
-begin_function_decl
 name|node_ptr
-name|hash_next
+name|objc_hash_next
 parameter_list|(
 name|cache_ptr
 name|cache
@@ -272,16 +227,10 @@ name|node_ptr
 name|node
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Used to return a value from a hash table using a given key.  */
-end_comment
-
-begin_function_decl
 name|void
 modifier|*
-name|hash_value_for_key
+name|objc_hash_value_for_key
 parameter_list|(
 name|cache_ptr
 name|cache
@@ -292,15 +241,9 @@ modifier|*
 name|key
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Used to determine if the given key exists in the hash table */
-end_comment
-
-begin_function_decl
 name|BOOL
-name|hash_is_key_in_hash
+name|objc_hash_is_key_in_hash
 parameter_list|(
 name|cache_ptr
 name|cache
@@ -311,22 +254,13 @@ modifier|*
 name|key
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/************************************************          Useful hashing functions.                    Declared inline for your pleasure.          ************************************************/
-end_comment
-
-begin_comment
 comment|/* Calculate a hash code by performing some     manipulation of the key pointer.  (Use the lowest bits    except for those likely to be 0 due to alignment.)  */
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|unsigned
 name|int
-name|hash_ptr
+name|objc_hash_ptr
 parameter_list|(
 name|cache_ptr
 name|cache
@@ -356,18 +290,12 @@ operator|->
 name|mask
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Calculate a hash code by iterating over a NULL     terminate string.  */
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|unsigned
 name|int
-name|hash_string
+name|objc_hash_string
 parameter_list|(
 name|cache_ptr
 name|cache
@@ -395,6 +323,11 @@ name|char
 modifier|*
 name|ckey
 init|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|key
 decl_stmt|;
 while|while
@@ -434,17 +367,11 @@ operator|->
 name|mask
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Compare two pointers for equality.  */
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|int
-name|compare_ptrs
+name|objc_compare_ptrs
 parameter_list|(
 specifier|const
 name|void
@@ -465,17 +392,11 @@ name|k2
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Compare two strings.  */
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|int
-name|compare_strings
+name|objc_compare_strings
 parameter_list|(
 specifier|const
 name|void
@@ -516,13 +437,36 @@ return|return
 operator|!
 name|strcmp
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|k1
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|k2
 argument_list|)
 return|;
 block|}
-end_function
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __cplusplus */
+end_comment
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declare the class Protocol for Objective C programs.    Copyright (C) 1993 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Declare the class Protocol for Objective C programs.    Copyright (C) 1993, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -22,11 +22,22 @@ end_define
 begin_include
 include|#
 directive|include
-file|"objc/Object.h"
+file|"Object.h"
 end_include
 
-begin_decl_stmt
-unit|@
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+block|@
 name|interface
 name|Protocol
 range|:
@@ -57,13 +68,7 @@ operator|*
 operator|)
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Testing protocol conformance */
-end_comment
-
-begin_expr_stmt
 operator|-
 operator|(
 name|BOOL
@@ -76,13 +81,7 @@ operator|*
 operator|)
 name|aProtocolObject
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Looking up information specific to a protocol */
-end_comment
-
-begin_expr_stmt
 operator|-
 operator|(
 expr|struct
@@ -96,9 +95,6 @@ name|SEL
 operator|)
 name|aSel
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|-
 operator|(
 expr|struct
@@ -112,12 +108,18 @@ name|SEL
 operator|)
 name|aSel
 expr_stmt|;
-end_expr_stmt
-
-begin_macro
-unit|@
+block|@
 name|end
-end_macro
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

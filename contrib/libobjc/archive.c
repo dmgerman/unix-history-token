@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime archiving    Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime archiving    Copyright (C) 1993, 1995, 1996, 1997, 2002, 2004 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -16,19 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"runtime.h"
+file|"objc/runtime.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"typedstream.h"
+file|"objc/typedstream.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"encoding.h"
+file|"objc/encoding.h"
 end_include
 
 begin_include
@@ -206,7 +206,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|int
 name|__objc_code_unsigned_char
 parameter_list|(
@@ -318,6 +318,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|len
@@ -328,7 +332,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|int
 name|__objc_code_char
 parameter_list|(
@@ -432,6 +436,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|len
@@ -442,7 +450,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|int
 name|__objc_code_unsigned_short
 parameter_list|(
@@ -636,6 +644,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|len
@@ -646,7 +658,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|int
 name|__objc_code_short
 parameter_list|(
@@ -747,6 +759,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|len
@@ -757,7 +773,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|int
 name|__objc_code_unsigned_int
 parameter_list|(
@@ -951,6 +967,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|len
@@ -961,7 +981,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|int
 name|__objc_code_int
 parameter_list|(
@@ -1062,6 +1082,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|len
@@ -1072,7 +1096,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|int
 name|__objc_code_unsigned_long
 parameter_list|(
@@ -1266,6 +1290,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|len
@@ -1276,7 +1304,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|int
 name|__objc_code_long
 parameter_list|(
@@ -1377,6 +1405,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|len
@@ -1488,6 +1520,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|len
@@ -1507,6 +1543,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|string
 argument_list|,
 name|nbytes
@@ -1549,7 +1589,7 @@ name|key
 operator|=
 name|PTR2LONG
 argument_list|(
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|stream
 operator|->
@@ -1573,7 +1613,7 @@ block|{
 name|int
 name|length
 decl_stmt|;
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|stream
@@ -1698,6 +1738,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|len
@@ -1736,6 +1780,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|+
 literal|1
@@ -1822,6 +1870,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|2
@@ -1858,6 +1910,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|+
 literal|1
@@ -1871,7 +1927,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|int
 name|__objc_write_extension
 parameter_list|(
@@ -1912,6 +1968,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|buf
 argument_list|,
@@ -1941,7 +2001,7 @@ block|}
 end_function
 
 begin_function
-name|__inline__
+specifier|inline
 name|int
 name|__objc_write_object
 parameter_list|(
@@ -2018,6 +2078,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|buf
 argument_list|,
@@ -2061,7 +2125,7 @@ name|key
 operator|=
 name|PTR2LONG
 argument_list|(
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|stream
 operator|->
@@ -2204,7 +2268,7 @@ name|key
 operator|=
 name|PTR2LONG
 argument_list|(
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|stream
 operator|->
@@ -2243,7 +2307,7 @@ block|{
 name|int
 name|length
 decl_stmt|;
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|stream
@@ -2292,7 +2356,7 @@ block|}
 end_function
 
 begin_function
-name|__inline__
+specifier|inline
 name|int
 name|__objc_write_class
 parameter_list|(
@@ -2319,6 +2383,7 @@ argument_list|(
 name|stream
 argument_list|,
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -2378,7 +2443,7 @@ name|key
 operator|=
 name|PTR2LONG
 argument_list|(
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|stream
 operator|->
@@ -2402,7 +2467,7 @@ block|{
 name|int
 name|length
 decl_stmt|;
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|stream
@@ -2451,7 +2516,7 @@ block|}
 end_function
 
 begin_function
-name|__inline__
+specifier|inline
 name|int
 name|__objc_write_selector
 parameter_list|(
@@ -2491,6 +2556,11 @@ name|objc_write_string
 argument_list|(
 name|stream
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 literal|""
 argument_list|,
 literal|0
@@ -2508,6 +2578,11 @@ name|objc_write_string
 argument_list|(
 name|stream
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|sel_name
 argument_list|,
 name|strlen
@@ -2577,7 +2652,7 @@ name|key
 operator|=
 name|PTR2LONG
 argument_list|(
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|stream
 operator|->
@@ -2601,7 +2676,7 @@ block|{
 name|int
 name|length
 decl_stmt|;
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|stream
@@ -2658,7 +2733,7 @@ comment|/* ** Read operations  */
 end_comment
 
 begin_function
-name|__inline__
+specifier|inline
 name|int
 name|objc_read_char
 parameter_list|(
@@ -2692,6 +2767,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|buf
 argument_list|,
@@ -2805,7 +2884,7 @@ block|}
 end_function
 
 begin_function
-name|__inline__
+specifier|inline
 name|int
 name|objc_read_unsigned_char
 parameter_list|(
@@ -2843,6 +2922,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|buf
 argument_list|,
@@ -2896,6 +2979,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|val
 argument_list|,
 literal|1
@@ -2930,7 +3017,7 @@ block|}
 end_function
 
 begin_function
-name|__inline__
+specifier|inline
 name|int
 name|objc_read_short
 parameter_list|(
@@ -2975,6 +3062,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -3064,6 +3155,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|+
 literal|1
@@ -3133,7 +3228,7 @@ block|}
 end_function
 
 begin_function
-name|__inline__
+specifier|inline
 name|int
 name|objc_read_unsigned_short
 parameter_list|(
@@ -3180,6 +3275,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -3265,6 +3364,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|+
 literal|1
@@ -3314,7 +3417,7 @@ block|}
 end_function
 
 begin_function
-name|__inline__
+specifier|inline
 name|int
 name|objc_read_int
 parameter_list|(
@@ -3359,6 +3462,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -3444,6 +3551,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|+
 literal|1
@@ -3513,7 +3624,7 @@ block|}
 end_function
 
 begin_function
-name|__inline__
+specifier|inline
 name|int
 name|objc_read_long
 parameter_list|(
@@ -3558,6 +3669,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -3643,6 +3758,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|+
 literal|1
@@ -3712,7 +3831,7 @@ block|}
 end_function
 
 begin_function
-name|__inline__
+specifier|inline
 name|int
 name|__objc_read_nbyte_uint
 parameter_list|(
@@ -3784,6 +3903,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|nbytes
@@ -3829,7 +3952,7 @@ block|}
 end_function
 
 begin_function
-name|__inline__
+specifier|inline
 name|int
 name|objc_read_unsigned_int
 parameter_list|(
@@ -3876,6 +3999,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -4008,6 +4135,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|nbytes
@@ -4053,7 +4184,7 @@ block|}
 end_function
 
 begin_function
-name|__inline__
+specifier|inline
 name|int
 name|objc_read_unsigned_long
 parameter_list|(
@@ -4100,6 +4231,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -4161,7 +4296,7 @@ block|}
 end_function
 
 begin_function
-name|__inline__
+specifier|inline
 name|int
 name|objc_read_string
 parameter_list|(
@@ -4208,6 +4343,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -4268,6 +4407,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -4318,7 +4461,7 @@ if|if
 condition|(
 name|key
 condition|)
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|stream
@@ -4394,7 +4537,7 @@ argument_list|)
 expr_stmt|;
 name|tmp
 operator|=
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|stream
 operator|->
@@ -4481,7 +4624,7 @@ if|if
 condition|(
 name|key
 condition|)
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|stream
@@ -4600,6 +4743,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -4668,6 +4815,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -4718,7 +4869,7 @@ if|if
 condition|(
 name|key
 condition|)
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|stream
@@ -4777,6 +4928,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -4858,7 +5013,7 @@ operator|*
 name|object
 operator|)
 operator|=
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|stream
 operator|->
@@ -4909,7 +5064,7 @@ expr|struct
 name|objc_list
 operator|*
 operator|)
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|stream
 operator|->
@@ -4921,7 +5076,7 @@ name|key
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|stream
@@ -5057,6 +5212,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -5117,6 +5276,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -5138,8 +5301,18 @@ operator|)
 condition|)
 block|{
 name|char
+name|temp
+index|[
+literal|1
+index|]
+init|=
+literal|""
+decl_stmt|;
+name|char
 modifier|*
 name|class_name
+init|=
+name|temp
 decl_stmt|;
 name|unsigned
 name|long
@@ -5176,7 +5349,7 @@ if|if
 condition|(
 name|key
 condition|)
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|stream
@@ -5200,7 +5373,7 @@ operator|&
 name|version
 argument_list|)
 expr_stmt|;
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|stream
@@ -5272,7 +5445,7 @@ expr_stmt|;
 operator|*
 name|class
 operator|=
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|stream
 operator|->
@@ -5368,6 +5541,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -5428,6 +5605,10 @@ name|stream
 operator|->
 name|physical
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 literal|1
@@ -5450,8 +5631,18 @@ condition|)
 comment|/* selector! */
 block|{
 name|char
+name|temp
+index|[
+literal|1
+index|]
+init|=
+literal|""
+decl_stmt|;
+name|char
 modifier|*
 name|selector_name
+init|=
+name|temp
 decl_stmt|;
 comment|/* get selector */
 name|len
@@ -5510,7 +5701,7 @@ if|if
 condition|(
 name|key
 condition|)
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|stream
@@ -5583,7 +5774,7 @@ operator|*
 name|selector
 operator|)
 operator|=
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|stream
 operator|->
@@ -5853,6 +6044,7 @@ name|stream
 argument_list|,
 operator|*
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|*
@@ -5882,6 +6074,7 @@ name|stream
 argument_list|,
 operator|*
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|*
@@ -5987,7 +6180,7 @@ argument_list|)
 expr_stmt|;
 comment|/* padd to alignment */
 name|acc_size
-operator|+=
+operator|=
 name|ROUND
 argument_list|(
 name|acc_size
@@ -6373,7 +6566,7 @@ argument_list|)
 expr_stmt|;
 comment|/* padd to alignment */
 name|acc_size
-operator|+=
+operator|=
 name|ROUND
 argument_list|(
 name|acc_size
@@ -6723,6 +6916,7 @@ case|case
 name|_C_CHARPTR
 case|:
 block|{
+name|unsigned
 name|char
 modifier|*
 modifier|*
@@ -6730,11 +6924,9 @@ name|str
 init|=
 name|va_arg
 argument_list|(
-name|args
+argument|args
 argument_list|,
-name|char
-operator|*
-operator|*
+argument|unsigned char **
 argument_list|)
 decl_stmt|;
 name|res
@@ -6748,6 +6940,10 @@ name|str
 argument_list|,
 name|strlen
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|*
 name|str
 argument_list|)
@@ -6759,6 +6955,7 @@ case|case
 name|_C_ATOM
 case|:
 block|{
+name|unsigned
 name|char
 modifier|*
 modifier|*
@@ -6766,11 +6963,9 @@ name|str
 init|=
 name|va_arg
 argument_list|(
-name|args
+argument|args
 argument_list|,
-name|char
-operator|*
-operator|*
+argument|unsigned char **
 argument_list|)
 decl_stmt|;
 name|res
@@ -6784,6 +6979,10 @@ name|str
 argument_list|,
 name|strlen
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|*
 name|str
 argument_list|)
@@ -7787,7 +7986,7 @@ modifier|*
 name|stream
 parameter_list|)
 block|{
-name|hash_delete
+name|objc_hash_delete
 argument_list|(
 name|stream
 operator|->
@@ -7798,19 +7997,19 @@ name|stream
 operator|->
 name|object_table
 operator|=
-name|hash_new
+name|objc_hash_new
 argument_list|(
 literal|64
 argument_list|,
 operator|(
 name|hash_func_type
 operator|)
-name|hash_ptr
+name|objc_hash_ptr
 argument_list|,
 operator|(
 name|compare_func_type
 operator|)
-name|compare_ptrs
+name|objc_compare_ptrs
 argument_list|)
 expr_stmt|;
 block|}
@@ -7841,19 +8040,19 @@ decl_stmt|;
 name|cache_ptr
 name|free_list
 init|=
-name|hash_new
+name|objc_hash_new
 argument_list|(
 literal|64
 argument_list|,
 operator|(
 name|hash_func_type
 operator|)
-name|hash_ptr
+name|objc_hash_ptr
 argument_list|,
 operator|(
 name|compare_func_type
 operator|)
-name|compare_ptrs
+name|objc_compare_ptrs
 argument_list|)
 decl_stmt|;
 comment|/* resolve object forward references */
@@ -7861,7 +8060,7 @@ for|for
 control|(
 name|node
 operator|=
-name|hash_next
+name|objc_hash_next
 argument_list|(
 name|stream
 operator|->
@@ -7874,7 +8073,7 @@ name|node
 condition|;
 name|node
 operator|=
-name|hash_next
+name|objc_hash_next
 argument_list|(
 name|stream
 operator|->
@@ -7905,7 +8104,7 @@ decl_stmt|;
 name|id
 name|object
 init|=
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|stream
 operator|->
@@ -7934,7 +8133,7 @@ name|object
 expr_stmt|;
 if|if
 condition|(
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|free_list
 argument_list|,
@@ -7943,7 +8142,7 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|free_list
@@ -7966,7 +8165,7 @@ for|for
 control|(
 name|node
 operator|=
-name|hash_next
+name|objc_hash_next
 argument_list|(
 name|free_list
 argument_list|,
@@ -7977,7 +8176,7 @@ name|node
 condition|;
 name|node
 operator|=
-name|hash_next
+name|objc_hash_next
 argument_list|(
 name|free_list
 argument_list|,
@@ -7995,13 +8194,13 @@ operator|->
 name|key
 argument_list|)
 expr_stmt|;
-name|hash_delete
+name|objc_hash_delete
 argument_list|(
 name|free_list
 argument_list|)
 expr_stmt|;
 comment|/* empty object reference table */
-name|hash_delete
+name|objc_hash_delete
 argument_list|(
 name|stream
 operator|->
@@ -8012,19 +8211,19 @@ name|stream
 operator|->
 name|object_refs
 operator|=
-name|hash_new
+name|objc_hash_new
 argument_list|(
 literal|8
 argument_list|,
 operator|(
 name|hash_func_type
 operator|)
-name|hash_ptr
+name|objc_hash_ptr
 argument_list|,
 operator|(
 name|compare_func_type
 operator|)
-name|compare_ptrs
+name|objc_compare_ptrs
 argument_list|)
 expr_stmt|;
 comment|/* call -awake for all objects read  */
@@ -8037,7 +8236,7 @@ for|for
 control|(
 name|node
 operator|=
-name|hash_next
+name|objc_hash_next
 argument_list|(
 name|stream
 operator|->
@@ -8050,7 +8249,7 @@ name|node
 condition|;
 name|node
 operator|=
-name|hash_next
+name|objc_hash_next
 argument_list|(
 name|stream
 operator|->
@@ -8094,7 +8293,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* empty object table */
-name|hash_delete
+name|objc_hash_delete
 argument_list|(
 name|stream
 operator|->
@@ -8105,19 +8304,19 @@ name|stream
 operator|->
 name|object_table
 operator|=
-name|hash_new
+name|objc_hash_new
 argument_list|(
 literal|64
 argument_list|,
 operator|(
 name|hash_func_type
 operator|)
-name|hash_ptr
+name|objc_hash_ptr
 argument_list|,
 operator|(
 name|compare_func_type
 operator|)
-name|compare_ptrs
+name|objc_compare_ptrs
 argument_list|)
 expr_stmt|;
 block|}
@@ -8172,38 +8371,38 @@ name|s
 operator|->
 name|stream_table
 operator|=
-name|hash_new
+name|objc_hash_new
 argument_list|(
 literal|64
 argument_list|,
 operator|(
 name|hash_func_type
 operator|)
-name|hash_ptr
+name|objc_hash_ptr
 argument_list|,
 operator|(
 name|compare_func_type
 operator|)
-name|compare_ptrs
+name|objc_compare_ptrs
 argument_list|)
 expr_stmt|;
 name|s
 operator|->
 name|object_table
 operator|=
-name|hash_new
+name|objc_hash_new
 argument_list|(
 literal|64
 argument_list|,
 operator|(
 name|hash_func_type
 operator|)
-name|hash_ptr
+name|objc_hash_ptr
 argument_list|,
 operator|(
 name|compare_func_type
 operator|)
-name|compare_ptrs
+name|objc_compare_ptrs
 argument_list|)
 expr_stmt|;
 name|s
@@ -8241,38 +8440,38 @@ name|s
 operator|->
 name|class_table
 operator|=
-name|hash_new
+name|objc_hash_new
 argument_list|(
 literal|8
 argument_list|,
 operator|(
 name|hash_func_type
 operator|)
-name|hash_string
+name|objc_hash_string
 argument_list|,
 operator|(
 name|compare_func_type
 operator|)
-name|compare_strings
+name|objc_compare_strings
 argument_list|)
 expr_stmt|;
 name|s
 operator|->
 name|object_refs
 operator|=
-name|hash_new
+name|objc_hash_new
 argument_list|(
 literal|8
 argument_list|,
 operator|(
 name|hash_func_type
 operator|)
-name|hash_ptr
+name|objc_hash_ptr
 argument_list|,
 operator|(
 name|compare_func_type
 operator|)
-name|compare_ptrs
+name|objc_compare_ptrs
 argument_list|)
 expr_stmt|;
 name|s
@@ -8482,14 +8681,14 @@ name|stream
 argument_list|)
 expr_stmt|;
 comment|/* Just in case... */
-name|hash_delete
+name|objc_hash_delete
 argument_list|(
 name|stream
 operator|->
 name|class_table
 argument_list|)
 expr_stmt|;
-name|hash_delete
+name|objc_hash_delete
 argument_list|(
 name|stream
 operator|->
@@ -8497,14 +8696,14 @@ name|object_refs
 argument_list|)
 expr_stmt|;
 block|}
-name|hash_delete
+name|objc_hash_delete
 argument_list|(
 name|stream
 operator|->
 name|stream_table
 argument_list|)
 expr_stmt|;
-name|hash_delete
+name|objc_hash_delete
 argument_list|(
 name|stream
 operator|->
@@ -8612,7 +8811,7 @@ condition|)
 return|return
 name|PTR2LONG
 argument_list|(
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|stream
 operator|->
