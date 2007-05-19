@@ -845,18 +845,18 @@ value|15
 end_define
 
 begin_comment
-comment|/* 15 'user' domains (0-14) */
+comment|/* 15 'user' domains (1-15) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PMAP_DOMAIN_KERNEL
-value|15
+value|0
 end_define
 
 begin_comment
-comment|/* The kernel uses domain #15 */
+comment|/* The kernel uses domain #0 */
 end_comment
 
 begin_comment
