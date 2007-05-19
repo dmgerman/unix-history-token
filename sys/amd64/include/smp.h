@@ -57,6 +57,12 @@ directive|include
 file|<machine/apicvar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
+end_include
+
 begin_comment
 comment|/* global symbols in mpboot.S */
 end_comment
