@@ -4,7 +4,7 @@ comment|// std::messages implementation details, GNU version -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -96,6 +96,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file messages_members.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -110,6 +114,13 @@ end_comment
 begin_comment
 comment|// Written by Benjamin Kosnik<bkoz@redhat.com>
 end_comment
+
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
 
 begin_comment
 comment|// Non-virtual member functions.
@@ -173,24 +184,18 @@ argument_list|)
 operator|,
 name|_M_c_locale_messages
 argument_list|(
-name|_S_clone_c_locale
-argument_list|(
-name|__cloc
-argument_list|)
+name|NULL
 argument_list|)
 operator|,
 name|_M_name_messages
 argument_list|(
-argument|__s
+argument|NULL
 argument_list|)
 block|{
-name|char
-operator|*
-name|__tmp
+specifier|const
+name|size_t
+name|__len
 operator|=
-name|new
-name|char
-index|[
 name|std
 operator|::
 name|strlen
@@ -199,20 +204,39 @@ name|__s
 argument_list|)
 operator|+
 literal|1
+block|;
+name|char
+operator|*
+name|__tmp
+operator|=
+name|new
+name|char
+index|[
+name|__len
 index|]
 block|;
 name|std
 operator|::
-name|strcpy
+name|memcpy
 argument_list|(
 name|__tmp
 argument_list|,
 name|__s
+argument_list|,
+name|__len
 argument_list|)
 block|;
 name|_M_name_messages
 operator|=
 name|__tmp
+block|;
+comment|// Last to avoid leaking memory if new throws.
+name|_M_c_locale_messages
+operator|=
+name|_S_clone_c_locale
+argument_list|(
+name|__cloc
+argument_list|)
 block|;      }
 name|template
 operator|<
@@ -495,6 +519,6 @@ expr_stmt|;
 block|}
 end_if
 
-unit|}
+unit|}  _GLIBCXX_END_NAMESPACE
 end_unit
 

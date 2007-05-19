@@ -4,7 +4,7 @@ comment|// Debugging set implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2003, 2004
+comment|// Copyright (C) 2003, 2004, 2005
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -99,6 +99,10 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
+begin_comment
+comment|/** @file debug/set.h  *  This file is a GNU debug extension to the Standard C++ Library.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -132,7 +136,10 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|__gnu_debug_def
+name|std
+block|{
+name|namespace
+name|__debug
 block|{
 name|template
 operator|<
@@ -236,14 +243,14 @@ name|allocator_type
 typedef|;
 typedef|typedef
 name|typename
-name|_Allocator
+name|_Base
 operator|::
 name|reference
 name|reference
 expr_stmt|;
 typedef|typedef
 name|typename
-name|_Allocator
+name|_Base
 operator|::
 name|const_reference
 name|const_reference
@@ -292,14 +299,14 @@ name|difference_type
 expr_stmt|;
 typedef|typedef
 name|typename
-name|_Allocator
+name|_Base
 operator|::
 name|pointer
 name|pointer
 expr_stmt|;
 typedef|typedef
 name|typename
-name|_Allocator
+name|_Base
 operator|::
 name|const_pointer
 name|const_pointer
@@ -668,9 +675,6 @@ name|second
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|iterator
 name|insert
 parameter_list|(
@@ -707,9 +711,6 @@ name|this
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -810,19 +811,14 @@ return|return
 literal|1
 return|;
 block|}
-end_expr_stmt
-
-begin_macro
-unit|}        void
+block|}
+name|void
 name|erase
 argument_list|(
 argument|iterator __first
 argument_list|,
 argument|iterator __last
 argument_list|)
-end_macro
-
-begin_block
 block|{
 comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
 comment|// 151. can't currently clear() empty container
@@ -832,7 +828,7 @@ name|__first
 argument_list|,
 name|__last
 argument_list|)
-expr_stmt|;
+block|;
 while|while
 condition|(
 name|__first
@@ -848,9 +844,6 @@ operator|++
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_decl_stmt
 name|void
 name|swap
 argument_list|(
@@ -881,9 +874,6 @@ name|__x
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_function
 name|void
 name|clear
 parameter_list|()
@@ -900,33 +890,18 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|// observers:
-end_comment
-
-begin_expr_stmt
 name|using
 name|_Base
 operator|::
 name|key_comp
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|using
 name|_Base
 operator|::
 name|value_comp
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// set operations:
-end_comment
-
-begin_function
 name|iterator
 name|find
 parameter_list|(
@@ -950,17 +925,8 @@ name|this
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
-end_comment
-
-begin_comment
 comment|// 214. set::find() missing const overload
-end_comment
-
-begin_decl_stmt
 name|const_iterator
 name|find
 argument_list|(
@@ -985,17 +951,11 @@ name|this
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|using
 name|_Base
 operator|::
 name|count
 expr_stmt|;
-end_expr_stmt
-
-begin_function
 name|iterator
 name|lower_bound
 parameter_list|(
@@ -1019,17 +979,8 @@ name|this
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
-end_comment
-
-begin_comment
 comment|// 214. set::find() missing const overload
-end_comment
-
-begin_decl_stmt
 name|const_iterator
 name|lower_bound
 argument_list|(
@@ -1054,9 +1005,6 @@ name|this
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|iterator
 name|upper_bound
 parameter_list|(
@@ -1080,17 +1028,8 @@ name|this
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
-end_comment
-
-begin_comment
 comment|// 214. set::find() missing const overload
-end_comment
-
-begin_decl_stmt
 name|const_iterator
 name|upper_bound
 argument_list|(
@@ -1115,9 +1054,6 @@ name|this
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|std
 operator|::
 name|pair
@@ -1155,9 +1091,6 @@ argument_list|(
 name|__x
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|std
 operator|::
@@ -1182,10 +1115,10 @@ name|this
 argument_list|)
 argument_list|)
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
 end_comment
 
@@ -1194,7 +1127,7 @@ comment|// 214. set::find() missing const overload
 end_comment
 
 begin_expr_stmt
-unit|std
+name|std
 operator|::
 name|pair
 operator|<
@@ -1710,7 +1643,12 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// namespace __gnu_debug_def
+comment|// namespace __debug
+end_comment
+
+begin_comment
+unit|}
+comment|// namespace std
 end_comment
 
 begin_endif

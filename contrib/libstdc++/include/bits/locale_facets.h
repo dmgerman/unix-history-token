@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,6 +100,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file locale_facets.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -109,10 +113,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|/** @file locale_facets.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_ifndef
@@ -158,6 +158,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<bits/ctype_base.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<iosfwd>
 end_include
 
@@ -177,29 +183,66 @@ directive|include
 file|<streambuf>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_include
+include|#
+directive|include
+file|<bits/cpp_type_traits.h>
+end_include
+
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|// NB: Don't instantiate required wchar_t facets if no wchar_t support.
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|_GLIBCXX_USE_WCHAR_T
+end_ifdef
+
+begin_define
 define|#
 directive|define
 name|_GLIBCXX_NUM_FACETS
 value|28
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_define
 define|#
 directive|define
 name|_GLIBCXX_NUM_FACETS
 value|14
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|// Convert string to numeric value of type _Tv and store results.
+end_comment
+
+begin_comment
 comment|// NB: This is specialized for all required types, there is no
+end_comment
+
+begin_comment
 comment|// generic definition.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -229,7 +272,13 @@ operator|&
 name|__cloc
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Explicit specializations for required types.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -253,6 +302,9 @@ name|__c_locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -276,6 +328,9 @@ name|__c_locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -291,8 +346,17 @@ argument_list|,
 argument|const __c_locale&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// NB: __pad is a struct, rather than a function, so it can be
+end_comment
+
+begin_comment
 comment|// partially-specialized.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -324,11 +388,29 @@ argument|const bool __num
 argument_list|)
 block|;     }
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Used by both numeric and monetary facets.
+end_comment
+
+begin_comment
 comment|// Inserts "group separator" characters into an array of characters.
+end_comment
+
+begin_comment
 comment|// It's recursive, one iteration per group.  It moves the characters
+end_comment
+
+begin_comment
 comment|// in the buffer this way: "xxxx12345" -> "12,345xxx".  Call this
+end_comment
+
+begin_comment
 comment|// only with __glen != 0.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -351,9 +433,21 @@ argument_list|,
 argument|const _CharT* __last
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// This template permits specializing facet output code for
+end_comment
+
+begin_comment
 comment|// ostreambuf_iterator.  For ostreambuf_iterator, sputn is
+end_comment
+
+begin_comment
 comment|// significantly more efficient than incrementing iterators.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -386,7 +480,13 @@ return|return
 name|__s
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// This is the unspecialized form of the template.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -431,25 +531,22 @@ index|[
 name|__j
 index|]
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|__s
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|// 22.2.1.1  Template class ctype
 end_comment
 
 begin_comment
 comment|// Include host and configuration specific ctype enums for ctype_base.
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<bits/ctype_base.h>
-end_include
 
 begin_comment
 comment|// Common base for ctype<_CharT>.
@@ -460,7 +557,7 @@ comment|/**    *  @brief  Common base for ctype facet    *    *  This template c
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|_CharT
@@ -3195,17 +3292,7 @@ comment|//_GLIBCXX_USE_WCHAR_T
 end_comment
 
 begin_comment
-comment|// Include host and configuration specific ctype inlines.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<bits/ctype_inline.h>
-end_include
-
-begin_comment
-comment|// 22.2.1.2  Template class ctype_byname
+comment|/// @brief  class ctype_byname [22.2.1.2].
 end_comment
 
 begin_expr_stmt
@@ -3256,7 +3343,7 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|// 22.2.1.4  Class ctype_byname specializations.
+comment|/// 22.2.1.4  Class ctype_byname specializations.
 end_comment
 
 begin_expr_stmt
@@ -3295,94 +3382,125 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
+begin_function
+name|_GLIBCXX_END_NAMESPACE
+comment|// Include host and configuration specific ctype inlines.
+include|#
+directive|include
+file|<bits/ctype_inline.h>
 comment|// 22.2.1.5  Template class codecvt
-end_comment
-
-begin_include
 include|#
 directive|include
 file|<bits/codecvt.h>
-end_include
+name|_GLIBCXX_BEGIN_NAMESPACE
+parameter_list|(
+name|std
+parameter_list|)
+comment|// 22.2.2  The numeric category.
+name|class
+name|__num_base
+decl_stmt|{   public:
+comment|// NB: Code depends on the order of _S_atoms_out elements.
+comment|// Below are the indices into _S_atoms_out.
+decl_stmt|enum
+block|{
+name|_S_ominus
+operator|,
+name|_S_oplus
+operator|,
+name|_S_ox
+operator|,
+name|_S_oX
+operator|,
+name|_S_odigits
+operator|,
+name|_S_odigits_end
+operator|=
+name|_S_odigits
+operator|+
+literal|16
+operator|,
+name|_S_oudigits
+operator|=
+name|_S_odigits_end
+operator|,
+name|_S_oudigits_end
+operator|=
+name|_S_oudigits
+operator|+
+literal|16
+operator|,
+name|_S_oe
+operator|=
+name|_S_odigits
+operator|+
+literal|14
+operator|,
+comment|// For scientific notation, 'e'
+name|_S_oE
+operator|=
+name|_S_oudigits
+operator|+
+literal|14
+operator|,
+comment|// For scientific notation, 'E'
+name|_S_oend
+operator|=
+name|_S_oudigits_end
+block|}
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-comment|// 22.2.2  The numeric category.
+comment|// A list of valid numeric literals for output.  This array
+end_comment
+
+begin_comment
+comment|// contains chars that will be passed through the current locale's
+end_comment
+
+begin_comment
+comment|// ctype<_CharT>.widen() and then used to render numbers.
+end_comment
+
+begin_comment
+comment|// For the standard "C" locale, this is
+end_comment
+
+begin_comment
+comment|// "-+xX0123456789abcdef0123456789ABCDEF".
 end_comment
 
 begin_decl_stmt
-name|class
-name|__num_base
-block|{
-name|public
-label|:
-comment|// NB: Code depends on the order of _S_atoms_out elements.
-comment|// Below are the indices into _S_atoms_out.
-enum|enum
-block|{
-name|_S_ominus
-block|,
-name|_S_oplus
-block|,
-name|_S_ox
-block|,
-name|_S_oX
-block|,
-name|_S_odigits
-block|,
-name|_S_odigits_end
-init|=
-name|_S_odigits
-operator|+
-literal|16
-block|,
-name|_S_oudigits
-init|=
-name|_S_odigits_end
-block|,
-name|_S_oudigits_end
-init|=
-name|_S_oudigits
-operator|+
-literal|16
-block|,
-name|_S_oe
-init|=
-name|_S_odigits
-operator|+
-literal|14
-block|,
-comment|// For scientific notation, 'e'
-name|_S_oE
-init|=
-name|_S_oudigits
-operator|+
-literal|14
-block|,
-comment|// For scientific notation, 'E'
-name|_S_oend
-init|=
-name|_S_oudigits_end
-block|}
-enum|;
-comment|// A list of valid numeric literals for output.  This array
-comment|// contains chars that will be passed through the current locale's
-comment|// ctype<_CharT>.widen() and then used to render numbers.
-comment|// For the standard "C" locale, this is
-comment|// "-+xX0123456789abcdef0123456789ABCDEF".
 specifier|static
 specifier|const
 name|char
 modifier|*
 name|_S_atoms_out
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// String literal of acceptable (narrow) input, for num_get.
+end_comment
+
+begin_comment
 comment|// "-+xX0123456789abcdefABCDEF"
+end_comment
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|char
 modifier|*
 name|_S_atoms_in
 decl_stmt|;
+end_decl_stmt
+
+begin_enum
 enum|enum
 block|{
 name|_S_iminus
@@ -3412,8 +3530,17 @@ init|=
 literal|26
 block|}
 enum|;
+end_enum
+
+begin_comment
 comment|// num_put
+end_comment
+
+begin_comment
 comment|// Construct and return valid scanf format for floating point types.
+end_comment
+
+begin_function_decl
 specifier|static
 name|void
 name|_S_format_float
@@ -3431,14 +3558,10 @@ name|char
 name|__mod
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function_decl
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -4122,6 +4245,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/// @brief  class numpunct_byname [22.2.3.2].
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -4242,12 +4369,10 @@ argument_list|()
 block|{ }
 end_expr_stmt
 
-begin_comment
-unit|};
-comment|/**    *  @brief  Facet for parsing number strings.    *    *  This facet encapsulates the code to parse and return a number    *  from a string.  It is used by the istream numeric extraction    *  operators.    *    *  The num_get template uses protected virtual functions to provide the    *  actual results.  The public accessors forward the call to the virtual    *  functions.  These virtual functions are hooks for developers to    *  implement the behavior they require from the num_get facet.   */
-end_comment
-
 begin_expr_stmt
+unit|};
+name|_GLIBCXX_BEGIN_LDBL_NAMESPACE
+comment|/**    *  @brief  Facet for parsing number strings.    *    *  This facet encapsulates the code to parse and return a number    *  from a string.  It is used by the istream numeric extraction    *  operators.    *    *  The num_get template uses protected virtual functions to provide the    *  actual results.  The public accessors forward the call to the virtual    *  functions.  These virtual functions are hooks for developers to    *  implement the behavior they require from the num_get facet.   */
 name|template
 operator|<
 name|typename
@@ -4328,7 +4453,7 @@ block|{ }
 end_block
 
 begin_comment
-comment|/**        *  @brief  Numeric parsing.        *        *  Parses the input stream into the bool @a v.  It does so by calling        *  num_put::do_put().        *        *  If ios_base::boolalpha is set, attempts to read        *  ctype<CharT>::truename() or ctype<CharT>::falsename().  Sets        *  @a v to true or false if successful.  Sets err to        *  ios_base::failbit if reading the string fails.  Sets err to        *  ios_base::eofbit if the stream is emptied.        *        *  If ios_base::boolalpha is not set, proceeds as with reading a long,        *  except if the value is 1, sets @a v to true, if the value is 0, sets        *  @a v to false, and otherwise set err to ios_base::failbit.        *        *  @param  in  Start of input stream.        *  @param  end  End of input stream.        *  @param  io  Source of locale and flags.        *  @param  err  Error flags to set.        *  @param  v  Value to format and insert.        *  @return  Iterator after reading.       */
+comment|/**        *  @brief  Numeric parsing.        *        *  Parses the input stream into the bool @a v.  It does so by calling        *  num_get::do_get().        *        *  If ios_base::boolalpha is set, attempts to read        *  ctype<CharT>::truename() or ctype<CharT>::falsename().  Sets        *  @a v to true or false if successful.  Sets err to        *  ios_base::failbit if reading the string fails.  Sets err to        *  ios_base::eofbit if the stream is emptied.        *        *  If ios_base::boolalpha is not set, proceeds as with reading a long,        *  except if the value is 1, sets @a v to true, if the value is 0, sets        *  @a v to false, and otherwise set err to ios_base::failbit.        *        *  @param  in  Start of input stream.        *  @param  end  End of input stream.        *  @param  io  Source of locale and flags.        *  @param  err  Error flags to set.        *  @param  v  Value to format and insert.        *  @return  Iterator after reading.       */
 end_comment
 
 begin_decl_stmt
@@ -4381,7 +4506,7 @@ comment|//@{
 end_comment
 
 begin_comment
-comment|/**        *  @brief  Numeric parsing.        *        *  Parses the input stream into the integral variable @a v.  It does so        *  by calling num_put::do_put().        *        *  Parsing is affected by the flag settings in @a io.        *        *  The basic parse is affected by the value of io.flags()&        *  ios_base::basefield.  If equal to ios_base::oct, parses like the        *  scanf %o specifier.  Else if equal to ios_base::hex, parses like %X        *  specifier.  Else if basefield equal to 0, parses like the %i        *  specifier.  Otherwise, parses like %d for signed and %u for unsigned        *  types.  The matching type length modifier is also used.        *        *  Digit grouping is intrepreted according to numpunct::grouping() and        *  numpunct::thousands_sep().  If the pattern of digit groups isn't        *  consistent, sets err to ios_base::failbit.        *        *  If parsing the string yields a valid value for @a v, @a v is set.        *  Otherwise, sets err to ios_base::failbit and leaves @a v unaltered.        *  Sets err to ios_base::eofbit if the stream is emptied.        *        *  @param  in  Start of input stream.        *  @param  end  End of input stream.        *  @param  io  Source of locale and flags.        *  @param  err  Error flags to set.        *  @param  v  Value to format and insert.        *  @return  Iterator after reading.       */
+comment|/**        *  @brief  Numeric parsing.        *        *  Parses the input stream into the integral variable @a v.  It does so        *  by calling num_get::do_get().        *        *  Parsing is affected by the flag settings in @a io.        *        *  The basic parse is affected by the value of io.flags()&        *  ios_base::basefield.  If equal to ios_base::oct, parses like the        *  scanf %o specifier.  Else if equal to ios_base::hex, parses like %X        *  specifier.  Else if basefield equal to 0, parses like the %i        *  specifier.  Otherwise, parses like %d for signed and %u for unsigned        *  types.  The matching type length modifier is also used.        *        *  Digit grouping is intrepreted according to numpunct::grouping() and        *  numpunct::thousands_sep().  If the pattern of digit groups isn't        *  consistent, sets err to ios_base::failbit.        *        *  If parsing the string yields a valid value for @a v, @a v is set.        *  Otherwise, sets err to ios_base::failbit and leaves @a v unaltered.        *  Sets err to ios_base::eofbit if the stream is emptied.        *        *  @param  in  Start of input stream.        *  @param  end  End of input stream.        *  @param  io  Source of locale and flags.        *  @param  err  Error flags to set.        *  @param  v  Value to format and insert.        *  @return  Iterator after reading.       */
 end_comment
 
 begin_decl_stmt
@@ -4680,7 +4805,7 @@ comment|//@{
 end_comment
 
 begin_comment
-comment|/**        *  @brief  Numeric parsing.        *        *  Parses the input stream into the integral variable @a v.  It does so        *  by calling num_put::do_put().        *        *  The input characters are parsed like the scanf %g specifier.  The        *  matching type length modifier is also used.        *        *  The decimal point character used is numpunct::decimal_point().        *  Digit grouping is intrepreted according to numpunct::grouping() and        *  numpunct::thousands_sep().  If the pattern of digit groups isn't        *  consistent, sets err to ios_base::failbit.        *        *  If parsing the string yields a valid value for @a v, @a v is set.        *  Otherwise, sets err to ios_base::failbit and leaves @a v unaltered.        *  Sets err to ios_base::eofbit if the stream is emptied.        *        *  @param  in  Start of input stream.        *  @param  end  End of input stream.        *  @param  io  Source of locale and flags.        *  @param  err  Error flags to set.        *  @param  v  Value to format and insert.        *  @return  Iterator after reading.       */
+comment|/**        *  @brief  Numeric parsing.        *        *  Parses the input stream into the integral variable @a v.  It does so        *  by calling num_get::do_get().        *        *  The input characters are parsed like the scanf %g specifier.  The        *  matching type length modifier is also used.        *        *  The decimal point character used is numpunct::decimal_point().        *  Digit grouping is intrepreted according to numpunct::grouping() and        *  numpunct::thousands_sep().  If the pattern of digit groups isn't        *  consistent, sets err to ios_base::failbit.        *        *  If parsing the string yields a valid value for @a v, @a v is set.        *  Otherwise, sets err to ios_base::failbit and leaves @a v unaltered.        *  Sets err to ios_base::eofbit if the stream is emptied.        *        *  @param  in  Start of input stream.        *  @param  end  End of input stream.        *  @param  io  Source of locale and flags.        *  @param  err  Error flags to set.        *  @param  v  Value to format and insert.        *  @return  Iterator after reading.       */
 end_comment
 
 begin_decl_stmt
@@ -4824,7 +4949,7 @@ comment|//@}
 end_comment
 
 begin_comment
-comment|/**        *  @brief  Numeric parsing.        *        *  Parses the input stream into the pointer variable @a v.  It does so        *  by calling num_put::do_put().        *        *  The input characters are parsed like the scanf %p specifier.        *        *  Digit grouping is intrepreted according to numpunct::grouping() and        *  numpunct::thousands_sep().  If the pattern of digit groups isn't        *  consistent, sets err to ios_base::failbit.        *        *  Note that the digit grouping effect for pointers is a bit ambiguous        *  in the standard and shouldn't be relied on.  See DR 344.        *        *  If parsing the string yields a valid value for @a v, @a v is set.        *  Otherwise, sets err to ios_base::failbit and leaves @a v unaltered.        *  Sets err to ios_base::eofbit if the stream is emptied.        *        *  @param  in  Start of input stream.        *  @param  end  End of input stream.        *  @param  io  Source of locale and flags.        *  @param  err  Error flags to set.        *  @param  v  Value to format and insert.        *  @return  Iterator after reading.       */
+comment|/**        *  @brief  Numeric parsing.        *        *  Parses the input stream into the pointer variable @a v.  It does so        *  by calling num_get::do_get().        *        *  The input characters are parsed like the scanf %p specifier.        *        *  Digit grouping is intrepreted according to numpunct::grouping() and        *  numpunct::thousands_sep().  If the pattern of digit groups isn't        *  consistent, sets err to ios_base::failbit.        *        *  Note that the digit grouping effect for pointers is a bit ambiguous        *  in the standard and shouldn't be relied on.  See DR 344.        *        *  If parsing the string yields a valid value for @a v, @a v is set.        *  Otherwise, sets err to ios_base::failbit and leaves @a v unaltered.        *  Sets err to ios_base::eofbit if the stream is emptied.        *        *  @param  in  Start of input stream.        *  @param  end  End of input stream.        *  @param  io  Source of locale and flags.        *  @param  err  Error flags to set.        *  @param  v  Value to format and insert.        *  @return  Iterator after reading.       */
 end_comment
 
 begin_decl_stmt
@@ -4928,7 +5053,271 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_CharT2
+operator|>
+name|typename
+name|__gnu_cxx
+operator|::
+name|__enable_if
+operator|<
+name|__is_char
+operator|<
+name|_CharT2
+operator|>
+operator|::
+name|__value
+operator|,
+name|int
+operator|>
+operator|::
+name|__type
+name|_M_find
+argument_list|(
+argument|const _CharT2*
+argument_list|,
+argument|size_t __len
+argument_list|,
+argument|_CharT2 __c
+argument_list|)
+specifier|const
+block|{
+name|int
+name|__ret
+operator|=
+operator|-
+literal|1
+block|;
+if|if
+condition|(
+name|__len
+operator|<=
+literal|10
+condition|)
+block|{
+if|if
+condition|(
+name|__c
+operator|>=
+name|_CharT2
+argument_list|(
+literal|'0'
+argument_list|)
+operator|&&
+name|__c
+operator|<
+name|_CharT2
+argument_list|(
+name|_CharT2
+argument_list|(
+literal|'0'
+argument_list|)
+operator|+
+name|__len
+argument_list|)
+condition|)
+name|__ret
+operator|=
+name|__c
+operator|-
+name|_CharT2
+argument_list|(
+literal|'0'
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_else
+else|else
+block|{
+if|if
+condition|(
+name|__c
+operator|>=
+name|_CharT2
+argument_list|(
+literal|'0'
+argument_list|)
+operator|&&
+name|__c
+operator|<=
+name|_CharT2
+argument_list|(
+literal|'9'
+argument_list|)
+condition|)
+name|__ret
+operator|=
+name|__c
+operator|-
+name|_CharT2
+argument_list|(
+literal|'0'
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|__c
+operator|>=
+name|_CharT2
+argument_list|(
+literal|'a'
+argument_list|)
+operator|&&
+name|__c
+operator|<=
+name|_CharT2
+argument_list|(
+literal|'f'
+argument_list|)
+condition|)
+name|__ret
+operator|=
+literal|10
+operator|+
+operator|(
+name|__c
+operator|-
+name|_CharT2
+argument_list|(
+literal|'a'
+argument_list|)
+operator|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|__c
+operator|>=
+name|_CharT2
+argument_list|(
+literal|'A'
+argument_list|)
+operator|&&
+name|__c
+operator|<=
+name|_CharT2
+argument_list|(
+literal|'F'
+argument_list|)
+condition|)
+name|__ret
+operator|=
+literal|10
+operator|+
+operator|(
+name|__c
+operator|-
+name|_CharT2
+argument_list|(
+literal|'A'
+argument_list|)
+operator|)
+expr_stmt|;
+block|}
+end_else
+
+begin_return
+return|return
+name|__ret
+return|;
+end_return
+
+begin_expr_stmt
+unit|}        template
+operator|<
+name|typename
+name|_CharT2
+operator|>
+name|typename
+name|__gnu_cxx
+operator|::
+name|__enable_if
+operator|<
+operator|!
+name|__is_char
+operator|<
+name|_CharT2
+operator|>
+operator|::
+name|__value
+operator|,
+name|int
+operator|>
+operator|::
+name|__type
+name|_M_find
+argument_list|(
+argument|const _CharT2* __zero
+argument_list|,
+argument|size_t __len
+argument_list|,
+argument|_CharT2 __c
+argument_list|)
+specifier|const
+block|{
+name|int
+name|__ret
+operator|=
+operator|-
+literal|1
+block|;
+specifier|const
+name|char_type
+operator|*
+name|__q
+operator|=
+name|char_traits
+operator|<
+name|_CharT2
+operator|>
+operator|::
+name|find
+argument_list|(
+name|__zero
+argument_list|,
+name|__len
+argument_list|,
+name|__c
+argument_list|)
+block|;
+if|if
+condition|(
+name|__q
+condition|)
+block|{
+name|__ret
+operator|=
+name|__q
+operator|-
+name|__zero
+expr_stmt|;
+if|if
+condition|(
+name|__ret
+operator|>
+literal|15
+condition|)
+name|__ret
+operator|-=
+literal|6
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+name|__ret
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|//@{
 end_comment
 
@@ -4937,7 +5326,7 @@ comment|/**        *  @brief  Numeric parsing.        *        *  Parses the inp
 end_comment
 
 begin_decl_stmt
-name|virtual
+unit|virtual
 name|iter_type
 name|do_get
 argument_list|(
@@ -5176,6 +5565,50 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// XXX GLIBCXX_ABI Deprecated
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|_GLIBCXX_LONG_DOUBLE_COMPAT
+operator|&&
+name|defined
+name|__LONG_DOUBLE_128__
+end_if
+
+begin_decl_stmt
+name|virtual
+name|iter_type
+name|__do_get
+argument_list|(
+name|iter_type
+argument_list|,
+name|iter_type
+argument_list|,
+name|ios_base
+operator|&
+argument_list|,
+name|ios_base
+operator|::
+name|iostate
+operator|&
+name|__err
+argument_list|,
+name|double
+operator|&
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|virtual
 name|iter_type
@@ -5202,6 +5635,11 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|virtual
 name|iter_type
@@ -5227,6 +5665,51 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// XXX GLIBCXX_ABI Deprecated
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|_GLIBCXX_LONG_DOUBLE_COMPAT
+operator|&&
+name|defined
+name|__LONG_DOUBLE_128__
+end_if
+
+begin_decl_stmt
+name|virtual
+name|iter_type
+name|do_get
+argument_list|(
+name|iter_type
+argument_list|,
+name|iter_type
+argument_list|,
+name|ios_base
+operator|&
+argument_list|,
+name|ios_base
+operator|::
+name|iostate
+operator|&
+name|__err
+argument_list|,
+name|long
+name|double
+operator|&
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|//@}
@@ -5983,6 +6466,45 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// XXX GLIBCXX_ABI Deprecated
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|_GLIBCXX_LONG_DOUBLE_COMPAT
+operator|&&
+name|defined
+name|__LONG_DOUBLE_128__
+end_if
+
+begin_decl_stmt
+name|virtual
+name|iter_type
+name|__do_put
+argument_list|(
+name|iter_type
+argument_list|,
+name|ios_base
+operator|&
+argument_list|,
+name|char_type
+name|__fill
+argument_list|,
+name|double
+name|__v
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|virtual
 name|iter_type
@@ -6003,6 +6525,11 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|virtual
@@ -6025,6 +6552,46 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// XXX GLIBCXX_ABI Deprecated
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|_GLIBCXX_LONG_DOUBLE_COMPAT
+operator|&&
+name|defined
+name|__LONG_DOUBLE_128__
+end_if
+
+begin_decl_stmt
+name|virtual
+name|iter_type
+name|do_put
+argument_list|(
+name|iter_type
+argument_list|,
+name|ios_base
+operator|&
+argument_list|,
+name|char_type
+name|__fill
+argument_list|,
+name|long
+name|double
+name|__v
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|//@}
@@ -6054,11 +6621,9 @@ name|id
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/**    *  @brief  Facet for localized string comparison.    *    *  This facet encapsulates the code to compare strings in a localized    *  manner.    *    *  The collate template uses protected virtual functions to provide    *  the actual results.  The public accessors forward the call to    *  the virtual functions.  These virtual functions are hooks for    *  developers to implement the behavior they require from the    *  collate facet.   */
-end_comment
-
 begin_expr_stmt
+name|_GLIBCXX_END_LDBL_NAMESPACE
+comment|/**    *  @brief  Facet for localized string comparison.    *    *  This facet encapsulates the code to compare strings in a localized    *  manner.    *    *  The collate template uses protected virtual functions to provide    *  the actual results.  The public accessors forward the call to    *  the virtual functions.  These virtual functions are hooks for    *  developers to implement the behavior they require from the    *  collate facet.   */
 name|template
 operator|<
 name|typename
@@ -6516,6 +7081,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/// @brief  class collate_byname [22.2.4.2].
+end_comment
 
 begin_expr_stmt
 name|template
@@ -7464,6 +8033,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// FIXME: for error checking purposes _M_put should return the return
+end_comment
+
+begin_comment
+comment|// value of strftime/wcsftime.
+end_comment
+
 begin_decl_stmt
 name|void
 name|_M_put
@@ -8191,42 +8768,38 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
+begin_decl_stmt
+name|_GLIBCXX_END_NAMESPACE
 comment|// Include host and configuration specific timepunct functions.
-end_comment
-
-begin_include
 include|#
 directive|include
 file|<bits/time_members.h>
-end_include
-
-begin_comment
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+name|std
+argument_list|)
 comment|/**    *  @brief  Facet for parsing dates and times.    *    *  This facet encapsulates the code to parse and return a date or    *  time from a string.  It is used by the istream numeric    *  extraction operators.    *    *  The time_get template uses protected virtual functions to provide the    *  actual results.  The public accessors forward the call to the virtual    *  functions.  These virtual functions are hooks for developers to    *  implement the behavior they require from the time_get facet.   */
-end_comment
-
-begin_expr_stmt
 name|template
-operator|<
+decl|<
 name|typename
 name|_CharT
-operator|,
+decl_stmt|,
 name|typename
 name|_InIter
-operator|>
+decl|>
 name|class
 name|time_get
-operator|:
+range|:
 name|public
 name|locale
 operator|::
 name|facet
-operator|,
+decl_stmt|,
 name|public
 name|time_base
 block|{
 name|public
-operator|:
+label|:
 comment|// Types:
 comment|//@{
 comment|/// Public typedefs
@@ -8234,20 +8807,11 @@ typedef|typedef
 name|_CharT
 name|char_type
 typedef|;
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|_InIter
 name|iter_type
 typedef|;
-end_typedef
-
-begin_comment
 comment|//@}
-end_comment
-
-begin_typedef
 typedef|typedef
 name|basic_string
 operator|<
@@ -8255,54 +8819,27 @@ name|_CharT
 operator|>
 name|__string_type
 expr_stmt|;
-end_typedef
-
-begin_comment
 comment|/// Numpunct facet id.
-end_comment
-
-begin_expr_stmt
 specifier|static
 name|locale
 operator|::
 name|id
 name|id
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/**        *  @brief  Constructor performs initialization.        *        *  This is the constructor provided by the standard.        *        *  @param refs  Passed to the base facet class.       */
-end_comment
-
-begin_macro
 name|explicit
-end_macro
-
-begin_macro
 name|time_get
 argument_list|(
 argument|size_t __refs =
 literal|0
 argument_list|)
-end_macro
-
-begin_macro
-unit|:
+block|:
 name|facet
 argument_list|(
 argument|__refs
 argument_list|)
-end_macro
-
-begin_block
 block|{ }
-end_block
-
-begin_comment
 comment|/**        *  @brief  Return preferred order of month, day, and year.        *        *  This function returns an enum from timebase::dateorder giving the        *  preferred ordering if the format "x" given to time_put::put() only        *  uses month, day, and year.  If the format "x" for the associated        *  locale uses other fields, this function returns        *  timebase::dateorder::noorder.        *        *  NOTE: The library always returns noorder at the moment.        *        *  @return  A member of timebase::dateorder.       */
-end_comment
-
-begin_expr_stmt
 name|dateorder
 name|date_order
 argument_list|()
@@ -8315,13 +8852,7 @@ name|do_date_order
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/**        *  @brief  Parse input time string.        *        *  This function parses a time according to the format "x" and puts the        *  results into a user-supplied struct tm.  The result is returned by        *  calling time_get::do_get_time().        *        *  If there is a valid time string according to format "x", @a tm will        *  be filled in accordingly and the returned iterator will point to the        *  first character beyond the time string.  If an error occurs before        *  the end, err |= ios_base::failbit.  If parsing reads all the        *  characters, err |= ios_base::eofbit.        *        *  @param  beg  Start of string to parse.        *  @param  end  End of string to parse.        *  @param  io  Source of the locale.        *  @param  err  Error flags to set.        *  @param  tm  Pointer to struct tm to fill in.        *  @return  Iterator to first char beyond time string.       */
-end_comment
-
-begin_decl_stmt
 name|iter_type
 name|get_time
 argument_list|(
@@ -8364,13 +8895,7 @@ name|__tm
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/**        *  @brief  Parse input date string.        *        *  This function parses a date according to the format "X" and puts the        *  results into a user-supplied struct tm.  The result is returned by        *  calling time_get::do_get_date().        *        *  If there is a valid date string according to format "X", @a tm will        *  be filled in accordingly and the returned iterator will point to the        *  first character beyond the date string.  If an error occurs before        *  the end, err |= ios_base::failbit.  If parsing reads all the        *  characters, err |= ios_base::eofbit.        *        *  @param  beg  Start of string to parse.        *  @param  end  End of string to parse.        *  @param  io  Source of the locale.        *  @param  err  Error flags to set.        *  @param  tm  Pointer to struct tm to fill in.        *  @return  Iterator to first char beyond date string.       */
-end_comment
-
-begin_decl_stmt
 name|iter_type
 name|get_date
 argument_list|(
@@ -8413,13 +8938,7 @@ name|__tm
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/**        *  @brief  Parse input weekday string.        *        *  This function parses a weekday name and puts the results into a        *  user-supplied struct tm.  The result is returned by calling        *  time_get::do_get_weekday().        *        *  Parsing starts by parsing an abbreviated weekday name.  If a valid        *  abbreviation is followed by a character that would lead to the full        *  weekday name, parsing continues until the full name is found or an        *  error occurs.  Otherwise parsing finishes at the end of the        *  abbreviated name.        *        *  If an error occurs before the end, err |= ios_base::failbit.  If        *  parsing reads all the characters, err |= ios_base::eofbit.        *        *  @param  beg  Start of string to parse.        *  @param  end  End of string to parse.        *  @param  io  Source of the locale.        *  @param  err  Error flags to set.        *  @param  tm  Pointer to struct tm to fill in.        *  @return  Iterator to first char beyond weekday name.       */
-end_comment
-
-begin_decl_stmt
 name|iter_type
 name|get_weekday
 argument_list|(
@@ -8462,13 +8981,7 @@ name|__tm
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/**        *  @brief  Parse input month string.        *        *  This function parses a month name and puts the results into a        *  user-supplied struct tm.  The result is returned by calling        *  time_get::do_get_monthname().        *        *  Parsing starts by parsing an abbreviated month name.  If a valid        *  abbreviation is followed by a character that would lead to the full        *  month name, parsing continues until the full name is found or an        *  error occurs.  Otherwise parsing finishes at the end of the        *  abbreviated name.        *        *  If an error occurs before the end, err |= ios_base::failbit.  If        *  parsing reads all the characters, err |=        *  ios_base::eofbit.        *        *  @param  beg  Start of string to parse.        *  @param  end  End of string to parse.        *  @param  io  Source of the locale.        *  @param  err  Error flags to set.        *  @param  tm  Pointer to struct tm to fill in.        *  @return  Iterator to first char beyond month name.       */
-end_comment
-
-begin_decl_stmt
 name|iter_type
 name|get_monthname
 argument_list|(
@@ -8511,13 +9024,7 @@ name|__tm
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/**        *  @brief  Parse input year string.        *        *  This function reads up to 4 characters to parse a year string and        *  puts the results into a user-supplied struct tm.  The result is        *  returned by calling time_get::do_get_year().        *        *  4 consecutive digits are interpreted as a full year.  If there are        *  exactly 2 consecutive digits, the library interprets this as the        *  number of years since 1900.        *        *  If an error occurs before the end, err |= ios_base::failbit.  If        *  parsing reads all the characters, err |= ios_base::eofbit.        *        *  @param  beg  Start of string to parse.        *  @param  end  End of string to parse.        *  @param  io  Source of the locale.        *  @param  err  Error flags to set.        *  @param  tm  Pointer to struct tm to fill in.        *  @return  Iterator to first char beyond year.       */
-end_comment
-
-begin_decl_stmt
 name|iter_type
 name|get_year
 argument_list|(
@@ -8560,18 +9067,9 @@ name|__tm
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_label
 name|protected
 label|:
-end_label
-
-begin_comment
 comment|/// Destructor.
-end_comment
-
-begin_expr_stmt
 name|virtual
 operator|~
 name|time_get
@@ -8584,13 +9082,7 @@ name|do_date_order
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/**        *  @brief  Parse input time string.        *        *  This function parses a time according to the format "x" and puts the        *  results into a user-supplied struct tm.  This function is a hook for        *  derived classes to change the value returned.  @see get_time() for        *  details.        *        *  @param  beg  Start of string to parse.        *  @param  end  End of string to parse.        *  @param  io  Source of the locale.        *  @param  err  Error flags to set.        *  @param  tm  Pointer to struct tm to fill in.        *  @return  Iterator to first char beyond time string.       */
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|iter_type
 name|do_get_time
@@ -8617,13 +9109,7 @@ name|__tm
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/**        *  @brief  Parse input date string.        *        *  This function parses a date according to the format "X" and puts the        *  results into a user-supplied struct tm.  This function is a hook for        *  derived classes to change the value returned.  @see get_date() for        *  details.        *        *  @param  beg  Start of string to parse.        *  @param  end  End of string to parse.        *  @param  io  Source of the locale.        *  @param  err  Error flags to set.        *  @param  tm  Pointer to struct tm to fill in.        *  @return  Iterator to first char beyond date string.       */
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|iter_type
 name|do_get_date
@@ -8650,13 +9136,7 @@ name|__tm
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/**        *  @brief  Parse input weekday string.        *        *  This function parses a weekday name and puts the results into a        *  user-supplied struct tm.  This function is a hook for derived        *  classes to change the value returned.  @see get_weekday() for        *  details.        *        *  @param  beg  Start of string to parse.        *  @param  end  End of string to parse.        *  @param  io  Source of the locale.        *  @param  err  Error flags to set.        *  @param  tm  Pointer to struct tm to fill in.        *  @return  Iterator to first char beyond weekday name.       */
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|iter_type
 name|do_get_weekday
@@ -8682,13 +9162,7 @@ name|__tm
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/**        *  @brief  Parse input month string.        *        *  This function parses a month name and puts the results into a        *  user-supplied struct tm.  This function is a hook for derived        *  classes to change the value returned.  @see get_monthname() for        *  details.        *        *  @param  beg  Start of string to parse.        *  @param  end  End of string to parse.        *  @param  io  Source of the locale.        *  @param  err  Error flags to set.        *  @param  tm  Pointer to struct tm to fill in.        *  @return  Iterator to first char beyond month name.       */
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|iter_type
 name|do_get_monthname
@@ -8714,13 +9188,7 @@ name|__tm
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/**        *  @brief  Parse input year string.        *        *  This function reads up to 4 characters to parse a year string and        *  puts the results into a user-supplied struct tm.  This function is a        *  hook for derived classes to change the value returned.  @see        *  get_year() for details.        *        *  @param  beg  Start of string to parse.        *  @param  end  End of string to parse.        *  @param  io  Source of the locale.        *  @param  err  Error flags to set.        *  @param  tm  Pointer to struct tm to fill in.        *  @return  Iterator to first char beyond year.       */
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|iter_type
 name|do_get_year
@@ -8747,13 +9215,7 @@ name|__tm
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Extract numeric component of length __len.
-end_comment
-
-begin_decl_stmt
 name|iter_type
 name|_M_extract_num
 argument_list|(
@@ -8788,17 +9250,8 @@ name|__err
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Extract day or month name, or any unique array of string
-end_comment
-
-begin_comment
 comment|// literals in a const _CharT* array.
-end_comment
-
-begin_decl_stmt
 name|iter_type
 name|_M_extract_name
 argument_list|(
@@ -8833,13 +9286,7 @@ name|__err
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Extract on a component-by-component basis, via __format argument.
-end_comment
-
-begin_decl_stmt
 name|iter_type
 name|_M_extract_via_format
 argument_list|(
@@ -8870,10 +9317,14 @@ name|__format
 argument_list|)
 decl|const
 decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_expr_stmt
-unit|};
 name|template
 operator|<
 name|typename
@@ -8895,6 +9346,10 @@ operator|::
 name|id
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// @brief  class time_get_byname [22.2.5.2].
+end_comment
 
 begin_expr_stmt
 name|template
@@ -9202,6 +9657,10 @@ operator|::
 name|id
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// @brief  class time_put_byname [22.2.5.4].
+end_comment
 
 begin_expr_stmt
 name|template
@@ -10415,6 +10874,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/// @brief  class moneypunct_byname [22.2.6.4].
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -10575,11 +11038,9 @@ name|intl
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/**    *  @brief  Facet for parsing monetary amounts.    *    *  This facet encapsulates the code to parse and return a monetary    *  amount from a string.    *    *  The money_get template uses protected virtual functions to    *  provide the actual results.  The public accessors forward the    *  call to the virtual functions.  These virtual functions are    *  hooks for developers to implement the behavior they require from    *  the money_get facet.   */
-end_comment
-
 begin_expr_stmt
+name|_GLIBCXX_BEGIN_LDBL_NAMESPACE
+comment|/**    *  @brief  Facet for parsing monetary amounts.    *    *  This facet encapsulates the code to parse and return a monetary    *  amount from a string.    *    *  The money_get template uses protected virtual functions to    *  provide the actual results.  The public accessors forward the    *  call to the virtual functions.  These virtual functions are    *  hooks for developers to implement the behavior they require from    *  the money_get facet.   */
 name|template
 operator|<
 name|typename
@@ -10794,9 +11255,17 @@ name|money_get
 argument_list|()
 block|{ }
 comment|/**        *  @brief  Read and parse a monetary value.        *        *  This function reads and parses characters representing a monetary        *  value.  This function is a hook for derived classes to change the        *  value returned.  @see get() for details.        */
+comment|// XXX GLIBCXX_ABI Deprecated
+if|#
+directive|if
+name|defined
+name|_GLIBCXX_LONG_DOUBLE_COMPAT
+operator|&&
+name|defined
+name|__LONG_DOUBLE_128__
 name|virtual
 name|iter_type
-name|do_get
+name|__do_get
 argument_list|(
 argument|iter_type __s
 argument_list|,
@@ -10808,11 +11277,54 @@ argument|ios_base& __io
 argument_list|,
 argument|ios_base::iostate& __err
 argument_list|,
-argument|long double& __units
+argument|double& __units
 argument_list|)
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|virtual
+name|iter_type
+name|do_get
+argument_list|(
+name|iter_type
+name|__s
+argument_list|,
+name|iter_type
+name|__end
+argument_list|,
+name|bool
+name|__intl
+argument_list|,
+name|ios_base
+operator|&
+name|__io
+argument_list|,
+name|ios_base
+operator|::
+name|iostate
+operator|&
+name|__err
+argument_list|,
+name|long
+name|double
+operator|&
+name|__units
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**        *  @brief  Read and parse a monetary value.        *        *  This function reads and parses characters representing a monetary        *  value.  This function is a hook for derived classes to change the        *  value returned.  @see get() for details.        */
@@ -10849,6 +11361,58 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// XXX GLIBCXX_ABI Deprecated
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|_GLIBCXX_LONG_DOUBLE_COMPAT
+operator|&&
+name|defined
+name|__LONG_DOUBLE_128__
+end_if
+
+begin_decl_stmt
+name|virtual
+name|iter_type
+name|do_get
+argument_list|(
+name|iter_type
+name|__s
+argument_list|,
+name|iter_type
+name|__end
+argument_list|,
+name|bool
+name|__intl
+argument_list|,
+name|ios_base
+operator|&
+name|__io
+argument_list|,
+name|ios_base
+operator|::
+name|iostate
+operator|&
+name|__err
+argument_list|,
+name|long
+name|double
+operator|&
+name|__units
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|template
@@ -11099,9 +11663,17 @@ name|money_put
 argument_list|()
 block|{ }
 comment|/**        *  @brief  Format and output a monetary value.        *        *  This function formats @a units as a monetary value according to        *  moneypunct and ctype facets retrieved from io.getloc(), and writes        *  the resulting characters to @a s.  For example, the value 1001 in a        *  US locale would write "$10.01" to @a s.        *        *  This function is a hook for derived classes to change the value        *  returned.  @see put().        *        *  @param  s  The stream to write to.        *  @param  intl  Parameter to use_facet<moneypunct<CharT,intl>>.        *  @param  io  Source of facets and io state.        *  @param  fill  char_type to use for padding.        *  @param  units  Place to store result of parsing.        *  @return  Iterator after writing.        */
+comment|// XXX GLIBCXX_ABI Deprecated
+if|#
+directive|if
+name|defined
+name|_GLIBCXX_LONG_DOUBLE_COMPAT
+operator|&&
+name|defined
+name|__LONG_DOUBLE_128__
 name|virtual
 name|iter_type
-name|do_put
+name|__do_put
 argument_list|(
 argument|iter_type __s
 argument_list|,
@@ -11111,11 +11683,47 @@ argument|ios_base& __io
 argument_list|,
 argument|char_type __fill
 argument_list|,
-argument|long double __units
+argument|double __units
 argument_list|)
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|virtual
+name|iter_type
+name|do_put
+argument_list|(
+name|iter_type
+name|__s
+argument_list|,
+name|bool
+name|__intl
+argument_list|,
+name|ios_base
+operator|&
+name|__io
+argument_list|,
+name|char_type
+name|__fill
+argument_list|,
+name|long
+name|double
+name|__units
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**        *  @brief  Format and output a monetary value.        *        *  This function formats @a digits as a monetary value according to        *  moneypunct and ctype facets retrieved from io.getloc(), and writes        *  the resulting characters to @a s.  For example, the string "1001" in        *  a US locale would write "$10.01" to @a s.        *        *  This function is a hook for derived classes to change the value        *  returned.  @see put().        *        *  @param  s  The stream to write to.        *  @param  intl  Parameter to use_facet<moneypunct<CharT,intl>>.        *  @param  io  Source of facets and io state.        *  @param  fill  char_type to use for padding.        *  @param  units  Place to store result of parsing.        *  @return  Iterator after writing.        */
@@ -11147,6 +11755,51 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// XXX GLIBCXX_ABI Deprecated
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|_GLIBCXX_LONG_DOUBLE_COMPAT
+operator|&&
+name|defined
+name|__LONG_DOUBLE_128__
+end_if
+
+begin_decl_stmt
+name|virtual
+name|iter_type
+name|do_put
+argument_list|(
+name|iter_type
+name|__s
+argument_list|,
+name|bool
+name|__intl
+argument_list|,
+name|ios_base
+operator|&
+name|__io
+argument_list|,
+name|char_type
+name|__fill
+argument_list|,
+name|long
+name|double
+name|__units
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|template
@@ -11192,6 +11845,10 @@ operator|::
 name|id
 expr_stmt|;
 end_expr_stmt
+
+begin_macro
+name|_GLIBCXX_END_LDBL_NAMESPACE
+end_macro
 
 begin_comment
 comment|/**    *  @brief  Messages facet base class providing catalog typedef.    */
@@ -11727,6 +12384,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/// @brief class messages_byname [22.2.7.2].
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -11790,55 +12451,39 @@ argument_list|()
 block|{ }
 end_expr_stmt
 
-begin_comment
+begin_decl_stmt
 unit|};
+name|_GLIBCXX_END_NAMESPACE
 comment|// Include host and configuration specific messages functions.
-end_comment
-
-begin_include
 include|#
 directive|include
 file|<bits/messages_members.h>
-end_include
-
-begin_comment
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+name|std
+argument_list|)
 comment|// Subclause convenience interfaces, inlines.
-end_comment
-
-begin_comment
 comment|// NB: These are inline because, when used in a loop, some compilers
-end_comment
-
-begin_comment
 comment|// can hoist the body out of the loop; then it's just as fast as the
-end_comment
-
-begin_comment
 comment|// C is*() function.
-end_comment
-
-begin_comment
-comment|//@{
-end_comment
-
-begin_comment
-comment|/// Convenience interface to ctype.is().
-end_comment
-
-begin_expr_stmt
+comment|/// Convenience interface to ctype.is(ctype_base::space, __c).
 name|template
-operator|<
+decl|<
 name|typename
 name|_CharT
-operator|>
+decl|>
 specifier|inline
-name|bool
+namespace|bool
 name|isspace
-argument_list|(
-argument|_CharT __c
-argument_list|,
-argument|const locale& __loc
-argument_list|)
+namespace|(
+name|_CharT
+name|__c
+operator|,
+namespace|const
+name|locale
+namespace|&
+name|__loc
+decl_stmt|)
 block|{
 return|return
 name|use_facet
@@ -11862,7 +12507,11 @@ name|__c
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
+
+begin_comment
+comment|/// Convenience interface to ctype.is(ctype_base::print, __c).
+end_comment
 
 begin_expr_stmt
 name|template
@@ -11903,6 +12552,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Convenience interface to ctype.is(ctype_base::cntrl, __c).
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -11941,6 +12594,10 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// Convenience interface to ctype.is(ctype_base::upper, __c).
+end_comment
 
 begin_expr_stmt
 name|template
@@ -11981,6 +12638,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Convenience interface to ctype.is(ctype_base::lower, __c).
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -12019,6 +12680,10 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// Convenience interface to ctype.is(ctype_base::alpha, __c).
+end_comment
 
 begin_expr_stmt
 name|template
@@ -12059,6 +12724,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Convenience interface to ctype.is(ctype_base::digit, __c).
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -12097,6 +12766,10 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// Convenience interface to ctype.is(ctype_base::punct, __c).
+end_comment
 
 begin_expr_stmt
 name|template
@@ -12137,6 +12810,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Convenience interface to ctype.is(ctype_base::xdigit, __c).
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -12175,6 +12852,10 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// Convenience interface to ctype.is(ctype_base::alnum, __c).
+end_comment
 
 begin_expr_stmt
 name|template
@@ -12215,6 +12896,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Convenience interface to ctype.is(ctype_base::graph, __c).
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -12254,6 +12939,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Convenience interface to ctype.toupper(__c).
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -12288,6 +12977,10 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// Convenience interface to ctype.tolower(__c).
+end_comment
 
 begin_expr_stmt
 name|template
@@ -12324,14 +13017,9 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-comment|//@}
-end_comment
-
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

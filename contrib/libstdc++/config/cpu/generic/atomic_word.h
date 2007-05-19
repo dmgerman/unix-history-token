@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -95,6 +95,10 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
+begin_comment
+comment|/** @file atomic_word.h  *  This file is a GNU extension to the Standard C++ Library.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -114,6 +118,46 @@ name|int
 name|_Atomic_word
 typedef|;
 end_typedef
+
+begin_comment
+comment|// Define these two macros using the appropriate memory barrier for the target.
+end_comment
+
+begin_comment
+comment|// The commented out versions below are the defaults.
+end_comment
+
+begin_comment
+comment|// See ia64/atomic_word.h for an alternative approach.
+end_comment
+
+begin_comment
+comment|// This one prevents loads from being hoisted across the barrier;
+end_comment
+
+begin_comment
+comment|// in other words, this is a Load-Load acquire barrier.
+end_comment
+
+begin_comment
+comment|// This is necessary iff TARGET_RELAXED_ORDERING is defined in tm.h.
+end_comment
+
+begin_comment
+comment|// #define _GLIBCXX_READ_MEM_BARRIER __asm __volatile ("":::"memory")
+end_comment
+
+begin_comment
+comment|// This one prevents stores from being sunk across the barrier; in other
+end_comment
+
+begin_comment
+comment|// words, a Store-Store release barrier.
+end_comment
+
+begin_comment
+comment|// #define _GLIBCXX_WRITE_MEM_BARRIER __asm __volatile ("":::"memory")
+end_comment
 
 begin_endif
 endif|#

@@ -4,7 +4,7 @@ comment|// Debugging hash_set implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2003
+comment|// Copyright (C) 2003, 2005, 2006
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -99,6 +99,10 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
+begin_comment
+comment|/** @file debug/hash_set.h  *  This file is a GNU debug extension to the Standard C++ Library.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -126,7 +130,10 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|__gnu_debug_def
+name|__gnu_cxx
+block|{
+name|namespace
+name|__debug
 block|{
 name|template
 operator|<
@@ -167,7 +174,7 @@ name|class
 name|hash_set
 operator|:
 name|public
-name|__gnu_cxx
+name|_GLIBCXX_EXT
 operator|::
 name|hash_set
 operator|<
@@ -198,7 +205,7 @@ operator|>
 expr|>
 block|{
 typedef|typedef
-name|__gnu_cxx
+name|_GLIBCXX_EXT
 operator|::
 name|hash_set
 operator|<
@@ -638,6 +645,37 @@ name|second
 argument_list|)
 return|;
 block|}
+name|void
+name|insert
+parameter_list|(
+specifier|const
+name|value_type
+modifier|*
+name|__first
+parameter_list|,
+specifier|const
+name|value_type
+modifier|*
+name|__last
+parameter_list|)
+block|{
+name|__glibcxx_check_valid_range
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+expr_stmt|;
+name|_Base
+operator|::
+name|insert
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+expr_stmt|;
+block|}
 name|template
 operator|<
 name|typename
@@ -818,9 +856,6 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|size_type
 name|erase
 parameter_list|(
@@ -865,9 +900,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|erase
 parameter_list|(
@@ -896,9 +928,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|erase
 parameter_list|(
@@ -957,9 +986,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|clear
 parameter_list|()
@@ -975,41 +1001,26 @@ name|_M_invalidate_all
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|using
 name|_Base
 operator|::
 name|resize
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|using
 name|_Base
 operator|::
 name|bucket_count
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|using
 name|_Base
 operator|::
 name|max_bucket_count
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|using
 name|_Base
 operator|::
 name|elems_in_bucket
 expr_stmt|;
-end_expr_stmt
-
-begin_function
 name|_Base
 modifier|&
 name|_M_base
@@ -1020,9 +1031,6 @@ operator|*
 name|this
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|_Base
 operator|&
@@ -1035,14 +1043,8 @@ operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_function
 name|void
 name|_M_invalidate_all
 parameter_list|()
@@ -1078,10 +1080,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_expr_stmt
-unit|};
 name|template
 operator|<
 name|typename
@@ -1254,7 +1260,12 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// namespace __gnu_debug_def
+comment|// namespace __debug
+end_comment
+
+begin_comment
+unit|}
+comment|// namespace __gnu_cxx
 end_comment
 
 begin_endif

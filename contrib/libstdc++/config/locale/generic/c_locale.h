@@ -4,7 +4,11 @@ comment|// Wrapper for underlying C-language localization -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -93,6 +97,10 @@ end_comment
 
 begin_comment
 comment|// the GNU General Public License.
+end_comment
+
+begin_comment
+comment|/** @file c++locale.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_comment
@@ -154,8 +162,14 @@ file|<cstdio>
 end_include
 
 begin_comment
-comment|// get std::snprintf or std::sprintf
+comment|// get std::vsnprintf or std::vsprintf
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<cstdarg>
+end_include
 
 begin_define
 define|#
@@ -164,44 +178,72 @@ name|_GLIBCXX_NUM_CATEGORIES
 value|0
 end_define
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_typedef
 typedef|typedef
 name|int
 modifier|*
 name|__c_locale
 typedef|;
-comment|// Convert numeric value of type _Tv to string and return length of
-comment|// string.  If snprintf is available use it, otherwise fall back to
-comment|// the unsafe sprintf which, in general, can be dangerous and should
-comment|// be avoided.
-name|template
-operator|<
-name|typename
-name|_Tv
-operator|>
+end_typedef
+
+begin_comment
+comment|// Convert numeric value of type double and long double to string and
+end_comment
+
+begin_comment
+comment|// return length of string.  If vsnprintf is available use it, otherwise
+end_comment
+
+begin_comment
+comment|// fall back to the unsafe vsprintf which, in general, can be dangerous
+end_comment
+
+begin_comment
+comment|// and should be avoided.
+end_comment
+
+begin_decl_stmt
+specifier|inline
 name|int
 name|__convert_from_v
 argument_list|(
-argument|char* __out
+specifier|const
+name|__c_locale
+operator|&
 argument_list|,
-argument|const int __size __attribute__((__unused__))
+name|char
+operator|*
+name|__out
 argument_list|,
-argument|const char* __fmt
+specifier|const
+name|int
+name|__size
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
 argument_list|,
-argument|_Tv __v
+specifier|const
+name|char
+operator|*
+name|__fmt
 argument_list|,
-argument|const __c_locale&
-argument_list|,
-argument|int __prec
+operator|...
 argument_list|)
 block|{
 name|char
-operator|*
+modifier|*
 name|__old
-operator|=
+init|=
 name|std
 operator|::
 name|setlocale
@@ -210,13 +252,13 @@ name|LC_NUMERIC
 argument_list|,
 name|NULL
 argument_list|)
-block|;
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|__sav
-operator|=
+init|=
 name|NULL
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|std
@@ -263,6 +305,16 @@ literal|"C"
 argument_list|)
 expr_stmt|;
 block|}
+name|va_list
+name|__args
+decl_stmt|;
+name|va_start
+argument_list|(
+name|__args
+argument_list|,
+name|__fmt
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_GLIBCXX_USE_C99
@@ -272,7 +324,7 @@ name|__ret
 init|=
 name|std
 operator|::
-name|snprintf
+name|vsnprintf
 argument_list|(
 name|__out
 argument_list|,
@@ -280,9 +332,7 @@ name|__size
 argument_list|,
 name|__fmt
 argument_list|,
-name|__prec
-argument_list|,
-name|__v
+name|__args
 argument_list|)
 decl_stmt|;
 else|#
@@ -290,22 +340,25 @@ directive|else
 specifier|const
 name|int
 name|__ret
-operator|=
+init|=
 name|std
 operator|::
-name|sprintf
+name|vsprintf
 argument_list|(
 name|__out
 argument_list|,
 name|__fmt
 argument_list|,
-name|__prec
-argument_list|,
-name|__v
+name|__args
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 endif|#
 directive|endif
+name|va_end
+argument_list|(
+name|__args
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|__sav
@@ -331,8 +384,11 @@ return|;
 block|}
 end_decl_stmt
 
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
+
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

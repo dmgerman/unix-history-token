@@ -4,7 +4,11 @@ comment|// Hashtable implementation used by containers -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,7 +104,7 @@ comment|/*  * Copyright (c) 1996,1997  * Silicon Graphics Computer Systems, Inc.
 end_comment
 
 begin_comment
-comment|/** @file ext/hashtable.h  *  This file is a GNU extension to the Standard C++ Library (possibly  *  containing extensions from the HP/SGI STL subset).  You should only  *  include this header if you are using GCC 3 or later.  */
+comment|/** @file ext/hashtable.h  *  This file is a GNU extension to the Standard C++ Library (possibly  *  containing extensions from the HP/SGI STL subset).  */
 end_comment
 
 begin_ifndef
@@ -154,60 +158,94 @@ directive|include
 file|<ext/hash_fun.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|__gnu_cxx
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|__gnu_cxx
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|size_t
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|ptrdiff_t
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|forward_iterator_tag
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|input_iterator_tag
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|_Construct
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|_Destroy
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|distance
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|vector
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|pair
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|__iterator_category
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -222,8 +260,11 @@ name|_M_next
 block|;
 name|_Val
 name|_M_val
-block|; }
+block|;     }
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -254,6 +295,9 @@ expr|>
 name|class
 name|hashtable
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -277,6 +321,9 @@ operator|>
 expr|struct
 name|_Hashtable_iterator
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -300,6 +347,9 @@ operator|>
 expr|struct
 name|_Hashtable_const_iterator
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -340,6 +390,9 @@ name|_Alloc
 operator|>
 name|_Hashtable
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|_Hashtable_iterator
 operator|<
@@ -357,6 +410,9 @@ name|_Alloc
 operator|>
 name|iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Hashtable_const_iterator
 operator|<
@@ -374,6 +430,9 @@ name|_Alloc
 operator|>
 name|const_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Hashtable_node
 operator|<
@@ -381,40 +440,67 @@ name|_Val
 operator|>
 name|_Node
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|forward_iterator_tag
 name|iterator_category
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Val
 name|value_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|ptrdiff_t
 name|difference_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|size_t
 name|size_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Val
 modifier|&
 name|reference
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Val
 modifier|*
 name|pointer
 typedef|;
+end_typedef
+
+begin_decl_stmt
 name|_Node
 modifier|*
 name|_M_cur
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|_Hashtable
 modifier|*
 name|_M_ht
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|_Hashtable_iterator
 argument_list|(
 name|_Node
@@ -435,10 +521,10 @@ name|_M_ht
 argument_list|(
 argument|__tab
 argument_list|)
-block|{}
+block|{ }
 name|_Hashtable_iterator
 argument_list|()
-block|{}
+block|{ }
 name|reference
 name|operator
 operator|*
@@ -452,12 +538,18 @@ operator|->
 name|_M_val
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|pointer
 name|operator
 operator|->
 expr|(
-block|)
-decl|const
+end_expr_stmt
+
+begin_expr_stmt
+unit|)
+specifier|const
 block|{
 return|return
 operator|&
@@ -469,7 +561,7 @@ operator|)
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_expr_stmt
 name|iterator
@@ -714,10 +806,10 @@ name|_M_ht
 argument_list|(
 argument|__tab
 argument_list|)
-block|{}
+block|{ }
 name|_Hashtable_const_iterator
 argument_list|()
-block|{}
+block|{ }
 name|_Hashtable_const_iterator
 argument_list|(
 specifier|const
@@ -737,7 +829,7 @@ name|_M_ht
 argument_list|(
 argument|__it._M_ht
 argument_list|)
-block|{}
+block|{ }
 name|reference
 name|operator
 operator|*
@@ -1522,9 +1614,9 @@ name|hashtable
 argument_list|(
 argument|size_type __n
 argument_list|,
-argument|const _HashFcn&    __hf
+argument|const _HashFcn& __hf
 argument_list|,
-argument|const _EqualKey&   __eql
+argument|const _EqualKey& __eql
 argument_list|,
 argument|const _ExtractKey& __ext
 argument_list|,
@@ -1568,14 +1660,14 @@ name|_M_initialize_buckets
 argument_list|(
 name|__n
 argument_list|)
-block|;   }
+block|; }
 name|hashtable
 argument_list|(
 argument|size_type __n
 argument_list|,
-argument|const _HashFcn&    __hf
+argument|const _HashFcn& __hf
 argument_list|,
-argument|const _EqualKey&   __eql
+argument|const _EqualKey& __eql
 argument_list|,
 argument|const allocator_type& __a = allocator_type()
 argument_list|)
@@ -1615,7 +1707,7 @@ name|_M_initialize_buckets
 argument_list|(
 name|__n
 argument_list|)
-block|;   }
+block|; }
 name|hashtable
 argument_list|(
 specifier|const
@@ -1670,7 +1762,7 @@ name|_M_copy_from
 argument_list|(
 name|__ht
 argument_list|)
-block|;   }
+block|; }
 name|hashtable
 operator|&
 name|operator
@@ -1727,7 +1819,7 @@ return|;
 end_return
 
 begin_macro
-unit|}    ~
+unit|}        ~
 name|hashtable
 argument_list|()
 end_macro
@@ -1962,7 +2054,7 @@ return|;
 end_return
 
 begin_macro
-unit|}    const_iterator
+unit|}        const_iterator
 name|end
 argument_list|()
 end_macro
@@ -2102,18 +2194,18 @@ for|for
 control|(
 name|_Node
 modifier|*
-name|__cur
+name|__n
 init|=
 name|_M_buckets
 index|[
 name|__bucket
 index|]
 init|;
-name|__cur
+name|__n
 condition|;
-name|__cur
+name|__n
 operator|=
-name|__cur
+name|__n
 operator|->
 name|_M_next
 control|)
@@ -2235,7 +2327,7 @@ argument_list|(
 name|__f
 argument_list|)
 argument_list|)
-block|;   }
+block|; }
 name|template
 operator|<
 name|class
@@ -2260,7 +2352,7 @@ argument_list|(
 name|__f
 argument_list|)
 argument_list|)
-block|;   }
+block|; }
 name|template
 operator|<
 name|class
@@ -2504,7 +2596,7 @@ name|__first
 operator|->
 name|_M_next
 control|)
-block|{}
+block|{ }
 return|return
 name|iterator
 argument_list|(
@@ -2570,7 +2662,7 @@ name|__first
 operator|->
 name|_M_next
 control|)
-block|{}
+block|{ }
 return|return
 name|const_iterator
 argument_list|(
@@ -2960,7 +3052,12 @@ literal|0
 expr_stmt|;
 name|try
 block|{
-name|_Construct
+name|this
+operator|->
+name|get_allocator
+argument_list|()
+operator|.
+name|construct
 argument_list|(
 operator|&
 name|__n
@@ -2999,7 +3096,12 @@ modifier|*
 name|__n
 parameter_list|)
 block|{
-name|_Destroy
+name|this
+operator|->
+name|get_allocator
+argument_list|()
+operator|.
+name|destroy
 argument_list|(
 operator|&
 name|__n
@@ -3184,7 +3286,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_Val
@@ -3378,7 +3480,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_Val
@@ -3619,7 +3721,7 @@ name|__cur2
 operator|->
 name|_M_next
 control|)
-block|{}
+block|{ }
 if|if
 condition|(
 name|__cur1
@@ -3657,10 +3759,8 @@ name|false
 decl_stmt|;
 for|for
 control|(
-name|_Node
-modifier|*
 name|__cur2
-init|=
+operator|=
 name|__ht2
 operator|.
 name|_M_buckets
@@ -3714,7 +3814,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_Val
@@ -4033,7 +4133,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_Val
@@ -4225,7 +4325,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_Val
@@ -4389,7 +4489,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_Val
@@ -4651,7 +4751,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_Val
@@ -4918,7 +5018,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_Val
@@ -5082,7 +5182,7 @@ block|}
 end_else
 
 begin_expr_stmt
-unit|}     if
+unit|} 	  if
 operator|(
 name|_M_equals
 argument_list|(
@@ -5116,17 +5216,17 @@ name|__erased
 block|;
 operator|--
 name|_M_num_elements
-block|;     }
+block|; 	    }
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   return
+unit|}       return
 name|__erased
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_Val
@@ -5286,7 +5386,7 @@ block|}
 end_else
 
 begin_expr_stmt
-unit|} }
+unit|}     }
 name|template
 operator|<
 name|class
@@ -5461,7 +5561,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_Val
@@ -5557,7 +5657,7 @@ name|_M_ht
 operator|)
 argument_list|)
 argument_list|)
-block|; }
+block|;     }
 name|template
 operator|<
 name|class
@@ -5799,7 +5899,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}         _M_buckets
+unit|} 		  _M_buckets
 operator|.
 name|swap
 argument_list|(
@@ -5809,7 +5909,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}       catch
+unit|} 	      catch
 operator|(
 operator|...
 operator|)
@@ -5870,12 +5970,12 @@ block|}
 end_expr_stmt
 
 begin_empty_stmt
-unit|}         __throw_exception_again
+unit|} 		  __throw_exception_again
 empty_stmt|;
 end_empty_stmt
 
 begin_expr_stmt
-unit|}     }   } }
+unit|} 	    } 	}     }
 name|template
 operator|<
 name|class
@@ -6005,7 +6105,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|} }
+unit|}     }
 name|template
 operator|<
 name|class
@@ -6096,7 +6196,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_Val
@@ -6197,14 +6297,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   _M_num_elements
+unit|}       _M_num_elements
 operator|=
 literal|0
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   template
+unit|}    template
 operator|<
 name|class
 name|_Val
@@ -6387,7 +6487,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}     _M_num_elements
+unit|} 	  _M_num_elements
 operator|=
 name|__ht
 operator|.
@@ -6396,7 +6496,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   catch
+unit|}       catch
 operator|(
 operator|...
 operator|)
@@ -6405,15 +6505,11 @@ name|clear
 argument_list|()
 block|;
 name|__throw_exception_again
-block|;     }
+block|; 	}
 end_expr_stmt
 
-begin_comment
-unit|} }
-comment|// namespace __gnu_cxx
-end_comment
-
 begin_endif
+unit|}  _GLIBCXX_END_NAMESPACE
 endif|#
 directive|endif
 end_endif

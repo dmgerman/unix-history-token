@@ -4,7 +4,11 @@ comment|// Components for manipulating sequences of characters -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+end_comment
+
+begin_comment
+comment|// 2006, 2007
 end_comment
 
 begin_comment
@@ -60,7 +64,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,6 +104,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file include/string  *  This is a Standard C++ Library header.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -109,10 +117,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|/** @file string  *  This is a Standard C++ Library header.  You should @c #include this header  *  in your programs, rather than any of the "st[dl]_*.h" implementation files.  */
 end_comment
 
 begin_ifndef
@@ -166,7 +170,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<bits/type_traits.h>
+file|<bits/cpp_type_traits.h>
 end_include
 
 begin_include
@@ -178,6 +182,12 @@ end_include
 begin_comment
 comment|// For operators>>,<<, and getline decls.
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<bits/ostream_insert.h>
+end_include
 
 begin_include
 include|#

@@ -4,7 +4,11 @@ comment|// Queue implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -128,11 +132,18 @@ directive|include
 file|<debug/debug.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
-comment|// Forward declarations of operators< and ==, needed for friend declaration.
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
+comment|/**    *  @brief  A standard container giving FIFO behavior.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  Meets many of the requirements of a    *<a href="tables.html#65">container</a>,    *  but does not define anything to do with iterators.  Very few of the    *  other standard container interfaces are defined.    *    *  This is not a true container, but an @e adaptor.  It holds another    *  container, and provides a wrapper interface to that container.  The    *  wrapper is what enforces strict first-in-first-out %queue behavior.    *    *  The second template parameter defines the type of the underlying    *  sequence/container.  It defaults to std::deque, but it can be any type    *  that supports @c front, @c back, @c push_back, and @c pop_front,    *  such as std::list or an appropriate user-defined type.    *    *  Members not found in "normal" containers are @c container_type,    *  which is a typedef for the second Sequence parameter, and @c push and    *  @c pop, which are standard %queue/FIFO operations.   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -146,82 +157,6 @@ operator|<
 name|_Tp
 operator|>
 expr|>
-name|class
-name|queue
-expr_stmt|;
-name|template
-operator|<
-name|typename
-name|_Tp
-operator|,
-name|typename
-name|_Seq
-operator|>
-specifier|inline
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|queue
-operator|<
-name|_Tp
-operator|,
-name|_Seq
-operator|>
-operator|&
-operator|,
-specifier|const
-name|queue
-operator|<
-name|_Tp
-operator|,
-name|_Seq
-operator|>
-operator|&
-operator|)
-expr_stmt|;
-name|template
-operator|<
-name|typename
-name|_Tp
-operator|,
-name|typename
-name|_Seq
-operator|>
-specifier|inline
-name|bool
-name|operator
-operator|<
-operator|(
-specifier|const
-name|queue
-operator|<
-name|_Tp
-operator|,
-name|_Seq
-operator|>
-operator|&
-operator|,
-specifier|const
-name|queue
-operator|<
-name|_Tp
-operator|,
-name|_Seq
-operator|>
-operator|&
-operator|)
-expr_stmt|;
-comment|/**    *  @brief  A standard container giving FIFO behavior.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  Meets many of the requirements of a    *<a href="tables.html#65">container</a>,    *  but does not define anything to do with iterators.  Very few of the    *  other standard container interfaces are defined.    *    *  This is not a true container, but an @e adaptor.  It holds another    *  container, and provides a wrapper interface to that container.  The    *  wrapper is what enforces strict first-in-first-out %queue behavior.    *    *  The second template parameter defines the type of the underlying    *  sequence/container.  It defaults to std::deque, but it can be any type    *  that supports @c front, @c back, @c push_back, and @c pop_front,    *  such as std::list or an appropriate user-defined type.    *    *  Members not found in "normal" containers are @c container_type,    *  which is a typedef for the second Sequence parameter, and @c push and    *  @c pop, which are standard %queue/FIFO operations.   */
-name|template
-operator|<
-name|typename
-name|_Tp
-operator|,
-name|typename
-name|_Sequence
-operator|>
 name|class
 name|queue
 block|{
@@ -291,6 +226,9 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -323,8 +261,14 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Sequence
@@ -332,6 +276,9 @@ operator|::
 name|value_type
 name|value_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Sequence
@@ -339,6 +286,9 @@ operator|::
 name|reference
 name|reference
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Sequence
@@ -346,6 +296,9 @@ operator|::
 name|const_reference
 name|const_reference
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Sequence
@@ -353,20 +306,44 @@ operator|::
 name|size_type
 name|size_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Sequence
 name|container_type
 typedef|;
+end_typedef
+
+begin_label
 name|protected
 label|:
+end_label
+
+begin_comment
 comment|/**        *  'c' is the underlying container.  Maintainers wondering why        *  this isn't uglified as per style guidelines should note that        *  this name is specified in the standard, [23.2.3.1].  (Why?        *  Presumably for the same reason that it's protected instead        *  of private: to allow derivation.  But none of the other        *  containers allow for derivation.  Odd.)        */
+end_comment
+
+begin_decl_stmt
 name|_Sequence
 name|c
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|/**        *  @brief  Default constructor creates no elements.        */
+end_comment
+
+begin_macro
 name|explicit
+end_macro
+
+begin_expr_stmt
 name|queue
 argument_list|(
 specifier|const
@@ -396,7 +373,13 @@ name|empty
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**  Returns the number of elements in the %queue.  */
+end_comment
+
+begin_expr_stmt
 name|size_type
 name|size
 argument_list|()
@@ -409,7 +392,13 @@ name|size
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  Returns a read/write reference to the data at the first        *  element of the %queue.        */
+end_comment
+
+begin_function
 name|reference
 name|front
 parameter_list|()
@@ -424,7 +413,13 @@ name|front
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  Returns a read-only (constant) reference to the data at the first        *  element of the %queue.        */
+end_comment
+
+begin_expr_stmt
 name|const_reference
 name|front
 argument_list|()
@@ -440,7 +435,13 @@ name|front
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  Returns a read/write reference to the data at the last        *  element of the %queue.        */
+end_comment
+
+begin_function
 name|reference
 name|back
 parameter_list|()
@@ -455,7 +456,13 @@ name|back
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  Returns a read-only (constant) reference to the data at the last        *  element of the %queue.        */
+end_comment
+
+begin_expr_stmt
 name|const_reference
 name|back
 argument_list|()
@@ -471,7 +478,13 @@ name|back
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Add data to the end of the %queue.        *  @param  x  Data to be added.        *        *  This is a typical %queue operation.  The function creates an        *  element at the end of the %queue and assigns the given data        *  to it.  The time complexity of the operation depends on the        *  underlying sequence.        */
+end_comment
+
+begin_function
 name|void
 name|push
 parameter_list|(
@@ -489,7 +502,13 @@ name|__x
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief  Removes first element.        *        *  This is a typical %queue operation.  It shrinks the %queue by one.        *  The time complexity of the operation depends on the underlying        *  sequence.        *        *  Note that no data is returned, and if the first element's        *  data is needed, it should be retrieved before pop() is        *  called.        */
+end_comment
+
+begin_function
 name|void
 name|pop
 parameter_list|()
@@ -503,14 +522,10 @@ name|pop_front
 argument_list|()
 expr_stmt|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
+unit|};
 comment|/**    *  @brief  Queue equality comparison.    *  @param  x  A %queue.    *  @param  y  A %queue of the same type as @a x.    *  @return  True iff the size and elements of the queues are equal.    *    *  This is an equivalence relation.  Complexity and semantics depend on the    *  underlying sequence type, but the expected rules are:  this relation is    *  linear in the size of the sequences, and queues are considered equivalent    *  if their sequences compare equal.   */
 end_comment
 
@@ -521,7 +536,7 @@ name|typename
 name|_Tp
 operator|,
 name|typename
-name|_Sequence
+name|_Seq
 operator|>
 specifier|inline
 name|bool
@@ -533,7 +548,7 @@ name|queue
 operator|<
 name|_Tp
 operator|,
-name|_Sequence
+name|_Seq
 operator|>
 operator|&
 name|__x
@@ -543,7 +558,7 @@ name|queue
 operator|<
 name|_Tp
 operator|,
-name|_Sequence
+name|_Seq
 operator|>
 operator|&
 name|__y
@@ -572,7 +587,7 @@ name|typename
 name|_Tp
 operator|,
 name|typename
-name|_Sequence
+name|_Seq
 operator|>
 specifier|inline
 name|bool
@@ -584,7 +599,7 @@ name|queue
 operator|<
 name|_Tp
 operator|,
-name|_Sequence
+name|_Seq
 operator|>
 operator|&
 name|__x
@@ -594,7 +609,7 @@ name|queue
 operator|<
 name|_Tp
 operator|,
-name|_Sequence
+name|_Seq
 operator|>
 operator|&
 name|__y
@@ -623,7 +638,7 @@ name|typename
 name|_Tp
 operator|,
 name|typename
-name|_Sequence
+name|_Seq
 operator|>
 specifier|inline
 name|bool
@@ -635,7 +650,7 @@ name|queue
 operator|<
 name|_Tp
 operator|,
-name|_Sequence
+name|_Seq
 operator|>
 operator|&
 name|__x
@@ -645,7 +660,7 @@ name|queue
 operator|<
 name|_Tp
 operator|,
-name|_Sequence
+name|_Seq
 operator|>
 operator|&
 name|__y
@@ -673,7 +688,7 @@ name|typename
 name|_Tp
 operator|,
 name|typename
-name|_Sequence
+name|_Seq
 operator|>
 specifier|inline
 name|bool
@@ -685,7 +700,7 @@ name|queue
 operator|<
 name|_Tp
 operator|,
-name|_Sequence
+name|_Seq
 operator|>
 operator|&
 name|__x
@@ -695,7 +710,7 @@ name|queue
 operator|<
 name|_Tp
 operator|,
-name|_Sequence
+name|_Seq
 operator|>
 operator|&
 name|__y
@@ -720,7 +735,7 @@ name|typename
 name|_Tp
 operator|,
 name|typename
-name|_Sequence
+name|_Seq
 operator|>
 specifier|inline
 name|bool
@@ -732,7 +747,7 @@ name|queue
 operator|<
 name|_Tp
 operator|,
-name|_Sequence
+name|_Seq
 operator|>
 operator|&
 name|__x
@@ -742,7 +757,7 @@ name|queue
 operator|<
 name|_Tp
 operator|,
-name|_Sequence
+name|_Seq
 operator|>
 operator|&
 name|__y
@@ -770,7 +785,7 @@ name|typename
 name|_Tp
 operator|,
 name|typename
-name|_Sequence
+name|_Seq
 operator|>
 specifier|inline
 name|bool
@@ -782,7 +797,7 @@ name|queue
 operator|<
 name|_Tp
 operator|,
-name|_Sequence
+name|_Seq
 operator|>
 operator|&
 name|__x
@@ -792,7 +807,7 @@ name|queue
 operator|<
 name|_Tp
 operator|,
-name|_Sequence
+name|_Seq
 operator|>
 operator|&
 name|__y
@@ -810,7 +825,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  @brief  A standard container automatically sorting its contents.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  This is not a true container, but an @e adaptor.  It holds    *  another container, and provides a wrapper interface to that    *  container.  The wrapper is what enforces sorting and    *  first-in-first-out %queue behavior.  Very few of the standard    *  container/sequence interface requirements are met (e.g.,    *  iterators).    *    *  The second template parameter defines the type of the underlying    *  sequence/container.  It defaults to std::vector, but it can be    *  any type that supports @c front(), @c push_back, @c pop_back,    *  and random-access iterators, such as std::deque or an    *  appropriate user-defined type.    *    *  The third template parameter supplies the means of making    *  priority comparisons.  It defaults to @c less<value_type> but    *  can be anything defining a strict weak ordering.    *    *  Members not found in "normal" containers are @c container_type,    *  which is a typedef for the second Sequence parameter, and @c    *  push, @c pop, and @c top, which are standard %queue/FIFO    *  operations.    *    *  @note No equality/comparison operators are provided for    *  %priority_queue.    *    *  @note Sorting of the elements takes place as they are added to,    *  and removed from, the %priority_queue using the    *  %priority_queue's member functions.  If you access the elements    *  by other means, and change their data such that the sorting    *  order would be different, the %priority_queue will not re-sort    *  the elements for you.  (How could it know to do so?)   */
+comment|/**    *  @brief  A standard container automatically sorting its contents.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  This is not a true container, but an @e adaptor.  It holds    *  another container, and provides a wrapper interface to that    *  container.  The wrapper is what enforces priority-based sorting     *  and %queue behavior.  Very few of the standard container/sequence    *  interface requirements are met (e.g., iterators).    *    *  The second template parameter defines the type of the underlying    *  sequence/container.  It defaults to std::vector, but it can be    *  any type that supports @c front(), @c push_back, @c pop_back,    *  and random-access iterators, such as std::deque or an    *  appropriate user-defined type.    *    *  The third template parameter supplies the means of making    *  priority comparisons.  It defaults to @c less<value_type> but    *  can be anything defining a strict weak ordering.    *    *  Members not found in "normal" containers are @c container_type,    *  which is a typedef for the second Sequence parameter, and @c    *  push, @c pop, and @c top, which are standard %queue operations.    *    *  @note No equality/comparison operators are provided for    *  %priority_queue.    *    *  @note Sorting of the elements takes place as they are added to,    *  and removed from, the %priority_queue using the    *  %priority_queue's member functions.  If you access the elements    *  by other means, and change their data such that the sorting    *  order would be different, the %priority_queue will not re-sort    *  the elements for you.  (How could it know to do so?)   */
 end_comment
 
 begin_expr_stmt
@@ -1154,8 +1169,6 @@ modifier|&
 name|__x
 parameter_list|)
 block|{
-name|try
-block|{
 name|c
 operator|.
 name|push_back
@@ -1181,20 +1194,6 @@ name|comp
 argument_list|)
 expr_stmt|;
 block|}
-name|catch
-argument_list|(
-argument|...
-argument_list|)
-block|{
-name|c
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-name|__throw_exception_again
-expr_stmt|;
-block|}
-block|}
 end_function
 
 begin_comment
@@ -1209,8 +1208,6 @@ block|{
 name|__glibcxx_requires_nonempty
 argument_list|()
 expr_stmt|;
-name|try
-block|{
 name|std
 operator|::
 name|pop_heap
@@ -1234,20 +1231,6 @@ name|pop_back
 argument_list|()
 expr_stmt|;
 block|}
-name|catch
-argument_list|(
-argument|...
-argument_list|)
-block|{
-name|c
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-name|__throw_exception_again
-expr_stmt|;
-block|}
-block|}
 end_function
 
 begin_comment
@@ -1255,10 +1238,9 @@ unit|};
 comment|// No equality/comparison operators are provided for priority_queue.
 end_comment
 
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

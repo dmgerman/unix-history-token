@@ -4,7 +4,11 @@ comment|// List implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -122,15 +126,36 @@ directive|include
 file|<bits/concept_check.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|_GLIBCXX_STD
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NESTED_NAMESPACE
+argument_list|(
+argument|std
+argument_list|,
+argument|_GLIBCXX_STD
+argument_list|)
+end_macro
+
+begin_comment
 comment|// Supporting structures are split into common and templated types; the
+end_comment
+
+begin_comment
 comment|// latter publicly inherits from the former in an effort to reduce code
+end_comment
+
+begin_comment
 comment|// duplication.  This results in some "needless" static_cast'ing later on,
+end_comment
+
+begin_comment
 comment|// but it's all safe downcasting.
+end_comment
+
+begin_comment
 comment|/// @if maint Common part of a node in the %list.  @endif
+end_comment
+
+begin_struct
 struct|struct
 name|_List_node_base
 block|{
@@ -190,7 +215,13 @@ parameter_list|()
 function_decl|;
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/// @if maint An actual node in the %list.  @endif
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -208,7 +239,13 @@ block|;
 comment|///< User's data.
 block|}
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/**    *  @brief A list::iterator.    *    *  @if maint    *  All the functions are op overloads.    *  @endif   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -224,6 +261,9 @@ name|_Tp
 operator|>
 name|_Self
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|_List_node
 operator|<
@@ -231,34 +271,55 @@ name|_Tp
 operator|>
 name|_Node
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|ptrdiff_t
 name|difference_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
+name|std
+operator|::
 name|bidirectional_iterator_tag
 name|iterator_category
-typedef|;
+expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Tp
 name|value_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Tp
 modifier|*
 name|pointer
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Tp
 modifier|&
 name|reference
 typedef|;
+end_typedef
+
+begin_expr_stmt
 name|_List_iterator
 argument_list|()
 operator|:
 name|_M_node
 argument_list|()
 block|{ }
+name|explicit
 name|_List_iterator
 argument_list|(
 name|_List_node_base
@@ -292,12 +353,18 @@ operator|->
 name|_M_data
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|pointer
 name|operator
 operator|->
 expr|(
-block|)
-decl|const
+end_expr_stmt
+
+begin_expr_stmt
+unit|)
+specifier|const
 block|{
 return|return
 operator|&
@@ -313,7 +380,7 @@ operator|->
 name|_M_data
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_expr_stmt
 name|_Self
@@ -517,9 +584,11 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|std
+operator|::
 name|bidirectional_iterator_tag
 name|iterator_category
-typedef|;
+expr_stmt|;
 end_typedef
 
 begin_typedef
@@ -554,6 +623,7 @@ operator|:
 name|_M_node
 argument_list|()
 block|{ }
+name|explicit
 name|_List_const_iterator
 argument_list|(
 specifier|const
@@ -891,7 +961,7 @@ comment|// instead.
 comment|//
 comment|// We put this to the test in the constructors and in
 comment|// get_allocator, where we use conversions between
-comment|// allocator_type and _Node_Alloc_type. The conversion is
+comment|// allocator_type and _Node_alloc_type. The conversion is
 comment|// required by table 32 in [20.1.5].
 typedef|typedef
 name|typename
@@ -907,13 +977,32 @@ operator|>
 expr|>
 operator|::
 name|other
-name|_Node_Alloc_type
+name|_Node_alloc_type
 expr_stmt|;
-block|struct
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|_Alloc
+operator|::
+name|template
+name|rebind
+operator|<
+name|_Tp
+operator|>
+operator|::
+name|other
+name|_Tp_alloc_type
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|struct
 name|_List_impl
-operator|:
+range|:
 name|public
-name|_Node_Alloc_type
+name|_Node_alloc_type
 block|{
 name|_List_node_base
 name|_M_node
@@ -921,19 +1010,22 @@ block|;
 name|_List_impl
 argument_list|(
 specifier|const
-name|_Node_Alloc_type
+name|_Node_alloc_type
 operator|&
 name|__a
 argument_list|)
 operator|:
-name|_Node_Alloc_type
+name|_Node_alloc_type
 argument_list|(
-argument|__a
+name|__a
 argument_list|)
+block|,
+name|_M_node
+argument_list|()
 block|{ }
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|_List_impl
@@ -953,7 +1045,7 @@ block|{
 return|return
 name|_M_impl
 operator|.
-name|_Node_Alloc_type
+name|_Node_alloc_type
 operator|::
 name|allocate
 argument_list|(
@@ -977,7 +1069,7 @@ argument_list|)
 block|{
 name|_M_impl
 operator|.
-name|_Node_Alloc_type
+name|_Node_alloc_type
 operator|::
 name|deallocate
 argument_list|(
@@ -1001,6 +1093,71 @@ name|allocator_type
 typedef|;
 end_typedef
 
+begin_function
+name|_Node_alloc_type
+modifier|&
+name|_M_get_Node_allocator
+parameter_list|()
+block|{
+return|return
+operator|*
+name|static_cast
+operator|<
+name|_Node_alloc_type
+operator|*
+operator|>
+operator|(
+operator|&
+name|this
+operator|->
+name|_M_impl
+operator|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+specifier|const
+name|_Node_alloc_type
+operator|&
+name|_M_get_Node_allocator
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|static_cast
+operator|<
+specifier|const
+name|_Node_alloc_type
+operator|*
+operator|>
+operator|(
+operator|&
+name|this
+operator|->
+name|_M_impl
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|_Tp_alloc_type
+name|_M_get_Tp_allocator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_Tp_alloc_type
+argument_list|(
+name|_M_get_Node_allocator
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_expr_stmt
 name|allocator_type
 name|get_allocator
@@ -1010,19 +1167,8 @@ block|{
 return|return
 name|allocator_type
 argument_list|(
-operator|*
-name|static_cast
-operator|<
-specifier|const
-name|_Node_Alloc_type
-operator|*
-operator|>
-operator|(
-operator|&
-name|this
-operator|->
-name|_M_impl
-operator|)
+name|_M_get_Node_allocator
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -1111,6 +1257,8 @@ operator|,
 name|typename
 name|_Alloc
 operator|=
+name|std
+operator|::
 name|allocator
 operator|<
 name|_Tp
@@ -1128,12 +1276,30 @@ name|_Alloc
 operator|>
 block|{
 comment|// concept requirements
+typedef|typedef
+name|typename
+name|_Alloc
+operator|::
+name|value_type
+name|_Alloc_value_type
+expr_stmt|;
 name|__glibcxx_class_requires
 argument_list|(
 argument|_Tp
 argument_list|,
 argument|_SGIAssignableConcept
 argument_list|)
+name|__glibcxx_class_requires2
+argument_list|(
+argument|_Tp
+argument_list|,
+argument|_Alloc_value_type
+argument_list|,
+argument|_SameTypeConcept
+argument_list|)
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|_List_base
 operator|<
@@ -1143,9 +1309,22 @@ name|_Alloc
 operator|>
 name|_Base
 expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|typename
+name|_Base
+operator|::
+name|_Tp_alloc_type
+name|_Tp_alloc_type
+expr_stmt|;
+end_typedef
+
+begin_label
 name|public
-operator|:
-end_expr_stmt
+label|:
+end_label
 
 begin_typedef
 typedef|typedef
@@ -1157,7 +1336,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_Tp_alloc_type
 operator|::
 name|pointer
 name|pointer
@@ -1167,7 +1346,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_Tp_alloc_type
 operator|::
 name|const_pointer
 name|const_pointer
@@ -1177,7 +1356,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_Tp_alloc_type
 operator|::
 name|reference
 name|reference
@@ -1187,7 +1366,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_Tp_alloc_type
 operator|::
 name|const_reference
 name|const_reference
@@ -1254,12 +1433,9 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|typename
-name|_Base
-operator|::
+name|_Alloc
 name|allocator_type
-name|allocator_type
-expr_stmt|;
+typedef|;
 end_typedef
 
 begin_label
@@ -1285,10 +1461,6 @@ name|_Node
 expr_stmt|;
 end_typedef
 
-begin_comment
-comment|/** @if maint        *  One data member plus two memory-handling functions.  If the        *  _Alloc type requires separate instances, then one of those        *  will also be included, accumulated from the topmost parent.        *  @endif        */
-end_comment
-
 begin_expr_stmt
 name|using
 name|_Base
@@ -1310,6 +1482,22 @@ name|using
 name|_Base
 operator|::
 name|_M_get_node
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|using
+name|_Base
+operator|::
+name|_M_get_Tp_allocator
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|using
+name|_Base
+operator|::
+name|_M_get_Node_allocator
 expr_stmt|;
 end_expr_stmt
 
@@ -1339,9 +1527,10 @@ argument_list|()
 decl_stmt|;
 name|try
 block|{
-name|std
-operator|::
-name|_Construct
+name|_M_get_Tp_allocator
+argument_list|()
+operator|.
+name|construct
 argument_list|(
 operator|&
 name|__p
@@ -1349,57 +1538,6 @@ operator|->
 name|_M_data
 argument_list|,
 name|__x
-argument_list|)
-expr_stmt|;
-block|}
-name|catch
-argument_list|(
-argument|...
-argument_list|)
-block|{
-name|_M_put_node
-argument_list|(
-name|__p
-argument_list|)
-expr_stmt|;
-name|__throw_exception_again
-expr_stmt|;
-block|}
-return|return
-name|__p
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/**        *  @if maint        *  Allocates space for a new node and default-constructs a new        *  instance of @c value_type in it.        *  @endif        */
-end_comment
-
-begin_function
-name|_Node
-modifier|*
-name|_M_create_node
-parameter_list|()
-block|{
-name|_Node
-modifier|*
-name|__p
-init|=
-name|this
-operator|->
-name|_M_get_node
-argument_list|()
-decl_stmt|;
-name|try
-block|{
-name|std
-operator|::
-name|_Construct
-argument_list|(
-operator|&
-name|__p
-operator|->
-name|_M_data
 argument_list|)
 expr_stmt|;
 block|}
@@ -1461,11 +1599,12 @@ argument|__a
 argument_list|)
 block|{ }
 comment|/**        *  @brief  Create a %list with copies of an exemplar element.        *  @param  n  The number of elements to initially create.        *  @param  value  An element to copy.        *        *  This constructor fills the %list with @a n copies of @a value.        */
+name|explicit
 name|list
 argument_list|(
 argument|size_type __n
 argument_list|,
-argument|const value_type& __value
+argument|const value_type& __value = value_type()
 argument_list|,
 argument|const allocator_type& __a = allocator_type()
 argument_list|)
@@ -1475,41 +1614,11 @@ argument_list|(
 argument|__a
 argument_list|)
 block|{
-name|this
-operator|->
-name|insert
+name|_M_fill_initialize
 argument_list|(
-name|begin
-argument_list|()
-argument_list|,
 name|__n
 argument_list|,
 name|__value
-argument_list|)
-block|; }
-comment|/**        *  @brief  Create a %list with default elements.        *  @param  n  The number of elements to initially create.        *        *  This constructor fills the %list with @a n copies of a        *  default-constructed element.        */
-name|explicit
-name|list
-argument_list|(
-argument|size_type __n
-argument_list|)
-operator|:
-name|_Base
-argument_list|(
-argument|allocator_type()
-argument_list|)
-block|{
-name|this
-operator|->
-name|insert
-argument_list|(
-name|begin
-argument_list|()
-argument_list|,
-name|__n
-argument_list|,
-name|value_type
-argument_list|()
 argument_list|)
 block|; }
 comment|/**        *  @brief  %List copy constructor.        *  @param  x  A %list of identical element and allocator types.        *        *  The newly-created %list uses a copy of the allocation object used        *  by @a x.        */
@@ -1523,16 +1632,11 @@ argument_list|)
 operator|:
 name|_Base
 argument_list|(
-argument|__x.get_allocator()
+argument|__x._M_get_Node_allocator()
 argument_list|)
 block|{
-name|this
-operator|->
-name|insert
+name|_M_initialize_dispatch
 argument_list|(
-name|begin
-argument_list|()
-argument_list|,
 name|__x
 operator|.
 name|begin
@@ -1542,9 +1646,12 @@ name|__x
 operator|.
 name|end
 argument_list|()
+argument_list|,
+name|__false_type
+argument_list|()
 argument_list|)
 block|; }
-comment|/**        *  @brief  Builds a %list from a range.        *  @param  first  An input iterator.        *  @param  last  An input iterator.        *        *  Create a %list consisting of copies of the elements from        *  [@a first,@a last).  This is linear in N (where N is        *  distance(@a first,@a last)).        *        *  @if maint        *  We don't need any dispatching tricks here, because insert does all of        *  that anyway.        *  @endif        */
+comment|/**        *  @brief  Builds a %list from a range.        *  @param  first  An input iterator.        *  @param  last  An input iterator.        *        *  Create a %list consisting of copies of the elements from        *  [@a first,@a last).  This is linear in N (where N is        *  distance(@a first,@a last)).        */
 name|template
 operator|<
 name|typename
@@ -1564,21 +1671,42 @@ argument_list|(
 argument|__a
 argument_list|)
 block|{
-name|this
-operator|->
-name|insert
+comment|// Check whether it's an integral type.  If so, it's not an iterator.
+typedef|typedef
+name|typename
+name|std
+operator|::
+name|__is_integer
+operator|<
+name|_InputIterator
+operator|>
+operator|::
+name|__type
+name|_Integral
+expr_stmt|;
+name|_M_initialize_dispatch
 argument_list|(
-name|begin
-argument_list|()
-argument_list|,
 name|__first
 argument_list|,
 name|__last
+argument_list|,
+name|_Integral
+argument_list|()
 argument_list|)
-block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|}
 comment|/**        *  No explicit dtor needed as the _Base dtor takes care of        *  things.  The _Base dtor only erases the elements, and note        *  that if the elements themselves are pointers, the pointed-to        *  memory is not touched in any way.  Managing the pointer is        *  the user's responsibilty.        */
+end_comment
+
+begin_comment
 comment|/**        *  @brief  %List assignment operator.        *  @param  x  A %list of identical element and allocator types.        *        *  All the elements of @a x are copied, but unlike the copy        *  constructor, the allocator object is not copied.        */
-name|list
+end_comment
+
+begin_expr_stmt
+unit|list
 operator|&
 name|operator
 operator|=
@@ -1639,12 +1767,14 @@ block|{
 comment|// Check whether it's an integral type.  If so, it's not an iterator.
 typedef|typedef
 name|typename
-name|_Is_integer
+name|std
+operator|::
+name|__is_integer
 operator|<
 name|_InputIterator
 operator|>
 operator|::
-name|_Integral
+name|__type
 name|_Integral
 expr_stmt|;
 name|_M_assign_dispatch
@@ -1696,6 +1826,8 @@ name|begin
 parameter_list|()
 block|{
 return|return
+name|iterator
+argument_list|(
 name|this
 operator|->
 name|_M_impl
@@ -1703,6 +1835,7 @@ operator|.
 name|_M_node
 operator|.
 name|_M_next
+argument_list|)
 return|;
 block|}
 end_function
@@ -1718,6 +1851,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|const_iterator
+argument_list|(
 name|this
 operator|->
 name|_M_impl
@@ -1725,6 +1860,7 @@ operator|.
 name|_M_node
 operator|.
 name|_M_next
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1739,12 +1875,15 @@ name|end
 parameter_list|()
 block|{
 return|return
+name|iterator
+argument_list|(
 operator|&
 name|this
 operator|->
 name|_M_impl
 operator|.
 name|_M_node
+argument_list|)
 return|;
 block|}
 end_function
@@ -1760,12 +1899,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|const_iterator
+argument_list|(
 operator|&
 name|this
 operator|->
 name|_M_impl
 operator|.
 name|_M_node
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1917,11 +2059,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|size_type
-argument_list|(
-operator|-
-literal|1
-argument_list|)
+name|_M_get_Tp_allocator
+argument_list|()
+operator|.
+name|max_size
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -1937,38 +2079,14 @@ parameter_list|(
 name|size_type
 name|__new_size
 parameter_list|,
-specifier|const
 name|value_type
-modifier|&
 name|__x
+init|=
+name|value_type
+argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/**        *  @brief  Resizes the %list to the specified number of elements.        *  @param  new_size  Number of elements the %list should contain.        *        *  This function will resize the %list to the specified number of        *  elements.  If the number is smaller than the %list's current        *  size the %list is truncated, otherwise the %list is extended        *  and new elements are default-constructed.        */
-end_comment
-
-begin_function
-name|void
-name|resize
-parameter_list|(
-name|size_type
-name|__new_size
-parameter_list|)
-block|{
-name|this
-operator|->
-name|resize
-argument_list|(
-name|__new_size
-argument_list|,
-name|value_type
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|// element access
@@ -2018,13 +2136,18 @@ name|reference
 name|back
 parameter_list|()
 block|{
-return|return
-operator|*
-operator|(
-operator|--
+name|iterator
+name|__tmp
+init|=
 name|end
 argument_list|()
-operator|)
+decl_stmt|;
+operator|--
+name|__tmp
+expr_stmt|;
+return|return
+operator|*
+name|__tmp
 return|;
 block|}
 end_function
@@ -2039,13 +2162,18 @@ name|back
 argument_list|()
 specifier|const
 block|{
-return|return
-operator|*
-operator|(
-operator|--
+name|const_iterator
+name|__tmp
+operator|=
 name|end
 argument_list|()
-operator|)
+block|;
+operator|--
+name|__tmp
+block|;
+return|return
+operator|*
+name|__tmp
 return|;
 block|}
 end_expr_stmt
@@ -2141,6 +2269,8 @@ name|this
 operator|->
 name|_M_erase
 argument_list|(
+name|iterator
+argument_list|(
 name|this
 operator|->
 name|_M_impl
@@ -2148,6 +2278,7 @@ operator|.
 name|_M_node
 operator|.
 name|_M_prev
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2173,7 +2304,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**        *  @brief  Inserts a number of copies of given data into the %list.        *  @param  position  An iterator into the %list.        *  @param  n  Number of elements to be inserted.        *  @param  x  Data to be inserted.        *        *  This function will insert a specified number of copies of the        *  given data before the location specified by @a position.        *        *  Due to the nature of a %list this operation can be done in        *  constant time, and does not invalidate iterators and        *  references.        */
+comment|/**        *  @brief  Inserts a number of copies of given data into the %list.        *  @param  position  An iterator into the %list.        *  @param  n  Number of elements to be inserted.        *  @param  x  Data to be inserted.        *        *  This function will insert a specified number of copies of the        *  given data before the location specified by @a position.        *        *  This operation is linear in the number of elements inserted and        *  does not invalidate iterators and references.        */
 end_comment
 
 begin_function
@@ -2192,20 +2323,29 @@ modifier|&
 name|__x
 parameter_list|)
 block|{
-name|_M_fill_insert
+name|list
+name|__tmp
 argument_list|(
-name|__position
-argument_list|,
 name|__n
 argument_list|,
 name|__x
+argument_list|,
+name|_M_get_Node_allocator
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|splice
+argument_list|(
+name|__position
+argument_list|,
+name|__tmp
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/**        *  @brief  Inserts a range into the %list.        *  @param  position  An iterator into the %list.        *  @param  first  An input iterator.        *  @param  last   An input iterator.        *        *  This function will insert copies of the data in the range [@a        *  first,@a last) into the %list before the location specified by        *  @a position.        *        *  Due to the nature of a %list this operation can be done in        *  constant time, and does not invalidate iterators and        *  references.        */
+comment|/**        *  @brief  Inserts a range into the %list.        *  @param  position  An iterator into the %list.        *  @param  first  An input iterator.        *  @param  last   An input iterator.        *        *  This function will insert copies of the data in the range [@a        *  first,@a last) into the %list before the location specified by        *  @a position.        *        *  This operation is linear in the number of elements inserted and        *  does not invalidate iterators and references.        */
 end_comment
 
 begin_expr_stmt
@@ -2224,50 +2364,35 @@ argument_list|,
 argument|_InputIterator __last
 argument_list|)
 block|{
-comment|// Check whether it's an integral type.  If so, it's not an iterator.
-typedef|typedef
-name|typename
-name|_Is_integer
-operator|<
-name|_InputIterator
-operator|>
-operator|::
-name|_Integral
-name|_Integral
-expr_stmt|;
-name|_M_insert_dispatch
+name|list
+name|__tmp
 argument_list|(
-name|__position
-argument_list|,
 name|__first
 argument_list|,
 name|__last
 argument_list|,
-name|_Integral
+name|_M_get_Node_allocator
 argument_list|()
+argument_list|)
+block|;
+name|splice
+argument_list|(
+name|__position
+argument_list|,
+name|__tmp
+argument_list|)
+block|; 	}
+comment|/**        *  @brief  Remove element at given position.        *  @param  position  Iterator pointing to element to be erased.        *  @return  An iterator pointing to the next element (or end()).        *        *  This function will erase the element at the given position and thus        *  shorten the %list by one.        *        *  Due to the nature of a %list this operation can be done in        *  constant time, and only invalidates iterators/references to        *  the element being removed.  The user is also cautioned that        *  this function only erases the element, and that if the element        *  is itself a pointer, the pointed-to memory is not touched in        *  any way.  Managing the pointer is the user's responsibilty.        */
+name|iterator
+name|erase
+argument_list|(
+argument|iterator __position
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|}
-comment|/**        *  @brief  Remove element at given position.        *  @param  position  Iterator pointing to element to be erased.        *  @return  An iterator pointing to the next element (or end()).        *        *  This function will erase the element at the given position and thus        *  shorten the %list by one.        *        *  Due to the nature of a %list this operation can be done in        *  constant time, and only invalidates iterators/references to        *  the element being removed.  The user is also cautioned that        *  this function only erases the element, and that if the element        *  is itself a pointer, the pointed-to memory is not touched in        *  any way.  Managing the pointer is the user's responsibilty.        */
-end_comment
-
-begin_macro
-unit|iterator
-name|erase
-argument_list|(
-argument|iterator __position
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/**        *  @brief  Remove a range of elements.        *  @param  first  Iterator pointing to the first element to be erased.        *  @param  last  Iterator pointing to one past the last element to be        *                erased.        *  @return  An iterator pointing to the element pointed to by @a last        *           prior to erasing (or end()).        *        *  This function will erase the elements in the range @a        *  [first,last) and shorten the %list accordingly.        *        *  Due to the nature of a %list this operation can be done in        *  constant time, and only invalidates iterators/references to        *  the element being removed.  The user is also cautioned that        *  this function only erases the elements, and that if the        *  elements themselves are pointers, the pointed-to memory is not        *  touched in any way.  Managing the pointer is the user's        *  responsibilty.        */
+comment|/**        *  @brief  Remove a range of elements.        *  @param  first  Iterator pointing to the first element to be erased.        *  @param  last  Iterator pointing to one past the last element to be        *                erased.        *  @return  An iterator pointing to the element pointed to by @a last        *           prior to erasing (or end()).        *        *  This function will erase the elements in the range @a        *  [first,last) and shorten the %list accordingly.        *        *  This operation is linear time in the size of the range and only        *  invalidates iterators/references to the element being removed.        *  The user is also cautioned that this function only erases the        *  elements, and that if the elements themselves are pointers, the        *  pointed-to memory is not touched in any way.  Managing the pointer        *  is the user's responsibilty.        */
 end_comment
 
 begin_function
@@ -2330,6 +2455,29 @@ operator|.
 name|_M_node
 argument_list|)
 expr_stmt|;
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 431. Swapping containers with unequal allocators.
+name|std
+operator|::
+name|__alloc_swap
+operator|<
+name|typename
+name|_Base
+operator|::
+name|_Node_alloc_type
+operator|>
+operator|::
+name|_S_do_it
+argument_list|(
+name|_M_get_Node_allocator
+argument_list|()
+argument_list|,
+name|__x
+operator|.
+name|_M_get_Node_allocator
+argument_list|()
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2360,7 +2508,7 @@ comment|// [23.2.2.4] list operations
 end_comment
 
 begin_comment
-comment|/**        *  @brief  Insert contents of another %list.        *  @param  position  Iterator referencing the element to insert before.        *  @param  x  Source list.        *        *  The elements of @a x are inserted in constant time in front of        *  the element referenced by @a position.  @a x becomes an empty        *  list.        */
+comment|/**        *  @brief  Insert contents of another %list.        *  @param  position  Iterator referencing the element to insert before.        *  @param  x  Source list.        *        *  The elements of @a x are inserted in constant time in front of        *  the element referenced by @a position.  @a x becomes an empty        *  list.        *        *  Requires this != @a x.        */
 end_comment
 
 begin_function
@@ -2383,6 +2531,12 @@ operator|.
 name|empty
 argument_list|()
 condition|)
+block|{
+name|_M_check_equal_allocators
+argument_list|(
+name|__x
+argument_list|)
+expr_stmt|;
 name|this
 operator|->
 name|_M_transfer
@@ -2401,6 +2555,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_function
 
 begin_comment
@@ -2416,6 +2571,7 @@ name|__position
 parameter_list|,
 name|list
 modifier|&
+name|__x
 parameter_list|,
 name|iterator
 name|__i
@@ -2440,6 +2596,18 @@ operator|==
 name|__j
 condition|)
 return|return;
+if|if
+condition|(
+name|this
+operator|!=
+operator|&
+name|__x
+condition|)
+name|_M_check_equal_allocators
+argument_list|(
+name|__x
+argument_list|)
+expr_stmt|;
 name|this
 operator|->
 name|_M_transfer
@@ -2467,6 +2635,7 @@ name|__position
 parameter_list|,
 name|list
 modifier|&
+name|__x
 parameter_list|,
 name|iterator
 name|__first
@@ -2481,6 +2650,19 @@ name|__first
 operator|!=
 name|__last
 condition|)
+block|{
+if|if
+condition|(
+name|this
+operator|!=
+operator|&
+name|__x
+condition|)
+name|_M_check_equal_allocators
+argument_list|(
+name|__x
+argument_list|)
+expr_stmt|;
 name|this
 operator|->
 name|_M_transfer
@@ -2492,6 +2674,7 @@ argument_list|,
 name|__last
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2650,6 +2833,123 @@ label|:
 end_label
 
 begin_comment
+comment|// Internal constructor functions follow.
+end_comment
+
+begin_comment
+comment|// Called by the range constructor to implement [23.1.1]/9
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Integer
+operator|>
+name|void
+name|_M_initialize_dispatch
+argument_list|(
+argument|_Integer __n
+argument_list|,
+argument|_Integer __x
+argument_list|,
+argument|__true_type
+argument_list|)
+block|{
+name|_M_fill_initialize
+argument_list|(
+name|static_cast
+operator|<
+name|size_type
+operator|>
+operator|(
+name|__n
+operator|)
+argument_list|,
+name|static_cast
+operator|<
+name|value_type
+operator|>
+operator|(
+name|__x
+operator|)
+argument_list|)
+block|; 	}
+comment|// Called by the range constructor to implement [23.1.1]/9
+name|template
+operator|<
+name|typename
+name|_InputIterator
+operator|>
+name|void
+name|_M_initialize_dispatch
+argument_list|(
+argument|_InputIterator __first
+argument_list|,
+argument|_InputIterator __last
+argument_list|,
+argument|__false_type
+argument_list|)
+block|{
+for|for
+control|(
+init|;
+name|__first
+operator|!=
+name|__last
+condition|;
+operator|++
+name|__first
+control|)
+name|push_back
+argument_list|(
+operator|*
+name|__first
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// Called by list(n,v,a), and the range constructor when it turns out
+end_comment
+
+begin_comment
+comment|// to be the same thing.
+end_comment
+
+begin_function
+name|void
+name|_M_fill_initialize
+parameter_list|(
+name|size_type
+name|__n
+parameter_list|,
+specifier|const
+name|value_type
+modifier|&
+name|__x
+parameter_list|)
+block|{
+for|for
+control|(
+init|;
+name|__n
+operator|>
+literal|0
+condition|;
+operator|--
+name|__n
+control|)
+name|push_back
+argument_list|(
+name|__x
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|// Internal assign functions follow.
 end_comment
 
@@ -2732,136 +3032,6 @@ name|__val
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|// Internal insert functions follow.
-end_comment
-
-begin_comment
-comment|// Called by the range insert to implement [23.1.1]/9
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|_Integer
-operator|>
-name|void
-name|_M_insert_dispatch
-argument_list|(
-argument|iterator __pos
-argument_list|,
-argument|_Integer __n
-argument_list|,
-argument|_Integer __x
-argument_list|,
-argument|__true_type
-argument_list|)
-block|{
-name|_M_fill_insert
-argument_list|(
-name|__pos
-argument_list|,
-name|static_cast
-operator|<
-name|size_type
-operator|>
-operator|(
-name|__n
-operator|)
-argument_list|,
-name|static_cast
-operator|<
-name|value_type
-operator|>
-operator|(
-name|__x
-operator|)
-argument_list|)
-block|; 	}
-comment|// Called by the range insert to implement [23.1.1]/9
-name|template
-operator|<
-name|typename
-name|_InputIterator
-operator|>
-name|void
-name|_M_insert_dispatch
-argument_list|(
-argument|iterator __pos
-argument_list|,
-argument|_InputIterator __first
-argument_list|,
-argument|_InputIterator __last
-argument_list|,
-argument|__false_type
-argument_list|)
-block|{
-for|for
-control|(
-init|;
-name|__first
-operator|!=
-name|__last
-condition|;
-operator|++
-name|__first
-control|)
-name|_M_insert
-argument_list|(
-name|__pos
-argument_list|,
-operator|*
-name|__first
-argument_list|)
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|// Called by insert(p,n,x), and the range insert when it turns out
-end_comment
-
-begin_comment
-comment|// to be the same thing.
-end_comment
-
-begin_function
-name|void
-name|_M_fill_insert
-parameter_list|(
-name|iterator
-name|__pos
-parameter_list|,
-name|size_type
-name|__n
-parameter_list|,
-specifier|const
-name|value_type
-modifier|&
-name|__x
-parameter_list|)
-block|{
-for|for
-control|(
-init|;
-name|__n
-operator|>
-literal|0
-condition|;
-operator|--
-name|__n
-control|)
-name|_M_insert
-argument_list|(
-name|__pos
-argument_list|,
-name|__x
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|// Moves the elements from [first,last) before position.
@@ -2971,9 +3141,10 @@ operator|.
 name|_M_node
 operator|)
 decl_stmt|;
-name|std
-operator|::
-name|_Destroy
+name|_M_get_Tp_allocator
+argument_list|()
+operator|.
+name|destroy
 argument_list|(
 operator|&
 name|__n
@@ -2984,6 +3155,40 @@ expr_stmt|;
 name|_M_put_node
 argument_list|(
 name|__n
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// To implement the splice (and merge) bits of N1599.
+end_comment
+
+begin_function
+name|void
+name|_M_check_equal_allocators
+parameter_list|(
+name|list
+modifier|&
+name|__x
+parameter_list|)
+block|{
+if|if
+condition|(
+name|_M_get_Node_allocator
+argument_list|()
+operator|!=
+name|__x
+operator|.
+name|_M_get_Node_allocator
+argument_list|()
+condition|)
+name|__throw_runtime_error
+argument_list|(
+name|__N
+argument_list|(
+literal|"list::_M_check_equal_allocators"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3422,12 +3627,8 @@ argument_list|(
 name|__y
 argument_list|)
 block|; }
+name|_GLIBCXX_END_NESTED_NAMESPACE
 end_expr_stmt
-
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
 
 begin_endif
 endif|#

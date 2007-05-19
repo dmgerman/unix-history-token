@@ -4,7 +4,7 @@ comment|// The template and inlines for the -*- C++ -*- slice_array class.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2004
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2004, 2005
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,11 +100,11 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
-comment|// Written by Gabriel Dos Reis<Gabriel.Dos-Reis@DPTMaths.ENS-Cachan.Fr>
+comment|/** @file slice_array.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_comment
-comment|/** @file slice_array.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+comment|// Written by Gabriel Dos Reis<Gabriel.Dos-Reis@DPTMaths.ENS-Cachan.Fr>
 end_comment
 
 begin_ifndef
@@ -127,11 +127,18 @@ name|GCC
 name|system_header
 end_pragma
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|/**    *  @brief  Class defining one-dimensional subset of an array.    *    *  The slice class represents a one-dimensional subset of an array,    *  specified by three parameters: start offset, size, and stride.  The    *  start offset is the index of the first element of the array that is part    *  of the subset.  The size is the total number of elements in the subset.    *  Stride is the distance between each successive array element to include    *  in the subset.    *    *  For example, with an array of size 10, and a slice with offset 1, size 3    *  and stride 2, the subset consists of array elements 1, 3, and 5.    */
+end_comment
+
+begin_decl_stmt
 name|class
 name|slice
 block|{
@@ -184,9 +191,21 @@ name|_M_st
 decl_stmt|;
 comment|// stride unit
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// The default constructor constructor is not required to initialize
+end_comment
+
+begin_comment
 comment|// data members with any meaningful values, so we choose to do nothing.
+end_comment
+
+begin_expr_stmt
 specifier|inline
 name|slice
 operator|::
@@ -232,6 +251,9 @@ return|return
 name|_M_off
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|size_t
 name|slice
@@ -244,6 +266,9 @@ return|return
 name|_M_sz
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|size_t
 name|slice
@@ -256,7 +281,13 @@ return|return
 name|_M_st
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**    *  @brief  Reference to one-dimensional subset of an array.    *    *  A slice_array is a reference to the actual elements of an array    *  specified by a slice.  The way to get a slice_array is to call    *  operator[](slice) on a valarray.  The returned slice_array then permits    *  carrying operations out on the referenced subset of elements in the    *  original valarray.  For example, operator+=(valarray) will add values    *  to the subset of elements in the underlying valarray this slice_array    *  refers to.    *    *  @param  Tp  Element type.    */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -281,8 +312,17 @@ name|slice_array
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Assignment operator.  Assigns slice elements to corresponding
+end_comment
+
+begin_comment
 comment|///  elements of @a a.
+end_comment
+
+begin_decl_stmt
 name|slice_array
 modifier|&
 name|operator
@@ -293,7 +333,13 @@ name|slice_array
 operator|&
 operator|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///  Assign slice elements to corresponding elements of @a v.
+end_comment
+
+begin_decl_stmt
 name|void
 name|operator
 init|=
@@ -307,7 +353,13 @@ operator|&
 operator|)
 specifier|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///  Multiply slice elements by corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|*=
@@ -321,7 +373,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Divide slice elements by corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|/=
@@ -335,7 +393,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Modulo slice elements by corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|%=
@@ -349,7 +413,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Add corresponding elements of @a v to slice elements.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|+=
@@ -363,7 +433,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Subtract corresponding elements of @a v from slice elements.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|-=
@@ -377,7 +453,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Logical xor slice elements with corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|^=
@@ -391,7 +473,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Logical and slice elements with corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|&=
@@ -405,7 +493,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Logical or slice elements with corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator||=
@@ -419,7 +513,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Left shift slice elements by corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|<<=
@@ -433,7 +533,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Right shift slice elements by corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|>>=
@@ -447,7 +553,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Assign all slice elements to @a t.
+end_comment
+
+begin_decl_stmt
 name|void
 name|operator
 init|=
@@ -458,7 +570,13 @@ operator|&
 operator|)
 specifier|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//        ~slice_array ();
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -479,6 +597,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -499,6 +620,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -519,6 +643,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -539,6 +666,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -559,6 +689,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -579,6 +712,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -599,6 +735,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -619,6 +758,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -639,6 +781,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -659,6 +804,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -679,8 +827,14 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_expr_stmt
 name|friend
 name|class
 name|valarray
@@ -688,6 +842,9 @@ operator|<
 name|_Tp
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|slice_array
 argument_list|(
 name|_Array
@@ -700,14 +857,23 @@ name|slice
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|const
 name|size_t
 name|_M_sz
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|const
 name|size_t
 name|_M_stride
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 specifier|const
 name|_Array
 operator|<
@@ -715,18 +881,20 @@ name|_Tp
 operator|>
 name|_M_array
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// not implemented
+end_comment
+
+begin_expr_stmt
 name|slice_array
 argument_list|()
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -1070,18 +1238,11 @@ argument|>>
 argument_list|,
 argument|__shift_right
 argument_list|)
-end_expr_stmt
-
-begin_undef
 undef|#
 directive|undef
 name|_DEFINE_VALARRAY_OPERATOR
-end_undef
-
-begin_comment
-unit|}
-comment|// std::
-end_comment
+name|_GLIBCXX_END_NAMESPACE
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -1090,18 +1251,6 @@ end_endif
 
 begin_comment
 comment|/* _SLICE_ARRAY_H */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:c++
-end_comment
-
-begin_comment
-comment|// End:
 end_comment
 
 end_unit

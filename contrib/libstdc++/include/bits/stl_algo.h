@@ -4,7 +4,11 @@ comment|// Algorithm implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -142,11 +146,18 @@ begin_comment
 comment|// See concept_check.h for the __glibcxx_*_requires macros.
 end_comment
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|/**    *  @brief Find the median of three values.    *  @param  a  A value.    *  @param  b  A value.    *  @param  c  A value.    *  @return One of @p a, @p b or @p c.    *    *  If @c {l,m,n} is some convolution of @p {a,b,c} such that @c l<=m<=n    *  then the value returned will be @c m.    *  This is an SGI extension.    *  @ingroup SGIextensions   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -224,7 +235,13 @@ return|return
 name|__b
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**    *  @brief Find the median of three values using a predicate for comparison.    *  @param  a     A value.    *  @param  b     A value.    *  @param  c     A value.    *  @param  comp  A binary predicate.    *  @return One of @p a, @p b or @p c.    *    *  If @c {l,m,n} is some convolution of @p {a,b,c} such that @p comp(l,m)    *  and @p comp(m,n) are both true then the value returned will be @c m.    *  This is an SGI extension.    *  @ingroup SGIextensions   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -328,7 +345,13 @@ return|return
 name|__b
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**    *  @brief Apply a function to every element of a sequence.    *  @param  first  An input iterator.    *  @param  last   An input iterator.    *  @param  f      A unary function object.    *  @return   @p f.    *    *  Applies the function object @p f to each element in the range    *  @p [first,last).  @p f must not modify the order of the sequence.    *  If @p f has a return value it is ignored.   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -375,18 +398,21 @@ operator|*
 name|__first
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|__f
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/**    *  @if maint    *  This is an overload used by find() for the Input Iterator case.    *  @endif   */
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|_InputIterator
@@ -396,7 +422,7 @@ name|_Tp
 operator|>
 specifier|inline
 name|_InputIterator
-name|find
+name|__find
 argument_list|(
 argument|_InputIterator __first
 argument_list|,
@@ -448,7 +474,7 @@ name|_Predicate
 operator|>
 specifier|inline
 name|_InputIterator
-name|find_if
+name|__find_if
 argument_list|(
 argument|_InputIterator __first
 argument_list|,
@@ -498,7 +524,7 @@ name|typename
 name|_Tp
 operator|>
 name|_RandomAccessIterator
-name|find
+name|__find
 argument_list|(
 argument|_RandomAccessIterator __first
 argument_list|,
@@ -673,7 +699,7 @@ name|typename
 name|_Predicate
 operator|>
 name|_RandomAccessIterator
-name|find_if
+name|__find_if
 argument_list|(
 argument|_RandomAccessIterator __first
 argument_list|,
@@ -842,11 +868,59 @@ end_switch
 
 begin_comment
 unit|}
-comment|/**    *  @brief Find the first occurrence of a value in a sequence.    *  @param  first  An input iterator.    *  @param  last   An input iterator.    *  @param  val    The value to find.    *  @return   The first iterator @c i in the range @p [first,last)    *  such that @c *i == @p val, or @p last if no such iterator exists.   */
+comment|/**    *  @if maint    *  This is an overload of find() for streambuf iterators.    *  @endif   */
 end_comment
 
 begin_expr_stmt
 unit|template
+operator|<
+name|typename
+name|_CharT
+operator|>
+name|typename
+name|__gnu_cxx
+operator|::
+name|__enable_if
+operator|<
+name|__is_char
+operator|<
+name|_CharT
+operator|>
+operator|::
+name|__value
+operator|,
+name|istreambuf_iterator
+operator|<
+name|_CharT
+operator|>
+expr|>
+operator|::
+name|__type
+name|find
+argument_list|(
+name|istreambuf_iterator
+operator|<
+name|_CharT
+operator|>
+argument_list|,
+name|istreambuf_iterator
+operator|<
+name|_CharT
+operator|>
+argument_list|,
+specifier|const
+name|_CharT
+operator|&
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/**    *  @brief Find the first occurrence of a value in a sequence.    *  @param  first  An input iterator.    *  @param  last   An input iterator.    *  @param  val    The value to find.    *  @return   The first iterator @c i in the range @p [first,last)    *  such that @c *i == @p val, or @p last if no such iterator exists.   */
+end_comment
+
+begin_expr_stmt
+name|template
 operator|<
 name|typename
 name|_InputIterator
@@ -886,7 +960,7 @@ block|;
 return|return
 name|std
 operator|::
-name|find
+name|__find
 argument_list|(
 name|__first
 argument_list|,
@@ -950,7 +1024,7 @@ block|;
 return|return
 name|std
 operator|::
-name|find_if
+name|__find_if
 argument_list|(
 name|__first
 argument_list|,
@@ -1185,11 +1259,9 @@ argument|_InputIteratorConcept<_InputIterator>
 argument_list|)
 name|__glibcxx_function_requires
 argument_list|(
-argument|_EqualityComparableConcept< 	    typename iterator_traits<_InputIterator>::value_type>
-argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
-argument|_EqualityComparableConcept<_Tp>
+argument|_EqualOpConcept< 	typename iterator_traits<_InputIterator>::value_type
+argument_list|,
+argument|_Tp>
 argument_list|)
 name|__glibcxx_requires_valid_range
 argument_list|(
@@ -1836,7 +1908,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/**    *  @brief Search a sequence for a number of consecutive values.    *  @param  first  A forward iterator.    *  @param  last   A forward iterator.    *  @param  count  The number of consecutive values.    *  @param  val    The value to find.    *  @return   The first iterator @c i in the range @p [first,last-count)    *  such that @c *(i+N) == @p val for each @c N in the range @p [0,count),    *  or @p last if no such iterator exists.    *    *  Searches the range @p [first,last) for @p count consecutive elements    *  equal to @p val.   */
+comment|/**    *  @if maint    *  This is an uglified    *  search_n(_ForwardIterator, _ForwardIterator, _Integer, const _Tp&)    *  overloaded for forward iterators.    *  @endif   */
 end_comment
 
 begin_expr_stmt
@@ -1852,7 +1924,7 @@ name|typename
 name|_Tp
 operator|>
 name|_ForwardIterator
-name|search_n
+name|__search_n
 argument_list|(
 argument|_ForwardIterator __first
 argument_list|,
@@ -1861,38 +1933,9 @@ argument_list|,
 argument|_Integer __count
 argument_list|,
 argument|const _Tp& __val
-argument_list|)
-block|{
-comment|// concept requirements
-name|__glibcxx_function_requires
-argument_list|(
-argument|_ForwardIteratorConcept<_ForwardIterator>
-argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
-argument|_EqualityComparableConcept< 	    typename iterator_traits<_ForwardIterator>::value_type>
-argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
-argument|_EqualityComparableConcept<_Tp>
-argument_list|)
-name|__glibcxx_requires_valid_range
-argument_list|(
-name|__first
 argument_list|,
-name|__last
+argument|std::forward_iterator_tag
 argument_list|)
-block|;
-if|if
-condition|(
-name|__count
-operator|<=
-literal|0
-condition|)
-return|return
-name|__first
-return|;
-else|else
 block|{
 name|__first
 operator|=
@@ -1906,7 +1949,7 @@ name|__last
 argument_list|,
 name|__val
 argument_list|)
-expr_stmt|;
+block|;
 while|while
 condition|(
 name|__first
@@ -1968,13 +2011,28 @@ condition|)
 return|return
 name|__first
 return|;
-else|else
+end_if
+
+begin_if
+if|if
+condition|(
+name|__i
+operator|==
+name|__last
+condition|)
+return|return
+name|__last
+return|;
+end_if
+
+begin_expr_stmt
 name|__first
 operator|=
 name|std
 operator|::
 name|find
 argument_list|(
+operator|++
 name|__i
 argument_list|,
 name|__last
@@ -1982,21 +2040,222 @@ argument_list|,
 name|__val
 argument_list|)
 expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_expr_stmt
-unit|} 	  return
+unit|}       return
 name|__last
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|}     }
-comment|/**    *  @brief Search a sequence for a number of consecutive values using a    *         predicate.    *  @param  first        A forward iterator.    *  @param  last         A forward iterator.    *  @param  count        The number of consecutive values.    *  @param  val          The value to find.    *  @param  binary_pred  A binary predicate.    *  @return   The first iterator @c i in the range @p [first,last-count)    *  such that @p binary_pred(*(i+N),val) is true for each @c N in the    *  range @p [0,count), or @p last if no such iterator exists.    *    *  Searches the range @p [first,last) for @p count consecutive elements    *  for which the predicate returns true.   */
+unit|}
+comment|/**    *  @if maint    *  This is an uglified    *  search_n(_ForwardIterator, _ForwardIterator, _Integer, const _Tp&)    *  overloaded for random access iterators.    *  @endif   */
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
+operator|<
+name|typename
+name|_RandomAccessIter
+operator|,
+name|typename
+name|_Integer
+operator|,
+name|typename
+name|_Tp
+operator|>
+name|_RandomAccessIter
+name|__search_n
+argument_list|(
+argument|_RandomAccessIter __first
+argument_list|,
+argument|_RandomAccessIter __last
+argument_list|,
+argument|_Integer __count
+argument_list|,
+argument|const _Tp& __val
+argument_list|,
+argument|std::random_access_iterator_tag
+argument_list|)
+block|{
+typedef|typedef
+name|typename
+name|std
+operator|::
+name|iterator_traits
+operator|<
+name|_RandomAccessIter
+operator|>
+operator|::
+name|difference_type
+name|_DistanceType
+expr_stmt|;
+name|_DistanceType
+name|__tailSize
+operator|=
+name|__last
+operator|-
+name|__first
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|const
+name|_DistanceType
+name|__pattSize
+init|=
+name|__count
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+name|__tailSize
+operator|<
+name|__pattSize
+condition|)
+return|return
+name|__last
+return|;
+end_if
+
+begin_decl_stmt
+specifier|const
+name|_DistanceType
+name|__skipOffset
+init|=
+name|__pattSize
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|_RandomAccessIter
+name|__lookAhead
+init|=
+name|__first
+operator|+
+name|__skipOffset
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|__tailSize
+operator|-=
+name|__pattSize
+expr_stmt|;
+end_expr_stmt
+
+begin_while
+while|while
+condition|(
+literal|1
+condition|)
+comment|// the main loop...
+block|{
+comment|// __lookAhead here is always pointing to the last element of next
+comment|// possible match.
+while|while
+condition|(
+operator|!
+operator|(
+operator|*
+name|__lookAhead
+operator|==
+name|__val
+operator|)
+condition|)
+comment|// the skip loop...
+block|{
+if|if
+condition|(
+name|__tailSize
+operator|<
+name|__pattSize
+condition|)
+return|return
+name|__last
+return|;
+comment|// Failure
+name|__lookAhead
+operator|+=
+name|__pattSize
+expr_stmt|;
+name|__tailSize
+operator|-=
+name|__pattSize
+expr_stmt|;
+block|}
+name|_DistanceType
+name|__remainder
+init|=
+name|__skipOffset
+decl_stmt|;
+for|for
+control|(
+name|_RandomAccessIter
+name|__backTrack
+init|=
+name|__lookAhead
+operator|-
+literal|1
+init|;
+operator|*
+name|__backTrack
+operator|==
+name|__val
+condition|;
+operator|--
+name|__backTrack
+control|)
+block|{
+if|if
+condition|(
+operator|--
+name|__remainder
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|__lookAhead
+operator|-
+name|__skipOffset
+operator|)
+return|;
+comment|// Success
+block|}
+if|if
+condition|(
+name|__remainder
+operator|>
+name|__tailSize
+condition|)
+return|return
+name|__last
+return|;
+comment|// Failure
+name|__lookAhead
+operator|+=
+name|__remainder
+expr_stmt|;
+name|__tailSize
+operator|-=
+name|__remainder
+expr_stmt|;
+block|}
+end_while
+
+begin_comment
+unit|}
+comment|/**    *  @brief Search a sequence for a number of consecutive values.    *  @param  first  A forward iterator.    *  @param  last   A forward iterator.    *  @param  count  The number of consecutive values.    *  @param  val    The value to find.    *  @return   The first iterator @c i in the range @p [first,last-count)    *  such that @c *(i+N) == @p val for each @c N in the range @p [0,count),    *  or @p last if no such iterator exists.    *    *  Searches the range @p [first,last) for @p count consecutive elements    *  equal to @p val.   */
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|_ForwardIterator
@@ -2006,9 +2265,6 @@ name|_Integer
 operator|,
 name|typename
 name|_Tp
-operator|,
-name|typename
-name|_BinaryPredicate
 operator|>
 name|_ForwardIterator
 name|search_n
@@ -2020,8 +2276,6 @@ argument_list|,
 argument|_Integer __count
 argument_list|,
 argument|const _Tp& __val
-argument_list|,
-argument|_BinaryPredicate __binary_pred
 argument_list|)
 block|{
 comment|// concept requirements
@@ -2031,9 +2285,7 @@ argument|_ForwardIteratorConcept<_ForwardIterator>
 argument_list|)
 name|__glibcxx_function_requires
 argument_list|(
-argument|_BinaryPredicateConcept<_BinaryPredicate
-argument_list|,
-argument|typename iterator_traits<_ForwardIterator>::value_type
+argument|_EqualOpConcept< 	typename iterator_traits<_ForwardIterator>::value_type
 argument_list|,
 argument|_Tp>
 argument_list|)
@@ -2053,17 +2305,96 @@ condition|)
 return|return
 name|__first
 return|;
-else|else
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|__count
+operator|==
+literal|1
+condition|)
+return|return
+name|std
+operator|::
+name|find
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|,
+name|__val
+argument_list|)
+return|;
+end_if
+
+begin_return
+return|return
+name|std
+operator|::
+name|__search_n
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|,
+name|__count
+argument_list|,
+name|__val
+argument_list|,
+name|std
+operator|::
+name|__iterator_category
+argument_list|(
+name|__first
+argument_list|)
+argument_list|)
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/**    *  @if maint    *  This is an uglified    *  search_n(_ForwardIterator, _ForwardIterator, _Integer, const _Tp&,    *	       _BinaryPredicate)    *  overloaded for forward iterators.    *  @endif   */
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|_ForwardIterator
+operator|,
+name|typename
+name|_Integer
+operator|,
+name|typename
+name|_Tp
+operator|,
+name|typename
+name|_BinaryPredicate
+operator|>
+name|_ForwardIterator
+name|__search_n
+argument_list|(
+argument|_ForwardIterator __first
+argument_list|,
+argument|_ForwardIterator __last
+argument_list|,
+argument|_Integer __count
+argument_list|,
+argument|const _Tp& __val
+argument_list|,
+argument|_BinaryPredicate __binary_pred
+argument_list|,
+argument|std::forward_iterator_tag
+argument_list|)
 block|{
 while|while
 condition|(
 name|__first
 operator|!=
 name|__last
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
+operator|!
 name|__binary_pred
 argument_list|(
 operator|*
@@ -2072,11 +2403,9 @@ argument_list|,
 name|__val
 argument_list|)
 condition|)
-break|break;
 operator|++
 name|__first
 expr_stmt|;
-block|}
 end_expr_stmt
 
 begin_while
@@ -2141,35 +2470,38 @@ condition|)
 return|return
 name|__first
 return|;
-else|else
-block|{
-while|while
-condition|(
-name|__i
-operator|!=
-name|__last
-condition|)
-block|{
 if|if
 condition|(
+name|__i
+operator|==
+name|__last
+condition|)
+return|return
+name|__last
+return|;
+name|__first
+operator|=
+operator|++
+name|__i
+expr_stmt|;
+while|while
+condition|(
+name|__first
+operator|!=
+name|__last
+operator|&&
+operator|!
 name|__binary_pred
 argument_list|(
 operator|*
-name|__i
+name|__first
 argument_list|,
 name|__val
 argument_list|)
 condition|)
-break|break;
 operator|++
-name|__i
-expr_stmt|;
-block|}
 name|__first
-operator|=
-name|__i
 expr_stmt|;
-block|}
 block|}
 end_while
 
@@ -2180,12 +2512,345 @@ return|;
 end_return
 
 begin_comment
-unit|}     }
+unit|}
+comment|/**    *  @if maint    *  This is an uglified    *  search_n(_ForwardIterator, _ForwardIterator, _Integer, const _Tp&,    *	       _BinaryPredicate)    *  overloaded for random access iterators.    *  @endif   */
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|_RandomAccessIter
+operator|,
+name|typename
+name|_Integer
+operator|,
+name|typename
+name|_Tp
+operator|,
+name|typename
+name|_BinaryPredicate
+operator|>
+name|_RandomAccessIter
+name|__search_n
+argument_list|(
+argument|_RandomAccessIter __first
+argument_list|,
+argument|_RandomAccessIter __last
+argument_list|,
+argument|_Integer __count
+argument_list|,
+argument|const _Tp& __val
+argument_list|,
+argument|_BinaryPredicate __binary_pred
+argument_list|,
+argument|std::random_access_iterator_tag
+argument_list|)
+block|{
+typedef|typedef
+name|typename
+name|std
+operator|::
+name|iterator_traits
+operator|<
+name|_RandomAccessIter
+operator|>
+operator|::
+name|difference_type
+name|_DistanceType
+expr_stmt|;
+name|_DistanceType
+name|__tailSize
+operator|=
+name|__last
+operator|-
+name|__first
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|const
+name|_DistanceType
+name|__pattSize
+init|=
+name|__count
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+name|__tailSize
+operator|<
+name|__pattSize
+condition|)
+return|return
+name|__last
+return|;
+end_if
+
+begin_decl_stmt
+specifier|const
+name|_DistanceType
+name|__skipOffset
+init|=
+name|__pattSize
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|_RandomAccessIter
+name|__lookAhead
+init|=
+name|__first
+operator|+
+name|__skipOffset
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|__tailSize
+operator|-=
+name|__pattSize
+expr_stmt|;
+end_expr_stmt
+
+begin_while
+while|while
+condition|(
+literal|1
+condition|)
+comment|// the main loop...
+block|{
+comment|// __lookAhead here is always pointing to the last element of next
+comment|// possible match.
+while|while
+condition|(
+operator|!
+name|__binary_pred
+argument_list|(
+operator|*
+name|__lookAhead
+argument_list|,
+name|__val
+argument_list|)
+condition|)
+comment|// the skip loop...
+block|{
+if|if
+condition|(
+name|__tailSize
+operator|<
+name|__pattSize
+condition|)
+return|return
+name|__last
+return|;
+comment|// Failure
+name|__lookAhead
+operator|+=
+name|__pattSize
+expr_stmt|;
+name|__tailSize
+operator|-=
+name|__pattSize
+expr_stmt|;
+block|}
+name|_DistanceType
+name|__remainder
+init|=
+name|__skipOffset
+decl_stmt|;
+for|for
+control|(
+name|_RandomAccessIter
+name|__backTrack
+init|=
+name|__lookAhead
+operator|-
+literal|1
+init|;
+name|__binary_pred
+argument_list|(
+operator|*
+name|__backTrack
+argument_list|,
+name|__val
+argument_list|)
+condition|;
+operator|--
+name|__backTrack
+control|)
+block|{
+if|if
+condition|(
+operator|--
+name|__remainder
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|__lookAhead
+operator|-
+name|__skipOffset
+operator|)
+return|;
+comment|// Success
+block|}
+if|if
+condition|(
+name|__remainder
+operator|>
+name|__tailSize
+condition|)
+return|return
+name|__last
+return|;
+comment|// Failure
+name|__lookAhead
+operator|+=
+name|__remainder
+expr_stmt|;
+name|__tailSize
+operator|-=
+name|__remainder
+expr_stmt|;
+block|}
+end_while
+
+begin_comment
+unit|}
+comment|/**    *  @brief Search a sequence for a number of consecutive values using a    *         predicate.    *  @param  first        A forward iterator.    *  @param  last         A forward iterator.    *  @param  count        The number of consecutive values.    *  @param  val          The value to find.    *  @param  binary_pred  A binary predicate.    *  @return   The first iterator @c i in the range @p [first,last-count)    *  such that @p binary_pred(*(i+N),val) is true for each @c N in the    *  range @p [0,count), or @p last if no such iterator exists.    *    *  Searches the range @p [first,last) for @p count consecutive elements    *  for which the predicate returns true.   */
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|_ForwardIterator
+operator|,
+name|typename
+name|_Integer
+operator|,
+name|typename
+name|_Tp
+operator|,
+name|typename
+name|_BinaryPredicate
+operator|>
+name|_ForwardIterator
+name|search_n
+argument_list|(
+argument|_ForwardIterator __first
+argument_list|,
+argument|_ForwardIterator __last
+argument_list|,
+argument|_Integer __count
+argument_list|,
+argument|const _Tp& __val
+argument_list|,
+argument|_BinaryPredicate __binary_pred
+argument_list|)
+block|{
+comment|// concept requirements
+name|__glibcxx_function_requires
+argument_list|(
+argument|_ForwardIteratorConcept<_ForwardIterator>
+argument_list|)
+name|__glibcxx_function_requires
+argument_list|(
+argument|_BinaryPredicateConcept<_BinaryPredicate
+argument_list|,
+argument|typename iterator_traits<_ForwardIterator>::value_type
+argument_list|,
+argument|_Tp>
+argument_list|)
+name|__glibcxx_requires_valid_range
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+block|;
+if|if
+condition|(
+name|__count
+operator|<=
+literal|0
+condition|)
+return|return
+name|__first
+return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|__count
+operator|==
+literal|1
+condition|)
+block|{
+while|while
+condition|(
+name|__first
+operator|!=
+name|__last
+operator|&&
+operator|!
+name|__binary_pred
+argument_list|(
+operator|*
+name|__first
+argument_list|,
+name|__val
+argument_list|)
+condition|)
+operator|++
+name|__first
+expr_stmt|;
+return|return
+name|__first
+return|;
+block|}
+end_if
+
+begin_return
+return|return
+name|std
+operator|::
+name|__search_n
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|,
+name|__count
+argument_list|,
+name|__val
+argument_list|,
+name|__binary_pred
+argument_list|,
+name|std
+operator|::
+name|__iterator_category
+argument_list|(
+name|__first
+argument_list|)
+argument_list|)
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/**    *  @brief Swap the elements of two sequences.    *  @param  first1  A forward iterator.    *  @param  last1   A forward iterator.    *  @param  first2  A forward iterator.    *  @return   An iterator equal to @p first2+(last1-first1).    *    *  Swaps each element in the range @p [first1,last1) with the    *  corresponding element in the range @p [first2,(last1-first1)).    *  The ranges must not overlap.   */
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|_ForwardIterator1
@@ -2652,16 +3317,22 @@ operator|,
 operator|++
 name|__result
 control|)
-operator|*
-name|__result
-operator|=
+if|if
+condition|(
 operator|*
 name|__first
 operator|==
 name|__old_value
-condition|?
+condition|)
+operator|*
+name|__result
+operator|=
 name|__new_value
-else|:
+expr_stmt|;
+else|else
+operator|*
+name|__result
+operator|=
 operator|*
 name|__first
 expr_stmt|;
@@ -2744,17 +3415,23 @@ operator|,
 operator|++
 name|__result
 control|)
-operator|*
-name|__result
-operator|=
+if|if
+condition|(
 name|__pred
 argument_list|(
 operator|*
 name|__first
 argument_list|)
-condition|?
+condition|)
+operator|*
+name|__result
+operator|=
 name|__new_value
-else|:
+expr_stmt|;
+else|else
+operator|*
+name|__result
+operator|=
 operator|*
 name|__first
 expr_stmt|;
@@ -3239,11 +3916,91 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  @if maint    *  This is an uglified unique_copy(_InputIterator, _InputIterator,    *                                  _OutputIterator)    *  overloaded for output iterators.    *  @endif   */
+comment|/**    *  @if maint    *  This is an uglified unique_copy(_InputIterator, _InputIterator,    *                                  _OutputIterator)    *  overloaded for forward iterators and output iterator as result.    *  @endif   */
 end_comment
 
 begin_expr_stmt
 name|template
+operator|<
+name|typename
+name|_ForwardIterator
+operator|,
+name|typename
+name|_OutputIterator
+operator|>
+name|_OutputIterator
+name|__unique_copy
+argument_list|(
+argument|_ForwardIterator __first
+argument_list|,
+argument|_ForwardIterator __last
+argument_list|,
+argument|_OutputIterator __result
+argument_list|,
+argument|forward_iterator_tag
+argument_list|,
+argument|output_iterator_tag
+argument_list|)
+block|{
+comment|// concept requirements -- taken care of in dispatching function
+name|_ForwardIterator
+name|__next
+operator|=
+name|__first
+block|;
+operator|*
+name|__result
+operator|=
+operator|*
+name|__first
+block|;
+while|while
+condition|(
+operator|++
+name|__next
+operator|!=
+name|__last
+condition|)
+if|if
+condition|(
+operator|!
+operator|(
+operator|*
+name|__first
+operator|==
+operator|*
+name|__next
+operator|)
+condition|)
+block|{
+name|__first
+operator|=
+name|__next
+expr_stmt|;
+operator|*
+operator|++
+name|__result
+operator|=
+operator|*
+name|__first
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+operator|++
+name|__result
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/**    *  @if maint    *  This is an uglified unique_copy(_InputIterator, _InputIterator,    *                                  _OutputIterator)    *  overloaded for input iterators and output iterator as result.    *  @endif   */
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|_InputIterator
@@ -3259,6 +4016,8 @@ argument_list|,
 argument|_InputIterator __last
 argument_list|,
 argument|_OutputIterator __result
+argument_list|,
+argument|input_iterator_tag
 argument_list|,
 argument|output_iterator_tag
 argument_list|)
@@ -3322,7 +4081,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/**    *  @if maint    *  This is an uglified unique_copy(_InputIterator, _InputIterator,    *                                  _OutputIterator)    *  overloaded for forward iterators.    *  @endif   */
+comment|/**    *  @if maint    *  This is an uglified unique_copy(_InputIterator, _InputIterator,    *                                  _OutputIterator)    *  overloaded for input iterators and forward iterator as result.    *  @endif   */
 end_comment
 
 begin_expr_stmt
@@ -3342,6 +4101,8 @@ argument_list|,
 argument|_InputIterator __last
 argument_list|,
 argument|_ForwardIterator __result
+argument_list|,
+argument|input_iterator_tag
 argument_list|,
 argument|forward_iterator_tag
 argument_list|)
@@ -3389,7 +4150,101 @@ end_return
 
 begin_comment
 unit|}
-comment|/**    *  @if maint    *  This is an uglified    *  unique_copy(_InputIterator, _InputIterator, _OutputIterator,    *              _BinaryPredicate)    *  overloaded for output iterators.    *  @endif   */
+comment|/**    *  @if maint    *  This is an uglified    *  unique_copy(_InputIterator, _InputIterator, _OutputIterator,    *              _BinaryPredicate)    *  overloaded for forward iterators and output iterator as result.    *  @endif   */
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|_ForwardIterator
+operator|,
+name|typename
+name|_OutputIterator
+operator|,
+name|typename
+name|_BinaryPredicate
+operator|>
+name|_OutputIterator
+name|__unique_copy
+argument_list|(
+argument|_ForwardIterator __first
+argument_list|,
+argument|_ForwardIterator __last
+argument_list|,
+argument|_OutputIterator __result
+argument_list|,
+argument|_BinaryPredicate __binary_pred
+argument_list|,
+argument|forward_iterator_tag
+argument_list|,
+argument|output_iterator_tag
+argument_list|)
+block|{
+comment|// concept requirements -- iterators already checked
+name|__glibcxx_function_requires
+argument_list|(
+argument|_BinaryPredicateConcept<_BinaryPredicate
+argument_list|,
+argument|typename iterator_traits<_ForwardIterator>::value_type
+argument_list|,
+argument|typename iterator_traits<_ForwardIterator>::value_type>
+argument_list|)
+name|_ForwardIterator
+name|__next
+operator|=
+name|__first
+block|;
+operator|*
+name|__result
+operator|=
+operator|*
+name|__first
+block|;
+while|while
+condition|(
+operator|++
+name|__next
+operator|!=
+name|__last
+condition|)
+if|if
+condition|(
+operator|!
+name|__binary_pred
+argument_list|(
+operator|*
+name|__first
+argument_list|,
+operator|*
+name|__next
+argument_list|)
+condition|)
+block|{
+name|__first
+operator|=
+name|__next
+expr_stmt|;
+operator|*
+operator|++
+name|__result
+operator|=
+operator|*
+name|__first
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+operator|++
+name|__result
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/**    *  @if maint    *  This is an uglified    *  unique_copy(_InputIterator, _InputIterator, _OutputIterator,    *              _BinaryPredicate)    *  overloaded for input iterators and output iterator as result.    *  @endif   */
 end_comment
 
 begin_expr_stmt
@@ -3414,6 +4269,8 @@ argument_list|,
 argument|_OutputIterator __result
 argument_list|,
 argument|_BinaryPredicate __binary_pred
+argument_list|,
+argument|input_iterator_tag
 argument_list|,
 argument|output_iterator_tag
 argument_list|)
@@ -3486,7 +4343,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/**    *  @if maint    *  This is an uglified    *  unique_copy(_InputIterator, _InputIterator, _OutputIterator,    *              _BinaryPredicate)    *  overloaded for forward iterators.    *  @endif   */
+comment|/**    *  @if maint    *  This is an uglified    *  unique_copy(_InputIterator, _InputIterator, _OutputIterator,    *              _BinaryPredicate)    *  overloaded for input iterators and forward iterator as result.    *  @endif   */
 end_comment
 
 begin_expr_stmt
@@ -3511,6 +4368,8 @@ argument_list|,
 argument|_ForwardIterator __result
 argument_list|,
 argument|_BinaryPredicate __binary_pred
+argument_list|,
+argument|input_iterator_tag
 argument_list|,
 argument|forward_iterator_tag
 argument_list|)
@@ -3567,7 +4426,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/**    *  @brief Copy a sequence, removing consecutive duplicate values.    *  @param  first   An input iterator.    *  @param  last    An input iterator.    *  @param  result  An output iterator.    *  @return   An iterator designating the end of the resulting sequence.    *    *  Copies each element in the range @p [first,last) to the range    *  beginning at @p result, except that only the first element is copied    *  from groups of consecutive elements that compare equal.    *  unique_copy() is stable, so the relative order of elements that are    *  copied is unchanged.   */
+comment|/**    *  @brief Copy a sequence, removing consecutive duplicate values.    *  @param  first   An input iterator.    *  @param  last    An input iterator.    *  @param  result  An output iterator.    *  @return   An iterator designating the end of the resulting sequence.    *    *  Copies each element in the range @p [first,last) to the range    *  beginning at @p result, except that only the first element is copied    *  from groups of consecutive elements that compare equal.    *  unique_copy() is stable, so the relative order of elements that are    *  copied is unchanged.    *    *  @if maint    *  _GLIBCXX_RESOLVE_LIB_DEFECTS    *  DR 241. Does unique_copy() require CopyConstructible and Assignable?    *      *  _GLIBCXX_RESOLVE_LIB_DEFECTS    *  DR 538. 241 again: Does unique_copy() require CopyConstructible and     *  Assignable?    *  @endif   */
 end_comment
 
 begin_expr_stmt
@@ -3612,19 +4471,6 @@ argument_list|,
 name|__last
 argument_list|)
 block|;
-typedef|typedef
-name|typename
-name|iterator_traits
-operator|<
-name|_OutputIterator
-operator|>
-operator|::
-name|iterator_category
-name|_IterType
-expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|__first
@@ -3634,7 +4480,7 @@ condition|)
 return|return
 name|__result
 return|;
-end_if
+end_expr_stmt
 
 begin_return
 return|return
@@ -3648,15 +4494,26 @@ name|__last
 argument_list|,
 name|__result
 argument_list|,
-name|_IterType
-argument_list|()
+name|std
+operator|::
+name|__iterator_category
+argument_list|(
+name|__first
+argument_list|)
+argument_list|,
+name|std
+operator|::
+name|__iterator_category
+argument_list|(
+name|__result
+argument_list|)
 argument_list|)
 return|;
 end_return
 
 begin_comment
 unit|}
-comment|/**    *  @brief Copy a sequence, removing consecutive values using a predicate.    *  @param  first        An input iterator.    *  @param  last         An input iterator.    *  @param  result       An output iterator.    *  @param  binary_pred  A binary predicate.    *  @return   An iterator designating the end of the resulting sequence.    *    *  Copies each element in the range @p [first,last) to the range    *  beginning at @p result, except that only the first element is copied    *  from groups of consecutive elements for which @p binary_pred returns    *  true.    *  unique_copy() is stable, so the relative order of elements that are    *  copied is unchanged.   */
+comment|/**    *  @brief Copy a sequence, removing consecutive values using a predicate.    *  @param  first        An input iterator.    *  @param  last         An input iterator.    *  @param  result       An output iterator.    *  @param  binary_pred  A binary predicate.    *  @return   An iterator designating the end of the resulting sequence.    *    *  Copies each element in the range @p [first,last) to the range    *  beginning at @p result, except that only the first element is copied    *  from groups of consecutive elements for which @p binary_pred returns    *  true.    *  unique_copy() is stable, so the relative order of elements that are    *  copied is unchanged.    *    *  @if maint    *  _GLIBCXX_RESOLVE_LIB_DEFECTS    *  DR 241. Does unique_copy() require CopyConstructible and Assignable?    *  @endif   */
 end_comment
 
 begin_expr_stmt
@@ -3702,19 +4559,6 @@ argument_list|,
 name|__last
 argument_list|)
 block|;
-typedef|typedef
-name|typename
-name|iterator_traits
-operator|<
-name|_OutputIterator
-operator|>
-operator|::
-name|iterator_category
-name|_IterType
-expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|__first
@@ -3724,7 +4568,7 @@ condition|)
 return|return
 name|__result
 return|;
-end_if
+end_expr_stmt
 
 begin_return
 return|return
@@ -3740,8 +4584,19 @@ name|__result
 argument_list|,
 name|__binary_pred
 argument_list|,
-name|_IterType
-argument_list|()
+name|std
+operator|::
+name|__iterator_category
+argument_list|(
+name|__first
+argument_list|)
+argument_list|,
+name|std
+operator|::
+name|__iterator_category
+argument_list|(
+name|__result
+argument_list|)
 argument_list|)
 return|;
 end_return
@@ -4006,25 +4861,29 @@ name|__last
 condition|)
 return|return;
 else|else
+block|{
 name|std
 operator|::
 name|iter_swap
 argument_list|(
 name|__first
-operator|++
 argument_list|,
 name|__last
 argument_list|)
+expr_stmt|;
+operator|++
+name|__first
 expr_stmt|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  @if maint    *  This is an uglified reverse(_BidirectionalIterator,    *                              _BidirectionalIterator)    *  overloaded for bidirectional iterators.    *  @endif   */
+unit|}
+comment|/**    *  @if maint    *  This is an uglified reverse(_BidirectionalIterator,    *                              _BidirectionalIterator)    *  overloaded for random access iterators.    *  @endif   */
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|_RandomAccessIterator
@@ -4039,32 +4898,51 @@ argument_list|,
 argument|random_access_iterator_tag
 argument_list|)
 block|{
+if|if
+condition|(
+name|__first
+operator|==
+name|__last
+condition|)
+return|return;
+operator|--
+name|__last
+expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|__first
 operator|<
 name|__last
 condition|)
+block|{
 name|std
 operator|::
 name|iter_swap
 argument_list|(
 name|__first
-operator|++
 argument_list|,
-operator|--
 name|__last
 argument_list|)
 expr_stmt|;
+operator|++
+name|__first
+expr_stmt|;
+operator|--
+name|__last
+expr_stmt|;
 block|}
-end_expr_stmt
+end_while
 
 begin_comment
+unit|}
 comment|/**    *  @brief Reverse a sequence.    *  @param  first  A bidirectional iterator.    *  @param  last   A bidirectional iterator.    *  @return   reverse() returns no value.    *    *  Reverses the order of the elements in the range @p [first,last),    *  so that the first element becomes the last etc.    *  For every @c i such that @p 0<=i<=(last-first)/2), @p reverse()    *  swaps @p *(first+i) and @p *(last-(i+1))   */
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|_BidirectionalIterator
@@ -4081,7 +4959,7 @@ block|{
 comment|// concept requirements
 name|__glibcxx_function_requires
 argument_list|(
-argument|_Mutable_BidirectionalIteratorConcept< 		    _BidirectionalIterator>
+argument|_Mutable_BidirectionalIteratorConcept< 				  _BidirectionalIterator>
 argument_list|)
 name|__glibcxx_requires_valid_range
 argument_list|(
@@ -4246,17 +5124,13 @@ argument_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|__first
 operator|==
 name|__middle
-operator|)
 operator|||
-operator|(
 name|__last
 operator|==
 name|__middle
-operator|)
 condition|)
 return|return;
 name|_ForwardIterator
@@ -4273,12 +5147,16 @@ name|swap
 argument_list|(
 operator|*
 name|__first
-operator|++
 argument_list|,
 operator|*
 name|__first2
-operator|++
 argument_list|)
+expr_stmt|;
+operator|++
+name|__first
+expr_stmt|;
+operator|++
+name|__first2
 expr_stmt|;
 if|if
 condition|(
@@ -4319,12 +5197,16 @@ name|swap
 argument_list|(
 operator|*
 name|__first
-operator|++
 argument_list|,
 operator|*
 name|__first2
-operator|++
 argument_list|)
+expr_stmt|;
+operator|++
+name|__first
+expr_stmt|;
+operator|++
+name|__first2
 expr_stmt|;
 if|if
 condition|(
@@ -4376,21 +5258,17 @@ block|{
 comment|// concept requirements
 name|__glibcxx_function_requires
 argument_list|(
-argument|_Mutable_BidirectionalIteratorConcept< 	    _BidirectionalIterator>
+argument|_Mutable_BidirectionalIteratorConcept< 				  _BidirectionalIterator>
 argument_list|)
 if|if
 condition|(
-operator|(
 name|__first
 operator|==
 name|__middle
-operator|)
 operator|||
-operator|(
 name|__last
 operator|==
 name|__middle
-operator|)
 condition|)
 return|return;
 name|std
@@ -4433,17 +5311,21 @@ name|__middle
 operator|!=
 name|__last
 condition|)
+block|{
 name|swap
 argument_list|(
 operator|*
 name|__first
-operator|++
 argument_list|,
 operator|*
 operator|--
 name|__last
 argument_list|)
 expr_stmt|;
+operator|++
+name|__first
+expr_stmt|;
+block|}
 end_while
 
 begin_if
@@ -4506,21 +5388,17 @@ block|{
 comment|// concept requirements
 name|__glibcxx_function_requires
 argument_list|(
-argument|_Mutable_RandomAccessIteratorConcept< 	    _RandomAccessIterator>
+argument|_Mutable_RandomAccessIteratorConcept< 				  _RandomAccessIterator>
 argument_list|)
 if|if
 condition|(
-operator|(
 name|__first
 operator|==
 name|__middle
-operator|)
 operator|||
-operator|(
 name|__last
 operator|==
 name|__middle
-operator|)
 condition|)
 return|return;
 end_expr_stmt
@@ -4637,7 +5515,6 @@ name|__i
 operator|++
 control|)
 block|{
-specifier|const
 name|_ValueType
 name|__tmp
 init|=
@@ -4912,6 +5789,8 @@ name|__first
 argument_list|,
 name|__middle
 argument_list|,
+name|std
+operator|::
 name|copy
 argument_list|(
 name|__middle
@@ -6552,7 +7431,10 @@ name|__last
 operator|-
 name|__first
 operator|>
+name|int
+argument_list|(
 name|_S_threshold
+argument_list|)
 condition|)
 block|{
 name|std
@@ -6563,7 +7445,10 @@ name|__first
 argument_list|,
 name|__first
 operator|+
+name|int
+argument_list|(
 name|_S_threshold
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|std
@@ -6572,7 +7457,10 @@ name|__unguarded_insertion_sort
 argument_list|(
 name|__first
 operator|+
+name|int
+argument_list|(
 name|_S_threshold
+argument_list|)
 argument_list|,
 name|__last
 argument_list|)
@@ -6623,7 +7511,10 @@ name|__last
 operator|-
 name|__first
 operator|>
+name|int
+argument_list|(
 name|_S_threshold
+argument_list|)
 condition|)
 block|{
 name|std
@@ -6634,7 +7525,10 @@ name|__first
 argument_list|,
 name|__first
 operator|+
+name|int
+argument_list|(
 name|_S_threshold
+argument_list|)
 argument_list|,
 name|__comp
 argument_list|)
@@ -6645,7 +7539,10 @@ name|__unguarded_insertion_sort
 argument_list|(
 name|__first
 operator|+
+name|int
+argument_list|(
 name|_S_threshold
+argument_list|)
 argument_list|,
 name|__last
 argument_list|,
@@ -6672,7 +7569,187 @@ end_else
 
 begin_comment
 unit|}
-comment|/**    *  @if maint    *  This is a helper function for the sort routine.    *  @endif   */
+comment|/**    *  @if maint    *  This is a helper function for the sort routines.    *  @endif   */
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|_RandomAccessIterator
+operator|>
+name|void
+name|__heap_select
+argument_list|(
+argument|_RandomAccessIterator __first
+argument_list|,
+argument|_RandomAccessIterator __middle
+argument_list|,
+argument|_RandomAccessIterator __last
+argument_list|)
+block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_RandomAccessIterator
+operator|>
+operator|::
+name|value_type
+name|_ValueType
+expr_stmt|;
+name|std
+operator|::
+name|make_heap
+argument_list|(
+name|__first
+argument_list|,
+name|__middle
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_for
+for|for
+control|(
+name|_RandomAccessIterator
+name|__i
+init|=
+name|__middle
+init|;
+name|__i
+operator|<
+name|__last
+condition|;
+operator|++
+name|__i
+control|)
+if|if
+condition|(
+operator|*
+name|__i
+operator|<
+operator|*
+name|__first
+condition|)
+name|std
+operator|::
+name|__pop_heap
+argument_list|(
+name|__first
+argument_list|,
+name|__middle
+argument_list|,
+name|__i
+argument_list|,
+name|_ValueType
+argument_list|(
+operator|*
+name|__i
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_for
+
+begin_comment
+unit|}
+comment|/**    *  @if maint    *  This is a helper function for the sort routines.    *  @endif   */
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|_RandomAccessIterator
+operator|,
+name|typename
+name|_Compare
+operator|>
+name|void
+name|__heap_select
+argument_list|(
+argument|_RandomAccessIterator __first
+argument_list|,
+argument|_RandomAccessIterator __middle
+argument_list|,
+argument|_RandomAccessIterator __last
+argument_list|,
+argument|_Compare __comp
+argument_list|)
+block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_RandomAccessIterator
+operator|>
+operator|::
+name|value_type
+name|_ValueType
+expr_stmt|;
+name|std
+operator|::
+name|make_heap
+argument_list|(
+name|__first
+argument_list|,
+name|__middle
+argument_list|,
+name|__comp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_for
+for|for
+control|(
+name|_RandomAccessIterator
+name|__i
+init|=
+name|__middle
+init|;
+name|__i
+operator|<
+name|__last
+condition|;
+operator|++
+name|__i
+control|)
+if|if
+condition|(
+name|__comp
+argument_list|(
+operator|*
+name|__i
+argument_list|,
+operator|*
+name|__first
+argument_list|)
+condition|)
+name|std
+operator|::
+name|__pop_heap
+argument_list|(
+name|__first
+argument_list|,
+name|__middle
+argument_list|,
+name|__i
+argument_list|,
+name|_ValueType
+argument_list|(
+operator|*
+name|__i
+argument_list|)
+argument_list|,
+name|__comp
+argument_list|)
+expr_stmt|;
+end_for
+
+begin_comment
+unit|}
+comment|/**    *  @if maint    *  This is a helper function for the sort routines.    *  @endif   */
 end_comment
 
 begin_expr_stmt
@@ -6727,6 +7804,7 @@ operator|<
 name|typename
 name|_RandomAccessIterator
 operator|>
+specifier|inline
 name|void
 name|partial_sort
 argument_list|(
@@ -6778,56 +7856,16 @@ end_expr_stmt
 begin_expr_stmt
 name|std
 operator|::
-name|make_heap
+name|__heap_select
 argument_list|(
 name|__first
 argument_list|,
 name|__middle
+argument_list|,
+name|__last
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_for
-for|for
-control|(
-name|_RandomAccessIterator
-name|__i
-init|=
-name|__middle
-init|;
-name|__i
-operator|<
-name|__last
-condition|;
-operator|++
-name|__i
-control|)
-if|if
-condition|(
-operator|*
-name|__i
-operator|<
-operator|*
-name|__first
-condition|)
-name|std
-operator|::
-name|__pop_heap
-argument_list|(
-name|__first
-argument_list|,
-name|__middle
-argument_list|,
-name|__i
-argument_list|,
-name|_ValueType
-argument_list|(
-operator|*
-name|__i
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_for
 
 begin_expr_stmt
 name|std
@@ -6855,6 +7893,7 @@ operator|,
 name|typename
 name|_Compare
 operator|>
+specifier|inline
 name|void
 name|partial_sort
 argument_list|(
@@ -6912,63 +7951,18 @@ end_expr_stmt
 begin_expr_stmt
 name|std
 operator|::
-name|make_heap
+name|__heap_select
 argument_list|(
 name|__first
 argument_list|,
 name|__middle
+argument_list|,
+name|__last
 argument_list|,
 name|__comp
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_for
-for|for
-control|(
-name|_RandomAccessIterator
-name|__i
-init|=
-name|__middle
-init|;
-name|__i
-operator|<
-name|__last
-condition|;
-operator|++
-name|__i
-control|)
-if|if
-condition|(
-name|__comp
-argument_list|(
-operator|*
-name|__i
-argument_list|,
-operator|*
-name|__first
-argument_list|)
-condition|)
-name|std
-operator|::
-name|__pop_heap
-argument_list|(
-name|__first
-argument_list|,
-name|__middle
-argument_list|,
-name|__i
-argument_list|,
-name|_ValueType
-argument_list|(
-operator|*
-name|__i
-argument_list|)
-argument_list|,
-name|__comp
-argument_list|)
-expr_stmt|;
-end_for
 
 begin_expr_stmt
 name|std
@@ -7071,14 +8065,16 @@ end_macro
 begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_LessThanComparableConcept<_OutputValueType>
+argument|_LessThanOpConcept<_InputValueType
+argument_list|,
+argument|_OutputValueType>
 argument_list|)
 end_macro
 
 begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_LessThanComparableConcept<_InputValueType>
+argument|_LessThanComparableConcept<_OutputValueType>
 argument_list|)
 end_macro
 
@@ -7327,6 +8323,17 @@ name|__glibcxx_function_requires
 argument_list|(
 argument|_BinaryPredicateConcept<_Compare
 argument_list|,
+argument|_InputValueType
+argument_list|,
+argument|_OutputValueType>
+argument_list|)
+end_macro
+
+begin_macro
+name|__glibcxx_function_requires
+argument_list|(
+argument|_BinaryPredicateConcept<_Compare
+argument_list|,
 argument|_OutputValueType
 argument_list|,
 argument|_OutputValueType>
@@ -7529,7 +8536,10 @@ name|__last
 operator|-
 name|__first
 operator|>
+name|int
+argument_list|(
 name|_S_threshold
+argument_list|)
 condition|)
 block|{
 if|if
@@ -7664,7 +8674,10 @@ name|__last
 operator|-
 name|__first
 operator|>
+name|int
+argument_list|(
 name|_S_threshold
+argument_list|)
 condition|)
 block|{
 if|if
@@ -7823,6 +8836,8 @@ name|__first
 argument_list|,
 name|__last
 argument_list|,
+name|std
+operator|::
 name|__lg
 argument_list|(
 name|__last
@@ -7918,6 +8933,8 @@ name|__first
 argument_list|,
 name|__last
 argument_list|,
+name|std
+operator|::
 name|__lg
 argument_list|(
 name|__last
@@ -7997,22 +9014,6 @@ begin_comment
 comment|// concept requirements
 end_comment
 
-begin_comment
-comment|// Note that these are slightly stricter than those of the 4-argument
-end_comment
-
-begin_comment
-comment|// version, defined next.  The difference is in the strictness of the
-end_comment
-
-begin_comment
-comment|// comparison operations... so for looser checking, define your own
-end_comment
-
-begin_comment
-comment|// comparison function, as was intended.
-end_comment
-
 begin_macro
 name|__glibcxx_function_requires
 argument_list|(
@@ -8023,16 +9024,9 @@ end_macro
 begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_SameTypeConcept<_Tp
+argument|_LessThanOpConcept<_ValueType
 argument_list|,
-argument|_ValueType>
-argument_list|)
-end_macro
-
-begin_macro
-name|__glibcxx_function_requires
-argument_list|(
-argument|_LessThanComparableConcept<_Tp>
+argument|_Tp>
 argument_list|)
 end_macro
 
@@ -8378,10 +9372,6 @@ begin_comment
 comment|// concept requirements
 end_comment
 
-begin_comment
-comment|// See comments on lower_bound.
-end_comment
-
 begin_macro
 name|__glibcxx_function_requires
 argument_list|(
@@ -8392,16 +9382,9 @@ end_macro
 begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_SameTypeConcept<_Tp
+argument|_LessThanOpConcept<_Tp
 argument_list|,
 argument|_ValueType>
-argument_list|)
-end_macro
-
-begin_macro
-name|__glibcxx_function_requires
-argument_list|(
-argument|_LessThanComparableConcept<_Tp>
 argument_list|)
 end_macro
 
@@ -9512,45 +10495,97 @@ argument_list|,
 argument|_OutputIterator __result
 argument_list|)
 block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator1
+operator|>
+operator|::
+name|value_type
+name|_ValueType1
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator2
+operator|>
+operator|::
+name|value_type
+name|_ValueType2
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// concept requirements
+end_comment
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator2>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_OutputIteratorConcept<_OutputIterator
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type>
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_SameTypeConcept< 	    typename iterator_traits<_InputIterator1>::value_type
+argument|_OutputIteratorConcept<_OutputIterator
 argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
+argument|_ValueType2>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_LessThanComparableConcept< 	    typename iterator_traits<_InputIterator1>::value_type>
+argument|_LessThanOpConcept<_ValueType2
+argument_list|,
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted
 argument_list|(
 name|__first1
 argument_list|,
 name|__last1
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted
 argument_list|(
 name|__first2
 argument_list|,
 name|__last2
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|__first1
@@ -9581,9 +10616,6 @@ operator|++
 name|__first2
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_else
 else|else
 block|{
 operator|*
@@ -9596,16 +10628,14 @@ operator|++
 name|__first1
 expr_stmt|;
 block|}
-end_else
-
-begin_expr_stmt
 operator|++
 name|__result
 expr_stmt|;
-end_expr_stmt
+block|}
+end_while
 
-begin_expr_stmt
-unit|}       return
+begin_return
+return|return
 name|std
 operator|::
 name|copy
@@ -9625,8 +10655,8 @@ argument_list|,
 name|__result
 argument_list|)
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+return|;
+end_return
 
 begin_comment
 unit|}
@@ -9664,35 +10694,79 @@ argument_list|,
 argument|_Compare __comp
 argument_list|)
 block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator1
+operator|>
+operator|::
+name|value_type
+name|_ValueType1
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator2
+operator|>
+operator|::
+name|value_type
+name|_ValueType2
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// concept requirements
+end_comment
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator2>
 argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
-argument|_SameTypeConcept< 	    typename iterator_traits<_InputIterator1>::value_type
-argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
-argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_OutputIteratorConcept<_OutputIterator
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type>
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_macro
+name|__glibcxx_function_requires
+argument_list|(
+argument|_OutputIteratorConcept<_OutputIterator
+argument_list|,
+argument|_ValueType2>
+argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_BinaryPredicateConcept<_Compare
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type
+argument|_ValueType2
 argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted_pred
 argument_list|(
 name|__first1
@@ -9701,7 +10775,10 @@ name|__last1
 argument_list|,
 name|__comp
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted_pred
 argument_list|(
 name|__first2
@@ -9710,7 +10787,10 @@ name|__last2
 argument_list|,
 name|__comp
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|__first1
@@ -9744,9 +10824,6 @@ operator|++
 name|__first2
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_else
 else|else
 block|{
 operator|*
@@ -9759,16 +10836,14 @@ operator|++
 name|__first1
 expr_stmt|;
 block|}
-end_else
-
-begin_expr_stmt
 operator|++
 name|__result
 expr_stmt|;
-end_expr_stmt
+block|}
+end_while
 
-begin_expr_stmt
-unit|}       return
+begin_return
+return|return
 name|std
 operator|::
 name|copy
@@ -9788,8 +10863,8 @@ argument_list|,
 name|__result
 argument_list|)
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+return|;
+end_return
 
 begin_expr_stmt
 unit|}    template
@@ -12322,7 +13397,7 @@ name|_RandomAccessIterator
 operator|,
 name|_ValueType
 operator|>
-name|buf
+name|__buf
 argument_list|(
 name|__first
 argument_list|,
@@ -12334,7 +13409,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|buf
+name|__buf
 operator|.
 name|begin
 argument_list|()
@@ -12359,14 +13434,14 @@ name|__first
 argument_list|,
 name|__last
 argument_list|,
-name|buf
+name|__buf
 operator|.
 name|begin
 argument_list|()
 argument_list|,
 name|_DistanceType
 argument_list|(
-name|buf
+name|__buf
 operator|.
 name|size
 argument_list|()
@@ -12464,7 +13539,7 @@ name|_RandomAccessIterator
 operator|,
 name|_ValueType
 operator|>
-name|buf
+name|__buf
 argument_list|(
 name|__first
 argument_list|,
@@ -12476,7 +13551,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|buf
+name|__buf
 operator|.
 name|begin
 argument_list|()
@@ -12503,14 +13578,14 @@ name|__first
 argument_list|,
 name|__last
 argument_list|,
-name|buf
+name|__buf
 operator|.
 name|begin
 argument_list|()
 argument_list|,
 name|_DistanceType
 argument_list|(
-name|buf
+name|__buf
 operator|.
 name|size
 argument_list|()
@@ -12521,25 +13596,25 @@ argument_list|)
 expr_stmt|;
 end_if
 
-begin_comment
-unit|}
-comment|/**    *  @brief Sort a sequence just enough to find a particular position.    *  @param  first   An iterator.    *  @param  nth     Another iterator.    *  @param  last    Another iterator.    *  @return  Nothing.    *    *  Rearranges the elements in the range @p [first,last) so that @p *nth    *  is the same element that would have been in that position had the    *  whole sequence been sorted.    *  whole sequence been sorted. The elements either side of @p *nth are    *  not completely sorted, but for any iterator @i in the range    *  @p [first,nth) and any iterator @j in the range @p [nth,last) it    *  holds that @p *j<*i is false.   */
-end_comment
-
 begin_expr_stmt
-unit|template
+unit|}     template
 operator|<
 name|typename
 name|_RandomAccessIterator
+operator|,
+name|typename
+name|_Size
 operator|>
 name|void
-name|nth_element
+name|__introselect
 argument_list|(
 argument|_RandomAccessIterator __first
 argument_list|,
 argument|_RandomAccessIterator __nth
 argument_list|,
 argument|_RandomAccessIterator __last
+argument_list|,
+argument|_Size __depth_limit
 argument_list|)
 block|{
 typedef|typedef
@@ -12551,32 +13626,6 @@ operator|>
 operator|::
 name|value_type
 name|_ValueType
-expr_stmt|;
-comment|// concept requirements
-name|__glibcxx_function_requires
-argument_list|(
-argument|_Mutable_RandomAccessIteratorConcept< 				  _RandomAccessIterator>
-argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
-argument|_LessThanComparableConcept<_ValueType>
-argument_list|)
-name|__glibcxx_requires_valid_range
-argument_list|(
-name|__first
-argument_list|,
-name|__nth
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__glibcxx_requires_valid_range
-argument_list|(
-name|__nth
-argument_list|,
-name|__last
-argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -12590,6 +13639,41 @@ operator|>
 literal|3
 condition|)
 block|{
+if|if
+condition|(
+name|__depth_limit
+operator|==
+literal|0
+condition|)
+block|{
+name|std
+operator|::
+name|__heap_select
+argument_list|(
+name|__first
+argument_list|,
+name|__nth
+operator|+
+literal|1
+argument_list|,
+name|__last
+argument_list|)
+expr_stmt|;
+comment|// Place the nth largest element in its final position.
+name|std
+operator|::
+name|iter_swap
+argument_list|(
+name|__first
+argument_list|,
+name|__nth
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+operator|--
+name|__depth_limit
+expr_stmt|;
 name|_RandomAccessIterator
 name|__cut
 init|=
@@ -12663,6 +13747,269 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+unit|}    template
+operator|<
+name|typename
+name|_RandomAccessIterator
+operator|,
+name|typename
+name|_Size
+operator|,
+name|typename
+name|_Compare
+operator|>
+name|void
+name|__introselect
+argument_list|(
+argument|_RandomAccessIterator __first
+argument_list|,
+argument|_RandomAccessIterator __nth
+argument_list|,
+argument|_RandomAccessIterator __last
+argument_list|,
+argument|_Size __depth_limit
+argument_list|,
+argument|_Compare __comp
+argument_list|)
+block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_RandomAccessIterator
+operator|>
+operator|::
+name|value_type
+name|_ValueType
+expr_stmt|;
+end_expr_stmt
+
+begin_while
+while|while
+condition|(
+name|__last
+operator|-
+name|__first
+operator|>
+literal|3
+condition|)
+block|{
+if|if
+condition|(
+name|__depth_limit
+operator|==
+literal|0
+condition|)
+block|{
+name|std
+operator|::
+name|__heap_select
+argument_list|(
+name|__first
+argument_list|,
+name|__nth
+operator|+
+literal|1
+argument_list|,
+name|__last
+argument_list|,
+name|__comp
+argument_list|)
+expr_stmt|;
+comment|// Place the nth largest element in its final position.
+name|std
+operator|::
+name|iter_swap
+argument_list|(
+name|__first
+argument_list|,
+name|__nth
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+operator|--
+name|__depth_limit
+expr_stmt|;
+name|_RandomAccessIterator
+name|__cut
+init|=
+name|std
+operator|::
+name|__unguarded_partition
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|,
+name|_ValueType
+argument_list|(
+name|std
+operator|::
+name|__median
+argument_list|(
+operator|*
+name|__first
+argument_list|,
+operator|*
+operator|(
+name|__first
+operator|+
+operator|(
+name|__last
+operator|-
+name|__first
+operator|)
+operator|/
+literal|2
+operator|)
+argument_list|,
+operator|*
+operator|(
+name|__last
+operator|-
+literal|1
+operator|)
+argument_list|,
+name|__comp
+argument_list|)
+argument_list|)
+argument_list|,
+name|__comp
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|__cut
+operator|<=
+name|__nth
+condition|)
+name|__first
+operator|=
+name|__cut
+expr_stmt|;
+else|else
+name|__last
+operator|=
+name|__cut
+expr_stmt|;
+block|}
+end_while
+
+begin_expr_stmt
+name|std
+operator|::
+name|__insertion_sort
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|,
+name|__comp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|}
+comment|/**    *  @brief Sort a sequence just enough to find a particular position.    *  @param  first   An iterator.    *  @param  nth     Another iterator.    *  @param  last    Another iterator.    *  @return  Nothing.    *    *  Rearranges the elements in the range @p [first,last) so that @p *nth    *  is the same element that would have been in that position had the    *  whole sequence been sorted.    *  whole sequence been sorted. The elements either side of @p *nth are    *  not completely sorted, but for any iterator @i in the range    *  @p [first,nth) and any iterator @j in the range @p [nth,last) it    *  holds that @p *j<*i is false.   */
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|_RandomAccessIterator
+operator|>
+specifier|inline
+name|void
+name|nth_element
+argument_list|(
+argument|_RandomAccessIterator __first
+argument_list|,
+argument|_RandomAccessIterator __nth
+argument_list|,
+argument|_RandomAccessIterator __last
+argument_list|)
+block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_RandomAccessIterator
+operator|>
+operator|::
+name|value_type
+name|_ValueType
+expr_stmt|;
+comment|// concept requirements
+name|__glibcxx_function_requires
+argument_list|(
+argument|_Mutable_RandomAccessIteratorConcept< 				  _RandomAccessIterator>
+argument_list|)
+name|__glibcxx_function_requires
+argument_list|(
+argument|_LessThanComparableConcept<_ValueType>
+argument_list|)
+name|__glibcxx_requires_valid_range
+argument_list|(
+name|__first
+argument_list|,
+name|__nth
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__glibcxx_requires_valid_range
+argument_list|(
+name|__nth
+argument_list|,
+name|__last
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|__first
+operator|==
+name|__last
+operator|||
+name|__nth
+operator|==
+name|__last
+condition|)
+return|return;
+end_if
+
+begin_expr_stmt
+name|std
+operator|::
+name|__introselect
+argument_list|(
+name|__first
+argument_list|,
+name|__nth
+argument_list|,
+name|__last
+argument_list|,
+name|std
+operator|::
+name|__lg
+argument_list|(
+name|__last
+operator|-
+name|__first
+argument_list|)
+operator|*
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 unit|}
 comment|/**    *  @brief Sort a sequence just enough to find a particular position    *         using a predicate for comparison.    *  @param  first   An iterator.    *  @param  nth     Another iterator.    *  @param  last    Another iterator.    *  @param  comp    A comparison functor.    *  @return  Nothing.    *    *  Rearranges the elements in the range @p [first,last) so that @p *nth    *  is the same element that would have been in that position had the    *  whole sequence been sorted. The elements either side of @p *nth are    *  not completely sorted, but for any iterator @i in the range    *  @p [first,nth) and any iterator @j in the range @p [nth,last) it    *  holds that @p comp(*j,*i) is false.   */
@@ -12677,6 +14024,7 @@ operator|,
 name|typename
 name|_Compare
 operator|>
+specifier|inline
 name|void
 name|nth_element
 argument_list|(
@@ -12731,89 +14079,41 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_while
-while|while
-condition|(
-name|__last
-operator|-
-name|__first
-operator|>
-literal|3
-condition|)
-block|{
-name|_RandomAccessIterator
-name|__cut
-init|=
-name|std
-operator|::
-name|__unguarded_partition
-argument_list|(
-name|__first
-argument_list|,
-name|__last
-argument_list|,
-name|_ValueType
-argument_list|(
-name|std
-operator|::
-name|__median
-argument_list|(
-operator|*
-name|__first
-argument_list|,
-operator|*
-operator|(
-name|__first
-operator|+
-operator|(
-name|__last
-operator|-
-name|__first
-operator|)
-operator|/
-literal|2
-operator|)
-argument_list|,
-operator|*
-operator|(
-name|__last
-operator|-
-literal|1
-operator|)
-argument_list|,
-name|__comp
-argument_list|)
-argument_list|)
-argument_list|,
-name|__comp
-argument_list|)
-decl_stmt|;
+begin_if
 if|if
 condition|(
-name|__cut
-operator|<=
-name|__nth
-condition|)
 name|__first
-operator|=
-name|__cut
-expr_stmt|;
-else|else
+operator|==
 name|__last
-operator|=
-name|__cut
-expr_stmt|;
-block|}
-end_while
+operator|||
+name|__nth
+operator|==
+name|__last
+condition|)
+return|return;
+end_if
 
 begin_expr_stmt
 name|std
 operator|::
-name|__insertion_sort
+name|__introselect
 argument_list|(
 name|__first
 argument_list|,
+name|__nth
+argument_list|,
 name|__last
+argument_list|,
+name|std
+operator|::
+name|__lg
+argument_list|(
+name|__last
+operator|-
+name|__first
+argument_list|)
+operator|*
+literal|2
 argument_list|,
 name|__comp
 argument_list|)
@@ -12878,10 +14178,6 @@ begin_comment
 comment|// concept requirements
 end_comment
 
-begin_comment
-comment|// See comments on lower_bound.
-end_comment
-
 begin_macro
 name|__glibcxx_function_requires
 argument_list|(
@@ -12892,16 +14188,18 @@ end_macro
 begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_SameTypeConcept<_Tp
+argument|_LessThanOpConcept<_ValueType
 argument_list|,
-argument|_ValueType>
+argument|_Tp>
 argument_list|)
 end_macro
 
 begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_LessThanComparableConcept<_Tp>
+argument|_LessThanOpConcept<_Tp
+argument_list|,
+argument|_ValueType>
 argument_list|)
 end_macro
 
@@ -13387,21 +14685,26 @@ argument_list|,
 argument|const _Tp& __val
 argument_list|)
 block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_ForwardIterator
+operator|>
+operator|::
+name|value_type
+name|_ValueType
+expr_stmt|;
 comment|// concept requirements
-comment|// See comments on lower_bound.
 name|__glibcxx_function_requires
 argument_list|(
 argument|_ForwardIteratorConcept<_ForwardIterator>
 argument_list|)
 name|__glibcxx_function_requires
 argument_list|(
-argument|_SameTypeConcept<_Tp
+argument|_LessThanOpConcept<_Tp
 argument_list|,
-argument|typename iterator_traits<_ForwardIterator>::value_type>
-argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
-argument|_LessThanComparableConcept<_Tp>
+argument|_ValueType>
 argument_list|)
 name|__glibcxx_requires_partitioned
 argument_list|(
@@ -13411,10 +14714,13 @@ name|__last
 argument_list|,
 name|__val
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|_ForwardIterator
 name|__i
-operator|=
+init|=
 name|std
 operator|::
 name|lower_bound
@@ -13425,7 +14731,10 @@ name|__last
 argument_list|,
 name|__val
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_return
 return|return
 name|__i
 operator|!=
@@ -13439,15 +14748,15 @@ operator|*
 name|__i
 operator|)
 return|;
-block|}
-end_expr_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/**    *  @brief Determines whether an element exists in a range.    *  @param  first   An iterator.    *  @param  last    Another iterator.    *  @param  val     The search term.    *  @param  comp    A functor to use for comparisons.    *  @return  True if @a val (or its equivelent) is in [@a first,@a last ].    *  @ingroup binarysearch    *    *  Note that this does not actually return an iterator to @a val.  For    *  that, use std::find or a container's specialized find member functions.    *    *  The comparison function should have the same effects on ordering as    *  the function used for the initial sort.   */
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|_ForwardIterator
@@ -13470,6 +14779,16 @@ argument_list|,
 argument|_Compare __comp
 argument_list|)
 block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_ForwardIterator
+operator|>
+operator|::
+name|value_type
+name|_ValueType
+expr_stmt|;
 comment|// concept requirements
 name|__glibcxx_function_requires
 argument_list|(
@@ -13479,17 +14798,9 @@ name|__glibcxx_function_requires
 argument_list|(
 argument|_BinaryPredicateConcept<_Compare
 argument_list|,
-argument|typename iterator_traits<_ForwardIterator>::value_type
-argument_list|,
-argument|_Tp>
-argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
-argument|_BinaryPredicateConcept<_Compare
-argument_list|,
 argument|_Tp
 argument_list|,
-argument|typename iterator_traits<_ForwardIterator>::value_type>
+argument|_ValueType>
 argument_list|)
 name|__glibcxx_requires_partitioned_pred
 argument_list|(
@@ -13501,10 +14812,13 @@ name|__val
 argument_list|,
 name|__comp
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|_ForwardIterator
 name|__i
-operator|=
+init|=
 name|std
 operator|::
 name|lower_bound
@@ -13517,7 +14831,10 @@ name|__val
 argument_list|,
 name|__comp
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_return
 return|return
 name|__i
 operator|!=
@@ -13532,10 +14849,10 @@ operator|*
 name|__i
 argument_list|)
 return|;
-block|}
-end_expr_stmt
+end_return
 
 begin_comment
+unit|}
 comment|// Set algorithms: includes, set_union, set_intersection, set_difference,
 end_comment
 
@@ -13556,7 +14873,7 @@ comment|/**    *  @brief Determines whether all elements of a sequence exists in
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|_InputIterator1
@@ -13576,39 +14893,88 @@ argument_list|,
 argument|_InputIterator2 __last2
 argument_list|)
 block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator1
+operator|>
+operator|::
+name|value_type
+name|_ValueType1
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator2
+operator|>
+operator|::
+name|value_type
+name|_ValueType2
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// concept requirements
+end_comment
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator2>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_SameTypeConcept< 	    typename iterator_traits<_InputIterator1>::value_type
+argument|_LessThanOpConcept<_ValueType1
 argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
+argument|_ValueType2>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_LessThanComparableConcept< 	    typename iterator_traits<_InputIterator1>::value_type>
+argument|_LessThanOpConcept<_ValueType2
+argument_list|,
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted
 argument_list|(
 name|__first1
 argument_list|,
 name|__last1
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted
 argument_list|(
 name|__first2
 argument_list|,
 name|__last2
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|__first1
@@ -13649,7 +15015,7 @@ operator|,
 operator|++
 name|__first2
 expr_stmt|;
-end_expr_stmt
+end_while
 
 begin_return
 return|return
@@ -13690,29 +15056,72 @@ argument_list|,
 argument|_Compare __comp
 argument_list|)
 block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator1
+operator|>
+operator|::
+name|value_type
+name|_ValueType1
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator2
+operator|>
+operator|::
+name|value_type
+name|_ValueType2
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// concept requirements
+end_comment
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator2>
 argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
-argument|_SameTypeConcept< 	    typename iterator_traits<_InputIterator1>::value_type
-argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
-argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_BinaryPredicateConcept<_Compare
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type
+argument|_ValueType1
 argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
+argument|_ValueType2>
 argument_list|)
+end_macro
+
+begin_macro
+name|__glibcxx_function_requires
+argument_list|(
+argument|_BinaryPredicateConcept<_Compare
+argument_list|,
+argument|_ValueType2
+argument_list|,
+argument|_ValueType1>
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted_pred
 argument_list|(
 name|__first1
@@ -13721,7 +15130,10 @@ name|__last1
 argument_list|,
 name|__comp
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted_pred
 argument_list|(
 name|__first2
@@ -13730,7 +15142,10 @@ name|__last2
 argument_list|,
 name|__comp
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|__first1
@@ -13777,7 +15192,7 @@ operator|,
 operator|++
 name|__first2
 expr_stmt|;
-end_expr_stmt
+end_while
 
 begin_return
 return|return
@@ -13818,45 +15233,106 @@ argument_list|,
 argument|_OutputIterator __result
 argument_list|)
 block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator1
+operator|>
+operator|::
+name|value_type
+name|_ValueType1
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator2
+operator|>
+operator|::
+name|value_type
+name|_ValueType2
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// concept requirements
+end_comment
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator2>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_OutputIteratorConcept<_OutputIterator
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type>
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_SameTypeConcept< 	    typename iterator_traits<_InputIterator1>::value_type
+argument|_OutputIteratorConcept<_OutputIterator
 argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
+argument|_ValueType2>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_LessThanComparableConcept< 	    typename iterator_traits<_InputIterator1>::value_type>
+argument|_LessThanOpConcept<_ValueType1
+argument_list|,
+argument|_ValueType2>
 argument_list|)
+end_macro
+
+begin_macro
+name|__glibcxx_function_requires
+argument_list|(
+argument|_LessThanOpConcept<_ValueType2
+argument_list|,
+argument|_ValueType1>
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted
 argument_list|(
 name|__first1
 argument_list|,
 name|__last1
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted
 argument_list|(
 name|__first2
 argument_list|,
 name|__last2
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|__first1
@@ -13887,9 +15363,6 @@ operator|++
 name|__first1
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_elseif
 elseif|else
 if|if
 condition|(
@@ -13910,9 +15383,6 @@ operator|++
 name|__first2
 expr_stmt|;
 block|}
-end_elseif
-
-begin_else
 else|else
 block|{
 operator|*
@@ -13928,16 +15398,14 @@ operator|++
 name|__first2
 expr_stmt|;
 block|}
-end_else
-
-begin_expr_stmt
 operator|++
 name|__result
 expr_stmt|;
-end_expr_stmt
+block|}
+end_while
 
-begin_expr_stmt
-unit|}       return
+begin_return
+return|return
 name|std
 operator|::
 name|copy
@@ -13957,8 +15425,8 @@ argument_list|,
 name|__result
 argument_list|)
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+return|;
+end_return
 
 begin_comment
 unit|}
@@ -13996,35 +15464,90 @@ argument_list|,
 argument|_Compare __comp
 argument_list|)
 block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator1
+operator|>
+operator|::
+name|value_type
+name|_ValueType1
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator2
+operator|>
+operator|::
+name|value_type
+name|_ValueType2
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// concept requirements
+end_comment
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator2>
 argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
-argument|_SameTypeConcept< 	    typename iterator_traits<_InputIterator1>::value_type
-argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
-argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_OutputIteratorConcept<_OutputIterator
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type>
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_macro
+name|__glibcxx_function_requires
+argument_list|(
+argument|_OutputIteratorConcept<_OutputIterator
+argument_list|,
+argument|_ValueType2>
+argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_BinaryPredicateConcept<_Compare
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type
+argument|_ValueType1
 argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
+argument|_ValueType2>
 argument_list|)
+end_macro
+
+begin_macro
+name|__glibcxx_function_requires
+argument_list|(
+argument|_BinaryPredicateConcept<_Compare
+argument_list|,
+argument|_ValueType2
+argument_list|,
+argument|_ValueType1>
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted_pred
 argument_list|(
 name|__first1
@@ -14033,7 +15556,10 @@ name|__last1
 argument_list|,
 name|__comp
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted_pred
 argument_list|(
 name|__first2
@@ -14042,7 +15568,10 @@ name|__last2
 argument_list|,
 name|__comp
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|__first1
@@ -14076,9 +15605,6 @@ operator|++
 name|__first1
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_elseif
 elseif|else
 if|if
 condition|(
@@ -14102,9 +15628,6 @@ operator|++
 name|__first2
 expr_stmt|;
 block|}
-end_elseif
-
-begin_else
 else|else
 block|{
 operator|*
@@ -14120,16 +15643,14 @@ operator|++
 name|__first2
 expr_stmt|;
 block|}
-end_else
-
-begin_expr_stmt
 operator|++
 name|__result
 expr_stmt|;
-end_expr_stmt
+block|}
+end_while
 
-begin_expr_stmt
-unit|}       return
+begin_return
+return|return
 name|std
 operator|::
 name|copy
@@ -14149,8 +15670,8 @@ argument_list|,
 name|__result
 argument_list|)
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+return|;
+end_return
 
 begin_comment
 unit|}
@@ -14183,45 +15704,97 @@ argument_list|,
 argument|_OutputIterator __result
 argument_list|)
 block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator1
+operator|>
+operator|::
+name|value_type
+name|_ValueType1
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator2
+operator|>
+operator|::
+name|value_type
+name|_ValueType2
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// concept requirements
+end_comment
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator2>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_OutputIteratorConcept<_OutputIterator
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type>
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_SameTypeConcept< 	    typename iterator_traits<_InputIterator1>::value_type
+argument|_LessThanOpConcept<_ValueType1
 argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
+argument|_ValueType2>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_LessThanComparableConcept< 	    typename iterator_traits<_InputIterator1>::value_type>
+argument|_LessThanOpConcept<_ValueType2
+argument_list|,
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted
 argument_list|(
 name|__first1
 argument_list|,
 name|__last1
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted
 argument_list|(
 name|__first2
 argument_list|,
 name|__last2
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|__first1
@@ -14273,7 +15846,7 @@ operator|++
 name|__result
 expr_stmt|;
 block|}
-end_expr_stmt
+end_while
 
 begin_return
 return|return
@@ -14317,35 +15890,81 @@ argument_list|,
 argument|_Compare __comp
 argument_list|)
 block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator1
+operator|>
+operator|::
+name|value_type
+name|_ValueType1
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator2
+operator|>
+operator|::
+name|value_type
+name|_ValueType2
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// concept requirements
+end_comment
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator2>
 argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
-argument|_SameTypeConcept< 	    typename iterator_traits<_InputIterator1>::value_type
-argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
-argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_OutputIteratorConcept<_OutputIterator
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type>
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_BinaryPredicateConcept<_Compare
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type
+argument|_ValueType1
 argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
+argument|_ValueType2>
 argument_list|)
+end_macro
+
+begin_macro
+name|__glibcxx_function_requires
+argument_list|(
+argument|_BinaryPredicateConcept<_Compare
+argument_list|,
+argument|_ValueType2
+argument_list|,
+argument|_ValueType1>
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted_pred
 argument_list|(
 name|__first1
@@ -14354,7 +15973,10 @@ name|__last1
 argument_list|,
 name|__comp
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted_pred
 argument_list|(
 name|__first2
@@ -14363,7 +15985,10 @@ name|__last2
 argument_list|,
 name|__comp
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|__first1
@@ -14421,7 +16046,7 @@ operator|++
 name|__result
 expr_stmt|;
 block|}
-end_expr_stmt
+end_while
 
 begin_return
 return|return
@@ -14460,45 +16085,97 @@ argument_list|,
 argument|_OutputIterator __result
 argument_list|)
 block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator1
+operator|>
+operator|::
+name|value_type
+name|_ValueType1
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator2
+operator|>
+operator|::
+name|value_type
+name|_ValueType2
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// concept requirements
+end_comment
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator2>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_OutputIteratorConcept<_OutputIterator
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type>
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_SameTypeConcept< 	    typename iterator_traits<_InputIterator1>::value_type
+argument|_LessThanOpConcept<_ValueType1
 argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
+argument|_ValueType2>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_LessThanComparableConcept< 	    typename iterator_traits<_InputIterator1>::value_type>
+argument|_LessThanOpConcept<_ValueType2
+argument_list|,
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted
 argument_list|(
 name|__first1
 argument_list|,
 name|__last1
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted
 argument_list|(
 name|__first2
 argument_list|,
 name|__last2
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|__first1
@@ -14531,9 +16208,6 @@ operator|++
 name|__result
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_elseif
 elseif|else
 if|if
 condition|(
@@ -14546,9 +16220,6 @@ condition|)
 operator|++
 name|__first2
 expr_stmt|;
-end_elseif
-
-begin_else
 else|else
 block|{
 operator|++
@@ -14558,7 +16229,7 @@ operator|++
 name|__first2
 expr_stmt|;
 block|}
-end_else
+end_while
 
 begin_return
 return|return
@@ -14611,35 +16282,81 @@ argument_list|,
 argument|_Compare __comp
 argument_list|)
 block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator1
+operator|>
+operator|::
+name|value_type
+name|_ValueType1
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator2
+operator|>
+operator|::
+name|value_type
+name|_ValueType2
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// concept requirements
+end_comment
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator2>
 argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
-argument|_SameTypeConcept< 	    typename iterator_traits<_InputIterator1>::value_type
-argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
-argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_OutputIteratorConcept<_OutputIterator
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type>
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_BinaryPredicateConcept<_Compare
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type
+argument|_ValueType1
 argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
+argument|_ValueType2>
 argument_list|)
+end_macro
+
+begin_macro
+name|__glibcxx_function_requires
+argument_list|(
+argument|_BinaryPredicateConcept<_Compare
+argument_list|,
+argument|_ValueType2
+argument_list|,
+argument|_ValueType1>
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted_pred
 argument_list|(
 name|__first1
@@ -14648,7 +16365,10 @@ name|__last1
 argument_list|,
 name|__comp
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted_pred
 argument_list|(
 name|__first2
@@ -14657,7 +16377,10 @@ name|__last2
 argument_list|,
 name|__comp
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|__first1
@@ -14693,9 +16416,6 @@ operator|++
 name|__result
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_elseif
 elseif|else
 if|if
 condition|(
@@ -14711,9 +16431,6 @@ condition|)
 operator|++
 name|__first2
 expr_stmt|;
-end_elseif
-
-begin_else
 else|else
 block|{
 operator|++
@@ -14723,7 +16440,7 @@ operator|++
 name|__first2
 expr_stmt|;
 block|}
-end_else
+end_while
 
 begin_return
 return|return
@@ -14771,45 +16488,106 @@ argument_list|,
 argument|_OutputIterator __result
 argument_list|)
 block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator1
+operator|>
+operator|::
+name|value_type
+name|_ValueType1
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator2
+operator|>
+operator|::
+name|value_type
+name|_ValueType2
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// concept requirements
+end_comment
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator2>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_OutputIteratorConcept<_OutputIterator
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type>
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_SameTypeConcept< 	    typename iterator_traits<_InputIterator1>::value_type
+argument|_OutputIteratorConcept<_OutputIterator
 argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
+argument|_ValueType2>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
-argument|_LessThanComparableConcept< 	    typename iterator_traits<_InputIterator1>::value_type>
+argument|_LessThanOpConcept<_ValueType1
+argument_list|,
+argument|_ValueType2>
 argument_list|)
+end_macro
+
+begin_macro
+name|__glibcxx_function_requires
+argument_list|(
+argument|_LessThanOpConcept<_ValueType2
+argument_list|,
+argument|_ValueType1>
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted
 argument_list|(
 name|__first1
 argument_list|,
 name|__last1
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted
 argument_list|(
 name|__first2
 argument_list|,
 name|__last2
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|__first1
@@ -14842,9 +16620,6 @@ operator|++
 name|__result
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_elseif
 elseif|else
 if|if
 condition|(
@@ -14868,9 +16643,6 @@ operator|++
 name|__result
 expr_stmt|;
 block|}
-end_elseif
-
-begin_else
 else|else
 block|{
 operator|++
@@ -14880,7 +16652,7 @@ operator|++
 name|__first2
 expr_stmt|;
 block|}
-end_else
+end_while
 
 begin_return
 return|return
@@ -14942,35 +16714,90 @@ argument_list|,
 argument|_Compare __comp
 argument_list|)
 block|{
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator1
+operator|>
+operator|::
+name|value_type
+name|_ValueType1
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator2
+operator|>
+operator|::
+name|value_type
+name|_ValueType2
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// concept requirements
+end_comment
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator1>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator2>
 argument_list|)
-name|__glibcxx_function_requires
-argument_list|(
-argument|_SameTypeConcept< 	    typename iterator_traits<_InputIterator1>::value_type
-argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
-argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_OutputIteratorConcept<_OutputIterator
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type>
+argument|_ValueType1>
 argument_list|)
+end_macro
+
+begin_macro
+name|__glibcxx_function_requires
+argument_list|(
+argument|_OutputIteratorConcept<_OutputIterator
+argument_list|,
+argument|_ValueType2>
+argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_BinaryPredicateConcept<_Compare
 argument_list|,
-argument|typename iterator_traits<_InputIterator1>::value_type
+argument|_ValueType1
 argument_list|,
-argument|typename iterator_traits<_InputIterator2>::value_type>
+argument|_ValueType2>
 argument_list|)
+end_macro
+
+begin_macro
+name|__glibcxx_function_requires
+argument_list|(
+argument|_BinaryPredicateConcept<_Compare
+argument_list|,
+argument|_ValueType2
+argument_list|,
+argument|_ValueType1>
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted_pred
 argument_list|(
 name|__first1
@@ -14979,7 +16806,10 @@ name|__last1
 argument_list|,
 name|__comp
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__glibcxx_requires_sorted_pred
 argument_list|(
 name|__first2
@@ -14988,7 +16818,10 @@ name|__last2
 argument_list|,
 name|__comp
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|__first1
@@ -15024,9 +16857,6 @@ operator|++
 name|__result
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_elseif
 elseif|else
 if|if
 condition|(
@@ -15053,9 +16883,6 @@ operator|++
 name|__result
 expr_stmt|;
 block|}
-end_elseif
-
-begin_else
 else|else
 block|{
 operator|++
@@ -15065,7 +16892,7 @@ operator|++
 name|__first2
 expr_stmt|;
 block|}
-end_else
+end_while
 
 begin_return
 return|return
@@ -17037,10 +18864,9 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

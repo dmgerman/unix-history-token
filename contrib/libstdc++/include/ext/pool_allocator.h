@@ -4,7 +4,11 @@ comment|// Allocators -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,7 +104,7 @@ comment|/*  * Copyright (c) 1996-1997  * Silicon Graphics Computer Systems, Inc.
 end_comment
 
 begin_comment
-comment|/** @file ext/pool_allocator.h  *  This file is a GNU extension to the Standard C++ Library.  *  You should only include this header if you are using GCC 3 or later.  */
+comment|/** @file ext/pool_allocator.h  *  This file is a GNU extension to the Standard C++ Library.  */
 end_comment
 
 begin_ifndef
@@ -143,20 +147,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bits/atomicity.h>
+file|<ext/atomicity.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<bits/concurrence.h>
+file|<ext/concurrence.h>
 end_include
 
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|__gnu_cxx
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|using
+name|std
+operator|::
+name|size_t
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|using
+name|std
+operator|::
+name|ptrdiff_t
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/**    *  @brief  Base class for __pool_alloc.    *    *  @if maint    *  Uses various allocators to fulfill underlying requests (and makes as    *  few requests as possible when in default high-speed pool mode).    *    *  Important implementation properties:    *  0. If globally mandated, then allocate objects from new    *  1. If the clients request an object of size> _S_max_bytes, the resulting    *     object will be obtained directly from new    *  2. In all other cases, we allocate an object of size exactly    *     _S_round_up(requested_size).  Thus the client has enough size    *     information that we can return the object to the proper free list    *     without permanently losing part of the object.    *    *  @endif    */
+end_comment
+
 begin_decl_stmt
-name|namespace
-name|__gnu_cxx
-block|{
-comment|/**    *  @if maint    *  Uses various allocators to fulfill underlying requests (and makes as    *  few requests as possible when in default high-speed pool mode).    *    *  Important implementation properties:    *  0. If globally mandated, then allocate objects from new    *  1. If the clients request an object of size> _S_max_bytes, the resulting    *     object will be obtained directly from new    *  2. In all other cases, we allocate an object of size exactly    *     _S_round_up(requested_size).  Thus the client has enough size    *     information that we can return the object to the proper free list    *     without permanently losing part of the object.    *    *  @endif    *  (See @link Allocators allocators info @endlink for more.)    */
 name|class
 name|__pool_alloc_base
 block|{
@@ -180,8 +207,14 @@ enum|enum
 block|{
 name|_S_free_list_size
 init|=
+operator|(
+name|size_t
+operator|)
 name|_S_max_bytes
 operator|/
+operator|(
+name|size_t
+operator|)
 name|_S_align
 block|}
 enum|;
@@ -268,7 +301,7 @@ name|size_t
 name|__bytes
 parameter_list|)
 function_decl|;
-name|mutex_type
+name|__mutex
 modifier|&
 name|_M_get_mutex
 parameter_list|()
@@ -298,7 +331,17 @@ name|__nobjs
 parameter_list|)
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// @brief  class __pool_alloc.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -322,36 +365,57 @@ typedef|typedef
 name|size_t
 name|size_type
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|ptrdiff_t
 name|difference_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Tp
 modifier|*
 name|pointer
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 specifier|const
 name|_Tp
 modifier|*
 name|const_pointer
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Tp
 modifier|&
 name|reference
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 specifier|const
 name|_Tp
 modifier|&
 name|const_reference
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Tp
 name|value_type
 typedef|;
+end_typedef
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -368,19 +432,43 @@ operator|>
 name|other
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_macro
 name|__pool_alloc
 argument_list|()
+end_macro
+
+begin_macro
 name|throw
 argument_list|()
+end_macro
+
+begin_block
 block|{ }
+end_block
+
+begin_macro
 name|__pool_alloc
 argument_list|(
 argument|const __pool_alloc&
 argument_list|)
+end_macro
+
+begin_macro
 name|throw
 argument_list|()
+end_macro
+
+begin_block
 block|{ }
+end_block
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -411,6 +499,9 @@ operator|&
 name|__x
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|const_pointer
 name|address
 argument_list|(
@@ -424,6 +515,9 @@ operator|&
 name|__x
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|size_type
 name|max_size
 argument_list|()
@@ -444,8 +538,17 @@ name|_Tp
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
+
+begin_comment
 comment|// 402. wrong new expression in [some_] allocator::construct
+end_comment
+
+begin_function
 name|void
 name|construct
 parameter_list|(
@@ -469,6 +572,9 @@ name|__val
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|destroy
 parameter_list|(
@@ -483,6 +589,9 @@ name|_Tp
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_function_decl
 name|pointer
 name|allocate
 parameter_list|(
@@ -496,6 +605,9 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|deallocate
 parameter_list|(
@@ -506,14 +618,10 @@ name|size_type
 name|__n
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function_decl
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -620,17 +728,35 @@ literal|0
 block|;
 if|if
 condition|(
+name|__builtin_expect
+argument_list|(
 name|__n
+operator|!=
+literal|0
+argument_list|,
+name|true
+argument_list|)
 condition|)
 block|{
 if|if
 condition|(
+name|__builtin_expect
+argument_list|(
 name|__n
-operator|<=
+operator|>
+name|this
+operator|->
 name|max_size
 argument_list|()
+argument_list|,
+name|false
+argument_list|)
 condition|)
-block|{
+name|std
+operator|::
+name|__throw_bad_alloc
+argument_list|()
+expr_stmt|;
 comment|// If there is a race through here, assume answer from getenv
 comment|// will resolve in same direction.  Inspired by techniques
 comment|// to efficiently support threading found in basic_string.h.
@@ -643,12 +769,14 @@ condition|)
 block|{
 if|if
 condition|(
+name|std
+operator|::
 name|getenv
 argument_list|(
 literal|"GLIBCXX_FORCE_NEW"
 argument_list|)
 condition|)
-name|__atomic_add
+name|__atomic_add_dispatch
 argument_list|(
 operator|&
 name|_S_force_new
@@ -657,7 +785,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
-name|__atomic_add
+name|__atomic_add_dispatch
 argument_list|(
 operator|&
 name|_S_force_new
@@ -723,7 +851,7 @@ argument_list|(
 name|__bytes
 argument_list|)
 decl_stmt|;
-name|lock
+name|__scoped_lock
 name|sentry
 argument_list|(
 name|_M_get_mutex
@@ -807,15 +935,6 @@ block|}
 end_if
 
 begin_expr_stmt
-unit|} 	  else
-name|std
-operator|::
-name|__throw_bad_alloc
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 unit|}       return
 name|__ret
 expr_stmt|;
@@ -842,7 +961,18 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|__builtin_expect
+argument_list|(
 name|__n
+operator|!=
+literal|0
+operator|&&
+name|__p
+operator|!=
+literal|0
+argument_list|,
+name|true
+argument_list|)
 condition|)
 block|{
 specifier|const
@@ -905,7 +1035,7 @@ operator|(
 name|__p
 operator|)
 decl_stmt|;
-name|lock
+name|__scoped_lock
 name|sentry
 argument_list|(
 name|_M_get_mutex
@@ -927,10 +1057,10 @@ expr_stmt|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|}     } }
-comment|// namespace __gnu_cxx
-end_comment
+begin_macro
+unit|}     }
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

@@ -4,7 +4,7 @@ comment|// Iostreams base classes -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003, 2004
+comment|// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003, 2004, 2005
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -147,12 +147,22 @@ directive|include
 file|<bits/locale_facets.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|// 27.4.5  Template class basic_ios
+end_comment
+
+begin_comment
 comment|/**    *  @brief  Virtual base class for all stream classes.    *    *  Most of the member functions called dispatched on stream objects    *  (e.g., @c std::cout.foo(bar);) are consolidated in this class.   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -175,6 +185,9 @@ typedef|typedef
 name|_CharT
 name|char_type
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Traits
@@ -182,6 +195,9 @@ operator|::
 name|int_type
 name|int_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Traits
@@ -189,6 +205,9 @@ operator|::
 name|pos_type
 name|pos_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Traits
@@ -196,13 +215,28 @@ operator|::
 name|off_type
 name|off_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Traits
 name|traits_type
 typedef|;
+end_typedef
+
+begin_comment
 comment|//@}
+end_comment
+
+begin_comment
 comment|//@{
+end_comment
+
+begin_comment
 comment|/**        *  @if maint        *  These are non-standard types.        *  @endif       */
+end_comment
+
+begin_typedef
 typedef|typedef
 name|ctype
 operator|<
@@ -210,6 +244,9 @@ name|_CharT
 operator|>
 name|__ctype_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|num_put
 operator|<
@@ -224,6 +261,9 @@ operator|>
 expr|>
 name|__num_put_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|num_get
 operator|<
@@ -238,10 +278,22 @@ operator|>
 expr|>
 name|__num_get_type
 expr_stmt|;
+end_typedef
+
+begin_comment
 comment|//@}
+end_comment
+
+begin_comment
 comment|// Data members:
+end_comment
+
+begin_label
 name|protected
 label|:
+end_label
+
+begin_expr_stmt
 name|basic_ostream
 operator|<
 name|_CharT
@@ -251,14 +303,23 @@ operator|>
 operator|*
 name|_M_tie
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|mutable
 name|char_type
 name|_M_fill
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|mutable
 name|bool
 name|_M_fill_init
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|basic_streambuf
 operator|<
 name|_CharT
@@ -268,28 +329,58 @@ operator|>
 operator|*
 name|_M_streambuf
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Cached use_facet<ctype>, which is based on the current locale info.
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|__ctype_type
 modifier|*
 name|_M_ctype
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// For ostream.
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|__num_put_type
 modifier|*
 name|_M_num_put
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// For istream.
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|__num_get_type
 modifier|*
 name|_M_num_get
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|//@{
+end_comment
+
+begin_comment
 comment|/**        *  @brief  The quick-and-easy status check.        *        *  This allows you to write constructs such as        *  "if (!a_stream) ..." and "while (a_stream) ..."       */
+end_comment
+
+begin_expr_stmt
 name|operator
 name|void
 operator|*
@@ -315,6 +406,9 @@ name|this
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|operator
 operator|!
@@ -329,8 +423,17 @@ name|fail
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|//@}
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Returns the error state of the stream buffer.        *  @return  A bit pattern (well, isn't everything?)        *        *  See std::ios_base::iostate for the possible bit values.  Most        *  users will call one of the interpreting wrappers, e.g., good().       */
+end_comment
+
+begin_expr_stmt
 name|iostate
 name|rdstate
 argument_list|()
@@ -340,7 +443,13 @@ return|return
 name|_M_streambuf_state
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  [Re]sets the error state.        *  @param  state  The new state flag(s) to set.        *        *  See std::ios_base::iostate for the possible bit values.  Most        *  users will not need to pass an argument.       */
+end_comment
+
+begin_function_decl
 name|void
 name|clear
 parameter_list|(
@@ -350,7 +459,13 @@ init|=
 name|goodbit
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**        *  @brief  Sets additional flags in the error state.        *  @param  state  The additional state flag(s) to set.        *        *  See std::ios_base::iostate for the possible bit values.       */
+end_comment
+
+begin_function
 name|void
 name|setstate
 parameter_list|(
@@ -371,9 +486,21 @@ name|__state
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|// Flip the internal state on for the proper state bits, then re
+end_comment
+
+begin_comment
 comment|// throws the propagated exception if bit also set in
+end_comment
+
+begin_comment
 comment|// exceptions().
+end_comment
+
+begin_function
 name|void
 name|_M_setstate
 parameter_list|(
@@ -399,7 +526,13 @@ condition|)
 name|__throw_exception_again
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief  Fast error checking.        *  @return  True if no error flags are set.        *        *  A wrapper around rdstate.       */
+end_comment
+
+begin_expr_stmt
 name|bool
 name|good
 argument_list|()
@@ -414,7 +547,13 @@ operator|==
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Fast error checking.        *  @return  True if the eofbit is set.        *        *  Note that other iostate flags may also be set.       */
+end_comment
+
+begin_expr_stmt
 name|bool
 name|eof
 argument_list|()
@@ -433,7 +572,13 @@ operator|!=
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Fast error checking.        *  @return  True if either the badbit or the failbit is set.        *        *  Checking the badbit in fail() is historical practice.        *  Note that other iostate flags may also be set.       */
+end_comment
+
+begin_expr_stmt
 name|bool
 name|fail
 argument_list|()
@@ -456,7 +601,13 @@ operator|!=
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Fast error checking.        *  @return  True if the badbit is set.        *        *  Note that other iostate flags may also be set.       */
+end_comment
+
+begin_expr_stmt
 name|bool
 name|bad
 argument_list|()
@@ -475,7 +626,13 @@ operator|!=
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Throwing exceptions on errors.        *  @return  The current exceptions mask.        *        *  This changes nothing in the stream.  See the one-argument version        *  of exceptions(iostate) for the meaning of the return value.       */
+end_comment
+
+begin_expr_stmt
 name|iostate
 name|exceptions
 argument_list|()
@@ -485,7 +642,13 @@ return|return
 name|_M_exception
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Throwing exceptions on errors.        *  @param  except  The new exceptions mask.        *        *  By default, error flags are set silently.  You can set an        *  exceptions mask for each stream; if a bit in the mask becomes set        *  in the error flags, then an exception of type        *  std::ios_base::failure is thrown.        *        *  If the error flage is already set when the exceptions mask is        *  added, the exception is immediately thrown.  Try running the        *  following under GCC 3.1 or later:        *  @code        *  #include<iostream>        *  #include<fstream>        *  #include<exception>        *        *  int main()        *  {        *      std::set_terminate (__gnu_cxx::__verbose_terminate_handler);        *        *      std::ifstream f ("/etc/motd");        *        *      std::cerr<< "Setting badbit\n";        *      f.setstate (std::ios_base::badbit);        *        *      std::cerr<< "Setting exception mask\n";        *      f.exceptions (std::ios_base::badbit);        *  }        *  @endcode       */
+end_comment
+
+begin_function
 name|void
 name|exceptions
 parameter_list|(
@@ -505,8 +668,17 @@ name|_M_streambuf_state
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|// Constructor/destructor:
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Constructor performs initialization.        *        *  The parameter is passed by derived streams.       */
+end_comment
+
+begin_decl_stmt
 name|explicit
 name|basic_ios
 argument_list|(
@@ -564,7 +736,13 @@ name|__sb
 argument_list|)
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @brief  Empty.        *        *  The destructor does nothing.  More specifically, it does not        *  destroy the streambuf held by rdbuf().       */
+end_comment
+
+begin_expr_stmt
 name|virtual
 operator|~
 name|basic_ios
@@ -587,7 +765,13 @@ return|return
 name|_M_tie
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Ties this stream to an output stream.        *  @param  tiestr  The output stream.        *  @return  The previously tied output stream, or NULL if the stream        *           was not tied.        *        *  This sets up a new tie; see tie() for more.       */
+end_comment
+
+begin_expr_stmt
 name|basic_ostream
 operator|<
 name|_CharT
@@ -621,7 +805,13 @@ return|return
 name|__old
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Accessing the underlying buffer.        *  @return  The current stream buffer.        *        *  This does not change the state of the stream.       */
+end_comment
+
+begin_expr_stmt
 name|basic_streambuf
 operator|<
 name|_CharT
@@ -637,7 +827,13 @@ return|return
 name|_M_streambuf
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Changing the underlying buffer.        *  @param  sb  The new stream buffer.        *  @return  The previous stream buffer.        *        *  Associates a new buffer with the current stream, and clears the        *  error state.        *        *  Due to historical accidents which the LWG refuses to correct, the        *  I/O library suffers from a design error:  this function is hidden        *  in derived classes by overrides of the zero-argument @c rdbuf(),        *  which is non-virtual for hysterical raisins.  As a result, you        *  must use explicit qualifications to access this function via any        *  derived class.  For example:        *        *  @code        *  std::fstream     foo;         // or some other derived type        *  std::streambuf*  p = .....;        *        *  foo.ios::rdbuf(p);            // ios == basic_ios<char>        *  @endcode       */
+end_comment
+
+begin_expr_stmt
 name|basic_streambuf
 operator|<
 name|_CharT
@@ -657,7 +853,13 @@ operator|*
 name|__sb
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Copies fields of __rhs into this.        *  @param  __rhs  The source values for the copies.        *  @return  Reference to this object.        *        *  All fields of __rhs are copied into this object except that rdbuf()        *  and rdstate() remain unchanged.  All values in the pword and iword        *  arrays are copied.  Before copying, each callback is invoked with        *  erase_event.  After copying, each (new) callback is invoked with        *  copyfmt_event.  The final step is to copy exceptions().       */
+end_comment
+
+begin_function_decl
 name|basic_ios
 modifier|&
 name|copyfmt
@@ -668,7 +870,13 @@ modifier|&
 name|__rhs
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**        *  @brief  Retreives the "empty" character.        *  @return  The current fill character.        *        *  It defaults to a space (' ') in the current locale.       */
+end_comment
+
+begin_expr_stmt
 name|char_type
 name|fill
 argument_list|()
@@ -694,17 +902,28 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|_M_fill
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|/**        *  @brief  Sets a new "empty" character.        *  @param  ch  The new character.        *  @return  The previous fill character.        *        *  The fill character is used to fill out space when P+ characters        *  have been requested (e.g., via setw), Q characters are actually        *  used, and Q<P.  It defaults to a space (' ') in the current locale.       */
-name|char_type
+end_comment
+
+begin_macro
+unit|char_type
 name|fill
-parameter_list|(
-name|char_type
-name|__ch
-parameter_list|)
+argument_list|(
+argument|char_type __ch
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|char_type
 name|__old
@@ -722,8 +941,17 @@ return|return
 name|__old
 return|;
 block|}
+end_block
+
+begin_comment
 comment|// Locales:
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Moves to a new locale.        *  @param  loc  The new locale.        *  @return  The previous locale.        *        *  Calls @c ios_base::imbue(loc), and if a stream buffer is associated        *  with this stream, calls that buffer's @c pubimbue(loc).        *        *  Additional l10n notes are at        *  http://gcc.gnu.org/onlinedocs/libstdc++/22_locale/howto.html       */
+end_comment
+
+begin_function_decl
 name|locale
 name|imbue
 parameter_list|(
@@ -733,7 +961,13 @@ modifier|&
 name|__loc
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**        *  @brief  Squeezes characters.        *  @param  c  The character to narrow.        *  @param  dfault  The character to narrow.        *  @return  The narrowed character.        *        *  Maps a character of @c char_type to a character of @c char,        *  if possible.        *        *  Returns the result of        *  @code        *    std::use_facet<ctype<char_type>>(getloc()).narrow(c,dfault)        *  @endcode        *        *  Additional l10n notes are at        *  http://gcc.gnu.org/onlinedocs/libstdc++/22_locale/howto.html       */
+end_comment
+
+begin_decl_stmt
 name|char
 name|narrow
 argument_list|(
@@ -745,7 +979,13 @@ name|__dfault
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @brief  Widens characters.        *  @param  c  The character to widen.        *  @return  The widened character.        *        *  Maps a character of @c char to a character of @c char_type.        *        *  Returns the result of        *  @code        *    std::use_facet<ctype<char_type>>(getloc()).widen(c)        *  @endcode        *        *  Additional l10n notes are at        *  http://gcc.gnu.org/onlinedocs/libstdc++/22_locale/howto.html       */
+end_comment
+
+begin_decl_stmt
 name|char_type
 name|widen
 argument_list|(
@@ -754,10 +994,22 @@ name|__c
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|protected
 label|:
+end_label
+
+begin_comment
 comment|// 27.4.5.1  basic_ios constructors
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Empty.        *        *  The default constructor does nothing and is not normally        *  accessible to users.       */
+end_comment
+
+begin_expr_stmt
 name|basic_ios
 argument_list|()
 operator|:
@@ -814,6 +1066,9 @@ operator|*
 name|__sb
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
 name|void
 name|_M_cache_locale
 parameter_list|(
@@ -823,17 +1078,12 @@ modifier|&
 name|__loc
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
+end_function_decl
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
+begin_macro
+unit|};
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_ifndef
 ifndef|#

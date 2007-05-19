@@ -4,7 +4,11 @@ comment|// Locale support (codecvt) -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005
+end_comment
+
+begin_comment
+comment|//  Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -96,6 +100,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file bits/codecvt.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -108,11 +116,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Written by Benjamin Kosnik<bkoz@cygnus.com>
-end_comment
-
-begin_comment
-comment|/** @file codecvt.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+comment|// Written by Benjamin Kosnik<bkoz@redhat.com>
 end_comment
 
 begin_ifndef
@@ -135,12 +139,15 @@ name|GCC
 name|system_header
 end_pragma
 
-begin_comment
-comment|//  22.2.1.5  Template class codecvt
-end_comment
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
 
 begin_comment
-comment|/// Base class for codecvt facet providing conversion result enum.
+comment|/// @brief  Empty base class for codecvt facet [22.2.1.5].
 end_comment
 
 begin_decl_stmt
@@ -169,23 +176,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// Template class __codecvt_abstract_base
-end_comment
-
-begin_comment
-comment|// NB: An abstract base class that fills in the public inlines, so
-end_comment
-
-begin_comment
-comment|// that the specializations don't have to re-copy the public
-end_comment
-
-begin_comment
-comment|// interface.
-end_comment
-
-begin_comment
-comment|/**    *  @brief  Common base for codecvt facet    *    *  This template class provides implementations of the public functions    *  that forward to the protected virtual functions.    *    *  This template also provides abstract stubs for the protected virtual    *  functions.   */
+comment|/**    *  @brief  Common base for codecvt functions.    *    *  This template class provides implementations of the public functions    *  that forward to the protected virtual functions.    *    *  This template also provides abstract stubs for the protected virtual    *  functions.   */
 end_comment
 
 begin_expr_stmt
@@ -248,7 +239,7 @@ comment|// 22.2.1.5.1 codecvt members
 end_comment
 
 begin_comment
-comment|/**        *  @brief  Convert from internal to external character set.        *        *  Converts input string of intern_type to output string of        *  extern_type.  This is analogous to wcsrtombs.  It does this by        *  calling codecvt::do_out.        *        *  The source and destination character sets are determined by the        *  facet's locale, internal and external types.        *        *  The characters in [from,from_end) are converted and written to        *  [to,to_end).  from_next and to_next are set to point to the        *  character following the last successfully converted character,        *  respectively.  If the result needed no conversion, from_next and        *  to_next are not affected.        *        *  The @a state argument should be intialized if the input is at the        *  beginning and carried from a previous call if continuing        *  conversion.  There are no guarantees about how @a state is used.        *        *  The result returned is a member of codecvt_base::result.  If all the        *  input is converted, returns codecvt_base::ok.  If no conversion is        *  necessary, returns codecvt_base::noconv.  If the input ends early or        *  there is insufficient space in the output, returns codecvt_base::partial.        *  Otherwise the conversion failed and codecvt_base::error is returned.        *        *  @param  state  Persistent conversion state data.        *  @param  from  Start of input.        *  @param  from_end  End of input.        *  @param  from_next  Returns start of unconverted data.        *  @param  to  Start of output buffer.        *  @param  to_end  End of output buffer.        *  @param  to_next  Returns start of unused output area.        *  @return  codecvt_base::result.       */
+comment|/**        *  @brief  Convert from internal to external character set.        *        *  Converts input string of intern_type to output string of        *  extern_type.  This is analogous to wcsrtombs.  It does this by        *  calling codecvt::do_out.        *        *  The source and destination character sets are determined by the        *  facet's locale, internal and external types.        *        *  The characters in [from,from_end) are converted and written to        *  [to,to_end).  from_next and to_next are set to point to the        *  character following the last successfully converted character,        *  respectively.  If the result needed no conversion, from_next and        *  to_next are not affected.        *        *  The @a state argument should be intialized if the input is at the        *  beginning and carried from a previous call if continuing        *  conversion.  There are no guarantees about how @a state is used.        *        *  The result returned is a member of codecvt_base::result.  If        *  all the input is converted, returns codecvt_base::ok.  If no        *  conversion is necessary, returns codecvt_base::noconv.  If        *  the input ends early or there is insufficient space in the        *  output, returns codecvt_base::partial.  Otherwise the        *  conversion failed and codecvt_base::error is returned.        *        *  @param  state  Persistent conversion state data.        *  @param  from  Start of input.        *  @param  from_end  End of input.        *  @param  from_next  Returns start of unconverted data.        *  @param  to  Start of output buffer.        *  @param  to_end  End of output buffer.        *  @param  to_next  Returns start of unused output area.        *  @return  codecvt_base::result.       */
 end_comment
 
 begin_decl_stmt
@@ -358,7 +349,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Convert from external to internal character set.        *        *  Converts input string of extern_type to output string of        *  intern_type.  This is analogous to mbsrtowcs.  It does this by        *  calling codecvt::do_in.        *        *  The source and destination character sets are determined by the        *  facet's locale, internal and external types.        *        *  The characters in [from,from_end) are converted and written to        *  [to,to_end).  from_next and to_next are set to point to the        *  character following the last successfully converted character,        *  respectively.  If the result needed no conversion, from_next and        *  to_next are not affected.        *        *  The @a state argument should be intialized if the input is at the        *  beginning and carried from a previous call if continuing        *  conversion.  There are no guarantees about how @a state is used.        *        *  The result returned is a member of codecvt_base::result.  If all the        *  input is converted, returns codecvt_base::ok.  If no conversion is        *  necessary, returns codecvt_base::noconv.  If the input ends early or        *  there is insufficient space in the output, returns codecvt_base::partial.        *  Otherwise the conversion failed and codecvt_base::error is returned.        *        *  @param  state  Persistent conversion state data.        *  @param  from  Start of input.        *  @param  from_end  End of input.        *  @param  from_next  Returns start of unconverted data.        *  @param  to  Start of output buffer.        *  @param  to_end  End of output buffer.        *  @param  to_next  Returns start of unused output area.        *  @return  codecvt_base::result.       */
+comment|/**        *  @brief  Convert from external to internal character set.        *        *  Converts input string of extern_type to output string of        *  intern_type.  This is analogous to mbsrtowcs.  It does this by        *  calling codecvt::do_in.        *        *  The source and destination character sets are determined by the        *  facet's locale, internal and external types.        *        *  The characters in [from,from_end) are converted and written to        *  [to,to_end).  from_next and to_next are set to point to the        *  character following the last successfully converted character,        *  respectively.  If the result needed no conversion, from_next and        *  to_next are not affected.        *        *  The @a state argument should be intialized if the input is at the        *  beginning and carried from a previous call if continuing        *  conversion.  There are no guarantees about how @a state is used.        *        *  The result returned is a member of codecvt_base::result.  If        *  all the input is converted, returns codecvt_base::ok.  If no        *  conversion is necessary, returns codecvt_base::noconv.  If        *  the input ends early or there is insufficient space in the        *  output, returns codecvt_base::partial.  Otherwise the        *  conversion failed and codecvt_base::error is returned.        *        *  @param  state  Persistent conversion state data.        *  @param  from  Start of input.        *  @param  from_end  End of input.        *  @param  from_next  Returns start of unconverted data.        *  @param  to  Start of output buffer.        *  @param  to_end  End of output buffer.        *  @param  to_next  Returns start of unused output area.        *  @return  codecvt_base::result.       */
 end_comment
 
 begin_decl_stmt
@@ -710,11 +701,11 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|// 22.2.1.5 Template class codecvt
+comment|/// @brief class codecvt [22.2.1.5].
 end_comment
 
 begin_comment
-comment|// NB: Generic, mostly useless implementation.
+comment|/// NB: Generic, mostly useless implementation.
 end_comment
 
 begin_expr_stmt
@@ -1025,7 +1016,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// codecvt<char, char, mbstate_t> required specialization
+comment|/// @brief class codecvt<char, char, mbstate_t> specialization.
 end_comment
 
 begin_expr_stmt
@@ -1316,7 +1307,7 @@ name|_GLIBCXX_USE_WCHAR_T
 end_ifdef
 
 begin_comment
-comment|// codecvt<wchar_t, char, mbstate_t> required specialization
+comment|/// @brief  class codecvt<wchar_t, char, mbstate_t> specialization.
 end_comment
 
 begin_expr_stmt
@@ -1610,7 +1601,7 @@ comment|//_GLIBCXX_USE_WCHAR_T
 end_comment
 
 begin_comment
-comment|// 22.2.1.6  Template class codecvt_byname
+comment|/// @brief class codecvt_byname [22.2.1.6].
 end_comment
 
 begin_expr_stmt
@@ -1717,31 +1708,10 @@ argument_list|()
 block|{ }
 end_expr_stmt
 
-begin_comment
+begin_macro
 unit|};
-comment|// Include host and configuration specific partial specializations
-end_comment
-
-begin_comment
-comment|// with additional functionality, if possible.
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCXX_USE_WCHAR_T
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<bits/codecvt_specializations.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

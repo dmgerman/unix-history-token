@@ -4,7 +4,7 @@ comment|// Iostreams wrapper for stdio FILE* -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -96,7 +96,7 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
-comment|/** @file ext/stdiostream.h  *  This file is a GNU extension to the Standard C++ Library.  */
+comment|/** @file ext/stdio_sync_filebuf.h  *  This file is a GNU extension to the Standard C++ Library.  */
 end_comment
 
 begin_ifndef
@@ -154,10 +154,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|namespace
-name|__gnu_cxx
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|__gnu_cxx
+argument_list|)
+end_macro
+
+begin_comment
+comment|/// @brief  class stdio_sync_filebuf.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -193,10 +201,16 @@ typedef|typedef
 name|_CharT
 name|char_type
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|_Traits
 name|traits_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -204,6 +218,9 @@ operator|::
 name|int_type
 name|int_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -211,6 +228,9 @@ operator|::
 name|pos_type
 name|pos_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -218,9 +238,18 @@ operator|::
 name|off_type
 name|off_type
 expr_stmt|;
+end_typedef
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
 comment|// Underlying stdio FILE
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|__c_file
@@ -228,13 +257,28 @@ operator|*
 specifier|const
 name|_M_file
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Last character gotten. This is used when pbackfail is
+end_comment
+
+begin_comment
 comment|// called from basic_streambuf::sungetc()
+end_comment
+
+begin_decl_stmt
 name|int_type
 name|_M_unget_buf
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_decl_stmt
 name|explicit
 name|stdio_sync_filebuf
 argument_list|(
@@ -258,7 +302,13 @@ name|eof
 argument_list|()
 argument_list|)
 block|{ }
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @return  The underlying FILE*.        *        *  This function can be used to access the underlying "C" file pointer.        *  Note that there is no way for the library to track what you do        *  with the file, so be careful.        */
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|__c_file
@@ -273,12 +323,21 @@ operator|->
 name|_M_file
 return|;
 block|}
+end_expr_stmt
+
+begin_label
 name|protected
 label|:
+end_label
+
+begin_function_decl
 name|int_type
 name|syncgetc
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int_type
 name|syncungetc
 parameter_list|(
@@ -286,6 +345,9 @@ name|int_type
 name|__c
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int_type
 name|syncputc
 parameter_list|(
@@ -293,6 +355,9 @@ name|int_type
 name|__c
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function
 name|virtual
 name|int_type
 name|underflow
@@ -315,6 +380,9 @@ name|__c
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 name|virtual
 name|int_type
 name|uflow
@@ -332,6 +400,9 @@ return|return
 name|_M_unget_buf
 return|;
 block|}
+end_function
+
+begin_function
 name|virtual
 name|int_type
 name|pbackfail
@@ -419,6 +490,9 @@ return|return
 name|__ret
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|virtual
 name|std
 operator|::
@@ -430,6 +504,9 @@ argument_list|,
 argument|std::streamsize __n
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_function
 name|virtual
 name|int_type
 name|overflow
@@ -502,6 +579,9 @@ return|return
 name|__ret
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|virtual
 name|std
 operator|::
@@ -513,6 +593,9 @@ argument_list|,
 argument|std::streamsize __n
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_function
 name|virtual
 name|int
 name|sync
@@ -527,6 +610,9 @@ name|_M_file
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|virtual
 name|std
 operator|::
@@ -591,9 +677,15 @@ name|__whence
 operator|=
 name|SEEK_END
 expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|_GLIBCXX_USE_LFS
+end_ifdef
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -618,8 +710,14 @@ name|_M_file
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -646,16 +744,21 @@ name|_M_file
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_return
 return|return
 name|__ret
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_expr_stmt
-name|virtual
+unit|}        virtual
 name|std
 operator|::
 name|streampos
@@ -1235,10 +1338,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-unit|}
-comment|// namespace __gnu_cxx
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

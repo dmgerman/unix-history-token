@@ -4,7 +4,7 @@ comment|// Numeric functions implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -122,11 +122,18 @@ directive|include
 file|<debug/debug.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|/**    *  @brief  Accumulate values in a range.    *    *  Accumulates the values in the range [first,last) using operator+().  The    *  initial value is @a init.  The values are processed in order.    *    *  @param  first  Start of range.    *  @param  last  End of range.    *  @param  init  Starting value to add other values to.    *  @return  The final sum.    */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -174,18 +181,21 @@ operator|+
 operator|*
 name|__first
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|__init
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/**    *  @brief  Accumulate values in a range with operation.    *    *  Accumulates the values in the range [first,last) using the function    *  object @a binary_op.  The initial value is @a init.  The values are    *  processed in order.    *    *  @param  first  Start of range.    *  @param  last  End of range.    *  @param  init  Starting value to add other values to.    *  @param  binary_op  Function object to accumulate with.    *  @return  The final sum.    */
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|_InputIterator
@@ -484,15 +494,6 @@ name|__result
 return|;
 end_if
 
-begin_expr_stmt
-operator|*
-name|__result
-operator|=
-operator|*
-name|__first
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|_ValueType
 name|__value
@@ -501,6 +502,14 @@ operator|*
 name|__first
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+operator|*
+name|__result
+operator|=
+name|__value
+expr_stmt|;
+end_expr_stmt
 
 begin_while
 while|while
@@ -605,15 +614,6 @@ name|__result
 return|;
 end_if
 
-begin_expr_stmt
-operator|*
-name|__result
-operator|=
-operator|*
-name|__first
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|_ValueType
 name|__value
@@ -622,6 +622,14 @@ operator|*
 name|__first
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+operator|*
+name|__result
+operator|=
+name|__value
+expr_stmt|;
+end_expr_stmt
 
 begin_while
 while|while
@@ -724,15 +732,6 @@ name|__result
 return|;
 end_if
 
-begin_expr_stmt
-operator|*
-name|__result
-operator|=
-operator|*
-name|__first
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|_ValueType
 name|__value
@@ -741,6 +740,14 @@ operator|*
 name|__first
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+operator|*
+name|__result
+operator|=
+name|__value
+expr_stmt|;
+end_expr_stmt
 
 begin_while
 while|while
@@ -850,15 +857,6 @@ name|__result
 return|;
 end_if
 
-begin_expr_stmt
-operator|*
-name|__result
-operator|=
-operator|*
-name|__first
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|_ValueType
 name|__value
@@ -867,6 +865,14 @@ operator|*
 name|__first
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+operator|*
+name|__result
+operator|=
+name|__value
+expr_stmt|;
+end_expr_stmt
 
 begin_while
 while|while
@@ -908,12 +914,8 @@ name|__result
 return|;
 end_return
 
-begin_comment
-unit|}  }
-comment|// namespace std
-end_comment
-
 begin_endif
+unit|}  _GLIBCXX_END_NAMESPACE
 endif|#
 directive|endif
 end_endif

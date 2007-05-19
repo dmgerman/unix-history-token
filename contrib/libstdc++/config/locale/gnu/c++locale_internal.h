@@ -4,7 +4,7 @@ comment|// Prototypes for GLIBC thread locale __-prefixed functions -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2002, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -96,8 +96,18 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file c++locale_internal.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+end_comment
+
+begin_comment
 comment|// Written by Jakub Jelinek<jakub@redhat.com>
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<bits/c++config.h>
+end_include
 
 begin_include
 include|#
@@ -122,17 +132,6 @@ operator|>
 literal|2
 operator|)
 end_if
-
-begin_extern
-extern|extern
-literal|"C"
-name|__typeof
-argument_list|(
-argument|iswctype_l
-argument_list|)
-name|__iswctype_l
-expr_stmt|;
-end_extern
 
 begin_extern
 extern|extern
@@ -216,6 +215,67 @@ extern|extern
 literal|"C"
 name|__typeof
 argument_list|(
+argument|newlocale
+argument_list|)
+name|__newlocale
+expr_stmt|;
+end_extern
+
+begin_extern
+extern|extern
+literal|"C"
+name|__typeof
+argument_list|(
+argument|freelocale
+argument_list|)
+name|__freelocale
+expr_stmt|;
+end_extern
+
+begin_extern
+extern|extern
+literal|"C"
+name|__typeof
+argument_list|(
+argument|duplocale
+argument_list|)
+name|__duplocale
+expr_stmt|;
+end_extern
+
+begin_extern
+extern|extern
+literal|"C"
+name|__typeof
+argument_list|(
+argument|uselocale
+argument_list|)
+name|__uselocale
+expr_stmt|;
+end_extern
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_GLIBCXX_USE_WCHAR_T
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+name|__typeof
+argument_list|(
+argument|iswctype_l
+argument_list|)
+name|__iswctype_l
+expr_stmt|;
+end_extern
+
+begin_extern
+extern|extern
+literal|"C"
+name|__typeof
+argument_list|(
 argument|towlower_l
 argument_list|)
 name|__towlower_l
@@ -277,49 +337,10 @@ name|__wctype_l
 expr_stmt|;
 end_extern
 
-begin_extern
-extern|extern
-literal|"C"
-name|__typeof
-argument_list|(
-argument|newlocale
-argument_list|)
-name|__newlocale
-expr_stmt|;
-end_extern
-
-begin_extern
-extern|extern
-literal|"C"
-name|__typeof
-argument_list|(
-argument|freelocale
-argument_list|)
-name|__freelocale
-expr_stmt|;
-end_extern
-
-begin_extern
-extern|extern
-literal|"C"
-name|__typeof
-argument_list|(
-argument|duplocale
-argument_list|)
-name|__duplocale
-expr_stmt|;
-end_extern
-
-begin_extern
-extern|extern
-literal|"C"
-name|__typeof
-argument_list|(
-argument|uselocale
-argument_list|)
-name|__uselocale
-expr_stmt|;
-end_extern
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

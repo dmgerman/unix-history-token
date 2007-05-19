@@ -4,7 +4,7 @@ comment|// Debugging multimap implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2003, 2004
+comment|// Copyright (C) 2003, 2004, 2005
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -99,6 +99,10 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
+begin_comment
+comment|/** @file debug/multimap.h  *  This file is a GNU debug extension to the Standard C++ Library.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -132,7 +136,10 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|__gnu_debug_def
+name|std
+block|{
+name|namespace
+name|__debug
 block|{
 name|template
 operator|<
@@ -261,14 +268,14 @@ name|allocator_type
 typedef|;
 typedef|typedef
 name|typename
-name|_Allocator
+name|_Base
 operator|::
 name|reference
 name|reference
 expr_stmt|;
 typedef|typedef
 name|typename
-name|_Allocator
+name|_Base
 operator|::
 name|const_reference
 name|const_reference
@@ -317,14 +324,14 @@ name|difference_type
 expr_stmt|;
 typedef|typedef
 name|typename
-name|_Allocator
+name|_Base
 operator|::
 name|pointer
 name|pointer
 expr_stmt|;
 typedef|typedef
 name|typename
-name|_Allocator
+name|_Base
 operator|::
 name|const_pointer
 name|const_pointer
@@ -1128,9 +1135,6 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|std
 operator|::
 name|pair
@@ -1169,9 +1173,6 @@ argument_list|(
 name|__x
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|std
 operator|::
@@ -1196,20 +1197,21 @@ name|this
 argument_list|)
 argument_list|)
 return|;
-end_return
+block|}
+end_decl_stmt
 
-begin_expr_stmt
-unit|}        _Base
-operator|&
+begin_function
+name|_Base
+modifier|&
 name|_M_base
-argument_list|()
+parameter_list|()
 block|{
 return|return
 operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_expr_stmt
 specifier|const
@@ -1695,7 +1697,12 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// namespace __gnu_debug_def
+comment|// namespace __debug
+end_comment
+
+begin_comment
+unit|}
+comment|// namespace std
 end_comment
 
 begin_endif

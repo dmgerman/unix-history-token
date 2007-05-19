@@ -4,7 +4,11 @@ comment|// Low-level functions for atomic operations: MIPS version  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -98,13 +102,21 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<bits/atomicity.h>
+file|<ext/atomicity.h>
 end_include
 
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|__gnu_cxx
+argument_list|)
+end_macro
+
+begin_comment
+comment|// NB: MIPS II or above required.
+end_comment
+
 begin_decl_stmt
-name|namespace
-name|__gnu_cxx
-block|{
 name|_Atomic_word
 name|__attribute__
 argument_list|(
@@ -139,11 +151,14 @@ name|_ABIO32
 asm|".set	mips2\n\t"
 endif|#
 directive|endif
-asm|"ll	%0,%3\n\t"        "addu	%1,%4,%0\n\t"        "sc	%1,%2\n\t"        ".set	pop\n\t"        "beqz	%1,1b\n\t"        "/* End exchange& add */"        : "=&r"(__result), "=&r"(__tmp), "=m"(*__mem)        : "m" (*__mem), "r"(__val));
+asm|"ll	%0,0(%2)\n\t"        "addu	%1,%3,%0\n\t"        "sc	%1,0(%2)\n\t"        ".set	pop\n\t"        "beqz	%1,1b\n\t"        "/* End exchange& add */"        : "=&r"(__result), "=&r"(__tmp)        : "r"(__mem), "r"(__val)        :  "memory" );
 return|return
 name|__result
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|__attribute__
 argument_list|(
@@ -176,14 +191,13 @@ name|_ABIO32
 asm|".set	mips2\n\t"
 endif|#
 directive|endif
-asm|"ll	%0,%2\n\t"        "addu	%0,%3,%0\n\t"        "sc	%0,%1\n\t"        ".set	pop\n\t"        "beqz	%0,1b\n\t"        "/* End atomic add */"        : "=&r"(__result), "=m"(*__mem)      : "m" (*__mem), "r"(__val));
-block|}
+asm|"ll	%0,0(%1)\n\t"        "addu	%0,%2,%0\n\t"        "sc	%0,0(%1)\n\t"        ".set	pop\n\t"        "beqz	%0,1b\n\t"        "/* End atomic add */"        : "=&r"(__result)        : "r"(__mem), "r"(__val)        : "memory" );
 block|}
 end_decl_stmt
 
-begin_comment
-comment|// namespace __gnu_cxx
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 end_unit
 

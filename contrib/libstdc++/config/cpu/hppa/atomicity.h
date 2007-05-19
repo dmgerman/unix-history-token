@@ -4,7 +4,7 @@ comment|// Low-level functions for atomic operations: PA-RISC version  -*- C++ -
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2002, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -104,13 +104,17 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bits/atomicity.h>
+file|<ext/atomicity.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|__gnu_cxx
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|__gnu_cxx
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|template
 operator|<
 name|int
@@ -125,6 +129,9 @@ name|int
 name|_S_atomicity_lock
 block|;     }
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|int
@@ -150,8 +157,17 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Because of the lack of weak support when using the hpux som
+end_comment
+
+begin_comment
 comment|// linker, we explicitly instantiate the atomicity lock.
+end_comment
+
+begin_expr_stmt
 name|template
 specifier|volatile
 name|int
@@ -162,6 +178,9 @@ operator|>
 operator|::
 name|_S_atomicity_lock
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|int
 name|__attribute__
 argument_list|(
@@ -200,7 +219,7 @@ name|_S_atomicity_lock
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("ldcw 0(%1),%0\n\t" 			  "cmpib,<>,n 0,%0,.+20\n\t" 			  "ldw 0(%1),%0\n\t" 			  "cmpib,= 0,%0,.-4\n\t" 			  "nop\n\t" 			  "b,n .-20" 			  : "=&r" (tmp) 			  : "r" (&lock));
+asm|("ldcw 0(%1),%0\n\t" 			  "cmpib,<>,n 0,%0,.+20\n\t" 			  "ldw 0(%1),%0\n\t" 			  "cmpib,= 0,%0,.-4\n\t" 			  "nop\n\t" 			  "b,n .-20" 			  : "=&r" (tmp) 			  : "r" (&lock) 			  : "memory");
 name|result
 operator|=
 operator|*
@@ -213,14 +232,16 @@ name|result
 operator|+
 name|__val
 expr_stmt|;
-comment|/* Reset lock with PA 2.0 "ordered" store.  */
 asm|__asm__
 specifier|__volatile__
-asm|("stw,ma %1,0(%0)" 			  : : "r" (&lock), "r" (tmp) : "memory");
+asm|("stw %1,0(%0)" 			  : : "r" (&lock), "r" (tmp) : "memory");
 return|return
 name|result
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|__attribute__
 argument_list|(
@@ -256,23 +277,21 @@ name|_S_atomicity_lock
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("ldcw 0(%1),%0\n\t" 			  "cmpib,<>,n 0,%0,.+20\n\t" 			  "ldw 0(%1),%0\n\t" 			  "cmpib,= 0,%0,.-4\n\t" 			  "nop\n\t" 			  "b,n .-20" 			  : "=&r" (tmp) 			  : "r" (&lock));
+asm|("ldcw 0(%1),%0\n\t" 			  "cmpib,<>,n 0,%0,.+20\n\t" 			  "ldw 0(%1),%0\n\t" 			  "cmpib,= 0,%0,.-4\n\t" 			  "nop\n\t" 			  "b,n .-20" 			  : "=&r" (tmp) 			  : "r" (&lock) 			  : "memory");
 operator|*
 name|__mem
 operator|+=
 name|__val
 expr_stmt|;
-comment|/* Reset lock with PA 2.0 "ordered" store.  */
 asm|__asm__
 specifier|__volatile__
-asm|("stw,ma %1,0(%0)" 			  : : "r" (&lock), "r" (tmp) : "memory");
-block|}
+asm|("stw %1,0(%0)" 			  : : "r" (&lock), "r" (tmp) : "memory");
 block|}
 end_decl_stmt
 
-begin_comment
-comment|// namespace __gnu_cxx
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 end_unit
 

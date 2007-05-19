@@ -4,7 +4,7 @@ comment|// The template and inlines for the -*- C++ -*- gslice class.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2004
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2004, 2005
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,11 +100,11 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
-comment|// Written by Gabriel Dos Reis<Gabriel.Dos-Reis@DPTMaths.ENS-Cachan.Fr>
+comment|/** @file gslice.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_comment
-comment|/** @file gslice.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+comment|// Written by Gabriel Dos Reis<Gabriel.Dos-Reis@DPTMaths.ENS-Cachan.Fr>
 end_comment
 
 begin_ifndef
@@ -127,11 +127,18 @@ name|GCC
 name|system_header
 end_pragma
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|/**    *  @brief  Class defining multi-dimensional subset of an array.    *    *  The slice class represents a multi-dimensional subset of an array,    *  specified by three parameter sets: start offset, size array, and stride    *  array.  The start offset is the index of the first element of the array    *  that is part of the subset.  The size and stride array describe each    *  dimension of the slice.  Size is the number of elements in that    *  dimension, and stride is the distance in the array between successive    *  elements in that dimension.  Each dimension's size and stride is taken    *  to begin at an array element described by the previous dimension.  The    *  size array and stride array must be the same size.    *    *  For example, if you have offset==3, stride[0]==11, size[1]==3,    *  stride[1]==3, then slice[0,0]==array[3], slice[0,1]==array[6],    *  slice[0,2]==array[9], slice[1,0]==array[14], slice[1,1]==array[17],    *  slice[1,2]==array[20].    */
+end_comment
+
+begin_decl_stmt
 name|class
 name|gslice
 block|{
@@ -141,7 +148,7 @@ comment|///  Construct an empty slice.
 name|gslice
 argument_list|()
 expr_stmt|;
-comment|/**        *  @brief  Construct a slice.        *        *  Constructs a slice with as many dimensions as the length of the @a l        *  and @a s arrays.        *        *  @param  o  Offset in array of first element.        *  @param  l  Array of dimension lengths.        *  @param  s  Array of dimension strides between array elements.        */
+comment|/**      *  @brief  Construct a slice.      *      *  Constructs a slice with as many dimensions as the length of the @a l      *  and @a s arrays.      *      *  @param  o  Offset in array of first element.      *  @param  l  Array of dimension lengths.      *  @param  s  Array of dimension strides between array elements.      */
 name|gslice
 argument_list|(
 name|size_t
@@ -295,7 +302,13 @@ name|class
 name|valarray
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 specifier|inline
 name|size_t
 name|gslice
@@ -314,6 +327,9 @@ operator|:
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|valarray
 operator|<
@@ -340,6 +356,9 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|valarray
 operator|<
@@ -366,6 +385,9 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|gslice
 operator|::
@@ -420,6 +442,9 @@ name|_M_increment_use
 argument_list|()
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|gslice
 operator|::
@@ -442,6 +467,9 @@ name|delete
 name|_M_index
 decl_stmt|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|gslice
 operator|&
@@ -469,6 +497,9 @@ operator|->
 name|_M_increment_use
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|_M_index
@@ -483,43 +514,32 @@ condition|)
 name|delete
 name|_M_index
 decl_stmt|;
+end_if
+
+begin_expr_stmt
 name|_M_index
 operator|=
 name|__g
 operator|.
 name|_M_index
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|*
 name|this
 return|;
-block|}
-end_decl_stmt
-
-begin_comment
-unit|}
-comment|// std::
-end_comment
+end_return
 
 begin_endif
+unit|}  _GLIBCXX_END_NAMESPACE
 endif|#
 directive|endif
 end_endif
 
 begin_comment
 comment|/* _GSLICE_H */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:c++
-end_comment
-
-begin_comment
-comment|// End:
 end_comment
 
 end_unit

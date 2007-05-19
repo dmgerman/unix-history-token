@@ -4,7 +4,7 @@ comment|// Stream iterators
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -125,11 +125,18 @@ directive|include
 file|<debug/debug.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|/// Provides input iterator semantics for streams.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -180,10 +187,16 @@ typedef|typedef
 name|_CharT
 name|char_type
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|_Traits
 name|traits_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|basic_istream
 operator|<
@@ -193,21 +206,42 @@ name|_Traits
 operator|>
 name|istream_type
 expr_stmt|;
+end_typedef
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_decl_stmt
 name|istream_type
 modifier|*
 name|_M_stream
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|_Tp
 name|_M_value
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|_M_ok
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|///  Construct end of input stream iterator.
+end_comment
+
+begin_expr_stmt
 name|istream_iterator
 argument_list|()
 operator|:
@@ -215,6 +249,9 @@ name|_M_stream
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|_M_value
+argument_list|()
 operator|,
 name|_M_ok
 argument_list|(
@@ -295,14 +332,20 @@ return|return
 name|_M_value
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|_Tp
 operator|*
 name|operator
 operator|->
 expr|(
-block|)
-decl|const
+end_expr_stmt
+
+begin_expr_stmt
+unit|)
+specifier|const
 block|{
 return|return
 operator|&
@@ -314,7 +357,7 @@ operator|)
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_expr_stmt
 name|istream_iterator
@@ -871,10 +914,10 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|}; }
-comment|// namespace std
-end_comment
+begin_macro
+unit|};
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

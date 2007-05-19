@@ -4,7 +4,7 @@ comment|// Multiset implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2004, 2005, 2006 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -122,11 +122,20 @@ directive|include
 file|<bits/concept_check.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|_GLIBCXX_STD
-block|{
-comment|// Forward declaration of operators< and ==, needed for friend declaration.
+begin_macro
+name|_GLIBCXX_BEGIN_NESTED_NAMESPACE
+argument_list|(
+argument|std
+argument_list|,
+argument|_GLIBCXX_STD
+argument_list|)
+end_macro
+
+begin_comment
+comment|/**    *  @brief A standard container made up of elements, which can be retrieved    *  in logarithmic time.    *    *  @ingroup Containers    *  @ingroup Assoc_containers    *    *  Meets the requirements of a<a href="tables.html#65">container</a>, a    *<a href="tables.html#66">reversible container</a>, and an    *<a href="tables.html#69">associative container</a> (using equivalent    *  keys).  For a @c multiset<Key> the key_type and value_type are Key.    *    *  Multisets support bidirectional iterators.    *    *  @if maint    *  The private tree data is declared exactly the same way for set and    *  multiset; the distinction is made entirely in how the tree functions are    *  called (*_unique versus *_equal, same as the standard).    *  @endif   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -135,6 +144,8 @@ operator|,
 name|class
 name|_Compare
 operator|=
+name|std
+operator|::
 name|less
 operator|<
 name|_Key
@@ -143,6 +154,8 @@ operator|,
 name|class
 name|_Alloc
 operator|=
+name|std
+operator|::
 name|allocator
 operator|<
 name|_Key
@@ -150,105 +163,15 @@ operator|>
 expr|>
 name|class
 name|multiset
-expr_stmt|;
-name|template
-operator|<
-name|class
-name|_Key
-operator|,
-name|class
-name|_Compare
-operator|,
-name|class
-name|_Alloc
-operator|>
-specifier|inline
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|multiset
-operator|<
-name|_Key
-operator|,
-name|_Compare
-operator|,
-name|_Alloc
-operator|>
-operator|&
-name|__x
-operator|,
-specifier|const
-name|multiset
-operator|<
-name|_Key
-operator|,
-name|_Compare
-operator|,
-name|_Alloc
-operator|>
-operator|&
-name|__y
-operator|)
-expr_stmt|;
-name|template
-operator|<
-name|class
-name|_Key
-operator|,
-name|class
-name|_Compare
-operator|,
-name|class
-name|_Alloc
-operator|>
-specifier|inline
-name|bool
-name|operator
-operator|<
-operator|(
-specifier|const
-name|multiset
-operator|<
-name|_Key
-operator|,
-name|_Compare
-operator|,
-name|_Alloc
-operator|>
-operator|&
-name|__x
-operator|,
-specifier|const
-name|multiset
-operator|<
-name|_Key
-operator|,
-name|_Compare
-operator|,
-name|_Alloc
-operator|>
-operator|&
-name|__y
-operator|)
-expr_stmt|;
-comment|/**    *  @brief A standard container made up of elements, which can be retrieved    *  in logarithmic time.    *    *  @ingroup Containers    *  @ingroup Assoc_containers    *    *  Meets the requirements of a<a href="tables.html#65">container</a>, a    *<a href="tables.html#66">reversible container</a>, and an    *<a href="tables.html#69">associative container</a> (using equivalent    *  keys).  For a @c multiset<Key> the key_type and value_type are Key.    *    *  Multisets support bidirectional iterators.    *    *  @if maint    *  The private tree data is declared exactly the same way for set and    *  multiset; the distinction is made entirely in how the tree functions are    *  called (*_unique versus *_equal, same as the standard).    *  @endif   */
-name|template
-operator|<
-name|class
-name|_Key
-operator|,
-name|class
-name|_Compare
-operator|,
-name|class
-name|_Alloc
-operator|>
-name|class
-name|multiset
 block|{
 comment|// concept requirements
+typedef|typedef
+name|typename
+name|_Alloc
+operator|::
+name|value_type
+name|_Alloc_value_type
+expr_stmt|;
 name|__glibcxx_class_requires
 argument_list|(
 argument|_Key
@@ -267,28 +190,83 @@ argument|_Key
 argument_list|,
 argument|_BinaryFunctionConcept
 argument_list|)
+name|__glibcxx_class_requires2
+argument_list|(
+argument|_Key
+argument_list|,
+argument|_Alloc_value_type
+argument_list|,
+argument|_SameTypeConcept
+argument_list|)
 name|public
 operator|:
+end_expr_stmt
+
+begin_comment
 comment|// typedefs:
+end_comment
+
+begin_typedef
 typedef|typedef
 name|_Key
 name|key_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Key
 name|value_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Compare
 name|key_compare
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Compare
 name|value_compare
 typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|_Alloc
+name|allocator_type
+typedef|;
+end_typedef
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
 comment|/// @if maint  This turns a red-black tree into a [multi]set.  @endif
+end_comment
+
+begin_typedef
+typedef|typedef
+name|typename
+name|_Alloc
+operator|::
+name|template
+name|rebind
+operator|<
+name|_Key
+operator|>
+operator|::
+name|other
+name|_Key_alloc_type
+expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Rb_tree
 operator|<
@@ -303,47 +281,80 @@ operator|>
 operator|,
 name|key_compare
 operator|,
-name|_Alloc
+name|_Key_alloc_type
 operator|>
 name|_Rep_type
 expr_stmt|;
+end_typedef
+
+begin_comment
 comment|/// @if maint  The actual tree structure.  @endif
+end_comment
+
+begin_decl_stmt
 name|_Rep_type
 name|_M_t
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_Key_alloc_type
 operator|::
 name|pointer
 name|pointer
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_Key_alloc_type
 operator|::
 name|const_pointer
 name|const_pointer
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_Key_alloc_type
 operator|::
 name|reference
 name|reference
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_Key_alloc_type
 operator|::
 name|const_reference
 name|const_reference
 expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
+
+begin_comment
 comment|// DR 103. set::iterator is required to be modifiable,
+end_comment
+
+begin_comment
 comment|// but this allows modification of keys.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Rep_type
@@ -351,6 +362,9 @@ operator|::
 name|const_iterator
 name|iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Rep_type
@@ -358,6 +372,9 @@ operator|::
 name|const_iterator
 name|const_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Rep_type
@@ -365,6 +382,9 @@ operator|::
 name|const_reverse_iterator
 name|reverse_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Rep_type
@@ -372,6 +392,9 @@ operator|::
 name|const_reverse_iterator
 name|const_reverse_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Rep_type
@@ -379,6 +402,9 @@ operator|::
 name|size_type
 name|size_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Rep_type
@@ -386,15 +412,17 @@ operator|::
 name|difference_type
 name|difference_type
 expr_stmt|;
-typedef|typedef
-name|typename
-name|_Rep_type
-operator|::
-name|allocator_type
-name|allocator_type
-expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// allocation/deallocation
-comment|/**      *  @brief  Default constructor creates no elements.      */
+end_comment
+
+begin_comment
+comment|/**        *  @brief  Default constructor creates no elements.        */
+end_comment
+
+begin_expr_stmt
 name|multiset
 argument_list|()
 operator|:
@@ -451,7 +479,7 @@ argument_list|)
 block|{
 name|_M_t
 operator|.
-name|insert_equal
+name|_M_insert_equal
 argument_list|(
 name|__first
 argument_list|,
@@ -484,7 +512,7 @@ argument_list|)
 block|{
 name|_M_t
 operator|.
-name|insert_equal
+name|_M_insert_equal
 argument_list|(
 name|__first
 argument_list|,
@@ -549,8 +577,17 @@ operator|*
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// accessors:
+end_comment
+
+begin_comment
 comment|///  Returns the comparison object.
+end_comment
+
+begin_expr_stmt
 name|key_compare
 name|key_comp
 argument_list|()
@@ -563,7 +600,13 @@ name|key_comp
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|///  Returns the comparison object.
+end_comment
+
+begin_expr_stmt
 name|value_compare
 name|value_comp
 argument_list|()
@@ -576,7 +619,13 @@ name|key_comp
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|///  Returns the memory allocation object.
+end_comment
+
+begin_expr_stmt
 name|allocator_type
 name|get_allocator
 argument_list|()
@@ -589,7 +638,13 @@ name|get_allocator
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  Returns a read/write iterator that points to the first element in the        *  %multiset.  Iteration is done in ascending order according to the        *  keys.        */
+end_comment
+
+begin_expr_stmt
 name|iterator
 name|begin
 argument_list|()
@@ -602,7 +657,13 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  Returns a read/write iterator that points one past the last element in        *  the %multiset.  Iteration is done in ascending order according to the        *  keys.        */
+end_comment
+
+begin_expr_stmt
 name|iterator
 name|end
 argument_list|()
@@ -615,7 +676,13 @@ name|end
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  Returns a read/write reverse iterator that points to the last element        *  in the %multiset.  Iteration is done in descending order according to        *  the keys.        */
+end_comment
+
+begin_expr_stmt
 name|reverse_iterator
 name|rbegin
 argument_list|()
@@ -628,7 +695,13 @@ name|rbegin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  Returns a read/write reverse iterator that points to the last element        *  in the %multiset.  Iteration is done in descending order according to        *  the keys.        */
+end_comment
+
+begin_expr_stmt
 name|reverse_iterator
 name|rend
 argument_list|()
@@ -641,7 +714,13 @@ name|rend
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|///  Returns true if the %set is empty.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|empty
 argument_list|()
@@ -654,7 +733,13 @@ name|empty
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|///  Returns the size of the %set.
+end_comment
+
+begin_expr_stmt
 name|size_type
 name|size
 argument_list|()
@@ -667,7 +752,13 @@ name|size
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|///  Returns the maximum size of the %set.
+end_comment
+
+begin_expr_stmt
 name|size_type
 name|max_size
 argument_list|()
@@ -680,7 +771,13 @@ name|max_size
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Swaps data with another %multiset.        *  @param  x  A %multiset of the same element and allocator types.        *        *  This exchanges the elements between two multisets in constant time.        *  (It is only swapping a pointer, an integer, and an instance of the @c        *  Compare type (which itself is often stateless and empty), so it should        *  be quite fast.)        *  Note that the global std::swap() function is specialized such that        *  std::swap(s1,s2) will feed to this function.        */
+end_comment
+
+begin_decl_stmt
 name|void
 name|swap
 argument_list|(
@@ -706,8 +803,17 @@ name|_M_t
 argument_list|)
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|// insert/erase
+end_comment
+
+begin_comment
 comment|/**        *  @brief Inserts an element into the %multiset.        *  @param  x  Element to be inserted.        *  @return An iterator that points to the inserted element.        *        *  This function inserts an element into the %multiset.  Contrary        *  to a std::set the %multiset does not rely on unique keys and thus        *  multiple copies of the same element can be inserted.        *        *  Insertion requires logarithmic time.        */
+end_comment
+
+begin_function
 name|iterator
 name|insert
 parameter_list|(
@@ -720,13 +826,19 @@ block|{
 return|return
 name|_M_t
 operator|.
-name|insert_equal
+name|_M_insert_equal
 argument_list|(
 name|__x
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief Inserts an element into the %multiset.        *  @param  position  An iterator that serves as a hint as to where the        *                    element should be inserted.        *  @param  x  Element to be inserted.        *  @return An iterator that points to the inserted element.        *        *  This function inserts an element into the %multiset.  Contrary        *  to a std::set the %multiset does not rely on unique keys and thus        *  multiple copies of the same element can be inserted.        *        *  Note that the first parameter is only a hint and can potentially        *  improve the performance of the insertion process.  A bad hint would        *  cause no gains in efficiency.        *        *  See http://gcc.gnu.org/onlinedocs/libstdc++/23_containers/howto.html#4        *  for more on "hinting".        *        *  Insertion requires logarithmic time (if the hint is not taken).        */
+end_comment
+
+begin_function
 name|iterator
 name|insert
 parameter_list|(
@@ -739,29 +851,24 @@ modifier|&
 name|__x
 parameter_list|)
 block|{
-typedef|typedef
-name|typename
-name|_Rep_type
-operator|::
-name|iterator
-name|_Rep_iterator
-expr_stmt|;
 return|return
 name|_M_t
 operator|.
-name|insert_equal
+name|_M_insert_equal
 argument_list|(
-operator|(
-name|_Rep_iterator
-operator|&
-operator|)
 name|__position
 argument_list|,
 name|__x
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief A template function that attemps to insert a range of elements.        *  @param  first  Iterator pointing to the start of the range to be        *                 inserted.        *  @param  last  Iterator pointing to the end of the range.        *        *  Complexity similar to that of the range constructor.        */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -777,7 +884,7 @@ argument_list|)
 block|{
 name|_M_t
 operator|.
-name|insert_equal
+name|_M_insert_equal
 argument_list|(
 name|__first
 argument_list|,
@@ -791,40 +898,19 @@ argument_list|(
 argument|iterator __position
 argument_list|)
 block|{
-typedef|typedef
-name|typename
-name|_Rep_type
-operator|::
-name|iterator
-name|_Rep_iterator
-expr_stmt|;
 name|_M_t
 operator|.
 name|erase
 argument_list|(
-operator|(
-name|_Rep_iterator
-operator|&
-operator|)
 name|__position
 argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
+block|; }
 comment|/**        *  @brief Erases elements according to the provided key.        *  @param  x  Key of element to be erased.        *  @return  The number of elements erased.        *        *  This function erases all elements located by the given key from a        *  %multiset.        *  Note that this function only erases the element, and that if        *  the element is itself a pointer, the pointed-to memory is not touched        *  in any way.  Managing the pointer is the user's responsibilty.        */
-end_comment
-
-begin_function
 name|size_type
 name|erase
-parameter_list|(
-specifier|const
-name|key_type
-modifier|&
-name|__x
-parameter_list|)
+argument_list|(
+argument|const key_type& __x
+argument_list|)
 block|{
 return|return
 name|_M_t
@@ -835,7 +921,7 @@ name|__x
 argument_list|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_comment
 comment|/**        *  @brief Erases a [first,last) range of elements from a %multiset.        *  @param  first  Iterator pointing to the start of the range to be        *                 erased.        *  @param  last  Iterator pointing to the end of the range to be erased.        *        *  This function erases a sequence of elements from a %multiset.        *  Note that this function only erases the elements, and that if        *  the elements themselves are pointers, the pointed-to memory is not        *  touched in any way.  Managing the pointer is the user's responsibilty.        */
@@ -852,27 +938,12 @@ name|iterator
 name|__last
 parameter_list|)
 block|{
-typedef|typedef
-name|typename
-name|_Rep_type
-operator|::
-name|iterator
-name|_Rep_iterator
-expr_stmt|;
 name|_M_t
 operator|.
 name|erase
 argument_list|(
-operator|(
-name|_Rep_iterator
-operator|&
-operator|)
 name|__first
 argument_list|,
-operator|(
-name|_Rep_iterator
-operator|&
-operator|)
 name|__last
 argument_list|)
 expr_stmt|;
@@ -1108,6 +1179,8 @@ comment|/**        *  @brief Finds a subsequence matching given key.        *  @
 end_comment
 
 begin_expr_stmt
+name|std
+operator|::
 name|pair
 operator|<
 name|iterator
@@ -1131,6 +1204,8 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|std
+operator|::
 name|pair
 operator|<
 name|const_iterator
@@ -1620,12 +1695,8 @@ argument_list|(
 name|__y
 argument_list|)
 block|; }
+name|_GLIBCXX_END_NESTED_NAMESPACE
 end_expr_stmt
-
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
 
 begin_endif
 endif|#

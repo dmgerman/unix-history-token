@@ -4,7 +4,7 @@ comment|// The template and inlines for the -*- C++ -*- internal _Array helper c
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2003
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2003, 2004, 2005, 2006
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,11 +100,11 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
-comment|// Written by Gabriel Dos Reis<Gabriel.Dos-Reis@DPTMaths.ENS-Cachan.Fr>
+comment|/** @file valarray_array.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_comment
-comment|/** @file valarray_array.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+comment|// Written by Gabriel Dos Reis<Gabriel.Dos-Reis@DPTMaths.ENS-Cachan.Fr>
 end_comment
 
 begin_ifndef
@@ -157,14 +157,30 @@ directive|include
 file|<new>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// Helper functions on raw pointers
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// We get memory by the old fashion way
+end_comment
+
+begin_function
 specifier|inline
 name|void
 modifier|*
@@ -182,6 +198,9 @@ name|__n
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -218,7 +237,13 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Return memory to the system
+end_comment
+
+begin_function
 specifier|inline
 name|void
 name|__valarray_release_memory
@@ -235,8 +260,17 @@ name|__p
 argument_list|)
 decl_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|// Turn a raw-memory into an array of _Tp filled with _Tp()
+end_comment
+
+begin_comment
 comment|// This is required in 'valarray<T> v(n);'
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -273,8 +307,10 @@ name|_Tp
 argument_list|()
 expr_stmt|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -284,7 +320,7 @@ expr|struct
 name|_Array_default_ctor
 operator|<
 name|_Tp
-block|,
+operator|,
 name|true
 operator|>
 block|{
@@ -320,7 +356,10 @@ argument_list|)
 argument_list|)
 block|; }
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -339,12 +378,12 @@ name|_Array_default_ctor
 operator|<
 name|_Tp
 block|,
-name|__is_fundamental
+name|__is_pod
 operator|<
 name|_Tp
 operator|>
 operator|::
-name|_M_type
+name|__value
 operator|>
 operator|::
 name|_S_do_it
@@ -353,7 +392,7 @@ name|__b
 argument_list|,
 name|__e
 argument_list|)
-block|;      }
+block|;     }
 comment|// Turn a raw-memory into an array of _Tp filled with __t
 comment|// This is the required in valarray<T> v(n, t).  Also
 comment|// used in valarray<>::resize().
@@ -361,7 +400,7 @@ name|template
 operator|<
 name|typename
 name|_Tp
-block|,
+operator|,
 name|bool
 operator|>
 expr|struct
@@ -397,8 +436,10 @@ name|__t
 argument_list|)
 expr_stmt|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -408,7 +449,7 @@ expr|struct
 name|_Array_init_ctor
 operator|<
 name|_Tp
-block|,
+operator|,
 name|true
 operator|>
 block|{
@@ -437,8 +478,10 @@ operator|=
 name|__t
 expr_stmt|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -459,12 +502,12 @@ name|_Array_init_ctor
 operator|<
 name|_Tp
 block|,
-name|__is_fundamental
+name|__is_pod
 operator|<
 name|_Tp
 operator|>
 operator|::
-name|_M_type
+name|__value
 operator|>
 operator|::
 name|_S_do_it
@@ -475,7 +518,7 @@ name|__e
 argument_list|,
 name|__t
 argument_list|)
-block|;      }
+block|;     }
 comment|//
 comment|// copy-construct raw array [__o, *) from plain array [__b, __e)
 comment|// We can't just say 'memcpy()'
@@ -484,7 +527,7 @@ name|template
 operator|<
 name|typename
 name|_Tp
-block|,
+operator|,
 name|bool
 operator|>
 expr|struct
@@ -522,8 +565,10 @@ operator|++
 argument_list|)
 expr_stmt|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -533,7 +578,7 @@ expr|struct
 name|_Array_copy_ctor
 operator|<
 name|_Tp
-block|,
+operator|,
 name|true
 operator|>
 block|{
@@ -570,7 +615,10 @@ argument_list|)
 argument_list|)
 block|; }
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -591,12 +639,12 @@ name|_Array_copy_ctor
 operator|<
 name|_Tp
 block|,
-name|__is_fundamental
+name|__is_pod
 operator|<
 name|_Tp
 operator|>
 operator|::
-name|_M_type
+name|__value
 operator|>
 operator|::
 name|_S_do_it
@@ -607,7 +655,7 @@ name|__e
 argument_list|,
 name|__o
 argument_list|)
-block|;      }
+block|;     }
 comment|// copy-construct raw array [__o, *) from strided array __a[<__n : __s>]
 name|template
 operator|<
@@ -629,12 +677,12 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|__is_fundamental
+name|__is_pod
 operator|<
 name|_Tp
 operator|>
 operator|::
-name|_M_type
+name|__value
 condition|)
 while|while
 condition|(
@@ -654,6 +702,9 @@ operator|+=
 name|__s
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_else
 else|else
 while|while
 condition|(
@@ -676,9 +727,15 @@ operator|+=
 name|__s
 expr_stmt|;
 block|}
-block|}
+end_else
+
+begin_comment
+unit|}
 comment|// copy-construct raw array [__o, *) from indexed array __a[__i[<__n>]]
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|_Tp
@@ -698,12 +755,12 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|__is_fundamental
+name|__is_pod
 operator|<
 name|_Tp
 operator|>
 operator|::
-name|_M_type
+name|__value
 condition|)
 while|while
 condition|(
@@ -742,7 +799,13 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Do the necessary cleanup when we're done with arrays.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -760,12 +823,12 @@ block|{
 if|if
 condition|(
 operator|!
-name|__is_fundamental
+name|__is_pod
 operator|<
 name|_Tp
 operator|>
 operator|::
-name|_M_type
+name|__value
 condition|)
 while|while
 condition|(
@@ -784,9 +847,15 @@ operator|++
 name|__b
 expr_stmt|;
 block|}
-block|}
+end_expr_stmt
+
+begin_comment
+unit|}
 comment|// Fill a plain array __a[<__n>] with __t
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|_Tp
@@ -814,7 +883,13 @@ operator|=
 name|__t
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// fill strided array __a[<__n-1 : __s>] with __t
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -857,7 +932,13 @@ operator|=
 name|__t
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// fill indir   ect array __a[__i[<__n>]] with __i
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -902,13 +983,22 @@ operator|=
 name|__t
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// copy plain array __a[<__n>] in __b[<__n>]
+end_comment
+
+begin_comment
 comment|// For non-fundamental types, it is wrong to say 'memcpy()'
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|_Tp
-block|,
+operator|,
 name|bool
 operator|>
 expr|struct
@@ -940,8 +1030,10 @@ name|__a
 operator|++
 expr_stmt|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -951,7 +1043,7 @@ expr|struct
 name|_Array_copier
 operator|<
 name|_Tp
-block|,
+operator|,
 name|true
 operator|>
 block|{
@@ -984,8 +1076,14 @@ argument_list|)
 argument_list|)
 block|; }
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Copy a plain array __a[<__n>] into a play array __b[<>]
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1006,12 +1104,12 @@ name|_Array_copier
 operator|<
 name|_Tp
 block|,
-name|__is_fundamental
+name|__is_pod
 operator|<
 name|_Tp
 operator|>
 operator|::
-name|_M_type
+name|__value
 operator|>
 operator|::
 name|_S_do_it
@@ -1022,7 +1120,7 @@ name|__n
 argument_list|,
 name|__b
 argument_list|)
-block|;      }
+block|;     }
 comment|// Copy strided array __a[<__n : __s>] in plain __b[<__n>]
 name|template
 operator|<
@@ -1070,7 +1168,13 @@ operator|*
 name|__a
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Copy a plain array  __a[<__n>] into a strided array __b[<__n : __s>]
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1117,8 +1221,17 @@ operator|*
 name|__a
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Copy strided array __src[<__n : __s1>] into another
+end_comment
+
+begin_comment
 comment|// strided array __dst[< : __s2>].  Their sizes must match.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1168,7 +1281,13 @@ name|__s1
 index|]
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Copy an indexed array __a[__i[<__n>]] in plain array __b[<__n>]
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1217,7 +1336,13 @@ name|__i
 index|]
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Copy a plain array __a[<__n>] in an indexed array __b[__i[<__n>]]
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1266,8 +1391,17 @@ operator|*
 name|__a
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Copy the __n first elements of an indexed array __src[<__i>] into
+end_comment
+
+begin_comment
 comment|// another indexed array __dst[<__j>].
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1317,13 +1451,37 @@ operator|++
 index|]
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// Compute the sum of elements in range [__f, __l)
+end_comment
+
+begin_comment
 comment|// This is a naive algorithm.  It suffers from cancelling.
+end_comment
+
+begin_comment
 comment|// In the future try to specialize
+end_comment
+
+begin_comment
 comment|// for _Tp = float, double, long double using a more accurate
+end_comment
+
+begin_comment
 comment|// algorithm.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1356,12 +1514,21 @@ operator|*
 name|__f
 operator|++
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|__r
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|// Compute the product of all elements in range [__f, __l)
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|_Tp
@@ -1397,12 +1564,21 @@ operator|*
 name|__f
 operator|++
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|__r
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|// Compute the min/max of an array-expression
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|_Ta
@@ -1446,7 +1622,10 @@ name|__a
 index|[
 literal|0
 index|]
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|size_t
@@ -1481,11 +1660,16 @@ operator|=
 name|__t
 expr_stmt|;
 block|}
+end_for
+
+begin_return
 return|return
 name|__r
 return|;
-block|}
-name|template
+end_return
+
+begin_expr_stmt
+unit|}    template
 operator|<
 name|typename
 name|_Ta
@@ -1529,7 +1713,10 @@ name|__a
 index|[
 literal|0
 index|]
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|size_t
@@ -1564,16 +1751,37 @@ operator|=
 name|__t
 expr_stmt|;
 block|}
+end_for
+
+begin_return
 return|return
 name|__r
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|//
+end_comment
+
+begin_comment
 comment|// Helper class _Array, first layer of valarray abstraction.
+end_comment
+
+begin_comment
 comment|// All operations on valarray should be forwarded to this class
+end_comment
+
+begin_comment
 comment|// whenever possible. -- gdr
+end_comment
+
+begin_comment
 comment|//
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|_Tp
@@ -1628,8 +1836,88 @@ operator|*
 specifier|const
 name|__restrict__
 name|_M_data
-block|;      }
-block|;
+block|;     }
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Copy-construct plain array __b[<__n>] from indexed array __a[__i[<__n>]]
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+specifier|inline
+name|void
+name|__valarray_copy_construct
+argument_list|(
+argument|_Array<_Tp> __a
+argument_list|,
+argument|_Array<size_t> __i
+argument_list|,
+argument|_Array<_Tp> __b
+argument_list|,
+argument|size_t __n
+argument_list|)
+block|{
+name|std
+operator|::
+name|__valarray_copy_construct
+argument_list|(
+name|__a
+operator|.
+name|_M_data
+argument_list|,
+name|__i
+operator|.
+name|_M_data
+argument_list|,
+name|__b
+operator|.
+name|_M_data
+argument_list|,
+name|__n
+argument_list|)
+block|; }
+comment|// Copy-construct plain array __b[<__n>] from strided array __a[<__n : __s>]
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+specifier|inline
+name|void
+name|__valarray_copy_construct
+argument_list|(
+argument|_Array<_Tp> __a
+argument_list|,
+argument|size_t __n
+argument_list|,
+argument|size_t __s
+argument_list|,
+argument|_Array<_Tp> __b
+argument_list|)
+block|{
+name|std
+operator|::
+name|__valarray_copy_construct
+argument_list|(
+name|__a
+operator|.
+name|_M_data
+argument_list|,
+name|__n
+argument_list|,
+name|__s
+argument_list|,
+name|__b
+operator|.
+name|_M_data
+argument_list|)
+block|; }
 name|template
 operator|<
 name|typename
@@ -1990,7 +2278,7 @@ name|__j
 operator|.
 name|_M_data
 argument_list|)
-block|;      }
+block|;     }
 name|template
 operator|<
 name|typename
@@ -2126,6 +2414,9 @@ return|return
 name|_M_data
 return|;
 block|}
+end_expr_stmt
+
+begin_define
 define|#
 directive|define
 name|_DEFINE_ARRAY_FUNCTION
@@ -2135,76 +2426,108 @@ parameter_list|,
 name|_Name
 parameter_list|)
 define|\
-value|template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n, const _Tp& __t)	\ {									\   for (_Tp* __p=__a._M_data; __p<__a._M_data+__n; ++__p)		\     *__p _Op##= __t;							\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n, _Array<_Tp> __b)	\ {									\   _Tp* __p = __a._M_data;						\   for (_Tp* __q=__b._M_data; __q<__b._M_data+__n; ++__p, ++__q)		\     *__p _Op##= *__q;							\ }									\ 									\ template<typename _Tp, class _Dom>					\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a,				\                          const _Expr<_Dom,_Tp>& __e, size_t __n)	\ {									\     _Tp* __p (__a._M_data);						\     for (size_t __i=0; __i<__n; ++__i, ++__p) *__p _Op##= __e[__i];	\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n, size_t __s,	\ 			 _Array<_Tp> __b)				\ {									\     _Tp* __q (__b._M_data);						\     for (_Tp* __p=__a._M_data; __p<__a._M_data+__s*__n; __p+=__s, ++__q) \       *__p _Op##= *__q;							\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<_Tp> __b,		\ 			 size_t __n, size_t __s)			\ {									\     _Tp* __q (__b._M_data);						\     for (_Tp* __p=__a._M_data; __p<__a._M_data+__n; ++__p, __q+=__s)	\       *__p _Op##= *__q;							\ }									\ 									\ template<typename _Tp, class _Dom>					\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __s,			\                           const _Expr<_Dom,_Tp>& __e, size_t __n)	\ {									\     _Tp* __p (__a._M_data);						\     for (size_t __i=0; __i<__n; ++__i, __p+=__s) *__p _Op##= __e[__i];	\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<size_t> __i,		\                           _Array<_Tp> __b, size_t __n)			\ {									\     _Tp* __q (__b._M_data);						\     for (size_t* __j=__i._M_data; __j<__i._M_data+__n; ++__j, ++__q)	\         __a._M_data[*__j] _Op##= *__q;					\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n,			\                           _Array<_Tp> __b, _Array<size_t> __i)		\ {									\     _Tp* __p (__a._M_data);						\     for (size_t* __j=__i._M_data; __j<__i._M_data+__n; ++__j, ++__p)	\         *__p _Op##= __b._M_data[*__j];					\ }									\ 									\ template<typename _Tp, class _Dom>					\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<size_t> __i,		\                           const _Expr<_Dom, _Tp>& __e, size_t __n)	\ {									\     size_t* __j (__i._M_data);						\     for (size_t __k=0; __k<__n; ++__k, ++__j)				\       __a._M_data[*__j] _Op##= __e[__k];				\ }									\ 									\ template<typename _Tp>							\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<bool> __m,		\                           _Array<_Tp> __b, size_t __n)			\ {									\     bool* ok (__m._M_data);						\     _Tp* __p (__a._M_data);						\     for (_Tp* __q=__b._M_data; __q<__b._M_data+__n; ++__q, ++ok, ++__p) { \         while (! *ok) {							\             ++ok;							\             ++__p;							\         }								\         *__p _Op##= *__q;						\     }									\ }									\ 									\ template<typename _Tp>							\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n,			\                          _Array<_Tp> __b, _Array<bool> __m)		\ {									\     bool* ok (__m._M_data);						\     _Tp* __q (__b._M_data);						\     for (_Tp* __p=__a._M_data; __p<__a._M_data+__n; ++__p, ++ok, ++__q) { \         while (! *ok) {							\             ++ok;							\             ++__q;							\         }								\         *__p _Op##= *__q;						\     }									\ }									\ 									\ template<typename _Tp, class _Dom>					\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<bool> __m,		\                           const _Expr<_Dom, _Tp>& __e, size_t __n)	\ {									\     bool* ok(__m._M_data);						\     _Tp* __p (__a._M_data);						\     for (size_t __i=0; __i<__n; ++__i, ++ok, ++__p) {			\         while (! *ok) {							\             ++ok;							\             ++__p;							\         }								\         *__p _Op##= __e[__i];						\     }									\ }
+value|template<typename _Tp>		        			\     inline void								\     _Array_augmented_##_Name(_Array<_Tp> __a, size_t __n, const _Tp& __t) \     {									\       for (_Tp* __p = __a._M_data; __p< __a._M_data + __n; ++__p)	\         *__p _Op##= __t;						\     }									\ 									\   template<typename _Tp>						\     inline void								\     _Array_augmented_##_Name(_Array<_Tp> __a, size_t __n, _Array<_Tp> __b) \     {									\       _Tp* __p = __a._M_data;						\       for (_Tp* __q = __b._M_data; __q< __b._M_data + __n; ++__p, ++__q) \         *__p _Op##= *__q;						\     }									\ 									\   template<typename _Tp, class _Dom>					\     void								\     _Array_augmented_##_Name(_Array<_Tp> __a,	        		\                              const _Expr<_Dom, _Tp>& __e, size_t __n)	\     {									\       _Tp* __p(__a._M_data);						\       for (size_t __i = 0; __i< __n; ++__i, ++__p)                     \         *__p _Op##= __e[__i];                                          	\     }									\ 									\   template<typename _Tp>						\     inline void								\     _Array_augmented_##_Name(_Array<_Tp> __a, size_t __n, size_t __s,	\ 	                     _Array<_Tp> __b)				\     {									\       _Tp* __q(__b._M_data);						\       for (_Tp* __p = __a._M_data; __p< __a._M_data + __s * __n;       \ 	   __p += __s, ++__q)                                           \         *__p _Op##= *__q;						\     }									\ 									\   template<typename _Tp>						\     inline void								\     _Array_augmented_##_Name(_Array<_Tp> __a, _Array<_Tp> __b,		\ 		             size_t __n, size_t __s)			\     {									\       _Tp* __q(__b._M_data);						\       for (_Tp* __p = __a._M_data; __p< __a._M_data + __n;             \ 	   ++__p, __q += __s)                                           \         *__p _Op##= *__q;						\     }									\ 									\   template<typename _Tp, class _Dom>					\     void								\     _Array_augmented_##_Name(_Array<_Tp> __a, size_t __s,		\                              const _Expr<_Dom, _Tp>& __e, size_t __n)	\     {									\       _Tp* __p(__a._M_data);						\       for (size_t __i = 0; __i< __n; ++__i, __p += __s)                \         *__p _Op##= __e[__i];                                          	\     }									\ 									\   template<typename _Tp>						\     inline void								\     _Array_augmented_##_Name(_Array<_Tp> __a, _Array<size_t> __i,	\                              _Array<_Tp> __b, size_t __n)		\     {									\       _Tp* __q(__b._M_data);						\       for (size_t* __j = __i._M_data; __j< __i._M_data + __n;          \            ++__j, ++__q)                                                \         __a._M_data[*__j] _Op##= *__q;					\     }									\ 									\   template<typename _Tp>						\     inline void					        		\     _Array_augmented_##_Name(_Array<_Tp> __a, size_t __n,		\                              _Array<_Tp> __b, _Array<size_t> __i)	\     {									\       _Tp* __p(__a._M_data);						\       for (size_t* __j = __i._M_data; __j<__i._M_data + __n;            \ 	   ++__j, ++__p)                                                \         *__p _Op##= __b._M_data[*__j];					\     }									\ 									\   template<typename _Tp, class _Dom>					\     void								\     _Array_augmented_##_Name(_Array<_Tp> __a, _Array<size_t> __i,	\                              const _Expr<_Dom, _Tp>& __e, size_t __n)	\     {									\       size_t* __j(__i._M_data);	        				\       for (size_t __k = 0; __k<__n; ++__k, ++__j)			\         __a._M_data[*__j] _Op##= __e[__k];				\     }									\ 									\   template<typename _Tp>						\     void								\     _Array_augmented_##_Name(_Array<_Tp> __a, _Array<bool> __m,         \                              _Array<_Tp> __b, size_t __n)		\     {									\       bool* __ok(__m._M_data);						\       _Tp* __p(__a._M_data);						\       for (_Tp* __q = __b._M_data; __q< __b._M_data + __n;             \ 	   ++__q, ++__ok, ++__p)                                        \         {                                                               \           while (! *__ok)                                               \             {						        	\               ++__ok;							\               ++__p;							\             }								\           *__p _Op##= *__q;						\         }								\     }									\ 									\   template<typename _Tp>						\     void								\     _Array_augmented_##_Name(_Array<_Tp> __a, size_t __n,		\                              _Array<_Tp> __b, _Array<bool> __m)   	\     {									\       bool* __ok(__m._M_data);						\       _Tp* __q(__b._M_data);						\       for (_Tp* __p = __a._M_data; __p< __a._M_data + __n;             \ 	   ++__p, ++__ok, ++__q)                                        \         {                                                               \           while (! *__ok)                                               \             {					        		\               ++__ok;							\               ++__q;							\             }								\           *__p _Op##= *__q;						\         }								\     }									\ 									\   template<typename _Tp, class _Dom>					\     void								\     _Array_augmented_##_Name(_Array<_Tp> __a, _Array<bool> __m,  	\                              const _Expr<_Dom, _Tp>& __e, size_t __n)	\     {									\       bool* __ok(__m._M_data);						\       _Tp* __p(__a._M_data);						\       for (size_t __i = 0; __i< __n; ++__i, ++__ok, ++__p)             \         {	                                           		\           while (! *__ok)                                               \             {		         					\ 	      ++__ok;							\               ++__p;							\             }								\           *__p _Op##= __e[__i];						\         }								\     }
+end_define
+
+begin_macro
 name|_DEFINE_ARRAY_FUNCTION
 argument_list|(
 argument|+
 argument_list|,
 argument|__plus
 argument_list|)
+end_macro
+
+begin_macro
 name|_DEFINE_ARRAY_FUNCTION
 argument_list|(
 argument|-
 argument_list|,
 argument|__minus
 argument_list|)
+end_macro
+
+begin_macro
 name|_DEFINE_ARRAY_FUNCTION
 argument_list|(
 argument|*
 argument_list|,
 argument|__multiplies
 argument_list|)
+end_macro
+
+begin_macro
 name|_DEFINE_ARRAY_FUNCTION
 argument_list|(
 argument|/
 argument_list|,
 argument|__divides
 argument_list|)
+end_macro
+
+begin_macro
 name|_DEFINE_ARRAY_FUNCTION
 argument_list|(
 argument|%
 argument_list|,
 argument|__modulus
 argument_list|)
+end_macro
+
+begin_macro
 name|_DEFINE_ARRAY_FUNCTION
 argument_list|(
 argument|^
 argument_list|,
 argument|__bitwise_xor
 argument_list|)
+end_macro
+
+begin_macro
 name|_DEFINE_ARRAY_FUNCTION
 argument_list|(
 argument||
 argument_list|,
 argument|__bitwise_or
 argument_list|)
+end_macro
+
+begin_macro
 name|_DEFINE_ARRAY_FUNCTION
 argument_list|(
 argument|&
 argument_list|,
 argument|__bitwise_and
 argument_list|)
+end_macro
+
+begin_macro
 name|_DEFINE_ARRAY_FUNCTION
 argument_list|(
 argument|<<
 argument_list|,
 argument|__shift_left
 argument_list|)
+end_macro
+
+begin_macro
 name|_DEFINE_ARRAY_FUNCTION
 argument_list|(
 argument|>>
 argument_list|,
 argument|__shift_right
 argument_list|)
+end_macro
+
+begin_undef
 undef|#
 directive|undef
-name|_DEFINE_VALARRAY_FUNCTION
-expr|}
-end_decl_stmt
+name|_DEFINE_ARRAY_FUNCTION
+end_undef
 
-begin_comment
-comment|// namespace std
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_ifndef
 ifndef|#

@@ -4,7 +4,7 @@ comment|// nonstandard construct and destroy functions -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -119,7 +119,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<bits/type_traits.h>
+file|<bits/cpp_type_traits.h>
 end_include
 
 begin_include
@@ -128,11 +128,18 @@ directive|include
 file|<new>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|/**    * @if maint    * Constructs an object in existing memory by invoking an allocated    * object's constructor with an initializer.    * @endif    */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -241,7 +248,13 @@ name|__first
 argument_list|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**    * @if maint    * Destroy a range of objects with trivial destructors.  Since the destructors    * are trivial, there's nothing to do and hopefully this function will be    * entirely optimized away.    *    * This is a helper function used only by _Destroy().    * @endif    */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -283,16 +296,24 @@ operator|::
 name|value_type
 name|_Value_type
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|typename
-name|__type_traits
+name|std
+operator|::
+name|__is_scalar
 operator|<
 name|_Value_type
 operator|>
 operator|::
-name|has_trivial_destructor
+name|__type
 name|_Has_trivial_destructor
 expr_stmt|;
+end_typedef
+
+begin_expr_stmt
 name|std
 operator|::
 name|__destroy_aux
@@ -305,13 +326,94 @@ name|_Has_trivial_destructor
 argument_list|()
 argument_list|)
 expr_stmt|;
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
 unit|}
-comment|// namespace std
+comment|/**    * @if maint    * Destroy a range of objects using the supplied allocator.  For    * nondefault allocators we do not optimize away invocation of     * destroy() even if _Tp has a trivial destructor.    * @endif    */
 end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+name|class
+name|allocator
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_ForwardIterator
+operator|,
+name|typename
+name|_Allocator
+operator|>
+name|void
+name|_Destroy
+argument_list|(
+argument|_ForwardIterator __first
+argument_list|,
+argument|_ForwardIterator __last
+argument_list|,
+argument|_Allocator __alloc
+argument_list|)
+block|{
+for|for
+control|(
+init|;
+name|__first
+operator|!=
+name|__last
+condition|;
+operator|++
+name|__first
+control|)
+name|__alloc
+operator|.
+name|destroy
+argument_list|(
+operator|&
+operator|*
+name|__first
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_ForwardIterator
+operator|,
+name|typename
+name|_Tp
+operator|>
+specifier|inline
+name|void
+name|_Destroy
+argument_list|(
+argument|_ForwardIterator __first
+argument_list|,
+argument|_ForwardIterator __last
+argument_list|,
+argument|allocator<_Tp>
+argument_list|)
+block|{
+name|_Destroy
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+block|;     }
+name|_GLIBCXX_END_NAMESPACE
+end_expr_stmt
 
 begin_endif
 endif|#

@@ -4,7 +4,11 @@ comment|// SGI's rope class implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -151,44 +155,78 @@ begin_comment
 comment|// For power
 end_comment
 
-begin_decl_stmt
-name|namespace
-name|__gnu_cxx
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|__gnu_cxx
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|size_t
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|printf
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|basic_ostream
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|__throw_length_error
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|_Destroy
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 name|std
 operator|::
 name|uninitialized_fill_n
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Set buf_start, buf_end, and buf_ptr appropriately, filling tmp_buf
+end_comment
+
+begin_comment
 comment|// if necessary.  Assumes _M_path_end[leaf_index] and leaf_pos are correct.
+end_comment
+
+begin_comment
 comment|// Results in a valid buf_ptr if the iterator can be legitimately
+end_comment
+
+begin_comment
 comment|// dereferenced.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -248,7 +286,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 case|:
@@ -299,12 +337,12 @@ name|_M_size
 expr_stmt|;
 break|break;
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_function
 case|:
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_substringfn
 case|:
@@ -375,7 +413,6 @@ name|__len
 operator|>
 name|__leaf_end
 condition|)
-block|{
 name|__buf_start_pos
 operator|=
 name|__leaf_end
@@ -383,7 +420,9 @@ operator|-
 name|__len
 expr_stmt|;
 block|}
-block|}
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|__buf_start_pos
@@ -392,14 +431,15 @@ name|__len
 operator|>
 name|__leaf_end
 condition|)
-block|{
 name|__len
 operator|=
 name|__leaf_end
 operator|-
 name|__buf_start_pos
 expr_stmt|;
-block|}
+end_if
+
+begin_expr_stmt
 call|(
 modifier|*
 name|__fn
@@ -416,6 +456,9 @@ operator|.
 name|_M_tmp_buf
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__x
 operator|.
 name|_M_buf_ptr
@@ -430,6 +473,9 @@ operator|-
 name|__buf_start_pos
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__x
 operator|.
 name|_M_buf_start
@@ -438,6 +484,9 @@ name|__x
 operator|.
 name|_M_tmp_buf
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|__x
 operator|.
 name|_M_buf_end
@@ -448,16 +497,23 @@ name|_M_tmp_buf
 operator|+
 name|__len
 expr_stmt|;
-block|}
+end_expr_stmt
+
+begin_empty_stmt
+unit|} 	  break
+empty_stmt|;
+end_empty_stmt
+
+begin_default
+default|default:
+end_default
+
+begin_break
 break|break;
-expr|default
-operator|:
-break|break;
-block|}
-block|}
-end_decl_stmt
+end_break
 
 begin_comment
+unit|}     }
 comment|// Set path and buffer inside a rope iterator.  We assume that
 end_comment
 
@@ -494,9 +550,12 @@ name|_RopeRep
 operator|*
 name|__path
 index|[
-name|_Rope_constants
+name|int
+argument_list|(
+name|__detail
 operator|::
 name|_S_max_rope_depth
+argument_list|)
 operator|+
 literal|1
 index|]
@@ -650,17 +709,17 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 case|:
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_function
 case|:
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_substringfn
 case|:
@@ -674,7 +733,7 @@ goto|goto
 name|done
 goto|;
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_concat
 case|:
@@ -743,12 +802,10 @@ name|__left_len
 expr_stmt|;
 block|}
 else|else
-block|{
 name|__curr_rope
 operator|=
 name|__left
 expr_stmt|;
-block|}
 block|}
 break|break;
 block|}
@@ -779,7 +836,10 @@ name|__curr_depth
 operator|+
 literal|1
 operator|-
+name|int
+argument_list|(
 name|_S_path_cache_len
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -797,7 +857,6 @@ name|__j
 operator|<=
 name|__curr_depth
 condition|)
-block|{
 name|__x
 operator|.
 name|_M_path_end
@@ -812,7 +871,6 @@ name|__j
 operator|++
 index|]
 expr_stmt|;
-block|}
 name|__x
 operator|.
 name|_M_leaf_index
@@ -1107,7 +1165,7 @@ end_expr_stmt
 begin_while
 while|while
 condition|(
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_concat
 operator|==
@@ -1121,7 +1179,10 @@ name|__current_index
 expr_stmt|;
 if|if
 condition|(
+name|int
+argument_list|(
 name|_S_path_cache_len
+argument_list|)
 operator|==
 name|__current_index
 condition|)
@@ -1137,14 +1198,16 @@ literal|0
 init|;
 name|__i
 operator|<
+name|int
+argument_list|(
 name|_S_path_cache_len
+argument_list|)
 operator|-
 literal|1
 condition|;
 name|__i
 operator|++
 control|)
-block|{
 name|__x
 operator|.
 name|_M_path_end
@@ -1161,7 +1224,6 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
-block|}
 operator|--
 name|__current_index
 expr_stmt|;
@@ -1236,7 +1298,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_CharT
@@ -1281,15 +1343,10 @@ name|__chars_left
 operator|>
 name|__n
 condition|)
-block|{
 name|_M_buf_ptr
 operator|+=
 name|__n
 expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_elseif
 elseif|else
 if|if
 condition|(
@@ -1309,20 +1366,18 @@ name|this
 argument_list|)
 expr_stmt|;
 block|}
-end_elseif
+end_expr_stmt
 
 begin_else
 else|else
-block|{
 name|_M_buf_ptr
 operator|=
 literal|0
 expr_stmt|;
-block|}
 end_else
 
 begin_expr_stmt
-unit|} }
+unit|}     }
 name|template
 operator|<
 name|class
@@ -1364,33 +1419,24 @@ name|__chars_left
 operator|>=
 name|__n
 condition|)
-block|{
 name|_M_buf_ptr
 operator|-=
 name|__n
 expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_else
 else|else
-block|{
 name|_M_buf_ptr
 operator|=
 literal|0
 expr_stmt|;
 block|}
-end_else
-
-begin_expr_stmt
-unit|}     _M_current_pos
+name|_M_current_pos
 operator|-=
 name|__n
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_CharT
@@ -1457,7 +1503,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_CharT
@@ -1587,11 +1633,9 @@ operator|*
 name|__p
 argument_list|)
 condition|)
-block|{
 operator|++
 name|__p
 expr_stmt|;
-block|}
 end_expr_stmt
 
 begin_return
@@ -1661,6 +1705,9 @@ argument_list|,
 name|__cstr
 operator|+
 name|__size
+argument_list|,
+name|get_allocator
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|this
@@ -1676,7 +1723,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   template
+unit|}    template
 operator|<
 name|class
 name|_CharT
@@ -1714,7 +1761,6 @@ operator|)
 literal|0
 argument_list|)
 condition|)
-block|{
 name|_Destroy
 argument_list|(
 name|__s
@@ -1722,9 +1768,10 @@ argument_list|,
 name|__s
 operator|+
 name|__n
+argument_list|,
+name|__a
 argument_list|)
 expr_stmt|;
-block|}
 comment|//  This has to be a static member, so this gets a bit messy
 name|__a
 operator|.
@@ -1798,7 +1845,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 case|:
@@ -1849,7 +1896,7 @@ end_expr_stmt
 
 begin_case
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_concat
 case|:
@@ -1903,7 +1950,7 @@ end_block
 
 begin_case
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_function
 case|:
@@ -1957,7 +2004,7 @@ end_block
 
 begin_case
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_substringfn
 case|:
@@ -2010,7 +2057,7 @@ block|}
 end_block
 
 begin_else
-unit|} }
+unit|}     }
 else|#
 directive|else
 end_else
@@ -2041,7 +2088,7 @@ argument|size_t
 argument_list|,
 argument|allocator_type
 argument_list|)
-block|{}
+block|{ }
 endif|#
 directive|endif
 comment|// Concatenate a C string onto a leaf rope by copying the rope data.
@@ -2158,7 +2205,7 @@ operator|->
 name|get_allocator
 argument_list|()
 argument_list|)
-block|;     }
+block|; 	}
 name|catch
 argument_list|(
 argument|...
@@ -2181,7 +2228,7 @@ argument_list|()
 argument_list|)
 block|;
 name|__throw_exception_again
-block|;       }
+block|; 	}
 return|return
 name|__result
 return|;
@@ -2299,7 +2346,6 @@ operator|)
 literal|0
 argument_list|)
 condition|)
-block|{
 name|_S_cond_store_eos
 argument_list|(
 name|__r
@@ -2312,7 +2358,6 @@ name|__len
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2471,9 +2516,12 @@ literal|1000
 operator|||
 name|__depth
 operator|>
-name|_Rope_constants
+name|size_t
+argument_list|(
+name|__detail
 operator|::
 name|_S_max_rope_depth
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -2509,7 +2557,7 @@ literal|1
 argument_list|)
 block|;
 name|__throw_exception_again
-block|; 	}
+block|; 	    }
 end_expr_stmt
 
 begin_comment
@@ -2535,14 +2583,14 @@ return|;
 end_return
 
 begin_return
-unit|}   else
+unit|}       else
 return|return
 name|__result
 return|;
 end_return
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_CharT
@@ -2623,13 +2671,13 @@ end_if
 begin_if
 if|if
 condition|(
-name|_Rope_constants
-operator|::
-name|_S_leaf
-operator|==
 name|__r
 operator|->
 name|_M_tag
+operator|==
+name|__detail
+operator|::
+name|_S_leaf
 operator|&&
 name|__r
 operator|->
@@ -2637,7 +2685,10 @@ name|_M_size
 operator|+
 name|__slen
 operator|<=
+name|size_t
+argument_list|(
 name|_S_copy_max
+argument_list|)
 condition|)
 block|{
 name|__result
@@ -2664,7 +2715,7 @@ end_if
 begin_if
 if|if
 condition|(
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_concat
 operator|==
@@ -2672,7 +2723,7 @@ name|__r
 operator|->
 name|_M_tag
 operator|&&
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 operator|==
@@ -2717,7 +2768,10 @@ name|_M_size
 operator|+
 name|__slen
 operator|<=
+name|size_t
+argument_list|(
 name|_S_copy_max
+argument_list|)
 condition|)
 block|{
 name|_RopeRep
@@ -2996,9 +3050,12 @@ name|__orig_size
 operator|+
 name|__slen
 operator|<=
+name|size_t
+argument_list|(
 name|_S_copy_max
+argument_list|)
 operator|&&
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 operator|==
@@ -3031,7 +3088,7 @@ end_if
 begin_if
 if|if
 condition|(
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_concat
 operator|==
@@ -3062,7 +3119,7 @@ operator|)
 decl_stmt|;
 if|if
 condition|(
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 operator|==
@@ -3076,7 +3133,10 @@ name|_M_size
 operator|+
 name|__slen
 operator|<=
+name|size_t
+argument_list|(
 name|_S_copy_max
+argument_list|)
 condition|)
 block|{
 name|_RopeRep
@@ -3323,7 +3383,7 @@ end_if
 begin_if
 if|if
 condition|(
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 operator|==
@@ -3334,7 +3394,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 operator|==
@@ -3353,9 +3413,11 @@ name|__left
 operator|->
 name|_M_size
 operator|<=
+name|size_t
+argument_list|(
 name|_S_copy_max
+argument_list|)
 condition|)
-block|{
 return|return
 name|_S_leaf_concat_char_iter
 argument_list|(
@@ -3381,11 +3443,10 @@ name|_M_size
 argument_list|)
 return|;
 block|}
-block|}
 elseif|else
 if|if
 condition|(
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_concat
 operator|==
@@ -3393,7 +3454,7 @@ name|__left
 operator|->
 name|_M_tag
 operator|&&
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 operator|==
@@ -3440,7 +3501,10 @@ name|__right
 operator|->
 name|_M_size
 operator|<=
+name|size_t
+argument_list|(
 name|_S_copy_max
+argument_list|)
 condition|)
 block|{
 name|_RopeRep
@@ -3581,7 +3645,7 @@ block|}
 end_block
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_CharT
@@ -3673,20 +3737,16 @@ name|__base
 return|;
 block|}
 else|else
-block|{
 name|__adj_endp1
 operator|=
 name|__len
 expr_stmt|;
 block|}
-block|}
 else|else
-block|{
 name|__adj_endp1
 operator|=
 name|__endp1
 expr_stmt|;
-block|}
 end_if
 
 begin_switch
@@ -3698,7 +3758,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_concat
 case|:
@@ -3746,7 +3806,6 @@ name|__adj_endp1
 operator|<=
 name|__left_len
 condition|)
-block|{
 return|return
 name|_S_substring
 argument_list|(
@@ -3757,7 +3816,6 @@ argument_list|,
 name|__endp1
 argument_list|)
 return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -3765,7 +3823,6 @@ name|__start
 operator|>=
 name|__left_len
 condition|)
-block|{
 return|return
 name|_S_substring
 argument_list|(
@@ -3780,7 +3837,6 @@ operator|-
 name|__left_len
 argument_list|)
 return|;
-block|}
 name|_Self_destruct_ptr
 name|__left_result
 argument_list|(
@@ -3823,7 +3879,7 @@ name|__result
 return|;
 block|}
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 case|:
@@ -3932,7 +3988,7 @@ name|__result
 return|;
 block|}
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_substringfn
 case|:
@@ -4006,7 +4062,7 @@ block|}
 comment|// *** else fall through: ***
 block|}
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_function
 case|:
@@ -4161,7 +4217,7 @@ block|}
 end_block
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_CharT
@@ -4191,7 +4247,7 @@ block|{
 name|_M_buf_ptr
 operator|=
 name|__buffer
-block|; 	}
+block|; }
 block|;
 operator|~
 name|_Rope_flatten_char_consumer
@@ -4337,7 +4393,7 @@ return|;
 end_return
 
 begin_empty_stmt
-unit|} }
+unit|}     }
 empty_stmt|;
 end_empty_stmt
 
@@ -4496,7 +4552,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_CharT
@@ -4543,7 +4599,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_concat
 case|:
@@ -4655,18 +4711,16 @@ operator|-
 name|__left_len
 argument_list|)
 condition|)
-block|{
 return|return
 name|false
 return|;
-block|}
 block|}
 block|}
 return|return
 name|true
 return|;
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 case|:
@@ -4697,12 +4751,12 @@ argument_list|)
 return|;
 block|}
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_function
 case|:
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_substringfn
 case|:
@@ -5035,25 +5089,18 @@ name|__rope_len
 operator|<
 name|__w
 condition|)
-block|{
 name|__pad_len
 operator|=
 name|__w
 operator|-
 name|__rope_len
 expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_else
 else|else
-block|{
 name|__pad_len
 operator|=
 literal|0
 expr_stmt|;
-block|}
-end_else
+end_expr_stmt
 
 begin_if
 if|if
@@ -5089,7 +5136,6 @@ name|__pad_len
 operator|>
 literal|0
 condition|)
-block|{
 name|_Rope_fill
 argument_list|(
 name|__o
@@ -5097,7 +5143,6 @@ argument_list|,
 name|__pad_len
 argument_list|)
 expr_stmt|;
-block|}
 name|__r
 operator|.
 name|apply_to_pieces
@@ -5122,7 +5167,6 @@ name|__pad_len
 operator|>
 literal|0
 condition|)
-block|{
 name|_Rope_fill
 argument_list|(
 name|__o
@@ -5130,7 +5174,6 @@ argument_list|,
 name|__pad_len
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -5179,7 +5222,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_CharT
@@ -5324,7 +5367,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_CharT
@@ -5368,7 +5411,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_concat
 case|:
@@ -5420,7 +5463,7 @@ argument_list|)
 return|;
 block|}
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 case|:
@@ -5453,12 +5496,12 @@ name|second
 return|;
 block|}
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_function
 case|:
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_substringfn
 case|:
@@ -5578,8 +5621,6 @@ end_if
 begin_if
 if|if
 condition|(
-name|_Rope_constants
-operator|::
 name|_S_concat
 operator|==
 name|__r
@@ -5705,7 +5746,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 case|:
@@ -5715,7 +5756,7 @@ literal|"Leaf"
 expr_stmt|;
 break|break;
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_function
 case|:
@@ -5725,7 +5766,7 @@ literal|"Function"
 expr_stmt|;
 break|break;
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_substringfn
 case|:
@@ -5877,18 +5918,16 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_if
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_CharT
@@ -5908,9 +5947,12 @@ operator|>
 operator|::
 name|_S_min_len
 index|[
-name|_Rope_constants
+name|int
+argument_list|(
+name|__detail
 operator|::
 name|_S_max_rope_depth
+argument_list|)
 operator|+
 literal|1
 index|]
@@ -6096,9 +6138,12 @@ name|_RopeRep
 operator|*
 name|__forest
 index|[
-name|_Rope_constants
+name|int
+argument_list|(
+name|__detail
 operator|::
 name|_S_max_rope_depth
+argument_list|)
 operator|+
 literal|1
 index|]
@@ -6125,9 +6170,12 @@ literal|0
 init|;
 name|__i
 operator|<=
-name|_Rope_constants
+name|int
+argument_list|(
+name|__detail
 operator|::
 name|_S_max_rope_depth
+argument_list|)
 condition|;
 operator|++
 name|__i
@@ -6156,9 +6204,12 @@ literal|0
 init|;
 name|__i
 operator|<=
-name|_Rope_constants
+name|int
+argument_list|(
+name|__detail
 operator|::
 name|_S_max_rope_depth
+argument_list|)
 condition|;
 operator|++
 name|__i
@@ -6229,7 +6280,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}     catch
+unit|}       catch
 operator|(
 operator|...
 operator|)
@@ -6242,9 +6293,12 @@ literal|0
 init|;
 name|__i
 operator|<=
-name|_Rope_constants
+name|int
+argument_list|(
+name|__detail
 operator|::
 name|_S_max_rope_depth
+argument_list|)
 condition|;
 name|__i
 operator|++
@@ -6262,15 +6316,18 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}      if
+unit|}              if
 operator|(
 name|__result
 operator|->
 name|_M_depth
 operator|>
-name|_Rope_constants
+name|int
+argument_list|(
+name|__detail
 operator|::
 name|_S_max_rope_depth
+argument_list|)
 operator|)
 name|__throw_length_error
 argument_list|(
@@ -6291,7 +6348,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}   template
+unit|}    template
 operator|<
 name|class
 name|_CharT
@@ -6358,11 +6415,11 @@ name|_M_right
 argument_list|,
 name|__forest
 argument_list|)
-block|;     }
+block|;       }
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   template
+unit|}     template
 operator|<
 name|class
 name|_CharT
@@ -6480,7 +6537,7 @@ block|}
 end_expr_stmt
 
 begin_ifndef
-unit|}     {
+unit|}       {
 ifndef|#
 directive|ifndef
 name|__GC
@@ -6585,9 +6642,12 @@ if|if
 condition|(
 name|__i
 operator|==
-name|_Rope_constants
+name|int
+argument_list|(
+name|__detail
 operator|::
 name|_S_max_rope_depth
+argument_list|)
 operator|||
 name|__insertee
 operator|->
@@ -6614,7 +6674,7 @@ block|}
 end_if
 
 begin_expr_stmt
-unit|} }
+unit|}     }
 name|template
 operator|<
 name|class
@@ -6676,7 +6736,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_concat
 case|:
@@ -6725,16 +6785,14 @@ name|_M_right
 expr_stmt|;
 block|}
 else|else
-block|{
 name|__r
 operator|=
 name|__left
 expr_stmt|;
 block|}
-block|}
 break|break;
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 case|:
@@ -6759,12 +6817,12 @@ index|]
 return|;
 block|}
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_function
 case|:
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_substringfn
 case|:
@@ -6851,7 +6909,7 @@ name|_RopeRep
 operator|*
 name|__clrstack
 index|[
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_max_rope_depth
 index|]
@@ -6886,7 +6944,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_concat
 case|:
@@ -6954,22 +7012,20 @@ end_expr_stmt
 
 begin_else
 else|else
-block|{
 name|__r
 operator|=
 name|__left
 expr_stmt|;
-block|}
 end_else
 
 begin_empty_stmt
-unit|} 	    break
+unit|} 	      break
 empty_stmt|;
 end_empty_stmt
 
 begin_case
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 case|:
@@ -7054,7 +7110,7 @@ end_block
 
 begin_case
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_function
 case|:
@@ -7062,7 +7118,7 @@ end_case
 
 begin_case
 case|case
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_substringfn
 case|:
@@ -7075,7 +7131,7 @@ return|;
 end_return
 
 begin_endif
-unit|}     } }
+unit|} 	}     }
 endif|#
 directive|endif
 end_endif
@@ -7177,7 +7233,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 operator|==
@@ -7198,7 +7254,7 @@ name|__left
 decl_stmt|;
 if|if
 condition|(
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 operator|==
@@ -7300,7 +7356,7 @@ parameter_list|)
 function_decl|;
 if|if
 condition|(
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 operator|==
@@ -7564,7 +7620,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  template
+unit|}    template
 operator|<
 name|class
 name|_CharT
@@ -7589,16 +7645,10 @@ if|if
 condition|(
 name|_M_current_valid
 condition|)
-block|{
 return|return
 name|_M_current
 return|;
-block|}
-end_expr_stmt
-
-begin_else
 else|else
-block|{
 return|return
 name|_My_rope
 operator|::
@@ -7612,10 +7662,10 @@ name|_M_pos
 argument_list|)
 return|;
 block|}
-end_else
+end_expr_stmt
 
 begin_expr_stmt
-unit|} template
+name|template
 operator|<
 name|class
 name|_CharT
@@ -7754,12 +7804,10 @@ literal|0
 operator|==
 name|__rest
 condition|)
-block|{
 name|__remainder
 operator|=
 literal|0
 expr_stmt|;
-block|}
 else|else
 block|{
 name|__rest_buffer
@@ -7774,13 +7822,16 @@ name|__rest
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|uninitialized_fill_n
+name|__uninitialized_fill_n_a
 argument_list|(
 name|__rest_buffer
 argument_list|,
 name|__rest
 argument_list|,
 name|__c
+argument_list|,
+name|get_allocator
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|_S_cond_store_eos
@@ -7865,13 +7916,16 @@ decl_stmt|;
 name|rope
 name|__base_rope
 decl_stmt|;
-name|uninitialized_fill_n
+name|__uninitialized_fill_n_a
 argument_list|(
 name|__base_buffer
 argument_list|,
 name|__exponentiate_threshold
 argument_list|,
 name|__c
+argument_list|,
+name|get_allocator
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|_S_cond_store_eos
@@ -7927,14 +7981,11 @@ literal|1
 operator|==
 name|__exponent
 condition|)
-block|{
 name|__result
 operator|=
 name|__base_rope
 expr_stmt|;
-block|}
 else|else
-block|{
 name|__result
 operator|=
 name|power
@@ -7953,27 +8004,22 @@ operator|(
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 literal|0
 operator|!=
 name|__remainder
 condition|)
-block|{
 name|__result
 operator|+=
 name|__remainder_rope
 expr_stmt|;
 block|}
-block|}
 else|else
-block|{
 name|__result
 operator|=
 name|__remainder_rope
 expr_stmt|;
-block|}
 end_if
 
 begin_expr_stmt
@@ -7998,7 +8044,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}  template
+unit|}          template
 operator|<
 name|class
 name|_CharT
@@ -8180,7 +8226,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  template
+unit|}      template
 operator|<
 name|class
 name|_CharT
@@ -8244,7 +8290,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|_Rope_constants
+name|__detail
 operator|::
 name|_S_leaf
 operator|==
@@ -8258,13 +8304,11 @@ literal|0
 operator|!=
 name|__old_c_string
 condition|)
-block|{
 return|return
 operator|(
 name|__old_c_string
 operator|)
 return|;
-block|}
 end_if
 
 begin_decl_stmt
@@ -8657,39 +8701,26 @@ comment|//   code bloat and compile time problem.  (Fixed in 7.2.)
 end_comment
 
 begin_comment
-comment|// - wchar_t is 4 bytes wide on most UNIX platforms, making it unattractive
+comment|// - wchar_t is 4 bytes wide on most UNIX platforms, making it
 end_comment
 
 begin_comment
-comment|//   for unicode strings.  Unsigned short may be a better character
+comment|//   unattractive for unicode strings.  Unsigned short may be a better
 end_comment
 
 begin_comment
-comment|//   type.
+comment|//   character type.
 end_comment
 
 begin_endif
-unit|inline void rotate( 		_Rope_iterator<wchar_t,__STL_DEFAULT_ALLOCATOR(char)> __first,                 _Rope_iterator<wchar_t,__STL_DEFAULT_ALLOCATOR(char)> __middle,                 _Rope_iterator<wchar_t,__STL_DEFAULT_ALLOCATOR(char)> __last) {     _Rope_rotate(__first, __middle, __last); }
+unit|inline void   rotate(_Rope_iterator<wchar_t, __STL_DEFAULT_ALLOCATOR(char)> __first, 	 _Rope_iterator<wchar_t, __STL_DEFAULT_ALLOCATOR(char)> __middle, 	 _Rope_iterator<wchar_t, __STL_DEFAULT_ALLOCATOR(char)> __last)   { _Rope_rotate(__first, __middle, __last); }
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-unit|}
-comment|// namespace __gnu_cxx
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:C++
-end_comment
-
-begin_comment
-comment|// End:
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 end_unit
 

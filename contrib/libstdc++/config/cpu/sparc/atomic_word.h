@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -132,6 +132,64 @@ name|int
 name|_Atomic_word
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__sparc_v9__
+argument_list|)
+end_if
+
+begin_comment
+comment|// These are necessary under the V9 RMO model, though it is almost never
+end_comment
+
+begin_comment
+comment|// used in userspace.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCXX_READ_MEM_BARRIER
+define|\
+value|__asm __volatile ("membar #LoadLoad":::"memory")
+end_define
+
+begin_define
+define|#
+directive|define
+name|_GLIBCXX_WRITE_MEM_BARRIER
+define|\
+value|__asm __volatile ("membar #StoreStore":::"memory")
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__sparc_v8__
+argument_list|)
+end_elif
+
+begin_comment
+comment|// This is necessary under the PSO model.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCXX_WRITE_MEM_BARRIER
+value|__asm __volatile ("stbar":::"memory")
+end_define
 
 begin_endif
 endif|#

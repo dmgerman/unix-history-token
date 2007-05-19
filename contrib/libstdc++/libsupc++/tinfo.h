@@ -60,11 +60,11 @@ comment|// along with GCC; see the file COPYING.  If not, write to
 end_comment
 
 begin_comment
-comment|// the Free Software Foundation, 59 Temple Place - Suite 330,
+comment|// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 end_comment
 
 begin_comment
-comment|// Boston, MA 02111-1307, USA.
+comment|// Boston, MA 02110-1301, USA.
 end_comment
 
 begin_comment

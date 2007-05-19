@@ -4,7 +4,7 @@ comment|// Heap implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2004, 2005, 2006 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -122,13 +122,26 @@ directive|include
 file|<debug/debug.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|// is_heap, a predicate testing whether or not a range is
+end_comment
+
+begin_comment
 comment|// a heap.  This function is an extension, not part of the C++
+end_comment
+
+begin_comment
 comment|// standard.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -194,11 +207,16 @@ operator|++
 name|__parent
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|true
 return|;
-block|}
-name|template
+end_return
+
+begin_expr_stmt
+unit|}    template
 operator|<
 name|typename
 name|_RandomAccessIterator
@@ -271,11 +289,16 @@ operator|++
 name|__parent
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|true
 return|;
-block|}
-name|template
+end_return
+
+begin_expr_stmt
+unit|}    template
 operator|<
 name|typename
 name|_RandomAccessIterator
@@ -306,6 +329,9 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -344,7 +370,13 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Heap-manipulation functions: push_heap, pop_heap, make_heap, sort_heap.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -433,9 +465,15 @@ operator|)
 operator|=
 name|__value
 expr_stmt|;
-block|}
+end_expr_stmt
+
+begin_comment
+unit|}
 comment|/**    *  @brief  Push an element onto a heap.    *  @param  first  Start of heap.    *  @param  last   End of heap + element.    *  @ingroup heap    *    *  This operation pushes the element at last-1 onto the valid heap over the    *  range [first,last-1).  After completion, [first,last) is a valid heap.   */
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|_RandomAccessIterator
@@ -459,6 +497,9 @@ operator|::
 name|value_type
 name|_ValueType
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|typename
 name|iterator_traits
@@ -469,15 +510,27 @@ operator|::
 name|difference_type
 name|_DistanceType
 expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// concept requirements
+end_comment
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_Mutable_RandomAccessIteratorConcept< 	    _RandomAccessIterator>
 argument_list|)
+end_macro
+
+begin_macro
 name|__glibcxx_function_requires
 argument_list|(
 argument|_LessThanComparableConcept<_ValueType>
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__glibcxx_requires_valid_range
 argument_list|(
 name|__first
@@ -485,7 +538,13 @@ argument_list|,
 name|__last
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//      __glibcxx_requires_heap(__first, __last - 1);
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|__push_heap
@@ -519,11 +578,10 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_expr_stmt
-name|template
+unit|}    template
 operator|<
 name|typename
 name|_RandomAccessIterator
@@ -1711,8 +1769,11 @@ name|pop_heap
 argument_list|(
 name|__first
 argument_list|,
+name|_RandomAccessIterator
+argument_list|(
 name|__last
 operator|--
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1776,8 +1837,11 @@ name|pop_heap
 argument_list|(
 name|__first
 argument_list|,
+name|_RandomAccessIterator
+argument_list|(
 name|__last
 operator|--
+argument_list|)
 argument_list|,
 name|__comp
 argument_list|)
@@ -1785,10 +1849,9 @@ expr_stmt|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#
@@ -1797,18 +1860,6 @@ end_endif
 
 begin_comment
 comment|/* _STL_HEAP_H */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:C++
-end_comment
-
-begin_comment
-comment|// End:
 end_comment
 
 end_unit

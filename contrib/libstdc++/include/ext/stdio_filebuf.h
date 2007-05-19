@@ -4,7 +4,7 @@ comment|// File descriptor layer for filebuf -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -125,11 +125,18 @@ directive|include
 file|<fstream>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|__gnu_cxx
-block|{
-comment|/**    *  @class stdio_filebuf ext/stdio_filebuf.h<ext/stdio_filebuf.h>    *  @brief Provides a layer of compatibility for C/POSIX.    *    *  This GNU extension provides extensions for working with standard C    *  FILE*'s and POSIX file descriptors.  It must be instantiated by the    *  user with the type of character used in the file stream, e.g.,    *  stdio_filebuf<char>.   */
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|__gnu_cxx
+argument_list|)
+end_macro
+
+begin_comment
+comment|/**    *  @brief Provides a layer of compatibility for C/POSIX.    *    *  This GNU extension provides extensions for working with standard C    *  FILE*'s and POSIX file descriptors.  It must be instantiated by the    *  user with the type of character used in the file stream, e.g.,    *  stdio_filebuf<char>.   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -165,10 +172,16 @@ typedef|typedef
 name|_CharT
 name|char_type
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|_Traits
 name|traits_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -176,6 +189,9 @@ operator|::
 name|int_type
 name|int_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -183,6 +199,9 @@ operator|::
 name|pos_type
 name|pos_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -190,15 +209,27 @@ operator|::
 name|off_type
 name|off_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
 name|size_t
 name|size_t
 expr_stmt|;
+end_typedef
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|/**        * deferred initialization       */
+end_comment
+
+begin_expr_stmt
 name|stdio_filebuf
 argument_list|()
 operator|:
@@ -223,7 +254,13 @@ argument_list|,
 argument|size_t __size = static_cast<size_t>(BUFSIZ)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @param  f  An open @c FILE*.        *  @param  mode  Same meaning as in a standard filebuf.        *  @param  size  Optimal or preferred size of internal buffer, in chars.        *                Defaults to system's @c BUFSIZ.        *        *  This constructor associates a file stream buffer with an open        *  C @c FILE*.  The @c FILE* will not be automatically closed when the        *  stdio_filebuf is closed/destroyed.       */
+end_comment
+
+begin_macro
 name|stdio_filebuf
 argument_list|(
 argument|std::__c_file* __f
@@ -232,14 +269,29 @@ argument|std::ios_base::openmode __mode
 argument_list|,
 argument|size_t __size = static_cast<size_t>(BUFSIZ)
 argument_list|)
+end_macro
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/**        *  Closes the external data stream if the file descriptor constructor        *  was used.       */
+end_comment
+
+begin_expr_stmt
 name|virtual
 operator|~
 name|stdio_filebuf
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @return  The underlying file descriptor.        *        *  Once associated with an external data stream, this function can be        *  used to access the underlying POSIX file descriptor.  Note that        *  there is no way for the library to track what you do with the        *  descriptor, so be careful.       */
+end_comment
+
+begin_function
 name|int
 name|fd
 parameter_list|()
@@ -253,7 +305,13 @@ name|fd
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @return  The underlying FILE*.        *        *  This function can be used to access the underlying "C" file pointer.        *  Note that there is no way for the library to track what you do        *  with the file, so be careful.        */
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|__c_file
@@ -270,14 +328,10 @@ name|file
 argument_list|()
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -464,12 +518,8 @@ expr_stmt|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|} }
-comment|// namespace __gnu_cxx
-end_comment
-
 begin_endif
+unit|}  _GLIBCXX_END_NAMESPACE
 endif|#
 directive|endif
 end_endif

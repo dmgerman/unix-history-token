@@ -4,7 +4,7 @@ comment|// Stream buffer classes -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,6 +100,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file streambuf  *  This is a Standard C++ Library header.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -111,20 +115,16 @@ begin_comment
 comment|//
 end_comment
 
-begin_comment
-comment|/** @file streambuf  *  This is a Standard C++ Library header.  You should @c #include this header  *  in your programs, rather than any of the "st[dl]_*.h" implementation files.  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CLIBXX_STREAMBUF
+name|_GLIBXX_STREAMBUF
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CLIBXX_STREAMBUF
+name|_GLIBXX_STREAMBUF
 value|1
 end_define
 
@@ -159,11 +159,30 @@ directive|include
 file|<bits/ios_base.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_include
+include|#
+directive|include
+file|<bits/cpp_type_traits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ext/type_traits.h>
+end_include
+
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|/**    *  @if maint    *  Does stuff.    *  @endif   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -173,7 +192,7 @@ name|typename
 name|_Traits
 operator|>
 name|streamsize
-name|__copy_streambufs
+name|__copy_streambufs_eof
 argument_list|(
 name|basic_streambuf
 operator|<
@@ -182,7 +201,6 @@ argument_list|,
 name|_Traits
 operator|>
 operator|*
-name|__sbin
 argument_list|,
 name|basic_streambuf
 operator|<
@@ -191,10 +209,18 @@ argument_list|,
 name|_Traits
 operator|>
 operator|*
-name|__sbout
+argument_list|,
+name|bool
+operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/**    *  @brief  The actual work of input and output (interface).    *    *  This is a base class.  Derived stream buffers each control a    *  pair of character sequences:  one for input, and one for output.    *    *  Section [27.5.1] of the standard describes the requirements and    *  behavior of stream buffer classes.  That section (three paragraphs)    *  is reproduced here, for simplicity and accuracy.    *    *  -# Stream buffers can impose various constraints on the sequences    *     they control.  Some constraints are:    *     - The controlled input sequence can be not readable.    *     - The controlled output sequence can be not writable.    *     - The controlled sequences can be associated with the contents of    *       other representations for character sequences, such as external    *       files.    *     - The controlled sequences can support operations @e directly to or    *       from associated sequences.    *     - The controlled sequences can impose limitations on how the    *       program can read characters from a sequence, write characters to    *       a sequence, put characters back into an input sequence, or alter    *       the stream position.    *     .    *  -# Each sequence is characterized by three pointers which, if non-null,    *     all point into the same @c charT array object.  The array object    *     represents, at any moment, a (sub)sequence of characters from the    *     sequence.  Operations performed on a sequence alter the values    *     stored in these pointers, perform reads and writes directly to or    *     from associated sequences, and alter "the stream position" and    *     conversion state as needed to maintain this subsequence relationship.    *     The three pointers are:    *     - the<em>beginning pointer</em>, or lowest element address in the    *       array (called @e xbeg here);    *     - the<em>next pointer</em>, or next element address that is a    *       current candidate for reading or writing (called @e xnext here);    *     - the<em>end pointer</em>, or first element address beyond the    *       end of the array (called @e xend here).    *     .    *  -# The following semantic constraints shall always apply for any set    *     of three pointers for a sequence, using the pointer names given    *     immediately above:    *     - If @e xnext is not a null pointer, then @e xbeg and @e xend shall    *       also be non-null pointers into the same @c charT array, as    *       described above; otherwise, @e xbeg and @e xend shall also be null.    *     - If @e xnext is not a null pointer and @e xnext< @e xend for an    *       output sequence, then a<em>write position</em> is available.    *       In this case, @e *xnext shall be assignable as the next element    *       to write (to put, or to store a character value, into the sequence).    *     - If @e xnext is not a null pointer and @e xbeg< @e xnext for an    *       input sequence, then a<em>putback position</em> is available.    *       In this case, @e xnext[-1] shall have a defined value and is the    *       next (preceding) element to store a character that is put back    *       into the input sequence.    *     - If @e xnext is not a null pointer and @e xnext< @e xend for an    *       input sequence, then a<em>read position</em> is available.    *       In this case, @e *xnext shall have a defined value and is the    *       next element to read (to get, or to obtain a character value,    *       from the sequence).   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -214,10 +240,16 @@ typedef|typedef
 name|_CharT
 name|char_type
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|_Traits
 name|traits_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -225,6 +257,9 @@ operator|::
 name|int_type
 name|int_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -232,6 +267,9 @@ operator|::
 name|pos_type
 name|pos_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -239,9 +277,21 @@ operator|::
 name|off_type
 name|off_type
 expr_stmt|;
+end_typedef
+
+begin_comment
 comment|//@}
+end_comment
+
+begin_comment
 comment|//@{
+end_comment
+
+begin_comment
 comment|/**        *  @if maint        *  This is a non-standard type.        *  @endif       */
+end_comment
+
+begin_typedef
 typedef|typedef
 name|basic_streambuf
 operator|<
@@ -251,7 +301,13 @@ name|traits_type
 operator|>
 name|__streambuf_type
 expr_stmt|;
+end_typedef
+
+begin_comment
 comment|//@}
+end_comment
+
+begin_expr_stmt
 name|friend
 name|class
 name|basic_ios
@@ -261,6 +317,9 @@ operator|,
 name|traits_type
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|friend
 name|class
 name|basic_istream
@@ -270,6 +329,9 @@ operator|,
 name|traits_type
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|friend
 name|class
 name|basic_ostream
@@ -279,6 +341,9 @@ operator|,
 name|traits_type
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|friend
 name|class
 name|istreambuf_iterator
@@ -288,6 +353,9 @@ operator|,
 name|traits_type
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|friend
 name|class
 name|ostreambuf_iterator
@@ -297,62 +365,336 @@ operator|,
 name|traits_type
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|friend
 name|streamsize
-name|__copy_streambufs
+name|__copy_streambufs_eof
 operator|<
 operator|>
 operator|(
 name|__streambuf_type
 operator|*
-name|__sbin
 operator|,
 name|__streambuf_type
 operator|*
-name|__sbout
+operator|,
+name|bool
+operator|&
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_CharT2
+operator|>
+name|friend
+name|typename
+name|__gnu_cxx
+operator|::
+name|__enable_if
+operator|<
+name|__is_char
+operator|<
+name|_CharT2
+operator|>
+operator|::
+name|__value
+operator|,
+name|_CharT2
+operator|*
+operator|>
+operator|::
+name|__type
+name|__copy_aux
+argument_list|(
+name|istreambuf_iterator
+operator|<
+name|_CharT2
+operator|>
+argument_list|,
+name|istreambuf_iterator
+operator|<
+name|_CharT2
+operator|>
+argument_list|,
+name|_CharT2
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_CharT2
+operator|>
+name|friend
+name|typename
+name|__gnu_cxx
+operator|::
+name|__enable_if
+operator|<
+name|__is_char
+operator|<
+name|_CharT2
+operator|>
+operator|::
+name|__value
+operator|,
+name|istreambuf_iterator
+operator|<
+name|_CharT2
+operator|>
+expr|>
+operator|::
+name|__type
+name|find
+argument_list|(
+name|istreambuf_iterator
+operator|<
+name|_CharT2
+operator|>
+argument_list|,
+name|istreambuf_iterator
+operator|<
+name|_CharT2
+operator|>
+argument_list|,
+specifier|const
+name|_CharT2
+operator|&
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_CharT2
+operator|,
+name|typename
+name|_Traits2
+operator|>
+name|friend
+name|basic_istream
+operator|<
+name|_CharT2
+operator|,
+name|_Traits2
+operator|>
+operator|&
+name|operator
+operator|>>
+operator|(
+name|basic_istream
+operator|<
+name|_CharT2
+operator|,
+name|_Traits2
+operator|>
+operator|&
+operator|,
+name|_CharT2
+operator|*
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_CharT2
+operator|,
+name|typename
+name|_Traits2
+operator|,
+name|typename
+name|_Alloc
+operator|>
+name|friend
+name|basic_istream
+operator|<
+name|_CharT2
+operator|,
+name|_Traits2
+operator|>
+operator|&
+name|operator
+operator|>>
+operator|(
+name|basic_istream
+operator|<
+name|_CharT2
+operator|,
+name|_Traits2
+operator|>
+operator|&
+operator|,
+name|basic_string
+operator|<
+name|_CharT2
+operator|,
+name|_Traits2
+operator|,
+name|_Alloc
+operator|>
+operator|&
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_CharT2
+operator|,
+name|typename
+name|_Traits2
+operator|,
+name|typename
+name|_Alloc
+operator|>
+name|friend
+name|basic_istream
+operator|<
+name|_CharT2
+operator|,
+name|_Traits2
+operator|>
+operator|&
+name|getline
+argument_list|(
+name|basic_istream
+operator|<
+name|_CharT2
+argument_list|,
+name|_Traits2
+operator|>
+operator|&
+argument_list|,
+name|basic_string
+operator|<
+name|_CharT2
+argument_list|,
+name|_Traits2
+argument_list|,
+name|_Alloc
+operator|>
+operator|&
+argument_list|,
+name|_CharT2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|protected
 label|:
+end_label
+
+begin_comment
 comment|//@{
+end_comment
+
+begin_comment
 comment|/**        *  @if maint        *  This is based on _IO_FILE, just reordered to be more consistent,        *  and is intended to be the most minimal abstraction for an        *  internal buffer.        *  -  get == input == read        *  -  put == output == write        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|char_type
 modifier|*
 name|_M_in_beg
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Start of get area.
+end_comment
+
+begin_decl_stmt
 name|char_type
 modifier|*
 name|_M_in_cur
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Current read area.
+end_comment
+
+begin_decl_stmt
 name|char_type
 modifier|*
 name|_M_in_end
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// End of get area.
+end_comment
+
+begin_decl_stmt
 name|char_type
 modifier|*
 name|_M_out_beg
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Start of put area.
+end_comment
+
+begin_decl_stmt
 name|char_type
 modifier|*
 name|_M_out_cur
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Current put area.
+end_comment
+
+begin_decl_stmt
 name|char_type
 modifier|*
 name|_M_out_end
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// End of put area.
+end_comment
+
+begin_comment
 comment|/**        *  @if maint        *  Current locale setting.        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|locale
 name|_M_buf_locale
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|/// Destructor deallocates no buffer space.
+end_comment
+
+begin_expr_stmt
 name|virtual
 operator|~
 name|basic_streambuf
@@ -390,7 +732,13 @@ return|return
 name|__tmp
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Locale access.        *  @return  The current locale in effect.        *        *  If pubimbue(loc) has been called, then the most recent @c loc        *  is returned.  Otherwise the global locale in effect at the time        *  of construction is returned.       */
+end_comment
+
+begin_expr_stmt
 name|locale
 name|getloc
 argument_list|()
@@ -400,9 +748,21 @@ return|return
 name|_M_buf_locale
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// [27.5.2.2.2] buffer management and positioning
+end_comment
+
+begin_comment
 comment|//@{
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Entry points for derived buffer functions.        *        *  The public versions of @c pubfoo dispatch to the protected        *  derived @c foo member functions, passing the arguments (if any)        *  and returning the result unchanged.       */
+end_comment
+
+begin_function
 name|__streambuf_type
 modifier|*
 name|pubsetbuf
@@ -426,6 +786,9 @@ name|__n
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 name|pos_type
 name|pubseekoff
 argument_list|(
@@ -464,6 +827,9 @@ name|__mode
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|pos_type
 name|pubseekpos
 argument_list|(
@@ -495,6 +861,9 @@ name|__mode
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|int
 name|pubsync
 parameter_list|()
@@ -506,9 +875,21 @@ name|sync
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_comment
 comment|//@}
+end_comment
+
+begin_comment
 comment|// [27.5.2.2.3] get area
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Looking ahead into the stream.        *  @return  The number of characters available.        *        *  If a read position is available, returns the number of characters        *  available for reading before the buffer must be refilled.        *  Otherwise returns the derived @c showmanyc().       */
+end_comment
+
+begin_function
 name|streamsize
 name|in_avail
 parameter_list|()
@@ -538,7 +919,13 @@ name|showmanyc
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief  Getting the next character.        *  @return  The next character, or eof.        *        *  Calls @c sbumpc(), and if that function returns        *  @c traits::eof(), so does this function.  Otherwise, @c sgetc().       */
+end_comment
+
+begin_function
 name|int_type
 name|snextc
 parameter_list|()
@@ -582,7 +969,13 @@ return|return
 name|__ret
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief  Getting the next character.        *  @return  The next character, or eof.        *        *  If the input read position is available, returns that character        *  and increments the read pointer, otherwise calls and returns        *  @c uflow().       */
+end_comment
+
+begin_function
 name|int_type
 name|sbumpc
 parameter_list|()
@@ -641,7 +1034,13 @@ return|return
 name|__ret
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief  Getting the next character.        *  @return  The next character, or eof.        *        *  If the input read position is available, returns that character,        *  otherwise calls and returns @c underflow().  Does not move the         *  read position after fetching the character.       */
+end_comment
+
+begin_function
 name|int_type
 name|sgetc
 parameter_list|()
@@ -691,7 +1090,13 @@ return|return
 name|__ret
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief  Entry point for xsgetn.        *  @param  s  A buffer area.        *  @param  n  A count.        *        *  Returns xsgetn(s,n).  The effect is to fill @a s[0] through        *  @a s[n-1] with characters from the input sequence, if possible.       */
+end_comment
+
+begin_function
 name|streamsize
 name|sgetn
 parameter_list|(
@@ -714,8 +1119,17 @@ name|__n
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// [27.5.2.2.4] putback
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Pushing characters back into the input stream.        *  @param  c  The character to push back.        *  @return  The previous character, if possible.        *        *  Similar to sungetc(), but @a c is pushed onto the stream instead        *  of "the previous character".  If successful, the next character        *  fetched from the input stream will be @a c.       */
+end_comment
+
+begin_function
 name|int_type
 name|sputbackc
 parameter_list|(
@@ -809,7 +1223,13 @@ return|return
 name|__ret
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief  Moving backwards in the input stream.        *  @return  The previous character, if possible.        *        *  If a putback position is available, this function decrements the        *  input pointer and returns that character.  Otherwise, calls and        *  returns pbackfail().  The effect is to "unget" the last character        *  "gotten".       */
+end_comment
+
+begin_function
 name|int_type
 name|sungetc
 parameter_list|()
@@ -869,8 +1289,17 @@ return|return
 name|__ret
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// [27.5.2.2.5] put area
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Entry point for all single-character output functions.        *  @param  c  A character to output.        *  @return  @a c, if possible.        *        *  One of two public output functions.        *        *  If a write position is available for the output sequence (i.e.,        *  the buffer is not full), stores @a c in that position, increments        *  the position, and returns @c traits::to_int_type(c).  If a write        *  position is not available, returns @c overflow(c).       */
+end_comment
+
+begin_function
 name|int_type
 name|sputc
 parameter_list|(
@@ -943,7 +1372,13 @@ return|return
 name|__ret
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief  Entry point for all single-character output functions.        *  @param  s  A buffer read area.        *  @param  n  A count.        *        *  One of two public output functions.        *        *        *  Returns xsputn(s,n).  The effect is to write @a s[0] through        *  @a s[n-1] to the output sequence, if possible.       */
+end_comment
+
+begin_function
 name|streamsize
 name|sputn
 parameter_list|(
@@ -967,9 +1402,18 @@ name|__n
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_label
 name|protected
 label|:
+end_label
+
+begin_comment
 comment|/**        *  @brief  Base constructor.        *        *  Only called from derived constructors, and sets up all the        *  buffer data to zero, including the pointers described in the        *  basic_streambuf class description.  Note that, as a result,        *  - the class starts with no read nor write positions available,        *  - this is not an error       */
+end_comment
+
+begin_expr_stmt
 name|basic_streambuf
 argument_list|()
 operator|:
@@ -1021,6 +1465,9 @@ return|return
 name|_M_in_beg
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|char_type
 operator|*
 name|gptr
@@ -1031,6 +1478,9 @@ return|return
 name|_M_in_cur
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|char_type
 operator|*
 name|egptr
@@ -1041,8 +1491,17 @@ return|return
 name|_M_in_end
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|//@}
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Moving the read position.        *  @param  n  The delta by which to move.        *        *  This just advances the read position without returning any data.       */
+end_comment
+
+begin_function
 name|void
 name|gbump
 parameter_list|(
@@ -1055,7 +1514,13 @@ operator|+=
 name|__n
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief  Setting the three read area pointers.        *  @param  gbeg  A pointer.        *  @param  gnext  A pointer.        *  @param  gend  A pointer.        *  @post  @a gbeg == @c eback(), @a gnext == @c gptr(), and        *         @a gend == @c egptr()       */
+end_comment
+
+begin_function
 name|void
 name|setg
 parameter_list|(
@@ -1085,9 +1550,21 @@ operator|=
 name|__gend
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|// [27.5.2.3.2] put area access
+end_comment
+
+begin_comment
 comment|//@{
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Access to the put area.        *        *  These functions are only available to other protected functions,        *  including derived classes.        *        *  - pbase() returns the beginning pointer for the output sequence        *  - pptr() returns the next pointer for the output sequence        *  - epptr() returns the end pointer for the output sequence       */
+end_comment
+
+begin_expr_stmt
 name|char_type
 operator|*
 name|pbase
@@ -1098,6 +1575,9 @@ return|return
 name|_M_out_beg
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|char_type
 operator|*
 name|pptr
@@ -1108,6 +1588,9 @@ return|return
 name|_M_out_cur
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|char_type
 operator|*
 name|epptr
@@ -1118,8 +1601,17 @@ return|return
 name|_M_out_end
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|//@}
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Moving the write position.        *  @param  n  The delta by which to move.        *        *  This just advances the write position without returning any data.       */
+end_comment
+
+begin_function
 name|void
 name|pbump
 parameter_list|(
@@ -1132,7 +1624,13 @@ operator|+=
 name|__n
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief  Setting the three write area pointers.        *  @param  pbeg  A pointer.        *  @param  pend  A pointer.        *  @post  @a pbeg == @c pbase(), @a pbeg == @c pptr(), and        *         @a pend == @c epptr()       */
+end_comment
+
+begin_function
 name|void
 name|setp
 parameter_list|(
@@ -1156,9 +1654,21 @@ operator|=
 name|__pend
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|// [27.5.2.4] virtual functions
+end_comment
+
+begin_comment
 comment|// [27.5.2.4.1] locales
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Changes translations.        *  @param  loc  A new locale.        *        *  Translations done during I/O which depend on the current locale        *  are changed by this call.  The standard adds, "Between invocations        *  of this function a class derived from streambuf can safely cache        *  results of calls to locale functions and to members of facets        *  so obtained."        *        *  @note  Base class version does nothing.       */
+end_comment
+
+begin_function
 name|virtual
 name|void
 name|imbue
@@ -1168,8 +1678,17 @@ name|locale
 modifier|&
 parameter_list|)
 block|{ }
+end_function
+
+begin_comment
 comment|// [27.5.2.4.2] buffer management and positioning
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Maniuplates the buffer.        *        *  Each derived class provides its own appropriate behavior.  See        *  the next-to-last paragraph of         *  http://gcc.gnu.org/onlinedocs/libstdc++/27_io/howto.html#2 for        *  more on this function.        *        *  @note  Base class version does nothing, returns @c this.       */
+end_comment
+
+begin_expr_stmt
 name|virtual
 name|basic_streambuf
 operator|<
@@ -1189,7 +1708,13 @@ return|return
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Alters the stream positions.        *        *  Each derived class provides its own appropriate behavior.        *  @note  Base class version does nothing, returns a @c pos_type        *         that represents an invalid stream position.       */
+end_comment
+
+begin_decl_stmt
 name|virtual
 name|pos_type
 name|seekoff
@@ -1225,7 +1750,13 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @brief  Alters the stream positions.        *        *  Each derived class provides its own appropriate behavior.        *  @note  Base class version does nothing, returns a @c pos_type        *         that represents an invalid stream position.       */
+end_comment
+
+begin_decl_stmt
 name|virtual
 name|pos_type
 name|seekpos
@@ -1257,7 +1788,13 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @brief  Synchronizes the buffer arrays with the controlled sequences.        *  @return  -1 on failure.        *        *  Each derived class provides its own appropriate behavior,        *  including the definition of "failure".        *  @note  Base class version does nothing, returns zero.       */
+end_comment
+
+begin_function
 name|virtual
 name|int
 name|sync
@@ -1267,8 +1804,17 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// [27.5.2.4.3] get area
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Investigating the data available.        *  @return  An estimate of the number of characters available in the        *           input sequence, or -1.        *        *  "If it returns a positive value, then successive calls to        *  @c underflow() will not return @c traits::eof() until at least that        *  number of characters have been supplied.  If @c showmanyc()        *  returns -1, then calls to @c underflow() or @c uflow() will fail."        *  [27.5.2.4.3]/1        *        *  @note  Base class version does nothing, returns zero.        *  @note  The standard adds that "the intention is not only that the        *         calls [to underflow or uflow] will not return @c eof() but        *         that they will return "immediately".        *  @note  The standard adds that "the morphemes of @c showmanyc are        *         "es-how-many-see", not "show-manic".       */
+end_comment
+
+begin_function
 name|virtual
 name|streamsize
 name|showmanyc
@@ -1278,7 +1824,13 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief  Multiple character extraction.        *  @param  s  A buffer area.        *  @param  n  Maximum number of characters to assign.        *  @return  The number of characters assigned.        *        *  Fills @a s[0] through @a s[n-1] with characters from the input        *  sequence, as if by @c sbumpc().  Stops when either @a n characters        *  have been copied, or when @c traits::eof() would be copied.        *        *  It is expected that derived classes provide a more efficient        *  implementation by overriding this definition.       */
+end_comment
+
+begin_function_decl
 name|virtual
 name|streamsize
 name|xsgetn
@@ -1291,7 +1843,13 @@ name|streamsize
 name|__n
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**        *  @brief  Fetches more data from the controlled sequence.        *  @return  The first character from the<em>pending sequence</em>.        *        *  Informally, this function is called when the input buffer is        *  exhausted (or does not exist, as buffering need not actually be        *  done).  If a buffer exists, it is "refilled".  In either case, the        *  next available character is returned, or @c traits::eof() to        *  indicate a null pending sequence.        *        *  For a formal definiton of the pending sequence, see a good text        *  such as Langer& Kreft, or [27.5.2.4.3]/7-14.        *        *  A functioning input streambuf can be created by overriding only        *  this function (no buffer area will be used).  For an example, see        *  http://gcc.gnu.org/onlinedocs/libstdc++/27_io/howto.html#6        *        *  @note  Base class version does nothing, returns eof().       */
+end_comment
+
+begin_function
 name|virtual
 name|int_type
 name|underflow
@@ -1304,7 +1862,13 @@ name|eof
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief  Fetches more data from the controlled sequence.        *  @return  The first character from the<em>pending sequence</em>.        *        *  Informally, this function does the same thing as @c underflow(),        *  and in fact is required to call that function.  It also returns        *  the new character, like @c underflow() does.  However, this        *  function also moves the read position forward by one.       */
+end_comment
+
+begin_function
 name|virtual
 name|int_type
 name|uflow
@@ -1365,8 +1929,17 @@ return|return
 name|__ret
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// [27.5.2.4.4] putback
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Tries to back up the input sequence.        *  @param  c  The character to be inserted back into the sequence.        *  @return  eof() on failure, "some other value" on success        *  @post  The constraints of @c gptr(), @c eback(), and @c pptr()        *         are the same as for @c underflow().        *        *  @note  Base class version does nothing, returns eof().       */
+end_comment
+
+begin_function
 name|virtual
 name|int_type
 name|pbackfail
@@ -1387,8 +1960,17 @@ name|eof
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// Put area:
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Multiple character insertion.        *  @param  s  A buffer area.        *  @param  n  Maximum number of characters to write.        *  @return  The number of characters written.        *        *  Writes @a s[0] through @a s[n-1] to the output sequence, as if        *  by @c sputc().  Stops when either @a n characters have been        *  copied, or when @c sputc() would return @c traits::eof().        *        *  It is expected that derived classes provide a more efficient        *  implementation by overriding this definition.       */
+end_comment
+
+begin_function_decl
 name|virtual
 name|streamsize
 name|xsputn
@@ -1402,7 +1984,13 @@ name|streamsize
 name|__n
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**        *  @brief  Consumes data from the buffer; writes to the        *          controlled sequence.        *  @param  c  An additional character to consume.        *  @return  eof() to indicate failure, something else (usually        *           @a c, or not_eof())        *        *  Informally, this function is called when the output buffer is full        *  (or does not exist, as buffering need not actually be done).  If a        *  buffer exists, it is "consumed", with "some effect" on the        *  controlled sequence.  (Typically, the buffer is written out to the        *  sequence verbatim.)  In either case, the character @a c is also        *  written out, if @a c is not @c eof().        *        *  For a formal definiton of this function, see a good text        *  such as Langer& Kreft, or [27.5.2.4.5]/3-7.        *        *  A functioning output streambuf can be created by overriding only        *  this function (no buffer area will be used).        *        *  @note  Base class version does nothing, returns eof().       */
+end_comment
+
+begin_function
 name|virtual
 name|int_type
 name|overflow
@@ -1423,13 +2011,28 @@ name|eof
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|_GLIBCXX_DEPRECATED
+end_ifdef
+
+begin_comment
 comment|// Annex D.6
+end_comment
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|/**        *  @brief  Tosses a character.        *        *  Advances the read pointer, ignoring the character that would have        *  been read.        *        *  See http://gcc.gnu.org/ml/libstdc++/2002-05/msg00168.html        *        *  @note  This function has been deprecated by the standard.  You        *         must define @c _GLIBCXX_DEPRECATED to make this visible; see        *         c++config.h.       */
+end_comment
+
+begin_function
 name|void
 name|stossc
 parameter_list|()
@@ -1460,12 +2063,27 @@ name|uflow
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
 comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
+
+begin_comment
 comment|// Side effect of DR 50.
+end_comment
+
+begin_expr_stmt
 name|basic_streambuf
 argument_list|(
 specifier|const
@@ -1536,18 +2154,87 @@ operator|*
 name|this
 return|;
 block|}
-empty_stmt|;
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
 begin_comment
-unit|}
-comment|// namespace std
+unit|};
+comment|// Explicit specialization declarations, defined in src/streambuf.cc.
 end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+name|streamsize
+name|__copy_streambufs_eof
+argument_list|(
+name|basic_streambuf
+operator|<
+name|char
+operator|>
+operator|*
+name|__sbin
+argument_list|,
+name|basic_streambuf
+operator|<
+name|char
+operator|>
+operator|*
+name|__sbout
+argument_list|,
+name|bool
+operator|&
+name|__ineof
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_GLIBCXX_USE_WCHAR_T
+end_ifdef
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+name|streamsize
+name|__copy_streambufs_eof
+argument_list|(
+name|basic_streambuf
+operator|<
+name|wchar_t
+operator|>
+operator|*
+name|__sbin
+argument_list|,
+name|basic_streambuf
+operator|<
+name|wchar_t
+operator|>
+operator|*
+name|__sbout
+argument_list|,
+name|bool
+operator|&
+name|__ineof
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_ifndef
 ifndef|#

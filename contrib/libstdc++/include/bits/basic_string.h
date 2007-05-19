@@ -4,7 +4,11 @@ comment|// Components for manipulating sequences of characters -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+end_comment
+
+begin_comment
+comment|// 2006, 2007
 end_comment
 
 begin_comment
@@ -60,7 +64,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,6 +104,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file basic_string.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -109,10 +117,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|/** @file basic_string.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_ifndef
@@ -138,7 +142,7 @@ end_pragma
 begin_include
 include|#
 directive|include
-file|<bits/atomicity.h>
+file|<ext/atomicity.h>
 end_include
 
 begin_include
@@ -147,12 +151,22 @@ directive|include
 file|<debug/debug.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|/**    *  @class basic_string basic_string.h<string>    *  @brief  Managing sequences of characters and character-like objects.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  Meets the requirements of a<a href="tables.html#65">container</a>, a    *<a href="tables.html#66">reversible container</a>, and a    *<a href="tables.html#67">sequence</a>.  Of the    *<a href="tables.html#68">optional sequence requirements</a>, only    *  @c push_back, @c at, and array access are supported.    *    *  @doctodo    *    *    *  @if maint    *  Documentation?  What's that?    *  Nathan Myers<ncm@cantrip.org>.    *    *  A string looks like this:    *    *  @code    *                                        [_Rep]    *                                        _M_length    *   [basic_string<char_type>]            _M_capacity    *   _M_dataplus                          _M_refcount    *   _M_p ---------------->               unnamed array of char_type    *  @endcode    *    *  Where the _M_p points to the first character in the string, and    *  you cast it to a pointer-to-_Rep and subtract 1 to get a    *  pointer to the header.    *    *  This approach has the enormous advantage that a string object    *  requires only one allocation.  All the ugliness is confined    *  within a single pair of inline functions, which each compile to    *  a single "add" instruction: _Rep::_M_data(), and    *  string::_M_rep(); and the allocation function which gets a    *  block of raw bytes and with room enough and constructs a _Rep    *  object at the front.    *    *  The reason you want _M_data pointing to the character array and    *  not the _Rep is so that the debugger can see the string    *  contents. (Probably we should add a non-inline member to get    *  the _Rep for the debugger to use, so users can check the actual    *  string length.)    *    *  Note that the _Rep object is a POD so that you can have a    *  static "empty string" _Rep object already "constructed" before    *  static constructors have run.  The reference-count encoding is    *  chosen so that a 0 indicates one reference, so you never try to    *  destroy the empty-string _Rep object.    *    *  All but the last paragraph is considered pretty conventional    *  for a C++ string implementation.    *  @endif   */
+end_comment
+
+begin_comment
 comment|// 21.3  Template class basic_string
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -167,13 +181,32 @@ operator|>
 name|class
 name|basic_string
 block|{
+typedef|typedef
+name|typename
+name|_Alloc
+operator|::
+name|template
+name|rebind
+operator|<
+name|_CharT
+operator|>
+operator|::
+name|other
+name|_CharT_alloc_type
+expr_stmt|;
 comment|// Types:
 name|public
 operator|:
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|_Traits
 name|traits_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Traits
@@ -181,52 +214,76 @@ operator|::
 name|char_type
 name|value_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Alloc
 name|allocator_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_CharT_alloc_type
 operator|::
 name|size_type
 name|size_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_CharT_alloc_type
 operator|::
 name|difference_type
 name|difference_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_CharT_alloc_type
 operator|::
 name|reference
 name|reference
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_CharT_alloc_type
 operator|::
 name|const_reference
 name|const_reference
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_CharT_alloc_type
 operator|::
 name|pointer
 name|pointer
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_CharT_alloc_type
 operator|::
 name|const_pointer
 name|const_pointer
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|__gnu_cxx
 operator|::
@@ -238,6 +295,9 @@ name|basic_string
 operator|>
 name|iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|__gnu_cxx
 operator|::
@@ -249,6 +309,9 @@ name|basic_string
 operator|>
 name|const_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -258,6 +321,9 @@ name|const_iterator
 operator|>
 name|const_reverse_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -267,21 +333,66 @@ name|iterator
 operator|>
 name|reverse_iterator
 expr_stmt|;
+end_typedef
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
 comment|// _Rep: string representation
+end_comment
+
+begin_comment
 comment|//   Invariants:
+end_comment
+
+begin_comment
 comment|//   1. String really contains _M_length + 1 characters: due to 21.3.4
+end_comment
+
+begin_comment
 comment|//      must be kept null-terminated.
+end_comment
+
+begin_comment
 comment|//   2. _M_capacity>= _M_length
+end_comment
+
+begin_comment
 comment|//      Allocated memory is always (_M_capacity + 1) * sizeof(_CharT).
+end_comment
+
+begin_comment
 comment|//   3. _M_refcount has three states:
+end_comment
+
+begin_comment
 comment|//      -1: leaked, one reference, no ref-copies allowed, non-const.
+end_comment
+
+begin_comment
 comment|//       0: one reference, non-const.
+end_comment
+
+begin_comment
 comment|//     n>0: n + 1 references, operations require a lock, const.
+end_comment
+
+begin_comment
 comment|//   4. All fields==0 is an empty string, given the extra storage
+end_comment
+
+begin_comment
 comment|//      beyond-the-end for a null terminator; thus, the shared
+end_comment
+
+begin_comment
 comment|//      empty string representation needs no constructor.
+end_comment
+
+begin_struct
 struct|struct
 name|_Rep_base
 block|{
@@ -296,6 +407,9 @@ name|_M_refcount
 decl_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_decl_stmt
 name|struct
 name|_Rep
 range|:
@@ -332,24 +446,56 @@ specifier|const
 name|size_type
 name|_S_max_size
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|_CharT
 name|_S_terminal
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// The following storage is init'd to 0 by the linker, resulting
+end_comment
+
+begin_comment
 comment|// (carefully) in an empty string with one reference.
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|size_type
 name|_S_empty_rep_storage
 index|[]
 decl_stmt|;
+end_decl_stmt
+
+begin_function
 specifier|static
 name|_Rep
 modifier|&
 name|_S_empty_rep
 parameter_list|()
 block|{
+comment|// NB: Mild hack to avoid strict-aliasing warnings.  Note that
+comment|// _S_empty_rep_storage is never modified and the punning should
+comment|// be reasonably safe in this case.
+name|void
+modifier|*
+name|__p
+init|=
+name|reinterpret_cast
+operator|<
+name|void
+operator|*
+operator|>
+operator|(
+operator|&
+name|_S_empty_rep_storage
+operator|)
+decl_stmt|;
 return|return
 operator|*
 name|reinterpret_cast
@@ -358,11 +504,13 @@ name|_Rep
 operator|*
 operator|>
 operator|(
-operator|&
-name|_S_empty_rep_storage
+name|__p
 operator|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|_M_is_leaked
 argument_list|()
@@ -376,6 +524,9 @@ operator|<
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|_M_is_shared
 argument_list|()
@@ -389,6 +540,9 @@ operator|>
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|_M_set_leaked
 parameter_list|()
@@ -401,6 +555,9 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|_M_set_sharable
 parameter_list|()
@@ -412,6 +569,49 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+end_function
+
+begin_function
+name|void
+name|_M_set_length_and_sharable
+parameter_list|(
+name|size_type
+name|__n
+parameter_list|)
+block|{
+name|this
+operator|->
+name|_M_set_sharable
+argument_list|()
+expr_stmt|;
+comment|// One reference.
+name|this
+operator|->
+name|_M_length
+operator|=
+name|__n
+expr_stmt|;
+name|traits_type
+operator|::
+name|assign
+argument_list|(
+name|this
+operator|->
+name|_M_refdata
+argument_list|()
+index|[
+name|__n
+index|]
+argument_list|,
+name|_S_terminal
+argument_list|)
+expr_stmt|;
+comment|// grrr. (per 21.3.4)
+comment|// You cannot leave those LWG people alone for a second.
+block|}
+end_function
+
+begin_function
 name|_CharT
 modifier|*
 name|_M_refdata
@@ -432,6 +632,9 @@ literal|1
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|_CharT
 modifier|*
 name|_M_grab
@@ -467,7 +670,13 @@ name|__alloc1
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// Create& Destroy
+end_comment
+
+begin_function_decl
 specifier|static
 name|_Rep
 modifier|*
@@ -482,6 +691,9 @@ name|_Alloc
 modifier|&
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function
 name|void
 name|_M_dispose
 parameter_list|(
@@ -513,7 +725,7 @@ if|if
 condition|(
 name|__gnu_cxx
 operator|::
-name|__exchange_and_add
+name|__exchange_and_add_dispatch
 argument_list|(
 operator|&
 name|this
@@ -532,7 +744,13 @@ name|__a
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|// XXX MT
+end_comment
+
+begin_function_decl
 name|void
 name|_M_destroy
 parameter_list|(
@@ -543,6 +761,9 @@ parameter_list|)
 function_decl|throw
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function
 name|_CharT
 modifier|*
 name|_M_refcopy
@@ -570,7 +791,7 @@ endif|#
 directive|endif
 name|__gnu_cxx
 operator|::
-name|__atomic_add
+name|__atomic_add_dispatch
 argument_list|(
 operator|&
 name|this
@@ -585,7 +806,13 @@ name|_M_refdata
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// XXX MT
+end_comment
+
+begin_function_decl
 name|_CharT
 modifier|*
 name|_M_clone
@@ -600,14 +827,10 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function_decl
 
 begin_comment
+unit|};
 comment|// Use empty-base optimization: http://www.cantrip.org/emptyopt.html
 end_comment
 
@@ -666,11 +889,7 @@ comment|// size that the allocator can hold.
 end_comment
 
 begin_comment
-comment|/// @var
-end_comment
-
-begin_comment
-comment|/// Value returned by various member functions when they fail.
+comment|///  Value returned by various member functions when they fail.
 end_comment
 
 begin_decl_stmt
@@ -876,6 +1095,52 @@ return|;
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|_M_check_length
+argument_list|(
+name|size_type
+name|__n1
+argument_list|,
+name|size_type
+name|__n2
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|__s
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|this
+operator|->
+name|max_size
+argument_list|()
+operator|-
+operator|(
+name|this
+operator|->
+name|size
+argument_list|()
+operator|-
+name|__n1
+operator|)
+operator|<
+name|__n2
+condition|)
+name|__throw_length_error
+argument_list|(
+name|__N
+argument_list|(
+name|__s
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
 begin_comment
 comment|// NB: _M_limit doesn't check for a bad __pos value.
 end_comment
@@ -919,6 +1184,217 @@ name|__pos
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// True if _Rep and source do not overlap.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|_M_disjunct
+argument_list|(
+specifier|const
+name|_CharT
+operator|*
+name|__s
+argument_list|)
+decl|const
+block|{
+return|return
+operator|(
+name|less
+operator|<
+specifier|const
+name|_CharT
+operator|*
+operator|>
+operator|(
+operator|)
+operator|(
+name|__s
+operator|,
+name|_M_data
+argument_list|()
+operator|)
+operator|||
+name|less
+operator|<
+specifier|const
+name|_CharT
+operator|*
+operator|>
+operator|(
+operator|)
+operator|(
+name|_M_data
+argument_list|()
+operator|+
+name|this
+operator|->
+name|size
+argument_list|()
+operator|,
+name|__s
+operator|)
+operator|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// When __n = 1 way faster than the general multichar
+end_comment
+
+begin_comment
+comment|// traits_type::copy/move/assign.
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|_M_copy
+parameter_list|(
+name|_CharT
+modifier|*
+name|__d
+parameter_list|,
+specifier|const
+name|_CharT
+modifier|*
+name|__s
+parameter_list|,
+name|size_type
+name|__n
+parameter_list|)
+block|{
+if|if
+condition|(
+name|__n
+operator|==
+literal|1
+condition|)
+name|traits_type
+operator|::
+name|assign
+argument_list|(
+operator|*
+name|__d
+argument_list|,
+operator|*
+name|__s
+argument_list|)
+expr_stmt|;
+else|else
+name|traits_type
+operator|::
+name|copy
+argument_list|(
+name|__d
+argument_list|,
+name|__s
+argument_list|,
+name|__n
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|_M_move
+parameter_list|(
+name|_CharT
+modifier|*
+name|__d
+parameter_list|,
+specifier|const
+name|_CharT
+modifier|*
+name|__s
+parameter_list|,
+name|size_type
+name|__n
+parameter_list|)
+block|{
+if|if
+condition|(
+name|__n
+operator|==
+literal|1
+condition|)
+name|traits_type
+operator|::
+name|assign
+argument_list|(
+operator|*
+name|__d
+argument_list|,
+operator|*
+name|__s
+argument_list|)
+expr_stmt|;
+else|else
+name|traits_type
+operator|::
+name|move
+argument_list|(
+name|__d
+argument_list|,
+name|__s
+argument_list|,
+name|__n
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|_M_assign
+parameter_list|(
+name|_CharT
+modifier|*
+name|__d
+parameter_list|,
+name|size_type
+name|__n
+parameter_list|,
+name|_CharT
+name|__c
+parameter_list|)
+block|{
+if|if
+condition|(
+name|__n
+operator|==
+literal|1
+condition|)
+name|traits_type
+operator|::
+name|assign
+argument_list|(
+operator|*
+name|__d
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+else|else
+name|traits_type
+operator|::
+name|assign
+argument_list|(
+name|__d
+argument_list|,
+name|__n
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|// _S_copy_chars is a separate template to permit specialization
@@ -1059,9 +1535,7 @@ modifier|*
 name|__k2
 parameter_list|)
 block|{
-name|traits_type
-operator|::
-name|copy
+name|_M_copy
 argument_list|(
 name|__p
 argument_list|,
@@ -1095,9 +1569,7 @@ modifier|*
 name|__k2
 parameter_list|)
 block|{
-name|traits_type
-operator|::
-name|copy
+name|_M_copy
 argument_list|(
 name|__p
 argument_list|,
@@ -1179,7 +1651,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**        *  @brief  Construct an empty string using allocator a.        */
+comment|/**        *  @brief  Construct an empty string using allocator @a a.        */
 end_comment
 
 begin_function_decl
@@ -1254,7 +1726,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/**        *  @brief  Construct string initialized by a character array.        *  @param  s  Source character array.        *  @param  n  Number of characters to copy.        *  @param  a  Allocator to use (default is default allocator).        *        *  NB: s must have at least n characters, '\0' has no special        *  meaning.        */
+comment|/**        *  @brief  Construct string initialized by a character array.        *  @param  s  Source character array.        *  @param  n  Number of characters to copy.        *  @param  a  Allocator to use (default is default allocator).        *        *  NB: @a s must have at least @a n characters, '\0' has no special        *  meaning.        */
 end_comment
 
 begin_macro
@@ -1367,16 +1839,13 @@ operator|&
 name|__str
 operator|)
 block|{
+return|return
 name|this
 operator|->
 name|assign
 argument_list|(
 name|__str
 argument_list|)
-block|;
-return|return
-operator|*
-name|this
 return|;
 block|}
 end_expr_stmt
@@ -1397,16 +1866,13 @@ operator|*
 name|__s
 operator|)
 block|{
+return|return
 name|this
 operator|->
 name|assign
 argument_list|(
 name|__s
 argument_list|)
-block|;
-return|return
-operator|*
-name|this
 return|;
 block|}
 end_decl_stmt
@@ -1760,7 +2226,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**        *  @brief  Attempt to preallocate enough memory for specified number of        *          characters.        *  @param  n  Number of characters required.        *  @throw  std::length_error  If @a n exceeds @c max_size().        *        *  This function attempts to reserve enough memory for the        *  %string to hold the specified number of characters.  If the        *  number requested is more than max_size(), length_error is        *  thrown.        *        *  The advantage of this function is that if optimal code is a        *  necessity and the user can determine the string length that will be        *  required, the user can reserve the memory in %advance, and thus        *  prevent a possible reallocation of memory and copying of %string        *  data.        */
+comment|/**        *  @brief  Attempt to preallocate enough memory for specified number of        *          characters.        *  @param  res_arg  Number of characters required.        *  @throw  std::length_error  If @a res_arg exceeds @c max_size().        *        *  This function attempts to reserve enough memory for the        *  %string to hold the specified number of characters.  If the        *  number requested is more than max_size(), length_error is        *  thrown.        *        *  The advantage of this function is that if optimal code is a        *  necessity and the user can determine the string length that will be        *  required, the user can reserve the memory in %advance, and thus        *  prevent a possible reallocation of memory and copying of %string        *  data.        */
 end_comment
 
 begin_function_decl
@@ -1825,7 +2291,7 @@ comment|// Element access:
 end_comment
 
 begin_comment
-comment|/**        *  @brief  Subscript access to the data contained in the %string.        *  @param  n  The index of the character to access.        *  @return  Read-only (constant) reference to the character.        *        *  This operator allows for easy, array-style, data access.        *  Note that data access with this operator is unchecked and        *  out_of_range lookups are not defined. (For checked lookups        *  see at().)        */
+comment|/**        *  @brief  Subscript access to the data contained in the %string.        *  @param  pos  The index of the character to access.        *  @return  Read-only (constant) reference to the character.        *        *  This operator allows for easy, array-style, data access.        *  Note that data access with this operator is unchecked and        *  out_of_range lookups are not defined. (For checked lookups        *  see at().)        */
 end_comment
 
 begin_decl_stmt
@@ -1857,7 +2323,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Subscript access to the data contained in the %string.        *  @param  n  The index of the character to access.        *  @return  Read/write reference to the character.        *        *  This operator allows for easy, array-style, data access.        *  Note that data access with this operator is unchecked and        *  out_of_range lookups are not defined. (For checked lookups        *  see at().)  Unshares the string.        */
+comment|/**        *  @brief  Subscript access to the data contained in the %string.        *  @param  pos  The index of the character to access.        *  @return  Read/write reference to the character.        *        *  This operator allows for easy, array-style, data access.        *  Note that data access with this operator is unchecked and        *  out_of_range lookups are not defined. (For checked lookups        *  see at().)  Unshares the string.        */
 end_comment
 
 begin_function
@@ -1869,7 +2335,17 @@ name|size_type
 name|__pos
 parameter_list|)
 block|{
+comment|// allow pos == size() as v3 extension:
 name|_GLIBCXX_DEBUG_ASSERT
+argument_list|(
+name|__pos
+operator|<=
+name|size
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|// but be strict in pedantic mode:
+name|_GLIBCXX_DEBUG_PEDASSERT
 argument_list|(
 name|__pos
 operator|<
@@ -2029,7 +2505,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**        *  @brief  Append a character.        *  @param s  The character to append.        *  @return  Reference to this string.        */
+comment|/**        *  @brief  Append a character.        *  @param c  The character to append.        *  @return  Reference to this string.        */
 end_comment
 
 begin_expr_stmt
@@ -2042,18 +2518,16 @@ name|_CharT
 name|__c
 operator|)
 block|{
-return|return
 name|this
 operator|->
-name|append
+name|push_back
 argument_list|(
-name|size_type
-argument_list|(
-literal|1
-argument_list|)
-argument_list|,
 name|__c
 argument_list|)
+block|;
+return|return
+operator|*
+name|this
 return|;
 block|}
 end_expr_stmt
@@ -2160,7 +2634,7 @@ begin_comment
 comment|/**        *  @brief  Append multiple characters.        *  @param n  The number of characters to append.        *  @param c  The character to use.        *  @return  Reference to this string.        *        *  Appends n copies of c to this string.        */
 end_comment
 
-begin_function
+begin_function_decl
 name|basic_string
 modifier|&
 name|append
@@ -2171,27 +2645,8 @@ parameter_list|,
 name|_CharT
 name|__c
 parameter_list|)
-block|{
-return|return
-name|_M_replace_aux
-argument_list|(
-name|this
-operator|->
-name|size
-argument_list|()
-argument_list|,
-name|size_type
-argument_list|(
-literal|0
-argument_list|)
-argument_list|,
-name|__n
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/**        *  @brief  Append a range of characters.        *  @param first  Iterator referencing the first character to append.        *  @param last  Iterator marking the end of the range.        *  @return  Reference to this string.        *        *  Appends characters in the range [first,last) to this string.        */
@@ -2243,24 +2698,61 @@ name|_CharT
 name|__c
 parameter_list|)
 block|{
-name|_M_replace_aux
-argument_list|(
+specifier|const
+name|size_type
+name|__len
+init|=
+literal|1
+operator|+
 name|this
 operator|->
 name|size
 argument_list|()
-argument_list|,
-name|size_type
+decl_stmt|;
+if|if
+condition|(
+name|__len
+operator|>
+name|this
+operator|->
+name|capacity
+argument_list|()
+operator|||
+name|_M_rep
+argument_list|()
+operator|->
+name|_M_is_shared
+argument_list|()
+condition|)
+name|this
+operator|->
+name|reserve
 argument_list|(
-literal|0
+name|__len
 argument_list|)
-argument_list|,
-name|size_type
+expr_stmt|;
+name|traits_type
+operator|::
+name|assign
 argument_list|(
-literal|1
-argument_list|)
+name|_M_data
+argument_list|()
+index|[
+name|this
+operator|->
+name|size
+argument_list|()
+index|]
 argument_list|,
 name|__c
+argument_list|)
+expr_stmt|;
+name|_M_rep
+argument_list|()
+operator|->
+name|_M_set_length_and_sharable
+argument_list|(
+name|__len
 argument_list|)
 expr_stmt|;
 block|}
@@ -2796,12 +3288,13 @@ name|_M_set_leaked
 argument_list|()
 expr_stmt|;
 return|return
-name|this
-operator|->
-name|_M_ibegin
+name|iterator
+argument_list|(
+name|_M_data
 argument_list|()
 operator|+
 name|__pos
+argument_list|)
 return|;
 block|}
 end_function
@@ -2826,8 +3319,7 @@ init|=
 name|npos
 parameter_list|)
 block|{
-return|return
-name|_M_replace_safe
+name|_M_mutate
 argument_list|(
 name|_M_check
 argument_list|(
@@ -2843,13 +3335,15 @@ argument_list|,
 name|__n
 argument_list|)
 argument_list|,
-name|NULL
-argument_list|,
 name|size_type
 argument_list|(
 literal|0
 argument_list|)
 argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|this
 return|;
 block|}
 end_function
@@ -2888,7 +3382,7 @@ operator|-
 name|_M_ibegin
 argument_list|()
 decl_stmt|;
-name|_M_replace_safe
+name|_M_mutate
 argument_list|(
 name|__pos
 argument_list|,
@@ -2896,8 +3390,6 @@ name|size_type
 argument_list|(
 literal|1
 argument_list|)
-argument_list|,
-name|NULL
 argument_list|,
 name|size_type
 argument_list|(
@@ -2912,10 +3404,13 @@ name|_M_set_leaked
 argument_list|()
 expr_stmt|;
 return|return
-name|_M_ibegin
+name|iterator
+argument_list|(
+name|_M_data
 argument_list|()
 operator|+
 name|__pos
+argument_list|)
 return|;
 block|}
 end_function
@@ -2961,15 +3456,13 @@ operator|-
 name|_M_ibegin
 argument_list|()
 decl_stmt|;
-name|_M_replace_safe
+name|_M_mutate
 argument_list|(
 name|__pos
 argument_list|,
 name|__last
 operator|-
 name|__first
-argument_list|,
-name|NULL
 argument_list|,
 name|size_type
 argument_list|(
@@ -2984,10 +3477,13 @@ name|_M_set_leaked
 argument_list|()
 expr_stmt|;
 return|return
-name|_M_ibegin
+name|iterator
+argument_list|(
+name|_M_data
 argument_list|()
 operator|+
 name|__pos
+argument_list|)
 return|;
 block|}
 end_function
@@ -3100,7 +3596,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**        *  @brief  Replace characters with value of a C substring.        *  @param pos  Index of first character to replace.        *  @param n1  Number of characters to be replaced.        *  @param str  C string to insert.        *  @param n2  Number of characters from str to use.        *  @return  Reference to this string.        *  @throw  std::out_of_range  If @a pos1> size().        *  @throw  std::length_error  If new length exceeds @c max_size().        *        *  Removes the characters in the range [pos,pos + n1) from this string.        *  In place, the first @a n2 characters of @a str are inserted, or all        *  of @a str if @a n2 is too large.  If @a pos is beyond end of string,        *  out_of_range is thrown.  If the length of result exceeds max_size(),        *  length_error is thrown.  The value of the string doesn't change if        *  an error is thrown.       */
+comment|/**        *  @brief  Replace characters with value of a C substring.        *  @param pos  Index of first character to replace.        *  @param n1  Number of characters to be replaced.        *  @param s  C string to insert.        *  @param n2  Number of characters from @a s to use.        *  @return  Reference to this string.        *  @throw  std::out_of_range  If @a pos1> size().        *  @throw  std::length_error  If new length exceeds @c max_size().        *        *  Removes the characters in the range [pos,pos + n1) from this string.        *  In place, the first @a n2 characters of @a s are inserted, or all        *  of @a s if @a n2 is too large.  If @a pos is beyond end of string,        *  out_of_range is thrown.  If the length of result exceeds max_size(),        *  length_error is thrown.  The value of the string doesn't change if        *  an error is thrown.       */
 end_comment
 
 begin_function_decl
@@ -3126,7 +3622,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**        *  @brief  Replace characters with value of a C string.        *  @param pos  Index of first character to replace.        *  @param n1  Number of characters to be replaced.        *  @param str  C string to insert.        *  @return  Reference to this string.        *  @throw  std::out_of_range  If @a pos> size().        *  @throw  std::length_error  If new length exceeds @c max_size().        *        *  Removes the characters in the range [pos,pos + n1) from this string.        *  In place, the first @a n characters of @a str are inserted.  If @a        *  pos is beyond end of string, out_of_range is thrown.  If the length        *  of result exceeds max_size(), length_error is thrown.  The value of        *  the string doesn't change if an error is thrown.       */
+comment|/**        *  @brief  Replace characters with value of a C string.        *  @param pos  Index of first character to replace.        *  @param n1  Number of characters to be replaced.        *  @param s  C string to insert.        *  @return  Reference to this string.        *  @throw  std::out_of_range  If @a pos> size().        *  @throw  std::length_error  If new length exceeds @c max_size().        *        *  Removes the characters in the range [pos,pos + n1) from this string.        *  In place, the first @a n characters of @a s are inserted.  If @a        *  pos is beyond end of string, out_of_range is thrown.  If the length        *  of result exceeds max_size(), length_error is thrown.  The value of        *  the string doesn't change if an error is thrown.       */
 end_comment
 
 begin_function
@@ -3483,12 +3979,14 @@ argument_list|)
 block|;
 typedef|typedef
 name|typename
-name|_Is_integer
+name|std
+operator|::
+name|__is_integer
 operator|<
 name|_InputIterator
 operator|>
 operator|::
-name|_Integral
+name|__type
 name|_Integral
 expr_stmt|;
 end_expr_stmt
@@ -3859,7 +4357,7 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function
+begin_function_decl
 name|basic_string
 modifier|&
 name|_M_replace_aux
@@ -3876,83 +4374,10 @@ parameter_list|,
 name|_CharT
 name|__c
 parameter_list|)
-block|{
-if|if
-condition|(
-name|this
-operator|->
-name|max_size
-argument_list|()
-operator|-
-operator|(
-name|this
-operator|->
-name|size
-argument_list|()
-operator|-
-name|__n1
-operator|)
-operator|<
-name|__n2
-condition|)
-name|__throw_length_error
-argument_list|(
-name|__N
-argument_list|(
-literal|"basic_string::_M_replace_aux"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|_M_mutate
-argument_list|(
-name|__pos1
-argument_list|,
-name|__n1
-argument_list|,
-name|__n2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|__n2
-operator|==
-literal|1
-condition|)
-name|_M_data
-argument_list|()
-index|[
-name|__pos1
-index|]
-operator|=
-name|__c
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|__n2
-condition|)
-name|traits_type
-operator|::
-name|assign
-argument_list|(
-name|_M_data
-argument_list|()
-operator|+
-name|__pos1
-argument_list|,
-name|__n2
-argument_list|,
-name|__c
-argument_list|)
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
+begin_function_decl
 name|basic_string
 modifier|&
 name|_M_replace_safe
@@ -3971,56 +4396,8 @@ parameter_list|,
 name|size_type
 name|__n2
 parameter_list|)
-block|{
-name|_M_mutate
-argument_list|(
-name|__pos1
-argument_list|,
-name|__n1
-argument_list|,
-name|__n2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|__n2
-operator|==
-literal|1
-condition|)
-name|_M_data
-argument_list|()
-index|[
-name|__pos1
-index|]
-operator|=
-operator|*
-name|__s
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|__n2
-condition|)
-name|traits_type
-operator|::
-name|copy
-argument_list|(
-name|_M_data
-argument_list|()
-operator|+
-name|__pos1
-argument_list|,
-name|__s
-argument_list|,
-name|__n2
-argument_list|)
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|// _S_construct_aux is used to implement the 21.3.1 para 15 which
@@ -4143,12 +4520,14 @@ argument_list|)
 block|{
 typedef|typedef
 name|typename
-name|_Is_integer
+name|std
+operator|::
+name|__is_integer
 operator|<
 name|_InIterator
 operator|>
 operator|::
-name|_Integral
+name|__type
 name|_Integral
 expr_stmt|;
 end_expr_stmt
@@ -4542,7 +4921,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Find last position of a C string.        *  @param s  C string to locate.        *  @param pos  Index of character to start search at (default 0).        *  @return  Index of start of  last occurrence.        *        *  Starting from @a pos, searches backward for the value of @a s within        *  this string.  If found, returns the index where it begins.  If not        *  found, returns npos.       */
+comment|/**        *  @brief  Find last position of a C string.        *  @param s  C string to locate.        *  @param pos  Index of character to start search at (default end).        *  @return  Index of start of  last occurrence.        *        *  Starting from @a pos, searches backward for the value of @a s within        *  this string.  If found, returns the index where it begins.  If not        *  found, returns npos.       */
 end_comment
 
 begin_decl_stmt
@@ -4587,7 +4966,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Find last position of a character.        *  @param c  Character to locate.        *  @param pos  Index of character to search back from (default 0).        *  @return  Index of last occurrence.        *        *  Starting from @a pos, searches backward for @a c within this string.        *  If found, returns the index where it was found.  If not found,        *  returns npos.       */
+comment|/**        *  @brief  Find last position of a character.        *  @param c  Character to locate.        *  @param pos  Index of character to search back from (default end).        *  @return  Index of last occurrence.        *        *  Starting from @a pos, searches backward for @a c within this string.        *  If found, returns the index where it was found.  If not found,        *  returns npos.       */
 end_comment
 
 begin_decl_stmt
@@ -6862,6 +7241,35 @@ operator|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+name|basic_istream
+operator|<
+name|char
+operator|>
+operator|&
+name|operator
+operator|>>
+operator|(
+name|basic_istream
+operator|<
+name|char
+operator|>
+operator|&
+name|__is
+operator|,
+name|basic_string
+operator|<
+name|char
+operator|>
+operator|&
+name|__str
+operator|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/**    *  @brief  Write string to a stream.    *  @param os  Output stream.    *  @param str  String to write out.    *  @return  Reference to the output stream.    *    *  Output characters of @a str into os following the same rules as for    *  writing a C string.    */
 end_comment
@@ -6878,6 +7286,7 @@ operator|,
 name|typename
 name|_Alloc
 operator|>
+specifier|inline
 name|basic_ostream
 operator|<
 name|_CharT
@@ -6909,7 +7318,26 @@ operator|>
 operator|&
 name|__str
 operator|)
-expr_stmt|;
+block|{
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 586. string inserter not a formatted function
+return|return
+name|__ostream_insert
+argument_list|(
+name|__os
+argument_list|,
+name|__str
+operator|.
+name|data
+argument_list|()
+argument_list|,
+name|__str
+operator|.
+name|size
+argument_list|()
+argument_list|)
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -6978,33 +7406,89 @@ operator|>
 operator|&
 name|getline
 argument_list|(
-name|basic_istream
-operator|<
-name|_CharT
+argument|basic_istream<_CharT
 argument_list|,
-name|_Traits
-operator|>
-operator|&
+argument|_Traits>& __is
+argument_list|,
+argument|basic_string<_CharT
+argument_list|,
+argument|_Traits
+argument_list|,
+argument|_Alloc>& __str
+argument_list|)
+block|{
+return|return
+name|getline
+argument_list|(
 name|__is
 argument_list|,
-name|basic_string
+name|__str
+argument_list|,
+name|__is
+operator|.
+name|widen
+argument_list|(
+literal|'\n'
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
 operator|<
-name|_CharT
-argument_list|,
-name|_Traits
-argument_list|,
-name|_Alloc
+operator|>
+name|basic_istream
+operator|<
+name|char
 operator|>
 operator|&
-name|__str
+name|getline
+argument_list|(
+argument|basic_istream<char>& __in
+argument_list|,
+argument|basic_string<char>& __str
+argument_list|,
+argument|char __delim
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_GLIBCXX_USE_WCHAR_T
+end_ifdef
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+name|basic_istream
+operator|<
+name|wchar_t
+operator|>
+operator|&
+name|getline
+argument_list|(
+argument|basic_istream<wchar_t>& __in
+argument_list|,
+argument|basic_string<wchar_t>& __str
+argument_list|,
+argument|wchar_t __delim
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

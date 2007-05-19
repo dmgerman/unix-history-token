@@ -4,7 +4,11 @@ comment|// Raw memory manipulators -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -122,11 +126,18 @@ directive|include
 file|<cstring>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|// uninitialized_copy
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -161,6 +172,9 @@ name|__result
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -218,10 +232,16 @@ return|return
 name|__cur
 return|;
 block|}
+end_expr_stmt
+
+begin_macro
 name|catch
 argument_list|(
 argument|...
 argument_list|)
+end_macro
+
+begin_block
 block|{
 name|std
 operator|::
@@ -235,15 +255,15 @@ expr_stmt|;
 name|__throw_exception_again
 expr_stmt|;
 block|}
-block|}
-end_decl_stmt
+end_block
 
 begin_comment
+unit|}
 comment|/**    *  @brief Copies the range [first,last) into result.    *  @param  first  An input iterator.    *  @param  last   An input iterator.    *  @param  result An output iterator.    *  @return   result + (first - last)    *    *  Like copy(), but does not require an initialized output range.   */
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|_InputIterator
@@ -277,12 +297,14 @@ end_expr_stmt
 begin_typedef
 typedef|typedef
 name|typename
-name|__type_traits
+name|std
+operator|::
+name|__is_scalar
 operator|<
 name|_ValueType
 operator|>
 operator|::
-name|is_POD_type
+name|__type
 name|_Is_POD
 expr_stmt|;
 end_typedef
@@ -552,12 +574,14 @@ end_expr_stmt
 begin_typedef
 typedef|typedef
 name|typename
-name|__type_traits
+name|std
+operator|::
+name|__is_scalar
 operator|<
 name|_ValueType
 operator|>
 operator|::
-name|is_POD_type
+name|__type
 name|_Is_POD
 expr_stmt|;
 end_typedef
@@ -601,7 +625,7 @@ name|typename
 name|_Tp
 operator|>
 specifier|inline
-name|_ForwardIterator
+name|void
 name|__uninitialized_fill_n_aux
 argument_list|(
 argument|_ForwardIterator __first
@@ -613,7 +637,6 @@ argument_list|,
 argument|__true_type
 argument_list|)
 block|{
-return|return
 name|std
 operator|::
 name|fill_n
@@ -624,11 +647,7 @@ name|__n
 argument_list|,
 name|__x
 argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
+block|; }
 name|template
 operator|<
 name|typename
@@ -640,7 +659,7 @@ operator|,
 name|typename
 name|_Tp
 operator|>
-name|_ForwardIterator
+name|void
 name|__uninitialized_fill_n_aux
 argument_list|(
 argument|_ForwardIterator __first
@@ -683,20 +702,11 @@ argument_list|,
 name|__x
 argument_list|)
 expr_stmt|;
-return|return
-name|__cur
-return|;
 block|}
-end_expr_stmt
-
-begin_macro
 name|catch
 argument_list|(
 argument|...
 argument_list|)
-end_macro
-
-begin_block
 block|{
 name|std
 operator|::
@@ -706,15 +716,14 @@ name|__first
 argument_list|,
 name|__cur
 argument_list|)
-expr_stmt|;
+block|;
 name|__throw_exception_again
-expr_stmt|;
-block|}
-end_block
+block|; 	}
+end_expr_stmt
 
 begin_comment
 unit|}
-comment|/**    *  @brief Copies the value x into the range [first,first+n).    *  @param  first  An input iterator.    *  @param  n      The number of copies to make.    *  @param  x      The source value.    *  @return   first+n    *    *  Like fill_n(), but does not require an initialized output range.   */
+comment|/**    *  @brief Copies the value x into the range [first,first+n).    *  @param  first  An input iterator.    *  @param  n      The number of copies to make.    *  @param  x      The source value.    *  @return   Nothing.    *    *  Like fill_n(), but does not require an initialized output range.   */
 end_comment
 
 begin_expr_stmt
@@ -730,7 +739,7 @@ name|typename
 name|_Tp
 operator|>
 specifier|inline
-name|_ForwardIterator
+name|void
 name|uninitialized_fill_n
 argument_list|(
 argument|_ForwardIterator __first
@@ -755,18 +764,19 @@ end_expr_stmt
 begin_typedef
 typedef|typedef
 name|typename
-name|__type_traits
+name|std
+operator|::
+name|__is_scalar
 operator|<
 name|_ValueType
 operator|>
 operator|::
-name|is_POD_type
+name|__type
 name|_Is_POD
 expr_stmt|;
 end_typedef
 
-begin_return
-return|return
+begin_expr_stmt
 name|std
 operator|::
 name|__uninitialized_fill_n_aux
@@ -780,36 +790,391 @@ argument_list|,
 name|_Is_POD
 argument_list|()
 argument_list|)
-return|;
-end_return
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|}
-comment|// Extensions: __uninitialized_copy_copy, __uninitialized_copy_fill,
+comment|// Extensions: versions of uninitialized_copy, uninitialized_fill,
 end_comment
 
 begin_comment
-comment|// __uninitialized_fill_copy.
+comment|//  and uninitialized_fill_n that take an allocator parameter.
 end_comment
 
 begin_comment
-comment|// __uninitialized_copy_copy
+comment|//  We dispatch back to the standard versions when we're given the
 end_comment
 
 begin_comment
-comment|// Copies [first1, last1) into [result, result + (last1 - first1)), and
+comment|//  default allocator.  For nondefault allocators we do not use
 end_comment
 
 begin_comment
-comment|//  copies [first2, last2) into
-end_comment
-
-begin_comment
-comment|//  [result, result + (last1 - first1) + (last2 - first2)).
+comment|//  any of the POD optimizations.
 end_comment
 
 begin_expr_stmt
 unit|template
+operator|<
+name|typename
+name|_InputIterator
+operator|,
+name|typename
+name|_ForwardIterator
+operator|,
+name|typename
+name|_Allocator
+operator|>
+name|_ForwardIterator
+name|__uninitialized_copy_a
+argument_list|(
+argument|_InputIterator __first
+argument_list|,
+argument|_InputIterator __last
+argument_list|,
+argument|_ForwardIterator __result
+argument_list|,
+argument|_Allocator __alloc
+argument_list|)
+block|{
+name|_ForwardIterator
+name|__cur
+operator|=
+name|__result
+block|;
+name|try
+block|{
+for|for
+control|(
+init|;
+name|__first
+operator|!=
+name|__last
+condition|;
+operator|++
+name|__first
+operator|,
+operator|++
+name|__cur
+control|)
+name|__alloc
+operator|.
+name|construct
+argument_list|(
+operator|&
+operator|*
+name|__cur
+argument_list|,
+operator|*
+name|__first
+argument_list|)
+expr_stmt|;
+return|return
+name|__cur
+return|;
+block|}
+end_expr_stmt
+
+begin_macro
+name|catch
+argument_list|(
+argument|...
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|std
+operator|::
+name|_Destroy
+argument_list|(
+name|__result
+argument_list|,
+name|__cur
+argument_list|,
+name|__alloc
+argument_list|)
+expr_stmt|;
+name|__throw_exception_again
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+unit|}    template
+operator|<
+name|typename
+name|_InputIterator
+operator|,
+name|typename
+name|_ForwardIterator
+operator|,
+name|typename
+name|_Tp
+operator|>
+specifier|inline
+name|_ForwardIterator
+name|__uninitialized_copy_a
+argument_list|(
+argument|_InputIterator __first
+argument_list|,
+argument|_InputIterator __last
+argument_list|,
+argument|_ForwardIterator __result
+argument_list|,
+argument|allocator<_Tp>
+argument_list|)
+block|{
+return|return
+name|std
+operator|::
+name|uninitialized_copy
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|,
+name|__result
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_ForwardIterator
+operator|,
+name|typename
+name|_Tp
+operator|,
+name|typename
+name|_Allocator
+operator|>
+name|void
+name|__uninitialized_fill_a
+argument_list|(
+argument|_ForwardIterator __first
+argument_list|,
+argument|_ForwardIterator __last
+argument_list|,
+argument|const _Tp& __x
+argument_list|,
+argument|_Allocator __alloc
+argument_list|)
+block|{
+name|_ForwardIterator
+name|__cur
+operator|=
+name|__first
+block|;
+name|try
+block|{
+for|for
+control|(
+init|;
+name|__cur
+operator|!=
+name|__last
+condition|;
+operator|++
+name|__cur
+control|)
+name|__alloc
+operator|.
+name|construct
+argument_list|(
+operator|&
+operator|*
+name|__cur
+argument_list|,
+name|__x
+argument_list|)
+expr_stmt|;
+block|}
+name|catch
+argument_list|(
+argument|...
+argument_list|)
+block|{
+name|std
+operator|::
+name|_Destroy
+argument_list|(
+name|__first
+argument_list|,
+name|__cur
+argument_list|,
+name|__alloc
+argument_list|)
+block|;
+name|__throw_exception_again
+block|; 	}
+end_expr_stmt
+
+begin_expr_stmt
+unit|}    template
+operator|<
+name|typename
+name|_ForwardIterator
+operator|,
+name|typename
+name|_Tp
+operator|,
+name|typename
+name|_Tp2
+operator|>
+specifier|inline
+name|void
+name|__uninitialized_fill_a
+argument_list|(
+argument|_ForwardIterator __first
+argument_list|,
+argument|_ForwardIterator __last
+argument_list|,
+argument|const _Tp& __x
+argument_list|,
+argument|allocator<_Tp2>
+argument_list|)
+block|{
+name|std
+operator|::
+name|uninitialized_fill
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|,
+name|__x
+argument_list|)
+block|; }
+name|template
+operator|<
+name|typename
+name|_ForwardIterator
+operator|,
+name|typename
+name|_Size
+operator|,
+name|typename
+name|_Tp
+operator|,
+name|typename
+name|_Allocator
+operator|>
+name|void
+name|__uninitialized_fill_n_a
+argument_list|(
+argument|_ForwardIterator __first
+argument_list|,
+argument|_Size __n
+argument_list|,
+argument|const _Tp& __x
+argument_list|,
+argument|_Allocator __alloc
+argument_list|)
+block|{
+name|_ForwardIterator
+name|__cur
+operator|=
+name|__first
+block|;
+name|try
+block|{
+for|for
+control|(
+init|;
+name|__n
+operator|>
+literal|0
+condition|;
+operator|--
+name|__n
+operator|,
+operator|++
+name|__cur
+control|)
+name|__alloc
+operator|.
+name|construct
+argument_list|(
+operator|&
+operator|*
+name|__cur
+argument_list|,
+name|__x
+argument_list|)
+expr_stmt|;
+block|}
+name|catch
+argument_list|(
+argument|...
+argument_list|)
+block|{
+name|std
+operator|::
+name|_Destroy
+argument_list|(
+name|__first
+argument_list|,
+name|__cur
+argument_list|,
+name|__alloc
+argument_list|)
+block|;
+name|__throw_exception_again
+block|; 	}
+end_expr_stmt
+
+begin_expr_stmt
+unit|}    template
+operator|<
+name|typename
+name|_ForwardIterator
+operator|,
+name|typename
+name|_Size
+operator|,
+name|typename
+name|_Tp
+operator|,
+name|typename
+name|_Tp2
+operator|>
+specifier|inline
+name|void
+name|__uninitialized_fill_n_a
+argument_list|(
+argument|_ForwardIterator __first
+argument_list|,
+argument|_Size __n
+argument_list|,
+argument|const _Tp& __x
+argument_list|,
+argument|allocator<_Tp2>
+argument_list|)
+block|{
+name|std
+operator|::
+name|uninitialized_fill_n
+argument_list|(
+name|__first
+argument_list|,
+name|__n
+argument_list|,
+name|__x
+argument_list|)
+block|; }
+comment|// Extensions: __uninitialized_copy_copy, __uninitialized_copy_fill,
+comment|// __uninitialized_fill_copy.  All of these algorithms take a user-
+comment|// supplied allocator, which is used for construction and destruction.
+comment|// __uninitialized_copy_copy
+comment|// Copies [first1, last1) into [result, result + (last1 - first1)), and
+comment|//  copies [first2, last2) into
+comment|//  [result, result + (last1 - first1) + (last2 - first2)).
+name|template
 operator|<
 name|typename
 name|_InputIterator1
@@ -819,6 +1184,9 @@ name|_InputIterator2
 operator|,
 name|typename
 name|_ForwardIterator
+operator|,
+name|typename
+name|_Allocator
 operator|>
 specifier|inline
 name|_ForwardIterator
@@ -833,6 +1201,8 @@ argument_list|,
 argument|_InputIterator2 __last2
 argument_list|,
 argument|_ForwardIterator __result
+argument_list|,
+argument|_Allocator __alloc
 argument_list|)
 block|{
 name|_ForwardIterator
@@ -840,13 +1210,15 @@ name|__mid
 operator|=
 name|std
 operator|::
-name|uninitialized_copy
+name|__uninitialized_copy_a
 argument_list|(
 name|__first1
 argument_list|,
 name|__last1
 argument_list|,
 name|__result
+argument_list|,
+name|__alloc
 argument_list|)
 block|;
 name|try
@@ -854,13 +1226,15 @@ block|{
 return|return
 name|std
 operator|::
-name|uninitialized_copy
+name|__uninitialized_copy_a
 argument_list|(
 name|__first2
 argument_list|,
 name|__last2
 argument_list|,
 name|__mid
+argument_list|,
+name|__alloc
 argument_list|)
 return|;
 block|}
@@ -876,6 +1250,8 @@ argument_list|(
 name|__result
 argument_list|,
 name|__mid
+argument_list|,
+name|__alloc
 argument_list|)
 block|;
 name|__throw_exception_again
@@ -906,6 +1282,9 @@ name|_Tp
 operator|,
 name|typename
 name|_InputIterator
+operator|,
+name|typename
+name|_Allocator
 operator|>
 specifier|inline
 name|_ForwardIterator
@@ -920,17 +1299,21 @@ argument_list|,
 argument|_InputIterator __first
 argument_list|,
 argument|_InputIterator __last
+argument_list|,
+argument|_Allocator __alloc
 argument_list|)
 block|{
 name|std
 operator|::
-name|uninitialized_fill
+name|__uninitialized_fill_a
 argument_list|(
 name|__result
 argument_list|,
 name|__mid
 argument_list|,
 name|__x
+argument_list|,
+name|__alloc
 argument_list|)
 block|;
 name|try
@@ -938,13 +1321,15 @@ block|{
 return|return
 name|std
 operator|::
-name|uninitialized_copy
+name|__uninitialized_copy_a
 argument_list|(
 name|__first
 argument_list|,
 name|__last
 argument_list|,
 name|__mid
+argument_list|,
+name|__alloc
 argument_list|)
 return|;
 block|}
@@ -960,6 +1345,8 @@ argument_list|(
 name|__result
 argument_list|,
 name|__mid
+argument_list|,
+name|__alloc
 argument_list|)
 block|;
 name|__throw_exception_again
@@ -990,6 +1377,9 @@ name|_ForwardIterator
 operator|,
 name|typename
 name|_Tp
+operator|,
+name|typename
+name|_Allocator
 operator|>
 specifier|inline
 name|void
@@ -1004,6 +1394,8 @@ argument_list|,
 argument|_ForwardIterator __last2
 argument_list|,
 argument|const _Tp& __x
+argument_list|,
+argument|_Allocator __alloc
 argument_list|)
 block|{
 name|_ForwardIterator
@@ -1011,26 +1403,30 @@ name|__mid2
 operator|=
 name|std
 operator|::
-name|uninitialized_copy
+name|__uninitialized_copy_a
 argument_list|(
 name|__first1
 argument_list|,
 name|__last1
 argument_list|,
 name|__first2
+argument_list|,
+name|__alloc
 argument_list|)
 block|;
 name|try
 block|{
 name|std
 operator|::
-name|uninitialized_fill
+name|__uninitialized_fill_a
 argument_list|(
 name|__mid2
 argument_list|,
 name|__last2
 argument_list|,
 name|__x
+argument_list|,
+name|__alloc
 argument_list|)
 block|; 	}
 name|catch
@@ -1045,17 +1441,15 @@ argument_list|(
 name|__first2
 argument_list|,
 name|__mid2
+argument_list|,
+name|__alloc
 argument_list|)
 block|;
 name|__throw_exception_again
 block|; 	}
 block|}
+name|_GLIBCXX_END_NAMESPACE
 end_expr_stmt
-
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
 
 begin_endif
 endif|#

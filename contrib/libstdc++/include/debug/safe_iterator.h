@@ -4,7 +4,7 @@ comment|// Safe iterator implementation  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2003, 2004
+comment|// Copyright (C) 2003, 2004, 2005, 2006
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -99,6 +99,10 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
+begin_comment
+comment|/** @file debug/safe_iterator.h  *  This file is a GNU debug extension to the Standard C++ Library.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -115,13 +119,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|<bits/stl_pair.h>
+file|<debug/debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<debug/debug.h>
+file|<debug/macros.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<debug/functions.h>
 end_include
 
 begin_include
@@ -139,23 +149,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bits/cpp_type_traits.h>
+file|<bits/stl_pair.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ext/type_traits.h>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|__gnu_debug
 block|{
-name|using
-name|std
-operator|::
-name|iterator_traits
-expr_stmt|;
-name|using
-name|std
-operator|::
-name|pair
-expr_stmt|;
 comment|/** Iterators that derive from _Safe_iterator_base but that aren't    *  _Safe_iterators can be determined singular or non-singular via    *  _Safe_iterator_base.    */
 specifier|inline
 name|bool
@@ -239,6 +245,8 @@ end_decl_stmt
 
 begin_typedef
 typedef|typedef
+name|std
+operator|::
 name|iterator_traits
 operator|<
 name|_Iterator
@@ -430,9 +438,9 @@ name|_Safe_iterator
 argument_list|(
 argument|const _Safe_iterator<_MutableIterator
 argument_list|,
-argument|typename std::__enable_if<                      _Sequence
+argument|typename __gnu_cxx::__enable_if<(std::__are_same<_MutableIterator,                       typename _Sequence::iterator::_Base_iterator>::__value)
 argument_list|,
-argument|(std::__are_same<_MutableIterator,                       typename _Sequence::iterator::_Base_iterator>::_M_type)>::_M_type>& __x
+argument|_Sequence>::__type>& __x
 argument_list|)
 operator|:
 name|_Safe_iterator_base
@@ -1112,12 +1120,57 @@ block|}
 end_function
 
 begin_comment
+comment|/** Likewise, but not thread-safe. */
+end_comment
+
+begin_function
+name|void
+name|_M_attach_single
+parameter_list|(
+specifier|const
+name|_Sequence
+modifier|*
+name|__seq
+parameter_list|)
+block|{
+name|_Safe_iterator_base
+operator|::
+name|_M_attach_single
+argument_list|(
+name|const_cast
+operator|<
+name|_Sequence
+operator|*
+operator|>
+operator|(
+name|__seq
+operator|)
+argument_list|,
+name|_M_constant
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/** Invalidate the iterator, making it singular. */
 end_comment
 
 begin_function_decl
 name|void
 name|_M_invalidate
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** Likewise, but not thread-safe. */
+end_comment
+
+begin_function_decl
+name|void
+name|_M_invalidate_single
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1265,6 +1318,8 @@ name|typename
 name|_Iterator2
 operator|>
 specifier|static
+name|std
+operator|::
 name|pair
 operator|<
 name|difference_type
@@ -1280,6 +1335,8 @@ argument_list|)
 block|{
 typedef|typedef
 name|typename
+name|std
+operator|::
 name|iterator_traits
 operator|<
 name|_Iterator1
@@ -1314,6 +1371,8 @@ name|typename
 name|_Iterator2
 operator|>
 specifier|static
+name|std
+operator|::
 name|pair
 operator|<
 name|difference_type
@@ -1360,6 +1419,8 @@ name|typename
 name|_Iterator2
 operator|>
 specifier|static
+name|std
+operator|::
 name|pair
 operator|<
 name|difference_type
@@ -2878,6 +2939,126 @@ specifier|const
 name|_Safe_iterator
 operator|<
 name|_IteratorR
+operator|,
+name|_Sequence
+operator|>
+operator|&
+name|__rhs
+operator|)
+block|{
+name|_GLIBCXX_DEBUG_VERIFY
+argument_list|(
+operator|!
+name|__lhs
+operator|.
+name|_M_singular
+argument_list|()
+operator|&&
+operator|!
+name|__rhs
+operator|.
+name|_M_singular
+argument_list|()
+argument_list|,
+name|_M_message
+argument_list|(
+name|__msg_distance_bad
+argument_list|)
+operator|.
+name|_M_iterator
+argument_list|(
+name|__lhs
+argument_list|,
+literal|"lhs"
+argument_list|)
+operator|.
+name|_M_iterator
+argument_list|(
+name|__rhs
+argument_list|,
+literal|"rhs"
+argument_list|)
+argument_list|)
+block|;
+name|_GLIBCXX_DEBUG_VERIFY
+argument_list|(
+name|__lhs
+operator|.
+name|_M_can_compare
+argument_list|(
+name|__rhs
+argument_list|)
+argument_list|,
+name|_M_message
+argument_list|(
+name|__msg_distance_different
+argument_list|)
+operator|.
+name|_M_iterator
+argument_list|(
+name|__lhs
+argument_list|,
+literal|"lhs"
+argument_list|)
+operator|.
+name|_M_iterator
+argument_list|(
+name|__rhs
+argument_list|,
+literal|"rhs"
+argument_list|)
+argument_list|)
+block|;
+return|return
+name|__lhs
+operator|.
+name|base
+argument_list|()
+operator|-
+name|__rhs
+operator|.
+name|base
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Iterator
+operator|,
+name|typename
+name|_Sequence
+operator|>
+specifier|inline
+name|typename
+name|_Safe_iterator
+operator|<
+name|_Iterator
+operator|,
+name|_Sequence
+operator|>
+operator|::
+name|difference_type
+name|operator
+operator|-
+operator|(
+specifier|const
+name|_Safe_iterator
+operator|<
+name|_Iterator
+operator|,
+name|_Sequence
+operator|>
+operator|&
+name|__lhs
+operator|,
+specifier|const
+name|_Safe_iterator
+operator|<
+name|_Iterator
 operator|,
 name|_Sequence
 operator|>

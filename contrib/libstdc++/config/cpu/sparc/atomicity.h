@@ -4,7 +4,11 @@ comment|// Low-level functions for atomic operations: Sparc version  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1999, 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 1999, 2000, 2001, 2002, 2004, 2005
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -98,16 +102,23 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<bits/atomicity.h>
+file|<ext/atomicity.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|__gnu_cxx
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|__gnu_cxx
+argument_list|)
+end_macro
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|__arch64__
+end_ifdef
+
+begin_decl_stmt
 name|_Atomic_word
 name|__attribute__
 argument_list|(
@@ -143,6 +154,9 @@ return|return
 name|__tmp2
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|__attribute__
 argument_list|(
@@ -175,9 +189,18 @@ asm|__asm__
 specifier|__volatile__
 asm|("1:	ldx	[%3], %0\n\t" 			 "	add	%0, %4, %1\n\t" 			 "	casx	[%3], %0, %1\n\t" 			 "	sub	%0, %1, %0\n\t" 			 "	brnz,pn	%0, 1b\n\t" 			 "	 nop" 			 : "=&r" (__tmp1), "=&r" (__tmp2), "=m" (*__mem) 			 : "r" (__mem), "r" (__val_extended), "m" (*__mem));
 block|}
+end_decl_stmt
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_comment
 comment|/* __arch32__ */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|int
@@ -192,6 +215,9 @@ name|char
 name|_S_atomicity_lock
 block|;     }
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|int
@@ -208,6 +234,9 @@ name|_S_atomicity_lock
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 name|unsigned
 name|char
@@ -218,6 +247,9 @@ operator|>
 operator|::
 name|_S_atomicity_lock
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|_Atomic_word
 name|__attribute__
 argument_list|(
@@ -263,6 +295,9 @@ return|return
 name|__result
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|__attribute__
 argument_list|(
@@ -298,15 +333,20 @@ asm|("stb	%%g0, [%0]" 			 :
 comment|/* no outputs */
 asm|: "r" (&_Atomicity_lock<0>::_S_atomicity_lock) 			 : "memory");
 block|}
-endif|#
-directive|endif
-comment|/* __arch32__ */
-block|}
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|// namespace __gnu_cxx
+comment|/* __arch32__ */
 end_comment
+
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 end_unit
 

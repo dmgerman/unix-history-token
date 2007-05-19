@@ -4,7 +4,7 @@ comment|// String based streams -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2002, 2003, 2004
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,6 +100,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file sstream  *  This is a Standard C++ Library header.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -109,10 +113,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|/** @file sstream  *  This is a Standard C++ Library header.  You should @c #include this header  *  in your programs, rather than any of the "st[dl]_*.h" implementation files.  */
 end_comment
 
 begin_ifndef
@@ -147,12 +147,22 @@ directive|include
 file|<ostream>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|// [27.7.1] template class basic_stringbuf
+end_comment
+
+begin_comment
 comment|/**    *  @brief  The actual work of input and output (for std::string).    *    *  This class associates either or both of its input and output sequences    *  with a sequence of characters, which can be initialized from, or made    *  available as, a @c std::basic_string.  (Paraphrased from [27.7.1]/1.)    *    *  For this class, open modes (of type @c ios_base::openmode) have    *  @c in set if the input sequence can be read, and @c out set if the    *  output sequence can be written.   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -182,16 +192,31 @@ typedef|typedef
 name|_CharT
 name|char_type
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|_Traits
 name|traits_type
 typedef|;
+end_typedef
+
+begin_comment
 comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
+
+begin_comment
 comment|// 251. basic_stringbuf missing allocator_type
+end_comment
+
+begin_typedef
 typedef|typedef
 name|_Alloc
 name|allocator_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -199,6 +224,9 @@ operator|::
 name|int_type
 name|int_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -206,6 +234,9 @@ operator|::
 name|pos_type
 name|pos_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -213,8 +244,9 @@ operator|::
 name|off_type
 name|off_type
 expr_stmt|;
-comment|//@{
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|basic_streambuf
 operator|<
@@ -224,6 +256,9 @@ name|traits_type
 operator|>
 name|__streambuf_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|basic_string
 operator|<
@@ -235,6 +270,9 @@ name|_Alloc
 operator|>
 name|__string_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|__string_type
@@ -242,24 +280,49 @@ operator|::
 name|size_type
 name|__size_type
 expr_stmt|;
-comment|//@}
+end_typedef
+
+begin_label
 name|protected
 label|:
+end_label
+
+begin_comment
 comment|/**        *  @if maint        *  Place to stash in || out || in | out settings for current stringbuf.        *  @endif       */
+end_comment
+
+begin_expr_stmt
 name|ios_base
 operator|::
 name|openmode
 name|_M_mode
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Data Members:
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|__string_type
 name|_M_string
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|// Constructors:
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Starts with an empty string buffer.        *  @param  mode  Whether the buffer can read, or write, or both.        *        *  The default constructor initializes the parent class using its        *  own default ctor.       */
+end_comment
+
+begin_decl_stmt
 name|explicit
 name|basic_stringbuf
 argument_list|(
@@ -288,7 +351,13 @@ decl_stmt|,
 name|_M_string
 argument_list|()
 block|{ }
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @brief  Starts with an existing string buffer.        *  @param  str  A string to copy as a starting buffer.        *  @param  mode  Whether the buffer can read, or write, or both.        *        *  This constructor initializes the parent class using its        *  own default ctor.       */
+end_comment
+
+begin_decl_stmt
 name|explicit
 name|basic_stringbuf
 argument_list|(
@@ -336,13 +405,25 @@ name|__mode
 argument_list|)
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|// Get and set:
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Copying out the string buffer.        *  @return  A copy of one of the underlying sequences.        *        *  "If the buffer is only created in input mode, the underlying        *  character sequence is equal to the input sequence; otherwise, it        *  is equal to the output sequence." [27.7.1.2]/1       */
+end_comment
+
+begin_expr_stmt
 name|__string_type
 name|str
 argument_list|()
 specifier|const
 block|{
+name|__string_type
+name|__ret
+block|;
 if|if
 condition|(
 name|this
@@ -364,7 +445,8 @@ operator|->
 name|egptr
 argument_list|()
 condition|)
-return|return
+name|__ret
+operator|=
 name|__string_type
 argument_list|(
 name|this
@@ -377,9 +459,10 @@ operator|->
 name|pptr
 argument_list|()
 argument_list|)
-return|;
+expr_stmt|;
 else|else
-return|return
+name|__ret
+operator|=
 name|__string_type
 argument_list|(
 name|this
@@ -392,22 +475,38 @@ operator|->
 name|egptr
 argument_list|()
 argument_list|)
-return|;
+expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_else
 else|else
-return|return
+name|__ret
+operator|=
 name|_M_string
+expr_stmt|;
+end_else
+
+begin_return
+return|return
+name|__ret
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|/**        *  @brief  Setting a new buffer.        *  @param  s  The string to use as a new sequence.        *        *  Deallocates any previous stored sequence, then copies @a s to        *  use as a new one.       */
-name|void
+end_comment
+
+begin_macro
+unit|void
 name|str
-parameter_list|(
-specifier|const
-name|__string_type
-modifier|&
-name|__s
-parameter_list|)
+argument_list|(
+argument|const __string_type& __s
+argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|// Cannot use _M_string = __s, since v3 strings are COW.
 name|_M_string
@@ -427,16 +526,22 @@ argument_list|)
 expr_stmt|;
 name|_M_stringbuf_init
 argument_list|(
-name|this
-operator|->
 name|_M_mode
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_label
 name|protected
 label|:
+end_label
+
+begin_comment
 comment|// Common initialization code goes here.
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|void
 name|_M_stringbuf_init
 argument_list|(
@@ -446,8 +551,6 @@ name|openmode
 name|__mode
 argument_list|)
 block|{
-name|this
-operator|->
 name|_M_mode
 operator|=
 name|__mode
@@ -459,8 +562,6 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|this
-operator|->
 name|_M_mode
 operator|&
 operator|(
@@ -500,13 +601,60 @@ name|__len
 argument_list|)
 expr_stmt|;
 block|}
-comment|// [documentation is inherited]
+end_decl_stmt
+
+begin_function
+name|virtual
+name|streamsize
+name|showmanyc
+parameter_list|()
+block|{
+name|streamsize
+name|__ret
+init|=
+operator|-
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|_M_mode
+operator|&
+name|ios_base
+operator|::
+name|in
+condition|)
+block|{
+name|_M_update_egptr
+argument_list|()
+expr_stmt|;
+name|__ret
+operator|=
+name|this
+operator|->
+name|egptr
+argument_list|()
+operator|-
+name|this
+operator|->
+name|gptr
+argument_list|()
+expr_stmt|;
+block|}
+return|return
+name|__ret
+return|;
+block|}
+end_function
+
+begin_function_decl
 name|virtual
 name|int_type
 name|underflow
 parameter_list|()
 function_decl|;
-comment|// [documentation is inherited]
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|int_type
 name|pbackfail
@@ -520,7 +668,9 @@ name|eof
 argument_list|()
 parameter_list|)
 function_decl|;
-comment|// [documentation is inherited]
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|int_type
 name|overflow
@@ -534,7 +684,13 @@ name|eof
 argument_list|()
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**        *  @brief  Manipulates the buffer.        *  @param  s  Pointer to a buffer area.        *  @param  n  Size of @a s.        *  @return  @c this        *        *  If no buffer has already been created, and both @a s and @a n are        *  non-zero, then @c s is used as a buffer; see        *  http://gcc.gnu.org/onlinedocs/libstdc++/27_io/howto.html#2        *  for more.       */
+end_comment
+
+begin_function
 name|virtual
 name|__streambuf_type
 modifier|*
@@ -563,20 +719,16 @@ comment|// and has been pre-allocated. If this is not the case,
 comment|// things will quickly blow up.
 comment|// Step 1: Destroy the current internal array.
 name|_M_string
-operator|=
-name|__string_type
-argument_list|(
-name|__s
-argument_list|,
-name|__n
-argument_list|)
+operator|.
+name|clear
+argument_list|()
 expr_stmt|;
 comment|// Step 2: Use the external array.
 name|_M_sync
 argument_list|(
 name|__s
 argument_list|,
-literal|0
+name|__n
 argument_list|,
 literal|0
 argument_list|)
@@ -586,7 +738,9 @@ return|return
 name|this
 return|;
 block|}
-comment|// [documentation is inherited]
+end_function
+
+begin_decl_stmt
 name|virtual
 name|pos_type
 name|seekoff
@@ -613,7 +767,9 @@ operator|::
 name|out
 argument_list|)
 decl_stmt|;
-comment|// [documentation is inherited]
+end_decl_stmt
+
+begin_decl_stmt
 name|virtual
 name|pos_type
 name|seekpos
@@ -635,13 +791,21 @@ operator|::
 name|out
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Internal function for correctly updating the internal buffer
-comment|// for a particular _M_string, due to initialization or
-comment|// re-sizing of an existing _M_string.
-comment|// Assumes: contents of _M_string and internal buffer match exactly.
-comment|// __i == _M_in_cur - _M_in_beg
-comment|// __o == _M_out_cur - _M_out_beg
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
+begin_comment
+comment|// for a particular _M_string, due to initialization or re-sizing
+end_comment
+
+begin_comment
+comment|// of an existing _M_string.
+end_comment
+
+begin_function_decl
 name|void
 name|_M_sync
 parameter_list|(
@@ -655,115 +819,18 @@ parameter_list|,
 name|__size_type
 name|__o
 parameter_list|)
-block|{
-specifier|const
-name|bool
-name|__testin
-init|=
-name|this
-operator|->
-name|_M_mode
-operator|&
-name|ios_base
-operator|::
-name|in
-decl_stmt|;
-specifier|const
-name|bool
-name|__testout
-init|=
-name|this
-operator|->
-name|_M_mode
-operator|&
-name|ios_base
-operator|::
-name|out
-decl_stmt|;
-specifier|const
-name|__size_type
-name|__len
-init|=
-name|_M_string
-operator|.
-name|size
-argument_list|()
-decl_stmt|;
-if|if
-condition|(
-name|__testin
-condition|)
-name|this
-operator|->
-name|setg
-argument_list|(
-name|__base
-argument_list|,
-name|__base
-operator|+
-name|__i
-argument_list|,
-name|__base
-operator|+
-name|__len
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|__testout
-condition|)
-block|{
-name|this
-operator|->
-name|setp
-argument_list|(
-name|__base
-argument_list|,
-name|__base
-operator|+
-name|_M_string
-operator|.
-name|capacity
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|this
-operator|->
-name|pbump
-argument_list|(
-name|__o
-argument_list|)
-expr_stmt|;
-comment|// We need a pointer to the string end anyway, even when
-comment|// !__testin: in that case, however, for the correct
-comment|// functioning of the streambuf inlines all the get area
-comment|// pointers must be identical.
-if|if
-condition|(
-operator|!
-name|__testin
-condition|)
-name|this
-operator|->
-name|setg
-argument_list|(
-name|__base
-operator|+
-name|__len
-argument_list|,
-name|__base
-operator|+
-name|__len
-argument_list|,
-name|__base
-operator|+
-name|__len
-argument_list|)
-expr_stmt|;
-block|}
-block|}
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Internal function for correctly updating egptr() to the actual
+end_comment
+
+begin_comment
 comment|// string end.
+end_comment
+
+begin_function
 name|void
 name|_M_update_egptr
 parameter_list|()
@@ -772,8 +839,6 @@ specifier|const
 name|bool
 name|__testin
 init|=
-name|this
-operator|->
 name|_M_mode
 operator|&
 name|ios_base
@@ -843,14 +908,10 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
+unit|};
 comment|// [27.7.2] Template class basic_istringstream
 end_comment
 
@@ -990,10 +1051,6 @@ begin_label
 name|private
 label|:
 end_label
-
-begin_comment
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
-end_comment
 
 begin_decl_stmt
 name|__stringbuf_type
@@ -1315,10 +1372,6 @@ name|private
 label|:
 end_label
 
-begin_comment
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
-end_comment
-
 begin_decl_stmt
 name|__stringbuf_type
 name|_M_stringbuf
@@ -1639,10 +1692,6 @@ name|private
 label|:
 end_label
 
-begin_comment
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
-end_comment
-
 begin_decl_stmt
 name|__stringbuf_type
 name|_M_stringbuf
@@ -1821,10 +1870,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-unit|}; }
-comment|// namespace std
-end_comment
+begin_macro
+unit|};
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_ifndef
 ifndef|#
