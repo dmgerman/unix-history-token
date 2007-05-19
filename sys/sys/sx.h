@@ -890,6 +890,13 @@ name|SX_ADAPTIVESPIN
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|SX_RECURSE
+value|0x20
+end_define
+
 begin_comment
 comment|/*  * XXX: These options should be renamed as SA_*  */
 end_comment
