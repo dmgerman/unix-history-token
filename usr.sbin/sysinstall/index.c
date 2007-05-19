@@ -533,6 +533,10 @@ literal|"x11-clocks"
 block|,
 literal|"X Window System based clocks."
 block|,
+literal|"x11-drivers"
+block|,
+literal|"X Window System drivers."
+block|,
 literal|"x11-fm"
 block|,
 literal|"X Window System based file managers."
