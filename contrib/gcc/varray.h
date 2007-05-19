@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Virtual array support.    Copyright (C) 1998, 1999, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Cygnus Solutions.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    the Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* Virtual array support.    Copyright (C) 1998, 1999, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Cygnus Solutions.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -62,34 +62,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Auxiliary structure used inside the varray structure, used for    function integration data.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|const_equiv_data
-name|GTY
-argument_list|(
-operator|(
-operator|)
-argument_list|)
-block|{
-comment|/* Map pseudo reg number in calling function to equivalent constant.  We      cannot in general substitute constants into parameter pseudo registers,      since some machine descriptions (many RISCs) won't always handle      the resulting insns.  So if an incoming parameter has a constant      equivalent, we record it here, and if the resulting insn is      recognizable, we go with it.       We also use this mechanism to convert references to incoming arguments      and stacked variables.  copy_rtx_and_substitute will replace the virtual      incoming argument and virtual stacked variables registers with new      pseudos that contain pointers into the replacement area allocated for      this inline instance.  These pseudos are then marked as being equivalent      to the appropriate address and substituted if valid.  */
-name|rtx
-name|rtx
-decl_stmt|;
-comment|/* Record the valid age for each entry.  The entry is invalid if its      age is less than const_age.  */
-name|unsigned
-name|age
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/* Enum indicating what the varray contains.    If this is changed, `element' in varray.c needs to be updated.  */
 end_comment
 
@@ -119,6 +91,8 @@ name|VARRAY_DATA_UHINT
 block|,
 name|VARRAY_DATA_GENERIC
 block|,
+name|VARRAY_DATA_GENERIC_NOGC
+block|,
 name|VARRAY_DATA_CPTR
 block|,
 name|VARRAY_DATA_RTX
@@ -131,11 +105,13 @@ name|VARRAY_DATA_BITMAP
 block|,
 name|VARRAY_DATA_REG
 block|,
-name|VARRAY_DATA_CONST_EQUIV
-block|,
 name|VARRAY_DATA_BB
 block|,
 name|VARRAY_DATA_TE
+block|,
+name|VARRAY_DATA_EDGE
+block|,
+name|VARRAY_DATA_TREE_PTR
 block|,
 name|NUM_VARRAY_DATA
 block|}
@@ -171,7 +147,7 @@ literal|"VARRAY_DATA_C"
 argument_list|)
 operator|)
 argument_list|)
-name|c
+name|vdt_c
 index|[
 literal|1
 index|]
@@ -185,7 +161,7 @@ block|("%0.num_elements")
 operator|,
 block|tag ("VARRAY_DATA_UC")
 typedef|))
-name|uc
+name|vdt_uc
 index|[
 literal|1
 index|]
@@ -208,7 +184,7 @@ literal|"VARRAY_DATA_S"
 argument_list|)
 operator|)
 argument_list|)
-name|s
+name|vdt_s
 index|[
 literal|1
 index|]
@@ -232,7 +208,7 @@ literal|"VARRAY_DATA_US"
 argument_list|)
 operator|)
 argument_list|)
-name|us
+name|vdt_us
 index|[
 literal|1
 index|]
@@ -255,7 +231,7 @@ literal|"VARRAY_DATA_I"
 argument_list|)
 operator|)
 argument_list|)
-name|i
+name|vdt_i
 index|[
 literal|1
 index|]
@@ -279,7 +255,7 @@ literal|"VARRAY_DATA_U"
 argument_list|)
 operator|)
 argument_list|)
-name|u
+name|vdt_u
 index|[
 literal|1
 index|]
@@ -302,7 +278,7 @@ literal|"VARRAY_DATA_L"
 argument_list|)
 operator|)
 argument_list|)
-name|l
+name|vdt_l
 index|[
 literal|1
 index|]
@@ -326,7 +302,7 @@ literal|"VARRAY_DATA_UL"
 argument_list|)
 operator|)
 argument_list|)
-name|ul
+name|vdt_ul
 index|[
 literal|1
 index|]
@@ -349,7 +325,7 @@ literal|"VARRAY_DATA_HINT"
 argument_list|)
 operator|)
 argument_list|)
-name|hint
+name|vdt_hint
 index|[
 literal|1
 index|]
@@ -373,7 +349,7 @@ literal|"VARRAY_DATA_UHINT"
 argument_list|)
 operator|)
 argument_list|)
-name|uhint
+name|vdt_uhint
 index|[
 literal|1
 index|]
@@ -391,9 +367,6 @@ literal|"%0.num_elements"
 argument_list|)
 operator|,
 name|use_param
-argument_list|(
-literal|""
-argument_list|)
 operator|,
 name|tag
 argument_list|(
@@ -401,7 +374,35 @@ literal|"VARRAY_DATA_GENERIC"
 argument_list|)
 operator|)
 argument_list|)
-name|generic
+name|vdt_generic
+index|[
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|PTR
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|skip
+argument_list|(
+literal|""
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_GENERIC_NOGC"
+argument_list|)
+operator|)
+argument_list|)
+name|vdt_generic_nogc
 index|[
 literal|1
 index|]
@@ -425,7 +426,7 @@ literal|"VARRAY_DATA_CPTR"
 argument_list|)
 operator|)
 argument_list|)
-name|cptr
+name|vdt_cptr
 index|[
 literal|1
 index|]
@@ -448,7 +449,7 @@ literal|"VARRAY_DATA_RTX"
 argument_list|)
 operator|)
 argument_list|)
-name|rtx
+name|vdt_rtx
 index|[
 literal|1
 index|]
@@ -471,7 +472,7 @@ literal|"VARRAY_DATA_RTVEC"
 argument_list|)
 operator|)
 argument_list|)
-name|rtvec
+name|vdt_rtvec
 index|[
 literal|1
 index|]
@@ -494,7 +495,7 @@ literal|"VARRAY_DATA_TREE"
 argument_list|)
 operator|)
 argument_list|)
-name|tree
+name|vdt_tree
 index|[
 literal|1
 index|]
@@ -519,7 +520,7 @@ literal|"VARRAY_DATA_BITMAP"
 argument_list|)
 operator|)
 argument_list|)
-name|bitmap
+name|vdt_bitmap
 index|[
 literal|1
 index|]
@@ -539,9 +540,6 @@ literal|"%0.num_elements"
 argument_list|)
 operator|,
 name|skip
-argument_list|(
-literal|""
-argument_list|)
 operator|,
 name|tag
 argument_list|(
@@ -549,31 +547,7 @@ literal|"VARRAY_DATA_REG"
 argument_list|)
 operator|)
 argument_list|)
-name|reg
-index|[
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|const_equiv_data
-name|GTY
-argument_list|(
-operator|(
-name|length
-argument_list|(
-literal|"%0.num_elements"
-argument_list|)
-operator|,
-name|tag
-argument_list|(
-literal|"VARRAY_DATA_CONST_EQUIV"
-argument_list|)
-operator|)
-argument_list|)
-name|const_equiv
+name|vdt_reg
 index|[
 literal|1
 index|]
@@ -593,9 +567,6 @@ literal|"%0.num_elements"
 argument_list|)
 operator|,
 name|skip
-argument_list|(
-literal|""
-argument_list|)
 operator|,
 name|tag
 argument_list|(
@@ -603,7 +574,7 @@ literal|"VARRAY_DATA_BB"
 argument_list|)
 operator|)
 argument_list|)
-name|bb
+name|vdt_bb
 index|[
 literal|1
 index|]
@@ -628,7 +599,61 @@ literal|"VARRAY_DATA_TE"
 argument_list|)
 operator|)
 argument_list|)
-name|te
+name|vdt_te
+index|[
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|edge_def
+modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_EDGE"
+argument_list|)
+operator|)
+argument_list|)
+name|vdt_e
+index|[
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|tree
+modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|skip
+argument_list|(
+literal|""
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_TREE_PTR"
+argument_list|)
+operator|)
+argument_list|)
+name|vdt_tp
 index|[
 literal|1
 index|]
@@ -890,6 +915,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|VARRAY_GENERIC_PTR_NOGC_INIT
+parameter_list|(
+name|va
+parameter_list|,
+name|num
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|va = varray_init (num, VARRAY_DATA_GENERIC_NOGC, name)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VARRAY_CHAR_PTR_INIT
 parameter_list|(
 name|va
@@ -980,21 +1020,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VARRAY_CONST_EQUIV_INIT
-parameter_list|(
-name|va
-parameter_list|,
-name|num
-parameter_list|,
-name|name
-parameter_list|)
-define|\
-value|va = varray_init (num, VARRAY_DATA_CONST_EQUIV, name)
-end_define
-
-begin_define
-define|#
-directive|define
 name|VARRAY_BB_INIT
 parameter_list|(
 name|va
@@ -1020,6 +1045,36 @@ name|name
 parameter_list|)
 define|\
 value|va = varray_init (num, VARRAY_DATA_TE, name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_EDGE_INIT
+parameter_list|(
+name|va
+parameter_list|,
+name|num
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|va = varray_init (num, VARRAY_DATA_EDGE, name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_TREE_PTR_INIT
+parameter_list|(
+name|va
+parameter_list|,
+name|num
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|va = varray_init (num, VARRAY_DATA_TREE_PTR, name)
 end_define
 
 begin_comment
@@ -1276,7 +1331,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, c)
+value|VARRAY_CHECK (VA, N, vdt_c)
 end_define
 
 begin_define
@@ -1288,7 +1343,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, uc)
+value|VARRAY_CHECK (VA, N, vdt_uc)
 end_define
 
 begin_define
@@ -1300,7 +1355,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, s)
+value|VARRAY_CHECK (VA, N, vdt_s)
 end_define
 
 begin_define
@@ -1312,7 +1367,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, us)
+value|VARRAY_CHECK (VA, N, vdt_us)
 end_define
 
 begin_define
@@ -1324,7 +1379,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, i)
+value|VARRAY_CHECK (VA, N, vdt_i)
 end_define
 
 begin_define
@@ -1336,7 +1391,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, u)
+value|VARRAY_CHECK (VA, N, vdt_u)
 end_define
 
 begin_define
@@ -1348,7 +1403,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, l)
+value|VARRAY_CHECK (VA, N, vdt_l)
 end_define
 
 begin_define
@@ -1360,7 +1415,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, ul)
+value|VARRAY_CHECK (VA, N, vdt_ul)
 end_define
 
 begin_define
@@ -1372,7 +1427,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, hint)
+value|VARRAY_CHECK (VA, N, vdt_hint)
 end_define
 
 begin_define
@@ -1384,7 +1439,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, uhint)
+value|VARRAY_CHECK (VA, N, vdt_uhint)
 end_define
 
 begin_define
@@ -1396,7 +1451,19 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, generic)
+value|VARRAY_CHECK (VA, N, vdt_generic)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_GENERIC_PTR_NOGC
+parameter_list|(
+name|VA
+parameter_list|,
+name|N
+parameter_list|)
+value|VARRAY_CHECK (VA, N, vdt_generic_nogc)
 end_define
 
 begin_define
@@ -1408,7 +1475,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, cptr)
+value|VARRAY_CHECK (VA, N, vdt_cptr)
 end_define
 
 begin_define
@@ -1420,7 +1487,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, rtx)
+value|VARRAY_CHECK (VA, N, vdt_rtx)
 end_define
 
 begin_define
@@ -1432,7 +1499,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, rtvec)
+value|VARRAY_CHECK (VA, N, vdt_rtvec)
 end_define
 
 begin_define
@@ -1444,7 +1511,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, tree)
+value|VARRAY_CHECK (VA, N, vdt_tree)
 end_define
 
 begin_define
@@ -1456,7 +1523,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, bitmap)
+value|VARRAY_CHECK (VA, N, vdt_bitmap)
 end_define
 
 begin_define
@@ -1468,19 +1535,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, reg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VARRAY_CONST_EQUIV
-parameter_list|(
-name|VA
-parameter_list|,
-name|N
-parameter_list|)
-value|VARRAY_CHECK (VA, N, const_equiv)
+value|VARRAY_CHECK (VA, N, vdt_reg)
 end_define
 
 begin_define
@@ -1492,7 +1547,7 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, bb)
+value|VARRAY_CHECK (VA, N, vdt_bb)
 end_define
 
 begin_define
@@ -1504,7 +1559,31 @@ name|VA
 parameter_list|,
 name|N
 parameter_list|)
-value|VARRAY_CHECK (VA, N, te)
+value|VARRAY_CHECK (VA, N, vdt_te)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_EDGE
+parameter_list|(
+name|VA
+parameter_list|,
+name|N
+parameter_list|)
+value|VARRAY_CHECK (VA, N, vdt_e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_TREE_PTR
+parameter_list|(
+name|VA
+parameter_list|,
+name|N
+parameter_list|)
+value|VARRAY_CHECK (VA, N, vdt_tp)
 end_define
 
 begin_comment
@@ -1520,7 +1599,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, c, X)
+value|VARRAY_PUSH (VA, vdt_c, X)
 end_define
 
 begin_define
@@ -1532,7 +1611,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, uc, X)
+value|VARRAY_PUSH (VA, vdt_uc, X)
 end_define
 
 begin_define
@@ -1544,7 +1623,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, s, X)
+value|VARRAY_PUSH (VA, vdt_s, X)
 end_define
 
 begin_define
@@ -1556,7 +1635,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, us, X)
+value|VARRAY_PUSH (VA, vdt_us, X)
 end_define
 
 begin_define
@@ -1568,7 +1647,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, i, X)
+value|VARRAY_PUSH (VA, vdt_i, X)
 end_define
 
 begin_define
@@ -1580,7 +1659,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, u, X)
+value|VARRAY_PUSH (VA, vdt_u, X)
 end_define
 
 begin_define
@@ -1592,7 +1671,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, l, X)
+value|VARRAY_PUSH (VA, vdt_l, X)
 end_define
 
 begin_define
@@ -1604,7 +1683,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, ul, X)
+value|VARRAY_PUSH (VA, vdt_ul, X)
 end_define
 
 begin_define
@@ -1616,7 +1695,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, hint, X)
+value|VARRAY_PUSH (VA, vdt_hint, X)
 end_define
 
 begin_define
@@ -1628,7 +1707,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, uhint, X)
+value|VARRAY_PUSH (VA, vdt_uhint, X)
 end_define
 
 begin_define
@@ -1640,7 +1719,19 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, generic, X)
+value|VARRAY_PUSH (VA, vdt_generic, X)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_PUSH_GENERIC_PTR_NOGC
+parameter_list|(
+name|VA
+parameter_list|,
+name|X
+parameter_list|)
+value|VARRAY_PUSH (VA, vdt_generic_nogc, X)
 end_define
 
 begin_define
@@ -1652,7 +1743,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, cptr, X)
+value|VARRAY_PUSH (VA, vdt_cptr, X)
 end_define
 
 begin_define
@@ -1664,7 +1755,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, rtx, X)
+value|VARRAY_PUSH (VA, vdt_rtx, X)
 end_define
 
 begin_define
@@ -1676,7 +1767,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, rtvec, X)
+value|VARRAY_PUSH (VA, vdt_rtvec, X)
 end_define
 
 begin_define
@@ -1688,7 +1779,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, tree, X)
+value|VARRAY_PUSH (VA, vdt_tree, X)
 end_define
 
 begin_define
@@ -1700,7 +1791,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, bitmap, X)
+value|VARRAY_PUSH (VA, vdt_bitmap, X)
 end_define
 
 begin_define
@@ -1712,19 +1803,7 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, reg, X)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VARRAY_PUSH_CONST_EQUIV
-parameter_list|(
-name|VA
-parameter_list|,
-name|X
-parameter_list|)
-value|VARRAY_PUSH (VA, const_equiv, X)
+value|VARRAY_PUSH (VA, vdt_reg, X)
 end_define
 
 begin_define
@@ -1736,7 +1815,31 @@ name|VA
 parameter_list|,
 name|X
 parameter_list|)
-value|VARRAY_PUSH (VA, bb, X)
+value|VARRAY_PUSH (VA, vdt_bb, X)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_PUSH_EDGE
+parameter_list|(
+name|VA
+parameter_list|,
+name|X
+parameter_list|)
+value|VARRAY_PUSH (VA, vdt_e, X)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_PUSH_TREE_PTR
+parameter_list|(
+name|VA
+parameter_list|,
+name|X
+parameter_list|)
+value|VARRAY_PUSH (VA, vdt_tp, X)
 end_define
 
 begin_comment
@@ -1762,7 +1865,7 @@ name|VARRAY_TOP_CHAR
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, c)
+value|VARRAY_TOP (VA, vdt_c)
 end_define
 
 begin_define
@@ -1772,7 +1875,7 @@ name|VARRAY_TOP_UCHAR
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, uc)
+value|VARRAY_TOP (VA, vdt_uc)
 end_define
 
 begin_define
@@ -1782,7 +1885,7 @@ name|VARRAY_TOP_SHORT
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, s)
+value|VARRAY_TOP (VA, vdt_s)
 end_define
 
 begin_define
@@ -1792,7 +1895,7 @@ name|VARRAY_TOP_USHORT
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, us)
+value|VARRAY_TOP (VA, vdt_us)
 end_define
 
 begin_define
@@ -1802,7 +1905,7 @@ name|VARRAY_TOP_INT
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, i)
+value|VARRAY_TOP (VA, vdt_i)
 end_define
 
 begin_define
@@ -1812,7 +1915,7 @@ name|VARRAY_TOP_UINT
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, u)
+value|VARRAY_TOP (VA, vdt_u)
 end_define
 
 begin_define
@@ -1822,7 +1925,7 @@ name|VARRAY_TOP_LONG
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, l)
+value|VARRAY_TOP (VA, vdt_l)
 end_define
 
 begin_define
@@ -1832,7 +1935,7 @@ name|VARRAY_TOP_ULONG
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, ul)
+value|VARRAY_TOP (VA, vdt_ul)
 end_define
 
 begin_define
@@ -1842,7 +1945,7 @@ name|VARRAY_TOP_WIDE_INT
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, hint)
+value|VARRAY_TOP (VA, vdt_hint)
 end_define
 
 begin_define
@@ -1852,7 +1955,7 @@ name|VARRAY_TOP_UWIDE_INT
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, uhint)
+value|VARRAY_TOP (VA, vdt_uhint)
 end_define
 
 begin_define
@@ -1862,7 +1965,17 @@ name|VARRAY_TOP_GENERIC_PTR
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, generic)
+value|VARRAY_TOP (VA, vdt_generic)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_TOP_GENERIC_PTR_NOGC
+parameter_list|(
+name|VA
+parameter_list|)
+value|VARRAY_TOP (VA, vdt_generic_nogc)
 end_define
 
 begin_define
@@ -1872,7 +1985,7 @@ name|VARRAY_TOP_CHAR_PTR
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, cptr)
+value|VARRAY_TOP (VA, vdt_cptr)
 end_define
 
 begin_define
@@ -1882,7 +1995,7 @@ name|VARRAY_TOP_RTX
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, rtx)
+value|VARRAY_TOP (VA, vdt_rtx)
 end_define
 
 begin_define
@@ -1892,7 +2005,7 @@ name|VARRAY_TOP_RTVEC
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, rtvec)
+value|VARRAY_TOP (VA, vdt_rtvec)
 end_define
 
 begin_define
@@ -1902,7 +2015,7 @@ name|VARRAY_TOP_TREE
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, tree)
+value|VARRAY_TOP (VA, vdt_tree)
 end_define
 
 begin_define
@@ -1912,7 +2025,7 @@ name|VARRAY_TOP_BITMAP
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, bitmap)
+value|VARRAY_TOP (VA, vdt_bitmap)
 end_define
 
 begin_define
@@ -1922,17 +2035,7 @@ name|VARRAY_TOP_REG
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, reg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VARRAY_TOP_CONST_EQUIV
-parameter_list|(
-name|VA
-parameter_list|)
-value|VARRAY_TOP (VA, const_equiv)
+value|VARRAY_TOP (VA, vdt_reg)
 end_define
 
 begin_define
@@ -1942,7 +2045,27 @@ name|VARRAY_TOP_BB
 parameter_list|(
 name|VA
 parameter_list|)
-value|VARRAY_TOP (VA, bb)
+value|VARRAY_TOP (VA, vdt_bb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_TOP_EDGE
+parameter_list|(
+name|VA
+parameter_list|)
+value|VARRAY_TOP (VA, vdt_e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_TOP_TREE_PTR
+parameter_list|(
+name|VA
+parameter_list|)
+value|VARRAY_TOP (VA, vdt_tp)
 end_define
 
 begin_endif

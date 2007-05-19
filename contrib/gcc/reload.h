@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Communication between reload.c and reload1.c.    Copyright (C) 1987, 1991, 1992, 1993, 1994, 1995, 1997, 1998,    1999, 2000, 2001, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Communication between reload.c and reload1.c.    Copyright (C) 1987, 1991, 1992, 1993, 1994, 1995, 1997, 1998,    1999, 2000, 2001, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -49,35 +49,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* If either macro is defined, show that we need secondary reloads.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SECONDARY_INPUT_RELOAD_CLASS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SECONDARY_OUTPUT_RELOAD_CLASS
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_SECONDARY_RELOADS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* If MEMORY_MOVE_COST isn't defined, give it a default here.  */
 end_comment
 
@@ -86,12 +57,6 @@ ifndef|#
 directive|ifndef
 name|MEMORY_MOVE_COST
 end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SECONDARY_RELOADS
-end_ifdef
 
 begin_define
 define|#
@@ -107,30 +72,6 @@ parameter_list|)
 define|\
 value|(4 + memory_move_secondary_cost ((MODE), (CLASS), (IN)))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MEMORY_MOVE_COST
-parameter_list|(
-name|MODE
-parameter_list|,
-name|CLASS
-parameter_list|,
-name|IN
-parameter_list|)
-value|4
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -345,11 +286,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_extern
+extern|extern GTY ((
+end_extern
+
+begin_expr_stmt
+unit|))
+name|VEC
+argument_list|(
+name|rtx
+argument_list|,
+name|gc
+argument_list|)
+operator|*
+name|reg_equiv_memory_loc_vec
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|rtx
 modifier|*
 name|reg_equiv_constant
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+modifier|*
+name|reg_equiv_invariant
 decl_stmt|;
 end_decl_stmt
 
@@ -374,6 +340,46 @@ specifier|extern
 name|rtx
 modifier|*
 name|reg_equiv_mem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+modifier|*
+name|reg_equiv_alt_mem_list
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Element N is the list of insns that initialized reg N from its equivalent    constant or memory slot.  */
+end_comment
+
+begin_extern
+extern|extern GTY((length(
+literal|"reg_equiv_init_size"
+end_extern
+
+begin_decl_stmt
+unit|)))
+name|rtx
+modifier|*
+name|reg_equiv_init
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The size of the previous array, for GC purposes.  */
+end_comment
+
+begin_extern
+extern|extern GTY((
+end_extern
+
+begin_decl_stmt
+unit|))
+name|int
+name|reg_equiv_init_size
 decl_stmt|;
 end_decl_stmt
 
@@ -449,30 +455,6 @@ name|num_not_at_initial_offset
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|needs
-block|{
-comment|/* [0] is normal, [1] is nongroup.  */
-name|short
-name|regs
-index|[
-literal|2
-index|]
-index|[
-name|N_REG_CLASSES
-index|]
-decl_stmt|;
-name|short
-name|groups
-index|[
-name|N_REG_CLASSES
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_if
 if|#
 directive|if
@@ -533,11 +515,6 @@ decl_stmt|;
 comment|/* Indicates which registers have already been used for spills.  */
 name|HARD_REG_SET
 name|used_spill_regs
-decl_stmt|;
-comment|/* Describe the needs for reload registers of this insn.  */
-name|struct
-name|needs
-name|need
 decl_stmt|;
 comment|/* Nonzero if find_reloads said the insn requires reloading.  */
 name|unsigned
@@ -621,6 +598,48 @@ end_endif
 begin_comment
 comment|/* Functions from reload.c:  */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|enum
+name|reg_class
+name|secondary_reload_class
+parameter_list|(
+name|bool
+parameter_list|,
+name|enum
+name|reg_class
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GCC_INSN_CODES_H
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|enum
+name|reg_class
+name|scratch_reload_class
+parameter_list|(
+name|enum
+name|insn_code
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Return a memory location that will be used to copy X in mode MODE.    If we haven't already made a location for this mode in this insn,    call find_reloads_address on the location being returned.  */
@@ -826,29 +845,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Return nonzero if register in range [REGNO, ENDREGNO)    appears either explicitly or implicitly in X    other than being stored into.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|refers_to_regno_for_reload_p
-parameter_list|(
-name|unsigned
-name|int
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Nonzero if modifying X will affect IN.  */
 end_comment
 
@@ -859,20 +855,6 @@ name|reg_overlap_mentioned_for_reload_p
 parameter_list|(
 name|rtx
 parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Return nonzero if anything in X contains a MEM.  Look also for pseudo    registers.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|refers_to_mem_for_reload_p
-parameter_list|(
 name|rtx
 parameter_list|)
 function_decl|;
@@ -1001,18 +983,6 @@ begin_comment
 comment|/* Functions in reload1.c:  */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|int
-name|reloads_conflict
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Initialize the reload pass once per compilation.  */
 end_comment
@@ -1072,27 +1042,6 @@ name|enum
 name|machine_mode
 parameter_list|,
 name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Emit code to perform a reload from IN (which may be a reload register) to    OUT (which may also be a reload register).  IN or OUT is from operand    OPNUM with reload type TYPE.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|gen_reload
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|int
-parameter_list|,
-name|enum
-name|reload_type
 parameter_list|)
 function_decl|;
 end_function_decl

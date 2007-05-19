@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Timing variables for measuring compiler performance.    Copyright (C) 2000, 2003 Free Software Foundation, Inc.    Contributed by Alex Samuel<samuel@codesourcery.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Timing variables for measuring compiler performance.    Copyright (C) 2000, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Alex Samuel<samuel@codesourcery.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -494,11 +494,31 @@ file|"timevar.h"
 end_include
 
 begin_decl_stmt
-specifier|static
 name|bool
 name|timevar_enable
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Total amount of memory allocated by garbage collector.  */
+end_comment
+
+begin_decl_stmt
+name|size_t
+name|timevar_ggc_mem_total
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The amount of memory that will cause us to report the timevar even    if the time spent is not significant.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GGC_MEM_BOUND
+value|(1<< 20)
+end_define
 
 begin_comment
 comment|/* See timevar.h for an explanation of timing variables.  */
@@ -686,6 +706,12 @@ name|wall
 operator|=
 literal|0
 expr_stmt|;
+name|now
+operator|->
+name|ggc_mem
+operator|=
+name|timevar_ggc_mem_total
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -866,6 +892,18 @@ name|start_time
 operator|->
 name|wall
 expr_stmt|;
+name|timer
+operator|->
+name|ggc_mem
+operator|+=
+name|stop_time
+operator|->
+name|ggc_mem
+operator|-
+name|start_time
+operator|->
+name|ggc_mem
+expr_stmt|;
 block|}
 end_function
 
@@ -941,7 +979,7 @@ end_comment
 
 begin_function
 name|void
-name|timevar_push
+name|timevar_push_1
 parameter_list|(
 name|timevar_id_t
 name|timevar
@@ -967,12 +1005,6 @@ name|struct
 name|timevar_time_def
 name|now
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|timevar_enable
-condition|)
-return|return;
 comment|/* Mark this timing variable as used.  */
 name|tv
 operator|->
@@ -981,14 +1013,13 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Can't push a standalone timer.  */
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
+operator|!
 name|tv
 operator|->
 name|standalone
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 comment|/* What time is it?  */
 name|get_time
@@ -1045,13 +1076,10 @@ block|}
 else|else
 name|context
 operator|=
-name|xmalloc
-argument_list|(
-sizeof|sizeof
+name|XNEW
 argument_list|(
 expr|struct
 name|timevar_stack_def
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Fill it in and put it on the stack.  */
@@ -1080,7 +1108,7 @@ end_comment
 
 begin_function
 name|void
-name|timevar_pop
+name|timevar_pop_1
 parameter_list|(
 name|timevar_id_t
 name|timevar
@@ -1097,47 +1125,19 @@ name|popped
 init|=
 name|stack
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|timevar_enable
-condition|)
-return|return;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 operator|&
 name|timevars
 index|[
 name|timevar
 index|]
-operator|!=
+operator|==
 name|stack
 operator|->
 name|timevar
-condition|)
-block|{
-name|sorry
-argument_list|(
-literal|"cannot timevar_pop '%s' when top of timevars stack is '%s'"
-argument_list|,
-name|timevars
-index|[
-name|timevar
-index|]
-operator|.
-name|name
-argument_list|,
-name|stack
-operator|->
-name|timevar
-operator|->
-name|name
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
 comment|/* What time is it?  */
 name|get_time
 argument_list|(
@@ -1225,14 +1225,13 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Don't allow the same timing variable to be started more than      once.  */
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
+operator|!
 name|tv
 operator|->
 name|standalone
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|tv
 operator|->
@@ -1285,15 +1284,12 @@ name|timevar_enable
 condition|)
 return|return;
 comment|/* TIMEVAR must have been started via timevar_start.  */
-if|if
-condition|(
-operator|!
+name|gcc_assert
+argument_list|(
 name|tv
 operator|->
 name|standalone
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|get_time
 argument_list|(
@@ -1317,105 +1313,6 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Fill the elapsed time for TIMEVAR into ELAPSED.  Returns    update-to-date information even if TIMEVAR is currently running.  */
-end_comment
-
-begin_function
-name|void
-name|timevar_get
-parameter_list|(
-name|timevar_id_t
-name|timevar
-parameter_list|,
-name|struct
-name|timevar_time_def
-modifier|*
-name|elapsed
-parameter_list|)
-block|{
-name|struct
-name|timevar_def
-modifier|*
-name|tv
-init|=
-operator|&
-name|timevars
-index|[
-name|timevar
-index|]
-decl_stmt|;
-name|struct
-name|timevar_time_def
-name|now
-decl_stmt|;
-operator|*
-name|elapsed
-operator|=
-name|tv
-operator|->
-name|elapsed
-expr_stmt|;
-comment|/* Is TIMEVAR currently running as a standalone timer?  */
-if|if
-condition|(
-name|tv
-operator|->
-name|standalone
-condition|)
-block|{
-name|get_time
-argument_list|(
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
-name|timevar_accumulate
-argument_list|(
-name|elapsed
-argument_list|,
-operator|&
-name|tv
-operator|->
-name|start_time
-argument_list|,
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Or is TIMEVAR at the top of the timer stack?  */
-elseif|else
-if|if
-condition|(
-name|stack
-operator|->
-name|timevar
-operator|==
-name|tv
-condition|)
-block|{
-name|get_time
-argument_list|(
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
-name|timevar_accumulate
-argument_list|(
-name|elapsed
-argument_list|,
-operator|&
-name|start_time
-argument_list|,
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1615,6 +1512,14 @@ operator|.
 name|wall
 operator|<
 name|tiny
+operator|&&
+name|tv
+operator|->
+name|elapsed
+operator|.
+name|ggc_mem
+operator|<
+name|GGC_MEM_BOUND
 condition|)
 continue|continue;
 comment|/* The timing variable name.  */
@@ -1755,6 +1660,52 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_WALL_TIME */
+comment|/* Print the amount of ggc memory allocated.  */
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%8u kB (%2.0f%%) ggc"
+argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
+name|tv
+operator|->
+name|elapsed
+operator|.
+name|ggc_mem
+operator|>>
+literal|10
+argument_list|)
+argument_list|,
+operator|(
+name|total
+operator|->
+name|ggc_mem
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
+operator|(
+name|float
+operator|)
+name|tv
+operator|->
+name|elapsed
+operator|.
+name|ggc_mem
+operator|/
+name|total
+operator|->
+name|ggc_mem
+operator|)
+operator|*
+literal|100
+argument_list|)
+expr_stmt|;
 name|putc
 argument_list|(
 literal|'\n'
@@ -1813,11 +1764,48 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%7.2f\n"
+literal|"%7.2f           "
 argument_list|,
 name|total
 operator|->
 name|wall
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%8u kB\n"
+argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
+name|total
+operator|->
+name|ggc_mem
+operator|>>
+literal|10
+argument_list|)
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_CHECKING
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"Extra diagnostic checks enabled; compiler may run slowly.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"Configure with --disable-checking to disable checks.\n"
 argument_list|)
 expr_stmt|;
 endif|#

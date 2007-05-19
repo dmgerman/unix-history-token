@@ -32,7 +32,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do						\     {						\ 	HURD_TARGET_OS_CPP_BUILTINS();		\ 	if (flag_pic)				\ 	  {					\ 	    builtin_define ("__PIC__");		\ 	    builtin_define ("__pic__");		\ 	  }					\     }						\   while (0)
+value|do						\     {						\ 	HURD_TARGET_OS_CPP_BUILTINS();		\     }						\   while (0)
 end_define
 
 begin_undef
@@ -95,7 +95,7 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|MD_FALLBACK_FRAME_STATE_FOR
+name|MD_UNWIND_SUPPORT
 end_undef
 
 end_unit

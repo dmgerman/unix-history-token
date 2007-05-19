@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* params.c - Run-time parameters.    Copyright (C) 2001, 2003 Free Software Foundation, Inc.    Written by Mark Mitchell<mark@codesourcery.com>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* params.c - Run-time parameters.    Copyright (C) 2001, 2003, 2004, 2005 Free Software Foundation, Inc.    Written by Mark Mitchell<mark@codesourcery.com>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -143,14 +143,12 @@ name|size_t
 name|i
 decl_stmt|;
 comment|/* Make sure nobody tries to set a parameter to an invalid value.  */
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|value
-operator|==
+operator|!=
 name|INVALID_PARAM_VAL
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 comment|/* Scan the parameter table to find a matching entry.  */
 for|for
@@ -183,6 +181,82 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|value
+operator|<
+name|compiler_params
+index|[
+name|i
+index|]
+operator|.
+name|min_value
+condition|)
+name|error
+argument_list|(
+literal|"minimum value of parameter %qs is %u"
+argument_list|,
+name|compiler_params
+index|[
+name|i
+index|]
+operator|.
+name|option
+argument_list|,
+name|compiler_params
+index|[
+name|i
+index|]
+operator|.
+name|min_value
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|compiler_params
+index|[
+name|i
+index|]
+operator|.
+name|max_value
+operator|>
+name|compiler_params
+index|[
+name|i
+index|]
+operator|.
+name|min_value
+operator|&&
+name|value
+operator|>
+name|compiler_params
+index|[
+name|i
+index|]
+operator|.
+name|max_value
+condition|)
+name|error
+argument_list|(
+literal|"maximum value of parameter %qs is %u"
+argument_list|,
+name|compiler_params
+index|[
+name|i
+index|]
+operator|.
+name|option
+argument_list|,
+name|compiler_params
+index|[
+name|i
+index|]
+operator|.
+name|max_value
+argument_list|)
+expr_stmt|;
+else|else
 name|compiler_params
 index|[
 name|i
@@ -197,7 +271,7 @@ block|}
 comment|/* If we didn't find this parameter, issue an error message.  */
 name|error
 argument_list|(
-literal|"invalid parameter `%s'"
+literal|"invalid parameter %qs"
 argument_list|,
 name|name
 argument_list|)

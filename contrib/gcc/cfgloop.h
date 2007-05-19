@@ -1,7 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Natural loop functions    Copyright (C) 1987, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Natural loop functions    Copyright (C) 1987, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GCC_CFGLOOP_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GCC_CFGLOOP_H
+end_define
+
+begin_include
+include|#
+directive|include
+file|"basic-block.h"
+end_include
+
+begin_comment
+comment|/* For rtx_code.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"rtl.h"
+end_include
 
 begin_comment
 comment|/* Structure to hold decision about unrolling/peeling.  */
@@ -42,81 +70,27 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Description of loop for simple loop unrolling.  */
+comment|/* The structure describing a bound on number of iterations of a loop.  */
 end_comment
 
 begin_struct
 struct|struct
-name|loop_desc
+name|nb_iter_bound
 block|{
-name|int
-name|postincr
+name|tree
+name|bound
 decl_stmt|;
-comment|/* 1 if increment/decrement is done after loop exit condition.  */
-name|rtx
-name|stride
+comment|/* The constant expression whose value is an upper 			   bound on the number of executions of ...  */
+name|tree
+name|at_stmt
 decl_stmt|;
-comment|/* Value added to VAR in each iteration.  */
-name|rtx
-name|var
+comment|/* ... this statement during one execution of 			   a loop.  */
+name|struct
+name|nb_iter_bound
+modifier|*
+name|next
 decl_stmt|;
-comment|/* Loop control variable.  */
-name|enum
-name|machine_mode
-name|inner_mode
-decl_stmt|;
-comment|/* The mode from that it is extended.  */
-name|enum
-name|rtx_code
-name|extend
-decl_stmt|;
-comment|/* With this extend.  */
-name|rtx
-name|var_alts
-decl_stmt|;
-comment|/* List of definitions of its initial value.  */
-name|rtx
-name|lim
-decl_stmt|;
-comment|/* Expression var is compared with.  */
-name|rtx
-name|lim_alts
-decl_stmt|;
-comment|/* List of definitions of its initial value.  */
-name|bool
-name|const_iter
-decl_stmt|;
-comment|/* True if it iterates constant number of times.  */
-name|unsigned
-name|HOST_WIDE_INT
-name|niter
-decl_stmt|;
-comment|/* Number of iterations if it is constant.  */
-name|bool
-name|may_be_zero
-decl_stmt|;
-comment|/* If we cannot determine that the first iteration will pass.  */
-name|enum
-name|rtx_code
-name|cond
-decl_stmt|;
-comment|/* Exit condition.  */
-name|int
-name|neg
-decl_stmt|;
-comment|/* Set to 1 if loop ends when condition is satisfied.  */
-name|edge
-name|out_edge
-decl_stmt|;
-comment|/* The exit edge.  */
-name|edge
-name|in_edge
-decl_stmt|;
-comment|/* And the other one.  */
-name|int
-name|n_branches
-decl_stmt|;
-comment|/* Number of branches inside the loop.  */
+comment|/* The next bound in a list.  */
 block|}
 struct|;
 end_struct
@@ -141,25 +115,10 @@ comment|/* Basic block of loop latch.  */
 name|basic_block
 name|latch
 decl_stmt|;
-comment|/* Basic block of loop preheader or NULL if it does not exist.  */
-name|basic_block
-name|pre_header
-decl_stmt|;
 comment|/* For loop unrolling/peeling decision.  */
 name|struct
 name|lpt_decision
 name|lpt_decision
-decl_stmt|;
-comment|/* Simple loop description.  */
-name|int
-name|simple
-decl_stmt|;
-name|struct
-name|loop_desc
-name|desc
-decl_stmt|;
-name|int
-name|has_desc
 decl_stmt|;
 comment|/* Number of loop insns.  */
 name|unsigned
@@ -169,52 +128,9 @@ comment|/* Average number of executed insns per iteration.  */
 name|unsigned
 name|av_ninsns
 decl_stmt|;
-comment|/* Array of edges along the preheader extended basic block trace.      The source of the first edge is the root node of preheader      extended basic block, if it exists.  */
-name|edge
-modifier|*
-name|pre_header_edges
-decl_stmt|;
-comment|/* Number of edges along the pre_header extended basic block trace.  */
-name|int
-name|num_pre_header_edges
-decl_stmt|;
-comment|/* The first block in the loop.  This is not necessarily the same as      the loop header.  */
-name|basic_block
-name|first
-decl_stmt|;
-comment|/* The last block in the loop.  This is not necessarily the same as      the loop latch.  */
-name|basic_block
-name|last
-decl_stmt|;
-comment|/* Bitmap of blocks contained within the loop.  */
-name|sbitmap
-name|nodes
-decl_stmt|;
 comment|/* Number of blocks contained within the loop.  */
 name|unsigned
 name|num_nodes
-decl_stmt|;
-comment|/* Array of edges that enter the loop.  */
-name|edge
-modifier|*
-name|entry_edges
-decl_stmt|;
-comment|/* Number of edges that enter the loop.  */
-name|int
-name|num_entries
-decl_stmt|;
-comment|/* Array of edges that exit the loop.  */
-name|edge
-modifier|*
-name|exit_edges
-decl_stmt|;
-comment|/* Number of edges that exit the loop.  */
-name|int
-name|num_exits
-decl_stmt|;
-comment|/* Bitmap of blocks that dominate all exits of the loop.  */
-name|sbitmap
-name|exits_doms
 decl_stmt|;
 comment|/* The loop nesting depth.  */
 name|int
@@ -255,55 +171,32 @@ name|loop
 modifier|*
 name|copy
 decl_stmt|;
-comment|/* Nonzero if the loop is invalid (e.g., contains setjmp.).  */
-name|int
-name|invalid
-decl_stmt|;
 comment|/* Auxiliary info specific to a pass.  */
 name|void
 modifier|*
 name|aux
 decl_stmt|;
-comment|/* The following are currently used by loop.c but they are likely to      disappear as loop.c is converted to use the CFG.  */
-comment|/* Nonzero if the loop has a NOTE_INSN_LOOP_VTOP.  */
-name|rtx
-name|vtop
+comment|/* The probable number of times the loop is executed at runtime.      This is an INTEGER_CST or an expression containing symbolic      names.  Don't access this field directly:      number_of_iterations_in_loop computes and caches the computed      information in this field.  */
+name|tree
+name|nb_iterations
 decl_stmt|;
-comment|/* Nonzero if the loop has a NOTE_INSN_LOOP_CONT.      A continue statement will generate a branch to NEXT_INSN (cont).  */
-name|rtx
-name|cont
+comment|/* An INTEGER_CST estimation of the number of iterations.  NULL_TREE      if there is no estimation.  */
+name|tree
+name|estimated_nb_iterations
 decl_stmt|;
-comment|/* The dominator of cont.  */
-name|rtx
-name|cont_dominator
+comment|/* Upper bound on number of iterations of a loop.  */
+name|struct
+name|nb_iter_bound
+modifier|*
+name|bounds
 decl_stmt|;
-comment|/* The NOTE_INSN_LOOP_BEG.  */
-name|rtx
-name|start
+comment|/* If not NULL, loop has just single exit edge stored here (edges to the      EXIT_BLOCK_PTR do not count.  */
+name|edge
+name|single_exit
 decl_stmt|;
-comment|/* The NOTE_INSN_LOOP_END.  */
-name|rtx
-name|end
-decl_stmt|;
-comment|/* For a rotated loop that is entered near the bottom,      this is the label at the top.  Otherwise it is zero.  */
-name|rtx
-name|top
-decl_stmt|;
-comment|/* Place in the loop where control enters.  */
-name|rtx
-name|scan_start
-decl_stmt|;
-comment|/* The position where to sink insns out of the loop.  */
-name|rtx
-name|sink
-decl_stmt|;
-comment|/* List of all LABEL_REFs which refer to code labels outside the      loop.  Used by routines that need to know all loop exits, such as      final_biv_value and final_giv_value.       This does not include loop exits due to return instructions.      This is because all bivs and givs are pseudos, and hence must be      dead after a return, so the presence of a return does not affect      any of the optimizations that use this info.  It is simpler to      just not include return instructions on this list.  */
-name|rtx
-name|exit_labels
-decl_stmt|;
-comment|/* The number of LABEL_REFs on exit_labels for this loop and all      loops nested inside it.  */
-name|int
-name|exit_count
+comment|/* True when the loop does not carry data dependences, and      consequently the iterations can be executed in any order.  False      when the loop carries data dependences, or when the property is      not decidable.  */
+name|bool
+name|parallel_p
 decl_stmt|;
 block|}
 struct|;
@@ -327,9 +220,20 @@ block|,
 name|LOOPS_HAVE_MARKED_IRREDUCIBLE_REGIONS
 init|=
 literal|4
+block|,
+name|LOOPS_HAVE_MARKED_SINGLE_EXITS
+init|=
+literal|8
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|LOOPS_NORMAL
+value|(LOOPS_HAVE_PREHEADERS | LOOPS_HAVE_SIMPLE_LATCHES \ 		      | LOOPS_HAVE_MARKED_IRREDUCIBLE_REGIONS)
+end_define
 
 begin_comment
 comment|/* Structure to hold CFG information about natural loops within a function.  */
@@ -343,17 +247,11 @@ comment|/* Number of natural loops in the function.  */
 name|unsigned
 name|num
 decl_stmt|;
-comment|/* Maximum nested loop level in the function.  */
-name|unsigned
-name|levels
+comment|/* State of loops.  */
+name|int
+name|state
 decl_stmt|;
-comment|/* Array of natural loop descriptors (scanning this array in reverse order      will find the inner loops before their enclosing outer loops).  */
-name|struct
-name|loop
-modifier|*
-name|array
-decl_stmt|;
-comment|/* The above array is unused in new loop infrastructure and is kept only for      purposes of the old loop optimizer.  Instead we store just pointers to      loops here.  */
+comment|/* We store just pointers to loops here.        Note that a loop in this array may actually be NULL, if the loop      has been removed and the entire loops structure has not been      recomputed since that time.  */
 name|struct
 name|loop
 modifier|*
@@ -387,79 +285,22 @@ comment|/* Headers shared by multiple loops that should be merged.  */
 name|sbitmap
 name|shared_headers
 decl_stmt|;
-comment|/* State of loops.  */
-name|int
-name|state
-decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* Flags for loop discovery.  */
+comment|/* The loop tree currently optimized.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LOOP_TREE
-value|1
-end_define
-
-begin_comment
-comment|/* Build loop hierarchy tree.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOOP_PRE_HEADER
-value|2
-end_define
-
-begin_comment
-comment|/* Analyze loop preheader.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOOP_ENTRY_EDGES
-value|4
-end_define
-
-begin_comment
-comment|/* Find entry edges.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOOP_EXIT_EDGES
-value|8
-end_define
-
-begin_comment
-comment|/* Find exit edges.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOOP_EDGES
-value|(LOOP_ENTRY_EDGES | LOOP_EXIT_EDGES)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOOP_ALL
-value|15
-end_define
-
-begin_comment
-comment|/* All of the above  */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|struct
+name|loops
+modifier|*
+name|current_loops
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Loop recognition.  */
@@ -473,24 +314,6 @@ parameter_list|(
 name|struct
 name|loops
 modifier|*
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|flow_loops_update
-parameter_list|(
-name|struct
-name|loops
-modifier|*
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -577,20 +400,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|flow_loop_scan
-parameter_list|(
-name|struct
-name|loop
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|flow_loop_free
 parameter_list|(
@@ -602,8 +411,46 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|flow_loop_nodes_find
+parameter_list|(
+name|basic_block
+parameter_list|,
+name|struct
+name|loop
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fix_loop_structure
+parameter_list|(
+name|struct
+name|loops
+modifier|*
+parameter_list|,
+name|bitmap
+name|changed_bbs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|mark_irreducible_loops
+parameter_list|(
+name|struct
+name|loops
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mark_single_exit_loops
 parameter_list|(
 name|struct
 name|loops
@@ -640,21 +487,6 @@ parameter_list|(
 name|struct
 name|loop
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|bool
-name|flow_loop_outside_edge_p
-parameter_list|(
-specifier|const
-name|struct
-name|loop
-modifier|*
-parameter_list|,
-name|edge
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -712,6 +544,33 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|loop
+modifier|*
+name|superloop_at_depth
+parameter_list|(
+name|struct
+name|loop
+modifier|*
+parameter_list|,
+name|unsigned
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|tree_num_loop_insns
+parameter_list|(
+name|struct
+name|loop
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|int
 name|num_loop_insns
@@ -730,6 +589,46 @@ name|average_num_loop_insns
 parameter_list|(
 name|struct
 name|loop
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|get_loop_level
+parameter_list|(
+specifier|const
+name|struct
+name|loop
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|loop_exit_edge_p
+parameter_list|(
+specifier|const
+name|struct
+name|loop
+modifier|*
+parameter_list|,
+name|edge
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|mark_loop_exit_edges
+parameter_list|(
+name|struct
+name|loops
 modifier|*
 parameter_list|)
 function_decl|;
@@ -755,6 +654,34 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|basic_block
+modifier|*
+name|get_loop_body_in_dom_order
+parameter_list|(
+specifier|const
+name|struct
+name|loop
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|basic_block
+modifier|*
+name|get_loop_body_in_bfs_order
+parameter_list|(
+specifier|const
+name|struct
+name|loop
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|edge
 modifier|*
 name|get_loop_exit_edges
@@ -765,6 +692,19 @@ name|loop
 modifier|*
 parameter_list|,
 name|unsigned
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|num_loop_branches
+parameter_list|(
+specifier|const
+name|struct
+name|loop
 modifier|*
 parameter_list|)
 function_decl|;
@@ -816,22 +756,6 @@ name|void
 name|remove_bb_from_loops
 parameter_list|(
 name|basic_block
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|cancel_loop
-parameter_list|(
-name|struct
-name|loops
-modifier|*
-parameter_list|,
-name|struct
-name|loop
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -931,40 +855,9 @@ end_comment
 begin_function_decl
 specifier|extern
 name|bool
-name|simple_loop_p
-parameter_list|(
-name|struct
-name|loop
-modifier|*
-parameter_list|,
-name|struct
-name|loop_desc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|count_loop_iterations
-parameter_list|(
-name|struct
-name|loop_desc
-modifier|*
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|bool
 name|just_once_each_iteration_p
 parameter_list|(
+specifier|const
 name|struct
 name|loop
 modifier|*
@@ -983,6 +876,16 @@ specifier|const
 name|struct
 name|loop
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|doloop_condition_get
+parameter_list|(
+name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1015,9 +918,53 @@ begin_comment
 comment|/* Update frequencies in 					   duplicate_loop_to_header_edge.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DLTHE_RECORD_COPY_NUMBER
+value|2
+end_define
+
+begin_comment
+comment|/* Record copy number in the aux 					   field of newly create BB.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLTHE_FLAG_COMPLETTE_PEEL
+value|4
+end_define
+
+begin_comment
+comment|/* Update frequencies expecting 					   a complete peeling.  */
+end_comment
+
 begin_function_decl
 specifier|extern
-name|int
+name|struct
+name|loop
+modifier|*
+name|duplicate_loop
+parameter_list|(
+name|struct
+name|loops
+modifier|*
+parameter_list|,
+name|struct
+name|loop
+modifier|*
+parameter_list|,
+name|struct
+name|loop
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
 name|duplicate_loop_to_header_edge
 parameter_list|(
 name|struct
@@ -1063,14 +1010,21 @@ parameter_list|,
 name|edge
 parameter_list|,
 name|basic_block
+parameter_list|,
+name|edge
+parameter_list|,
+name|edge
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|void
-name|unloop
+name|struct
+name|loop
+modifier|*
+name|loop_version
 parameter_list|(
 name|struct
 name|loops
@@ -1079,6 +1033,14 @@ parameter_list|,
 name|struct
 name|loop
 modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|basic_block
+modifier|*
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1097,14 +1059,383 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Induction variable analysis.  */
+end_comment
+
+begin_comment
+comment|/* The description of induction variable.  The things are a bit complicated    due to need to handle subregs and extends.  The value of the object described    by it can be obtained as follows (all computations are done in extend_mode):     Value in i-th iteration is      delta + mult * extend_{extend_mode} (subreg_{mode} (base + i * step)).     If first_special is true, the value in the first iteration is      delta + mult * base     If extend = UNKNOWN, first_special must be false, delta 0, mult 1 and value is      subreg_{mode} (base + i * step)     The get_iv_value function can be used to obtain these expressions.     ??? Add a third mode field that would specify the mode in that inner    computation is done, which would enable it to be different from the    outer one?  */
+end_comment
+
+begin_struct
+struct|struct
+name|rtx_iv
+block|{
+comment|/* Its base and step (mode of base and step is supposed to be extend_mode,      see the description above).  */
+name|rtx
+name|base
+decl_stmt|,
+name|step
+decl_stmt|;
+comment|/* The type of extend applied to it (SIGN_EXTEND, ZERO_EXTEND or UNKNOWN).  */
+name|enum
+name|rtx_code
+name|extend
+decl_stmt|;
+comment|/* Operations applied in the extended mode.  */
+name|rtx
+name|delta
+decl_stmt|,
+name|mult
+decl_stmt|;
+comment|/* The mode it is extended to.  */
+name|enum
+name|machine_mode
+name|extend_mode
+decl_stmt|;
+comment|/* The mode the variable iterates in.  */
+name|enum
+name|machine_mode
+name|mode
+decl_stmt|;
+comment|/* Whether the first iteration needs to be handled specially.  */
+name|unsigned
+name|first_special
+range|:
+literal|1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* The description of an exit from the loop and of the number of iterations    till we take the exit.  */
+end_comment
+
+begin_struct
+struct|struct
+name|niter_desc
+block|{
+comment|/* The edge out of the loop.  */
+name|edge
+name|out_edge
+decl_stmt|;
+comment|/* The other edge leading from the condition.  */
+name|edge
+name|in_edge
+decl_stmt|;
+comment|/* True if we are able to say anything about number of iterations of the      loop.  */
+name|bool
+name|simple_p
+decl_stmt|;
+comment|/* True if the loop iterates the constant number of times.  */
+name|bool
+name|const_iter
+decl_stmt|;
+comment|/* Number of iterations if constant.  */
+name|unsigned
+name|HOST_WIDEST_INT
+name|niter
+decl_stmt|;
+comment|/* Upper bound on the number of iterations.  */
+name|unsigned
+name|HOST_WIDEST_INT
+name|niter_max
+decl_stmt|;
+comment|/* Assumptions under that the rest of the information is valid.  */
+name|rtx
+name|assumptions
+decl_stmt|;
+comment|/* Assumptions under that the loop ends before reaching the latch,      even if value of niter_expr says otherwise.  */
+name|rtx
+name|noloop_assumptions
+decl_stmt|;
+comment|/* Condition under that the loop is infinite.  */
+name|rtx
+name|infinite
+decl_stmt|;
+comment|/* Whether the comparison is signed.  */
+name|bool
+name|signed_p
+decl_stmt|;
+comment|/* The mode in that niter_expr should be computed.  */
+name|enum
+name|machine_mode
+name|mode
+decl_stmt|;
+comment|/* The number of iterations of the loop.  */
+name|rtx
+name|niter_expr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function_decl
 specifier|extern
-name|edge
-name|split_loop_bb
+name|void
+name|iv_analysis_loop_init
 parameter_list|(
-name|basic_block
+name|struct
+name|loop
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|iv_analyze
+parameter_list|(
+name|rtx
 parameter_list|,
 name|rtx
+parameter_list|,
+name|struct
+name|rtx_iv
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|iv_analyze_result
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|struct
+name|rtx_iv
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|iv_analyze_expr
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|struct
+name|rtx_iv
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|get_iv_value
+parameter_list|(
+name|struct
+name|rtx_iv
+modifier|*
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|biv_p
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|find_simple_exit
+parameter_list|(
+name|struct
+name|loop
+modifier|*
+parameter_list|,
+name|struct
+name|niter_desc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|iv_analysis_done
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|df
+modifier|*
+name|iv_current_loop_df
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|niter_desc
+modifier|*
+name|get_simple_loop_desc
+parameter_list|(
+name|struct
+name|loop
+modifier|*
+name|loop
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|free_simple_loop_desc
+parameter_list|(
+name|struct
+name|loop
+modifier|*
+name|loop
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+specifier|inline
+name|struct
+name|niter_desc
+modifier|*
+name|simple_loop_desc
+parameter_list|(
+name|struct
+name|loop
+modifier|*
+name|loop
+parameter_list|)
+block|{
+return|return
+operator|(
+expr|struct
+name|niter_desc
+operator|*
+operator|)
+name|loop
+operator|->
+name|aux
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* The properties of the target.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|target_avail_regs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of available registers.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|target_res_regs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of reserved registers.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|target_small_cost
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The cost for register when there 					   is a free one.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|target_pres_cost
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The cost for register when there are 					   not too many free ones.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|target_spill_cost
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The cost for register when we need 					   to spill.  */
+end_comment
+
+begin_comment
+comment|/* Register pressure estimation for induction variable optimizations& loop    invariant motion.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|global_cost_for_size
+parameter_list|(
+name|unsigned
+parameter_list|,
+name|unsigned
+parameter_list|,
+name|unsigned
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|init_set_costs
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1120,8 +1451,7 @@ name|loops
 modifier|*
 name|loop_optimizer_init
 parameter_list|(
-name|FILE
-modifier|*
+name|unsigned
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1133,9 +1463,6 @@ name|loop_optimizer_finalize
 parameter_list|(
 name|struct
 name|loops
-modifier|*
-parameter_list|,
-name|FILE
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1194,23 +1521,54 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|bool
-name|is_bct_cond
+name|void
+name|doloop_optimize_loops
 parameter_list|(
-name|rtx
+name|struct
+name|loops
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|extern
-name|rtx
-name|get_var_set_from_bct
+name|void
+name|move_loop_invariants
 parameter_list|(
-name|rtx
+name|struct
+name|loops
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|record_estimate
+parameter_list|(
+name|struct
+name|loop
+modifier|*
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GCC_CFGLOOP_H */
+end_comment
 
 end_unit
 

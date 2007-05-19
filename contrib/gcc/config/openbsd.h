@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Base configuration file for all OpenBSD targets.    Copyright (C) 1999, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Base configuration file for all OpenBSD targets.    Copyright (C) 1999, 2000, 2004, 2005 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -21,19 +21,6 @@ directive|ifdef
 name|OPENBSD_NATIVE
 end_ifdef
 
-begin_undef
-undef|#
-directive|undef
-name|GCC_INCLUDE_DIR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|GCC_INCLUDE_DIR
-value|"/usr/include"
-end_define
-
 begin_comment
 comment|/* The compiler is configured with ONLY the gcc/g++ standard headers.  */
 end_comment
@@ -49,18 +36,24 @@ define|#
 directive|define
 name|INCLUDE_DEFAULTS
 define|\
-value|{						\     { GPLUSPLUS_INCLUDE_DIR, "G++", 1, 1 },	\     { GCC_INCLUDE_DIR, "GCC", 0, 0 },		\     { 0, 0, 0, 0 }				\   }
+value|{						\     { GPLUSPLUS_INCLUDE_DIR, "G++", 1, 1 },	\     { GPLUSPLUS_TOOL_INCLUDE_DIR, "G++", 1, 1 }, \     { GPLUSPLUS_BACKWARD_INCLUDE_DIR, "G++", 1, 1 }, \     { STANDARD_INCLUDE_DIR, STANDARD_INCLUDE_COMPONENT, 0, 0 }, \     { 0, 0, 0, 0 }				\   }
 end_define
 
 begin_comment
 comment|/* Under OpenBSD, the normal location of the various *crt*.o files is the    /usr/lib directory.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|STANDARD_STARTFILE_PREFIX
+end_undef
+
 begin_define
 define|#
 directive|define
 name|STANDARD_STARTFILE_PREFIX
-value|"/usr/lib/"
+value|"/usr/local/lib/"
 end_define
 
 begin_endif
@@ -76,7 +69,20 @@ comment|/* Controlling the compilation driver.  */
 end_comment
 
 begin_comment
-comment|/* CPP_SPEC appropriate for OpenBSD. We deal with -posix and -pthread.    XXX the way threads are handling currently is not very satisfying,    since all code must be compiled with -pthread to work.     This two-stage defines makes it easy to pick that for targets that    have subspecs.  */
+comment|/* TARGET_OS_CPP_BUILTINS() common to all OpenBSD targets.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENBSD_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\       builtin_define ("__OpenBSD__");		\       builtin_define ("__unix__");		\       builtin_define ("__ANSI_COMPAT");		\       builtin_assert ("system=unix");		\       builtin_assert ("system=bsd");		\       builtin_assert ("system=OpenBSD");	\     }						\   while (0)
+end_define
+
+begin_comment
+comment|/* CPP_SPEC appropriate for OpenBSD. We deal with -posix and -pthread.    XXX the way threads are handled currently is not very satisfying,    since all code must be compiled with -pthread to work.     This two-stage defines makes it easy to pick that for targets that    have subspecs.  */
 end_comment
 
 begin_ifdef
@@ -110,7 +116,17 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LIB_SPEC appropriate for OpenBSD.  Select the appropriate libc,     depending on profiling and threads.  Basically,     -lc(_r)?(_p)?, select _r for threads, and _p for p or pg.  */
+comment|/* LIB_SPEC appropriate for OpenBSD.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAS_LIBC_R
+end_ifdef
+
+begin_comment
+comment|/*   -lc(_r)?(_p)?, select _r for threads, and _p for p or pg.  */
 end_comment
 
 begin_define
@@ -119,6 +135,27 @@ directive|define
 name|OBSD_LIB_SPEC
 value|"%{!shared:-lc%{pthread:_r}%{p:_p}%{!p:%{pg:_p}}}"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Include -lpthread if -pthread is specified on the command line. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBSD_LIB_SPEC
+value|"%{!shared:%{pthread:-lpthread%{p:_p}%{!p:%{pg:_p}}}} %{!shared:-lc%{p:_p}%{!p:%{pg:_p}}}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -271,31 +308,6 @@ end_escape
 begin_comment
 comment|/* Runtime target specification.  */
 end_comment
-
-begin_comment
-comment|/* Implicit calls to library routines.  */
-end_comment
-
-begin_comment
-comment|/* Use memcpy and memset instead of bcopy and bzero.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TARGET_MEM_FUNCTIONS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TARGET_MEM_FUNCTIONS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Miscellaneous parameters.  */
@@ -642,6 +654,30 @@ directive|define
 name|HANDLE_SYSV_PRAGMA
 value|1
 end_define
+
+begin_comment
+comment|/* Stack is explicitly denied execution rights on OpenBSD platforms.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_EXECUTE_STACK
+define|\
+value|extern void __enable_execute_stack (void *);				\ void									\ __enable_execute_stack (void *addr)					\ {									\   long size = getpagesize ();						\   long mask = ~(size-1);						\   char *page = (char *) (((long) addr)& mask); 			\   char *end  = (char *) ((((long) (addr + TRAMPOLINE_SIZE))& mask) + size); \ 								      \   if (mprotect (page, end - page, PROT_READ | PROT_WRITE | PROT_EXEC)< 0) \     perror ("mprotect of trampoline code");				\ }
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mman.h>
+end_include
 
 end_unit
 

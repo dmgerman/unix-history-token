@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* elfos.h  --  operating system specific defines to be used when    targeting GCC for some generic ELF system    Copyright (C) 1991, 1994, 1995, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Based on svr4.h contributed by Ron Guilmette (rfg@netcom.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* elfos.h  --  operating system specific defines to be used when    targeting GCC for some generic ELF system    Copyright (C) 1991, 1994, 1995, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Based on svr4.h contributed by Ron Guilmette (rfg@netcom.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -92,16 +92,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Implicit library calls should use memcpy, not bcopy, etc.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_MEM_FUNCTIONS
-end_define
 
 begin_comment
 comment|/* Handle #pragma weak and #pragma pack.  */
@@ -539,6 +529,19 @@ name|TARGET_ASM_SELECT_SECTION
 value|default_elf_select_section
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|TARGET_HAVE_SWITCHABLE_BSS_SECTIONS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_HAVE_SWITCHABLE_BSS_SECTIONS
+value|true
+end_define
+
 begin_comment
 comment|/* Define the strings used for the special svr4 .type and .size directives.    These strings generally do not vary from one system running svr4 to    another, but if a given system (e.g. m88k running svr) needs to use    different pseudo-op names for these, they may be overridden in the    file which includes this one.  */
 end_comment
@@ -790,7 +793,7 @@ parameter_list|,
 name|LENGTH
 parameter_list|)
 define|\
-value|do									\     {									\       register const unsigned char *_ascii_bytes =			\ 	(const unsigned char *) (STR);					\       register const unsigned char *limit = _ascii_bytes + (LENGTH);	\       register unsigned bytes_in_chunk = 0;				\ 									\       for (; _ascii_bytes< limit; _ascii_bytes++)			\         {								\ 	  register const unsigned char *p;				\ 									\ 	  if (bytes_in_chunk>= 60)					\ 	    {								\ 	      fprintf ((FILE), "\"\n");					\ 	      bytes_in_chunk = 0;					\ 	    }								\ 									\ 	  for (p = _ascii_bytes; p< limit&& *p != '\0'; p++)		\ 	    continue;							\ 									\ 	  if (p< limit&& (p - _ascii_bytes)<= (long)STRING_LIMIT)	\ 	    {								\ 	      if (bytes_in_chunk> 0)					\ 		{							\ 		  fprintf ((FILE), "\"\n");				\ 		  bytes_in_chunk = 0;					\ 		}							\ 									\ 	      ASM_OUTPUT_LIMITED_STRING ((FILE), _ascii_bytes);		\ 	      _ascii_bytes = p;						\ 	    }								\ 	  else								\ 	    {								\ 	      register int escape;					\ 	      register unsigned ch;					\ 									\ 	      if (bytes_in_chunk == 0)					\ 		fprintf ((FILE), "%s\"", ASCII_DATA_ASM_OP);		\ 									\ 	      switch (escape = ESCAPES[ch = *_ascii_bytes])		\ 		{							\ 		case 0:							\ 		  putc (ch, (FILE));					\ 		  bytes_in_chunk++;					\ 		  break;						\ 		case 1:							\ 		  fprintf ((FILE), "\\%03o", ch);			\ 		  bytes_in_chunk += 4;					\ 		  break;						\ 		default:						\ 		  putc ('\\', (FILE));					\ 		  putc (escape, (FILE));				\ 		  bytes_in_chunk += 2;					\ 		  break;						\ 		}							\ 	    }								\ 	}								\ 									\       if (bytes_in_chunk> 0)						\         fprintf ((FILE), "\"\n");					\     }									\   while (0)
+value|do									\     {									\       const unsigned char *_ascii_bytes =				\ 	(const unsigned char *) (STR);					\       const unsigned char *limit = _ascii_bytes + (LENGTH);		\       const unsigned char *last_null = NULL;				\       unsigned bytes_in_chunk = 0;					\ 									\       for (; _ascii_bytes< limit; _ascii_bytes++)			\         {								\ 	  const unsigned char *p;					\ 									\ 	  if (bytes_in_chunk>= 60)					\ 	    {								\ 	      fprintf ((FILE), "\"\n");					\ 	      bytes_in_chunk = 0;					\ 	    }								\ 									\ 	  if (_ascii_bytes> last_null)					\ 	    {								\ 	      for (p = _ascii_bytes; p< limit&& *p != '\0'; p++)	\ 		continue;						\ 	      last_null = p;						\ 	    }								\ 	  else								\ 	    p = last_null;						\ 									\ 	  if (p< limit&& (p - _ascii_bytes)<= (long)STRING_LIMIT)	\ 	    {								\ 	      if (bytes_in_chunk> 0)					\ 		{							\ 		  fprintf ((FILE), "\"\n");				\ 		  bytes_in_chunk = 0;					\ 		}							\ 									\ 	      ASM_OUTPUT_LIMITED_STRING ((FILE), _ascii_bytes);		\ 	      _ascii_bytes = p;						\ 	    }								\ 	  else								\ 	    {								\ 	      register int escape;					\ 	      register unsigned ch;					\ 									\ 	      if (bytes_in_chunk == 0)					\ 		fprintf ((FILE), "%s\"", ASCII_DATA_ASM_OP);		\ 									\ 	      switch (escape = ESCAPES[ch = *_ascii_bytes])		\ 		{							\ 		case 0:							\ 		  putc (ch, (FILE));					\ 		  bytes_in_chunk++;					\ 		  break;						\ 		case 1:							\ 		  fprintf ((FILE), "\\%03o", ch);			\ 		  bytes_in_chunk += 4;					\ 		  break;						\ 		default:						\ 		  putc ('\\', (FILE));					\ 		  putc (escape, (FILE));				\ 		  bytes_in_chunk += 2;					\ 		  break;						\ 		}							\ 	    }								\ 	}								\ 									\       if (bytes_in_chunk> 0)						\         fprintf ((FILE), "\"\n");					\     }									\   while (0)
 end_define
 
 end_unit

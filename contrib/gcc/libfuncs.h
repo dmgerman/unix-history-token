@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for code generation pass of GNU compiler.    Copyright (C) 2001 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for code generation pass of GNU compiler.    Copyright (C) 2001, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -29,15 +29,9 @@ name|LTI_memcpy
 block|,
 name|LTI_memmove
 block|,
-name|LTI_bcopy
-block|,
 name|LTI_memcmp
 block|,
-name|LTI_bcmp
-block|,
 name|LTI_memset
-block|,
-name|LTI_bzero
 block|,
 name|LTI_setbits
 block|,
@@ -58,8 +52,6 @@ block|,
 name|LTI_profile_function_exit
 block|,
 name|LTI_gcov_flush
-block|,
-name|LTI_gcov_init
 block|,
 name|LTI_MAX
 block|}
@@ -112,13 +104,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|bcopy_libfunc
-value|(libfunc_table[LTI_bcopy])
-end_define
-
-begin_define
-define|#
-directive|define
 name|memcmp_libfunc
 value|(libfunc_table[LTI_memcmp])
 end_define
@@ -126,22 +111,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|bcmp_libfunc
-value|(libfunc_table[LTI_bcmp])
-end_define
-
-begin_define
-define|#
-directive|define
 name|memset_libfunc
 value|(libfunc_table[LTI_memset])
-end_define
-
-begin_define
-define|#
-directive|define
-name|bzero_libfunc
-value|(libfunc_table[LTI_bzero])
 end_define
 
 begin_define
@@ -213,13 +184,6 @@ define|#
 directive|define
 name|gcov_flush_libfunc
 value|(libfunc_table[LTI_gcov_flush])
-end_define
-
-begin_define
-define|#
-directive|define
-name|gcov_init_libfunc
-value|(libfunc_table[LTI_gcov_init])
 end_define
 
 begin_endif

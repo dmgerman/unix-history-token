@@ -3,6 +3,19 @@ begin_comment
 comment|/* Override definitions in elfos.h/svr4.h to be correct for IA64.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|TARGET_INIT_LIBFUNCS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_INIT_LIBFUNCS
+value|ia64_sysv4_init_libfuncs
+end_define
+
 begin_comment
 comment|/* We want DWARF2 as specified by the IA64 ABI.  */
 end_comment
@@ -144,7 +157,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   if ((DECL)&& sdata_symbolic_operand (XEXP (DECL_RTL (DECL), 0), Pmode)) \     sbss_section ();							\   else									\     bss_section ();							\   ASM_OUTPUT_ALIGN (FILE, floor_log2 ((ALIGN) / BITS_PER_UNIT));	\   ASM_DECLARE_OBJECT_NAME (FILE, NAME, DECL);				\   ASM_OUTPUT_SKIP (FILE, SIZE ? SIZE : 1);				\ } while (0)
+value|do {									\   if ((DECL)&& sdata_symbolic_operand (XEXP (DECL_RTL (DECL), 0), Pmode)) \     switch_to_section (sbss_section);					\   else									\     switch_to_section (bss_section);					\   ASM_OUTPUT_ALIGN (FILE, floor_log2 ((ALIGN) / BITS_PER_UNIT));	\   ASM_DECLARE_OBJECT_NAME (FILE, NAME, DECL);				\   ASM_OUTPUT_SKIP (FILE, SIZE ? SIZE : 1);				\ } while (0)
 end_define
 
 begin_comment
@@ -328,6 +341,19 @@ end_comment
 begin_undef
 undef|#
 directive|undef
+name|TARGET_ASM_RELOC_RW_MASK
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_RELOC_RW_MASK
+value|ia64_reloc_rw_mask
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|TARGET_ASM_SELECT_RTX_SECTION
 end_undef
 
@@ -336,33 +362,6 @@ define|#
 directive|define
 name|TARGET_ASM_SELECT_RTX_SECTION
 value|ia64_select_rtx_section
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTIONS
-value|in_sdata, in_sbss
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTION_FUNCTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTION_FUNCTIONS
-define|\
-value|SDATA_SECTION_FUNCTION						\   SBSS_SECTION_FUNCTION
 end_define
 
 begin_define
@@ -375,24 +374,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SDATA_SECTION_FUNCTION
-define|\
-value|void									\ sdata_section (void)							\ {									\   if (in_section != in_sdata)						\     {									\       fprintf (asm_out_file, "%s\n", SDATA_SECTION_ASM_OP);		\       in_section = in_sdata;						\     }									\ }
-end_define
-
-begin_define
-define|#
-directive|define
 name|SBSS_SECTION_ASM_OP
 value|"\t.sbss"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBSS_SECTION_FUNCTION
-define|\
-value|void									\ sbss_section (void)							\ {									\   if (in_section != in_sbss)						\     {									\       fprintf (asm_out_file, "%s\n", SBSS_SECTION_ASM_OP);		\       in_section = in_sbss;						\     }									\ }
 end_define
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Debug hooks for GCC.    Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Debug hooks for GCC.    Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -267,6 +267,34 @@ name|tree
 name|decl
 parameter_list|)
 function_decl|;
+comment|/* Debug information for a type DECL.  Called from toplev.c after      compilation proper, also from various language front ends to      record built-in types.  The second argument is properly a      boolean, which indicates whether or not the type is a "local"      type as determined by the language.  (It's not a boolean for      legacy reasons.)  */
+name|void
+function_decl|(
+modifier|*
+name|type_decl
+function_decl|)
+parameter_list|(
+name|tree
+name|decl
+parameter_list|,
+name|int
+name|local
+parameter_list|)
+function_decl|;
+comment|/* Debug information for imported modules and declarations.  */
+name|void
+function_decl|(
+modifier|*
+name|imported_module_or_decl
+function_decl|)
+parameter_list|(
+name|tree
+name|decl
+parameter_list|,
+name|tree
+name|context
+parameter_list|)
+function_decl|;
 comment|/* DECL is an inline function, whose body is present, but which is      not being output at this point.  */
 name|void
 function_decl|(
@@ -310,6 +338,30 @@ name|unsigned
 name|int
 parameter_list|)
 function_decl|;
+comment|/* Called from final_scan_insn for any NOTE_INSN_VAR_LOCATION note.  */
+name|void
+function_decl|(
+modifier|*
+name|var_location
+function_decl|)
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+comment|/* Called from final_scan_insn if there is a switch between hot and cold      text sections.  */
+name|void
+function_decl|(
+modifier|*
+name|switch_text_section
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* This is 1 if the debug writer wants to see start and end commands for the      main source files, and 0 otherwise.  */
+name|int
+name|start_end_main_source_file
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -402,6 +454,30 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|debug_nothing_tree_int
+parameter_list|(
+name|tree
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|debug_nothing_tree_tree
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|bool
 name|debug_true_tree
 parameter_list|(
@@ -457,15 +533,6 @@ specifier|const
 name|struct
 name|gcc_debug_hooks
 name|xcoff_debug_hooks
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|gcc_debug_hooks
-name|dwarf_debug_hooks
 decl_stmt|;
 end_decl_stmt
 

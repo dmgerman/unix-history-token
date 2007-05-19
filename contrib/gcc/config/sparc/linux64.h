@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for 64-bit SPARC running Linux-based GNU systems with ELF.    Copyright 1996, 1997, 1998, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by David S. Miller (davem@caip.rutgers.edu)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for 64-bit SPARC running Linux-based GNU systems with ELF.    Copyright 1996, 1997, 1998, 2000, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.    Contributed by David S. Miller (davem@caip.rutgers.edu)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -9,7 +9,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do						\     {						\ 	builtin_define_std ("unix");		\ 	builtin_define_std ("linux");		\ 	builtin_define ("_LONGLONG");		\ 	builtin_define ("__gnu_linux__");	\ 	builtin_assert ("system=linux");	\ 	builtin_assert ("system=unix");		\ 	builtin_assert ("system=posix");	\     }						\   while (0)
+value|do							\     {							\       builtin_define_std ("unix");			\       builtin_define_std ("linux");			\       builtin_define ("_LONGLONG");			\       builtin_define ("__gnu_linux__");			\       builtin_assert ("system=linux");			\       builtin_assert ("system=unix");			\       builtin_assert ("system=posix");			\       if (TARGET_ARCH32&& TARGET_LONG_DOUBLE_128)	\ 	builtin_define ("__LONG_DOUBLE_128__");		\     }							\   while (0)
 end_define
 
 begin_comment
@@ -50,6 +50,11 @@ operator|||
 name|TARGET_CPU_DEFAULT
 operator|==
 name|TARGET_CPU_ultrasparc3
+expr|\
+operator|||
+name|TARGET_CPU_DEFAULT
+operator|==
+name|TARGET_CPU_niagara
 end_if
 
 begin_comment
@@ -89,30 +94,6 @@ directive|define
 name|ASM_CPU_DEFAULT_SPEC
 value|"-Av9a"
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SPARC_BI_ARCH
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_ARCH32_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_ARCH32_SPEC
-value|"%{mlong-double-128:-D__LONG_DOUBLE_128__}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Provide a STARTFILE_SPEC appropriate for GNU/Linux.  Here we add    the GNU/Linux magical crtbegin.o file (see crtstuff.c) which    provides part of the support for getting C++ file-scope static    object constructed before entering `main'.  */
@@ -224,20 +205,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|SUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_SWITCHES
-define|\
-value|{"long-double-64", -MASK_LONG_DOUBLE_128, N_("Use 64 bit long doubles") },  \ {"long-double-128", MASK_LONG_DOUBLE_128, N_("Use 128 bit long doubles") },
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|WCHAR_TYPE
 end_undef
 
@@ -276,23 +243,6 @@ define|#
 directive|define
 name|LONG_DOUBLE_TYPE_SIZE
 value|(TARGET_LONG_DOUBLE_128 ? 128 : 64)
-end_define
-
-begin_comment
-comment|/* Constant which presents upper bound of the above value.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|MAX_LONG_DOUBLE_TYPE_SIZE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|MAX_LONG_DOUBLE_TYPE_SIZE
-value|128
 end_define
 
 begin_comment
@@ -347,7 +297,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SUBTARGET_SPEC
-value|"\ %{fPIC|fpic|fPIE|fpie:-D__PIC__ -D__pic__} \ %{posix:-D_POSIX_SOURCE} \ %{pthread:-D_REENTRANT} \ "
+value|"\ %{posix:-D_POSIX_SOURCE} \ %{pthread:-D_REENTRANT} \ "
 end_define
 
 begin_undef
@@ -371,6 +321,90 @@ end_comment
 begin_comment
 comment|/* If ELF is the default format, we should not use /lib/elf.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GLIBC_DYNAMIC_LINKER32
+value|"/lib/ld-linux.so.2"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GLIBC_DYNAMIC_LINKER64
+value|"/lib64/ld-linux.so.2"
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCLIBC_DYNAMIC_LINKER32
+value|"/lib/ld-uClibc.so.0"
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCLIBC_DYNAMIC_LINKER64
+value|"/lib/ld64-uClibc.so.0"
+end_define
+
+begin_if
+if|#
+directive|if
+name|UCLIBC_DEFAULT
+end_if
+
+begin_define
+define|#
+directive|define
+name|CHOOSE_DYNAMIC_LINKER
+parameter_list|(
+name|G
+parameter_list|,
+name|U
+parameter_list|)
+value|"%{mglibc:%{muclibc:%e-mglibc and -muclibc used together}" G ";:" U "}"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CHOOSE_DYNAMIC_LINKER
+parameter_list|(
+name|G
+parameter_list|,
+name|U
+parameter_list|)
+value|"%{muclibc:%{mglibc:%e-mglibc and -muclibc used together}" U ";:" G "}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|LINUX_DYNAMIC_LINKER32
+define|\
+value|CHOOSE_DYNAMIC_LINKER (GLIBC_DYNAMIC_LINKER32, UCLIBC_DYNAMIC_LINKER32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_DYNAMIC_LINKER64
+define|\
+value|CHOOSE_DYNAMIC_LINKER (GLIBC_DYNAMIC_LINKER64, UCLIBC_DYNAMIC_LINKER64)
+end_define
 
 begin_ifdef
 ifdef|#
@@ -396,14 +430,14 @@ begin_define
 define|#
 directive|define
 name|LINK_ARCH32_SPEC
-value|"-m elf32_sparc -Y P,/usr/lib %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.2}} \         %{static:-static}}} \ "
+value|"-m elf32_sparc -Y P,/usr/lib %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker " LINUX_DYNAMIC_LINKER32 "}} \         %{static:-static}}} \ "
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINK_ARCH64_SPEC
-value|"-m elf64_sparc -Y P,/usr/lib64 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker /lib64/ld-linux.so.2}} \         %{static:-static}}} \ "
+value|"-m elf64_sparc -Y P,/usr/lib64 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker " LINUX_DYNAMIC_LINKER64 "}} \         %{static:-static}}} \ "
 end_define
 
 begin_define
@@ -561,7 +595,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-m elf64_sparc -Y P,/usr/lib64 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker /lib64/ld-linux.so.2}} \         %{static:-static}}} \ %{mlittle-endian:-EL} \ %{!mno-relax:%{!r:-relax}} \ "
+value|"-m elf64_sparc -Y P,/usr/lib64 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker " LINUX_DYNAMIC_LINKER64 "}} \         %{static:-static}}} \ %{mlittle-endian:-EL} \ %{!mno-relax:%{!r:-relax}} \ "
 end_define
 
 begin_endif
@@ -608,20 +642,6 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 value|(REGNO)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DWARF2_DEBUGGING_INFO
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBX_DEBUGGING_INFO
-value|1
 end_define
 
 begin_undef
@@ -671,31 +691,6 @@ define|#
 directive|define
 name|LOCAL_LABEL_PREFIX
 value|"."
-end_define
-
-begin_comment
-comment|/* This is how to output a reference to an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_INTERNAL_LABELREF
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_INTERNAL_LABELREF
-parameter_list|(
-name|FILE
-parameter_list|,
-name|PREFIX
-parameter_list|,
-name|NUM
-parameter_list|)
-define|\
-value|fprintf (FILE, ".L%s%d", PREFIX, NUM)
 end_define
 
 begin_comment
@@ -838,28 +833,21 @@ directive|undef
 name|DTORS_SECTION_ASM_OP
 end_undef
 
-begin_define
-define|#
-directive|define
-name|TARGET_ASM_FILE_END
-value|file_end_indicate_exec_stack
-end_define
-
 begin_comment
-comment|/* Determine whether the the entire c99 runtime is present in the    runtime library.  */
+comment|/* Determine whether the entire c99 runtime is present in the    runtime library.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TARGET_C99_FUNCTIONS
-value|1
+value|(OPTION_GLIBC)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TARGET_HAS_F_SETLKW
+name|TARGET_POSIX_IO
 end_define
 
 begin_undef
@@ -877,85 +865,95 @@ value|"%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}"
 end_define
 
 begin_comment
-comment|/* Do code reading to identify a signal frame, and set the frame    state data appropriately.  See unwind-dw2.c for the structs.  */
+comment|/* Use --as-needed -lgcc_s for eh support.  */
 end_comment
 
-begin_comment
-comment|/* Handle multilib correctly.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__arch64__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* 64-bit SPARC version */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LD_AS_NEEDED
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|MD_FALLBACK_FRAME_STATE_FOR
-parameter_list|(
-name|CONTEXT
-parameter_list|,
-name|FS
-parameter_list|,
-name|SUCCESS
-parameter_list|)
-define|\
-value|do {									\     unsigned int *pc_ = (CONTEXT)->ra;					\     long new_cfa_, i_;							\     long regs_off_, fpu_save_off_;					\     long this_cfa_, fpu_save_;						\ 									\     if (pc_[0] != 0x82102065
-comment|/* mov NR_rt_sigreturn, %g1 */
-value|\         || pc_[1] != 0x91d0206d)
-comment|/* ta 0x6d */
-value|\       break;								\     regs_off_ = 192 + 128;						\     fpu_save_off_ = regs_off_ + (16 * 8) + (3 * 8) + (2 * 4);		\     this_cfa_ = (long) (CONTEXT)->cfa;					\     new_cfa_ = *(long *)(((CONTEXT)->cfa) + (regs_off_ + (14 * 8)));	\     new_cfa_ += 2047;
-comment|/* Stack bias */
-value|\     fpu_save_ = *(long *)((this_cfa_) + (fpu_save_off_));		\     (FS)->cfa_how = CFA_REG_OFFSET;					\     (FS)->cfa_reg = 14;							\     (FS)->cfa_offset = new_cfa_ - (long) (CONTEXT)->cfa;		\     for (i_ = 1; i_< 16; ++i_)						\       {									\ 	(FS)->regs.reg[i_].how = REG_SAVED_OFFSET;			\ 	(FS)->regs.reg[i_].loc.offset =					\ 	  this_cfa_ + (regs_off_ + (i_ * 8)) - new_cfa_;		\       }									\     for (i_ = 0; i_< 16; ++i_)						\       {									\ 	(FS)->regs.reg[i_ + 16].how = REG_SAVED_OFFSET;			\ 	(FS)->regs.reg[i_ + 16].loc.offset =				\ 	  this_cfa_ + (i_ * 8) - new_cfa_;				\       }									\     if (fpu_save_)							\       {									\ 	for (i_ = 0; i_< 64; ++i_)					\ 	  {								\             if (i_> 32&& (i_& 0x1))					\               continue;							\ 	    (FS)->regs.reg[i_ + 32].how = REG_SAVED_OFFSET;		\ 	    (FS)->regs.reg[i_ + 32].loc.offset =			\ 	      (fpu_save_ + (i_ * 4)) - new_cfa_;			\ 	  }								\       }									\
-comment|/* Stick return address into %g0, same trick Alpha uses.  */
-value|\     (FS)->regs.reg[0].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[0].loc.offset =					\       this_cfa_ + (regs_off_ + (16 * 8) + 8) - new_cfa_;		\     (FS)->retaddr_column = 0;						\     goto SUCCESS;							\   } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* 32-bit SPARC version */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MD_FALLBACK_FRAME_STATE_FOR
-parameter_list|(
-name|CONTEXT
-parameter_list|,
-name|FS
-parameter_list|,
-name|SUCCESS
-parameter_list|)
-define|\
-value|do {									\     unsigned int *pc_ = (CONTEXT)->ra;					\     int new_cfa_, i_, oldstyle_;					\     int regs_off_, fpu_save_off_;					\     int fpu_save_, this_cfa_;						\ 									\     if (pc_[1] != 0x91d02010)
-comment|/* ta 0x10 */
-value|\       break;								\     if (pc_[0] == 0x821020d8)
-comment|/* mov NR_sigreturn, %g1 */
-value|\       oldstyle_ = 1;							\     else if (pc_[0] == 0x82102065)
-comment|/* mov NR_rt_sigreturn, %g1 */
-value|\       oldstyle_ = 0;							\     else								\       break;								\     if (oldstyle_)							\       {									\         regs_off_ = 96;							\         fpu_save_off_ = regs_off_ + (4 * 4) + (16 * 4);			\       }									\     else								\       {									\         regs_off_ = 96 + 128;						\         fpu_save_off_ = regs_off_ + (4 * 4) + (16 * 4) + (2 * 4);	\       }									\     this_cfa_ = (int) (CONTEXT)->cfa;					\     new_cfa_ = *(int *)(((CONTEXT)->cfa) + (regs_off_+(4*4)+(14 * 4)));	\     fpu_save_ = *(int *)((this_cfa_) + (fpu_save_off_));		\     (FS)->cfa_how = CFA_REG_OFFSET;					\     (FS)->cfa_reg = 14;							\     (FS)->cfa_offset = new_cfa_ - (int) (CONTEXT)->cfa;			\     for (i_ = 1; i_< 16; ++i_)						\       {									\         if (i_ == 14)							\           continue;							\ 	(FS)->regs.reg[i_].how = REG_SAVED_OFFSET;			\ 	(FS)->regs.reg[i_].loc.offset =					\ 	   this_cfa_ + (regs_off_+(4 * 4)+(i_ * 4)) - new_cfa_;		\       }									\     for (i_ = 0; i_< 16; ++i_)						\       {									\ 	(FS)->regs.reg[i_ + 16].how = REG_SAVED_OFFSET;			\ 	(FS)->regs.reg[i_ + 16].loc.offset =				\ 	  this_cfa_ + (i_ * 4) - new_cfa_;				\       }									\     if (fpu_save_)							\       {									\ 	for (i_ = 0; i_< 32; ++i_)					\ 	  {								\ 	    (FS)->regs.reg[i_ + 32].how = REG_SAVED_OFFSET;		\ 	    (FS)->regs.reg[i_ + 32].loc.offset =			\ 	      (fpu_save_ + (i_ * 4)) - new_cfa_;			\ 	  }								\       }									\
-comment|/* Stick return address into %g0, same trick Alpha uses.  */
-value|\     (FS)->regs.reg[0].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[0].loc.offset = this_cfa_+(regs_off_+4)-new_cfa_;	\     (FS)->retaddr_column = 0;						\     goto SUCCESS;							\   } while (0)
+name|USE_LD_AS_NEEDED
+value|1
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|MD_UNWIND_SUPPORT
+value|"config/sparc/linux-unwind.h"
+end_define
+
+begin_comment
+comment|/* Linux currently uses RMO in uniprocessor mode, which is equivalent to    TMO, and TMO in multiprocessor mode.  But they reserve the right to    change their minds.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SPARC_RELAXED_ORDERING
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SPARC_RELAXED_ORDERING
+value|true
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|NEED_INDICATE_EXEC_STACK
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NEED_INDICATE_EXEC_STACK
+value|1
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TARGET_LIBC_PROVIDES_SSP
+end_ifdef
+
+begin_comment
+comment|/* sparc glibc provides __stack_chk_guard in [%g7 + 0x14],    sparc64 glibc provides it at [%g7 + 0x28].  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_THREAD_SSP_OFFSET
+value|(TARGET_ARCH64 ? 0x28 : 0x14)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Define if long doubles should be mangled as 'g'.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_ALTERNATE_LONG_DOUBLE_MANGLING
+end_define
 
 end_unit
 

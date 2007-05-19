@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Subroutines needed for unwinding IA-64 standard format stack frame    info for exception handling.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Andrew MacLeod<amacleod@cygnus.com> 	          Andrew Haley<aph@cygnus.com> 		  David Mosberger-Tang<davidm@hpl.hp.com>     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Subroutines needed for unwinding IA-64 standard format stack frame    info for exception handling.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2004, 2005, 2006    Free Software Foundation, Inc.    Contributed by Andrew MacLeod<amacleod@cygnus.com> 	          Andrew Haley<aph@cygnus.com> 		  David Mosberger-Tang<davidm@hpl.hp.com>     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street, Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -879,6 +879,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|int
 name|emergency_reg_state_free
 init|=
@@ -902,6 +903,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|int
 name|emergency_labeled_state_free
 init|=
@@ -8597,6 +8599,34 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|inline
+name|_Unwind_Ptr
+name|_Unwind_GetIPInfo
+parameter_list|(
+name|struct
+name|_Unwind_Context
+modifier|*
+name|context
+parameter_list|,
+name|int
+modifier|*
+name|ip_before_insn
+parameter_list|)
+block|{
+operator|*
+name|ip_before_insn
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|context
+operator|->
+name|rp
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* Overwrite the return address for CONTEXT with VAL.  */
 end_comment
@@ -8771,6 +8801,23 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MD_UNWIND_SUPPORT
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|MD_UNWIND_SUPPORT
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_escape
 end_escape
 
@@ -8900,15 +8947,20 @@ comment|/* Couldn't find unwind info for this function.  Try an 	 os-specific fa
 ifdef|#
 directive|ifdef
 name|MD_FALLBACK_FRAME_STATE_FOR
+if|if
+condition|(
 name|MD_FALLBACK_FRAME_STATE_FOR
 argument_list|(
 name|context
 argument_list|,
 name|fs
-argument_list|,
-name|success
 argument_list|)
-expr_stmt|;
+operator|==
+name|_URC_NO_REASON
+condition|)
+return|return
+name|_URC_NO_REASON
+return|;
 comment|/* [SCRA 11.4.1] A leaf function with no memory stack, no exception 	 handlers, and which keeps the return value in B0 does not need 	 an unwind table entry.  	 This can only happen in the frame after unwinding through a signal 	 handler.  Avoid infinite looping by requiring that B0 != RP. 	 RP == 0 terminates the chain.  */
 if|if
 condition|(
@@ -8978,25 +9030,15 @@ name|val
 operator|=
 literal|0
 expr_stmt|;
-goto|goto
-name|success
-goto|;
-block|}
-return|return
-name|_URC_END_OF_STACK
-return|;
-name|success
-label|:
 return|return
 name|_URC_NO_REASON
 return|;
-else|#
-directive|else
+block|}
+endif|#
+directive|endif
 return|return
 name|_URC_END_OF_STACK
 return|;
-endif|#
-directive|endif
 block|}
 name|context
 operator|->
@@ -10300,6 +10342,31 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|uw_advance_context
+parameter_list|(
+name|struct
+name|_Unwind_Context
+modifier|*
+name|context
+parameter_list|,
+name|_Unwind_FrameState
+modifier|*
+name|fs
+parameter_list|)
+block|{
+name|uw_update_context
+argument_list|(
+name|context
+argument_list|,
+name|fs
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* Fill in CONTEXT for top-of-stack.  The only valid registers at this    level will be the return address and the CFA.  Note that CFA = SP+16.  */
 end_comment
@@ -10467,7 +10534,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Install (ie longjmp to) the contents of TARGET.  */
+comment|/* Install (i.e. longjmp to) the contents of TARGET.  */
 end_comment
 
 begin_decl_stmt
@@ -10802,14 +10869,6 @@ begin_expr_stmt
 name|alias
 argument_list|(
 name|_Unwind_FindEnclosingFunction
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|alias
-argument_list|(
-name|_Unwind_FindTableEntry
 argument_list|)
 expr_stmt|;
 end_expr_stmt

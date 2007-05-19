@@ -1,12 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Define per-register tables for data flow info and register allocation.    Copyright (C) 1987, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Define per-register tables for data flow info and register allocation.    Copyright (C) 1987, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GCC_REGS_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GCC_REGS_H
+end_define
 
 begin_include
 include|#
 directive|include
 file|"varray.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"obstack.h"
 end_include
 
 begin_include
@@ -103,10 +121,6 @@ name|int
 name|last_uid
 decl_stmt|;
 comment|/* UID of last insn to use (REG n) */
-name|int
-name|last_note_uid
-decl_stmt|;
-comment|/* UID of last note to use (REG n) */
 comment|/* fields set by reg_scan& flow_analysis */
 name|int
 name|sets
@@ -141,21 +155,49 @@ name|int
 name|basic_block
 decl_stmt|;
 comment|/* # of basic blocks (REG n) is used in */
-name|char
-name|changes_mode
-decl_stmt|;
-comment|/* whether (SUBREG (REG n)) exists and 				   is illegal.  */
 block|}
 name|reg_info
 typedef|;
 end_typedef
 
-begin_decl_stmt
-specifier|extern
-name|varray_type
+begin_typedef
+typedef|typedef
+name|reg_info
+modifier|*
+name|reg_info_p
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEF_VEC_P
+argument_list|(
+name|reg_info_p
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEF_VEC_ALLOC_P
+argument_list|(
+name|reg_info_p
+argument_list|,
+name|heap
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern VEC(reg_info_p
+operator|,
+extern|heap
+end_extern
+
+begin_expr_stmt
+unit|)
+operator|*
 name|reg_n_info
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Indexed by n, gives number of times (REG n) is used or set.  */
@@ -168,7 +210,7 @@ name|REG_N_REFS
 parameter_list|(
 name|N
 parameter_list|)
-value|(VARRAY_REG (reg_n_info, N)->refs)
+value|(VEC_index (reg_info_p, reg_n_info, N)->refs)
 end_define
 
 begin_comment
@@ -182,7 +224,7 @@ name|REG_FREQ
 parameter_list|(
 name|N
 parameter_list|)
-value|(VARRAY_REG (reg_n_info, N)->freq)
+value|(VEC_index (reg_info_p, reg_n_info, N)->freq)
 end_define
 
 begin_comment
@@ -221,7 +263,7 @@ name|REG_N_SETS
 parameter_list|(
 name|N
 parameter_list|)
-value|(VARRAY_REG (reg_n_info, N)->sets)
+value|(VEC_index (reg_info_p, reg_n_info, N)->sets)
 end_define
 
 begin_comment
@@ -235,7 +277,7 @@ name|REG_N_DEATHS
 parameter_list|(
 name|N
 parameter_list|)
-value|(VARRAY_REG (reg_n_info, N)->deaths)
+value|(VEC_index (reg_info_p, reg_n_info, N)->deaths)
 end_define
 
 begin_comment
@@ -293,7 +335,8 @@ name|REG_N_CALLS_CROSSED
 parameter_list|(
 name|N
 parameter_list|)
-value|(VARRAY_REG (reg_n_info, N)->calls_crossed)
+define|\
+value|(VEC_index (reg_info_p, reg_n_info, N)->calls_crossed)
 end_define
 
 begin_comment
@@ -308,7 +351,7 @@ parameter_list|(
 name|N
 parameter_list|)
 define|\
-value|(VARRAY_REG (reg_n_info, N)->throw_calls_crossed)
+value|(VEC_index (reg_info_p, reg_n_info, N)->throw_calls_crossed)
 end_define
 
 begin_comment
@@ -322,7 +365,8 @@ name|REG_LIVE_LENGTH
 parameter_list|(
 name|N
 parameter_list|)
-value|(VARRAY_REG (reg_n_info, N)->live_length)
+define|\
+value|(VEC_index (reg_info_p, reg_n_info, N)->live_length)
 end_define
 
 begin_comment
@@ -366,6 +410,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Vector indexed by machine mode saying whether there are regs of that mode.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|have_regs_of_mode
+index|[
+name|MAX_MACHINE_MODE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* For each hard register, the widest mode object that it can contain.    This will be a MODE_INT mode if the register can hold integers.  Otherwise    it will be a MODE_FLOAT or a MODE_CC mode, whichever is valid for the    register.  */
 end_comment
 
@@ -391,7 +449,7 @@ name|REGNO_FIRST_UID
 parameter_list|(
 name|N
 parameter_list|)
-value|(VARRAY_REG (reg_n_info, N)->first_uid)
+value|(VEC_index (reg_info_p, reg_n_info, N)->first_uid)
 end_define
 
 begin_comment
@@ -405,21 +463,7 @@ name|REGNO_LAST_UID
 parameter_list|(
 name|N
 parameter_list|)
-value|(VARRAY_REG (reg_n_info, N)->last_uid)
-end_define
-
-begin_comment
-comment|/* Similar, but includes insns that mention the reg in their notes.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REGNO_LAST_NOTE_UID
-parameter_list|(
-name|N
-parameter_list|)
-value|(VARRAY_REG (reg_n_info, N)->last_note_uid)
+value|(VEC_index (reg_info_p, reg_n_info, N)->last_uid)
 end_define
 
 begin_comment
@@ -570,6 +614,33 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Specify number of hard registers given machine mode occupy.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|hard_regno_nregs
+index|[
+name|FIRST_PSEUDO_REGISTER
+index|]
+index|[
+name|MAX_MACHINE_MODE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GCC_REGS_H */
+end_comment
 
 end_unit
 

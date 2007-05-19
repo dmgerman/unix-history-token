@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler.    For ARM with ELF obj format.    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Philip Blundell<philb@gnu.org> and    Catherine Moore<clm@cygnus.com>        This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler.    For ARM with ELF obj format.    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2004, 2005    Free Software Foundation, Inc.    Contributed by Philip Blundell<philb@gnu.org> and    Catherine Moore<clm@cygnus.com>        This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street, Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|SUBTARGET_ASM_FLOAT_SPEC
-value|"\ %{mapcs-float:-mfloat} %{msoft-float:-mfpu=softfpa}"
+value|"\ %{mapcs-float:-mfloat}"
 end_define
 
 begin_endif
@@ -121,7 +121,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"\ %{mbig-endian:-EB} \ %{mlittle-endian:-EL} \ %{mcpu=*:-mcpu=%*} \ %{march=*:-march=%*} \ %{mapcs-*:-mapcs-%*} \ %(subtarget_asm_float_spec) \ %{mthumb-interwork:-mthumb-interwork} \ %(subtarget_extra_asm_spec)"
+value|"\ %{mbig-endian:-EB} \ %{mlittle-endian:-EL} \ %{mcpu=*:-mcpu=%*} \ %{march=*:-march=%*} \ %{mapcs-*:-mapcs-%*} \ %(subtarget_asm_float_spec) \ %{mthumb-interwork:-mthumb-interwork} \ %{msoft-float:-mfloat-abi=soft} %{mhard-float:-mfloat-abi=hard} \ %{mfloat-abi=*} %{mfpu=*} \ %(subtarget_extra_asm_spec)"
 end_define
 
 begin_endif
@@ -168,7 +168,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do								\     {								\       ARM_DECLARE_FUNCTION_NAME (FILE, NAME, DECL);		\       ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "function");	\       ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));		\       ASM_OUTPUT_LABEL(FILE, NAME);				\     }								\   while (0)
+value|do								\     {								\       ARM_DECLARE_FUNCTION_NAME (FILE, NAME, DECL);		\       ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "function");	\       ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));		\       ASM_OUTPUT_LABEL(FILE, NAME);				\       ARM_OUTPUT_FN_UNWIND (FILE, TRUE);			\     }								\   while (0)
 end_define
 
 begin_comment
@@ -193,7 +193,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do								\     {								\       ARM_DECLARE_FUNCTION_SIZE (FILE, FNAME, DECL);		\       if (!flag_inhibit_size_directive)				\ 	ASM_OUTPUT_MEASURED_SIZE (FILE, FNAME);			\     }								\   while (0)
+value|do								\     {								\       ARM_OUTPUT_FN_UNWIND (FILE, FALSE);			\       ARM_DECLARE_FUNCTION_SIZE (FILE, FNAME, DECL);		\       if (!flag_inhibit_size_directive)				\ 	ASM_OUTPUT_MEASURED_SIZE (FILE, FNAME);			\     }								\   while (0)
 end_define
 
 begin_comment
@@ -261,7 +261,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_DEFAULT
-value|(ARM_FLAG_SOFT_FLOAT | ARM_FLAG_APCS_32 | ARM_FLAG_APCS_FRAME | ARM_FLAG_MMU_TRAPS)
+value|(MASK_APCS_FRAME)
 end_define
 
 begin_endif
@@ -280,7 +280,7 @@ define|#
 directive|define
 name|MULTILIB_DEFAULTS
 define|\
-value|{ "marm", "mlittle-endian", "msoft-float", "mapcs-32", "mno-thumb-interwork", "fno-leading-underscore" }
+value|{ "marm", "mlittle-endian", "msoft-float", "mno-thumb-interwork", "fno-leading-underscore" }
 end_define
 
 begin_endif
@@ -308,21 +308,22 @@ end_define
 begin_escape
 end_escape
 
+begin_comment
+comment|/* Output an element in the static constructor array.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
-name|TARGET_ASM_NAMED_SECTION
+name|TARGET_ASM_CONSTRUCTOR
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_ASM_NAMED_SECTION
-value|arm_elf_asm_named_section
+name|TARGET_ASM_CONSTRUCTOR
+value|arm_elf_asm_constructor
 end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* For PIC code we need to explicitly specify (PLT) and (GOT) relocs.  */
@@ -381,11 +382,15 @@ define|\
 value|do							\     {							\       if ((POWER)> 0)					\ 	fprintf (STREAM, "\t.align\t%d\n", POWER);	\     }							\   while (0)
 end_define
 
+begin_comment
+comment|/* The EABI doesn't provide a way of implementing init_priority.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SUPPORTS_INIT_PRIORITY
-value|1
+value|(!TARGET_AAPCS_BASED)
 end_define
 
 end_unit

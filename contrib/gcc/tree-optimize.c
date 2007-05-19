@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Control and data flow functions for trees.    Copyright 2001, 2002, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Top-level control of tree optimizations.    Copyright 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Diego Novillo<dnovillo@redhat.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"toplev.h"
+file|"tm.h"
 end_include
 
 begin_include
@@ -36,7 +36,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tree-inline.h"
+file|"rtl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm_p.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hard-reg-set.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"basic-block.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"output.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"expr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"diagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"basic-block.h"
 end_include
 
 begin_include
@@ -48,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"langhooks.h"
+file|"tree-flow.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cgraph.h"
+file|"tree-dump.h"
 end_include
 
 begin_include
@@ -66,13 +108,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tm.h"
+file|"function.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"function.h"
+file|"langhooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"toplev.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"flags.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cgraph.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tree-inline.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tree-mudflap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tree-pass.h"
 end_include
 
 begin_include
@@ -81,203 +159,1076 @@ directive|include
 file|"ggc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"cgraph.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"graph.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cfgloop.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"except.h"
+end_include
+
 begin_comment
-comment|/* Called to move the SAVE_EXPRs for parameter declarations in a    nested function into the nested function.  DATA is really the    nested FUNCTION_DECL.  */
+comment|/* Gate: execute, or not, all of the non-trivial optimizations.  */
 end_comment
 
 begin_function
 specifier|static
-name|tree
-name|set_save_expr_context
+name|bool
+name|gate_all_optimizations
 parameter_list|(
-name|tree
-modifier|*
-name|tp
-parameter_list|,
-name|int
-modifier|*
-name|walk_subtrees
-parameter_list|,
 name|void
-modifier|*
-name|data
 parameter_list|)
 block|{
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-operator|*
-name|tp
-argument_list|)
-operator|==
-name|SAVE_EXPR
+return|return
+operator|(
+name|optimize
+operator|>=
+literal|1
+comment|/* Don't bother doing anything if the program has errors.  */
 operator|&&
 operator|!
-name|SAVE_EXPR_CONTEXT
-argument_list|(
-operator|*
-name|tp
-argument_list|)
-condition|)
-name|SAVE_EXPR_CONTEXT
-argument_list|(
-operator|*
-name|tp
-argument_list|)
-operator|=
 operator|(
-name|tree
+name|errorcount
+operator|||
+name|sorrycount
 operator|)
-name|data
+operator|)
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|struct
+name|tree_opt_pass
+name|pass_all_optimizations
+init|=
+block|{
+name|NULL
+block|,
+comment|/* name */
+name|gate_all_optimizations
+block|,
+comment|/* gate */
+name|NULL
+block|,
+comment|/* execute */
+name|NULL
+block|,
+comment|/* sub */
+name|NULL
+block|,
+comment|/* next */
+literal|0
+block|,
+comment|/* static_pass_number */
+literal|0
+block|,
+comment|/* tv_id */
+literal|0
+block|,
+comment|/* properties_required */
+literal|0
+block|,
+comment|/* properties_provided */
+literal|0
+block|,
+comment|/* properties_destroyed */
+literal|0
+block|,
+comment|/* todo_flags_start */
+literal|0
+block|,
+comment|/* todo_flags_finish */
+literal|0
+comment|/* letter */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|tree_opt_pass
+name|pass_early_local_passes
+init|=
+block|{
+name|NULL
+block|,
+comment|/* name */
+name|gate_all_optimizations
+block|,
+comment|/* gate */
+name|NULL
+block|,
+comment|/* execute */
+name|NULL
+block|,
+comment|/* sub */
+name|NULL
+block|,
+comment|/* next */
+literal|0
+block|,
+comment|/* static_pass_number */
+literal|0
+block|,
+comment|/* tv_id */
+literal|0
+block|,
+comment|/* properties_required */
+literal|0
+block|,
+comment|/* properties_provided */
+literal|0
+block|,
+comment|/* properties_destroyed */
+literal|0
+block|,
+comment|/* todo_flags_start */
+literal|0
+block|,
+comment|/* todo_flags_finish */
+literal|0
+comment|/* letter */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Pass: cleanup the CFG just before expanding trees to RTL.    This is just a round of label cleanups and case node grouping    because after the tree optimizers have run such cleanups may    be necessary.  */
+end_comment
+
+begin_function
+specifier|static
+name|unsigned
+name|int
+name|execute_cleanup_cfg_pre_ipa
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|cleanup_tree_cfg
+argument_list|()
 expr_stmt|;
-comment|/* Do not walk back into the SAVE_EXPR_CONTEXT; that will cause      circularity.  */
-elseif|else
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|struct
+name|tree_opt_pass
+name|pass_cleanup_cfg
+init|=
+block|{
+literal|"cleanup_cfg"
+block|,
+comment|/* name */
+name|NULL
+block|,
+comment|/* gate */
+name|execute_cleanup_cfg_pre_ipa
+block|,
+comment|/* execute */
+name|NULL
+block|,
+comment|/* sub */
+name|NULL
+block|,
+comment|/* next */
+literal|0
+block|,
+comment|/* static_pass_number */
+literal|0
+block|,
+comment|/* tv_id */
+name|PROP_cfg
+block|,
+comment|/* properties_required */
+literal|0
+block|,
+comment|/* properties_provided */
+literal|0
+block|,
+comment|/* properties_destroyed */
+literal|0
+block|,
+comment|/* todo_flags_start */
+name|TODO_dump_func
+block|,
+comment|/* todo_flags_finish */
+literal|0
+comment|/* letter */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Pass: cleanup the CFG just before expanding trees to RTL.    This is just a round of label cleanups and case node grouping    because after the tree optimizers have run such cleanups may    be necessary.  */
+end_comment
+
+begin_function
+specifier|static
+name|unsigned
+name|int
+name|execute_cleanup_cfg_post_optimizing
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fold_cond_expr_cond
+argument_list|()
+expr_stmt|;
+name|cleanup_tree_cfg
+argument_list|()
+expr_stmt|;
+name|cleanup_dead_labels
+argument_list|()
+expr_stmt|;
+name|group_case_labels
+argument_list|()
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|struct
+name|tree_opt_pass
+name|pass_cleanup_cfg_post_optimizing
+init|=
+block|{
+literal|"final_cleanup"
+block|,
+comment|/* name */
+name|NULL
+block|,
+comment|/* gate */
+name|execute_cleanup_cfg_post_optimizing
+block|,
+comment|/* execute */
+name|NULL
+block|,
+comment|/* sub */
+name|NULL
+block|,
+comment|/* next */
+literal|0
+block|,
+comment|/* static_pass_number */
+literal|0
+block|,
+comment|/* tv_id */
+name|PROP_cfg
+block|,
+comment|/* properties_required */
+literal|0
+block|,
+comment|/* properties_provided */
+literal|0
+block|,
+comment|/* properties_destroyed */
+literal|0
+block|,
+comment|/* todo_flags_start */
+name|TODO_dump_func
+block|,
+comment|/* todo_flags_finish */
+literal|0
+comment|/* letter */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Pass: do the actions required to finish with tree-ssa optimization    passes.  */
+end_comment
+
+begin_function
+specifier|static
+name|unsigned
+name|int
+name|execute_free_datastructures
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* ??? This isn't the right place for this.  Worse, it got computed      more or less at random in various passes.  */
+name|free_dominance_info
+argument_list|(
+name|CDI_DOMINATORS
+argument_list|)
+expr_stmt|;
+name|free_dominance_info
+argument_list|(
+name|CDI_POST_DOMINATORS
+argument_list|)
+expr_stmt|;
+comment|/* Remove the ssa structures.  Do it here since this includes statement      annotations that need to be intact during disband_implicit_edges.  */
+name|delete_tree_ssa
+argument_list|()
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|struct
+name|tree_opt_pass
+name|pass_free_datastructures
+init|=
+block|{
+name|NULL
+block|,
+comment|/* name */
+name|NULL
+block|,
+comment|/* gate */
+name|execute_free_datastructures
+block|,
+comment|/* execute */
+name|NULL
+block|,
+comment|/* sub */
+name|NULL
+block|,
+comment|/* next */
+literal|0
+block|,
+comment|/* static_pass_number */
+literal|0
+block|,
+comment|/* tv_id */
+name|PROP_cfg
+block|,
+comment|/* properties_required */
+literal|0
+block|,
+comment|/* properties_provided */
+literal|0
+block|,
+comment|/* properties_destroyed */
+literal|0
+block|,
+comment|/* todo_flags_start */
+literal|0
+block|,
+comment|/* todo_flags_finish */
+literal|0
+comment|/* letter */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Pass: free cfg annotations.  */
+end_comment
+
+begin_function
+specifier|static
+name|unsigned
+name|int
+name|execute_free_cfg_annotations
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|basic_block
+name|bb
+decl_stmt|;
+name|block_stmt_iterator
+name|bsi
+decl_stmt|;
+comment|/* Emit gotos for implicit jumps.  */
+name|disband_implicit_edges
+argument_list|()
+expr_stmt|;
+comment|/* Remove annotations from every tree in the function.  */
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
+for|for
+control|(
+name|bsi
+operator|=
+name|bsi_start
+argument_list|(
+name|bb
+argument_list|)
+init|;
+operator|!
+name|bsi_end_p
+argument_list|(
+name|bsi
+argument_list|)
+condition|;
+name|bsi_next
+argument_list|(
+operator|&
+name|bsi
+argument_list|)
+control|)
+block|{
+name|tree
+name|stmt
+init|=
+name|bsi_stmt
+argument_list|(
+name|bsi
+argument_list|)
+decl_stmt|;
+name|ggc_free
+argument_list|(
+name|stmt
+operator|->
+name|common
+operator|.
+name|ann
+argument_list|)
+expr_stmt|;
+name|stmt
+operator|->
+name|common
+operator|.
+name|ann
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* And get rid of annotations we no longer need.  */
+name|delete_tree_cfg_annotations
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_CHECKING
+comment|/* Once the statement annotations have been removed, we can verify      the integrity of statements in the EH throw table.  */
+name|verify_eh_throw_table_statements
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|struct
+name|tree_opt_pass
+name|pass_free_cfg_annotations
+init|=
+block|{
+name|NULL
+block|,
+comment|/* name */
+name|NULL
+block|,
+comment|/* gate */
+name|execute_free_cfg_annotations
+block|,
+comment|/* execute */
+name|NULL
+block|,
+comment|/* sub */
+name|NULL
+block|,
+comment|/* next */
+literal|0
+block|,
+comment|/* static_pass_number */
+literal|0
+block|,
+comment|/* tv_id */
+name|PROP_cfg
+block|,
+comment|/* properties_required */
+literal|0
+block|,
+comment|/* properties_provided */
+literal|0
+block|,
+comment|/* properties_destroyed */
+literal|0
+block|,
+comment|/* todo_flags_start */
+literal|0
+block|,
+comment|/* todo_flags_finish */
+literal|0
+comment|/* letter */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Return true if BB has at least one abnormal outgoing edge.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|bool
+name|has_abnormal_outgoing_edge_p
+parameter_list|(
+name|basic_block
+name|bb
+parameter_list|)
+block|{
+name|edge
+name|e
+decl_stmt|;
+name|edge_iterator
+name|ei
+decl_stmt|;
+name|FOR_EACH_EDGE
+argument_list|(
+argument|e
+argument_list|,
+argument|ei
+argument_list|,
+argument|bb->succs
+argument_list|)
 if|if
 condition|(
-name|DECL_P
-argument_list|(
-operator|*
-name|tp
-argument_list|)
+name|e
+operator|->
+name|flags
+operator|&
+name|EDGE_ABNORMAL
 condition|)
-operator|*
-name|walk_subtrees
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Pass: fixup_cfg.  IPA passes, compilation of earlier functions or inlining    might have changed some properties, such as marked functions nothrow or    added calls that can potentially go to non-local labels.  Remove redundant    edges and basic blocks, and create new ones if necessary.  */
+end_comment
+
+begin_function
+specifier|static
+name|unsigned
+name|int
+name|execute_fixup_cfg
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|basic_block
+name|bb
+decl_stmt|;
+name|block_stmt_iterator
+name|bsi
+decl_stmt|;
+if|if
+condition|(
+name|cfun
+operator|->
+name|eh
+condition|)
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
+block|{
+for|for
+control|(
+name|bsi
+operator|=
+name|bsi_start
+argument_list|(
+name|bb
+argument_list|)
+init|;
+operator|!
+name|bsi_end_p
+argument_list|(
+name|bsi
+argument_list|)
+condition|;
+name|bsi_next
+argument_list|(
+operator|&
+name|bsi
+argument_list|)
+control|)
+block|{
+name|tree
+name|stmt
+init|=
+name|bsi_stmt
+argument_list|(
+name|bsi
+argument_list|)
+decl_stmt|;
+name|tree
+name|call
+init|=
+name|get_call_expr_in
+argument_list|(
+name|stmt
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|call
+operator|&&
+name|call_expr_flags
+argument_list|(
+name|call
+argument_list|)
+operator|&
+operator|(
+name|ECF_CONST
+operator||
+name|ECF_PURE
+operator|)
+condition|)
+name|TREE_SIDE_EFFECTS
+argument_list|(
+name|call
+argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tree_could_throw_p
+argument_list|(
+name|stmt
+argument_list|)
+operator|&&
+name|lookup_stmt_eh_region
+argument_list|(
+name|stmt
+argument_list|)
+condition|)
+name|remove_stmt_from_eh_region
+argument_list|(
+name|stmt
+argument_list|)
+expr_stmt|;
+block|}
+name|tree_purge_dead_eh_edges
+argument_list|(
+name|bb
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|current_function_has_nonlocal_label
+condition|)
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
+block|{
+for|for
+control|(
+name|bsi
+operator|=
+name|bsi_start
+argument_list|(
+name|bb
+argument_list|)
+init|;
+operator|!
+name|bsi_end_p
+argument_list|(
+name|bsi
+argument_list|)
+condition|;
+name|bsi_next
+argument_list|(
+operator|&
+name|bsi
+argument_list|)
+control|)
+block|{
+name|tree
+name|stmt
+init|=
+name|bsi_stmt
+argument_list|(
+name|bsi
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|tree_can_make_abnormal_goto
+argument_list|(
+name|stmt
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|stmt
+operator|==
+name|bsi_stmt
+argument_list|(
+name|bsi_last
+argument_list|(
+name|bb
+argument_list|)
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|has_abnormal_outgoing_edge_p
+argument_list|(
+name|bb
+argument_list|)
+condition|)
+name|make_abnormal_goto_edges
+argument_list|(
+name|bb
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|edge
+name|e
+init|=
+name|split_block
+argument_list|(
+name|bb
+argument_list|,
+name|stmt
+argument_list|)
+decl_stmt|;
+name|bb
+operator|=
+name|e
+operator|->
+name|src
+expr_stmt|;
+name|make_abnormal_goto_edges
+argument_list|(
+name|bb
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+block|}
+block|}
+block|}
+name|cleanup_tree_cfg
+argument_list|()
+expr_stmt|;
+comment|/* Dump a textual representation of the flowgraph.  */
+if|if
+condition|(
+name|dump_file
+condition|)
+name|dump_tree_cfg
+argument_list|(
+name|dump_file
+argument_list|,
+name|dump_flags
+argument_list|)
+expr_stmt|;
 return|return
-name|NULL
+literal|0
 return|;
 block|}
 end_function
 
+begin_decl_stmt
+name|struct
+name|tree_opt_pass
+name|pass_fixup_cfg
+init|=
+block|{
+literal|"fixupcfg"
+block|,
+comment|/* name */
+name|NULL
+block|,
+comment|/* gate */
+name|execute_fixup_cfg
+block|,
+comment|/* execute */
+name|NULL
+block|,
+comment|/* sub */
+name|NULL
+block|,
+comment|/* next */
+literal|0
+block|,
+comment|/* static_pass_number */
+literal|0
+block|,
+comment|/* tv_id */
+name|PROP_cfg
+block|,
+comment|/* properties_required */
+literal|0
+block|,
+comment|/* properties_provided */
+literal|0
+block|,
+comment|/* properties_destroyed */
+literal|0
+block|,
+comment|/* todo_flags_start */
+literal|0
+block|,
+comment|/* todo_flags_finish */
+literal|0
+comment|/* letter */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* Clear out the DECL_RTL for the non-static local variables in BLOCK and    its sub-blocks.  DATA is the decl of the function being processed.  */
+comment|/* Do the actions required to initialize internal data structures used    in tree-ssa optimization passes.  */
 end_comment
 
 begin_function
 specifier|static
-name|tree
-name|clear_decl_rtl
-parameter_list|(
-name|tree
-modifier|*
-name|tp
-parameter_list|,
+name|unsigned
 name|int
-modifier|*
-name|walk_subtrees
-name|ATTRIBUTE_UNUSED
-parameter_list|,
+name|execute_init_datastructures
+parameter_list|(
 name|void
-modifier|*
-name|data
 parameter_list|)
 block|{
-name|bool
-name|nonstatic_p
-decl_stmt|,
-name|local_p
-decl_stmt|;
-name|tree
-name|t
-init|=
-operator|*
-name|tp
-decl_stmt|;
-switch|switch
-condition|(
-name|TREE_CODE
-argument_list|(
-name|t
-argument_list|)
-condition|)
-block|{
-case|case
-name|VAR_DECL
-case|:
-name|nonstatic_p
-operator|=
-operator|!
-name|TREE_STATIC
-argument_list|(
-name|t
-argument_list|)
-operator|&&
-operator|!
-name|DECL_EXTERNAL
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
-name|local_p
-operator|=
-name|decl_function_context
-argument_list|(
-name|t
-argument_list|)
-operator|==
-name|data
-expr_stmt|;
-break|break;
-case|case
-name|PARM_DECL
-case|:
-case|case
-name|LABEL_DECL
-case|:
-name|nonstatic_p
-operator|=
-name|true
-expr_stmt|;
-name|local_p
-operator|=
-name|decl_function_context
-argument_list|(
-name|t
-argument_list|)
-operator|==
-name|data
-expr_stmt|;
-break|break;
-case|case
-name|RESULT_DECL
-case|:
-name|nonstatic_p
-operator|=
-name|local_p
-operator|=
-name|true
-expr_stmt|;
-break|break;
-default|default:
-name|nonstatic_p
-operator|=
-name|local_p
-operator|=
-name|false
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-name|nonstatic_p
-operator|&&
-name|local_p
-condition|)
-name|SET_DECL_RTL
-argument_list|(
-name|t
-argument_list|,
-name|NULL
-argument_list|)
+comment|/* Allocate hash tables, arrays and other structures.  */
+name|init_tree_ssa
+argument_list|()
 expr_stmt|;
 return|return
-name|NULL
+literal|0
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|struct
+name|tree_opt_pass
+name|pass_init_datastructures
+init|=
+block|{
+name|NULL
+block|,
+comment|/* name */
+name|NULL
+block|,
+comment|/* gate */
+name|execute_init_datastructures
+block|,
+comment|/* execute */
+name|NULL
+block|,
+comment|/* sub */
+name|NULL
+block|,
+comment|/* next */
+literal|0
+block|,
+comment|/* static_pass_number */
+literal|0
+block|,
+comment|/* tv_id */
+name|PROP_cfg
+block|,
+comment|/* properties_required */
+literal|0
+block|,
+comment|/* properties_provided */
+literal|0
+block|,
+comment|/* properties_destroyed */
+literal|0
+block|,
+comment|/* todo_flags_start */
+literal|0
+block|,
+comment|/* todo_flags_finish */
+literal|0
+comment|/* letter */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|tree_lowering_passes
+parameter_list|(
+name|tree
+name|fn
+parameter_list|)
+block|{
+name|tree
+name|saved_current_function_decl
+init|=
+name|current_function_decl
+decl_stmt|;
+name|current_function_decl
+operator|=
+name|fn
+expr_stmt|;
+name|push_cfun
+argument_list|(
+name|DECL_STRUCT_FUNCTION
+argument_list|(
+name|fn
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|tree_register_cfg_hooks
+argument_list|()
+expr_stmt|;
+name|bitmap_obstack_initialize
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|execute_pass_list
+argument_list|(
+name|all_lowering_passes
+argument_list|)
+expr_stmt|;
+name|free_dominance_info
+argument_list|(
+name|CDI_POST_DOMINATORS
+argument_list|)
+expr_stmt|;
+name|compact_blocks
+argument_list|()
+expr_stmt|;
+name|current_function_decl
+operator|=
+name|saved_current_function_decl
+expr_stmt|;
+name|bitmap_obstack_release
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|pop_cfun
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Update recursively all inlined_to pointers of functions    inlined into NODE to INLINED_TO.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|update_inlined_to_pointers
+parameter_list|(
+name|struct
+name|cgraph_node
+modifier|*
+name|node
+parameter_list|,
+name|struct
+name|cgraph_node
+modifier|*
+name|inlined_to
+parameter_list|)
+block|{
+name|struct
+name|cgraph_edge
+modifier|*
+name|e
+decl_stmt|;
+for|for
+control|(
+name|e
+operator|=
+name|node
+operator|->
+name|callees
+init|;
+name|e
+condition|;
+name|e
+operator|=
+name|e
+operator|->
+name|next_callee
+control|)
+block|{
+if|if
+condition|(
+name|e
+operator|->
+name|callee
+operator|->
+name|global
+operator|.
+name|inlined_to
+condition|)
+block|{
+name|e
+operator|->
+name|callee
+operator|->
+name|global
+operator|.
+name|inlined_to
+operator|=
+name|inlined_to
+expr_stmt|;
+name|update_inlined_to_pointers
+argument_list|(
+name|e
+operator|->
+name|callee
+argument_list|,
+name|inlined_to
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* For functions-as-trees languages, this performs all optimization and    compilation for FNDECL.  */
@@ -289,28 +1240,48 @@ name|tree_rest_of_compilation
 parameter_list|(
 name|tree
 name|fndecl
-parameter_list|,
-name|bool
-name|nested_p
 parameter_list|)
 block|{
 name|location_t
 name|saved_loc
+decl_stmt|;
+name|struct
+name|cgraph_node
+modifier|*
+name|node
 decl_stmt|;
 name|timevar_push
 argument_list|(
 name|TV_EXPAND
 argument_list|)
 expr_stmt|;
+name|gcc_assert
+argument_list|(
+operator|!
+name|flag_unit_at_a_time
+operator|||
+name|cgraph_global_info_ready
+argument_list|)
+expr_stmt|;
+name|node
+operator|=
+name|cgraph_node
+argument_list|(
+name|fndecl
+argument_list|)
+expr_stmt|;
+comment|/* We might need the body of this function so that we can expand      it inline somewhere else.  */
 if|if
 condition|(
-name|flag_unit_at_a_time
-operator|&&
-operator|!
-name|cgraph_global_info_ready
+name|cgraph_preserve_function_body_p
+argument_list|(
+name|fndecl
+argument_list|)
 condition|)
-name|abort
-argument_list|()
+name|save_inline_function_body
+argument_list|(
+name|node
+argument_list|)
 expr_stmt|;
 comment|/* Initialize the RTL code for the function.  */
 name|current_function_decl
@@ -333,163 +1304,171 @@ argument_list|(
 name|fndecl
 argument_list|)
 expr_stmt|;
-comment|/* This function is being processed in whole-function mode.  */
-name|cfun
-operator|->
-name|x_whole_function_mode_p
-operator|=
-literal|1
-expr_stmt|;
 comment|/* Even though we're inside a function body, we still don't want to      call expand_expr to calculate the size of a variable-sized array.      We haven't necessarily assigned RTL to all variables yet, so it's      not safe to try to expand expressions involving them.  */
-name|immediate_size_expand
-operator|=
-literal|0
-expr_stmt|;
 name|cfun
 operator|->
 name|x_dont_save_pending_sizes_p
 operator|=
 literal|1
 expr_stmt|;
-comment|/* If the function has a variably modified type, there may be      SAVE_EXPRs in the parameter types.  Their context must be set to      refer to this function; they cannot be expanded in the containing      function.  */
+name|cfun
+operator|->
+name|after_inlining
+operator|=
+name|true
+expr_stmt|;
 if|if
 condition|(
-name|decl_function_context
-argument_list|(
-name|fndecl
-argument_list|)
-operator|&&
-name|variably_modified_type_p
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|fndecl
-argument_list|)
-argument_list|)
+name|flag_inline_trees
 condition|)
-name|walk_tree
+block|{
+name|struct
+name|cgraph_edge
+modifier|*
+name|e
+decl_stmt|;
+for|for
+control|(
+name|e
+operator|=
+name|node
+operator|->
+name|callees
+init|;
+name|e
+condition|;
+name|e
+operator|=
+name|e
+operator|->
+name|next_callee
+control|)
+if|if
+condition|(
+operator|!
+name|e
+operator|->
+name|inline_failed
+operator|||
+name|warn_inline
+condition|)
+break|break;
+if|if
+condition|(
+name|e
+condition|)
+block|{
+name|timevar_push
 argument_list|(
-operator|&
-name|TREE_TYPE
+name|TV_INTEGRATION
+argument_list|)
+expr_stmt|;
+name|optimize_inline_calls
 argument_list|(
 name|fndecl
 argument_list|)
-argument_list|,
-name|set_save_expr_context
-argument_list|,
-name|fndecl
-argument_list|,
+expr_stmt|;
+name|timevar_pop
+argument_list|(
+name|TV_INTEGRATION
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* In non-unit-at-a-time we must mark all referenced functions as needed.      */
+if|if
+condition|(
+operator|!
+name|flag_unit_at_a_time
+condition|)
+block|{
+name|struct
+name|cgraph_edge
+modifier|*
+name|e
+decl_stmt|;
+for|for
+control|(
+name|e
+operator|=
+name|node
+operator|->
+name|callees
+init|;
+name|e
+condition|;
+name|e
+operator|=
+name|e
+operator|->
+name|next_callee
+control|)
+if|if
+condition|(
+name|e
+operator|->
+name|callee
+operator|->
+name|analyzed
+condition|)
+name|cgraph_mark_needed_node
+argument_list|(
+name|e
+operator|->
+name|callee
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* We are not going to maintain the cgraph edges up to date.      Kill it so it won't confuse us.  */
+name|cgraph_node_remove_callees
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+comment|/* Initialize the default bitmap obstack.  */
+name|bitmap_obstack_initialize
+argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Set up parameters and prepare for return, for the function.  */
-name|expand_function_start
+name|bitmap_obstack_initialize
 argument_list|(
-name|fndecl
-argument_list|,
-literal|0
+operator|&
+name|reg_obstack
 argument_list|)
 expr_stmt|;
-comment|/* Allow language dialects to perform special processing.  */
-call|(
-modifier|*
-name|lang_hooks
-operator|.
-name|rtl_expand
-operator|.
-name|start
-call|)
+comment|/* FIXME, only at RTL generation*/
+name|tree_register_cfg_hooks
 argument_list|()
 expr_stmt|;
-comment|/* If this function is `main', emit a call to `__main'      to run global initializers, etc.  */
-if|if
-condition|(
-name|DECL_NAME
+comment|/* Perform all tree transforms and optimizations.  */
+name|execute_pass_list
 argument_list|(
-name|fndecl
+name|all_passes
 argument_list|)
-operator|&&
-name|MAIN_NAME_P
-argument_list|(
-name|DECL_NAME
-argument_list|(
-name|fndecl
-argument_list|)
-argument_list|)
-operator|&&
-name|DECL_FILE_SCOPE_P
-argument_list|(
-name|fndecl
-argument_list|)
-condition|)
-name|expand_main_function
-argument_list|()
 expr_stmt|;
-comment|/* Generate the RTL for this function.  */
-call|(
-modifier|*
-name|lang_hooks
-operator|.
-name|rtl_expand
-operator|.
-name|stmt
-call|)
+name|bitmap_obstack_release
 argument_list|(
+operator|&
+name|reg_obstack
+argument_list|)
+expr_stmt|;
+comment|/* Release the default bitmap obstack.  */
+name|bitmap_obstack_release
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|DECL_SAVED_TREE
 argument_list|(
 name|fndecl
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* We hard-wired immediate_size_expand to zero above.      expand_function_end will decrement this variable.  So, we set the      variable to one here, so that after the decrement it will remain      zero.  */
-name|immediate_size_expand
 operator|=
-literal|1
+name|NULL
 expr_stmt|;
-comment|/* Allow language dialects to perform special processing.  */
-call|(
-modifier|*
-name|lang_hooks
-operator|.
-name|rtl_expand
-operator|.
-name|end
-call|)
-argument_list|()
-expr_stmt|;
-comment|/* Generate rtl for function exit.  */
-name|expand_function_end
-argument_list|()
-expr_stmt|;
-comment|/* If this is a nested function, protect the local variables in the stack      above us from being collected while we're compiling this function.  */
-if|if
-condition|(
-name|nested_p
-condition|)
-name|ggc_push_context
-argument_list|()
-expr_stmt|;
-comment|/* There's no need to defer outputting this function any more; we      know we want to output it.  */
-name|DECL_DEFER_OUTPUT
-argument_list|(
-name|fndecl
-argument_list|)
+name|cfun
 operator|=
 literal|0
-expr_stmt|;
-comment|/* Run the optimizers and output the assembler code for this function.  */
-name|rest_of_compilation
-argument_list|(
-name|fndecl
-argument_list|)
-expr_stmt|;
-comment|/* Undo the GC context switch.  */
-if|if
-condition|(
-name|nested_p
-condition|)
-name|ggc_pop_context
-argument_list|()
 expr_stmt|;
 comment|/* If requested, warn about function definitions where the function will      return a value (usually of some struct or union type) which itself will      take up a lot of stack space.  */
 if|if
@@ -579,9 +1558,9 @@ literal|0
 condition|)
 name|warning
 argument_list|(
-literal|"%Jsize of return value of '%D' is %u bytes"
+literal|0
 argument_list|,
-name|fndecl
+literal|"size of return value of %q+D is %u bytes"
 argument_list|,
 name|fndecl
 argument_list|,
@@ -591,9 +1570,9 @@ expr_stmt|;
 else|else
 name|warning
 argument_list|(
-literal|"%Jsize of return value of '%D' is larger than %wd bytes"
+literal|0
 argument_list|,
-name|fndecl
+literal|"size of return value of %q+D is larger than %wd bytes"
 argument_list|,
 name|fndecl
 argument_list|,
@@ -605,41 +1584,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|DECL_DEFER_OUTPUT
-argument_list|(
-name|fndecl
-argument_list|)
-operator|||
-operator|!
-name|cgraph_node
-argument_list|(
-name|fndecl
-argument_list|)
-operator|->
-name|origin
-condition|)
-block|{
-comment|/* Since we don't need the RTL for this function anymore, stop pointing 	 to it.  That's especially important for LABEL_DECLs, since you can 	 reach all the instructions in the function from the CODE_LABEL stored 	 in the DECL_RTL for the LABEL_DECL.  Walk the BLOCK-tree, clearing 	 DECL_RTL for LABEL_DECLs and non-static local variables.  Note that 	 we must check the context of the variables, otherwise processing a 	 nested function can kill the rtl of a variable from an outer 	 function.  */
-name|walk_tree_without_duplicates
-argument_list|(
-operator|&
-name|DECL_SAVED_TREE
-argument_list|(
-name|fndecl
-argument_list|)
-argument_list|,
-name|clear_decl_rtl
-argument_list|,
-name|fndecl
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|cgraph_function_possibly_inlined_p
-argument_list|(
-name|fndecl
-argument_list|)
+name|flag_inline_trees
 condition|)
 block|{
 name|DECL_SAVED_TREE
@@ -651,7 +1596,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|DECL_SAVED_INSNS
+name|DECL_STRUCT_FUNCTION
 argument_list|(
 name|fndecl
 argument_list|)
@@ -667,7 +1612,7 @@ operator|->
 name|origin
 condition|)
 block|{
-comment|/* Stop pointing to the local nodes about to be freed. 		 But DECL_INITIAL must remain nonzero so we know this 		 was an actual function definition. 		 For a nested function, this is done in c_pop_function_context. 		 If rest_of_compilation set this to 0, leave it 0.  */
+comment|/* Stop pointing to the local nodes about to be freed. 	     But DECL_INITIAL must remain nonzero so we know this 	     was an actual function definition. 	     For a nested function, this is done in c_pop_function_context. 	     If rest_of_compilation set this to 0, leave it 0.  */
 if|if
 condition|(
 name|DECL_INITIAL
@@ -686,10 +1631,12 @@ name|error_mark_node
 expr_stmt|;
 block|}
 block|}
-block|}
 name|input_location
 operator|=
 name|saved_loc
+expr_stmt|;
+name|ggc_collect
+argument_list|()
 expr_stmt|;
 name|timevar_pop
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Garbage collection for the GNU compiler.    Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Garbage collection for the GNU compiler.    Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,12 @@ define|#
 directive|define
 name|GCC_GGC_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"statistics.h"
+end_include
 
 begin_comment
 comment|/* Symbols are marked with `ggc' for `gcc gc' so as not to interfere with    an external gc library that might be linked in.  */
@@ -158,6 +164,9 @@ name|void
 modifier|*
 parameter_list|,
 name|gt_note_pointers
+parameter_list|,
+name|enum
+name|gt_types_enum
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -599,34 +608,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Start a new GGC context.  Memory allocated in previous contexts    will not be collected while the new context is active.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|ggc_push_context
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Finish a GC context.  Any uncollected memory in the new context    will be merged with the old context.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|ggc_pop_context
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_struct_decl
 struct_decl|struct
 name|ggc_pch_data
@@ -650,7 +631,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* The second parameter and third parameters give the address and size    of an object.  Update the ggc_pch_data structure with as much of    that information as is necessary. The last argument should be true    if the object is a string.  */
+comment|/* The second parameter and third parameters give the address and size    of an object.  Update the ggc_pch_data structure with as much of    that information as is necessary. The bool argument should be true    if the object is a string.  */
 end_comment
 
 begin_function_decl
@@ -668,6 +649,9 @@ parameter_list|,
 name|size_t
 parameter_list|,
 name|bool
+parameter_list|,
+name|enum
+name|gt_types_enum
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -708,7 +692,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Assuming that the objects really do end up at the address    passed to ggc_pch_this_base, return the address of this object.    The last argument should be true if the object is a string.  */
+comment|/* Assuming that the objects really do end up at the address    passed to ggc_pch_this_base, return the address of this object.    The bool argument should be true if the object is a string.  */
 end_comment
 
 begin_function_decl
@@ -727,6 +711,9 @@ parameter_list|,
 name|size_t
 parameter_list|,
 name|bool
+parameter_list|,
+name|enum
+name|gt_types_enum
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -824,41 +811,13 @@ comment|/* Allocation.  */
 end_comment
 
 begin_comment
-comment|/* For single pass garbage.  */
+comment|/* When set, ggc_collect will do collection.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|alloc_zone
-modifier|*
-name|garbage_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* For regular rtl allocations.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|alloc_zone
-modifier|*
-name|rtl_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* For regular tree allocations.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|alloc_zone
-modifier|*
-name|tree_zone
+name|bool
+name|ggc_force_collect
 decl_stmt|;
 end_decl_stmt
 
@@ -870,31 +829,23 @@ begin_function_decl
 specifier|extern
 name|void
 modifier|*
+name|ggc_alloc_stat
+parameter_list|(
+name|size_t
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
 name|ggc_alloc
 parameter_list|(
-name|size_t
+name|s
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Allocate an object into the specified allocation zone.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
-name|ggc_alloc_zone
-parameter_list|(
-name|size_t
-parameter_list|,
-name|struct
-name|alloc_zone
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+value|ggc_alloc_stat (s MEM_STAT_INFO)
+end_define
 
 begin_comment
 comment|/* Allocate an object of the specified type and size.  */
@@ -904,15 +855,28 @@ begin_function_decl
 specifier|extern
 name|void
 modifier|*
-name|ggc_alloc_typed
+name|ggc_alloc_typed_stat
 parameter_list|(
 name|enum
 name|gt_types_enum
 parameter_list|,
 name|size_t
+name|MEM_STAT_DECL
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ggc_alloc_typed
+parameter_list|(
+name|s
+parameter_list|,
+name|z
+parameter_list|)
+value|ggc_alloc_typed_stat (s,z MEM_STAT_INFO)
+end_define
 
 begin_comment
 comment|/* Like ggc_alloc, but allocates cleared memory.  */
@@ -922,31 +886,23 @@ begin_function_decl
 specifier|extern
 name|void
 modifier|*
+name|ggc_alloc_cleared_stat
+parameter_list|(
+name|size_t
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
 name|ggc_alloc_cleared
 parameter_list|(
-name|size_t
+name|s
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Like ggc_alloc_zone, but allocates cleared memory.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
-name|ggc_alloc_cleared_zone
-parameter_list|(
-name|size_t
-parameter_list|,
-name|struct
-name|alloc_zone
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+value|ggc_alloc_cleared_stat (s MEM_STAT_INFO)
+end_define
 
 begin_comment
 comment|/* Resize a block.  */
@@ -956,15 +912,28 @@ begin_function_decl
 specifier|extern
 name|void
 modifier|*
-name|ggc_realloc
+name|ggc_realloc_stat
 parameter_list|(
 name|void
 modifier|*
 parameter_list|,
 name|size_t
+name|MEM_STAT_DECL
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ggc_realloc
+parameter_list|(
+name|s
+parameter_list|,
+name|z
+parameter_list|)
+value|ggc_realloc_stat (s,z MEM_STAT_INFO)
+end_define
 
 begin_comment
 comment|/* Like ggc_alloc_cleared, but performs a multiplication.  */
@@ -983,15 +952,152 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Free a block.  To be used when known for certain it's not reachable.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|ggc_free
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ggc_record_overhead
+parameter_list|(
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|,
+name|void
+modifier|*
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ggc_free_overhead
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ggc_prune_overhead_list
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|dump_ggc_loc_statistics
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Type-safe, C++-friendly versions of ggc_alloc() and gcc_calloc().  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ggc_alloc_rtx
+name|GGC_NEW
 parameter_list|(
-name|CODE
+name|T
 parameter_list|)
-define|\
-value|((rtx) ggc_alloc_typed (gt_ggc_e_7rtx_def, RTX_SIZE (CODE)))
+value|((T *) ggc_alloc (sizeof (T)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GGC_CNEW
+parameter_list|(
+name|T
+parameter_list|)
+value|((T *) ggc_alloc_cleared (sizeof (T)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GGC_NEWVEC
+parameter_list|(
+name|T
+parameter_list|,
+name|N
+parameter_list|)
+value|((T *) ggc_alloc ((N) * sizeof(T)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GGC_CNEWVEC
+parameter_list|(
+name|T
+parameter_list|,
+name|N
+parameter_list|)
+value|((T *) ggc_alloc_cleared ((N) * sizeof(T)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GGC_NEWVAR
+parameter_list|(
+name|T
+parameter_list|,
+name|S
+parameter_list|)
+value|((T *) ggc_alloc ((S)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GGC_CNEWVAR
+parameter_list|(
+name|T
+parameter_list|,
+name|S
+parameter_list|)
+value|((T *) ggc_alloc_cleared ((S)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GGC_RESIZEVEC
+parameter_list|(
+name|T
+parameter_list|,
+name|P
+parameter_list|,
+name|N
+parameter_list|)
+value|((T *) ggc_realloc ((P), (N) * sizeof (T)))
 end_define
 
 begin_define
@@ -1002,7 +1108,7 @@ parameter_list|(
 name|NELT
 parameter_list|)
 define|\
-value|((rtvec) ggc_alloc_typed (gt_ggc_e_9rtvec_def, sizeof (struct rtvec_def) \ 		      + ((NELT) - 1) * sizeof (rtx)))
+value|((rtvec) ggc_alloc_zone (sizeof (struct rtvec_def) + ((NELT) - 1)	 \ 			   * sizeof (rtx),&rtl_zone))
 end_define
 
 begin_define
@@ -1012,7 +1118,7 @@ name|ggc_alloc_tree
 parameter_list|(
 name|LENGTH
 parameter_list|)
-value|((tree) ggc_alloc_zone (LENGTH, tree_zone))
+value|((tree) ggc_alloc_zone (LENGTH,&tree_zone))
 end_define
 
 begin_define
@@ -1269,6 +1375,139 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Zone collection.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|GGC_ZONE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|GENERATOR_FILE
+argument_list|)
+end_if
+
+begin_comment
+comment|/* For regular rtl allocations.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|alloc_zone
+name|rtl_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* For regular tree allocations.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|alloc_zone
+name|tree_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* For IDENTIFIER_NODE allocations.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|alloc_zone
+name|tree_id_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Allocate an object into the specified allocation zone.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|ggc_alloc_zone_stat
+parameter_list|(
+name|size_t
+parameter_list|,
+name|struct
+name|alloc_zone
+modifier|*
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ggc_alloc_zone
+parameter_list|(
+name|s
+parameter_list|,
+name|z
+parameter_list|)
+value|ggc_alloc_zone_stat (s,z MEM_STAT_INFO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ggc_alloc_zone_pass_stat
+parameter_list|(
+name|s
+parameter_list|,
+name|z
+parameter_list|)
+value|ggc_alloc_zone_stat (s,z PASS_MEM_STAT)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ggc_alloc_zone
+parameter_list|(
+name|s
+parameter_list|,
+name|z
+parameter_list|)
+value|ggc_alloc (s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ggc_alloc_zone_pass_stat
+parameter_list|(
+name|s
+parameter_list|,
+name|z
+parameter_list|)
+value|ggc_alloc_stat (s PASS_MEM_STAT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

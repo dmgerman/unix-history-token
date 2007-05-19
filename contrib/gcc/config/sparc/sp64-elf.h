@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GCC, for SPARC64, ELF.    Copyright (C) 1994, 1995, 1996, 1997, 1998, 2000    Free Software Foundation, Inc.    Contributed by Doug Evans, dje@cygnus.com.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-end_comment
-
-begin_comment
-comment|/* ??? We're taking the scheme of including another file and then overriding    the values we don't like a bit too far here.  The alternative is to more or    less duplicate all of svr4.h, sparc/sysv4.h, and sparc/sol2.h here    (suitably cleaned up).  */
+comment|/* Definitions of target machine for GCC, for SPARC64, ELF.    Copyright (C) 1994, 1995, 1996, 1997, 1998, 2000, 2004, 2005    Free Software Foundation, Inc.    Contributed by Doug Evans, dje@cygnus.com.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_undef
@@ -52,22 +48,13 @@ value|CM_EMBMEDANY
 end_define
 
 begin_comment
-comment|/* Target OS builtins for config/sol.h.  */
+comment|/* Don't assume anything about the header files.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_SUB_OS_CPP_BUILTINS
-end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_SUB_OS_CPP_BUILTINS
-parameter_list|()
-define|\
-value|do						\     {						\ 	builtin_define_std ("sparc");		\     }						\   while (0)
+name|NO_IMPLICIT_EXTERN_C
 end_define
 
 begin_comment
@@ -171,21 +158,24 @@ name|LIB_SPEC
 end_undef
 
 begin_comment
-comment|/* V9 chips can handle either endianness.  */
+comment|/* This defines which switch letters take arguments.    It is as in svr4.h but with -R added.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|SUBTARGET_SWITCHES
+name|SWITCH_TAKES_ARG
 end_undef
 
 begin_define
 define|#
 directive|define
-name|SUBTARGET_SWITCHES
+name|SWITCH_TAKES_ARG
+parameter_list|(
+name|CHAR
+parameter_list|)
 define|\
-value|{"big-endian", -MASK_LITTLE_ENDIAN, N_("Generate code for big endian") }, \ {"little-endian", MASK_LITTLE_ENDIAN, N_("Generate code for little endian") },
+value|(DEFAULT_SWITCH_TAKES_ARG(CHAR) \    || (CHAR) == 'R' \    || (CHAR) == 'h' \    || (CHAR) == 'z')
 end_define
 
 begin_undef
@@ -213,6 +203,50 @@ directive|define
 name|WORDS_BIG_ENDIAN
 value|(! TARGET_LITTLE_ENDIAN)
 end_define
+
+begin_escape
+end_escape
+
+begin_undef
+undef|#
+directive|undef
+name|LOCAL_LABEL_PREFIX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LOCAL_LABEL_PREFIX
+value|"."
+end_define
+
+begin_comment
+comment|/* This is how to store into the string LABEL    the symbol_ref name of an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.    This is suitable for output with `assemble_name'.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_GENERATE_INTERNAL_LABEL
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_GENERATE_INTERNAL_LABEL
+parameter_list|(
+name|LABEL
+parameter_list|,
+name|PREFIX
+parameter_list|,
+name|NUM
+parameter_list|)
+define|\
+value|sprintf ((LABEL), "*.L%s%ld", (PREFIX), (long)(NUM))
+end_define
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* ??? This should be 32 bits for v9 but what can we do?  */
@@ -276,30 +310,6 @@ define|#
 directive|define
 name|JUMP_TABLES_IN_TEXT_SECTION
 value|0
-end_define
-
-begin_comment
-comment|/* System V Release 4 uses DWARF debugging info.    GDB doesn't support 64 bit stabs yet and the desired debug format is DWARF    anyway so it is the default.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DBX_DEBUGGING_INFO
-value|1
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|PREFERRED_DEBUGGING_TYPE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PREFERRED_DEBUGGING_TYPE
-value|DWARF2_DEBUG
 end_define
 
 end_unit

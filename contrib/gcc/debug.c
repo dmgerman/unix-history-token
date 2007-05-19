@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Do-nothing debug hooks for GCC.    Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Do-nothing debug hooks for GCC.    Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -89,6 +89,12 @@ comment|/* function_decl */
 name|debug_nothing_tree
 block|,
 comment|/* global_decl */
+name|debug_nothing_tree_int
+block|,
+comment|/* type_decl */
+name|debug_nothing_tree_tree
+block|,
+comment|/* imported_module_or_decl */
 name|debug_nothing_tree
 block|,
 comment|/* deferred_inline_function */
@@ -99,7 +105,16 @@ name|debug_nothing_rtx
 block|,
 comment|/* label */
 name|debug_nothing_int
+block|,
 comment|/* handle_pch */
+name|debug_nothing_rtx
+block|,
+comment|/* var_location */
+name|debug_nothing_void
+block|,
+comment|/* switch_text_section */
+literal|0
+comment|/* start_end_main_source_file */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -123,6 +138,21 @@ name|debug_nothing_tree
 parameter_list|(
 name|tree
 name|decl
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|debug_nothing_tree_tree
+parameter_list|(
+name|tree
+name|t1
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|tree
+name|t2
 name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{ }
@@ -209,6 +239,21 @@ parameter_list|,
 name|unsigned
 name|int
 name|n
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|debug_nothing_tree_int
+parameter_list|(
+name|tree
+name|decl
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|int
+name|local
 name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{ }

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations for objc-act.c.    Copyright (C) 1990, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Declarations for objc-act.c.    Copyright (C) 1990, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,17 @@ name|GCC_OBJC_ACT_H
 end_define
 
 begin_comment
-comment|/*** Public Interface (procedures) ***/
+comment|/* For enum gimplify_status */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"tree-gimple.h"
+end_include
+
+begin_comment
+comment|/*** Language hooks ***/
 end_comment
 
 begin_function_decl
@@ -41,13 +51,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* used by yyparse */
-end_comment
+begin_function_decl
+name|tree
+name|objc_get_callee_fndecl
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
-name|finish_file
+name|objc_finish_file
 parameter_list|(
 name|void
 parameter_list|)
@@ -56,451 +71,35 @@ end_function_decl
 
 begin_function_decl
 name|tree
-name|start_class
+name|objc_fold_obj_type_ref
 parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|enum
-name|tree_code
+name|gimplify_status
+name|objc_gimplify_expr
+parameter_list|(
+name|tree
+modifier|*
 parameter_list|,
 name|tree
+modifier|*
 parameter_list|,
 name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|continue_class
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|finish_class
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|start_method_def
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|continue_method_def
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|finish_method_def
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|start_protocol
-parameter_list|(
-name|enum
-name|tree_code
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|finish_protocol
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|objc_build_throw_stmt
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|objc_build_try_catch_finally_stmt
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|objc_build_synchronized_prologue
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|objc_build_synchronized_epilogue
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|objc_build_try_prologue
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|objc_build_try_epilogue
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|objc_build_catch_stmt
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|objc_build_catch_epilogue
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|objc_build_finally_prologue
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|objc_build_finally_epilogue
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|is_ivar
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|is_private
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|is_public
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|add_instance_variable
-parameter_list|(
-name|tree
-parameter_list|,
-name|int
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|objc_add_method
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|get_super_receiver
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|objc_clear_super_receiver
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|get_class_ivars_from_name
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|get_class_reference
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|get_static_reference
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|get_object_reference
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|build_message_expr
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|finish_message_expr
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|build_selector_expr
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|build_ivar_reference
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|build_keyword_decl
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|build_method_decl
-parameter_list|(
-name|enum
-name|tree_code
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|build_protocol_expr
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|build_objc_string_object
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|objc_declare_alias
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|objc_declare_class
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|objc_declare_protocols
-parameter_list|(
-name|tree
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* the following routines are used to implement statically typed objects */
+comment|/* NB: The remaining public functions are prototyped in c-common.h, for the    benefit of stub-objc.c and objc-act.c.  */
 end_comment
-
-begin_function_decl
-name|int
-name|objc_comptypes
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|objc_check_decl
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* NeXT extensions */
-end_comment
-
-begin_function_decl
-name|tree
-name|build_encode_expr
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* Objective-C structures */
@@ -509,14 +108,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CLASS_BINFO_ELTS
-value|6
+name|CLASS_LANG_SLOT_ELTS
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|PROTOCOL_BINFO_ELTS
+name|PROTOCOL_LANG_SLOT_ELTS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|OBJC_INFO_SLOT_ELTS
 value|2
 end_define
 
@@ -531,7 +137,7 @@ name|KEYWORD_KEY_NAME
 parameter_list|(
 name|DECL
 parameter_list|)
-value|((DECL)->decl.name)
+value|((DECL)->decl_minimal.name)
 end_define
 
 begin_define
@@ -541,7 +147,7 @@ name|KEYWORD_ARG_NAME
 parameter_list|(
 name|DECL
 parameter_list|)
-value|((DECL)->decl.arguments)
+value|((DECL)->decl_non_common.arguments)
 end_define
 
 begin_comment
@@ -555,7 +161,7 @@ name|METHOD_SEL_NAME
 parameter_list|(
 name|DECL
 parameter_list|)
-value|((DECL)->decl.name)
+value|((DECL)->decl_minimal.name)
 end_define
 
 begin_define
@@ -565,7 +171,7 @@ name|METHOD_SEL_ARGS
 parameter_list|(
 name|DECL
 parameter_list|)
-value|((DECL)->decl.arguments)
+value|((DECL)->decl_non_common.arguments)
 end_define
 
 begin_define
@@ -575,7 +181,17 @@ name|METHOD_ADD_ARGS
 parameter_list|(
 name|DECL
 parameter_list|)
-value|((DECL)->decl.result)
+value|((DECL)->decl_non_common.result)
+end_define
+
+begin_define
+define|#
+directive|define
+name|METHOD_ADD_ARGS_ELLIPSIS_P
+parameter_list|(
+name|DECL
+parameter_list|)
+value|((DECL)->decl_common.lang_flag_0)
 end_define
 
 begin_define
@@ -585,7 +201,7 @@ name|METHOD_DEFINITION
 parameter_list|(
 name|DECL
 parameter_list|)
-value|((DECL)->decl.initial)
+value|((DECL)->decl_common.initial)
 end_define
 
 begin_define
@@ -595,7 +211,7 @@ name|METHOD_ENCODING
 parameter_list|(
 name|DECL
 parameter_list|)
-value|((DECL)->decl.context)
+value|((DECL)->decl_minimal.context)
 end_define
 
 begin_comment
@@ -629,7 +245,7 @@ name|CLASS_IVARS
 parameter_list|(
 name|CLASS
 parameter_list|)
-value|TREE_VEC_ELT (TYPE_BINFO (CLASS), 0)
+value|TREE_VEC_ELT (TYPE_LANG_SLOT_1 (CLASS), 0)
 end_define
 
 begin_define
@@ -639,7 +255,7 @@ name|CLASS_RAW_IVARS
 parameter_list|(
 name|CLASS
 parameter_list|)
-value|TREE_VEC_ELT (TYPE_BINFO (CLASS), 1)
+value|TREE_VEC_ELT (TYPE_LANG_SLOT_1 (CLASS), 1)
 end_define
 
 begin_define
@@ -669,7 +285,7 @@ name|CLASS_STATIC_TEMPLATE
 parameter_list|(
 name|CLASS
 parameter_list|)
-value|TREE_VEC_ELT (TYPE_BINFO (CLASS), 2)
+value|TREE_VEC_ELT (TYPE_LANG_SLOT_1 (CLASS), 2)
 end_define
 
 begin_define
@@ -679,7 +295,7 @@ name|CLASS_CATEGORY_LIST
 parameter_list|(
 name|CLASS
 parameter_list|)
-value|TREE_VEC_ELT (TYPE_BINFO (CLASS), 3)
+value|TREE_VEC_ELT (TYPE_LANG_SLOT_1 (CLASS), 3)
 end_define
 
 begin_define
@@ -689,17 +305,7 @@ name|CLASS_PROTOCOL_LIST
 parameter_list|(
 name|CLASS
 parameter_list|)
-value|TREE_VEC_ELT (TYPE_BINFO (CLASS), 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLASS_OWN_IVARS
-parameter_list|(
-name|CLASS
-parameter_list|)
-value|TREE_VEC_ELT (TYPE_BINFO (CLASS), 5)
+value|TREE_VEC_ELT (TYPE_LANG_SLOT_1 (CLASS), 4)
 end_define
 
 begin_define
@@ -719,7 +325,7 @@ name|PROTOCOL_LIST
 parameter_list|(
 name|CLASS
 parameter_list|)
-value|TREE_VEC_ELT (TYPE_BINFO (CLASS), 0)
+value|TREE_VEC_ELT (TYPE_LANG_SLOT_1 (CLASS), 0)
 end_define
 
 begin_define
@@ -749,7 +355,7 @@ name|PROTOCOL_FORWARD_DECL
 parameter_list|(
 name|CLASS
 parameter_list|)
-value|TREE_VEC_ELT (TYPE_BINFO (CLASS), 1)
+value|TREE_VEC_ELT (TYPE_LANG_SLOT_1 (CLASS), 1)
 end_define
 
 begin_define
@@ -763,44 +369,94 @@ value|TREE_USED (CLASS)
 end_define
 
 begin_comment
-comment|/* We need to distinguish TYPE_PROTOCOL_LISTs from TYPE_CONTEXTs, both of which    are stored in the same accessor slot.  */
+comment|/* ObjC-specific information pertaining to RECORD_TYPEs are stored in    the LANG_SPECIFIC structures, which may itself need allocating first.  */
+end_comment
+
+begin_comment
+comment|/* The following three macros must be overridden (in objcp/objcp-decl.h)    for Objective-C++.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TYPE_PROTOCOL_LIST
+name|TYPE_OBJC_INFO
+parameter_list|(
+name|TYPE
+parameter_list|)
+value|TYPE_LANG_SPECIFIC (TYPE)->objc_info
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_OBJC_TYPE_LANG_SPECIFIC
+value|sizeof (struct lang_type)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALLOC_OBJC_TYPE_LANG_SPECIFIC
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|do {									\     TYPE_LANG_SPECIFIC (NODE) = GGC_CNEW (struct lang_type);		\   } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_HAS_OBJC_INFO
 parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|((TYPE_CHECK (TYPE)->type.context			\&& TREE_CODE ((TYPE)->type.context) == TREE_LIST)	\ 	 ? (TYPE)->type.context : NULL_TREE)
+value|(TYPE_LANG_SPECIFIC (TYPE)&& TYPE_OBJC_INFO (TYPE))
 end_define
 
 begin_define
 define|#
 directive|define
-name|SET_TYPE_PROTOCOL_LIST
+name|TYPE_OBJC_INTERFACE
 parameter_list|(
 name|TYPE
-parameter_list|,
-name|P
 parameter_list|)
-value|(TYPE_CHECK (TYPE)->type.context = (P))
+value|TREE_VEC_ELT (TYPE_OBJC_INFO (TYPE), 0)
 end_define
-
-begin_comment
-comment|/* Set by `continue_class' and checked by `is_public'.  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|TREE_STATIC_TEMPLATE
+name|TYPE_OBJC_PROTOCOL_LIST
 parameter_list|(
-name|record_type
+name|TYPE
 parameter_list|)
-value|(TREE_PUBLIC (record_type))
+value|TREE_VEC_ELT (TYPE_OBJC_INFO (TYPE), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INIT_TYPE_OBJC_INFO
+parameter_list|(
+name|TYPE
+parameter_list|)
+define|\
+value|do							\ 	  {							\ 	    if (!TYPE_LANG_SPECIFIC (TYPE))			\ 	      ALLOC_OBJC_TYPE_LANG_SPECIFIC(TYPE);		\ 	    if (!TYPE_OBJC_INFO (TYPE))				\ 	      TYPE_OBJC_INFO (TYPE)				\ 		= make_tree_vec (OBJC_INFO_SLOT_ELTS);		\ 	  }							\ 	while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DUP_TYPE_OBJC_INFO
+parameter_list|(
+name|DST
+parameter_list|,
+name|SRC
+parameter_list|)
+define|\
+value|do							\ 	  {							\ 	    ALLOC_OBJC_TYPE_LANG_SPECIFIC(DST);			\ 	    if (TYPE_LANG_SPECIFIC (SRC))			\ 	      memcpy (TYPE_LANG_SPECIFIC (DST),			\ 		      TYPE_LANG_SPECIFIC (SRC),			\ 		      SIZEOF_OBJC_TYPE_LANG_SPECIFIC);		\ 	    TYPE_OBJC_INFO (DST)				\ 	      = make_tree_vec (OBJC_INFO_SLOT_ELTS);		\ 	  }							\ 	while (0)
 end_define
 
 begin_define
@@ -808,10 +464,10 @@ define|#
 directive|define
 name|TYPED_OBJECT
 parameter_list|(
-name|type
+name|TYPE
 parameter_list|)
 define|\
-value|(TREE_CODE (type) == RECORD_TYPE&& TREE_STATIC_TEMPLATE (type))
+value|(TREE_CODE (TYPE) == RECORD_TYPE			\&& TYPE_HAS_OBJC_INFO (TYPE)				\&& TYPE_OBJC_INTERFACE (TYPE))
 end_define
 
 begin_define
@@ -819,9 +475,21 @@ define|#
 directive|define
 name|OBJC_TYPE_NAME
 parameter_list|(
-name|type
+name|TYPE
 parameter_list|)
-value|TYPE_NAME(type)
+value|TYPE_NAME(TYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OBJC_SET_TYPE_NAME
+parameter_list|(
+name|TYPE
+parameter_list|,
+name|NAME
+parameter_list|)
+value|(TYPE_NAME (TYPE) = NAME)
 end_define
 
 begin_comment
@@ -1027,6 +695,11 @@ name|tree
 name|meta_decl
 decl_stmt|;
 comment|/* _OBJC_METACLASS_<my_name>; */
+name|BOOL_BITFIELD
+name|has_cxx_cdtors
+range|:
+literal|1
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -1047,8 +720,12 @@ name|imp_list
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|int
 name|imp_count
 decl_stmt|;
@@ -1058,8 +735,12 @@ begin_comment
 comment|/* `@implementation' */
 end_comment
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|int
 name|cat_count
 decl_stmt|;
@@ -1068,6 +749,29 @@ end_decl_stmt
 begin_comment
 comment|/* `@category' */
 end_comment
+
+begin_extern
+extern|extern GTY((
+end_extern
+
+begin_decl_stmt
+unit|))
+name|enum
+name|tree_code
+name|objc_inherit_code
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern GTY((
+end_extern
+
+begin_decl_stmt
+unit|))
+name|int
+name|objc_public_flag
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Objective-C/Objective-C++ global tree enumeration.  */
@@ -1085,13 +789,11 @@ name|OCTI_SELF_ID
 block|,
 name|OCTI_UCMD_ID
 block|,
-name|OCTI_UNUSED_LIST
-block|,
-name|OCTI_ELLIPSIS_NODE
-block|,
 name|OCTI_SELF_DECL
 block|,
 name|OCTI_UMSG_DECL
+block|,
+name|OCTI_UMSG_FAST_DECL
 block|,
 name|OCTI_UMSG_SUPER_DECL
 block|,
@@ -1155,7 +857,7 @@ name|OCTI_SEL_TABLE_DECL
 block|,
 name|OCTI_MODULES_DECL
 block|,
-name|OCTI_STRG_DECL
+name|OCTI_GNU_INIT_DECL
 block|,
 name|OCTI_INTF_CTX
 block|,
@@ -1185,6 +887,12 @@ name|OCTI_METH_TEMPL
 block|,
 name|OCTI_IVAR_TEMPL
 block|,
+name|OCTI_METH_LIST_TEMPL
+block|,
+name|OCTI_METH_PROTO_LIST_TEMPL
+block|,
+name|OCTI_IVAR_LIST_TEMPL
+block|,
 name|OCTI_SYMTAB_TEMPL
 block|,
 name|OCTI_MODULE_TEMPL
@@ -1192,6 +900,8 @@ block|,
 name|OCTI_SUPER_TEMPL
 block|,
 name|OCTI_OBJ_REF
+block|,
+name|OCTI_CLS_REF
 block|,
 name|OCTI_METH_PROTO_TEMPL
 block|,
@@ -1203,7 +913,9 @@ name|OCTI_OBJ_ID
 block|,
 name|OCTI_CLS_ID
 block|,
-name|OCTI_ID_ID
+name|OCTI_ID_NAME
+block|,
+name|OCTI_CLASS_NAME
 block|,
 name|OCTI_CNST_STR_ID
 block|,
@@ -1212,6 +924,8 @@ block|,
 name|OCTI_CNST_STR_GLOB_ID
 block|,
 name|OCTI_STRING_CLASS_DECL
+block|,
+name|OCTI_INTERNAL_CNST_STR_TYPE
 block|,
 name|OCTI_SUPER_DECL
 block|,
@@ -1247,9 +961,17 @@ name|OCTI_RETHROW_EXCEPTION_DECL
 block|,
 name|OCTI_EVAL_ONCE_DECL
 block|,
-name|OCTI_EXCEPTION_BLK_STACK
-block|,
 name|OCTI_CATCH_TYPE
+block|,
+name|OCTI_EXECCLASS_DECL
+block|,
+name|OCTI_ASSIGN_IVAR_DECL
+block|,
+name|OCTI_ASSIGN_IVAR_FAST_DECL
+block|,
+name|OCTI_ASSIGN_GLOBAL_DECL
+block|,
+name|OCTI_ASSIGN_STRONGCAST_DECL
 block|,
 name|OCTI_MAX
 block|}
@@ -1313,20 +1035,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|unused_list
-value|objc_global_trees[OCTI_UNUSED_LIST]
-end_define
-
-begin_define
-define|#
-directive|define
-name|objc_ellipsis_node
-value|objc_global_trees[OCTI_ELLIPSIS_NODE]
-end_define
-
-begin_define
-define|#
-directive|define
 name|self_decl
 value|objc_global_trees[OCTI_SELF_DECL]
 end_define
@@ -1336,6 +1044,13 @@ define|#
 directive|define
 name|umsg_decl
 value|objc_global_trees[OCTI_UMSG_DECL]
+end_define
+
+begin_define
+define|#
+directive|define
+name|umsg_fast_decl
+value|objc_global_trees[OCTI_UMSG_FAST_DECL]
 end_define
 
 begin_define
@@ -1377,21 +1092,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|super_type
+name|objc_super_type
 value|objc_global_trees[OCTI_SUPER_TYPE]
 end_define
 
 begin_define
 define|#
 directive|define
-name|selector_type
+name|objc_selector_type
 value|objc_global_trees[OCTI_SEL_TYPE]
 end_define
 
 begin_define
 define|#
 directive|define
-name|id_type
+name|objc_object_type
 value|objc_global_trees[OCTI_ID_TYPE]
 end_define
 
@@ -1405,14 +1120,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|instance_type
+name|objc_instance_type
 value|objc_global_trees[OCTI_NST_TYPE]
 end_define
 
 begin_define
 define|#
 directive|define
-name|protocol_type
+name|objc_protocol_type
 value|objc_global_trees[OCTI_PROTO_TYPE]
 end_define
 
@@ -1428,18 +1143,29 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|(TYPE_MAIN_VARIANT (TYPE) == TYPE_MAIN_VARIANT (id_type))
+value|(TREE_CODE (TYPE) == POINTER_TYPE				\&& (TYPE_MAIN_VARIANT (TREE_TYPE (TYPE))			\ 	     == TREE_TYPE (objc_object_type)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|IS_PROTOCOL_QUALIFIED_ID
+name|IS_CLASS
 parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|(IS_ID (TYPE)&& TYPE_PROTOCOL_LIST (TYPE))
+value|(TREE_CODE (TYPE) == POINTER_TYPE				\&& (TYPE_MAIN_VARIANT (TREE_TYPE (TYPE))			\ 	     == TREE_TYPE (objc_class_type)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_PROTOCOL_QUALIFIED_UNTYPED
+parameter_list|(
+name|TYPE
+parameter_list|)
+define|\
+value|((IS_ID (TYPE) || IS_CLASS (TYPE))				\&& TYPE_HAS_OBJC_INFO (TREE_TYPE (TYPE))			\&& TYPE_OBJC_PROTOCOL_LIST (TREE_TYPE (TYPE)))
 end_define
 
 begin_define
@@ -1450,7 +1176,7 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|(TREE_CODE (TYPE) == POINTER_TYPE&& TREE_TYPE (TYPE) == objc_super_template)
+value|(TREE_CODE (TYPE) == POINTER_TYPE				\&& TREE_TYPE (TYPE) == objc_super_template)
 end_define
 
 begin_define
@@ -1616,8 +1342,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|UOBJC_STRINGS_decl
-value|objc_global_trees[OCTI_STRG_DECL]
+name|GNU_INIT_decl
+value|objc_global_trees[OCTI_GNU_INIT_DECL]
 end_define
 
 begin_comment
@@ -1830,16 +1556,45 @@ end_define
 begin_define
 define|#
 directive|define
-name|objc_exception_block_stack
-define|\
-value|objc_global_trees[OCTI_EXCEPTION_BLK_STACK]
+name|objc_catch_type
+value|objc_global_trees[OCTI_CATCH_TYPE]
 end_define
 
 begin_define
 define|#
 directive|define
-name|objc_catch_type
-value|objc_global_trees[OCTI_CATCH_TYPE]
+name|execclass_decl
+value|objc_global_trees[OCTI_EXECCLASS_DECL]
+end_define
+
+begin_define
+define|#
+directive|define
+name|objc_assign_ivar_decl
+value|objc_global_trees[OCTI_ASSIGN_IVAR_DECL]
+end_define
+
+begin_define
+define|#
+directive|define
+name|objc_assign_ivar_fast_decl
+define|\
+value|objc_global_trees[OCTI_ASSIGN_IVAR_FAST_DECL]
+end_define
+
+begin_define
+define|#
+directive|define
+name|objc_assign_global_decl
+value|objc_global_trees[OCTI_ASSIGN_GLOBAL_DECL]
+end_define
+
+begin_define
+define|#
+directive|define
+name|objc_assign_strong_cast_decl
+define|\
+value|objc_global_trees[OCTI_ASSIGN_STRONGCAST_DECL]
 end_define
 
 begin_define
@@ -1854,6 +1609,28 @@ define|#
 directive|define
 name|objc_ivar_template
 value|objc_global_trees[OCTI_IVAR_TEMPL]
+end_define
+
+begin_define
+define|#
+directive|define
+name|objc_method_list_ptr
+value|objc_global_trees[OCTI_METH_LIST_TEMPL]
+end_define
+
+begin_define
+define|#
+directive|define
+name|objc_method_proto_list_ptr
+define|\
+value|objc_global_trees[OCTI_METH_PROTO_LIST_TEMPL]
+end_define
+
+begin_define
+define|#
+directive|define
+name|objc_ivar_list_ptr
+value|objc_global_trees[OCTI_IVAR_LIST_TEMPL]
 end_define
 
 begin_define
@@ -1882,6 +1659,13 @@ define|#
 directive|define
 name|objc_object_reference
 value|objc_global_trees[OCTI_OBJ_REF]
+end_define
+
+begin_define
+define|#
+directive|define
+name|objc_class_reference
+value|objc_global_trees[OCTI_CLS_REF]
 end_define
 
 begin_define
@@ -1923,8 +1707,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|objc_id_id
-value|objc_global_trees[OCTI_ID_ID]
+name|objc_object_name
+value|objc_global_trees[OCTI_ID_NAME]
+end_define
+
+begin_define
+define|#
+directive|define
+name|objc_class_name
+value|objc_global_trees[OCTI_CLASS_NAME]
 end_define
 
 begin_define
@@ -1954,6 +1745,13 @@ define|#
 directive|define
 name|string_class_decl
 value|objc_global_trees[OCTI_STRING_CLASS_DECL]
+end_define
+
+begin_define
+define|#
+directive|define
+name|internal_const_str_type
+value|objc_global_trees[OCTI_INTERNAL_CNST_STR_TYPE]
 end_define
 
 begin_define

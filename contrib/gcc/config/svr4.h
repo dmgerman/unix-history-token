@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for some    generic System V Release 4 system.    Copyright (C) 1991, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     To use this file, make up a line like that in config.gcc:  	tm_file="$tm_file elfos.h svr4.h MACHINE/svr4.h"     where MACHINE is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file MACHINE/svr4.h, put any really    system-specific defines (or overrides of defines) which you find that    you need. */
+comment|/* Operating system specific defines to be used when targeting GCC for some    generic System V Release 4 system.    Copyright (C) 1991, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.     To use this file, make up a line like that in config.gcc:  	tm_file="$tm_file elfos.h svr4.h MACHINE/svr4.h"     where MACHINE is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file MACHINE/svr4.h, put any really    system-specific defines (or overrides of defines) which you find that    you need. */
 end_comment
 
 begin_comment
@@ -293,7 +293,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TARGET_HAS_F_SETLKW
+name|TARGET_POSIX_IO
 end_define
 
 end_unit

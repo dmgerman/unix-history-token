@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* HOST_WIDE_INT definitions for the GNU compiler.    Copyright (C) 1998, 2002 Free Software Foundation, Inc.     This file is part of GCC.     Provide definitions for macros which depend on HOST_BITS_PER_INT    and HOST_BITS_PER_LONG.  */
+comment|/* HOST_WIDE_INT definitions for the GNU compiler.    Copyright (C) 1998, 2002, 2004 Free Software Foundation, Inc.     This file is part of GCC.     Provide definitions for macros which depend on HOST_BITS_PER_INT    and HOST_BITS_PER_LONG.  */
 end_comment
 
 begin_ifndef
@@ -46,6 +46,28 @@ directive|define
 name|HOST_BITS_PER_LONG
 value|(CHAR_BIT * SIZEOF_LONG)
 end_define
+
+begin_comment
+comment|/* The string that should be inserted into a printf style format to    indicate a "long long" operand.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HOST_LONG_LONG_FORMAT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HOST_LONG_LONG_FORMAT
+value|"ll"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* If HAVE_LONG_LONG and SIZEOF_LONG_LONG aren't defined, but    GCC_VERSION>= 3000, assume this is the second or later stage of a    bootstrap, we do have long long, and it's 64 bits.  (This is    required by C99; we do have some ports that violate that assumption    but they're all cross-compile-only.)  Just in case, force a    constraint violation if that assumption is incorrect.  */
@@ -325,7 +347,7 @@ begin_define
 define|#
 directive|define
 name|HOST_WIDE_INT_PRINT
-value|"ll"
+value|HOST_LONG_LONG_FORMAT
 end_define
 
 begin_define
@@ -343,7 +365,8 @@ begin_define
 define|#
 directive|define
 name|HOST_WIDE_INT_PRINT_DOUBLE_HEX
-value|"0x%llx%016llx"
+define|\
+value|"0x%" HOST_LONG_LONG_FORMAT "x%016" HOST_LONG_LONG_FORMAT "x"
 end_define
 
 begin_endif
@@ -534,35 +557,135 @@ begin_define
 define|#
 directive|define
 name|HOST_WIDEST_INT_PRINT_DEC
-value|"%lld"
+value|"%" HOST_LONG_LONG_FORMAT "d"
 end_define
 
 begin_define
 define|#
 directive|define
 name|HOST_WIDEST_INT_PRINT_DEC_C
-value|"%lldLL"
+value|"%" HOST_LONG_LONG_FORMAT "dLL"
 end_define
 
 begin_define
 define|#
 directive|define
 name|HOST_WIDEST_INT_PRINT_UNSIGNED
-value|"%llu"
+value|"%" HOST_LONG_LONG_FORMAT "u"
 end_define
 
 begin_define
 define|#
 directive|define
 name|HOST_WIDEST_INT_PRINT_HEX
-value|"0x%llx"
+value|"0x%" HOST_LONG_LONG_FORMAT "x"
 end_define
 
 begin_define
 define|#
 directive|define
 name|HOST_WIDEST_INT_PRINT_DOUBLE_HEX
-value|"0x%llx%016llx"
+define|\
+value|"0x%" HOST_LONG_LONG_FORMAT "x%016" HOST_LONG_LONG_FORMAT "x"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Define HOST_WIDEST_FAST_INT to the widest integer type supported    efficiently in hardware.  (That is, the widest integer type that fits    in a hardware register.)  Normally this is "long" but on some hosts it    should be "long long" or "__int64".  This is no convenient way to    autodect this, so such systems must set a flag in config.host; see there    for details.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_LONG_LONG_FOR_WIDEST_FAST_INT
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LONG_LONG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HOST_WIDEST_FAST_INT
+value|long long
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_BITS_PER_WIDEST_FAST_INT
+value|HOST_BITS_PER_LONGLONG
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE___INT64
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|HOST_WIDEST_FAST_INT
+value|__int64
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_BITS_PER_WIDEST_FAST_INT
+value|HOST_BITS_PER___INT64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+literal|"Your host said it wantted to use long long or __int64 but neither"
+end_error
+
+begin_error
+error|#
+directive|error
+literal|"exist"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|HOST_WIDEST_FAST_INT
+value|long
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_BITS_PER_WIDEST_FAST_INT
+value|HOST_BITS_PER_LONG
 end_define
 
 begin_endif

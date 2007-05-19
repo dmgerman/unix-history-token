@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for code generation pass of GNU compiler.    Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for code generation pass of GNU compiler.    Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006     Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -172,6 +172,9 @@ name|OTI_smul_widen
 block|,
 name|OTI_umul_widen
 block|,
+comment|/* Widening multiply of one unsigned and one signed operand.  */
+name|OTI_usmul_widen
+block|,
 comment|/* Signed divide */
 name|OTI_sdiv
 block|,
@@ -188,6 +191,11 @@ comment|/* Signed remainder */
 name|OTI_smod
 block|,
 name|OTI_umod
+block|,
+comment|/* Floating point remainder functions */
+name|OTI_fmod
+block|,
+name|OTI_drem
 block|,
 comment|/* Convert float to integer in float fmt */
 name|OTI_ftrunc
@@ -240,6 +248,9 @@ block|,
 comment|/* Move, preserving high part of register.  */
 name|OTI_movstrict
 block|,
+comment|/* Move, with a misaligned memory.  */
+name|OTI_movmisalign
+block|,
 comment|/* Unary operations */
 comment|/* Negation */
 name|OTI_neg
@@ -268,34 +279,80 @@ block|,
 comment|/* Square root */
 name|OTI_sqrt
 block|,
+comment|/* Sine-Cosine */
+name|OTI_sincos
+block|,
 comment|/* Sine */
 name|OTI_sin
+block|,
+comment|/* Inverse sine */
+name|OTI_asin
 block|,
 comment|/* Cosine */
 name|OTI_cos
 block|,
+comment|/* Inverse cosine */
+name|OTI_acos
+block|,
 comment|/* Exponential */
 name|OTI_exp
+block|,
+comment|/* Base-10 Exponential */
+name|OTI_exp10
+block|,
+comment|/* Base-2 Exponential */
+name|OTI_exp2
+block|,
+comment|/* Exponential - 1*/
+name|OTI_expm1
+block|,
+comment|/* Load exponent of a floating point number */
+name|OTI_ldexp
+block|,
+comment|/* Radix-independent exponent */
+name|OTI_logb
+block|,
+name|OTI_ilogb
 block|,
 comment|/* Natural Logarithm */
 name|OTI_log
 block|,
+comment|/* Base-10 Logarithm */
+name|OTI_log10
+block|,
+comment|/* Base-2 Logarithm */
+name|OTI_log2
+block|,
+comment|/* logarithm of 1 plus argument */
+name|OTI_log1p
+block|,
 comment|/* Rounding functions */
 name|OTI_floor
 block|,
+name|OTI_lfloor
+block|,
 name|OTI_ceil
 block|,
-name|OTI_trunc
+name|OTI_lceil
+block|,
+name|OTI_btrunc
 block|,
 name|OTI_round
 block|,
 name|OTI_nearbyint
+block|,
+name|OTI_rint
+block|,
+name|OTI_lrint
 block|,
 comment|/* Tangent */
 name|OTI_tan
 block|,
 comment|/* Inverse tangent */
 name|OTI_atan
+block|,
+comment|/* Copy sign */
+name|OTI_copysign
 block|,
 comment|/* Compare insn; two operands.  */
 name|OTI_cmp
@@ -337,6 +394,29 @@ block|,
 comment|/* Conditional add instruction.  */
 name|OTI_addcc
 block|,
+comment|/* Reduction operations on a vector operand.  */
+name|OTI_reduc_smax
+block|,
+name|OTI_reduc_umax
+block|,
+name|OTI_reduc_smin
+block|,
+name|OTI_reduc_umin
+block|,
+name|OTI_reduc_splus
+block|,
+name|OTI_reduc_uplus
+block|,
+comment|/* Summation, with result machine mode one or more wider than args.  */
+name|OTI_ssum_widen
+block|,
+name|OTI_usum_widen
+block|,
+comment|/* Dot product, with result machine mode one or more wider than args.  */
+name|OTI_sdot_prod
+block|,
+name|OTI_udot_prod
+block|,
 comment|/* Set specified field of vector operand.  */
 name|OTI_vec_set
 block|,
@@ -345,6 +425,17 @@ name|OTI_vec_extract
 block|,
 comment|/* Initialize vector operand.  */
 name|OTI_vec_init
+block|,
+comment|/* Whole vector shift. The shift amount is in bits.  */
+name|OTI_vec_shl
+block|,
+name|OTI_vec_shr
+block|,
+comment|/* Extract specified elements from vectors, for vector load.  */
+name|OTI_vec_realign_load
+block|,
+comment|/* Perform a raise to the power of integer.  */
+name|OTI_powi
 block|,
 name|OTI_MAX
 block|}
@@ -431,6 +522,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|usmul_widen_optab
+value|(optab_table[OTI_usmul_widen])
+end_define
+
+begin_define
+define|#
+directive|define
 name|sdiv_optab
 value|(optab_table[OTI_sdiv])
 end_define
@@ -482,6 +580,20 @@ define|#
 directive|define
 name|umod_optab
 value|(optab_table[OTI_umod])
+end_define
+
+begin_define
+define|#
+directive|define
+name|fmod_optab
+value|(optab_table[OTI_fmod])
+end_define
+
+begin_define
+define|#
+directive|define
+name|drem_optab
+value|(optab_table[OTI_drem])
 end_define
 
 begin_define
@@ -606,6 +718,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|movmisalign_optab
+value|(optab_table[OTI_movmisalign])
+end_define
+
+begin_define
+define|#
+directive|define
 name|neg_optab
 value|(optab_table[OTI_neg])
 end_define
@@ -683,8 +802,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|sincos_optab
+value|(optab_table[OTI_sincos])
+end_define
+
+begin_define
+define|#
+directive|define
 name|sin_optab
 value|(optab_table[OTI_sin])
+end_define
+
+begin_define
+define|#
+directive|define
+name|asin_optab
+value|(optab_table[OTI_asin])
 end_define
 
 begin_define
@@ -697,8 +830,57 @@ end_define
 begin_define
 define|#
 directive|define
+name|acos_optab
+value|(optab_table[OTI_acos])
+end_define
+
+begin_define
+define|#
+directive|define
 name|exp_optab
 value|(optab_table[OTI_exp])
+end_define
+
+begin_define
+define|#
+directive|define
+name|exp10_optab
+value|(optab_table[OTI_exp10])
+end_define
+
+begin_define
+define|#
+directive|define
+name|exp2_optab
+value|(optab_table[OTI_exp2])
+end_define
+
+begin_define
+define|#
+directive|define
+name|expm1_optab
+value|(optab_table[OTI_expm1])
+end_define
+
+begin_define
+define|#
+directive|define
+name|ldexp_optab
+value|(optab_table[OTI_ldexp])
+end_define
+
+begin_define
+define|#
+directive|define
+name|logb_optab
+value|(optab_table[OTI_logb])
+end_define
+
+begin_define
+define|#
+directive|define
+name|ilogb_optab
+value|(optab_table[OTI_ilogb])
 end_define
 
 begin_define
@@ -711,8 +893,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|log10_optab
+value|(optab_table[OTI_log10])
+end_define
+
+begin_define
+define|#
+directive|define
+name|log2_optab
+value|(optab_table[OTI_log2])
+end_define
+
+begin_define
+define|#
+directive|define
+name|log1p_optab
+value|(optab_table[OTI_log1p])
+end_define
+
+begin_define
+define|#
+directive|define
 name|floor_optab
 value|(optab_table[OTI_floor])
+end_define
+
+begin_define
+define|#
+directive|define
+name|lfloor_optab
+value|(optab_table[OTI_lfloor])
 end_define
 
 begin_define
@@ -725,8 +935,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|lceil_optab
+value|(optab_table[OTI_lceil])
+end_define
+
+begin_define
+define|#
+directive|define
 name|btrunc_optab
-value|(optab_table[OTI_trunc])
+value|(optab_table[OTI_btrunc])
 end_define
 
 begin_define
@@ -746,6 +963,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|rint_optab
+value|(optab_table[OTI_rint])
+end_define
+
+begin_define
+define|#
+directive|define
+name|lrint_optab
+value|(optab_table[OTI_lrint])
+end_define
+
+begin_define
+define|#
+directive|define
 name|tan_optab
 value|(optab_table[OTI_tan])
 end_define
@@ -755,6 +986,13 @@ define|#
 directive|define
 name|atan_optab
 value|(optab_table[OTI_atan])
+end_define
+
+begin_define
+define|#
+directive|define
+name|copysign_optab
+value|(optab_table[OTI_copysign])
 end_define
 
 begin_define
@@ -872,6 +1110,76 @@ end_define
 begin_define
 define|#
 directive|define
+name|reduc_smax_optab
+value|(optab_table[OTI_reduc_smax])
+end_define
+
+begin_define
+define|#
+directive|define
+name|reduc_umax_optab
+value|(optab_table[OTI_reduc_umax])
+end_define
+
+begin_define
+define|#
+directive|define
+name|reduc_smin_optab
+value|(optab_table[OTI_reduc_smin])
+end_define
+
+begin_define
+define|#
+directive|define
+name|reduc_umin_optab
+value|(optab_table[OTI_reduc_umin])
+end_define
+
+begin_define
+define|#
+directive|define
+name|reduc_splus_optab
+value|(optab_table[OTI_reduc_splus])
+end_define
+
+begin_define
+define|#
+directive|define
+name|reduc_uplus_optab
+value|(optab_table[OTI_reduc_uplus])
+end_define
+
+begin_define
+define|#
+directive|define
+name|ssum_widen_optab
+value|(optab_table[OTI_ssum_widen])
+end_define
+
+begin_define
+define|#
+directive|define
+name|usum_widen_optab
+value|(optab_table[OTI_usum_widen])
+end_define
+
+begin_define
+define|#
+directive|define
+name|sdot_prod_optab
+value|(optab_table[OTI_sdot_prod])
+end_define
+
+begin_define
+define|#
+directive|define
+name|udot_prod_optab
+value|(optab_table[OTI_udot_prod])
+end_define
+
+begin_define
+define|#
+directive|define
 name|vec_set_optab
 value|(optab_table[OTI_vec_set])
 end_define
@@ -890,6 +1198,34 @@ name|vec_init_optab
 value|(optab_table[OTI_vec_init])
 end_define
 
+begin_define
+define|#
+directive|define
+name|vec_shl_optab
+value|(optab_table[OTI_vec_shl])
+end_define
+
+begin_define
+define|#
+directive|define
+name|vec_shr_optab
+value|(optab_table[OTI_vec_shr])
+end_define
+
+begin_define
+define|#
+directive|define
+name|vec_realign_load_optab
+value|(optab_table[OTI_vec_realign_load])
+end_define
+
+begin_define
+define|#
+directive|define
+name|powi_optab
+value|(optab_table[OTI_powi])
+end_define
+
 begin_comment
 comment|/* Conversion optabs have their own table and indexes.  */
 end_comment
@@ -898,25 +1234,25 @@ begin_enum
 enum|enum
 name|convert_optab_index
 block|{
-name|CTI_sext
+name|COI_sext
 block|,
-name|CTI_zext
+name|COI_zext
 block|,
-name|CTI_trunc
+name|COI_trunc
 block|,
-name|CTI_sfix
+name|COI_sfix
 block|,
-name|CTI_ufix
+name|COI_ufix
 block|,
-name|CTI_sfixtrunc
+name|COI_sfixtrunc
 block|,
-name|CTI_ufixtrunc
+name|COI_ufixtrunc
 block|,
-name|CTI_sfloat
+name|COI_sfloat
 block|,
-name|CTI_ufloat
+name|COI_ufloat
 block|,
-name|CTI_MAX
+name|COI_MAX
 block|}
 enum|;
 end_enum
@@ -930,7 +1266,7 @@ unit|))
 name|convert_optab
 name|convert_optab_table
 index|[
-name|CTI_MAX
+name|COI_MAX
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -939,63 +1275,63 @@ begin_define
 define|#
 directive|define
 name|sext_optab
-value|(convert_optab_table[CTI_sext])
+value|(convert_optab_table[COI_sext])
 end_define
 
 begin_define
 define|#
 directive|define
 name|zext_optab
-value|(convert_optab_table[CTI_zext])
+value|(convert_optab_table[COI_zext])
 end_define
 
 begin_define
 define|#
 directive|define
 name|trunc_optab
-value|(convert_optab_table[CTI_trunc])
+value|(convert_optab_table[COI_trunc])
 end_define
 
 begin_define
 define|#
 directive|define
 name|sfix_optab
-value|(convert_optab_table[CTI_sfix])
+value|(convert_optab_table[COI_sfix])
 end_define
 
 begin_define
 define|#
 directive|define
 name|ufix_optab
-value|(convert_optab_table[CTI_ufix])
+value|(convert_optab_table[COI_ufix])
 end_define
 
 begin_define
 define|#
 directive|define
 name|sfixtrunc_optab
-value|(convert_optab_table[CTI_sfixtrunc])
+value|(convert_optab_table[COI_sfixtrunc])
 end_define
 
 begin_define
 define|#
 directive|define
 name|ufixtrunc_optab
-value|(convert_optab_table[CTI_ufixtrunc])
+value|(convert_optab_table[COI_ufixtrunc])
 end_define
 
 begin_define
 define|#
 directive|define
 name|sfloat_optab
-value|(convert_optab_table[CTI_sfloat])
+value|(convert_optab_table[COI_sfloat])
 end_define
 
 begin_define
 define|#
 directive|define
 name|ufloat_optab
-value|(convert_optab_table[CTI_ufloat])
+value|(convert_optab_table[COI_ufloat])
 end_define
 
 begin_comment
@@ -1061,7 +1397,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/* Indexed by the rtx-code for a conditional (eg. EQ, LT,...)    gives the gen_function to make a branch to test that condition.  */
+comment|/* Indexed by the rtx-code for a conditional (e.g. EQ, LT,...)    gives the gen_function to make a branch to test that condition.  */
 end_comment
 
 begin_decl_stmt
@@ -1075,7 +1411,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Indexed by the rtx-code for a conditional (eg. EQ, LT,...)    gives the insn code to make a store-condition insn    to test that condition.  */
+comment|/* Indexed by the rtx-code for a conditional (e.g. EQ, LT,...)    gives the insn code to make a store-condition insn    to test that condition.  */
 end_comment
 
 begin_decl_stmt
@@ -1116,14 +1452,25 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This array records the insn_code of insns to perform block moves.  */
+comment|/* Indexed by the machine mode, gives the insn code for vector conditional    operation.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|enum
 name|insn_code
-name|movstr_optab
+name|vcond_gen_code
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|vcondu_gen_code
 index|[
 name|NUM_MACHINE_MODES
 index|]
@@ -1131,14 +1478,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This array records the insn_code of insns to perform block clears.  */
+comment|/* This array records the insn_code of insns to perform block moves.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|enum
 name|insn_code
-name|clrstr_optab
+name|movmem_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This array records the insn_code of insns to perform block sets.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|setmem_optab
 index|[
 name|NUM_MACHINE_MODES
 index|]
@@ -1164,7 +1526,284 @@ begin_decl_stmt
 specifier|extern
 name|enum
 name|insn_code
+name|cmpstrn_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
 name|cmpmem_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Synchronization primitives.  This first set is atomic operation for    which we don't care about the resulting value.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_add_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_sub_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_ior_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_and_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_xor_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_nand_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This second set is atomic operations in which we return the value    that existed in memory before the operation.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_old_add_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_old_sub_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_old_ior_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_old_and_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_old_xor_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_old_nand_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This third set is atomic operations in which we return the value    that resulted after performing the operation.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_new_add_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_new_sub_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_new_ior_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_new_and_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_new_xor_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_new_nand_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Atomic compare and swap.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_compare_and_swap
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_compare_and_swap_cc
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Atomic exchange with acquire semantics.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_lock_test_and_set
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Atomic clear with release semantics.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|sync_lock_release
 index|[
 name|NUM_MACHINE_MODES
 index|]
@@ -1175,6 +1814,62 @@ begin_comment
 comment|/* Define functions given in optabs.c.  */
 end_comment
 
+begin_function_decl
+specifier|extern
+name|rtx
+name|expand_widen_pattern_expr
+parameter_list|(
+name|tree
+name|exp
+parameter_list|,
+name|rtx
+name|op0
+parameter_list|,
+name|rtx
+name|op1
+parameter_list|,
+name|rtx
+name|wide_op
+parameter_list|,
+name|rtx
+name|target
+parameter_list|,
+name|int
+name|unsignedp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|expand_ternary_op
+parameter_list|(
+name|enum
+name|machine_mode
+name|mode
+parameter_list|,
+name|optab
+name|ternary_optab
+parameter_list|,
+name|rtx
+name|op0
+parameter_list|,
+name|rtx
+name|op1
+parameter_list|,
+name|rtx
+name|op2
+parameter_list|,
+name|rtx
+name|target
+parameter_list|,
+name|int
+name|unsignedp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Expand a binary operation given optab and rtx operands.  */
 end_comment
@@ -1183,6 +1878,30 @@ begin_function_decl
 specifier|extern
 name|rtx
 name|expand_binop
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|optab
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|int
+parameter_list|,
+name|enum
+name|optab_methods
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|force_expand_binop
 parameter_list|(
 name|enum
 name|machine_mode
@@ -1234,6 +1953,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Generate code to perform an operation on one operand with two results.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|expand_twoval_unop
+parameter_list|(
+name|optab
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Generate code to perform an operation on two operands with two results.  */
 end_comment
 
@@ -1253,6 +1994,31 @@ parameter_list|,
 name|rtx
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Generate code to perform an operation on two operands with two    results, using a library function.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|bool
+name|expand_twoval_binop_libfunc
+parameter_list|(
+name|optab
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|enum
+name|rtx_code
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1321,22 +2087,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Expand the complex absolute value operation.  */
+comment|/* Expand the copysign operation.  */
 end_comment
 
 begin_function_decl
 specifier|extern
 name|rtx
-name|expand_complex_abs
+name|expand_copysign
 parameter_list|(
-name|enum
-name|machine_mode
-parameter_list|,
 name|rtx
 parameter_list|,
 name|rtx
 parameter_list|,
-name|int
+name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1379,34 +2142,6 @@ name|rtx
 parameter_list|,
 name|rtx
 parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Emit one rtl instruction to store zero in specified rtx.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|emit_clr_insn
-parameter_list|(
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Emit one rtl insn to store 1 in specified rtx assuming it contains 0.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|emit_0_to_1_insn
-parameter_list|(
 name|rtx
 parameter_list|)
 function_decl|;
@@ -1456,6 +2191,23 @@ enum|;
 end_enum
 
 begin_comment
+comment|/* Return the optab used for computing the given operation on the type    given by the second argument.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|optab
+name|optab_for_tree_code
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Nonzero if a compare of mode MODE can be done straightforwardly    (without splitting it into pieces).  */
 end_comment
 
@@ -1472,28 +2224,6 @@ name|machine_mode
 parameter_list|,
 name|enum
 name|can_compare_purpose
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|prepare_operand
-parameter_list|(
-name|int
-parameter_list|,
-name|rtx
-parameter_list|,
-name|int
-parameter_list|,
-name|enum
-name|machine_mode
-parameter_list|,
-name|enum
-name|machine_mode
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1539,30 +2269,6 @@ name|enum
 name|machine_mode
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Initialize the tables that control conversion between fixed and    floating values.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|init_fixtab
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|init_floattab
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1640,6 +2346,54 @@ parameter_list|,
 name|rtx
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return tree if target supports vector operations for COND_EXPR.  */
+end_comment
+
+begin_function_decl
+name|bool
+name|expand_vec_cond_expr_p
+parameter_list|(
+name|tree
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Generate code for VEC_COND_EXPR.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|expand_vec_cond_expr
+parameter_list|(
+name|tree
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Generate code for VEC_LSHIFT_EXPR and VEC_RSHIFT_EXPR.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|expand_vec_shift_expr
+parameter_list|(
+name|tree
+parameter_list|,
+name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl

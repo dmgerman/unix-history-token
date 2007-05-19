@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Output VMS debug format symbol table information from GCC.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Douglas B. Rupp (rupp@gnat.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Output VMS debug format symbol table information from GCC.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Douglas B. Rupp (rupp@gnat.com).    Updated by Bernard W. Giroud (bgiroud@users.sourceforge.net).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"tree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"version.h"
 end_include
 
 begin_include
@@ -289,14 +295,36 @@ name|FILE_TABLE_INCREMENT
 value|64
 end_define
 
-begin_decl_stmt
-specifier|static
+begin_comment
+comment|/* A structure to hold basic information for the VMS end    routine.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|vms_func_struct
+block|{
+specifier|const
 name|char
 modifier|*
-modifier|*
-name|func_table
+name|vms_func_name
 decl_stmt|;
-end_decl_stmt
+name|unsigned
+name|funcdef_number
+decl_stmt|;
+block|}
+name|vms_func_node
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|vms_func_struct
+modifier|*
+name|vms_func_ref
+typedef|;
+end_typedef
 
 begin_decl_stmt
 specifier|static
@@ -320,6 +348,17 @@ directive|define
 name|FUNC_TABLE_INCREMENT
 value|256
 end_define
+
+begin_comment
+comment|/* A pointer to the base of a table that contains frame description    information for each routine.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|vms_func_ref
+name|func_table
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Local pointer to the name of the main input file.  Initialized in    avmdbgout_init.  */
@@ -931,6 +970,12 @@ name|vmsdbgout_decl
 block|,
 name|vmsdbgout_global_decl
 block|,
+name|debug_nothing_tree_int
+block|,
+comment|/* type_decl */
+name|debug_nothing_tree_tree
+block|,
+comment|/* imported_module_or_decl */
 name|debug_nothing_tree
 block|,
 comment|/* deferred_inline_function */
@@ -940,7 +985,16 @@ name|debug_nothing_rtx
 block|,
 comment|/* label */
 name|debug_nothing_int
+block|,
 comment|/* handle_pch */
+name|debug_nothing_rtx
+block|,
+comment|/* var_location */
+name|debug_nothing_void
+block|,
+comment|/* switch_text_section */
+literal|0
+comment|/* start_end_main_source_file */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1652,20 +1706,17 @@ block|{
 case|case
 name|PC
 case|:
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|flag_pic
-condition|)
+argument_list|)
+expr_stmt|;
 name|strcat
 argument_list|(
 name|str
 argument_list|,
 literal|","
 argument_list|)
-expr_stmt|;
-else|else
-name|abort
-argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -3215,12 +3266,24 @@ decl_stmt|;
 name|DST_PROLOG
 name|prolog
 decl_stmt|;
-name|rtnname
-operator|=
+name|vms_func_ref
+name|fde
+init|=
+operator|&
 name|func_table
 index|[
 name|rtnnum
 index|]
+decl_stmt|;
+name|rtnname
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|fde
+operator|->
+name|vms_func_name
 expr_stmt|;
 name|rtnnamelen
 operator|=
@@ -3567,7 +3630,9 @@ name|label
 argument_list|,
 name|FUNC_PROLOG_LABEL
 argument_list|,
-name|rtnnum
+name|fde
+operator|->
+name|funcdef_number
 argument_list|)
 expr_stmt|;
 name|totsize
@@ -3621,6 +3686,22 @@ index|]
 decl_stmt|;
 name|int
 name|totsize
+decl_stmt|;
+name|vms_func_ref
+name|fde
+init|=
+operator|&
+name|func_table
+index|[
+name|rtnnum
+index|]
+decl_stmt|;
+name|int
+name|corrected_rtnnum
+init|=
+name|fde
+operator|->
+name|funcdef_number
 decl_stmt|;
 name|totsize
 operator|=
@@ -3694,7 +3775,7 @@ name|label1
 argument_list|,
 name|FUNC_BEGIN_LABEL
 argument_list|,
-name|rtnnum
+name|corrected_rtnnum
 argument_list|)
 expr_stmt|;
 name|ASM_GENERATE_INTERNAL_LABEL
@@ -3703,7 +3784,7 @@ name|label2
 argument_list|,
 name|FUNC_END_LABEL
 argument_list|,
-name|rtnnum
+name|corrected_rtnnum
 argument_list|)
 expr_stmt|;
 name|totsize
@@ -5604,14 +5685,11 @@ name|debug_info_level
 operator|>
 name|DINFO_LEVEL_TERSE
 condition|)
-call|(
-modifier|*
 name|targetm
 operator|.
 name|asm_out
 operator|.
 name|internal_label
-call|)
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -5665,14 +5743,11 @@ name|debug_info_level
 operator|>
 name|DINFO_LEVEL_TERSE
 condition|)
-call|(
-modifier|*
 name|targetm
 operator|.
 name|asm_out
 operator|.
 name|internal_label
-call|)
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -5759,6 +5834,9 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
+name|vms_func_ref
+name|fde
+decl_stmt|;
 if|if
 condition|(
 name|write_symbols
@@ -5788,6 +5866,9 @@ name|FUNC_TABLE_INCREMENT
 expr_stmt|;
 name|func_table
 operator|=
+operator|(
+name|vms_func_ref
+operator|)
 name|xrealloc
 argument_list|(
 name|func_table
@@ -5796,23 +5877,35 @@ name|func_table_allocated
 operator|*
 sizeof|sizeof
 argument_list|(
-name|char
-operator|*
+name|vms_func_node
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* Add the new entry to the end of the function name table.  */
+name|fde
+operator|=
+operator|&
 name|func_table
 index|[
 name|func_table_in_use
 operator|++
 index|]
+expr_stmt|;
+name|fde
+operator|->
+name|vms_func_name
 operator|=
 name|xstrdup
 argument_list|(
 name|name
 argument_list|)
+expr_stmt|;
+name|fde
+operator|->
+name|funcdef_number
+operator|=
+name|current_function_funcdef_no
 expr_stmt|;
 block|}
 end_function
@@ -6349,14 +6442,11 @@ block|{
 name|dst_line_info_ref
 name|line_info
 decl_stmt|;
-call|(
-modifier|*
 name|targetm
 operator|.
 name|asm_out
 operator|.
 name|internal_label
-call|)
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -6597,14 +6687,16 @@ literal|1
 expr_stmt|;
 name|func_table
 operator|=
+operator|(
+name|vms_func_ref
+operator|)
 name|xcalloc
 argument_list|(
 name|FUNC_TABLE_INCREMENT
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|char
-operator|*
+name|vms_func_node
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6955,17 +7047,16 @@ name|DINFO_LEVEL_NONE
 condition|)
 return|return;
 comment|/* Output a terminator label for the .text section.  */
+name|switch_to_section
+argument_list|(
 name|text_section
-argument_list|()
+argument_list|)
 expr_stmt|;
-call|(
-modifier|*
 name|targetm
 operator|.
 name|asm_out
 operator|.
 name|internal_label
-call|)
 argument_list|(
 name|asm_out_file
 argument_list|,
@@ -6975,13 +7066,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Output debugging information.      Warning! Do not change the name of the .vmsdebug section without      changing it in the assembler also.  */
-name|named_section
+name|switch_to_section
 argument_list|(
-name|NULL_TREE
+name|get_named_section
+argument_list|(
+name|NULL
 argument_list|,
 literal|".vmsdebug"
 argument_list|,
 literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ASM_OUTPUT_ALIGN

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for    hosting on Windows32, using a Unix style C library and tools.    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Operating system specific defines to be used when targeting GCC for    hosting on Windows32, using a Unix style C library and tools.    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -655,7 +655,7 @@ define|#
 directive|define
 name|GCC_DRIVER_HOST_INITIALIZATION
 define|\
-value|do \ { \   mingw_scan(argc, argv, (char **)&spec_machine); \   } \ while (0)
+value|do \ { \   mingw_scan(argc, (const char * const *) argv, (char **)&spec_machine); \   } \ while (0)
 end_define
 
 begin_else
@@ -668,13 +668,41 @@ define|#
 directive|define
 name|GCC_DRIVER_HOST_INITIALIZATION
 define|\
-value|do \ { \   char *cprefix = concat (tooldir_base_prefix, spec_machine, \ 			  dir_separator_str, NULL); \   if (!IS_ABSOLUTE_PATH (cprefix)) \     cprefix = concat (standard_exec_prefix, spec_machine, dir_separator_str, \ 		      spec_version, dir_separator_str, tooldir_prefix, NULL); \   add_prefix (&exec_prefixes,\ 	      concat (cprefix, "../../../../", spec_machine, "/bin/", NULL), \ 	      "BINUTILS", PREFIX_PRIORITY_LAST, 0, NULL); \   add_prefix (&exec_prefixes, cprefix, \ 	      "BINUTILS", PREFIX_PRIORITY_LAST, 0, NULL); \   add_prefix (&startfile_prefixes,\ 	      concat (standard_startfile_prefix, "w32api", NULL),\ 	      "GCC", PREFIX_PRIORITY_LAST, 0, NULL);\   mingw_scan(argc, argv,&spec_machine); \   } \ while (0)
+value|do \ { \   char *cprefix = concat (tooldir_base_prefix, spec_machine, \ 			  dir_separator_str, NULL); \   if (!IS_ABSOLUTE_PATH (cprefix)) \     cprefix = concat (standard_exec_prefix, spec_machine, dir_separator_str, \ 		      spec_version, dir_separator_str, tooldir_prefix, NULL); \   add_prefix (&exec_prefixes,\ 	      concat (cprefix, "../../../../", spec_machine, "/bin/", NULL), \ 	      "BINUTILS", PREFIX_PRIORITY_LAST, 0, NULL); \   add_prefix (&exec_prefixes, cprefix, \ 	      "BINUTILS", PREFIX_PRIORITY_LAST, 0, NULL); \   add_prefix (&startfile_prefixes,\ 	      concat (standard_startfile_prefix, "w32api", NULL),\ 	      "GCC", PREFIX_PRIORITY_LAST, 0, NULL);\   mingw_scan(argc, (const char * const *) argv,&spec_machine); \   } \ while (0)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Binutils does not handle weak symbols from dlls correctly.  For now,    do not use them unnecessarily in gthr-posix.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GTHREAD_USE_WEAK
+value|0
+end_define
+
+begin_comment
+comment|/* Every program on cygwin links against cygwin1.dll which contains     the pthread routines.  There is no need to explicitly link them    and the -pthread flag is not recognized.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|GOMP_SELF_SPECS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|GOMP_SELF_SPECS
+value|""
+end_define
 
 end_unit
 

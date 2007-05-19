@@ -1,35 +1,120 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Rs6000 running LynxOS.    Copyright (C) 1995, 1996, 2000, 2002, 2003 Free Software Foundation, Inc.    Contributed by David Henkel-Wallace, Cygnus Support (gumby@cygnus.com)     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* Definitions for Rs6000 running LynxOS.    Copyright (C) 1995, 1996, 2000, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Contributed by David Henkel-Wallace, Cygnus Support (gumby@cygnus.com)    Rewritten by Adam Nemet, LynuxWorks Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/* Print subsidiary information on the compiler version in use.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_VERSION
-value|fprintf (stderr, " (LynxOS-RS/6000)");
-end_define
-
-begin_comment
-comment|/* LynxOS has signed chars, regardless of what most R/S 6000 systems do */
+comment|/* Override the definition in sysv4.h.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_SIGNED_CHAR
+name|TARGET_VERSION
 end_undef
 
 begin_define
 define|#
 directive|define
-name|DEFAULT_SIGNED_CHAR
-value|1
+name|TARGET_VERSION
+value|fputs (" (PowerPC/LynxOS)", stderr);
 end_define
+
+begin_comment
+comment|/* Undefine the definition to enable the LynxOS default from the    top-level lynx.h.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_EXTRA_SPECS
+end_undef
+
+begin_comment
+comment|/* Get rid off the spec definitions from rs6000/sysv4.h.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CPP_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_SPEC
+define|\
+value|"%{msoft-float: -D_SOFT_FLOAT} \  %(cpp_cpu) \  %(cpp_os_lynx)"
+end_define
+
+begin_comment
+comment|/* LynxOS only supports big-endian on PPC so we override the    definition from sysv4.h.  Since the LynxOS 4.0 compiler was set to    return every structure in memory regardless of their size we have    to emulate the same behavior here with disabling the SVR4 structure    returning.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CC1_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CC1_SPEC
+define|\
+value|"%{G*} %{mno-sdata:-msdata=none} \  %{maltivec:-mabi=altivec} \  -maix-struct-return"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_SPEC
+define|\
+value|"%(asm_cpu) \  %{.s: %{mregnames} %{mno-regnames}} \  %{.S: %{mregnames} %{mno-regnames}}"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|STARTFILE_SPEC
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ENDFILE_SPEC
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|LIB_SPEC
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|LINK_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LINK_SPEC
+define|\
+value|"%{!msdata=none:%{G*}} %{msdata=none:-G0} \  %(link_os_lynx)"
+end_define
+
+begin_comment
+comment|/* Override the definition from sysv4.h.  */
+end_comment
 
 begin_undef
 undef|#
@@ -43,153 +128,163 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do                                     \     {                                    \       builtin_assert ("cpu=rs6000");     \       builtin_assert ("machine=rs6000"); \       builtin_assert ("system=lynx");    \       builtin_assert ("system=unix");    \       builtin_define_std ("Lynx");       \       builtin_define ("_IBMR2");         \       builtin_define_std ("unix");       \       builtin_define_std ("rs6000");     \       builtin_define_std ("lynx");       \       builtin_define_std ("LYNX");       \     }                                    \   while (0)
+value|do						\     {						\       builtin_define ("__BIG_ENDIAN__");	\       builtin_define ("__powerpc__");		\       builtin_assert ("cpu=powerpc");		\       builtin_assert ("machine=powerpc");	\       builtin_define ("__PPC__");		\     }						\   while (0)
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|LINK_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LINK_SPEC
-value|"-T0x10001000 -H0x1000 -D0x20000000 -btextro -bhalt:4 -bnodelcsect -bnso -bro -bnoglink %{v} %{b*}"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|LIB_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-value|"%{mthreads:-L/lib/thread/}  \   %{msystem-v:-lc_v -lm.v}  \   %{!msystem-v:%{mposix:-lc_p} -lc -lm}"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|STARTFILE_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_SPEC
-value|"%{p:%{mthreads:thread/pinit.o%s}%{!mthreads:pinit.o%s}}%{!p:%{msystem-v:vinit.o%s -e_start}%{!msystem-v:%{mthreads:thread/init.o%s}%{!mthreads:init.o%s}}}"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|ENDFILE_SPEC
-end_undef
 
 begin_comment
-comment|/* This can become more refined as we have more powerpc options.  */
+comment|/* Override the rs6000.h definition.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|ASM_SPEC
+name|ASM_APP_ON
 end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_SPEC
-value|"-u %(asm_cpu)"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_SWITCHES
-define|\
-value|{"threads",		MASK_THREADS},		\     {"posix",		MASK_POSIX},		\     {"system-v",	MASK_SYSTEM_V},
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_OVERRIDE_OPTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_OVERRIDE_OPTIONS
-define|\
-value|do {								\   if (TARGET_SYSTEM_V&& profile_flag)				\     warning ("-msystem-v and -p are incompatible");		\   if (TARGET_SYSTEM_V&& TARGET_THREADS)			\     warning ("-msystem-v and -mthreads are incompatible");	\ } while (0)
+name|ASM_APP_ON
+value|"#APP\n"
 end_define
 
 begin_comment
-comment|/* For collect2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OBJECT_FORMAT_NONE
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|OBJECT_FORMAT_COFF
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|MD_EXEC_PREFIX
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|REAL_LD_FILE_NAME
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|REAL_STRIP_FILE_NAME
-end_undef
-
-begin_comment
-comment|/* LynxOS doesn't have mcount.  */
+comment|/* Override the rs6000.h definition.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|FUNCTION_PROFILER
+name|ASM_APP_OFF
 end_undef
 
 begin_define
 define|#
 directive|define
-name|FUNCTION_PROFILER
+name|ASM_APP_OFF
+value|"#NO_APP\n"
+end_define
+
+begin_comment
+comment|/* LynxOS does not do anything with .fixup plus let's not create    writable section for linkonce.r and linkonce.t.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|RELOCATABLE_NEEDS_FIXUP
+end_undef
+
+begin_comment
+comment|/* Override these from rs6000.h with the generic definition.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SIZE_TYPE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_ALIGN
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|PREFERRED_DEBUGGING_TYPE
+end_undef
+
+begin_comment
+comment|/* The file rs6000.c defines TARGET_HAVE_TLS unconditionally to the    value of HAVE_AS_TLS.  HAVE_AS_TLS is true as gas support for TLS    is detected by configure.  Override the definition to false.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_AS_TLS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|HAVE_AS_TLS
+value|0
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRT_BEGIN
+end_ifdef
+
+begin_comment
+comment|/* This function is part of crtbegin*.o which is at the beginning of    the link and is called from .fini which is usually toward the end    of the executable.  Make it longcall so that we don't limit the    text size of the executables to 32M.  */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|__do_global_dtors_aux
 parameter_list|(
-name|file
-parameter_list|,
-name|profile_label_no
+name|void
 parameter_list|)
-end_define
+function_decl|__attribute__
+parameter_list|(
+function_decl|(longcall
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CRT_BEGIN */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRT_END
+end_ifdef
+
+begin_comment
+comment|/* Similarly here.  This function resides in crtend*.o which is toward    to end of the link and is called from .init which is at the    beginning.  */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|__do_global_ctors_aux
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(longcall
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CRT_END */
+end_comment
 
 end_unit
 

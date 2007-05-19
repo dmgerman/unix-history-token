@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Specialized bits of code needed to support construction and    destruction of file-scope objects in C++ code.    Copyright (C) 1991, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  In addition to the permissions in the GNU General Public License, the Free Software Foundation gives you unlimited permission to link the compiled version of this file into combinations with other programs, and to distribute those combinations without any restriction coming from the use of this file.  (The General Public License restrictions do apply in other respects; for example, they cover modification of the file, and distribution when not linked into a combine executable.)  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Specialized bits of code needed to support construction and    destruction of file-scope objects in C++ code.    Copyright (C) 1991, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  In addition to the permissions in the GNU General Public License, the Free Software Foundation gives you unlimited permission to link the compiled version of this file into combinations with other programs, and to distribute those combinations without any restriction coming from the use of this file.  (The General Public License restrictions do apply in other respects; for example, they cover modification of the file, and distribution when not linked into a combine executable.)  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -8,11 +8,17 @@ comment|/* This file is a bit like libgcc2.c in that it is compiled    multiple 
 end_comment
 
 begin_comment
-comment|/* It is incorrect to include config.h here, because this file is being    compiled for the target, and hence definitions concerning only the host    do not apply.  */
+comment|/* Target machine header files require this define. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IN_LIBGCC2
+end_define
+
 begin_comment
-comment|/* We include auto-host.h here to get HAVE_GAS_HIDDEN.  This is    supposedly valid even though this is a "target" file.  */
+comment|/* FIXME: Including auto-host is incorrect, but until we have    identified the set of defines that need to go into auto-target.h,    this will have to do.  */
 end_comment
 
 begin_include
@@ -20,6 +26,42 @@ include|#
 directive|include
 file|"auto-host.h"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|gid_t
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|pid_t
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|rlim_t
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ssize_t
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|uid_t
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|vfork
+end_undef
 
 begin_include
 include|#
@@ -221,10 +263,7 @@ argument_list|(
 name|EH_FRAME_SECTION_NAME
 argument_list|)
 operator|&&
-name|defined
-argument_list|(
-name|HAVE_LD_RO_RW_SECTION_MIXING
-argument_list|)
+name|EH_TABLES_CAN_BE_READ_ONLY
 end_if
 
 begin_define
@@ -251,7 +290,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* We do not want to add the weak attribute to the declarations of these    routines in unwind-dw2-fde.h because that will cause the definition of    these symbols to be weak as well.     This exposes a core issue, how to handle creating weak references vs    how to create weak definitions.  Either we have to have the definition    of TARGET_WEAK_ATTRIBUTE be conditional in the shared header files or    have a second declaration if we want a function's references to be weak,    but not its definition.     Making TARGET_WEAK_ATTRIBUTE conditional seems like a good solution until    one thinks about scaling to larger problems -- ie, the condition under    which TARGET_WEAK_ATTRIBUTE is active will eventually get far too    complicated.     So, we take an approach similar to #pragma weak -- we have a second    declaration for functions that we want to have weak references.     Neither way is particularly good.  */
+comment|/* We do not want to add the weak attribute to the declarations of these    routines in unwind-dw2-fde.h because that will cause the definition of    these symbols to be weak as well.     This exposes a core issue, how to handle creating weak references vs    how to create weak definitions.  Either we have to have the definition    of TARGET_WEAK_ATTRIBUTE be conditional in the shared header files or    have a second declaration if we want a function's references to be weak,    but not its definition.     Making TARGET_WEAK_ATTRIBUTE conditional seems like a good solution until    one thinks about scaling to larger problems -- i.e., the condition under    which TARGET_WEAK_ATTRIBUTE is active will eventually get far too    complicated.     So, we take an approach similar to #pragma weak -- we have a second    declaration for functions that we want to have weak references.     Neither way is particularly good.  */
 end_comment
 
 begin_comment
@@ -760,11 +799,19 @@ begin_comment
 comment|/* JCR_SECTION_NAME */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INIT_SECTION_ASM_OP
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INIT_ARRAY_SECTION_ASM_OP
+argument_list|)
+end_if
 
 begin_ifdef
 ifdef|#
@@ -775,6 +822,34 @@ end_ifdef
 begin_comment
 comment|/* Declare the __dso_handle variable.  It should have a unique value    in every shared-object; in a main program its value is zero.  The    object should in any case be protected.  This means the instance    in one DSO or the main program is not used in another object.  The    dynamic linker takes care of this.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TARGET_LIBGCC_SDATA_SECTION
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|__dso_handle
+name|__attribute__
+argument_list|(
+operator|(
+name|__section__
+argument_list|(
+name|TARGET_LIBGCC_SDATA_SECTION
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -877,6 +952,9 @@ argument_list|(
 name|void
 argument_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|FINI_ARRAY_SECTION_ASM_OP
 specifier|static
 name|func_ptr
 modifier|*
@@ -886,12 +964,15 @@ name|__DTOR_LIST__
 operator|+
 literal|1
 decl_stmt|;
+name|func_ptr
+name|f
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* !defined(FINI_ARRAY_SECTION_ASM_OP)  */
 specifier|static
 name|_Bool
 name|completed
-decl_stmt|;
-name|func_ptr
-name|f
 decl_stmt|;
 if|if
 condition|(
@@ -917,6 +998,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|FINI_ARRAY_SECTION_ASM_OP
+comment|/* If we are using .fini_array then destructors will be run via that      mechanism.  */
+else|#
+directive|else
+comment|/* !defined (FINI_ARRAY_SECTION_ASM_OP) */
 while|while
 condition|(
 operator|(
@@ -934,6 +1022,9 @@ name|f
 argument_list|()
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* !defined(FINI_ARRAY_SECTION_ASM_OP) */
 ifdef|#
 directive|ifdef
 name|USE_EH_FRAME_REGISTRY
@@ -976,6 +1067,12 @@ begin_comment
 comment|/* Stick a call to __do_global_dtors_aux into the .fini section.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FINI_SECTION_ASM_OP
+end_ifdef
+
 begin_macro
 name|CRT_CALL_STATIC_FUNCTION
 argument_list|(
@@ -984,6 +1081,47 @@ argument_list|,
 argument|__do_global_dtors_aux
 argument_list|)
 end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !defined(FINI_SECTION_ASM_OP) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|func_ptr
+name|__do_global_dtors_aux_fini_array_entry
+index|[]
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|,
+name|section
+argument_list|(
+literal|".fini_array"
+argument_list|)
+operator|)
+argument_list|)
+init|=
+block|{
+name|__do_global_dtors_aux
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(FINI_SECTION_ASM_OP) */
+end_comment
 
 begin_if
 if|#
@@ -1089,19 +1227,42 @@ name|__JCR_LIST__
 index|[
 literal|0
 index|]
-operator|&&
-name|_Jv_RegisterClasses
 condition|)
+block|{
+name|void
+function_decl|(
+modifier|*
+name|register_classes
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+init|=
 name|_Jv_RegisterClasses
+function_decl|;
+asm|__asm ("" : "+r" (register_classes));
+if|if
+condition|(
+name|register_classes
+condition|)
+name|register_classes
 argument_list|(
 name|__JCR_LIST__
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* JCR_SECTION_NAME */
 block|}
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INIT_SECTION_ASM_OP
+end_ifdef
 
 begin_macro
 name|CRT_CALL_STATIC_FUNCTION
@@ -1111,6 +1272,47 @@ argument_list|,
 argument|frame_dummy
 argument_list|)
 end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* defined(INIT_SECTION_ASM_OP) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|func_ptr
+name|__frame_dummy_init_array_entry
+index|[]
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|,
+name|section
+argument_list|(
+literal|".init_array"
+argument_list|)
+operator|)
+argument_list|)
+init|=
+block|{
+name|frame_dummy
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(INIT_SECTION_ASM_OP) */
+end_comment
 
 begin_endif
 endif|#
@@ -1351,14 +1553,31 @@ name|__JCR_LIST__
 index|[
 literal|0
 index|]
-operator|&&
-name|_Jv_RegisterClasses
 condition|)
+block|{
+name|void
+function_decl|(
+modifier|*
+name|register_classes
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+init|=
 name|_Jv_RegisterClasses
+function_decl|;
+asm|__asm ("" : "+r" (register_classes));
+if|if
+condition|(
+name|register_classes
+condition|)
+name|register_classes
 argument_list|(
 name|__JCR_LIST__
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -1799,8 +2018,21 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|INIT_SECTION_ASM_OP
+name|INIT_ARRAY_SECTION_ASM_OP
 end_ifdef
+
+begin_comment
+comment|/* If we are using .init_array, there is nothing to do.  */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|INIT_SECTION_ASM_OP
+argument_list|)
+end_elif
 
 begin_ifdef
 ifdef|#

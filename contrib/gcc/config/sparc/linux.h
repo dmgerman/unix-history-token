@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for SPARC running Linux-based GNU systems with ELF.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Eddie C. Dost (ecd@skynet.be)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for SPARC running Linux-based GNU systems with ELF.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.    Contributed by Eddie C. Dost (ecd@skynet.be)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -9,7 +9,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do						\     {						\ 	builtin_define_std ("unix");		\ 	builtin_define_std ("linux");		\ 	builtin_define ("__gnu_linux__");	\ 	builtin_assert ("system=linux");	\ 	builtin_assert ("system=unix");		\ 	builtin_assert ("system=posix");	\     }						\   while (0)
+value|do						\     {						\       builtin_define_std ("unix");		\       builtin_define_std ("linux");		\       builtin_define ("__gnu_linux__");		\       builtin_assert ("system=linux");		\       builtin_assert ("system=unix");		\       builtin_assert ("system=posix");		\       if (TARGET_LONG_DOUBLE_128)       	\ 	builtin_define ("__LONG_DOUBLE_128__");	\     }						\   while (0)
 end_define
 
 begin_comment
@@ -44,26 +44,12 @@ directive|undef
 name|STARTFILE_SPEC
 end_undef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_GNULIBC_1
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_SPEC
-define|\
-value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
-end_define
-
-begin_elif
-elif|#
-directive|elif
+begin_if
+if|#
+directive|if
 name|defined
 name|HAVE_LD_PIE
-end_elif
+end_if
 
 begin_define
 define|#
@@ -159,20 +145,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|SUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_SWITCHES
-define|\
-value|{"long-double-64", -MASK_LONG_DOUBLE_128, N_("Use 64 bit long doubles") }, \ {"long-double-128", MASK_LONG_DOUBLE_128, N_("Use 128 bit long doubles") },
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|SIZE_TYPE
 end_undef
 
@@ -228,72 +200,19 @@ directive|undef
 name|CPP_SUBTARGET_SPEC
 end_undef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_GNULIBC_1
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|CPP_SUBTARGET_SPEC
 define|\
-value|"%{fPIC|fPIE|fpic|fpie:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} \ %{mlong-double-128:-D__LONG_DOUBLE_128__}"
+value|"%{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CPP_SUBTARGET_SPEC
-define|\
-value|"%{fPIC|fPIE|fpic|fpie:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} \ %{pthread:-D_REENTRANT} %{mlong-double-128:-D__LONG_DOUBLE_128__}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
 directive|undef
 name|LIB_SPEC
 end_undef
-
-begin_comment
-comment|/* We no longer link with libc_p.a or libg.a by default. If you    want to profile or debug the GNU/Linux C library, please add    -lc_p or -ggdb to LDFLAGS at the link time, respectively.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_GNULIBC_1
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-define|\
-value|"%{!shared: %{p:-lgmon} %{pg:-lgmon} %{profile:-lgmon -lc_p} \      %{!profile:%{!ggdb:-lc} %{ggdb:-lg}}}"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -303,29 +222,6 @@ define|\
 value|"%{pthread:-lpthread} \    %{shared:-lc} \    %{!shared:%{mieee-fp:-lieee} %{profile:-lc_p}%{!profile:-lc}}"
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-define|\
-value|"%{!shared: \      %{mieee-fp:-lieee} %{p:-lgmon -lc_p} %{pg:-lgmon -lc_p} \        %{!p:%{!pg:%{!g*:-lc} %{g*:-lg}}}}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Provide a LINK_SPEC appropriate for GNU/Linux.  Here we provide support    for the special GCC options -static and -shared, which allow us to    link things in one of these three modes by applying the appropriate    combinations of options at link-time. We like to support here for    as many of the other GNU linker options as possible. But I don't    have the time to search for those flags. I am sure how to add    support for -soname shared_object_name. H.J.     I took out %{v:%{!V:-V}}. It is too much :-(. They can use    -Wl,-V.     When the -shared link option is used a final link is not being    done.  */
 end_comment
@@ -334,23 +230,36 @@ begin_comment
 comment|/* If ELF is the default format, we should not use /lib/elf.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|LINK_SPEC
-end_undef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_GNULIBC_1
-end_ifdef
+begin_define
+define|#
+directive|define
+name|GLIBC_DYNAMIC_LINKER
+value|"/lib/ld-linux.so.2"
+end_define
 
 begin_define
 define|#
 directive|define
-name|LINK_SPEC
-value|"-m elf32_sparc -Y P,/usr/lib %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.1}} \         %{static:-static}}}"
+name|UCLIBC_DYNAMIC_LINKER
+value|"/lib/ld-uClibc.so.0"
+end_define
+
+begin_if
+if|#
+directive|if
+name|UCLIBC_DEFAULT
+end_if
+
+begin_define
+define|#
+directive|define
+name|CHOOSE_DYNAMIC_LINKER
+parameter_list|(
+name|G
+parameter_list|,
+name|U
+parameter_list|)
+value|"%{mglibc:%{muclibc:%e-mglibc and -muclibc used together}" G ";:" U "}"
 end_define
 
 begin_else
@@ -361,14 +270,40 @@ end_else
 begin_define
 define|#
 directive|define
-name|LINK_SPEC
-value|"-m elf32_sparc -Y P,/usr/lib %{shared:-shared} \   %{!mno-relax:%{!r:-relax}} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.2}} \         %{static:-static}}}"
+name|CHOOSE_DYNAMIC_LINKER
+parameter_list|(
+name|G
+parameter_list|,
+name|U
+parameter_list|)
+value|"%{muclibc:%{mglibc:%e-mglibc and -muclibc used together}" U ";:" G "}"
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|LINUX_DYNAMIC_LINKER
+define|\
+value|CHOOSE_DYNAMIC_LINKER (GLIBC_DYNAMIC_LINKER, UCLIBC_DYNAMIC_LINKER)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LINK_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LINK_SPEC
+value|"-m elf32_sparc -Y P,/usr/lib %{shared:-shared} \   %{!mno-relax:%{!r:-relax}} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker " LINUX_DYNAMIC_LINKER "}} \         %{static:-static}}}"
+end_define
 
 begin_comment
 comment|/* The sun bundled assembler doesn't accept -Yd, (and neither does gas).    It's safe to pass -s always, even if -g is not used.  */
@@ -458,31 +393,6 @@ value|"."
 end_define
 
 begin_comment
-comment|/* This is how to output a reference to an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_INTERNAL_LABELREF
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_INTERNAL_LABELREF
-parameter_list|(
-name|FILE
-parameter_list|,
-name|PREFIX
-parameter_list|,
-name|NUM
-parameter_list|)
-define|\
-value|fprintf (FILE, ".L%s%d", PREFIX, NUM)
-end_define
-
-begin_comment
 comment|/* This is how to store into the string LABEL    the symbol_ref name of an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.    This is suitable for output with `assemble_name'.  */
 end_comment
 
@@ -519,17 +429,6 @@ define|#
 directive|define
 name|LONG_DOUBLE_TYPE_SIZE
 value|(TARGET_LONG_DOUBLE_128 ? 128 : 64)
-end_define
-
-begin_comment
-comment|/* Constant which presents upper bound of the above value.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_LONG_DOUBLE_TYPE_SIZE
-value|128
 end_define
 
 begin_comment
@@ -582,12 +481,6 @@ end_define
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|USE_GNULIBC_1
-argument_list|)
-operator|&&
 name|defined
 argument_list|(
 name|HAVE_LD_EH_FRAME_HDR
@@ -675,28 +568,21 @@ directive|undef
 name|DTORS_SECTION_ASM_OP
 end_undef
 
-begin_define
-define|#
-directive|define
-name|TARGET_ASM_FILE_END
-value|file_end_indicate_exec_stack
-end_define
-
 begin_comment
-comment|/* Determine whether the the entire c99 runtime is present in the    runtime library.  */
+comment|/* Determine whether the entire c99 runtime is present in the    runtime library.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TARGET_C99_FUNCTIONS
-value|1
+value|(OPTION_GLIBC)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TARGET_HAS_F_SETLKW
+name|TARGET_POSIX_IO
 end_define
 
 begin_undef
@@ -714,30 +600,94 @@ value|"%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}"
 end_define
 
 begin_comment
-comment|/* Do code reading to identify a signal frame, and set the frame    state data appropriately.  See unwind-dw2.c for the structs.  */
+comment|/* Use --as-needed -lgcc_s for eh support.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LD_AS_NEEDED
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|USE_LD_AS_NEEDED
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MD_UNWIND_SUPPORT
+value|"config/sparc/linux-unwind.h"
+end_define
+
+begin_comment
+comment|/* Linux currently uses RMO in uniprocessor mode, which is equivalent to    TMO, and TMO in multiprocessor mode.  But they reserve the right to    change their minds.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SPARC_RELAXED_ORDERING
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SPARC_RELAXED_ORDERING
+value|true
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|NEED_INDICATE_EXEC_STACK
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NEED_INDICATE_EXEC_STACK
+value|1
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TARGET_LIBC_PROVIDES_SSP
+end_ifdef
+
+begin_comment
+comment|/* sparc glibc provides __stack_chk_guard in [%g7 + 0x14].  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MD_FALLBACK_FRAME_STATE_FOR
-parameter_list|(
-name|CONTEXT
-parameter_list|,
-name|FS
-parameter_list|,
-name|SUCCESS
-parameter_list|)
-define|\
-value|do {									\     unsigned int *pc_ = (CONTEXT)->ra;					\     int new_cfa_, i_, oldstyle_;					\     int regs_off_, fpu_save_off_;					\     int fpu_save_, this_cfa_;						\ 									\     if (pc_[1] != 0x91d02010)
-comment|/* ta 0x10 */
-value|\       break;								\     if (pc_[0] == 0x821020d8)
-comment|/* mov NR_sigreturn, %g1 */
-value|\       oldstyle_ = 1;							\     else if (pc_[0] == 0x82102065)
-comment|/* mov NR_rt_sigreturn, %g1 */
-value|\       oldstyle_ = 0;							\     else								\       break;								\     if (oldstyle_)							\       {									\         regs_off_ = 96;							\         fpu_save_off_ = regs_off_ + (4 * 4) + (16 * 4);			\       }									\     else								\       {									\         regs_off_ = 96 + 128;						\         fpu_save_off_ = regs_off_ + (4 * 4) + (16 * 4) + (2 * 4);	\       }									\     this_cfa_ = (int) (CONTEXT)->cfa;					\     new_cfa_ = *(int *)(((CONTEXT)->cfa) + (regs_off_+(4*4)+(14 * 4)));	\     fpu_save_ = *(int *)((this_cfa_) + (fpu_save_off_));		\     (FS)->cfa_how = CFA_REG_OFFSET;					\     (FS)->cfa_reg = 14;							\     (FS)->cfa_offset = new_cfa_ - (int) (CONTEXT)->cfa;			\     for (i_ = 1; i_< 16; ++i_)						\       {									\         if (i_ == 14)							\           continue;							\ 	(FS)->regs.reg[i_].how = REG_SAVED_OFFSET;			\ 	(FS)->regs.reg[i_].loc.offset =					\ 	   this_cfa_ + (regs_off_+(4 * 4)+(i_ * 4)) - new_cfa_;		\       }									\     for (i_ = 0; i_< 16; ++i_)						\       {									\ 	(FS)->regs.reg[i_ + 16].how = REG_SAVED_OFFSET;			\ 	(FS)->regs.reg[i_ + 16].loc.offset =				\ 	  this_cfa_ + (i_ * 4) - new_cfa_;				\       }									\     if (fpu_save_)							\       {									\ 	for (i_ = 0; i_< 32; ++i_)					\ 	  {								\ 	    (FS)->regs.reg[i_ + 32].how = REG_SAVED_OFFSET;		\ 	    (FS)->regs.reg[i_ + 32].loc.offset =			\ 	      (fpu_save_ + (i_ * 4)) - new_cfa_;			\ 	  }								\       }									\
-comment|/* Stick return address into %g0, same trick Alpha uses.  */
-value|\     (FS)->regs.reg[0].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[0].loc.offset = this_cfa_+(regs_off_+4)-new_cfa_;	\     (FS)->retaddr_column = 0;						\     goto SUCCESS;							\   } while (0)
+name|TARGET_THREAD_SSP_OFFSET
+value|0x14
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Define if long doubles should be mangled as 'g'.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_ALTERNATE_LONG_DOUBLE_MANGLING
 end_define
 
 end_unit

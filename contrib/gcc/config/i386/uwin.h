@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for    hosting on U/WIN (Windows32), using GNU tools and the Windows32 API     Library, as distinct from winnt.h, which is used to build GCC for use     with a windows style library and tool set and uses the Microsoft tools.    Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.    Contributed by Mumit Khan<khan@xraylith.wisc.edu>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Operating system specific defines to be used when targeting GCC for    hosting on U/WIN (Windows32), using GNU tools and the Windows32 API     Library, as distinct from winnt.h, which is used to build GCC for use     with a windows style library and tool set and uses the Microsoft tools.    Copyright (C) 1999, 2002, 2003, 2004 Free Software Foundation, Inc.    Contributed by Mumit Khan<khan@xraylith.wisc.edu>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -78,17 +78,6 @@ directive|define
 name|LIB_SPEC
 define|\
 value|"%{pg:-lgmon} %{mwindows:-luser32 -lgdi32 -lcomdlg32} -lkernel32 -ladvapi32"
-end_define
-
-begin_comment
-comment|/* This is needed in g77spec.c for now. Will be removed in the future.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WIN32_UWIN_TARGET
-value|1
 end_define
 
 begin_comment

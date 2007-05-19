@@ -1,126 +1,368 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target independent definitions for LynxOS using gas and gnu ld.    Copyright (C) 1993, 1994, 1995, 1996, 1999, 2000, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target independent definitions for LynxOS.    Copyright (C) 1993, 1994, 1995, 1996, 1999, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/* LynxOS is a multi-platform Unix, similar to SVR3, but not identical.  */
+comment|/* In this file we set up defaults that can be chosen by<target>/lynx.h files.  A target-specific lynx.h file can decide    either to define and override these definitions or to use them by    ensuring they are undefined at this point.  If we were to #undef    them here we might accidentally disable some target-specific    defines.  */
 end_comment
 
-begin_comment
-comment|/* Define various macros, depending on the combination of flags.  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXTRA_OS_LYNX_TARGET_SPECS
+end_ifndef
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
+name|EXTRA_OS_LYNX_TARGET_SPECS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXTRA_OS_LYNX_SPECS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EXTRA_OS_LYNX_SPECS
+define|\
+value|{ "cpp_os_lynx", CPP_OS_LYNX_SPEC }, \   { "lib_os_lynx", LIB_OS_LYNX_SPEC }, \   { "link_os_lynx", LINK_OS_LYNX_SPEC }, \   { "startfile_os_lynx", STARTFILE_OS_LYNX_SPEC }, \   { "endfile_os_lynx", ENDFILE_OS_LYNX_SPEC }, \   EXTRA_OS_LYNX_TARGET_SPECS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SUBTARGET_EXTRA_SPECS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_SPECS
+value|EXTRA_OS_LYNX_SPECS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|CPP_SPEC
-end_undef
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{mthreads:-D_MULTITHREADED}  \   %{mposix:-D_POSIX_SOURCE}  \   %{msystem-v:-I/usr/include_v}"
+value|"%(cpp_cpu) %(cpp_os_lynx)"
 end_define
 
-begin_comment
-comment|/* No asm spec needed, since using GNU assembler always.  */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_comment
-comment|/* No linker spec needed, since using GNU linker always.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|LIB_SPEC
-end_undef
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|LIB_SPEC
-value|"%{mthreads:-L/lib/thread/}  \   %{msystem-v:-lc_v}  \   %{!msystem-v:%{mposix:-lc_p} -lc -lm}"
+value|"%(lib_os_lynx)"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINK_SPEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LINK_SPEC
+value|"%(link_os_lynx)"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STARTFILE_SPEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+value|"%(startfile_os_lynx)"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ENDFILE_SPEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_SPEC
+value|"%(endfile_os_lynx)"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CPP_OS_LYNX_SPEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CPP_OS_LYNX_SPEC
+define|\
+value|"%{mthreads: \    %{mlegacy-threads: \      %ecannot use mthreads and mlegacy-threads together}} \  %{mthreads: -D_MULTITHREADED} \  %{mlegacy-threads: -D_THREADS_POSIX4ad4} \  -Asystem=lynx -Asystem=unix -D__Lynx__ -D__unix__"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LIB_OS_LYNX_SPEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LIB_OS_LYNX_SPEC
+define|\
+value|"%{mlegacy-threads:-lposix-pre1c} -lm -lc"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* Set the appropriate names for the Lynx startfiles.  */
+comment|/* We link static executables for LynxOS by default unless -mshared is    used when linking an executable.  Along the same line, we link to    shared libraries when linking a shared object by default unless    -static is used.     We have to pass in our -L options here otherwise the translated    startfile directories (%D) will take priority over this.    Furthermore since we have to pass in -L options here we have to    make sure that -L options provided by the user take priority over    everything we specify.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|STARTFILE_SPEC
-end_undef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINK_OS_LYNX_SPEC
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|STARTFILE_SPEC
-value|"%{p:%{mthreads:thread/pinit1.o%s}%{!mthreads:pinit1.o%s}}%{!p:%{msystem-v:vinit1.o%s -e_start}%{!msystem-v:%{mthreads:thread/init1.o%s}%{!mthreads:init1.o%s}}}"
+name|LINK_OS_LYNX_SPEC
+define|\
+value|"%{shared} %{static} \  %{mshared: %{static: %ecannot use mshared and static together}} \  %{!mshared: %{!shared: %{!static: -static}}} \  %{L*} \  %{mthreads: \    %{mshared: -L/lib/thread/shlib -rpath /lib/thread/shlib} \    %{shared: \      %{!static: -L/lib/thread/shlib -rpath /lib/thread/shlib} \    %{!mshared: -L/lib/thread}} \    %{shared: %{static: -L/lib/thread}}} \  %{!mthreads: \    %{mshared: -L/lib/shlib -rpath /lib/shlib} \    %{shared: -L/lib/shlib -rpath /lib/shlib}} \  %{mlegacy-threads:-lposix-pre1c} -lm -lc"
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|ENDFILE_SPEC
-end_undef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STARTFILE_OS_LYNX_SPEC
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ENDFILE_SPEC
-value|"%{p:_etext.o%s}%{!p:initn.o%s}"
+name|STARTFILE_OS_LYNX_SPEC
+define|\
+value|"%{!shared: \    %{!mthreads: \      %{p:gcrt1.o%s} %{pg:gcrt1.o%s} \      %{!p:%{!pg:crt1.o%s}}} \    %{mthreads: \      %{p:thread/gcrt1.o%s} %{pg:thread/gcrt1.o%s} \      %{!p:%{!pg:thread/crt1.o%s }}}}\  %{mthreads: thread/crti.o%s} %{!mthreads: crti.o%s} \  %{!shared: crtbegin.o%s} \  %{shared: crtbeginS.o%s}"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ENDFILE_OS_LYNX_SPEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_OS_LYNX_SPEC
+define|\
+value|"%{!shared: crtend.o%s} \  %{shared: crtendS.o%s} \  %{mthreads: thread/crtn.o%s} %{!mthreads: crtn.o%s}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* Override the svr3 versions.  */
+comment|/* Define the actual types of some ANSI-mandated types.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|WCHAR_TYPE
-end_undef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIZE_TYPE
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|WCHAR_TYPE
+name|SIZE_TYPE
+value|"unsigned int"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PTRDIFF_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PTRDIFF_TYPE
 value|"int"
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|PTRDIFF_TYPE
-end_undef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WCHAR_TYPE
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|PTRDIFF_TYPE
+name|WCHAR_TYPE
 value|"long int"
 end_define
 
-begin_comment
-comment|/* We want to output DBX (stabs) debugging information normally.  */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WCHAR_TYPE_SIZE
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|DBX_DEBUGGING_INFO
-value|1
+name|WCHAR_TYPE_SIZE
+value|BITS_PER_WORD
 end_define
 
-begin_undef
-undef|#
-directive|undef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Define ASM_OUTPUT_ALIGN to use the .balign directive rather that    the .align directive with GAS.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ASM_OUTPUT_ALIGN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ALIGN
+parameter_list|(
+name|FILE
+parameter_list|,
+name|LOG
+parameter_list|)
+define|\
+value|do							\     {							\       if ((LOG) != 0)					\ 	fprintf ((FILE), "\t.balign %d\n", 1<< (LOG));	\     }							\   while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Keep the *_DEBUGGING_INFO defines from elfos.h except that stabs is    the default on LynxOS.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|PREFERRED_DEBUGGING_TYPE
-end_undef
+end_ifndef
 
 begin_define
 define|#
@@ -129,256 +371,48 @@ name|PREFERRED_DEBUGGING_TYPE
 value|DBX_DEBUG
 end_define
 
-begin_comment
-comment|/* It is convenient to be able to generate standard coff debugging    if requested via -gcoff.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SDB_DEBUGGING_INFO
-value|1
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* Be function-relative for block and source line stab directives.  */
+comment|/* We have C++ support in our system headers.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DBX_BLOCKS_FUNCTION_RELATIVE
-value|1
-end_define
-
-begin_comment
-comment|/* but, to make this work, functions must appear prior to line info */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_IMPLICIT_EXTERN_C
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|DBX_FUNCTION_FIRST
+name|NO_IMPLICIT_EXTERN_C
 end_define
 
-begin_comment
-comment|/* Generate a blank trailing N_SO to mark the end of the .o file, since    we can't depend upon the linker to mark .o file boundaries with    embedded stabs.  */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TARGET_POSIX_IO
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|DBX_OUTPUT_MAIN_SOURCE_FILE_END
-parameter_list|(
-name|FILE
-parameter_list|,
-name|FILENAME
-parameter_list|)
-define|\
-value|fprintf (FILE,							\ 	   "\t.text\n\t.stabs \"\",%d,0,0,Letext\nLetext:\n", N_SO)
+name|TARGET_POSIX_IO
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_SOURCE_LINE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_SOURCE_LINE
-parameter_list|(
-name|file
-parameter_list|,
-name|line
-parameter_list|,
-name|counter
-parameter_list|)
-define|\
-value|{ fprintf (file, ".stabn 68,0,%d,.LM%d-",		\ 	     line, counter);				\     assemble_name (file,				\ 		   XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0)); \     fprintf (file, "\n.LM%d:\n", counter); }
-end_define
-
-begin_comment
-comment|/* Handle #pragma pack and sometimes #pragma weak.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HANDLE_SYSV_PRAGMA
-value|1
-end_define
-
-begin_comment
-comment|/* Some additional command-line options.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_THREADS
-value|(target_flags& MASK_THREADS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MASK_THREADS
-value|0x40000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_POSIX
-value|(target_flags& MASK_POSIX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MASK_POSIX
-value|0x20000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_SYSTEM_V
-value|(target_flags& MASK_SYSTEM_V)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MASK_SYSTEM_V
-value|0x10000000
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_SWITCHES
-define|\
-value|{"threads",		MASK_THREADS},		\     {"posix",		MASK_POSIX},		\     {"system-v",	MASK_SYSTEM_V},
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_OVERRIDE_OPTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_OVERRIDE_OPTIONS
-define|\
-value|do {								\   if (TARGET_SYSTEM_V&& profile_flag)				\     warning ("-msystem-v and -p are incompatible");		\   if (TARGET_SYSTEM_V&& TARGET_THREADS)			\     warning ("-msystem-v and -mthreads are incompatible");	\ } while (0)
-end_define
-
-begin_comment
-comment|/* Since init.o et al put all sorts of stuff into the init section,    we can't use the standard init section support in crtbegin.o.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|INIT_SECTION_ASM_OP
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTIONS
-value|in_fini
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTION_FUNCTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTION_FUNCTIONS
-define|\
-value|FINI_SECTION_FUNCTION
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CTORS_SECTION_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CTORS_SECTION_ASM_OP
-value|"\t.section\t.ctors"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|DTORS_SECTION_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DTORS_SECTION_ASM_OP
-value|"\t.section\t.dtors"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|DO_GLOBAL_CTORS_BODY
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|DO_GLOBAL_DTORS_BODY
-end_undef
-
-begin_comment
-comment|/* LynxOS doesn't have mcount.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|FUNCTION_PROFILER
-end_undef
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_PROFILER
-parameter_list|(
-name|file
-parameter_list|,
-name|profile_label_no
-parameter_list|)
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -44,34 +44,28 @@ name|int
 name|__v2si
 name|__attribute__
 typedef|((
-name|__mode__
-typedef|(
-name|__V2SI__
-typedef|)));
+name|vector_size
+typedef|(8)));
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
+name|short
 name|__v4hi
 name|__attribute__
 typedef|((
-name|__mode__
-typedef|(
-name|__V4HI__
-typedef|)));
+name|vector_size
+typedef|(8)));
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
+name|char
 name|__v8qi
 name|__attribute__
 typedef|((
-name|__mode__
-typedef|(
-name|__V8QI__
-typedef|)));
+name|vector_size
+typedef|(8)));
 end_typedef
 
 begin_comment
@@ -1699,7 +1693,7 @@ return|return
 operator|(
 name|__m64
 operator|)
-name|__builtin_arm_wmulsh
+name|__builtin_arm_wmulsm
 argument_list|(
 operator|(
 name|__v4hi
@@ -1736,7 +1730,7 @@ return|return
 operator|(
 name|__m64
 operator|)
-name|__builtin_arm_wmuluh
+name|__builtin_arm_wmulum
 argument_list|(
 operator|(
 name|__v4hi
@@ -4386,11 +4380,11 @@ name|_mm_setwcx
 parameter_list|(
 specifier|const
 name|int
-name|__regno
+name|__value
 parameter_list|,
 specifier|const
 name|int
-name|__value
+name|__regno
 parameter_list|)
 block|{
 switch|switch
@@ -4403,9 +4397,9 @@ literal|0
 case|:
 name|__builtin_arm_setwcx
 argument_list|(
+name|__value
+argument_list|,
 literal|0
-argument_list|,
-name|__value
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4414,9 +4408,9 @@ literal|1
 case|:
 name|__builtin_arm_setwcx
 argument_list|(
+name|__value
+argument_list|,
 literal|1
-argument_list|,
-name|__value
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4425,9 +4419,9 @@ literal|2
 case|:
 name|__builtin_arm_setwcx
 argument_list|(
+name|__value
+argument_list|,
 literal|2
-argument_list|,
-name|__value
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4436,9 +4430,9 @@ literal|3
 case|:
 name|__builtin_arm_setwcx
 argument_list|(
+name|__value
+argument_list|,
 literal|3
-argument_list|,
-name|__value
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4447,9 +4441,9 @@ literal|8
 case|:
 name|__builtin_arm_setwcx
 argument_list|(
+name|__value
+argument_list|,
 literal|8
-argument_list|,
-name|__value
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4458,9 +4452,9 @@ literal|9
 case|:
 name|__builtin_arm_setwcx
 argument_list|(
+name|__value
+argument_list|,
 literal|9
-argument_list|,
-name|__value
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4469,9 +4463,9 @@ literal|10
 case|:
 name|__builtin_arm_setwcx
 argument_list|(
-literal|10
-argument_list|,
 name|__value
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4480,9 +4474,9 @@ literal|11
 case|:
 name|__builtin_arm_setwcx
 argument_list|(
-literal|11
-argument_list|,
 name|__value
+argument_list|,
+literal|11
 argument_list|)
 expr_stmt|;
 break|break;

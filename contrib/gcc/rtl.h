@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Register Transfer Language (RTL) definitions for GCC    Copyright (C) 1987, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Register Transfer Language (RTL) definitions for GCC    Copyright (C) 1987, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -15,11 +15,11 @@ directive|define
 name|GCC_RTL_H
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|function
-struct_decl|;
-end_struct_decl
+begin_include
+include|#
+directive|include
+file|"statistics.h"
+end_include
 
 begin_include
 include|#
@@ -31,6 +31,18 @@ begin_include
 include|#
 directive|include
 file|"input.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"real.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vec.h"
 end_include
 
 begin_undef
@@ -139,6 +151,127 @@ begin_comment
 comment|/* The cast here, saves many elsewhere.  */
 end_comment
 
+begin_comment
+comment|/* Register Transfer Language EXPRESSIONS CODE CLASSES */
+end_comment
+
+begin_enum
+enum|enum
+name|rtx_class
+block|{
+comment|/* We check bit 0-1 of some rtx class codes in the predicates below.  */
+comment|/* Bit 0 = comparison if 0, arithmetic is 1      Bit 1 = 1 if commutative.  */
+name|RTX_COMPARE
+block|,
+comment|/* 0 */
+name|RTX_COMM_COMPARE
+block|,
+name|RTX_BIN_ARITH
+block|,
+name|RTX_COMM_ARITH
+block|,
+comment|/* Must follow the four preceding values.  */
+name|RTX_UNARY
+block|,
+comment|/* 4 */
+name|RTX_EXTRA
+block|,
+name|RTX_MATCH
+block|,
+name|RTX_INSN
+block|,
+comment|/* Bit 0 = 1 if constant.  */
+name|RTX_OBJ
+block|,
+comment|/* 8 */
+name|RTX_CONST_OBJ
+block|,
+name|RTX_TERNARY
+block|,
+name|RTX_BITFIELD_OPS
+block|,
+name|RTX_AUTOINC
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|RTX_OBJ_MASK
+value|(~1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTX_OBJ_RESULT
+value|(RTX_OBJ& RTX_OBJ_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTX_COMPARE_MASK
+value|(~1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTX_COMPARE_RESULT
+value|(RTX_COMPARE& RTX_COMPARE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTX_ARITHMETIC_MASK
+value|(~1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTX_ARITHMETIC_RESULT
+value|(RTX_COMM_ARITH& RTX_ARITHMETIC_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTX_BINARY_MASK
+value|(~3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTX_BINARY_RESULT
+value|(RTX_COMPARE& RTX_BINARY_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTX_COMMUTATIVE_MASK
+value|(~2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTX_COMMUTATIVE_RESULT
+value|(RTX_COMM_COMPARE& RTX_COMMUTATIVE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTX_NON_COMMUTATIVE_RESULT
+value|(RTX_COMPARE& RTX_COMMUTATIVE_MASK)
+end_define
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -210,7 +343,8 @@ end_define
 begin_decl_stmt
 specifier|extern
 specifier|const
-name|char
+name|enum
+name|rtx_class
 name|rtx_class
 index|[
 name|NUM_RTX_CODE
@@ -233,7 +367,7 @@ specifier|extern
 specifier|const
 name|unsigned
 name|char
-name|rtx_size
+name|rtx_code_size
 index|[
 name|NUM_RTX_CODE
 index|]
@@ -407,26 +541,26 @@ union|union
 name|rtunion_def
 block|{
 name|int
-name|rtint
+name|rt_int
 decl_stmt|;
 name|unsigned
 name|int
-name|rtuint
+name|rt_uint
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|rtstr
+name|rt_str
 decl_stmt|;
 name|rtx
-name|rtx
+name|rt_rtx
 decl_stmt|;
 name|rtvec
-name|rtvec
+name|rt_rtvec
 decl_stmt|;
 name|enum
 name|machine_mode
-name|rttype
+name|rt_type
 decl_stmt|;
 name|addr_diff_vec_flags
 name|rt_addr_diff_vec_flags
@@ -439,23 +573,28 @@ decl_stmt|;
 name|struct
 name|bitmap_head_def
 modifier|*
-name|rtbit
+name|rt_bit
 decl_stmt|;
 name|tree
-name|rttree
+name|rt_tree
 decl_stmt|;
 name|struct
 name|basic_block_def
 modifier|*
-name|bb
+name|rt_bb
 decl_stmt|;
 name|mem_attrs
 modifier|*
-name|rtmem
+name|rt_mem
 decl_stmt|;
 name|reg_attrs
 modifier|*
-name|rtreg
+name|rt_reg
+decl_stmt|;
+name|struct
+name|constant_descriptor_rtx
+modifier|*
+name|rt_constant
 decl_stmt|;
 block|}
 union|;
@@ -468,6 +607,131 @@ name|rtunion_def
 name|rtunion
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* This structure remembers the position of a SYMBOL_REF within an    object_block structure.  A SYMBOL_REF only provides this information    if SYMBOL_REF_HAS_BLOCK_INFO_P is true.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|block_symbol
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+comment|/* The usual SYMBOL_REF fields.  */
+name|rtunion
+name|GTY
+argument_list|(
+operator|(
+name|skip
+operator|)
+argument_list|)
+name|fld
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* The block that contains this object.  */
+name|struct
+name|object_block
+modifier|*
+name|block
+decl_stmt|;
+comment|/* The offset of this object from the start of its block.  It is negative      if the symbol has not yet been assigned an offset.  */
+name|HOST_WIDE_INT
+name|offset
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|DEF_VEC_P
+argument_list|(
+name|rtx
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEF_VEC_ALLOC_P
+argument_list|(
+name|rtx
+argument_list|,
+name|heap
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEF_VEC_ALLOC_P
+argument_list|(
+name|rtx
+argument_list|,
+name|gc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Describes a group of objects that are to be placed together in such    a way that their relative positions are known.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|object_block
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+comment|/* The section in which these objects should be placed.  */
+name|section
+modifier|*
+name|sect
+decl_stmt|;
+comment|/* The alignment of the first object, measured in bits.  */
+name|unsigned
+name|int
+name|alignment
+decl_stmt|;
+comment|/* The total size of the objects, measured in bytes.  */
+name|HOST_WIDE_INT
+name|size
+decl_stmt|;
+comment|/* The SYMBOL_REFs for each object.  The vector is sorted in      order of increasing offset and the following conditions will      hold for each element X:  	 SYMBOL_REF_HAS_BLOCK_INFO_P (X) 	 !SYMBOL_REF_ANCHOR_P (X) 	 SYMBOL_REF_BLOCK (X) == [address of this structure] 	 SYMBOL_REF_BLOCK_OFFSET (X)>= 0.  */
+name|VEC
+argument_list|(
+name|rtx
+argument_list|,
+name|gc
+argument_list|)
+operator|*
+name|objects
+expr_stmt|;
+comment|/* All the anchor SYMBOL_REFs used to address these objects, sorted      in order of increasing offset, and then increasing TLS model.      The following conditions will hold for each element X in this vector:  	 SYMBOL_REF_HAS_BLOCK_INFO_P (X) 	 SYMBOL_REF_ANCHOR_P (X) 	 SYMBOL_REF_BLOCK (X) == [address of this structure] 	 SYMBOL_REF_BLOCK_OFFSET (X)>= 0.  */
+name|VEC
+argument_list|(
+name|rtx
+argument_list|,
+name|gc
+argument_list|)
+operator|*
+name|anchors
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* RTL expression ("rtx").  */
@@ -537,7 +801,7 @@ name|volatil
 range|:
 literal|1
 decl_stmt|;
-comment|/* 1 in a MEM referring to a field of an aggregate.      0 if the MEM was a variable or the result of a * operator in C;      1 if it was the result of a . or -> operator (on a struct) in C.      1 in a REG if the register is used only in exit code a loop.      1 in a SUBREG expression if was generated from a variable with a      promoted mode.      1 in a CODE_LABEL if the label is used for nonlocal gotos      and must not be deleted even if its count is zero.      1 in a LABEL_REF if this is a reference to a label outside the      current loop.      1 in an INSN, JUMP_INSN or CALL_INSN if this insn must be scheduled      together with the preceding insn.  Valid only within sched.      1 in an INSN, JUMP_INSN, or CALL_INSN if insn is in a delay slot and      from the target of a branch.  Valid from reorg until end of compilation;      cleared before used.      1 in an INSN, JUMP_INSN or CALL_INSN or related rtx if this insn is      dead code.  Valid only during dead-code elimination phase; cleared      before use.  */
+comment|/* 1 in a MEM referring to a field of an aggregate.      0 if the MEM was a variable or the result of a * operator in C;      1 if it was the result of a . or -> operator (on a struct) in C.      1 in a REG if the register is used only in exit code a loop.      1 in a SUBREG expression if was generated from a variable with a      promoted mode.      1 in a CODE_LABEL if the label is used for nonlocal gotos      and must not be deleted even if its count is zero.      1 in an INSN, JUMP_INSN or CALL_INSN if this insn must be scheduled      together with the preceding insn.  Valid only within sched.      1 in an INSN, JUMP_INSN, or CALL_INSN if insn is in a delay slot and      from the target of a branch.  Valid from reorg until end of compilation;      cleared before used.  */
 name|unsigned
 name|int
 name|in_struct
@@ -551,15 +815,15 @@ name|used
 range|:
 literal|1
 decl_stmt|;
-comment|/* Nonzero if this rtx came from procedure integration.      1 in a REG or PARALLEL means this rtx refers to the return value      of the current function.      1 in a SYMBOL_REF if the symbol is weak.  */
+comment|/* 1 in an INSN or a SET if this rtx is related to the call frame,      either changing how we compute the frame address or saving and      restoring registers in the prologue and epilogue.      1 in a REG or MEM if it is a pointer.      1 in a SYMBOL_REF if it addresses something in the per-function      constant string pool.  */
 name|unsigned
-name|integrated
+name|frame_related
 range|:
 literal|1
 decl_stmt|;
-comment|/* 1 in an INSN or a SET if this rtx is related to the call frame,      either changing how we compute the frame address or saving and      restoring registers in the prologue and epilogue.      1 in a MEM if the MEM refers to a scalar, rather than a member of      an aggregate.      1 in a REG if the register is a pointer.      1 in a SYMBOL_REF if it addresses something in the per-function      constant string pool.  */
+comment|/* 1 in a REG or PARALLEL that is the current function's return value.      1 in a MEM if it refers to a scalar.      1 in a SYMBOL_REF for a weak symbol.  */
 name|unsigned
-name|frame_related
+name|return_val
 range|:
 literal|1
 decl_stmt|;
@@ -578,6 +842,14 @@ name|hwint
 index|[
 literal|1
 index|]
+decl_stmt|;
+name|struct
+name|block_symbol
+name|block_sym
+decl_stmt|;
+name|struct
+name|real_value
+name|rv
 decl_stmt|;
 block|}
 name|GTY
@@ -621,11 +893,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RTX_SIZE
+name|RTX_CODE_SIZE
 parameter_list|(
 name|CODE
 parameter_list|)
-value|rtx_size[CODE]
+value|rtx_code_size[CODE]
 end_define
 
 begin_define
@@ -660,7 +932,7 @@ name|RTX_PREV
 parameter_list|(
 name|X
 parameter_list|)
-value|((GET_CODE (X) == INSN              \                       || GET_CODE (X) == CALL_INSN      \                       || GET_CODE (X) == JUMP_INSN      \                       || GET_CODE (X) == NOTE           \                       || GET_CODE (X) == BARRIER        \                       || GET_CODE (X) == CODE_LABEL)    \&& PREV_INSN (X) != NULL           \&& NEXT_INSN (PREV_INSN (X)) == X  \                      ? PREV_INSN (X) : NULL)
+value|((INSN_P (X)       			\                       || NOTE_P (X)       		\                       || BARRIER_P (X)        		\                       || LABEL_P (X))    		\&& PREV_INSN (X) != NULL           \&& NEXT_INSN (PREV_INSN (X)) == X  \                      ? PREV_INSN (X) : NULL)
 end_define
 
 begin_comment
@@ -780,7 +1052,7 @@ value|((RTVEC)->num_elem = (NUM))
 end_define
 
 begin_comment
-comment|/* Predicate yielding nonzero iff X is an rtl for a register.  */
+comment|/* Predicate yielding nonzero iff X is an rtx for a register.  */
 end_comment
 
 begin_define
@@ -791,6 +1063,34 @@ parameter_list|(
 name|X
 parameter_list|)
 value|(GET_CODE (X) == REG)
+end_define
+
+begin_comment
+comment|/* Predicate yielding nonzero iff X is an rtx for a memory location.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEM_P
+parameter_list|(
+name|X
+parameter_list|)
+value|(GET_CODE (X) == MEM)
+end_define
+
+begin_comment
+comment|/* Predicate yielding nonzero iff X is an rtx for a constant integer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONST_INT_P
+parameter_list|(
+name|X
+parameter_list|)
+value|(GET_CODE (X) == CONST_INT)
 end_define
 
 begin_comment
@@ -819,6 +1119,49 @@ parameter_list|(
 name|X
 parameter_list|)
 value|(GET_CODE (X) == JUMP_INSN)
+end_define
+
+begin_comment
+comment|/* Predicate yielding nonzero iff X is a call insn.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALL_P
+parameter_list|(
+name|X
+parameter_list|)
+value|(GET_CODE (X) == CALL_INSN)
+end_define
+
+begin_comment
+comment|/* Predicate yielding nonzero iff X is an insn that cannot jump.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NONJUMP_INSN_P
+parameter_list|(
+name|X
+parameter_list|)
+value|(GET_CODE (X) == INSN)
+end_define
+
+begin_comment
+comment|/* Predicate yielding nonzero iff X is a real insn.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSN_P
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|(NONJUMP_INSN_P (X) || JUMP_P (X) || CALL_P (X))
 end_define
 
 begin_comment
@@ -865,6 +1208,126 @@ value|(JUMP_P (INSN)&& (GET_CODE (PATTERN (INSN)) == ADDR_VEC || \ 		     GET_CO
 end_define
 
 begin_comment
+comment|/* 1 if X is a unary operator.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNARY_P
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|(GET_RTX_CLASS (GET_CODE (X)) == RTX_UNARY)
+end_define
+
+begin_comment
+comment|/* 1 if X is a binary operator.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BINARY_P
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|((GET_RTX_CLASS (GET_CODE (X))& RTX_BINARY_MASK) == RTX_BINARY_RESULT)
+end_define
+
+begin_comment
+comment|/* 1 if X is an arithmetic operator.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARITHMETIC_P
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|((GET_RTX_CLASS (GET_CODE (X))& RTX_ARITHMETIC_MASK)			\     == RTX_ARITHMETIC_RESULT)
+end_define
+
+begin_comment
+comment|/* 1 if X is an arithmetic operator.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COMMUTATIVE_ARITH_P
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|(GET_RTX_CLASS (GET_CODE (X)) == RTX_COMM_ARITH)
+end_define
+
+begin_comment
+comment|/* 1 if X is a commutative arithmetic operator or a comparison operator.    These two are sometimes selected together because it is possible to    swap the two operands.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWAPPABLE_OPERANDS_P
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|((1<< GET_RTX_CLASS (GET_CODE (X)))					\& ((1<< RTX_COMM_ARITH) | (1<< RTX_COMM_COMPARE)			\        | (1<< RTX_COMPARE)))
+end_define
+
+begin_comment
+comment|/* 1 if X is a non-commutative operator.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NON_COMMUTATIVE_P
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|((GET_RTX_CLASS (GET_CODE (X))& RTX_COMMUTATIVE_MASK)		\     == RTX_NON_COMMUTATIVE_RESULT)
+end_define
+
+begin_comment
+comment|/* 1 if X is a commutative operator on integers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COMMUTATIVE_P
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|((GET_RTX_CLASS (GET_CODE (X))& RTX_COMMUTATIVE_MASK)		\     == RTX_COMMUTATIVE_RESULT)
+end_define
+
+begin_comment
+comment|/* 1 if X is a relational operator.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COMPARISON_P
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|((GET_RTX_CLASS (GET_CODE (X))& RTX_COMPARE_MASK) == RTX_COMPARE_RESULT)
+end_define
+
+begin_comment
 comment|/* 1 if X is a constant value that is an integer.  */
 end_comment
 
@@ -876,7 +1339,22 @@ parameter_list|(
 name|X
 parameter_list|)
 define|\
-value|(GET_CODE (X) == LABEL_REF || GET_CODE (X) == SYMBOL_REF		\    || GET_CODE (X) == CONST_INT || GET_CODE (X) == CONST_DOUBLE		\    || GET_CODE (X) == CONST || GET_CODE (X) == HIGH			\    || GET_CODE (X) == CONST_VECTOR	                                \    || GET_CODE (X) == CONSTANT_P_RTX)
+value|(GET_RTX_CLASS (GET_CODE (X)) == RTX_CONST_OBJ)
+end_define
+
+begin_comment
+comment|/* 1 if X can be used to represent an object.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJECT_P
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|((GET_RTX_CLASS (GET_CODE (X))& RTX_OBJ_MASK) == RTX_OBJ_RESULT)
 end_define
 
 begin_comment
@@ -998,6 +1476,46 @@ parameter_list|)
 value|__extension__					\ (*({ rtx const _rtx = (RTX);						\      if (GET_CODE (_rtx) != (C))					\        rtl_check_failed_code1 (_rtx, (C), __FILE__, __LINE__,		\ 			       __FUNCTION__);				\&_rtx->u.hwint[N]; }))
 end_define
 
+begin_define
+define|#
+directive|define
+name|XCMWINT
+parameter_list|(
+name|RTX
+parameter_list|,
+name|N
+parameter_list|,
+name|C
+parameter_list|,
+name|M
+parameter_list|)
+value|__extension__				\ (*({ rtx const _rtx = (RTX);						\      if (GET_CODE (_rtx) != (C) || GET_MODE (_rtx) != (M))		\        rtl_check_failed_code_mode (_rtx, (C), (M), false, __FILE__,	\ 				   __LINE__, __FUNCTION__);		\&_rtx->u.hwint[N]; }))
+end_define
+
+begin_define
+define|#
+directive|define
+name|XCNMPRV
+parameter_list|(
+name|RTX
+parameter_list|,
+name|C
+parameter_list|,
+name|M
+parameter_list|)
+value|__extension__				\ ({ rtx const _rtx = (RTX);						\    if (GET_CODE (_rtx) != (C) || GET_MODE (_rtx) == (M))		\      rtl_check_failed_code_mode (_rtx, (C), (M), true, __FILE__,	\ 				 __LINE__, __FUNCTION__);		\&_rtx->u.rv; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLOCK_SYMBOL_CHECK
+parameter_list|(
+name|RTX
+parameter_list|)
+value|__extension__				\ ({ rtx const _symbol = (RTX);						\    unsigned int flags = RTL_CHECKC1 (_symbol, 1, SYMBOL_REF).rt_int;	\    if ((flags& SYMBOL_FLAG_HAS_BLOCK_INFO) == 0)			\      rtl_check_failed_block_symbol (__FILE__, __LINE__,			\ 				    __FUNCTION__);			\&_symbol->u.block_sym; })
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -1110,6 +1628,54 @@ argument_list|,
 expr|enum
 name|rtx_code
 argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|int
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+name|ATTRIBUTE_NORETURN
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|rtl_check_failed_code_mode
+argument_list|(
+name|rtx
+argument_list|,
+expr|enum
+name|rtx_code
+argument_list|,
+expr|enum
+name|machine_mode
+argument_list|,
+name|bool
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|int
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+name|ATTRIBUTE_NORETURN
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|rtl_check_failed_block_symbol
+argument_list|(
 specifier|const
 name|char
 operator|*
@@ -1252,6 +1818,62 @@ parameter_list|,
 name|C
 parameter_list|)
 value|((RTX)->u.hwint[N])
+end_define
+
+begin_define
+define|#
+directive|define
+name|XCMWINT
+parameter_list|(
+name|RTX
+parameter_list|,
+name|N
+parameter_list|,
+name|C
+parameter_list|,
+name|M
+parameter_list|)
+value|((RTX)->u.hwint[N])
+end_define
+
+begin_define
+define|#
+directive|define
+name|XCNMWINT
+parameter_list|(
+name|RTX
+parameter_list|,
+name|N
+parameter_list|,
+name|C
+parameter_list|,
+name|M
+parameter_list|)
+value|((RTX)->u.hwint[N])
+end_define
+
+begin_define
+define|#
+directive|define
+name|XCNMPRV
+parameter_list|(
+name|RTX
+parameter_list|,
+name|C
+parameter_list|,
+name|M
+parameter_list|)
+value|(&(RTX)->u.rv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLOCK_SYMBOL_CHECK
+parameter_list|(
+name|RTX
+parameter_list|)
+value|(&(RTX)->u.block_sym)
 end_define
 
 begin_endif
@@ -1673,24 +2295,13 @@ end_endif
 begin_define
 define|#
 directive|define
-name|CLEAR_RTX_FLAGS
-parameter_list|(
-name|RTX
-parameter_list|)
-define|\
-value|do {				\   rtx const _rtx = (RTX);	\   _rtx->call = 0;		\   _rtx->frame_related = 0;	\   _rtx->in_struct = 0;		\   _rtx->integrated = 0;		\   _rtx->jump = 0;		\   _rtx->unchanging = 0;		\   _rtx->used = 0;		\   _rtx->volatil = 0;		\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|XINT
 parameter_list|(
 name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK2 (RTX, N, 'i', 'n').rtint)
+value|(RTL_CHECK2 (RTX, N, 'i', 'n').rt_int)
 end_define
 
 begin_define
@@ -1702,7 +2313,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK2 (RTX, N, 's', 'S').rtstr)
+value|(RTL_CHECK2 (RTX, N, 's', 'S').rt_str)
 end_define
 
 begin_define
@@ -1714,7 +2325,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK2 (RTX, N, 'e', 'u').rtx)
+value|(RTL_CHECK2 (RTX, N, 'e', 'u').rt_rtx)
 end_define
 
 begin_define
@@ -1726,7 +2337,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK2 (RTX, N, 'E', 'V').rtvec)
+value|(RTL_CHECK2 (RTX, N, 'E', 'V').rt_rtvec)
 end_define
 
 begin_define
@@ -1738,7 +2349,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK1 (RTX, N, 'M').rttype)
+value|(RTL_CHECK1 (RTX, N, 'M').rt_type)
 end_define
 
 begin_define
@@ -1750,7 +2361,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK1 (RTX, N, 'b').rtbit)
+value|(RTL_CHECK1 (RTX, N, 'b').rt_bit)
 end_define
 
 begin_define
@@ -1762,7 +2373,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK1 (RTX, N, 't').rttree)
+value|(RTL_CHECK1 (RTX, N, 't').rt_tree)
 end_define
 
 begin_define
@@ -1774,7 +2385,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK1 (RTX, N, 'B').bb)
+value|(RTL_CHECK1 (RTX, N, 'B').rt_bb)
 end_define
 
 begin_define
@@ -1786,7 +2397,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK1 (RTX, N, 'T').rtstr)
+value|(RTL_CHECK1 (RTX, N, 'T').rt_str)
 end_define
 
 begin_define
@@ -1828,7 +2439,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK1 (RTX, N, '0').rtint)
+value|(RTL_CHECK1 (RTX, N, '0').rt_int)
 end_define
 
 begin_define
@@ -1840,7 +2451,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK1 (RTX, N, '0').rtuint)
+value|(RTL_CHECK1 (RTX, N, '0').rt_uint)
 end_define
 
 begin_define
@@ -1852,7 +2463,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK1 (RTX, N, '0').rtstr)
+value|(RTL_CHECK1 (RTX, N, '0').rt_str)
 end_define
 
 begin_define
@@ -1864,7 +2475,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK1 (RTX, N, '0').rtx)
+value|(RTL_CHECK1 (RTX, N, '0').rt_rtx)
 end_define
 
 begin_define
@@ -1876,7 +2487,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK1 (RTX, N, '0').rtvec)
+value|(RTL_CHECK1 (RTX, N, '0').rt_rtvec)
 end_define
 
 begin_define
@@ -1888,7 +2499,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK1 (RTX, N, '0').rttype)
+value|(RTL_CHECK1 (RTX, N, '0').rt_type)
 end_define
 
 begin_define
@@ -1900,7 +2511,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK1 (RTX, N, '0').rtbit)
+value|(RTL_CHECK1 (RTX, N, '0').rt_bit)
 end_define
 
 begin_define
@@ -1912,7 +2523,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK1 (RTX, N, '0').rttree)
+value|(RTL_CHECK1 (RTX, N, '0').rt_tree)
 end_define
 
 begin_define
@@ -1924,7 +2535,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECK1 (RTX, N, '0').bb)
+value|(RTL_CHECK1 (RTX, N, '0').rt_bb)
 end_define
 
 begin_define
@@ -1960,7 +2571,7 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECKC1 (RTX, N, MEM).rtmem)
+value|(RTL_CHECKC1 (RTX, N, MEM).rt_mem)
 end_define
 
 begin_define
@@ -1972,7 +2583,19 @@ name|RTX
 parameter_list|,
 name|N
 parameter_list|)
-value|(RTL_CHECKC1 (RTX, N, REG).rtreg)
+value|(RTL_CHECKC1 (RTX, N, REG).rt_reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|X0CONSTANT
+parameter_list|(
+name|RTX
+parameter_list|,
+name|N
+parameter_list|)
+value|(RTL_CHECK1 (RTX, N, '0').rt_constant)
 end_define
 
 begin_comment
@@ -2002,7 +2625,7 @@ name|N
 parameter_list|,
 name|C
 parameter_list|)
-value|(RTL_CHECKC1 (RTX, N, C).rtint)
+value|(RTL_CHECKC1 (RTX, N, C).rt_int)
 end_define
 
 begin_define
@@ -2016,7 +2639,7 @@ name|N
 parameter_list|,
 name|C
 parameter_list|)
-value|(RTL_CHECKC1 (RTX, N, C).rtuint)
+value|(RTL_CHECKC1 (RTX, N, C).rt_uint)
 end_define
 
 begin_define
@@ -2030,7 +2653,7 @@ name|N
 parameter_list|,
 name|C
 parameter_list|)
-value|(RTL_CHECKC1 (RTX, N, C).rtstr)
+value|(RTL_CHECKC1 (RTX, N, C).rt_str)
 end_define
 
 begin_define
@@ -2044,7 +2667,7 @@ name|N
 parameter_list|,
 name|C
 parameter_list|)
-value|(RTL_CHECKC1 (RTX, N, C).rtx)
+value|(RTL_CHECKC1 (RTX, N, C).rt_rtx)
 end_define
 
 begin_define
@@ -2058,7 +2681,7 @@ name|N
 parameter_list|,
 name|C
 parameter_list|)
-value|(RTL_CHECKC1 (RTX, N, C).rtvec)
+value|(RTL_CHECKC1 (RTX, N, C).rt_rtvec)
 end_define
 
 begin_define
@@ -2072,7 +2695,7 @@ name|N
 parameter_list|,
 name|C
 parameter_list|)
-value|(RTL_CHECKC1 (RTX, N, C).rttype)
+value|(RTL_CHECKC1 (RTX, N, C).rt_type)
 end_define
 
 begin_define
@@ -2086,7 +2709,7 @@ name|N
 parameter_list|,
 name|C
 parameter_list|)
-value|(RTL_CHECKC1 (RTX, N, C).rtbit)
+value|(RTL_CHECKC1 (RTX, N, C).rt_bit)
 end_define
 
 begin_define
@@ -2100,7 +2723,7 @@ name|N
 parameter_list|,
 name|C
 parameter_list|)
-value|(RTL_CHECKC1 (RTX, N, C).rttree)
+value|(RTL_CHECKC1 (RTX, N, C).rt_tree)
 end_define
 
 begin_define
@@ -2114,21 +2737,7 @@ name|N
 parameter_list|,
 name|C
 parameter_list|)
-value|(RTL_CHECKC1 (RTX, N, C).bb)
-end_define
-
-begin_define
-define|#
-directive|define
-name|XCADVFLAGS
-parameter_list|(
-name|RTX
-parameter_list|,
-name|N
-parameter_list|,
-name|C
-parameter_list|)
-value|(RTL_CHECKC1 (RTX, N, C).rt_addr_diff_vec_flags)
+value|(RTL_CHECKC1 (RTX, N, C).rt_bb)
 end_define
 
 begin_define
@@ -2188,7 +2797,7 @@ name|C1
 parameter_list|,
 name|C2
 parameter_list|)
-value|(RTL_CHECKC2 (RTX, N, C1, C2).rtx)
+value|(RTL_CHECKC2 (RTX, N, C1, C2).rt_rtx)
 end_define
 
 begin_escape
@@ -2197,20 +2806,6 @@ end_escape
 begin_comment
 comment|/* ACCESS MACROS for particular fields of insns.  */
 end_comment
-
-begin_comment
-comment|/* Determines whether X is an insn.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INSN_P
-parameter_list|(
-name|X
-parameter_list|)
-value|(GET_RTX_CLASS (GET_CODE(X)) == 'i')
-end_define
 
 begin_comment
 comment|/* Holds a unique number for each insn.    These are not necessarily sequentially increasing.  */
@@ -2315,28 +2910,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|RTX_INTEGRATED_P
-parameter_list|(
-name|RTX
-parameter_list|)
-define|\
-value|(RTL_FLAG_CHECK8("RTX_INTEGRATED_P", (RTX), INSN, CALL_INSN,		\ 		   JUMP_INSN, INSN_LIST, BARRIER, CODE_LABEL, CONST,	\ 		   NOTE)->integrated)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RTX_UNCHANGING_P
-parameter_list|(
-name|RTX
-parameter_list|)
-define|\
-value|(RTL_FLAG_CHECK3("RTX_UNCHANGING_P", (RTX), REG, MEM, CONCAT)->unchanging)
-end_define
-
-begin_define
-define|#
-directive|define
 name|RTX_FRAME_RELATED_P
 parameter_list|(
 name|RTX
@@ -2406,21 +2979,6 @@ value|(RTL_FLAG_CHECK3("INSN_ANNULLED_BRANCH_P", (RTX), JUMP_INSN, CALL_INSN, IN
 end_define
 
 begin_comment
-comment|/* 1 if RTX is an insn that is dead code.  Valid only for dead-code    elimination phase.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INSN_DEAD_CODE_P
-parameter_list|(
-name|RTX
-parameter_list|)
-define|\
-value|(RTL_FLAG_CHECK3("INSN_DEAD_CODE_P", (RTX), INSN, CALL_INSN, JUMP_INSN)->in_struct)
-end_define
-
-begin_comment
 comment|/* 1 if RTX is an insn in a delay slot and is from the target of the branch.    If the branch insn has INSN_ANNULLED_BRANCH_P set, this insn should only be    executed if the branch is taken.  For annulled branches with this bit    clear, the insn should be executed only if the branch is not taken.  */
 end_comment
 
@@ -2435,6 +2993,10 @@ define|\
 value|(RTL_FLAG_CHECK3("INSN_FROM_TARGET_P", (RTX), INSN, JUMP_INSN, CALL_INSN)->in_struct)
 end_define
 
+begin_comment
+comment|/* In an ADDR_DIFF_VEC, the flags for RTX for use by branch shortening.    See the comments for ADDR_DIFF_VEC in rtl.def.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2444,6 +3006,10 @@ name|RTX
 parameter_list|)
 value|X0ADVFLAGS(RTX, 4)
 end_define
+
+begin_comment
+comment|/* In a VALUE, the value cselib has assigned to RTX.    This is a "struct cselib_val_struct", see cselib.h.  */
+end_comment
 
 begin_define
 define|#
@@ -2469,114 +3035,27 @@ parameter_list|)
 value|XEXP(INSN, 8)
 end_define
 
-begin_comment
-comment|/* Don't forget to change reg_note_name in rtl.c.  */
-end_comment
-
 begin_enum
 enum|enum
 name|reg_note
 block|{
-comment|/* The value in REG dies in this insn (i.e., it is not needed past      this insn).  If REG is set in this insn, the REG_DEAD note may,      but need not, be omitted.  */
-name|REG_DEAD
-init|=
-literal|1
-block|,
-comment|/* The REG is autoincremented or autodecremented.  */
-name|REG_INC
-block|,
-comment|/* Describes the insn as a whole; it says that the insn sets a register      to a constant value or to be equivalent to a memory address.  If the      register is spilled to the stack then the constant value should be      substituted for it.  The contents of the REG_EQUIV is the constant      value or memory address, which may be different from the source of      the SET although it has the same value.  A REG_EQUIV note may also      appear on an insn which copies a register parameter to a pseudo-register,      if there is a memory address which could be used to hold that      pseudo-register throughout the function.  */
-name|REG_EQUIV
-block|,
-comment|/* Like REG_EQUIV except that the destination is only momentarily equal      to the specified rtx.  Therefore, it cannot be used for substitution;      but it can be used for cse.  */
-name|REG_EQUAL
-block|,
-comment|/* This insn copies the return-value of a library call out of the hard reg      for return values.  This note is actually an INSN_LIST and it points to      the first insn involved in setting up arguments for the call.  flow.c      uses this to delete the entire library call when its result is dead.  */
-name|REG_RETVAL
-block|,
-comment|/* The inverse of REG_RETVAL: it goes on the first insn of the library call      and points at the one that has the REG_RETVAL.  This note is also an      INSN_LIST.  */
-name|REG_LIBCALL
-block|,
-comment|/* The register is always nonnegative during the containing loop.  This is      used in branches so that decrement and branch instructions terminating      on zero can be matched.  There must be an insn pattern in the md file      named `decrement_and_branch_until_zero' or else this will never be added      to any instructions.  */
-name|REG_NONNEG
-block|,
-comment|/* There is no conflict *after this insn* between the register in the note      and the destination of this insn.  */
-name|REG_NO_CONFLICT
-block|,
-comment|/* Identifies a register set in this insn and never used.  */
-name|REG_UNUSED
-block|,
-comment|/* REG_CC_SETTER and REG_CC_USER link a pair of insns that set and use CC0,      respectively.  Normally, these are required to be consecutive insns, but      we permit putting a cc0-setting insn in the delay slot of a branch as      long as only one copy of the insn exists.  In that case, these notes      point from one to the other to allow code generation to determine what      any require information and to properly update CC_STATUS.  These notes      are INSN_LISTs.  */
-name|REG_CC_SETTER
-block|,
-name|REG_CC_USER
-block|,
-comment|/* Points to a CODE_LABEL.  Used by non-JUMP_INSNs to say that the      CODE_LABEL contained in the REG_LABEL note is used by the insn.      This note is an INSN_LIST.  */
-name|REG_LABEL
-block|,
-comment|/* REG_DEP_ANTI and REG_DEP_OUTPUT are used in LOG_LINKS to represent      write-after-read and write-after-write dependencies respectively.      Data dependencies, which are the only type of LOG_LINK created by      flow, are represented by a 0 reg note kind.  */
-name|REG_DEP_ANTI
-block|,
-name|REG_DEP_OUTPUT
-block|,
-comment|/* REG_BR_PROB is attached to JUMP_INSNs and CALL_INSNs.      It has an integer value.  For jumps, it is the probability that this is a      taken branch.  For calls, it is the probability that this call won't      return.  */
-name|REG_BR_PROB
-block|,
-comment|/* REG_VALUE_PROFILE is attached when the profile is read in to an insn      before that the code to profile the value is inserted.  It contains      the results of profiling.  */
-name|REG_VALUE_PROFILE
-block|,
-comment|/* Attached to a call insn; indicates that the call is malloc-like and      that the pointer returned cannot alias anything else.  */
-name|REG_NOALIAS
-block|,
-comment|/* Used to optimize rtl generated by dynamic stack allocations for targets      where SETJMP_VIA_SAVE_AREA is true.  */
-name|REG_SAVE_AREA
-block|,
-comment|/* REG_BR_PRED is attached to JUMP_INSNs and CALL_INSNSs.  It contains      CONCAT of two integer value.  First specifies the branch predictor      that added the note, second specifies the predicted hitrate of branch      in the same format as REG_BR_PROB note uses.  */
-name|REG_BR_PRED
-block|,
-comment|/* Attached to insns that are RTX_FRAME_RELATED_P, but are too complex      for DWARF to interpret what they imply.  The attached rtx is used      instead of intuition.  */
-name|REG_FRAME_RELATED_EXPR
-block|,
-comment|/* Indicates that REG holds the exception context for the function.      This context is shared by inline functions, so the code to acquire      the real exception context is delayed until after inlining.  */
-name|REG_EH_CONTEXT
-block|,
-comment|/* Indicates what exception region an INSN belongs in.  This is used to      indicate what region to which a call may throw.  REGION 0 indicates      that a call cannot throw at all.  REGION -1 indicates that it cannot      throw, nor will it execute a non-local goto.  */
-name|REG_EH_REGION
-block|,
-comment|/* Used by haifa-sched to save NOTE_INSN notes across scheduling.  */
-name|REG_SAVE_NOTE
-block|,
-comment|/* Indicates that this insn (which is part of the prologue) computes      a value which might not be used later, and if so it's OK to delete      the insn.  Normally, deleting any insn in the prologue is an error.      At present the parameter is unused and set to (const_int 0).  */
-name|REG_MAYBE_DEAD
-block|,
-comment|/* Indicates that a call does not return.  */
-name|REG_NORETURN
-block|,
-comment|/* Indicates that an indirect jump is a non-local goto instead of a      computed goto.  */
-name|REG_NON_LOCAL_GOTO
-block|,
-comment|/* This kind of note is generated at each to `setjmp',      and similar functions that can return twice.  */
-name|REG_SETJMP
-block|,
-comment|/* Indicate calls that always returns.  */
-name|REG_ALWAYS_RETURN
-block|,
-comment|/* Indicate that the memory load references a vtable.  The expression      is of the form (plus (symbol_ref vtable_sym) (const_int offset)).  */
-name|REG_VTABLE_REF
+define|#
+directive|define
+name|DEF_REG_NOTE
+parameter_list|(
+name|NAME
+parameter_list|)
+value|NAME,
+include|#
+directive|include
+file|"reg-notes.def"
+undef|#
+directive|undef
+name|DEF_REG_NOTE
+name|REG_NOTE_MAX
 block|}
 enum|;
 end_enum
-
-begin_comment
-comment|/* The base value for branch probability notes.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REG_BR_PROB_BASE
-value|10000
-end_define
 
 begin_comment
 comment|/* Define macros to extract and insert the reg-note kind in an EXPR_LIST.  */
@@ -2658,13 +3137,6 @@ parameter_list|)
 value|XINT (INSN, 6)
 end_define
 
-begin_define
-define|#
-directive|define
-name|LINE_NUMBER
-value|NOTE
-end_define
-
 begin_comment
 comment|/* In a NOTE that is a line number, this is a string for the file name that the    line is in.  We use the same field to record block numbers temporarily in    NOTE_INSN_BLOCK_BEG and NOTE_INSN_BLOCK_END notes.  (We avoid lots of casts    between ints and pointers if we use a different macro for the block number.)    */
 end_comment
@@ -2686,12 +3158,96 @@ end_define
 begin_define
 define|#
 directive|define
+name|NOTE_DELETED_LABEL_NAME
+parameter_list|(
+name|INSN
+parameter_list|)
+value|XCSTR (INSN, 4, NOTE)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_MAPPED_LOCATION
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NOTE_SOURCE_LOCATION
+parameter_list|(
+name|INSN
+parameter_list|)
+value|XCUINT (INSN, 5, NOTE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOTE_EXPANDED_LOCATION
+parameter_list|(
+name|XLOC
+parameter_list|,
+name|INSN
+parameter_list|)
+define|\
+value|(XLOC) = expand_location (NOTE_SOURCE_LOCATION (INSN))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_INSN_DELETED
+parameter_list|(
+name|INSN
+parameter_list|)
+define|\
+value|(PUT_CODE (INSN, NOTE), NOTE_LINE_NUMBER (INSN) = NOTE_INSN_DELETED)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NOTE_EXPANDED_LOCATION
+parameter_list|(
+name|XLOC
+parameter_list|,
+name|INSN
+parameter_list|)
+define|\
+value|((XLOC).file = NOTE_SOURCE_FILE (INSN),	\    (XLOC).line = NOTE_LINE_NUMBER (INSN))
+end_define
+
+begin_define
+define|#
+directive|define
 name|NOTE_SOURCE_FILE
 parameter_list|(
 name|INSN
 parameter_list|)
 value|XCSTR (INSN, 4, NOTE)
 end_define
+
+begin_define
+define|#
+directive|define
+name|SET_INSN_DELETED
+parameter_list|(
+name|INSN
+parameter_list|)
+define|\
+value|(PUT_CODE (INSN, NOTE),  NOTE_SOURCE_FILE (INSN) = 0, \    NOTE_LINE_NUMBER (INSN) = NOTE_INSN_DELETED)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2736,21 +3292,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|NOTE_PREDICTION
+name|NOTE_VAR_LOCATION
 parameter_list|(
 name|INSN
 parameter_list|)
-value|XCINT (INSN, 4, NOTE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOTE_PRECONDITIONED
-parameter_list|(
-name|INSN
-parameter_list|)
-value|XCINT (INSN, 4, NOTE)
+value|XCEXP (INSN, 4, NOTE)
 end_define
 
 begin_comment
@@ -2783,43 +3329,31 @@ value|(GET_CODE (INSN) == NOTE				\&& NOTE_LINE_NUMBER (INSN) == NOTE_INSN_BASIC
 end_define
 
 begin_comment
-comment|/* Algorithm and flags for prediction.  */
+comment|/* Variable declaration and the location of a variable.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NOTE_PREDICTION_ALG
+name|NOTE_VAR_LOCATION_DECL
 parameter_list|(
 name|INSN
 parameter_list|)
-value|(XCINT(INSN, 4, NOTE)>>8)
+value|(XCTREE (XCEXP (INSN, 4, NOTE), \ 						 0, VAR_LOCATION))
 end_define
 
 begin_define
 define|#
 directive|define
-name|NOTE_PREDICTION_FLAGS
+name|NOTE_VAR_LOCATION_LOC
 parameter_list|(
 name|INSN
 parameter_list|)
-value|(XCINT(INSN, 4, NOTE)&0xff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOTE_PREDICT
-parameter_list|(
-name|ALG
-parameter_list|,
-name|FLAGS
-parameter_list|)
-value|((ALG<<8)+(FLAGS))
+value|(XCEXP (XCEXP (INSN, 4, NOTE),  \ 						1, VAR_LOCATION))
 end_define
 
 begin_comment
-comment|/* Codes that appear in the NOTE_LINE_NUMBER field    for kinds of notes that are not line numbers.     Notice that we do not try to use zero here for any of    the special note codes because sometimes the source line    actually can be zero!  This happens (for example) when we    are generating code for the per-translation-unit constructor    and destructor routines for some C++ translation unit.     If you should change any of the following values, or if you    should add a new value here, don't forget to change the    note_insn_name array in rtl.c.  */
+comment|/* Codes that appear in the NOTE_LINE_NUMBER field for kinds of notes    that are not line numbers.  These codes are all negative.        Notice that we do not try to use zero here for any of    the special note codes because sometimes the source line    actually can be zero!  This happens (for example) when we    are generating code for the per-translation-unit constructor    and destructor routines for some C++ translation unit.  */
 end_comment
 
 begin_enum
@@ -2832,60 +3366,19 @@ init|=
 operator|-
 literal|100
 block|,
-comment|/* This note is used to get rid of an insn      when it isn't safe to patch the insn out of the chain.  */
-name|NOTE_INSN_DELETED
-block|,
-comment|/* These are used to mark the beginning and end of a lexical block.      See NOTE_BLOCK, identify_blocks and reorder_blocks.  */
-name|NOTE_INSN_BLOCK_BEG
-block|,
-name|NOTE_INSN_BLOCK_END
-block|,
-comment|/* These mark the extremes of a loop.  */
-name|NOTE_INSN_LOOP_BEG
-block|,
-name|NOTE_INSN_LOOP_END
-block|,
-comment|/* Generated at the place in a loop that `continue' jumps to.  */
-name|NOTE_INSN_LOOP_CONT
-block|,
-comment|/* Generated at the start of a duplicated exit test.  */
-name|NOTE_INSN_LOOP_VTOP
-block|,
-comment|/* Generated at the end of a conditional at the top of the loop.      This is used to perform a lame form of loop rotation in lieu      of actually understanding the loop structure.  The note is      discarded after rotation is complete.  */
-name|NOTE_INSN_LOOP_END_TOP_COND
-block|,
-comment|/* This kind of note is generated at the end of the function body,      just before the return insn or return label.  In an optimizing      compilation it is deleted by the first jump optimization, after      enabling that optimizer to determine whether control can fall      off the end of the function body without a return statement.  */
-name|NOTE_INSN_FUNCTION_END
-block|,
-comment|/* This marks the point immediately after the last prologue insn.  */
-name|NOTE_INSN_PROLOGUE_END
-block|,
-comment|/* This marks the point immediately prior to the first epilogue insn.  */
-name|NOTE_INSN_EPILOGUE_BEG
-block|,
-comment|/* Generated in place of user-declared labels when they are deleted.  */
-name|NOTE_INSN_DELETED_LABEL
-block|,
-comment|/* This note indicates the start of the real body of the function,      i.e. the point just after all of the parms have been moved into      their homes, etc.  */
-name|NOTE_INSN_FUNCTION_BEG
-block|,
-comment|/* These note where exception handling regions begin and end.      Uses NOTE_EH_HANDLER to identify the region in question.  */
-name|NOTE_INSN_EH_REGION_BEG
-block|,
-name|NOTE_INSN_EH_REGION_END
-block|,
-comment|/* Generated whenever a duplicate line number note is output.  For example,      one is output after the end of an inline function, in order to prevent      the line containing the inline call from being counted twice in gcov.  */
-name|NOTE_INSN_REPEATED_LINE_NUMBER
-block|,
-comment|/* Record the struct for the following basic block.  Uses NOTE_BASIC_BLOCK.  */
-name|NOTE_INSN_BASIC_BLOCK
-block|,
-comment|/* Record the expected value of a register at a location.  Uses      NOTE_EXPECTED_VALUE; stored as (eq (reg) (const_int)).  */
-name|NOTE_INSN_EXPECTED_VALUE
-block|,
-comment|/* Record a prediction.  Uses NOTE_PREDICTION.  */
-name|NOTE_INSN_PREDICTION
-block|,
+define|#
+directive|define
+name|DEF_INSN_NOTE
+parameter_list|(
+name|NAME
+parameter_list|)
+value|NAME,
+include|#
+directive|include
+file|"insn-notes.def"
+undef|#
+directive|undef
+name|DEF_INSN_NOTE
 name|NOTE_INSN_MAX
 block|}
 enum|;
@@ -3073,34 +3566,6 @@ value|(LABEL_KIND (LABEL) != LABEL_NORMAL)
 end_define
 
 begin_comment
-comment|/* The original regno this ADDRESSOF was built for.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADDRESSOF_REGNO
-parameter_list|(
-name|RTX
-parameter_list|)
-value|XCUINT (RTX, 1, ADDRESSOF)
-end_define
-
-begin_comment
-comment|/* The variable in the register we took the address of.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADDRESSOF_DECL
-parameter_list|(
-name|RTX
-parameter_list|)
-value|XCTREE (RTX, 2, ADDRESSOF)
-end_define
-
-begin_comment
 comment|/* In jump.c, each JUMP_INSN can point to a label that it can jump to,    so that if the JUMP_INSN is deleted, the label's LABEL_NUSES can    be decremented and possibly the label can be deleted.  */
 end_comment
 
@@ -3130,34 +3595,6 @@ end_define
 
 begin_escape
 end_escape
-
-begin_comment
-comment|/* This is the field in the LABEL_REF through which the circular chain    of references to a particular label is linked.    This chain is set up in flow.c.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LABEL_NEXTREF
-parameter_list|(
-name|REF
-parameter_list|)
-value|XCEXP (REF, 1, LABEL_REF)
-end_define
-
-begin_comment
-comment|/* Once basic blocks are found in flow.c,    Each LABEL_REF points to its containing instruction with this field.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONTAINING_INSN
-parameter_list|(
-name|RTX
-parameter_list|)
-value|XCEXP (RTX, 2, LABEL_REF)
-end_define
 
 begin_comment
 comment|/* For a REG rtx, REGNO extracts the register number.  ORIGINAL_REGNO holds    the number the register originally had; for a pseudo register turned into    a hard reg this will hold the old pseudo register number.  */
@@ -3195,7 +3632,7 @@ parameter_list|(
 name|RTX
 parameter_list|)
 define|\
-value|(RTL_FLAG_CHECK2("REG_FUNCTION_VALUE_P", (RTX), REG, PARALLEL)->integrated)
+value|(RTL_FLAG_CHECK2("REG_FUNCTION_VALUE_P", (RTX), REG, PARALLEL)->return_val)
 end_define
 
 begin_comment
@@ -3226,6 +3663,21 @@ name|RTX
 parameter_list|)
 define|\
 value|(RTL_FLAG_CHECK1("REG_POINTER", (RTX), REG)->frame_related)
+end_define
+
+begin_comment
+comment|/* 1 if RTX is a mem that holds a pointer value.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEM_POINTER
+parameter_list|(
+name|RTX
+parameter_list|)
+define|\
+value|(RTL_FLAG_CHECK1("MEM_POINTER", (RTX), MEM)->frame_related)
 end_define
 
 begin_comment
@@ -3270,8 +3722,18 @@ parameter_list|)
 value|XCWINT(RTX, 0, CONST_INT)
 end_define
 
+begin_define
+define|#
+directive|define
+name|UINTVAL
+parameter_list|(
+name|RTX
+parameter_list|)
+value|((unsigned HOST_WIDE_INT) INTVAL (RTX))
+end_define
+
 begin_comment
-comment|/* For a CONST_DOUBLE:    For a DImode, there are two integers CONST_DOUBLE_LOW is the      low-order word and ..._HIGH the high-order.    For a float, there is a REAL_VALUE_TYPE structure, and      CONST_DOUBLE_REAL_VALUE(r) is a pointer to it.  */
+comment|/* For a CONST_DOUBLE:    For a VOIDmode, there are two integers CONST_DOUBLE_LOW is the      low-order word and ..._HIGH the high-order.    For a float, there is a REAL_VALUE_TYPE structure, and      CONST_DOUBLE_REAL_VALUE(r) is a pointer to it.  */
 end_comment
 
 begin_define
@@ -3281,7 +3743,7 @@ name|CONST_DOUBLE_LOW
 parameter_list|(
 name|r
 parameter_list|)
-value|XCWINT (r, 0, CONST_DOUBLE)
+value|XCMWINT (r, 0, CONST_DOUBLE, VOIDmode)
 end_define
 
 begin_define
@@ -3291,7 +3753,7 @@ name|CONST_DOUBLE_HIGH
 parameter_list|(
 name|r
 parameter_list|)
-value|XCWINT (r, 1, CONST_DOUBLE)
+value|XCMWINT (r, 1, CONST_DOUBLE, VOIDmode)
 end_define
 
 begin_define
@@ -3301,7 +3763,8 @@ name|CONST_DOUBLE_REAL_VALUE
 parameter_list|(
 name|r
 parameter_list|)
-value|((struct real_value *)&CONST_DOUBLE_LOW(r))
+define|\
+value|((const struct real_value *) XCNMPRV (r, CONST_DOUBLE, VOIDmode))
 end_define
 
 begin_comment
@@ -3362,6 +3825,67 @@ begin_comment
 comment|/* in rtlanal.c */
 end_comment
 
+begin_comment
+comment|/* Return the right cost to give to an operation    to make the cost of the corresponding register-to-register instruction    N times that of a fast register-to-register instruction.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COSTS_N_INSNS
+parameter_list|(
+name|N
+parameter_list|)
+value|((N) * 4)
+end_define
+
+begin_comment
+comment|/* Maximum cost of an rtl expression.  This value has the special meaning    not to use an rtx with this cost under any circumstances.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_COST
+value|INT_MAX
+end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|init_rtlanal
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|rtx_cost
+parameter_list|(
+name|rtx
+parameter_list|,
+name|enum
+name|rtx_code
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|address_cost
+parameter_list|(
+name|rtx
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 specifier|extern
 name|unsigned
@@ -3369,6 +3893,24 @@ name|int
 name|subreg_lsb
 parameter_list|(
 name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|int
+name|subreg_lsb_1
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|unsigned
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3420,6 +3962,57 @@ name|unsigned
 name|int
 name|subreg_regno
 parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|HOST_WIDE_INT
+name|nonzero_bits
+parameter_list|(
+name|rtx
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|int
+name|num_sign_bit_copies
+parameter_list|(
+name|rtx
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|constant_pool_constant_p
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|truncated_to_mode
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
 name|rtx
 parameter_list|)
 function_decl|;
@@ -3579,6 +4172,27 @@ define|\
 value|GET_MODE (XCVECEXP (RTX, 4, N, ASM_OPERANDS))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_MAPPED_LOCATION
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ASM_OPERANDS_SOURCE_LOCATION
+parameter_list|(
+name|RTX
+parameter_list|)
+value|XCUINT (RTX, 5, ASM_OPERANDS)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -3597,6 +4211,26 @@ parameter_list|(
 name|RTX
 parameter_list|)
 value|XCINT (RTX, 6, ASM_OPERANDS)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 1 if RTX is a mem that is statically allocated in read-only memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEM_READONLY_P
+parameter_list|(
+name|RTX
+parameter_list|)
+define|\
+value|(RTL_FLAG_CHECK1("MEM_READONLY_P", (RTX), MEM)->unchanging)
 end_define
 
 begin_comment
@@ -3630,7 +4264,7 @@ value|(RTL_FLAG_CHECK3("MEM_VOLATILE_P", (RTX), MEM, ASM_OPERANDS,		\ 		   ASM_I
 end_define
 
 begin_comment
-comment|/* 1 if RTX is a mem that refers to an aggregate, either to the    aggregate itself of to a field of the aggregate.  If zero, RTX may    or may not be such a reference.  */
+comment|/* 1 if RTX is a mem that refers to an aggregate, either to the    aggregate itself or to a field of the aggregate.  If zero, RTX may    or may not be such a reference.  */
 end_comment
 
 begin_define
@@ -3645,7 +4279,7 @@ value|(RTL_FLAG_CHECK1("MEM_IN_STRUCT_P", (RTX), MEM)->in_struct)
 end_define
 
 begin_comment
-comment|/* 1 if RTX is a mem that refers to a scalar.  If zero, RTX may or may    not refer to a scalar.  */
+comment|/* 1 if RTX is a MEM that refers to a scalar.  If zero, RTX may or may    not refer to a scalar.  */
 end_comment
 
 begin_define
@@ -3656,7 +4290,7 @@ parameter_list|(
 name|RTX
 parameter_list|)
 define|\
-value|(RTL_FLAG_CHECK1("MEM_SCALAR_P", (RTX), MEM)->frame_related)
+value|(RTL_FLAG_CHECK1("MEM_SCALAR_P", (RTX), MEM)->return_val)
 end_define
 
 begin_comment
@@ -3833,22 +4467,7 @@ parameter_list|,
 name|RHS
 parameter_list|)
 define|\
-value|(MEM_VOLATILE_P (LHS) = MEM_VOLATILE_P (RHS),			\    MEM_IN_STRUCT_P (LHS) = MEM_IN_STRUCT_P (RHS),		\    MEM_SCALAR_P (LHS) = MEM_SCALAR_P (RHS),			\    MEM_NOTRAP_P (LHS) = MEM_NOTRAP_P (RHS),			\    RTX_UNCHANGING_P (LHS) = RTX_UNCHANGING_P (RHS),		\    MEM_KEEP_ALIAS_SET_P (LHS) = MEM_KEEP_ALIAS_SET_P (RHS),	\    MEM_ATTRS (LHS) = MEM_ATTRS (RHS))
-end_define
-
-begin_comment
-comment|/* 1 if RTX is a label_ref to a label outside the loop containing the    reference.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LABEL_OUTSIDE_LOOP_P
-parameter_list|(
-name|RTX
-parameter_list|)
-define|\
-value|(RTL_FLAG_CHECK1("LABEL_OUTSIDE_LOOP_P", (RTX), LABEL_REF)->in_struct)
+value|(MEM_VOLATILE_P (LHS) = MEM_VOLATILE_P (RHS),			\    MEM_IN_STRUCT_P (LHS) = MEM_IN_STRUCT_P (RHS),		\    MEM_SCALAR_P (LHS) = MEM_SCALAR_P (RHS),			\    MEM_NOTRAP_P (LHS) = MEM_NOTRAP_P (RHS),			\    MEM_READONLY_P (LHS) = MEM_READONLY_P (RHS),			\    MEM_KEEP_ALIAS_SET_P (LHS) = MEM_KEEP_ALIAS_SET_P (RHS),	\    MEM_ATTRS (LHS) = MEM_ATTRS (RHS))
 end_define
 
 begin_comment
@@ -3883,21 +4502,6 @@ name|RTX
 parameter_list|)
 define|\
 value|(RTL_FLAG_CHECK2("LABEL_PRESERVE_P", (RTX), CODE_LABEL, NOTE)->in_struct)
-end_define
-
-begin_comment
-comment|/* 1 if RTX is a reg that is used only in an exit test of a loop.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REG_LOOP_TEST_P
-parameter_list|(
-name|RTX
-parameter_list|)
-define|\
-value|(RTL_FLAG_CHECK1("REG_LOOP_TEST_P", (RTX), REG)->in_struct)
 end_define
 
 begin_comment
@@ -4070,7 +4674,38 @@ parameter_list|(
 name|RTX
 parameter_list|)
 define|\
-value|(RTL_FLAG_CHECK1("SYMBOL_REF_WEAK", (RTX), SYMBOL_REF)->integrated)
+value|(RTL_FLAG_CHECK1("SYMBOL_REF_WEAK", (RTX), SYMBOL_REF)->return_val)
+end_define
+
+begin_comment
+comment|/* A pointer attached to the SYMBOL_REF; either SYMBOL_REF_DECL or    SYMBOL_REF_CONSTANT.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_REF_DATA
+parameter_list|(
+name|RTX
+parameter_list|)
+value|X0ANY ((RTX), 2)
+end_define
+
+begin_comment
+comment|/* Set RTX's SYMBOL_REF_DECL to DECL.  RTX must not be a constant    pool symbol.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_SYMBOL_REF_DECL
+parameter_list|(
+name|RTX
+parameter_list|,
+name|DECL
+parameter_list|)
+define|\
+value|(gcc_assert (!CONSTANT_POOL_ADDRESS_P (RTX)), X0TREE ((RTX), 2) = (DECL))
 end_define
 
 begin_comment
@@ -4084,7 +4719,40 @@ name|SYMBOL_REF_DECL
 parameter_list|(
 name|RTX
 parameter_list|)
-value|X0TREE ((RTX), 2)
+define|\
+value|(CONSTANT_POOL_ADDRESS_P (RTX) ? NULL : X0TREE ((RTX), 2))
+end_define
+
+begin_comment
+comment|/* Set RTX's SYMBOL_REF_CONSTANT to C.  RTX must be a constant pool symbol.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_SYMBOL_REF_CONSTANT
+parameter_list|(
+name|RTX
+parameter_list|,
+name|C
+parameter_list|)
+define|\
+value|(gcc_assert (CONSTANT_POOL_ADDRESS_P (RTX)), X0CONSTANT ((RTX), 2) = (C))
+end_define
+
+begin_comment
+comment|/* The rtx constant pool entry for a symbol, or null.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_REF_CONSTANT
+parameter_list|(
+name|RTX
+parameter_list|)
+define|\
+value|(CONSTANT_POOL_ADDRESS_P (RTX) ? X0CONSTANT ((RTX), 2) : NULL)
 end_define
 
 begin_comment
@@ -4216,6 +4884,50 @@ value|((SYMBOL_REF_FLAGS (RTX)& SYMBOL_FLAG_EXTERNAL) != 0)
 end_define
 
 begin_comment
+comment|/* Set if this symbol has a block_symbol structure associated with it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_FLAG_HAS_BLOCK_INFO
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_REF_HAS_BLOCK_INFO_P
+parameter_list|(
+name|RTX
+parameter_list|)
+define|\
+value|((SYMBOL_REF_FLAGS (RTX)& SYMBOL_FLAG_HAS_BLOCK_INFO) != 0)
+end_define
+
+begin_comment
+comment|/* Set if this symbol is a section anchor.  SYMBOL_REF_ANCHOR_P implies    SYMBOL_REF_HAS_BLOCK_INFO_P.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_FLAG_ANCHOR
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_REF_ANCHOR_P
+parameter_list|(
+name|RTX
+parameter_list|)
+define|\
+value|((SYMBOL_REF_FLAGS (RTX)& SYMBOL_FLAG_ANCHOR) != 0)
+end_define
+
+begin_comment
 comment|/* Subsequent bits are available for the target to use.  */
 end_comment
 
@@ -4223,7 +4935,7 @@ begin_define
 define|#
 directive|define
 name|SYMBOL_FLAG_MACH_DEP_SHIFT
-value|7
+value|9
 end_define
 
 begin_define
@@ -4231,6 +4943,34 @@ define|#
 directive|define
 name|SYMBOL_FLAG_MACH_DEP
 value|(1<< SYMBOL_FLAG_MACH_DEP_SHIFT)
+end_define
+
+begin_comment
+comment|/* If SYMBOL_REF_HAS_BLOCK_INFO_P (RTX), this is the object_block    structure to which the symbol belongs, or NULL if it has not been    assigned a block.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_REF_BLOCK
+parameter_list|(
+name|RTX
+parameter_list|)
+value|(BLOCK_SYMBOL_CHECK (RTX)->block)
+end_define
+
+begin_comment
+comment|/* If SYMBOL_REF_HAS_BLOCK_INFO_P (RTX), this is the offset of RTX from    the first object in SYMBOL_REF_BLOCK (RTX).  The value is negative if    RTX has not yet been assigned to a block, or it has not been given an    offset within that block.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_REF_BLOCK_OFFSET
+parameter_list|(
+name|RTX
+parameter_list|)
+value|(BLOCK_SYMBOL_CHECK (RTX)->offset)
 end_define
 
 begin_comment
@@ -4655,34 +5395,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Determine if the insn is a PHI node.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PHI_NODE_P
-parameter_list|(
-name|X
-parameter_list|)
-define|\
-value|((X)&& GET_CODE (X) == INSN			\&& GET_CODE (PATTERN (X)) == SET		\&& GET_CODE (SET_SRC (PATTERN (X))) == PHI)
-end_define
-
 begin_escape
 end_escape
-
-begin_comment
-comment|/* Nonzero if we need to distinguish between the return value of this function    and the return value of a function called by this function.  This helps    integrate.c.    This is 1 until after the rtl generation pass.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|rtx_equal_function_value_matters
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Nonzero when we are generating CONCATs.  */
@@ -4692,6 +5406,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|generating_concat_p
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero when we are expanding trees to RTL.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|currently_expanding_to_rtl
 decl_stmt|;
 end_decl_stmt
 
@@ -4714,18 +5439,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|plus_constant
-parameter_list|(
-name|X
-parameter_list|,
-name|C
-parameter_list|)
-value|plus_constant_wide ((X), (HOST_WIDE_INT) (C))
-end_define
-
 begin_comment
 comment|/* In builtins.c */
 end_comment
@@ -4740,16 +5453,6 @@ parameter_list|,
 name|rtx
 parameter_list|,
 name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|purge_builtin_constant_p
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4784,33 +5487,11 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|rtx
-name|plus_constant_wide
+name|plus_constant
 parameter_list|(
 name|rtx
 parameter_list|,
 name|HOST_WIDE_INT
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|plus_constant_for_output_wide
-parameter_list|(
-name|rtx
-parameter_list|,
-name|HOST_WIDE_INT
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|optimize_save_area_alloca
-parameter_list|(
-name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4818,22 +5499,6 @@ end_function_decl
 begin_comment
 comment|/* In emit-rtl.c */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|gen_rtx
-parameter_list|(
-name|enum
-name|rtx_code
-parameter_list|,
-name|enum
-name|machine_mode
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -4947,12 +5612,23 @@ end_comment
 begin_function_decl
 specifier|extern
 name|rtx
-name|rtx_alloc
+name|rtx_alloc_stat
 parameter_list|(
 name|RTX_CODE
+name|MEM_STAT_DECL
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|rtx_alloc
+parameter_list|(
+name|c
+parameter_list|)
+value|rtx_alloc_stat (c MEM_STAT_INFO)
+end_define
 
 begin_function_decl
 specifier|extern
@@ -5004,11 +5680,10 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|rtx
-name|copy_most_rtx
+name|unsigned
+name|int
+name|rtx_size
 parameter_list|(
-name|rtx
-parameter_list|,
 name|rtx
 parameter_list|)
 function_decl|;
@@ -5017,12 +5692,23 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|rtx
-name|shallow_copy_rtx
+name|shallow_copy_rtx_stat
 parameter_list|(
 name|rtx
+name|MEM_STAT_DECL
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|shallow_copy_rtx
+parameter_list|(
+name|a
+parameter_list|)
+value|shallow_copy_rtx_stat (a MEM_STAT_INFO)
+end_define
 
 begin_function_decl
 specifier|extern
@@ -5094,33 +5780,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|subreg_hard_regno
-parameter_list|(
-name|rtx
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|rtx
 name|gen_lowpart_common
-parameter_list|(
-name|enum
-name|machine_mode
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|gen_lowpart
 parameter_list|(
 name|enum
 name|machine_mode
@@ -5172,32 +5833,6 @@ parameter_list|(
 name|enum
 name|machine_mode
 parameter_list|,
-name|enum
-name|machine_mode
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|gen_realpart
-parameter_list|(
-name|enum
-name|machine_mode
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|gen_imagpart
-parameter_list|(
 name|enum
 name|machine_mode
 parameter_list|,
@@ -5403,38 +6038,32 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|push_to_full_sequence
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|end_full_sequence
-parameter_list|(
-name|rtx
-modifier|*
-parameter_list|,
-name|rtx
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|rtx
 name|immed_double_const
 parameter_list|(
 name|HOST_WIDE_INT
 parameter_list|,
 name|HOST_WIDE_INT
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In loop-iv.c  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|lowpart_subreg
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
 parameter_list|,
 name|enum
 name|machine_mode
@@ -5462,6 +6091,12 @@ end_function_decl
 begin_comment
 comment|/* In varasm.c  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|function
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 specifier|extern
@@ -5491,45 +6126,6 @@ specifier|extern
 name|enum
 name|machine_mode
 name|get_pool_mode
-parameter_list|(
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|get_pool_constant_for_function
-parameter_list|(
-name|struct
-name|function
-modifier|*
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|enum
-name|machine_mode
-name|get_pool_mode_for_function
-parameter_list|(
-name|struct
-name|function
-modifier|*
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|get_pool_offset
 parameter_list|(
 name|rtx
 parameter_list|)
@@ -6017,6 +6613,16 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|rtx
+name|make_jump_insn_raw
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|add_function_usage_to
 parameter_list|(
@@ -6150,6 +6756,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|rtx
+name|skip_consecutive_labels
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|rtx
 name|next_cc0_user
 parameter_list|(
 name|rtx
@@ -6170,18 +6786,6 @@ end_function_decl
 begin_comment
 comment|/* In cfglayout.c  */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|tree
-name|choose_inner_scope
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -6316,7 +6920,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|unsigned
+name|int
 name|cleanup_barriers
 parameter_list|(
 name|void
@@ -6356,16 +6961,6 @@ begin_function_decl
 specifier|extern
 name|void
 name|delete_jump
-parameter_list|(
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|delete_barrier
 parameter_list|(
 name|rtx
 parameter_list|)
@@ -6466,6 +7061,25 @@ end_comment
 begin_function_decl
 specifier|extern
 name|rtx
+name|simplify_const_unary_operation
+parameter_list|(
+name|enum
+name|rtx_code
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|rtx
 name|simplify_unary_operation
 parameter_list|(
 name|enum
@@ -6478,6 +7092,24 @@ name|rtx
 parameter_list|,
 name|enum
 name|machine_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|simplify_const_binary_operation
+parameter_list|(
+name|enum
+name|rtx_code
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6526,10 +7158,31 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|rtx
+name|simplify_const_relational_operation
+parameter_list|(
+name|enum
+name|rtx_code
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|rtx
 name|simplify_relational_operation
 parameter_list|(
 name|enum
 name|rtx_code
+parameter_list|,
+name|enum
+name|machine_mode
 parameter_list|,
 name|enum
 name|machine_mode
@@ -6700,24 +7353,20 @@ name|bool
 name|constant_pool_reference_p
 parameter_list|(
 name|rtx
+name|x
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* In function.c  */
-end_comment
-
 begin_function_decl
 specifier|extern
-name|rtx
-name|gen_mem_addressof
+name|bool
+name|mode_signbit_p
 parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
 name|rtx
-parameter_list|,
-name|tree
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6889,29 +7538,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|rtx
-name|get_jump_table_offset
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|global_reg_mentioned_p
-parameter_list|(
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|int
 name|reg_mentioned_p
 parameter_list|(
@@ -6965,35 +7591,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|reg_referenced_between_p
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|reg_set_between_p
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|regs_set_between_p
 parameter_list|(
 name|rtx
 parameter_list|,
@@ -7055,31 +7653,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|no_jumps_between_p
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|modified_in_p
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|insn_dependent_p
 parameter_list|(
 name|rtx
 parameter_list|,
@@ -7256,18 +7830,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|rtx
-name|reg_set_last
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|int
 name|dead_or_set_p
 parameter_list|(
@@ -7428,6 +7990,26 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|may_trap_after_code_motion_p
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|may_trap_or_fault_p
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|inequality_comparisons_p
 parameter_list|(
 name|rtx
@@ -7445,24 +8027,6 @@ parameter_list|,
 name|rtx
 parameter_list|,
 name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|replace_regs
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-modifier|*
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7603,21 +8167,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|insns_safe_to_move_p
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|loc_mentioned_in_p
 parameter_list|(
 name|rtx
@@ -7658,6 +8207,64 @@ parameter_list|(
 name|rtx
 parameter_list|,
 name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|insn_rtx_cost
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Given an insn and condition, return a canonical description of    the test being made.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|canonicalize_condition
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|int
+parameter_list|,
+name|rtx
+modifier|*
+parameter_list|,
+name|rtx
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Given a JUMP_INSN, return a canonical description of the test    being made.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|get_condition
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7741,6 +8348,74 @@ name|int
 parameter_list|,
 name|rtx
 parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|free_DEPS_LIST_list
+parameter_list|(
+name|rtx
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|rtx
+name|alloc_DEPS_LIST
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|remove_free_DEPS_LIST_elem
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|remove_free_INSN_LIST_elem
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|rtx
+name|remove_list_elem
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|rtx
+name|copy_DEPS_LIST_list
+parameter_list|(
 name|rtx
 parameter_list|)
 function_decl|;
@@ -7841,16 +8516,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|rtx
-name|get_first_nonparm_insn
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|split_all_insns
 parameter_list|(
@@ -7861,7 +8526,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|unsigned
+name|int
 name|split_all_insns_noflow
 parameter_list|(
 name|void
@@ -8212,7 +8878,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_GENRTL_H
+name|GENERATOR_FILE
 end_ifndef
 
 begin_include
@@ -8221,13 +8887,53 @@ directive|include
 file|"genrtl.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_MAPPED_LOCATION
+end_ifndef
+
+begin_undef
+undef|#
+directive|undef
+name|gen_rtx_ASM_OPERANDS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|gen_rtx_ASM_OPERANDS
+parameter_list|(
+name|MODE
+parameter_list|,
+name|ARG0
+parameter_list|,
+name|ARG1
+parameter_list|,
+name|ARG2
+parameter_list|,
+name|ARG3
+parameter_list|,
+name|ARG4
+parameter_list|,
+name|LOC
+parameter_list|)
+define|\
+value|gen_rtx_fmt_ssiEEsi (ASM_OPERANDS, (MODE), (ARG0), (ARG1), (ARG2), (ARG3), (ARG4), (LOC).file, (LOC).line)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* There are some RTL codes that require special attention; the    generation functions included above do the raw handling.  If you    add to this list, modify special_rtx in gengenrtl.c as well.  You    should also modify gen_rtx to use the special function.  */
+comment|/* There are some RTL codes that require special attention; the    generation functions included above do the raw handling.  If you    add to this list, modify special_rtx in gengenrtl.c as well.  */
 end_comment
 
 begin_function_decl
@@ -8310,23 +9016,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|rtx
-name|gen_lowpart_SUBREG
-parameter_list|(
-name|enum
-name|machine_mode
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* We need the cast here to ensure that we get the same result both with    and without prototypes.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -8334,7 +9023,7 @@ name|GEN_INT
 parameter_list|(
 name|N
 parameter_list|)
-value|gen_rtx_CONST_INT (VOIDmode, (HOST_WIDE_INT) (N))
+value|gen_rtx_CONST_INT (VOIDmode, (N))
 end_define
 
 begin_comment
@@ -8494,20 +9183,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Called from integrate.c when a deferred constant is inlined.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|notice_rtl_inlining_of_deferred_constant
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Nonzero after the second flow pass has completed.    Set to 1 or 0 by toplev.c  */
 end_comment
 
@@ -8551,6 +9226,28 @@ name|reload_in_progress
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STACK_REGS
+end_ifdef
+
+begin_comment
+comment|/* Nonzero after end of regstack pass.    Set to 1 or 0 by reg-stack.c.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|regstack_completed
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* If this is nonzero, we do not bother generating VOLATILE    around volatile memory references, and we are willing to    output indirect addresses.  If cse is to follow, we reject    indirect addresses so a useful potential cse is generated;    if it is used only once, instruction combination will produce    the same indirect address eventually.  */
 end_comment
@@ -8592,63 +9289,6 @@ begin_comment
 comment|/* In cse.c */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|cse_basic_block_data
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* Return the right cost to give to an operation    to make the cost of the corresponding register-to-register instruction    N times that of a fast register-to-register instruction.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COSTS_N_INSNS
-parameter_list|(
-name|N
-parameter_list|)
-value|((N) * 4)
-end_define
-
-begin_comment
-comment|/* Maximum cost of an rtl expression.  This value has the special meaning    not to use an rtx with this cost under any circumstances.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_COST
-value|INT_MAX
-end_define
-
-begin_function_decl
-specifier|extern
-name|int
-name|rtx_cost
-parameter_list|(
-name|rtx
-parameter_list|,
-name|enum
-name|rtx_code
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|address_cost
-parameter_list|(
-name|rtx
-parameter_list|,
-name|enum
-name|machine_mode
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 specifier|extern
 name|int
@@ -8661,12 +9301,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
-
 begin_function_decl
 specifier|extern
 name|int
@@ -8675,46 +9309,44 @@ parameter_list|(
 name|rtx
 parameter_list|,
 name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|FILE
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|extern
-name|void
-name|cse_end_of_basic_block
+name|int
+name|exp_equiv_p
 parameter_list|(
 name|rtx
 parameter_list|,
-name|struct
-name|cse_basic_block_data
-modifier|*
+name|rtx
 parameter_list|,
 name|int
 parameter_list|,
-name|int
-parameter_list|,
-name|int
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|cse_condition_code_reg
+name|unsigned
+name|hash_rtx
 parameter_list|(
-name|void
+name|rtx
+name|x
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8761,16 +9393,6 @@ begin_function_decl
 specifier|extern
 name|int
 name|any_uncondjump_p
-parameter_list|(
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|safe_to_remove_jump_p
 parameter_list|(
 name|rtx
 parameter_list|)
@@ -8920,6 +9542,24 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|redirect_jump_2
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|redirect_jump
 parameter_list|(
@@ -8938,6 +9578,19 @@ name|void
 name|rebuild_jump_labels
 parameter_list|(
 name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|reversed_comparison
+parameter_list|(
+name|rtx
+parameter_list|,
+name|enum
+name|machine_mode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8997,32 +9650,11 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|never_reached_warning
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
+name|unsigned
+name|int
 name|purge_line_number_notes
 parameter_list|(
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
-name|copy_loop_headers
-parameter_list|(
-name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9057,6 +9689,16 @@ name|int
 name|get_first_label_num
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|maybe_set_first_label_num
+parameter_list|(
+name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9213,26 +9855,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|subreg_realpart_p
-parameter_list|(
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|reverse_comparison
-parameter_list|(
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|set_new_first_and_last_insn
 parameter_list|(
@@ -9245,10 +9867,11 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|set_new_last_label_num
-parameter_list|(
+name|unsigned
 name|int
+name|unshare_all_rtl
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9360,37 +9983,12 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|reorder_insns_with_line_notes
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|emit_insn_after_with_line_notes
 parameter_list|(
 name|rtx
 parameter_list|,
 name|rtx
 parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|enum
-name|rtx_code
-name|classify_insn
-parameter_list|(
 name|rtx
 parameter_list|)
 function_decl|;
@@ -9406,44 +10004,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Query and clear/ restore no_line_numbers.  This is used by the    switch / case handling in stmt.c to give proper line numbers in    warnings about unreachable code.  */
-end_comment
-
-begin_function_decl
-name|int
-name|force_line_numbers
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|restore_line_number_status
-parameter_list|(
-name|int
-name|old_value
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 specifier|extern
 name|void
 name|renumber_insns
-parameter_list|(
-name|FILE
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|remove_unnecessary_notes
 parameter_list|(
 name|void
 parameter_list|)
@@ -9454,6 +10018,26 @@ begin_function_decl
 specifier|extern
 name|rtx
 name|delete_insn
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|entry_of_function
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|emit_insn_at_entry
 parameter_list|(
 name|rtx
 parameter_list|)
@@ -9506,15 +10090,69 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* In combine.c */
-end_comment
+begin_function_decl
+specifier|extern
+name|rtx
+name|gen_lowpart_SUBREG
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|combine_instructions
+name|rtx
+name|gen_const_mem
 parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|gen_frame_mem
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|gen_tmp_stack_mem
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|validate_subreg
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
 name|rtx
 parameter_list|,
 name|unsigned
@@ -9522,6 +10160,10 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* In combine.c */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -9552,12 +10194,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
-
 begin_function_decl
 specifier|extern
 name|void
@@ -9580,61 +10216,82 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* In web.c */
+comment|/* In sched-vis.c.  */
 end_comment
 
 begin_function_decl
 specifier|extern
 name|void
-name|web_main
+name|print_rtl_slim_with_bb
 parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|rtx
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
+name|dump_insn_slim
+parameter_list|(
+name|FILE
+modifier|*
+name|f
+parameter_list|,
+name|rtx
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|debug_insn_slim
+parameter_list|(
+name|rtx
+name|x
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* In sched.c.  */
+comment|/* In sched-rgn.c.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
 
 begin_function_decl
 specifier|extern
 name|void
 name|schedule_insns
 parameter_list|(
-name|FILE
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* In sched-ebb.c.  */
+end_comment
 
 begin_function_decl
 specifier|extern
 name|void
 name|schedule_ebbs
 parameter_list|(
-name|FILE
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* In haifa-sched.c.  */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -9711,12 +10368,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
-
 begin_function_decl
 specifier|extern
 name|void
@@ -9784,86 +10435,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* In loop.c */
+comment|/* In bt-load.c */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|init_loop
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|libcall_other_reg
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|void
-name|loop_optimize
-parameter_list|(
-name|rtx
-parameter_list|,
-name|FILE
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
 name|void
 name|branch_target_load_optimize
 parameter_list|(
-name|rtx
-parameter_list|,
 name|bool
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|record_excess_regs
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9915,16 +10496,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|preserve_rtl_expr_result
-parameter_list|(
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|mark_temp_addr_taken
 parameter_list|(
 name|rtx
@@ -9944,39 +10515,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|purge_addressof
-parameter_list|(
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|purge_hard_subreg_sets
-parameter_list|(
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* In stmt.c */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|set_file_and_line_for_stmt
-parameter_list|(
-name|location_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -10004,16 +10545,6 @@ name|void
 name|emit_jump
 parameter_list|(
 name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|preserve_subexpressions_p
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10049,40 +10580,12 @@ end_comment
 begin_function_decl
 specifier|extern
 name|void
-name|recompute_reg_usage
-parameter_list|(
-name|rtx
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|initialize_uninitialized_subregs
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|delete_dead_jumptables
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
 
 begin_function_decl
 specifier|extern
@@ -10104,14 +10607,11 @@ name|dump_flow_info
 parameter_list|(
 name|FILE
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* In expmed.c */
@@ -10151,28 +10651,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|rtx
-name|expand_mult_highpart
-parameter_list|(
-name|enum
-name|machine_mode
-parameter_list|,
-name|rtx
-parameter_list|,
-name|unsigned
-name|HOST_WIDE_INT
-parameter_list|,
-name|rtx
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* In gcse.c */
 end_comment
@@ -10198,41 +10676,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|int
-name|gcse_main
-parameter_list|(
-name|rtx
-parameter_list|,
-name|FILE
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|bypass_jumps
-parameter_list|(
-name|FILE
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* In global.c */
 end_comment
@@ -10249,23 +10692,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|int
-name|global_alloc
-parameter_list|(
-name|FILE
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 specifier|extern
 name|void
@@ -10276,11 +10702,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -10404,16 +10825,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|regset_release_memory
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|regclass_init
 parameter_list|(
 name|void
@@ -10429,9 +10840,6 @@ parameter_list|(
 name|rtx
 parameter_list|,
 name|int
-parameter_list|,
-name|FILE
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10441,23 +10849,6 @@ specifier|extern
 name|void
 name|reg_scan
 parameter_list|(
-name|rtx
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|reg_scan_update
-parameter_list|(
-name|rtx
-parameter_list|,
 name|rtx
 parameter_list|,
 name|unsigned
@@ -10547,65 +10938,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|int
-name|delete_null_pointer_checks
-parameter_list|(
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* In regmove.c */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|void
-name|regmove_optimize
-parameter_list|(
-name|rtx
-parameter_list|,
-name|int
-parameter_list|,
-name|FILE
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-specifier|extern
-name|void
-name|combine_stack_adjustments
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* In reorg.c */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
 
 begin_function_decl
 specifier|extern
@@ -10613,27 +10948,13 @@ name|void
 name|dbr_schedule
 parameter_list|(
 name|rtx
-parameter_list|,
-name|FILE
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* In local-alloc.c */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
 
 begin_function_decl
 specifier|extern
@@ -10646,20 +10967,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-specifier|extern
-name|int
-name|local_alloc
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* In reload1.c */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -10670,68 +10980,6 @@ name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* In profile.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|init_branch_prob
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|branch_prob
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|end_branch_prob
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* In reg-stack.c */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|bool
-name|reg_to_stack
-parameter_list|(
-name|rtx
-parameter_list|,
-name|FILE
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* In calls.c */
@@ -10769,13 +11017,9 @@ name|LCT_THROW
 init|=
 literal|6
 block|,
-name|LCT_ALWAYS_RETURN
-init|=
-literal|7
-block|,
 name|LCT_RETURNS_TWICE
 init|=
-literal|8
+literal|7
 block|}
 enum|;
 end_enum
@@ -10823,40 +11067,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* In unroll.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|set_dominates_use
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* In varasm.c */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|in_data_section
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -10868,19 +11080,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* In rtl.c */
-end_comment
-
 begin_function_decl
 specifier|extern
-name|void
-name|init_rtl
+name|enum
+name|tls_model
+name|decl_default_tls_model
 parameter_list|(
-name|void
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* In rtl.c */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -10921,11 +11134,9 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
+begin_comment
+comment|/* In read-rtl.c */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -10940,19 +11151,78 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|rtx
+name|bool
 name|read_rtx
 parameter_list|(
 name|FILE
+modifier|*
+parameter_list|,
+name|rtx
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+specifier|extern
+name|void
+name|copy_rtx_ptr_loc
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|print_rtx_ptr_loc
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|join_c_conditions
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|print_c_condition
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -10969,37 +11239,6 @@ name|int
 name|read_rtx_lineno
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Redefine abort to report an internal error w/o coredump, and    reporting the location of the error in the source file.  This logic    is duplicated in rtl.h and tree.h because every file that needs the    special abort includes one or both.  toplev.h gets too few files,    system.h gets too many.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|fancy_abort
-argument_list|(
-specifier|const
-name|char
-operator|*
-argument_list|,
-name|int
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
-name|ATTRIBUTE_NORETURN
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|abort
-parameter_list|()
-value|fancy_abort (__FILE__, __LINE__, __FUNCTION__)
-end_define
 
 begin_comment
 comment|/* In alias.c */
@@ -11125,28 +11364,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|unchanging_anti_dependence
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|mark_constant_function
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|init_alias_once
 parameter_list|(
@@ -11177,20 +11394,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|rtx
-name|addr_side_effect_eval
-parameter_list|(
-name|rtx
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|bool
 name|memory_modified_in_insn_p
 parameter_list|(
@@ -11214,6 +11417,20 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|rtx
+name|gen_hard_reg_clobber
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|rtx
 name|get_reg_known_value
 parameter_list|(
 name|unsigned
@@ -11229,48 +11446,6 @@ name|get_reg_known_equiv_p
 parameter_list|(
 name|unsigned
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* In sibcall.c */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|sibcall_use_normal
-init|=
-literal|1
-block|,
-name|sibcall_use_tail_recursion
-block|,
-name|sibcall_use_sibcall
-block|}
-name|sibcall_use_t
-typedef|;
-end_typedef
-
-begin_function_decl
-specifier|extern
-name|void
-name|optimize_sibling_and_tail_recursive_calls
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|replace_call_placeholder
-parameter_list|(
-name|rtx
-parameter_list|,
-name|sibcall_use_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11313,44 +11488,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* In regrename.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|regrename_optimize
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|copyprop_hardreg_forward
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* In ifcvt.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|if_convert
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* In predict.c */
 end_comment
 
@@ -11388,6 +11525,245 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* In var-tracking.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|int
+name|variable_tracking_main
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In stor-layout.c.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|get_mode_bounds
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|int
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+modifier|*
+parameter_list|,
+name|rtx
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In loop-unswitch.c  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|reversed_condition
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|compare_and_jump_seq
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|enum
+name|rtx_code
+parameter_list|,
+name|rtx
+parameter_list|,
+name|int
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In loop-iv.c  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|canon_condition
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|simplify_using_condition
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+modifier|*
+parameter_list|,
+name|struct
+name|bitmap_head_def
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_escape
+end_escape
+
+begin_struct
+struct|struct
+name|rtl_hooks
+block|{
+name|rtx
+function_decl|(
+modifier|*
+name|gen_lowpart
+function_decl|)
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+name|rtx
+function_decl|(
+modifier|*
+name|gen_lowpart_no_emit
+function_decl|)
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+name|rtx
+function_decl|(
+modifier|*
+name|reg_nonzero_bits
+function_decl|)
+parameter_list|(
+name|rtx
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|unsigned
+name|HOST_WIDE_INT
+parameter_list|,
+name|unsigned
+name|HOST_WIDE_INT
+modifier|*
+parameter_list|)
+function_decl|;
+name|rtx
+function_decl|(
+modifier|*
+name|reg_num_sign_bit_copies
+function_decl|)
+parameter_list|(
+name|rtx
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+name|bool
+function_decl|(
+modifier|*
+name|reg_truncated_to_mode
+function_decl|)
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+comment|/* Whenever you add entries here, make sure you adjust rtlhooks-def.h.  */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Each pass can provide its own.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rtl_hooks
+name|rtl_hooks
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ... but then it has to restore these.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|rtl_hooks
+name|general_rtl_hooks
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Keep this for the nonce.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|gen_lowpart
+value|rtl_hooks.gen_lowpart
+end_define
 
 begin_endif
 endif|#

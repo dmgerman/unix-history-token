@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Utility to update paths from internal to external forms.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Utility to update paths from internal to external forms.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -290,8 +290,10 @@ name|char
 modifier|*
 name|result
 init|=
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 name|len
 operator|+
 literal|1
@@ -332,6 +334,24 @@ argument_list|(
 name|ENABLE_WIN32_REGISTRY
 argument_list|)
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WIN32_REGISTRY_KEY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|WIN32_REGISTRY_KEY
+value|BASEVER
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Look up "key" in the registry, as above.  */
@@ -474,6 +494,9 @@ argument_list|,
 operator|&
 name|type
 argument_list|,
+operator|(
+name|LPBYTE
+operator|)
 name|dst
 argument_list|,
 operator|&
@@ -513,6 +536,9 @@ argument_list|,
 operator|&
 name|type
 argument_list|,
+operator|(
+name|LPBYTE
+operator|)
 name|dst
 argument_list|,
 operator|&
@@ -643,6 +669,10 @@ control|)
 empty_stmt|;
 name|key
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|alloca
 argument_list|(
 name|keylen
@@ -793,7 +823,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Update PATH using KEY if PATH starts with PREFIX.  The returned    string is always malloc-ed, and the caller is responsible for    freeing it.  */
+comment|/* Update PATH using KEY if PATH starts with PREFIX as a directory.    The returned string is always malloc-ed, and the caller is    responsible for freeing it.  */
 end_comment
 
 begin_function
@@ -819,6 +849,15 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
+name|int
+name|len
+init|=
+name|strlen
+argument_list|(
+name|std_prefix
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -828,11 +867,25 @@ name|path
 argument_list|,
 name|std_prefix
 argument_list|,
-name|strlen
+name|len
+argument_list|)
+operator|&&
+operator|(
+name|IS_DIR_SEPARATOR
 argument_list|(
-name|std_prefix
+name|path
+index|[
+name|len
+index|]
 argument_list|)
-argument_list|)
+operator|||
+name|path
+index|[
+name|len
+index|]
+operator|==
+literal|'\0'
+operator|)
 operator|&&
 name|key
 operator|!=
@@ -879,10 +932,7 @@ argument_list|,
 operator|&
 name|path
 index|[
-name|strlen
-argument_list|(
-name|std_prefix
-argument_list|)
+name|len
 index|]
 argument_list|,
 name|NULL

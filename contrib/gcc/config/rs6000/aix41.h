@@ -1,21 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for IBM RS/6000 POWER running AIX version 4.1.    Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2003    Free Software Foundation, Inc.    Contributed by David Edelsohn (edelsohn@gnu.org).     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for IBM RS/6000 POWER running AIX version 4.1.    Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004,    2005    Free Software Foundation, Inc.    Contributed by David Edelsohn (edelsohn@gnu.org).     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SUBSUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBSUBTARGET_SWITCHES
-define|\
-value|{"pe",		0,					\    N_("Support message passing with the Parallel Environment") },
-end_define
 
 begin_undef
 undef|#
@@ -55,7 +41,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do                                  \     {                                 \       builtin_define ("_IBMR2");      \       builtin_define ("_POWER");      \       builtin_define ("_AIX");        \       builtin_define ("_AIX32");      \       builtin_define ("_AIX41");      \       builtin_define ("_LONG_LONG");  \       builtin_assert ("system=unix"); \       builtin_assert ("system=aix");  \     }                                 \   while (0)
+value|do                                 \     {                                \       TARGET_OS_AIX_CPP_BUILTINS (); \     }                                \   while (0)
 end_define
 
 begin_undef
@@ -184,6 +170,19 @@ parameter_list|,
 name|TARGET
 parameter_list|)
 value|true
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_64BIT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_64BIT
+value|0
 end_define
 
 end_unit

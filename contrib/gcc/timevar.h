@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Timing variables for measuring compiler performance.    Copyright (C) 2000, 2003 Free Software Foundation, Inc.    Contributed by Alex Samuel<samuel@codesourcery.com>     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Timing variables for measuring compiler performance.    Copyright (C) 2000, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Alex Samuel<samuel@codesourcery.com>     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -38,6 +38,10 @@ decl_stmt|;
 comment|/* Wall clock time.  */
 name|double
 name|wall
+decl_stmt|;
+comment|/* Garbage collector memory.  */
+name|unsigned
+name|ggc_mem
 decl_stmt|;
 block|}
 struct|;
@@ -92,7 +96,27 @@ name|TV
 parameter_list|,
 name|E
 parameter_list|)
-value|return (timevar_pop (TV), (E))
+value|do { timevar_pop (TV); return (E); }while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|timevar_pop
+parameter_list|(
+name|TV
+parameter_list|)
+value|do { if (timevar_enable) timevar_pop_1 (TV); }while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|timevar_push
+parameter_list|(
+name|TV
+parameter_list|)
+value|do { if (timevar_enable) timevar_push_1 (TV); }while(0)
 end_define
 
 begin_function_decl
@@ -108,7 +132,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|timevar_push
+name|timevar_push_1
 parameter_list|(
 name|timevar_id_t
 parameter_list|)
@@ -118,7 +142,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|timevar_pop
+name|timevar_pop_1
 parameter_list|(
 name|timevar_id_t
 parameter_list|)
@@ -141,20 +165,6 @@ name|void
 name|timevar_stop
 parameter_list|(
 name|timevar_id_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|timevar_get
-parameter_list|(
-name|timevar_id_t
-parameter_list|,
-name|struct
-name|timevar_time_def
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -187,6 +197,20 @@ name|long
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|timevar_enable
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|size_t
+name|timevar_ggc_mem_total
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

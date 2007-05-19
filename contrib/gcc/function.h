@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Structure for saving state for a nested function.    Copyright (C) 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Structure for saving state for a nested function.    Copyright (C) 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2003, 2004, 2005 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,18 @@ define|#
 directive|define
 name|GCC_FUNCTION_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"tree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hashtab.h"
+end_include
 
 begin_decl_stmt
 name|struct
@@ -65,9 +77,6 @@ name|first
 decl_stmt|;
 name|rtx
 name|last
-decl_stmt|;
-name|tree
-name|sequence_rtl_expr
 decl_stmt|;
 name|struct
 name|sequence_stack
@@ -132,16 +141,12 @@ comment|/* Lowest label number in current function.  */
 name|int
 name|x_first_label_num
 decl_stmt|;
-comment|/* The ends of the doubly-linked chain of rtl for the current function.      Both are reset to null at the start of rtl generation for the function.       start_sequence saves both of these on `sequence_stack' along with      `sequence_rtl_expr' and then starts a new, nested sequence of insns.  */
+comment|/* The ends of the doubly-linked chain of rtl for the current function.      Both are reset to null at the start of rtl generation for the function.       start_sequence saves both of these on `sequence_stack' and then starts      a new, nested sequence of insns.  */
 name|rtx
 name|x_first_insn
 decl_stmt|;
 name|rtx
 name|x_last_insn
-decl_stmt|;
-comment|/* RTL_EXPR within which the current sequence will be placed.  Use to      prevent reuse of any temporaries within the sequence until after the      RTL_EXPR is emitted.  */
-name|tree
-name|sequence_rtl_expr
 decl_stmt|;
 comment|/* Stack of pending (incomplete) sequences saved by `start_sequence'.      Each element describes one pending sequence.      The main insn-chain is saved in the last element of the chain,      unless the chain is empty.  */
 name|struct
@@ -176,7 +181,7 @@ operator|)
 argument_list|)
 name|regno_pointer_align
 decl_stmt|;
-comment|/* Indexed by pseudo register number, gives the rtx for that pseudo.      Allocated in parallel with regno_pointer_align.       Note MEM expressions can appear in this array due to the actions      of put_var_into_stack.  */
+comment|/* Indexed by pseudo register number, gives the rtx for that pseudo.      Allocated in parallel with regno_pointer_align.  */
 name|rtx
 modifier|*
 name|GTY
@@ -206,13 +211,6 @@ define|#
 directive|define
 name|reg_rtx_no
 value|(cfun->emit->x_reg_rtx_no)
-end_define
-
-begin_define
-define|#
-directive|define
-name|seq_rtl_expr
-value|(cfun->emit->sequence_rtl_expr)
 end_define
 
 begin_define
@@ -272,10 +270,6 @@ comment|/* List of labels that must never be deleted.  */
 name|rtx
 name|x_forced_labels
 decl_stmt|;
-comment|/* Postincrements that still need to be expanded.  */
-name|rtx
-name|x_pending_chain
-decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -321,16 +315,58 @@ end_define
 begin_define
 define|#
 directive|define
-name|pending_chain
-value|(cfun->expr->x_pending_chain)
-end_define
-
-begin_define
-define|#
-directive|define
 name|stack_pointer_delta
 value|(cfun->expr->x_stack_pointer_delta)
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|temp_slot
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|struct
+name|temp_slot
+modifier|*
+name|temp_slot_p
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEF_VEC_P
+argument_list|(
+name|temp_slot_p
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEF_VEC_ALLOC_P
+argument_list|(
+name|temp_slot_p
+argument_list|,
+name|gc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_enum
+enum|enum
+name|function_frequency
+block|{
+comment|/* This function most likely won't be executed at all.      (set only when profile feedback is available).  */
+name|FUNCTION_FREQUENCY_UNLIKELY_EXECUTED
+block|,
+comment|/* The default value.  */
+name|FUNCTION_FREQUENCY_NORMAL
+block|,
+comment|/* Optimize this function hard      (set only when profile feedback is available).  */
+name|FUNCTION_FREQUENCY_HOT
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/* This structure can save all the important global and static variables    describing the status of the current function.  */
@@ -351,11 +387,6 @@ modifier|*
 name|eh
 decl_stmt|;
 name|struct
-name|stmt_status
-modifier|*
-name|stmt
-decl_stmt|;
-name|struct
 name|expr_status
 modifier|*
 name|expr
@@ -369,6 +400,12 @@ name|struct
 name|varasm_status
 modifier|*
 name|varasm
+decl_stmt|;
+comment|/* The control flow graph for this function.  */
+name|struct
+name|control_flow_graph
+modifier|*
+name|cfg
 decl_stmt|;
 comment|/* For function.c.  */
 comment|/* Points to the FUNCTION_DECL of this function.  */
@@ -413,41 +450,15 @@ comment|/* The arg pointer hard register, or the pseudo into which it was copied
 name|rtx
 name|internal_arg_pointer
 decl_stmt|;
-comment|/* Language-specific reason why the current function cannot be made      inline.  */
-specifier|const
-name|char
-modifier|*
-name|cannot_inline
-decl_stmt|;
 comment|/* Opaque pointer used by get_hard_reg_initial_val and      has_hard_reg_initial_val (see integrate.[hc]).  */
 name|struct
 name|initial_value_struct
 modifier|*
 name|hard_reg_initial_vals
 decl_stmt|;
-comment|/* Number of function calls seen so far in current function.  */
-name|int
-name|x_function_call_count
-decl_stmt|;
-comment|/* List (chain of TREE_LIST) of LABEL_DECLs for all nonlocal labels      (labels to which there can be nonlocal gotos from nested functions)      in this function.  */
-name|tree
-name|x_nonlocal_labels
-decl_stmt|;
-comment|/* List (chain of EXPR_LIST) of stack slots that hold the current handlers      for nonlocal gotos.  There is one for every nonlocal label in the      function; this list matches the one in nonlocal_labels.      Zero when function does not have nonlocal labels.  */
-name|rtx
-name|x_nonlocal_goto_handler_slots
-decl_stmt|;
 comment|/* List (chain of EXPR_LIST) of labels heading the current handlers for      nonlocal gotos.  */
 name|rtx
 name|x_nonlocal_goto_handler_labels
-decl_stmt|;
-comment|/* RTX for stack slot that holds the stack pointer value to restore      for a nonlocal goto.      Zero when function does not have nonlocal labels.  */
-name|rtx
-name|x_nonlocal_goto_stack_level
-decl_stmt|;
-comment|/* Label that will go on parm cleanup code, if any.      Jumping to this label runs cleanup code for parameters, if      such code must be run.  Following this code is the logical return      label.  */
-name|rtx
-name|x_cleanup_label
 decl_stmt|;
 comment|/* Label that will go on function epilogue.      Jumping to this label serves as a "return" instruction      on machines which require execution of the epilogue on all returns.  */
 name|rtx
@@ -457,97 +468,49 @@ comment|/* Label that will go on the end of function epilogue.      Jumping to t
 name|rtx
 name|x_naked_return_label
 decl_stmt|;
-comment|/* Label and register for unswitching computed gotos.  */
-name|rtx
-name|computed_goto_common_label
-decl_stmt|;
-name|rtx
-name|computed_goto_common_reg
-decl_stmt|;
-comment|/* List (chain of EXPR_LISTs) of pseudo-regs of SAVE_EXPRs.      So we can mark them all live at the end of the function, if nonopt.  */
-name|rtx
-name|x_save_expr_regs
-decl_stmt|;
 comment|/* List (chain of EXPR_LISTs) of all stack slots in this function.      Made for the sake of unshare_all_rtl.  */
 name|rtx
 name|x_stack_slot_list
 decl_stmt|;
-comment|/* Chain of all RTL_EXPRs that have insns in them.  */
-name|tree
-name|x_rtl_expr_chain
-decl_stmt|;
-comment|/* Label to jump back to for tail recursion, or 0 if we have      not yet needed one for this function.  */
-name|rtx
-name|x_tail_recursion_label
-decl_stmt|;
 comment|/* Place after which to insert the tail_recursion_label if we need one.  */
 name|rtx
-name|x_tail_recursion_reentry
+name|x_stack_check_probe_note
 decl_stmt|;
 comment|/* Location at which to save the argument pointer if it will need to be      referenced.  There are two cases where this is done: if nonlocal gotos      exist, or if vars stored at an offset from the argument pointer will be      needed by inner routines.  */
 name|rtx
 name|x_arg_pointer_save_area
 decl_stmt|;
-comment|/* If the function returns non-void, we will emit a clobber of the      return registers just in case the user fell off the end without      returning a proper value.  This is that insn.  */
-name|rtx
-name|x_clobber_return_insn
-decl_stmt|;
 comment|/* Offset to end of allocated area of stack frame.      If stack grows down, this is the address of the last stack slot allocated.      If stack grows up, this is the address for the next slot.  */
 name|HOST_WIDE_INT
 name|x_frame_offset
 decl_stmt|;
-comment|/* List (chain of TREE_LISTs) of static chains for containing functions.      Each link has a FUNCTION_DECL in the TREE_PURPOSE and a reg rtx      in an RTL_EXPR in the TREE_VALUE.  */
+comment|/* A PARM_DECL that should contain the static chain for this function.      It will be initialized at the beginning of the function.  */
 name|tree
-name|x_context_display
+name|static_chain_decl
 decl_stmt|;
-comment|/* List (chain of TREE_LISTs) of trampolines for nested functions.      The trampoline sets up the static chain and jumps to the function.      We supply the trampoline's address when the function's address is      requested.       Each link has a FUNCTION_DECL in the TREE_PURPOSE and a reg rtx      in an RTL_EXPR in the TREE_VALUE.  */
+comment|/* An expression that contains the non-local goto save area.  The first      word is the saved frame pointer and the second is the saved stack       pointer.  */
 name|tree
-name|x_trampoline_list
+name|nonlocal_goto_save_area
 decl_stmt|;
 comment|/* Insn after which register parms and SAVE_EXPRs are born, if nonopt.  */
 name|rtx
 name|x_parm_birth_insn
 decl_stmt|;
-comment|/* Last insn of those whose job was to put parms into their nominal      homes.  */
-name|rtx
-name|x_last_parm_insn
-decl_stmt|;
-comment|/* 1 + last pseudo register number possibly used for loading a copy      of a parameter of this function.  */
-name|unsigned
-name|int
-name|x_max_parm_reg
-decl_stmt|;
-comment|/* Vector indexed by REGNO, containing location on stack in which      to put the parm which is nominally in pseudo register REGNO,      if we discover that that parm must go in the stack.  The highest      element in this vector is one less than MAX_PARM_REG, above.  */
-name|rtx
-modifier|*
-name|GTY
+comment|/* List of all used temporaries allocated, by level.  */
+name|VEC
 argument_list|(
-operator|(
-name|length
-argument_list|(
-literal|"%h.x_max_parm_reg"
+name|temp_slot_p
+argument_list|,
+name|gc
 argument_list|)
-operator|)
-argument_list|)
-name|x_parm_reg_stack_loc
-decl_stmt|;
-comment|/* List of all temporaries allocated, both available and in use.  */
+operator|*
+name|x_used_temp_slots
+expr_stmt|;
+comment|/* List of available temp slots.  */
 name|struct
 name|temp_slot
 modifier|*
-name|x_temp_slots
-decl_stmt|;
-comment|/* Current nesting level for temporaries.  */
-name|int
-name|x_temp_slot_level
-decl_stmt|;
-comment|/* Current nesting level for variables in a block.  */
-name|int
-name|x_var_temp_slot_level
-decl_stmt|;
-comment|/* When temporaries are created by TARGET_EXPRs, they are created at      this level of temp_slot_level, so that they can remain allocated      until no longer needed.  CLEANUP_POINT_EXPRs define the lifetime      of TARGET_EXPRs.  */
-name|int
-name|x_target_temp_slot_level
+name|x_avail_temp_slots
 decl_stmt|;
 comment|/* This slot is initialized as 0 and is added to      during the nested function.  */
 name|struct
@@ -555,22 +518,9 @@ name|var_refs_queue
 modifier|*
 name|fixup_var_refs_queue
 decl_stmt|;
-comment|/* For integrate.c.  */
+comment|/* Current nesting level for temporaries.  */
 name|int
-name|inlinable
-decl_stmt|;
-name|int
-name|no_debugging_symbols
-decl_stmt|;
-name|rtvec
-name|original_arg_vector
-decl_stmt|;
-name|tree
-name|original_decl_initial
-decl_stmt|;
-comment|/* Last insn of those whose job was to put parms into their nominal      homes.  */
-name|rtx
-name|inl_last_parm_insn
+name|x_temp_slot_level
 decl_stmt|;
 comment|/* Highest label number in current function.  */
 name|int
@@ -579,6 +529,11 @@ decl_stmt|;
 comment|/* Function sequence number for profiling, debugging, etc.  */
 name|int
 name|funcdef_no
+decl_stmt|;
+comment|/* For flow.c.  */
+comment|/* Highest loop depth seen so far in loop analysis.  Used in flow.c      for the "failure strategy" when doing liveness analysis starting      with non-empty initial sets.  */
+name|int
+name|max_loop_depth
 decl_stmt|;
 comment|/* For md files.  */
 comment|/* tm.h can use this to store whatever it likes.  */
@@ -589,24 +544,19 @@ name|GTY
 argument_list|(
 operator|(
 name|maybe_undef
-argument_list|(
-literal|""
-argument_list|)
 operator|)
 argument_list|)
 name|machine
 decl_stmt|;
 comment|/* The largest alignment of slot allocated on the stack.  */
+name|unsigned
 name|int
 name|stack_alignment_needed
 decl_stmt|;
 comment|/* Preferred alignment of the end of stack frame.  */
+name|unsigned
 name|int
 name|preferred_stack_boundary
-decl_stmt|;
-comment|/* Set when the call to function itself has been emit.  */
-name|bool
-name|recursive_call_emit
 decl_stmt|;
 comment|/* Language-specific code can use this to store whatever it likes.  */
 name|struct
@@ -614,29 +564,81 @@ name|language_function
 modifier|*
 name|language
 decl_stmt|;
+comment|/* Used types hash table.  */
+name|htab_t
+name|GTY
+argument_list|(
+operator|(
+name|param_is
+argument_list|(
+expr|union
+name|tree_node
+argument_list|)
+operator|)
+argument_list|)
+name|used_types_hash
+decl_stmt|;
 comment|/* For reorg.  */
 comment|/* If some insns can be deferred to the delay slots of the epilogue, the      delay list for them is recorded here.  */
 name|rtx
 name|epilogue_delay_list
 decl_stmt|;
-comment|/* How commonly executed the function is.  Initialized during branch      probabilities pass.  */
-enum|enum
-name|function_frequency
-block|{
-comment|/* This function most likely won't be executed at all.        (set only when profile feedback is available).  */
-name|FUNCTION_FREQUENCY_UNLIKELY_EXECUTED
-block|,
-comment|/* The default value.  */
-name|FUNCTION_FREQUENCY_NORMAL
-block|,
-comment|/* Optimize this function hard        (set only when profile feedback is available).  */
-name|FUNCTION_FREQUENCY_HOT
-block|}
-name|function_frequency
-enum|;
 comment|/* Maximal number of entities in the single jumptable.  Used to estimate      final flowgraph size.  */
 name|int
 name|max_jumptable_ents
+decl_stmt|;
+comment|/* UIDs for LABEL_DECLs.  */
+name|int
+name|last_label_uid
+decl_stmt|;
+comment|/* Line number of the end of the function.  */
+name|location_t
+name|function_end_locus
+decl_stmt|;
+comment|/* Array mapping insn uids to blocks.  */
+name|VEC
+argument_list|(
+name|tree
+argument_list|,
+name|gc
+argument_list|)
+operator|*
+name|ib_boundaries_block
+expr_stmt|;
+comment|/* The variables unexpanded so far.  */
+name|tree
+name|unexpanded_var_list
+decl_stmt|;
+comment|/* Assembly labels for the hot and cold text sections, to      be used by debugger functions for determining the size of text      sections.  */
+specifier|const
+name|char
+modifier|*
+name|hot_section_label
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|cold_section_label
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|hot_section_end_label
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|cold_section_end_label
+decl_stmt|;
+comment|/* String to be used for name of cold text sections, via      targetm.asm_out.named_section.  */
+specifier|const
+name|char
+modifier|*
+name|unlikely_text_section_name
+decl_stmt|;
+comment|/* A variable living at the top of the frame that holds a known value.      Used for detecting stack clobbers.  */
+name|tree
+name|stack_protect_guard
 decl_stmt|;
 comment|/* Collected bit flags.  */
 comment|/* Nonzero if function being compiled needs to be given an address      where the value should be stored.  */
@@ -660,24 +662,10 @@ name|returns_pointer
 range|:
 literal|1
 decl_stmt|;
-comment|/* Nonzero if function being compiled needs to be passed a static chain.  */
-name|unsigned
-name|int
-name|needs_context
-range|:
-literal|1
-decl_stmt|;
 comment|/* Nonzero if function being compiled can call setjmp.  */
 name|unsigned
 name|int
 name|calls_setjmp
-range|:
-literal|1
-decl_stmt|;
-comment|/* Nonzero if function being compiled can call longjmp.  */
-name|unsigned
-name|int
-name|calls_longjmp
 range|:
 literal|1
 decl_stmt|;
@@ -688,17 +676,17 @@ name|calls_alloca
 range|:
 literal|1
 decl_stmt|;
+comment|/* Nonzero if function being compiled called builtin_return_addr or      builtin_frame_address with nonzero count.  */
+name|unsigned
+name|int
+name|accesses_prior_frames
+range|:
+literal|1
+decl_stmt|;
 comment|/* Nonzero if the function calls __builtin_eh_return.  */
 name|unsigned
 name|int
 name|calls_eh_return
-range|:
-literal|1
-decl_stmt|;
-comment|/* Nonzero if the function calls __builtin_constant_p.  */
-name|unsigned
-name|int
-name|calls_constant_p
 range|:
 literal|1
 decl_stmt|;
@@ -716,20 +704,6 @@ name|has_nonlocal_goto
 range|:
 literal|1
 decl_stmt|;
-comment|/* Nonzero if function being compiled contains nested functions.  */
-name|unsigned
-name|int
-name|contains_functions
-range|:
-literal|1
-decl_stmt|;
-comment|/* Nonzero if the function being compiled issues a computed jump.  */
-name|unsigned
-name|int
-name|has_computed_jump
-range|:
-literal|1
-decl_stmt|;
 comment|/* Nonzero if the current function is a thunk, i.e., a lightweight      function implemented by the output_mi_thunk hook) that just      adjusts one of its arguments and forwards to another      function.  */
 name|unsigned
 name|int
@@ -741,13 +715,6 @@ comment|/* This bit is used by the exception handling logic.  It is set if all  
 name|unsigned
 name|int
 name|all_throwers_are_sibcalls
-range|:
-literal|1
-decl_stmt|;
-comment|/* Nonzero if instrumentation calls for function entry and exit should be      generated.  */
-name|unsigned
-name|int
-name|instrument_entry_exit
 range|:
 literal|1
 decl_stmt|;
@@ -769,13 +736,6 @@ comment|/* Nonzero if current function uses stdarg.h or equivalent.  */
 name|unsigned
 name|int
 name|stdarg
-range|:
-literal|1
-decl_stmt|;
-comment|/* Nonzero if this function is being processed in function-at-a-time      mode.  In other words, if all tree structure for this function,      including the BLOCK tree, is created before RTL generation      commences.  */
-name|unsigned
-name|int
-name|x_whole_function_mode_p
 range|:
 literal|1
 decl_stmt|;
@@ -814,19 +774,48 @@ name|arg_pointer_save_area_init
 range|:
 literal|1
 decl_stmt|;
-comment|/* Flag for use by ther rtl inliner, to tell if the function has been      processed at least once.  */
 name|unsigned
 name|int
-name|rtl_inline_init
+name|after_inlining
 range|:
 literal|1
 decl_stmt|;
-comment|/* Nonzero if the rtl inliner has saved the function for inlining.  */
+comment|/* Set when the call to function itself has been emit.  */
 name|unsigned
 name|int
-name|saved_for_inline
+name|recursive_call_emit
 range|:
 literal|1
+decl_stmt|;
+comment|/* Set when the tail call has been produced.  */
+name|unsigned
+name|int
+name|tail_call_emit
+range|:
+literal|1
+decl_stmt|;
+comment|/* How commonly executed the function is.  Initialized during branch      probabilities pass.  */
+name|ENUM_BITFIELD
+argument_list|(
+argument|function_frequency
+argument_list|)
+name|function_frequency
+label|:
+literal|2
+expr_stmt|;
+comment|/* Number of units of general registers that need saving in stdarg      function.  What unit is depends on the backend, either it is number      of bytes, or it can be number of registers.  */
+name|unsigned
+name|int
+name|va_list_gpr_size
+range|:
+literal|8
+decl_stmt|;
+comment|/* Number of units of floating point registers that need saving in stdarg      function.  */
+name|unsigned
+name|int
+name|va_list_fpr_size
+range|:
+literal|8
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -834,6 +823,24 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/* If va_list_[gf]pr_size is set to this, it means we don't know how    many units need to be saved.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VA_LIST_MAX_GPR_SIZE
+value|255
+end_define
+
+begin_define
+define|#
+directive|define
+name|VA_LIST_MAX_FPR_SIZE
+value|255
+end_define
 
 begin_comment
 comment|/* The function currently being compiled.  */
@@ -926,13 +933,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|current_function_needs_context
-value|(cfun->needs_context)
-end_define
-
-begin_define
-define|#
-directive|define
 name|current_function_calls_setjmp
 value|(cfun->calls_setjmp)
 end_define
@@ -947,8 +947,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|current_function_calls_longjmp
-value|(cfun->calls_longjmp)
+name|current_function_accesses_prior_frames
+value|(cfun->accesses_prior_frames)
 end_define
 
 begin_define
@@ -956,27 +956,6 @@ define|#
 directive|define
 name|current_function_calls_eh_return
 value|(cfun->calls_eh_return)
-end_define
-
-begin_define
-define|#
-directive|define
-name|current_function_calls_constant_p
-value|(cfun->calls_constant_p)
-end_define
-
-begin_define
-define|#
-directive|define
-name|current_function_has_computed_jump
-value|(cfun->has_computed_jump)
-end_define
-
-begin_define
-define|#
-directive|define
-name|current_function_contains_functions
-value|(cfun->contains_functions)
 end_define
 
 begin_define
@@ -1045,13 +1024,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|current_function_instrument_entry_exit
-value|(cfun->instrument_entry_exit)
-end_define
-
-begin_define
-define|#
-directive|define
 name|current_function_profile
 value|(cfun->profile)
 end_define
@@ -1087,13 +1059,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|current_function_cannot_inline
-value|(cfun->cannot_inline)
-end_define
-
-begin_define
-define|#
-directive|define
 name|current_function_epilogue_delay_list
 value|(cfun->epilogue_delay_list)
 end_define
@@ -1115,27 +1080,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|max_parm_reg
-value|(cfun->x_max_parm_reg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|parm_reg_stack_loc
-value|(cfun->x_parm_reg_stack_loc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cleanup_label
-value|(cfun->x_cleanup_label)
-end_define
-
-begin_define
-define|#
-directive|define
 name|return_label
 value|(cfun->x_return_label)
 end_define
@@ -1145,13 +1089,6 @@ define|#
 directive|define
 name|naked_return_label
 value|(cfun->x_naked_return_label)
-end_define
-
-begin_define
-define|#
-directive|define
-name|save_expr_regs
-value|(cfun->x_save_expr_regs)
 end_define
 
 begin_define
@@ -1178,15 +1115,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|tail_recursion_label
-value|(cfun->x_tail_recursion_label)
-end_define
-
-begin_define
-define|#
-directive|define
-name|tail_recursion_reentry
-value|(cfun->x_tail_recursion_reentry)
+name|stack_check_probe_note
+value|(cfun->x_stack_check_probe_note)
 end_define
 
 begin_define
@@ -1199,43 +1129,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|rtl_expr_chain
-value|(cfun->x_rtl_expr_chain)
+name|used_temp_slots
+value|(cfun->x_used_temp_slots)
 end_define
 
 begin_define
 define|#
 directive|define
-name|last_parm_insn
-value|(cfun->x_last_parm_insn)
-end_define
-
-begin_define
-define|#
-directive|define
-name|context_display
-value|(cfun->x_context_display)
-end_define
-
-begin_define
-define|#
-directive|define
-name|trampoline_list
-value|(cfun->x_trampoline_list)
-end_define
-
-begin_define
-define|#
-directive|define
-name|function_call_count
-value|(cfun->x_function_call_count)
-end_define
-
-begin_define
-define|#
-directive|define
-name|temp_slots
-value|(cfun->x_temp_slots)
+name|avail_temp_slots
+value|(cfun->x_avail_temp_slots)
 end_define
 
 begin_define
@@ -1248,55 +1150,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|target_temp_slot_level
-value|(cfun->x_target_temp_slot_level)
-end_define
-
-begin_define
-define|#
-directive|define
-name|var_temp_slot_level
-value|(cfun->x_var_temp_slot_level)
-end_define
-
-begin_define
-define|#
-directive|define
-name|nonlocal_labels
-value|(cfun->x_nonlocal_labels)
-end_define
-
-begin_define
-define|#
-directive|define
-name|nonlocal_goto_handler_slots
-value|(cfun->x_nonlocal_goto_handler_slots)
-end_define
-
-begin_define
-define|#
-directive|define
 name|nonlocal_goto_handler_labels
 value|(cfun->x_nonlocal_goto_handler_labels)
 end_define
-
-begin_define
-define|#
-directive|define
-name|nonlocal_goto_stack_level
-value|(cfun->x_nonlocal_goto_stack_level)
-end_define
-
-begin_comment
-comment|/* The FUNCTION_DECL for an inline function currently being expanded.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|tree
-name|inline_function_decl
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Given a function decl for a containing function,    return the `struct function' for it.  */
@@ -1309,20 +1165,6 @@ modifier|*
 name|find_function_data
 parameter_list|(
 name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Set NOTE_BLOCK for each block note in the current function.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|identify_blocks
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1355,6 +1197,79 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|clear_block_marks
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|blocks_nreverse
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|reset_block_changes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|record_block_change
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|finalize_block_changes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|check_block_change
+parameter_list|(
+name|rtx
+parameter_list|,
+name|tree
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|free_block_changes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Return size needed for stack frame based on slots so far allocated.    This size counts from zero.  It is not rounded to STACK_BOUNDARY;    the caller may have to do that.  */
 end_comment
@@ -1370,17 +1285,17 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Likewise, but for a different than the current function.  */
+comment|/* Issue an error message and return TRUE if frame OFFSET overflows in    the signed target pointer arithmetics for function FUNC.  Otherwise    return FALSE.  */
 end_comment
 
 begin_function_decl
 specifier|extern
-name|HOST_WIDE_INT
-name|get_func_frame_size
+name|bool
+name|frame_offset_overflow
 parameter_list|(
-name|struct
-name|function
-modifier|*
+name|HOST_WIDE_INT
+parameter_list|,
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1407,18 +1322,6 @@ end_function_decl
 begin_comment
 comment|/* Save and restore status information for a nested function.  */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|restore_emit_status
-parameter_list|(
-name|struct
-name|function
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -1494,16 +1397,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|use_return_register
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
@@ -1516,18 +1409,6 @@ name|get_arg_pointer_save_area
 parameter_list|(
 name|struct
 name|function
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|init_virtual_regs
-parameter_list|(
-name|struct
-name|emit_status
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1549,16 +1430,48 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Called once, at initialization, to initialize function.c.  */
-end_comment
-
 begin_function_decl
 specifier|extern
 name|void
-name|init_function_once
+name|do_warn_unused_parameter
 parameter_list|(
-name|void
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|pass_by_reference
+parameter_list|(
+name|CUMULATIVE_ARGS
+modifier|*
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|tree
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|reference_callee_copied
+parameter_list|(
+name|CUMULATIVE_ARGS
+modifier|*
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|tree
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1566,7 +1479,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|do_warn_unused_parameter
+name|used_types_insert
 parameter_list|(
 name|tree
 parameter_list|)

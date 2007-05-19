@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, NetBSD/arm ELF version.    Copyright (C) 2002, 2003 Free Software Foundation, Inc.    Contributed by Wasabi Systems, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, NetBSD/arm ELF version.    Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Wasabi Systems, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street, Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -67,7 +67,20 @@ define|#
 directive|define
 name|TARGET_DEFAULT
 define|\
-value|(ARM_FLAG_APCS_32			\    | ARM_FLAG_SOFT_FLOAT		\    | ARM_FLAG_APCS_FRAME		\    | ARM_FLAG_ATPCS			\    | ARM_FLAG_VFP			\    | ARM_FLAG_MMU_TRAPS			\    | TARGET_ENDIAN_DEFAULT)
+value|(MASK_APCS_FRAME			\    | TARGET_ENDIAN_DEFAULT)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ARM_DEFAULT_ABI
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ARM_DEFAULT_ABI
+value|ARM_ABI_ATPCS
 end_define
 
 begin_define
@@ -107,7 +120,7 @@ value|"-matpcs %{fpic|fpie:-k} %{fPIC|fPIE:-k}"
 end_define
 
 begin_comment
-comment|/* Default floating point model is soft-VFP.    FIXME: -mhard-float currently implies FPA.  */
+comment|/* Default to full VFP if -mhard-float is specified.  */
 end_comment
 
 begin_undef
@@ -121,7 +134,7 @@ define|#
 directive|define
 name|SUBTARGET_ASM_FLOAT_SPEC
 define|\
-value|"%{mhard-float:-mfpu=fpa} \    %{msoft-float:-mfpu=softvfp} \    %{!mhard-float: \      %{!msoft-float:-mfpu=softvfp}}"
+value|"%{mhard-float:{!mfpu=*:-mfpu=vfp}}   \    %{mfloat-abi=hard:{!mfpu=*:-mfpu=vfp}}"
 end_define
 
 begin_undef
@@ -219,7 +232,7 @@ parameter_list|,
 name|LABELNO
 parameter_list|)
 define|\
-value|{							\   asm_fprintf (STREAM, "\tmov\t%Rip, %Rlr\n");		\   asm_fprintf (STREAM, "\tbl\t__mcount%s\n",		\ 	       NEED_PLT_RELOC ? "(PLT)" : "");		\ }
+value|{							\   asm_fprintf (STREAM, "\tmov\t%Rip, %Rlr\n");		\   asm_fprintf (STREAM, "\tbl\t__mcount%s\n",		\ 	       (TARGET_ARM&& NEED_PLT_RELOC)		\ 	       ? "(PLT)" : "");				\ }
 end_define
 
 begin_comment
@@ -240,31 +253,6 @@ value|8
 end_define
 
 begin_comment
-comment|/* Emit code to set up a trampoline and synchronize the caches.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|INITIALIZE_TRAMPOLINE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|INITIALIZE_TRAMPOLINE
-parameter_list|(
-name|TRAMP
-parameter_list|,
-name|FNADDR
-parameter_list|,
-name|CXT
-parameter_list|)
-define|\
-value|do									\   {									\     emit_move_insn (gen_rtx (MEM, SImode, plus_constant ((TRAMP), 8)),	\ 		    (CXT));						\     emit_move_insn (gen_rtx (MEM, SImode, plus_constant ((TRAMP), 12)),	\ 		    (FNADDR));						\     emit_library_call (gen_rtx_SYMBOL_REF (Pmode, "__clear_cache"),	\ 		       0, VOIDmode, 2, TRAMP, Pmode,			\ 		       plus_constant (TRAMP, TRAMPOLINE_SIZE), Pmode);	\   }									\ while (0)
-end_define
-
-begin_comment
 comment|/* Clear the instruction cache from `BEG' to `END'.  This makes a    call to the ARM_SYNC_ICACHE architecture specific syscall.  */
 end_comment
 
@@ -279,6 +267,19 @@ name|END
 parameter_list|)
 define|\
 value|do									\   {									\     extern int sysarch(int number, void *args);				\     struct								\       {									\ 	unsigned int addr;						\ 	int          len;						\       } s;								\     s.addr = (unsigned int)(BEG);					\     s.len = (END) - (BEG);						\     (void) sysarch (0,&s);						\   }									\ while (0)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|FPUTYPE_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|FPUTYPE_DEFAULT
+value|FPUTYPE_VFP
 end_define
 
 end_unit

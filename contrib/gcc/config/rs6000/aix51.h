@@ -1,25 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for IBM RS/6000 POWER running AIX V5.    Copyright (C) 2001, 2003 Free Software Foundation, Inc.    Contributed by David Edelsohn (edelsohn@gnu.org).     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for IBM RS/6000 POWER running AIX V5.    Copyright (C) 2001, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by David Edelsohn (edelsohn@gnu.org).     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
-
-begin_comment
-comment|/* AIX V5 and above support 64-bit executables.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SUBSUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBSUBTARGET_SWITCHES
-define|\
-value|{"aix64", 		MASK_64BIT | MASK_POWERPC64 | MASK_POWERPC,	\    N_("Compile for 64-bit pointers") },					\   {"aix32",		- (MASK_64BIT | MASK_POWERPC64),		\    N_("Compile for 32-bit pointers") },					\   {"pe",		0,						\    N_("Support message passing with the Parallel Environment") },
-end_define
 
 begin_comment
 comment|/* Sometimes certain combinations of command options do not make sense    on a particular target machine.  You can define a macro    `OVERRIDE_OPTIONS' to take account of this.  This macro, if    defined, is executed once just after all the command options have    been parsed.     The macro SUBTARGET_OVERRIDE_OPTIONS is provided for subtargets, to    get control.  */
@@ -37,7 +19,7 @@ define|#
 directive|define
 name|SUBTARGET_OVERRIDE_OPTIONS
 define|\
-value|do {									\   if (TARGET_64BIT&& (target_flags& NON_POWERPC_MASKS))		\     {									\       target_flags&= ~NON_POWERPC_MASKS;				\       warning ("-maix64 and POWER architecture are incompatible");	\     }									\   if (TARGET_64BIT&& ! TARGET_POWERPC64)				\     {									\       target_flags |= MASK_POWERPC64;					\       warning ("-maix64 requires PowerPC64 architecture remain enabled"); \     }									\   if (TARGET_POWERPC64&& ! TARGET_64BIT)				\     {									\       error ("-maix64 required: 64-bit computation with 32-bit addressing not yet supported"); \     }									\ } while (0);
+value|do {									\   if (TARGET_64BIT&& (target_flags& NON_POWERPC_MASKS))		\     {									\       target_flags&= ~NON_POWERPC_MASKS;				\       warning (0, "-maix64 and POWER architecture are incompatible");	\     }									\   if (TARGET_64BIT&& ! TARGET_POWERPC64)				\     {									\       target_flags |= MASK_POWERPC64;					\       warning (0, "-maix64 requires PowerPC64 architecture remain enabled"); \     }									\   if (TARGET_POWERPC64&& ! TARGET_64BIT)				\     {									\       error ("-maix64 required: 64-bit computation with 32-bit addressing not yet supported"); \     }									\ } while (0);
 end_define
 
 begin_undef
@@ -68,7 +50,7 @@ define|#
 directive|define
 name|ASM_CPU_SPEC
 define|\
-value|"%{!mcpu*: %{!maix64: \   %{mpower: %{!mpower2: -mpwr}} \   %{mpower2: -mpwr2} \   %{mpowerpc*: %{!mpowerpc64: -mppc}} \   %{mpowerpc64: -mppc64} \   %{!mpower*: %{!mpowerpc*: %(asm_default)}}}} \ %{mcpu=common: -mcom} \ %{mcpu=power: -mpwr} \ %{mcpu=power2: -mpwr2} \ %{mcpu=power3: -m620} \ %{mcpu=power4: -m620} \ %{mcpu=powerpc: -mppc} \ %{mcpu=rios: -mpwr} \ %{mcpu=rios1: -mpwr} \ %{mcpu=rios2: -mpwr2} \ %{mcpu=rsc: -mpwr} \ %{mcpu=rsc1: -mpwr} \ %{mcpu=rs64a: -mppc} \ %{mcpu=601: -m601} \ %{mcpu=602: -mppc} \ %{mcpu=603: -m603} \ %{mcpu=603e: -m603} \ %{mcpu=604: -m604} \ %{mcpu=604e: -m604} \ %{mcpu=620: -m620} \ %{mcpu=630: -m620}"
+value|"%{!mcpu*: %{!maix64: \   %{mpower: %{!mpower2: -mpwr}} \   %{mpower2: -mpwr2} \   %{mpowerpc*: %{!mpowerpc64: -mppc}} \   %{mpowerpc64: -mppc64} \   %{!mpower*: %{!mpowerpc*: %(asm_default)}}}} \ %{mcpu=common: -mcom} \ %{mcpu=power: -mpwr} \ %{mcpu=power2: -mpwr2} \ %{mcpu=power3: -m620} \ %{mcpu=power4: -m620} \ %{mcpu=powerpc: -mppc} \ %{mcpu=rios: -mpwr} \ %{mcpu=rios1: -mpwr} \ %{mcpu=rios2: -mpwr2} \ %{mcpu=rsc: -mpwr} \ %{mcpu=rsc1: -mpwr} \ %{mcpu=rs64a: -mppc} \ %{mcpu=601: -m601} \ %{mcpu=602: -mppc} \ %{mcpu=603: -m603} \ %{mcpu=603e: -m603} \ %{mcpu=604: -m604} \ %{mcpu=604e: -m604} \ %{mcpu=620: -m620} \ %{mcpu=630: -m620} \ %{mcpu=970: -m620} \ %{mcpu=G5: -m620}"
 end_define
 
 begin_undef
@@ -96,7 +78,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do                                  \     {                                 \       builtin_define ("_IBMR2");      \       builtin_define ("_POWER");      \       builtin_define ("_LONG_LONG");  \       builtin_define ("_AIX");        \       builtin_define ("_AIX32");      \       builtin_define ("_AIX41");      \       builtin_define ("_AIX43");      \       builtin_define ("_AIX51");      \       builtin_assert ("system=unix"); \       builtin_assert ("system=aix");  \     }                                 \   while (0)
+value|do                                 \     {                                \       builtin_define ("_AIX43");     \       builtin_define ("_AIX51");     \       TARGET_OS_AIX_CPP_BUILTINS (); \     }                                \   while (0)
 end_define
 
 begin_undef
@@ -127,7 +109,7 @@ define|#
 directive|define
 name|CPLUSPLUS_CPP_SPEC
 define|\
-value|"-D_XOPEN_SOURCE=500				\    -D_XOPEN_SOURCE_EXTENDED=1			\    -D_LARGE_FILE_API				\    -D_ALL_SOURCE				\    %{maix64: -D__64BIT__}			\    %{mpe: -I/usr/lpp/ppe.poe/include}		\    %{pthread: -D_THREAD_SAFE}"
+value|"-D_ALL_SOURCE				\    %{maix64: -D__64BIT__}			\    %{mpe: -I/usr/lpp/ppe.poe/include}		\    %{pthread: -D_THREAD_SAFE}"
 end_define
 
 begin_undef
@@ -263,13 +245,6 @@ name|WCHAR_TYPE_SIZE
 value|(!TARGET_64BIT ? 16 : 32)
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAX_WCHAR_TYPE_SIZE
-value|32
-end_define
-
 begin_comment
 comment|/* AIX V5 uses PowerPC nop (ori 0,0,0) instruction as call glue for PowerPC    and "cror 31,31,31" for POWER architecture.  */
 end_comment
@@ -314,6 +289,17 @@ define|#
 directive|define
 name|LD_INIT_SWITCH
 value|"-binitfini"
+end_define
+
+begin_comment
+comment|/* This target uses the aix64.opt file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_USES_AIX64_OPT
+value|1
 end_define
 
 end_unit

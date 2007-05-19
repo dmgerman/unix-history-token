@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate from machine description:    a series of #define statements, one for each constant named in    a (define_constants ...) pattern.     Copyright (C) 1987, 1991, 1995, 1998, 1999, 2000, 2001, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate from machine description:    a series of #define statements, one for each constant named in    a (define_constants ...) pattern.     Copyright (C) 1987, 1991, 1995, 1998, 1999, 2000, 2001, 2003, 2004    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -49,21 +49,6 @@ directive|include
 file|"gensupport.h"
 end_include
 
-begin_function_decl
-specifier|static
-name|int
-name|print_md_constant
-parameter_list|(
-name|void
-modifier|*
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Called via traverse_md_constants; emit a #define for    the current constant definition.  */
 end_comment
@@ -88,6 +73,11 @@ name|md_constant
 modifier|*
 name|def
 init|=
+operator|(
+expr|struct
+name|md_constant
+operator|*
+operator|)
 operator|*
 name|slot
 decl_stmt|;
@@ -95,6 +85,10 @@ name|FILE
 modifier|*
 name|file
 init|=
+operator|(
+name|FILE
+operator|*
+operator|)
 name|info
 decl_stmt|;
 name|fprintf
@@ -131,37 +125,17 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|int
-name|dummy1
-decl_stmt|,
-name|dummy2
-decl_stmt|;
-name|rtx
-name|desc
-decl_stmt|;
 name|progname
 operator|=
 literal|"genconstants"
 expr_stmt|;
 if|if
 condition|(
+name|init_md_reader_args
+argument_list|(
 name|argc
-operator|<=
-literal|1
-condition|)
-name|fatal
-argument_list|(
-literal|"no input file name"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|init_md_reader
-argument_list|(
+argument_list|,
 name|argv
-index|[
-literal|1
-index|]
 argument_list|)
 operator|!=
 name|SUCCESS_EXIT_CODE
@@ -171,24 +145,7 @@ operator|(
 name|FATAL_EXIT_CODE
 operator|)
 return|;
-comment|/* Scan and discard the entire file.  This has the side effect      of loading up the constants table that we wish to scan.  */
-do|do
-name|desc
-operator|=
-name|read_md_rtx
-argument_list|(
-operator|&
-name|dummy1
-argument_list|,
-operator|&
-name|dummy2
-argument_list|)
-expr_stmt|;
-do|while
-condition|(
-name|desc
-condition|)
-do|;
+comment|/* Initializing the MD reader has the side effect of loading up      the constants table that we wish to scan.  */
 name|puts
 argument_list|(
 literal|"/* Generated automatically by the program `genconstants'"

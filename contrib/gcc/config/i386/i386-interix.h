@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for GCC for Intel 80386 running Interix    Parts Copyright (C) 1991, 1999, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.     Parts:      by Douglas B. Rupp (drupp@cs.washington.edu).      by Ron Guilmette (rfg@netcom.com).      by Donn Terry (donn@softway.com).      by Mumit Khan (khan@xraylith.wisc.edu).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target definitions for GCC for Intel 80386 running Interix    Parts Copyright (C) 1991, 1999, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.     Parts:      by Douglas B. Rupp (drupp@cs.washington.edu).      by Ron Guilmette (rfg@netcom.com).      by Donn Terry (donn@softway.com).      by Mumit Khan (khan@xraylith.wisc.edu).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -117,6 +117,13 @@ parameter_list|)
 value|"     leal " #loc "," #reg "\n"
 end_define
 
+begin_define
+define|#
+directive|define
+name|TARGET_DECLSPEC
+value|1
+end_define
+
 begin_comment
 comment|/* cpp handles __STDC__ */
 end_comment
@@ -127,7 +134,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do									\     {									\ 	builtin_define ("__INTERIX");					\ 	builtin_define ("__OPENNT");					\ 	builtin_define ("_M_IX86=300");					\ 	builtin_define ("_X86_=1");					\ 	builtin_define ("__stdcall=__attribute__((__stdcall__))");	\ 	builtin_define ("__cdecl=__attribute__((__cdecl__))");		\ 	builtin_define ("__declspec(x)=__attribute__((x))");		\ 	builtin_assert ("system=unix");					\ 	builtin_assert ("system=interix");				\ 	if (preprocessing_asm_p ())					\ 	  builtin_define_std ("LANGUAGE_ASSEMBLY");			\ 	else								\ 	  {								\ 	     builtin_define_std ("LANGUAGE_C");				\ 	     if (c_dialect_cxx ())					\ 	       builtin_define_std ("LANGUAGE_C_PLUS_PLUS");		\ 	     if (c_dialect_objc ())					\ 	       builtin_define_std ("LANGUAGE_OBJECTIVE_C");		\ 	  } 								\     }									\   while (0)
+value|do									\     {									\ 	builtin_define ("__INTERIX");					\ 	builtin_define ("__OPENNT");					\ 	builtin_define ("_M_IX86=300");					\ 	builtin_define ("_X86_=1");					\ 	builtin_define ("__stdcall=__attribute__((__stdcall__))");	\ 	builtin_define ("__cdecl=__attribute__((__cdecl__))");		\ 	builtin_assert ("system=unix");					\ 	builtin_assert ("system=interix");				\ 	if (preprocessing_asm_p ())					\ 	  builtin_define_std ("LANGUAGE_ASSEMBLY");			\ 	else								\ 	  {								\ 	     builtin_define_std ("LANGUAGE_C");				\ 	     if (c_dialect_cxx ())					\ 	       builtin_define_std ("LANGUAGE_C_PLUS_PLUS");		\ 	     if (c_dialect_objc ())					\ 	       builtin_define_std ("LANGUAGE_OBJECTIVE_C");		\ 	  } 								\     }									\   while (0)
 end_define
 
 begin_undef
@@ -137,7 +144,7 @@ name|CPP_SPEC
 end_undef
 
 begin_comment
-comment|/* Write out the correct language type definition for the header files.      Unless we have assembler language, write out the symbols for C.    mieee is an Alpha specific variant.  Cross polination a bad idea.    */
+comment|/* Write out the correct language type definition for the header files.      Unless we have assembler language, write out the symbols for C.    mieee is an Alpha specific variant.  Cross pollination a bad idea.    */
 end_comment
 
 begin_define
@@ -392,13 +399,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HOST_PTR_PRINTF
-value|"%p"
-end_define
-
-begin_define
-define|#
-directive|define
 name|HOST_PTR_AS_INT
 value|unsigned long
 end_define
@@ -496,13 +496,14 @@ comment|/* Turn this back on when the linker is updated to handle grouped    .da
 end_comment
 
 begin_comment
-comment|/* Define this macro if in some cases global symbols from one translation    unit may not be bound to undefined symbols in another translation unit    without user intervention.  For instance, under Microsoft Windows    symbols must be explicitly imported from shared libraries (DLLs).  */
+comment|/* Interix uses explicit import from shared libraries.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MULTIPLE_SYMBOL_SPACES
+value|1
 end_define
 
 begin_define
@@ -511,6 +512,13 @@ define|#
 directive|define
 name|TARGET_ASM_UNIQUE_SECTION
 value|i386_pe_unique_section
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_FUNCTION_RODATA_SECTION
+value|default_no_function_rodata_section
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GCC core type declarations.    Copyright (C) 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GCC core type declarations.    Copyright (C) 2002, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -37,6 +37,21 @@ ifndef|#
 directive|ifndef
 name|USED_FOR_TARGET
 end_ifndef
+
+begin_struct_decl
+struct_decl|struct
+name|bitmap_head_def
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|struct
+name|bitmap_head_def
+modifier|*
+name|bitmap
+typedef|;
+end_typedef
 
 begin_struct_decl
 struct_decl|struct
@@ -83,6 +98,20 @@ name|tree
 typedef|;
 end_typedef
 
+begin_union_decl
+union_decl|union
+name|section
+union_decl|;
+end_union_decl
+
+begin_typedef
+typedef|typedef
+name|union
+name|section
+name|section
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* Provide forward struct declaration so that we don't have to include    all of cpplib.h whenever a random prototype includes a pointer.    Note that the cpp_reader typedef remains part of cpplib.h.  */
 end_comment
@@ -92,6 +121,27 @@ struct_decl|struct
 name|cpp_reader
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/* The thread-local storage model associated with a given VAR_DECL    or SYMBOL_REF.  This isn't used much, but both trees and RTL refer    to it, so it's here.  */
+end_comment
+
+begin_enum
+enum|enum
+name|tls_model
+block|{
+name|TLS_MODEL_NONE
+block|,
+name|TLS_MODEL_GLOBAL_DYNAMIC
+block|,
+name|TLS_MODEL_LOCAL_DYNAMIC
+block|,
+name|TLS_MODEL_INITIAL_EXEC
+block|,
+name|TLS_MODEL_LOCAL_EXEC
+block|}
+enum|;
+end_enum
 
 begin_else
 else|#
