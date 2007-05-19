@@ -821,6 +821,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|LACP_SYS_PRI
+parameter_list|(
+name|peer
+parameter_list|)
+value|(peer).lip_systemid.lsi_prio
+end_define
+
+begin_define
+define|#
+directive|define
 name|LACP_PORT
 parameter_list|(
 name|_lp
