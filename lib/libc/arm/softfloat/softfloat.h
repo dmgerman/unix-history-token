@@ -114,12 +114,23 @@ begin_comment
 comment|/* ------------------------------------------------------------------------------- Software IEC/IEEE floating-point underflow tininess-detection mode. ------------------------------------------------------------------------------- */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SOFTFLOAT_FOR_GCC
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|float_detect_tininess
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_enum
 enum|enum
