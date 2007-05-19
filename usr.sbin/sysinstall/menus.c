@@ -12851,7 +12851,7 @@ literal|"In secure mode system flags may not be overriden by the root user,\n"
 literal|"access to direct kernel memory is limited, and kernel modules may not\n"
 literal|"be changed.  In highly secure mode, mounted file systems may not be\n"
 literal|"modified on-disk, tampering with the system clock is prohibited.  In\n"
-literal|"network secure mode configuration changes to firwalling are prohibited.\n"
+literal|"network secure mode configuration changes to firewalling are prohibited.\n"
 block|,
 literal|"Select a securelevel to operate at - F1 for help"
 block|,
