@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running FreeBSD with ELF format    Copyright (C) 1996, 2000, 2002 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.    Continued development by David O'Brien<obrien@freebsd.org>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running FreeBSD with ELF format    Copyright (C) 1996, 2000, 2002, 2004 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.    Continued development by David O'Brien<obrien@freebsd.org>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -20,19 +20,6 @@ name|CC1_SPEC
 value|"%(cc1_cpu) %{profile:-p}"
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|ASM_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_SPEC
-value|"%{v*: -v}"
-end_define
-
 begin_comment
 comment|/* Provide a LINK_SPEC appropriate for FreeBSD.  Here we provide support    for the special GCC options -static and -shared, which allow us to    link things in one of these three modes by applying the appropriate    combinations of options at link-time. We like to support here for    as many of the other GNU linker options as possible. But I don't    have the time to search for those flags. I am sure how to add    support for -soname shared_object_name. H.J.     When the -shared link option is used a final link is not being    done.  */
 end_comment
@@ -47,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"\  %{p:%nconsider using `-pg' instead of `-p' with gprof(1) } \     %{Wl,*:%*} \     %{v:-V} \     %{assert*} %{R*} %{rpath*} %{defsym*} \     %{shared:-Bshareable %{h*} %{soname*}} \     %{!shared: \       %{!static: \ 	%{rdynamic: -export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }} \       %{static:-Bstatic}} \     %{symbolic:-Bsymbolic}"
+value|"\  %{p:%nconsider using `-pg' instead of `-p' with gprof(1) } \     %{v:-V} \     %{assert*} %{R*} %{rpath*} %{defsym*} \     %{shared:-Bshareable %{h*} %{soname*}} \     %{!shared: \       %{!static: \ 	%{rdynamic: -export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }} \       %{static:-Bstatic}} \     %{symbolic:-Bsymbolic}"
 end_define
 
 begin_comment
@@ -159,36 +146,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|MASK_PROFILER_EPILOGUE
-value|010000000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_PROFILER_EPILOGUE
-value|(target_flags& MASK_PROFILER_EPILOGUE)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TARGET_ELF
 value|1
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_SWITCHES
-define|\
-value|{ "profiler-epilogue",	 MASK_PROFILER_EPILOGUE, "Function profiler epilogue"}, \   { "no-profiler-epilogue",	-MASK_PROFILER_EPILOGUE, "No function profiler epilogue"},
 end_define
 
 begin_comment
@@ -379,25 +338,6 @@ begin_comment
 comment|/* BDE will need to fix this. */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_ALIGN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_ALIGN
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LOG
-parameter_list|)
-define|\
-value|do {					     				\     if ((LOG)!=0) {							\       if (in_text_section())						\ 	fprintf ((FILE), "\t.p2align %d,0x90\n", (LOG));		\       else								\ 	fprintf ((FILE), "\t.p2align %d\n", (LOG));			\     }									\   } while (0)
-end_define
-
 begin_comment
 comment|/* A C statement to output to the stdio stream FILE an assembler    command to advance the location counter to a multiple of 1<<LOG    bytes if it is within MAX_SKIP bytes.     This is used to align code labels according to Intel recommendations.  */
 end_comment
@@ -501,7 +441,7 @@ name|DBX_REGISTER_NUMBER
 parameter_list|(
 name|n
 parameter_list|)
-value|(TARGET_64BIT ? dbx64_register_map[n]	\ 				: (write_symbols == DWARF2_DEBUG	\ 	    			  || write_symbols == DWARF_DEBUG)	\ 				  ? svr4_dbx_register_map[(n)]		\ 				  : dbx_register_map[(n)])
+value|(TARGET_64BIT ? dbx64_register_map[n]	\ 				: (write_symbols == DWARF2_DEBUG)	\ 				  ? svr4_dbx_register_map[(n)]		\ 				  : dbx_register_map[(n)])
 end_define
 
 begin_comment
@@ -538,7 +478,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do {									\     fprintf (asmfile, "%s %d,0,0,", ASM_STABN_OP, N_LBRAC);		\     assemble_name (asmfile, NAME);					\         fputc ('-', asmfile);						\         assemble_name (asmfile,						\ 	      	 XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));	\     fprintf (asmfile, "\n");						\   } while (0)
+value|do {									\     fprintf (asm_out_file, "%s %d,0,0,", ASM_STABN_OP, N_LBRAC);	\     assemble_name (asm_out_file, NAME);					\         fputc ('-', asm_out_file);					\         assemble_name (asm_out_file,					\ 	      	 XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));	\     fprintf (asm_out_file, "\n");					\   } while (0)
 end_define
 
 begin_undef
@@ -557,7 +497,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do {									\     fprintf (asmfile, "%s %d,0,0,", ASM_STABN_OP, N_RBRAC);		\     assemble_name (asmfile, NAME);					\         fputc ('-', asmfile);						\         assemble_name (asmfile,						\ 		 XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));	\     fprintf (asmfile, "\n");						\   } while (0)
+value|do {									\     fprintf (asm_out_file, "%s %d,0,0,", ASM_STABN_OP, N_RBRAC);	\     assemble_name (asm_out_file, NAME);					\         fputc ('-', asm_out_file);					\         assemble_name (asm_out_file,					\ 		 XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));	\     fprintf (asm_out_file, "\n");					\   } while (0)
 end_define
 
 end_unit

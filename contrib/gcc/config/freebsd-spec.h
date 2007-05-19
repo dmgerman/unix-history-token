@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Base configuration file for all FreeBSD targets.    Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Base configuration file for all FreeBSD targets.    Copyright (C) 1999, 2000, 2001, 2004, 2005 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ value|do									\     {									\ 	builtin_define_with_int_value ("__FreeBSD__"
 end_define
 
 begin_comment
-comment|/* Define the default FreeBSD-specific per-CPU hook code. */
+comment|/* Define the default FreeBSD-specific per-CPU hook code.  */
 end_comment
 
 begin_define
@@ -110,14 +110,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Provide a CPP_SPEC appropriate for FreeBSD.  We just deal with the GCC     option `-posix', and PIC issues.  Try to detect support for the    `long long' type.  Unfortunately the GCC spec parser will not allow us    to properly detect the "iso9899:1990" and "iso9899:199409" forms of    -std=c89.  Because of the ':' in the -std argument. :-(  I have left    them in the spec as a place holder in hopes someone knows a way to make    the detection of them work.  */
+comment|/* Provide a CPP_SPEC appropriate for FreeBSD.  We just deal with the GCC    option `-posix', and PIC issues.  Try to detect support for the    `long long' type.  Unfortunately the GCC spec parser will not allow us    to properly detect the "iso9899:1990" and "iso9899:199409" forms of    -std=c89.  Because of the ':' in the -std argument. :-(  I have left    them in the spec as a place holder in hopes someone knows a way to make    the detection of them work.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FBSD_CPP_SPEC
-value|"							\   %(cpp_cpu)								\   %{fPIC|fpic|fPIE|fpie:-D__PIC__ -D__pic__}				\   %{!ansi:%{!std=c89:%{!std=iso9899.1990:%{!std=iso9899.199409:-D_LONGLONG}}}} \   %{posix:-D_POSIX_SOURCE}"
+value|"							\   %(cpp_cpu)								\   %(cpp_arch)								\   %{!ansi:%{!std=c89:%{!std=iso9899.1990:%{!std=iso9899.199409:-D_LONGLONG}}}} \   %{posix:-D_POSIX_SOURCE}"
 end_define
 
 begin_comment
@@ -128,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_STARTFILE_SPEC
-value|"\   %{!shared: \     %{pg:gcrt1.o%s} \     %{!pg: \       %{p:gcrt1.o%s} \       %{!p: \ 	%{profile:gcrt1.o%s} \ 	%{!profile:crt1.o%s}}}} \   crti.o%s \   %{!shared:crtbegin.o%s} \   %{shared:crtbeginS.o%s}"
+value|"\   %{!shared: \     %{pg:gcrt1.o%s} \     %{!pg: \       %{p:gcrt1.o%s} \       %{!p: \ 	%{profile:gcrt1.o%s} \ 	%{!profile:crt1.o%s}}}} \   crti.o%s \   %{static:crtbeginT.o%s;shared:crtbeginS.o%s;:crtbegin.o%s}"
 end_define
 
 begin_comment
@@ -147,7 +147,7 @@ comment|/* Provide a LIB_SPEC appropriate for FreeBSD as configured and as    re
 end_comment
 
 begin_comment
-comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling or need threads support.    (simular to the default, except no -lg, and no -p).  */
+comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling or need threads support.    (similar to the default, except no -lg, and no -p).  */
 end_comment
 
 begin_ifdef
@@ -189,6 +189,21 @@ name|FBSD_LIB_SPEC
 value|"							\   %{!shared:								\     %{!pg:								\       %{!pthread:-lc}							\       %{pthread:-lc_r}}							\     %{pg:								\       %{!pthread:-lc_p}							\       %{pthread:-lc_r_p}}						\   }"
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700022
+end_elif
+
+begin_define
+define|#
+directive|define
+name|FBSD_LIB_SPEC
+value|"							\   %{!shared:								\     %{!pg: %{pthread:-lpthread} -lc}					\     %{pg:  %{pthread:-lpthread_p} -lc_p}				\   }"
+end_define
+
 begin_else
 else|#
 directive|else
@@ -198,7 +213,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_LIB_SPEC
-value|"							\   %{!shared:								\     %{!pg: %{pthread:-lpthread} -lc}					\     %{pg:  %{pthread:-lpthread_p} -lc_p}				\   }"
+value|"							\   %{!shared:								\     %{!pg: %{pthread:-lpthread} -lc}					\     %{pg:  %{pthread:-lpthread_p} -lc_p}}				\   %{shared:								\     %{pthread:-lpthread} -lc}						\   "
 end_define
 
 begin_endif
@@ -236,6 +251,49 @@ define|#
 directive|define
 name|FBSD_DYNAMIC_LINKER
 value|"/libexec/ld-elf.so.1"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_LD_EH_FRAME_HDR
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LINK_EH_SPEC
+value|"%{!static:--eh-frame-hdr} "
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Use --as-needed -lgcc_s for eh support.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LD_AS_NEEDED
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|USE_LD_AS_NEEDED
+value|1
 end_define
 
 begin_endif
