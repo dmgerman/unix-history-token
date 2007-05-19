@@ -4697,6 +4697,8 @@ parameter_list|)
 block|{
 name|vm_offset_t
 name|lastaddr
+init|=
+literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -5073,7 +5075,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|bus_dmamap_sync_buf
 parameter_list|(
