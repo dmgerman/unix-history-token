@@ -811,6 +811,21 @@ parameter_list|)
 value|_sx_downgrade((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
+begin_comment
+comment|/*  * Return a pointer to the owning thread if the lock is exclusively  * locked.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sx_xholder
+parameter_list|(
+name|sx
+parameter_list|)
+define|\
+value|((sx)->sx_lock& SX_LOCK_SHARED ? NULL :			\ 	(struct thread *)SX_OWNER((sx)->sx_lock))
+end_define
+
 begin_define
 define|#
 directive|define
