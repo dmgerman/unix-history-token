@@ -4161,7 +4161,7 @@ name|ptr
 operator|->
 name|info
 argument_list|,
-literal|0
+name|AK452X_DVC_DEMOFF
 argument_list|)
 expr_stmt|;
 block|}
