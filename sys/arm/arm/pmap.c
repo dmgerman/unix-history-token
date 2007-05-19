@@ -10375,7 +10375,6 @@ comment|/*  * remove a page rom the kernel pagetables  */
 end_comment
 
 begin_function
-name|PMAP_INLINE
 name|void
 name|pmap_kremove
 parameter_list|(
