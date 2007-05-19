@@ -5356,7 +5356,7 @@ name|m
 argument_list|)
 expr_stmt|;
 else|else
-name|m_free
+name|m_freem
 argument_list|(
 name|m
 argument_list|)
@@ -5373,11 +5373,19 @@ name|if_opackets
 operator|++
 expr_stmt|;
 else|else
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* sc_start failed */
 name|ifp
 operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
+block|}
 block|}
 name|LAGG_RUNLOCK
 argument_list|(
