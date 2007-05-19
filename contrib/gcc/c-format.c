@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Check calls to formatted I/O functions (-Wformat).    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Check calls to formatted I/O functions (-Wformat).    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -46,13 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"toplev.h"
+file|"c-common.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"c-common.h"
+file|"toplev.h"
 end_include
 
 begin_include
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"langhooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"c-format.h"
 end_include
 
 begin_escape
@@ -140,7 +146,7 @@ comment|/* Handle attributes associated with format checking.  */
 end_comment
 
 begin_comment
-comment|/* This must be in the same order as format_types, with format_type_error    last.  */
+comment|/* This must be in the same order as format_types, except for    format_type_error.  Target-specific format types do not have    matching enum values.  */
 end_comment
 
 begin_enum
@@ -153,9 +159,13 @@ name|asm_fprintf_format_type
 block|,
 name|gcc_diag_format_type
 block|,
+name|gcc_tdiag_format_type
+block|,
 name|gcc_cdiag_format_type
 block|,
 name|gcc_cxxdiag_format_type
+block|,
+name|gcc_gfc_format_type
 block|,
 name|scanf_format_type
 block|,
@@ -163,9 +173,10 @@ name|strftime_format_type
 block|,
 name|strfmon_format_type
 block|,
-name|rintf0_format_type
-block|,
 name|format_type_error
+init|=
+operator|-
+literal|1
 block|}
 enum|;
 end_enum
@@ -175,8 +186,7 @@ typedef|typedef
 struct|struct
 name|function_format_info
 block|{
-name|enum
-name|format_type
+name|int
 name|format_type
 decl_stmt|;
 comment|/* type of format (printf, scanf, etc.) */
@@ -212,8 +222,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|enum
-name|format_type
+name|int
 name|decode_format_type
 parameter_list|(
 specifier|const
@@ -277,8 +286,10 @@ modifier|*
 name|node
 parameter_list|,
 name|tree
+name|ARG_UNUSED
+parameter_list|(
 name|name
-name|ATTRIBUTE_UNUSED
+parameter_list|)
 parameter_list|,
 name|tree
 name|args
@@ -308,6 +319,8 @@ decl_stmt|;
 name|unsigned
 name|HOST_WIDE_INT
 name|format_num
+init|=
+literal|0
 decl_stmt|;
 name|tree
 name|argument
@@ -532,7 +545,7 @@ operator|)
 condition|)
 name|error
 argument_list|(
-literal|"format string arg not a string type"
+literal|"format string argument not a string type"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -551,7 +564,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Strip any conversions from the expression, verify it is a constant,    and store its value. If validated_p is true, abort on errors.    Returns true on success, false otherwise.  */
+comment|/* Verify EXPR is a constant, and store its value.    If validated_p is true there should be no errors.    Returns true on success, false otherwise.  */
 end_comment
 
 begin_function
@@ -571,38 +584,6 @@ name|int
 name|validated_p
 parameter_list|)
 block|{
-while|while
-condition|(
-name|TREE_CODE
-argument_list|(
-name|expr
-argument_list|)
-operator|==
-name|NOP_EXPR
-operator|||
-name|TREE_CODE
-argument_list|(
-name|expr
-argument_list|)
-operator|==
-name|CONVERT_EXPR
-operator|||
-name|TREE_CODE
-argument_list|(
-name|expr
-argument_list|)
-operator|==
-name|NON_LVALUE_EXPR
-condition|)
-name|expr
-operator|=
-name|TREE_OPERAND
-argument_list|(
-name|expr
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|TREE_CODE
@@ -620,12 +601,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
+operator|!
 name|validated_p
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 return|return
 name|false
@@ -646,7 +626,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Decode the arguments to a "format" attribute into a function_format_info    structure.  It is already known that the list is of the right length.    If VALIDATED_P is true, then these attributes have already been validated    and this function will abort if they are erroneous; if false, it    will give an error message.  Returns true if the attributes are    successfully decoded, false otherwise.  */
+comment|/* Decode the arguments to a "format" attribute into a    function_format_info structure.  It is already known that the list    is of the right length.  If VALIDATED_P is true, then these    attributes have already been validated and must not be erroneous;    if false, it will give an error message.  Returns true if the    attributes are successfully decoded, false otherwise.  */
 end_comment
 
 begin_function
@@ -708,17 +688,20 @@ operator|!=
 name|IDENTIFIER_NODE
 condition|)
 block|{
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
+operator|!
 name|validated_p
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
 literal|"%Junrecognized format specifier"
 argument_list|,
+name|lang_hooks
+operator|.
+name|decls
+operator|.
 name|getdecls
 argument_list|()
 argument_list|)
@@ -757,18 +740,19 @@ operator|==
 name|format_type_error
 condition|)
 block|{
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
+operator|!
 name|validated_p
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|warning
 argument_list|(
-literal|"`%s' is an unrecognized format function type"
+name|OPT_Wformat
 argument_list|,
-name|p
+literal|"%qE is an unrecognized format function type"
+argument_list|,
+name|format_type_id
 argument_list|)
 expr_stmt|;
 return|return
@@ -819,7 +803,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"'...' has invalid operand number"
+literal|"%<...%> has invalid operand number"
 argument_list|)
 expr_stmt|;
 return|return
@@ -843,16 +827,15 @@ operator|->
 name|format_num
 condition|)
 block|{
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
+operator|!
 name|validated_p
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"format string arg follows the args to be formatted"
+literal|"format string argument follows the args to be formatted"
 argument_list|)
 expr_stmt|;
 return|return
@@ -873,59 +856,6 @@ comment|/* Check a call to a format function against a parameter list.  */
 end_comment
 
 begin_comment
-comment|/* The meaningfully distinct length modifiers for format checking recognized    by GCC.  */
-end_comment
-
-begin_enum
-enum|enum
-name|format_lengths
-block|{
-name|FMT_LEN_none
-block|,
-name|FMT_LEN_hh
-block|,
-name|FMT_LEN_h
-block|,
-name|FMT_LEN_l
-block|,
-name|FMT_LEN_ll
-block|,
-name|FMT_LEN_L
-block|,
-name|FMT_LEN_z
-block|,
-name|FMT_LEN_t
-block|,
-name|FMT_LEN_j
-block|,
-name|FMT_LEN_MAX
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/* The standard versions in which various format features appeared.  */
-end_comment
-
-begin_enum
-enum|enum
-name|format_std_version
-block|{
-name|STD_C89
-block|,
-name|STD_C94
-block|,
-name|STD_C9L
-block|,
-comment|/* C99, but treat as C89 if -Wno-long-long.  */
-name|STD_C99
-block|,
-name|STD_EXT
-block|}
-enum|;
-end_enum
-
-begin_comment
 comment|/* The C standard version C++ is treated as equivalent to    or inheriting from, for the purpose of format features supported.  */
 end_comment
 
@@ -944,7 +874,7 @@ begin_define
 define|#
 directive|define
 name|C_STD_VER
-value|((int)(c_dialect_cxx ()			  \ 				 ? CPLUSPLUS_STD_VER			  \ 				 : (flag_isoc99				  \ 				    ? STD_C99				  \ 				    : (flag_isoc94 ? STD_C94 : STD_C89))))
+value|((int) (c_dialect_cxx ()		   \ 				 ? CPLUSPLUS_STD_VER			   \ 				 : (flag_isoc99				   \ 				    ? STD_C99				   \ 				    : (flag_isoc94 ? STD_C94 : STD_C89))))
 end_define
 
 begin_comment
@@ -972,364 +902,8 @@ name|ADJ_STD
 parameter_list|(
 name|VER
 parameter_list|)
-value|((int)((VER) == STD_C9L			      \ 				       ? (warn_long_long ? STD_C99 : STD_C89) \ 				       : (VER)))
+value|((int) ((VER) == STD_C9L		      \ 				       ? (warn_long_long ? STD_C99 : STD_C89) \ 				       : (VER)))
 end_define
-
-begin_comment
-comment|/* Flags that may apply to a particular kind of format checked by GCC.  */
-end_comment
-
-begin_enum
-enum|enum
-block|{
-comment|/* This format converts arguments of types determined by the      format string.  */
-name|FMT_FLAG_ARG_CONVERT
-init|=
-literal|1
-block|,
-comment|/* The scanf allocation 'a' kludge applies to this format kind.  */
-name|FMT_FLAG_SCANF_A_KLUDGE
-init|=
-literal|2
-block|,
-comment|/* A % during parsing a specifier is allowed to be a modified % rather      that indicating the format is broken and we are out-of-sync.  */
-name|FMT_FLAG_FANCY_PERCENT_OK
-init|=
-literal|4
-block|,
-comment|/* With $ operand numbers, it is OK to reference the same argument more      than once.  */
-name|FMT_FLAG_DOLLAR_MULTIPLE
-init|=
-literal|8
-block|,
-comment|/* This format type uses $ operand numbers (strfmon doesn't).  */
-name|FMT_FLAG_USE_DOLLAR
-init|=
-literal|16
-block|,
-comment|/* Zero width is bad in this type of format (scanf).  */
-name|FMT_FLAG_ZERO_WIDTH_BAD
-init|=
-literal|32
-block|,
-comment|/* Empty precision specification is OK in this type of format (printf).  */
-name|FMT_FLAG_EMPTY_PREC_OK
-init|=
-literal|64
-block|,
-comment|/* Gaps are allowed in the arguments with $ operand numbers if all      arguments are pointers (scanf).  */
-name|FMT_FLAG_DOLLAR_GAP_POINTER_OK
-init|=
-literal|128
-comment|/* Not included here: details of whether width or precision may occur      (controlled by width_char and precision_char); details of whether      '*' can be used for these (width_type and precision_type); details      of whether length modifiers can occur (length_char_specs).  */
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/* Structure describing a length modifier supported in format checking, and    possibly a doubled version such as "hh".  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-comment|/* Name of the single-character length modifier.  */
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* Index into a format_char_info.types array.  */
-name|enum
-name|format_lengths
-name|index
-decl_stmt|;
-comment|/* Standard version this length appears in.  */
-name|enum
-name|format_std_version
-name|std
-decl_stmt|;
-comment|/* Same, if the modifier can be repeated, or NULL if it can't.  */
-specifier|const
-name|char
-modifier|*
-name|double_name
-decl_stmt|;
-name|enum
-name|format_lengths
-name|double_index
-decl_stmt|;
-name|enum
-name|format_std_version
-name|double_std
-decl_stmt|;
-block|}
-name|format_length_info
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Structure describing the combination of a conversion specifier    (or a set of specifiers which act identically) and a length modifier.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-comment|/* The standard version this combination of length and type appeared in.      This is only relevant if greater than those for length and type      individually; otherwise it is ignored.  */
-name|enum
-name|format_std_version
-name|std
-decl_stmt|;
-comment|/* The name to use for the type, if different from that generated internally      (e.g., "signed size_t").  */
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* The type itself.  */
-name|tree
-modifier|*
-name|type
-decl_stmt|;
-block|}
-name|format_type_detail
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Macros to fill out tables of these.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOARGUMENTS
-value|{ T89_V, BADLEN, BADLEN, BADLEN, BADLEN, BADLEN, BADLEN, BADLEN, BADLEN }
-end_define
-
-begin_define
-define|#
-directive|define
-name|BADLEN
-value|{ 0, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOLENGTHS
-value|{ BADLEN, BADLEN, BADLEN, BADLEN, BADLEN, BADLEN, BADLEN, BADLEN, BADLEN }
-end_define
-
-begin_comment
-comment|/* Structure describing a format conversion specifier (or a set of specifiers    which act identically), and the length modifiers used with it.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-specifier|const
-name|char
-modifier|*
-name|format_chars
-decl_stmt|;
-name|int
-name|pointer_count
-decl_stmt|;
-name|enum
-name|format_std_version
-name|std
-decl_stmt|;
-comment|/* Types accepted for each length modifier.  */
-name|format_type_detail
-name|types
-index|[
-name|FMT_LEN_MAX
-index|]
-decl_stmt|;
-comment|/* List of other modifier characters allowed with these specifiers.      This lists flags, and additionally "w" for width, "p" for precision      (right precision, for strfmon), "#" for left precision (strfmon),      "a" for scanf "a" allocation extension (not applicable in C99 mode),      "*" for scanf suppression, and "E" and "O" for those strftime      modifiers.  */
-specifier|const
-name|char
-modifier|*
-name|flag_chars
-decl_stmt|;
-comment|/* List of additional flags describing these conversion specifiers.      "c" for generic character pointers being allowed, "2" for strftime      two digit year formats, "3" for strftime formats giving two digit      years in some locales, "4" for "2" which becomes "3" with an "E" modifier,      "o" if use of strftime "O" is a GNU extension beyond C99,      "W" if the argument is a pointer which is dereferenced and written into,      "R" if the argument is a pointer which is dereferenced and read from,      "i" for printf integer formats where the '0' flag is ignored with      precision, and "[" for the starting character of a scanf scanset.  */
-specifier|const
-name|char
-modifier|*
-name|flags2
-decl_stmt|;
-block|}
-name|format_char_info
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Structure describing a flag accepted by some kind of format.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-comment|/* The flag character in question (0 for end of array).  */
-name|int
-name|flag_char
-decl_stmt|;
-comment|/* Zero if this entry describes the flag character in general, or a      nonzero character that may be found in flags2 if it describes the      flag when used with certain formats only.  If the latter, only      the first such entry found that applies to the current conversion      specifier is used; the values of `name' and `long_name' it supplies      will be used, if non-NULL and the standard version is higher than      the unpredicated one, for any pedantic warning.  For example, 'o'      for strftime formats (meaning 'O' is an extension over C99).  */
-name|int
-name|predicate
-decl_stmt|;
-comment|/* Nonzero if the next character after this flag in the format should      be skipped ('=' in strfmon), zero otherwise.  */
-name|int
-name|skip_next_char
-decl_stmt|;
-comment|/* The name to use for this flag in diagnostic messages.  For example,      N_("`0' flag"), N_("field width").  */
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* Long name for this flag in diagnostic messages; currently only used for      "ISO C does not support ...".  For example, N_("the `I' printf flag").  */
-specifier|const
-name|char
-modifier|*
-name|long_name
-decl_stmt|;
-comment|/* The standard version in which it appeared.  */
-name|enum
-name|format_std_version
-name|std
-decl_stmt|;
-block|}
-name|format_flag_spec
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Structure describing a combination of flags that is bad for some kind    of format.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-comment|/* The first flag character in question (0 for end of array).  */
-name|int
-name|flag_char1
-decl_stmt|;
-comment|/* The second flag character.  */
-name|int
-name|flag_char2
-decl_stmt|;
-comment|/* Nonzero if the message should say that the first flag is ignored with      the second, zero if the combination should simply be objected to.  */
-name|int
-name|ignored
-decl_stmt|;
-comment|/* Zero if this entry applies whenever this flag combination occurs,      a nonzero character from flags2 if it only applies in some      circumstances (e.g. 'i' for printf formats ignoring 0 with precision).  */
-name|int
-name|predicate
-decl_stmt|;
-block|}
-name|format_flag_pair
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Structure describing a particular kind of format processed by GCC.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-comment|/* The name of this kind of format, for use in diagnostics.  Also      the name of the attribute (without preceding and following __).  */
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* Specifications of the length modifiers accepted; possibly NULL.  */
-specifier|const
-name|format_length_info
-modifier|*
-name|length_char_specs
-decl_stmt|;
-comment|/* Details of the conversion specification characters accepted.  */
-specifier|const
-name|format_char_info
-modifier|*
-name|conversion_specs
-decl_stmt|;
-comment|/* String listing the flag characters that are accepted.  */
-specifier|const
-name|char
-modifier|*
-name|flag_chars
-decl_stmt|;
-comment|/* String listing modifier characters (strftime) accepted.  May be NULL.  */
-specifier|const
-name|char
-modifier|*
-name|modifier_chars
-decl_stmt|;
-comment|/* Details of the flag characters, including pseudo-flags.  */
-specifier|const
-name|format_flag_spec
-modifier|*
-name|flag_specs
-decl_stmt|;
-comment|/* Details of bad combinations of flags.  */
-specifier|const
-name|format_flag_pair
-modifier|*
-name|bad_flag_pairs
-decl_stmt|;
-comment|/* Flags applicable to this kind of format.  */
-name|int
-name|flags
-decl_stmt|;
-comment|/* Flag character to treat a width as, or 0 if width not used.  */
-name|int
-name|width_char
-decl_stmt|;
-comment|/* Flag character to treat a left precision (strfmon) as,      or 0 if left precision not used.  */
-name|int
-name|left_precision_char
-decl_stmt|;
-comment|/* Flag character to treat a precision (for strfmon, right precision) as,      or 0 if precision not used.  */
-name|int
-name|precision_char
-decl_stmt|;
-comment|/* If a flag character has the effect of suppressing the conversion of      an argument ('*' in scanf), that flag character, otherwise 0.  */
-name|int
-name|suppression_char
-decl_stmt|;
-comment|/* Flag character to treat a length modifier as (ignored if length      modifiers not used).  Need not be placed in flag_chars for conversion      specifiers, but is used to check for bad combinations such as length      modifier with assignment suppression in scanf.  */
-name|int
-name|length_code_char
-decl_stmt|;
-comment|/* Pointer to type of argument expected if '*' is used for a width,      or NULL if '*' not used for widths.  */
-name|tree
-modifier|*
-name|width_type
-decl_stmt|;
-comment|/* Pointer to type of argument expected if '*' is used for a precision,      or NULL if '*' not used for precisions.  */
-name|tree
-modifier|*
-name|precision_type
-decl_stmt|;
-specifier|const
-name|int
-name|null_format_ok
-decl_stmt|;
-block|}
-name|format_kind_info
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* Structure describing details of a type expected in format checking,    and the type to check against it.  */
@@ -1366,7 +940,7 @@ comment|/* Whether the argument, dereferenced once, is read from and so      mus
 name|int
 name|reading_from_flag
 decl_stmt|;
-comment|/* If warnings should be of the form "field precision is not type int",      the name to use (in this case "field precision"), otherwise NULL,      for "%s format, %s arg" type messages.  If (in an extension), this      is a pointer type, wanted_type_name should be set to include the      terminating '*' characters of the type name to give a correct      message.  */
+comment|/* If warnings should be of the form "field precision should have      type 'int'", the name to use (in this case "field precision"),      otherwise NULL, for "format expects type 'long'" type      messages.  */
 specifier|const
 name|char
 modifier|*
@@ -1512,6 +1086,34 @@ literal|0
 block|}
 block|,
 block|{
+literal|"H"
+block|,
+name|FMT_LEN_H
+block|,
+name|STD_EXT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"D"
+block|,
+name|FMT_LEN_D
+block|,
+name|STD_EXT
+block|,
+literal|"DD"
+block|,
+name|FMT_LEN_DD
+block|,
+name|STD_EXT
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
@@ -1649,6 +1251,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|gcc_tdiag_length_specs
+value|gcc_diag_length_specs
+end_define
+
+begin_define
+define|#
+directive|define
 name|gcc_cdiag_length_specs
 value|gcc_diag_length_specs
 end_define
@@ -1771,6 +1380,34 @@ literal|0
 block|}
 block|,
 block|{
+literal|"H"
+block|,
+name|FMT_LEN_H
+block|,
+name|STD_EXT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"D"
+block|,
+name|FMT_LEN_D
+block|,
+name|STD_EXT
+block|,
+literal|"DD"
+block|,
+name|FMT_LEN_DD
+block|,
+name|STD_EXT
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
@@ -1848,12 +1485,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"` ' flag"
+literal|"' ' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the ` ' printf flag"
+literal|"the ' ' printf flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -1868,12 +1505,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`+' flag"
+literal|"'+' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `+' printf flag"
+literal|"the '+' printf flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -1888,12 +1525,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`#' flag"
+literal|"'#' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `#' printf flag"
+literal|"the '#' printf flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -1908,12 +1545,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`0' flag"
+literal|"'0' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `0' printf flag"
+literal|"the '0' printf flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -1928,12 +1565,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`-' flag"
+literal|"'-' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `-' printf flag"
+literal|"the '-' printf flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -1948,12 +1585,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`'' flag"
+literal|"''' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `'' printf flag"
+literal|"the ''' printf flag"
 argument_list|)
 block|,
 name|STD_EXT
@@ -1968,12 +1605,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`I' flag"
+literal|"'I' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `I' printf flag"
+literal|"the 'I' printf flag"
 argument_list|)
 block|,
 name|STD_EXT
@@ -2124,12 +1761,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"` ' flag"
+literal|"' ' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the ` ' printf flag"
+literal|"the ' ' printf flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -2144,12 +1781,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`+' flag"
+literal|"'+' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `+' printf flag"
+literal|"the '+' printf flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -2164,12 +1801,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`#' flag"
+literal|"'#' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `#' printf flag"
+literal|"the '#' printf flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -2184,12 +1821,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`0' flag"
+literal|"'0' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `0' printf flag"
+literal|"the '0' printf flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -2204,12 +1841,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`-' flag"
+literal|"'-' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `-' printf flag"
+literal|"the '-' printf flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -2367,6 +2004,13 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|gcc_tdiag_flag_pairs
+value|gcc_diag_flag_pairs
+end_define
+
+begin_define
+define|#
+directive|define
 name|gcc_cdiag_flag_pairs
 value|gcc_diag_flag_pairs
 end_define
@@ -2381,11 +2025,72 @@ end_define
 begin_decl_stmt
 specifier|static
 specifier|const
+name|format_flag_pair
+name|gcc_gfc_flag_pairs
+index|[]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
 name|format_flag_spec
 name|gcc_diag_flag_specs
 index|[]
 init|=
 block|{
+block|{
+literal|'+'
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"'+' flag"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"the '+' printf flag"
+argument_list|)
+block|,
+name|STD_C89
+block|}
+block|,
+block|{
+literal|'q'
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"'q' flag"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"the 'q' diagnostic flag"
+argument_list|)
+block|,
+name|STD_C89
+block|}
+block|,
 block|{
 literal|'p'
 block|,
@@ -2446,6 +2151,13 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|gcc_tdiag_flag_specs
+value|gcc_diag_flag_specs
+end_define
+
+begin_define
+define|#
+directive|define
 name|gcc_cdiag_flag_specs
 value|gcc_diag_flag_specs
 end_define
@@ -2467,12 +2179,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`+' flag"
+literal|"'+' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `+' printf flag"
+literal|"the '+' printf flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -2487,12 +2199,32 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`#' flag"
+literal|"'#' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `#' printf flag"
+literal|"the '#' printf flag"
+argument_list|)
+block|,
+name|STD_C89
+block|}
+block|,
+block|{
+literal|'q'
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"'q' flag"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"the 'q' diagnostic flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -2592,12 +2324,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`a' flag"
+literal|"'a' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `a' scanf flag"
+literal|"the 'a' scanf flag"
 argument_list|)
 block|,
 name|STD_EXT
@@ -2652,12 +2384,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`'' flag"
+literal|"''' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `'' scanf flag"
+literal|"the ''' scanf flag"
 argument_list|)
 block|,
 name|STD_EXT
@@ -2672,12 +2404,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`I' flag"
+literal|"'I' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `I' scanf flag"
+literal|"the 'I' scanf flag"
 argument_list|)
 block|,
 name|STD_EXT
@@ -2748,12 +2480,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`_' flag"
+literal|"'_' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `_' strftime flag"
+literal|"the '_' strftime flag"
 argument_list|)
 block|,
 name|STD_EXT
@@ -2768,12 +2500,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`-' flag"
+literal|"'-' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `-' strftime flag"
+literal|"the '-' strftime flag"
 argument_list|)
 block|,
 name|STD_EXT
@@ -2788,12 +2520,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`0' flag"
+literal|"'0' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `0' strftime flag"
+literal|"the '0' strftime flag"
 argument_list|)
 block|,
 name|STD_EXT
@@ -2808,12 +2540,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`^' flag"
+literal|"'^' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `^' strftime flag"
+literal|"the '^' strftime flag"
 argument_list|)
 block|,
 name|STD_EXT
@@ -2828,12 +2560,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`#' flag"
+literal|"'#' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `#' strftime flag"
+literal|"the '#' strftime flag"
 argument_list|)
 block|,
 name|STD_EXT
@@ -2868,12 +2600,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`E' modifier"
+literal|"'E' modifier"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `E' strftime modifier"
+literal|"the 'E' strftime modifier"
 argument_list|)
 block|,
 name|STD_C99
@@ -2888,12 +2620,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`O' modifier"
+literal|"'O' modifier"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `O' strftime modifier"
+literal|"the 'O' strftime modifier"
 argument_list|)
 block|,
 name|STD_C99
@@ -2910,7 +2642,7 @@ name|NULL
 block|,
 name|N_
 argument_list|(
-literal|"the `O' modifier"
+literal|"the 'O' modifier"
 argument_list|)
 block|,
 name|STD_EXT
@@ -3041,12 +2773,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`^' flag"
+literal|"'^' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `^' strfmon flag"
+literal|"the '^' strfmon flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -3061,12 +2793,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`+' flag"
+literal|"'+' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `+' strfmon flag"
+literal|"the '+' strfmon flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -3081,12 +2813,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`(' flag"
+literal|"'(' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `(' strfmon flag"
+literal|"the '(' strfmon flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -3101,12 +2833,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`!' flag"
+literal|"'!' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `!' strfmon flag"
+literal|"the '!' strfmon flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -3121,12 +2853,12 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"`-' flag"
+literal|"'-' flag"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"the `-' strfmon flag"
+literal|"the '-' strfmon flag"
 argument_list|)
 block|,
 name|STD_C89
@@ -3260,377 +2992,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|T_I
-value|&integer_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T89_I
-value|{ STD_C89, NULL, T_I }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_L
-value|&long_integer_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T89_L
-value|{ STD_C89, NULL, T_L }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_LL
-value|&long_long_integer_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T9L_LL
-value|{ STD_C9L, NULL, T_LL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|TEX_LL
-value|{ STD_EXT, NULL, T_LL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_S
-value|&short_integer_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T89_S
-value|{ STD_C89, NULL, T_S }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_UI
-value|&unsigned_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T89_UI
-value|{ STD_C89, NULL, T_UI }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_UL
-value|&long_unsigned_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T89_UL
-value|{ STD_C89, NULL, T_UL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_ULL
-value|&long_long_unsigned_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T9L_ULL
-value|{ STD_C9L, NULL, T_ULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|TEX_ULL
-value|{ STD_EXT, NULL, T_ULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_US
-value|&short_unsigned_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T89_US
-value|{ STD_C89, NULL, T_US }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_F
-value|&float_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T89_F
-value|{ STD_C89, NULL, T_F }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T99_F
-value|{ STD_C99, NULL, T_F }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_D
-value|&double_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T89_D
-value|{ STD_C89, NULL, T_D }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T99_D
-value|{ STD_C99, NULL, T_D }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_LD
-value|&long_double_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T89_LD
-value|{ STD_C89, NULL, T_LD }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T99_LD
-value|{ STD_C99, NULL, T_LD }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_C
-value|&char_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T89_C
-value|{ STD_C89, NULL, T_C }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_SC
-value|&signed_char_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T99_SC
-value|{ STD_C99, NULL, T_SC }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_UC
-value|&unsigned_char_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T99_UC
-value|{ STD_C99, NULL, T_UC }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_V
-value|&void_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T89_V
-value|{ STD_C89, NULL, T_V }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_W
-value|&wchar_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T94_W
-value|{ STD_C94, "wchar_t", T_W }
-end_define
-
-begin_define
-define|#
-directive|define
-name|TEX_W
-value|{ STD_EXT, "wchar_t", T_W }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_WI
-value|&wint_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T94_WI
-value|{ STD_C94, "wint_t", T_WI }
-end_define
-
-begin_define
-define|#
-directive|define
-name|TEX_WI
-value|{ STD_EXT, "wint_t", T_WI }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_ST
-value|&size_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T99_ST
-value|{ STD_C99, "size_t", T_ST }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_SST
-value|&signed_size_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T99_SST
-value|{ STD_C99, "signed size_t", T_SST }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_PD
-value|&ptrdiff_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T99_PD
-value|{ STD_C99, "ptrdiff_t", T_PD }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_UPD
-value|&unsigned_ptrdiff_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T99_UPD
-value|{ STD_C99, "unsigned ptrdiff_t", T_UPD }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_IM
-value|&intmax_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T99_IM
-value|{ STD_C99, "intmax_t", T_IM }
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_UIM
-value|&uintmax_type_node
-end_define
-
-begin_define
-define|#
-directive|define
-name|T99_UIM
-value|{ STD_C99, "uintmax_t", T_UIM }
-end_define
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -3665,11 +3026,19 @@ block|,
 name|T99_PD
 block|,
 name|T99_IM
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-wp0 +'I"
 block|,
 literal|"i"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -3697,11 +3066,19 @@ block|,
 name|T99_UPD
 block|,
 name|T99_UIM
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-wp0#"
 block|,
 literal|"i"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -3729,11 +3106,19 @@ block|,
 name|T99_UPD
 block|,
 name|T99_UIM
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-wp0'I"
 block|,
 literal|"i"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -3761,11 +3146,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|TEX_D32
+block|,
+name|TEX_D64
+block|,
+name|TEX_D128
 block|}
 block|,
 literal|"-wp0 +#'I"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -3793,11 +3186,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|TEX_D32
+block|,
+name|TEX_D64
+block|,
+name|TEX_D128
 block|}
 block|,
 literal|"-wp0 +#I"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -3825,11 +3226,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-w"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -3857,11 +3266,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-wp"
 block|,
 literal|"cR"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -3889,11 +3306,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-w"
 block|,
 literal|"c"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -3921,11 +3346,19 @@ block|,
 name|T99_PD
 block|,
 name|T99_IM
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|""
 block|,
 literal|"W"
+block|,
+name|NULL
 block|}
 block|,
 comment|/* C99 conversion specifiers.  */
@@ -3954,11 +3387,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|TEX_D32
+block|,
+name|TEX_D64
+block|,
+name|TEX_D128
 block|}
 block|,
 literal|"-wp0 +#'I"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -3986,11 +3427,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-wp0 +#"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 comment|/* X/Open conversion specifiers.  */
@@ -4019,11 +3468,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-w"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4051,11 +3508,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-wp"
 block|,
 literal|"R"
+block|,
+name|NULL
 block|}
 block|,
 comment|/* GNU conversion specifiers.  */
@@ -4084,13 +3549,90 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-wp"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NOLENGTHS
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|format_char_info
+name|fbsd_ext_char_info
+init|=
+block|{
+name|NULL
+block|,
+literal|1
+block|,
+name|STD_EXT
+block|,
+block|{
+name|T89_C
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|}
+block|,
+literal|""
+block|,
+literal|"cR"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|format_char_info
+name|fbsd_print_char_table
+index|[]
+init|=
+block|{
 comment|/* BSD conversion specifiers.  */
 comment|/* FreeBSD kernel extensions (src/sys/kern/subr_prf.c).      The format %b is supported to decode error registers.      Its usage is:	printf("reg=%b\n", regval, "<base><arg>*");      which produces:	reg=3<BITTWO,BITONE>      The format %D provides a hexdump given a pointer and separator string:      ("%6D", ptr, ":")		-> XX:XX:XX:XX:XX:XX      ("%*D", len, ptr, " ")	-> XX XX XX XX ...    */
 block|{
@@ -4101,7 +3643,13 @@ block|,
 name|STD_EXT
 block|,
 block|{
-name|T89_C
+name|T89_V
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|,
 name|BADLEN
 block|,
@@ -4123,17 +3671,26 @@ block|,
 literal|"-wp"
 block|,
 literal|"cR"
+block|,
+operator|&
+name|fbsd_ext_char_info
 block|}
 block|,
 block|{
 literal|"b"
 block|,
-literal|1
+literal|0
 block|,
 name|STD_EXT
 block|,
 block|{
-name|T89_C
+name|T89_I
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|,
 name|BADLEN
 block|,
@@ -4155,6 +3712,9 @@ block|,
 literal|"-wp"
 block|,
 literal|""
+block|,
+operator|&
+name|fbsd_ext_char_info
 block|}
 block|,
 block|{
@@ -4182,11 +3742,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-wp0 +#"
 block|,
 literal|"i"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4240,11 +3808,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-wp0 +"
 block|,
 literal|"i"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4272,11 +3848,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-wp0#"
 block|,
 literal|"i"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4304,11 +3888,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-wp0"
 block|,
 literal|"i"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4336,11 +3928,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-w"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4368,11 +3968,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"-wp"
 block|,
 literal|"cR"
+block|,
+name|NULL
 block|}
 block|,
 comment|/* asm_fprintf conversion specifiers.  */
@@ -4388,6 +3996,8 @@ block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4402,6 +4012,8 @@ block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4416,6 +4028,8 @@ block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4430,6 +4044,8 @@ block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4444,6 +4060,8 @@ block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4471,11 +4089,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4490,6 +4116,8 @@ block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4500,6 +4128,8 @@ block|,
 literal|0
 block|,
 name|NOLENGTHS
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -4543,11 +4173,396 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
+literal|"q"
+block|,
+literal|""
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"ox"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+block|{
+name|T89_UI
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|T89_UL
+block|,
+name|T9L_ULL
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|}
+block|,
+literal|"q"
+block|,
+literal|""
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"u"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+block|{
+name|T89_UI
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|T89_UL
+block|,
+name|T9L_ULL
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|}
+block|,
+literal|"q"
+block|,
+literal|""
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"c"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+block|{
+name|T89_I
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|}
+block|,
+literal|"q"
+block|,
+literal|""
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"s"
+block|,
+literal|1
+block|,
+name|STD_C89
+block|,
+block|{
+name|T89_C
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|}
+block|,
+literal|"pq"
+block|,
+literal|"cR"
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"p"
+block|,
+literal|1
+block|,
+name|STD_C89
+block|,
+block|{
+name|T89_V
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|}
+block|,
+literal|"q"
+block|,
+literal|"c"
+block|,
+name|NULL
+block|}
+block|,
+comment|/* Custom conversion specifiers.  */
+comment|/* %H will require "location_t" at runtime.  */
+block|{
+literal|"H"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+block|{
+name|T89_V
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|}
+block|,
+literal|"q"
+block|,
+literal|""
+block|,
+name|NULL
+block|}
+block|,
+comment|/* These will require a "tree" at runtime.  */
+block|{
+literal|"J"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+block|{
+name|T89_V
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|}
+block|,
+literal|"q"
+block|,
+literal|""
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"<>'"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+name|NOARGUMENTS
+block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"m"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+name|NOARGUMENTS
+block|,
+literal|"q"
+block|,
+literal|""
+block|,
+name|NULL
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NOLENGTHS
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|format_char_info
+name|gcc_tdiag_char_table
+index|[]
+init|=
+block|{
+comment|/* C89 conversion specifiers.  */
+block|{
+literal|"di"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+block|{
+name|T89_I
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|T89_L
+block|,
+name|T9L_LL
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|}
+block|,
+literal|"q"
+block|,
+literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4577,9 +4592,11 @@ block|,
 name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4609,9 +4626,11 @@ block|,
 name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4641,9 +4660,11 @@ block|,
 name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4673,9 +4694,11 @@ block|,
 name|BADLEN
 block|}
 block|,
-literal|"p"
+literal|"pq"
 block|,
 literal|"cR"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4705,9 +4728,11 @@ block|,
 name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|"c"
+block|,
+name|NULL
 block|}
 block|,
 comment|/* Custom conversion specifiers.  */
@@ -4739,14 +4764,16 @@ block|,
 name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 comment|/* These will require a "tree" at runtime.  */
 block|{
-literal|"J"
+literal|"DFJT"
 block|,
 literal|0
 block|,
@@ -4772,9 +4799,27 @@ block|,
 name|BADLEN
 block|}
 block|,
+literal|"q+"
+block|,
+literal|""
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"<>'"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+name|NOARGUMENTS
+block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4786,9 +4831,11 @@ name|STD_C89
 block|,
 name|NOARGUMENTS
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4799,6 +4846,8 @@ block|,
 literal|0
 block|,
 name|NOLENGTHS
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -4842,11 +4891,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4874,11 +4931,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4906,11 +4971,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4938,11 +5011,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -4970,11 +5051,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|"p"
+literal|"pq"
 block|,
 literal|"cR"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5002,11 +5091,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|"c"
+block|,
+name|NULL
 block|}
 block|,
 comment|/* Custom conversion specifiers.  */
@@ -5036,11 +5133,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 comment|/* These will require a "tree" at runtime.  */
@@ -5069,11 +5174,35 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
+literal|"q+"
+block|,
+literal|""
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"<>'"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+name|NOARGUMENTS
+block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5085,9 +5214,11 @@ name|STD_C89
 block|,
 name|NOARGUMENTS
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5098,6 +5229,8 @@ block|,
 literal|0
 block|,
 name|NOLENGTHS
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -5141,11 +5274,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5173,11 +5314,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5205,11 +5354,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5237,11 +5394,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5269,11 +5434,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|"p"
+literal|"pq"
 block|,
 literal|"cR"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5301,11 +5474,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|"c"
+block|,
+name|NULL
 block|}
 block|,
 comment|/* Custom conversion specifiers.  */
@@ -5335,11 +5516,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|""
+literal|"q"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 comment|/* These will require a "tree" at runtime.  */
@@ -5368,16 +5557,124 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
-literal|"+#"
+literal|"q+#"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
-comment|/* These accept either an `int' or an `enum tree_code' (which is handled as an `int'.)  */
+comment|/* These accept either an 'int' or an 'enum tree_code' (which is handled as an 'int'.)  */
 block|{
 literal|"CLOPQ"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+block|{
+name|T89_I
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|}
+block|,
+literal|"q"
+block|,
+literal|""
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"<>'"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+name|NOARGUMENTS
+block|,
+literal|""
+block|,
+literal|""
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"m"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+name|NOARGUMENTS
+block|,
+literal|"q"
+block|,
+literal|""
+block|,
+name|NULL
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NOLENGTHS
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|format_char_info
+name|gcc_gfc_char_table
+index|[]
+init|=
+block|{
+comment|/* C89 conversion specifiers.  */
+block|{
+literal|"di"
 block|,
 literal|0
 block|,
@@ -5406,10 +5703,81 @@ block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
-literal|"m"
+literal|"c"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+block|{
+name|T89_I
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|}
+block|,
+literal|""
+block|,
+literal|""
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"s"
+block|,
+literal|1
+block|,
+name|STD_C89
+block|,
+block|{
+name|T89_C
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|}
+block|,
+literal|""
+block|,
+literal|"cR"
+block|,
+name|NULL
+block|}
+block|,
+comment|/* gfc conversion specifiers.  */
+block|{
+literal|"C"
 block|,
 literal|0
 block|,
@@ -5420,6 +5788,43 @@ block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
+block|}
+block|,
+comment|/* This will require a "locus" at runtime.  */
+block|{
+literal|"L"
+block|,
+literal|0
+block|,
+name|STD_C89
+block|,
+block|{
+name|T89_V
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|}
+block|,
+literal|""
+block|,
+literal|"R"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5430,6 +5835,8 @@ block|,
 literal|0
 block|,
 name|NOLENGTHS
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -5473,11 +5880,19 @@ block|,
 name|T99_PD
 block|,
 name|T99_IM
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"*w'I"
 block|,
 literal|"W"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5505,11 +5920,19 @@ block|,
 name|T99_UPD
 block|,
 name|T99_UIM
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"*w'I"
 block|,
 literal|"W"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5537,11 +5960,19 @@ block|,
 name|T99_UPD
 block|,
 name|T99_UIM
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"*w"
 block|,
 literal|"W"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5569,11 +6000,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|TEX_D32
+block|,
+name|TEX_D64
+block|,
+name|TEX_D128
 block|}
 block|,
 literal|"*w'"
 block|,
 literal|"W"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5601,11 +6040,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"*w"
 block|,
 literal|"cW"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5633,11 +6080,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"*aw"
 block|,
 literal|"cW"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5665,11 +6120,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"*aw"
 block|,
 literal|"cW["
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5697,11 +6160,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"*w"
 block|,
 literal|"W"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5729,16 +6200,24 @@ block|,
 name|T99_PD
 block|,
 name|T99_IM
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|""
 block|,
 literal|"W"
+block|,
+name|NULL
 block|}
 block|,
 comment|/* C99 conversion specifiers.  */
 block|{
-literal|"FaA"
+literal|"F"
 block|,
 literal|1
 block|,
@@ -5762,11 +6241,59 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|TEX_D32
+block|,
+name|TEX_D64
+block|,
+name|TEX_D128
 block|}
 block|,
 literal|"*w'"
 block|,
 literal|"W"
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"aA"
+block|,
+literal|1
+block|,
+name|STD_C99
+block|,
+block|{
+name|T99_F
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|T99_D
+block|,
+name|BADLEN
+block|,
+name|T99_LD
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|}
+block|,
+literal|"*w'"
+block|,
+literal|"W"
+block|,
+name|NULL
 block|}
 block|,
 comment|/* X/Open conversion specifiers.  */
@@ -5795,11 +6322,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"*w"
 block|,
 literal|"W"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5827,11 +6362,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"*aw"
 block|,
 literal|"W"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5842,6 +6385,8 @@ block|,
 literal|0
 block|,
 name|NOLENGTHS
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -5872,6 +6417,8 @@ block|,
 literal|"^#"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5886,6 +6433,8 @@ block|,
 literal|"E"
 block|,
 literal|"3"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5900,6 +6449,8 @@ block|,
 literal|"-_0Ow"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5914,6 +6465,8 @@ block|,
 literal|"-_0Ow"
 block|,
 literal|"o"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5928,6 +6481,8 @@ block|,
 literal|"#"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5942,6 +6497,8 @@ block|,
 literal|"E"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5956,6 +6513,8 @@ block|,
 literal|"EO-_0w"
 block|,
 literal|"4"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5970,6 +6529,8 @@ block|,
 literal|"-_0EOw"
 block|,
 literal|"o"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5984,6 +6545,8 @@ block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 comment|/* C99 conversion specifiers.  */
@@ -5999,6 +6562,8 @@ block|,
 literal|"-_0EOw"
 block|,
 literal|"o"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6013,6 +6578,8 @@ block|,
 literal|""
 block|,
 literal|"2"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6027,6 +6594,8 @@ block|,
 literal|"-_0Ow"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6041,6 +6610,8 @@ block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6055,6 +6626,8 @@ block|,
 literal|"O-_0w"
 block|,
 literal|"2o"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6069,6 +6642,8 @@ block|,
 literal|"-_0Ow"
 block|,
 literal|"o"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6083,6 +6658,8 @@ block|,
 literal|"^#"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6097,6 +6674,8 @@ block|,
 literal|"O"
 block|,
 literal|"o"
+block|,
+name|NULL
 block|}
 block|,
 comment|/* GNU conversion specifiers.  */
@@ -6112,6 +6691,8 @@ block|,
 literal|"-_0Ow"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6126,6 +6707,8 @@ block|,
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6136,6 +6719,8 @@ block|,
 literal|0
 block|,
 name|NOLENGTHS
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -6178,11 +6763,19 @@ block|,
 name|BADLEN
 block|,
 name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
+block|,
+name|BADLEN
 block|}
 block|,
 literal|"=^+(!-w#p"
 block|,
 literal|""
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6193,6 +6786,8 @@ block|,
 literal|0
 block|,
 name|NOLENGTHS
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -6252,8 +6847,6 @@ name|integer_type_node
 block|,
 operator|&
 name|integer_type_node
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -6297,7 +6890,7 @@ name|gcc_diag_length_specs
 block|,
 name|gcc_diag_char_table
 block|,
-literal|""
+literal|"q+"
 block|,
 name|NULL
 block|,
@@ -6324,13 +6917,46 @@ name|integer_type_node
 block|}
 block|,
 block|{
+literal|"gcc_tdiag"
+block|,
+name|gcc_tdiag_length_specs
+block|,
+name|gcc_tdiag_char_table
+block|,
+literal|"q+"
+block|,
+name|NULL
+block|,
+name|gcc_tdiag_flag_specs
+block|,
+name|gcc_tdiag_flag_pairs
+block|,
+name|FMT_FLAG_ARG_CONVERT
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'p'
+block|,
+literal|0
+block|,
+literal|'L'
+block|,
+name|NULL
+block|,
+operator|&
+name|integer_type_node
+block|}
+block|,
+block|{
 literal|"gcc_cdiag"
 block|,
 name|gcc_cdiag_length_specs
 block|,
 name|gcc_cdiag_char_table
 block|,
-literal|""
+literal|"q+"
 block|,
 name|NULL
 block|,
@@ -6363,7 +6989,7 @@ name|gcc_cxxdiag_length_specs
 block|,
 name|gcc_cxxdiag_char_table
 block|,
-literal|"+#"
+literal|"q+#"
 block|,
 name|NULL
 block|,
@@ -6387,6 +7013,38 @@ name|NULL
 block|,
 operator|&
 name|integer_type_node
+block|}
+block|,
+block|{
+literal|"gcc_gfc"
+block|,
+name|NULL
+block|,
+name|gcc_gfc_char_table
+block|,
+literal|""
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|gcc_gfc_flag_pairs
+block|,
+name|FMT_FLAG_ARG_CONVERT
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6427,8 +7085,6 @@ block|,
 name|NULL
 block|,
 name|NULL
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -6461,8 +7117,6 @@ block|,
 name|NULL
 block|,
 name|NULL
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -6495,8 +7149,6 @@ block|,
 name|NULL
 block|,
 name|NULL
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -6521,6 +7173,8 @@ operator||
 name|FMT_FLAG_USE_DOLLAR
 operator||
 name|FMT_FLAG_EMPTY_PREC_OK
+operator||
+name|FMT_FLAG_NULL_FORMAT_OK
 block|,
 literal|'w'
 block|,
@@ -6537,8 +7191,6 @@ name|integer_type_node
 block|,
 operator|&
 name|integer_type_node
-block|,
-literal|1
 block|}
 block|}
 decl_stmt|;
@@ -6560,7 +7212,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* We can modify this one.  */
+comment|/* We can modify this one.  We also add target-specific format types    to the end of the array.  */
 end_comment
 
 begin_decl_stmt
@@ -6568,6 +7220,18 @@ specifier|static
 name|format_kind_info
 modifier|*
 name|dynamic_format_types
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|n_format_types
+init|=
+name|ARRAY_SIZE
+argument_list|(
+name|format_types_orig
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -6627,10 +7291,6 @@ decl_stmt|;
 name|tree
 name|params
 decl_stmt|;
-name|int
-modifier|*
-name|status
-decl_stmt|;
 block|}
 name|format_check_context
 typedef|;
@@ -6641,9 +7301,6 @@ specifier|static
 name|void
 name|check_format_info
 parameter_list|(
-name|int
-modifier|*
-parameter_list|,
 name|function_format_info
 modifier|*
 parameter_list|,
@@ -6673,9 +7330,6 @@ specifier|static
 name|void
 name|check_format_info_main
 parameter_list|(
-name|int
-modifier|*
-parameter_list|,
 name|format_check_results
 modifier|*
 parameter_list|,
@@ -6696,24 +7350,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|void
-name|status_warning
-argument_list|(
-name|int
-operator|*
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|,
-operator|...
-argument_list|)
-name|ATTRIBUTE_PRINTF_2
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -6731,9 +7367,6 @@ specifier|static
 name|int
 name|maybe_read_dollar_number
 parameter_list|(
-name|int
-modifier|*
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -6755,12 +7388,21 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|bool
+name|avoid_dollar_number
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|finish_dollar_format_checking
 parameter_list|(
-name|int
-modifier|*
-parameter_list|,
 name|format_check_results
 modifier|*
 parameter_list|,
@@ -6794,11 +7436,44 @@ specifier|static
 name|void
 name|check_format_types
 parameter_list|(
-name|int
-modifier|*
-parameter_list|,
 name|format_wanted_type
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|format_type_warning
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|tree
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|tree
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6809,8 +7484,7 @@ end_comment
 
 begin_function
 specifier|static
-name|enum
-name|format_type
+name|int
 name|decode_format_type
 parameter_list|(
 specifier|const
@@ -6840,10 +7514,7 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
-name|int
-operator|)
-name|format_type_error
+name|n_format_types
 condition|;
 name|i
 operator|++
@@ -6867,7 +7538,9 @@ operator|.
 name|name
 argument_list|)
 condition|)
-break|break;
+return|return
+name|i
+return|;
 name|alen
 operator|=
 name|strlen
@@ -6937,16 +7610,12 @@ argument_list|,
 name|alen
 argument_list|)
 condition|)
-break|break;
+return|return
+name|i
+return|;
 block|}
 return|return
-operator|(
-operator|(
-expr|enum
-name|format_type
-operator|)
-name|i
-operator|)
+name|format_type_error
 return|;
 block|}
 end_function
@@ -6962,10 +7631,6 @@ begin_function
 name|void
 name|check_function_format
 parameter_list|(
-name|int
-modifier|*
-name|status
-parameter_list|,
 name|tree
 name|attrs
 parameter_list|,
@@ -7023,10 +7688,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|warn_format
+condition|)
 name|check_format_info
 argument_list|(
-name|status
-argument_list|,
 operator|&
 name|info
 argument_list|,
@@ -7186,7 +7853,10 @@ literal|0
 condition|)
 name|warning
 argument_list|(
-literal|"function might be possible candidate for `%s' format attribute"
+name|OPT_Wmissing_format_attribute
+argument_list|,
+literal|"function might "
+literal|"be possible candidate for %qs format attribute"
 argument_list|,
 name|format_types
 index|[
@@ -7202,85 +7872,6 @@ block|}
 block|}
 block|}
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/* This function replaces `warning' inside the printf format checking    functions.  If the `status' parameter is non-NULL, then it is    dereferenced and set to 1 whenever a warning is caught.  Otherwise    it warns as usual by replicating the innards of the warning    function from diagnostic.c.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|status_warning
-parameter_list|(
-name|int
-modifier|*
-name|status
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|msgid
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|diagnostic_info
-name|diagnostic
-decl_stmt|;
-name|va_list
-name|ap
-decl_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|msgid
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|status
-condition|)
-operator|*
-name|status
-operator|=
-literal|1
-expr_stmt|;
-else|else
-block|{
-comment|/* This duplicates the warning function behavior.  */
-name|diagnostic_set_info
-argument_list|(
-operator|&
-name|diagnostic
-argument_list|,
-name|_
-argument_list|(
-name|msgid
-argument_list|)
-argument_list|,
-operator|&
-name|ap
-argument_list|,
-name|input_location
-argument_list|,
-name|DK_WARNING
-argument_list|)
-expr_stmt|;
-name|report_diagnostic
-argument_list|(
-operator|&
-name|diagnostic
-argument_list|)
-expr_stmt|;
-block|}
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -7437,15 +8028,19 @@ name|dollar_arguments_count
 expr_stmt|;
 name|dollar_arguments_used
 operator|=
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 name|dollar_arguments_alloc
 argument_list|)
 expr_stmt|;
 name|dollar_arguments_pointer_p
 operator|=
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 name|dollar_arguments_alloc
 argument_list|)
 expr_stmt|;
@@ -7530,10 +8125,6 @@ specifier|static
 name|int
 name|maybe_read_dollar_number
 parameter_list|(
-name|int
-modifier|*
-name|status
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -7585,9 +8176,9 @@ condition|(
 name|dollar_needed
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"missing $ operand number in format"
 argument_list|)
@@ -7672,9 +8263,9 @@ condition|(
 name|dollar_needed
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"missing $ operand number in format"
 argument_list|)
@@ -7704,9 +8295,9 @@ operator|!
 name|dollar_format_warned
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"%s does not support %%n$ operand number formats"
 argument_list|,
@@ -7738,9 +8329,9 @@ name|dollar_arguments_count
 operator|)
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"operand number out of range in format"
 argument_list|)
@@ -7781,8 +8372,10 @@ literal|16
 expr_stmt|;
 name|dollar_arguments_used
 operator|=
-name|xrealloc
+name|XRESIZEVEC
 argument_list|(
+name|char
+argument_list|,
 name|dollar_arguments_used
 argument_list|,
 name|nalloc
@@ -7790,8 +8383,10 @@ argument_list|)
 expr_stmt|;
 name|dollar_arguments_pointer_p
 operator|=
-name|xrealloc
+name|XRESIZEVEC
 argument_list|(
+name|char
+argument_list|,
 name|dollar_arguments_pointer_p
 argument_list|,
 name|nalloc
@@ -7848,9 +8443,9 @@ index|]
 operator|=
 literal|2
 expr_stmt|;
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"format argument %d used more than once in %s format"
 argument_list|,
@@ -7912,19 +8507,13 @@ operator|*
 name|param_ptr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+comment|/* This case shouldn't be caught here.  */
+name|gcc_assert
+argument_list|(
 operator|*
 name|param_ptr
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* This case shouldn't be caught here.  */
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 operator|*
@@ -7939,6 +8528,69 @@ block|}
 end_function
 
 begin_comment
+comment|/* Ensure that FORMAT does not start with a decimal number followed by    a $; give a diagnostic and return true if it does, false otherwise.  */
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|avoid_dollar_number
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|ISDIGIT
+argument_list|(
+operator|*
+name|format
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+while|while
+condition|(
+name|ISDIGIT
+argument_list|(
+operator|*
+name|format
+argument_list|)
+condition|)
+name|format
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|format
+operator|==
+literal|'$'
+condition|)
+block|{
+name|warning
+argument_list|(
+name|OPT_Wformat
+argument_list|,
+literal|"$ operand number used after format without operand number"
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Finish the checking for a format string that used $ operand number formats    instead of non-$ formats.  We check for unused operands before used ones    (a serious error, since the implementation of the format function    can't know what types to pass to va_arg to find the later arguments).    and for unused operands at the end of the format (if we know how many    arguments the format had, so not for vprintf).  If there were operand    numbers out of range on a non-vprintf-style format, we won't have reached    here.  If POINTER_GAP_OK, unused arguments are OK if all arguments are    pointers.  */
 end_comment
 
@@ -7947,10 +8599,6 @@ specifier|static
 name|void
 name|finish_dollar_format_checking
 parameter_list|(
-name|int
-modifier|*
-name|status
-parameter_list|,
 name|format_check_results
 modifier|*
 name|res
@@ -8010,9 +8658,9 @@ operator|=
 name|true
 expr_stmt|;
 else|else
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"format argument %d unused before used argument %d in $-style format"
 argument_list|,
@@ -8053,7 +8701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Retrieve the specification for a format flag.  SPEC contains the    specifications for format flags for the applicable kind of format.    FLAG is the flag in question.  If PREDICATES is NULL, the basic    spec for that flag must be retrieved and this function aborts if    it cannot be found.  If PREDICATES is not NULL, it is a string listing    possible predicates for the spec entry; if an entry predicated on any    of these is found, it is returned, otherwise NULL is returned.  */
+comment|/* Retrieve the specification for a format flag.  SPEC contains the    specifications for format flags for the applicable kind of format.    FLAG is the flag in question.  If PREDICATES is NULL, the basic    spec for that flag must be retrieved and must exist.  If    PREDICATES is not NULL, it is a string listing possible predicates    for the spec entry; if an entry predicated on any of these is    found, it is returned, otherwise NULL is returned.  */
 end_comment
 
 begin_function
@@ -8171,16 +8819,11 @@ name|i
 index|]
 return|;
 block|}
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|predicates
-operator|==
-name|NULL
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
-else|else
 return|return
 name|NULL
 return|;
@@ -8196,10 +8839,6 @@ specifier|static
 name|void
 name|check_format_info
 parameter_list|(
-name|int
-modifier|*
-name|status
-parameter_list|,
 name|function_format_info
 modifier|*
 name|info
@@ -8339,12 +8978,6 @@ name|params
 operator|=
 name|params
 expr_stmt|;
-name|format_ctx
-operator|.
-name|status
-operator|=
-name|status
-expr_stmt|;
 name|check_function_arguments_recurse
 argument_list|(
 name|check_format_arg
@@ -8388,13 +9021,9 @@ operator|)
 condition|)
 block|{
 comment|/* For strftime-like formats, warn for not checking the format 	     string; but there are no arguments to check.  */
-if|if
-condition|(
-name|warn_format_nonliteral
-condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat_nonliteral
 argument_list|,
 literal|"format not a string literal, format string not checked"
 argument_list|)
@@ -8446,15 +9075,11 @@ name|params
 operator|==
 literal|0
 operator|&&
-operator|(
-name|warn_format_nonliteral
-operator|||
 name|warn_format_security
-operator|)
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat_security
 argument_list|,
 literal|"format not a string literal and no format arguments"
 argument_list|)
@@ -8462,11 +9087,23 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|params
+operator|==
+literal|0
+operator|&&
 name|warn_format_nonliteral
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat_nonliteral
+argument_list|,
+literal|"format not a string literal and no format arguments"
+argument_list|)
+expr_stmt|;
+else|else
+name|warning
+argument_list|(
+name|OPT_Wformat_nonliteral
 argument_list|,
 literal|"format not a string literal, argument types not checked"
 argument_list|)
@@ -8493,12 +9130,10 @@ operator|.
 name|number_other
 operator|==
 literal|0
-operator|&&
-name|warn_format_extra_args
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat_extra_args
 argument_list|,
 literal|"too many arguments for format"
 argument_list|)
@@ -8522,12 +9157,10 @@ operator|.
 name|number_other
 operator|==
 literal|0
-operator|&&
-name|warn_format_extra_args
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat_extra_args
 argument_list|,
 literal|"unused arguments in $-style format"
 argument_list|)
@@ -8551,12 +9184,10 @@ operator|.
 name|number_other
 operator|==
 literal|0
-operator|&&
-name|warn_format_zero_length
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat_zero_length
 argument_list|,
 literal|"zero-length %s format string"
 argument_list|,
@@ -8578,9 +9209,9 @@ name|number_wide
 operator|>
 literal|0
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"format is a wide character string"
 argument_list|)
@@ -8593,9 +9224,9 @@ name|number_unterminated
 operator|>
 literal|0
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"unterminated format string"
 argument_list|)
@@ -8628,6 +9259,10 @@ name|format_check_context
 modifier|*
 name|format_ctx
 init|=
+operator|(
+name|format_check_context
+operator|*
+operator|)
 name|ctx
 decl_stmt|;
 name|format_check_results
@@ -8652,14 +9287,6 @@ init|=
 name|format_ctx
 operator|->
 name|params
-decl_stmt|;
-name|int
-modifier|*
-name|status
-init|=
-name|format_ctx
-operator|->
-name|status
 decl_stmt|;
 name|int
 name|format_length
@@ -8692,6 +9319,7 @@ comment|/* FIXME: this warning should go away once Marc Espie's 	 __attribute__(
 if|if
 condition|(
 operator|!
+operator|(
 name|format_types
 index|[
 name|info
@@ -8699,11 +9327,14 @@ operator|->
 name|format_type
 index|]
 operator|.
-name|null_format_ok
+name|flags
+operator|&
+name|FMT_FLAG_NULL_FORMAT_OK
+operator|)
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"null format string"
 argument_list|)
@@ -8911,6 +9542,54 @@ argument_list|(
 name|format_tree
 argument_list|)
 operator|==
+name|ARRAY_REF
+operator|&&
+name|host_integerp
+argument_list|(
+name|TREE_OPERAND
+argument_list|(
+name|format_tree
+argument_list|,
+literal|1
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+operator|&&
+operator|(
+name|offset
+operator|+=
+name|tree_low_cst
+argument_list|(
+name|TREE_OPERAND
+argument_list|(
+name|format_tree
+argument_list|,
+literal|1
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|>=
+literal|0
+condition|)
+name|format_tree
+operator|=
+name|TREE_OPERAND
+argument_list|(
+name|format_tree
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|format_tree
+argument_list|)
+operator|==
 name|VAR_DECL
 operator|&&
 name|TREE_CODE
@@ -9017,17 +9696,15 @@ literal|0
 condition|)
 block|{
 comment|/* Variable length arrays can't be initialized.  */
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|TREE_CODE
 argument_list|(
 name|array_size
 argument_list|)
-operator|!=
+operator|==
 name|INTEGER_CST
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -9182,8 +9859,6 @@ operator|++
 expr_stmt|;
 name|check_format_info_main
 argument_list|(
-name|status
-argument_list|,
 name|res
 argument_list|,
 name|info
@@ -9209,10 +9884,6 @@ specifier|static
 name|void
 name|check_format_info_main
 parameter_list|(
-name|int
-modifier|*
-name|status
-parameter_list|,
 name|format_check_results
 modifier|*
 name|res
@@ -9402,6 +10073,13 @@ name|aflag
 init|=
 literal|0
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|format_start
+init|=
+name|format_chars
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -9418,11 +10096,11 @@ name|orig_format_chars
 operator|!=
 name|format_length
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"embedded `\\0' in format"
+literal|"embedded %<\\0%> in format"
 argument_list|)
 expr_stmt|;
 if|if
@@ -9461,8 +10139,6 @@ literal|0
 condition|)
 name|finish_dollar_format_checking
 argument_list|(
-name|status
-argument_list|,
 name|res
 argument_list|,
 name|fki
@@ -9494,11 +10170,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"spurious trailing `%%' in format"
+literal|"spurious trailing %<%%%> in format"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -9549,8 +10225,6 @@ name|opnum
 operator|=
 name|maybe_read_dollar_number
 argument_list|(
-name|status
-argument_list|,
 operator|&
 name|format_chars
 argument_list|,
@@ -9595,6 +10269,25 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|fki
+operator|->
+name|flags
+operator|&
+name|FMT_FLAG_USE_DOLLAR
+condition|)
+block|{
+if|if
+condition|(
+name|avoid_dollar_number
+argument_list|(
+name|format_chars
+argument_list|)
+condition|)
+return|return;
 block|}
 comment|/* Read any format flags, but do not yet validate them beyond removing 	 duplicates, since in general validation depends on the rest of 	 the format.  */
 while|while
@@ -9645,9 +10338,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"repeated %s in format"
 argument_list|,
@@ -9704,9 +10397,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"missing fill character at end of strfmon format"
 argument_list|)
@@ -9784,8 +10477,6 @@ name|opnum
 operator|=
 name|maybe_read_dollar_number
 argument_list|(
-name|status
-argument_list|,
 operator|&
 name|format_chars
 argument_list|,
@@ -9838,6 +10529,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|avoid_dollar_number
+argument_list|(
+name|format_chars
+argument_list|)
+condition|)
+return|return;
+block|}
 if|if
 condition|(
 name|info
@@ -9854,9 +10556,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"too few arguments for format"
 argument_list|)
@@ -10044,9 +10746,9 @@ operator|)
 name|FMT_FLAG_ZERO_WIDTH_BAD
 operator|)
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"zero width in %s format"
 argument_list|,
@@ -10138,9 +10840,9 @@ operator|*
 name|format_chars
 argument_list|)
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"empty left precision in %s format"
 argument_list|,
@@ -10235,8 +10937,6 @@ name|opnum
 operator|=
 name|maybe_read_dollar_number
 argument_list|(
-name|status
-argument_list|,
 operator|&
 name|format_chars
 argument_list|,
@@ -10289,6 +10989,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|avoid_dollar_number
+argument_list|(
+name|format_chars
+argument_list|)
+condition|)
+return|return;
+block|}
 if|if
 condition|(
 name|info
@@ -10305,9 +11016,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"too few arguments for format"
 argument_list|)
@@ -10459,9 +11170,9 @@ operator|*
 name|format_chars
 argument_list|)
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"empty precision in %s format"
 argument_list|,
@@ -10524,6 +11235,34 @@ index|]
 operator|!=
 operator|*
 name|format_chars
+condition|)
+name|fli
+operator|++
+expr_stmt|;
+comment|/* 	   * Make sure FreeBSD's D format char takes preference 	   * over new DD length specifier if FreeBSD format 	   * extensions are requested. 	   */
+if|if
+condition|(
+name|fli
+operator|->
+name|index
+operator|==
+name|FMT_LEN_D
+operator|&&
+name|flag_format_extensions
+operator|&&
+name|fki
+operator|->
+name|conversion_specs
+operator|==
+name|print_char_table
+condition|)
+while|while
+condition|(
+name|fli
+operator|->
+name|name
+operator|!=
+literal|0
 condition|)
 name|fli
 operator|++
@@ -10642,11 +11381,11 @@ argument_list|)
 operator|>
 name|C_STD_VER
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"%s does not support the `%s' %s length modifier"
+literal|"%s does not support the %qs %s length modifier"
 argument_list|,
 name|C_STD_NAME
 argument_list|(
@@ -10720,9 +11459,9 @@ argument_list|,
 name|NULL
 argument_list|)
 decl_stmt|;
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"repeated %s in format"
 argument_list|,
@@ -10814,7 +11553,7 @@ operator|==
 literal|'['
 condition|)
 block|{
-comment|/* `a' is used as a flag.  */
+comment|/* 'a' is used as a flag.  */
 name|i
 operator|=
 name|strlen
@@ -10839,189 +11578,6 @@ literal|0
 expr_stmt|;
 name|format_chars
 operator|++
-expr_stmt|;
-block|}
-block|}
-block|}
-if|if
-condition|(
-operator|*
-name|format_chars
-operator|==
-literal|'b'
-condition|)
-block|{
-comment|/* There should be an int arg to control the string arg.  */
-if|if
-condition|(
-name|params
-operator|==
-literal|0
-condition|)
-block|{
-name|status_warning
-argument_list|(
-name|status
-argument_list|,
-literal|"too few arguments for format"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|info
-operator|->
-name|first_arg_num
-operator|!=
-literal|0
-condition|)
-block|{
-name|cur_param
-operator|=
-name|TREE_VALUE
-argument_list|(
-name|params
-argument_list|)
-expr_stmt|;
-name|params
-operator|=
-name|TREE_CHAIN
-argument_list|(
-name|params
-argument_list|)
-expr_stmt|;
-operator|++
-name|arg_num
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|TYPE_MAIN_VARIANT
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|cur_param
-argument_list|)
-argument_list|)
-operator|!=
-name|integer_type_node
-operator|)
-operator|&&
-operator|(
-name|TYPE_MAIN_VARIANT
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|cur_param
-argument_list|)
-argument_list|)
-operator|!=
-name|unsigned_type_node
-operator|)
-condition|)
-block|{
-name|status_warning
-argument_list|(
-name|status
-argument_list|,
-literal|"bitmap is not type int (arg %d)"
-argument_list|,
-name|arg_num
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-if|if
-condition|(
-operator|*
-name|format_chars
-operator|==
-literal|'D'
-condition|)
-block|{
-comment|/* There should be an unsigned char * arg before the string arg.  */
-if|if
-condition|(
-name|params
-operator|==
-literal|0
-condition|)
-block|{
-name|status_warning
-argument_list|(
-name|status
-argument_list|,
-literal|"too few arguments for format"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|info
-operator|->
-name|first_arg_num
-operator|!=
-literal|0
-condition|)
-block|{
-name|tree
-name|cur_type
-decl_stmt|;
-name|cur_param
-operator|=
-name|TREE_VALUE
-argument_list|(
-name|params
-argument_list|)
-expr_stmt|;
-name|params
-operator|=
-name|TREE_CHAIN
-argument_list|(
-name|params
-argument_list|)
-expr_stmt|;
-operator|++
-name|arg_num
-expr_stmt|;
-name|cur_type
-operator|=
-name|TREE_TYPE
-argument_list|(
-name|cur_param
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|cur_type
-argument_list|)
-operator|!=
-name|POINTER_TYPE
-operator|||
-name|TYPE_MAIN_VARIANT
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|cur_type
-argument_list|)
-argument_list|)
-operator|!=
-name|unsigned_char_type_node
-condition|)
-block|{
-name|status_warning
-argument_list|(
-name|status
-argument_list|,
-literal|"ethernet address is not type unsigned char * (arg %d)"
-argument_list|,
-name|arg_num
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -11056,9 +11612,9 @@ literal|'%'
 operator|)
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"conversion lacks type at end of format"
 argument_list|)
@@ -11103,6 +11659,50 @@ operator|->
 name|format_chars
 operator|==
 literal|0
+operator|&&
+name|flag_format_extensions
+operator|&&
+name|fki
+operator|->
+name|conversion_specs
+operator|==
+name|print_char_table
+condition|)
+block|{
+name|fci
+operator|=
+name|fbsd_print_char_table
+expr_stmt|;
+while|while
+condition|(
+name|fci
+operator|->
+name|format_chars
+operator|!=
+literal|0
+operator|&&
+name|strchr
+argument_list|(
+name|fci
+operator|->
+name|format_chars
+argument_list|,
+name|format_char
+argument_list|)
+operator|==
+literal|0
+condition|)
+operator|++
+name|fci
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fci
+operator|->
+name|format_chars
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -11112,19 +11712,19 @@ argument_list|(
 name|format_char
 argument_list|)
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"unknown conversion type character `%c' in format"
+literal|"unknown conversion type character %qc in format"
 argument_list|,
 name|format_char
 argument_list|)
 expr_stmt|;
 else|else
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"unknown conversion type character 0x%x in format"
 argument_list|,
@@ -11149,11 +11749,11 @@ argument_list|)
 operator|>
 name|C_STD_VER
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"%s does not support the `%%%c' %s format"
+literal|"%s does not support the %<%%%c%> %s format"
 argument_list|,
 name|C_STD_NAME
 argument_list|(
@@ -11252,11 +11852,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"%s used with `%%%c' %s format"
+literal|"%s used with %<%%%c%> %s format"
 argument_list|,
 name|_
 argument_list|(
@@ -11298,9 +11898,9 @@ argument_list|)
 operator|>
 name|C_STD_VER
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"%s does not support %s"
 argument_list|,
@@ -11388,11 +11988,11 @@ argument_list|)
 operator|>
 name|C_STD_VER
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"%s does not support %s with the `%%%c' %s format"
+literal|"%s does not support %s with the %<%%%c%> %s format"
 argument_list|,
 name|C_STD_NAME
 argument_list|(
@@ -11616,11 +12216,11 @@ name|predicate
 operator|!=
 literal|0
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"%s ignored with %s and `%%%c' %s format"
+literal|"%s ignored with %s and %<%%%c%> %s format"
 argument_list|,
 name|_
 argument_list|(
@@ -11644,9 +12244,9 @@ name|name
 argument_list|)
 expr_stmt|;
 else|else
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"%s ignored with %s in %s format"
 argument_list|,
@@ -11683,11 +12283,11 @@ name|predicate
 operator|!=
 literal|0
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"use of %s and %s together with `%%%c' %s format"
+literal|"use of %s and %s together with %<%%%c%> %s format"
 argument_list|,
 name|_
 argument_list|(
@@ -11711,9 +12311,9 @@ name|name
 argument_list|)
 expr_stmt|;
 else|else
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"use of %s and %s together in %s format"
 argument_list|,
@@ -11824,11 +12424,12 @@ name|y2k_level
 operator|==
 literal|3
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat_y2k
 argument_list|,
-literal|"`%%%c' yields only last 2 digits of year in some locales on non-BSD systems"
+literal|"%<%%%c%> yields only last 2 digits of "
+literal|"year in some locales on non-BSD systems"
 argument_list|,
 name|format_char
 argument_list|)
@@ -11840,11 +12441,12 @@ name|y2k_level
 operator|==
 literal|2
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat_y2k
 argument_list|,
-literal|"`%%%c' yields only last 2 digits of year"
+literal|"%<%%%c%> yields only last 2 digits of "
+literal|"year"
 argument_list|,
 name|format_char
 argument_list|)
@@ -11907,11 +12509,11 @@ operator|!=
 literal|']'
 condition|)
 comment|/* The end of the format string was reached.  */
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"no closing `]' for `%%[' format"
+literal|"no closing %<]%> for %<%%[%> format"
 argument_list|)
 expr_stmt|;
 block|}
@@ -11989,11 +12591,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"use of `%s' length modifier with `%c' type character"
+literal|"use of %qs length modifier with %qc type character"
 argument_list|,
 name|length_chars
 argument_list|,
@@ -12011,9 +12613,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"too few arguments for format"
 argument_list|)
@@ -12067,11 +12669,11 @@ argument_list|)
 operator|>
 name|C_STD_VER
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"%s does not support the `%%%s%c' %s format"
+literal|"%s does not support the %<%%%s%c%> %s format"
 argument_list|,
 name|C_STD_NAME
 argument_list|(
@@ -12089,6 +12691,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|main_wanted_type
+operator|.
+name|next
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Finally. . .check type of argument against desired type!  */
 if|if
 condition|(
@@ -12127,25 +12735,31 @@ if|if
 condition|(
 name|suppressed
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"operand number specified with suppressed assignment"
+literal|"operand number specified with "
+literal|"suppressed assignment"
 argument_list|)
 expr_stmt|;
 else|else
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"operand number specified for format taking no argument"
+literal|"operand number specified for format "
+literal|"taking no argument"
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 else|else
 block|{
+name|format_wanted_type
+modifier|*
+name|wanted_type_ptr
+decl_stmt|;
 if|if
 condition|(
 name|main_arg_num
@@ -12174,9 +12788,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"missing $ operand number in format"
 argument_list|)
@@ -12188,6 +12802,17 @@ name|has_operand_number
 operator|=
 literal|0
 expr_stmt|;
+block|}
+name|wanted_type_ptr
+operator|=
+operator|&
+name|main_wanted_type
+expr_stmt|;
+while|while
+condition|(
+name|fci
+condition|)
+block|{
 if|if
 condition|(
 name|params
@@ -12195,15 +12820,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
 literal|"too few arguments for format"
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
 block|}
 name|cur_param
 operator|=
@@ -12219,20 +12843,20 @@ argument_list|(
 name|params
 argument_list|)
 expr_stmt|;
-name|main_wanted_type
-operator|.
+name|wanted_type_ptr
+operator|->
 name|wanted_type
 operator|=
 name|wanted_type
 expr_stmt|;
-name|main_wanted_type
-operator|.
+name|wanted_type_ptr
+operator|->
 name|wanted_type_name
 operator|=
 name|wanted_type_name
 expr_stmt|;
-name|main_wanted_type
-operator|.
+name|wanted_type_ptr
+operator|->
 name|pointer_count
 operator|=
 name|fci
@@ -12241,8 +12865,8 @@ name|pointer_count
 operator|+
 name|aflag
 expr_stmt|;
-name|main_wanted_type
-operator|.
+name|wanted_type_ptr
+operator|->
 name|char_lenient_flag
 operator|=
 literal|0
@@ -12260,20 +12884,20 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|main_wanted_type
-operator|.
+name|wanted_type_ptr
+operator|->
 name|char_lenient_flag
 operator|=
 literal|1
 expr_stmt|;
-name|main_wanted_type
-operator|.
+name|wanted_type_ptr
+operator|->
 name|writing_in_flag
 operator|=
 literal|0
 expr_stmt|;
-name|main_wanted_type
-operator|.
+name|wanted_type_ptr
+operator|->
 name|reading_from_flag
 operator|=
 literal|0
@@ -12282,8 +12906,8 @@ if|if
 condition|(
 name|aflag
 condition|)
-name|main_wanted_type
-operator|.
+name|wanted_type_ptr
+operator|->
 name|writing_in_flag
 operator|=
 literal|1
@@ -12303,8 +12927,8 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|main_wanted_type
-operator|.
+name|wanted_type_ptr
+operator|->
 name|writing_in_flag
 operator|=
 literal|1
@@ -12322,33 +12946,33 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|main_wanted_type
-operator|.
+name|wanted_type_ptr
+operator|->
 name|reading_from_flag
 operator|=
 literal|1
 expr_stmt|;
 block|}
-name|main_wanted_type
-operator|.
+name|wanted_type_ptr
+operator|->
 name|name
 operator|=
 name|NULL
 expr_stmt|;
-name|main_wanted_type
-operator|.
+name|wanted_type_ptr
+operator|->
 name|param
 operator|=
 name|cur_param
 expr_stmt|;
-name|main_wanted_type
-operator|.
+name|wanted_type_ptr
+operator|->
 name|arg_num
 operator|=
 name|arg_num
 expr_stmt|;
-name|main_wanted_type
-operator|.
+name|wanted_type_ptr
+operator|->
 name|next
 operator|=
 name|NULL
@@ -12363,8 +12987,7 @@ name|last_wanted_type
 operator|->
 name|next
 operator|=
-operator|&
-name|main_wanted_type
+name|wanted_type_ptr
 expr_stmt|;
 if|if
 condition|(
@@ -12374,14 +12997,58 @@ literal|0
 condition|)
 name|first_wanted_type
 operator|=
-operator|&
-name|main_wanted_type
+name|wanted_type_ptr
 expr_stmt|;
 name|last_wanted_type
 operator|=
-operator|&
-name|main_wanted_type
+name|wanted_type_ptr
 expr_stmt|;
+name|fci
+operator|=
+name|fci
+operator|->
+name|chain
+expr_stmt|;
+if|if
+condition|(
+name|fci
+condition|)
+block|{
+name|wanted_type_ptr
+operator|=
+name|GGC_NEW
+argument_list|(
+name|format_wanted_type
+argument_list|)
+expr_stmt|;
+name|arg_num
+operator|++
+expr_stmt|;
+name|wanted_type
+operator|=
+operator|*
+name|fci
+operator|->
+name|types
+index|[
+name|length_chars_val
+index|]
+operator|.
+name|type
+expr_stmt|;
+name|wanted_type_name
+operator|=
+name|fci
+operator|->
+name|types
+index|[
+name|length_chars_val
+index|]
+operator|.
+name|name
+expr_stmt|;
+block|}
+block|}
 block|}
 if|if
 condition|(
@@ -12391,11 +13058,56 @@ literal|0
 condition|)
 name|check_format_types
 argument_list|(
-name|status
-argument_list|,
 name|first_wanted_type
+argument_list|,
+name|format_start
+argument_list|,
+name|format_chars
+operator|-
+name|format_start
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|main_wanted_type
+operator|.
+name|next
+operator|!=
+name|NULL
+condition|)
+block|{
+name|format_wanted_type
+modifier|*
+name|wanted_type_ptr
+init|=
+name|main_wanted_type
+operator|.
+name|next
+decl_stmt|;
+while|while
+condition|(
+name|wanted_type_ptr
+condition|)
+block|{
+name|format_wanted_type
+modifier|*
+name|next
+init|=
+name|wanted_type_ptr
+operator|->
+name|next
+decl_stmt|;
+name|ggc_free
+argument_list|(
+name|wanted_type_ptr
+argument_list|)
+expr_stmt|;
+name|wanted_type_ptr
+operator|=
+name|next
+expr_stmt|;
+block|}
+block|}
 block|}
 block|}
 end_function
@@ -12409,13 +13121,17 @@ specifier|static
 name|void
 name|check_format_types
 parameter_list|(
-name|int
-modifier|*
-name|status
-parameter_list|,
 name|format_wanted_type
 modifier|*
 name|types
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|format_start
+parameter_list|,
+name|int
+name|format_length
 parameter_list|)
 block|{
 for|for
@@ -12473,6 +13189,10 @@ operator|==
 name|error_mark_node
 condition|)
 continue|continue;
+name|orig_cur_type
+operator|=
+name|cur_type
+expr_stmt|;
 name|char_type_flag
 operator|=
 literal|0
@@ -12490,29 +13210,21 @@ operator|->
 name|arg_num
 expr_stmt|;
 comment|/* The following should not occur here.  */
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|wanted_type
-operator|==
-literal|0
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|wanted_type
-operator|==
+operator|!=
 name|void_type_node
-operator|&&
+operator|||
 name|types
 operator|->
 name|pointer_count
-operator|==
-literal|0
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -12524,14 +13236,18 @@ literal|0
 condition|)
 name|wanted_type
 operator|=
-call|(
-modifier|*
 name|lang_hooks
 operator|.
 name|types
 operator|.
 name|type_promotes_to
-call|)
+argument_list|(
+name|wanted_type
+argument_list|)
+expr_stmt|;
+name|wanted_type
+operator|=
+name|TYPE_MAIN_VARIANT
 argument_list|(
 name|wanted_type
 argument_list|)
@@ -12602,11 +13318,12 @@ argument_list|(
 name|cur_param
 argument_list|)
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"writing through null pointer (arg %d)"
+literal|"writing through null pointer "
+literal|"(argument %d)"
 argument_list|,
 name|arg_num
 argument_list|)
@@ -12631,11 +13348,12 @@ argument_list|(
 name|cur_param
 argument_list|)
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"reading through null pointer (arg %d)"
+literal|"reading through null pointer "
+literal|"(argument %d)"
 argument_list|,
 name|arg_num
 argument_list|)
@@ -12690,15 +13408,10 @@ operator|!=
 literal|0
 operator|&&
 operator|(
-name|TREE_CODE_CLASS
-argument_list|(
-name|TREE_CODE
+name|CONSTANT_CLASS_P
 argument_list|(
 name|cur_param
 argument_list|)
-argument_list|)
-operator|==
-literal|'c'
 operator|||
 operator|(
 name|DECL_P
@@ -12715,11 +13428,12 @@ operator|)
 operator|)
 operator|)
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"writing into constant object (arg %d)"
+literal|"writing into constant object "
+literal|"(argument %d)"
 argument_list|,
 name|arg_num
 argument_list|)
@@ -12750,11 +13464,12 @@ name|cur_type
 argument_list|)
 operator|)
 condition|)
-name|status_warning
+name|warning
 argument_list|(
-name|status
+name|OPT_Wformat
 argument_list|,
-literal|"extra type qualifiers in format argument (arg %d)"
+literal|"extra type qualifiers in format "
+literal|"argument (argument %d)"
 argument_list|,
 name|arg_num
 argument_list|)
@@ -12762,29 +13477,27 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
+name|format_type_warning
+argument_list|(
+name|types
+operator|->
+name|name
+argument_list|,
+name|format_start
+argument_list|,
+name|format_length
+argument_list|,
+name|wanted_type
+argument_list|,
 name|types
 operator|->
 name|pointer_count
-operator|==
-literal|1
-condition|)
-name|status_warning
-argument_list|(
-name|status
 argument_list|,
-literal|"format argument is not a pointer (arg %d)"
+name|types
+operator|->
+name|wanted_type_name
 argument_list|,
-name|arg_num
-argument_list|)
-expr_stmt|;
-else|else
-name|status_warning
-argument_list|(
-name|status
-argument_list|,
-literal|"format argument is not a pointer to a pointer (arg %d)"
+name|orig_cur_type
 argument_list|,
 name|arg_num
 argument_list|)
@@ -12801,10 +13514,6 @@ operator|->
 name|pointer_count
 condition|)
 continue|continue;
-name|orig_cur_type
-operator|=
-name|cur_type
-expr_stmt|;
 name|cur_type
 operator|=
 name|TYPE_MAIN_VARIANT
@@ -12838,12 +13547,17 @@ expr_stmt|;
 comment|/* Check the type of the "real" argument, if there's a type we want.  */
 if|if
 condition|(
+name|lang_hooks
+operator|.
+name|types_compatible_p
+argument_list|(
 name|wanted_type
-operator|==
+argument_list|,
 name|cur_type
+argument_list|)
 condition|)
 continue|continue;
-comment|/* If we want `void *', allow any pointer type. 	 (Anything else would already have got a warning.) 	 With -pedantic, only allow pointers to void and to character 	 types.  */
+comment|/* If we want 'void *', allow any pointer type. 	 (Anything else would already have got a warning.) 	 With -pedantic, only allow pointers to void and to character 	 types.  */
 if|if
 condition|(
 name|wanted_type
@@ -12899,7 +13613,7 @@ operator|)
 operator|)
 operator|&&
 operator|(
-name|TREE_UNSIGNED
+name|TYPE_UNSIGNED
 argument_list|(
 name|wanted_type
 argument_list|)
@@ -12940,299 +13654,313 @@ name|char_type_flag
 condition|)
 continue|continue;
 comment|/* Now we have a type mismatch.  */
-block|{
-specifier|const
-name|char
-modifier|*
-name|this
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|that
-decl_stmt|;
-name|tree
-name|tmp
-decl_stmt|;
-name|tmp
-operator|=
-name|TYPE_NAME
+name|format_type_warning
 argument_list|(
-name|wanted_type
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|tmp
-argument_list|)
-operator|==
-name|TYPE_DECL
-condition|)
-name|tmp
-operator|=
-name|DECL_NAME
-argument_list|(
-name|tmp
-argument_list|)
-expr_stmt|;
-name|this
-operator|=
-name|IDENTIFIER_POINTER
-argument_list|(
-name|tmp
-argument_list|)
-expr_stmt|;
-name|that
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|TYPE_NAME
-argument_list|(
-name|orig_cur_type
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-name|TREE_CODE
-argument_list|(
-name|orig_cur_type
-argument_list|)
-operator|!=
-name|INTEGER_TYPE
-operator|&&
-operator|!
-operator|(
-name|TREE_CODE
-argument_list|(
-name|orig_cur_type
-argument_list|)
-operator|==
-name|POINTER_TYPE
-operator|&&
-name|TREE_CODE
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|orig_cur_type
-argument_list|)
-argument_list|)
-operator|==
-name|INTEGER_TYPE
-operator|)
-condition|)
-block|{
-name|tmp
-operator|=
-name|TYPE_NAME
-argument_list|(
-name|orig_cur_type
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|tmp
-argument_list|)
-operator|==
-name|TYPE_DECL
-condition|)
-name|tmp
-operator|=
-name|DECL_NAME
-argument_list|(
-name|tmp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tmp
-condition|)
-name|that
-operator|=
-name|IDENTIFIER_POINTER
-argument_list|(
-name|tmp
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* A nameless type can't possibly match what the format wants. 	   So there will be a warning for it. 	   Make up a string to describe vaguely what it is.  */
-if|if
-condition|(
-name|that
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|orig_cur_type
-argument_list|)
-operator|==
-name|POINTER_TYPE
-condition|)
-name|that
-operator|=
-name|_
-argument_list|(
-literal|"pointer"
-argument_list|)
-expr_stmt|;
-else|else
-name|that
-operator|=
-name|_
-argument_list|(
-literal|"different type"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Make the warning better in case of mismatch of int vs long.  */
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|orig_cur_type
-argument_list|)
-operator|==
-name|INTEGER_TYPE
-operator|&&
-name|TREE_CODE
-argument_list|(
-name|wanted_type
-argument_list|)
-operator|==
-name|INTEGER_TYPE
-operator|&&
-name|TYPE_PRECISION
-argument_list|(
-name|orig_cur_type
-argument_list|)
-operator|==
-name|TYPE_PRECISION
-argument_list|(
-name|wanted_type
-argument_list|)
-operator|&&
-name|TYPE_NAME
-argument_list|(
-name|orig_cur_type
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-name|TREE_CODE
-argument_list|(
-name|TYPE_NAME
-argument_list|(
-name|orig_cur_type
-argument_list|)
-argument_list|)
-operator|==
-name|TYPE_DECL
-condition|)
-name|that
-operator|=
-name|IDENTIFIER_POINTER
-argument_list|(
-name|DECL_NAME
-argument_list|(
-name|TYPE_NAME
-argument_list|(
-name|orig_cur_type
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|this
-argument_list|,
-name|that
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* There may be a better name for the format, e.g. size_t, 	       but we should allow for programs with a perverse typedef 	       making size_t something other than what the compiler 	       thinks.  */
-if|if
-condition|(
-name|types
-operator|->
-name|wanted_type_name
-operator|!=
-literal|0
-operator|&&
-name|strcmp
-argument_list|(
-name|types
-operator|->
-name|wanted_type_name
-argument_list|,
-name|that
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|this
-operator|=
-name|types
-operator|->
-name|wanted_type_name
-expr_stmt|;
-if|if
-condition|(
-name|types
-operator|->
-name|name
-operator|!=
-literal|0
-condition|)
-name|status_warning
-argument_list|(
-name|status
-argument_list|,
-literal|"%s is not type %s (arg %d)"
-argument_list|,
 name|types
 operator|->
 name|name
 argument_list|,
-name|this
+name|format_start
+argument_list|,
+name|format_length
+argument_list|,
+name|wanted_type
+argument_list|,
+name|types
+operator|->
+name|pointer_count
+argument_list|,
+name|types
+operator|->
+name|wanted_type_name
+argument_list|,
+name|orig_cur_type
 argument_list|,
 name|arg_num
 argument_list|)
 expr_stmt|;
-else|else
-name|status_warning
-argument_list|(
-name|status
-argument_list|,
-literal|"%s format, %s arg (arg %d)"
-argument_list|,
-name|this
-argument_list|,
-name|that
-argument_list|,
-name|arg_num
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/* Given a format_char_info array FCI, and a character C, this function    returns the index into the conversion_specs where that specifier's    data is located.  If the character isn't found it aborts.  */
+comment|/* Give a warning about a format argument of different type from that    expected.  DESCR is a description such as "field precision", or    NULL for an ordinary format.  For an ordinary format, FORMAT_START    points to where the format starts in the format string and    FORMAT_LENGTH is its length.  WANTED_TYPE is the type the argument    should have after POINTER_COUNT pointer dereferences.    WANTED_NAME_NAME is a possibly more friendly name of WANTED_TYPE,    or NULL if the ordinary name of the type should be used.  ARG_TYPE    is the type of the actual argument.  ARG_NUM is the number of that    argument.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|format_type_warning
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|descr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|format_start
+parameter_list|,
+name|int
+name|format_length
+parameter_list|,
+name|tree
+name|wanted_type
+parameter_list|,
+name|int
+name|pointer_count
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|wanted_type_name
+parameter_list|,
+name|tree
+name|arg_type
+parameter_list|,
+name|int
+name|arg_num
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|p
+decl_stmt|;
+comment|/* If ARG_TYPE is a typedef with a misleading name (for example,      size_t but not the standard size_t expected by printf %zu), avoid      printing the typedef name.  */
+if|if
+condition|(
+name|wanted_type_name
+operator|&&
+name|TYPE_NAME
+argument_list|(
+name|arg_type
+argument_list|)
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|TYPE_NAME
+argument_list|(
+name|arg_type
+argument_list|)
+argument_list|)
+operator|==
+name|TYPE_DECL
+operator|&&
+name|DECL_NAME
+argument_list|(
+name|TYPE_NAME
+argument_list|(
+name|arg_type
+argument_list|)
+argument_list|)
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|wanted_type_name
+argument_list|,
+name|lang_hooks
+operator|.
+name|decl_printable_name
+argument_list|(
+name|TYPE_NAME
+argument_list|(
+name|arg_type
+argument_list|)
+argument_list|,
+literal|2
+argument_list|)
+argument_list|)
+condition|)
+name|arg_type
+operator|=
+name|TYPE_MAIN_VARIANT
+argument_list|(
+name|arg_type
+argument_list|)
+expr_stmt|;
+comment|/* The format type and name exclude any '*' for pointers, so those      must be formatted manually.  For all the types we currently have,      this is adequate, but formats taking pointers to functions or      arrays would require the full type to be built up in order to      print it with %T.  */
+name|p
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|alloca
+argument_list|(
+name|pointer_count
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pointer_count
+operator|==
+literal|0
+condition|)
+name|p
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c_dialect_cxx
+argument_list|()
+condition|)
+block|{
+name|memset
+argument_list|(
+name|p
+argument_list|,
+literal|'*'
+argument_list|,
+name|pointer_count
+argument_list|)
+expr_stmt|;
+name|p
+index|[
+name|pointer_count
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|p
+index|[
+literal|0
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+name|memset
+argument_list|(
+name|p
+operator|+
+literal|1
+argument_list|,
+literal|'*'
+argument_list|,
+name|pointer_count
+argument_list|)
+expr_stmt|;
+name|p
+index|[
+name|pointer_count
+operator|+
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|wanted_type_name
+condition|)
+block|{
+if|if
+condition|(
+name|descr
+condition|)
+name|warning
+argument_list|(
+name|OPT_Wformat
+argument_list|,
+literal|"%s should have type %<%s%s%>, "
+literal|"but argument %d has type %qT"
+argument_list|,
+name|descr
+argument_list|,
+name|wanted_type_name
+argument_list|,
+name|p
+argument_list|,
+name|arg_num
+argument_list|,
+name|arg_type
+argument_list|)
+expr_stmt|;
+else|else
+name|warning
+argument_list|(
+name|OPT_Wformat
+argument_list|,
+literal|"format %q.*s expects type %<%s%s%>, "
+literal|"but argument %d has type %qT"
+argument_list|,
+name|format_length
+argument_list|,
+name|format_start
+argument_list|,
+name|wanted_type_name
+argument_list|,
+name|p
+argument_list|,
+name|arg_num
+argument_list|,
+name|arg_type
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|descr
+condition|)
+name|warning
+argument_list|(
+name|OPT_Wformat
+argument_list|,
+literal|"%s should have type %<%T%s%>, "
+literal|"but argument %d has type %qT"
+argument_list|,
+name|descr
+argument_list|,
+name|wanted_type
+argument_list|,
+name|p
+argument_list|,
+name|arg_num
+argument_list|,
+name|arg_type
+argument_list|)
+expr_stmt|;
+else|else
+name|warning
+argument_list|(
+name|OPT_Wformat
+argument_list|,
+literal|"format %q.*s expects type %<%T%s%>, "
+literal|"but argument %d has type %qT"
+argument_list|,
+name|format_length
+argument_list|,
+name|format_start
+argument_list|,
+name|wanted_type
+argument_list|,
+name|p
+argument_list|,
+name|arg_num
+argument_list|,
+name|arg_type
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Given a format_char_info array FCI, and a character C, this function    returns the index into the conversion_specs where that specifier's    data is located.  The character must exist.  */
 end_comment
 
 begin_function
@@ -13251,18 +13979,24 @@ name|c
 parameter_list|)
 block|{
 name|unsigned
-name|int
 name|i
-init|=
-literal|0
 decl_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
 name|fci
 operator|->
 name|format_chars
-condition|)
-block|{
+condition|;
+name|i
+operator|++
+operator|,
+name|fci
+operator|++
+control|)
 if|if
 condition|(
 name|strchr
@@ -13277,22 +14011,15 @@ condition|)
 return|return
 name|i
 return|;
-name|i
-operator|++
-expr_stmt|;
-name|fci
-operator|++
-expr_stmt|;
-block|}
 comment|/* We shouldn't be looking for a non-existent specifier.  */
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* Given a format_length_info array FLI, and a character C, this    function returns the index into the conversion_specs where that    modifier's data is located.  If the character isn't found it    aborts.  */
+comment|/* Given a format_length_info array FLI, and a character C, this    function returns the index into the conversion_specs where that    modifier's data is located.  The character must exist.  */
 end_comment
 
 begin_function
@@ -13311,18 +14038,24 @@ name|c
 parameter_list|)
 block|{
 name|unsigned
-name|int
 name|i
-init|=
-literal|0
 decl_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
 name|fli
 operator|->
 name|name
-condition|)
-block|{
+condition|;
+name|i
+operator|++
+operator|,
+name|fli
+operator|++
+control|)
 if|if
 condition|(
 name|strchr
@@ -13337,15 +14070,8 @@ condition|)
 return|return
 name|i
 return|;
-name|i
-operator|++
-expr_stmt|;
-name|fli
-operator|++
-expr_stmt|;
-block|}
 comment|/* We shouldn't be looking for a non-existent modifier.  */
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}
@@ -13397,7 +14123,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"'__gcc_host_wide_int__' is not defined as a type"
+literal|"%<__gcc_host_wide_int__%> is not defined as a type"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13424,7 +14150,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"'__gcc_host_wide_int__' is not defined as a type"
+literal|"%<__gcc_host_wide_int__%> is not defined as a type"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13436,13 +14162,10 @@ argument_list|(
 name|hwi
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
+name|gcc_assert
+argument_list|(
 name|hwi
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -13457,8 +14180,8 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"'__gcc_host_wide_int__' is not defined as 'long'"
-literal|" or 'long long'"
+literal|"%<__gcc_host_wide_int__%> is not defined as %<long%>"
+literal|" or %<long long%>"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13466,6 +14189,10 @@ block|}
 comment|/* Create a new (writable) copy of asm_fprintf_length_specs.  */
 name|new_asm_fprintf_length_specs
 operator|=
+operator|(
+name|format_length_info
+operator|*
+operator|)
 name|xmemdup
 argument_list|(
 name|asm_fprintf_length_specs
@@ -13523,7 +14250,7 @@ operator|=
 name|FMT_LEN_ll
 expr_stmt|;
 else|else
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 comment|/* Assign the new data for use.  */
@@ -13536,6 +14263,168 @@ name|length_char_specs
 operator|=
 name|new_asm_fprintf_length_specs
 expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Determine the type of a "locus" in the code being compiled for use    in GCC's __gcc_gfc__ custom format attribute.  You must have set    dynamic_format_types before calling this function.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|init_dynamic_gfc_info
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|static
+name|tree
+name|locus
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|locus
+condition|)
+block|{
+specifier|static
+name|format_char_info
+modifier|*
+name|gfc_fci
+decl_stmt|;
+comment|/* For the GCC __gcc_gfc__ custom format specifier to work, one 	 must have declared 'locus' prior to using this attribute.  If 	 we haven't seen this declarations then you shouldn't use the 	 specifier requiring that type.  */
+if|if
+condition|(
+operator|(
+name|locus
+operator|=
+name|maybe_get_identifier
+argument_list|(
+literal|"locus"
+argument_list|)
+operator|)
+condition|)
+block|{
+name|locus
+operator|=
+name|identifier_global_value
+argument_list|(
+name|locus
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|locus
+condition|)
+block|{
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|locus
+argument_list|)
+operator|!=
+name|TYPE_DECL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%<locus%> is not defined as a type"
+argument_list|)
+expr_stmt|;
+name|locus
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|locus
+operator|=
+name|TREE_TYPE
+argument_list|(
+name|locus
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Assign the new data for use.  */
+comment|/* Handle the __gcc_gfc__ format specifics.  */
+if|if
+condition|(
+operator|!
+name|gfc_fci
+condition|)
+name|dynamic_format_types
+index|[
+name|gcc_gfc_format_type
+index|]
+operator|.
+name|conversion_specs
+operator|=
+name|gfc_fci
+operator|=
+operator|(
+name|format_char_info
+operator|*
+operator|)
+name|xmemdup
+argument_list|(
+name|gcc_gfc_char_table
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|gcc_gfc_char_table
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|gcc_gfc_char_table
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|locus
+condition|)
+block|{
+specifier|const
+name|unsigned
+name|i
+init|=
+name|find_char_info_specifier_index
+argument_list|(
+name|gfc_fci
+argument_list|,
+literal|'L'
+argument_list|)
+decl_stmt|;
+name|gfc_fci
+index|[
+name|i
+index|]
+operator|.
+name|types
+index|[
+literal|0
+index|]
+operator|.
+name|type
+operator|=
+operator|&
+name|locus
+expr_stmt|;
+name|gfc_fci
+index|[
+name|i
+index|]
+operator|.
+name|pointer_count
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -13578,6 +14467,9 @@ modifier|*
 name|diag_fci
 decl_stmt|,
 modifier|*
+name|tdiag_fci
+decl_stmt|,
+modifier|*
 name|cdiag_fci
 decl_stmt|,
 modifier|*
@@ -13592,7 +14484,7 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-comment|/* For the GCC-diagnostics custom format specifiers to work, one 	 must have declared `tree' and/or `location_t' prior to using 	 those attributes.  If we haven't seen these declarations then 	 you shouldn't use the specifiers requiring these types. 	 However we don't force a hard ICE because we may see only one 	 or the other type.  */
+comment|/* For the GCC-diagnostics custom format specifiers to work, one 	 must have declared 'tree' and/or 'location_t' prior to using 	 those attributes.  If we haven't seen these declarations then 	 you shouldn't use the specifiers requiring these types. 	 However we don't force a hard ICE because we may see only one 	 or the other type.  */
 if|if
 condition|(
 operator|(
@@ -13629,7 +14521,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"'location_t' is not defined as a type"
+literal|"%<location_t%> is not defined as a type"
 argument_list|)
 expr_stmt|;
 name|loc
@@ -13647,7 +14539,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* We need to grab the underlying `union tree_node' so peek into 	 an extra type level.  */
+comment|/* We need to grab the underlying 'union tree_node' so peek into 	 an extra type level.  */
 if|if
 condition|(
 operator|(
@@ -13684,7 +14576,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"'tree' is not defined as a type"
+literal|"%<tree%> is not defined as a type"
 argument_list|)
 expr_stmt|;
 name|t
@@ -13708,7 +14600,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"'tree' is not defined as a pointer type"
+literal|"%<tree%> is not defined as a pointer type"
 argument_list|)
 expr_stmt|;
 name|t
@@ -13766,7 +14658,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"'__gcc_host_wide_int__' is not defined as a type"
+literal|"%<__gcc_host_wide_int__%> is not defined as a type"
 argument_list|)
 expr_stmt|;
 name|hwi
@@ -13783,13 +14675,10 @@ argument_list|(
 name|hwi
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
+name|gcc_assert
+argument_list|(
 name|hwi
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -13804,8 +14693,8 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"'__gcc_host_wide_int__' is not defined"
-literal|" as 'long' or 'long long'"
+literal|"%<__gcc_host_wide_int__%> is not defined"
+literal|" as %<long%> or %<long long%>"
 argument_list|)
 expr_stmt|;
 name|hwi
@@ -13832,6 +14721,13 @@ name|length_char_specs
 operator|=
 name|dynamic_format_types
 index|[
+name|gcc_tdiag_format_type
+index|]
+operator|.
+name|length_char_specs
+operator|=
+name|dynamic_format_types
+index|[
 name|gcc_cdiag_format_type
 index|]
 operator|.
@@ -13846,6 +14742,10 @@ name|length_char_specs
 operator|=
 name|diag_ls
 operator|=
+operator|(
+name|format_length_info
+operator|*
+operator|)
 name|xmemdup
 argument_list|(
 name|gcc_diag_length_specs
@@ -13908,7 +14808,7 @@ operator|=
 name|FMT_LEN_ll
 expr_stmt|;
 else|else
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}
@@ -13927,6 +14827,10 @@ name|conversion_specs
 operator|=
 name|diag_fci
 operator|=
+operator|(
+name|format_char_info
+operator|*
+operator|)
 name|xmemdup
 argument_list|(
 name|gcc_diag_char_table
@@ -14020,6 +14924,152 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* Handle the __gcc_tdiag__ format specifics.  */
+if|if
+condition|(
+operator|!
+name|tdiag_fci
+condition|)
+name|dynamic_format_types
+index|[
+name|gcc_tdiag_format_type
+index|]
+operator|.
+name|conversion_specs
+operator|=
+name|tdiag_fci
+operator|=
+operator|(
+name|format_char_info
+operator|*
+operator|)
+name|xmemdup
+argument_list|(
+name|gcc_tdiag_char_table
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|gcc_tdiag_char_table
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|gcc_tdiag_char_table
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|loc
+condition|)
+block|{
+name|i
+operator|=
+name|find_char_info_specifier_index
+argument_list|(
+name|tdiag_fci
+argument_list|,
+literal|'H'
+argument_list|)
+expr_stmt|;
+name|tdiag_fci
+index|[
+name|i
+index|]
+operator|.
+name|types
+index|[
+literal|0
+index|]
+operator|.
+name|type
+operator|=
+operator|&
+name|loc
+expr_stmt|;
+name|tdiag_fci
+index|[
+name|i
+index|]
+operator|.
+name|pointer_count
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|t
+condition|)
+block|{
+comment|/* All specifiers taking a tree share the same struct.  */
+name|i
+operator|=
+name|find_char_info_specifier_index
+argument_list|(
+name|tdiag_fci
+argument_list|,
+literal|'D'
+argument_list|)
+expr_stmt|;
+name|tdiag_fci
+index|[
+name|i
+index|]
+operator|.
+name|types
+index|[
+literal|0
+index|]
+operator|.
+name|type
+operator|=
+operator|&
+name|t
+expr_stmt|;
+name|tdiag_fci
+index|[
+name|i
+index|]
+operator|.
+name|pointer_count
+operator|=
+literal|1
+expr_stmt|;
+name|i
+operator|=
+name|find_char_info_specifier_index
+argument_list|(
+name|tdiag_fci
+argument_list|,
+literal|'J'
+argument_list|)
+expr_stmt|;
+name|tdiag_fci
+index|[
+name|i
+index|]
+operator|.
+name|types
+index|[
+literal|0
+index|]
+operator|.
+name|type
+operator|=
+operator|&
+name|t
+expr_stmt|;
+name|tdiag_fci
+index|[
+name|i
+index|]
+operator|.
+name|pointer_count
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* Handle the __gcc_cdiag__ format specifics.  */
 if|if
 condition|(
@@ -14035,6 +15085,10 @@ name|conversion_specs
 operator|=
 name|cdiag_fci
 operator|=
+operator|(
+name|format_char_info
+operator|*
+operator|)
 name|xmemdup
 argument_list|(
 name|gcc_cdiag_char_table
@@ -14177,6 +15231,10 @@ name|conversion_specs
 operator|=
 name|cxxdiag_fci
 operator|=
+operator|(
+name|format_char_info
+operator|*
+operator|)
 name|xmemdup
 argument_list|(
 name|gcc_cxxdiag_char_table
@@ -14308,6 +15366,26 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TARGET_FORMAT_TYPES
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|format_kind_info
+name|TARGET_FORMAT_TYPES
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Handle a "format" attribute; arguments as in    struct attribute_spec.handler.  */
 end_comment
@@ -14321,8 +15399,10 @@ modifier|*
 name|node
 parameter_list|,
 name|tree
+name|ARG_UNUSED
+parameter_list|(
 name|name
-name|ATTRIBUTE_UNUSED
+parameter_list|)
 parameter_list|,
 name|tree
 name|args
@@ -14347,6 +15427,83 @@ decl_stmt|;
 name|tree
 name|argument
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TARGET_FORMAT_TYPES
+comment|/* If the target provides additional format types, we need to      add them to FORMAT_TYPES at first use.  */
+if|if
+condition|(
+name|TARGET_FORMAT_TYPES
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|dynamic_format_types
+condition|)
+block|{
+name|dynamic_format_types
+operator|=
+name|xmalloc
+argument_list|(
+operator|(
+name|n_format_types
+operator|+
+name|TARGET_N_FORMAT_TYPES
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|dynamic_format_types
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|dynamic_format_types
+argument_list|,
+name|format_types_orig
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|format_types_orig
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|dynamic_format_types
+index|[
+name|n_format_types
+index|]
+argument_list|,
+name|TARGET_FORMAT_TYPES
+argument_list|,
+name|TARGET_N_FORMAT_TYPES
+operator|*
+sizeof|sizeof
+argument_list|(
+name|dynamic_format_types
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|format_types
+operator|=
+name|dynamic_format_types
+expr_stmt|;
+name|n_format_types
+operator|+=
+name|TARGET_N_FORMAT_TYPES
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -14454,7 +15611,7 @@ operator|)
 condition|)
 name|error
 argument_list|(
-literal|"args to be formatted is not '...'"
+literal|"args to be formatted is not %<...%>"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -14510,7 +15667,19 @@ name|info
 operator|.
 name|format_type
 operator|==
+name|gcc_gfc_format_type
+operator|||
+name|info
+operator|.
+name|format_type
+operator|==
 name|gcc_diag_format_type
+operator|||
+name|info
+operator|.
+name|format_type
+operator|==
+name|gcc_tdiag_format_type
 operator|||
 name|info
 operator|.
@@ -14525,7 +15694,7 @@ operator|==
 name|gcc_cxxdiag_format_type
 condition|)
 block|{
-comment|/* Our first time through, we have to make sure that our          format_type data is allocated dynamically and is modifiable.  */
+comment|/* Our first time through, we have to make sure that our 	 format_type data is allocated dynamically and is modifiable.  */
 if|if
 condition|(
 operator|!
@@ -14535,6 +15704,10 @@ name|format_types
 operator|=
 name|dynamic_format_types
 operator|=
+operator|(
+name|format_kind_info
+operator|*
+operator|)
 name|xmemdup
 argument_list|(
 name|format_types_orig
@@ -14550,7 +15723,7 @@ name|format_types_orig
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* If this is format __asm_fprintf__, we have to initialize          GCC's notion of HOST_WIDE_INT for checking %wd.  */
+comment|/* If this is format __asm_fprintf__, we have to initialize 	 GCC's notion of HOST_WIDE_INT for checking %wd.  */
 if|if
 condition|(
 name|info
@@ -14562,7 +15735,20 @@ condition|)
 name|init_dynamic_asm_fprintf_info
 argument_list|()
 expr_stmt|;
-comment|/* If this is one of the diagnostic attributes, then we have to          initialize `location_t' and `tree' at runtime.  */
+comment|/* If this is format __gcc_gfc__, we have to initialize GCC's 	 notion of 'locus' at runtime for %L.  */
+elseif|else
+if|if
+condition|(
+name|info
+operator|.
+name|format_type
+operator|==
+name|gcc_gfc_format_type
+condition|)
+name|init_dynamic_gfc_info
+argument_list|()
+expr_stmt|;
+comment|/* If this is one of the diagnostic attributes, then we have to 	 initialize 'location_t' and 'tree' at runtime.  */
 elseif|else
 if|if
 condition|(
@@ -14571,6 +15757,12 @@ operator|.
 name|format_type
 operator|==
 name|gcc_diag_format_type
+operator|||
+name|info
+operator|.
+name|format_type
+operator|==
+name|gcc_tdiag_format_type
 operator|||
 name|info
 operator|.
@@ -14588,7 +15780,7 @@ name|init_dynamic_diag_info
 argument_list|()
 expr_stmt|;
 else|else
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}
