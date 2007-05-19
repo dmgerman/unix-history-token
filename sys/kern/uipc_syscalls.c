@@ -8681,6 +8681,10 @@ name|off
 decl_stmt|,
 name|xfsize
 decl_stmt|,
+name|fsbytes
+init|=
+literal|0
+decl_stmt|,
 name|sbytes
 init|=
 literal|0
@@ -8691,6 +8695,10 @@ literal|0
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|hdrlen
+init|=
+literal|0
 decl_stmt|,
 name|mnw
 init|=
@@ -9069,6 +9077,15 @@ goto|goto
 name|out
 goto|;
 block|}
+name|hdrlen
+operator|=
+name|m_length
+argument_list|(
+name|m
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* Protect against multiple writers to the socket. */
@@ -9093,6 +9110,12 @@ operator|=
 name|uap
 operator|->
 name|offset
+operator|,
+name|rem
+operator|=
+name|uap
+operator|->
+name|nbytes
 init|;
 condition|;
 control|)
@@ -9309,6 +9332,11 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Reduce space in the socket buffer by the size of 		 * the header mbuf chain. 		 * hdrlen is set to 0 after the first loop. 		 */
+name|space
+operator|-=
+name|hdrlen
+expr_stmt|;
 comment|/* 		 * Loop and construct maximum sized mbuf chain to be bulk 		 * dumped into socket buffer. 		 */
 while|while
 condition|(
@@ -9365,7 +9393,7 @@ name|uap
 operator|->
 name|offset
 operator|-
-name|sbytes
+name|fsbytes
 operator|-
 name|loopbytes
 argument_list|)
@@ -9383,7 +9411,7 @@ name|uap
 operator|->
 name|nbytes
 operator|-
-name|sbytes
+name|fsbytes
 operator|-
 name|loopbytes
 operator|)
@@ -9403,7 +9431,7 @@ name|uap
 operator|->
 name|offset
 operator|-
-name|sbytes
+name|fsbytes
 operator|-
 name|loopbytes
 expr_stmt|;
@@ -9452,7 +9480,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 * Attempt to look up the page. 			 * Allocate if not found or 			 * wait and loop if busy. 			 */
+comment|/* 			 * Attempt to look up the page.  Allocate 			 * if not found or wait and loop if busy. 			 */
 name|pindex
 operator|=
 name|OFF_TO_IDX
@@ -9939,6 +9967,8 @@ condition|)
 block|{
 name|int
 name|mlen
+decl_stmt|,
+name|err
 decl_stmt|;
 name|mlen
 operator|=
@@ -9992,7 +10022,8 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
-name|error
+comment|/* Avoid error aliasing. */
+name|err
 operator|=
 call|(
 modifier|*
@@ -10020,12 +10051,45 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|error
+name|err
+operator|==
+literal|0
 condition|)
+block|{
+comment|/* 				 * We need two counters to get the 				 * file offset and nbytes to send 				 * right: 				 * - sbytes contains the total amount 				 *   of bytes sent, including headers. 				 * - fsbytes contains the total amount 				 *   of bytes sent from the file. 				 */
 name|sbytes
 operator|+=
 name|mlen
+expr_stmt|;
+name|fsbytes
+operator|+=
+name|mlen
+expr_stmt|;
+if|if
+condition|(
+name|hdrlen
+condition|)
+block|{
+name|fsbytes
+operator|-=
+name|hdrlen
+expr_stmt|;
+name|hdrlen
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|err
 expr_stmt|;
 name|m
 operator|=
