@@ -51,11 +51,9 @@ name|TW_OSLI_MAX_NUM_AENS
 value|0x100
 end_define
 
-begin_define
-define|#
-directive|define
-name|TW_OSLI_DEFERRED_INTR_USED
-end_define
+begin_comment
+comment|//#define TW_OSLI_DEFERRED_INTR_USED
+end_comment
 
 begin_comment
 comment|/* Possible values of req->state. */
