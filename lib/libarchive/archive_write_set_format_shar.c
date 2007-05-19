@@ -997,6 +997,11 @@ literal|0
 condition|)
 block|{
 comment|/* Don't try to "mkdir ." */
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1025,11 +1030,18 @@ name|ret
 operator|!=
 name|ARCHIVE_OK
 condition|)
+block|{
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ret
 operator|)
 return|;
+block|}
 name|shar
 operator|->
 name|last_dir
@@ -1117,11 +1129,18 @@ name|ret
 operator|!=
 name|ARCHIVE_OK
 condition|)
+block|{
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ret
 operator|)
 return|;
+block|}
 name|free
 argument_list|(
 name|shar
@@ -1136,6 +1155,14 @@ operator|=
 name|p
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* Handle file-type specific issues. */
