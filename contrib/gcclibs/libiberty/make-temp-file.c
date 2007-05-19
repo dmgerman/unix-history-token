@@ -449,7 +449,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Try /var/tmp, /usr/tmp, then /tmp.  */
+comment|/* Try /tmp, /var/tmp, then /usr/tmp.  */
+name|base
+operator|=
+name|try_dir
+argument_list|(
+name|tmp
+argument_list|,
+name|base
+argument_list|)
+expr_stmt|;
 name|base
 operator|=
 name|try_dir
@@ -464,15 +473,6 @@ operator|=
 name|try_dir
 argument_list|(
 name|usrtmp
-argument_list|,
-name|base
-argument_list|)
-expr_stmt|;
-name|base
-operator|=
-name|try_dir
-argument_list|(
-name|tmp
 argument_list|,
 name|base
 argument_list|)
