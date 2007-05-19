@@ -912,10 +912,6 @@ name|SX_RECURSE
 value|0x20
 end_define
 
-begin_comment
-comment|/*  * XXX: These options should be renamed as SA_*  */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -929,6 +925,52 @@ argument_list|(
 name|INVARIANT_SUPPORT
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|SA_LOCKED
+value|LA_LOCKED
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_SLOCKED
+value|LA_SLOCKED
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_XLOCKED
+value|LA_XLOCKED
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_UNLOCKED
+value|LA_UNLOCKED
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_RECURSED
+value|LA_RECURSED
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_NOTRECURSED
+value|LA_NOTRECURSED
+end_define
+
+begin_comment
+comment|/* Backwards compatability. */
+end_comment
 
 begin_define
 define|#
