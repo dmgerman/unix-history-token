@@ -2560,6 +2560,7 @@ name|td
 operator|->
 name|td_frame
 decl_stmt|;
+specifier|const
 name|__greg_t
 modifier|*
 name|gr
