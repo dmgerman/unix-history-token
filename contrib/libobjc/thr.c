@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime Thread Interface    Copyright (C) 1996, 1997 Free Software Foundation, Inc.    Contributed by Galen C. Hunt (gchunt@cs.rochester.edu)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime Thread Interface    Copyright (C) 1996, 1997 Free Software Foundation, Inc.    Contributed by Galen C. Hunt (gchunt@cs.rochester.edu)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"runtime.h"
+file|"objc/runtime.h"
 end_include
 
 begin_comment
@@ -107,17 +107,22 @@ block|}
 struct|;
 end_struct
 
-begin_function
+begin_decl_stmt
 specifier|static
-specifier|volatile
 name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|noreturn
+operator|)
+argument_list|)
 name|__objc_thread_detach_function
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|__objc_thread_start_state
-modifier|*
+operator|*
 name|istate
-parameter_list|)
+argument_list|)
 block|{
 comment|/* Valid state? */
 if|if
@@ -261,7 +266,7 @@ name|objc_thread_exit
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/*   Frontend functions    These functions constitute the public interface to the Objective-C thread   and mutex functionality.   */

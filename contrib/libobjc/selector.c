@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime selector related functions    Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime selector related functions    Copyright (C) 1993, 1995, 1996, 1997, 2002, 2004 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,19 +10,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"runtime.h"
+file|"objc/runtime.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sarray.h"
+file|"objc/sarray.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"encoding.h"
+file|"objc/encoding.h"
 end_include
 
 begin_comment
@@ -83,16 +83,6 @@ begin_comment
 comment|/* name -> uid !T:MUTEX */
 end_comment
 
-begin_function_decl
-specifier|static
-name|void
-name|register_selectors_from_list
-parameter_list|(
-name|MethodList_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Number of selectors stored in each of the above tables */
 end_comment
@@ -113,7 +103,9 @@ end_comment
 begin_function
 name|void
 name|__objc_init_selector_tables
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|__objc_selector_array
 operator|=
@@ -135,19 +127,19 @@ argument_list|)
 expr_stmt|;
 name|__objc_selector_hash
 operator|=
-name|hash_new
+name|objc_hash_new
 argument_list|(
 name|SELECTOR_HASH_SIZE
 argument_list|,
 operator|(
 name|hash_func_type
 operator|)
-name|hash_string
+name|objc_hash_string
 argument_list|,
 operator|(
 name|compare_func_type
 operator|)
-name|compare_strings
+name|objc_compare_strings
 argument_list|)
 expr_stmt|;
 block|}
@@ -179,7 +171,7 @@ condition|(
 name|method_list
 condition|)
 block|{
-name|register_selectors_from_list
+name|__objc_register_selectors_from_list
 argument_list|(
 name|method_list
 argument_list|)
@@ -195,13 +187,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* This routine is given a list of methods and records each of the methods in    the record table.  This is the routine that does the actual recording    work.     This one is only called for Class objects.  For categories,    class_add_method_list is called.    */
+comment|/* This routine is given a list of methods and records each of the methods in    the record table.  This is the routine that does the actual recording    work.     The name and type pointers in the method list must be permanent and    immutable.    */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|register_selectors_from_list
+name|__objc_register_selectors_from_list
 parameter_list|(
 name|MethodList_t
 name|method_list
@@ -212,6 +203,11 @@ name|i
 init|=
 literal|0
 decl_stmt|;
+name|objc_mutex_lock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|i
@@ -232,11 +228,18 @@ index|[
 name|i
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|method
+operator|->
+name|method_name
+condition|)
+block|{
 name|method
 operator|->
 name|method_name
 operator|=
-name|sel_register_typed_name
+name|__sel_register_typed_name
 argument_list|(
 operator|(
 specifier|const
@@ -250,13 +253,23 @@ argument_list|,
 name|method
 operator|->
 name|method_types
+argument_list|,
+literal|0
+argument_list|,
+name|YES
 argument_list|)
 expr_stmt|;
+block|}
 name|i
 operator|+=
 literal|1
 expr_stmt|;
 block|}
+name|objc_mutex_unlock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -705,7 +718,7 @@ operator|=
 operator|(
 name|sidx
 operator|)
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|__objc_selector_hash
 argument_list|,
@@ -866,7 +879,7 @@ operator|=
 operator|(
 name|sidx
 operator|)
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|__objc_selector_hash
 argument_list|,
@@ -983,7 +996,7 @@ operator|=
 operator|(
 name|sidx
 operator|)
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|__objc_selector_hash
 argument_list|,
@@ -1237,6 +1250,78 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* __sel_register_typed_name allocates lots of struct objc_selector:s    of 8 (16, if pointers are 64 bits) bytes at startup. To reduce the number    of malloc calls and memory lost to malloc overhead, we allocate    objc_selector:s in blocks here. This is only called from    __sel_register_typed_name, and __sel_register_typed_name may only be    called when __objc_runtime_mutex is locked.     Note that the objc_selector:s allocated from __sel_register_typed_name    are never freed.     62 because 62 * sizeof (struct objc_selector) = 496 (992). This should    let malloc add some overhead and use a nice, round 512 (1024) byte chunk.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SELECTOR_POOL_SIZE
+value|62
+end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|objc_selector
+modifier|*
+name|selector_pool
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|selector_pool_left
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|struct
+name|objc_selector
+modifier|*
+name|pool_alloc_selector
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|selector_pool_left
+condition|)
+block|{
+name|selector_pool
+operator|=
+name|objc_malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|objc_selector
+argument_list|)
+operator|*
+name|SELECTOR_POOL_SIZE
+argument_list|)
+expr_stmt|;
+name|selector_pool_left
+operator|=
+name|SELECTOR_POOL_SIZE
+expr_stmt|;
+block|}
+return|return
+operator|&
+name|selector_pool
+index|[
+operator|--
+name|selector_pool_left
+index|]
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Store the passed selector name in the selector record and return its    selector value (value returned by sel_get_uid).    Assumes that the calling function has locked down __objc_runtime_mutex. */
 end_comment
 
@@ -1285,7 +1370,7 @@ operator|=
 operator|(
 name|sidx
 operator|)
-name|hash_value_for_key
+name|objc_hash_value_for_key
 argument_list|(
 name|__objc_selector_hash
 argument_list|,
@@ -1434,14 +1519,8 @@ expr_stmt|;
 else|else
 name|j
 operator|=
-name|objc_malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|objc_selector
-argument_list|)
-argument_list|)
+name|pool_alloc_selector
+argument_list|()
 expr_stmt|;
 name|j
 operator|->
@@ -1550,14 +1629,8 @@ expr_stmt|;
 else|else
 name|j
 operator|=
-name|objc_malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|objc_selector
-argument_list|)
-argument_list|)
+name|pool_alloc_selector
+argument_list|()
 expr_stmt|;
 name|j
 operator|->
@@ -1640,6 +1713,9 @@ name|name
 argument_list|,
 name|types
 argument_list|,
+operator|(
+name|long
+operator|)
 name|soffset_decode
 argument_list|(
 name|i
@@ -1751,7 +1827,7 @@ if|if
 condition|(
 name|is_new
 condition|)
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|__objc_selector_hash

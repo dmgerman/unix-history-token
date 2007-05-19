@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime initialization     Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup    +load support contributed by Ovidiu Predescu<ovidiu@net-community.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime initialization     Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup    +load support contributed by Ovidiu Predescu<ovidiu@net-community.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"runtime.h"
+file|"objc/runtime.h"
 end_include
 
 begin_comment
@@ -1265,7 +1265,7 @@ name|op
 argument_list|)
 operator|&&
 operator|!
-name|hash_is_key_in_hash
+name|objc_hash_is_key_in_hash
 argument_list|(
 name|__objc_load_methods
 argument_list|,
@@ -1276,7 +1276,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* Add this method into the +load hash table */
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|__objc_load_methods
@@ -1833,16 +1833,16 @@ argument_list|)
 expr_stmt|;
 name|__objc_load_methods
 operator|=
-name|hash_new
+name|objc_hash_new
 argument_list|(
 literal|128
 argument_list|,
 operator|(
 name|hash_func_type
 operator|)
-name|hash_ptr
+name|objc_hash_ptr
 argument_list|,
-name|compare_ptrs
+name|objc_compare_ptrs
 argument_list|)
 expr_stmt|;
 name|previous_constructors

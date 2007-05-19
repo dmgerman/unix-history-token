@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Hash tables for Objective C internal structures    Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Hash tables for Objective C internal structures    Copyright (C) 1993, 1996, 1997, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -16,13 +16,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"hash.h"
+file|"objc/hash.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"runtime.h"
+file|"objc/runtime.h"
 end_include
 
 begin_comment
@@ -57,7 +57,7 @@ end_define
 
 begin_function
 name|cache_ptr
-name|hash_new
+name|objc_hash_new
 parameter_list|(
 name|unsigned
 name|int
@@ -180,7 +180,7 @@ end_function
 
 begin_function
 name|void
-name|hash_delete
+name|objc_hash_delete
 parameter_list|(
 name|cache_ptr
 name|cache
@@ -197,7 +197,7 @@ name|int
 name|i
 decl_stmt|;
 comment|/* Purge all key/value pairs from the table.  */
-comment|/* Step through the nodes one by one and remove every node WITHOUT      using hash_next. this makes hash_delete much more efficient. */
+comment|/* Step through the nodes one by one and remove every node WITHOUT      using objc_hash_next. this makes objc_hash_delete much more efficient. */
 for|for
 control|(
 name|i
@@ -240,7 +240,7 @@ name|next
 operator|)
 condition|)
 block|{
-name|hash_remove
+name|objc_hash_remove
 argument_list|(
 name|cache
 argument_list|,
@@ -254,7 +254,7 @@ operator|=
 name|next_node
 expr_stmt|;
 block|}
-name|hash_remove
+name|objc_hash_remove
 argument_list|(
 name|cache
 argument_list|,
@@ -283,7 +283,7 @@ end_function
 
 begin_function
 name|void
-name|hash_add
+name|objc_hash_add
 parameter_list|(
 name|cache_ptr
 modifier|*
@@ -450,7 +450,7 @@ decl_stmt|;
 name|cache_ptr
 name|new
 init|=
-name|hash_new
+name|objc_hash_new
 argument_list|(
 name|EXPANSION
 argument_list|(
@@ -477,6 +477,9 @@ name|DEBUG_PRINTF
 argument_list|(
 literal|"Expanding cache %#x from %d to %d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 operator|*
 name|cachep
 argument_list|,
@@ -498,7 +501,7 @@ condition|(
 operator|(
 name|node1
 operator|=
-name|hash_next
+name|objc_hash_next
 argument_list|(
 operator|*
 name|cachep
@@ -507,7 +510,7 @@ name|node1
 argument_list|)
 operator|)
 condition|)
-name|hash_add
+name|objc_hash_add
 argument_list|(
 operator|&
 name|new
@@ -522,7 +525,7 @@ name|value
 argument_list|)
 expr_stmt|;
 comment|/* Trash the old cache.  */
-name|hash_delete
+name|objc_hash_delete
 argument_list|(
 operator|*
 name|cachep
@@ -540,7 +543,7 @@ end_function
 
 begin_function
 name|void
-name|hash_remove
+name|objc_hash_remove
 parameter_list|(
 name|cache_ptr
 name|cache
@@ -704,7 +707,7 @@ end_function
 
 begin_function
 name|node_ptr
-name|hash_next
+name|objc_hash_next
 parameter_list|(
 name|cache_ptr
 name|cache
@@ -819,7 +822,7 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|hash_value_for_key
+name|objc_hash_value_for_key
 parameter_list|(
 name|cache_ptr
 name|cache
@@ -915,7 +918,7 @@ end_comment
 
 begin_function
 name|BOOL
-name|hash_is_key_in_hash
+name|objc_hash_is_key_in_hash
 parameter_list|(
 name|cache_ptr
 name|cache
