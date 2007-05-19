@@ -1463,6 +1463,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DA_DEFAULT_SEND_ORDERED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DA_DEFAULT_SEND_ORDERED
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1478,6 +1496,15 @@ name|int
 name|da_default_timeout
 init|=
 name|DA_DEFAULT_TIMEOUT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|da_send_ordered
+init|=
+name|DA_DEFAULT_SEND_ORDERED
 decl_stmt|;
 end_decl_stmt
 
@@ -1559,6 +1586,38 @@ literal|"kern.cam.da.default_timeout"
 argument_list|,
 operator|&
 name|da_default_timeout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_cam_da
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|da_send_ordered
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|da_send_ordered
+argument_list|,
+literal|0
+argument_list|,
+literal|"Send Ordered Tags"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.da.da_send_ordered"
+argument_list|,
+operator|&
+name|da_send_ordered
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3061,7 +3120,11 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|da_send_ordered
+condition|)
 block|{
 comment|/* 		 * Schedule a periodic event to occasionally send an 		 * ordered tag to a device. 		 */
 name|timeout
@@ -5013,6 +5076,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -5111,6 +5176,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -6023,6 +6090,50 @@ name|addr
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * Because GEOM code just will panic us if we 			 * give them an 'illegal' value we'll avoid that 			 * here. 			 */
+if|if
+condition|(
+name|block_size
+operator|>=
+name|MAXPHYS
+operator|||
+name|block_size
+operator|==
+literal|0
+condition|)
+block|{
+name|xpt_print_path
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"unsupportable block size %ju\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|block_size
+argument_list|)
+expr_stmt|;
+name|announce_buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|cam_periph_invalidate
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|dasetgeom
 argument_list|(
 name|periph
@@ -6048,7 +6159,8 @@ argument_list|(
 name|announce_buf
 argument_list|)
 argument_list|,
-literal|"%juMB (%ju %u byte sectors: %dH %dS/T %dC)"
+literal|"%juMB (%ju %u byte sectors: %dH %dS/T "
+literal|"%dC)"
 argument_list|,
 call|(
 name|uintmax_t
@@ -6098,6 +6210,7 @@ operator|->
 name|cylinders
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -7516,6 +7629,11 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|da_send_ordered
+condition|)
+block|{
 for|for
 control|(
 name|softc
@@ -7618,6 +7736,7 @@ operator|/
 name|DA_ORDEREDTAG_INTERVAL
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
