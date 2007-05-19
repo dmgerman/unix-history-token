@@ -18,7 +18,7 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|__ofsetof
+name|__offsetof
 end_undef
 
 begin_define
