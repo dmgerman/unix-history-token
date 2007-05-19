@@ -6840,6 +6840,10 @@ operator|||
 name|tmp
 operator|==
 literal|0x00
+operator|||
+name|tmp
+operator|==
+literal|0x05
 operator|)
 condition|)
 block|{
