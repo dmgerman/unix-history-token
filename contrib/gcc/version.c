@@ -17,7 +17,7 @@ begin_define
 define|#
 directive|define
 name|VERSUFFIX
-value|" [FreeBSD]"
+value|"[FreeBSD]"
 end_define
 
 begin_comment
