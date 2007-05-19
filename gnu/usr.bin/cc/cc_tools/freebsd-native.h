@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_CC_VER
-value|700002
+value|700003
 end_define
 
 begin_comment
@@ -74,14 +74,14 @@ begin_define
 define|#
 directive|define
 name|GPLUSPLUS_INCLUDE_DIR
-value|PREFIX"/include/c++/3.4"
+value|PREFIX"/include/c++/4.2"
 end_define
 
 begin_define
 define|#
 directive|define
 name|GPLUSPLUS_BACKWARD_INCLUDE_DIR
-value|PREFIX"/include/c++/3.4/backward"
+value|PREFIX"/include/c++/4.2/backward"
 end_define
 
 begin_define
@@ -122,7 +122,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Under FreeBSD, the normal location of the compiler back ends is the    /usr/libexec directory.     ``cc --print-search-dirs'' gives:    install: STANDARD_EXEC_PREFIX/(null)    programs: /usr/libexec/<OBJFORMAT>/:STANDARD_EXEC_PREFIX:MD_EXEC_PREFIX    libraries: MD_EXEC_PREFIX:MD_STARTFILE_PREFIX:STANDARD_STARTFILE_PREFIX */
+comment|/* Under FreeBSD, the normal location of the compiler back ends is the    /usr/libexec directory.     ``cc --print-search-dirs'' gives:    install: STANDARD_EXEC_PREFIX/    programs: STANDARD_EXEC_PREFIX:MD_EXEC_PREFIX    libraries: STANDARD_STARTFILE_PREFIX */
 end_comment
 
 begin_undef
@@ -201,9 +201,11 @@ name|STARTFILE_PREFIX_SPEC
 value|PREFIX"/lib/"
 end_define
 
-begin_comment
-comment|/* For the native system compiler, we actually build libgcc in a profiled    version.  So we should use it with -pg.  */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
@@ -211,6 +213,11 @@ directive|define
 name|LIBGCC_SPEC
 value|"%{shared: -lgcc_pic} \     %{!shared: %{!pg: -lgcc} %{pg: -lgcc_p}}"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -233,6 +240,31 @@ name|FORTRAN_LIBRARY_PROFILE
 value|"-lg2c_p"
 end_define
 
+begin_define
+define|#
+directive|define
+name|LIBGCC_SPEC
+value|"-lgcc"
+end_define
+
+begin_comment
+comment|/* For the native system compiler, we actually build libgcc in a profiled    version.  So we should use it with -pg.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LIBGCC_STATIC_LIB_SPEC
+value|"%{pg: -lgcc_p;:-lgcc}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIBGCC_EH_STATIC_LIB_SPEC
+value|"%{pg: -lgcc_eh_p;:-lgcc_eh}"
+end_define
+
 begin_comment
 comment|/* FreeBSD is 4.4BSD derived */
 end_comment
@@ -241,45 +273,6 @@ begin_define
 define|#
 directive|define
 name|bsd4_4
-end_define
-
-begin_comment
-comment|/* And now they want to replace ctype.h.... grr... [stupid, IMHO] */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|xxxISDIGIT
-value|isdigit
-end_define
-
-begin_define
-define|#
-directive|define
-name|xxxISGRAPH
-value|isgraph
-end_define
-
-begin_define
-define|#
-directive|define
-name|xxxISLOWER
-value|islower
-end_define
-
-begin_define
-define|#
-directive|define
-name|xxxISSPACE
-value|isspace
-end_define
-
-begin_define
-define|#
-directive|define
-name|xxxTOUPPER
-value|toupper
 end_define
 
 end_unit

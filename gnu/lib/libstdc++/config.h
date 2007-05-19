@@ -29,602 +29,6 @@ comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
-comment|// acconfig.h symbols and macros for libstdc++ v3 -*- C++ -*-
-end_comment
-
-begin_comment
-comment|// Defines libstdc++ version.
-end_comment
-
-begin_comment
-comment|/* #undef PACKAGE */
-end_comment
-
-begin_comment
-comment|/* #undef VERSION */
-end_comment
-
-begin_comment
-comment|// Needed for gettext.
-end_comment
-
-begin_comment
-comment|/* #undef ENABLE_NLS */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_CATGETS */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_GETTEXT */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_STPCPY */
-end_comment
-
-begin_comment
-comment|// Include I/O support for 'long long' and 'unsigned long long'.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_GLIBCXX_USE_LONG_LONG
-value|1
-end_define
-
-begin_comment
-comment|// Include support for 'long double'.
-end_comment
-
-begin_comment
-comment|/* #undef _GLIBCXX_USE_LONG_DOUBLE */
-end_comment
-
-begin_comment
-comment|// Define if C99 math functions (like fpclassify) should be exposed.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_GLIBCXX_USE_C99_MATH
-value|1
-end_define
-
-begin_comment
-comment|// Define if C99 features such as lldiv_t, llabs, lldiv should be exposed.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_GLIBCXX_USE_C99
-value|1
-end_define
-
-begin_comment
-comment|// Define if code specialized for wchar_t should be used.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_GLIBCXX_USE_WCHAR_T
-value|1
-end_define
-
-begin_comment
-comment|// Define if using setrlimit to limit memory usage during 'make check'.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_GLIBCXX_MEM_LIMITS
-value|1
-end_define
-
-begin_comment
-comment|// Define to use concept checking code from the boost libraries.
-end_comment
-
-begin_comment
-comment|/* #undef _GLIBCXX_CONCEPT_CHECKS */
-end_comment
-
-begin_comment
-comment|// Define to use symbol versioning in the shared library.
-end_comment
-
-begin_comment
-comment|/* #undef _GLIBCXX_SYMVER */
-end_comment
-
-begin_comment
-comment|// Define symbol versioning in assember directives. If symbol
-end_comment
-
-begin_comment
-comment|// versioning is beigng used, and the assembler supports this kind of
-end_comment
-
-begin_comment
-comment|// thing, then use it.
-end_comment
-
-begin_comment
-comment|// NB: _GLIBCXX_AT_AT is a hack to work around quoting issues in m4.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_GLIBCXX_SYMVER
-end_if
-
-begin_define
-define|#
-directive|define
-name|_GLIBCXX_ASM_SYMVER
-parameter_list|(
-name|cur
-parameter_list|,
-name|old
-parameter_list|,
-name|version
-parameter_list|)
-define|\
-value|asm (".symver " #cur "," #old _GLIBCXX_AT_AT #version);
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_GLIBCXX_ASM_SYMVER
-parameter_list|(
-name|cur
-parameter_list|,
-name|old
-parameter_list|,
-name|version
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// Define if LFS support is available.
-end_comment
-
-begin_comment
-comment|/* #undef _GLIBCXX_USE_LFS */
-end_comment
-
-begin_comment
-comment|// Define if a fully dynamic basic_string is wanted.
-end_comment
-
-begin_comment
-comment|/* #undef _GLIBCXX_FULLY_DYNAMIC_STRING */
-end_comment
-
-begin_comment
-comment|// Define if NLS translations are to be used.
-end_comment
-
-begin_comment
-comment|/* #undef _GLIBCXX_USE_NLS */
-end_comment
-
-begin_comment
-comment|// Define if gthr-default.h exists (meaning that threading support is enabled).
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GTHR_DEFAULT
-value|1
-end_define
-
-begin_comment
-comment|// Define if the atan2f function exists.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ATAN2F
-value|1
-end_define
-
-begin_comment
-comment|// Define if the atan2l function exists.
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ATAN2L */
-end_comment
-
-begin_comment
-comment|// Define if the tanl function exists.
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_TANL */
-end_comment
-
-begin_comment
-comment|// Define if the copysignf function exists.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_COPYSIGNF
-value|1
-end_define
-
-begin_comment
-comment|// Define if getpagesize exists.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETPAGESIZE
-value|1
-end_define
-
-begin_comment
-comment|// Define if setenv exists.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SETENV
-value|1
-end_define
-
-begin_comment
-comment|// Define if sigsetjmp exists.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SIGSETJMP
-value|1
-end_define
-
-begin_comment
-comment|// Define if mbstate_t exists in wchar.h.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MBSTATE_T
-value|1
-end_define
-
-begin_comment
-comment|// Define if you have the modff function.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MODFF
-value|1
-end_define
-
-begin_comment
-comment|// Define if you have the modfl function.
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_MODFL */
-end_comment
-
-begin_comment
-comment|// Define if you have the expf function.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_EXPF
-value|1
-end_define
-
-begin_comment
-comment|// Define if you have the expl function.
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_EXPL */
-end_comment
-
-begin_comment
-comment|// Define if you have the hypot function.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_HYPOT
-value|1
-end_define
-
-begin_comment
-comment|// Define if you have the hypotf function.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_HYPOTF
-value|1
-end_define
-
-begin_comment
-comment|// Define if you have the hypotl function.
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_HYPOTL */
-end_comment
-
-begin_comment
-comment|// Define if the compiler/host combination has __builtin_abs
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___BUILTIN_ABS
-value|1
-end_define
-
-begin_comment
-comment|// Define if the compiler/host combination has __builtin_labs
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___BUILTIN_LABS
-value|1
-end_define
-
-begin_comment
-comment|// Define if the compiler/host combination has __builtin_cos
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___BUILTIN_COS
-value|1
-end_define
-
-begin_comment
-comment|// Define if the compiler/host combination has __builtin_cosf
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___BUILTIN_COSF
-value|1
-end_define
-
-begin_comment
-comment|// Define if the compiler/host combination has __builtin_cosl
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___BUILTIN_COSL
-value|1
-end_define
-
-begin_comment
-comment|// Define if the compiler/host combination has __builtin_fabs
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___BUILTIN_FABS
-value|1
-end_define
-
-begin_comment
-comment|// Define if the compiler/host combination has __builtin_fabsf
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___BUILTIN_FABSF
-value|1
-end_define
-
-begin_comment
-comment|// Define if the compiler/host combination has __builtin_fabsl
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___BUILTIN_FABSL
-value|1
-end_define
-
-begin_comment
-comment|// Define if the compiler/host combination has __builtin_sin
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___BUILTIN_SIN
-value|1
-end_define
-
-begin_comment
-comment|// Define if the compiler/host combination has __builtin_sinf
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___BUILTIN_SINF
-value|1
-end_define
-
-begin_comment
-comment|// Define if the compiler/host combination has __builtin_sinl
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___BUILTIN_SINL
-value|1
-end_define
-
-begin_comment
-comment|// Define if the compiler/host combination has __builtin_sqrt
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___BUILTIN_SQRT
-value|1
-end_define
-
-begin_comment
-comment|// Define if the compiler/host combination has __builtin_sqrtf
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___BUILTIN_SQRTF
-value|1
-end_define
-
-begin_comment
-comment|// Define if the compiler/host combination has __builtin_sqrtl
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE___BUILTIN_SQRTL
-value|1
-end_define
-
-begin_comment
-comment|// Define if poll is available in<poll.h>.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_POLL
-value|1
-end_define
-
-begin_comment
-comment|// Define if S_ISREG (Posix) is available in<sys/stat.h>.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_S_ISREG
-value|1
-end_define
-
-begin_comment
-comment|// Define if S_IFREG is available in<sys/stat.h>.
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_S_IFREG */
-end_comment
-
-begin_comment
-comment|// Define if writev is available in<sys/uio.h>.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WRITEV
-value|1
-end_define
-
-begin_comment
-comment|// Define if int64_t is available in<stdint.h>.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_INT64_T
-value|1
-end_define
-
-begin_comment
-comment|// Define if LC_MESSAGES is available in<locale.h>.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LC_MESSAGES
-value|1
-end_define
-
-begin_comment
-comment|// Define if<float.h> exists.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FLOAT_H
-value|1
-end_define
-
-begin_comment
-comment|// Define if modf is present in<math.h>
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_MODF */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `acosf' function. */
 end_comment
 
@@ -701,17 +105,6 @@ comment|/* #undef HAVE_ATANL */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `btowc' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_BTOWC
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `ceilf' function. */
 end_comment
 
@@ -730,6 +123,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_CEILL
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<complex.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_COMPLEX_H
 value|1
 end_define
 
@@ -854,24 +258,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `fgetwc' function. */
+comment|/* Define to 1 if you have the<fenv.h> header file. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_FGETWC
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `fgetws' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FGETWS
+name|HAVE_FENV_H
 value|1
 end_define
 
@@ -966,28 +359,6 @@ comment|/* #undef HAVE_FPCLASS */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `fputwc' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FPUTWC
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `fputws' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FPUTWS
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the<fp.h> header file. */
 end_comment
 
@@ -1018,45 +389,23 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `fwide' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FWIDE
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `fwprintf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FWPRINTF
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `fwscanf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FWSCANF
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the<gconv.h> header file. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_GCONV_H */
 end_comment
+
+begin_comment
+comment|/* Define if _Unwind_GetIPInfo is available. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETIPINFO
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `getpagesize' function. */
@@ -1070,24 +419,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `getwc' function. */
+comment|/* Define if gthr-default.h exists (meaning that threading support is    enabled). */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_GETWC
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `getwchar' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETWCHAR
+name|HAVE_GTHR_DEFAULT
 value|1
 end_define
 
@@ -1125,34 +463,25 @@ begin_comment
 comment|/* Define to 1 if you have the `iconv' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_ICONV
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_ICONV */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `iconv_close' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_ICONV_CLOSE
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_ICONV_CLOSE */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `iconv_open' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_ICONV_OPEN
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_ICONV_OPEN */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<ieeefp.h> header file. */
@@ -1162,6 +491,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_IEEEFP_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if int64_t is available in<stdint.h>. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INT64_T
 value|1
 end_define
 
@@ -1234,13 +574,24 @@ comment|/* #undef HAVE_ISNANL */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `iswblank' function. */
+comment|/* Defined if iswblank exists. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|HAVE_ISWBLANK
+value|1
+end_define
+
+begin_comment
+comment|/* Define if LC_MESSAGES is available in<locale.h>. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LC_MESSAGES
 value|1
 end_define
 
@@ -1412,46 +763,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `mbrlen' function. */
+comment|/* Define if mbstate_t exists in wchar.h. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_MBRLEN
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `mbrtowc' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MBRTOWC
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `mbsinit' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MBSINIT
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `mbsrtowcs' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MBSRTOWCS
+name|HAVE_MBSTATE_T
 value|1
 end_define
 
@@ -1478,6 +796,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `modf' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MODF
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `modff' function. */
 end_comment
 
@@ -1492,9 +821,12 @@ begin_comment
 comment|/* Define to 1 if you have the `modfl' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_MODFL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_MODFL
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<nan.h> header file. */
@@ -1516,6 +848,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if poll is available in<poll.h>. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_POLL
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `powf' function. */
 end_comment
 
@@ -1533,28 +876,6 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_POWL */
 end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `putwc' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PUTWC
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `putwchar' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PUTWCHAR
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `qfpclass' function. */
@@ -1668,6 +989,17 @@ comment|/* #undef HAVE_SQRTL */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<stdbool.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDBOOL_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<stdint.h> header file. */
 end_comment
 
@@ -1734,28 +1066,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `swprintf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SWPRINTF
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `swscanf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SWSCANF
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the<sys/filio.h> header file. */
 end_comment
 
@@ -1774,6 +1084,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_IOCTL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/ipc.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_IPC_H
 value|1
 end_define
 
@@ -1809,6 +1130,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_RESOURCE_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/sem.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_SEM_H
 value|1
 end_define
 
@@ -1857,6 +1189,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if S_IFREG is available in<sys/stat.h>. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_S_IFREG */
+end_comment
+
+begin_comment
+comment|/* Define if S_IFREG is available in<sys/stat.h>. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_S_ISREG
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `tanf' function. */
 end_comment
 
@@ -1895,15 +1246,36 @@ comment|/* #undef HAVE_TANL */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `ungetwc' function. */
+comment|/* Define to 1 if the target supports thread-local storage. */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|HAVE_UNGETWC
+name|HAVE_TLS
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<unistd.h> header file. */
@@ -1916,17 +1288,6 @@ name|HAVE_UNISTD_H
 value|1
 end_define
 
-begin_comment
-comment|/* Define to 1 if you have the `vfwprintf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_VFWPRINTF
-value|1
-end_define
-
 begin_if
 if|#
 directive|if
@@ -1936,7 +1297,7 @@ literal|1999
 end_if
 
 begin_comment
-comment|/* Define to 1 if you have the `vfwscanf' function. */
+comment|/* Defined if vfwscanf exists. */
 end_comment
 
 begin_define
@@ -1946,32 +1307,8 @@ name|HAVE_VFWSCANF
 value|1
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* Define to 1 if you have the `vswprintf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_VSWPRINTF
-value|1
-end_define
-
-begin_if
-if|#
-directive|if
-name|__ISO_C_VISIBLE
-operator|>=
-literal|1999
-end_if
-
-begin_comment
-comment|/* Define to 1 if you have the `vswscanf' function. */
+comment|/* Defined if vswscanf exists. */
 end_comment
 
 begin_define
@@ -1981,32 +1318,8 @@ name|HAVE_VSWSCANF
 value|1
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* Define to 1 if you have the `vwprintf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_VWPRINTF
-value|1
-end_define
-
-begin_if
-if|#
-directive|if
-name|__ISO_C_VISIBLE
-operator|>=
-literal|1999
-end_if
-
-begin_comment
-comment|/* Define to 1 if you have the `vwscanf' function. */
+comment|/* Defined if vwscanf exists. */
 end_comment
 
 begin_define
@@ -2022,6 +1335,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* __ISO_C_VISIBLE>= 1999 */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<wchar.h> header file. */
 end_comment
 
@@ -2029,204 +1346,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_WCHAR_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcrtomb' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCRTOMB
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcscat' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSCAT
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcschr' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSCHR
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcscmp' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSCMP
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcscoll' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSCOLL
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcscpy' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSCPY
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcscspn' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSCSPN
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcsftime' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSFTIME
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcslen' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSLEN
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcsncat' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSNCAT
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcsncmp' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSNCMP
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcsncpy' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSNCPY
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcspbrk' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSPBRK
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcsrchr' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSRCHR
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcsrtombs' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSRTOMBS
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcsspn' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSSPN
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcsstr' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSSTR
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcstod' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSTOD
 value|1
 end_define
 
@@ -2239,7 +1358,7 @@ literal|1999
 end_if
 
 begin_comment
-comment|/* Define to 1 if you have the `wcstof' function. */
+comment|/* Defined if wcstof exists. */
 end_comment
 
 begin_define
@@ -2255,59 +1374,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Define to 1 if you have the `wcstok' function. */
+comment|/* __ISO_C_VISIBLE>= 1999 */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSTOK
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcstol' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSTOL
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcstoul' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSTOUL
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wcsxfrm' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSXFRM
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wctob' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCTOB
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<wctype.h> header file. */
@@ -2321,79 +1389,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `wmemchr' function. */
+comment|/* Define if writev is available in<sys/uio.h>. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_WMEMCHR
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wmemcmp' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WMEMCMP
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wmemcpy' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WMEMCPY
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wmemmove' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WMEMMOVE
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wmemset' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WMEMSET
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wprintf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WPRINTF
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `wscanf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WSCANF
+name|HAVE_WRITEV
 value|1
 end_define
 
@@ -2758,6 +1760,14 @@ comment|/* #undef HAVE__LOGL */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `_modf' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE__MODF */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `_modff' function. */
 end_comment
 
@@ -2902,6 +1912,160 @@ comment|/* #undef HAVE__TANL */
 end_comment
 
 begin_comment
+comment|/* Define if the compiler/host combination has __builtin_abs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_ABS
+value|1
+end_define
+
+begin_comment
+comment|/* Define if the compiler/host combination has __builtin_cos. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_COS
+value|1
+end_define
+
+begin_comment
+comment|/* Define if the compiler/host combination has __builtin_cosf. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_COSF
+value|1
+end_define
+
+begin_comment
+comment|/* Define if the compiler/host combination has __builtin_cosl. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_COSL
+value|1
+end_define
+
+begin_comment
+comment|/* Define if the compiler/host combination has __builtin_fabs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_FABS
+value|1
+end_define
+
+begin_comment
+comment|/* Define if the compiler/host combination has __builtin_fabsf. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_FABSF
+value|1
+end_define
+
+begin_comment
+comment|/* Define if the compiler/host combination has __builtin_fabsl. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_FABSL
+value|1
+end_define
+
+begin_comment
+comment|/* Define if the compiler/host combination has __builtin_labs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_LABS
+value|1
+end_define
+
+begin_comment
+comment|/* Define if the compiler/host combination has __builtin_sin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_SIN
+value|1
+end_define
+
+begin_comment
+comment|/* Define if the compiler/host combination has __builtin_sinf. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_SINF
+value|1
+end_define
+
+begin_comment
+comment|/* Define if the compiler/host combination has __builtin_sinl. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_SINL
+value|1
+end_define
+
+begin_comment
+comment|/* Define if the compiler/host combination has __builtin_sqrt. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_SQRT
+value|1
+end_define
+
+begin_comment
+comment|/* Define if the compiler/host combination has __builtin_sqrtf. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_SQRTF
+value|1
+end_define
+
+begin_comment
+comment|/* Define if the compiler/host combination has __builtin_sqrtl. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_SQRTL
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `__signbit' function. */
 end_comment
 
@@ -2933,6 +2097,14 @@ directive|define
 name|HAVE___SIGNBITL
 value|1
 end_define
+
+begin_comment
+comment|/* Name of package */
+end_comment
+
+begin_comment
+comment|/* #undef PACKAGE */
+end_comment
 
 begin_comment
 comment|/* Define to the address where bug reports for this package should be sent. */
@@ -3001,6 +2173,55 @@ value|1
 end_define
 
 begin_comment
+comment|/* Version number of package */
+end_comment
+
+begin_comment
+comment|/* #undef VERSION */
+end_comment
+
+begin_comment
+comment|/* Define if builtin atomic operations are supported on this host. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_GLIBCXX_ATOMIC_BUILTINS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Define to use concept checking code from the boost libraries. */
+end_comment
+
+begin_comment
+comment|/* #undef _GLIBCXX_CONCEPT_CHECKS */
+end_comment
+
+begin_comment
+comment|/* Define if a fully dynamic basic_string is wanted. */
+end_comment
+
+begin_comment
+comment|/* #undef _GLIBCXX_FULLY_DYNAMIC_STRING */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if a full hosted library is built, or 0 if freestanding. */
 end_comment
 
@@ -3012,6 +2233,77 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if compatibility should be provided for -mlong-double-64. */
+end_comment
+
+begin_comment
+comment|/* #undef _GLIBCXX_LONG_DOUBLE_COMPAT */
+end_comment
+
+begin_comment
+comment|/* Define if ptrdiff_t is int. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_GLIBCXX_PTRDIFF_T_IS_INT
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Define if using setrlimit to set resource limits during "make check" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCXX_RES_LIMITS
+value|1
+end_define
+
+begin_comment
+comment|/* Define if size_t is unsigned int. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_GLIBCXX_SIZE_T_IS_UINT
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Define if the compiler is configured for setjmp/longjmp exceptions. */
 end_comment
 
@@ -3020,326 +2312,189 @@ comment|/* #undef _GLIBCXX_SJLJ_EXCEPTIONS */
 end_comment
 
 begin_comment
-comment|//
+comment|/* Define to use symbol versioning in the shared library. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCXX_SYMVER
+value|1
+end_define
+
+begin_comment
+comment|/* Define to use darwin versioning in the shared library. */
 end_comment
 
 begin_comment
-comment|// Systems that have certain non-standard functions prefixed with an
+comment|/* #undef _GLIBCXX_SYMVER_DARWIN */
 end_comment
 
 begin_comment
-comment|// underscore, we'll handle those here. Must come after config.h.in.
+comment|/* Define to use GNU versioning in the shared library. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCXX_SYMVER_GNU
+value|1
+end_define
+
+begin_comment
+comment|/* Define to use GNU namespace versioning in the shared library. */
 end_comment
 
 begin_comment
-comment|//
+comment|/* #undef _GLIBCXX_SYMVER_GNU_NAMESPACE */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__ISNAN
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_ISNAN
-argument_list|)
-end_if
+begin_comment
+comment|/* Define if C99 functions or macros from<wchar.h>,<math.h>,<complex.h>,<stdio.h>, and<stdlib.h> can be used or exposed. */
+end_comment
+
+begin_comment
+comment|/* #undef _GLIBCXX_USE_C99 */
+end_comment
+
+begin_comment
+comment|/* Define if C99 functions in<complex.h> should be used in<complex>. Using    compiler builtins for these functions requires corresponding C99 library    functions to be present. */
+end_comment
+
+begin_comment
+comment|/* #undef _GLIBCXX_USE_C99_COMPLEX */
+end_comment
+
+begin_comment
+comment|/* Define if C99 functions in<complex.h> should be used in<tr1/complex>.    Using compiler builtins for these functions requires corresponding C99    library functions to be present. */
+end_comment
+
+begin_comment
+comment|/* #undef _GLIBCXX_USE_C99_COMPLEX_TR1 */
+end_comment
+
+begin_comment
+comment|/* Define if C99 functions in<ctype.h> should be imported in<tr1/cctype> in    namespace std::tr1. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_ISNAN
+name|_GLIBCXX_USE_C99_CTYPE_TR1
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|isnan
-value|_isnan
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__ISNANF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_ISNANF
-argument_list|)
-end_if
+begin_comment
+comment|/* Define if C99 functions in<fenv.h> should be imported in<tr1/cfenv> in    namespace std::tr1. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_ISNANF
+name|_GLIBCXX_USE_C99_FENV_TR1
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|isnanf
-value|_isnanf
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__ISNANL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_ISNANL
-argument_list|)
-end_if
+begin_comment
+comment|/* Define if C99 functions in<inttypes.h> should be imported in<tr1/cinttypes> in namespace std::tr1. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_ISNANL
+name|_GLIBCXX_USE_C99_INTTYPES_TR1
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|isnanl
-value|_isnanl
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__ISINF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_ISINF
-argument_list|)
-end_if
+begin_comment
+comment|/* Define if C99 functions or macros in<math.h> should be imported in<cmath>    in namespace std. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_ISINF
+name|_GLIBCXX_USE_C99_MATH
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|isinf
-value|_isinf
-end_define
+begin_comment
+comment|/* Define if C99 functions or macros in<math.h> should be imported in<tr1/cmath> in namespace std::tr1. */
+end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #undef _GLIBCXX_USE_C99_MATH_TR1 */
+end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__ISINFF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_ISINFF
-argument_list|)
-end_if
+begin_comment
+comment|/* Define if C99 types in<stdint.h> should be imported in<tr1/cstdint> in    namespace std::tr1. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_ISINFF
+name|_GLIBCXX_USE_C99_STDINT_TR1
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|isinff
-value|_isinff
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__ISINFL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_ISINFL
-argument_list|)
-end_if
+begin_comment
+comment|/* Define if iconv and related functions exist and are usable. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_ISINFL
+name|_GLIBCXX_USE_ICONV
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|isinfl
-value|_isinfl
-end_define
+begin_comment
+comment|/* Define if LFS support is available. */
+end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #undef _GLIBCXX_USE_LFS */
+end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__COPYSIGN
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_COPYSIGN
-argument_list|)
-end_if
+begin_comment
+comment|/* Define if code specialized for long long should be used. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_COPYSIGN
+name|_GLIBCXX_USE_LONG_LONG
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|copysign
-value|_copysign
-end_define
+begin_comment
+comment|/* Define if NLS translations are to be used. */
+end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #undef _GLIBCXX_USE_NLS */
+end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__COPYSIGNL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_COPYSIGNL
-argument_list|)
-end_if
+begin_comment
+comment|/* Define if dev/random and dev/urandom are available for the random_device of    TR1 (Chapter 5.1). */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_COPYSIGNL
+name|_GLIBCXX_USE_RANDOM_TR1
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|copysignl
-value|_copysignl
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__COSF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_COSF
-argument_list|)
-end_if
+begin_comment
+comment|/* Define if code specialized for wchar_t should be used. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_COSF
+name|_GLIBCXX_USE_WCHAR_T
 value|1
 end_define
-
-begin_define
-define|#
-directive|define
-name|cosf
-value|_cosf
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -3482,6 +2637,74 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|HAVE__ATAN2F
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_ATAN2F
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_ATAN2F
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|atan2f
+value|_atan2f
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__ATAN2L
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_ATAN2L
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_ATAN2L
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|atan2l
+value|_atan2l
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE__ATANF
 argument_list|)
 operator|&&
@@ -3570,7 +2793,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|aceil
+name|ceilf
 value|_ceilf
 end_define
 
@@ -3604,8 +2827,110 @@ end_define
 begin_define
 define|#
 directive|define
-name|aceil
+name|ceill
 value|_ceill
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__COPYSIGN
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_COPYSIGN
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_COPYSIGN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|copysign
+value|_copysign
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__COPYSIGNL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_COPYSIGNL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_COPYSIGNL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|copysignl
+value|_copysignl
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__COSF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_COSF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_COSF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|cosf
+value|_cosf
 end_define
 
 begin_endif
@@ -3652,74 +2977,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE__COSL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_COSL
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_COSL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|cosl
-value|_cosl
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__LOGF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_LOGF
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_LOGF
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|logf
-value|_logf
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
 name|HAVE__COSHL
 argument_list|)
 operator|&&
@@ -3742,6 +2999,40 @@ define|#
 directive|define
 name|coshl
 value|_coshl
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__COSL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_COSL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_COSL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|cosl
+value|_cosl
 end_define
 
 begin_endif
@@ -3890,6 +3181,108 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|HAVE__FINITE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_FINITE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_FINITE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|finite
+value|_finite
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__FINITEF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_FINITEF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_FINITEF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|finitef
+value|_finitef
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__FINITEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_FINITEL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_FINITEL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|finitel
+value|_finitel
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE__FLOORF
 argument_list|)
 operator|&&
@@ -4026,6 +3419,40 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|HAVE__FPCLASS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_FPCLASS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_FPCLASS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|fpclass
+value|_fpclass
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE__FREXPF
 argument_list|)
 operator|&&
@@ -4082,6 +3509,312 @@ define|#
 directive|define
 name|frexpl
 value|_frexpl
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__HYPOT
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_HYPOT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_HYPOT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|hypot
+value|_hypot
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__HYPOTF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_HYPOTF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_HYPOTF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|hypotf
+value|_hypotf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__HYPOTL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_HYPOTL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_HYPOTL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|hypotl
+value|_hypotl
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__ISINF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_ISINF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISINF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|isinf
+value|_isinf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__ISINFF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_ISINFF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISINFF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|isinff
+value|_isinff
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__ISINFL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_ISINFL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISINFL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|isinfl
+value|_isinfl
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__ISNAN
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_ISNAN
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISNAN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|isnan
+value|_isnan
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__ISNANF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_ISNANF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISNANF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|isnanf
+value|_isnanf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__ISNANL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_ISNANL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISNANL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|isnanl
+value|_isnanl
 end_define
 
 begin_endif
@@ -4196,74 +3929,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE__LOGL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_LOGL
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_LOGL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|logl
-value|_logl
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__POWF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_POWF
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_POWF
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|powf
-value|_powf
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
 name|HAVE__LOG10L
 argument_list|)
 operator|&&
@@ -4286,6 +3951,74 @@ define|#
 directive|define
 name|log10l
 value|_log10l
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__LOGF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_LOGF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOGF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|logf
+value|_logf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__LOGL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_LOGL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOGL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|logl
+value|_logl
 end_define
 
 begin_endif
@@ -4332,28 +4065,28 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE__MODL
+name|HAVE__MODFF
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|HAVE_MODL
+name|HAVE_MODFF
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|HAVE_MODL
+name|HAVE_MODFF
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|modl
-value|_modl
+name|modff
+value|_modff
 end_define
 
 begin_endif
@@ -4366,28 +4099,62 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE__SINF
+name|HAVE__MODFL
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|HAVE_SINF
+name|HAVE_MODFL
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|HAVE_SINF
+name|HAVE_MODFL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|sinf
-value|_sinf
+name|modfl
+value|_modfl
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__POWF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_POWF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_POWF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|powf
+value|_powf
 end_define
 
 begin_endif
@@ -4434,368 +4201,28 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE__SINHF
+name|HAVE__QFPCLASS
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|HAVE_SINHF
+name|HAVE_QFPCLASS
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|HAVE_SINHF
+name|HAVE_QFPCLASS
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|sinhf
-value|_sinhf
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__SINL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_SINL
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_SINL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|sinl
-value|_sinl
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__SQRTF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_SQRTF
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_SQRTF
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|sqrtf
-value|_sqrtf
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__SINHL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_SINHL
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_SINHL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|sinhl
-value|_sinhl
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__TANF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_TANF
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_TANF
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|tanf
-value|_tanf
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__SQRTL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_SQRTL
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_SQRTL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|sqrtl
-value|_sqrtl
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__TANHF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_TANHF
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_TANHF
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|tanhf
-value|_tanhf
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__TANL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_TANL
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_TANF
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|tanf
-value|_tanf
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__STRTOF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_STRTOF
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRTOF
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|strtof
-value|_strtof
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__TANHL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_TANHL
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_TANHL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|tanhl
-value|_tanhl
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE__STRTOLD
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_STRTOLD
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRTOLD
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|strtold
-value|_strtold
+name|qfpclass
+value|_qfpclass
 end_define
 
 begin_endif
@@ -4910,28 +4337,28 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE__FINITE
+name|HAVE__SINF
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|HAVE_FINITE
+name|HAVE_SINF
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|HAVE_FINITE
+name|HAVE_SINF
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|finite
-value|_finite
+name|sinf
+value|_sinf
 end_define
 
 begin_endif
@@ -4944,28 +4371,28 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE__FINITEF
+name|HAVE__SINHF
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|HAVE_FINITEF
+name|HAVE_SINHF
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|HAVE_FINITEF
+name|HAVE_SINHF
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|finitef
-value|_finitef
+name|sinhf
+value|_sinhf
 end_define
 
 begin_endif
@@ -4978,28 +4405,28 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE__FINITEL
+name|HAVE__SINHL
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|HAVE_FINITEL
+name|HAVE_SINHL
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|HAVE_FINITEL
+name|HAVE_SINHL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|finitel
-value|_finitel
+name|sinhl
+value|_sinhl
 end_define
 
 begin_endif
@@ -5012,28 +4439,28 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE__QFINITE
+name|HAVE__SINL
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|HAVE_QFINITE
+name|HAVE_SINL
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|HAVE_QFINITE
+name|HAVE_SINL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|qfinite
-value|_qfinite
+name|sinl
+value|_sinl
 end_define
 
 begin_endif
@@ -5046,28 +4473,28 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE__FPCLASS
+name|HAVE__SQRTF
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|HAVE_FPCLASS
+name|HAVE_SQRTF
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|HAVE_FPCLASS
+name|HAVE_SQRTF
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|fpclass
-value|_fpclass
+name|sqrtf
+value|_sqrtf
 end_define
 
 begin_endif
@@ -5080,28 +4507,232 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE__QFPCLASS
+name|HAVE__SQRTL
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|HAVE_QFPCLASS
+name|HAVE_SQRTL
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|HAVE_QFPCLASS
+name|HAVE_SQRTL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|qfpclass
-value|_qfpclass
+name|sqrtl
+value|_sqrtl
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__STRTOF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_STRTOF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRTOF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|strtof
+value|_strtof
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__STRTOLD
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_STRTOLD
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRTOLD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|strtold
+value|_strtold
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__TANF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_TANF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_TANF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|tanf
+value|_tanf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__TANHF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_TANHF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_TANHF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|tanhf
+value|_tanhf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__TANHL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_TANHL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_TANHL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|tanhl
+value|_tanhl
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE__TANL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_TANL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_TANL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|tanl
+value|_tanl
 end_define
 
 begin_endif
