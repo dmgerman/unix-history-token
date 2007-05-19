@@ -6,20 +6,6 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|SUBTARGET_EXTRA_SPECS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_EXTRA_SPECS
-define|\
-value|{ "fbsd_dynamic_linker", FBSD_DYNAMIC_LINKER }
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|SUBTARGET_CPP_SPEC
 end_undef
 
@@ -33,6 +19,52 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|SUBTARGET_EXTRA_SPECS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_SPECS
+define|\
+value|{ "subtarget_extra_asm_spec",	SUBTARGET_EXTRA_ASM_SPEC }, \   { "subtarget_asm_float_spec", SUBTARGET_ASM_FLOAT_SPEC }, \   { "fbsd_dynamic_linker", FBSD_DYNAMIC_LINKER }
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_EXTRA_ASM_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_ASM_SPEC
+define|\
+value|"-matpcs %{fpic|fpie:-k} %{fPIC|fPIE:-k}"
+end_define
+
+begin_comment
+comment|/* Default to full FPA if -mhard-float is specified. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_ASM_FLOAT_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_ASM_FLOAT_SPEC
+define|\
+value|"%{mhard-float:-mfpu=fpa}			\    %{mfloat-abi=hard:{!mfpu=*:-mfpu=fpa}}	\    %{!mhard-float: %{msoft-float:-mfpu=softvfp;:-mfpu=softvfp}}"
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|LINK_SPEC
 end_undef
 
@@ -40,15 +72,77 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"							\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1) }		\   %{v:-V}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}							\   %{symbolic:-Bsymbolic}"
+value|"							\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1) }		\   %{v:-V}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}							\   %{symbolic:-Bsymbolic}						\   -X %{mbig-endian:-EB} %{mlittle-endian:-EL}"
 end_define
 
 begin_comment
 comment|/************************[  Target stuff  ]***********************************/
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|TARGET_VERSION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_VERSION
+value|fprintf (stderr, " (FreeBSD/StrongARM ELF)");
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TARGET_ENDIAN_DEFAULT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TARGET_ENDIAN_DEFAULT
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* Define the actual types of some ANSI-mandated types.      Needs to agree with<machine/ansi.h>.  GCC defaults come from c-decl.c,    c-common.c, and config/<arch>/<arch>.h.  */
+comment|/* Default it to use ATPCS with soft-VFP.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEFAULT
+define|\
+value|(MASK_APCS_FRAME			\    | TARGET_ENDIAN_DEFAULT)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ARM_DEFAULT_ABI
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ARM_DEFAULT_ABI
+value|ARM_ABI_ATPCS
+end_define
+
+begin_comment
+comment|/* Define the actual types of some ANSI-mandated types.    Needs to agree with<machine/ansi.h>.  GCC defaults come from c-decl.c,    c-common.c, and config/<arch>/<arch>.h.  */
 end_comment
 
 begin_comment
@@ -94,19 +188,6 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|WCHAR_TYPE_SIZE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|WCHAR_TYPE_SIZE
-value|32
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|SUBTARGET_CPU_DEFAULT
 end_undef
 
@@ -117,17 +198,44 @@ name|SUBTARGET_CPU_DEFAULT
 value|TARGET_CPU_strongarm
 end_define
 
+begin_comment
+comment|/* FreeBSD does its profiling differently to the Acorn compiler. We    don't need a word following the mcount call; and to skip it    requires either an assembly stub or use of fomit-frame-pointer when    compiling the profiling functions.  Since we break Acorn CC    compatibility below a little more won't hurt.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
-name|TARGET_VERSION
+name|ARM_FUNCTION_PROFILER
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_VERSION
-value|fprintf (stderr, " (FreeBSD/StrongARM ELF)");
+name|ARM_FUNCTION_PROFILER
+parameter_list|(
+name|STREAM
+parameter_list|,
+name|LABELNO
+parameter_list|)
+define|\
+value|{							\   asm_fprintf (STREAM, "\tmov\t%Rip, %Rlr\n");		\   asm_fprintf (STREAM, "\tbl\t__mcount%s\n",		\ 	       (TARGET_ARM&& NEED_PLT_RELOC)		\ 	       ? "(PLT)" : "");				\ }
+end_define
+
+begin_comment
+comment|/* Clear the instruction cache from `BEG' to `END'.  This makes a    call to the ARM_SYNC_ICACHE architecture specific syscall.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLEAR_INSN_CACHE
+parameter_list|(
+name|BEG
+parameter_list|,
+name|END
+parameter_list|)
+define|\
+value|do									\   {									\     extern int sysarch(int number, void *args);				\     struct								\       {									\ 	unsigned int addr;						\ 	int          len;						\       } s;								\     s.addr = (unsigned int)(BEG);					\     s.len = (END) - (BEG);						\     (void) sysarch (0,&s);						\   }									\ while (0)
 end_define
 
 end_unit
