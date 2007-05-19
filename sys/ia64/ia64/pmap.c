@@ -5840,8 +5840,6 @@ operator|<
 name|eva
 condition|;
 name|va
-operator|=
-name|va
 operator|+=
 name|PAGE_SIZE
 control|)
