@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Front-end tree definitions for GNU compiler.    Copyright (C) 1989, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Front-end tree definitions for GNU compiler.    Copyright (C) 1989, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -18,19 +18,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"hashtab.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"machmode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"version.h"
+file|"input.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"input.h"
+file|"statistics.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vec.h"
 end_include
 
 begin_comment
@@ -61,7 +73,7 @@ include|#
 directive|include
 file|"tree.def"
 name|LAST_AND_UNUSED_TREE_CODE
-comment|/* A convenient way to get a value for 				   NUM_TREE_CODE.  */
+comment|/* A convenient way to get a value for 				   NUM_TREE_CODES.  */
 block|}
 enum|;
 end_enum
@@ -71,6 +83,32 @@ undef|#
 directive|undef
 name|DEFTREECODE
 end_undef
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|tree_contains_struct
+index|[
+literal|256
+index|]
+index|[
+literal|64
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|CODE_CONTAINS_STRUCT
+parameter_list|(
+name|CODE
+parameter_list|,
+name|STRUCT
+parameter_list|)
+value|(tree_contains_struct[(CODE)][(STRUCT)])
+end_define
 
 begin_comment
 comment|/* Number of language-independent tree codes.  */
@@ -84,8 +122,80 @@ value|((int) LAST_AND_UNUSED_TREE_CODE)
 end_define
 
 begin_comment
-comment|/* Indexed by enum tree_code, contains a character which is    `<' for a comparison expression, `1', for a unary arithmetic    expression, `2' for a binary arithmetic expression, `e' for    other types of expressions, `r' for a reference, `c' for a    constant, `d' for a decl, `t' for a type, `s' for a statement,    and `x' for anything else (TREE_LIST, IDENTIFIER, etc).  */
+comment|/* Tree code classes.  */
 end_comment
+
+begin_comment
+comment|/* Each tree_code has an associated code class represented by a    TREE_CODE_CLASS.  */
+end_comment
+
+begin_enum
+enum|enum
+name|tree_code_class
+block|{
+name|tcc_exceptional
+block|,
+comment|/* An exceptional code (fits no category).  */
+name|tcc_constant
+block|,
+comment|/* A constant.  */
+comment|/* Order of tcc_type and tcc_declaration is important.  */
+name|tcc_type
+block|,
+comment|/* A type object code.  */
+name|tcc_declaration
+block|,
+comment|/* A declaration (also serving as variable refs).  */
+name|tcc_reference
+block|,
+comment|/* A reference to storage.  */
+name|tcc_comparison
+block|,
+comment|/* A comparison expression.  */
+name|tcc_unary
+block|,
+comment|/* A unary arithmetic expression.  */
+name|tcc_binary
+block|,
+comment|/* A binary arithmetic expression.  */
+name|tcc_statement
+block|,
+comment|/* A statement expression, which have side effects 		      but usually no interesting value.  */
+name|tcc_expression
+comment|/* Any other expression.  */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Each tree code class has an associated string representation.    These must correspond to the tree_code_class entries.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|tree_code_class_strings
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Returns the string representing CLASS.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TREE_CODE_CLASS_STRING
+parameter_list|(
+name|CLASS
+parameter_list|)
+define|\
+value|tree_code_class_strings[(int) (CLASS)]
+end_define
 
 begin_define
 define|#
@@ -97,7 +207,8 @@ end_define
 begin_decl_stmt
 specifier|extern
 specifier|const
-name|char
+name|enum
+name|tree_code_class
 name|tree_code_type
 index|[]
 decl_stmt|;
@@ -114,6 +225,216 @@ value|tree_code_type[(int) (CODE)]
 end_define
 
 begin_comment
+comment|/* Nonzero if CODE represents an exceptional code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXCEPTIONAL_CLASS_P
+parameter_list|(
+name|CODE
+parameter_list|)
+define|\
+value|(TREE_CODE_CLASS (TREE_CODE (CODE)) == tcc_exceptional)
+end_define
+
+begin_comment
+comment|/* Nonzero if CODE represents a constant.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONSTANT_CLASS_P
+parameter_list|(
+name|CODE
+parameter_list|)
+define|\
+value|(TREE_CODE_CLASS (TREE_CODE (CODE)) == tcc_constant)
+end_define
+
+begin_comment
+comment|/* Nonzero if CODE represents a type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_P
+parameter_list|(
+name|CODE
+parameter_list|)
+define|\
+value|(TREE_CODE_CLASS (TREE_CODE (CODE)) == tcc_type)
+end_define
+
+begin_comment
+comment|/* Nonzero if CODE represents a declaration.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_P
+parameter_list|(
+name|CODE
+parameter_list|)
+define|\
+value|(TREE_CODE_CLASS (TREE_CODE (CODE)) == tcc_declaration)
+end_define
+
+begin_comment
+comment|/* Nonzero if CODE represents a memory tag.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTAG_P
+parameter_list|(
+name|CODE
+parameter_list|)
+define|\
+value|(TREE_CODE (CODE) == STRUCT_FIELD_TAG		\    || TREE_CODE (CODE) == NAME_MEMORY_TAG	\    || TREE_CODE (CODE) == SYMBOL_MEMORY_TAG)
+end_define
+
+begin_comment
+comment|/* Nonzero if DECL represents a VAR_DECL or FUNCTION_DECL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VAR_OR_FUNCTION_DECL_P
+parameter_list|(
+name|DECL
+parameter_list|)
+define|\
+value|(TREE_CODE (DECL) == VAR_DECL || TREE_CODE (DECL) == FUNCTION_DECL)
+end_define
+
+begin_comment
+comment|/* Nonzero if CODE represents a INDIRECT_REF.  Keep these checks in    ascending code order.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INDIRECT_REF_P
+parameter_list|(
+name|CODE
+parameter_list|)
+define|\
+value|(TREE_CODE (CODE) == INDIRECT_REF \    || TREE_CODE (CODE) == ALIGN_INDIRECT_REF \    || TREE_CODE (CODE) == MISALIGNED_INDIRECT_REF)
+end_define
+
+begin_comment
+comment|/* Nonzero if CODE represents a reference.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFERENCE_CLASS_P
+parameter_list|(
+name|CODE
+parameter_list|)
+define|\
+value|(TREE_CODE_CLASS (TREE_CODE (CODE)) == tcc_reference)
+end_define
+
+begin_comment
+comment|/* Nonzero if CODE represents a comparison.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COMPARISON_CLASS_P
+parameter_list|(
+name|CODE
+parameter_list|)
+define|\
+value|(TREE_CODE_CLASS (TREE_CODE (CODE)) == tcc_comparison)
+end_define
+
+begin_comment
+comment|/* Nonzero if CODE represents a unary arithmetic expression.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNARY_CLASS_P
+parameter_list|(
+name|CODE
+parameter_list|)
+define|\
+value|(TREE_CODE_CLASS (TREE_CODE (CODE)) == tcc_unary)
+end_define
+
+begin_comment
+comment|/* Nonzero if CODE represents a binary arithmetic expression.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BINARY_CLASS_P
+parameter_list|(
+name|CODE
+parameter_list|)
+define|\
+value|(TREE_CODE_CLASS (TREE_CODE (CODE)) == tcc_binary)
+end_define
+
+begin_comment
+comment|/* Nonzero if CODE represents a statement expression.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STATEMENT_CLASS_P
+parameter_list|(
+name|CODE
+parameter_list|)
+define|\
+value|(TREE_CODE_CLASS (TREE_CODE (CODE)) == tcc_statement)
+end_define
+
+begin_comment
+comment|/* Nonzero if CODE represents any other expression.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXPRESSION_CLASS_P
+parameter_list|(
+name|CODE
+parameter_list|)
+define|\
+value|(TREE_CODE_CLASS (TREE_CODE (CODE)) == tcc_expression)
+end_define
+
+begin_comment
+comment|/* Returns nonzero iff CODE represents a type or declaration.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_TYPE_OR_DECL_P
+parameter_list|(
+name|CODE
+parameter_list|)
+define|\
+value|(TYPE_P (CODE) || DECL_P (CODE))
+end_define
+
+begin_comment
 comment|/* Returns nonzero iff CLASS is the tree-code class of an    expression.  */
 end_comment
 
@@ -124,7 +445,8 @@ name|IS_EXPR_CODE_CLASS
 parameter_list|(
 name|CLASS
 parameter_list|)
-value|(strchr ("<12ers", (CLASS)) != 0)
+define|\
+value|((CLASS)>= tcc_reference&& (CLASS)<= tcc_expression)
 end_define
 
 begin_comment
@@ -139,6 +461,21 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|IS_EXPR_CODE_CLASS (TREE_CODE_CLASS (TREE_CODE (NODE)))
+end_define
+
+begin_comment
+comment|/* Returns nonzero iff NODE is an OpenMP directive.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OMP_DIRECTIVE_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(TREE_CODE (NODE) == OMP_PARALLEL			\      || TREE_CODE (NODE) == OMP_FOR			\      || TREE_CODE (NODE) == OMP_SECTIONS		\      || TREE_CODE (NODE) == OMP_SINGLE			\      || TREE_CODE (NODE) == OMP_SECTION			\      || TREE_CODE (NODE) == OMP_MASTER			\      || TREE_CODE (NODE) == OMP_ORDERED			\      || TREE_CODE (NODE) == OMP_CRITICAL		\      || TREE_CODE (NODE) == OMP_RETURN			\      || TREE_CODE (NODE) == OMP_CONTINUE)
 end_define
 
 begin_comment
@@ -179,6 +516,38 @@ name|tree_code_name
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* A vectors of trees.  */
+end_comment
+
+begin_expr_stmt
+name|DEF_VEC_P
+argument_list|(
+name|tree
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEF_VEC_ALLOC_P
+argument_list|(
+name|tree
+argument_list|,
+name|gc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEF_VEC_ALLOC_P
+argument_list|(
+name|tree
+argument_list|,
+name|heap
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_escape
 end_escape
@@ -249,6 +618,8 @@ parameter_list|,
 name|AT
 parameter_list|,
 name|IM
+parameter_list|,
+name|COND
 parameter_list|)
 value|ENUM,
 end_define
@@ -260,6 +631,27 @@ block|{
 include|#
 directive|include
 file|"builtins.def"
+comment|/* Complex division routines in libgcc.  These are done via builtins      because emit_library_call_value can't handle complex values.  */
+name|BUILT_IN_COMPLEX_MUL_MIN
+block|,
+name|BUILT_IN_COMPLEX_MUL_MAX
+init|=
+name|BUILT_IN_COMPLEX_MUL_MIN
+operator|+
+name|MAX_MODE_COMPLEX_FLOAT
+operator|-
+name|MIN_MODE_COMPLEX_FLOAT
+block|,
+name|BUILT_IN_COMPLEX_DIV_MIN
+block|,
+name|BUILT_IN_COMPLEX_DIV_MAX
+init|=
+name|BUILT_IN_COMPLEX_DIV_MIN
+operator|+
+name|MAX_MODE_COMPLEX_FLOAT
+operator|-
+name|MIN_MODE_COMPLEX_FLOAT
+block|,
 comment|/* Upper bound on non-language-specific builtins.  */
 name|END_BUILTINS
 block|}
@@ -281,7 +673,6 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
-specifier|const
 name|built_in_names
 index|[
 operator|(
@@ -291,6 +682,83 @@ name|END_BUILTINS
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Helper macros for math builtins.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUILTIN_EXP10_P
+parameter_list|(
+name|FN
+parameter_list|)
+define|\
+value|((FN) == BUILT_IN_EXP10 || (FN) == BUILT_IN_EXP10F || (FN) == BUILT_IN_EXP10L \   || (FN) == BUILT_IN_POW10 || (FN) == BUILT_IN_POW10F || (FN) == BUILT_IN_POW10L)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUILTIN_EXPONENT_P
+parameter_list|(
+name|FN
+parameter_list|)
+value|(BUILTIN_EXP10_P (FN) \   || (FN) == BUILT_IN_EXP || (FN) == BUILT_IN_EXPF || (FN) == BUILT_IN_EXPL \   || (FN) == BUILT_IN_EXP2 || (FN) == BUILT_IN_EXP2F || (FN) == BUILT_IN_EXP2L)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUILTIN_SQRT_P
+parameter_list|(
+name|FN
+parameter_list|)
+define|\
+value|((FN) == BUILT_IN_SQRT || (FN) == BUILT_IN_SQRTF || (FN) == BUILT_IN_SQRTL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUILTIN_CBRT_P
+parameter_list|(
+name|FN
+parameter_list|)
+define|\
+value|((FN) == BUILT_IN_CBRT || (FN) == BUILT_IN_CBRTF || (FN) == BUILT_IN_CBRTL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUILTIN_ROOT_P
+parameter_list|(
+name|FN
+parameter_list|)
+value|(BUILTIN_SQRT_P (FN) || BUILTIN_CBRT_P (FN))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CASE_FLT_FN
+parameter_list|(
+name|FN
+parameter_list|)
+value|case FN: case FN##F: case FN##L
+end_define
+
+begin_define
+define|#
+directive|define
+name|CASE_INT_FN
+parameter_list|(
+name|FN
+parameter_list|)
+value|case FN: case FN##L: case FN##LL
+end_define
 
 begin_comment
 comment|/* An array of _DECL trees for the above.  */
@@ -334,6 +802,93 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* In an OMP_CLAUSE node.  */
+end_comment
+
+begin_comment
+comment|/* Number of operands and names for each clause.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+specifier|const
+name|char
+name|omp_clause_num_ops
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|omp_clause_code_name
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Clause codes.  Do not reorder, as this is used to index into the tables    omp_clause_num_ops and omp_clause_code_name.  */
+end_comment
+
+begin_enum
+enum|enum
+name|omp_clause_code
+block|{
+comment|/* Clause zero is special-cased inside the parser      (c_parser_omp_variable_list).  */
+name|OMP_CLAUSE_ERROR
+init|=
+literal|0
+block|,
+comment|/* OpenMP clause: private (variable_list).  */
+name|OMP_CLAUSE_PRIVATE
+block|,
+comment|/* OpenMP clause: shared (variable_list).  */
+name|OMP_CLAUSE_SHARED
+block|,
+comment|/* OpenMP clause: firstprivate (variable_list).  */
+name|OMP_CLAUSE_FIRSTPRIVATE
+block|,
+comment|/* OpenMP clause: lastprivate (variable_list).  */
+name|OMP_CLAUSE_LASTPRIVATE
+block|,
+comment|/* OpenMP clause: reduction (operator:variable_list).      OMP_CLAUSE_REDUCTION_CODE: The tree_code of the operator.      Operand 1: OMP_CLAUSE_REDUCTION_INIT: Stmt-list to initialize the var.      Operand 2: OMP_CLAUSE_REDUCTION_MERGE: Stmt-list to merge private var                 into the shared one.      Operand 3: OMP_CLAUSE_REDUCTION_PLACEHOLDER: A dummy VAR_DECL                 placeholder used in OMP_CLAUSE_REDUCTION_MERGE.  */
+name|OMP_CLAUSE_REDUCTION
+block|,
+comment|/* OpenMP clause: copyin (variable_list).  */
+name|OMP_CLAUSE_COPYIN
+block|,
+comment|/* OpenMP clause: copyprivate (variable_list).  */
+name|OMP_CLAUSE_COPYPRIVATE
+block|,
+comment|/* OpenMP clause: if (scalar-expression).  */
+name|OMP_CLAUSE_IF
+block|,
+comment|/* OpenMP clause: num_threads (integer-expression).  */
+name|OMP_CLAUSE_NUM_THREADS
+block|,
+comment|/* OpenMP clause: schedule.  */
+name|OMP_CLAUSE_SCHEDULE
+block|,
+comment|/* OpenMP clause: nowait.  */
+name|OMP_CLAUSE_NOWAIT
+block|,
+comment|/* OpenMP clause: ordered.  */
+name|OMP_CLAUSE_ORDERED
+block|,
+comment|/* OpenMP clause: default.  */
+name|OMP_CLAUSE_DEFAULT
+block|}
+enum|;
+end_enum
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* The definition of tree nodes fills the next several pages.  */
 end_comment
 
@@ -344,6 +899,12 @@ end_comment
 begin_comment
 comment|/* Every kind of tree node starts with this structure,    so all nodes have these fields.     See the accessor macros, defined below, for documentation of the    fields.  */
 end_comment
+
+begin_union_decl
+union_decl|union
+name|tree_ann_d
+union_decl|;
+end_union_decl
 
 begin_decl_stmt
 name|struct
@@ -359,6 +920,11 @@ name|chain
 decl_stmt|;
 name|tree
 name|type
+decl_stmt|;
+name|union
+name|tree_ann_d
+modifier|*
+name|ann
 decl_stmt|;
 name|ENUM_BITFIELD
 argument_list|(
@@ -404,7 +970,7 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|unused_0
+name|nowarning_flag
 range|:
 literal|1
 decl_stmt|;
@@ -444,7 +1010,7 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|unused_1
+name|invariant_flag
 range|:
 literal|1
 decl_stmt|;
@@ -484,7 +1050,7 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|unused_2
+name|visited
 range|:
 literal|1
 decl_stmt|;
@@ -496,8 +1062,44 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* The following table lists the uses of each of the above flags and    for which types of nodes they are defined.  Note that expressions    include decls.     addressable_flag:         TREE_ADDRESSABLE in 	   VAR_DECL, FUNCTION_DECL, FIELD_DECL, CONSTRUCTOR, LABEL_DECL, 	   ..._TYPE, IDENTIFIER_NODE. 	   In a STMT_EXPR, it means we want the result of the enclosed 	   expression.     static_flag:         TREE_STATIC in            VAR_DECL, FUNCTION_DECL, CONSTRUCTOR, ADDR_EXPR        TREE_NO_UNUSED_WARNING in            CONVERT_EXPR, NOP_EXPR, COMPOUND_EXPR        TREE_VIA_VIRTUAL in            TREE_LIST or TREE_VEC        TREE_CONSTANT_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST, VECTOR_CST        TREE_SYMBOL_REFERENCED in            IDENTIFIER_NODE        CLEANUP_EH_ONLY in            TARGET_EXPR, WITH_CLEANUP_EXPR, CLEANUP_STMT, 	   TREE_LIST elements of a block's cleanup list.     public_flag:         TREE_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST, VECTOR_CST        TREE_PUBLIC in            VAR_DECL or FUNCTION_DECL or IDENTIFIER_NODE        EXPR_WFL_EMIT_LINE_NOTE in            EXPR_WITH_FILE_LOCATION     private_flag:         TREE_PRIVATE in            ..._DECL        CALL_EXPR_HAS_RETURN_SLOT_ADDR in            CALL_EXPR     protected_flag:         TREE_PROTECTED in            BLOCK 	   ..._DECL        CALL_FROM_THUNK_P in            CALL_EXPR      side_effects_flag:         TREE_SIDE_EFFECTS in            all expressions     volatile_flag:         TREE_THIS_VOLATILE in            all expressions        TYPE_VOLATILE in            ..._TYPE     readonly_flag:         TREE_READONLY in            all expressions        TYPE_READONLY in            ..._TYPE     constant_flag:         TREE_CONSTANT in            all expressions     unsigned_flag:         TREE_UNSIGNED in            INTEGER_TYPE, ENUMERAL_TYPE, FIELD_DECL        SAVE_EXPR_NOPLACEHOLDER in 	   SAVE_EXPR     asm_written_flag:         TREE_ASM_WRITTEN in            VAR_DECL, FUNCTION_DECL, RECORD_TYPE, UNION_TYPE, QUAL_UNION_TYPE 	   BLOCK     used_flag:         TREE_USED in            expressions, IDENTIFIER_NODE     nothrow_flag:         TREE_NOTHROW in            CALL_EXPR, FUNCTION_DECL         TYPE_ALIGN_OK in 	   ..._TYPE     deprecated_flag:  	TREE_DEPRECATED in 	   ..._DECL  */
+comment|/* The following table lists the uses of each of the above flags and    for which types of nodes they are defined.  Note that expressions    include decls.     addressable_flag:         TREE_ADDRESSABLE in 	   VAR_DECL, FUNCTION_DECL, FIELD_DECL, CONSTRUCTOR, LABEL_DECL, 	   ..._TYPE, IDENTIFIER_NODE. 	   In a STMT_EXPR, it means we want the result of the enclosed 	   expression.        CALL_EXPR_TAILCALL in CALL_EXPR        CASE_LOW_SEEN in CASE_LABEL_EXPR     static_flag:         TREE_STATIC in            VAR_DECL, FUNCTION_DECL, CONSTRUCTOR, ADDR_EXPR        BINFO_VIRTUAL_P in            TREE_BINFO        TREE_CONSTANT_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST, VECTOR_CST        TREE_SYMBOL_REFERENCED in            IDENTIFIER_NODE        CLEANUP_EH_ONLY in            TARGET_EXPR, WITH_CLEANUP_EXPR        ASM_INPUT_P in            ASM_EXPR        EH_FILTER_MUST_NOT_THROW in EH_FILTER_EXPR        TYPE_REF_CAN_ALIAS_ALL in            POINTER_TYPE, REFERENCE_TYPE        CASE_HIGH_SEEN in CASE_LABEL_EXPR     public_flag:         TREE_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST, VECTOR_CST        TREE_PUBLIC in            VAR_DECL or FUNCTION_DECL or IDENTIFIER_NODE        ASM_VOLATILE_P in            ASM_EXPR        TYPE_CACHED_VALUES_P in           ..._TYPE        SAVE_EXPR_RESOLVED_P in 	  SAVE_EXPR        OMP_CLAUSE_LASTPRIVATE_FIRSTPRIVATE in 	  OMP_CLAUSE_LASTPRIVATE        OMP_CLAUSE_PRIVATE_DEBUG in 	  OMP_CLAUSE_PRIVATE     private_flag:         TREE_PRIVATE in            ..._DECL        CALL_EXPR_RETURN_SLOT_OPT in            CALL_EXPR        DECL_BY_REFERENCE in            PARM_DECL, RESULT_DECL        OMP_RETURN_NOWAIT in 	   OMP_RETURN        OMP_SECTION_LAST in 	   OMP_SECTION        OMP_PARALLEL_COMBINED in 	   OMP_PARALLEL     protected_flag:         TREE_PROTECTED in            BLOCK 	   ..._DECL        CALL_FROM_THUNK_P in            CALL_EXPR     side_effects_flag:         TREE_SIDE_EFFECTS in            all expressions 	   all decls 	   all constants         FORCED_LABEL in 	   LABEL_DECL     volatile_flag:         TREE_THIS_VOLATILE in            all expressions        TYPE_VOLATILE in            ..._TYPE     readonly_flag:         TREE_READONLY in            all expressions        TYPE_READONLY in            ..._TYPE     constant_flag:         TREE_CONSTANT in            all expressions 	   all decls 	   all constants        TYPE_SIZES_GIMPLIFIED            ..._TYPE     unsigned_flag:         TYPE_UNSIGNED in            all types        DECL_UNSIGNED in            all decls        BIT_FIELD_REF_UNSIGNED in            BIT_FIELD_REF     asm_written_flag:         TREE_ASM_WRITTEN in            VAR_DECL, FUNCTION_DECL, RECORD_TYPE, UNION_TYPE, QUAL_UNION_TYPE 	   BLOCK, SSA_NAME     used_flag:         TREE_USED in            expressions, IDENTIFIER_NODE     nothrow_flag:         TREE_NOTHROW in            CALL_EXPR, FUNCTION_DECL         TYPE_ALIGN_OK in 	   ..._TYPE         TREE_THIS_NOTRAP in           (ALIGN/MISALIGNED_)INDIRECT_REF, ARRAY_REF, ARRAY_RANGE_REF     deprecated_flag:  	TREE_DEPRECATED in 	   ..._DECL  	IDENTIFIER_TRANSPARENT_ALIAS in 	   IDENTIFIER_NODE     visited:     	Used in tree traversals to mark visited nodes.     invariant_flag:  	TREE_INVARIANT in 	    all expressions.     nowarning_flag:         TREE_NO_WARNING in            ... any expr or decl node */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEFTREESTRUCT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DEFTREESTRUCT
+parameter_list|(
+name|ENUM
+parameter_list|,
+name|NAME
+parameter_list|)
+value|ENUM,
+end_define
+
+begin_enum
+enum|enum
+name|tree_node_structure_enum
+block|{
+include|#
+directive|include
+file|"treestruct.def"
+name|LAST_TS_ENUM
+block|}
+enum|;
+end_enum
+
+begin_undef
+undef|#
+directive|undef
+name|DEFTREESTRUCT
+end_undef
 
 begin_comment
 comment|/* Define accessors for the fields that all tree nodes have    (though some fields are not used for all kinds of nodes).  */
@@ -530,7 +1132,7 @@ value|((NODE)->common.code = (VALUE))
 end_define
 
 begin_comment
-comment|/* When checking is enabled, errors will be generated if a tree node    is accessed incorrectly. The macros abort with a fatal error.  */
+comment|/* When checking is enabled, errors will be generated if a tree node    is accessed incorrectly. The macros die with a fatal error.  */
 end_comment
 
 begin_if
@@ -555,7 +1157,167 @@ name|T
 parameter_list|,
 name|CODE
 parameter_list|)
-value|__extension__				\ ({  const tree __t = (T);						\     if (TREE_CODE (__t) != (CODE))					\       tree_check_failed (__t, (CODE), __FILE__, __LINE__, __FUNCTION__); \     __t; })
+value|__extension__				\ ({  const tree __t = (T);						\     if (TREE_CODE (__t) != (CODE))					\       tree_check_failed (__t, __FILE__, __LINE__, __FUNCTION__, 	\ 			 (CODE), 0);					\     __t; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_NOT_CHECK
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE
+parameter_list|)
+value|__extension__				\ ({  const tree __t = (T);						\     if (TREE_CODE (__t) == (CODE))					\       tree_not_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,	\ 			     (CODE), 0);				\     __t; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_CHECK2
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|)
+value|__extension__			\ ({  const tree __t = (T);						\     if (TREE_CODE (__t) != (CODE1)					\&& TREE_CODE (__t) != (CODE2))					\       tree_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,		\  			 (CODE1), (CODE2), 0);				\     __t; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_NOT_CHECK2
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|)
+value|__extension__			\ ({  const tree __t = (T);						\     if (TREE_CODE (__t) == (CODE1)					\ 	|| TREE_CODE (__t) == (CODE2))					\       tree_not_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,	\ 			     (CODE1), (CODE2), 0);			\     __t; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_CHECK3
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|,
+name|CODE3
+parameter_list|)
+value|__extension__		\ ({  const tree __t = (T);						\     if (TREE_CODE (__t) != (CODE1)					\&& TREE_CODE (__t) != (CODE2)					\&& TREE_CODE (__t) != (CODE3))					\       tree_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,		\ 			     (CODE1), (CODE2), (CODE3), 0);		\     __t; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_NOT_CHECK3
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|,
+name|CODE3
+parameter_list|)
+value|__extension__		\ ({  const tree __t = (T);						\     if (TREE_CODE (__t) == (CODE1)					\ 	|| TREE_CODE (__t) == (CODE2)					\ 	|| TREE_CODE (__t) == (CODE3))					\       tree_not_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,	\ 			     (CODE1), (CODE2), (CODE3), 0);		\     __t; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_CHECK4
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|,
+name|CODE3
+parameter_list|,
+name|CODE4
+parameter_list|)
+value|__extension__	\ ({  const tree __t = (T);						\     if (TREE_CODE (__t) != (CODE1)					\&& TREE_CODE (__t) != (CODE2)					\&& TREE_CODE (__t) != (CODE3)					\&& TREE_CODE (__t) != (CODE4))					\       tree_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,		\ 			     (CODE1), (CODE2), (CODE3), (CODE4), 0);	\     __t; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|NON_TREE_CHECK4
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|,
+name|CODE3
+parameter_list|,
+name|CODE4
+parameter_list|)
+value|__extension__	\ ({  const tree __t = (T);						\     if (TREE_CODE (__t) == (CODE1)					\ 	|| TREE_CODE (__t) == (CODE2)					\ 	|| TREE_CODE (__t) == (CODE3)					\ 	|| TREE_CODE (__t) == (CODE4))					\       tree_not_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,	\ 			     (CODE1), (CODE2), (CODE3), (CODE4), 0);	\     __t; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_CHECK5
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|,
+name|CODE3
+parameter_list|,
+name|CODE4
+parameter_list|,
+name|CODE5
+parameter_list|)
+value|__extension__	\ ({  const tree __t = (T);						\     if (TREE_CODE (__t) != (CODE1)					\&& TREE_CODE (__t) != (CODE2)					\&& TREE_CODE (__t) != (CODE3)					\&& TREE_CODE (__t) != (CODE4)					\&& TREE_CODE (__t) != (CODE5))					\       tree_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,		\ 			     (CODE1), (CODE2), (CODE3), (CODE4), (CODE5), 0);\     __t; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_NOT_CHECK5
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|,
+name|CODE3
+parameter_list|,
+name|CODE4
+parameter_list|,
+name|CODE5
+parameter_list|)
+value|__extension__ \ ({  const tree __t = (T);						\     if (TREE_CODE (__t) == (CODE1)					\ 	|| TREE_CODE (__t) == (CODE2)					\ 	|| TREE_CODE (__t) == (CODE3)					\ 	|| TREE_CODE (__t) == (CODE4)					\ 	|| TREE_CODE (__t) == (CODE5))					\       tree_not_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,	\ 			     (CODE1), (CODE2), (CODE3), (CODE4), (CODE5), 0);\     __t; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONTAINS_STRUCT_CHECK
+parameter_list|(
+name|T
+parameter_list|,
+name|STRUCT
+parameter_list|)
+value|__extension__			\ ({  const tree __t = (T);						\   if (tree_contains_struct[TREE_CODE(__t)][(STRUCT)] != 1)		\       tree_contains_struct_check_failed (__t, (STRUCT), __FILE__, __LINE__,	\ 			       __FUNCTION__);				\     __t; })
 end_define
 
 begin_define
@@ -570,6 +1332,46 @@ parameter_list|)
 value|__extension__			\ ({  const tree __t = (T);						\     if (TREE_CODE_CLASS (TREE_CODE(__t)) != (CLASS))			\       tree_class_check_failed (__t, (CLASS), __FILE__, __LINE__,	\ 			       __FUNCTION__);				\     __t; })
 end_define
 
+begin_define
+define|#
+directive|define
+name|TREE_RANGE_CHECK
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|)
+value|__extension__			\ ({  const tree __t = (T);						\     if (TREE_CODE (__t)< (CODE1) || TREE_CODE (__t)> (CODE2))		\       tree_range_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,	\ 			       (CODE1), (CODE2));			\     __t; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_SUBCODE_CHECK
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE
+parameter_list|)
+value|__extension__			\ ({  const tree __t = (T);						\     if (TREE_CODE (__t) != OMP_CLAUSE)					\       tree_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,  	\ 			 OMP_CLAUSE, 0);				\     if (__t->omp_clause.code != (CODE))					\       omp_clause_check_failed (__t, __FILE__, __LINE__, __FUNCTION__, 	\ 			       (CODE));					\     __t; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_RANGE_CHECK
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|)
+value|__extension__		\ ({  const tree __t = (T);						\     if (TREE_CODE (__t) != OMP_CLAUSE)					\       tree_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,  	\ 			 OMP_CLAUSE, 0);				\     if ((int) __t->omp_clause.code< (int) (CODE1)			\         || (int) __t->omp_clause.code> (int) (CODE2))			\       omp_clause_range_check_failed (__t, __FILE__, __LINE__,		\ 				     __FUNCTION__, (CODE1), (CODE2));	\     __t; })
+end_define
+
 begin_comment
 comment|/* These checks have to be special cased.  */
 end_comment
@@ -581,7 +1383,21 @@ name|EXPR_CHECK
 parameter_list|(
 name|T
 parameter_list|)
-value|__extension__					\ ({  const tree __t = (T);						\     char const __c = TREE_CODE_CLASS (TREE_CODE (__t));			\     if (!IS_EXPR_CODE_CLASS (__c))					\       tree_class_check_failed (__t, 'e', __FILE__, __LINE__,		\ 			       __FUNCTION__);				\     __t; })
+value|__extension__					\ ({  const tree __t = (T);						\     char const __c = TREE_CODE_CLASS (TREE_CODE (__t));			\     if (!IS_EXPR_CODE_CLASS (__c))					\       tree_class_check_failed (__t, tcc_expression, __FILE__, __LINE__,	\ 			       __FUNCTION__);				\     __t; })
+end_define
+
+begin_comment
+comment|/* These checks have to be special cased.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NON_TYPE_CHECK
+parameter_list|(
+name|T
+parameter_list|)
+value|__extension__					\ ({  const tree __t = (T);						\     if (TYPE_P (__t))							\       tree_not_class_check_failed (__t, tcc_type, __FILE__, __LINE__,	\ 				   __FUNCTION__);			\     __t; })
 end_define
 
 begin_define
@@ -593,7 +1409,31 @@ name|T
 parameter_list|,
 name|I
 parameter_list|)
-value|__extension__				\ (*({const tree __t = (T);						\     const int __i = (I);						\     if (TREE_CODE (__t) != TREE_VEC)					\       tree_check_failed (__t, TREE_VEC,					\ 			 __FILE__, __LINE__, __FUNCTION__);		\     if (__i< 0 || __i>= __t->vec.length)				\       tree_vec_elt_check_failed (__i, __t->vec.length,			\ 				 __FILE__, __LINE__, __FUNCTION__);	\&__t->vec.a[__i]; }))
+value|__extension__				\ (*({const tree __t = (T);						\     const int __i = (I);						\     if (TREE_CODE (__t) != TREE_VEC)					\       tree_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,		\   			 TREE_VEC, 0);					\     if (__i< 0 || __i>= __t->vec.length)				\       tree_vec_elt_check_failed (__i, __t->vec.length,			\ 				 __FILE__, __LINE__, __FUNCTION__);	\&__t->vec.a[__i]; }))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHI_NODE_ELT_CHECK
+parameter_list|(
+name|t
+parameter_list|,
+name|i
+parameter_list|)
+value|__extension__				\ (*({const tree __t = t;							\     const int __i = (i);						\     if (TREE_CODE (__t) != PHI_NODE)					\       tree_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,  	\ 			 PHI_NODE, 0);					\     if (__i< 0 || __i>= __t->phi.capacity)				\       phi_node_elt_check_failed (__i, __t->phi.num_args,		\ 				 __FILE__, __LINE__, __FUNCTION__);	\&__t->phi.a[__i]; }))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_ELT_CHECK
+parameter_list|(
+name|t
+parameter_list|,
+name|i
+parameter_list|)
+value|__extension__			\ (*({const tree __t = t;							\     const int __i = (i);						\     if (TREE_CODE (__t) != OMP_CLAUSE)					\       tree_check_failed (__t, __FILE__, __LINE__, __FUNCTION__,  	\ 			 OMP_CLAUSE, 0);				\     if (__i< 0 || __i>= omp_clause_num_ops [__t->omp_clause.code])	\       omp_clause_operand_check_failed (__i, __t, __FILE__, __LINE__,	\ 	                               __FUNCTION__);			\&__t->omp_clause.ops[__i]; }))
 end_define
 
 begin_comment
@@ -623,7 +1463,7 @@ name|CODE
 parameter_list|,
 name|I
 parameter_list|)
-value|__extension__		\ (*({const tree __t = (T);						\     const int __i = (I);						\     if (TREE_CODE (__t) != CODE)					\       tree_check_failed (__t, CODE, __FILE__, __LINE__, __FUNCTION__);	\     if (__i< 0 || __i>= TREE_CODE_LENGTH (CODE))			\       tree_operand_check_failed (__i, (CODE),				\ 				 __FILE__, __LINE__, __FUNCTION__);	\&__t->exp.operands[__i]; }))
+value|__extension__		\ (*({const tree __t = (T);						\     const int __i = (I);						\     if (TREE_CODE (__t) != CODE)					\       tree_check_failed (__t, __FILE__, __LINE__, __FUNCTION__, (CODE), 0);\     if (__i< 0 || __i>= TREE_CODE_LENGTH (CODE))			\       tree_operand_check_failed (__i, (CODE),				\ 				 __FILE__, __LINE__, __FUNCTION__);	\&__t->exp.operands[__i]; }))
 end_define
 
 begin_define
@@ -637,19 +1477,20 @@ name|CODE
 parameter_list|,
 name|I
 parameter_list|)
-value|__extension__		\ (*(rtx *)								\  ({const tree __t = (T);						\     const int __i = (I);						\     if (TREE_CODE (__t) != (CODE))					\       tree_check_failed (__t, (CODE), __FILE__, __LINE__, __FUNCTION__); \     if (__i< 0 || __i>= TREE_CODE_LENGTH ((CODE)))			\       tree_operand_check_failed (__i, (CODE),				\ 				 __FILE__, __LINE__, __FUNCTION__);	\&__t->exp.operands[__i]; }))
+value|__extension__		\ (*(rtx *)								\  ({const tree __t = (T);						\     const int __i = (I);						\     if (TREE_CODE (__t) != (CODE))					\       tree_check_failed (__t, __FILE__, __LINE__, __FUNCTION__, (CODE), 0); \     if (__i< 0 || __i>= TREE_CODE_LENGTH ((CODE)))			\       tree_operand_check_failed (__i, (CODE),				\ 				 __FILE__, __LINE__, __FUNCTION__);	\&__t->exp.operands[__i]; }))
 end_define
 
 begin_decl_stmt
 specifier|extern
 name|void
-name|tree_check_failed
+name|tree_contains_struct_check_failed
 argument_list|(
 specifier|const
 name|tree
 argument_list|,
+specifier|const
 expr|enum
-name|tree_code
+name|tree_node_structure_enum
 argument_list|,
 specifier|const
 name|char
@@ -668,12 +1509,115 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|tree_check_failed
+argument_list|(
+specifier|const
+name|tree
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|int
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+operator|...
+argument_list|)
+name|ATTRIBUTE_NORETURN
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|tree_not_check_failed
+argument_list|(
+specifier|const
+name|tree
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|int
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+operator|...
+argument_list|)
+name|ATTRIBUTE_NORETURN
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|tree_class_check_failed
 argument_list|(
 specifier|const
 name|tree
 argument_list|,
+specifier|const
+expr|enum
+name|tree_code_class
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
 name|int
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+name|ATTRIBUTE_NORETURN
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|void
+name|tree_range_check_failed
+parameter_list|(
+specifier|const
+name|tree
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|enum
+name|tree_code
+parameter_list|,
+name|enum
+name|tree_code
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|tree_not_class_check_failed
+argument_list|(
+specifier|const
+name|tree
+argument_list|,
+specifier|const
+expr|enum
+name|tree_code_class
 argument_list|,
 specifier|const
 name|char
@@ -693,6 +1637,29 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|tree_vec_elt_check_failed
+argument_list|(
+name|int
+argument_list|,
+name|int
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|int
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+name|ATTRIBUTE_NORETURN
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|phi_node_elt_check_failed
 argument_list|(
 name|int
 argument_list|,
@@ -736,6 +1703,82 @@ name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|omp_clause_check_failed
+argument_list|(
+specifier|const
+name|tree
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|int
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+expr|enum
+name|omp_clause_code
+argument_list|)
+name|ATTRIBUTE_NORETURN
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|omp_clause_operand_check_failed
+argument_list|(
+name|int
+argument_list|,
+name|tree
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|int
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+name|ATTRIBUTE_NORETURN
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|omp_clause_range_check_failed
+argument_list|(
+specifier|const
+name|tree
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|int
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+expr|enum
+name|omp_clause_code
+argument_list|,
+expr|enum
+name|omp_clause_code
+argument_list|)
+name|ATTRIBUTE_NORETURN
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -748,11 +1791,171 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CONTAINS_STRUCT_CHECK
+parameter_list|(
+name|T
+parameter_list|,
+name|ENUM
+parameter_list|)
+value|(T)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TREE_CHECK
 parameter_list|(
 name|T
 parameter_list|,
 name|CODE
+parameter_list|)
+value|(T)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_NOT_CHECK
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE
+parameter_list|)
+value|(T)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_CHECK2
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|)
+value|(T)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_NOT_CHECK2
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|)
+value|(T)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_CHECK3
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|,
+name|CODE3
+parameter_list|)
+value|(T)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_NOT_CHECK3
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|,
+name|CODE3
+parameter_list|)
+value|(T)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_CHECK4
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|,
+name|CODE3
+parameter_list|,
+name|CODE4
+parameter_list|)
+value|(T)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_NOT_CHECK4
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|,
+name|CODE3
+parameter_list|,
+name|CODE4
+parameter_list|)
+value|(T)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_CHECK5
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|,
+name|CODE3
+parameter_list|,
+name|CODE4
+parameter_list|,
+name|CODE5
+parameter_list|)
+value|(T)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_NOT_CHECK5
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|,
+name|CODE3
+parameter_list|,
+name|CODE4
+parameter_list|,
+name|CODE5
 parameter_list|)
 value|(T)
 end_define
@@ -772,7 +1975,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|TREE_RANGE_CHECK
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|)
+value|(T)
+end_define
+
+begin_define
+define|#
+directive|define
 name|EXPR_CHECK
+parameter_list|(
+name|T
+parameter_list|)
+value|(T)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NON_TYPE_CHECK
 parameter_list|(
 name|T
 parameter_list|)
@@ -831,10 +2058,70 @@ parameter_list|)
 value|(*(rtx *)&((T)->exp.operands[I]))
 end_define
 
+begin_define
+define|#
+directive|define
+name|PHI_NODE_ELT_CHECK
+parameter_list|(
+name|T
+parameter_list|,
+name|i
+parameter_list|)
+value|((T)->phi.a[i])
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_ELT_CHECK
+parameter_list|(
+name|T
+parameter_list|,
+name|i
+parameter_list|)
+value|((T)->omp_clause.ops[i])
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_RANGE_CHECK
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE1
+parameter_list|,
+name|CODE2
+parameter_list|)
+value|(T)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_SUBCODE_CHECK
+parameter_list|(
+name|T
+parameter_list|,
+name|CODE
+parameter_list|)
+value|(T)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|TREE_BLOCK
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(EXPR_CHECK (NODE)->exp.block)
+end_define
 
 begin_include
 include|#
@@ -849,17 +2136,67 @@ name|TYPE_CHECK
 parameter_list|(
 name|T
 parameter_list|)
-value|TREE_CLASS_CHECK (T, 't')
+value|TREE_CLASS_CHECK (T, tcc_type)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DECL_CHECK
+name|DECL_MINIMAL_CHECK
 parameter_list|(
 name|T
 parameter_list|)
-value|TREE_CLASS_CHECK (T, 'd')
+value|CONTAINS_STRUCT_CHECK (T, TS_DECL_MINIMAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_MEMORY_TAG_CHECK
+parameter_list|(
+name|T
+parameter_list|)
+value|CONTAINS_STRUCT_CHECK (T, TS_MEMORY_TAG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_COMMON_CHECK
+parameter_list|(
+name|T
+parameter_list|)
+value|CONTAINS_STRUCT_CHECK (T, TS_DECL_COMMON)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_WRTL_CHECK
+parameter_list|(
+name|T
+parameter_list|)
+value|CONTAINS_STRUCT_CHECK (T, TS_DECL_WRTL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_WITH_VIS_CHECK
+parameter_list|(
+name|T
+parameter_list|)
+value|CONTAINS_STRUCT_CHECK (T, TS_DECL_WITH_VIS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_NON_COMMON_CHECK
+parameter_list|(
+name|T
+parameter_list|)
+value|CONTAINS_STRUCT_CHECK (T, TS_DECL_NON_COMMON)
 end_define
 
 begin_define
@@ -869,7 +2206,7 @@ name|CST_CHECK
 parameter_list|(
 name|T
 parameter_list|)
-value|TREE_CLASS_CHECK (T, 'c')
+value|TREE_CLASS_CHECK (T, tcc_constant)
 end_define
 
 begin_define
@@ -879,7 +2216,60 @@ name|STMT_CHECK
 parameter_list|(
 name|T
 parameter_list|)
-value|TREE_CLASS_CHECK (T, 's')
+value|TREE_CLASS_CHECK (T, tcc_statement)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FUNC_OR_METHOD_CHECK
+parameter_list|(
+name|T
+parameter_list|)
+value|TREE_CHECK2 (T, FUNCTION_TYPE, METHOD_TYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTR_OR_REF_CHECK
+parameter_list|(
+name|T
+parameter_list|)
+value|TREE_CHECK2 (T, POINTER_TYPE, REFERENCE_TYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RECORD_OR_UNION_CHECK
+parameter_list|(
+name|T
+parameter_list|)
+define|\
+value|TREE_CHECK3 (T, RECORD_TYPE, UNION_TYPE, QUAL_UNION_TYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOT_RECORD_OR_UNION_CHECK
+parameter_list|(
+name|T
+parameter_list|)
+define|\
+value|TREE_NOT_CHECK3 (T, RECORD_TYPE, UNION_TYPE, QUAL_UNION_TYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUMERICAL_TYPE_CHECK
+parameter_list|(
+name|T
+parameter_list|)
+define|\
+value|TREE_CHECK4 (T, INTEGER_TYPE, ENUMERAL_TYPE, BOOLEAN_TYPE, REAL_TYPE)
 end_define
 
 begin_comment
@@ -907,7 +2297,21 @@ name|TYPE_HASH
 parameter_list|(
 name|TYPE
 parameter_list|)
-value|((size_t) (TYPE)& 0777777)
+value|(TYPE_UID (TYPE))
+end_define
+
+begin_comment
+comment|/* A simple hash function for an arbitrary tree node.  This must not be    used in hash tables which are saved to a PCH.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TREE_HASH
+parameter_list|(
+name|NODE
+parameter_list|)
+value|((size_t) (NODE)& 0777777)
 end_define
 
 begin_comment
@@ -951,22 +2355,7 @@ parameter_list|(
 name|EXP
 parameter_list|)
 define|\
-value|while ((TREE_CODE (EXP) == NOP_EXPR				\ 	  || TREE_CODE (EXP) == CONVERT_EXPR			\ 	  || TREE_CODE (EXP) == NON_LVALUE_EXPR)		\&& TREE_OPERAND (EXP, 0) != error_mark_node		\&& (TYPE_MODE (TREE_TYPE (EXP))			\ 	     == TYPE_MODE (TREE_TYPE (TREE_OPERAND (EXP, 0))))	\&& (TREE_UNSIGNED (TREE_TYPE (EXP))			\ 	     == TREE_UNSIGNED (TREE_TYPE (TREE_OPERAND (EXP, 0))))) \     (EXP) = TREE_OPERAND (EXP, 0)
-end_define
-
-begin_comment
-comment|/* Like STRIP_NOPS, but don't alter the TREE_TYPE main variant either.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STRIP_MAIN_TYPE_NOPS
-parameter_list|(
-name|EXP
-parameter_list|)
-define|\
-value|while ((TREE_CODE (EXP) == NOP_EXPR					\ 	  || TREE_CODE (EXP) == CONVERT_EXPR				\ 	  || TREE_CODE (EXP) == NON_LVALUE_EXPR)			\&& TREE_OPERAND (EXP, 0) != error_mark_node			\&& (TYPE_MAIN_VARIANT (TREE_TYPE (EXP))			\ 	     == TYPE_MAIN_VARIANT (TREE_TYPE (TREE_OPERAND (EXP, 0)))))	\     (EXP) = TREE_OPERAND (EXP, 0)
+value|while ((TREE_CODE (EXP) == NOP_EXPR				\ 	  || TREE_CODE (EXP) == CONVERT_EXPR			\ 	  || TREE_CODE (EXP) == NON_LVALUE_EXPR)		\&& TREE_OPERAND (EXP, 0) != error_mark_node		\&& (TYPE_MODE (TREE_TYPE (EXP))			\ 	     == TYPE_MODE (TREE_TYPE (TREE_OPERAND (EXP, 0))))	\&& (TYPE_UNSIGNED (TREE_TYPE (EXP))			\ 	     == TYPE_UNSIGNED (TREE_TYPE (TREE_OPERAND (EXP, 0))))) \     (EXP) = TREE_OPERAND (EXP, 0)
 end_define
 
 begin_comment
@@ -985,7 +2374,22 @@ value|while ((TREE_CODE (EXP) == NOP_EXPR				\ 	  || TREE_CODE (EXP) == CONVERT_
 end_define
 
 begin_comment
-comment|/* Nonzero if TYPE represents an integral type.  Note that we do not    include COMPLEX types here.  */
+comment|/* Remove unnecessary type conversions according to    tree_ssa_useless_type_conversion.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STRIP_USELESS_TYPE_CONVERSION
+parameter_list|(
+name|EXP
+parameter_list|)
+define|\
+value|while (tree_ssa_useless_type_conversion (EXP))			\ 	EXP = TREE_OPERAND (EXP, 0)
+end_define
+
+begin_comment
+comment|/* Nonzero if TYPE represents an integral type.  Note that we do not    include COMPLEX types here.  Keep these checks in ascending code    order.  */
 end_comment
 
 begin_define
@@ -996,7 +2400,7 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|(TREE_CODE (TYPE) == INTEGER_TYPE || TREE_CODE (TYPE) == ENUMERAL_TYPE  \    || TREE_CODE (TYPE) == BOOLEAN_TYPE || TREE_CODE (TYPE) == CHAR_TYPE)
+value|(TREE_CODE (TYPE) == ENUMERAL_TYPE  \    || TREE_CODE (TYPE) == BOOLEAN_TYPE \    || TREE_CODE (TYPE) == INTEGER_TYPE)
 end_define
 
 begin_comment
@@ -1029,7 +2433,22 @@ value|(TREE_CODE (TYPE) == COMPLEX_TYPE	\&& TREE_CODE (TREE_TYPE (TYPE)) == REAL
 end_define
 
 begin_comment
-comment|/* Nonzero if TYPE represents a floating-point type, including complex    floating-point types.  */
+comment|/* Nonzero if TYPE represents a vector floating-point type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VECTOR_FLOAT_TYPE_P
+parameter_list|(
+name|TYPE
+parameter_list|)
+define|\
+value|(TREE_CODE (TYPE) == VECTOR_TYPE	\&& TREE_CODE (TREE_TYPE (TYPE)) == REAL_TYPE)
+end_define
+
+begin_comment
+comment|/* Nonzero if TYPE represents a floating-point type, including complex    and vector floating-point types.  The vector and complex check does    not use the previous two macros to enable early folding.  */
 end_comment
 
 begin_define
@@ -1040,11 +2459,26 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|(SCALAR_FLOAT_TYPE_P (TYPE) || COMPLEX_FLOAT_TYPE_P (TYPE))
+value|(SCALAR_FLOAT_TYPE_P (TYPE)			\    || ((TREE_CODE (TYPE) == COMPLEX_TYPE 	\         || TREE_CODE (TYPE) == VECTOR_TYPE)	\&& SCALAR_FLOAT_TYPE_P (TREE_TYPE (TYPE))))
 end_define
 
 begin_comment
-comment|/* Nonzero if TYPE represents an aggregate (multi-component) type.  */
+comment|/* Nonzero if TYPE represents a decimal floating-point type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECIMAL_FLOAT_TYPE_P
+parameter_list|(
+name|TYPE
+parameter_list|)
+define|\
+value|(SCALAR_FLOAT_TYPE_P (TYPE)			\&& DECIMAL_FLOAT_MODE_P (TYPE_MODE (TYPE)))
+end_define
+
+begin_comment
+comment|/* Nonzero if TYPE represents an aggregate (multi-component) type.    Keep these checks in ascending code order.  */
 end_comment
 
 begin_define
@@ -1055,11 +2489,11 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|(TREE_CODE (TYPE) == ARRAY_TYPE || TREE_CODE (TYPE) == RECORD_TYPE \    || TREE_CODE (TYPE) == UNION_TYPE || TREE_CODE (TYPE) == QUAL_UNION_TYPE \    || TREE_CODE (TYPE) == SET_TYPE)
+value|(TREE_CODE (TYPE) == ARRAY_TYPE || TREE_CODE (TYPE) == RECORD_TYPE \    || TREE_CODE (TYPE) == UNION_TYPE || TREE_CODE (TYPE) == QUAL_UNION_TYPE)
 end_define
 
 begin_comment
-comment|/* Nonzero if TYPE represents a pointer or reference type.    (It should be renamed to INDIRECT_TYPE_P.)  */
+comment|/* Nonzero if TYPE represents a pointer or reference type.    (It should be renamed to INDIRECT_TYPE_P.)  Keep these checks in    ascending code order.  */
 end_comment
 
 begin_define
@@ -1131,20 +2565,6 @@ define|\
 value|(COMPLETE_TYPE_P (TREE_CODE (NODE) == ARRAY_TYPE ? TREE_TYPE (NODE) : (NODE)))
 end_define
 
-begin_comment
-comment|/* Nonzero if TYPE represents a type.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TYPE_P
-parameter_list|(
-name|TYPE
-parameter_list|)
-value|(TREE_CODE_CLASS (TREE_CODE (TYPE)) == 't')
-end_define
-
 begin_escape
 end_escape
 
@@ -1167,7 +2587,36 @@ value|((NODE)->common.addressable_flag)
 end_define
 
 begin_comment
-comment|/* In a VAR_DECL, nonzero means allocate static storage.    In a FUNCTION_DECL, nonzero if function has been defined.    In a CONSTRUCTOR, nonzero means allocate static storage.  */
+comment|/* Set on a CALL_EXPR if the call is in a tail position, ie. just before the    exit of a function.  Calls for which this is true are candidates for tail    call optimizations.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALL_EXPR_TAILCALL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(CALL_EXPR_CHECK(NODE)->common.addressable_flag)
+end_define
+
+begin_comment
+comment|/* Used as a temporary field on a CASE_LABEL_EXPR to indicate that the    CASE_LOW operand has been processed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CASE_LOW_SEEN
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(CASE_LABEL_EXPR_CHECK (NODE)->common.addressable_flag)
+end_define
+
+begin_comment
+comment|/* In a VAR_DECL, nonzero means allocate static storage.    In a FUNCTION_DECL, nonzero if function has been defined.    In a CONSTRUCTOR, nonzero means allocate static storage.     ??? This is also used in lots of other nodes in unclear ways which    should be cleaned up some day.  */
 end_comment
 
 begin_define
@@ -1181,7 +2630,7 @@ value|((NODE)->common.static_flag)
 end_define
 
 begin_comment
-comment|/* In a TARGET_EXPR, WITH_CLEANUP_EXPR, CLEANUP_STMT, or element of a    block's cleanup list, means that the pertinent cleanup should only be    executed if an exception is thrown, not on normal exit of its scope.  */
+comment|/* In a TARGET_EXPR, WITH_CLEANUP_EXPR, means that the pertinent cleanup    should only be executed if an exception is thrown, not on normal exit    of its scope.  */
 end_comment
 
 begin_define
@@ -1195,31 +2644,32 @@ value|((NODE)->common.static_flag)
 end_define
 
 begin_comment
-comment|/* In a CONVERT_EXPR, NOP_EXPR or COMPOUND_EXPR, this means the node was    made implicitly and should not lead to an "unused value" warning.  */
+comment|/* Used as a temporary field on a CASE_LABEL_EXPR to indicate that the    CASE_HIGH operand has been processed.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TREE_NO_UNUSED_WARNING
+name|CASE_HIGH_SEEN
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->common.static_flag)
+define|\
+value|(CASE_LABEL_EXPR_CHECK (NODE)->common.static_flag)
 end_define
 
 begin_comment
-comment|/* Nonzero for a TREE_LIST or TREE_VEC node means that the derivation    chain is via a `virtual' declaration.  */
+comment|/* In an expr node (usually a conversion) this means the node was made    implicitly and should not lead to any sort of warning.  In a decl node,    warnings concerning the decl should be suppressed.  This is used at    least for used-before-set warnings, and it set after one warning is    emitted.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TREE_VIA_VIRTUAL
+name|TREE_NO_WARNING
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->common.static_flag)
+value|((NODE)->common.nowarning_flag)
 end_define
 
 begin_comment
@@ -1233,7 +2683,7 @@ name|TREE_CONSTANT_OVERFLOW
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->common.static_flag)
+value|(CST_CHECK (NODE)->common.static_flag)
 end_define
 
 begin_comment
@@ -1252,7 +2702,22 @@ value|(IDENTIFIER_NODE_CHECK (NODE)->common.static_flag)
 end_define
 
 begin_comment
-comment|/* In an INTEGER_CST, REAL_CST, COMPLEX_CST, or VECTOR_CST, this means    there was an overflow in folding, and no warning has been issued    for this subexpression.  TREE_OVERFLOW implies    TREE_CONSTANT_OVERFLOW, but not vice versa.  */
+comment|/* Nonzero in a pointer or reference type means the data pointed to    by this type can alias anything.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_REF_CAN_ALIAS_ALL
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(PTR_OR_REF_CHECK (NODE)->common.static_flag)
+end_define
+
+begin_comment
+comment|/* In an INTEGER_CST, REAL_CST, COMPLEX_CST, or VECTOR_CST, this means    there was an overflow in folding, and no warning has been issued    for this subexpression.  TREE_OVERFLOW implies TREE_CONSTANT_OVERFLOW,    but not vice versa.  */
 end_comment
 
 begin_define
@@ -1262,11 +2727,11 @@ name|TREE_OVERFLOW
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->common.public_flag)
+value|(CST_CHECK (NODE)->common.public_flag)
 end_define
 
 begin_comment
-comment|/* In a VAR_DECL or FUNCTION_DECL,    nonzero means name is to be accessible from outside this module.    In an IDENTIFIER_NODE, nonzero means an external declaration    accessible from outside this module was previously seen    for this name in an inner scope.  */
+comment|/* In a VAR_DECL, FUNCTION_DECL, NAMESPACE_DECL or TYPE_DECL,    nonzero means name is to be accessible from outside this module.    In an IDENTIFIER_NODE, nonzero means an external declaration    accessible from outside this module was previously seen    for this name in an inner scope.  */
 end_comment
 
 begin_define
@@ -1280,7 +2745,36 @@ value|((NODE)->common.public_flag)
 end_define
 
 begin_comment
-comment|/* In any expression, nonzero means it has side effects or reevaluation    of the whole expression could produce a different value.    This is set if any subexpression is a function call, a side effect    or a reference to a volatile variable.    In a ..._DECL, this is set only if the declaration said `volatile'.  */
+comment|/* In a _TYPE, indicates whether TYPE_CACHED_VALUES contains a vector    of cached values, or is something else.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_CACHED_VALUES_P
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TYPE_CHECK(NODE)->common.public_flag)
+end_define
+
+begin_comment
+comment|/* In a SAVE_EXPR, indicates that the original expression has already    been substituted with a VAR_DECL that contains the value.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAVE_EXPR_RESOLVED_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(TREE_CHECK (NODE, SAVE_EXPR)->common.public_flag)
+end_define
+
+begin_comment
+comment|/* In any expression, decl, or constant, nonzero means it has side effects or    reevaluation of the whole expression could produce a different value.    This is set if any subexpression is a function call, a side effect or a    reference to a volatile variable.  In a ..._DECL, this is set only if the    declaration said `volatile'.  This will never be set for a constant.  */
 end_comment
 
 begin_define
@@ -1290,11 +2784,26 @@ name|TREE_SIDE_EFFECTS
 parameter_list|(
 name|NODE
 parameter_list|)
+define|\
+value|(NON_TYPE_CHECK (NODE)->common.side_effects_flag)
+end_define
+
+begin_comment
+comment|/* In a LABEL_DECL, nonzero means this label had its address taken    and therefore can never be deleted and is a jump target for    computed gotos.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FORCED_LABEL
+parameter_list|(
+name|NODE
+parameter_list|)
 value|((NODE)->common.side_effects_flag)
 end_define
 
 begin_comment
-comment|/* Nonzero means this expression is volatile in the C sense:    its address should be of type `volatile WHATEVER *'.    In other words, the declared item is volatile qualified.    This is used in _DECL nodes and _REF nodes.     In a ..._TYPE node, means this type is volatile-qualified.    But use TYPE_VOLATILE instead of this macro when the node is a type,    because eventually we may make that a different bit.     If this bit is set in an expression, so is TREE_SIDE_EFFECTS.  */
+comment|/* Nonzero means this expression is volatile in the C sense:    its address should be of type `volatile WHATEVER *'.    In other words, the declared item is volatile qualified.    This is used in _DECL nodes and _REF nodes.    On a FUNCTION_DECL node, this means the function does not    return normally.  This is the same effect as setting    the attribute noreturn on the function in C.     In a ..._TYPE node, means this type is volatile-qualified.    But use TYPE_VOLATILE instead of this macro when the node is a type,    because eventually we may make that a different bit.     If this bit is set in an expression, so is TREE_SIDE_EFFECTS.  */
 end_comment
 
 begin_define
@@ -1308,7 +2817,21 @@ value|((NODE)->common.volatile_flag)
 end_define
 
 begin_comment
-comment|/* In a VAR_DECL, PARM_DECL or FIELD_DECL, or any kind of ..._REF node,    nonzero means it may not be the lhs of an assignment.    In a ..._TYPE node, means this type is const-qualified    (but the macro TYPE_READONLY should be used instead of this macro    when the node is a type).  */
+comment|/* Nonzero means this node will not trap.  In an INDIRECT_REF, means    accessing the memory pointed to won't generate a trap.  However,    this only applies to an object when used appropriately: it doesn't    mean that writing a READONLY mem won't trap. Similarly for    ALIGN_INDIRECT_REF and MISALIGNED_INDIRECT_REF.     In ARRAY_REF and ARRAY_RANGE_REF means that we know that the index    (or slice of the array) always belongs to the range of the array.    I.e. that the access will not trap, provided that the access to    the base to the array will not trap.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TREE_THIS_NOTRAP
+parameter_list|(
+name|NODE
+parameter_list|)
+value|((NODE)->common.nothrow_flag)
+end_define
+
+begin_comment
+comment|/* In a VAR_DECL, PARM_DECL or FIELD_DECL, or any kind of ..._REF node,    nonzero means it may not be the lhs of an assignment.  */
 end_comment
 
 begin_define
@@ -1318,7 +2841,7 @@ name|TREE_READONLY
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->common.readonly_flag)
+value|(NON_TYPE_CHECK (NODE)->common.readonly_flag)
 end_define
 
 begin_comment
@@ -1332,11 +2855,12 @@ name|TREE_READONLY_DECL_P
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(TREE_READONLY (NODE)&& DECL_P (NODE))
+define|\
+value|(DECL_P (NODE)&& TREE_READONLY (NODE))
 end_define
 
 begin_comment
-comment|/* Value of expression is constant.    Always appears in all ..._CST nodes.    May also appear in an arithmetic expression, an ADDR_EXPR or a CONSTRUCTOR    if the value is constant.  */
+comment|/* Value of expression is constant.  Always on in all ..._CST nodes.  May    also appear in an expression or decl where the value is constant.  */
 end_comment
 
 begin_define
@@ -1346,36 +2870,68 @@ name|TREE_CONSTANT
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->common.constant_flag)
+value|(NON_TYPE_CHECK (NODE)->common.constant_flag)
 end_define
 
 begin_comment
-comment|/* In INTEGER_TYPE or ENUMERAL_TYPE nodes, means an unsigned type.    In FIELD_DECL nodes, means an unsigned bit field.  */
+comment|/* Nonzero if NODE, a type, has had its sizes gimplified.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TREE_UNSIGNED
+name|TYPE_SIZES_GIMPLIFIED
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->common.unsigned_flag)
+value|(TYPE_CHECK (NODE)->common.constant_flag)
 end_define
+
+begin_comment
+comment|/* In a decl (most significantly a FIELD_DECL), means an unsigned field.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|TYPE_TRAP_SIGNED
+name|DECL_UNSIGNED
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_COMMON_CHECK (NODE)->common.unsigned_flag)
+end_define
+
+begin_comment
+comment|/* In a BIT_FIELD_REF, means the bitfield is to be interpreted as unsigned.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIT_FIELD_REF_UNSIGNED
 parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(flag_trapv&& ! TREE_UNSIGNED (TYPE_CHECK (NODE)))
+value|(BIT_FIELD_REF_CHECK (NODE)->common.unsigned_flag)
 end_define
 
 begin_comment
-comment|/* Nonzero in a VAR_DECL means assembler code has been written.    Nonzero in a FUNCTION_DECL means that the function has been compiled.    This is interesting in an inline function, since it might not need    to be compiled separately.    Nonzero in a RECORD_TYPE, UNION_TYPE, QUAL_UNION_TYPE or ENUMERAL_TYPE    if the sdb debugging info for the type has been written.    In a BLOCK node, nonzero if reorder_blocks has already seen this block.  */
+comment|/* In integral and pointer types, means an unsigned type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_UNSIGNED
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TYPE_CHECK (NODE)->common.unsigned_flag)
+end_define
+
+begin_comment
+comment|/* Nonzero in a VAR_DECL means assembler code has been written.    Nonzero in a FUNCTION_DECL means that the function has been compiled.    This is interesting in an inline function, since it might not need    to be compiled separately.    Nonzero in a RECORD_TYPE, UNION_TYPE, QUAL_UNION_TYPE or ENUMERAL_TYPE    if the sdb debugging info for the type has been written.    In a BLOCK node, nonzero if reorder_blocks has already seen this block.    In an SSA_NAME node, nonzero if the SSA_NAME occurs in an abnormal    PHI node.  */
 end_comment
 
 begin_define
@@ -1389,7 +2945,7 @@ value|((NODE)->common.asm_written_flag)
 end_define
 
 begin_comment
-comment|/* Nonzero in a _DECL if the name is used in its scope.    Nonzero in an expr node means inhibit warning if value is unused.    In IDENTIFIER_NODEs, this means that some extern decl for this name    was used.  */
+comment|/* Nonzero in a _DECL if the name is used in its scope.    Nonzero in an expr node means inhibit warning if value is unused.    In IDENTIFIER_NODEs, this means that some extern decl for this name    was used.    In a BLOCK, this means that the block contains variables that are used.  */
 end_comment
 
 begin_define
@@ -1417,17 +2973,31 @@ value|((NODE)->common.nothrow_flag)
 end_define
 
 begin_comment
-comment|/* In a CALL_EXPR, means that the address of the return slot is part of the    argument list.  */
+comment|/* In a CALL_EXPR, means that it's safe to use the target of the call    expansion as the return slot for a call that returns in memory.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CALL_EXPR_HAS_RETURN_SLOT_ADDR
+name|CALL_EXPR_RETURN_SLOT_OPT
 parameter_list|(
 name|NODE
 parameter_list|)
 value|((NODE)->common.private_flag)
+end_define
+
+begin_comment
+comment|/* In a RESULT_DECL or PARM_DECL, means that it is passed by invisible    reference (and the TREE_TYPE is a pointer to the true type).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_BY_REFERENCE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_COMMON_CHECK (NODE)->common.private_flag)
 end_define
 
 begin_comment
@@ -1441,11 +3011,11 @@ name|CALL_FROM_THUNK_P
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->common.protected_flag)
+value|(CALL_EXPR_CHECK (NODE)->common.protected_flag)
 end_define
 
 begin_comment
-comment|/* In a type, nonzero means that all objects of the type are guaranteed by the    language or front-end to be properly aligned, so we can indicate that a MEM    of this type is aligned at least to the alignment of the type, even if it    doesn't appear that it is.  We see this, for example, in object-oriented    languages where a tag field may show this is an object of a more-aligned    variant of the more generic type.  */
+comment|/* In a type, nonzero means that all objects of the type are guaranteed by the    language or front-end to be properly aligned, so we can indicate that a MEM    of this type is aligned at least to the alignment of the type, even if it    doesn't appear that it is.  We see this, for example, in object-oriented    languages where a tag field may show this is an object of a more-aligned    variant of the more generic type.     In an SSA_NAME node, nonzero if the SSA_NAME node is on the SSA_NAME    freelist.  */
 end_comment
 
 begin_define
@@ -1487,7 +3057,7 @@ value|((NODE)->common.protected_flag)
 end_define
 
 begin_comment
-comment|/* Nonzero in an IDENTIFIER_NODE if the use of the name is defined as a    deprecated feature by __attribute__((deprecated)).  */
+comment|/* Nonzero in a _DECL if the use of the name is defined as a    deprecated feature by __attribute__((deprecated)).  */
 end_comment
 
 begin_define
@@ -1497,7 +3067,37 @@ name|TREE_DEPRECATED
 parameter_list|(
 name|NODE
 parameter_list|)
+define|\
 value|((NODE)->common.deprecated_flag)
+end_define
+
+begin_comment
+comment|/* Nonzero in an IDENTIFIER_NODE if the name is a local alias, whose    uses are to be substituted for uses of the TREE_CHAINed identifier.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDENTIFIER_TRANSPARENT_ALIAS
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(IDENTIFIER_NODE_CHECK (NODE)->common.deprecated_flag)
+end_define
+
+begin_comment
+comment|/* Value of expression is function invariant.  A strict subset of    TREE_CONSTANT, such an expression is constant over any one function    invocation, though not across different invocations.  May appear in    any expression node.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TREE_INVARIANT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|((NODE)->common.invariant_flag)
 end_define
 
 begin_comment
@@ -1654,20 +3254,9 @@ name|struct
 name|tree_common
 name|common
 decl_stmt|;
-comment|/* A sub-struct is necessary here because the function `const_hash'      wants to scan both words as a unit and taking the address of the      sub-struct yields the properly inclusive bounded pointer.  */
-struct|struct
-name|tree_int_cst_lowhi
-block|{
-name|unsigned
-name|HOST_WIDE_INT
-name|low
-decl_stmt|;
-name|HOST_WIDE_INT
-name|high
-decl_stmt|;
-block|}
+name|double_int
 name|int_cst
-struct|;
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -1751,7 +3340,8 @@ name|TREE_STRING_POINTER
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(STRING_CST_CHECK (NODE)->string.pointer)
+define|\
+value|((const char *)(STRING_CST_CHECK (NODE)->string.str))
 end_define
 
 begin_decl_stmt
@@ -1770,10 +3360,11 @@ decl_stmt|;
 name|int
 name|length
 decl_stmt|;
-specifier|const
 name|char
-modifier|*
-name|pointer
+name|str
+index|[
+literal|1
+index|]
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -1875,7 +3466,7 @@ end_escape
 begin_include
 include|#
 directive|include
-file|"hashtable.h"
+file|"symtab.h"
 end_include
 
 begin_comment
@@ -2090,107 +3681,6 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* Define fields and accessors for some nodes that represent expressions.  */
-end_comment
-
-begin_comment
-comment|/* In a SAVE_EXPR node.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAVE_EXPR_CONTEXT
-parameter_list|(
-name|NODE
-parameter_list|)
-value|TREE_OPERAND_CHECK_CODE (NODE, SAVE_EXPR, 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SAVE_EXPR_RTL
-parameter_list|(
-name|NODE
-parameter_list|)
-value|TREE_RTL_OPERAND_CHECK (NODE, SAVE_EXPR, 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SAVE_EXPR_NOPLACEHOLDER
-parameter_list|(
-name|NODE
-parameter_list|)
-value|TREE_UNSIGNED (SAVE_EXPR_CHECK (NODE))
-end_define
-
-begin_comment
-comment|/* Nonzero if the SAVE_EXPRs value should be kept, even if it occurs    both in normal code and in a handler.  (Normally, in a handler, all    SAVE_EXPRs are unsaved, meaning that their values are    recalculated.)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAVE_EXPR_PERSISTENT_P
-parameter_list|(
-name|NODE
-parameter_list|)
-value|TREE_ASM_WRITTEN (SAVE_EXPR_CHECK (NODE))
-end_define
-
-begin_comment
-comment|/* In a RTL_EXPR node.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RTL_EXPR_SEQUENCE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|TREE_RTL_OPERAND_CHECK (NODE, RTL_EXPR, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RTL_EXPR_RTL
-parameter_list|(
-name|NODE
-parameter_list|)
-value|TREE_RTL_OPERAND_CHECK (NODE, RTL_EXPR, 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RTL_EXPR_ALT_RTL
-parameter_list|(
-name|NODE
-parameter_list|)
-value|TREE_RTL_OPERAND_CHECK (NODE, RTL_EXPR, 2)
-end_define
-
-begin_comment
-comment|/* In a WITH_CLEANUP_EXPR node.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WITH_CLEANUP_EXPR_RTL
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|TREE_RTL_OPERAND_CHECK (NODE, WITH_CLEANUP_EXPR, 2)
-end_define
-
-begin_comment
 comment|/* In a CONSTRUCTOR node.  */
 end_comment
 
@@ -2201,7 +3691,158 @@ name|CONSTRUCTOR_ELTS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|TREE_OPERAND_CHECK_CODE (NODE, CONSTRUCTOR, 0)
+value|(CONSTRUCTOR_CHECK (NODE)->constructor.elts)
+end_define
+
+begin_comment
+comment|/* Iterate through the vector V of CONSTRUCTOR_ELT elements, yielding the    value of each element (stored within VAL). IX must be a scratch variable    of unsigned integer type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOR_EACH_CONSTRUCTOR_VALUE
+parameter_list|(
+name|V
+parameter_list|,
+name|IX
+parameter_list|,
+name|VAL
+parameter_list|)
+define|\
+value|for (IX = 0; (IX>= VEC_length (constructor_elt, V)) \ 	       ? false \ 	       : ((VAL = VEC_index (constructor_elt, V, IX)->value), \ 	       true); \        (IX)++)
+end_define
+
+begin_comment
+comment|/* Iterate through the vector V of CONSTRUCTOR_ELT elements, yielding both    the value of each element (stored within VAL) and its index (stored    within INDEX). IX must be a scratch variable of unsigned integer type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOR_EACH_CONSTRUCTOR_ELT
+parameter_list|(
+name|V
+parameter_list|,
+name|IX
+parameter_list|,
+name|INDEX
+parameter_list|,
+name|VAL
+parameter_list|)
+define|\
+value|for (IX = 0; (IX>= VEC_length (constructor_elt, V)) \ 	       ? false \ 	       : ((VAL = VEC_index (constructor_elt, V, IX)->value), \ 		  (INDEX = VEC_index (constructor_elt, V, IX)->index), \ 	       true); \        (IX)++)
+end_define
+
+begin_comment
+comment|/* Append a new constructor element to V, with the specified INDEX and VAL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONSTRUCTOR_APPEND_ELT
+parameter_list|(
+name|V
+parameter_list|,
+name|INDEX
+parameter_list|,
+name|VALUE
+parameter_list|)
+define|\
+value|do { \     constructor_elt *_ce___ = VEC_safe_push (constructor_elt, gc, V, NULL); \     _ce___->index = INDEX; \     _ce___->value = VALUE; \   } while (0)
+end_define
+
+begin_comment
+comment|/* A single element of a CONSTRUCTOR. VALUE holds the actual value of the    element. INDEX can optionally design the position of VALUE: in arrays,    it is the index where VALUE has to be placed; in structures, it is the    FIELD_DECL of the member.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|constructor_elt_d
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|tree
+name|index
+block|;
+name|tree
+name|value
+block|; }
+end_typedef
+
+begin_expr_stmt
+name|constructor_elt
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEF_VEC_O
+argument_list|(
+name|constructor_elt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEF_VEC_ALLOC_O
+argument_list|(
+name|constructor_elt
+argument_list|,
+name|gc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|struct
+name|tree_constructor
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_common
+name|common
+decl_stmt|;
+name|VEC
+argument_list|(
+name|constructor_elt
+argument_list|,
+name|gc
+argument_list|)
+operator|*
+name|elts
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* Define fields and accessors for some nodes that represent expressions.  */
+end_comment
+
+begin_comment
+comment|/* Nonzero if NODE is an empty statement (NOP_EXPR<0>).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_EMPTY_STMT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_CODE (NODE) == NOP_EXPR \&& VOID_TYPE_P (TREE_TYPE (NODE)) \&& integer_zerop (TREE_OPERAND (NODE, 0)))
 end_define
 
 begin_comment
@@ -2231,57 +3872,6 @@ value|(EXPR_CHECK (NODE)->exp.complexity)
 end_define
 
 begin_comment
-comment|/* In a LABELED_BLOCK_EXPR node.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LABELED_BLOCK_LABEL
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|TREE_OPERAND_CHECK_CODE (NODE, LABELED_BLOCK_EXPR, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LABELED_BLOCK_BODY
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|TREE_OPERAND_CHECK_CODE (NODE, LABELED_BLOCK_EXPR, 1)
-end_define
-
-begin_comment
-comment|/* In an EXIT_BLOCK_EXPR node.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXIT_BLOCK_LABELED_BLOCK
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|TREE_OPERAND_CHECK_CODE (NODE, EXIT_BLOCK_EXPR, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXIT_BLOCK_RETURN
-parameter_list|(
-name|NODE
-parameter_list|)
-value|TREE_OPERAND_CHECK_CODE (NODE, EXIT_BLOCK_EXPR, 1)
-end_define
-
-begin_comment
 comment|/* In a LOOP_EXPR node.  */
 end_comment
 
@@ -2295,102 +3885,192 @@ parameter_list|)
 value|TREE_OPERAND_CHECK_CODE (NODE, LOOP_EXPR, 0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_MAPPED_LOCATION
+end_ifdef
+
 begin_comment
-comment|/* In an EXPR_WITH_FILE_LOCATION node.  */
+comment|/* The source location of this expression.  Non-tree_exp nodes such as    decls and constants can be shared among multiple locations, so    return nothing.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EXPR_WFL_EMIT_LINE_NOTE
+name|EXPR_LOCATION
 parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(EXPR_WITH_FILE_LOCATION_CHECK (NODE)->common.public_flag)
+value|(EXPR_P (NODE) ? (NODE)->exp.locus : UNKNOWN_LOCATION)
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXPR_WFL_NODE
+name|SET_EXPR_LOCATION
 parameter_list|(
 name|NODE
+parameter_list|,
+name|FROM
 parameter_list|)
 define|\
-value|TREE_OPERAND_CHECK_CODE (NODE, EXPR_WITH_FILE_LOCATION, 0)
+value|(EXPR_CHECK (NODE)->exp.locus = (FROM))
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXPR_WFL_FILENAME_NODE
+name|EXPR_HAS_LOCATION
 parameter_list|(
 name|NODE
 parameter_list|)
-define|\
-value|TREE_OPERAND_CHECK_CODE (NODE, EXPR_WITH_FILE_LOCATION, 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXPR_WFL_FILENAME
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|IDENTIFIER_POINTER (EXPR_WFL_FILENAME_NODE (NODE))
+value|(EXPR_LOCATION (NODE) != UNKNOWN_LOCATION)
 end_define
 
 begin_comment
-comment|/* ??? Java uses this in all expressions.  */
+comment|/* EXPR_LOCUS and SET_EXPR_LOCUS are deprecated.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EXPR_WFL_LINECOL
+name|EXPR_LOCUS
 parameter_list|(
 name|NODE
-parameter_list|)
-value|(EXPR_CHECK (NODE)->exp.complexity)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXPR_WFL_LINENO
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(EXPR_WFL_LINECOL (NODE)>> 12)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXPR_WFL_COLNO
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(EXPR_WFL_LINECOL (NODE)& 0xfff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXPR_WFL_SET_LINECOL
-parameter_list|(
-name|NODE
-parameter_list|,
-name|LINE
-parameter_list|,
-name|COL
 parameter_list|)
 define|\
-value|(EXPR_WFL_LINECOL(NODE) = ((LINE)<< 12) | ((COL)& 0xfff))
+value|(EXPR_P (NODE) ?&(NODE)->exp.locus : (location_t *)NULL)
 end_define
+
+begin_define
+define|#
+directive|define
+name|SET_EXPR_LOCUS
+parameter_list|(
+name|NODE
+parameter_list|,
+name|FROM
+parameter_list|)
+define|\
+value|do { source_location *loc_tmp = FROM; \        EXPR_CHECK (NODE)->exp.locus \        = loc_tmp == NULL ? UNKNOWN_LOCATION : *loc_tmp; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPR_FILENAME
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|LOCATION_FILE (EXPR_CHECK (NODE)->exp.locus)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPR_LINENO
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|LOCATION_LINE (EXPR_CHECK (NODE)->exp.locus)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* The source location of this expression.  Non-tree_exp nodes such as    decls and constants can be shared among multiple locations, so    return nothing.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXPR_LOCUS
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(EXPR_P (NODE) ? (NODE)->exp.locus : (location_t *)NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_EXPR_LOCUS
+parameter_list|(
+name|NODE
+parameter_list|,
+name|FROM
+parameter_list|)
+define|\
+value|(EXPR_CHECK (NODE)->exp.locus = (FROM))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_EXPR_LOCATION
+parameter_list|(
+name|NODE
+parameter_list|,
+name|FROM
+parameter_list|)
+value|annotate_with_locus (NODE, FROM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPR_FILENAME
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(EXPR_CHECK (NODE)->exp.locus->file)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPR_LINENO
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(EXPR_CHECK (NODE)->exp.locus->line)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPR_HAS_LOCATION
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(EXPR_LOCUS (NODE) != NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPR_LOCATION
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(EXPR_HAS_LOCATION(NODE) ? *(NODE)->exp.locus : UNKNOWN_LOCATION)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* In a TARGET_EXPR node.  */
@@ -2426,6 +4106,897 @@ parameter_list|)
 value|TREE_OPERAND_CHECK_CODE (NODE, TARGET_EXPR, 2)
 end_define
 
+begin_comment
+comment|/* DECL_EXPR accessor. This gives access to the DECL associated with    the given declaration statement.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_EXPR_DECL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (DECL_EXPR_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXIT_EXPR_COND
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (EXIT_EXPR_CHECK (NODE), 0)
+end_define
+
+begin_comment
+comment|/* SWITCH_EXPR accessors. These give access to the condition, body and    original condition type (before any compiler conversions)    of the switch statement, respectively.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWITCH_COND
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (SWITCH_EXPR_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWITCH_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (SWITCH_EXPR_CHECK (NODE), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWITCH_LABELS
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (SWITCH_EXPR_CHECK (NODE), 2)
+end_define
+
+begin_comment
+comment|/* CASE_LABEL_EXPR accessors. These give access to the high and low values    of a case label, respectively.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CASE_LOW
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (CASE_LABEL_EXPR_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CASE_HIGH
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (CASE_LABEL_EXPR_CHECK (NODE), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CASE_LABEL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (CASE_LABEL_EXPR_CHECK (NODE), 2)
+end_define
+
+begin_comment
+comment|/* The operands of a TARGET_MEM_REF.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMR_SYMBOL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_OPERAND (TARGET_MEM_REF_CHECK (NODE), 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMR_BASE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_OPERAND (TARGET_MEM_REF_CHECK (NODE), 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMR_INDEX
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_OPERAND (TARGET_MEM_REF_CHECK (NODE), 2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMR_STEP
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_OPERAND (TARGET_MEM_REF_CHECK (NODE), 3))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMR_OFFSET
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_OPERAND (TARGET_MEM_REF_CHECK (NODE), 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMR_ORIGINAL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_OPERAND (TARGET_MEM_REF_CHECK (NODE), 5))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMR_TAG
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_OPERAND (TARGET_MEM_REF_CHECK (NODE), 6))
+end_define
+
+begin_comment
+comment|/* The operands of a BIND_EXPR.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIND_EXPR_VARS
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_OPERAND (BIND_EXPR_CHECK (NODE), 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIND_EXPR_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_OPERAND (BIND_EXPR_CHECK (NODE), 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIND_EXPR_BLOCK
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_OPERAND (BIND_EXPR_CHECK (NODE), 2))
+end_define
+
+begin_comment
+comment|/* GOTO_EXPR accessor. This gives access to the label associated with    a goto statement.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GOTO_DESTINATION
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND ((NODE), 0)
+end_define
+
+begin_comment
+comment|/* ASM_EXPR accessors. ASM_STRING returns a STRING_CST for the    instruction (e.g., "mov x, y"). ASM_OUTPUTS, ASM_INPUTS, and    ASM_CLOBBERS represent the outputs, inputs, and clobbers for the    statement.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_STRING
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (ASM_EXPR_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUTS
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (ASM_EXPR_CHECK (NODE), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_INPUTS
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (ASM_EXPR_CHECK (NODE), 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_CLOBBERS
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (ASM_EXPR_CHECK (NODE), 3)
+end_define
+
+begin_comment
+comment|/* Nonzero if we want to create an ASM_INPUT instead of an    ASM_OPERAND with no operands.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_INPUT_P
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_STATIC (NODE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_VOLATILE_P
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_PUBLIC (NODE))
+end_define
+
+begin_comment
+comment|/* COND_EXPR accessors.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COND_EXPR_COND
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_OPERAND (COND_EXPR_CHECK (NODE), 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|COND_EXPR_THEN
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_OPERAND (COND_EXPR_CHECK (NODE), 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|COND_EXPR_ELSE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_OPERAND (COND_EXPR_CHECK (NODE), 2))
+end_define
+
+begin_comment
+comment|/* LABEL_EXPR accessor. This gives access to the label associated with    the given label expression.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LABEL_EXPR_LABEL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (LABEL_EXPR_CHECK (NODE), 0)
+end_define
+
+begin_comment
+comment|/* VDEF_EXPR accessors are specified in tree-flow.h, along with the other    accessors for SSA operands.  */
+end_comment
+
+begin_comment
+comment|/* CATCH_EXPR accessors.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CATCH_TYPES
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (CATCH_EXPR_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CATCH_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (CATCH_EXPR_CHECK (NODE), 1)
+end_define
+
+begin_comment
+comment|/* EH_FILTER_EXPR accessors.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EH_FILTER_TYPES
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (EH_FILTER_EXPR_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EH_FILTER_FAILURE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (EH_FILTER_EXPR_CHECK (NODE), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EH_FILTER_MUST_NOT_THROW
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_STATIC (EH_FILTER_EXPR_CHECK (NODE))
+end_define
+
+begin_comment
+comment|/* OBJ_TYPE_REF accessors.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJ_TYPE_REF_EXPR
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OBJ_TYPE_REF_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OBJ_TYPE_REF_OBJECT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OBJ_TYPE_REF_CHECK (NODE), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OBJ_TYPE_REF_TOKEN
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OBJ_TYPE_REF_CHECK (NODE), 2)
+end_define
+
+begin_comment
+comment|/* ASSERT_EXPR accessors.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASSERT_EXPR_VAR
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (ASSERT_EXPR_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSERT_EXPR_COND
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (ASSERT_EXPR_CHECK (NODE), 1)
+end_define
+
+begin_comment
+comment|/* OpenMP directive and clause accessors.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OMP_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|TREE_OPERAND (TREE_RANGE_CHECK (NODE, OMP_PARALLEL, OMP_CRITICAL), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSES
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|TREE_OPERAND (TREE_RANGE_CHECK (NODE, OMP_PARALLEL, OMP_SINGLE), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_PARALLEL_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_PARALLEL_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_PARALLEL_CLAUSES
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_PARALLEL_CHECK (NODE), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_PARALLEL_FN
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_PARALLEL_CHECK (NODE), 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_PARALLEL_DATA_ARG
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_PARALLEL_CHECK (NODE), 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_FOR_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_FOR_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_FOR_CLAUSES
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_FOR_CHECK (NODE), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_FOR_INIT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_FOR_CHECK (NODE), 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_FOR_COND
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_FOR_CHECK (NODE), 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_FOR_INCR
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_FOR_CHECK (NODE), 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_FOR_PRE_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_FOR_CHECK (NODE), 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_SECTIONS_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_SECTIONS_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_SECTIONS_CLAUSES
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_SECTIONS_CHECK (NODE), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_SECTION_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_SECTION_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_SINGLE_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_SINGLE_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_SINGLE_CLAUSES
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_SINGLE_CHECK (NODE), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_MASTER_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_MASTER_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_ORDERED_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_ORDERED_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CRITICAL_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_CRITICAL_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CRITICAL_NAME
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (OMP_CRITICAL_CHECK (NODE), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_CHAIN
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_CHAIN (OMP_CLAUSE_CHECK (NODE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_DECL
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|OMP_CLAUSE_OPERAND (OMP_CLAUSE_RANGE_CHECK (OMP_CLAUSE_CHECK (NODE),	\ 					      OMP_CLAUSE_PRIVATE,	\ 	                                      OMP_CLAUSE_COPYPRIVATE), 0)
+end_define
+
+begin_comment
+comment|/* True on an OMP_SECTION statement that was the last lexical member.    This status is meaningful in the implementation of lastprivate.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OMP_SECTION_LAST
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|TREE_PRIVATE (OMP_SECTION_CHECK (NODE))
+end_define
+
+begin_comment
+comment|/* True on an OMP_RETURN statement if the return does not require a    thread synchronization via some sort of barrier.  The exact barrier    that would otherwise be emitted is dependent on the OMP statement    with which this return is associated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OMP_RETURN_NOWAIT
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|TREE_PRIVATE (OMP_RETURN_CHECK (NODE))
+end_define
+
+begin_comment
+comment|/* True on an OMP_PARALLEL statement if it represents an explicit    combined parallel work-sharing constructs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OMP_PARALLEL_COMBINED
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|TREE_PRIVATE (OMP_PARALLEL_CHECK (NODE))
+end_define
+
+begin_comment
+comment|/* True on a PRIVATE clause if its decl is kept around for debugging    information only and its DECL_VALUE_EXPR is supposed to point    to what it has been remapped to.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_PRIVATE_DEBUG
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|TREE_PUBLIC (OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_PRIVATE))
+end_define
+
+begin_comment
+comment|/* True on a LASTPRIVATE clause if a FIRSTPRIVATE clause for the same    decl is present in the chain.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_LASTPRIVATE_FIRSTPRIVATE
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|TREE_PUBLIC (OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_LASTPRIVATE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_IF_EXPR
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|OMP_CLAUSE_OPERAND (OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_IF), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_NUM_THREADS_EXPR
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|OMP_CLAUSE_OPERAND (OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_NUM_THREADS),0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_SCHEDULE_CHUNK_EXPR
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|OMP_CLAUSE_OPERAND (OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_SCHEDULE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_REDUCTION_CODE
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_REDUCTION)->omp_clause.subcode.reduction_code)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_REDUCTION_INIT
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|OMP_CLAUSE_OPERAND (OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_REDUCTION), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_REDUCTION_MERGE
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|OMP_CLAUSE_OPERAND (OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_REDUCTION), 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_REDUCTION_PLACEHOLDER
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|OMP_CLAUSE_OPERAND (OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_REDUCTION), 3)
+end_define
+
+begin_enum
+enum|enum
+name|omp_clause_schedule_kind
+block|{
+name|OMP_CLAUSE_SCHEDULE_STATIC
+block|,
+name|OMP_CLAUSE_SCHEDULE_DYNAMIC
+block|,
+name|OMP_CLAUSE_SCHEDULE_GUIDED
+block|,
+name|OMP_CLAUSE_SCHEDULE_RUNTIME
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_SCHEDULE_KIND
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_SCHEDULE)->omp_clause.subcode.schedule_kind)
+end_define
+
+begin_enum
+enum|enum
+name|omp_clause_default_kind
+block|{
+name|OMP_CLAUSE_DEFAULT_UNSPECIFIED
+block|,
+name|OMP_CLAUSE_DEFAULT_SHARED
+block|,
+name|OMP_CLAUSE_DEFAULT_NONE
+block|,
+name|OMP_CLAUSE_DEFAULT_PRIVATE
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_DEFAULT_KIND
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_DEFAULT)->omp_clause.subcode.default_kind)
+end_define
+
 begin_decl_stmt
 name|struct
 name|tree_exp
@@ -2439,8 +5010,14 @@ name|struct
 name|tree_common
 name|common
 decl_stmt|;
+name|source_locus
+name|locus
+decl_stmt|;
 name|int
 name|complexity
+decl_stmt|;
+name|tree
+name|block
 decl_stmt|;
 name|tree
 name|GTY
@@ -2471,6 +5048,573 @@ end_empty_stmt
 
 begin_escape
 end_escape
+
+begin_comment
+comment|/* SSA_NAME accessors.  */
+end_comment
+
+begin_comment
+comment|/* Returns the variable being referenced.  Once released, this is the    only field that can be relied upon.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSA_NAME_VAR
+parameter_list|(
+name|NODE
+parameter_list|)
+value|SSA_NAME_CHECK (NODE)->ssa_name.var
+end_define
+
+begin_comment
+comment|/* Returns the statement which defines this reference.   Note that    we use the same field when chaining SSA_NAME nodes together on    the SSA_NAME freelist.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSA_NAME_DEF_STMT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|SSA_NAME_CHECK (NODE)->common.chain
+end_define
+
+begin_comment
+comment|/* Returns the SSA version number of this SSA name.  Note that in    tree SSA, version numbers are not per variable and may be recycled.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSA_NAME_VERSION
+parameter_list|(
+name|NODE
+parameter_list|)
+value|SSA_NAME_CHECK (NODE)->ssa_name.version
+end_define
+
+begin_comment
+comment|/* Nonzero if this SSA name occurs in an abnormal PHI.  SSA_NAMES are    never output, so we can safely use the ASM_WRITTEN_FLAG for this    status bit.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSA_NAME_OCCURS_IN_ABNORMAL_PHI
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|SSA_NAME_CHECK (NODE)->common.asm_written_flag
+end_define
+
+begin_comment
+comment|/* Nonzero if this SSA_NAME expression is currently on the free list of    SSA_NAMES.  Using NOTHROW_FLAG seems reasonably safe since throwing    has no meaning for an SSA_NAME.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSA_NAME_IN_FREE_LIST
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|SSA_NAME_CHECK (NODE)->common.nothrow_flag
+end_define
+
+begin_comment
+comment|/* Attributes for SSA_NAMEs for pointer-type variables.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSA_NAME_PTR_INFO
+parameter_list|(
+name|N
+parameter_list|)
+define|\
+value|SSA_NAME_CHECK (N)->ssa_name.ptr_info
+end_define
+
+begin_comment
+comment|/* Get the value of this SSA_NAME, if available.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSA_NAME_VALUE
+parameter_list|(
+name|N
+parameter_list|)
+define|\
+value|SSA_NAME_CHECK (N)->ssa_name.value_handle
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TREE_FLOW_H
+end_ifndef
+
+begin_struct_decl
+struct_decl|struct
+name|ptr_info_def
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Immediate use linking structure.  This structure is used for maintaining    a doubly linked list of uses of an SSA_NAME.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ssa_use_operand_d
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|ssa_use_operand_d
+modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|skip
+argument_list|(
+literal|""
+argument_list|)
+operator|)
+argument_list|)
+name|prev
+block|;
+name|struct
+name|ssa_use_operand_d
+modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|skip
+argument_list|(
+literal|""
+argument_list|)
+operator|)
+argument_list|)
+name|next
+block|;
+name|tree
+name|GTY
+argument_list|(
+operator|(
+name|skip
+argument_list|(
+literal|""
+argument_list|)
+operator|)
+argument_list|)
+name|stmt
+block|;
+name|tree
+modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|skip
+argument_list|(
+literal|""
+argument_list|)
+operator|)
+argument_list|)
+name|use
+block|; }
+end_typedef
+
+begin_expr_stmt
+name|ssa_use_operand_t
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Return the immediate_use information for an SSA_NAME. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSA_NAME_IMM_USE_NODE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|SSA_NAME_CHECK (NODE)->ssa_name.imm_uses
+end_define
+
+begin_decl_stmt
+name|struct
+name|tree_ssa_name
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_common
+name|common
+decl_stmt|;
+comment|/* _DECL wrapped by this SSA name.  */
+name|tree
+name|var
+decl_stmt|;
+comment|/* SSA version number.  */
+name|unsigned
+name|int
+name|version
+decl_stmt|;
+comment|/* Pointer attributes used for alias analysis.  */
+name|struct
+name|ptr_info_def
+modifier|*
+name|ptr_info
+decl_stmt|;
+comment|/* Value for SSA name used by various passes.       Right now only invariants are allowed to persist beyond a pass in      this field; in the future we will allow VALUE_HANDLEs to persist      as well.  */
+name|tree
+name|value_handle
+decl_stmt|;
+comment|/* Immediate uses list for this SSA_NAME.  */
+name|struct
+name|ssa_use_operand_d
+name|imm_uses
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* In a PHI_NODE node.  */
+end_comment
+
+begin_comment
+comment|/* These 2 macros should be considered off limits for use by developers.  If    you wish to access the use or def fields of a PHI_NODE in the SSA    optimizers, use the accessor macros found in tree-ssa-operands.h.    These two macros are to be used only by those accessor macros, and other    select places where we *absolutely* must take the address of the tree.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHI_RESULT_TREE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|PHI_NODE_CHECK (NODE)->phi.result
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHI_ARG_DEF_TREE
+parameter_list|(
+name|NODE
+parameter_list|,
+name|I
+parameter_list|)
+value|PHI_NODE_ELT_CHECK (NODE, I).def
+end_define
+
+begin_comment
+comment|/* PHI_NODEs for each basic block are chained together in a single linked    list.  The head of the list is linked from the block annotation, and    the link to the next PHI is in PHI_CHAIN.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHI_CHAIN
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_CHAIN (PHI_NODE_CHECK (NODE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHI_NUM_ARGS
+parameter_list|(
+name|NODE
+parameter_list|)
+value|PHI_NODE_CHECK (NODE)->phi.num_args
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHI_ARG_CAPACITY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|PHI_NODE_CHECK (NODE)->phi.capacity
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHI_ARG_ELT
+parameter_list|(
+name|NODE
+parameter_list|,
+name|I
+parameter_list|)
+value|PHI_NODE_ELT_CHECK (NODE, I)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHI_ARG_EDGE
+parameter_list|(
+name|NODE
+parameter_list|,
+name|I
+parameter_list|)
+value|(EDGE_PRED (PHI_BB ((NODE)), (I)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHI_BB
+parameter_list|(
+name|NODE
+parameter_list|)
+value|PHI_NODE_CHECK (NODE)->phi.bb
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHI_ARG_IMM_USE_NODE
+parameter_list|(
+name|NODE
+parameter_list|,
+name|I
+parameter_list|)
+value|PHI_NODE_ELT_CHECK (NODE, I).imm_use
+end_define
+
+begin_decl_stmt
+name|struct
+name|phi_arg_d
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+comment|/* imm_use MUST be the first element in struct because we do some      pointer arithmetic with it.  See phi_arg_index_from_use.  */
+name|struct
+name|ssa_use_operand_d
+name|imm_use
+decl_stmt|;
+name|tree
+name|def
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+name|struct
+name|tree_phi_node
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_common
+name|common
+decl_stmt|;
+name|tree
+name|result
+decl_stmt|;
+name|int
+name|num_args
+decl_stmt|;
+name|int
+name|capacity
+decl_stmt|;
+comment|/* Basic block to that the phi node belongs.  */
+name|struct
+name|basic_block_def
+modifier|*
+name|bb
+decl_stmt|;
+comment|/* Arguments of the PHI node.  These are maintained in the same      order as predecessor edge vector BB->PREDS.  */
+name|struct
+name|phi_arg_d
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"((tree)&%h)->phi.num_args"
+argument_list|)
+operator|)
+argument_list|)
+name|a
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_escape
+end_escape
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_CODE
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(OMP_CLAUSE_CHECK (NODE))->omp_clause.code
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_SET_CODE
+parameter_list|(
+name|NODE
+parameter_list|,
+name|CODE
+parameter_list|)
+define|\
+value|((OMP_CLAUSE_CHECK (NODE))->omp_clause.code = (CODE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_CODE
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(OMP_CLAUSE_CHECK (NODE))->omp_clause.code
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMP_CLAUSE_OPERAND
+parameter_list|(
+name|NODE
+parameter_list|,
+name|I
+parameter_list|)
+define|\
+value|OMP_CLAUSE_ELT_CHECK (NODE, I)
+end_define
+
+begin_decl_stmt
+name|struct
+name|tree_omp_clause
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_common
+name|common
+decl_stmt|;
+name|enum
+name|omp_clause_code
+name|code
+decl_stmt|;
+union|union
+name|omp_clause_subcode
+block|{
+name|enum
+name|omp_clause_default_kind
+name|default_kind
+decl_stmt|;
+name|enum
+name|omp_clause_schedule_kind
+name|schedule_kind
+decl_stmt|;
+name|enum
+name|tree_code
+name|reduction_code
+decl_stmt|;
+block|}
+name|GTY
+argument_list|(
+operator|(
+name|skip
+operator|)
+argument_list|)
+name|subcode
+union|;
+name|tree
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"omp_clause_num_ops[OMP_CLAUSE_CODE ((tree)&%h)]"
+argument_list|)
+operator|)
+argument_list|)
+name|ops
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_escape
+end_escape
+
+begin_struct_decl
+struct_decl|struct
+name|varray_head_tag
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/* In a BLOCK node.  */
@@ -2593,6 +5737,20 @@ parameter_list|)
 value|(BLOCK_CHECK (NODE)->block.fragment_chain)
 end_define
 
+begin_comment
+comment|/* For an inlined function, this gives the location where it was called    from.  This is only set in the top level block, which corresponds to the    inlined function scope.  This is used in the debug output routines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLOCK_SOURCE_LOCATION
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(BLOCK_CHECK (NODE)->block.locus)
+end_define
+
 begin_decl_stmt
 name|struct
 name|tree_block
@@ -2639,6 +5797,9 @@ decl_stmt|;
 name|tree
 name|fragment_chain
 decl_stmt|;
+name|location_t
+name|locus
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -2654,7 +5815,7 @@ comment|/* Define fields and accessors for nodes representing data types.  */
 end_comment
 
 begin_comment
-comment|/* See tree.def for documentation of the use of these fields.    Look at the documentation of the various ..._TYPE tree codes.  */
+comment|/* See tree.def for documentation of the use of these fields.    Look at the documentation of the various ..._TYPE tree codes.     Note that the type.values, type.minval, and type.maxval fields are    overloaded and used for different macros in different kinds of types.    Each macro must check to ensure the tree node is of the proper kind of    type.  Note also that some of the front-ends also overload these fields,    so they must be checked as well.  */
 end_comment
 
 begin_define
@@ -2704,7 +5865,7 @@ name|TYPE_VALUES
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(TYPE_CHECK (NODE)->type.values)
+value|(ENUMERAL_TYPE_CHECK (NODE)->type.values)
 end_define
 
 begin_define
@@ -2714,7 +5875,7 @@ name|TYPE_DOMAIN
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(TYPE_CHECK (NODE)->type.values)
+value|(ARRAY_TYPE_CHECK (NODE)->type.values)
 end_define
 
 begin_define
@@ -2724,7 +5885,28 @@ name|TYPE_FIELDS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(TYPE_CHECK (NODE)->type.values)
+value|(RECORD_OR_UNION_CHECK (NODE)->type.values)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_CACHED_VALUES
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TYPE_CHECK(NODE)->type.values)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_ORIG_SIZE_TYPE
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(INTEGER_TYPE_CHECK (NODE)->type.values		\   ? TREE_TYPE ((NODE)->type.values) : NULL_TREE)
 end_define
 
 begin_define
@@ -2734,7 +5916,7 @@ name|TYPE_METHODS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(TYPE_CHECK (NODE)->type.maxval)
+value|(RECORD_OR_UNION_CHECK (NODE)->type.maxval)
 end_define
 
 begin_define
@@ -2744,7 +5926,7 @@ name|TYPE_VFIELD
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(TYPE_CHECK (NODE)->type.minval)
+value|(RECORD_OR_UNION_CHECK (NODE)->type.minval)
 end_define
 
 begin_define
@@ -2754,7 +5936,7 @@ name|TYPE_ARG_TYPES
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(TYPE_CHECK (NODE)->type.values)
+value|(FUNC_OR_METHOD_CHECK (NODE)->type.values)
 end_define
 
 begin_define
@@ -2764,7 +5946,7 @@ name|TYPE_METHOD_BASETYPE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(TYPE_CHECK (NODE)->type.maxval)
+value|(FUNC_OR_METHOD_CHECK (NODE)->type.maxval)
 end_define
 
 begin_define
@@ -2774,7 +5956,7 @@ name|TYPE_OFFSET_BASETYPE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(TYPE_CHECK (NODE)->type.maxval)
+value|(OFFSET_TYPE_CHECK (NODE)->type.maxval)
 end_define
 
 begin_define
@@ -2800,11 +5982,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|TYPE_NEXT_PTR_TO
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(POINTER_TYPE_CHECK (NODE)->type.minval)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_NEXT_REF_TO
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(REFERENCE_TYPE_CHECK (NODE)->type.minval)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TYPE_MIN_VALUE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(TYPE_CHECK (NODE)->type.minval)
+value|(NUMERICAL_TYPE_CHECK (NODE)->type.minval)
 end_define
 
 begin_define
@@ -2814,7 +6016,7 @@ name|TYPE_MAX_VALUE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(TYPE_CHECK (NODE)->type.maxval)
+value|(NUMERICAL_TYPE_CHECK (NODE)->type.maxval)
 end_define
 
 begin_define
@@ -2918,11 +6120,11 @@ name|TYPE_DEBUG_REPRESENTATION_TYPE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(TYPE_CHECK (NODE)->type.values)
+value|(VECTOR_TYPE_CHECK (NODE)->type.values)
 end_define
 
 begin_comment
-comment|/* For aggregate types, information about this type, as a base type    for itself.  Used in a language-dependent way for types that are    neither a RECORD_TYPE, QUAL_UNION_TYPE, nor a UNION_TYPE.  */
+comment|/* For record and union types, information about this type, as a base type    for itself.  */
 end_comment
 
 begin_define
@@ -2932,7 +6134,21 @@ name|TYPE_BINFO
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(TYPE_CHECK (NODE)->type.binfo)
+value|(RECORD_OR_UNION_CHECK(NODE)->type.binfo)
+end_define
+
+begin_comment
+comment|/* For non record and union types, used in a language-dependent way.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_LANG_SLOT_1
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(NOT_RECORD_OR_UNION_CHECK(NODE)->type.binfo)
 end_define
 
 begin_comment
@@ -3241,7 +6457,21 @@ value|(TYPE_CHECK (NODE)->type.lang_flag_6)
 end_define
 
 begin_comment
-comment|/* If set in an ARRAY_TYPE, indicates a string type (for languages    that distinguish string from array of char).    If set in a SET_TYPE, indicates a bitstring type.  */
+comment|/* Used to keep track of visited nodes in tree traversals.  This is set to    0 by copy_node and make_node.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TREE_VISITED
+parameter_list|(
+name|NODE
+parameter_list|)
+value|((NODE)->common.visited)
+end_define
+
+begin_comment
+comment|/* If set in an ARRAY_TYPE, indicates a string type (for languages    that distinguish string from array of char).    If set in a INTEGER_TYPE, indicates a character type.  */
 end_comment
 
 begin_define
@@ -3266,7 +6496,7 @@ parameter_list|(
 name|ARRAY_TYPE
 parameter_list|)
 define|\
-value|TYPE_MAX_VALUE (ARRAY_TYPE_CHECK (ARRAY_TYPE))
+value|(ARRAY_TYPE_CHECK (ARRAY_TYPE)->type.maxval)
 end_define
 
 begin_comment
@@ -3281,7 +6511,24 @@ parameter_list|(
 name|VECTOR_TYPE
 parameter_list|)
 define|\
-value|GET_MODE_NUNITS (VECTOR_TYPE_CHECK (VECTOR_TYPE)->type.mode)
+value|(((unsigned HOST_WIDE_INT) 1) \<< VECTOR_TYPE_CHECK (VECTOR_TYPE)->type.precision)
+end_define
+
+begin_comment
+comment|/* Set precision to n when we have 2^n sub-parts of the vector.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_TYPE_VECTOR_SUBPARTS
+parameter_list|(
+name|VECTOR_TYPE
+parameter_list|,
+name|X
+parameter_list|)
+define|\
+value|(VECTOR_TYPE_CHECK (VECTOR_TYPE)->type.precision = exact_log2 (X))
 end_define
 
 begin_comment
@@ -3341,6 +6588,21 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|(TYPE_CHECK (NODE)->type.packed_flag)
+end_define
+
+begin_comment
+comment|/* Used by type_contains_placeholder_p to avoid recomputation.    Values are: 0 (unknown), 1 (false), 2 (true).  Never access    this field directly.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_CONTAINS_PLACEHOLDER_INTERNAL
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(TYPE_CHECK (NODE)->type.contains_placeholder_bits)
 end_define
 
 begin_struct_decl
@@ -3423,7 +6685,7 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|spare
+name|contains_placeholder_bits
 range|:
 literal|2
 decl_stmt|;
@@ -3581,6 +6843,98 @@ comment|/* Define accessor macros for information about type inheritance    and 
 end_comment
 
 begin_comment
+comment|/* BINFO specific flags.  */
+end_comment
+
+begin_comment
+comment|/* Nonzero means that the derivation chain is via a `virtual' declaration.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BINFO_VIRTUAL_P
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_BINFO_CHECK (NODE)->common.static_flag)
+end_define
+
+begin_comment
+comment|/* Flags for language dependent use.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BINFO_MARKED
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_LANG_FLAG_0(TREE_BINFO_CHECK(NODE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINFO_FLAG_1
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_LANG_FLAG_1(TREE_BINFO_CHECK(NODE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINFO_FLAG_2
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_LANG_FLAG_2(TREE_BINFO_CHECK(NODE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINFO_FLAG_3
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_LANG_FLAG_3(TREE_BINFO_CHECK(NODE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINFO_FLAG_4
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_LANG_FLAG_4(TREE_BINFO_CHECK(NODE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINFO_FLAG_5
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_LANG_FLAG_5(TREE_BINFO_CHECK(NODE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINFO_FLAG_6
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_LANG_FLAG_6(TREE_BINFO_CHECK(NODE))
+end_define
+
+begin_comment
 comment|/* The actual data type node being inherited in this basetype.  */
 end_comment
 
@@ -3591,7 +6945,7 @@ name|BINFO_TYPE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|TREE_TYPE (NODE)
+value|TREE_TYPE (TREE_BINFO_CHECK(NODE))
 end_define
 
 begin_comment
@@ -3605,17 +6959,7 @@ name|BINFO_OFFSET
 parameter_list|(
 name|NODE
 parameter_list|)
-value|TREE_VEC_ELT ((NODE), 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TYPE_BINFO_OFFSET
-parameter_list|(
-name|NODE
-parameter_list|)
-value|BINFO_OFFSET (TYPE_BINFO (NODE))
+value|(TREE_BINFO_CHECK(NODE)->binfo.offset)
 end_define
 
 begin_define
@@ -3639,17 +6983,7 @@ name|BINFO_VTABLE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|TREE_VEC_ELT ((NODE), 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TYPE_BINFO_VTABLE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|BINFO_VTABLE (TYPE_BINFO (NODE))
+value|(TREE_BINFO_CHECK(NODE)->binfo.vtable)
 end_define
 
 begin_comment
@@ -3663,41 +6997,21 @@ name|BINFO_VIRTUALS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|TREE_VEC_ELT ((NODE), 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TYPE_BINFO_VIRTUALS
-parameter_list|(
-name|NODE
-parameter_list|)
-value|BINFO_VIRTUALS (TYPE_BINFO (NODE))
+value|(TREE_BINFO_CHECK(NODE)->binfo.virtuals)
 end_define
 
 begin_comment
-comment|/* A vector of binfos for the direct basetypes inherited by this    basetype.     If this basetype describes type D as inherited in C, and if the    basetypes of D are E and F, then this vector contains binfos for    inheritance of E and F by C.     ??? This could probably be done by just allocating the    base types at the end of this TREE_VEC (instead of using    another TREE_VEC).  This would simplify the calculation    of how many basetypes a given type had.  */
+comment|/* A vector of binfos for the direct basetypes inherited by this    basetype.     If this basetype describes type D as inherited in C, and if the    basetypes of D are E and F, then this vector contains binfos for    inheritance of E and F by C.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BINFO_BASETYPES
+name|BINFO_BASE_BINFOS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|TREE_VEC_ELT ((NODE), 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TYPE_BINFO_BASETYPES
-parameter_list|(
-name|NODE
-parameter_list|)
-value|TREE_VEC_ELT (TYPE_BINFO (NODE), 4)
+value|(&TREE_BINFO_CHECK(NODE)->binfo.base_binfos)
 end_define
 
 begin_comment
@@ -3707,41 +7021,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BINFO_N_BASETYPES
+name|BINFO_N_BASE_BINFOS
 parameter_list|(
 name|NODE
 parameter_list|)
-define|\
-value|(BINFO_BASETYPES (NODE) ? TREE_VEC_LENGTH (BINFO_BASETYPES (NODE)) : 0)
+value|(VEC_length (tree, BINFO_BASE_BINFOS (NODE)))
 end_define
 
 begin_comment
-comment|/* Accessor macro to get to the Nth basetype of this basetype.  */
+comment|/* Accessor macro to get to the Nth base binfo of this binfo.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BINFO_BASETYPE
-parameter_list|(
-name|NODE
-parameter_list|,
-name|N
-parameter_list|)
-value|TREE_VEC_ELT (BINFO_BASETYPES (NODE), (N))
-end_define
-
-begin_define
-define|#
-directive|define
-name|TYPE_BINFO_BASETYPE
+name|BINFO_BASE_BINFO
 parameter_list|(
 name|NODE
 parameter_list|,
 name|N
 parameter_list|)
 define|\
-value|BINFO_TYPE (TREE_VEC_ELT (BINFO_BASETYPES (TYPE_BINFO (NODE)), (N)))
+value|(VEC_index (tree, BINFO_BASE_BINFOS (NODE), (N)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINFO_BASE_ITERATE
+parameter_list|(
+name|NODE
+parameter_list|,
+name|N
+parameter_list|,
+name|B
+parameter_list|)
+define|\
+value|(VEC_iterate (tree, BINFO_BASE_BINFOS (NODE), (N), (B)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINFO_BASE_APPEND
+parameter_list|(
+name|NODE
+parameter_list|,
+name|T
+parameter_list|)
+define|\
+value|(VEC_quick_push (tree, BINFO_BASE_BINFOS (NODE), (T)))
 end_define
 
 begin_comment
@@ -3755,7 +7084,7 @@ name|BINFO_VPTR_FIELD
 parameter_list|(
 name|NODE
 parameter_list|)
-value|TREE_VEC_ELT (NODE, 5)
+value|(TREE_BINFO_CHECK(NODE)->binfo.vptr_field)
 end_define
 
 begin_comment
@@ -3765,38 +7094,69 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BINFO_BASEACCESSES
+name|BINFO_BASE_ACCESSES
 parameter_list|(
 name|NODE
 parameter_list|)
-value|TREE_VEC_ELT ((NODE), 6)
+value|(TREE_BINFO_CHECK(NODE)->binfo.base_accesses)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BINFO_BASEACCESS
+name|BINFO_BASE_ACCESS
 parameter_list|(
 name|NODE
 parameter_list|,
 name|N
 parameter_list|)
-value|TREE_VEC_ELT (BINFO_BASEACCESSES(NODE), (N))
+define|\
+value|VEC_index (tree, BINFO_BASE_ACCESSES (NODE), (N))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINFO_BASE_ACCESS_APPEND
+parameter_list|(
+name|NODE
+parameter_list|,
+name|T
+parameter_list|)
+define|\
+value|VEC_quick_push (tree, BINFO_BASE_ACCESSES (NODE), (T))
 end_define
 
 begin_comment
-comment|/* Number of language independent elements in a binfo.  Languages may    add additional trailing elements.  */
+comment|/* The index in the VTT where this subobject's sub-VTT can be found.    NULL_TREE if there is no sub-VTT.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BINFO_ELTS
-value|7
+name|BINFO_SUBVTT_INDEX
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_BINFO_CHECK(NODE)->binfo.vtt_subvtt)
 end_define
 
 begin_comment
-comment|/* Slot used to build a chain that represents a use of inheritance.    For example, if X is derived from Y, and Y is derived from Z,    then this field can be used to link the binfo node for X to    the binfo node for X's Y to represent the use of inheritance    from X to Y.  Similarly, this slot of the binfo node for X's Y    can point to the Z from which Y is inherited (in X's inheritance    hierarchy).  In this fashion, one can represent and traverse specific    uses of inheritance using the binfo nodes themselves (instead of    consing new space pointing to binfo nodes).    It is up to the language-dependent front-ends to maintain    this information as necessary.  */
+comment|/* The index in the VTT where the vptr for this subobject can be    found.  NULL_TREE if there is no secondary vptr in the VTT.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BINFO_VPTR_INDEX
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_BINFO_CHECK(NODE)->binfo.vtt_vptr)
+end_define
+
+begin_comment
+comment|/* The BINFO_INHERITANCE_CHAIN points at the binfo for the base    inheriting this base for non-virtual bases. For virtual bases it    points either to the binfo for which this is a primary binfo, or to    the binfo of the most derived type.  */
 end_comment
 
 begin_define
@@ -3806,8 +7166,67 @@ name|BINFO_INHERITANCE_CHAIN
 parameter_list|(
 name|NODE
 parameter_list|)
-value|TREE_VEC_ELT ((NODE), 0)
+define|\
+value|(TREE_BINFO_CHECK(NODE)->binfo.inheritance)
 end_define
+
+begin_decl_stmt
+name|struct
+name|tree_binfo
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_common
+name|common
+decl_stmt|;
+name|tree
+name|offset
+decl_stmt|;
+name|tree
+name|vtable
+decl_stmt|;
+name|tree
+name|virtuals
+decl_stmt|;
+name|tree
+name|vptr_field
+decl_stmt|;
+name|VEC
+argument_list|(
+name|tree
+argument_list|,
+name|gc
+argument_list|)
+operator|*
+name|base_accesses
+expr_stmt|;
+name|tree
+name|inheritance
+decl_stmt|;
+name|tree
+name|vtt_subvtt
+decl_stmt|;
+name|tree
+name|vtt_vptr
+decl_stmt|;
+name|VEC
+argument_list|(
+argument|tree
+argument_list|,
+argument|none
+argument_list|)
+name|base_binfos
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_escape
 end_escape
@@ -3817,18 +7236,61 @@ comment|/* Define fields and accessors for nodes representing declared names.  *
 end_comment
 
 begin_comment
-comment|/* Nonzero if DECL represents a decl.  */
+comment|/* Nonzero if DECL represents a variable for the SSA passes.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DECL_P
+name|SSA_VAR_P
 parameter_list|(
 name|DECL
 parameter_list|)
-value|(TREE_CODE_CLASS (TREE_CODE (DECL)) == 'd')
+define|\
+value|(TREE_CODE (DECL) == VAR_DECL					\ 	 || TREE_CODE (DECL) == PARM_DECL				\ 	 || TREE_CODE (DECL) == RESULT_DECL				\ 	 || MTAG_P (DECL)						\ 	 || (TREE_CODE (DECL) == SSA_NAME				\&& (TREE_CODE (SSA_NAME_VAR (DECL)) == VAR_DECL		\ 		 || TREE_CODE (SSA_NAME_VAR (DECL)) == PARM_DECL	\ 		 || TREE_CODE (SSA_NAME_VAR (DECL)) == RESULT_DECL	\ 		 || MTAG_P (SSA_NAME_VAR (DECL)))))
 end_define
+
+begin_comment
+comment|/* Enumerate visibility settings.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYMBOL_VISIBILITY_DEFINED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_VISIBILITY_DEFINED
+end_define
+
+begin_enum
+enum|enum
+name|symbol_visibility
+block|{
+name|VISIBILITY_DEFAULT
+block|,
+name|VISIBILITY_PROTECTED
+block|,
+name|VISIBILITY_HIDDEN
+block|,
+name|VISIBILITY_INTERNAL
+block|}
+enum|;
+end_enum
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct_decl
+struct_decl|struct
+name|function
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/* This is the name of the object as written by the user.    It is an IDENTIFIER_NODE.  */
@@ -3841,572 +7303,7 @@ name|DECL_NAME
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.name)
-end_define
-
-begin_comment
-comment|/* The name of the object as the assembler will see it (but before any    translations made by ASM_OUTPUT_LABELREF).  Often this is the same    as DECL_NAME.  It is an IDENTIFIER_NODE.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_ASSEMBLER_NAME
-parameter_list|(
-name|NODE
-parameter_list|)
-value|decl_assembler_name (NODE)
-end_define
-
-begin_comment
-comment|/* Returns nonzero if the DECL_ASSEMBLER_NAME for NODE has been set.  If zero,    the NODE might still have a DECL_ASSEMBLER_NAME -- it just hasn't been set    yet.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_ASSEMBLER_NAME_SET_P
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|(DECL_CHECK (NODE)->decl.assembler_name != NULL_TREE)
-end_define
-
-begin_comment
-comment|/* Set the DECL_ASSEMBLER_NAME for NODE to NAME.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SET_DECL_ASSEMBLER_NAME
-parameter_list|(
-name|NODE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|(DECL_CHECK (NODE)->decl.assembler_name = (NAME))
-end_define
-
-begin_comment
-comment|/* Copy the DECL_ASSEMBLER_NAME from DECL1 to DECL2.  Note that if DECL1's    DECL_ASSEMBLER_NAME has not yet been set, using this macro will not cause    the DECL_ASSEMBLER_NAME of either DECL to be set.  In other words, the    semantics of using this macro, are different than saying:       SET_DECL_ASSEMBLER_NAME(DECL2, DECL_ASSEMBLER_NAME (DECL1))     which will try to set the DECL_ASSEMBLER_NAME for DECL1.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COPY_DECL_ASSEMBLER_NAME
-parameter_list|(
-name|DECL1
-parameter_list|,
-name|DECL2
-parameter_list|)
-define|\
-value|(DECL_ASSEMBLER_NAME_SET_P (DECL1)					\    ? (void) SET_DECL_ASSEMBLER_NAME (DECL2,				\ 				     DECL_ASSEMBLER_NAME (DECL1))	\    : (void) 0)
-end_define
-
-begin_comment
-comment|/* Records the section name in a section attribute.  Used to pass    the name from decl_attributes to make_function_rtl and make_decl_rtl.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_SECTION_NAME
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.section_name)
-end_define
-
-begin_comment
-comment|/*  For FIELD_DECLs, this is the RECORD_TYPE, UNION_TYPE, or     QUAL_UNION_TYPE node that the field is a member of.  For VAR_DECL,     PARM_DECL, FUNCTION_DECL, LABEL_DECL, and CONST_DECL nodes, this     points to either the FUNCTION_DECL for the containing function,     the RECORD_TYPE or UNION_TYPE for the containing type, or     NULL_TREE or a TRANSLATION_UNIT_DECL if the given decl has "file     scope".  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_CONTEXT
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.context)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DECL_FIELD_CONTEXT
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FIELD_DECL_CHECK (NODE)->decl.context)
-end_define
-
-begin_comment
-comment|/* In a DECL this is the field where attributes are stored.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_ATTRIBUTES
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.attributes)
-end_define
-
-begin_comment
-comment|/* In a FIELD_DECL, this is the field position, counting in bytes, of the    byte containing the bit closest to the beginning of the structure.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_FIELD_OFFSET
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FIELD_DECL_CHECK (NODE)->decl.arguments)
-end_define
-
-begin_comment
-comment|/* In a FIELD_DECL, this is the offset, in bits, of the first bit of the    field from DECL_FIELD_OFFSET.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_FIELD_BIT_OFFSET
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FIELD_DECL_CHECK (NODE)->decl.u2.t)
-end_define
-
-begin_comment
-comment|/* In a FIELD_DECL, this indicates whether the field was a bit-field and    if so, the type that was originally specified for it.    TREE_TYPE may have been modified (in finish_struct).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_BIT_FIELD_TYPE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FIELD_DECL_CHECK (NODE)->decl.result)
-end_define
-
-begin_comment
-comment|/* In FUNCTION_DECL, a chain of ..._DECL nodes.    VAR_DECL and PARM_DECL reserve the arguments slot for language-specific    uses.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_ARGUMENTS
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.arguments)
-end_define
-
-begin_comment
-comment|/* This field is used to reference anything in decl.result and is meant only    for use by the garbage collector.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_RESULT_FLD
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.result)
-end_define
-
-begin_comment
-comment|/* In FUNCTION_DECL, holds the decl for the return value.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_RESULT
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FUNCTION_DECL_CHECK (NODE)->decl.result)
-end_define
-
-begin_comment
-comment|/* For a TYPE_DECL, holds the "original" type.  (TREE_TYPE has the copy.) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_ORIGINAL_TYPE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(TYPE_DECL_CHECK (NODE)->decl.result)
-end_define
-
-begin_comment
-comment|/* In PARM_DECL, holds the type as written (perhaps a function or array).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_ARG_TYPE_AS_WRITTEN
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(PARM_DECL_CHECK (NODE)->decl.result)
-end_define
-
-begin_comment
-comment|/* For a FUNCTION_DECL, holds the tree of BINDINGs.    For a TRANSLATION_UNIT_DECL, holds the namespace's BLOCK.    For a VAR_DECL, holds the initial value.    For a PARM_DECL, not used--default    values for parameters are encoded in the type of the function,    not in the PARM_DECL slot.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_INITIAL
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.initial)
-end_define
-
-begin_comment
-comment|/* For a PARM_DECL, records the data type used to pass the argument,    which may be different from the type seen in the program.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_ARG_TYPE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(PARM_DECL_CHECK (NODE)->decl.initial)
-end_define
-
-begin_comment
-comment|/* For a FIELD_DECL in a QUAL_UNION_TYPE, records the expression, which    if nonzero, indicates that the field occupies the type.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_QUALIFIER
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FIELD_DECL_CHECK (NODE)->decl.initial)
-end_define
-
-begin_comment
-comment|/* These two fields describe where in the source code the declaration    was.  If the declaration appears in several places (as for a C    function that is declared first and then defined later), this    information should refer to the definition.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_SOURCE_LOCATION
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.locus)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DECL_SOURCE_FILE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_SOURCE_LOCATION (NODE).file)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DECL_SOURCE_LINE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_SOURCE_LOCATION (NODE).line)
-end_define
-
-begin_comment
-comment|/* Holds the size of the datum, in bits, as a tree expression.    Need not be constant.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_SIZE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.size)
-end_define
-
-begin_comment
-comment|/* Likewise for the size in bytes.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_SIZE_UNIT
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.size_unit)
-end_define
-
-begin_comment
-comment|/* Holds the alignment required for the datum, in bits.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_ALIGN
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.u1.a.align)
-end_define
-
-begin_comment
-comment|/* The alignment of NODE, in bytes.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_ALIGN_UNIT
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_ALIGN (NODE) / BITS_PER_UNIT)
-end_define
-
-begin_comment
-comment|/* For FIELD_DECLs, off_align holds the number of low-order bits of    DECL_FIELD_OFFSET which are known to be always zero.    DECL_OFFSET_ALIGN thus returns the alignment that DECL_FIELD_OFFSET    has.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_OFFSET_ALIGN
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|(((unsigned HOST_WIDE_INT)1)<< FIELD_DECL_CHECK (NODE)->decl.u1.a.off_align)
-end_define
-
-begin_comment
-comment|/* Specify that DECL_ALIGN(NODE) is a multiple of X.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SET_DECL_OFFSET_ALIGN
-parameter_list|(
-name|NODE
-parameter_list|,
-name|X
-parameter_list|)
-define|\
-value|(FIELD_DECL_CHECK (NODE)->decl.u1.a.off_align	= exact_log2 ((X)& -(X)))
-end_define
-
-begin_comment
-comment|/* 1 if the alignment for this type was requested by "aligned" attribute,    0 if it is the default for this type.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_USER_ALIGN
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.user_align)
-end_define
-
-begin_comment
-comment|/* Holds the machine mode corresponding to the declaration of a variable or    field.  Always equal to TYPE_MODE (TREE_TYPE (decl)) except for a    FIELD_DECL.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_MODE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.mode)
-end_define
-
-begin_comment
-comment|/* Holds the RTL expression for the value of a variable or function.    This value can be evaluated lazily for functions, variables with    static storage duration, and labels.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_RTL
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|(DECL_CHECK (NODE)->decl.rtl				\    ? (NODE)->decl.rtl					\    : (make_decl_rtl (NODE, NULL), (NODE)->decl.rtl))
-end_define
-
-begin_comment
-comment|/* Set the DECL_RTL for NODE to RTL.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SET_DECL_RTL
-parameter_list|(
-name|NODE
-parameter_list|,
-name|RTL
-parameter_list|)
-value|set_decl_rtl (NODE, RTL)
-end_define
-
-begin_comment
-comment|/* Returns nonzero if the DECL_RTL for NODE has already been set.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_RTL_SET_P
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.rtl != NULL)
-end_define
-
-begin_comment
-comment|/* Copy the RTL from NODE1 to NODE2.  If the RTL was not set for    NODE1, it will not be set for NODE2; this is a lazy copy.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COPY_DECL_RTL
-parameter_list|(
-name|NODE1
-parameter_list|,
-name|NODE2
-parameter_list|)
-define|\
-value|(DECL_CHECK (NODE2)->decl.rtl = DECL_CHECK (NODE1)->decl.rtl)
-end_define
-
-begin_comment
-comment|/* The DECL_RTL for NODE, if it is set, or NULL, if it is not set.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_RTL_IF_SET
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_RTL_SET_P (NODE) ? DECL_RTL (NODE) : NULL)
-end_define
-
-begin_comment
-comment|/* For PARM_DECL, holds an RTL for the stack slot or register    where the data was actually passed.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_INCOMING_RTL
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(PARM_DECL_CHECK (NODE)->decl.u2.r)
-end_define
-
-begin_comment
-comment|/* For FUNCTION_DECL, if it is inline, holds the saved insn chain.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_SAVED_INSNS
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FUNCTION_DECL_CHECK (NODE)->decl.u2.f)
-end_define
-
-begin_comment
-comment|/* For FUNCTION_DECL, if it is built-in,    this identifies which built-in operation it is.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_FUNCTION_CODE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FUNCTION_DECL_CHECK (NODE)->decl.u1.f)
-end_define
-
-begin_comment
-comment|/* The DECL_VINDEX is used for FUNCTION_DECLS in two different ways.    Before the struct containing the FUNCTION_DECL is laid out,    DECL_VINDEX may point to a FUNCTION_DECL in a base class which    is the FUNCTION_DECL which this FUNCTION_DECL will replace as a virtual    function.  When the class is laid out, this pointer is changed    to an INTEGER_CST node which is suitable for use as an index    into the virtual function table.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_VINDEX
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.vindex)
-end_define
-
-begin_comment
-comment|/* For FIELD_DECLS, DECL_FCONTEXT is the *first* baseclass in    which this FIELD_DECL is defined.  This information is needed when    writing debugging information about vfield and vbase decls for C++.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_FCONTEXT
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FIELD_DECL_CHECK (NODE)->decl.vindex)
+value|(DECL_MINIMAL_CHECK (NODE)->decl_minimal.name)
 end_define
 
 begin_comment
@@ -4420,7 +7317,279 @@ name|DECL_UID
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.uid)
+value|(DECL_MINIMAL_CHECK (NODE)->decl_minimal.uid)
+end_define
+
+begin_comment
+comment|/* These two fields describe where in the source code the declaration    was.  If the declaration appears in several places (as for a C    function that is declared first and then defined later), this    information should refer to the definition.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_SOURCE_LOCATION
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_MINIMAL_CHECK (NODE)->decl_minimal.locus)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_SOURCE_FILE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|LOCATION_FILE (DECL_SOURCE_LOCATION (NODE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_SOURCE_LINE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|LOCATION_LINE (DECL_SOURCE_LOCATION (NODE))
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_MAPPED_LOCATION
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DECL_IS_BUILTIN
+parameter_list|(
+name|DECL
+parameter_list|)
+define|\
+value|(DECL_SOURCE_LOCATION (DECL)<= BUILTINS_LOCATION)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DECL_IS_BUILTIN
+parameter_list|(
+name|DECL
+parameter_list|)
+value|(DECL_SOURCE_LINE(DECL) == 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  For FIELD_DECLs, this is the RECORD_TYPE, UNION_TYPE, or     QUAL_UNION_TYPE node that the field is a member of.  For VAR_DECL,     PARM_DECL, FUNCTION_DECL, LABEL_DECL, and CONST_DECL nodes, this     points to either the FUNCTION_DECL for the containing function,     the RECORD_TYPE or UNION_TYPE for the containing type, or     NULL_TREE or a TRANSLATION_UNIT_DECL if the given decl has "file     scope".  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_CONTEXT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_MINIMAL_CHECK (NODE)->decl_minimal.context)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_FIELD_CONTEXT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FIELD_DECL_CHECK (NODE)->decl_minimal.context)
+end_define
+
+begin_decl_stmt
+name|struct
+name|tree_decl_minimal
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_common
+name|common
+decl_stmt|;
+name|location_t
+name|locus
+decl_stmt|;
+name|unsigned
+name|int
+name|uid
+decl_stmt|;
+name|tree
+name|name
+decl_stmt|;
+name|tree
+name|context
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* When computing aliasing information, we represent the memory pointed-to    by pointers with artificial variables called "memory tags" (MT).  There    are two kinds of tags, namely symbol and name:     Symbol tags (SMT) are used in flow-insensitive alias analysis, they    represent all the pointed-to locations and variables pointed-to by    the same pointer symbol.  Usually, this set is computed using    type-based analysis (i.e., alias set classes), but this may not    always be the case.     Name tags (NMT) are used in flow-sensitive points-to alias    analysis, they represent the variables and memory locations    pointed-to by a specific SSA_NAME pointer.     In general, given a pointer P with a symbol tag SMT, the alias set    of SMT should be the union of all the alias sets of the NMTs of    every SSA_NAME for P.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|tree_memory_tag
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_decl_minimal
+name|common
+decl_stmt|;
+name|unsigned
+name|int
+name|is_global
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|int
+name|is_used_alone
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|int
+name|old_used_alone
+range|:
+literal|1
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_define
+define|#
+directive|define
+name|MTAG_GLOBAL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_MEMORY_TAG_CHECK (NODE)->mtag.is_global)
+end_define
+
+begin_comment
+comment|/* This flag is true if a SMT is used as the V_MAY_DEF or VUSE operand    directly, because the access had all of the SMT's aliases pruned    from it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMT_USED_ALONE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(SYMBOL_MEMORY_TAG_CHECK (NODE)->mtag.is_used_alone)
+end_define
+
+begin_comment
+comment|/* This flag is used to temporarily store the old value of the used alone    flag when updating so we know whether to mark the symbol for    renaming.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMT_OLD_USED_ALONE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(SYMBOL_MEMORY_TAG_CHECK (NODE)->mtag.old_used_alone)
+end_define
+
+begin_decl_stmt
+name|struct
+name|tree_struct_field_tag
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_memory_tag
+name|common
+decl_stmt|;
+comment|/* Parent variable.  */
+name|tree
+name|parent_var
+decl_stmt|;
+comment|/* Offset inside structure.  */
+name|unsigned
+name|HOST_WIDE_INT
+name|offset
+decl_stmt|;
+comment|/* Size of the field.  */
+name|unsigned
+name|HOST_WIDE_INT
+name|size
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_define
+define|#
+directive|define
+name|SFT_PARENT_VAR
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(STRUCT_FIELD_TAG_CHECK (NODE)->sft.parent_var)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFT_OFFSET
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(STRUCT_FIELD_TAG_CHECK (NODE)->sft.offset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFT_SIZE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(STRUCT_FIELD_TAG_CHECK (NODE)->sft.size)
 end_define
 
 begin_comment
@@ -4434,7 +7603,7 @@ name|DECL_ABSTRACT_ORIGIN
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.abstract_origin)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.abstract_origin)
 end_define
 
 begin_comment
@@ -4467,7 +7636,144 @@ value|(DECL_ABSTRACT_ORIGIN (NODE) != NULL_TREE \&& DECL_ABSTRACT_ORIGIN (NODE) 
 end_define
 
 begin_comment
-comment|/* Nonzero if a _DECL means that the name of this decl should be ignored    for symbolic debug purposes.  */
+comment|/* In a DECL this is the field where attributes are stored.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_ATTRIBUTES
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.attributes)
+end_define
+
+begin_comment
+comment|/* For a FUNCTION_DECL, holds the tree of BINDINGs.    For a TRANSLATION_UNIT_DECL, holds the namespace's BLOCK.    For a VAR_DECL, holds the initial value.    For a PARM_DECL, not used--default    values for parameters are encoded in the type of the function,    not in the PARM_DECL slot.    For a FIELD_DECL, this is used for enumeration values and the C    frontend uses it for temporarily storing bitwidth of bitfields.     ??? Need to figure out some way to check this isn't a PARM_DECL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_INITIAL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.initial)
+end_define
+
+begin_comment
+comment|/* Holds the size of the datum, in bits, as a tree expression.    Need not be constant.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_SIZE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.size)
+end_define
+
+begin_comment
+comment|/* Likewise for the size in bytes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_SIZE_UNIT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.size_unit)
+end_define
+
+begin_comment
+comment|/* Holds the alignment required for the datum, in bits.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_ALIGN
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.u1.a.align)
+end_define
+
+begin_comment
+comment|/* The alignment of NODE, in bytes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_ALIGN_UNIT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_ALIGN (NODE) / BITS_PER_UNIT)
+end_define
+
+begin_comment
+comment|/* For FIELD_DECLs, off_align holds the number of low-order bits of    DECL_FIELD_OFFSET which are known to be always zero.    DECL_OFFSET_ALIGN thus returns the alignment that DECL_FIELD_OFFSET    has.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_USER_ALIGN
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.user_align)
+end_define
+
+begin_comment
+comment|/* Holds the machine mode corresponding to the declaration of a variable or    field.  Always equal to TYPE_MODE (TREE_TYPE (decl)) except for a    FIELD_DECL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_MODE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.mode)
+end_define
+
+begin_comment
+comment|/* For FUNCTION_DECL, if it is built-in, this identifies which built-in    operation it is.  Note, however, that this field is overloaded, with    DECL_BUILT_IN_CLASS as the discriminant, so the latter must always be    checked before any access to the former.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_FUNCTION_CODE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FUNCTION_DECL_CHECK (NODE)->decl_common.u1.f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_DEBUG_EXPR_IS_FROM
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(DECL_COMMON_CHECK (NODE)->decl_common.debug_expr_is_from)
+end_define
+
+begin_comment
+comment|/* Nonzero for a given ..._DECL node means that the name of this node should    be ignored for symbolic debug purposes.  */
 end_comment
 
 begin_define
@@ -4477,7 +7783,7 @@ name|DECL_IGNORED_P
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.ignored_flag)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.ignored_flag)
 end_define
 
 begin_comment
@@ -4491,36 +7797,7 @@ name|DECL_ABSTRACT
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.abstract_flag)
-end_define
-
-begin_comment
-comment|/* Nonzero if a _DECL means that no warnings should be generated just    because this decl is unused.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_IN_SYSTEM_HEADER
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|(DECL_CHECK (NODE)->decl.in_system_header_flag)
-end_define
-
-begin_comment
-comment|/* Nonzero for a given ..._DECL node means that this node should be    put in .common, if possible.  If a DECL_INITIAL is given, and it    is not error_mark_node, then the decl cannot be put in .common.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_COMMON
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.common_flag)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.abstract_flag)
 end_define
 
 begin_comment
@@ -4534,11 +7811,11 @@ name|DECL_LANG_SPECIFIC
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.lang_specific)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.lang_specific)
 end_define
 
 begin_comment
-comment|/* In a VAR_DECL or FUNCTION_DECL,    nonzero means external reference:    do not allocate storage, and refer to a definition elsewhere.  */
+comment|/* In a VAR_DECL or FUNCTION_DECL, nonzero means external reference:    do not allocate storage, and refer to a definition elsewhere.  Note that    this does not necessarily imply the entity represented by NODE    has no program source-level definition in this translation unit.  For    example, for a FUNCTION_DECL, DECL_SAVED_TREE may be non-NULL and    DECL_EXTERNAL may be true simultaneously; that can be the case for    a C99 "extern inline" function.  */
 end_comment
 
 begin_define
@@ -4548,7 +7825,7 @@ name|DECL_EXTERNAL
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.external_flag)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.decl_flag_2)
 end_define
 
 begin_comment
@@ -4577,78 +7854,6 @@ value|100
 end_define
 
 begin_comment
-comment|/* In a TYPE_DECL    nonzero means the detail info about this type is not dumped into stabs.    Instead it will generate cross reference ('x') of names.    This uses the same flag as DECL_EXTERNAL.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TYPE_DECL_SUPPRESS_DEBUG
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|(TYPE_DECL_CHECK (NODE)->decl.external_flag)
-end_define
-
-begin_comment
-comment|/* In VAR_DECL and PARM_DECL nodes, nonzero means declared `register'.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_REGISTER
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.regdecl_flag)
-end_define
-
-begin_comment
-comment|/* In LABEL_DECL nodes, nonzero means that an error message about    jumping into such a binding contour has been printed for this label.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_ERROR_ISSUED
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(LABEL_DECL_CHECK (NODE)->decl.regdecl_flag)
-end_define
-
-begin_comment
-comment|/* In a FIELD_DECL, indicates this field should be bit-packed.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_PACKED
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FIELD_DECL_CHECK (NODE)->decl.regdecl_flag)
-end_define
-
-begin_comment
-comment|/* In a FUNCTION_DECL with a nonzero DECL_CONTEXT, indicates that a    static chain is not needed.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_NO_STATIC_CHAIN
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|(FUNCTION_DECL_CHECK (NODE)->decl.regdecl_flag)
-end_define
-
-begin_comment
 comment|/* Nonzero in a ..._DECL means this variable is ref'd from a nested function.    For VAR_DECL nodes, PARM_DECL nodes, and FUNCTION_DECL nodes.     For LABEL_DECL nodes, nonzero if nonlocal gotos to the label are permitted.     Also set in some languages for variables, etc., outside the normal    lexical scope, such as class instance variables.  */
 end_comment
 
@@ -4659,209 +7864,7 @@ name|DECL_NONLOCAL
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.nonlocal_flag)
-end_define
-
-begin_comment
-comment|/* Nonzero in a FUNCTION_DECL means this function can be substituted    where it is called.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_INLINE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FUNCTION_DECL_CHECK (NODE)->decl.inline_flag)
-end_define
-
-begin_comment
-comment|/* Nonzero in a FUNCTION_DECL means that this function was declared inline,    such as via the `inline' keyword in C/C++.  This flag controls the linkage    semantics of 'inline'; whether or not the function is inlined is    controlled by DECL_INLINE.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_DECLARED_INLINE_P
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|(FUNCTION_DECL_CHECK (NODE)->decl.declared_inline_flag)
-end_define
-
-begin_comment
-comment|/* Value of the decls's visibility attribute */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_VISIBILITY
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.visibility)
-end_define
-
-begin_comment
-comment|/* In a FUNCTION_DECL, nonzero if the function cannot be inlined.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_UNINLINABLE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FUNCTION_DECL_CHECK (NODE)->decl.uninlinable)
-end_define
-
-begin_comment
-comment|/* In a VAR_DECL, nonzero if the data should be allocated from    thread-local storage.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_THREAD_LOCAL
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(VAR_DECL_CHECK (NODE)->decl.thread_local_flag)
-end_define
-
-begin_comment
-comment|/* In a FUNCTION_DECL, the saved representation of the body of the    entire function.  Usually a COMPOUND_STMT, but in C++ this may also    be a RETURN_INIT, CTOR_INITIALIZER, or TRY_BLOCK.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_SAVED_TREE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FUNCTION_DECL_CHECK (NODE)->decl.saved_tree)
-end_define
-
-begin_comment
-comment|/* List of FUNCTION_DECLs inlined into this function's body.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_INLINED_FNS
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FUNCTION_DECL_CHECK (NODE)->decl.inlined_fns)
-end_define
-
-begin_comment
-comment|/* Nonzero in a FUNCTION_DECL means this function should be treated    as if it were a malloc, meaning it returns a pointer that is    not an alias.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_IS_MALLOC
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FUNCTION_DECL_CHECK (NODE)->decl.malloc_flag)
-end_define
-
-begin_comment
-comment|/* Nonzero in a FUNCTION_DECL means this function should be treated    as "pure" function (like const function, but may read global memory).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_IS_PURE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FUNCTION_DECL_CHECK (NODE)->decl.pure_flag)
-end_define
-
-begin_comment
-comment|/* Nonzero in a FIELD_DECL means it is a bit field, and must be accessed    specially.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_BIT_FIELD
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(FIELD_DECL_CHECK (NODE)->decl.bit_field_flag)
-end_define
-
-begin_comment
-comment|/* In a LABEL_DECL, nonzero means label was defined inside a binding    contour that restored a stack level and which is now exited.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_TOO_LATE
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(LABEL_DECL_CHECK (NODE)->decl.bit_field_flag)
-end_define
-
-begin_comment
-comment|/* Unused in FUNCTION_DECL.  */
-end_comment
-
-begin_comment
-comment|/* In a VAR_DECL that's static,    nonzero if the space is in the text section.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_IN_TEXT_SECTION
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(VAR_DECL_CHECK (NODE)->decl.bit_field_flag)
-end_define
-
-begin_comment
-comment|/* In a FUNCTION_DECL, nonzero means a built in function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_BUILT_IN
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_BUILT_IN_CLASS (NODE) != NOT_BUILT_IN)
-end_define
-
-begin_comment
-comment|/* For a builtin function, identify which part of the compiler defined it.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_BUILT_IN_CLASS
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|(FUNCTION_DECL_CHECK (NODE)->decl.built_in_class)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.nonlocal_flag)
 end_define
 
 begin_comment
@@ -4875,62 +7878,7 @@ name|DECL_VIRTUAL_P
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.virtual_flag)
-end_define
-
-begin_comment
-comment|/* Used to indicate that the linkage status of this DECL is not yet known,    so it should not be output now.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_DEFER_OUTPUT
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.defer_output)
-end_define
-
-begin_comment
-comment|/* Used in PARM_DECLs whose type are unions to indicate that the    argument should be passed in the same way that the first union    alternative would be passed.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_TRANSPARENT_UNION
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|(PARM_DECL_CHECK (NODE)->decl.transparent_union)
-end_define
-
-begin_comment
-comment|/* Used in FUNCTION_DECLs to indicate that they should be run automatically    at the beginning or end of execution.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_STATIC_CONSTRUCTOR
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|(FUNCTION_DECL_CHECK (NODE)->decl.static_ctor_flag)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DECL_STATIC_DESTRUCTOR
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|(FUNCTION_DECL_CHECK (NODE)->decl.static_dtor_flag)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.virtual_flag)
 end_define
 
 begin_comment
@@ -4944,79 +7892,7 @@ name|DECL_ARTIFICIAL
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.artificial_flag)
-end_define
-
-begin_comment
-comment|/* Used to indicate that this DECL has weak linkage.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_WEAK
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.weak_flag)
-end_define
-
-begin_comment
-comment|/* Used in TREE_PUBLIC decls to indicate that copies of this DECL in    multiple translation units should be merged.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_ONE_ONLY
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.transparent_union)
-end_define
-
-begin_comment
-comment|/* Used in a DECL to indicate that, even if it TREE_PUBLIC, it need    not be put out unless it is needed in this translation unit.    Entities like this are shared across translation units (like weak    entities), but are guaranteed to be generated by any translation    unit that needs them, and therefore need not be put out anywhere    where they are not needed.  DECL_COMDAT is just a hint to the    back-end; it is up to front-ends which set this flag to ensure    that there will never be any harm, other than bloat, in putting out    something which is DECL_COMDAT.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_COMDAT
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.comdat_flag)
-end_define
-
-begin_comment
-comment|/* Used in FUNCTION_DECLs to indicate that function entry and exit should    be instrumented with calls to support routines.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|(FUNCTION_DECL_CHECK (NODE)->decl.no_instrument_function_entry_exit)
-end_define
-
-begin_comment
-comment|/* Used in FUNCTION_DECLs to indicate that limit-stack-* should be    disabled in this function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_NO_LIMIT_STACK
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|(FUNCTION_DECL_CHECK (NODE)->decl.no_limit_stack)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.artificial_flag)
 end_define
 
 begin_comment
@@ -5030,7 +7906,7 @@ name|DECL_LANG_FLAG_0
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.lang_flag_0)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.lang_flag_0)
 end_define
 
 begin_define
@@ -5040,7 +7916,7 @@ name|DECL_LANG_FLAG_1
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.lang_flag_1)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.lang_flag_1)
 end_define
 
 begin_define
@@ -5050,7 +7926,7 @@ name|DECL_LANG_FLAG_2
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.lang_flag_2)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.lang_flag_2)
 end_define
 
 begin_define
@@ -5060,7 +7936,7 @@ name|DECL_LANG_FLAG_3
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.lang_flag_3)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.lang_flag_3)
 end_define
 
 begin_define
@@ -5070,7 +7946,7 @@ name|DECL_LANG_FLAG_4
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.lang_flag_4)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.lang_flag_4)
 end_define
 
 begin_define
@@ -5080,7 +7956,7 @@ name|DECL_LANG_FLAG_5
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.lang_flag_5)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.lang_flag_5)
 end_define
 
 begin_define
@@ -5090,7 +7966,7 @@ name|DECL_LANG_FLAG_6
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.lang_flag_6)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.lang_flag_6)
 end_define
 
 begin_define
@@ -5100,36 +7976,7 @@ name|DECL_LANG_FLAG_7
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_CHECK (NODE)->decl.lang_flag_7)
-end_define
-
-begin_comment
-comment|/* Used to indicate that the pointer to this DECL cannot be treated as    an address constant.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_NON_ADDR_CONST_P
-parameter_list|(
-name|NODE
-parameter_list|)
-value|(DECL_CHECK (NODE)->decl.non_addr_const_p)
-end_define
-
-begin_comment
-comment|/* Used in a FIELD_DECL to indicate that we cannot form the address of    this component.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECL_NONADDRESSABLE_P
-parameter_list|(
-name|NODE
-parameter_list|)
-define|\
-value|(FIELD_DECL_CHECK (NODE)->decl.non_addressable)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.lang_flag_7)
 end_define
 
 begin_comment
@@ -5144,7 +7991,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(DECL_CHECK (NODE)->decl.pointer_alias_set)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.pointer_alias_set)
 end_define
 
 begin_comment
@@ -5178,33 +8025,53 @@ value|(! DECL_CONTEXT (EXP)						\    || TREE_CODE (DECL_CONTEXT (EXP)) == TRANS
 end_define
 
 begin_comment
-comment|/* Enumerate visibility settings.  */
+comment|/* Nonzero for a decl that is decorated using attribute used.    This indicates compiler tools that this decl needs to be preserved.  */
 end_comment
 
-begin_enum
-enum|enum
-name|symbol_visibility
-block|{
-name|VISIBILITY_DEFAULT
-block|,
-name|VISIBILITY_INTERNAL
-block|,
-name|VISIBILITY_HIDDEN
-block|,
-name|VISIBILITY_PROTECTED
-block|}
-enum|;
-end_enum
+begin_define
+define|#
+directive|define
+name|DECL_PRESERVE_P
+parameter_list|(
+name|DECL
+parameter_list|)
+define|\
+value|DECL_COMMON_CHECK (DECL)->decl_common.preserve_flag
+end_define
 
-begin_struct_decl
-struct_decl|struct
-name|function
-struct_decl|;
-end_struct_decl
+begin_comment
+comment|/* For function local variables of COMPLEX type, indicates that the    variable is not aliased, and that all modifications to the variable    have been adjusted so that they are killing assignments.  Thus the    variable may now be treated as a GIMPLE register, and use real    instead of virtual ops in SSA form.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_COMPLEX_GIMPLE_REG_P
+parameter_list|(
+name|DECL
+parameter_list|)
+define|\
+value|DECL_COMMON_CHECK (DECL)->decl_common.gimple_reg_flag
+end_define
+
+begin_comment
+comment|/* This is true if DECL is call clobbered in the current function.    The result of this flag should always be the same as    bitmap_bit_p (call_clobbered_vars, DECL_UID (decl)).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_CALL_CLOBBERED
+parameter_list|(
+name|DECL
+parameter_list|)
+define|\
+value|DECL_COMMON_CHECK (DECL)->decl_common.call_clobbered_flag
+end_define
 
 begin_decl_stmt
 name|struct
-name|tree_decl
+name|tree_decl_common
 name|GTY
 argument_list|(
 operator|(
@@ -5212,15 +8079,8 @@ operator|)
 argument_list|)
 block|{
 name|struct
-name|tree_common
+name|tree_decl_minimal
 name|common
-decl_stmt|;
-name|location_t
-name|locus
-decl_stmt|;
-name|unsigned
-name|int
-name|uid
 decl_stmt|;
 name|tree
 name|size
@@ -5234,27 +8094,7 @@ label|:
 literal|8
 expr_stmt|;
 name|unsigned
-name|external_flag
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
 name|nonlocal_flag
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|regdecl_flag
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|inline_flag
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|bit_field_flag
 range|:
 literal|1
 decl_stmt|;
@@ -5274,85 +8114,7 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|in_system_header_flag
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|common_flag
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|defer_output
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|transparent_union
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|static_ctor_flag
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|static_dtor_flag
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
 name|artificial_flag
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|weak_flag
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|non_addr_const_p
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|no_instrument_function_entry_exit
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|comdat_flag
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|malloc_flag
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|no_limit_stack
-range|:
-literal|1
-decl_stmt|;
-name|ENUM_BITFIELD
-argument_list|(
-argument|built_in_class
-argument_list|)
-name|built_in_class
-label|:
-literal|2
-expr_stmt|;
-name|unsigned
-name|pure_flag
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|non_addressable
 range|:
 literal|1
 decl_stmt|;
@@ -5362,34 +8124,15 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|uninlinable
+name|preserve_flag
 range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|thread_local_flag
+name|debug_expr_is_from
 range|:
 literal|1
 decl_stmt|;
-name|unsigned
-name|declared_inline_flag
-range|:
-literal|1
-decl_stmt|;
-name|ENUM_BITFIELD
-argument_list|(
-argument|symbol_visibility
-argument_list|)
-name|visibility
-label|:
-literal|2
-expr_stmt|;
-name|unsigned
-name|unused
-range|:
-literal|1
-decl_stmt|;
-comment|/* one unused bit.  */
 name|unsigned
 name|lang_flag_0
 range|:
@@ -5430,6 +8173,41 @@ name|lang_flag_7
 range|:
 literal|1
 decl_stmt|;
+comment|/* In LABEL_DECL, this is DECL_ERROR_ISSUED.      In VAR_DECL and PARM_DECL, this is DECL_REGISTER.  */
+name|unsigned
+name|decl_flag_0
+range|:
+literal|1
+decl_stmt|;
+comment|/* In FIELD_DECL, this is DECL_PACKED.  */
+name|unsigned
+name|decl_flag_1
+range|:
+literal|1
+decl_stmt|;
+comment|/* In FIELD_DECL, this is DECL_BIT_FIELD      In VAR_DECL and FUNCTION_DECL, this is DECL_EXTERNAL.      In TYPE_DECL, this is TYPE_DECL_SUPRESS_DEBUG.  */
+name|unsigned
+name|decl_flag_2
+range|:
+literal|1
+decl_stmt|;
+comment|/* In FIELD_DECL, this is DECL_NONADDRESSABLE_P      In VAR_DECL and PARM_DECL, this is DECL_HAS_VALUE_EXPR.  */
+name|unsigned
+name|decl_flag_3
+range|:
+literal|1
+decl_stmt|;
+comment|/* Logically, these two would go in a theoretical base shared by var and      parm decl. */
+name|unsigned
+name|gimple_reg_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|call_clobbered_flag
+range|:
+literal|1
+decl_stmt|;
 union|union
 name|tree_decl_u1
 block|{
@@ -5466,9 +8244,6 @@ name|GTY
 argument_list|(
 operator|(
 name|skip
-argument_list|(
-literal|""
-argument_list|)
 operator|)
 argument_list|)
 name|u1
@@ -5477,115 +8252,13 @@ name|tree
 name|size_unit
 decl_stmt|;
 name|tree
-name|name
-decl_stmt|;
-name|tree
-name|context
-decl_stmt|;
-name|tree
-name|arguments
-decl_stmt|;
-comment|/* Also used for DECL_FIELD_OFFSET */
-name|tree
-name|result
-decl_stmt|;
-comment|/* Also used for DECL_BIT_FIELD_TYPE */
-name|tree
 name|initial
-decl_stmt|;
-comment|/* Also used for DECL_QUALIFIER */
-name|tree
-name|abstract_origin
-decl_stmt|;
-name|tree
-name|assembler_name
-decl_stmt|;
-name|tree
-name|section_name
 decl_stmt|;
 name|tree
 name|attributes
 decl_stmt|;
-name|rtx
-name|rtl
-decl_stmt|;
-comment|/* RTL representation for object.  */
-comment|/* In FUNCTION_DECL, if it is inline, holds the saved insn chain.      In FIELD_DECL, is DECL_FIELD_BIT_OFFSET.      In PARM_DECL, holds an RTL for the stack slot      of register where the data was actually passed.      Used by Chill and Java in LABEL_DECL and by C++ and Java in VAR_DECL.  */
-union|union
-name|tree_decl_u2
-block|{
-name|struct
-name|function
-modifier|*
-name|GTY
-argument_list|(
-operator|(
-name|tag
-argument_list|(
-literal|"FUNCTION_DECL"
-argument_list|)
-operator|)
-argument_list|)
-name|f
-decl_stmt|;
-name|rtx
-name|GTY
-argument_list|(
-operator|(
-name|tag
-argument_list|(
-literal|"PARM_DECL"
-argument_list|)
-operator|)
-argument_list|)
-name|r
-decl_stmt|;
 name|tree
-name|GTY
-argument_list|(
-operator|(
-name|tag
-argument_list|(
-literal|"FIELD_DECL"
-argument_list|)
-operator|)
-argument_list|)
-name|t
-decl_stmt|;
-name|int
-name|GTY
-argument_list|(
-operator|(
-name|tag
-argument_list|(
-literal|"VAR_DECL"
-argument_list|)
-operator|)
-argument_list|)
-name|i
-decl_stmt|;
-block|}
-name|GTY
-argument_list|(
-operator|(
-name|desc
-argument_list|(
-literal|"TREE_CODE((tree)&(%0))"
-argument_list|)
-operator|)
-argument_list|)
-name|u2
-union|;
-comment|/* In a FUNCTION_DECL, this is DECL_SAVED_TREE.  */
-name|tree
-name|saved_tree
-decl_stmt|;
-comment|/* In a FUNCTION_DECL, these are function data which is to be kept      as long as FUNCTION_DECL is kept.  */
-name|tree
-name|inlined_fns
-decl_stmt|;
-name|tree
-name|vindex
+name|abstract_origin
 decl_stmt|;
 name|HOST_WIDE_INT
 name|pointer_alias_set
@@ -5603,43 +8276,1860 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_function_decl
+specifier|extern
+name|tree
+name|decl_value_expr_lookup
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|decl_value_expr_insert
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In a VAR_DECL or PARM_DECL, the location at which the value may be found,    if transformations have made this more complicated than evaluating the    decl itself.  This should only be used for debugging; once this field has    been set, the decl itself may not legitimately appear in the function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_HAS_VALUE_EXPR_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(TREE_CHECK2 (NODE, VAR_DECL, PARM_DECL)->decl_common.decl_flag_3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_VALUE_EXPR
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(decl_value_expr_lookup (DECL_WRTL_CHECK (NODE)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_DECL_VALUE_EXPR
+parameter_list|(
+name|NODE
+parameter_list|,
+name|VAL
+parameter_list|)
+define|\
+value|(decl_value_expr_insert (DECL_WRTL_CHECK (NODE), VAL))
+end_define
+
+begin_comment
+comment|/* Holds the RTL expression for the value of a variable or function.    This value can be evaluated lazily for functions, variables with    static storage duration, and labels.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_RTL
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(DECL_WRTL_CHECK (NODE)->decl_with_rtl.rtl		\    ? (NODE)->decl_with_rtl.rtl					\    : (make_decl_rtl (NODE), (NODE)->decl_with_rtl.rtl))
+end_define
+
+begin_comment
+comment|/* Set the DECL_RTL for NODE to RTL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_DECL_RTL
+parameter_list|(
+name|NODE
+parameter_list|,
+name|RTL
+parameter_list|)
+value|set_decl_rtl (NODE, RTL)
+end_define
+
+begin_comment
+comment|/* Returns nonzero if NODE is a tree node that can contain RTL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAS_RTL_P
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(CODE_CONTAINS_STRUCT (TREE_CODE (NODE), TS_DECL_WRTL))
+end_define
+
+begin_comment
+comment|/* Returns nonzero if the DECL_RTL for NODE has already been set.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_RTL_SET_P
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(HAS_RTL_P (NODE)&& DECL_WRTL_CHECK (NODE)->decl_with_rtl.rtl != NULL)
+end_define
+
+begin_comment
+comment|/* Copy the RTL from NODE1 to NODE2.  If the RTL was not set for    NODE1, it will not be set for NODE2; this is a lazy copy.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COPY_DECL_RTL
+parameter_list|(
+name|NODE1
+parameter_list|,
+name|NODE2
+parameter_list|)
+define|\
+value|(DECL_WRTL_CHECK (NODE2)->decl_with_rtl.rtl = DECL_WRTL_CHECK (NODE1)->decl_with_rtl.rtl)
+end_define
+
+begin_comment
+comment|/* The DECL_RTL for NODE, if it is set, or NULL, if it is not set.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_RTL_IF_SET
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_RTL_SET_P (NODE) ? DECL_RTL (NODE) : NULL)
+end_define
+
+begin_comment
+comment|/* In VAR_DECL and PARM_DECL nodes, nonzero means declared `register'.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_REGISTER
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_WRTL_CHECK (NODE)->decl_common.decl_flag_0)
+end_define
+
+begin_decl_stmt
+name|struct
+name|tree_decl_with_rtl
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_decl_common
+name|common
+decl_stmt|;
+name|rtx
+name|rtl
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* In a FIELD_DECL, this is the field position, counting in bytes, of the    DECL_OFFSET_ALIGN-bit-sized word containing the bit closest to the beginning    of the structure.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_FIELD_OFFSET
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FIELD_DECL_CHECK (NODE)->field_decl.offset)
+end_define
+
+begin_comment
+comment|/* In a FIELD_DECL, this is the offset, in bits, of the first bit of the    field from DECL_FIELD_OFFSET.  This field may be nonzero even for fields    that are not bit fields (since DECL_OFFSET_ALIGN may be larger than the    natural alignment of the field's type).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_FIELD_BIT_OFFSET
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FIELD_DECL_CHECK (NODE)->field_decl.bit_offset)
+end_define
+
+begin_comment
+comment|/* In a FIELD_DECL, this indicates whether the field was a bit-field and    if so, the type that was originally specified for it.    TREE_TYPE may have been modified (in finish_struct).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_BIT_FIELD_TYPE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FIELD_DECL_CHECK (NODE)->field_decl.bit_field_type)
+end_define
+
+begin_comment
+comment|/* For a FIELD_DECL in a QUAL_UNION_TYPE, records the expression, which    if nonzero, indicates that the field occupies the type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_QUALIFIER
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FIELD_DECL_CHECK (NODE)->field_decl.qualifier)
+end_define
+
+begin_comment
+comment|/* For FIELD_DECLs, off_align holds the number of low-order bits of    DECL_FIELD_OFFSET which are known to be always zero.    DECL_OFFSET_ALIGN thus returns the alignment that DECL_FIELD_OFFSET    has.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_OFFSET_ALIGN
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(((unsigned HOST_WIDE_INT)1)<< FIELD_DECL_CHECK (NODE)->decl_common.u1.a.off_align)
+end_define
+
+begin_comment
+comment|/* Specify that DECL_ALIGN(NODE) is a multiple of X.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_DECL_OFFSET_ALIGN
+parameter_list|(
+name|NODE
+parameter_list|,
+name|X
+parameter_list|)
+define|\
+value|(FIELD_DECL_CHECK (NODE)->decl_common.u1.a.off_align = exact_log2 ((X)& -(X)))
+end_define
+
+begin_comment
+comment|/* 1 if the alignment for this type was requested by "aligned" attribute,    0 if it is the default for this type.  */
+end_comment
+
+begin_comment
+comment|/* For FIELD_DECLS, DECL_FCONTEXT is the *first* baseclass in    which this FIELD_DECL is defined.  This information is needed when    writing debugging information about vfield and vbase decls for C++.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_FCONTEXT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FIELD_DECL_CHECK (NODE)->field_decl.fcontext)
+end_define
+
+begin_comment
+comment|/* In a FIELD_DECL, indicates this field should be bit-packed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_PACKED
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FIELD_DECL_CHECK (NODE)->decl_common.decl_flag_1)
+end_define
+
+begin_comment
+comment|/* Nonzero in a FIELD_DECL means it is a bit field, and must be accessed    specially.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_BIT_FIELD
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FIELD_DECL_CHECK (NODE)->decl_common.decl_flag_2)
+end_define
+
+begin_comment
+comment|/* Used in a FIELD_DECL to indicate that we cannot form the address of    this component.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_NONADDRESSABLE_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(FIELD_DECL_CHECK (NODE)->decl_common.decl_flag_3)
+end_define
+
+begin_decl_stmt
+name|struct
+name|tree_field_decl
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_decl_common
+name|common
+decl_stmt|;
+name|tree
+name|offset
+decl_stmt|;
+name|tree
+name|bit_field_type
+decl_stmt|;
+name|tree
+name|qualifier
+decl_stmt|;
+name|tree
+name|bit_offset
+decl_stmt|;
+name|tree
+name|fcontext
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* A numeric unique identifier for a LABEL_DECL.  The UID allocation is    dense, unique within any one function, and may be used to index arrays.    If the value is -1, then no UID has been assigned.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LABEL_DECL_UID
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(LABEL_DECL_CHECK (NODE)->decl_common.pointer_alias_set)
+end_define
+
+begin_comment
+comment|/* In LABEL_DECL nodes, nonzero means that an error message about    jumping into such a binding contour has been printed for this label.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_ERROR_ISSUED
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(LABEL_DECL_CHECK (NODE)->decl_common.decl_flag_0)
+end_define
+
+begin_decl_stmt
+name|struct
+name|tree_label_decl
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_decl_with_rtl
+name|common
+decl_stmt|;
+comment|/* Java's verifier has some need to store information about labels,      and was using fields that no longer exist on labels.      Once the verifier doesn't need these anymore, they should be removed.  */
+name|tree
+name|java_field_1
+decl_stmt|;
+name|tree
+name|java_field_2
+decl_stmt|;
+name|tree
+name|java_field_3
+decl_stmt|;
+name|unsigned
+name|int
+name|java_field_4
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+name|struct
+name|tree_result_decl
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_decl_with_rtl
+name|common
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+name|struct
+name|tree_const_decl
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_decl_with_rtl
+name|common
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* For a PARM_DECL, records the data type used to pass the argument,    which may be different from the type seen in the program.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_ARG_TYPE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(PARM_DECL_CHECK (NODE)->decl_common.initial)
+end_define
+
+begin_comment
+comment|/* For PARM_DECL, holds an RTL for the stack slot or register    where the data was actually passed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_INCOMING_RTL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(PARM_DECL_CHECK (NODE)->parm_decl.incoming_rtl)
+end_define
+
+begin_decl_stmt
+name|struct
+name|tree_parm_decl
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_decl_with_rtl
+name|common
+decl_stmt|;
+name|rtx
+name|incoming_rtl
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* Nonzero in a decl means that the gimplifier has seen (or placed)    this variable in a BIND_EXPR.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_SEEN_IN_BIND_EXPR_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.seen_in_bind_expr)
+end_define
+
+begin_comment
+comment|/* Used to indicate that the linkage status of this DECL is not yet known,    so it should not be output now.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_DEFER_OUTPUT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.defer_output)
+end_define
+
+begin_comment
+comment|/* Nonzero for a given ..._DECL node means that no warnings should be    generated just because this node is unused.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_IN_SYSTEM_HEADER
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.in_system_header_flag)
+end_define
+
+begin_comment
+comment|/* Used to indicate that this DECL has weak linkage.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_WEAK
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.weak_flag)
+end_define
+
+begin_comment
+comment|/* Internal to the gimplifier.  Indicates that the value is a formal    temporary controlled by the gimplifier.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_GIMPLE_FORMAL_TEMP_P
+parameter_list|(
+name|DECL
+parameter_list|)
+define|\
+value|DECL_WITH_VIS_CHECK (DECL)->decl_with_vis.gimple_formal_temp
+end_define
+
+begin_comment
+comment|/* Used to indicate that the DECL is a dllimport.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_DLLIMPORT_P
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.dllimport_flag)
+end_define
+
+begin_comment
+comment|/* DECL_BASED_ON_RESTRICT_P records whether a VAR_DECL is a temporary    based on a variable with a restrict qualified type.  If it is,    DECL_RESTRICT_BASE returns the restrict qualified variable on which    it is based.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_BASED_ON_RESTRICT_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.based_on_restrict_p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_GET_RESTRICT_BASE
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(decl_restrict_base_lookup (VAR_DECL_CHECK (NODE)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_DECL_RESTRICT_BASE
+parameter_list|(
+name|NODE
+parameter_list|,
+name|VAL
+parameter_list|)
+define|\
+value|(decl_restrict_base_insert (VAR_DECL_CHECK (NODE), (VAL)))
+end_define
+
+begin_function_decl
+specifier|extern
+name|tree
+name|decl_restrict_base_lookup
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|decl_restrict_base_insert
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Used in a DECL to indicate that, even if it TREE_PUBLIC, it need    not be put out unless it is needed in this translation unit.    Entities like this are shared across translation units (like weak    entities), but are guaranteed to be generated by any translation    unit that needs them, and therefore need not be put out anywhere    where they are not needed.  DECL_COMDAT is just a hint to the    back-end; it is up to front-ends which set this flag to ensure    that there will never be any harm, other than bloat, in putting out    something which is DECL_COMDAT.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_COMDAT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.comdat_flag)
+end_define
+
+begin_comment
+comment|/* A replaceable function is one which may be replaced at link-time    with an entirely different definition, provided that the    replacement has the same type.  For example, functions declared    with __attribute__((weak)) on most systems are replaceable.       COMDAT functions are not replaceable, since all definitions of the    function must be equivalent.  It is important that COMDAT functions    not be treated as replaceable so that use of C++ template    instantiations is not penalized.       For example, DECL_REPLACEABLE is used to determine whether or not a    function (including a template instantiation) which is not    explicitly declared "inline" can be inlined.  If the function is    DECL_REPLACEABLE then it is not safe to do the inlining, since the    implementation chosen at link-time may be different.  However, a    function that is not DECL_REPLACEABLE can be inlined, since all    versions of the function will be functionally identical.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_REPLACEABLE_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(!DECL_COMDAT (NODE)&& !targetm.binds_local_p (NODE))
+end_define
+
+begin_comment
+comment|/* The name of the object as the assembler will see it (but before any    translations made by ASM_OUTPUT_LABELREF).  Often this is the same    as DECL_NAME.  It is an IDENTIFIER_NODE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_ASSEMBLER_NAME
+parameter_list|(
+name|NODE
+parameter_list|)
+value|decl_assembler_name (NODE)
+end_define
+
+begin_comment
+comment|/* Return true if NODE is a NODE that can contain a DECL_ASSEMBLER_NAME.    This is true of all DECL nodes except FIELD_DECL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAS_DECL_ASSEMBLER_NAME_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(CODE_CONTAINS_STRUCT (TREE_CODE (NODE), TS_DECL_WITH_VIS))
+end_define
+
+begin_comment
+comment|/* Returns nonzero if the DECL_ASSEMBLER_NAME for NODE has been set.  If zero,    the NODE might still have a DECL_ASSEMBLER_NAME -- it just hasn't been set    yet.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_ASSEMBLER_NAME_SET_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(HAS_DECL_ASSEMBLER_NAME_P (NODE)&&  DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.assembler_name != NULL_TREE)
+end_define
+
+begin_comment
+comment|/* Set the DECL_ASSEMBLER_NAME for NODE to NAME.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_DECL_ASSEMBLER_NAME
+parameter_list|(
+name|NODE
+parameter_list|,
+name|NAME
+parameter_list|)
+define|\
+value|(DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.assembler_name = (NAME))
+end_define
+
+begin_comment
+comment|/* Copy the DECL_ASSEMBLER_NAME from DECL1 to DECL2.  Note that if DECL1's    DECL_ASSEMBLER_NAME has not yet been set, using this macro will not cause    the DECL_ASSEMBLER_NAME of either DECL to be set.  In other words, the    semantics of using this macro, are different than saying:       SET_DECL_ASSEMBLER_NAME(DECL2, DECL_ASSEMBLER_NAME (DECL1))     which will try to set the DECL_ASSEMBLER_NAME for DECL1.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COPY_DECL_ASSEMBLER_NAME
+parameter_list|(
+name|DECL1
+parameter_list|,
+name|DECL2
+parameter_list|)
+define|\
+value|(DECL_ASSEMBLER_NAME_SET_P (DECL1)					\    ? (void) SET_DECL_ASSEMBLER_NAME (DECL2,				\ 				     DECL_ASSEMBLER_NAME (DECL1))	\    : (void) 0)
+end_define
+
+begin_comment
+comment|/* Records the section name in a section attribute.  Used to pass    the name from decl_attributes to make_function_rtl and make_decl_rtl.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_SECTION_NAME
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.section_name)
+end_define
+
+begin_comment
+comment|/* Value of the decls's visibility attribute */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_VISIBILITY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.visibility)
+end_define
+
+begin_comment
+comment|/* Nonzero means that the decl had its visibility specified rather than    being inferred.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_VISIBILITY_SPECIFIED
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.visibility_specified)
+end_define
+
+begin_comment
+comment|/* Used in TREE_PUBLIC decls to indicate that copies of this DECL in    multiple translation units should be merged.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_ONE_ONLY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.one_only)
+end_define
+
+begin_decl_stmt
+name|struct
+name|tree_decl_with_vis
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_decl_with_rtl
+name|common
+decl_stmt|;
+name|tree
+name|assembler_name
+decl_stmt|;
+name|tree
+name|section_name
+decl_stmt|;
+comment|/* Belong to VAR_DECL exclusively.  */
+name|unsigned
+name|defer_output
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|hard_register
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|thread_local
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|common_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|in_text_section
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|gimple_formal_temp
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|dllimport_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|based_on_restrict_p
+range|:
+literal|1
+decl_stmt|;
+comment|/* Used by C++.  Might become a generic decl flag.  */
+name|unsigned
+name|shadowed_for_var_p
+range|:
+literal|1
+decl_stmt|;
+comment|/* Don't belong to VAR_DECL exclusively.  */
+name|unsigned
+name|in_system_header_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|weak_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|seen_in_bind_expr
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|comdat_flag
+range|:
+literal|1
+decl_stmt|;
+name|ENUM_BITFIELD
+argument_list|(
+argument|symbol_visibility
+argument_list|)
+name|visibility
+label|:
+literal|2
+expr_stmt|;
+name|unsigned
+name|visibility_specified
+range|:
+literal|1
+decl_stmt|;
+comment|/* Belong to FUNCTION_DECL exclusively.  */
+name|unsigned
+name|one_only
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|init_priority_p
+range|:
+literal|1
+decl_stmt|;
+comment|/* Belongs to VAR_DECL exclusively.  */
+name|ENUM_BITFIELD
+argument_list|(
+argument|tls_model
+argument_list|)
+name|tls_model
+label|:
+literal|3
+expr_stmt|;
+comment|/* 11 unused bits. */
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* In a VAR_DECL that's static,    nonzero if the space is in the text section.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_IN_TEXT_SECTION
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.in_text_section)
+end_define
+
+begin_comment
+comment|/* Nonzero for a given ..._DECL node means that this node should be    put in .common, if possible.  If a DECL_INITIAL is given, and it    is not error_mark_node, then the decl cannot be put in .common.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_COMMON
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.common_flag)
+end_define
+
+begin_comment
+comment|/* In a VAR_DECL, nonzero if the decl is a register variable with    an explicit asm specification.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_HARD_REGISTER
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.hard_register)
+end_define
+
+begin_function_decl
+specifier|extern
+name|tree
+name|decl_debug_expr_lookup
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|decl_debug_expr_insert
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* For VAR_DECL, this is set to either an expression that it was split    from (if DECL_DEBUG_EXPR_IS_FROM is true), otherwise a tree_list of    subexpressions that it was split into.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_DEBUG_EXPR
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(decl_debug_expr_lookup (VAR_DECL_CHECK (NODE)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_DECL_DEBUG_EXPR
+parameter_list|(
+name|NODE
+parameter_list|,
+name|VAL
+parameter_list|)
+define|\
+value|(decl_debug_expr_insert (VAR_DECL_CHECK (NODE), VAL))
+end_define
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|short
+name|decl_init_priority_lookup
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|decl_init_priority_insert
+parameter_list|(
+name|tree
+parameter_list|,
+name|unsigned
+name|short
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In a non-local VAR_DECL with static storage duration, this is the    initialization priority.  If this value is zero, the NODE will be    initialized at the DEFAULT_INIT_PRIORITY.  Only used by C++ FE*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_HAS_INIT_PRIORITY_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.init_priority_p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_INIT_PRIORITY
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(decl_init_priority_lookup (VAR_DECL_CHECK (NODE)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_DECL_INIT_PRIORITY
+parameter_list|(
+name|NODE
+parameter_list|,
+name|VAL
+parameter_list|)
+define|\
+value|(decl_init_priority_insert (VAR_DECL_CHECK (NODE), VAL))
+end_define
+
+begin_comment
+comment|/* In a VAR_DECL, the model to use if the data should be allocated from    thread-local storage.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_TLS_MODEL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.tls_model)
+end_define
+
+begin_comment
+comment|/* In a VAR_DECL, nonzero if the data should be allocated from    thread-local storage.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_THREAD_LOCAL_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.tls_model != TLS_MODEL_NONE)
+end_define
+
+begin_decl_stmt
+name|struct
+name|tree_var_decl
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_decl_with_vis
+name|common
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* This field is used to reference anything in decl.result and is meant only    for use by the garbage collector.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_RESULT_FLD
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_NON_COMMON_CHECK (NODE)->decl_non_common.result)
+end_define
+
+begin_comment
+comment|/* The DECL_VINDEX is used for FUNCTION_DECLS in two different ways.    Before the struct containing the FUNCTION_DECL is laid out,    DECL_VINDEX may point to a FUNCTION_DECL in a base class which    is the FUNCTION_DECL which this FUNCTION_DECL will replace as a virtual    function.  When the class is laid out, this pointer is changed    to an INTEGER_CST node which is suitable for use as an index    into the virtual function table.    C++ also uses this field in namespaces, hence the DECL_NON_COMMON_CHECK.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_VINDEX
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_NON_COMMON_CHECK (NODE)->decl_non_common.vindex)
+end_define
+
+begin_decl_stmt
+name|struct
+name|tree_decl_non_common
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_decl_with_vis
+name|common
+decl_stmt|;
+comment|/* C++ uses this in namespaces.  */
+name|tree
+name|saved_tree
+decl_stmt|;
+comment|/* C++ uses this in templates.  */
+name|tree
+name|arguments
+decl_stmt|;
+comment|/* Almost all FE's use this.  */
+name|tree
+name|result
+decl_stmt|;
+comment|/* C++ uses this in namespaces.  */
+name|tree
+name|vindex
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* In FUNCTION_DECL, holds the decl for the return value.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_RESULT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FUNCTION_DECL_CHECK (NODE)->decl_non_common.result)
+end_define
+
+begin_comment
+comment|/* In a FUNCTION_DECL, nonzero if the function cannot be inlined.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_UNINLINABLE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.uninlinable)
+end_define
+
+begin_comment
+comment|/* In a FUNCTION_DECL, the saved representation of the body of the    entire function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_SAVED_TREE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FUNCTION_DECL_CHECK (NODE)->decl_non_common.saved_tree)
+end_define
+
+begin_comment
+comment|/* Nonzero in a FUNCTION_DECL means this function should be treated    as if it were a malloc, meaning it returns a pointer that is    not an alias.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_IS_MALLOC
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.malloc_flag)
+end_define
+
+begin_comment
+comment|/* Nonzero in a FUNCTION_DECL means this function may return more    than once.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_IS_RETURNS_TWICE
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.returns_twice_flag)
+end_define
+
+begin_comment
+comment|/* Nonzero in a FUNCTION_DECL means this function should be treated    as "pure" function (like const function, but may read global memory).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_IS_PURE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.pure_flag)
+end_define
+
+begin_comment
+comment|/* Nonzero in a FUNCTION_DECL means this function should be treated    as "novops" function (function that does not read global memory,    but may have arbitrary side effects).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_IS_NOVOPS
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.novops_flag)
+end_define
+
+begin_comment
+comment|/* Used in FUNCTION_DECLs to indicate that they should be run automatically    at the beginning or end of execution.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_STATIC_CONSTRUCTOR
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.static_ctor_flag)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_STATIC_DESTRUCTOR
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.static_dtor_flag)
+end_define
+
+begin_comment
+comment|/* Used in FUNCTION_DECLs to indicate that function entry and exit should    be instrumented with calls to support routines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.no_instrument_function_entry_exit)
+end_define
+
+begin_comment
+comment|/* Used in FUNCTION_DECLs to indicate that limit-stack-* should be    disabled in this function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_NO_LIMIT_STACK
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.no_limit_stack)
+end_define
+
+begin_comment
+comment|/* In a FUNCTION_DECL with a nonzero DECL_CONTEXT, indicates that a    static chain is not needed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_NO_STATIC_CHAIN
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.regdecl_flag)
+end_define
+
+begin_comment
+comment|/* Nonzero for a decl that cgraph has decided should be inlined into    at least one call site.  It is not meaningful to look at this    directly; always use cgraph_function_possibly_inlined_p.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_POSSIBLY_INLINED
+parameter_list|(
+name|DECL
+parameter_list|)
+define|\
+value|FUNCTION_DECL_CHECK (DECL)->function_decl.possibly_inlined
+end_define
+
+begin_comment
+comment|/* Nonzero in a FUNCTION_DECL means this function can be substituted    where it is called.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_INLINE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.inline_flag)
+end_define
+
+begin_comment
+comment|/* Nonzero in a FUNCTION_DECL means that this function was declared inline,    such as via the `inline' keyword in C/C++.  This flag controls the linkage    semantics of 'inline'; whether or not the function is inlined is    controlled by DECL_INLINE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_DECLARED_INLINE_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.declared_inline_flag)
+end_define
+
+begin_comment
+comment|/* For FUNCTION_DECL, this holds a pointer to a structure ("struct function")    that describes the status of this function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_STRUCT_FUNCTION
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.f)
+end_define
+
+begin_comment
+comment|/* In a FUNCTION_DECL, nonzero means a built in function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_BUILT_IN
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_BUILT_IN_CLASS (NODE) != NOT_BUILT_IN)
+end_define
+
+begin_comment
+comment|/* For a builtin function, identify which part of the compiler defined it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_BUILT_IN_CLASS
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.built_in_class)
+end_define
+
+begin_comment
+comment|/* In FUNCTION_DECL, a chain of ..._DECL nodes.    VAR_DECL and PARM_DECL reserve the arguments slot for language-specific    uses.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_ARGUMENTS
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FUNCTION_DECL_CHECK (NODE)->decl_non_common.arguments)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_ARGUMENT_FLD
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_NON_COMMON_CHECK (NODE)->decl_non_common.arguments)
+end_define
+
+begin_comment
+comment|/* FUNCTION_DECL inherits from DECL_NON_COMMON because of the use of the    arguments/result/saved_tree fields by front ends.   It was either inherit    FUNCTION_DECL from non_common, or inherit non_common from FUNCTION_DECL,    which seemed a bit strange.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|tree_function_decl
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_decl_non_common
+name|common
+decl_stmt|;
+name|unsigned
+name|static_ctor_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|static_dtor_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|uninlinable
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|possibly_inlined
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|novops_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|returns_twice_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|malloc_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|pure_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|declared_inline_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|regdecl_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|inline_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|no_instrument_function_entry_exit
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|no_limit_stack
+range|:
+literal|1
+decl_stmt|;
+name|ENUM_BITFIELD
+argument_list|(
+argument|built_in_class
+argument_list|)
+name|built_in_class
+label|:
+literal|2
+expr_stmt|;
+name|struct
+name|function
+modifier|*
+name|f
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* For a TYPE_DECL, holds the "original" type.  (TREE_TYPE has the copy.) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_ORIGINAL_TYPE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TYPE_DECL_CHECK (NODE)->decl_non_common.result)
+end_define
+
+begin_comment
+comment|/* In a TYPE_DECL nonzero means the detail info about this type is not dumped    into stabs.  Instead it will generate cross reference ('x') of names.    This uses the same flag as DECL_EXTERNAL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_DECL_SUPPRESS_DEBUG
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(TYPE_DECL_CHECK (NODE)->decl_common.decl_flag_2)
+end_define
+
+begin_decl_stmt
+name|struct
+name|tree_type_decl
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_decl_non_common
+name|common
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_escape
 end_escape
 
-begin_enum
-enum|enum
-name|tree_node_structure_enum
+begin_comment
+comment|/* A STATEMENT_LIST chains statements together in GENERIC and GIMPLE.    To reduce overhead, the nodes containing the statements are not trees.    This avoids the overhead of tree_common on all linked list elements.     Use the interface in tree-iterator.h to access this node.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STATEMENT_LIST_HEAD
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(STATEMENT_LIST_CHECK (NODE)->stmt_list.head)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STATEMENT_LIST_TAIL
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(STATEMENT_LIST_CHECK (NODE)->stmt_list.tail)
+end_define
+
+begin_decl_stmt
+name|struct
+name|tree_statement_list_node
+name|GTY
+argument_list|(
+operator|(
+name|chain_next
+argument_list|(
+literal|"%h.next"
+argument_list|)
+operator|,
+name|chain_prev
+argument_list|(
+literal|"%h.prev"
+argument_list|)
+operator|)
+argument_list|)
 block|{
-name|TS_COMMON
-block|,
-name|TS_INT_CST
-block|,
-name|TS_REAL_CST
-block|,
-name|TS_VECTOR
-block|,
-name|TS_STRING
-block|,
-name|TS_COMPLEX
-block|,
-name|TS_IDENTIFIER
-block|,
-name|TS_DECL
-block|,
-name|TS_TYPE
-block|,
-name|TS_LIST
-block|,
-name|TS_VEC
-block|,
-name|TS_EXP
-block|,
-name|TS_BLOCK
-block|,
-name|LAST_TS_ENUM
+name|struct
+name|tree_statement_list_node
+modifier|*
+name|prev
+decl_stmt|;
+name|struct
+name|tree_statement_list_node
+modifier|*
+name|next
+decl_stmt|;
+name|tree
+name|stmt
+decl_stmt|;
 block|}
-enum|;
-end_enum
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+name|struct
+name|tree_statement_list
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_common
+name|common
+decl_stmt|;
+name|struct
+name|tree_statement_list_node
+modifier|*
+name|head
+decl_stmt|;
+name|struct
+name|tree_statement_list_node
+modifier|*
+name|tail
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_define
+define|#
+directive|define
+name|VALUE_HANDLE_ID
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(VALUE_HANDLE_CHECK (NODE)->value_handle.id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VALUE_HANDLE_EXPR_SET
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(VALUE_HANDLE_CHECK (NODE)->value_handle.expr_set)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VALUE_HANDLE_VUSES
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(VALUE_HANDLE_CHECK (NODE)->value_handle.vuses)
+end_define
+
+begin_comment
+comment|/* Defined and used in tree-ssa-pre.c.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|value_set
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+name|struct
+name|tree_value_handle
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|struct
+name|tree_common
+name|common
+decl_stmt|;
+comment|/* The set of expressions represented by this handle.  */
+name|struct
+name|value_set
+modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|skip
+operator|)
+argument_list|)
+name|expr_set
+decl_stmt|;
+comment|/* Unique ID for this value handle.  IDs are handed out in a      conveniently dense form starting at 0, so that we can make      bitmaps of value handles.  */
+name|unsigned
+name|int
+name|id
+decl_stmt|;
+comment|/* Set of virtual uses represented by this handle.  */
+name|VEC
+argument_list|(
+name|tree
+argument_list|,
+name|gc
+argument_list|)
+operator|*
+name|vuses
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* Define the overall contents of a tree node.    It may be any of the structures declared above    for various types of node.  */
@@ -5756,17 +10246,173 @@ argument_list|)
 name|identifier
 decl_stmt|;
 name|struct
-name|tree_decl
+name|tree_decl_minimal
 name|GTY
 argument_list|(
 operator|(
 name|tag
 argument_list|(
-literal|"TS_DECL"
+literal|"TS_DECL_MINIMAL"
 argument_list|)
 operator|)
 argument_list|)
-name|decl
+name|decl_minimal
+decl_stmt|;
+name|struct
+name|tree_decl_common
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_DECL_COMMON"
+argument_list|)
+operator|)
+argument_list|)
+name|decl_common
+decl_stmt|;
+name|struct
+name|tree_decl_with_rtl
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_DECL_WRTL"
+argument_list|)
+operator|)
+argument_list|)
+name|decl_with_rtl
+decl_stmt|;
+name|struct
+name|tree_decl_non_common
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_DECL_NON_COMMON"
+argument_list|)
+operator|)
+argument_list|)
+name|decl_non_common
+decl_stmt|;
+name|struct
+name|tree_parm_decl
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_PARM_DECL"
+argument_list|)
+operator|)
+argument_list|)
+name|parm_decl
+decl_stmt|;
+name|struct
+name|tree_decl_with_vis
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_DECL_WITH_VIS"
+argument_list|)
+operator|)
+argument_list|)
+name|decl_with_vis
+decl_stmt|;
+name|struct
+name|tree_var_decl
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_VAR_DECL"
+argument_list|)
+operator|)
+argument_list|)
+name|var_decl
+decl_stmt|;
+name|struct
+name|tree_field_decl
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_FIELD_DECL"
+argument_list|)
+operator|)
+argument_list|)
+name|field_decl
+decl_stmt|;
+name|struct
+name|tree_label_decl
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_LABEL_DECL"
+argument_list|)
+operator|)
+argument_list|)
+name|label_decl
+decl_stmt|;
+name|struct
+name|tree_result_decl
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_RESULT_DECL"
+argument_list|)
+operator|)
+argument_list|)
+name|result_decl
+decl_stmt|;
+name|struct
+name|tree_const_decl
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_CONST_DECL"
+argument_list|)
+operator|)
+argument_list|)
+name|const_decl
+decl_stmt|;
+name|struct
+name|tree_type_decl
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_TYPE_DECL"
+argument_list|)
+operator|)
+argument_list|)
+name|type_decl
+decl_stmt|;
+name|struct
+name|tree_function_decl
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_FUNCTION_DECL"
+argument_list|)
+operator|)
+argument_list|)
+name|function_decl
 decl_stmt|;
 name|struct
 name|tree_type
@@ -5821,6 +10467,32 @@ argument_list|)
 name|exp
 decl_stmt|;
 name|struct
+name|tree_ssa_name
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_SSA_NAME"
+argument_list|)
+operator|)
+argument_list|)
+name|ssa_name
+decl_stmt|;
+name|struct
+name|tree_phi_node
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_PHI_NODE"
+argument_list|)
+operator|)
+argument_list|)
+name|phi
+decl_stmt|;
+name|struct
 name|tree_block
 name|GTY
 argument_list|(
@@ -5832,6 +10504,97 @@ argument_list|)
 operator|)
 argument_list|)
 name|block
+decl_stmt|;
+name|struct
+name|tree_binfo
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_BINFO"
+argument_list|)
+operator|)
+argument_list|)
+name|binfo
+decl_stmt|;
+name|struct
+name|tree_statement_list
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_STATEMENT_LIST"
+argument_list|)
+operator|)
+argument_list|)
+name|stmt_list
+decl_stmt|;
+name|struct
+name|tree_value_handle
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_VALUE_HANDLE"
+argument_list|)
+operator|)
+argument_list|)
+name|value_handle
+decl_stmt|;
+name|struct
+name|tree_constructor
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_CONSTRUCTOR"
+argument_list|)
+operator|)
+argument_list|)
+name|constructor
+decl_stmt|;
+name|struct
+name|tree_memory_tag
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_MEMORY_TAG"
+argument_list|)
+operator|)
+argument_list|)
+name|mtag
+decl_stmt|;
+name|struct
+name|tree_struct_field_tag
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_STRUCT_FIELD_TAG"
+argument_list|)
+operator|)
+argument_list|)
+name|sft
+decl_stmt|;
+name|struct
+name|tree_omp_clause
+name|GTY
+argument_list|(
+operator|(
+name|tag
+argument_list|(
+literal|"TS_OMP_CLAUSE"
+argument_list|)
+operator|)
+argument_list|)
+name|omp_clause
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -5931,63 +10694,33 @@ name|TI_CONST_PTR_TYPE
 block|,
 name|TI_SIZE_TYPE
 block|,
+name|TI_PID_TYPE
+block|,
 name|TI_PTRDIFF_TYPE
 block|,
 name|TI_VA_LIST_TYPE
 block|,
+name|TI_VA_LIST_GPR_COUNTER_FIELD
+block|,
+name|TI_VA_LIST_FPR_COUNTER_FIELD
+block|,
 name|TI_BOOLEAN_TYPE
 block|,
+name|TI_FILEPTR_TYPE
+block|,
+name|TI_DFLOAT32_TYPE
+block|,
+name|TI_DFLOAT64_TYPE
+block|,
+name|TI_DFLOAT128_TYPE
+block|,
+name|TI_DFLOAT32_PTR_TYPE
+block|,
+name|TI_DFLOAT64_PTR_TYPE
+block|,
+name|TI_DFLOAT128_PTR_TYPE
+block|,
 name|TI_VOID_LIST_NODE
-block|,
-name|TI_UV4SF_TYPE
-block|,
-name|TI_UV4SI_TYPE
-block|,
-name|TI_UV8HI_TYPE
-block|,
-name|TI_UV8QI_TYPE
-block|,
-name|TI_UV4HI_TYPE
-block|,
-name|TI_UV2HI_TYPE
-block|,
-name|TI_UV2SI_TYPE
-block|,
-name|TI_UV2SF_TYPE
-block|,
-name|TI_UV2DI_TYPE
-block|,
-name|TI_UV1DI_TYPE
-block|,
-name|TI_UV16QI_TYPE
-block|,
-name|TI_V4SF_TYPE
-block|,
-name|TI_V16SF_TYPE
-block|,
-name|TI_V4SI_TYPE
-block|,
-name|TI_V8HI_TYPE
-block|,
-name|TI_V8QI_TYPE
-block|,
-name|TI_V4HI_TYPE
-block|,
-name|TI_V2HI_TYPE
-block|,
-name|TI_V2SI_TYPE
-block|,
-name|TI_V2SF_TYPE
-block|,
-name|TI_V2DF_TYPE
-block|,
-name|TI_V2DI_TYPE
-block|,
-name|TI_V1DI_TYPE
-block|,
-name|TI_V16QI_TYPE
-block|,
-name|TI_V4DF_TYPE
 block|,
 name|TI_MAIN_IDENTIFIER
 block|,
@@ -6295,6 +11028,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|pid_type_node
+value|global_trees[TI_PID_TYPE]
+end_define
+
+begin_define
+define|#
+directive|define
 name|ptrdiff_type_node
 value|global_trees[TI_PTRDIFF_TYPE]
 end_define
@@ -6304,6 +11044,31 @@ define|#
 directive|define
 name|va_list_type_node
 value|global_trees[TI_VA_LIST_TYPE]
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_list_gpr_counter_field
+value|global_trees[TI_VA_LIST_GPR_COUNTER_FIELD]
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_list_fpr_counter_field
+value|global_trees[TI_VA_LIST_FPR_COUNTER_FIELD]
+end_define
+
+begin_comment
+comment|/* The C type `FILE *'.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|fileptr_type_node
+value|global_trees[TI_FILEPTR_TYPE]
 end_define
 
 begin_define
@@ -6325,6 +11090,52 @@ define|#
 directive|define
 name|boolean_true_node
 value|global_trees[TI_BOOLEAN_TRUE]
+end_define
+
+begin_comment
+comment|/* The decimal floating point types. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dfloat32_type_node
+value|global_trees[TI_DFLOAT32_TYPE]
+end_define
+
+begin_define
+define|#
+directive|define
+name|dfloat64_type_node
+value|global_trees[TI_DFLOAT64_TYPE]
+end_define
+
+begin_define
+define|#
+directive|define
+name|dfloat128_type_node
+value|global_trees[TI_DFLOAT128_TYPE]
+end_define
+
+begin_define
+define|#
+directive|define
+name|dfloat32_ptr_type_node
+value|global_trees[TI_DFLOAT32_PTR_TYPE]
+end_define
+
+begin_define
+define|#
+directive|define
+name|dfloat64_ptr_type_node
+value|global_trees[TI_DFLOAT64_PTR_TYPE]
+end_define
+
+begin_define
+define|#
+directive|define
+name|dfloat128_ptr_type_node
+value|global_trees[TI_DFLOAT128_PTR_TYPE]
 end_define
 
 begin_comment
@@ -6353,167 +11164,6 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|(IDENTIFIER_NODE_CHECK (NODE) == main_identifier_node)
-end_define
-
-begin_define
-define|#
-directive|define
-name|unsigned_V16QI_type_node
-value|global_trees[TI_UV16QI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|unsigned_V4SI_type_node
-value|global_trees[TI_UV4SI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|unsigned_V8QI_type_node
-value|global_trees[TI_UV8QI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|unsigned_V8HI_type_node
-value|global_trees[TI_UV8HI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|unsigned_V4HI_type_node
-value|global_trees[TI_UV4HI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|unsigned_V2HI_type_node
-value|global_trees[TI_UV2HI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|unsigned_V2SI_type_node
-value|global_trees[TI_UV2SI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|unsigned_V2DI_type_node
-value|global_trees[TI_UV2DI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|unsigned_V1DI_type_node
-value|global_trees[TI_UV1DI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|V16QI_type_node
-value|global_trees[TI_V16QI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|V4SF_type_node
-value|global_trees[TI_V4SF_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|V4SI_type_node
-value|global_trees[TI_V4SI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|V8QI_type_node
-value|global_trees[TI_V8QI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|V8HI_type_node
-value|global_trees[TI_V8HI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|V4HI_type_node
-value|global_trees[TI_V4HI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|V2HI_type_node
-value|global_trees[TI_V2HI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|V2SI_type_node
-value|global_trees[TI_V2SI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|V2SF_type_node
-value|global_trees[TI_V2SF_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|V2DI_type_node
-value|global_trees[TI_V2DI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|V2DF_type_node
-value|global_trees[TI_V2DF_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|V16SF_type_node
-value|global_trees[TI_V16SF_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|V1DI_type_node
-value|global_trees[TI_V1DI_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|V4DF_type_node
-value|global_trees[TI_V4DF_TYPE]
 end_define
 
 begin_comment
@@ -6661,23 +11311,6 @@ begin_comment
 comment|/* Set to the default thread-local storage (tls) model to use.  */
 end_comment
 
-begin_enum
-enum|enum
-name|tls_model
-block|{
-name|TLS_MODEL_GLOBAL_DYNAMIC
-init|=
-literal|1
-block|,
-name|TLS_MODEL_LOCAL_DYNAMIC
-block|,
-name|TLS_MODEL_INITIAL_EXEC
-block|,
-name|TLS_MODEL_LOCAL_EXEC
-block|}
-enum|;
-end_enum
-
 begin_decl_stmt
 specifier|extern
 name|enum
@@ -6739,13 +11372,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Lowest level primitive for allocating a node.    The TREE_CODE is the only argument.  Contents are initialized    to zero except for a few of the common fields.  */
+comment|/* Compute the number of bytes occupied by a tree with code CODE.  This    function cannot be used for TREE_VEC or PHI_NODE codes, which are of    variable length.  */
 end_comment
 
 begin_function_decl
 specifier|extern
-name|tree
-name|make_node
+name|size_t
+name|tree_code_size
 parameter_list|(
 name|enum
 name|tree_code
@@ -6754,18 +11387,55 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Lowest level primitive for allocating a node.    The TREE_CODE is the only argument.  Contents are initialized    to zero except for a few of the common fields.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|make_node_stat
+parameter_list|(
+name|enum
+name|tree_code
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|make_node
+parameter_list|(
+name|t
+parameter_list|)
+value|make_node_stat (t MEM_STAT_INFO)
+end_define
+
+begin_comment
 comment|/* Make a copy of a node, with all the same contents.  */
 end_comment
 
 begin_function_decl
 specifier|extern
 name|tree
-name|copy_node
+name|copy_node_stat
 parameter_list|(
 name|tree
+name|MEM_STAT_DECL
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|copy_node
+parameter_list|(
+name|t
+parameter_list|)
+value|copy_node_stat (t MEM_STAT_INFO)
+end_define
 
 begin_comment
 comment|/* Make a copy of a chain of TREE_LIST nodes.  */
@@ -6782,18 +11452,220 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Make a BINFO.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|make_tree_binfo_stat
+parameter_list|(
+name|unsigned
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|make_tree_binfo
+parameter_list|(
+name|t
+parameter_list|)
+value|make_tree_binfo_stat (t MEM_STAT_INFO)
+end_define
+
+begin_comment
 comment|/* Make a TREE_VEC.  */
 end_comment
 
 begin_function_decl
 specifier|extern
 name|tree
-name|make_tree_vec
+name|make_tree_vec_stat
 parameter_list|(
 name|int
+name|MEM_STAT_DECL
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|make_tree_vec
+parameter_list|(
+name|t
+parameter_list|)
+value|make_tree_vec_stat (t MEM_STAT_INFO)
+end_define
+
+begin_comment
+comment|/* Tree nodes for SSA analysis.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|init_phinodes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|fini_phinodes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|release_phi_node
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GATHER_STATISTICS
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|phinodes_print_statistics
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+specifier|extern
+name|void
+name|init_ssanames
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|fini_ssanames
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|make_ssa_name
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|duplicate_ssa_name
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|duplicate_ssa_name_ptr_info
+parameter_list|(
+name|tree
+parameter_list|,
+name|struct
+name|ptr_info_def
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|release_ssa_name
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|release_defs
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|replace_ssa_name_symbol
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GATHER_STATISTICS
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|ssanames_print_statistics
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Return the (unique) IDENTIFIER_NODE node for a given name.    The name is supplied as a char *.  */
@@ -6873,34 +11745,6 @@ begin_comment
 comment|/* Construct various types of nodes.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|build_int_2
-parameter_list|(
-name|LO
-parameter_list|,
-name|HI
-parameter_list|)
-define|\
-value|build_int_2_wide ((unsigned HOST_WIDE_INT) (LO), (HOST_WIDE_INT) (HI))
-end_define
-
-begin_function_decl
-specifier|extern
-name|tree
-name|build
-parameter_list|(
-name|enum
-name|tree_code
-parameter_list|,
-name|tree
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 specifier|extern
 name|tree
@@ -6917,8 +11761,318 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|tree
-name|build_int_2_wide
+name|build0_stat
 parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|build0
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|)
+value|build0_stat (c,t MEM_STAT_INFO)
+end_define
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build1_stat
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|build1
+parameter_list|(
+name|c
+parameter_list|,
+name|t1
+parameter_list|,
+name|t2
+parameter_list|)
+value|build1_stat (c,t1,t2 MEM_STAT_INFO)
+end_define
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build2_stat
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|build2
+parameter_list|(
+name|c
+parameter_list|,
+name|t1
+parameter_list|,
+name|t2
+parameter_list|,
+name|t3
+parameter_list|)
+value|build2_stat (c,t1,t2,t3 MEM_STAT_INFO)
+end_define
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build3_stat
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|build3
+parameter_list|(
+name|c
+parameter_list|,
+name|t1
+parameter_list|,
+name|t2
+parameter_list|,
+name|t3
+parameter_list|,
+name|t4
+parameter_list|)
+value|build3_stat (c,t1,t2,t3,t4 MEM_STAT_INFO)
+end_define
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build4_stat
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|build4
+parameter_list|(
+name|c
+parameter_list|,
+name|t1
+parameter_list|,
+name|t2
+parameter_list|,
+name|t3
+parameter_list|,
+name|t4
+parameter_list|,
+name|t5
+parameter_list|)
+value|build4_stat (c,t1,t2,t3,t4,t5 MEM_STAT_INFO)
+end_define
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build5_stat
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|build5
+parameter_list|(
+name|c
+parameter_list|,
+name|t1
+parameter_list|,
+name|t2
+parameter_list|,
+name|t3
+parameter_list|,
+name|t4
+parameter_list|,
+name|t5
+parameter_list|,
+name|t6
+parameter_list|)
+value|build5_stat (c,t1,t2,t3,t4,t5,t6 MEM_STAT_INFO)
+end_define
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build7_stat
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|build7
+parameter_list|(
+name|c
+parameter_list|,
+name|t1
+parameter_list|,
+name|t2
+parameter_list|,
+name|t3
+parameter_list|,
+name|t4
+parameter_list|,
+name|t5
+parameter_list|,
+name|t6
+parameter_list|,
+name|t7
+parameter_list|,
+name|t8
+parameter_list|)
+define|\
+value|build7_stat (c,t1,t2,t3,t4,t5,t6,t7,t8 MEM_STAT_INFO)
+end_define
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_int_cst
+parameter_list|(
+name|tree
+parameter_list|,
+name|HOST_WIDE_INT
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_int_cst_type
+parameter_list|(
+name|tree
+parameter_list|,
+name|HOST_WIDE_INT
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_int_cstu
+parameter_list|(
+name|tree
+parameter_list|,
+name|unsigned
+name|HOST_WIDE_INT
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_int_cst_wide
+parameter_list|(
+name|tree
+parameter_list|,
 name|unsigned
 name|HOST_WIDE_INT
 parameter_list|,
@@ -6939,10 +12093,60 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
+specifier|extern
+name|tree
+name|build_vector_from_ctor
+argument_list|(
+name|tree
+argument_list|,
+name|VEC
+argument_list|(
+name|constructor_elt
+argument_list|,
+name|gc
+argument_list|)
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|tree
 name|build_constructor
+argument_list|(
+name|tree
+argument_list|,
+name|VEC
+argument_list|(
+name|constructor_elt
+argument_list|,
+name|gc
+argument_list|)
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_constructor_single
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_constructor_from_list
 parameter_list|(
 name|tree
 parameter_list|,
@@ -6980,6 +12184,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|tree
+name|build_one_cst
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
 name|build_string
 parameter_list|(
 name|int
@@ -6994,34 +12208,32 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|tree
-name|build1
+name|build_tree_list_stat
 parameter_list|(
-name|enum
-name|tree_code
-parameter_list|,
 name|tree
 parameter_list|,
 name|tree
+name|MEM_STAT_DECL
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|tree
+begin_define
+define|#
+directive|define
 name|build_tree_list
 parameter_list|(
-name|tree
+name|t
 parameter_list|,
-name|tree
+name|q
 parameter_list|)
-function_decl|;
-end_function_decl
+value|build_tree_list_stat(t,q MEM_STAT_INFO)
+end_define
 
 begin_function_decl
 specifier|extern
 name|tree
-name|build_decl
+name|build_decl_stat
 parameter_list|(
 name|enum
 name|tree_code
@@ -7029,9 +12241,38 @@ parameter_list|,
 name|tree
 parameter_list|,
 name|tree
+name|MEM_STAT_DECL
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_fn_decl
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|build_decl
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|q
+parameter_list|)
+value|build_decl_stat (c,t,q MEM_STAT_INFO)
+end_define
 
 begin_function_decl
 specifier|extern
@@ -7045,16 +12286,20 @@ parameter_list|,
 name|tree
 parameter_list|,
 name|tree
-parameter_list|,
-name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_MAPPED_LOCATION
+end_ifndef
+
 begin_function_decl
 specifier|extern
-name|tree
-name|build_expr_wfl
+name|void
+name|annotate_with_file_line
 parameter_list|(
 name|tree
 parameter_list|,
@@ -7063,8 +12308,44 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|annotate_with_locus
+parameter_list|(
+name|tree
 parameter_list|,
-name|int
+name|location_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_empty_stmt
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_omp_clause
+parameter_list|(
+name|enum
+name|omp_clause_code
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7095,10 +12376,30 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|tree
+name|signed_type_for
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|unsigned_type_for
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|initialize_sizetypes
 parameter_list|(
-name|void
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7132,6 +12433,8 @@ name|tree
 parameter_list|,
 name|enum
 name|machine_mode
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7155,6 +12458,8 @@ name|tree
 parameter_list|,
 name|enum
 name|machine_mode
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7165,6 +12470,33 @@ name|tree
 name|build_reference_type
 parameter_list|(
 name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_vector_type_for_mode
+parameter_list|(
+name|tree
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_vector_type
+parameter_list|(
+name|tree
+name|innertype
+parameter_list|,
+name|int
+name|nunits
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7288,7 +12620,37 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|tree
+name|build_resx
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
 name|array_type_nelts
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|in_array_bounds_p
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|range_in_array_bounds_p
 parameter_list|(
 name|tree
 parameter_list|)
@@ -7314,29 +12676,6 @@ name|purpose_member
 parameter_list|(
 name|tree
 parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|tree
-name|binfo_member
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|unsigned
-name|int
-name|attribute_hash_list
-parameter_list|(
 name|tree
 parameter_list|)
 function_decl|;
@@ -7449,6 +12788,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|tree_int_cst_sign_bit
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|tree_expr_nonnegative_p
 parameter_list|(
 name|tree
@@ -7459,9 +12808,22 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|rtl_expr_nonnegative_p
+name|tree_expr_nonnegative_warnv_p
 parameter_list|(
-name|rtx
+name|tree
+parameter_list|,
+name|bool
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|may_negate_without_overflow_p
+parameter_list|(
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7655,72 +13017,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|default_register_cpp_builtins
-parameter_list|(
-name|struct
-name|cpp_reader
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Split a list of declspecs and attributes into two.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|split_specs_attrs
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-modifier|*
-parameter_list|,
-name|tree
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Strip attributes from a list of combined specs and attrs.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|tree
-name|strip_attrs
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Return 1 if an attribute and its arguments are valid for a decl or type.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|valid_machine_attribute
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Given a tree node and a string, return nonzero if the tree node is    a valid attribute name for the string.  */
 end_comment
@@ -7758,6 +13054,24 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Remove any instances of attribute ATTR_NAME in LIST and return the    modified list.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|remove_attribute
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Given two attributes lists, return a list of their union.  */
 end_comment
 
@@ -7773,11 +13087,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|TARGET_DLLIMPORT_DECL_ATTRIBUTES
-end_ifdef
+end_if
 
 begin_comment
 comment|/* Given two Windows decl attributes lists, possibly including    dllimport, return a list of their union .  */
@@ -7795,10 +13109,52 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Handle a "dllimport" or "dllexport" attribute.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|handle_dll_attribute
+parameter_list|(
+name|tree
+modifier|*
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|int
+parameter_list|,
+name|bool
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Check whether CAND is suitable to be returned from get_qualified_type    (BASE, TYPE_QUALS).  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|bool
+name|check_qualified_type
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Return a version of the TYPE, qualified as indicated by the    TYPE_QUALS, if one exists.  If no qualified version exists yet,    return NULL_TREE.  */
@@ -7858,7 +13214,17 @@ end_comment
 begin_function_decl
 specifier|extern
 name|tree
-name|build_type_copy
+name|build_distinct_type_copy
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_variant_type_copy
 parameter_list|(
 name|tree
 parameter_list|)
@@ -7866,7 +13232,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Finish up a builtin RECORD_TYPE. Give it a name and provide its    fields. Optionally specify an alignment, and then lsy it out.  */
+comment|/* Finish up a builtin RECORD_TYPE. Give it a name and provide its    fields. Optionally specify an alignment, and then lay it out.  */
 end_comment
 
 begin_function_decl
@@ -8143,6 +13509,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Given a VAR_DECL, PARM_DECL or RESULT_DECL, clears the results of    a previous call to layout_decl and calls it again.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|relayout_decl
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Return the mode for data of a given size SIZE and mode class CLASS.    If LIMIT is nonzero, then don't use modes bigger than MAX_FIXED_MODE_SIZE.    The value is BLKmode if no other mode is found.  This is like    mode_for_size, but is passed a tree.  */
 end_comment
 
@@ -8170,16 +13550,6 @@ begin_function_decl
 specifier|extern
 name|tree
 name|non_lvalue
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|tree
-name|pedantic_non_lvalue
 parameter_list|(
 name|tree
 parameter_list|)
@@ -8231,8 +13601,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|expr_length
+name|tree
+name|expr_only
 parameter_list|(
 name|tree
 parameter_list|)
@@ -8253,6 +13623,16 @@ begin_function_decl
 specifier|extern
 name|HOST_WIDE_INT
 name|int_size_in_bytes
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|HOST_WIDE_INT
+name|max_int_size_in_bytes
 parameter_list|(
 name|tree
 parameter_list|)
@@ -8313,18 +13693,12 @@ comment|/* Normal representation of sizes in bytes.  */
 name|SSIZETYPE
 block|,
 comment|/* Signed representation of sizes in bytes.  */
-name|USIZETYPE
-block|,
-comment|/* Unsigned representation of sizes in bytes.  */
 name|BITSIZETYPE
 block|,
 comment|/* Normal representation of sizes in bits.  */
 name|SBITSIZETYPE
 block|,
 comment|/* Signed representation of sizes in bits.  */
-name|UBITSIZETYPE
-block|,
-comment|/* Unsigned representation of sizes in bits.  */
 name|TYPE_KIND_LAST
 block|}
 enum|;
@@ -8371,23 +13745,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|usizetype
-value|sizetype_tab[(int) USIZETYPE]
-end_define
-
-begin_define
-define|#
-directive|define
 name|sbitsizetype
 value|sizetype_tab[(int) SBITSIZETYPE]
 end_define
 
-begin_define
-define|#
-directive|define
-name|ubitsizetype
-value|sizetype_tab[(int) UBITSIZETYPE]
-end_define
+begin_function_decl
+specifier|extern
+name|tree
+name|size_int_kind
+parameter_list|(
+name|HOST_WIDE_INT
+parameter_list|,
+name|enum
+name|size_type_kind
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -8416,43 +13789,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|tree
-name|size_int_wide
-parameter_list|(
-name|HOST_WIDE_INT
-parameter_list|,
-name|enum
-name|size_type_kind
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|tree
-name|size_int_type_wide
-parameter_list|(
-name|HOST_WIDE_INT
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|size_int_type
-parameter_list|(
-name|L
-parameter_list|,
-name|T
-parameter_list|)
-value|size_int_type_wide ((HOST_WIDE_INT) (L), T)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -8460,7 +13796,7 @@ name|size_int
 parameter_list|(
 name|L
 parameter_list|)
-value|size_int_wide ((HOST_WIDE_INT) (L), SIZETYPE)
+value|size_int_kind (L, SIZETYPE)
 end_define
 
 begin_define
@@ -8470,7 +13806,7 @@ name|ssize_int
 parameter_list|(
 name|L
 parameter_list|)
-value|size_int_wide ((HOST_WIDE_INT) (L), SSIZETYPE)
+value|size_int_kind (L, SSIZETYPE)
 end_define
 
 begin_define
@@ -8480,7 +13816,7 @@ name|bitsize_int
 parameter_list|(
 name|L
 parameter_list|)
-value|size_int_wide ((HOST_WIDE_INT) (L), BITSIZETYPE)
+value|size_int_kind (L, BITSIZETYPE)
 end_define
 
 begin_define
@@ -8490,7 +13826,7 @@ name|sbitsize_int
 parameter_list|(
 name|L
 parameter_list|)
-value|size_int_wide ((HOST_WIDE_INT) (L), SBITSIZETYPE)
+value|size_int_kind (L, SBITSIZETYPE)
 end_define
 
 begin_function_decl
@@ -8529,16 +13865,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|is_pending_size
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|put_pending_size
 parameter_list|(
@@ -8570,7 +13896,7 @@ value|((BITS_PER_UNIT> 1) + (BITS_PER_UNIT> 2) + (BITS_PER_UNIT> 4) \    + (BITS
 end_define
 
 begin_comment
-comment|/* If nonzero, an upper limit on alignment of structure fields, in bits.  */
+comment|/* If nonzero, an upper limit on alignment of structure fields, in bits,  */
 end_comment
 
 begin_decl_stmt
@@ -8582,14 +13908,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* If nonzero, the alignment of a bitstring or (power-)set value, in bits.  */
+comment|/* and its original value in bytes, specified via -fpack-struct=<value>.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|unsigned
 name|int
-name|set_alignment
+name|initial_max_fld_align
 decl_stmt|;
 end_decl_stmt
 
@@ -8616,16 +13942,31 @@ end_comment
 begin_function_decl
 specifier|extern
 name|tree
-name|tree_cons
+name|tree_cons_stat
 parameter_list|(
 name|tree
 parameter_list|,
 name|tree
 parameter_list|,
 name|tree
+name|MEM_STAT_DECL
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|tree_cons
+parameter_list|(
+name|t
+parameter_list|,
+name|q
+parameter_list|,
+name|w
+parameter_list|)
+value|tree_cons_stat (t,q,w MEM_STAT_INFO)
+end_define
 
 begin_comment
 comment|/* Return the last tree node in a chain.  */
@@ -8698,21 +14039,42 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Given an initializer INIT, return TRUE if INIT is at least 3/4 zeros.    Otherwise return FALSE.  */
+comment|/* Examine CTOR to discover:    * how many scalar fields are set to nonzero values,      and place it in *P_NZ_ELTS;    * how many scalar fields in total are in CTOR,      and place it in *P_ELT_COUNT.    * if a type is a union, and the initializer from the constructor      is not the largest element in the union, then set *p_must_clear.     Return whether or not CTOR is a valid static constant initializer, the same    as "initializer_constant_valid_p (CTOR, TREE_TYPE (CTOR)) != 0".  */
 end_comment
 
 begin_function_decl
 specifier|extern
-name|int
-name|mostly_zeros_p
+name|bool
+name|categorize_ctor_elements
 parameter_list|(
 name|tree
+parameter_list|,
+name|HOST_WIDE_INT
+modifier|*
+parameter_list|,
+name|HOST_WIDE_INT
+modifier|*
+parameter_list|,
+name|bool
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|HOST_WIDE_INT
+name|count_type_elements
+parameter_list|(
+name|tree
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* integer_zerop (tree x) is nonzero if X is an integer constant of value 0 */
+comment|/* integer_zerop (tree x) is nonzero if X is an integer constant of value 0.  */
 end_comment
 
 begin_function_decl
@@ -8726,7 +14088,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* integer_onep (tree x) is nonzero if X is an integer constant of value 1 */
+comment|/* integer_onep (tree x) is nonzero if X is an integer constant of value 1.  */
 end_comment
 
 begin_function_decl
@@ -8781,14 +14143,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* staticp (tree x) is nonzero if X is a reference to data allocated    at a fixed address in memory.  */
-end_comment
+begin_function_decl
+specifier|extern
+name|bool
+name|zero_p
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|staticp
+name|bool
+name|cst_and_fits_in_hwi
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|num_ending_zeros
 parameter_list|(
 name|tree
 parameter_list|)
@@ -8796,19 +14174,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Gets an error if argument X is not an lvalue.    Also returns 1 if X is an lvalue, 0 if not.  */
+comment|/* staticp (tree x) is nonzero if X is a reference to data allocated    at a fixed address in memory.  Returns the outermost data.  */
 end_comment
 
 begin_function_decl
 specifier|extern
-name|int
-name|lvalue_or_else
+name|tree
+name|staticp
 parameter_list|(
 name|tree
-parameter_list|,
-specifier|const
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8842,35 +14216,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Return TRUE if EXPR is a SAVE_EXPR or wraps simple arithmetic around a    SAVE_EXPR.  Return FALSE otherwise.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|bool
-name|saved_expr_p
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Returns the index of the first non-tree operand for CODE, or the number    of operands if all are trees.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|first_rtl_op
-parameter_list|(
-name|enum
-name|tree_code
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Return which tree structure is used by T.  */
 end_comment
 
@@ -8878,48 +14223,6 @@ begin_function_decl
 name|enum
 name|tree_node_structure_enum
 name|tree_node_structure
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* unsave_expr (EXP) returns an expression equivalent to EXP but it    can be used multiple times and will evaluate EXP in its entirety    each time.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|tree
-name|unsave_expr
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Reset EXP in place so that it can be expanded again.  Does not    recurse into subtrees.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|unsave_expr_1
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Return 0 if it is safe to evaluate EXPR multiple times,    return 1 if it is safe if EXPR is unsaved afterward, or    return 2 if it is completely unsafe.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|unsafe_for_reeval
 parameter_list|(
 name|tree
 parameter_list|)
@@ -8970,20 +14273,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Return 1 if EXP contains any expressions that produce cleanups for an    outer scope to deal with.  Used by fold.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|has_cleanups
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Given a tree EXP, a FIELD_DECL F, and a replacement value R,    return a tree with all occurrences of references to F in a    PLACEHOLDER_EXPR replaced by R.   Note that we assume here that EXP    contains only arithmetic expressions.  */
 end_comment
 
@@ -9000,6 +14289,58 @@ name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* This macro calls the above function but short-circuits the common    case of a constant to save time and also checks for NULL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBSTITUTE_IN_EXPR
+parameter_list|(
+name|EXP
+parameter_list|,
+name|F
+parameter_list|,
+name|R
+parameter_list|)
+define|\
+value|((EXP) == 0 || TREE_CONSTANT (EXP) ? (EXP) : substitute_in_expr (EXP, F, R))
+end_define
+
+begin_comment
+comment|/* Similar, but look for a PLACEHOLDER_EXPR in EXP and find a replacement    for it within OBJ, a tree that is an object or a chain of references.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|substitute_placeholder_in_expr
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* This macro calls the above function but short-circuits the common    case of a constant to save time and also checks for NULL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBSTITUTE_PLACEHOLDER_IN_EXPR
+parameter_list|(
+name|EXP
+parameter_list|,
+name|OBJ
+parameter_list|)
+define|\
+value|((EXP) == 0 || TREE_CONSTANT (EXP) ? (EXP)	\    : substitute_placeholder_in_expr (EXP, OBJ))
+end_define
 
 begin_comment
 comment|/* variable_size (EXP) is like save_expr (EXP) except that it    is for the special case of something that is part of a    variable size for a data type.  It makes special arrangements    to compute the value at the right time when the data type    belongs to a function parameter.  */
@@ -9105,6 +14446,8 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9117,6 +14460,62 @@ begin_function_decl
 specifier|extern
 name|int
 name|handled_component_p
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return a tree of sizetype representing the size, in bytes, of the element    of EXP, an ARRAY_REF.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|array_ref_element_size
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return a tree representing the lower bound of the array mentioned in    EXP, an ARRAY_REF.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|array_ref_low_bound
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return a tree representing the upper bound of the array mentioned in    EXP, an ARRAY_REF.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|array_ref_up_bound
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return a tree representing the offset, in bytes, of the field referenced    by EXP.  This does not include any offset in DECL_FIELD_BIT_OFFSET.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|component_ref_field_offset
 parameter_list|(
 name|tree
 parameter_list|)
@@ -9166,22 +14565,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Given the FUNCTION_DECL for the current function,    return zero if it is ok for this function to be inline.    Otherwise return a warning message with a single %s    for the function's name.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|function_cannot_inline_p
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Return 1 if EXPR is the real constant zero.  */
 end_comment
 
@@ -9214,17 +14597,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means can safely call expand_expr now;    otherwise layout_type puts variable sizes onto `pending_sizes' instead.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|immediate_size_expand
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Points to the FUNCTION_DECL of the function whose body we are reading.  */
 end_comment
 
@@ -9249,68 +14621,12 @@ end_extern
 
 begin_decl_stmt
 unit|))
-name|tree
+specifier|const
+name|char
+modifier|*
 name|current_function_func_begin_label
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means all ..._TYPE nodes should be allocated permanently.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|all_types_permanent
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Exit a binding level.  This function is provided by each language    frontend.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|tree
-name|poplevel
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Declare a predefined function.  Return the declaration.  This function is    provided by each language frontend.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|tree
-name|builtin_function
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|tree
-parameter_list|,
-name|int
-parameter_list|,
-name|enum
-name|built_in_class
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_escape
 end_escape
@@ -9359,37 +14675,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|tree
-name|get_set_constructor_bits
-parameter_list|(
-name|tree
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|tree
-name|get_set_constructor_bytes
-parameter_list|(
-name|tree
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|tree
 name|get_callee_fndecl
 parameter_list|(
 name|tree
@@ -9421,8 +14706,66 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|bool
+name|associative_tree_code
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|commutative_tree_code
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|tree
-name|lhd_unsave_expr_now
+name|upper_bound_in_type
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|lower_bound_in_type
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|operand_equal_for_phi_arg_p
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|empty_body_p
 parameter_list|(
 name|tree
 parameter_list|)
@@ -9439,53 +14782,9 @@ end_comment
 begin_function_decl
 specifier|extern
 name|void
-name|expand_fixups
-parameter_list|(
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|tree
-name|expand_start_stmt_expr
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|tree
-name|expand_end_stmt_expr
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|expand_expr_stmt
 parameter_list|(
 name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_expr_stmt_value
-parameter_list|(
-name|tree
-parameter_list|,
-name|int
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9496,26 +14795,8 @@ name|int
 name|warn_if_unused_value
 parameter_list|(
 name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_decl_init
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|clear_last_expr
-parameter_list|(
-name|void
+parameter_list|,
+name|location_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9542,182 +14823,20 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|rtx
+name|expand_stack_save
+parameter_list|(
 name|void
-name|expand_asm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|expand_stack_restore
 parameter_list|(
 name|tree
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_start_cond
-parameter_list|(
-name|tree
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_end_cond
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_start_else
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_start_elseif
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|nesting
-modifier|*
-name|expand_start_loop
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|nesting
-modifier|*
-name|expand_start_loop_continue_elsewhere
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|nesting
-modifier|*
-name|expand_start_null_loop
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_loop_continue_here
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_end_loop
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_end_null_loop
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|expand_continue_loop
-parameter_list|(
-name|struct
-name|nesting
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|expand_exit_loop
-parameter_list|(
-name|struct
-name|nesting
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|expand_exit_loop_if_false
-parameter_list|(
-name|struct
-name|nesting
-modifier|*
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|expand_exit_loop_top_cond
-parameter_list|(
-name|struct
-name|nesting
-modifier|*
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|expand_exit_something
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9735,85 +14854,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|optimize_tail_recursion
-parameter_list|(
-name|tree
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_start_bindings_and_block
-parameter_list|(
-name|int
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|expand_start_bindings
-parameter_list|(
-name|flags
-parameter_list|)
-define|\
-value|expand_start_bindings_and_block(flags, NULL_TREE)
-end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_end_bindings
-parameter_list|(
-name|tree
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|warn_about_unused_variables
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|start_cleanup_deferral
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|end_cleanup_deferral
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|is_body_block
 parameter_list|(
 name|tree
@@ -9821,146 +14861,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|int
-name|conditional_context
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|nesting
-modifier|*
-name|current_nesting_level
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|tree
-name|last_cleanup_this_contour
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_start_case
-parameter_list|(
-name|int
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_end_case_type
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|expand_end_case
-parameter_list|(
-name|cond
-parameter_list|)
-value|expand_end_case_type (cond, NULL)
-end_define
-
-begin_function_decl
-specifier|extern
-name|int
-name|add_case_node
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|pushcase
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|pushcase_range
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* In tree-eh.c */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -9975,6 +14878,17 @@ end_function_decl
 begin_comment
 comment|/* In fold-const.c */
 end_comment
+
+begin_comment
+comment|/* Non-zero if we are folding constants inside an initializer; zero    otherwise.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|folding_initializer
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Fold constants as much as possible in an expression.    Returns the simplified expression.    Acts only on the top level of the expression;    if the argument itself cannot be simplified, its    subexpressions are not changed.  */
@@ -9993,8 +14907,214 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|tree
-name|fold_initializer
+name|fold_unary
 parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_binary
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_ternary
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_build1_stat
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|fold_build1
+parameter_list|(
+name|c
+parameter_list|,
+name|t1
+parameter_list|,
+name|t2
+parameter_list|)
+value|fold_build1_stat (c, t1, t2 MEM_STAT_INFO)
+end_define
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_build2_stat
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|fold_build2
+parameter_list|(
+name|c
+parameter_list|,
+name|t1
+parameter_list|,
+name|t2
+parameter_list|,
+name|t3
+parameter_list|)
+value|fold_build2_stat (c, t1, t2, t3 MEM_STAT_INFO)
+end_define
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_build3_stat
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+name|MEM_STAT_DECL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|fold_build3
+parameter_list|(
+name|c
+parameter_list|,
+name|t1
+parameter_list|,
+name|t2
+parameter_list|,
+name|t3
+parameter_list|,
+name|t4
+parameter_list|)
+value|fold_build3_stat (c, t1, t2, t3, t4 MEM_STAT_INFO)
+end_define
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_build1_initializer
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_build2_initializer
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_build3_initializer
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_convert
+parameter_list|(
+name|tree
+parameter_list|,
 name|tree
 parameter_list|)
 function_decl|;
@@ -10019,9 +15139,55 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|force_fit_type
+name|tree
+name|fold_ignored_result
 parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_abs_const
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_indirect_ref_1
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|fold_defer_overflow_warnings
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|fold_undefer_overflow_warnings
+parameter_list|(
+name|bool
+parameter_list|,
 name|tree
 parameter_list|,
 name|int
@@ -10031,8 +15197,44 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|fold_undefer_and_ignore_overflow_warnings
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|fold_deferring_overflow_warnings_p
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|force_fit_type
+parameter_list|(
+name|tree
+parameter_list|,
 name|int
-name|add_double
+parameter_list|,
+name|bool
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|add_double_with_sign
 parameter_list|(
 name|unsigned
 name|HOST_WIDE_INT
@@ -10050,9 +15252,32 @@ modifier|*
 parameter_list|,
 name|HOST_WIDE_INT
 modifier|*
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|add_double
+parameter_list|(
+name|l1
+parameter_list|,
+name|h1
+parameter_list|,
+name|l2
+parameter_list|,
+name|h2
+parameter_list|,
+name|lv
+parameter_list|,
+name|hv
+parameter_list|)
+define|\
+value|add_double_with_sign (l1, h1, l2, h2, lv, hv, false)
+end_define
 
 begin_function_decl
 specifier|extern
@@ -10077,7 +15302,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|mul_double
+name|mul_double_with_sign
 parameter_list|(
 name|unsigned
 name|HOST_WIDE_INT
@@ -10095,9 +15320,32 @@ modifier|*
 parameter_list|,
 name|HOST_WIDE_INT
 modifier|*
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|mul_double
+parameter_list|(
+name|l1
+parameter_list|,
+name|h1
+parameter_list|,
+name|l2
+parameter_list|,
+name|h2
+parameter_list|,
+name|lv
+parameter_list|,
+name|hv
+parameter_list|)
+define|\
+value|mul_double_with_sign (l1, h1, l2, h2, lv, hv, false)
+end_define
 
 begin_function_decl
 specifier|extern
@@ -10240,6 +15488,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_enum
+enum|enum
+name|operand_equal_flag
+block|{
+name|OEP_ONLY_CONST
+init|=
+literal|1
+block|,
+name|OEP_PURE_SAME
+init|=
+literal|2
+block|}
+enum|;
+end_enum
+
 begin_function_decl
 specifier|extern
 name|int
@@ -10249,6 +15512,7 @@ name|tree
 parameter_list|,
 name|tree
 parameter_list|,
+name|unsigned
 name|int
 parameter_list|)
 function_decl|;
@@ -10271,9 +15535,278 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|tree
+name|omit_two_operands
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
 name|invert_truthvalue
 parameter_list|(
 name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_truth_not_expr
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_unary_to_constant
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_binary_to_constant
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_read_from_constant_string
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|int_const_binop
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_fold_addr_expr
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_build_cleanup_point_expr
+parameter_list|(
+name|tree
+name|type
+parameter_list|,
+name|tree
+name|expr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_strip_sign_ops
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_fold_addr_expr_with_type
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_fold_indirect_ref
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_indirect_ref
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|constant_boolean_node
+parameter_list|(
+name|int
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_low_bits_mask
+parameter_list|(
+name|tree
+parameter_list|,
+name|unsigned
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|tree_swap_operands_p
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|swap_tree_operands
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+modifier|*
+parameter_list|,
+name|tree
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|enum
+name|tree_code
+name|swap_tree_comparison
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|ptr_difference_const
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|HOST_WIDE_INT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|enum
+name|tree_code
+name|invert_tree_comparison
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|tree_expr_nonzero_p
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|tree_expr_nonzero_warnv_p
+parameter_list|(
+name|tree
+parameter_list|,
+name|bool
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10286,6 +15819,129 @@ begin_function_decl
 specifier|extern
 name|tree
 name|fold_builtin
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_builtin_fputs
+parameter_list|(
+name|tree
+parameter_list|,
+name|bool
+parameter_list|,
+name|bool
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_builtin_strcpy
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_builtin_strncpy
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_builtin_memory_chk
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|bool
+parameter_list|,
+name|enum
+name|built_in_function
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_builtin_stxcpy_chk
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|bool
+parameter_list|,
+name|enum
+name|built_in_function
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_builtin_strncpy_chk
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|fold_builtin_snprintf_chk
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|enum
+name|built_in_function
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|fold_builtin_next_arg
 parameter_list|(
 name|tree
 parameter_list|)
@@ -10325,6 +15981,69 @@ parameter_list|,
 name|enum
 name|built_in_function
 name|fn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|strip_float_extensions
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|c_strlen
+parameter_list|(
+name|tree
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|std_gimplify_va_arg_expr
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+modifier|*
+parameter_list|,
+name|tree
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_va_arg_indirect_ref
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|tree
+name|build_string_literal
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10382,9 +16101,11 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|readonly_fields_p
+name|alias_sets_might_conflict_p
 parameter_list|(
-name|tree
+name|HOST_WIDE_INT
+parameter_list|,
+name|HOST_WIDE_INT
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10433,6 +16154,8 @@ name|bool
 name|variably_modified_type_p
 parameter_list|(
 name|tree
+parameter_list|,
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10471,14 +16194,12 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|unsigned
-name|int
+name|hashval_t
 name|iterative_hash_expr
 parameter_list|(
 name|tree
 parameter_list|,
-name|unsigned
-name|int
+name|hashval_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10548,17 +16269,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|unsigned
-name|int
-name|type_hash_list
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|int
 name|simple_cst_list_equal
 parameter_list|(
@@ -10595,8 +16305,6 @@ name|void
 name|expand_function_start
 parameter_list|(
 name|tree
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10604,7 +16312,27 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|expand_pending_sizes
+name|stack_protect_prologue
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|stack_protect_epilogue
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|recompute_tree_invariant_for_addr_expr
 parameter_list|(
 name|tree
 parameter_list|)
@@ -10613,15 +16341,21 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|tree
-name|make_vector
+name|bool
+name|is_global_var
 parameter_list|(
-name|enum
-name|machine_mode
-parameter_list|,
 name|tree
-parameter_list|,
-name|int
+name|t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|needs_to_live_in_memory
+parameter_list|(
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10683,7 +16417,9 @@ specifier|extern
 name|void
 name|build_common_tree_nodes
 parameter_list|(
-name|int
+name|bool
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10693,6 +16429,29 @@ specifier|extern
 name|void
 name|build_common_tree_nodes_2
 parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|build_common_builtin_nodes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_nonstandard_integer_type
+parameter_list|(
+name|unsigned
+name|HOST_WIDE_INT
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -10712,29 +16471,67 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* In function.c */
-end_comment
-
 begin_function_decl
 specifier|extern
-name|void
-name|setjmp_protect_args
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|setjmp_protect
+name|HOST_WIDE_INT
+name|int_cst_value
 parameter_list|(
 name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|tree_fold_gcd
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_addr
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|fields_compatible_p
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|find_compatible_field
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In function.c */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -10768,7 +16565,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|unsigned
+name|int
 name|init_function_for_compilation
 parameter_list|(
 name|void
@@ -10798,8 +16596,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|assign_parms
+name|bool
+name|use_register_for_decl
 parameter_list|(
 name|tree
 parameter_list|)
@@ -10809,29 +16607,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|put_var_into_stack
-parameter_list|(
-name|tree
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|flush_addressof
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|uninitialized_vars_warning
+name|setjmp_vars_warning
 parameter_list|(
 name|tree
 parameter_list|)
@@ -10851,27 +16627,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|mark_all_temps_used
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|init_temp_slots
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|combine_temp_slots
 parameter_list|(
 name|void
 parameter_list|)
@@ -10920,56 +16676,12 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|preserve_rtl_expr_temps
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|int
 name|aggregate_value_p
 parameter_list|(
 name|tree
 parameter_list|,
 name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|free_temps_for_rtl_expr
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|instantiate_virtual_regs
-parameter_list|(
-name|tree
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|unshare_all_rtl
-parameter_list|(
-name|tree
-parameter_list|,
-name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11010,6 +16722,16 @@ name|void
 name|pop_function_context_from
 parameter_list|(
 name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|gimplify_parameters
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11061,6 +16783,24 @@ ifdef|#
 directive|ifdef
 name|BUFSIZ
 end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|dump_addr
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -11119,38 +16859,39 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* In expr.c */
+comment|/* In tree-inline.c:  */
 end_comment
 
 begin_function_decl
 specifier|extern
-name|int
-name|apply_args_register_offset
+name|bool
+name|debug_find_tree
 parameter_list|(
-name|int
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* This is in tree-inline.c since the routine uses    data structures from the inliner.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|unsave_expr_now
+parameter_list|(
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|extern
-name|rtx
-name|expand_builtin_return_addr
-parameter_list|(
-name|enum
-name|built_in_function
-parameter_list|,
-name|int
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|check_max_integer_computation_mode
+name|tree
+name|build_duplicate_type
 parameter_list|(
 name|tree
 parameter_list|)
@@ -11160,16 +16901,6 @@ end_function_decl
 begin_comment
 comment|/* In emit-rtl.c */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|start_sequence_for_rtl_expr
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -11186,7 +16917,7 @@ comment|/* In calls.c */
 end_comment
 
 begin_comment
-comment|/* Nonzero if this is a call to a `const' function.  */
+comment|/* Nonzero if this is a call to a function whose return value depends    solely on its arguments, has no side effects, and does not read    global memory.  */
 end_comment
 
 begin_define
@@ -11197,7 +16928,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Nonzero if this is a call to a `volatile' function.  */
+comment|/* Nonzero if this call will never return.  */
 end_comment
 
 begin_define
@@ -11252,32 +16983,14 @@ value|32
 end_define
 
 begin_comment
-comment|/* Nonzero if this is a call to `longjmp'.  */
+comment|/* Nonzero if this call replaces the current stack frame.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ECF_LONGJMP
-value|64
-end_define
-
-begin_comment
-comment|/* Nonzero if this is a syscall that makes a new process in the image of    the current one.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ECF_FORK_OR_EXEC
-value|128
-end_define
 
 begin_define
 define|#
 directive|define
 name|ECF_SIBCALL
-value|256
+value|64
 end_define
 
 begin_comment
@@ -11288,7 +17001,7 @@ begin_define
 define|#
 directive|define
 name|ECF_PURE
-value|512
+value|128
 end_define
 
 begin_comment
@@ -11299,18 +17012,7 @@ begin_define
 define|#
 directive|define
 name|ECF_SP_DEPRESSED
-value|1024
-end_define
-
-begin_comment
-comment|/* Nonzero if this call is known to always return.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ECF_ALWAYS_RETURN
-value|2048
+value|256
 end_define
 
 begin_comment
@@ -11321,7 +17023,18 @@ begin_define
 define|#
 directive|define
 name|ECF_LIBCALL_BLOCK
-value|4096
+value|512
+end_define
+
+begin_comment
+comment|/* Function does not read or write memory (but may have side effects, so    it does not necessarily fit ECF_CONST).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ECF_NOVOPS
+value|1024
 end_define
 
 begin_function_decl
@@ -11364,6 +17077,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|bool
+name|must_pass_in_stack_var_size
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|must_pass_in_stack_var_size_or_pad
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* In attribs.c.  */
 end_comment
@@ -11394,31 +17133,11 @@ end_comment
 begin_function_decl
 specifier|extern
 name|void
-name|save_for_inline
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|set_decl_abstract_flags
 parameter_list|(
 name|tree
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|output_inline_function
-parameter_list|(
-name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11471,6 +17190,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|unsigned
+name|int
+name|update_alignment_for_field
+parameter_list|(
+name|record_layout_info
+parameter_list|,
+name|tree
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* varasm.c */
 end_comment
@@ -11481,10 +17216,6 @@ name|void
 name|make_decl_rtl
 parameter_list|(
 name|tree
-parameter_list|,
-specifier|const
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11505,28 +17236,6 @@ name|int
 name|supports_one_only
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|variable_section
-parameter_list|(
-name|tree
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|enum
-name|tls_model
-name|decl_tls_model
-parameter_list|(
-name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11558,6 +17267,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|mark_decl_referenced
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|notice_global_symbol
 parameter_list|(
 name|tree
@@ -11568,7 +17287,41 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|process_pending_assemble_output_defs
+name|set_user_assembler_name
+parameter_list|(
+name|tree
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|process_pending_assemble_externals
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|finish_aliases_1
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|finish_aliases_2
 parameter_list|(
 name|void
 parameter_list|)
@@ -11578,16 +17331,6 @@ end_function_decl
 begin_comment
 comment|/* In stmt.c */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|emit_nop
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -11663,19 +17406,9 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|expand_asm_operands
+name|expand_asm_expr
 parameter_list|(
 name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|int
-parameter_list|,
-name|location_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11696,60 +17429,10 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|any_pending_cleanups
-parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|init_stmt_for_function
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_start_target_temps
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_end_target_temps
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|expand_elseif
+name|expand_case
 parameter_list|(
 name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|save_stack_pointer
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11760,32 +17443,6 @@ name|void
 name|expand_decl
 parameter_list|(
 name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|expand_decl_cleanup
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|expand_decl_cleanup_eh
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11804,33 +17461,74 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|expand_start_case_dummy
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HARD_CONST
+end_ifdef
+
+begin_comment
+comment|/* Silly ifdef to avoid having all includers depend on hard-reg-set.h.  */
+end_comment
 
 begin_function_decl
 specifier|extern
-name|HOST_WIDE_INT
-name|all_cases_count
+name|tree
+name|tree_overlaps_hard_reg_set
 parameter_list|(
 name|tree
 parameter_list|,
-name|int
+name|HARD_REG_SET
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* In gimplify.c.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|create_artificial_label
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 specifier|extern
 name|void
-name|check_for_full_enumeration_handling
+name|gimplify_function_tree
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|get_name
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|unshare_expr
 parameter_list|(
 name|tree
 parameter_list|)
@@ -11840,7 +17538,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|declare_nonlocal_label
+name|sort_case_labels
 parameter_list|(
 name|tree
 parameter_list|)
@@ -11994,7 +17692,41 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* The type of a function that walks over tree structure.  */
+comment|/* Entry point for saving the first register into the second.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|dwarf2out_reg_save_reg
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In tree-inline.c  */
+end_comment
+
+begin_comment
+comment|/* The type of a set of already-visited pointers.  Functions for creating    and manipulating it are declared in pointer-set.h */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|pointer_set_t
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* The type of a callback function for walking over tree structure.  */
 end_comment
 
 begin_typedef
@@ -12017,163 +17749,38 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_comment
-comment|/* In tree-dump.c */
-end_comment
-
-begin_comment
-comment|/* Different tree dump places.  When you add new tree dump places,    extend the DUMP_FILES array in tree-dump.c */
-end_comment
-
-begin_enum
-enum|enum
-name|tree_dump_index
-block|{
-name|TDI_all
-block|,
-comment|/* dump the whole translation unit */
-name|TDI_class
-block|,
-comment|/* dump class hierarchy */
-name|TDI_original
-block|,
-comment|/* dump each function before optimizing it */
-name|TDI_optimized
-block|,
-comment|/* dump each function after optimizing it */
-name|TDI_inlined
-block|,
-comment|/* dump each function after inlining 				   within it.  */
-name|TDI_end
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/* Bit masks to control tree dumping. Not all values are applicable to    all tree dumps. Add new ones at the end. When you define new    values, extend the DUMP_OPTIONS array in tree-dump.c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDF_ADDRESS
-value|(1<< 0)
-end_define
-
-begin_comment
-comment|/* dump node addresses */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDF_SLIM
-value|(1<< 1)
-end_define
-
-begin_comment
-comment|/* don't go wild following links */
-end_comment
-
-begin_typedef
-typedef|typedef
+begin_function_decl
+specifier|extern
+name|tree
+name|walk_tree
+parameter_list|(
+name|tree
+modifier|*
+parameter_list|,
+name|walk_tree_fn
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
 name|struct
-name|dump_info
+name|pointer_set_t
 modifier|*
-name|dump_info_p
-typedef|;
-end_typedef
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|dump_flag
-parameter_list|(
-name|dump_info_p
-parameter_list|,
-name|int
-parameter_list|,
 name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dump_enabled_p
-parameter_list|(
-name|enum
-name|tree_dump_index
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|FILE
-modifier|*
-name|dump_begin
-parameter_list|(
-name|enum
-name|tree_dump_index
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|dump_end
-parameter_list|(
-name|enum
-name|tree_dump_index
-parameter_list|,
-name|FILE
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|dump_node
+name|walk_tree_without_duplicates
 parameter_list|(
 name|tree
+modifier|*
 parameter_list|,
-name|int
+name|walk_tree_fn
 parameter_list|,
-name|FILE
+name|void
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dump_switch_p
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|dump_flag_name
-parameter_list|(
-name|enum
-name|tree_dump_index
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -12194,42 +17801,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|set_decl_incoming_rtl
+parameter_list|(
+name|tree
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Redefine abort to report an internal error w/o coredump, and    reporting the location of the error in the source file.  This logic    is duplicated in rtl.h and tree.h because every file that needs the    special abort includes one or both.  toplev.h gets too few files,    system.h gets too many.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|fancy_abort
-argument_list|(
-specifier|const
-name|char
-operator|*
-argument_list|,
-name|int
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
-name|ATTRIBUTE_NORETURN
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|abort
-parameter_list|()
-value|fancy_abort (__FILE__, __LINE__, __FUNCTION__)
-end_define
-
-begin_comment
-comment|/* Enum and arrays used for tree allocation stats.     Keep in sync with tree.c:tree_node_kind_names.  */
+comment|/* Enum and arrays used for tree allocation stats.    Keep in sync with tree.c:tree_node_kind_names.  */
 end_comment
 
 begin_typedef
@@ -12258,11 +17846,21 @@ name|temp_list_kind
 block|,
 name|vec_kind
 block|,
+name|binfo_kind
+block|,
+name|phi_kind
+block|,
+name|ssa_name_kind
+block|,
+name|constr_kind
+block|,
 name|x_kind
 block|,
 name|lang_decl
 block|,
 name|lang_type
+block|,
+name|omp_clause_kind
 block|,
 name|all_kinds
 block|}
@@ -12285,6 +17883,219 @@ name|tree_node_sizes
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* True if we are in gimple form and the actions of the folders need to    be restricted.  False if we are not in gimple form and folding is not    restricted to creating gimple expressions.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|in_gimple_form
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In tree-gimple.c.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|get_base_address
+parameter_list|(
+name|tree
+name|t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In tree-vectorizer.c.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|vect_set_verbosity_level
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|struct
+name|tree_map
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|unsigned
+name|int
+name|hash
+decl_stmt|;
+name|tree
+name|from
+decl_stmt|;
+name|tree
+name|to
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|int
+name|tree_map_hash
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|tree_map_marked_p
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|tree_map_eq
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In tree-ssa-address.c.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|tree_mem_ref_addr
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|copy_mem_ref_info
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In tree-vrp.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|bool
+name|ssa_name_nonzero_p
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|ssa_name_nonnegative_p
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In tree-object-size.c.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|init_object_sizes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|fini_object_sizes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|HOST_WIDE_INT
+name|compute_builtin_object_size
+parameter_list|(
+name|tree
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In expr.c.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|HOST_WIDE_INT
+name|highest_pow2_factor
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

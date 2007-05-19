@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Help friends in C++.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Help friends in C++.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -230,32 +230,14 @@ block|}
 else|else
 comment|/* It's a type.  */
 block|{
-comment|/* Nested classes are implicitly friends of their enclosing types, as 	 per core issue 45 (this is a change from the standard).  */
-for|for
-control|(
-name|context
-operator|=
-name|supplicant
-init|;
-name|context
-operator|&&
-name|TYPE_P
-argument_list|(
-name|context
-argument_list|)
-condition|;
-name|context
-operator|=
-name|TYPE_CONTEXT
-argument_list|(
-name|context
-argument_list|)
-control|)
 if|if
 condition|(
+name|same_type_p
+argument_list|(
+name|supplicant
+argument_list|,
 name|type
-operator|==
-name|context
+argument_list|)
 condition|)
 return|return
 literal|1
@@ -303,7 +285,7 @@ argument_list|)
 operator|==
 name|TEMPLATE_DECL
 condition|?
-name|is_specialization_of
+name|is_specialization_of_friend
 argument_list|(
 name|TYPE_MAIN_DECL
 argument_list|(
@@ -328,7 +310,10 @@ block|}
 if|if
 condition|(
 name|declp
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|DECL_FUNCTION_MEMBER_P
 argument_list|(
 name|supplicant
@@ -341,12 +326,30 @@ argument_list|(
 name|supplicant
 argument_list|)
 expr_stmt|;
-elseif|else
+else|else
+name|context
+operator|=
+name|NULL_TREE
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
-operator|!
-name|declp
+name|TYPE_CLASS_SCOPE_P
+argument_list|(
+name|supplicant
+argument_list|)
 condition|)
+comment|/* Nested classes get the same access as their enclosing types, as 	   per DR 45 (this is a change from the standard).  */
+name|context
+operator|=
+name|TYPE_CONTEXT
+argument_list|(
+name|supplicant
+argument_list|)
+expr_stmt|;
+else|else
 comment|/* Local classes have the same access as the enclosing function.  */
 name|context
 operator|=
@@ -358,11 +361,7 @@ name|supplicant
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
-name|context
-operator|=
-name|NULL_TREE
-expr_stmt|;
+block|}
 comment|/* A namespace is not friend to anybody.  */
 if|if
 condition|(
@@ -423,6 +422,9 @@ name|list
 decl_stmt|;
 name|tree
 name|name
+decl_stmt|;
+name|tree
+name|ctx
 decl_stmt|;
 if|if
 condition|(
@@ -511,7 +513,9 @@ name|complain
 condition|)
 name|warning
 argument_list|(
-literal|"`%D' is already a friend of class `%T'"
+literal|0
+argument_list|,
+literal|"%qD is already a friend of class %qT"
 argument_list|,
 name|decl
 argument_list|,
@@ -558,44 +562,40 @@ name|list
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|DECL_CLASS_SCOPE_P
-argument_list|(
-name|decl
-argument_list|)
-condition|)
-block|{
-name|tree
-name|class_binfo
-init|=
-name|TYPE_BINFO
-argument_list|(
+name|ctx
+operator|=
 name|DECL_CONTEXT
 argument_list|(
 name|decl
 argument_list|)
-argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
+name|ctx
+operator|&&
+name|CLASS_TYPE_P
+argument_list|(
+name|ctx
+argument_list|)
+operator|&&
 operator|!
 name|uses_template_parms
 argument_list|(
-name|BINFO_TYPE
-argument_list|(
-name|class_binfo
-argument_list|)
+name|ctx
 argument_list|)
 condition|)
 name|perform_or_defer_access_check
 argument_list|(
-name|class_binfo
+name|TYPE_BINFO
+argument_list|(
+name|ctx
+argument_list|)
+argument_list|,
+name|decl
 argument_list|,
 name|decl
 argument_list|)
 expr_stmt|;
-block|}
 name|maybe_add_class_template_decl_list
 argument_list|(
 name|type
@@ -680,8 +680,21 @@ block|{
 name|tree
 name|classes
 decl_stmt|;
+comment|/* CLASS_TEMPLATE_DEPTH counts the number of template headers for      the enclosing class.  FRIEND_DEPTH counts the number of template      headers used for this friend declaration.  TEMPLATE_MEMBER_P,      defined inside the `if' block for TYPENAME_TYPE case, is true if      a template header in FRIEND_DEPTH is intended for DECLARATOR.      For example, the code         template<class T> struct A { 	 template<class U> struct B { 	   template<class V> template<class W> 	     friend class C<V>::D; 	 };        };       will eventually give the following results       1. CLASS_TEMPLATE_DEPTH equals 2 (for `T' and `U').      2. FRIEND_DEPTH equals 2 (for `V' and `W').      3. TEMPLATE_MEMBER_P is true (for `W').       The friend is a template friend iff FRIEND_DEPTH is nonzero.  */
 name|int
-name|is_template_friend
+name|class_template_depth
+init|=
+name|template_class_depth
+argument_list|(
+name|type
+argument_list|)
+decl_stmt|;
+name|int
+name|friend_depth
+init|=
+name|processing_template_decl
+operator|-
+name|class_template_depth
 decl_stmt|;
 if|if
 condition|(
@@ -694,7 +707,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"invalid type `%T' declared `friend'"
+literal|"invalid type %qT declared %<friend%>"
 argument_list|,
 name|friend_type
 argument_list|)
@@ -703,12 +716,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|processing_template_decl
-operator|>
-name|template_class_depth
-argument_list|(
-name|type
-argument_list|)
+name|friend_depth
 condition|)
 comment|/* If the TYPE is a template then it makes sense for it to be        friends with itself; this means that each instantiation is        friends with all other instantiations.  */
 block|{
@@ -733,17 +741,13 @@ block|{
 comment|/* [temp.friend] 	     Friend declarations shall not declare partial 	     specializations.  */
 name|error
 argument_list|(
-literal|"partial specialization `%T' declared `friend'"
+literal|"partial specialization %qT declared %<friend%>"
 argument_list|,
 name|friend_type
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|is_template_friend
-operator|=
-literal|1
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -762,23 +766,18 @@ name|complain
 condition|)
 name|pedwarn
 argument_list|(
-literal|"class `%T' is implicitly friends with itself"
+literal|"class %qT is implicitly friends with itself"
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-else|else
-name|is_template_friend
-operator|=
-literal|0
-expr_stmt|;
 comment|/* [temp.friend]       A friend of a class or class template can be a function or      class template, a specialization of a function template or      class template, or an ordinary (nontemplate) function or      class.  */
 if|if
 condition|(
 operator|!
-name|is_template_friend
+name|friend_depth
 condition|)
 empty_stmt|;
 comment|/* ok */
@@ -793,15 +792,226 @@ operator|==
 name|TYPENAME_TYPE
 condition|)
 block|{
-comment|/* template<class T> friend typename S<T>::X; */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|TYPENAME_TYPE_FULLNAME
+argument_list|(
+name|friend_type
+argument_list|)
+argument_list|)
+operator|==
+name|TEMPLATE_ID_EXPR
+condition|)
+block|{
+comment|/* template<class U> friend class T::X<U>; */
+comment|/* [temp.friend] 	     Friend declarations shall not declare partial 	     specializations.  */
 name|error
 argument_list|(
-literal|"typename type `%#T' declared `friend'"
+literal|"partial specialization %qT declared %<friend%>"
 argument_list|,
 name|friend_type
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+else|else
+block|{
+comment|/* We will figure this out later.  */
+name|bool
+name|template_member_p
+init|=
+name|false
+decl_stmt|;
+name|tree
+name|ctype
+init|=
+name|TYPE_CONTEXT
+argument_list|(
+name|friend_type
+argument_list|)
+decl_stmt|;
+name|tree
+name|name
+init|=
+name|TYPE_IDENTIFIER
+argument_list|(
+name|friend_type
+argument_list|)
+decl_stmt|;
+name|tree
+name|decl
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|uses_template_parms_level
+argument_list|(
+name|ctype
+argument_list|,
+name|class_template_depth
+operator|+
+name|friend_depth
+argument_list|)
+condition|)
+name|template_member_p
+operator|=
+name|true
+expr_stmt|;
+if|if
+condition|(
+name|class_template_depth
+condition|)
+block|{
+comment|/* We rely on tsubst_friend_class to check the 		 validity of the declaration later.  */
+if|if
+condition|(
+name|template_member_p
+condition|)
+name|friend_type
+operator|=
+name|make_unbound_class_template
+argument_list|(
+name|ctype
+argument_list|,
+name|name
+argument_list|,
+name|current_template_parms
+argument_list|,
+name|tf_error
+argument_list|)
+expr_stmt|;
+else|else
+name|friend_type
+operator|=
+name|make_typename_type
+argument_list|(
+name|ctype
+argument_list|,
+name|name
+argument_list|,
+name|class_type
+argument_list|,
+name|tf_error
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|decl
+operator|=
+name|lookup_member
+argument_list|(
+name|ctype
+argument_list|,
+name|name
+argument_list|,
+literal|0
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|decl
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%qT is not a member of %qT"
+argument_list|,
+name|name
+argument_list|,
+name|ctype
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|template_member_p
+operator|&&
+operator|!
+name|DECL_CLASS_TEMPLATE_P
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%qT is not a member class template of %qT"
+argument_list|,
+name|name
+argument_list|,
+name|ctype
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"%q+D declared here"
+argument_list|,
+name|decl
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+operator|!
+name|template_member_p
+operator|&&
+operator|(
+name|TREE_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|!=
+name|TYPE_DECL
+operator|||
+operator|!
+name|CLASS_TYPE_P
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+operator|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%qT is not a nested class of %qT"
+argument_list|,
+name|name
+argument_list|,
+name|ctype
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"%q+D declared here"
+argument_list|,
+name|decl
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|friend_type
+operator|=
+name|CLASSTYPE_TI_TEMPLATE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 elseif|else
 if|if
@@ -817,7 +1027,7 @@ block|{
 comment|/* template<class T> friend class T; */
 name|error
 argument_list|(
-literal|"template parameter type `%T' declared `friend'"
+literal|"template parameter type %qT declared %<friend%>"
 argument_list|,
 name|friend_type
 argument_list|)
@@ -837,17 +1047,15 @@ block|{
 comment|/* template<class T> friend class A; where A is not a template */
 name|error
 argument_list|(
-literal|"`%#T' is not a template"
+literal|"%q#T is not a template"
 argument_list|,
 name|friend_type
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|is_template_friend
-condition|)
+else|else
+comment|/* template<class T> friend class A; where A is a template */
 name|friend_type
 operator|=
 name|CLASSTYPE_TI_TEMPLATE
@@ -855,6 +1063,13 @@ argument_list|(
 name|friend_type
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|friend_type
+operator|==
+name|error_mark_node
+condition|)
+return|return;
 comment|/* See if it is already a friend.  */
 for|for
 control|(
@@ -906,7 +1121,9 @@ name|complain
 condition|)
 name|warning
 argument_list|(
-literal|"`%D' is already a friend of `%T'"
+literal|0
+argument_list|,
+literal|"%qD is already a friend of %qT"
 argument_list|,
 name|probe
 argument_list|,
@@ -943,7 +1160,9 @@ name|complain
 condition|)
 name|warning
 argument_list|(
-literal|"`%T' is already a friend of `%T'"
+literal|0
+argument_list|,
+literal|"%qT is already a friend of %qT"
 argument_list|,
 name|probe
 argument_list|,
@@ -989,7 +1208,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|is_template_friend
+name|TREE_CODE
+argument_list|(
+name|friend_type
+argument_list|)
+operator|==
+name|TEMPLATE_DECL
 condition|)
 name|friend_type
 operator|=
@@ -1028,7 +1252,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Main friend processor.      CTYPE is the class this friend belongs to.     DECLARATOR is the name of the friend.     DECL is the FUNCTION_DECL that the friend is.     FLAGS is just used for `grokclassfn'.     QUALS say what special qualifies should apply to the object    pointed to by `this'.  */
+comment|/* Record DECL (a FUNCTION_DECL) as a friend of the    CURRENT_CLASS_TYPE.  If DECL is a member function, CTYPE is the    class of which it is a member, as named in the friend declaration.    DECLARATOR is the name of the friend.  FUNCDEF_FLAG is true if the    friend declaration is a definition of the function.  FLAGS is as    for grokclass fn.  */
 end_comment
 
 begin_function
@@ -1051,13 +1275,31 @@ name|enum
 name|overload_flags
 name|flags
 parameter_list|,
-name|tree
-name|quals
-parameter_list|,
-name|int
+name|bool
 name|funcdef_flag
 parameter_list|)
 block|{
+name|gcc_assert
+argument_list|(
+name|TREE_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|==
+name|FUNCTION_DECL
+argument_list|)
+expr_stmt|;
+name|gcc_assert
+argument_list|(
+operator|!
+name|ctype
+operator|||
+name|IS_AGGR_TYPE
+argument_list|(
+name|ctype
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Every decl that gets here is a friend of something.  */
 name|DECL_FRIEND_P
 argument_list|(
@@ -1103,18 +1345,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|decl
-argument_list|)
-operator|!=
-name|FUNCTION_DECL
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|ctype
@@ -1184,7 +1414,6 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
-comment|/* This will set up DECL_ARGUMENTS for us.  */
 name|grokclassfn
 argument_list|(
 name|ctype
@@ -1192,8 +1421,6 @@ argument_list|,
 name|decl
 argument_list|,
 name|flags
-argument_list|,
-name|quals
 argument_list|)
 expr_stmt|;
 if|if
@@ -1256,7 +1483,7 @@ argument_list|(
 name|decl
 argument_list|,
 comment|/*is_friend=*/
-literal|1
+name|true
 argument_list|)
 expr_stmt|;
 else|else
@@ -1269,6 +1496,10 @@ argument_list|,
 name|decl
 argument_list|,
 name|template_member_p
+condition|?
+name|current_template_parms
+else|:
+name|NULL_TREE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1309,7 +1540,7 @@ block|}
 else|else
 name|error
 argument_list|(
-literal|"member `%D' declared as friend before type `%T' defined"
+literal|"member %qD declared as friend before type %qT defined"
 argument_list|,
 name|decl
 argument_list|,
@@ -1396,7 +1627,7 @@ argument_list|(
 name|decl
 argument_list|,
 comment|/*is_friend=*/
-literal|1
+name|true
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1407,14 +1638,17 @@ condition|)
 comment|/* This must be a local class, so pushdecl will be ok, and 	       insert an unqualified friend into the local scope 	       (rather than the containing namespace scope, which the 	       next choice will do).  */
 name|decl
 operator|=
-name|pushdecl
+name|pushdecl_maybe_friend
 argument_list|(
 name|decl
+argument_list|,
+comment|/*is_friend=*/
+name|true
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* We can't use pushdecl, as we might be in a template 	         class specialization, and pushdecl will insert an 	         unqualified friend decl into the template parameter 	         scope, rather than the namespace containing it.  */
+comment|/* We can't use pushdecl, as we might be in a template 		 class specialization, and pushdecl will insert an 		 unqualified friend decl into the template parameter 		 scope, rather than the namespace containing it.  */
 name|tree
 name|ns
 init|=
@@ -1433,6 +1667,9 @@ operator|=
 name|pushdecl_namespace_level
 argument_list|(
 name|decl
+argument_list|,
+comment|/*is_friend=*/
+name|true
 argument_list|)
 expr_stmt|;
 name|pop_nested_namespace
@@ -1452,7 +1689,10 @@ name|explained
 decl_stmt|;
 name|warning
 argument_list|(
-literal|"friend declaration `%#D' declares a non-template function"
+literal|0
+argument_list|,
+literal|"friend declaration %q#D declares a non-template "
+literal|"function"
 argument_list|,
 name|decl
 argument_list|)
@@ -1465,7 +1705,12 @@ condition|)
 block|{
 name|warning
 argument_list|(
-literal|"(if this is not what you intended, make sure the function template has already been declared and add<> after the function name here) -Wno-non-template-friend disables this warning"
+literal|0
+argument_list|,
+literal|"(if this is not what you intended, make sure "
+literal|"the function template has already been declared "
+literal|"and add<> after the function name here) "
+literal|"-Wno-non-template-friend disables this warning"
 argument_list|)
 expr_stmt|;
 name|explained

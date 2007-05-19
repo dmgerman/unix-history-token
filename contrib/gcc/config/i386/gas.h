@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 using GAS.    Copyright (C) 1988, 1993, 1994, 1996, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 using GAS.    Copyright (C) 1988, 1993, 1994, 1996, 2002, 2004    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -56,16 +56,6 @@ parameter_list|,
 name|NAME
 parameter_list|)
 value|fprintf (FILE, "\t.ident \"%s\"\n", NAME);
-end_define
-
-begin_comment
-comment|/* Implicit library calls should use memcpy, not bcopy, etc.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_MEM_FUNCTIONS
 end_define
 
 begin_comment
@@ -178,6 +168,23 @@ define|#
 directive|define
 name|GAS_MNEMONICS
 value|1
+end_define
+
+begin_comment
+comment|/* The comment-starter string as GAS expects it. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_COMMENT_START
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_COMMENT_START
+value|"#"
 end_define
 
 begin_define

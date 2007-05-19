@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Linux-based GNU systems with ELF format    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2003    Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu (hjl@lucon.org).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Linux-based GNU systems with ELF format    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu (hjl@lucon.org).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -61,26 +61,12 @@ directive|undef
 name|STARTFILE_SPEC
 end_undef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_GNULIBC_1
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_SPEC
-define|\
-value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} \ 		       %{!p:%{profile:gcrt1.o%s} \ 			 %{!profile:crt1.o%s}}}} \    crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
-end_define
-
-begin_elif
-elif|#
-directive|elif
+begin_if
+if|#
+directive|if
 name|defined
 name|HAVE_LD_PIE
-end_elif
+end_if
 
 begin_define
 define|#
@@ -171,35 +157,6 @@ directive|undef
 name|LIB_SPEC
 end_undef
 
-begin_comment
-comment|/* We no longer link with libc_p.a or libg.a by default. If you    want to profile or debug the GNU/Linux C library, please add    -profile or -ggdb to LDFLAGS at the link time, respectively.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_GNULIBC_1
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-define|\
-value|"%{!shared: %{p:-lgmon} %{pg:-lgmon} %{profile:-lgmon -lc_p} \      %{!profile:%{!ggdb:-lc} %{ggdb:-lg}}}"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -207,29 +164,6 @@ name|LIB_SPEC
 define|\
 value|"%{pthread:-lpthread} \    %{shared:-lc} \    %{!shared:%{mieee-fp:-lieee} %{profile:-lc_p}%{!profile:-lc}}"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-define|\
-value|"%{!shared: \      %{p:-lgmon -lc_p} %{pg:-lgmon -lc_p} \        %{!p:%{!pg:%{!g*:-lc} %{g*:-lg}}}}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -243,12 +177,6 @@ end_define
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|USE_GNULIBC_1
-argument_list|)
-operator|&&
 name|defined
 argument_list|(
 name|HAVE_LD_EH_FRAME_HDR
@@ -286,19 +214,19 @@ value|"%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}"
 end_define
 
 begin_comment
-comment|/* Determine whether the the entire c99 runtime    is present in the runtime library.  */
+comment|/* Use --as-needed -lgcc_s for eh support.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USE_GNULIBC_1
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LD_AS_NEEDED
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|TARGET_C99_FUNCTIONS
+name|USE_LD_AS_NEEDED
 value|1
 end_define
 
@@ -307,10 +235,114 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Determine which dynamic linker to use depending on whether GLIBC or    uClibc is the default C library and whether -muclibc or -mglibc has    been passed to change the default.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|UCLIBC_DEFAULT
+end_if
+
 begin_define
 define|#
 directive|define
-name|TARGET_HAS_F_SETLKW
+name|CHOOSE_DYNAMIC_LINKER
+parameter_list|(
+name|G
+parameter_list|,
+name|U
+parameter_list|)
+value|"%{mglibc:%{muclibc:%e-mglibc and -muclibc used together}" G ";:" U "}"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CHOOSE_DYNAMIC_LINKER
+parameter_list|(
+name|G
+parameter_list|,
+name|U
+parameter_list|)
+value|"%{muclibc:%{mglibc:%e-mglibc and -muclibc used together}" U ";:" G "}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* For most targets the following definitions suffice;    GLIBC_DYNAMIC_LINKER must be defined for each target using them, or    GLIBC_DYNAMIC_LINKER32 and GLIBC_DYNAMIC_LINKER64 for targets    supporting both 32-bit and 64-bit compilation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UCLIBC_DYNAMIC_LINKER
+value|"/lib/ld-uClibc.so.0"
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCLIBC_DYNAMIC_LINKER32
+value|"/lib/ld-uClibc.so.0"
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCLIBC_DYNAMIC_LINKER64
+value|"/lib/ld64-uClibc.so.0"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_DYNAMIC_LINKER
+define|\
+value|CHOOSE_DYNAMIC_LINKER (GLIBC_DYNAMIC_LINKER, UCLIBC_DYNAMIC_LINKER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_DYNAMIC_LINKER32
+define|\
+value|CHOOSE_DYNAMIC_LINKER (GLIBC_DYNAMIC_LINKER32, UCLIBC_DYNAMIC_LINKER32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_DYNAMIC_LINKER64
+define|\
+value|CHOOSE_DYNAMIC_LINKER (GLIBC_DYNAMIC_LINKER64, UCLIBC_DYNAMIC_LINKER64)
+end_define
+
+begin_comment
+comment|/* Determine whether the entire c99 runtime    is present in the runtime library.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_C99_FUNCTIONS
+value|(OPTION_GLIBC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_POSIX_IO
 end_define
 
 end_unit

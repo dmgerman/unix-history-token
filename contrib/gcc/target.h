@@ -1,17 +1,79 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Data structure definitions for a generic GCC target.    Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
+comment|/* Data structure definitions for a generic GCC target.    Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
 end_comment
 
 begin_comment
 comment|/* This file contains a data structure that describes a GCC target.    At present it is incomplete, but in future it should grow to    contain most or all target machine and target O/S specific    information.     This structure has its initializer declared in target-def.h in the    form of large macro TARGET_INITIALIZER that expands to many smaller    macros.     The smaller macros each initialize one component of the structure,    and each has a default.  Each target should have a file that    includes target.h and target-def.h, and overrides any inappropriate    defaults by undefining the relevant macro and defining a suitable    replacement.  That file should then contain the definition of    "targetm" like so:     struct gcc_target targetm = TARGET_INITIALIZER;     Doing things this way allows us to bring together everything that    defines a GCC target.  By supplying a default that is appropriate    to most targets, we can easily add new items without needing to    edit dozens of target configuration files.  It should also allow us    to gradually reduce the amount of conditional compilation that is    scattered throughout GCC.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GCC_TARGET_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GCC_TARGET_H
+end_define
+
 begin_include
 include|#
 directive|include
 file|"tm.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"insn-modes.h"
+end_include
+
+begin_struct_decl
+struct_decl|struct
+name|stdarg_info
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|spec_info_def
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* The struct used by the secondary_reload target hook.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|secondary_reload_info
+block|{
+comment|/* icode is actually an enum insn_code, but we don't want to force every      file that includes target.h to include optabs.h .  */
+name|int
+name|icode
+decl_stmt|;
+name|int
+name|extra_cost
+decl_stmt|;
+comment|/* Cost for using (a) scratch register(s) to be taken 		     into account by copy_cost.  */
+comment|/* The next two members are for the use of the backward      compatibility hook.  */
+name|struct
+name|secondary_reload_info
+modifier|*
+name|prev_sri
+decl_stmt|;
+name|int
+name|t_icode
+decl_stmt|;
+comment|/* Actually an enum insn_code - see above.  */
+block|}
+name|secondary_reload_info
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
@@ -97,6 +159,47 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* Output code that will emit a label for unwind info, if this        target requires such labels.  Second argument is the decl the        unwind info is associated with, third is a boolean: true if        this is for exception handling, fourth is a boolean: true if        this is only a placeholder for an omitted FDE.  */
+name|void
+function_decl|(
+modifier|*
+name|unwind_label
+function_decl|)
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|tree
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* Output code that will emit a label to divide up the exception        table.  */
+name|void
+function_decl|(
+modifier|*
+name|except_table_label
+function_decl|)
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Emit any directives required to unwind this instruction.  */
+name|void
+function_decl|(
+modifier|*
+name|unwind_emit
+function_decl|)
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
 comment|/* Output an internal label.  */
 name|void
 function_decl|(
@@ -113,6 +216,16 @@ modifier|*
 parameter_list|,
 name|unsigned
 name|long
+parameter_list|)
+function_decl|;
+comment|/* Emit a ttype table reference to a typeinfo object.  */
+name|bool
+function_decl|(
+modifier|*
+name|ttype
+function_decl|)
+parameter_list|(
+name|rtx
 parameter_list|)
 function_decl|;
 comment|/* Emit an assembler directive to set visibility for the symbol        associated with the tree decl.  */
@@ -175,7 +288,17 @@ parameter_list|,
 name|HOST_WIDE_INT
 parameter_list|)
 function_decl|;
-comment|/* Switch to an arbitrary section NAME with attributes as        specified by FLAGS.  */
+comment|/* Initialize target-specific sections.  */
+name|void
+function_decl|(
+modifier|*
+name|init_sections
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Tell assembler to change to section NAME with attributes FLAGS.        If DECL is non-NULL, it is the VAR_DECL or FUNCTION_DECL with        which this section is associated.  */
 name|void
 function_decl|(
 modifier|*
@@ -185,33 +308,29 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|name
 parameter_list|,
 name|unsigned
 name|int
+name|flags
+parameter_list|,
+name|tree
+name|decl
 parameter_list|)
 function_decl|;
-comment|/* Switch to the section that holds the exception table.  */
-name|void
+comment|/* Return a mask describing how relocations should be treated when        selecting sections.  Bit 1 should be set if global relocations        should be placed in a read-write section; bit 0 should be set if        local relocations should be placed in a read-write section.  */
+name|int
 function_decl|(
 modifier|*
-name|exception_section
+name|reloc_rw_mask
 function_decl|)
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* Switch to the section that holds the exception frames.  */
-name|void
-function_decl|(
+comment|/* Return a section for EXP.  It may be a DECL or a constant.  RELOC        is nonzero if runtime relocations must be applied; bit 1 will be        set if the runtime relocations require non-local name resolution.        ALIGN is the required alignment of the data.  */
+name|section
 modifier|*
-name|eh_frame_section
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-comment|/* Select and switch to a section for EXP.  It may be a DECL or a        constant.  RELOC is nonzero if runtime relocations must be applied;        bit 1 will be set if the runtime relocations require non-local        name resolution.  ALIGN is the required alignment of the data.  */
-name|void
 function_decl|(
 modifier|*
 name|select_section
@@ -225,8 +344,9 @@ name|unsigned
 name|HOST_WIDE_INT
 parameter_list|)
 function_decl|;
-comment|/* Select and switch to a section for X with MODE.  ALIGN is        the desired alignment of the data.  */
-name|void
+comment|/* Return a section for X.  MODE is X's mode and ALIGN is its        alignment in bits.  */
+name|section
+modifier|*
 function_decl|(
 modifier|*
 name|select_rtx_section
@@ -251,6 +371,17 @@ parameter_list|(
 name|tree
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+comment|/* Return the readonly data section associated with function DECL.  */
+name|section
+modifier|*
+function_decl|(
+modifier|*
+name|function_rodata_section
+function_decl|)
+parameter_list|(
+name|tree
 parameter_list|)
 function_decl|;
 comment|/* Output a constructor for a symbol with a given priority.  */
@@ -352,6 +483,46 @@ parameter_list|(
 name|rtx
 parameter_list|)
 function_decl|;
+comment|/* Output an assembler directive to mark decl live. This instructs 	linker to not dead code strip this symbol.  */
+name|void
+function_decl|(
+modifier|*
+name|mark_decl_preserved
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Output the definition of a section anchor.  */
+name|void
+function_decl|(
+modifier|*
+name|output_anchor
+function_decl|)
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+comment|/* Output a DTP-relative reference to a TLS symbol.  */
+name|void
+function_decl|(
+modifier|*
+name|output_dwarf_dtprel
+function_decl|)
+parameter_list|(
+name|FILE
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|size
+parameter_list|,
+name|rtx
+name|x
+parameter_list|)
+function_decl|;
 block|}
 name|asm_out
 struct|;
@@ -446,6 +617,34 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+comment|/* Initialize machine-dependent function while scheduling code.  */
+name|void
+function_decl|(
+modifier|*
+name|md_init_global
+function_decl|)
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* Finalize machine-dependent function wide scheduling code.  */
+name|void
+function_decl|(
+modifier|*
+name|md_finish_global
+function_decl|)
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 comment|/* Reorder insns in a machine-dependent fashion, in two different        places.  Default does nothing.  */
 name|int
 function_decl|(
@@ -499,17 +698,6 @@ parameter_list|,
 name|rtx
 parameter_list|)
 function_decl|;
-comment|/* The following member value is a pointer to a function returning        nonzero if we should use DFA based scheduling.  The default is        to use the old pipeline scheduler.  */
-name|int
-function_decl|(
-modifier|*
-name|use_dfa_pipeline_interface
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-comment|/* The values of all the following members are used only for the        DFA based scheduler: */
 comment|/* The values of the following four members are pointers to        functions used to simplify the automaton descriptions.        dfa_pre_cycle_insn and dfa_post_cycle_insn give functions        returning insns which are used to change the pipeline hazard        recognizer state when the new simulated processor cycle        correspondingly starts and finishes.  The function defined by        init_dfa_pre_cycle_insn and init_dfa_post_cycle_insn are used        to initialize the corresponding insns.  The default values of        the members result in not changing the automaton state when        the new simulated processor cycle correspondingly starts and        finishes.  */
 name|void
 function_decl|(
@@ -547,7 +735,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* The following member value is a pointer to a function returning value        which defines how many insns in queue `ready' will we try for        multi-pass scheduling.  if the member value is nonzero and the        function returns positive value, the DFA based scheduler will make        multi-pass scheduling for the first cycle.  In other words, we will        try to choose ready insn which permits to start maximum number of        insns on the same cycle.  */
+comment|/* The following member value is a pointer to a function returning value        which defines how many insns in queue `ready' will we try for        multi-pass scheduling.  If the member value is nonzero and the        function returns positive value, the DFA based scheduler will make        multi-pass scheduling for the first cycle.  In other words, we will        try to choose ready insn which permits to start maximum number of        insns on the same cycle.  */
 name|int
 function_decl|(
 modifier|*
@@ -589,26 +777,7 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* The values of the following members are pointers to functions        used to improve the first cycle multipass scheduling by        inserting nop insns.  dfa_scheduler_bubble gives a function        returning a nop insn with given index.  The indexes start with        zero.  The function should return NULL if there are no more nop        insns with indexes greater than given index.  To initialize the        nop insn the function given by member        init_dfa_scheduler_bubbles is used.  The default values of the        members result in not inserting nop insns during the multipass        scheduling.  */
-name|void
-function_decl|(
-modifier|*
-name|init_dfa_bubbles
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|rtx
-function_decl|(
-modifier|*
-name|dfa_bubble
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-comment|/* The following member value is a pointer to a function called        by the insn scheduler.  It should return true if there exists a        dependence which is considered costly by the target, between         the insn passed as the first parameter, and the insn passed as         the second parameter.  The third parameter is the INSN_DEPEND         link that represents the dependence between the two insns.  The        fourth argument is the cost of the dependence as estimated by        the scheduler.  The last argument is the distance in cycles         between the already scheduled insn (first parameter) and the        the second insn (second parameter).  */
+comment|/* The following member value is a pointer to a function called        by the insn scheduler.  It should return true if there exists a        dependence which is considered costly by the target, between        the insn passed as the first parameter, and the insn passed as        the second parameter.  The third parameter is the INSN_DEPEND        link that represents the dependence between the two insns.  The        fourth argument is the cost of the dependence as estimated by        the scheduler.  The last argument is the distance in cycles        between the already scheduled insn (first parameter) and the        the second insn (second parameter).  */
 name|bool
 function_decl|(
 modifier|*
@@ -626,9 +795,150 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+comment|/* Given the current cost, COST, of an insn, INSN, calculate and        return a new cost based on its relationship to DEP_INSN through the        dependence of type DEP_TYPE.  The default is to make no adjustment.  */
+name|int
+function_decl|(
+modifier|*
+name|adjust_cost_2
+function_decl|)
+parameter_list|(
+name|rtx
+name|insn
+parameter_list|,
+name|int
+parameter_list|,
+name|rtx
+name|def_insn
+parameter_list|,
+name|int
+name|cost
+parameter_list|)
+function_decl|;
+comment|/* The following member value is a pointer to a function called        by the insn scheduler. This hook is called to notify the backend        that new instructions were emitted.  */
+name|void
+function_decl|(
+modifier|*
+name|h_i_d_extended
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* The following member value is a pointer to a function called        by the insn scheduler.        The first parameter is an instruction, the second parameter is the type        of the requested speculation, and the third parameter is a pointer to the        speculative pattern of the corresponding type (set if return value == 1).        It should return        -1, if there is no pattern, that will satisfy the requested speculation        type,        0, if current pattern satisfies the requested speculation type,        1, if pattern of the instruction should be changed to the newly        generated one.  */
+name|int
+function_decl|(
+modifier|*
+name|speculate_insn
+function_decl|)
+parameter_list|(
+name|rtx
+parameter_list|,
+name|int
+parameter_list|,
+name|rtx
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* The following member value is a pointer to a function called        by the insn scheduler.  It should return true if the check instruction        corresponding to the instruction passed as the parameter needs a        recovery block.  */
+name|bool
+function_decl|(
+modifier|*
+name|needs_block_p
+function_decl|)
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+comment|/* The following member value is a pointer to a function called        by the insn scheduler.  It should return a pattern for the check        instruction.        The first parameter is a speculative instruction, the second parameter        is the label of the corresponding recovery block (or null, if it is a        simple check).  If the mutation of the check is requested (e.g. from        ld.c to chk.a), the third parameter is true - in this case the first        parameter is the previous check.  */
+name|rtx
+function_decl|(
+modifier|*
+name|gen_check
+function_decl|)
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+comment|/* The following member value is a pointer to a function controlling        what insns from the ready insn queue will be considered for the        multipass insn scheduling.  If the hook returns zero for the insn        passed as the parameter, the insn will not be chosen to be        issued.  This hook is used to discard speculative instructions,        that stand at the first position of the ready list.  */
+name|bool
+function_decl|(
+modifier|*
+name|first_cycle_multipass_dfa_lookahead_guard_spec
+function_decl|)
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+comment|/* The following member value is a pointer to a function that provides        information about the speculation capabilities of the target.        The parameter is a pointer to spec_info variable.  */
+name|void
+function_decl|(
+modifier|*
+name|set_sched_flags
+function_decl|)
+parameter_list|(
+name|struct
+name|spec_info_def
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 name|sched
 struct|;
+comment|/* Functions relating to vectorization.  */
+struct|struct
+name|vectorize
+block|{
+comment|/* The following member value is a pointer to a function called        by the vectorizer, and return the decl of the target builtin        function.  */
+name|tree
+function_decl|(
+modifier|*
+name|builtin_mask_for_load
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+block|}
+name|vectorize
+struct|;
+comment|/* The initial value of target_flags.  */
+name|int
+name|default_target_flags
+decl_stmt|;
+comment|/* Handle target switch CODE (an OPT_* value).  ARG is the argument      passed to the switch; it is NULL if no argument was.  VALUE is the      value of ARG if CODE specifies a UInteger option, otherwise it is      1 if the positive form of the switch was used and 0 if the negative      form was.  Return true if the switch was valid.  */
+name|bool
+function_decl|(
+modifier|*
+name|handle_option
+function_decl|)
+parameter_list|(
+name|size_t
+name|code
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|value
+parameter_list|)
+function_decl|;
+comment|/* Return machine mode for filter value.  */
+name|enum
+name|machine_mode
+function_decl|(
+modifier|*
+name|eh_return_filter_mode
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 comment|/* Given two decls, merge their attributes and return the result.  */
 name|tree
 function_decl|(
@@ -722,6 +1032,36 @@ name|tree
 name|record_type
 parameter_list|)
 function_decl|;
+comment|/* True if the target supports decimal floating point.  */
+name|bool
+function_decl|(
+modifier|*
+name|decimal_float_supported_p
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Return true if anonymous bitfields affect structure alignment.  */
+name|bool
+function_decl|(
+modifier|*
+name|align_anon_bitfield
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Return true if volatile bitfields should use the narrowest type possible.      Return false if they should use the container type.  */
+name|bool
+function_decl|(
+modifier|*
+name|narrow_volatile_bitfield
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 comment|/* Set up target-specific built-in functions.  */
 name|void
 function_decl|(
@@ -753,6 +1093,37 @@ name|machine_mode
 name|mode
 parameter_list|,
 name|int
+name|ignore
+parameter_list|)
+function_decl|;
+comment|/* Select a replacement for a target-specific builtin.  This is done      *before* regular type checking, and so allows the target to implement      a crude form of function overloading.  The result is a complete      expression that implements the operation.  */
+name|tree
+function_decl|(
+modifier|*
+name|resolve_overloaded_builtin
+function_decl|)
+parameter_list|(
+name|tree
+name|decl
+parameter_list|,
+name|tree
+name|params
+parameter_list|)
+function_decl|;
+comment|/* Fold a target-specific builtin.  */
+name|tree
+function_decl|(
+modifier|*
+name|fold_builtin
+function_decl|)
+parameter_list|(
+name|tree
+name|fndecl
+parameter_list|,
+name|tree
+name|arglist
+parameter_list|,
+name|bool
 name|ignore
 parameter_list|)
 function_decl|;
@@ -848,11 +1219,53 @@ parameter_list|(
 name|rtx
 parameter_list|)
 function_decl|;
+comment|/* True if X is considered to be commutative.  */
+name|bool
+function_decl|(
+modifier|*
+name|commutative_p
+function_decl|)
+parameter_list|(
+name|rtx
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 comment|/* Given an address RTX, undo the effects of LEGITIMIZE_ADDRESS.  */
 name|rtx
 function_decl|(
 modifier|*
 name|delegitimize_address
+function_decl|)
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+comment|/* True if the given constant can be put into an object_block.  */
+name|bool
+function_decl|(
+modifier|*
+name|use_blocks_for_constant_p
+function_decl|)
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+comment|/* The minimum and maximum byte offsets for anchored addresses.  */
+name|HOST_WIDE_INT
+name|min_anchor_offset
+decl_stmt|;
+name|HOST_WIDE_INT
+name|max_anchor_offset
+decl_stmt|;
+comment|/* True if section anchors can be used to access the given symbol.  */
+name|bool
+function_decl|(
+modifier|*
+name|use_anchors_for_symbol_p
 function_decl|)
 parameter_list|(
 name|rtx
@@ -920,11 +1333,78 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* If shift optabs for MODE are known to always truncate the shift count,      return the mask that they apply.  Return 0 otherwise.  */
+name|unsigned
+name|HOST_WIDE_INT
+function_decl|(
+modifier|*
+name|shift_truncation_mask
+function_decl|)
+parameter_list|(
+name|enum
+name|machine_mode
+name|mode
+parameter_list|)
+function_decl|;
+comment|/* Return the number of divisions in the given MODE that should be present,      so that it is profitable to turn the division into a multiplication by      the reciprocal.  */
+name|unsigned
+name|int
+function_decl|(
+modifier|*
+name|min_divisions_for_recip_mul
+function_decl|)
+parameter_list|(
+name|enum
+name|machine_mode
+name|mode
+parameter_list|)
+function_decl|;
+comment|/* If the representation of integral MODE is such that values are      always sign-extended to a wider mode MODE_REP then return      SIGN_EXTEND.  Return UNKNOWN otherwise.  */
+comment|/* Note that the return type ought to be RTX_CODE, but that's not      necessarily defined at this point.  */
+name|int
+function_decl|(
+modifier|*
+name|mode_rep_extended
+function_decl|)
+parameter_list|(
+name|enum
+name|machine_mode
+name|mode
+parameter_list|,
+name|enum
+name|machine_mode
+name|mode_rep
+parameter_list|)
+function_decl|;
 comment|/* True if MODE is valid for a pointer in __attribute__((mode("MODE"))).  */
 name|bool
 function_decl|(
 modifier|*
 name|valid_pointer_mode
+function_decl|)
+parameter_list|(
+name|enum
+name|machine_mode
+name|mode
+parameter_list|)
+function_decl|;
+comment|/* True if MODE is valid for the target.  By "valid", we mean able to      be manipulated in non-trivial ways.  In particular, this means all      the arithmetic is supported.  */
+name|bool
+function_decl|(
+modifier|*
+name|scalar_mode_supported_p
+function_decl|)
+parameter_list|(
+name|enum
+name|machine_mode
+name|mode
+parameter_list|)
+function_decl|;
+comment|/* Similarly for vector modes.  "Supported" here is less strict.  At      least some operations are supported; need to check optabs or builtins      for further details.  */
+name|bool
+function_decl|(
+modifier|*
+name|vector_mode_supported_p
 function_decl|)
 parameter_list|(
 name|enum
@@ -969,6 +1449,17 @@ name|int
 function_decl|(
 modifier|*
 name|address_cost
+function_decl|)
+parameter_list|(
+name|rtx
+name|x
+parameter_list|)
+function_decl|;
+comment|/* Return where to allocate pseudo for a given hard register initial      value.  */
+name|rtx
+function_decl|(
+modifier|*
+name|allocate_initial_value
 function_decl|)
 parameter_list|(
 name|rtx
@@ -1036,6 +1527,28 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+comment|/* Gimplifies a VA_ARG_EXPR.  */
+name|tree
+function_decl|(
+modifier|*
+name|gimplify_va_arg_expr
+function_decl|)
+parameter_list|(
+name|tree
+name|valist
+parameter_list|,
+name|tree
+name|type
+parameter_list|,
+name|tree
+modifier|*
+name|pre_p
+parameter_list|,
+name|tree
+modifier|*
+name|post_p
+parameter_list|)
+function_decl|;
 comment|/* Validity-checking routines for PCH files, target-specific.      get_pch_validity returns a pointer to the data to be stored,      and stores the size in its argument.  pch_valid_p gets the same      information back and returns NULL if the PCH is valid,      or an error message if not.   */
 name|void
 modifier|*
@@ -1061,6 +1574,140 @@ name|void
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+comment|/* If nonnull, this function checks whether a PCH file with the      given set of target flags can be used.  It returns NULL if so,      otherwise it returns an error message.  */
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|check_pch_target_flags
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+comment|/* True if the compiler should give an enum type only as many      bytes as it takes to represent the range of possible values of      that type.  */
+name|bool
+function_decl|(
+modifier|*
+name|default_short_enums
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* This target hook returns an rtx that is used to store the address      of the current frame into the built-in setjmp buffer.  */
+name|rtx
+function_decl|(
+modifier|*
+name|builtin_setjmp_frame_value
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* This target hook should add STRING_CST trees for any hard regs      the port wishes to automatically clobber for an asm.  */
+name|tree
+function_decl|(
+modifier|*
+name|md_asm_clobbers
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+comment|/* This target hook allows the backend to specify a calling convention      in the debug information.  This function actually returns an      enum dwarf_calling_convention, but because of forward declarations      and not wanting to include dwarf2.h everywhere target.h is included      the function is being declared as an int.  */
+name|int
+function_decl|(
+modifier|*
+name|dwarf_calling_convention
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+comment|/* This target hook allows the backend to emit frame-related insns that      contain UNSPECs or UNSPEC_VOLATILEs.  The call frame debugging info      engine will invoke it on insns of the form        (set (reg) (unspec [...] UNSPEC_INDEX))      and        (set (reg) (unspec_volatile [...] UNSPECV_INDEX))      to let the backend emit the call frame instructions.  */
+name|void
+function_decl|(
+modifier|*
+name|dwarf_handle_frame_unspec
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|rtx
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* Perform architecture specific checking of statements gimplified      from VA_ARG_EXPR.  LHS is left hand side of MODIFY_EXPR, RHS      is right hand side.  Returns true if the statements doesn't need      to be checked for va_list references.  */
+name|bool
+function_decl|(
+modifier|*
+name|stdarg_optimize_hook
+function_decl|)
+parameter_list|(
+name|struct
+name|stdarg_info
+modifier|*
+name|ai
+parameter_list|,
+name|tree
+name|lhs
+parameter_list|,
+name|tree
+name|rhs
+parameter_list|)
+function_decl|;
+comment|/* This target hook allows the operating system to override the DECL      that represents the external variable that contains the stack      protection guard variable.  The type of this DECL is ptr_type_node.  */
+name|tree
+function_decl|(
+modifier|*
+name|stack_protect_guard
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* This target hook allows the operating system to override the CALL_EXPR      that is invoked when a check vs the guard variable fails.  */
+name|tree
+function_decl|(
+modifier|*
+name|stack_protect_fail
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Returns NULL if target supports the insn within a doloop block,      otherwise it returns an error message.  */
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|invalid_within_doloop
+function_decl|)
+parameter_list|(
+name|rtx
+parameter_list|)
+function_decl|;
+comment|/* DECL is a variable or function with __attribute__((dllimport))      specified.  Use this hook if the target needs to add extra validation      checks to  handle_dll_attribute ().  */
+name|bool
+function_decl|(
+modifier|*
+name|valid_dllimport_attribute_p
+function_decl|)
+parameter_list|(
+name|tree
+name|decl
 parameter_list|)
 function_decl|;
 comment|/* Functions relating to calls - argument passing, returns, etc.  */
@@ -1133,6 +1780,28 @@ name|tree
 name|type
 parameter_list|)
 function_decl|;
+comment|/* Return true if a parameter must be passed by reference.  TYPE may        be null if this is a libcall.  CA may be null if this query is        from __builtin_va_arg.  */
+name|bool
+function_decl|(
+modifier|*
+name|pass_by_reference
+function_decl|)
+parameter_list|(
+name|CUMULATIVE_ARGS
+modifier|*
+name|ca
+parameter_list|,
+name|enum
+name|machine_mode
+name|mode
+parameter_list|,
+name|tree
+name|type
+parameter_list|,
+name|bool
+name|named_arg
+parameter_list|)
+function_decl|;
 name|rtx
 function_decl|(
 modifier|*
@@ -1179,7 +1848,7 @@ modifier|*
 name|ca
 parameter_list|)
 function_decl|;
-comment|/* Returns true if we should use SETUP_INCOMING_VARARGS and/or        targetm.calls.strict_argument_naming().  */
+comment|/* Returns true if we should use        targetm.calls.setup_incoming_varargs() and/or        targetm.calls.strict_argument_naming().  */
 name|bool
 function_decl|(
 modifier|*
@@ -1202,13 +1871,332 @@ name|tree
 name|type
 parameter_list|)
 function_decl|;
+comment|/* Return true if type T, mode MODE, may not be passed in registers,        but must be passed on the stack.  */
+comment|/* ??? This predicate should be applied strictly after pass-by-reference.        Need audit to verify that this is the case.  */
+name|bool
+function_decl|(
+modifier|*
+name|must_pass_in_stack
+function_decl|)
+parameter_list|(
+name|enum
+name|machine_mode
+name|mode
+parameter_list|,
+name|tree
+name|t
+parameter_list|)
+function_decl|;
+comment|/* Return true if type TYPE, mode MODE, which is passed by reference,        should have the object copy generated by the callee rather than        the caller.  It is never called for TYPE requiring constructors.  */
+name|bool
+function_decl|(
+modifier|*
+name|callee_copies
+function_decl|)
+parameter_list|(
+name|CUMULATIVE_ARGS
+modifier|*
+name|ca
+parameter_list|,
+name|enum
+name|machine_mode
+name|mode
+parameter_list|,
+name|tree
+name|type
+parameter_list|,
+name|bool
+name|named
+parameter_list|)
+function_decl|;
+comment|/* Return zero for arguments passed entirely on the stack or entirely        in registers.  If passed in both, return the number of bytes passed        in registers; the balance is therefore passed on the stack.  */
+name|int
+function_decl|(
+modifier|*
+name|arg_partial_bytes
+function_decl|)
+parameter_list|(
+name|CUMULATIVE_ARGS
+modifier|*
+name|ca
+parameter_list|,
+name|enum
+name|machine_mode
+name|mode
+parameter_list|,
+name|tree
+name|type
+parameter_list|,
+name|bool
+name|named
+parameter_list|)
+function_decl|;
+comment|/* Return the diagnostic message string if function without a prototype        is not allowed for this 'val' argument; NULL otherwise. */
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|invalid_arg_for_unprototyped_fn
+function_decl|)
+parameter_list|(
+name|tree
+name|typelist
+parameter_list|,
+name|tree
+name|funcdecl
+parameter_list|,
+name|tree
+name|val
+parameter_list|)
+function_decl|;
+comment|/* Return an rtx for the return value location of the function        specified by FN_DECL_OR_TYPE with a return type of RET_TYPE.  */
+name|rtx
+function_decl|(
+modifier|*
+name|function_value
+function_decl|)
+parameter_list|(
+name|tree
+name|ret_type
+parameter_list|,
+name|tree
+name|fn_decl_or_type
+parameter_list|,
+name|bool
+name|outgoing
+parameter_list|)
+function_decl|;
+comment|/* Return an rtx for the argument pointer incoming to the        current function.  */
+name|rtx
+function_decl|(
+modifier|*
+name|internal_arg_pointer
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 block|}
 name|calls
 struct|;
+comment|/* Return the diagnostic message string if conversion from FROMTYPE      to TOTYPE is not allowed, NULL otherwise.  */
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|invalid_conversion
+function_decl|)
+parameter_list|(
+name|tree
+name|fromtype
+parameter_list|,
+name|tree
+name|totype
+parameter_list|)
+function_decl|;
+comment|/* Return the diagnostic message string if the unary operation OP is      not permitted on TYPE, NULL otherwise.  */
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|invalid_unary_op
+function_decl|)
+parameter_list|(
+name|int
+name|op
+parameter_list|,
+name|tree
+name|type
+parameter_list|)
+function_decl|;
+comment|/* Return the diagnostic message string if the binary operation OP      is not permitted on TYPE1 and TYPE2, NULL otherwise.  */
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|invalid_binary_op
+function_decl|)
+parameter_list|(
+name|int
+name|op
+parameter_list|,
+name|tree
+name|type1
+parameter_list|,
+name|tree
+name|type2
+parameter_list|)
+function_decl|;
+comment|/* Return the class for a secondary reload, and fill in extra information.  */
+name|enum
+name|reg_class
+function_decl|(
+modifier|*
+name|secondary_reload
+function_decl|)
+parameter_list|(
+name|bool
+parameter_list|,
+name|rtx
+parameter_list|,
+name|enum
+name|reg_class
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+name|struct
+name|secondary_reload_info
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Functions specific to the C++ frontend.  */
+struct|struct
+name|cxx
+block|{
+comment|/* Return the integer type used for guard variables.  */
+name|tree
+function_decl|(
+modifier|*
+name|guard_type
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Return true if only the low bit of the guard should be tested.  */
+name|bool
+function_decl|(
+modifier|*
+name|guard_mask_bit
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Returns the size of the array cookie for an array of type.  */
+name|tree
+function_decl|(
+modifier|*
+name|get_cookie_size
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+comment|/* Returns true if the element size should be stored in the        array cookie.  */
+name|bool
+function_decl|(
+modifier|*
+name|cookie_has_size
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Allows backends to perform additional processing when        deciding if a class should be exported or imported.  */
+name|int
+function_decl|(
+modifier|*
+name|import_export_class
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* Returns true if constructors and destructors return "this".  */
+name|bool
+function_decl|(
+modifier|*
+name|cdtor_returns_this
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Returns true if the key method for a class can be an inline        function, so long as it is not declared inline in the class        itself.  Returning true is the behavior required by the Itanium        C++ ABI.  */
+name|bool
+function_decl|(
+modifier|*
+name|key_method_may_be_inline
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* DECL is a virtual table, virtual table table, typeinfo object,        or other similar implicit class data object that will be        emitted with external linkage in this translation unit.  No ELF        visibility has been explicitly specified.  If the target needs        to specify a visibility other than that of the containing class,        use this hook to set DECL_VISIBILITY and        DECL_VISIBILITY_SPECIFIED.  */
+name|void
+function_decl|(
+modifier|*
+name|determine_class_data_visibility
+function_decl|)
+parameter_list|(
+name|tree
+name|decl
+parameter_list|)
+function_decl|;
+comment|/* Returns true (the default) if virtual tables and other        similar implicit class data objects are always COMDAT if they        have external linkage.  If this hook returns false, then        class data for classes whose virtual table will be emitted in        only one translation unit will not be COMDAT.  */
+name|bool
+function_decl|(
+modifier|*
+name|class_data_always_comdat
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Returns true if __aeabi_atexit should be used to register static        destructors.  */
+name|bool
+function_decl|(
+modifier|*
+name|use_aeabi_atexit
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* TYPE is a C++ class (i.e., RECORD_TYPE or UNION_TYPE) that        has just been defined.  Use this hook to make adjustments to the        class  (eg, tweak visibility or perform any other required        target modifications).  */
+name|void
+function_decl|(
+modifier|*
+name|adjust_class_at_definition
+function_decl|)
+parameter_list|(
+name|tree
+name|type
+parameter_list|)
+function_decl|;
+block|}
+name|cxx
+struct|;
+comment|/* For targets that need to mark extra registers as live on entry to      the function, they should define this target hook and set their      bits in the bitmap passed in. */
+name|void
+function_decl|(
+modifier|*
+name|live_on_entry
+function_decl|)
+parameter_list|(
+name|bitmap
+parameter_list|)
+function_decl|;
+comment|/* True if unwinding tables should be generated by default.  */
+name|bool
+name|unwind_tables_default
+decl_stmt|;
 comment|/* Leave the boolean fields at the end.  */
 comment|/* True if arbitrary sections are supported.  */
 name|bool
 name|have_named_sections
+decl_stmt|;
+comment|/* True if we can create zeroed data by switching to a BSS section      and then using ASM_OUTPUT_SKIP to allocate the space.  */
+name|bool
+name|have_switchable_bss_sections
 decl_stmt|;
 comment|/* True if "native" constructors and destructors are supported,      false if we're using collect2 for the job.  */
 name|bool
@@ -1234,6 +2222,22 @@ comment|/* True if output_file_directive should be called for main_input_filenam
 name|bool
 name|file_start_file_directive
 decl_stmt|;
+comment|/* True if #pragma redefine_extname is to be supported.  */
+name|bool
+name|handle_pragma_redefine_extname
+decl_stmt|;
+comment|/* True if #pragma extern_prefix is to be supported.  */
+name|bool
+name|handle_pragma_extern_prefix
+decl_stmt|;
+comment|/* True if the target is allowed to reorder memory accesses unless      synchronization is explicitly requested.  */
+name|bool
+name|relaxed_ordering
+decl_stmt|;
+comment|/* Returns true if we should generate exception tables for use with the      ARM EABI.  The effects the encoding of function exception specifications.    */
+name|bool
+name|arm_eabi_unwinder
+decl_stmt|;
 comment|/* Leave the boolean fields at the end.  */
 block|}
 struct|;
@@ -1246,6 +2250,15 @@ name|gcc_target
 name|targetm
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GCC_TARGET_H */
+end_comment
 
 end_unit
 

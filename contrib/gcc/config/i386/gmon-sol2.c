@@ -7,47 +7,27 @@ begin_comment
 comment|/*  * This is a modified gmon.c by J.W.Hawtin<oolon@ankh.org>,  * 14/8/96 based on the original gmon.c in GCC and the hacked version  * solaris 2 sparc version (config/sparc/gmon-sol.c) by Mark Eichin. To do  * process profiling on solaris 2.X X86  *  * It must be used in conjunction with sol2-gc1.asm, which is used to start  * and stop process monitoring.  *  * Differences.  *  * On Solaris 2 _mcount is called by library functions not mcount, so support  * has been added for both.  *  * Also the prototype for profil() is different  *  * Solaris 2 does not seem to have char *minbrk whcih allows the setting of  * the minimum SBRK region so this code has been removed and lets pray malloc  * does not mess it up.  *  * Notes  *  * This code could easily be integrated with the original gmon.c and perhaps  * should be.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)gmon.c	5.3 (Berkeley) 5/22/91"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_include
+include|#
+directive|include
+file|"tconfig.h"
+end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|"tsystem.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_comment
+comment|/* for creat() */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -66,22 +46,49 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_function_decl
+specifier|static
+name|void
+name|moncontrol
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_include
-include|#
-directive|include
-file|"i386/gmon.h"
-end_include
+begin_function_decl
+specifier|extern
+name|void
+name|monstartup
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
+begin_function_decl
+specifier|extern
+name|void
+name|_mcleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|internal_mcount
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct
 struct|struct
@@ -210,34 +217,9 @@ parameter_list|)
 value|((((x)+(y)-1)/(y))*(y))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* char *minbrk; */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|sbrk
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*      *	froms is actually a bunch of unsigned shorts indexing tos      */
@@ -358,30 +340,18 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|monstartup
-argument_list|(
-argument|lowpc
-argument_list|,
-argument|highpc
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|lowpc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|highpc
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|monsize
@@ -405,6 +375,7 @@ name|ROUNDDOWN
 argument_list|(
 operator|(
 name|unsigned
+name|long
 operator|)
 name|lowpc
 argument_list|,
@@ -430,6 +401,7 @@ name|ROUNDUP
 argument_list|(
 operator|(
 name|unsigned
+name|long
 operator|)
 name|highpc
 argument_list|,
@@ -817,14 +789,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|_mcleanup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|fd
@@ -890,7 +862,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 name|write
 argument_list|(
 name|fd
@@ -1007,7 +979,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 name|rawarc
 operator|.
 name|raw_frompc
@@ -1063,7 +1035,7 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Solaris 2 libraries use _mcount.  */
@@ -1081,12 +1053,12 @@ begin_asm
 asm|asm(".globl mcount; mcount: jmp internal_mcount");
 end_asm
 
-begin_macro
+begin_function
+name|void
 name|internal_mcount
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -1150,9 +1122,11 @@ operator|!
 name|already_setup
 condition|)
 block|{
-extern|extern etext(
-block|)
-empty_stmt|;
+specifier|extern
+name|char
+name|etext
+index|[]
+decl_stmt|;
 name|already_setup
 operator|=
 literal|1
@@ -1160,6 +1134,10 @@ expr_stmt|;
 comment|/*	  monstartup(0, etext); */
 name|monstartup
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0x08040000
 argument_list|,
 name|etext
@@ -1185,13 +1163,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
-
-begin_comment
 comment|/* 	 *	check that we are profiling 	 *	and that we aren't recursively invoked. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|profiling
@@ -1201,19 +1173,10 @@ goto|goto
 name|out
 goto|;
 block|}
-end_if
-
-begin_expr_stmt
 name|profiling
 operator|++
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 *	check that frompcindex is a reasonable pc value. 	 *	for example:	signal catchers get called from the stack, 	 *			not from text space.  too bad. 	 */
-end_comment
-
-begin_expr_stmt
 name|frompcindex
 operator|=
 operator|(
@@ -1233,9 +1196,6 @@ operator|)
 name|s_lowpc
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -1251,9 +1211,6 @@ goto|goto
 name|done
 goto|;
 block|}
-end_if
-
-begin_expr_stmt
 name|frompcindex
 operator|=
 operator|&
@@ -1277,17 +1234,11 @@ argument_list|)
 operator|)
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|toindex
 operator|=
 operator|*
 name|frompcindex
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|toindex
@@ -1352,9 +1303,6 @@ goto|goto
 name|done
 goto|;
 block|}
-end_if
-
-begin_expr_stmt
 name|top
 operator|=
 operator|&
@@ -1363,9 +1311,6 @@ index|[
 name|toindex
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|top
@@ -1385,13 +1330,7 @@ goto|goto
 name|done
 goto|;
 block|}
-end_if
-
-begin_comment
 comment|/* 	 *	have to go looking down chain for it. 	 *	top points to what we are looking at, 	 *	prevtop points to previous top. 	 *	we know it is not at the head of the chain. 	 */
-end_comment
-
-begin_for
 for|for
 control|(
 init|;
@@ -1527,59 +1466,26 @@ name|done
 goto|;
 block|}
 block|}
-end_for
-
-begin_label
 name|done
 label|:
-end_label
-
-begin_expr_stmt
 name|profiling
 operator|--
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* and fall through */
-end_comment
-
-begin_label
 name|out
 label|:
-end_label
-
-begin_return
 return|return;
-end_return
-
-begin_comment
 comment|/* normal return restores saved registers */
-end_comment
-
-begin_label
 name|overflow
 label|:
-end_label
-
-begin_expr_stmt
 name|profiling
 operator|++
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* halt further profiling */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|TOLIMIT
 value|"mcount: tos overflow\n"
-end_define
-
-begin_expr_stmt
 name|write
 argument_list|(
 literal|2
@@ -1592,30 +1498,24 @@ name|TOLIMIT
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_goto
 goto|goto
 name|out
 goto|;
-end_goto
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Control profiling  *	profiling is what mcount checks to see if  *	all the data structures are ready.  */
 end_comment
 
-begin_expr_stmt
-unit|moncontrol
-operator|(
-name|mode
-operator|)
+begin_function
+specifier|static
+name|void
+name|moncontrol
+parameter_list|(
 name|int
 name|mode
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1649,7 +1549,7 @@ name|phdr
 argument_list|)
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|s_lowpc
 argument_list|,
@@ -1686,7 +1586,7 @@ literal|3
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

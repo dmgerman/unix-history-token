@@ -8,7 +8,7 @@ comment|/* Compile this one with gcc.  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -189,6 +189,21 @@ end_decl_stmt
 
 begin_function
 name|int
+name|pthread_cancel
+parameter_list|(
+name|pthread_t
+name|thread
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|pthread_mutex_lock
 parameter_list|(
 name|pthread_mutex_t
@@ -226,6 +241,58 @@ parameter_list|(
 name|pthread_mutex_t
 modifier|*
 name|mutex
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|pthread_mutexattr_init
+parameter_list|(
+name|pthread_mutexattr_t
+modifier|*
+name|attr
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|pthread_mutexattr_settype
+parameter_list|(
+name|pthread_mutexattr_t
+modifier|*
+name|attr
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|int
+name|type
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|pthread_mutexattr_destroy
+parameter_list|(
+name|pthread_mutexattr_t
+modifier|*
+name|attr
 name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
@@ -395,6 +462,12 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|_POSIX_PRIORITY_SCHEDULING
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_POSIX_THREAD_PRIORITY_SCHEDULING
 end_ifdef
 
@@ -435,6 +508,15 @@ end_endif
 
 begin_comment
 comment|/* _POSIX_THREAD_PRIORITY_SCHEDULING */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _POSIX_PRIORITY_SCHEDULING */
 end_comment
 
 begin_function

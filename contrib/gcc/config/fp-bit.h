@@ -4,11 +4,7 @@ comment|/* Header file for fp-bit.c.  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 2000, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-end_comment
-
-begin_comment
-comment|/* As a special exception, if you link this library with other files,    some of which are compiled with GCC, to produce an executable,    this library does not by itself cause the resulting executable    to be covered by the GNU General Public License.    This exception does not however invalidate any other reasons why    the executable file might be covered by the GNU General Public License.  */
+comment|/* Copyright (C) 2000, 2002, 2003, 2006 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  In addition to the permissions in the GNU General Public License, the Free Software Foundation gives you unlimited permission to link the compiled version of this file into combinations with other programs, and to distribute those combinations without any restriction coming from the use of this file.  (The General Public License restrictions do apply in other respects; for example, they cover modification of the file, and distribution when not linked into a combine executable.)  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -334,11 +330,35 @@ operator|==
 literal|106
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TFLOAT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|L_sf_to_tf
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|L_df_to_tf
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|TMODES
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -452,7 +472,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* The type of the result of a fp compare */
+comment|/* The type of the result of a floating point comparison.  This must    match `word_mode' in GCC for the target.  */
 end_comment
 
 begin_ifndef
@@ -461,12 +481,17 @@ directive|ifndef
 name|CMPtype
 end_ifndef
 
-begin_define
-define|#
-directive|define
+begin_typedef
+typedef|typedef
+name|int
 name|CMPtype
-value|SItype
-end_define
+name|__attribute__
+typedef|((
+name|mode
+typedef|(
+name|word
+typedef|)));
+end_typedef
 
 begin_endif
 endif|#
@@ -1881,8 +1906,10 @@ directive|define
 name|LSHIFT
 parameter_list|(
 name|a
+parameter_list|,
+name|s
 parameter_list|)
-value|{ a = (a& 1) | (a>> 1); }
+value|{ a = (a>> s) | !!(a& (((fractype) 1<< s) - 1)); }
 end_define
 
 begin_comment

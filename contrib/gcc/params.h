@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* params.h - Run-time parameters.    Copyright (C) 2001, 2003 Free Software Foundation, Inc.    Written by Mark Mitchell<mark@codesourcery.com>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* params.h - Run-time parameters.    Copyright (C) 2001, 2003, 2004, 2005 Free Software Foundation, Inc.    Written by Mark Mitchell<mark@codesourcery.com>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -49,6 +49,14 @@ decl_stmt|;
 comment|/* The associated value.  */
 name|int
 name|value
+decl_stmt|;
+comment|/* Minimum acceptable value.  */
+name|int
+name|min_value
+decl_stmt|;
+comment|/* Maximum acceptable value, if greater than minimum  */
+name|int
+name|max_value
 decl_stmt|;
 comment|/* A short description of the option.  */
 specifier|const
@@ -136,7 +144,7 @@ name|option
 parameter_list|,
 name|msgid
 parameter_list|,
-define|default) \   enumerator,
+define|default, min, max) \   enumerator,
 include|#
 directive|include
 file|"params.def"
@@ -167,6 +175,46 @@ end_define
 begin_comment
 comment|/* Macros for the various parameters.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SALIAS_MAX_IMPLICIT_FIELDS
+define|\
+value|PARAM_VALUE (PARAM_SALIAS_MAX_IMPLICIT_FIELDS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SALIAS_MAX_ARRAY_ELEMENTS
+define|\
+value|PARAM_VALUE (PARAM_SALIAS_MAX_ARRAY_ELEMENTS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SRA_MAX_STRUCTURE_SIZE
+define|\
+value|PARAM_VALUE (PARAM_SRA_MAX_STRUCTURE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SRA_MAX_STRUCTURE_COUNT
+define|\
+value|PARAM_VALUE (PARAM_SRA_MAX_STRUCTURE_COUNT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SRA_FIELD_STRUCTURE_RATIO
+define|\
+value|PARAM_VALUE (PARAM_SRA_FIELD_STRUCTURE_RATIO)
+end_define
 
 begin_define
 define|#
@@ -211,9 +259,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_INLINE_INSNS_RTL
+name|MAX_VARIABLE_EXPANSIONS
 define|\
-value|PARAM_VALUE (PARAM_MAX_INLINE_INSNS_RTL)
+value|PARAM_VALUE (PARAM_MAX_VARIABLE_EXPANSIONS)
 end_define
 
 begin_define
@@ -259,6 +307,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|GCSE_AFTER_RELOAD_PARTIAL_FRACTION
+define|\
+value|PARAM_VALUE (PARAM_GCSE_AFTER_RELOAD_PARTIAL_FRACTION)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GCSE_AFTER_RELOAD_CRITICAL_FRACTION
+define|\
+value|PARAM_VALUE (PARAM_GCSE_AFTER_RELOAD_CRITICAL_FRACTION)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAX_UNROLLED_INSNS
 define|\
 value|PARAM_VALUE (PARAM_MAX_UNROLLED_INSNS)
@@ -267,9 +331,97 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAX_SMS_LOOP_NUMBER
+define|\
+value|PARAM_VALUE (PARAM_MAX_SMS_LOOP_NUMBER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMS_MAX_II_FACTOR
+define|\
+value|PARAM_VALUE (PARAM_SMS_MAX_II_FACTOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMS_DFA_HISTORY
+define|\
+value|PARAM_VALUE (PARAM_SMS_DFA_HISTORY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMS_LOOP_AVERAGE_COUNT_THRESHOLD
+define|\
+value|PARAM_VALUE (PARAM_SMS_LOOP_AVERAGE_COUNT_THRESHOLD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GLOBAL_VAR_THRESHOLD
+define|\
+value|PARAM_VALUE (PARAM_GLOBAL_VAR_THRESHOLD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_ALIASED_VOPS
+define|\
+value|PARAM_VALUE (PARAM_MAX_ALIASED_VOPS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTEGER_SHARE_LIMIT
+define|\
+value|PARAM_VALUE (PARAM_INTEGER_SHARE_LIMIT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAX_LAST_VALUE_RTL
 define|\
 value|PARAM_VALUE (PARAM_MAX_LAST_VALUE_RTL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIN_VIRTUAL_MAPPINGS
+define|\
+value|PARAM_VALUE (PARAM_MIN_VIRTUAL_MAPPINGS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIRTUAL_MAPPINGS_TO_SYMS_RATIO
+define|\
+value|PARAM_VALUE (PARAM_VIRTUAL_MAPPINGS_TO_SYMS_RATIO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_FIELDS_FOR_FIELD_SENSITIVE
+define|\
+value|((size_t) PARAM_VALUE (PARAM_MAX_FIELDS_FOR_FIELD_SENSITIVE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_SCHED_READY_INSNS
+define|\
+value|PARAM_VALUE (PARAM_MAX_SCHED_READY_INSNS)
 end_define
 
 begin_endif

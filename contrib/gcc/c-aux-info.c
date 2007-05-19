@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate information regarding function declarations and definitions based    on information stored in GCC's tree structure.  This code implements the    -aux-info option.    Copyright (C) 1989, 1991, 1994, 1995, 1997, 1998,    1999, 2000, 2003 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@segfault.us.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate information regarding function declarations and definitions based    on information stored in GCC's tree structure.  This code implements the    -aux-info option.    Copyright (C) 1989, 1991, 1994, 1995, 1997, 1998,    1999, 2000, 2003, 2004 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@segfault.us.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -477,7 +477,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* If there were at least some parameters, and if the formals-types-list          petered out to a NULL (i.e. without being terminated by a          void_type_node) then we need to tack on an ellipsis.  */
+comment|/* If there were at least some parameters, and if the formals-types-list 	 petered out to a NULL (i.e. without being terminated by a 	 void_type_node) then we need to tack on an ellipsis.  */
 if|if
 condition|(
 operator|!
@@ -1113,7 +1113,7 @@ name|t
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* The following three cases are complicated by the fact that a            user may do something really stupid, like creating a brand new            "anonymous" type specification in a formal argument list (or as            part of a function return type specification).  For example:  		int f (enum { red, green, blue } color);  	   In such cases, we have no name that we can put into the prototype 	   to represent the (anonymous) type.  Thus, we have to generate the 	   whole darn type specification.  Yuck!  */
+comment|/* The following three cases are complicated by the fact that a 	   user may do something really stupid, like creating a brand new 	   "anonymous" type specification in a formal argument list (or as 	   part of a function return type specification).  For example:  		int f (enum { red, green, blue } color);  	   In such cases, we have no name that we can put into the prototype 	   to represent the (anonymous) type.  Thus, we have to generate the 	   whole darn type specification.  Yuck!  */
 case|case
 name|RECORD_TYPE
 case|:
@@ -1453,7 +1453,7 @@ expr_stmt|;
 comment|/* Normally, `unsigned' is part of the deal.  Not so if it comes 	     with a type qualifier.  */
 if|if
 condition|(
-name|TREE_UNSIGNED
+name|TYPE_UNSIGNED
 argument_list|(
 name|t
 argument_list|)
@@ -1509,7 +1509,7 @@ literal|"[ERROR]"
 expr_stmt|;
 break|break;
 default|default:
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}
@@ -1702,7 +1702,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Since we have already added in the formals list stuff, here we don't          add the whole "type" of the function we are considering (which          would include its parameter-list info), rather, we only add in          the "type" of the "type" of the function, which is really just          the return-type of the function (and does not include the parameter          list info).  */
+comment|/* Since we have already added in the formals list stuff, here we don't 	 add the whole "type" of the function we are considering (which 	 would include its parameter-list info), rather, we only add in 	 the "type" of the "type" of the function, which is really just 	 the return-type of the function (and does not include the parameter 	 list info).  */
 name|ret_val
 operator|=
 name|gen_type
@@ -1752,7 +1752,7 @@ argument_list|)
 operator|!=
 name|FUNCTION_DECL
 operator|&&
-name|DECL_REGISTER
+name|C_DECL_REGISTER
 argument_list|(
 name|decl
 argument_list|)
@@ -1858,6 +1858,17 @@ name|compiled_from_record
 init|=
 literal|0
 decl_stmt|;
+name|expanded_location
+name|xloc
+init|=
+name|expand_location
+argument_list|(
+name|DECL_SOURCE_LOCATION
+argument_list|(
+name|fndecl
+argument_list|)
+argument_list|)
+decl_stmt|;
 comment|/* Each output .X file must have a header line.  Write one now if we 	 have not yet done so.  */
 if|if
 condition|(
@@ -1882,15 +1893,13 @@ name|aux_info_file
 argument_list|,
 literal|"/* %s:%d:%c%c */ %s;"
 argument_list|,
-name|DECL_SOURCE_FILE
-argument_list|(
-name|fndecl
-argument_list|)
+name|xloc
+operator|.
+name|file
 argument_list|,
-name|DECL_SOURCE_LINE
-argument_list|(
-name|fndecl
-argument_list|)
+name|xloc
+operator|.
+name|line
 argument_list|,
 operator|(
 name|is_implicit

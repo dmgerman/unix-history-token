@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Sun SPARC64 running FreeBSD using the ELF format    Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.    Contributed by David E. O'Brien<obrien@FreeBSD.org> and BSDi.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Definitions for Sun SPARC64 running FreeBSD using the ELF format    Copyright (C) 2001, 2002, 2004, 2005, 2006 Free Software Foundation, Inc.    Contributed by David E. O'Brien<obrien@FreeBSD.org> and BSDi.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_undef
@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"%(link_arch)						\   %{!mno-relax:%{!r:-relax}}						\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1)}				\   %{Wl,*:%*}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{symbolic:-Bsymbolic}						\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}"
+value|"%(link_arch)						\   %{!mno-relax:%{!r:-relax}}						\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1)}		\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{symbolic:-Bsymbolic}						\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}"
 end_define
 
 begin_comment
@@ -91,23 +91,6 @@ value|(TARGET_LONG_DOUBLE_128 ? 128 : 64)
 end_define
 
 begin_comment
-comment|/* Constant which presents upper bound of the above value.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|MAX_LONG_DOUBLE_TYPE_SIZE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|MAX_LONG_DOUBLE_TYPE_SIZE
-value|128
-end_define
-
-begin_comment
 comment|/* Define this to set long double type size to use in libgcc2.c, which can    not depend on target_flags.  */
 end_comment
 
@@ -152,20 +135,6 @@ end_endif
 begin_comment
 comment|/* Definitions for 64-bit SPARC running systems with ELF. */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_SWITCHES
-define|\
-value|{"long-double-64", -MASK_LONG_DOUBLE_128, N_("Use 64 bit long doubles") },  \   {"long-double-128", MASK_LONG_DOUBLE_128, N_("Use 128 bit long doubles") },
-end_define
 
 begin_undef
 undef|#
@@ -262,35 +231,6 @@ comment|/* XXX2 */
 end_comment
 
 begin_comment
-comment|/* This is how to output a reference to an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_INTERNAL_LABELREF
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_INTERNAL_LABELREF
-parameter_list|(
-name|FILE
-parameter_list|,
-name|PREFIX
-parameter_list|,
-name|NUM
-parameter_list|)
-define|\
-value|fprintf (FILE, ".L%s%d", PREFIX, NUM)
-end_define
-
-begin_comment
-comment|/* XXX2 */
-end_comment
-
-begin_comment
 comment|/* This is how to store into the string LABEL    the symbol_ref name of an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.    This is suitable for output with `assemble_name'.  */
 end_comment
 
@@ -359,7 +299,7 @@ define|#
 directive|define
 name|ENDFILE_SPEC
 define|\
-value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s}" \ 	FBSD_ENDFILE_SPEC
+value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s} "	\   FBSD_ENDFILE_SPEC
 end_define
 
 begin_comment

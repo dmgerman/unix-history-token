@@ -8,7 +8,7 @@ comment|/* Compile this one with gcc.  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1997, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1997, 1999, 2000, 2002, 2003, 2005     Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -55,6 +55,10 @@ define|#
 directive|define
 name|__GTHREAD_MUTEX_INIT_FUNCTION
 value|rtems_gxx_mutex_init
+define|#
+directive|define
+name|__GTHREAD_RECURSIVE_MUTEX_INIT_FUNCTION
+value|rtems_gxx_recursive_mutex_init
 comment|/* Avoid dependency on rtems specific headers.  */
 typedef|typedef
 name|void
@@ -69,6 +73,11 @@ typedef|typedef
 name|void
 modifier|*
 name|__gthread_mutex_t
+typedef|;
+typedef|typedef
+name|void
+modifier|*
+name|__gthread_recursive_mutex_t
 typedef|;
 comment|/*  * External functions provided by RTEMS. They are very similar to their POSIX  * counterparts. A "Wrapper API" is being use to avoid dependency on any RTEMS  * header files.  */
 comment|/* generic per task variables */
@@ -172,6 +181,43 @@ name|int
 name|rtems_gxx_mutex_unlock
 parameter_list|(
 name|__gthread_mutex_t
+modifier|*
+name|mutex
+parameter_list|)
+function_decl|;
+comment|/* recursive mutex support */
+specifier|extern
+name|void
+name|rtems_gxx_recursive_mutex_init
+parameter_list|(
+name|__gthread_recursive_mutex_t
+modifier|*
+name|mutex
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|rtems_gxx_recursive_mutex_lock
+parameter_list|(
+name|__gthread_recursive_mutex_t
+modifier|*
+name|mutex
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|rtems_gxx_recursive_mutex_trylock
+parameter_list|(
+name|__gthread_recursive_mutex_t
+modifier|*
+name|mutex
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|rtems_gxx_recursive_mutex_unlock
+parameter_list|(
+name|__gthread_recursive_mutex_t
 modifier|*
 name|mutex
 parameter_list|)
@@ -349,6 +395,57 @@ parameter_list|)
 block|{
 return|return
 name|rtems_gxx_mutex_unlock
+argument_list|(
+name|mutex
+argument_list|)
+return|;
+block|}
+specifier|static
+specifier|inline
+name|int
+name|__gthread_recursive_mutex_lock
+parameter_list|(
+name|__gthread_recursive_mutex_t
+modifier|*
+name|mutex
+parameter_list|)
+block|{
+return|return
+name|rtems_gxx_recursive_mutex_lock
+argument_list|(
+name|mutex
+argument_list|)
+return|;
+block|}
+specifier|static
+specifier|inline
+name|int
+name|__gthread_recursive_mutex_trylock
+parameter_list|(
+name|__gthread_recursive_mutex_t
+modifier|*
+name|mutex
+parameter_list|)
+block|{
+return|return
+name|rtems_gxx_recursive_mutex_trylock
+argument_list|(
+name|mutex
+argument_list|)
+return|;
+block|}
+specifier|static
+specifier|inline
+name|int
+name|__gthread_recursive_mutex_unlock
+parameter_list|(
+name|__gthread_recursive_mutex_t
+modifier|*
+name|mutex
+parameter_list|)
+block|{
+return|return
+name|rtems_gxx_recursive_mutex_unlock
 argument_list|(
 name|mutex
 argument_list|)

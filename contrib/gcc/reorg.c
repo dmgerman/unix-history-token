@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Perform instruction reorganizations for delay slot filling.    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu).    Hacked by Michael Tiemann (tiemann@cygnus.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Perform instruction reorganizations for delay slot filling.    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu).    Hacked by Michael Tiemann (tiemann@cygnus.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/* Instruction reorganization pass.     This pass runs after register allocation and final jump    optimization.  It should be the last pass to run before peephole.    It serves primarily to fill delay slots of insns, typically branch    and call insns.  Other insns typically involve more complicated    interactions of data dependencies and resource constraints, and    are better handled by scheduling before register allocation (by the    function `schedule_insns').     The Branch Penalty is the number of extra cycles that are needed to    execute a branch insn.  On an ideal machine, branches take a single    cycle, and the Branch Penalty is 0.  Several RISC machines approach    branch delays differently:     The MIPS and AMD 29000 have a single branch delay slot.  Most insns    (except other branches) can be used to fill this slot.  When the    slot is filled, two insns execute in two cycles, reducing the    branch penalty to zero.     The Motorola 88000 conditionally exposes its branch delay slot,    so code is shorter when it is turned off, but will run faster    when useful insns are scheduled there.     The IBM ROMP has two forms of branch and call insns, both with and    without a delay slot.  Much like the 88k, insns not using the delay    slot can be shorted (2 bytes vs. 4 bytes), but will run slowed.     The SPARC always has a branch delay slot, but its effects can be    annulled when the branch is not taken.  This means that failing to    find other sources of insns, we can hoist an insn from the branch    target that would only be safe to execute knowing that the branch    is taken.     The HP-PA always has a branch delay slot.  For unconditional branches    its effects can be annulled when the branch is taken.  The effects    of the delay slot in a conditional branch can be nullified for forward    taken branches, or for untaken backward branches.  This means    we can hoist insns from the fall-through path for forward branches or    steal insns from the target of backward branches.     The TMS320C3x and C4x have three branch delay slots.  When the three    slots are filled, the branch penalty is zero.  Most insns can fill the    delay slots except jump insns.     Three techniques for filling delay slots have been implemented so far:     (1) `fill_simple_delay_slots' is the simplest, most efficient way    to fill delay slots.  This pass first looks for insns which come    from before the branch and which are safe to execute after the    branch.  Then it searches after the insn requiring delay slots or,    in the case of a branch, for insns that are after the point at    which the branch merges into the fallthrough code, if such a point    exists.  When such insns are found, the branch penalty decreases    and no code expansion takes place.     (2) `fill_eager_delay_slots' is more complicated: it is used for    scheduling conditional jumps, or for scheduling jumps which cannot    be filled using (1).  A machine need not have annulled jumps to use    this strategy, but it helps (by keeping more options open).    `fill_eager_delay_slots' tries to guess the direction the branch    will go; if it guesses right 100% of the time, it can reduce the    branch penalty as much as `fill_simple_delay_slots' does.  If it    guesses wrong 100% of the time, it might as well schedule nops (or    on the m88k, unexpose the branch slot).  When    `fill_eager_delay_slots' takes insns from the fall-through path of    the jump, usually there is no code expansion; when it takes insns    from the branch target, there is code expansion if it is not the    only way to reach that target.     (3) `relax_delay_slots' uses a set of rules to simplify code that    has been reorganized by (1) and (2).  It finds cases where    conditional test can be eliminated, jumps can be threaded, extra    insns can be eliminated, etc.  It is the job of (1) and (2) to do a    good job of scheduling locally; `relax_delay_slots' takes care of    making the various individual schedules work well together.  It is    especially tuned to handle the control flow interactions of branch    insns.  It does nothing for insns with delay slots that do not    branch.     On machines that use CC0, we are very conservative.  We will not make    a copy of an insn involving CC0 since we want to maintain a 1-1    correspondence between the insn that sets and uses CC0.  The insns are    allowed to be separated by placing an insn that sets CC0 (but not an insn    that uses CC0; we could do this, but it doesn't seem worthwhile) in a    delay slot.  In that case, we point each insn at the other with REG_CC_USER    and REG_CC_SETTER notes.  Note that these restrictions affect very few    machines because most RISC machines with delay slots will not use CC0    (the RT is the only known exception at this point).     Not yet implemented:     The Acorn Risc Machine can conditionally execute most insns, so    it is profitable to move single insns into a position to execute    based on the condition code of the previous insn.     The HP-PA can conditionally nullify insns, providing a similar    effect to the ARM, differing mostly in which insn is "in charge".  */
+comment|/* Instruction reorganization pass.     This pass runs after register allocation and final jump    optimization.  It should be the last pass to run before peephole.    It serves primarily to fill delay slots of insns, typically branch    and call insns.  Other insns typically involve more complicated    interactions of data dependencies and resource constraints, and    are better handled by scheduling before register allocation (by the    function `schedule_insns').     The Branch Penalty is the number of extra cycles that are needed to    execute a branch insn.  On an ideal machine, branches take a single    cycle, and the Branch Penalty is 0.  Several RISC machines approach    branch delays differently:     The MIPS has a single branch delay slot.  Most insns    (except other branches) can be used to fill this slot.  When the    slot is filled, two insns execute in two cycles, reducing the    branch penalty to zero.     The SPARC always has a branch delay slot, but its effects can be    annulled when the branch is not taken.  This means that failing to    find other sources of insns, we can hoist an insn from the branch    target that would only be safe to execute knowing that the branch    is taken.     The HP-PA always has a branch delay slot.  For unconditional branches    its effects can be annulled when the branch is taken.  The effects    of the delay slot in a conditional branch can be nullified for forward    taken branches, or for untaken backward branches.  This means    we can hoist insns from the fall-through path for forward branches or    steal insns from the target of backward branches.     The TMS320C3x and C4x have three branch delay slots.  When the three    slots are filled, the branch penalty is zero.  Most insns can fill the    delay slots except jump insns.     Three techniques for filling delay slots have been implemented so far:     (1) `fill_simple_delay_slots' is the simplest, most efficient way    to fill delay slots.  This pass first looks for insns which come    from before the branch and which are safe to execute after the    branch.  Then it searches after the insn requiring delay slots or,    in the case of a branch, for insns that are after the point at    which the branch merges into the fallthrough code, if such a point    exists.  When such insns are found, the branch penalty decreases    and no code expansion takes place.     (2) `fill_eager_delay_slots' is more complicated: it is used for    scheduling conditional jumps, or for scheduling jumps which cannot    be filled using (1).  A machine need not have annulled jumps to use    this strategy, but it helps (by keeping more options open).    `fill_eager_delay_slots' tries to guess the direction the branch    will go; if it guesses right 100% of the time, it can reduce the    branch penalty as much as `fill_simple_delay_slots' does.  If it    guesses wrong 100% of the time, it might as well schedule nops.  When    `fill_eager_delay_slots' takes insns from the fall-through path of    the jump, usually there is no code expansion; when it takes insns    from the branch target, there is code expansion if it is not the    only way to reach that target.     (3) `relax_delay_slots' uses a set of rules to simplify code that    has been reorganized by (1) and (2).  It finds cases where    conditional test can be eliminated, jumps can be threaded, extra    insns can be eliminated, etc.  It is the job of (1) and (2) to do a    good job of scheduling locally; `relax_delay_slots' takes care of    making the various individual schedules work well together.  It is    especially tuned to handle the control flow interactions of branch    insns.  It does nothing for insns with delay slots that do not    branch.     On machines that use CC0, we are very conservative.  We will not make    a copy of an insn involving CC0 since we want to maintain a 1-1    correspondence between the insn that sets and uses CC0.  The insns are    allowed to be separated by placing an insn that sets CC0 (but not an insn    that uses CC0; we could do this, but it doesn't seem worthwhile) in a    delay slot.  In that case, we point each insn at the other with REG_CC_USER    and REG_CC_SETTER notes.  Note that these restrictions affect very few    machines because most RISC machines with delay slots will not use CC0    (the RT is the only known exception at this point).     Not yet implemented:     The Acorn Risc Machine can conditionally execute most insns, so    it is profitable to move single insns into a position to execute    based on the condition code of the previous insn.     The HP-PA can conditionally nullify insns, providing a similar    effect to the ARM, differing mostly in which insn is "in charge".  */
 end_comment
 
 begin_include
@@ -137,6 +137,24 @@ begin_include
 include|#
 directive|include
 file|"params.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"timevar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"target.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tree-pass.h"
 end_include
 
 begin_ifdef
@@ -892,7 +910,7 @@ literal|0
 operator|)
 return|;
 default|default:
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}
@@ -1147,7 +1165,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Find a label at the end of the function or before a RETURN.  If there is    none, make one.  */
+comment|/* Find a label at the end of the function or before a RETURN.  If there    is none, try to make one.  If that fails, returns 0.     The property of such a label is that it is placed just before the    epilogue or a bare RETURN insn, so that another bare RETURN can be    turned into a jump to the label unconditionally.  In particular, the    label cannot be placed before a RETURN insn with a filled delay slot.     ??? There may be a problem with the current implementation.  Suppose    we start with a bare RETURN insn and call find_end_label.  It may set    end_of_function_label just before the RETURN.  Suppose the machinery    is able to fill the delay slot of the RETURN insn afterwards.  Then    end_of_function_label is no longer valid according to the property    described above and find_end_label will still return it unmodified.    Note that this is probably mitigated by the following observation:    once end_of_function_label is made, it is very likely the target of    a jump, so filling the delay slot of the RETURN will be much more    difficult.  */
 end_comment
 
 begin_function
@@ -1177,20 +1195,16 @@ argument_list|()
 expr_stmt|;
 while|while
 condition|(
-name|GET_CODE
+name|NOTE_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|NOTE
 operator|||
 operator|(
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 operator|(
 name|GET_CODE
@@ -1225,22 +1239,18 @@ expr_stmt|;
 comment|/* When a target threads its epilogue we might already have a      suitable return insn.  If so put a label before it for the      end_of_function_label.  */
 if|if
 condition|(
-name|GET_CODE
+name|BARRIER_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|BARRIER
 operator|&&
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|PREV_INSN
 argument_list|(
 name|insn
 argument_list|)
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -1279,7 +1289,7 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Put the label before an USE insns that may proceed the RETURN insn.  */
+comment|/* Put the label before an USE insns that may precede the RETURN insn.  */
 while|while
 condition|(
 name|GET_CODE
@@ -1307,12 +1317,10 @@ block|}
 elseif|else
 if|if
 condition|(
-name|GET_CODE
+name|LABEL_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|CODE_LABEL
 condition|)
 name|end_of_function_label
 operator|=
@@ -1339,12 +1347,10 @@ name|insn
 operator|&&
 operator|!
 operator|(
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 operator|(
 name|GET_CODE
@@ -1405,6 +1411,34 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_epilogue
+if|if
+condition|(
+name|HAVE_epilogue
+ifdef|#
+directive|ifdef
+name|HAVE_return
+operator|&&
+operator|!
+name|HAVE_return
+endif|#
+directive|endif
+condition|)
+block|{
+comment|/* The RETURN insn has its delay slot filled so we cannot 		 emit the label just before it.  Since we already have 		 an epilogue and cannot emit a new RETURN, we cannot 		 emit the label at all.  */
+name|end_of_function_label
+operator|=
+name|NULL_RTX
+expr_stmt|;
+return|return
+name|end_of_function_label
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_epilogue */
 comment|/* Otherwise, make a new label and emit a RETURN and BARRIER, 	     if needed.  */
 name|emit_label
 argument_list|(
@@ -1414,8 +1448,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_return
+comment|/* We don't bother trying to create a return insn if the 	     epilogue has filled delay-slots; we would have to try and 	     move the delay-slot fillers to the delay-slots for the new 	     return insn or in front of the new return insn.  */
 if|if
 condition|(
+name|current_function_epilogue_delay_list
+operator|==
+name|NULL
+operator|&&
 name|HAVE_return
 condition|)
 block|{
@@ -1564,15 +1603,13 @@ argument_list|(
 name|insn
 argument_list|)
 operator|&&
-name|GET_CODE
+name|BARRIER_P
 argument_list|(
 name|NEXT_INSN
 argument_list|(
 name|insn
 argument_list|)
 argument_list|)
-operator|==
-name|BARRIER
 condition|)
 block|{
 name|delete_related_insns
@@ -1871,7 +1908,7 @@ case|:
 comment|/* Keep the label reference count up to date.  */
 if|if
 condition|(
-name|GET_CODE
+name|LABEL_P
 argument_list|(
 name|XEXP
 argument_list|(
@@ -1880,8 +1917,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-operator|==
-name|CODE_LABEL
 condition|)
 name|LABEL_NUSES
 argument_list|(
@@ -1925,15 +1960,13 @@ argument_list|(
 name|seq_insn
 argument_list|)
 operator|&&
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|PREV_INSN
 argument_list|(
 name|seq_insn
 argument_list|)
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -1988,15 +2021,13 @@ argument_list|(
 name|seq_insn
 argument_list|)
 operator|&&
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|NEXT_INSN
 argument_list|(
 name|seq_insn
 argument_list|)
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -2041,16 +2072,14 @@ argument_list|(
 name|seq_insn
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|i
-operator|!=
+operator|==
 name|length
 operator|+
 literal|1
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 return|return
 name|seq_insn
@@ -2157,6 +2186,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|had_barrier
+init|=
+literal|0
+decl_stmt|;
 comment|/* We first must find the insn containing the SEQUENCE with INSN in its      delay slot.  Do this by finding an insn, TRIAL, where      PREV_INSN (NEXT_INSN (TRIAL)) != TRIAL.  */
 for|for
 control|(
@@ -2198,6 +2232,25 @@ name|PATTERN
 argument_list|(
 name|seq_insn
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|NEXT_INSN
+argument_list|(
+name|seq_insn
+argument_list|)
+operator|&&
+name|BARRIER_P
+argument_list|(
+name|NEXT_INSN
+argument_list|(
+name|seq_insn
+argument_list|)
+argument_list|)
+condition|)
+name|had_barrier
+operator|=
+literal|1
 expr_stmt|;
 comment|/* Create a delay list consisting of all the insns other than the one      we are deleting (unless we were the only one).  */
 if|if
@@ -2289,31 +2342,10 @@ argument_list|,
 name|prev
 argument_list|)
 expr_stmt|;
+comment|/* If there was a barrier after the old SEQUENCE, remit it.  */
 if|if
 condition|(
-name|GET_CODE
-argument_list|(
-name|trial
-argument_list|)
-operator|==
-name|JUMP_INSN
-operator|&&
-operator|(
-name|simplejump_p
-argument_list|(
-name|trial
-argument_list|)
-operator|||
-name|GET_CODE
-argument_list|(
-name|PATTERN
-argument_list|(
-name|trial
-argument_list|)
-argument_list|)
-operator|==
-name|RETURN
-operator|)
+name|had_barrier
 condition|)
 name|emit_barrier_after
 argument_list|(
@@ -2346,26 +2378,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|GET_CODE
+name|INSN_P
 argument_list|(
 name|trial
 argument_list|)
-operator|==
-name|JUMP_INSN
-operator|||
-name|GET_CODE
-argument_list|(
-name|trial
-argument_list|)
-operator|==
-name|CALL_INSN
-operator|||
-name|GET_CODE
-argument_list|(
-name|trial
-argument_list|)
-operator|==
-name|INSN
 condition|)
 name|INSN_ANNULLED_BRANCH_P
 argument_list|(
@@ -2498,12 +2514,10 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|GET_CODE
+name|NOTE_P
 argument_list|(
 name|trial
 argument_list|)
-operator|==
-name|NOTE
 condition|)
 name|trial
 operator|=
@@ -2730,9 +2744,6 @@ name|delay_list
 init|=
 literal|0
 decl_stmt|;
-name|rtx
-name|target_label
-decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
@@ -2754,12 +2765,11 @@ name|trial
 operator|==
 literal|0
 operator|||
-name|GET_CODE
+operator|!
+name|NONJUMP_INSN_P
 argument_list|(
 name|trial
 argument_list|)
-operator|!=
-name|INSN
 operator|||
 name|GET_CODE
 argument_list|(
@@ -2843,12 +2853,10 @@ name|next_trial
 operator|!=
 literal|0
 operator|&&
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|next_trial
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 name|JUMP_LABEL
 argument_list|(
@@ -2966,12 +2974,10 @@ if|if
 condition|(
 name|next_trial
 operator|&&
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|next_trial
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 operator|(
 name|simplejump_p
@@ -2991,13 +2997,14 @@ name|RETURN
 operator|)
 condition|)
 block|{
+name|rtx
 name|target_label
-operator|=
+init|=
 name|JUMP_LABEL
 argument_list|(
 name|next_trial
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|target_label
@@ -3009,7 +3016,12 @@ operator|=
 name|find_end_label
 argument_list|()
 expr_stmt|;
-comment|/* Recompute the flags based on TARGET_LABEL since threading 	     the jump to TARGET_LABEL may change the direction of the 	     jump (which may change the circumstances in which the 	     delay slot is nullified).  */
+if|if
+condition|(
+name|target_label
+condition|)
+block|{
+comment|/* Recompute the flags based on TARGET_LABEL since threading 		 the jump to TARGET_LABEL may change the direction of the 		 jump (which may change the circumstances in which the 		 delay slot is nullified).  */
 name|flags
 operator|=
 name|get_jump_flags
@@ -3039,6 +3051,7 @@ argument_list|,
 name|target_label
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|INSN_ANNULLED_BRANCH_P
 argument_list|(
@@ -3084,12 +3097,10 @@ decl_stmt|;
 comment|/* get_jump_flags can be passed any insn with delay slots, these may      be INSNs, CALL_INSNs, or JUMP_INSNs.  Only JUMP_INSNs have branch      direction information, and only if they are conditional jumps.       If LABEL is zero, then there is no way to determine the branch      direction.  */
 if|if
 condition|(
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 operator|(
 name|condjump_p
@@ -3154,12 +3165,10 @@ expr_stmt|;
 comment|/* If insn is a conditional branch call mostly_true_jump to get      determine the branch prediction.       Non conditional branches are predicted as very likely taken.  */
 if|if
 condition|(
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 operator|(
 name|condjump_p
@@ -3238,7 +3247,7 @@ operator|)
 expr_stmt|;
 break|break;
 default|default:
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}
@@ -3291,12 +3300,10 @@ control|)
 block|{
 if|if
 condition|(
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -3428,28 +3435,12 @@ name|jump_insn
 argument_list|)
 decl_stmt|;
 name|rtx
-name|insn
-decl_stmt|,
 name|note
 decl_stmt|;
 name|int
 name|rare_dest
-init|=
-name|rare_destination
-argument_list|(
-name|target_label
-argument_list|)
-decl_stmt|;
-name|int
+decl_stmt|,
 name|rare_fallthrough
-init|=
-name|rare_destination
-argument_list|(
-name|NEXT_INSN
-argument_list|(
-name|jump_insn
-argument_list|)
-argument_list|)
 decl_stmt|;
 comment|/* If branch probabilities are available, then use that number since it      always gives a correct answer.  */
 name|note
@@ -3524,194 +3515,24 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* ??? Ought to use estimate_probability instead.  */
-comment|/* If this is a branch outside a loop, it is highly unlikely.  */
-if|if
-condition|(
-name|GET_CODE
-argument_list|(
-name|PATTERN
-argument_list|(
-name|jump_insn
-argument_list|)
-argument_list|)
-operator|==
-name|SET
-operator|&&
-name|GET_CODE
-argument_list|(
-name|SET_SRC
-argument_list|(
-name|PATTERN
-argument_list|(
-name|jump_insn
-argument_list|)
-argument_list|)
-argument_list|)
-operator|==
-name|IF_THEN_ELSE
-operator|&&
-operator|(
-operator|(
-name|GET_CODE
-argument_list|(
-name|XEXP
-argument_list|(
-name|SET_SRC
-argument_list|(
-name|PATTERN
-argument_list|(
-name|jump_insn
-argument_list|)
-argument_list|)
-argument_list|,
-literal|1
-argument_list|)
-argument_list|)
-operator|==
-name|LABEL_REF
-operator|&&
-name|LABEL_OUTSIDE_LOOP_P
-argument_list|(
-name|XEXP
-argument_list|(
-name|SET_SRC
-argument_list|(
-name|PATTERN
-argument_list|(
-name|jump_insn
-argument_list|)
-argument_list|)
-argument_list|,
-literal|1
-argument_list|)
-argument_list|)
-operator|)
-operator|||
-operator|(
-name|GET_CODE
-argument_list|(
-name|XEXP
-argument_list|(
-name|SET_SRC
-argument_list|(
-name|PATTERN
-argument_list|(
-name|jump_insn
-argument_list|)
-argument_list|)
-argument_list|,
-literal|2
-argument_list|)
-argument_list|)
-operator|==
-name|LABEL_REF
-operator|&&
-name|LABEL_OUTSIDE_LOOP_P
-argument_list|(
-name|XEXP
-argument_list|(
-name|SET_SRC
-argument_list|(
-name|PATTERN
-argument_list|(
-name|jump_insn
-argument_list|)
-argument_list|)
-argument_list|,
-literal|2
-argument_list|)
-argument_list|)
-operator|)
-operator|)
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-if|if
-condition|(
-name|target_label
-condition|)
-block|{
-comment|/* If this is the test of a loop, it is very likely true.  We scan 	 backwards from the target label.  If we find a NOTE_INSN_LOOP_BEG 	 before the next real insn, we assume the branch is to the top of 	 the loop.  */
-for|for
-control|(
-name|insn
+comment|/* Look at the relative rarities of the fallthrough and destination.  If      they differ, we can predict the branch that way.  */
+name|rare_dest
 operator|=
-name|PREV_INSN
+name|rare_destination
 argument_list|(
 name|target_label
 argument_list|)
-init|;
-name|insn
-operator|&&
-name|GET_CODE
-argument_list|(
-name|insn
-argument_list|)
-operator|==
-name|NOTE
-condition|;
-name|insn
+expr_stmt|;
+name|rare_fallthrough
 operator|=
-name|PREV_INSN
+name|rare_destination
 argument_list|(
-name|insn
-argument_list|)
-control|)
-if|if
-condition|(
-name|NOTE_LINE_NUMBER
-argument_list|(
-name|insn
-argument_list|)
-operator|==
-name|NOTE_INSN_LOOP_BEG
-condition|)
-return|return
-literal|2
-return|;
-comment|/* If this is a jump to the test of a loop, it is likely true.  We scan 	 forwards from the target label.  If we find a NOTE_INSN_LOOP_VTOP 	 before the next real insn, we assume the branch is to the loop branch 	 test.  */
-for|for
-control|(
-name|insn
-operator|=
 name|NEXT_INSN
 argument_list|(
-name|target_label
+name|jump_insn
 argument_list|)
-init|;
-name|insn
-operator|&&
-name|GET_CODE
-argument_list|(
-name|insn
 argument_list|)
-operator|==
-name|NOTE
-condition|;
-name|insn
-operator|=
-name|PREV_INSN
-argument_list|(
-name|insn
-argument_list|)
-control|)
-if|if
-condition|(
-name|NOTE_LINE_NUMBER
-argument_list|(
-name|insn
-argument_list|)
-operator|==
-name|NOTE_INSN_LOOP_VTOP
-condition|)
-return|return
-literal|1
-return|;
-block|}
-comment|/* Look at the relative rarities of the fallthrough and destination.  If      they differ, we can predict the branch that way.  */
+expr_stmt|;
 switch|switch
 condition|(
 name|rare_fallthrough
@@ -3761,79 +3582,6 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* EQ tests are usually false and NE tests are usually true.  Also,      most quantities are positive, so we can make the appropriate guesses      about signed comparisons against zero.  */
-switch|switch
-condition|(
-name|GET_CODE
-argument_list|(
-name|condition
-argument_list|)
-condition|)
-block|{
-case|case
-name|CONST_INT
-case|:
-comment|/* Unconditional branch.  */
-return|return
-literal|1
-return|;
-case|case
-name|EQ
-case|:
-return|return
-literal|0
-return|;
-case|case
-name|NE
-case|:
-return|return
-literal|1
-return|;
-case|case
-name|LE
-case|:
-case|case
-name|LT
-case|:
-if|if
-condition|(
-name|XEXP
-argument_list|(
-name|condition
-argument_list|,
-literal|1
-argument_list|)
-operator|==
-name|const0_rtx
-condition|)
-return|return
-literal|0
-return|;
-break|break;
-case|case
-name|GE
-case|:
-case|case
-name|GT
-case|:
-if|if
-condition|(
-name|XEXP
-argument_list|(
-name|condition
-argument_list|,
-literal|1
-argument_list|)
-operator|==
-name|const0_rtx
-condition|)
-return|return
-literal|1
-return|;
-break|break;
-default|default:
-break|break;
-block|}
 comment|/* Predict backward branches usually take, forward branches usually not.  If      we don't know whether this is forward or backward, assume the branch      will be taken, since most are.  */
 return|return
 operator|(
@@ -5185,7 +4933,7 @@ literal|0
 argument_list|)
 operator|&&
 operator|!
-name|may_trap_p
+name|may_trap_or_fault_p
 argument_list|(
 name|PATTERN
 argument_list|(
@@ -5615,7 +5363,7 @@ literal|0
 argument_list|)
 operator|&&
 operator|!
-name|may_trap_p
+name|may_trap_or_fault_p
 argument_list|(
 name|PATTERN
 argument_list|(
@@ -5940,12 +5688,10 @@ expr_stmt|;
 comment|/* TRIAL must be a CALL_INSN or INSN.  Skip USE and CLOBBER.  */
 if|if
 condition|(
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|trial
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 operator|(
 name|GET_CODE
@@ -6193,12 +5939,10 @@ name|num_slots
 operator|&&
 name|trial
 operator|&&
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|trial
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -6733,12 +6477,10 @@ control|)
 block|{
 if|if
 condition|(
-name|GET_CODE
+name|LABEL_P
 argument_list|(
 name|trial
 argument_list|)
-operator|==
-name|CODE_LABEL
 condition|)
 return|return
 literal|0
@@ -6789,7 +6531,7 @@ block|{
 comment|/* Stop for a CALL and its delay slots because it is difficult to 	     track its resource needs correctly.  */
 if|if
 condition|(
-name|GET_CODE
+name|CALL_P
 argument_list|(
 name|XVECEXP
 argument_list|(
@@ -6800,8 +6542,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-operator|==
-name|CALL_INSN
 condition|)
 return|return
 literal|0
@@ -7015,12 +6755,10 @@ expr_stmt|;
 comment|/* If TARGET is a SEQUENCE, get the main insn.  */
 if|if
 condition|(
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|target
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -7159,12 +6897,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|target
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -7238,12 +6974,11 @@ name|MAX_DELAY_SLOT_INSN_SEARCH
 init|;
 name|trial
 operator|&&
-name|GET_CODE
+operator|!
+name|LABEL_P
 argument_list|(
 name|trial
 argument_list|)
-operator|!=
-name|CODE_LABEL
 operator|&&
 name|insns_to_search
 operator|>
@@ -7262,26 +6997,11 @@ control|)
 block|{
 if|if
 condition|(
-name|GET_CODE
+operator|!
+name|INSN_P
 argument_list|(
 name|trial
 argument_list|)
-operator|!=
-name|INSN
-operator|&&
-name|GET_CODE
-argument_list|(
-name|trial
-argument_list|)
-operator|!=
-name|CALL_INSN
-operator|&&
-name|GET_CODE
-argument_list|(
-name|trial
-argument_list|)
-operator|!=
-name|JUMP_INSN
 condition|)
 continue|continue;
 name|pat
@@ -7321,7 +7041,7 @@ block|{
 comment|/* If this is a CALL_INSN and its delay slots, it is hard to track 	     the resource needs properly, so give up.  */
 if|if
 condition|(
-name|GET_CODE
+name|CALL_P
 argument_list|(
 name|XVECEXP
 argument_list|(
@@ -7332,8 +7052,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-operator|==
-name|CALL_INSN
 condition|)
 return|return
 literal|0
@@ -7639,12 +7357,10 @@ argument_list|)
 control|)
 if|if
 condition|(
-name|GET_CODE
+name|LABEL_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|CODE_LABEL
 operator|&&
 operator|(
 name|insn
@@ -7683,12 +7399,11 @@ name|insn
 operator|==
 literal|0
 operator|||
-name|GET_CODE
+operator|!
+name|BARRIER_P
 argument_list|(
 name|insn
 argument_list|)
-operator|!=
-name|BARRIER
 condition|;
 name|insn
 operator|=
@@ -7703,20 +7418,16 @@ name|insn
 operator|==
 literal|0
 operator|||
-name|GET_CODE
+name|LABEL_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|CODE_LABEL
 operator|||
 operator|(
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -7832,7 +7543,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Called when INSN is being moved forward into a delay slot of DELAYED_INSN.    We check every instruction between INSN and DELAYED_INSN for REG_DEAD notes    that reference values used in INSN.  If we find one, then we move the    REG_DEAD note to INSN.     This is needed to handle the case where an later insn (after INSN) has a    REG_DEAD note for a register used by INSN, and this later insn subsequently    gets moved before a CODE_LABEL because it is a redundant insn.  In this    case, mark_target_live_regs may be confused into thinking the register    is dead because it sees a REG_DEAD note immediately before a CODE_LABEL.  */
+comment|/* Called when INSN is being moved forward into a delay slot of DELAYED_INSN.    We check every instruction between INSN and DELAYED_INSN for REG_DEAD notes    that reference values used in INSN.  If we find one, then we move the    REG_DEAD note to INSN.     This is needed to handle the case where a later insn (after INSN) has a    REG_DEAD note for a register used by INSN, and this later insn subsequently    gets moved before a CODE_LABEL because it is a redundant insn.  In this    case, mark_target_live_regs may be confused into thinking the register    is dead because it sees a REG_DEAD note immediately before a CODE_LABEL.  */
 end_comment
 
 begin_function
@@ -7908,7 +7619,8 @@ argument_list|)
 operator|!=
 name|REG_DEAD
 operator|||
-name|GET_CODE
+operator|!
+name|REG_P
 argument_list|(
 name|XEXP
 argument_list|(
@@ -7917,8 +7629,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-operator|!=
-name|REG
 condition|)
 continue|continue;
 if|if
@@ -8048,7 +7758,8 @@ argument_list|)
 operator|!=
 name|REG_DEAD
 operator|||
-name|GET_CODE
+operator|!
+name|REG_P
 argument_list|(
 name|XEXP
 argument_list|(
@@ -8057,8 +7768,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-operator|!=
-name|REG
 condition|)
 continue|continue;
 if|if
@@ -8147,7 +7856,8 @@ argument_list|)
 operator|!=
 name|REG_UNUSED
 operator|||
-name|GET_CODE
+operator|!
+name|REG_P
 argument_list|(
 name|XEXP
 argument_list|(
@@ -8156,8 +7866,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-operator|!=
-name|REG
 condition|)
 continue|continue;
 if|if
@@ -8277,12 +7985,10 @@ name|insn
 argument_list|)
 operator|||
 operator|(
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -8296,23 +8002,20 @@ name|SEQUENCE
 operator|)
 operator|||
 operator|(
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 name|non_jumps_p
 operator|)
 operator|||
 operator|(
-name|GET_CODE
+operator|!
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|!=
-name|JUMP_INSN
 operator|&&
 operator|!
 name|non_jumps_p
@@ -8346,12 +8049,10 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 condition|)
 name|flags
 operator|=
@@ -8386,12 +8087,10 @@ name|insn
 argument_list|)
 operator|)
 operator|&&
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|trial
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 name|simplejump_p
 argument_list|(
@@ -8801,12 +8500,10 @@ name|delay_list
 operator|==
 literal|0
 operator|&&
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 operator|(
 name|condjump_p
@@ -8854,12 +8551,11 @@ name|insn
 argument_list|)
 operator|&&
 operator|(
-name|GET_CODE
+operator|!
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|!=
-name|JUMP_INSN
 operator|||
 operator|(
 operator|(
@@ -8920,12 +8616,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|GET_CODE
+name|CALL_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|CALL_INSN
 condition|)
 block|{
 name|mark_set_resources
@@ -8981,12 +8675,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 condition|)
 name|target
 operator|=
@@ -9027,19 +8719,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|GET_CODE
+name|LABEL_P
 argument_list|(
 name|trial
 argument_list|)
-operator|==
-name|CODE_LABEL
 operator|||
-name|GET_CODE
+name|BARRIER_P
 argument_list|(
 name|trial
 argument_list|)
-operator|==
-name|BARRIER
 condition|)
 break|break;
 comment|/* We must have an INSN, JUMP_INSN, or CALL_INSN.  */
@@ -9097,12 +8785,10 @@ expr_stmt|;
 comment|/* Stop our search when seeing an unconditional jump.  */
 if|if
 condition|(
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|trial_delay
 argument_list|)
-operator|==
-name|JUMP_INSN
 condition|)
 break|break;
 comment|/* See if we have a resource problem before we try to 		   split.  */
@@ -9173,7 +8859,7 @@ operator|!
 operator|(
 name|maybe_never
 operator|&&
-name|may_trap_p
+name|may_trap_or_fault_p
 argument_list|(
 name|pat
 argument_list|)
@@ -9292,19 +8978,15 @@ expr_stmt|;
 comment|/* If this is a call or jump, we might not get here.  */
 if|if
 condition|(
-name|GET_CODE
+name|CALL_P
 argument_list|(
 name|trial_delay
 argument_list|)
-operator|==
-name|CALL_INSN
 operator|||
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|trial_delay
 argument_list|)
-operator|==
-name|JUMP_INSN
 condition|)
 name|maybe_never
 operator|=
@@ -9320,12 +9002,10 @@ name|slots_filled
 operator|&&
 name|trial
 operator|&&
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|trial
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 name|simplejump_p
 argument_list|(
@@ -9361,12 +9041,10 @@ literal|0
 operator|&&
 operator|!
 operator|(
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|next_trial
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -9379,12 +9057,11 @@ operator|==
 name|SEQUENCE
 operator|)
 operator|&&
-name|GET_CODE
+operator|!
+name|JUMP_P
 argument_list|(
 name|next_trial
 argument_list|)
-operator|!=
-name|JUMP_INSN
 operator|&&
 operator|!
 name|insn_references_resource_p
@@ -9439,7 +9116,7 @@ operator|!
 operator|(
 name|maybe_never
 operator|&&
-name|may_trap_p
+name|may_trap_or_fault_p
 argument_list|(
 name|PATTERN
 argument_list|(
@@ -9510,6 +9187,11 @@ operator|=
 name|find_end_label
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|new_label
+condition|)
+block|{
 name|delay_list
 operator|=
 name|add_to_delay_list
@@ -9532,7 +9214,7 @@ argument_list|,
 name|new_label
 argument_list|)
 expr_stmt|;
-comment|/* If we merged because we both jumped to the same place, 		 redirect the original insn also.  */
+comment|/* If we merged because we both jumped to the same place, 		     redirect the original insn also.  */
 if|if
 condition|(
 name|target
@@ -9546,15 +9228,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 comment|/* If this is an unconditional jump, then try to get insns from the 	 target of the jump.  */
 if|if
 condition|(
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 name|simplejump_p
 argument_list|(
@@ -9804,12 +9485,10 @@ control|)
 block|{
 if|if
 condition|(
-name|GET_CODE
+name|NOTE_P
 argument_list|(
 name|trial
 argument_list|)
-operator|==
-name|NOTE
 condition|)
 continue|continue;
 name|pat
@@ -10070,27 +9749,21 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* Validate our arguments.  */
-if|if
-condition|(
-operator|(
+name|gcc_assert
+argument_list|(
 name|condition
-operator|==
+operator|!=
 name|const_true_rtx
-operator|&&
-operator|!
-name|thread_if_true
-operator|)
 operator|||
-operator|(
-operator|!
-name|own_thread
-operator|&&
-operator|!
 name|thread_if_true
-operator|)
-condition|)
-name|abort
-argument_list|()
+argument_list|)
+expr_stmt|;
+name|gcc_assert
+argument_list|(
+name|own_thread
+operator|||
+name|thread_if_true
+argument_list|)
 expr_stmt|;
 name|flags
 operator|=
@@ -10208,12 +9881,10 @@ decl_stmt|;
 comment|/* If we have passed a label, we no longer own this thread.  */
 if|if
 condition|(
-name|GET_CODE
+name|LABEL_P
 argument_list|(
 name|trial
 argument_list|)
-operator|==
-name|CODE_LABEL
 condition|)
 block|{
 name|own_thread
@@ -10428,7 +10099,7 @@ literal|1
 argument_list|)
 operator|&&
 operator|!
-name|may_trap_p
+name|may_trap_or_fault_p
 argument_list|(
 name|pat
 argument_list|)
@@ -10698,7 +10369,7 @@ if|if
 condition|(
 name|note
 operator|&&
-name|GET_CODE
+name|LABEL_P
 argument_list|(
 name|XEXP
 argument_list|(
@@ -10707,8 +10378,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-operator|==
-name|CODE_LABEL
 condition|)
 name|LABEL_NUSES
 argument_list|(
@@ -10730,7 +10399,7 @@ if|if
 condition|(
 name|note
 operator|&&
-name|GET_CODE
+name|LABEL_P
 argument_list|(
 name|XEXP
 argument_list|(
@@ -10739,8 +10408,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-operator|==
-name|CODE_LABEL
 condition|)
 name|LABEL_NUSES
 argument_list|(
@@ -10925,12 +10592,10 @@ expr_stmt|;
 comment|/* If this insn is a register-register copy and the next insn has 	 a use of our destination, change it to use our source.  That way, 	 it will become a candidate for our delay slot the next time 	 through this loop.  This case occurs commonly in loops that 	 scan a list.  	 We could check for more complex cases than those tested below, 	 but it doesn't seem worth it.  It might also be a good idea to try 	 to swap the two insns.  That might do better.  	 We can't do this if the next insn modifies our destination, because 	 that would make the replacement into the insn invalid.  We also can't 	 do this if it modifies our source, because it might be an earlyclobber 	 operand.  This latter test also prevents updating the contents of 	 a PRE_INC.  We also can't do this if there's overlap of source and 	 destination.  Overlap may happen for larger-than-register-size modes.  */
 if|if
 condition|(
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|trial
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -10939,25 +10604,21 @@ argument_list|)
 operator|==
 name|SET
 operator|&&
-name|GET_CODE
+name|REG_P
 argument_list|(
 name|SET_SRC
 argument_list|(
 name|pat
 argument_list|)
 argument_list|)
-operator|==
-name|REG
 operator|&&
-name|GET_CODE
+name|REG_P
 argument_list|(
 name|SET_DEST
 argument_list|(
 name|pat
 argument_list|)
 argument_list|)
-operator|==
-name|REG
 operator|&&
 operator|!
 name|reg_overlap_mentioned_p
@@ -10986,12 +10647,10 @@ if|if
 condition|(
 name|next
 operator|&&
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|next
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -11071,12 +10730,10 @@ if|if
 condition|(
 name|trial
 operator|&&
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|trial
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -11088,7 +10745,7 @@ argument_list|)
 operator|==
 name|SEQUENCE
 operator|&&
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|XVECEXP
 argument_list|(
@@ -11102,8 +10759,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-operator|==
-name|JUMP_INSN
 condition|)
 block|{
 comment|/* If this is the `true' thread, we will want to follow the jump, 	 so we can only do this if we have taken everything up to here.  */
@@ -11222,12 +10877,10 @@ name|likely
 operator|&&
 name|new_thread
 operator|&&
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|new_thread
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -11277,12 +10930,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|GET_CODE
+operator|!
+name|NONJUMP_INSN_P
 argument_list|(
 name|trial
 argument_list|)
-operator|!=
-name|INSN
 operator|||
 name|GET_CODE
 argument_list|(
@@ -11354,6 +11006,19 @@ argument_list|)
 argument_list|,
 name|dest
 argument_list|)
+operator|&&
+operator|(
+operator|!
+name|FLOAT_MODE_P
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|src
+argument_list|)
+argument_list|)
+operator|||
+name|flag_unsafe_math_optimizations
+operator|)
 operator|&&
 operator|!
 name|reg_overlap_mentioned_p
@@ -11616,24 +11281,19 @@ block|{
 name|rtx
 name|label
 decl_stmt|;
-if|if
-condition|(
-operator|!
+name|gcc_assert
+argument_list|(
 name|thread_if_true
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|new_thread
 operator|&&
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|new_thread
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 operator|(
 name|simplejump_p
@@ -11688,12 +11348,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|GET_CODE
+name|LABEL_P
 argument_list|(
 name|new_thread
 argument_list|)
-operator|==
-name|CODE_LABEL
 condition|)
 name|label
 operator|=
@@ -11707,6 +11365,10 @@ argument_list|(
 name|new_thread
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|label
+condition|)
 name|reorg_redirect_jump
 argument_list|(
 name|insn
@@ -11809,12 +11471,11 @@ argument_list|(
 name|insn
 argument_list|)
 operator|||
-name|GET_CODE
+operator|!
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|!=
-name|JUMP_INSN
 operator|||
 operator|!
 operator|(
@@ -12199,12 +11860,10 @@ expr_stmt|;
 comment|/* If this is a jump insn, see if it now jumps to a jump, jumps to 	 the next insn, or jumps to a label that is not the last of a 	 group of consecutive labels.  */
 if|if
 condition|(
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 operator|(
 name|condjump_p
@@ -12232,17 +11891,9 @@ condition|)
 block|{
 name|target_label
 operator|=
+name|skip_consecutive_labels
+argument_list|(
 name|follow_jumps
-argument_list|(
-name|target_label
-argument_list|)
-expr_stmt|;
-comment|/* See comment further down why we must use next_real_insn here, 	     instead of next_active_insn.  */
-name|target_label
-operator|=
-name|prev_label
-argument_list|(
-name|next_real_insn
 argument_list|(
 name|target_label
 argument_list|)
@@ -12261,6 +11912,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|target_label
+operator|&&
 name|next_active_insn
 argument_list|(
 name|target_label
@@ -12285,6 +11938,8 @@ block|}
 if|if
 condition|(
 name|target_label
+operator|&&
+name|target_label
 operator|!=
 name|JUMP_LABEL
 argument_list|(
@@ -12298,17 +11953,20 @@ argument_list|,
 name|target_label
 argument_list|)
 expr_stmt|;
-comment|/* See if this jump branches around an unconditional jump. 	     If so, invert this jump and point it to the target of the 	     second jump.  */
+comment|/* See if this jump conditionally branches around an unconditional 	     jump.  If so, invert this jump and point it to the target of the 	     second jump.  */
 if|if
 condition|(
 name|next
 operator|&&
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|next
 argument_list|)
-operator|==
-name|JUMP_INSN
+operator|&&
+name|any_condjump_p
+argument_list|(
+name|insn
+argument_list|)
 operator|&&
 operator|(
 name|simplejump_p
@@ -12326,6 +11984,8 @@ argument_list|)
 operator|==
 name|RETURN
 operator|)
+operator|&&
+name|target_label
 operator|&&
 name|next_active_insn
 argument_list|(
@@ -12423,12 +12083,10 @@ block|}
 comment|/* If this is an unconditional jump and the previous insn is a 	 conditional jump, try reversing the condition of the previous 	 insn and swapping our targets.  The next pass might be able to 	 fill the slots.  	 Don't do this if we expect the conditional branch to be true, because 	 we would then be making the more common case longer.  */
 if|if
 condition|(
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 operator|(
 name|simplejump_p
@@ -12458,17 +12116,10 @@ operator|)
 operator|!=
 literal|0
 operator|&&
-operator|(
-name|condjump_p
+name|any_condjump_p
 argument_list|(
 name|other
 argument_list|)
-operator|||
-name|condjump_in_parallel_p
-argument_list|(
-name|other
-argument_list|)
-operator|)
 operator|&&
 name|no_labels_between_p
 argument_list|(
@@ -12532,12 +12183,11 @@ block|}
 comment|/* Now look only at cases where we have filled a delay slot.  */
 if|if
 condition|(
-name|GET_CODE
+operator|!
+name|NONJUMP_INSN_P
 argument_list|(
 name|insn
 argument_list|)
-operator|!=
-name|INSN
 operator|||
 name|GET_CODE
 argument_list|(
@@ -12609,7 +12259,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* See if we have a RETURN insn with a filled delay slot followed 	 by a RETURN insn with an unfilled a delay slot.  If so, we can delete 	 the first RETURN (but not it's delay insn).  This gives the same 	 effect in fewer instructions.  	 Only do so if optimizing for size since this results in slower, but 	 smaller code.  */
+comment|/* See if we have a RETURN insn with a filled delay slot followed 	 by a RETURN insn with an unfilled a delay slot.  If so, we can delete 	 the first RETURN (but not its delay insn).  This gives the same 	 effect in fewer instructions.  	 Only do so if optimizing for size since this results in slower, but 	 smaller code.  */
 if|if
 condition|(
 name|optimize_size
@@ -12626,12 +12276,10 @@ name|RETURN
 operator|&&
 name|next
 operator|&&
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|next
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -12696,17 +12344,15 @@ argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|GET_CODE
 argument_list|(
 name|pat
 argument_list|)
-operator|!=
+operator|==
 name|SEQUENCE
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|after
 operator|=
@@ -12765,7 +12411,8 @@ block|}
 comment|/* Now look only at the cases where we have a filled JUMP_INSN.  */
 if|if
 condition|(
-name|GET_CODE
+operator|!
+name|JUMP_P
 argument_list|(
 name|XVECEXP
 argument_list|(
@@ -12779,8 +12426,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-operator|!=
-name|JUMP_INSN
 operator|||
 operator|!
 operator|(
@@ -12831,19 +12476,11 @@ block|{
 comment|/* If this jump goes to another unconditional jump, thread it, but 	     don't convert a jump into a RETURN here.  */
 name|trial
 operator|=
+name|skip_consecutive_labels
+argument_list|(
 name|follow_jumps
 argument_list|(
 name|target_label
-argument_list|)
-expr_stmt|;
-comment|/* We use next_real_insn instead of next_active_insn, so that 	     the special USE insns emitted by reorg won't be ignored. 	     If they are ignored, then they will get deleted if target_label 	     is now unreachable, and that would cause mark_target_live_regs 	     to fail.  */
-name|trial
-operator|=
-name|prev_label
-argument_list|(
-name|next_real_insn
-argument_list|(
-name|trial
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12851,10 +12488,6 @@ if|if
 condition|(
 name|trial
 operator|==
-literal|0
-operator|&&
-name|target_label
-operator|!=
 literal|0
 condition|)
 name|trial
@@ -12864,6 +12497,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|trial
+operator|&&
 name|trial
 operator|!=
 name|target_label
@@ -12928,17 +12563,15 @@ name|trial
 argument_list|)
 condition|)
 block|{
+comment|/* Figure out where to emit the special USE insn so we don't 		 later incorrectly compute register live/death info.  */
 name|rtx
 name|tmp
-decl_stmt|;
-comment|/* Figure out where to emit the special USE insn so we don't 		 later incorrectly compute register live/death info.  */
-name|tmp
-operator|=
+init|=
 name|next_active_insn
 argument_list|(
 name|trial
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|tmp
@@ -12950,6 +12583,11 @@ operator|=
 name|find_end_label
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|tmp
+condition|)
+block|{
 comment|/* Insert the special USE insn and update dataflow info.  */
 name|update_block
 argument_list|(
@@ -12958,7 +12596,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-comment|/* Now emit a label before the special USE insn, and 		 redirect our jump to the new label.  */
+comment|/* Now emit a label before the special USE insn, and 		     redirect our jump to the new label.  */
 name|target_label
 operator|=
 name|get_label_before
@@ -12981,6 +12619,7 @@ operator|=
 name|insn
 expr_stmt|;
 continue|continue;
+block|}
 block|}
 comment|/* Similarly, if it is an unconditional jump with one insn in its 	     delay list and that insn is redundant, thread the jump.  */
 if|if
@@ -13009,7 +12648,7 @@ argument_list|)
 operator|==
 literal|2
 operator|&&
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|XVECEXP
 argument_list|(
@@ -13023,8 +12662,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 operator|(
 name|simplejump_p
@@ -13113,6 +12750,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|target_label
+operator|&&
 name|redirect_with_delay_slots_safe_p
 argument_list|(
 name|delay_insn
@@ -13242,17 +12881,15 @@ argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|GET_CODE
 argument_list|(
 name|pat
 argument_list|)
-operator|!=
+operator|==
 name|SEQUENCE
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|after
 operator|=
@@ -13313,12 +12950,10 @@ if|if
 condition|(
 name|next
 operator|&&
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|next
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|prev_label
 argument_list|(
@@ -13372,7 +13007,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* See if this jump (with its delay slots) branches around another 	 jump (without delay slots).  If so, invert this jump and point 	 it to the target of the second jump.  We cannot do this for 	 annulled jumps, though.  Again, don't convert a jump to a RETURN 	 here.  */
+comment|/* See if this jump (with its delay slots) conditionally branches 	 around an unconditional jump (without delay slots).  If so, invert 	 this jump and point it to the target of the second jump.  We cannot 	 do this for annulled jumps, though.  Again, don't convert a jump to 	 a RETURN here.  */
 if|if
 condition|(
 operator|!
@@ -13381,14 +13016,17 @@ argument_list|(
 name|delay_insn
 argument_list|)
 operator|&&
+name|any_condjump_p
+argument_list|(
+name|delay_insn
+argument_list|)
+operator|&&
 name|next
 operator|&&
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|next
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 operator|(
 name|simplejump_p
@@ -13455,6 +13093,8 @@ expr_stmt|;
 comment|/* find_end_label can generate a new label. Check this first.  */
 if|if
 condition|(
+name|label
+operator|&&
 name|no_labels_between_p
 argument_list|(
 name|insn
@@ -13729,12 +13369,10 @@ argument_list|)
 control|)
 if|if
 condition|(
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -13794,12 +13432,11 @@ decl_stmt|;
 comment|/* Only look at filled JUMP_INSNs that go to the end of function 	 label.  */
 if|if
 condition|(
-name|GET_CODE
+operator|!
+name|NONJUMP_INSN_P
 argument_list|(
 name|insn
 argument_list|)
-operator|!=
-name|INSN
 operator|||
 name|GET_CODE
 argument_list|(
@@ -13811,7 +13448,8 @@ argument_list|)
 operator|!=
 name|SEQUENCE
 operator|||
-name|GET_CODE
+operator|!
+name|JUMP_P
 argument_list|(
 name|XVECEXP
 argument_list|(
@@ -13825,8 +13463,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-operator|!=
-name|JUMP_INSN
 operator|||
 name|JUMP_LABEL
 argument_list|(
@@ -14233,10 +13869,6 @@ name|dbr_schedule
 parameter_list|(
 name|rtx
 name|first
-parameter_list|,
-name|FILE
-modifier|*
-name|file
 parameter_list|)
 block|{
 name|rtx
@@ -14251,20 +13883,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|int old_flag_no_peephole = flag_no_peephole;
-comment|/* Execute `final' once in prescan mode to delete any insns that won't be      used.  Don't let final try to do any peephole optimization--it will      ruin dataflow information for this pass.  */
-block|flag_no_peephole = 1;   final (first, 0, NO_DEBUG, 1, 1);   flag_no_peephole = old_flag_no_peephole;
-endif|#
-directive|endif
 comment|/* If the current function has no insns other than the prologue and      epilogue, then do not try to fill any delay slots.  */
 if|if
 condition|(
 name|n_basic_blocks
 operator|==
-literal|0
+name|NUM_FIXED_BLOCKS
 condition|)
 return|return;
 comment|/* Find the highest INSN_UID and allocate and initialize our map from      INSN_UID's to position in code.  */
@@ -14306,12 +13930,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|GET_CODE
+name|NOTE_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|NOTE
 operator|&&
 name|NOTE_LINE_NUMBER
 argument_list|(
@@ -14437,12 +14059,10 @@ expr_stmt|;
 comment|/* Skip vector tables.  We can't get attributes for them.  */
 if|if
 condition|(
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 operator|(
 name|GET_CODE
@@ -14487,12 +14107,10 @@ expr_stmt|;
 comment|/* Ensure all jumps go to the last of a set of consecutive labels.  */
 if|if
 condition|(
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|&&
 operator|(
 name|condjump_p
@@ -14517,14 +14135,11 @@ operator|(
 operator|(
 name|target
 operator|=
-name|prev_label
-argument_list|(
-name|next_active_insn
+name|skip_consecutive_labels
 argument_list|(
 name|JUMP_LABEL
 argument_list|(
 name|insn
-argument_list|)
 argument_list|)
 argument_list|)
 operator|)
@@ -14633,12 +14248,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -14728,7 +14341,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|file
+name|dump_file
 condition|)
 block|{
 name|int
@@ -14770,7 +14383,7 @@ control|)
 block|{
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|";; Reorg pass #%d:\n"
 argument_list|,
@@ -14799,7 +14412,7 @@ literal|0
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|";; Reorg function #%d\n"
 argument_list|,
@@ -14808,7 +14421,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|";; %d insns needing delay slots\n;; "
 argument_list|,
@@ -14856,7 +14469,7 @@ name|need_comma
 condition|)
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|", "
 argument_list|)
@@ -14867,7 +14480,7 @@ literal|1
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|"%d got %d delays"
 argument_list|,
@@ -14888,7 +14501,7 @@ expr_stmt|;
 block|}
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|"\n"
 argument_list|)
@@ -14939,12 +14552,10 @@ argument_list|(
 name|insn
 argument_list|)
 operator|&&
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|INSN
 operator|&&
 name|GET_CODE
 argument_list|(
@@ -15055,7 +14666,7 @@ block|}
 block|}
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|";; Reorg totals: "
 argument_list|)
@@ -15094,7 +14705,7 @@ name|need_comma
 condition|)
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|", "
 argument_list|)
@@ -15105,7 +14716,7 @@ literal|1
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|"%d got %d delays"
 argument_list|,
@@ -15121,7 +14732,7 @@ block|}
 block|}
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|"\n"
 argument_list|)
@@ -15139,7 +14750,7 @@ name|ANNUL_IFFALSE_SLOTS
 argument_list|)
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|";; Reorg annuls: "
 argument_list|)
@@ -15178,7 +14789,7 @@ name|need_comma
 condition|)
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|", "
 argument_list|)
@@ -15189,7 +14800,7 @@ literal|1
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|"%d got %d delays"
 argument_list|,
@@ -15205,7 +14816,7 @@ block|}
 block|}
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|"\n"
 argument_list|)
@@ -15214,7 +14825,7 @@ endif|#
 directive|endif
 name|fprintf
 argument_list|(
-name|file
+name|dump_file
 argument_list|,
 literal|"\n"
 argument_list|)
@@ -15242,12 +14853,10 @@ name|pred_flags
 decl_stmt|;
 if|if
 condition|(
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|INSN
 condition|)
 block|{
 name|rtx
@@ -15281,12 +14890,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|GET_CODE
+operator|!
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|!=
-name|JUMP_INSN
 condition|)
 continue|continue;
 name|pred_flags
@@ -15381,6 +14989,205 @@ end_endif
 begin_comment
 comment|/* DELAY_SLOTS */
 end_comment
+
+begin_escape
+end_escape
+
+begin_function
+specifier|static
+name|bool
+name|gate_handle_delay_slots
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|DELAY_SLOTS
+return|return
+name|flag_delayed_branch
+return|;
+else|#
+directive|else
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/* Run delay slot optimization.  */
+end_comment
+
+begin_function
+specifier|static
+name|unsigned
+name|int
+name|rest_of_handle_delay_slots
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|DELAY_SLOTS
+name|dbr_schedule
+argument_list|(
+name|get_insns
+argument_list|()
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|struct
+name|tree_opt_pass
+name|pass_delay_slots
+init|=
+block|{
+literal|"dbr"
+block|,
+comment|/* name */
+name|gate_handle_delay_slots
+block|,
+comment|/* gate */
+name|rest_of_handle_delay_slots
+block|,
+comment|/* execute */
+name|NULL
+block|,
+comment|/* sub */
+name|NULL
+block|,
+comment|/* next */
+literal|0
+block|,
+comment|/* static_pass_number */
+name|TV_DBR_SCHED
+block|,
+comment|/* tv_id */
+literal|0
+block|,
+comment|/* properties_required */
+literal|0
+block|,
+comment|/* properties_provided */
+literal|0
+block|,
+comment|/* properties_destroyed */
+literal|0
+block|,
+comment|/* todo_flags_start */
+name|TODO_dump_func
+operator||
+name|TODO_ggc_collect
+block|,
+comment|/* todo_flags_finish */
+literal|'d'
+comment|/* letter */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Machine dependent reorg pass.  */
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|gate_handle_machine_reorg
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|targetm
+operator|.
+name|machine_dependent_reorg
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|unsigned
+name|int
+name|rest_of_handle_machine_reorg
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|targetm
+operator|.
+name|machine_dependent_reorg
+argument_list|()
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|struct
+name|tree_opt_pass
+name|pass_machine_reorg
+init|=
+block|{
+literal|"mach"
+block|,
+comment|/* name */
+name|gate_handle_machine_reorg
+block|,
+comment|/* gate */
+name|rest_of_handle_machine_reorg
+block|,
+comment|/* execute */
+name|NULL
+block|,
+comment|/* sub */
+name|NULL
+block|,
+comment|/* next */
+literal|0
+block|,
+comment|/* static_pass_number */
+name|TV_MACH_DEP
+block|,
+comment|/* tv_id */
+literal|0
+block|,
+comment|/* properties_required */
+literal|0
+block|,
+comment|/* properties_provided */
+literal|0
+block|,
+comment|/* properties_destroyed */
+literal|0
+block|,
+comment|/* todo_flags_start */
+name|TODO_dump_func
+operator||
+name|TODO_ggc_collect
+block|,
+comment|/* todo_flags_finish */
+literal|'M'
+comment|/* letter */
+block|}
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

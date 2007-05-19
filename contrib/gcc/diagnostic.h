@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Various declarations for language-independent diagnostics subroutines.    Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.    Contributed by Gabriel Dos Reis<gdr@codesourcery.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Various declarations for language-independent diagnostics subroutines.    Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.    Contributed by Gabriel Dos Reis<gdr@codesourcery.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"pretty-print.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"options.h"
 end_include
 
 begin_comment
@@ -67,6 +73,10 @@ decl_stmt|;
 comment|/* The kind of diagnostic it is about.  */
 name|diagnostic_t
 name|kind
+decl_stmt|;
+comment|/* Which OPT_* directly controls this diagnostic.  */
+name|int
+name|option_index
 decl_stmt|;
 block|}
 name|diagnostic_info
@@ -139,7 +149,22 @@ index|]
 decl_stmt|;
 comment|/* True if we should display the "warnings are being tread as error"      message, usually displayed once per compiler run.  */
 name|bool
-name|warnings_are_errors_message
+name|issue_warnings_are_errors_message
+decl_stmt|;
+comment|/* True if it has been requested that warnings be treated as errors.  */
+name|bool
+name|warning_as_error_requested
+decl_stmt|;
+comment|/* For each option index that can be passed to warning() et all      (OPT_* from options.h), this array may contain a new kind that      the diagnostic should be changed to before reporting, or      DK_UNSPECIFIED to leave it as the reported kind, or DK_IGNORED to      not report it at all.  N_OPTS is from<options.h>.  */
+name|char
+name|classify_diagnostic
+index|[
+name|N_OPTS
+index|]
+decl_stmt|;
+comment|/* True if we should print the command line option which controls      each diagnostic, if known.  */
+name|bool
+name|show_option_requested
 decl_stmt|;
 comment|/* True if we should raise a SIGABRT on errors.  */
 name|bool
@@ -178,11 +203,6 @@ name|last_module
 decl_stmt|;
 name|int
 name|lock
-decl_stmt|;
-comment|/* Hook for front-end extensions.  */
-name|void
-modifier|*
-name|x_data
 decl_stmt|;
 block|}
 struct|;
@@ -255,7 +275,7 @@ name|diagnostic_prefixing_rule
 parameter_list|(
 name|DC
 parameter_list|)
-value|((DC)->printer->prefixing_rule)
+value|((DC)->printer->wrapping.rule)
 end_define
 
 begin_comment
@@ -269,7 +289,7 @@ name|diagnostic_line_cutoff
 parameter_list|(
 name|DC
 parameter_list|)
-value|((DC)->printer->ideal_maximum_length)
+value|((DC)->printer->wrapping.line_cutoff)
 end_define
 
 begin_define
@@ -478,6 +498,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Force diagnostics controlled by OPTIDX to be kind KIND.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|diagnostic_t
+name|diagnostic_classify_diagnostic
+parameter_list|(
+name|diagnostic_context
+modifier|*
+parameter_list|,
+name|int
+comment|/* optidx */
+parameter_list|,
+name|diagnostic_t
+comment|/* kind */
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 specifier|extern
 name|void
@@ -491,6 +532,12 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATTRIBUTE_GCC_DIAG
+end_ifdef
 
 begin_function_decl
 specifier|extern
@@ -511,8 +558,53 @@ name|location_t
 parameter_list|,
 name|diagnostic_t
 parameter_list|)
-function_decl|;
+function_decl|ATTRIBUTE_GCC_DIAG
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|0
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|extern
+name|void
+name|diagnostic_set_info_translated
+parameter_list|(
+name|diagnostic_info
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|va_list
+modifier|*
+parameter_list|,
+name|location_t
+parameter_list|,
+name|diagnostic_t
+parameter_list|)
+function_decl|ATTRIBUTE_GCC_DIAG
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|0
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -532,20 +624,6 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|void
-name|verbatim
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|file_name_as_prefix
@@ -553,6 +631,131 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In tree-pretty-print.c  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|dump_generic_node
+parameter_list|(
+name|pretty_printer
+modifier|*
+parameter_list|,
+name|tree
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|print_generic_stmt
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|tree
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|print_generic_stmt_indented
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|tree
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|print_generic_expr
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|tree
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|print_generic_decl
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|tree
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|debug_generic_expr
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|debug_generic_stmt
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|debug_tree_chain
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|debug_c_tree
+parameter_list|(
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl

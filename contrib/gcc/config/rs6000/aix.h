@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for IBM RS/6000 POWER running AIX.    Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for IBM RS/6000 POWER running AIX.    Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -64,6 +64,23 @@ value|0
 end_define
 
 begin_comment
+comment|/* 32-bit and 64-bit AIX stack boundary is 128.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|STACK_BOUNDARY
+end_undef
+
+begin_define
+define|#
+directive|define
+name|STACK_BOUNDARY
+value|128
+end_define
+
+begin_comment
 comment|/* AIX does not support Altivec.  */
 end_comment
 
@@ -96,13 +113,13 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|TARGET_ALTIVEC_VRSAVE
+name|TARGET_IEEEQUAD
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_ALTIVEC_VRSAVE
+name|TARGET_IEEEQUAD
 value|0
 end_define
 
@@ -165,6 +182,20 @@ directive|define
 name|LINK_LIBGCC_SPECIAL_1
 end_define
 
+begin_define
+define|#
+directive|define
+name|MFWRAP_SPEC
+value|" %{static: %{fmudflap|fmudflapth: \  -brename:malloc,__wrap_malloc -brename:__real_malloc,malloc \  -brename:free,__wrap_free -brename:__real_free,free \  -brename:calloc,__wrap_calloc -brename:__real_calloc,calloc \  -brename:realloc,__wrap_realloc -brename:__real_realloc,realloc \  -brename:mmap,__wrap_mmap -brename:__real_mmap,mmap \  -brename:munmap,__wrap_munmap -brename:__real_munmap,munmap \  -brename:alloca,__wrap_alloca -brename:__real_alloca,alloca \ } %{fmudflapth: \  -brename:pthread_create,__wrap_pthread_create \  -brename:__real_pthread_create,pthread_create \  -brename:pthread_join,__wrap_pthread_join \  -brename:__real_pthread_join,pthread_join \  -brename:pthread_exit,__wrap_pthread_exit \  -brename:__real_pthread_exit,pthread_exit \ }} %{fmudflap|fmudflapth: \  -brename:main,__wrap_main -brename:__real_main,main \ }"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MFLIB_SPEC
+value|" %{fmudflap: -lmudflap \  %{static:%(link_gcc_c_sequence) -lmudflap}} \  %{fmudflapth: -lmudflapth -lpthread \  %{static:%(link_gcc_c_sequence) -lmudflapth}} "
+end_define
+
 begin_comment
 comment|/* Names to predefine in the preprocessor for this target machine.  */
 end_comment
@@ -172,10 +203,10 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TARGET_OS_CPP_BUILTINS
+name|TARGET_OS_AIX_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do                                     \     {                                    \       builtin_define ("_IBMR2");         \       builtin_define ("_POWER");         \       builtin_define ("_AIX");           \       builtin_define ("_AIX32");         \       builtin_define ("_LONG_LONG");     \       builtin_assert ("system=unix");    \       builtin_assert ("system=aix");     \       builtin_assert ("cpu=rs6000");     \       builtin_assert ("machine=rs6000"); \     }                                    \   while (0)
+value|do						\     {						\       builtin_define ("_IBMR2");		\       builtin_define ("_POWER");		\       builtin_define ("_AIX");			\       builtin_define ("_AIX32");		\       builtin_define ("_AIX41");		\       builtin_define ("_LONG_LONG");		\       if (TARGET_LONG_DOUBLE_128)		\         builtin_define ("__LONGDOUBLE128");	\       builtin_assert ("system=unix");		\       builtin_assert ("system=aix");		\     }						\   while (0)
 end_define
 
 begin_comment
@@ -337,7 +368,7 @@ parameter_list|,
 name|SPECIFIED
 parameter_list|)
 define|\
-value|((TREE_CODE (STRUCT) == RECORD_TYPE						\     || TREE_CODE (STRUCT) == UNION_TYPE						\     || TREE_CODE (STRUCT) == QUAL_UNION_TYPE)					\&& TARGET_ALIGN_NATURAL == 0							\    ? rs6000_special_round_type_align (STRUCT, COMPUTED, SPECIFIED)		\    : MAX ((COMPUTED), (SPECIFIED)))
+value|((TREE_CODE (STRUCT) == RECORD_TYPE					\     || TREE_CODE (STRUCT) == UNION_TYPE					\     || TREE_CODE (STRUCT) == QUAL_UNION_TYPE)				\&& TARGET_ALIGN_NATURAL == 0						\    ? rs6000_special_round_type_align (STRUCT, COMPUTED, SPECIFIED)	\    : MAX ((COMPUTED), (SPECIFIED)))
 end_define
 
 begin_comment
@@ -356,23 +387,6 @@ define|#
 directive|define
 name|AGGREGATES_PAD_UPWARD_ALWAYS
 value|1
-end_define
-
-begin_comment
-comment|/* We don't want anything in the reg parm area being passed on the    stack.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MUST_PASS_IN_STACK
-parameter_list|(
-name|MODE
-parameter_list|,
-name|TYPE
-parameter_list|)
-define|\
-value|((TYPE) != 0							\&& (TREE_CODE (TYPE_SIZE (TYPE)) != INTEGER_CST		\ 	|| TREE_ADDRESSABLE (TYPE)))
 end_define
 
 begin_comment
@@ -403,50 +417,6 @@ define|#
 directive|define
 name|JUMP_TABLES_IN_TEXT_SECTION
 value|1
-end_define
-
-begin_comment
-comment|/* Enable AIX XL compiler calling convention breakage compatibility.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_XL_COMPAT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|MASK_XL_COMPAT
-value|0x40000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_XL_COMPAT
-value|(target_flags& MASK_XL_COMPAT)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_SWITCHES
-define|\
-value|{"xl-compat",		MASK_XL_COMPAT,					\    N_("Conform more closely to IBM XLC semantics") },			\   {"no-xl-compat",	- MASK_XL_COMPAT,				\    N_("Default GCC semantics that differ from IBM XLC") },		\   SUBSUBTARGET_SWITCHES
-end_define
-
-begin_define
-define|#
-directive|define
-name|SUBSUBTARGET_SWITCHES
 end_define
 
 begin_comment
@@ -576,6 +546,17 @@ define|#
 directive|define
 name|OS_MISSING_ALTIVEC
 value|1
+end_define
+
+begin_comment
+comment|/* WINT_TYPE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WINT_TYPE
+value|"int"
 end_define
 
 end_unit

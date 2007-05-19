@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Gcov.c: prepend line execution counts and branch probabilities to a    source file.    Copyright (C) 1990, 1991, 1992, 1993, 1994, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.    Contributed by James E. Wilson of Cygnus Support.    Mangled by Bob Manson of Cygnus Support.    Mangled further by Nathan Sidwell<nathan@codesourcery.com>  Gcov is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Gcov is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Gcov; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Gcov.c: prepend line execution counts and branch probabilities to a    source file.    Copyright (C) 1990, 1991, 1992, 1993, 1994, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.    Contributed by James E. Wilson of Cygnus Support.    Mangled by Bob Manson of Cygnus Support.    Mangled further by Nathan Sidwell<nathan@codesourcery.com>  Gcov is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Gcov is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Gcov; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -54,12 +54,6 @@ include|#
 directive|include
 file|"version.h"
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|abort
-end_undef
 
 begin_include
 include|#
@@ -613,6 +607,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Data file is missing.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|no_data_file
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Output branch probabilities.  */
 end_comment
 
@@ -1017,6 +1022,10 @@ block|{
 name|int
 name|argno
 decl_stmt|;
+comment|/* Unlock the stdio streams.  */
+name|unlock_std_streams
+argument_list|()
+expr_stmt|;
 name|gcc_init_libintl
 argument_list|()
 expr_stmt|;
@@ -1081,7 +1090,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|msgid
+name|cmsgid
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -1093,7 +1102,7 @@ name|va_start
 argument_list|(
 name|ap
 argument_list|,
-name|msgid
+name|cmsgid
 argument_list|)
 expr_stmt|;
 name|vfprintf
@@ -1102,7 +1111,7 @@ name|file
 argument_list|,
 name|_
 argument_list|(
-name|msgid
+name|cmsgid
 argument_list|)
 argument_list|,
 name|ap
@@ -1111,43 +1120,6 @@ expr_stmt|;
 name|va_end
 argument_list|(
 name|ap
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* More 'friendly' abort that prints the line and file.    config.h can #define abort fancy_abort if you like that sort of thing.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|fancy_abort
-argument_list|(
-name|void
-argument_list|)
-name|ATTRIBUTE_NORETURN
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|void
-name|fancy_abort
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|fnotice
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Internal gcov abort.\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|FATAL_EXIT_CODE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1737,16 +1709,13 @@ name|src
 operator|->
 name|lines
 operator|=
-name|xcalloc
+name|XCNEWVEC
 argument_list|(
+name|line_t
+argument_list|,
 name|src
 operator|->
 name|num_lines
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|line_t
-argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1890,7 +1859,7 @@ name|fnotice
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s:creating `%s'\n"
+literal|"%s:creating '%s'\n"
 argument_list|,
 name|src
 operator|->
@@ -1917,7 +1886,7 @@ name|fnotice
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:error writing output file `%s'\n"
+literal|"%s:error writing output file '%s'\n"
 argument_list|,
 name|src
 operator|->
@@ -1937,7 +1906,7 @@ name|fnotice
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:could not open output file `%s'\n"
+literal|"%s:could not open output file '%s'\n"
 argument_list|,
 name|src
 operator|->
@@ -2192,8 +2161,10 @@ literal|2
 expr_stmt|;
 name|name
 operator|=
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
@@ -2257,8 +2228,10 @@ else|else
 block|{
 name|name
 operator|=
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 name|length
 operator|+
 literal|1
@@ -2333,8 +2306,10 @@ argument_list|)
 expr_stmt|;
 name|bbg_file_name
 operator|=
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 name|length
 operator|+
 name|strlen
@@ -2363,8 +2338,10 @@ argument_list|)
 expr_stmt|;
 name|da_file_name
 operator|=
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 name|length
 operator|+
 name|strlen
@@ -2389,6 +2366,11 @@ operator|+
 name|length
 argument_list|,
 name|GCOV_DATA_SUFFIX
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|name
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2455,14 +2437,9 @@ name|src
 return|;
 name|src
 operator|=
-name|xcalloc
-argument_list|(
-literal|1
-argument_list|,
-sizeof|sizeof
+name|XCNEW
 argument_list|(
 name|source_t
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|src
@@ -2651,7 +2628,7 @@ name|fnotice
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:version `%.4s', prefer `%.4s'\n"
+literal|"%s:version '%.4s', prefer '%.4s'\n"
 argument_list|,
 name|bbg_file_name
 argument_list|,
@@ -2750,14 +2727,9 @@ argument_list|()
 expr_stmt|;
 name|fn
 operator|=
-name|xcalloc
-argument_list|(
-literal|1
-argument_list|,
-sizeof|sizeof
+name|XCNEW
 argument_list|(
 name|function_t
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|fn
@@ -2896,7 +2868,7 @@ name|fnotice
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:already seen blocks for `%s'\n"
+literal|"%s:already seen blocks for '%s'\n"
 argument_list|,
 name|bbg_file_name
 argument_list|,
@@ -2927,16 +2899,13 @@ name|fn
 operator|->
 name|blocks
 operator|=
-name|xcalloc
+name|XCNEWVEC
 argument_list|(
+name|block_t
+argument_list|,
 name|fn
 operator|->
 name|num_blocks
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|block_t
-argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -3046,14 +3015,9 @@ name|corrupt
 goto|;
 name|arc
 operator|=
-name|xcalloc
-argument_list|(
-literal|1
-argument_list|,
-sizeof|sizeof
+name|XCNEW
 argument_list|(
 name|arc_t
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|arc
@@ -3283,16 +3247,13 @@ name|unsigned
 modifier|*
 name|line_nos
 init|=
-name|xcalloc
+name|XCNEWVEC
 argument_list|(
+name|unsigned
+argument_list|,
 name|length
 operator|-
 literal|1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
 argument_list|)
 decl_stmt|;
 if|if
@@ -3498,14 +3459,6 @@ condition|(
 name|gcov_is_error
 argument_list|()
 condition|)
-break|break;
-block|}
-if|if
-condition|(
-operator|!
-name|gcov_is_eof
-argument_list|()
-condition|)
 block|{
 name|corrupt
 label|:
@@ -3525,6 +3478,7 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
 block|}
 name|gcov_close
 argument_list|()
@@ -3817,13 +3771,17 @@ name|fnotice
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:cannot open data file\n"
+literal|"%s:cannot open data file, assuming not executed\n"
 argument_list|,
 name|da_file_name
 argument_list|)
 expr_stmt|;
-return|return
+name|no_data_file
+operator|=
 literal|1
+expr_stmt|;
+return|return
+literal|0
 return|;
 block|}
 if|if
@@ -3898,7 +3856,7 @@ name|fnotice
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:version `%.4s', prefer version `%.4s'\n"
+literal|"%s:version '%.4s', prefer version '%.4s'\n"
 argument_list|,
 name|da_file_name
 argument_list|,
@@ -4043,7 +4001,7 @@ name|fnotice
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:unknown function `%u'\n"
+literal|"%s:unknown function '%u'\n"
 argument_list|,
 name|da_file_name
 argument_list|,
@@ -4086,7 +4044,7 @@ name|fnotice
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:profile mismatch for `%s'\n"
+literal|"%s:profile mismatch for '%s'\n"
 argument_list|,
 name|da_file_name
 argument_list|,
@@ -4138,16 +4096,13 @@ name|fn
 operator|->
 name|counts
 operator|=
-name|xcalloc
+name|XCNEWVEC
 argument_list|(
+name|gcov_type
+argument_list|,
 name|fn
 operator|->
 name|num_counts
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|gcov_type
-argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -4192,14 +4147,6 @@ name|gcov_is_error
 argument_list|()
 operator|)
 condition|)
-break|break;
-block|}
-if|if
-condition|(
-operator|!
-name|gcov_is_eof
-argument_list|()
-condition|)
 block|{
 name|fnotice
 argument_list|(
@@ -4219,6 +4166,7 @@ expr_stmt|;
 goto|goto
 name|cleanup
 goto|;
+block|}
 block|}
 name|gcov_close
 argument_list|()
@@ -4288,7 +4236,7 @@ name|fnotice
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:`%s' lacks entry and/or exit blocks\n"
+literal|"%s:'%s' lacks entry and/or exit blocks\n"
 argument_list|,
 name|bbg_file_name
 argument_list|,
@@ -4314,7 +4262,7 @@ name|fnotice
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:`%s' has arcs to entry block\n"
+literal|"%s:'%s' has arcs to entry block\n"
 argument_list|,
 name|bbg_file_name
 argument_list|,
@@ -4359,7 +4307,7 @@ name|fnotice
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:`%s' has arcs from exit block\n"
+literal|"%s:'%s' has arcs from exit block\n"
 argument_list|,
 name|bbg_file_name
 argument_list|,
@@ -5249,7 +5197,7 @@ name|fnotice
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:graph is unsolvable for `%s'\n"
+literal|"%s:graph is unsolvable for '%s'\n"
 argument_list|,
 name|bbg_file_name
 argument_list|,
@@ -5573,7 +5521,7 @@ name|fnotice
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s `%s'\n"
+literal|"%s '%s'\n"
 argument_list|,
 name|title
 argument_list|,
@@ -5617,7 +5565,7 @@ name|fnotice
 argument_list|(
 name|stdout
 argument_list|,
-literal|"No executable lines"
+literal|"No executable lines\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5760,8 +5708,10 @@ name|char
 modifier|*
 name|name
 init|=
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 name|strlen
 argument_list|(
 name|src_name
@@ -6391,7 +6341,7 @@ name|fnotice
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:no lines for `%s'\n"
+literal|"%s:no lines for '%s'\n"
 argument_list|,
 name|bbg_file_name
 argument_list|,
@@ -7126,7 +7076,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Ouput information about ARC number IX.  Returns nonzero if    anything is output.  */
+comment|/* Output information about ARC number IX.  Returns nonzero if    anything is output.  */
 end_comment
 
 begin_function
@@ -7386,9 +7336,7 @@ name|function_t
 modifier|*
 name|fn
 init|=
-name|src
-operator|->
-name|functions
+name|NULL
 decl_stmt|;
 name|fprintf
 argument_list|(
@@ -7428,6 +7376,10 @@ literal|"-"
 argument_list|,
 literal|0
 argument_list|,
+name|no_data_file
+condition|?
+literal|"-"
+else|:
 name|da_file_name
 argument_list|)
 expr_stmt|;
@@ -7528,7 +7480,7 @@ name|fnotice
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:source file is newer than graph file `%s'\n"
+literal|"%s:source file is newer than graph file '%s'\n"
 argument_list|,
 name|src
 operator|->
@@ -7550,6 +7502,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|flag_branches
+condition|)
+name|fn
+operator|=
+name|src
+operator|->
+name|functions
+expr_stmt|;
 for|for
 control|(
 name|line_num

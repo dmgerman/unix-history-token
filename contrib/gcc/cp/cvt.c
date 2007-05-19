@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Language-level data type conversion for GNU C++.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Hacked by Michael Tiemann (tiemann@cygnus.com)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Language-level data type conversion for GNU C++.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.    Hacked by Michael Tiemann (tiemann@cygnus.com)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -67,6 +67,12 @@ directive|include
 file|"decl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"target.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|tree
@@ -85,6 +91,18 @@ begin_function_decl
 specifier|static
 name|tree
 name|convert_to_pointer_force
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|tree
+name|build_type_conversion
 parameter_list|(
 name|tree
 parameter_list|,
@@ -124,7 +142,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Change of width--truncation and extension of integers or reals--    is represented with NOP_EXPR.  Proper functioning of many things    assumes that no other conversions can be NOP_EXPRs.     Conversion between integer and pointer is represented with CONVERT_EXPR.    Converting integer to real uses FLOAT_EXPR    and real to integer uses FIX_TRUNC_EXPR.     Here is a list of all the functions that assume that widening and    narrowing is always done with a NOP_EXPR:      In convert.c, convert_to_integer.      In c-typeck.c, build_binary_op_nodefault (boolean ops),         and c_common_truthvalue_conversion.      In expr.c: expand_expr, for operands of a MULT_EXPR.      In fold-const.c: fold.      In tree.c: get_narrower and get_unwidened.     C++: in multiple-inheritance, converting between pointers may involve    adjusting them by a delta stored within the class definition.  */
+comment|/* Change of width--truncation and extension of integers or reals--    is represented with NOP_EXPR.  Proper functioning of many things    assumes that no other conversions can be NOP_EXPRs.     Conversion between integer and pointer is represented with CONVERT_EXPR.    Converting integer to real uses FLOAT_EXPR    and real to integer uses FIX_TRUNC_EXPR.     Here is a list of all the functions that assume that widening and    narrowing is always done with a NOP_EXPR:      In convert.c, convert_to_integer.      In c-typeck.c, build_binary_op_nodefault (boolean ops), 	and c_common_truthvalue_conversion.      In expr.c: expand_expr, for operands of a MULT_EXPR.      In fold-const.c: fold.      In tree.c: get_narrower and get_unwidened.     C++: in multiple-inheritance, converting between pointers may involve    adjusting them by a delta stored within the class definition.  */
 end_comment
 
 begin_escape
@@ -203,7 +221,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"can't convert from incomplete type `%T' to `%T'"
+literal|"can't convert from incomplete type %qT to %qT"
 argument_list|,
 name|intype
 argument_list|,
@@ -236,7 +254,7 @@ name|error_mark_node
 condition|)
 name|error
 argument_list|(
-literal|"conversion of `%E' from `%T' to `%T' is ambiguous"
+literal|"conversion of %qE from %qT to %qT is ambiguous"
 argument_list|,
 name|expr
 argument_list|,
@@ -281,120 +299,28 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* Allow an implicit this pointer for pointer to member 	 functions.  */
 if|if
 condition|(
 name|TYPE_PTRMEMFUNC_P
 argument_list|(
 name|intype
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|pedantic
 operator|||
-name|warn_pmf2ptr
-condition|)
-name|pedwarn
-argument_list|(
-literal|"converting from `%T' to `%T'"
-argument_list|,
-name|intype
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|TREE_CODE
 argument_list|(
-name|expr
-argument_list|)
-operator|==
-name|PTRMEM_CST
-condition|)
-name|expr
-operator|=
-name|build_address
-argument_list|(
-name|PTRMEM_CST_MEMBER
-argument_list|(
-name|expr
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|tree
-name|decl
-init|=
-name|maybe_dummy_object
-argument_list|(
-name|TYPE_PTRMEM_CLASS_TYPE
-argument_list|(
 name|intype
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-decl_stmt|;
-name|decl
-operator|=
-name|build_address
-argument_list|(
-name|decl
-argument_list|)
-expr_stmt|;
-name|expr
-operator|=
-name|get_member_function_from_ptrfunc
-argument_list|(
-operator|&
-name|decl
-argument_list|,
-name|expr
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|expr
-argument_list|)
 argument_list|)
 operator|==
 name|METHOD_TYPE
 condition|)
-block|{
-if|if
-condition|(
-name|pedantic
-operator|||
-name|warn_pmf2ptr
-condition|)
-name|pedwarn
+return|return
+name|convert_member_func_to_ptr
 argument_list|(
-literal|"converting from `%T' to `%T'"
-argument_list|,
-name|intype
-argument_list|,
 name|type
-argument_list|)
-expr_stmt|;
-name|expr
-operator|=
-name|build_addr_func
-argument_list|(
+argument_list|,
 name|expr
 argument_list|)
-expr_stmt|;
-block|}
+return|;
 if|if
 condition|(
 name|TREE_CODE
@@ -659,7 +585,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"cannot convert `%E' from type `%T' to type `%T'"
+literal|"cannot convert %qE from type %qT to type %qT"
 argument_list|,
 name|expr
 argument_list|,
@@ -788,7 +714,10 @@ name|force
 condition|)
 name|warning
 argument_list|(
-literal|"pointer to member cast from `%T' to `%T' is via virtual base"
+literal|0
+argument_list|,
+literal|"pointer to member cast from %qT to %qT is via"
+literal|" virtual base"
 argument_list|,
 name|intype
 argument_list|,
@@ -799,7 +728,8 @@ else|else
 block|{
 name|error
 argument_list|(
-literal|"pointer to member cast from `%T' to `%T' is via virtual base"
+literal|"pointer to member cast from %qT to %qT is"
+literal|" via virtual base"
 argument_list|,
 name|intype
 argument_list|,
@@ -903,6 +833,9 @@ argument_list|,
 name|expr
 argument_list|,
 literal|0
+argument_list|,
+comment|/*c_cast_p=*/
+name|false
 argument_list|)
 return|;
 elseif|else
@@ -981,7 +914,7 @@ block|}
 block|}
 name|error
 argument_list|(
-literal|"cannot convert `%E' from type `%T' to type `%T'"
+literal|"cannot convert %qE from type %qT to type %qT"
 argument_list|,
 name|expr
 argument_list|,
@@ -1020,6 +953,9 @@ argument_list|,
 name|expr
 argument_list|,
 literal|0
+argument_list|,
+comment|/*c_cast_p=*/
+name|false
 argument_list|)
 return|;
 if|if
@@ -1029,39 +965,39 @@ argument_list|(
 name|type
 argument_list|)
 condition|)
-comment|/* A NULL pointer-to-member is represented by -1, not by 	   zero.  */
+block|{
+comment|/* A NULL pointer-to-member is represented by -1, not by 	     zero.  */
 name|expr
 operator|=
-name|build_int_2
+name|build_int_cst
 argument_list|(
-operator|-
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-else|else
-name|expr
-operator|=
-name|build_int_2
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|TREE_TYPE
-argument_list|(
-name|expr
-argument_list|)
-operator|=
 name|type
+argument_list|,
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* Fix up the representation of -1 if appropriate.  */
+name|expr
+operator|=
 name|force_fit_type
 argument_list|(
 name|expr
+argument_list|,
+literal|0
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|expr
+operator|=
+name|build_int_cst
+argument_list|(
+name|type
 argument_list|,
 literal|0
 argument_list|)
@@ -1086,7 +1022,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"invalid conversion from '%T' to '%T'"
+literal|"invalid conversion from %qT to %qT"
 argument_list|,
 name|intype
 argument_list|,
@@ -1138,9 +1074,9 @@ argument_list|,
 name|expr
 argument_list|)
 expr_stmt|;
-comment|/* Modes may be different but sizes should be the same.  */
-if|if
-condition|(
+comment|/* Modes may be different but sizes should be the same.  There 	 is supposed to be some integral type that is the same width 	 as a pointer.  */
+name|gcc_assert
+argument_list|(
 name|GET_MODE_SIZE
 argument_list|(
 name|TYPE_MODE
@@ -1151,7 +1087,7 @@ name|expr
 argument_list|)
 argument_list|)
 argument_list|)
-operator|!=
+operator|==
 name|GET_MODE_SIZE
 argument_list|(
 name|TYPE_MODE
@@ -1159,10 +1095,7 @@ argument_list|(
 name|type
 argument_list|)
 argument_list|)
-condition|)
-comment|/* There is supposed to be some integral type 	   that is the same width as a pointer.  */
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 return|return
 name|convert_to_pointer
@@ -1187,14 +1120,12 @@ name|type
 argument_list|,
 name|expr
 argument_list|,
-name|tf_error
-operator||
-name|tf_warning
+name|tf_warning_or_error
 argument_list|)
 return|;
 name|error
 argument_list|(
-literal|"cannot convert `%E' from type `%T' to type `%T'"
+literal|"cannot convert %qE from type %qT to type %qT"
 argument_list|,
 name|expr
 argument_list|,
@@ -1325,7 +1256,7 @@ argument_list|(
 name|type
 argument_list|)
 argument_list|,
-name|ba_ignore
+name|ba_unique
 argument_list|,
 name|NULL
 argument_list|)
@@ -1350,7 +1281,7 @@ argument_list|(
 name|intype
 argument_list|)
 argument_list|,
-name|ba_ignore
+name|ba_unique
 argument_list|,
 name|NULL
 argument_list|)
@@ -1485,7 +1416,7 @@ argument_list|(
 name|type
 argument_list|)
 decl_stmt|;
-name|my_friendly_assert
+name|gcc_assert
 argument_list|(
 name|TREE_CODE
 argument_list|(
@@ -1493,8 +1424,6 @@ name|type
 argument_list|)
 operator|==
 name|REFERENCE_TYPE
-argument_list|,
-literal|187
 argument_list|)
 expr_stmt|;
 if|if
@@ -1543,6 +1472,9 @@ argument_list|(
 name|arg
 argument_list|,
 name|targ
+argument_list|,
+comment|/*init_const_expr_p=*/
+name|false
 argument_list|,
 name|NULL_TREE
 argument_list|,
@@ -1701,7 +1633,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Subroutine of convert_to_reference. REFTYPE is the target reference type.    INTYPE is the original rvalue type and DECL is an optional _DECL node    for diagnostics.        [dcl.init.ref] says that if an rvalue is used to    initialize a reference, then the reference must be to a    non-volatile const type.  */
+comment|/* Subroutine of convert_to_reference. REFTYPE is the target reference type.    INTYPE is the original rvalue type and DECL is an optional _DECL node    for diagnostics.     [dcl.init.ref] says that if an rvalue is used to    initialize a reference, then the reference must be to a    non-volatile const type.  */
 end_comment
 
 begin_function
@@ -1752,7 +1684,8 @@ name|decl
 condition|)
 name|msg
 operator|=
-literal|"initialization of volatile reference type `%#T' from rvalue of type `%T'"
+literal|"initialization of volatile reference type %q#T from"
+literal|" rvalue of type %qT"
 expr_stmt|;
 elseif|else
 if|if
@@ -1764,7 +1697,8 @@ argument_list|)
 condition|)
 name|msg
 operator|=
-literal|"conversion to volatile reference type `%#T' from rvalue of type `%T'"
+literal|"conversion to volatile reference type %q#T "
+literal|" from rvalue of type %qT"
 expr_stmt|;
 elseif|else
 if|if
@@ -1773,12 +1707,14 @@ name|decl
 condition|)
 name|msg
 operator|=
-literal|"initialization of non-const reference type `%#T' from rvalue of type `%T'"
+literal|"initialization of non-const reference type %q#T from"
+literal|" rvalue of type %qT"
 expr_stmt|;
 else|else
 name|msg
 operator|=
-literal|"conversion to non-const reference type `%#T' from rvalue of type `%T'"
+literal|"conversion to non-const reference type %q#T from"
+literal|" rvalue of type %qT"
 expr_stmt|;
 name|pedwarn
 argument_list|(
@@ -1874,19 +1810,9 @@ operator|&
 name|LOOKUP_COMPLAIN
 operator|)
 condition|?
-name|tf_error
-operator||
-name|tf_warning
+name|tf_warning_or_error
 else|:
 name|tf_none
-argument_list|)
-expr_stmt|;
-else|else
-name|expr
-operator|=
-name|convert_from_reference
-argument_list|(
-name|expr
 argument_list|)
 expr_stmt|;
 if|if
@@ -1905,7 +1831,7 @@ argument_list|(
 name|expr
 argument_list|)
 expr_stmt|;
-name|my_friendly_assert
+name|gcc_assert
 argument_list|(
 name|TREE_CODE
 argument_list|(
@@ -1913,8 +1839,16 @@ name|intype
 argument_list|)
 operator|!=
 name|REFERENCE_TYPE
-argument_list|,
-literal|364
+argument_list|)
+expr_stmt|;
+name|gcc_assert
+argument_list|(
+name|TREE_CODE
+argument_list|(
+name|reftype
+argument_list|)
+operator|==
+name|REFERENCE_TYPE
 argument_list|)
 expr_stmt|;
 name|intype
@@ -2086,7 +2020,7 @@ argument_list|)
 condition|)
 name|pedwarn
 argument_list|(
-literal|"conversion from `%T' to `%T' discards qualifiers"
+literal|"conversion from %qT to %qT discards qualifiers"
 argument_list|,
 name|ttr
 argument_list|,
@@ -2123,7 +2057,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* When casting an lvalue to a reference type, just convert into 	 a pointer to the new type and deference it.  This is allowed 	 by San Diego WP section 5.2.9 paragraph 12, though perhaps it 	 should be done directly (jason).  (int&)ri ---> *(int*)&ri */
-comment|/* B* bp; A& ar = (A&)bp; is valid, but it's probably not what they          meant.  */
+comment|/* B* bp; A& ar = (A&)bp; is valid, but it's probably not what they 	 meant.  */
 if|if
 condition|(
 name|TREE_CODE
@@ -2151,7 +2085,9 @@ operator|)
 condition|)
 name|warning
 argument_list|(
-literal|"casting `%T' to `%T' does not dereference pointer"
+literal|0
+argument_list|,
+literal|"casting %qT to %qT does not dereference pointer"
 argument_list|,
 name|intype
 argument_list|,
@@ -2285,22 +2221,13 @@ name|LOOKUP_COMPLAIN
 condition|)
 name|error
 argument_list|(
-literal|"cannot convert type `%T' to type `%T'"
+literal|"cannot convert type %qT to type %qT"
 argument_list|,
 name|intype
 argument_list|,
 name|reftype
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|LOOKUP_SPECULATIVELY
-condition|)
-return|return
-name|NULL_TREE
-return|;
 return|return
 name|error_mark_node
 return|;
@@ -2331,77 +2258,85 @@ argument_list|)
 operator|==
 name|REFERENCE_TYPE
 condition|)
-return|return
-name|build_indirect_ref
-argument_list|(
-name|val
-argument_list|,
-name|NULL
-argument_list|)
-return|;
-return|return
-name|val
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Implicitly convert the lvalue EXPR to another lvalue of type TOTYPE,    preserving cv-qualification.  */
-end_comment
-
-begin_function
-name|tree
-name|convert_lvalue
-parameter_list|(
-name|tree
-name|totype
-parameter_list|,
-name|tree
-name|expr
-parameter_list|)
 block|{
-name|totype
-operator|=
-name|cp_build_qualified_type
-argument_list|(
-name|totype
-argument_list|,
-name|TYPE_QUALS
+name|tree
+name|t
+init|=
+name|canonical_type_variant
 argument_list|(
 name|TREE_TYPE
 argument_list|(
-name|expr
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|totype
-operator|=
-name|build_reference_type
+name|TREE_TYPE
 argument_list|(
-name|totype
+name|val
 argument_list|)
-expr_stmt|;
-name|expr
-operator|=
-name|convert_to_reference
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|tree
+name|ref
+init|=
+name|build1
 argument_list|(
-name|totype
+name|INDIRECT_REF
 argument_list|,
-name|expr
+name|t
 argument_list|,
-name|CONV_IMPLICIT
-argument_list|,
-name|LOOKUP_NORMAL
-argument_list|,
-name|NULL_TREE
+name|val
+argument_list|)
+decl_stmt|;
+comment|/* We *must* set TREE_READONLY when dereferencing a pointer to const, 	  so that we get the proper error message if the result is used 	  to assign to.  Also,&* is supposed to be a no-op.  */
+name|TREE_READONLY
+argument_list|(
+name|ref
+argument_list|)
+operator|=
+name|CP_TYPE_CONST_P
+argument_list|(
+name|t
 argument_list|)
 expr_stmt|;
+name|TREE_THIS_VOLATILE
+argument_list|(
+name|ref
+argument_list|)
+operator|=
+name|CP_TYPE_VOLATILE_P
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+name|TREE_SIDE_EFFECTS
+argument_list|(
+name|ref
+argument_list|)
+operator|=
+operator|(
+name|TREE_THIS_VOLATILE
+argument_list|(
+name|ref
+argument_list|)
+operator|||
+name|TREE_SIDE_EFFECTS
+argument_list|(
+name|val
+argument_list|)
+operator|)
+expr_stmt|;
+name|REFERENCE_REF_P
+argument_list|(
+name|ref
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+name|val
+operator|=
+name|ref
+expr_stmt|;
+block|}
 return|return
-name|convert_from_reference
-argument_list|(
-name|expr
-argument_list|)
+name|val
 return|;
 block|}
 end_function
@@ -2535,6 +2470,11 @@ argument_list|(
 name|type
 argument_list|)
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|invalid_conv_diag
+decl_stmt|;
 if|if
 condition|(
 name|error_operand_p
@@ -2562,9 +2502,37 @@ name|expr
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|invalid_conv_diag
+operator|=
+name|targetm
+operator|.
+name|invalid_conversion
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|expr
+argument_list|)
+argument_list|,
+name|type
+argument_list|)
+operator|)
+condition|)
+block|{
+name|error
+argument_list|(
+name|invalid_conv_diag
+argument_list|)
+expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
 name|e
 operator|=
-name|decl_constant_value
+name|integral_constant_value
 argument_list|(
 name|e
 argument_list|)
@@ -2623,7 +2591,7 @@ comment|/* The call to fold will not always remove the NOP_EXPR as 	   might be 
 return|return
 name|e
 return|;
-comment|/* For complex data types, we need to perform componentwise          conversion.  */
+comment|/* For complex data types, we need to perform componentwise 	 conversion.  */
 elseif|else
 if|if
 condition|(
@@ -2635,7 +2603,7 @@ operator|==
 name|COMPLEX_TYPE
 condition|)
 return|return
-name|fold
+name|fold_if_not_in_template
 argument_list|(
 name|convert_to_complex
 argument_list|(
@@ -2657,9 +2625,8 @@ name|TARGET_EXPR
 condition|)
 block|{
 comment|/* Don't build a NOP_EXPR of class type.  Instead, change the 	     type of the temporary.  Only allow this for cv-qual changes, 	     though.  */
-if|if
-condition|(
-operator|!
+name|gcc_assert
+argument_list|(
 name|same_type_p
 argument_list|(
 name|TYPE_MAIN_VARIANT
@@ -2675,9 +2642,7 @@ argument_list|(
 name|type
 argument_list|)
 argument_list|)
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|TREE_TYPE
 argument_list|(
@@ -2698,32 +2663,30 @@ return|return
 name|e
 return|;
 block|}
-elseif|else
-if|if
-condition|(
+else|else
+block|{
+comment|/* We shouldn't be treating objects of ADDRESSABLE type as 	     rvalues.  */
+name|gcc_assert
+argument_list|(
+operator|!
 name|TREE_ADDRESSABLE
 argument_list|(
 name|type
 argument_list|)
-condition|)
-comment|/* We shouldn't be treating objects of ADDRESSABLE type as rvalues.  */
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
-else|else
 return|return
-name|fold
+name|fold_if_not_in_template
 argument_list|(
-name|build1
+name|build_nop
 argument_list|(
-name|NOP_EXPR
-argument_list|,
 name|type
 argument_list|,
 name|e
 argument_list|)
 argument_list|)
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -2768,7 +2731,7 @@ argument_list|(
 name|e
 argument_list|)
 decl_stmt|;
-comment|/* enum = enum, enum = int, enum = float, (enum)pointer are all          errors.  */
+comment|/* enum = enum, enum = int, enum = float, (enum)pointer are all 	 errors.  */
 if|if
 condition|(
 name|TREE_CODE
@@ -2780,10 +2743,19 @@ name|ENUMERAL_TYPE
 operator|&&
 operator|(
 operator|(
-name|ARITHMETIC_TYPE_P
+operator|(
+name|INTEGRAL_OR_ENUMERATION_TYPE_P
 argument_list|(
 name|intype
 argument_list|)
+operator|||
+name|TREE_CODE
+argument_list|(
+name|intype
+argument_list|)
+operator|==
+name|REAL_TYPE
+operator|)
 operator|&&
 operator|!
 operator|(
@@ -2793,7 +2765,6 @@ name|CONV_STATIC
 operator|)
 operator|)
 operator|||
-operator|(
 name|TREE_CODE
 argument_list|(
 name|intype
@@ -2801,12 +2772,17 @@ argument_list|)
 operator|==
 name|POINTER_TYPE
 operator|)
-operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|LOOKUP_COMPLAIN
+condition|)
 name|pedwarn
 argument_list|(
-literal|"conversion from `%#T' to `%#T'"
+literal|"conversion from %q#T to %q#T"
 argument_list|,
 name|intype
 argument_list|,
@@ -2856,22 +2832,13 @@ name|LOOKUP_COMPLAIN
 condition|)
 name|error
 argument_list|(
-literal|"`%#T' used where a `%T' was expected"
+literal|"%q#T used where a %qT was expected"
 argument_list|,
 name|intype
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|LOOKUP_SPECULATIVELY
-condition|)
-return|return
-name|NULL_TREE
-return|;
 return|return
 name|error_mark_node
 return|;
@@ -2889,7 +2856,7 @@ name|e
 argument_list|)
 return|;
 return|return
-name|fold
+name|fold_if_not_in_template
 argument_list|(
 name|convert_to_integer
 argument_list|(
@@ -2913,7 +2880,7 @@ name|type
 argument_list|)
 condition|)
 return|return
-name|fold
+name|fold_if_not_in_template
 argument_list|(
 name|cp_convert_to_pointer
 argument_list|(
@@ -2931,8 +2898,63 @@ name|code
 operator|==
 name|VECTOR_TYPE
 condition|)
+block|{
+name|tree
+name|in_vtype
+init|=
+name|TREE_TYPE
+argument_list|(
+name|e
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|IS_AGGR_TYPE
+argument_list|(
+name|in_vtype
+argument_list|)
+condition|)
+block|{
+name|tree
+name|ret_val
+decl_stmt|;
+name|ret_val
+operator|=
+name|build_type_conversion
+argument_list|(
+name|type
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
 return|return
-name|fold
+name|ret_val
+return|;
+if|if
+condition|(
+name|flags
+operator|&
+name|LOOKUP_COMPLAIN
+condition|)
+name|error
+argument_list|(
+literal|"%q#T used where a %qT was expected"
+argument_list|,
+name|in_vtype
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
+return|return
+name|fold_if_not_in_template
 argument_list|(
 name|convert_to_vector
 argument_list|(
@@ -2942,6 +2964,7 @@ name|e
 argument_list|)
 argument_list|)
 return|;
+block|}
 if|if
 condition|(
 name|code
@@ -2992,7 +3015,7 @@ name|LOOKUP_COMPLAIN
 condition|)
 name|error
 argument_list|(
-literal|"`%#T' used where a floating point value was expected"
+literal|"%q#T used where a floating point value was expected"
 argument_list|,
 name|TREE_TYPE
 argument_list|(
@@ -3008,7 +3031,7 @@ operator|==
 name|REAL_TYPE
 condition|)
 return|return
-name|fold
+name|fold_if_not_in_template
 argument_list|(
 name|convert_to_real
 argument_list|(
@@ -3026,7 +3049,7 @@ operator|==
 name|COMPLEX_TYPE
 condition|)
 return|return
-name|fold
+name|fold_if_not_in_template
 argument_list|(
 name|convert_to_complex
 argument_list|(
@@ -3134,10 +3157,7 @@ argument_list|,
 name|ctor
 argument_list|)
 argument_list|,
-name|TYPE_BINFO
-argument_list|(
 name|type
-argument_list|)
 argument_list|,
 name|flags
 argument_list|)
@@ -3163,7 +3183,7 @@ name|LOOKUP_COMPLAIN
 condition|)
 name|error
 argument_list|(
-literal|"conversion from `%T' to non-scalar type `%T' requested"
+literal|"conversion from %qT to non-scalar type %qT requested"
 argument_list|,
 name|TREE_TYPE
 argument_list|(
@@ -3173,15 +3193,6 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|LOOKUP_SPECULATIVELY
-condition|)
-return|return
-name|NULL_TREE
-return|;
 return|return
 name|error_mark_node
 return|;
@@ -3189,7 +3200,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* When an expression is used in a void context, its value is discarded and    no lvalue-rvalue and similar conversions happen [expr.static.cast/4,    stmt.expr/1, expr.comma/1].  This permits dereferencing an incomplete type    in a void context. The C++ standard does not define what an `access' to an    object is, but there is reason to believe that it is the lvalue to rvalue    conversion -- if it were not, `*&*p = 1' would violate [expr]/4 in that it    accesses `*p' not to calculate the value to be stored. But, dcl.type.cv/8    indicates that volatile semantics should be the same between C and C++    where ever possible. C leaves it implementation defined as to what    constitutes an access to a volatile. So, we interpret `*vp' as a read of    the volatile object `vp' points to, unless that is an incomplete type. For    volatile references we do not do this interpretation, because that would    make it impossible to ignore the reference return value from functions. We    issue warnings in the confusing cases.        IMPLICIT is tells us the context of an implicit void conversion.  */
+comment|/* When an expression is used in a void context, its value is discarded and    no lvalue-rvalue and similar conversions happen [expr.static.cast/4,    stmt.expr/1, expr.comma/1].  This permits dereferencing an incomplete type    in a void context. The C++ standard does not define what an `access' to an    object is, but there is reason to believe that it is the lvalue to rvalue    conversion -- if it were not, `*&*p = 1' would violate [expr]/4 in that it    accesses `*p' not to calculate the value to be stored. But, dcl.type.cv/8    indicates that volatile semantics should be the same between C and C++    where ever possible. C leaves it implementation defined as to what    constitutes an access to a volatile. So, we interpret `*vp' as a read of    the volatile object `vp' points to, unless that is an incomplete type. For    volatile references we do not do this interpretation, because that would    make it impossible to ignore the reference return value from functions. We    issue warnings in the confusing cases.     IMPLICIT is tells us the context of an implicit void conversion.  */
 end_comment
 
 begin_function
@@ -3353,7 +3364,7 @@ argument_list|)
 decl_stmt|;
 name|expr
 operator|=
-name|build
+name|build3
 argument_list|(
 name|COND_EXPR
 argument_list|,
@@ -3402,7 +3413,7 @@ operator|(
 name|implicit
 operator|&&
 operator|!
-name|TREE_NO_UNUSED_WARNING
+name|TREE_NO_WARNING
 argument_list|(
 name|expr
 argument_list|)
@@ -3423,7 +3434,7 @@ block|{
 name|tree
 name|t
 init|=
-name|build
+name|build2
 argument_list|(
 name|COMPOUND_EXPR
 argument_list|,
@@ -3511,6 +3522,7 @@ name|type
 argument_list|)
 argument_list|)
 decl_stmt|;
+comment|/* Can't load the value if we don't know the type.  */
 if|if
 condition|(
 name|is_volatile
@@ -3520,7 +3532,9 @@ name|is_complete
 condition|)
 name|warning
 argument_list|(
-literal|"object of incomplete type `%T' will not be accessed in %s"
+literal|0
+argument_list|,
+literal|"object of incomplete type %qT will not be accessed in %s"
 argument_list|,
 name|type
 argument_list|,
@@ -3531,16 +3545,26 @@ else|:
 literal|"void context"
 argument_list|)
 expr_stmt|;
+comment|/* Don't load the value if this is an implicit dereference, or if 	   the type needs to be handled by ctors/dtors.  */
 elseif|else
 if|if
 condition|(
-name|is_reference
-operator|&&
 name|is_volatile
+operator|&&
+operator|(
+name|is_reference
+operator|||
+name|TREE_ADDRESSABLE
+argument_list|(
+name|type
+argument_list|)
+operator|)
 condition|)
 name|warning
 argument_list|(
-literal|"object of type `%T' will not be accessed in %s"
+literal|0
+argument_list|,
+literal|"object of type %qT will not be accessed in %s"
 argument_list|,
 name|TREE_TYPE
 argument_list|(
@@ -3568,6 +3592,11 @@ name|is_volatile
 operator|||
 operator|!
 name|is_complete
+operator|||
+name|TREE_ADDRESSABLE
+argument_list|(
+name|type
+argument_list|)
 condition|)
 name|expr
 operator|=
@@ -3616,7 +3645,9 @@ name|is_complete
 condition|)
 name|warning
 argument_list|(
-literal|"object `%E' of incomplete type `%T' will not be accessed in %s"
+literal|0
+argument_list|,
+literal|"object %qE of incomplete type %qT will not be accessed in %s"
 argument_list|,
 name|expr
 argument_list|,
@@ -3631,6 +3662,92 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+case|case
+name|TARGET_EXPR
+case|:
+comment|/* Don't bother with the temporary object returned from a function if 	 we don't use it and don't need to destroy it.  We'll still 	 allocate space for it in expand_call or declare_return_variable, 	 but we don't need to track it through all the tree phases.  */
+if|if
+condition|(
+name|TARGET_EXPR_IMPLICIT_P
+argument_list|(
+name|expr
+argument_list|)
+operator|&&
+name|TYPE_HAS_TRIVIAL_DESTRUCTOR
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|expr
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|tree
+name|init
+init|=
+name|TARGET_EXPR_INITIAL
+argument_list|(
+name|expr
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|init
+argument_list|)
+operator|==
+name|AGGR_INIT_EXPR
+operator|&&
+operator|!
+name|AGGR_INIT_VIA_CTOR_P
+argument_list|(
+name|init
+argument_list|)
+condition|)
+block|{
+name|tree
+name|fn
+init|=
+name|TREE_OPERAND
+argument_list|(
+name|init
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+name|expr
+operator|=
+name|build3
+argument_list|(
+name|CALL_EXPR
+argument_list|,
+name|TREE_TYPE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|fn
+argument_list|)
+argument_list|)
+argument_list|)
+argument_list|,
+name|fn
+argument_list|,
+name|TREE_OPERAND
+argument_list|(
+name|init
+argument_list|,
+literal|1
+argument_list|)
+argument_list|,
+name|NULL_TREE
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+break|break;
 default|default:
 empty_stmt|;
 block|}
@@ -3697,16 +3814,38 @@ argument_list|(
 name|probe
 argument_list|)
 condition|)
+block|{
 comment|/* Only warn when there is no&.  */
 name|warning
 argument_list|(
-literal|"%s is a reference, not call, to function `%E'"
+name|OPT_Waddress
+argument_list|,
+literal|"%s is a reference, not call, to function %qE"
 argument_list|,
 name|implicit
 argument_list|,
 name|expr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|expr
+argument_list|)
+operator|==
+name|COMPONENT_REF
+condition|)
+name|expr
+operator|=
+name|TREE_OPERAND
+argument_list|(
+name|expr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -3728,21 +3867,138 @@ if|if
 condition|(
 name|implicit
 operator|&&
+name|warn_unused_value
+operator|&&
+operator|!
+name|TREE_NO_WARNING
+argument_list|(
+name|expr
+argument_list|)
+operator|&&
+operator|!
+name|processing_template_decl
+condition|)
+block|{
+comment|/* The middle end does not warn about expressions that have 	     been explicitly cast to void, so we must do so here.  */
+if|if
+condition|(
 operator|!
 name|TREE_SIDE_EFFECTS
 argument_list|(
 name|expr
 argument_list|)
-operator|&&
-name|warn_unused_value
 condition|)
 name|warning
 argument_list|(
+name|OPT_Wunused_value
+argument_list|,
 literal|"%s has no effect"
 argument_list|,
 name|implicit
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|tree
+name|e
+decl_stmt|;
+name|enum
+name|tree_code
+name|code
+decl_stmt|;
+name|enum
+name|tree_code_class
+name|class
+decl_stmt|;
+name|e
+operator|=
+name|expr
+expr_stmt|;
+comment|/* We might like to warn about (say) "(int) f()", as the 		 cast has no effect, but the compiler itself will 		 generate implicit conversions under some 		 circumstances.  (For example a block copy will be 		 turned into a call to "__builtin_memcpy", with a 		 conversion of the return value to an appropriate 		 type.)  So, to avoid false positives, we strip 		 conversions.  Do not use STRIP_NOPs because it will 		 not strip conversions to "void", as that is not a 		 mode-preserving conversion.  */
+while|while
+condition|(
+name|TREE_CODE
+argument_list|(
+name|e
+argument_list|)
+operator|==
+name|NOP_EXPR
+condition|)
+name|e
+operator|=
+name|TREE_OPERAND
+argument_list|(
+name|e
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|code
+operator|=
+name|TREE_CODE
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+name|class
+operator|=
+name|TREE_CODE_CLASS
+argument_list|(
+name|code
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|class
+operator|==
+name|tcc_comparison
+operator|||
+name|class
+operator|==
+name|tcc_unary
+operator|||
+operator|(
+name|class
+operator|==
+name|tcc_binary
+operator|&&
+operator|!
+operator|(
+name|code
+operator|==
+name|MODIFY_EXPR
+operator|||
+name|code
+operator|==
+name|INIT_EXPR
+operator|||
+name|code
+operator|==
+name|PREDECREMENT_EXPR
+operator|||
+name|code
+operator|==
+name|PREINCREMENT_EXPR
+operator|||
+name|code
+operator|==
+name|POSTDECREMENT_EXPR
+operator|||
+name|code
+operator|==
+name|POSTINCREMENT_EXPR
+operator|)
+operator|)
+condition|)
+name|warning
+argument_list|(
+name|OPT_Wunused_value
+argument_list|,
+literal|"value computed is not used"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|expr
 operator|=
 name|build1
@@ -3755,6 +4011,18 @@ name|expr
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|TREE_SIDE_EFFECTS
+argument_list|(
+name|expr
+argument_list|)
+condition|)
+name|expr
+operator|=
+name|void_zero_node
+expr_stmt|;
 return|return
 name|expr
 return|;
@@ -3811,28 +4079,17 @@ argument_list|(
 name|intype
 argument_list|)
 condition|)
-block|{
-name|expr
-operator|=
-name|decl_constant_value
-argument_list|(
-name|expr
-argument_list|)
-expr_stmt|;
 return|return
-name|fold
+name|fold_if_not_in_template
 argument_list|(
-name|build1
+name|build_nop
 argument_list|(
-name|NOP_EXPR
-argument_list|,
 name|type
 argument_list|,
 name|expr
 argument_list|)
 argument_list|)
 return|;
-block|}
 return|return
 name|ocp_convert
 argument_list|(
@@ -3889,7 +4146,8 @@ operator|==
 name|REFERENCE_TYPE
 condition|)
 return|return
-name|fold
+operator|(
+name|fold_if_not_in_template
 argument_list|(
 name|convert_to_reference
 argument_list|(
@@ -3904,27 +4162,8 @@ argument_list|,
 name|NULL_TREE
 argument_list|)
 argument_list|)
+operator|)
 return|;
-elseif|else
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|e
-argument_list|)
-argument_list|)
-operator|==
-name|REFERENCE_TYPE
-condition|)
-name|e
-operator|=
-name|convert_from_reference
-argument_list|(
-name|e
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|code
@@ -3932,7 +4171,7 @@ operator|==
 name|POINTER_TYPE
 condition|)
 return|return
-name|fold
+name|fold_if_not_in_template
 argument_list|(
 name|convert_to_pointer_force
 argument_list|(
@@ -4007,7 +4246,6 @@ argument_list|(
 name|type
 argument_list|)
 condition|)
-block|{
 comment|/* compatible pointer to member functions.  */
 return|return
 name|build_ptrmemfunc
@@ -4020,9 +4258,11 @@ argument_list|,
 name|e
 argument_list|,
 literal|1
+argument_list|,
+comment|/*c_cast_p=*/
+literal|1
 argument_list|)
 return|;
-block|}
 return|return
 name|ocp_convert
 argument_list|(
@@ -4045,6 +4285,7 @@ comment|/* Convert an aggregate EXPR to type XTYPE.  If a conversion    exists, 
 end_comment
 
 begin_function
+specifier|static
 name|tree
 name|build_type_conversion
 parameter_list|(
@@ -4126,14 +4367,9 @@ operator|)
 condition|)
 name|warning
 argument_list|(
+name|OPT_Wconversion
+argument_list|,
 literal|"converting NULL to non-pointer type"
-argument_list|)
-expr_stmt|;
-name|expr
-operator|=
-name|convert_from_reference
-argument_list|(
-name|expr
 argument_list|)
 expr_stmt|;
 name|basetype
@@ -4188,9 +4424,6 @@ return|return
 name|expr
 return|;
 comment|/* else fall through...  */
-case|case
-name|VECTOR_TYPE
-case|:
 case|case
 name|BOOLEAN_TYPE
 case|:
@@ -4267,6 +4500,83 @@ argument_list|)
 else|:
 name|NULL_TREE
 return|;
+case|case
+name|VECTOR_TYPE
+case|:
+if|if
+condition|(
+operator|(
+name|desires
+operator|&
+name|WANT_VECTOR
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+name|NULL_TREE
+return|;
+switch|switch
+condition|(
+name|TREE_CODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|basetype
+argument_list|)
+argument_list|)
+condition|)
+block|{
+case|case
+name|INTEGER_TYPE
+case|:
+case|case
+name|BOOLEAN_TYPE
+case|:
+return|return
+operator|(
+name|desires
+operator|&
+name|WANT_INT
+operator|)
+condition|?
+name|expr
+else|:
+name|NULL_TREE
+return|;
+case|case
+name|ENUMERAL_TYPE
+case|:
+return|return
+operator|(
+name|desires
+operator|&
+name|WANT_ENUM
+operator|)
+condition|?
+name|expr
+else|:
+name|NULL_TREE
+return|;
+case|case
+name|REAL_TYPE
+case|:
+return|return
+operator|(
+name|desires
+operator|&
+name|WANT_FLOAT
+operator|)
+condition|?
+name|expr
+else|:
+name|NULL_TREE
+return|;
+default|default:
+return|return
+name|NULL_TREE
+return|;
+block|}
 default|default:
 return|return
 name|NULL_TREE
@@ -4413,6 +4723,74 @@ name|WANT_POINTER
 operator|)
 expr_stmt|;
 break|break;
+case|case
+name|VECTOR_TYPE
+case|:
+if|if
+condition|(
+operator|(
+name|desires
+operator|&
+name|WANT_VECTOR
+operator|)
+operator|==
+literal|0
+condition|)
+break|break;
+switch|switch
+condition|(
+name|TREE_CODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|candidate
+argument_list|)
+argument_list|)
+condition|)
+block|{
+case|case
+name|BOOLEAN_TYPE
+case|:
+case|case
+name|INTEGER_TYPE
+case|:
+name|win
+operator|=
+operator|(
+name|desires
+operator|&
+name|WANT_INT
+operator|)
+expr_stmt|;
+break|break;
+case|case
+name|ENUMERAL_TYPE
+case|:
+name|win
+operator|=
+operator|(
+name|desires
+operator|&
+name|WANT_ENUM
+operator|)
+expr_stmt|;
+break|break;
+case|case
+name|REAL_TYPE
+case|:
+name|win
+operator|=
+operator|(
+name|desires
+operator|&
+name|WANT_FLOAT
+operator|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+break|break;
 default|default:
 break|break;
 block|}
@@ -4433,14 +4811,14 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"ambiguous default type conversion from `%T'"
+literal|"ambiguous default type conversion from %qT"
 argument_list|,
 name|basetype
 argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"  candidate conversions include `%D' and `%D'"
+literal|"  candidate conversions include %qD and %qD"
 argument_list|,
 name|winner
 argument_list|,
@@ -4578,7 +4956,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|TREE_UNSIGNED
+name|TYPE_UNSIGNED
 argument_list|(
 name|type
 argument_list|)
@@ -4621,7 +4999,7 @@ block|{
 comment|/* Retain unsignedness if really not getting bigger.  */
 if|if
 condition|(
-name|TREE_UNSIGNED
+name|TYPE_UNSIGNED
 argument_list|(
 name|type
 argument_list|)
@@ -4692,6 +5070,19 @@ argument_list|(
 name|expr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|same_type_p
+argument_list|(
+name|type
+argument_list|,
+name|expr_type
+argument_list|)
+condition|)
+return|return
+name|expr
+return|;
+elseif|else
 if|if
 condition|(
 name|TYPE_PTR_P

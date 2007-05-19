@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* The lang_hooks data structure.    Copyright 2001, 2002, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* The lang_hooks data structure.    Copyright 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -22,6 +22,12 @@ end_comment
 begin_struct_decl
 struct_decl|struct
 name|diagnostic_context
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|gimplify_omp_ctx
 struct_decl|;
 end_struct_decl
 
@@ -86,7 +92,8 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|void
+name|struct
+name|pointer_set_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -124,40 +131,10 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|tree_chain_matters_p
-function_decl|)
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
 name|auto_var_in_fn_p
 function_decl|)
 parameter_list|(
 name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-name|tree
-function_decl|(
-modifier|*
-name|copy_res_decl_for_inlining
-function_decl|)
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|int
-modifier|*
 parameter_list|,
 name|tree
 parameter_list|)
@@ -177,6 +154,8 @@ modifier|*
 name|var_mod_type_p
 function_decl|)
 parameter_list|(
+name|tree
+parameter_list|,
 name|tree
 parameter_list|)
 function_decl|;
@@ -211,15 +190,6 @@ parameter_list|,
 name|tree
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|estimate_num_insns
-function_decl|)
-parameter_list|(
-name|tree
 parameter_list|)
 function_decl|;
 block|}
@@ -316,46 +286,14 @@ name|function
 modifier|*
 parameter_list|)
 function_decl|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Lang hooks for rtl code generation.  */
-end_comment
-
-begin_struct
-struct|struct
-name|lang_hooks_for_rtl_expansion
-block|{
-comment|/* Called after expand_function_start, but before expanding the body.  */
-name|void
+comment|/* Determines if it's ok for a function to have no noreturn attribute.  */
+name|bool
 function_decl|(
 modifier|*
-name|start
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-comment|/* Called to expand each statement.  */
-name|void
-function_decl|(
-modifier|*
-name|stmt
+name|missing_noreturn_ok_p
 function_decl|)
 parameter_list|(
 name|tree
-parameter_list|)
-function_decl|;
-comment|/* Called after expanding the body but before expand_function_end.  */
-name|void
-function_decl|(
-modifier|*
-name|end
-function_decl|)
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 block|}
@@ -473,7 +411,7 @@ parameter_list|,
 name|tree
 parameter_list|)
 function_decl|;
-comment|/* Given a type, apply default promotions to unnamed function      arguments and return the new type.  Return the same type if no      change.  Required by any language that supports variadic      arguments.  The default hook aborts.  */
+comment|/* Given a type, apply default promotions to unnamed function      arguments and return the new type.  Return the same type if no      change.  Required by any language that supports variadic      arguments.  The default hook dies.  */
 name|tree
 function_decl|(
 modifier|*
@@ -511,6 +449,34 @@ name|tree
 name|type
 parameter_list|)
 function_decl|;
+comment|/* Called from assign_temp to return the maximum size, if there is one,      for a type.  */
+name|tree
+function_decl|(
+modifier|*
+name|max_size
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+comment|/* Register language specific type size variables as potentially OpenMP      firstprivate variables.  */
+name|void
+function_decl|(
+modifier|*
+name|omp_firstprivatize_type_sizes
+function_decl|)
+parameter_list|(
+name|struct
+name|gimplify_omp_ctx
+modifier|*
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+comment|/* Nonzero if types that are identical are to be hashed so that only      one copy is kept.  If a language requires unique types for each      user-specified type, such as Ada, this should be set to TRUE.  */
+name|bool
+name|hash_types
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -523,30 +489,6 @@ begin_struct
 struct|struct
 name|lang_hooks_for_decls
 block|{
-comment|/* Enter a new lexical scope.  Argument is always zero when called      from outside the front end.  */
-name|void
-function_decl|(
-modifier|*
-name|pushlevel
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-comment|/* Exit a lexical scope and return a BINDING for that scope.      Takes three arguments:      KEEP -- nonzero if there were declarations in this scope.      REVERSE -- reverse the order of decls before returning them.      FUNCTIONBODY -- nonzero if this level is the body of a function.  */
-name|tree
-function_decl|(
-modifier|*
-name|poplevel
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
 comment|/* Returns nonzero if we are in the global binding level.  Ada      returns -1 for an undocumented reason used in stor-layout.c.  */
 name|int
 function_decl|(
@@ -567,16 +509,6 @@ parameter_list|(
 name|tree
 parameter_list|)
 function_decl|;
-comment|/* Set the BLOCK node for the current scope level.  */
-name|void
-function_decl|(
-modifier|*
-name|set_block
-function_decl|)
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
 comment|/* Function to add a decl to the current scope level.  Takes one      argument, a decl to add.  Returns that decl, or, if the same      symbol is already declared, may return a different decl for that      name.  */
 name|tree
 function_decl|(
@@ -592,16 +524,6 @@ name|tree
 function_decl|(
 modifier|*
 name|getdecls
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-comment|/* Returns a chain of TYPE_DECLs for built-in types.  */
-name|tree
-function_decl|(
-modifier|*
-name|builtin_type_decls
 function_decl|)
 parameter_list|(
 name|void
@@ -647,6 +569,125 @@ parameter_list|(
 name|tree
 parameter_list|)
 function_decl|;
+comment|/* Return the COMDAT group into which this DECL should be placed.      It is known that the DECL belongs in *some* COMDAT group when      this hook is called.  The return value will be used immediately,      but not explicitly deallocated, so implementations should not use      xmalloc to allocate the string returned.  (Typically, the return      value will be the string already stored in an      IDENTIFIER_NODE.)  */
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|comdat_group
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+comment|/* True if OpenMP should privatize what this DECL points to rather      than the DECL itself.  */
+name|bool
+function_decl|(
+modifier|*
+name|omp_privatize_by_reference
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+comment|/* Return sharing kind if OpenMP sharing attribute of DECL is      predetermined, OMP_CLAUSE_DEFAULT_UNSPECIFIED otherwise.  */
+name|enum
+name|omp_clause_default_kind
+function_decl|(
+modifier|*
+name|omp_predetermined_sharing
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+comment|/* Return true if DECL's DECL_VALUE_EXPR (if any) should be      disregarded in OpenMP construct, because it is going to be      remapped during OpenMP lowering.  SHARED is true if DECL      is going to be shared, false if it is going to be privatized.  */
+name|bool
+function_decl|(
+modifier|*
+name|omp_disregard_value_expr
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+comment|/* Return true if DECL that is shared iff SHARED is true should      be put into OMP_CLAUSE_PRIVATE_DEBUG.  */
+name|bool
+function_decl|(
+modifier|*
+name|omp_private_debug_clause
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+comment|/* Build and return code for a default constructor for DECL in      response to CLAUSE.  Return NULL if nothing to be done.  */
+name|tree
+function_decl|(
+modifier|*
+name|omp_clause_default_ctor
+function_decl|)
+parameter_list|(
+name|tree
+name|clause
+parameter_list|,
+name|tree
+name|decl
+parameter_list|)
+function_decl|;
+comment|/* Build and return code for a copy constructor from SRC to DST.  */
+name|tree
+function_decl|(
+modifier|*
+name|omp_clause_copy_ctor
+function_decl|)
+parameter_list|(
+name|tree
+name|clause
+parameter_list|,
+name|tree
+name|dst
+parameter_list|,
+name|tree
+name|src
+parameter_list|)
+function_decl|;
+comment|/* Similarly, except use an assignment operator instead.  */
+name|tree
+function_decl|(
+modifier|*
+name|omp_clause_assign_op
+function_decl|)
+parameter_list|(
+name|tree
+name|clause
+parameter_list|,
+name|tree
+name|dst
+parameter_list|,
+name|tree
+name|src
+parameter_list|)
+function_decl|;
+comment|/* Build and return code destructing DECL.  Return NULL if nothing      to be done.  */
+name|tree
+function_decl|(
+modifier|*
+name|omp_clause_dtor
+function_decl|)
+parameter_list|(
+name|tree
+name|clause
+parameter_list|,
+name|tree
+name|decl
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -669,7 +710,7 @@ comment|/* sizeof (struct lang_identifier), so make_node () creates      identif
 name|size_t
 name|identifier_size
 decl_stmt|;
-comment|/* Determines the size of any language-specific 'x' or 'c' nodes.      Since it is called from make_node, the only information available      is the tree code.  Expected to abort on unrecognized codes.  */
+comment|/* Determines the size of any language-specific tcc_constant or      tcc_exceptional nodes.  Since it is called from make_node, the      only information available is the tree code.  Expected to die      on unrecognized codes.  */
 name|size_t
 function_decl|(
 modifier|*
@@ -839,11 +880,11 @@ name|rtx
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* Prepare expr to be an argument of a TRUTH_NOT_EXPR or other logical      operation.       This preparation consists of taking the ordinary representation      of an expression expr and producing a valid tree boolean      expression describing whether expr is nonzero.  We could simply      always do build_binary_op (NE_EXPR, expr, integer_zero_node, 1),      but we optimize comparisons,&&, ||, and !.       The result should be an expression of boolean type (if not an      error_mark_node).  */
-name|tree
+comment|/* Called by expand_expr to generate the definition of a decl.  Returns      1 if handled, 0 otherwise.  */
+name|int
 function_decl|(
 modifier|*
-name|truthvalue_conversion
+name|expand_decl
 function_decl|)
 parameter_list|(
 name|tree
@@ -871,16 +912,6 @@ parameter_list|(
 name|tree
 parameter_list|)
 function_decl|;
-comment|/* Function used by unsafe_for_reeval.  A non-negative number is      returned directly from unsafe_for_reeval, a negative number falls      through.  The default hook returns a negative number.  */
-name|int
-function_decl|(
-modifier|*
-name|unsafe_for_reeval
-function_decl|)
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
 comment|/* Mark EXP saying that we need to be able to take the address of      it; it should not be allocated in a register.  Return true if      successful.  */
 name|bool
 function_decl|(
@@ -892,7 +923,7 @@ name|tree
 parameter_list|)
 function_decl|;
 comment|/* Hook called by staticp for language-specific tree codes.  */
-name|int
+name|tree
 function_decl|(
 modifier|*
 name|staticp
@@ -906,26 +937,6 @@ name|void
 function_decl|(
 modifier|*
 name|dup_lang_specific_decl
-function_decl|)
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-comment|/* Called before its argument, an UNSAVE_EXPR, is to be      unsaved.  Modify it in-place so that all the evaluate only once      things are cleared out.  */
-name|tree
-function_decl|(
-modifier|*
-name|unsave_expr_now
-function_decl|)
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-comment|/* Called by expand_expr to build and return the cleanup-expression      for the passed TARGET_EXPR.  Return NULL if there is none.  */
-name|tree
-function_decl|(
-modifier|*
-name|maybe_build_cleanup
 function_decl|)
 parameter_list|(
 name|tree
@@ -951,9 +962,9 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* Nonzero if TYPE_READONLY and TREE_READONLY should always be honored.  */
+comment|/* Nonzero if operations on types narrower than their mode should      have their results reduced to the precision of the type.  */
 name|bool
-name|honor_readonly
+name|reduce_bit_field_operations
 decl_stmt|;
 comment|/* Nonzero if this front end does not generate a dummy BLOCK between      the outermost scope of the function and the FUNCTION_DECL.  See      is_body_block in stmt.c, and its callers.  */
 name|bool
@@ -969,11 +980,11 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* Called by print_tree when there is a tree of class 'x' that it      doesn't know how to display.  */
+comment|/* Called by print_tree when there is a tree of class tcc_exceptional      that it doesn't know how to display.  */
 name|lang_print_tree_hook
 name|print_xnode
 decl_stmt|;
-comment|/* Called to print language-dependent parts of a class 'd', class      't', and IDENTIFIER_NODE nodes.  */
+comment|/* Called to print language-dependent parts of tcc_decl, tcc_type,      and IDENTIFIER_NODE nodes.  */
 name|lang_print_tree_hook
 name|print_decl
 decl_stmt|;
@@ -997,6 +1008,35 @@ name|decl
 parameter_list|,
 name|int
 name|verbosity
+parameter_list|)
+function_decl|;
+comment|/* Computes the dwarf-2/3 name for a tree.  VERBOSITY determines what      information will be printed: 0: DECL_NAME, demangled as      necessary.  1: and scope information.  */
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|dwarf_name
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|,
+name|int
+name|verbosity
+parameter_list|)
+function_decl|;
+comment|/* This compares two types for equivalence ("compatible" in C-based languages).      This routine should only return 1 if it is sure.  It should not be used      in contexts where erroneously returning 0 causes problems.  */
+name|int
+function_decl|(
+modifier|*
+name|types_compatible_p
+function_decl|)
+parameter_list|(
+name|tree
+name|x
+parameter_list|,
+name|tree
+name|y
 parameter_list|)
 function_decl|;
 comment|/* Given a CALL_EXPR, return a function decl that is its target.  */
@@ -1035,14 +1075,14 @@ parameter_list|(
 name|tree
 parameter_list|)
 function_decl|;
-comment|/* Called from uninitialized_vars_warning to find out if a variable is      uninitialized based on DECL_INITIAL.  */
-name|bool
+comment|/* Convert a character from the host's to the target's character      set.  The character should be in what C calls the "basic source      character set" (roughly, the set of characters defined by plain      old ASCII).  The default is to return the character unchanged,      which is correct in most circumstances.  Note that both argument      and result should be sign-extended under -fsigned-char,      zero-extended under -fno-signed-char.  */
+name|HOST_WIDE_INT
 function_decl|(
 modifier|*
-name|decl_uninit
+name|to_target_charset
 function_decl|)
 parameter_list|(
-name|tree
+name|HOST_WIDE_INT
 parameter_list|)
 function_decl|;
 comment|/* Pointers to machine-independent attribute tables, for front ends      using attribs.c.  If one is NULL, it is ignored.  Respectively, a      table of attributes specific to the language, a table of      attributes common to two or more languages (to allow easy      sharing), and a table of attributes for checking formats.  */
@@ -1089,10 +1129,99 @@ name|struct
 name|lang_hooks_for_types
 name|types
 decl_stmt|;
-name|struct
-name|lang_hooks_for_rtl_expansion
-name|rtl_expand
-decl_stmt|;
+comment|/* Perform language-specific gimplification on the argument.  Returns an      enum gimplify_status, though we can't see that type here.  */
+name|int
+function_decl|(
+modifier|*
+name|gimplify_expr
+function_decl|)
+parameter_list|(
+name|tree
+modifier|*
+parameter_list|,
+name|tree
+modifier|*
+parameter_list|,
+name|tree
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Fold an OBJ_TYPE_REF expression to the address of a function.      KNOWN_TYPE carries the true type of the OBJ_TYPE_REF_OBJECT.  */
+name|tree
+function_decl|(
+modifier|*
+name|fold_obj_type_ref
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+comment|/* Return a definition for a builtin function named NAME and whose data type      is TYPE.  TYPE should be a function type with argument types.      FUNCTION_CODE tells later passes how to compile calls to this function.      See tree.h for its possible values.       If LIBRARY_NAME is nonzero, use that for DECL_ASSEMBLER_NAME,      the name to be called if we can't opencode the function.  If      ATTRS is nonzero, use that for the function's attribute list.  */
+name|tree
+function_decl|(
+modifier|*
+name|builtin_function
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|tree
+name|type
+parameter_list|,
+name|int
+name|function_code
+parameter_list|,
+name|enum
+name|built_in_class
+name|bt_class
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|library_name
+parameter_list|,
+name|tree
+name|attrs
+parameter_list|)
+function_decl|;
+comment|/* Used to set up the tree_contains_structure array for a frontend. */
+name|void
+function_decl|(
+modifier|*
+name|init_ts
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Called by recompute_tree_invariant_for_addr_expr to go from EXPR      to a contained expression or DECL, possibly updating *TC, *TI or      *SE if in the process TREE_CONSTANT, TREE_INVARIANT or      TREE_SIDE_EFFECTS need updating.  */
+name|tree
+function_decl|(
+modifier|*
+name|expr_to_decl
+function_decl|)
+parameter_list|(
+name|tree
+name|expr
+parameter_list|,
+name|bool
+modifier|*
+name|tc
+parameter_list|,
+name|bool
+modifier|*
+name|ti
+parameter_list|,
+name|bool
+modifier|*
+name|se
+parameter_list|)
+function_decl|;
 comment|/* Whenever you add entries here, make sure you adjust langhooks-def.h      and langhooks.c accordingly.  */
 block|}
 struct|;

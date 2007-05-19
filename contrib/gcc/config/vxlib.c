@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 2002 Free Software Foundation, Inc.    Contributed by Zack Weinberg<zack@codesourcery.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-end_comment
-
-begin_comment
-comment|/* Threads compatibility routines for libgcc2 for VxWorks.    These are out-of-line routines called from gthr-vxworks.h.  */
+comment|/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Zack Weinberg<zack@codesourcery.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
 comment|/* As a special exception, if you link this library with other files,    some of which are compiled with GCC, to produce an executable,    this library does not by itself cause the resulting executable    to be covered by the GNU General Public License.    This exception does not however invalidate any other reasons why    the executable file might be covered by the GNU General Public License.  */
+end_comment
+
+begin_comment
+comment|/* Threads compatibility routines for libgcc2 for VxWorks.    These are out-of-line routines called from gthr-vxworks.h.  */
 end_comment
 
 begin_include
@@ -29,11 +29,26 @@ directive|include
 file|"gthr.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GTHREADS
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<vxWorks.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__RTP__
+end_ifndef
 
 begin_include
 include|#
@@ -41,17 +56,44 @@ directive|include
 file|<vxLib.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<taskLib.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__RTP__
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<taskHookLib.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Init-once operation.     This would be a clone of the implementation from gthr-solaris.h,    except that we have a bootstrap problem - the whole point of this    exercise is to prevent double initialization, but if two threads    are racing with each other, once->mutex is liable to be initialized    by both.  Then each thread will lock its own mutex, and proceed to    call the initialization routine.     So instead we use a bare atomic primitive (vxTas()) to handle    mutual exclusion.  Threads losing the race then busy-wait, calling    taskDelay() to yield the processor, until the initialization is    completed.  Inefficient, but reliable.  */
@@ -84,6 +126,14 @@ condition|)
 return|return
 literal|0
 return|;
+ifdef|#
+directive|ifdef
+name|__RTP__
+name|__gthread_lock_library
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 while|while
 condition|(
 operator|!
@@ -104,6 +154,8 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Only one thread at a time gets here.  Check ->done again, then      go ahead and call func() if no one has done it yet.  */
 if|if
 condition|(
@@ -123,12 +175,22 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|__RTP__
+name|__gthread_unlock_library
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|guard
 operator|->
 name|busy
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -136,7 +198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Thread-specific data.     We reserve a field in the TCB to point to a dynamically allocated    array which is used to store TSD values.  A TSD key is simply an    offset in this array.  The exact location of the TCB field is not    known to this code nor to vxlib.c -- all access to it indirects    through the routines __gthread_get_tsd_data and    __gthread_set_tsd_data, which are provided by the VxWorks kernel.     There is also a global array which records which keys are valid and    which have destructors.     A task delete hook is installed to execute key destructors.  The    routines __gthread_enter_tsd_dtor_context and    __gthread_leave_tsd_dtor_context, which are also provided by the    kernel, ensure that it is safe to call free() on memory allocated    by the task being deleted.  (This is a no-op on VxWorks 5, but    a major undertaking on AE.)     Since this interface is used to allocate only a small number of    keys, the table size is small and static, which simplifies the    code quite a bit.  Revisit this if and when it becomes necessary.  */
+comment|/* Thread-local storage.     We reserve a field in the TCB to point to a dynamically allocated    array which is used to store TLS values.  A TLS key is simply an    offset in this array.  The exact location of the TCB field is not    known to this code nor to vxlib.c -- all access to it indirects    through the routines __gthread_get_tls_data and    __gthread_set_tls_data, which are provided by the VxWorks kernel.     There is also a global array which records which keys are valid and    which have destructors.     A task delete hook is installed to execute key destructors.  The    routines __gthread_enter_tls_dtor_context and    __gthread_leave_tls_dtor_context, which are also provided by the    kernel, ensure that it is safe to call free() on memory allocated    by the task being deleted.  (This is a no-op on VxWorks 5, but    a major undertaking on AE.)     The task delete hook is only installed when at least one thread    has TLS data.  This is a necessary precaution, to allow this module    to be unloaded - a module with a hook can not be removed.     Since this interface is used to allocate only a small number of    keys, the table size is small and static, which simplifies the    code quite a bit.  Revisit this if and when it becomes necessary.  */
 end_comment
 
 begin_define
@@ -147,13 +209,17 @@ value|4
 end_define
 
 begin_comment
-comment|/* This is the structure pointed to by the pointer returned    by __gthread_get_tsd_data.  */
+comment|/* This is the structure pointed to by the pointer returned    by __gthread_get_tls_data.  */
 end_comment
 
 begin_struct
 struct|struct
-name|tsd_data
+name|tls_data
 block|{
+name|int
+modifier|*
+name|owner
+decl_stmt|;
 name|void
 modifier|*
 name|values
@@ -173,6 +239,28 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* To make sure we only delete TLS data associated with this object,    include a pointer to a local variable in the TLS data object.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|self_owner
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The number of threads for this module which have active TLS data.    This is protected by tls_lock.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|active_tls_threads
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* kernel provided routines */
 end_comment
 
@@ -180,11 +268,9 @@ begin_function_decl
 specifier|extern
 name|void
 modifier|*
-name|__gthread_get_tsd_data
+name|__gthread_get_tls_data
 parameter_list|(
-name|WIND_TCB
-modifier|*
-name|tcb
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -192,12 +278,8 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|__gthread_set_tsd_data
+name|__gthread_set_tls_data
 parameter_list|(
-name|WIND_TCB
-modifier|*
-name|tcb
-parameter_list|,
 name|void
 modifier|*
 name|data
@@ -208,11 +290,9 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|__gthread_enter_tsd_dtor_context
+name|__gthread_enter_tls_dtor_context
 parameter_list|(
-name|WIND_TCB
-modifier|*
-name|tcb
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -220,43 +300,9 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|__gthread_leave_tsd_dtor_context
+name|__gthread_leave_tls_dtor_context
 parameter_list|(
-name|WIND_TCB
-modifier|*
-name|tcb
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_typedef
-typedef|typedef
 name|void
-function_decl|(
-modifier|*
-name|fet_callback_t
-function_decl|)
-parameter_list|(
-name|WIND_TCB
-modifier|*
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_function_decl
-specifier|extern
-name|void
-name|__gthread_for_all_tasks
-parameter_list|(
-name|fet_callback_t
-name|fun
-parameter_list|,
-name|unsigned
-name|int
-name|number
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -270,7 +316,7 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|tsd_dtor
+name|tls_dtor
 function_decl|)
 parameter_list|(
 name|void
@@ -281,9 +327,9 @@ end_typedef
 
 begin_struct
 struct|struct
-name|tsd_keys
+name|tls_keys
 block|{
-name|tsd_dtor
+name|tls_dtor
 name|dtor
 index|[
 name|MAX_KEYS
@@ -307,7 +353,7 @@ name|KEY_VALID_P
 parameter_list|(
 name|key
 parameter_list|)
-value|!(tsd_keys.generation[key]& 1)
+value|!(tls_keys.generation[key]& 1)
 end_define
 
 begin_comment
@@ -317,8 +363,8 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|tsd_keys
-name|tsd_keys
+name|tls_keys
+name|tls_keys
 init|=
 block|{
 block|{
@@ -345,20 +391,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This lock protects the tsd_keys structure.  */
+comment|/* This lock protects the tls_keys structure.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|__gthread_mutex_t
-name|tsd_lock
+name|tls_lock
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|__gthread_once_t
-name|tsd_init_guard
+name|tls_init_guard
 init|=
 name|__GTHREAD_ONCE_INIT
 decl_stmt|;
@@ -369,28 +415,27 @@ comment|/* Internal routines.  */
 end_comment
 
 begin_comment
-comment|/* The task TCB has just been deleted.  Call the destructor    function for each TSD key that has both a destructor and    a non-NULL specific value in this thread.     This routine does not need to take tsd_lock; the generation    count protects us from calling a stale destructor.  It does    need to read tsd_keys.dtor[key] atomically.  */
+comment|/* The task TCB has just been deleted.  Call the destructor    function for each TLS key that has both a destructor and    a non-NULL specific value in this thread.     This routine does not need to take tls_lock; the generation    count protects us from calling a stale destructor.  It does    need to read tls_keys.dtor[key] atomically.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|tsd_delete_hook
+name|tls_delete_hook
 parameter_list|(
-name|WIND_TCB
+name|void
 modifier|*
 name|tcb
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 name|struct
-name|tsd_data
+name|tls_data
 modifier|*
 name|data
 init|=
-name|__gthread_get_tsd_data
-argument_list|(
-name|tcb
-argument_list|)
+name|__gthread_get_tls_data
+argument_list|()
 decl_stmt|;
 name|__gthread_key_t
 name|key
@@ -398,12 +443,17 @@ decl_stmt|;
 if|if
 condition|(
 name|data
+operator|&&
+name|data
+operator|->
+name|owner
+operator|==
+operator|&
+name|self_owner
 condition|)
 block|{
-name|__gthread_enter_tsd_dtor_context
-argument_list|(
-name|tcb
-argument_list|)
+name|__gthread_enter_tls_dtor_context
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -428,7 +478,7 @@ index|[
 name|key
 index|]
 operator|==
-name|tsd_keys
+name|tls_keys
 operator|.
 name|generation
 index|[
@@ -436,10 +486,10 @@ name|key
 index|]
 condition|)
 block|{
-name|tsd_dtor
+name|tls_dtor
 name|dtor
 init|=
-name|tsd_keys
+name|tls_keys
 operator|.
 name|dtor
 index|[
@@ -467,46 +517,139 @@ argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
-name|__gthread_set_tsd_data
+comment|/* We can't handle an error here, so just leave the thread 	 marked as loaded if one occurs.  */
+if|if
+condition|(
+name|__gthread_mutex_lock
 argument_list|(
-name|tcb
-argument_list|,
+operator|&
+name|tls_lock
+argument_list|)
+operator|!=
+name|ERROR
+condition|)
+block|{
+name|active_tls_threads
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|active_tls_threads
+operator|==
+literal|0
+condition|)
+name|taskDeleteHookDelete
+argument_list|(
+operator|(
+name|FUNCPTR
+operator|)
+name|tls_delete_hook
+argument_list|)
+expr_stmt|;
+name|__gthread_mutex_unlock
+argument_list|(
+operator|&
+name|tls_lock
+argument_list|)
+expr_stmt|;
+block|}
+name|__gthread_set_tls_data
+argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|__gthread_leave_tsd_dtor_context
-argument_list|(
-name|tcb
-argument_list|)
+name|__gthread_leave_tls_dtor_context
+argument_list|()
 expr_stmt|;
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/* Initialize global data used by the TSD system.  */
+comment|/* Initialize global data used by the TLS system.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|tsd_init
+name|tls_init
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|taskDeleteHookAdd
+name|__GTHREAD_MUTEX_INIT_FUNCTION
+argument_list|(
+operator|&
+name|tls_lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function_decl
+specifier|static
+name|void
+name|tls_destructor
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(destructor
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+specifier|static
+name|void
+name|tls_destructor
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|__RTP__
+comment|/* All threads but this one should have exited by now.  */
+name|tls_delete_hook
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* Unregister the hook forcibly.  The counter of active threads may      be incorrect, because constructors (like the C++ library's) and      destructors (like this one) run in the context of the shell rather      than in a task spawned from this module.  */
+name|taskDeleteHookDelete
 argument_list|(
 operator|(
 name|FUNCPTR
 operator|)
-name|tsd_delete_hook
+name|tls_delete_hook
 argument_list|)
 expr_stmt|;
-name|__GTHREAD_MUTEX_INIT_FUNCTION
+endif|#
+directive|endif
+if|if
+condition|(
+name|tls_init_guard
+operator|.
+name|done
+operator|&&
+name|__gthread_mutex_lock
 argument_list|(
 operator|&
-name|tsd_lock
+name|tls_lock
+argument_list|)
+operator|!=
+name|ERROR
+condition|)
+name|semDelete
+argument_list|(
+name|tls_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -528,7 +671,7 @@ name|__gthread_key_t
 modifier|*
 name|keyp
 parameter_list|,
-name|tsd_dtor
+name|tls_dtor
 name|dtor
 parameter_list|)
 block|{
@@ -538,9 +681,9 @@ decl_stmt|;
 name|__gthread_once
 argument_list|(
 operator|&
-name|tsd_init_guard
+name|tls_init_guard
 argument_list|,
-name|tsd_init
+name|tls_init
 argument_list|)
 expr_stmt|;
 if|if
@@ -548,7 +691,7 @@ condition|(
 name|__gthread_mutex_lock
 argument_list|(
 operator|&
-name|tsd_lock
+name|tls_lock
 argument_list|)
 operator|==
 name|ERROR
@@ -584,7 +727,7 @@ comment|/* no room */
 name|__gthread_mutex_unlock
 argument_list|(
 operator|&
-name|tsd_lock
+name|tls_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -592,7 +735,7 @@ name|EAGAIN
 return|;
 name|found_slot
 label|:
-name|tsd_keys
+name|tls_keys
 operator|.
 name|generation
 index|[
@@ -601,7 +744,7 @@ index|]
 operator|++
 expr_stmt|;
 comment|/* making it even */
-name|tsd_keys
+name|tls_keys
 operator|.
 name|dtor
 index|[
@@ -618,7 +761,7 @@ expr_stmt|;
 name|__gthread_mutex_unlock
 argument_list|(
 operator|&
-name|tsd_lock
+name|tls_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -651,9 +794,9 @@ return|;
 name|__gthread_once
 argument_list|(
 operator|&
-name|tsd_init_guard
+name|tls_init_guard
 argument_list|,
-name|tsd_init
+name|tls_init
 argument_list|)
 expr_stmt|;
 if|if
@@ -661,7 +804,7 @@ condition|(
 name|__gthread_mutex_lock
 argument_list|(
 operator|&
-name|tsd_lock
+name|tls_lock
 argument_list|)
 operator|==
 name|ERROR
@@ -681,14 +824,14 @@ block|{
 name|__gthread_mutex_unlock
 argument_list|(
 operator|&
-name|tsd_lock
+name|tls_lock
 argument_list|)
 expr_stmt|;
 return|return
 name|EINVAL
 return|;
 block|}
-name|tsd_keys
+name|tls_keys
 operator|.
 name|generation
 index|[
@@ -697,7 +840,7 @@ index|]
 operator|++
 expr_stmt|;
 comment|/* making it odd */
-name|tsd_keys
+name|tls_keys
 operator|.
 name|dtor
 index|[
@@ -709,7 +852,7 @@ expr_stmt|;
 name|__gthread_mutex_unlock
 argument_list|(
 operator|&
-name|tsd_lock
+name|tls_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -732,7 +875,7 @@ name|key
 parameter_list|)
 block|{
 name|struct
-name|tsd_data
+name|tls_data
 modifier|*
 name|data
 decl_stmt|;
@@ -747,14 +890,8 @@ literal|0
 return|;
 name|data
 operator|=
-name|__gthread_get_tsd_data
-argument_list|(
-name|taskTcb
-argument_list|(
-name|taskIdSelf
+name|__gthread_get_tls_data
 argument_list|()
-argument_list|)
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -773,7 +910,7 @@ index|[
 name|key
 index|]
 operator|!=
-name|tsd_keys
+name|tls_keys
 operator|.
 name|generation
 index|[
@@ -795,7 +932,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set the thread-specific value for KEY.  If KEY is invalid, or    memory allocation fails, returns -1, otherwise 0.     The generation count protects this function against races with    key_create/key_delete; the worst thing that can happen is that a    value is successfully stored into a dead generation (and then    immediately becomes invalid).  However, we do have to make sure    to read tsd_keys.generation[key] atomically.  */
+comment|/* Set the thread-specific value for KEY.  If KEY is invalid, or    memory allocation fails, returns -1, otherwise 0.     The generation count protects this function against races with    key_create/key_delete; the worst thing that can happen is that a    value is successfully stored into a dead generation (and then    immediately becomes invalid).  However, we do have to make sure    to read tls_keys.generation[key] atomically.  */
 end_comment
 
 begin_function
@@ -811,13 +948,9 @@ name|value
 parameter_list|)
 block|{
 name|struct
-name|tsd_data
+name|tls_data
 modifier|*
 name|data
-decl_stmt|;
-name|WIND_TCB
-modifier|*
-name|tcb
 decl_stmt|;
 name|unsigned
 name|int
@@ -832,20 +965,10 @@ condition|)
 return|return
 name|EINVAL
 return|;
-name|tcb
-operator|=
-name|taskTcb
-argument_list|(
-name|taskIdSelf
-argument_list|()
-argument_list|)
-expr_stmt|;
 name|data
 operator|=
-name|__gthread_get_tsd_data
-argument_list|(
-name|tcb
-argument_list|)
+name|__gthread_get_tls_data
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -853,6 +976,42 @@ operator|!
 name|data
 condition|)
 block|{
+if|if
+condition|(
+name|__gthread_mutex_lock
+argument_list|(
+operator|&
+name|tls_lock
+argument_list|)
+operator|==
+name|ERROR
+condition|)
+return|return
+name|ENOMEM
+return|;
+if|if
+condition|(
+name|active_tls_threads
+operator|==
+literal|0
+condition|)
+name|taskDeleteHookAdd
+argument_list|(
+operator|(
+name|FUNCPTR
+operator|)
+name|tls_delete_hook
+argument_list|)
+expr_stmt|;
+name|active_tls_threads
+operator|++
+expr_stmt|;
+name|__gthread_mutex_unlock
+argument_list|(
+operator|&
+name|tls_lock
+argument_list|)
+expr_stmt|;
 name|data
 operator|=
 name|malloc
@@ -860,7 +1019,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|tsd_data
+name|tls_data
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -881,21 +1040,26 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|tsd_data
+name|tls_data
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|__gthread_set_tsd_data
+name|data
+operator|->
+name|owner
+operator|=
+operator|&
+name|self_owner
+expr_stmt|;
+name|__gthread_set_tls_data
 argument_list|(
-name|tcb
-argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
 block|}
 name|generation
 operator|=
-name|tsd_keys
+name|tls_keys
 operator|.
 name|generation
 index|[
@@ -934,6 +1098,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GTHREADS */
+end_comment
 
 end_unit
 

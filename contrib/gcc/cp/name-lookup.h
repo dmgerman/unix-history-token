@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations for C++ name lookup routines.    Copyright (C) 2003, 2004 Free Software Foundation, Inc.    Contributed by Gabriel Dos Reis<gdr@integrable-solutions.net>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Declarations for C++ name lookup routines.    Copyright (C) 2003, 2004, 2005  Free Software Foundation, Inc.    Contributed by Gabriel Dos Reis<gdr@integrable-solutions.net>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -130,16 +130,6 @@ end_define
 begin_function_decl
 specifier|extern
 name|void
-name|binding_table_remove_anonymous_types
-parameter_list|(
-name|binding_table
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|binding_table_foreach
 parameter_list|(
 name|binding_table
@@ -164,30 +154,8 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|cxx_remember_type_decls
-parameter_list|(
-name|binding_table
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_escape
 end_escape
-
-begin_comment
-comment|/* Datatype used to temporarily save C++ bindings (for implicit    instantiations purposes and like).  Implemented in decl.c.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|cxx_saved_binding
-name|cxx_saved_binding
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* Datatype that represents binding established by a declaration between    a name and a C++ entity.  */
@@ -285,6 +253,57 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/* Datatype used to temporarily save C++ bindings (for implicit    instantiations purposes and like).  Implemented in decl.c.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|cxx_saved_binding
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+comment|/* The name of the current binding.  */
+name|tree
+name|identifier
+block|;
+comment|/* The binding we're saving.  */
+name|cxx_binding
+modifier|*
+name|binding
+block|;
+name|tree
+name|real_type_value
+block|; }
+end_typedef
+
+begin_expr_stmt
+name|cxx_saved_binding
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEF_VEC_O
+argument_list|(
+name|cxx_saved_binding
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEF_VEC_ALLOC_O
+argument_list|(
+name|cxx_saved_binding
+argument_list|,
+name|gc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|extern
 name|tree
@@ -314,26 +333,6 @@ name|pop_binding
 parameter_list|(
 name|tree
 parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|clear_identifier_class_values
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|tree
-name|constructor_name_full
-parameter_list|(
 name|tree
 parameter_list|)
 function_decl|;
@@ -380,7 +379,7 @@ block|,
 comment|/* An ordinary block scope.  This enumerator must 			have the value zero because "cp_binding_level" 			is initialized by using "memset" to set the 			contents to zero, and the default scope kind 			is "sk_block".  */
 name|sk_cleanup
 block|,
-comment|/* A scope for (pseudo-)scope for cleanup.  It is                         peusdo in that it is transparent to name lookup                         activities.  */
+comment|/* A scope for (pseudo-)scope for cleanup.  It is 			pseudo in that it is transparent to name lookup 			activities.  */
 name|sk_try
 block|,
 comment|/* A try-block.  */
@@ -403,11 +402,84 @@ name|sk_template_parms
 block|,
 comment|/* A scope for template parameters.  */
 name|sk_template_spec
+block|,
 comment|/* Like sk_template_parms, but for an explicit 			specialization.  Since, by definition, an 			explicit specialization is introduced by 			"template<>", this scope is always empty.  */
+name|sk_omp
+comment|/* An OpenMP structured block.  */
 block|}
 name|scope_kind
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* The scope where the class/struct/union/enum tag applies.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|tag_scope
+block|{
+name|ts_current
+init|=
+literal|0
+block|,
+comment|/* Current scope only.  This is for the 			     class-key identifier; 			   case mentioned in [basic.lookup.elab]/2, 			   or the class/enum definition 			     class-key identifier { ... };  */
+name|ts_global
+init|=
+literal|1
+block|,
+comment|/* All scopes.  This is the 3.4.1 			   [basic.lookup.unqual] lookup mentioned 			   in [basic.lookup.elab]/2.  */
+name|ts_within_enclosing_non_class
+init|=
+literal|2
+comment|/* Search within enclosing non-class 					   only, for friend class lookup 					   according to [namespace.memdef]/3 					   and [class.friend]/9.  */
+block|}
+name|tag_scope
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|cp_class_binding
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+block|{
+name|cxx_binding
+name|base
+block|;
+comment|/* The bound name.  */
+name|tree
+name|identifier
+block|; }
+end_typedef
+
+begin_expr_stmt
+name|cp_class_binding
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEF_VEC_O
+argument_list|(
+name|cp_class_binding
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEF_VEC_ALLOC_O
+argument_list|(
+name|cp_class_binding
+argument_list|,
+name|gc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* For each binding contour we allocate a binding_level structure    which records the names defined in that contour.    Contours include:     0) the global one     1) one for each function definition,        where internal declarations of the parameters appear.     2) one for each compound statement,        to record its declarations.     The current meaning of a name can be found by searching the levels    from the current one out to the global one.     Off to the side, may be the class_binding_level.  This exists only    to catch class-local declarations.  It is otherwise nonexistent.     Also there may be binding levels that catch cleanups that must be    run when exceptions occur.  Thus, to see whether a name is bound in    the current scope, it is not enough to look in the    CURRENT_BINDING_LEVEL.  You should use lookup_name_current_level    instead.  */
@@ -439,16 +511,18 @@ name|tree
 name|namespaces
 decl_stmt|;
 comment|/* An array of static functions and variables (for namespaces only) */
-name|varray_type
+name|VEC
+argument_list|(
+name|tree
+argument_list|,
+name|gc
+argument_list|)
+operator|*
 name|static_decls
-decl_stmt|;
+expr_stmt|;
 comment|/* A chain of VTABLE_DECL nodes.  */
 name|tree
 name|vtables
-decl_stmt|;
-comment|/* A dictionary for looking up user-defined-types.  */
-name|binding_table
-name|type_decls
 decl_stmt|;
 comment|/* A list of USING_DECL nodes.  */
 name|tree
@@ -458,11 +532,17 @@ comment|/* A list of used namespaces. PURPOSE is the namespace,        VALUE the
 name|tree
 name|using_directives
 decl_stmt|;
-comment|/* If this binding level is the binding level for a class, then        class_shadowed is a TREE_LIST.  The TREE_PURPOSE of each node        is the name of an entity bound in the class.  The TREE_TYPE is        the DECL bound by this name in the class.  */
-name|tree
+comment|/* For the binding level corresponding to a class, the entities        declared in the class or its base classes.  */
+name|VEC
+argument_list|(
+name|cp_class_binding
+argument_list|,
+name|gc
+argument_list|)
+operator|*
 name|class_shadowed
-decl_stmt|;
-comment|/* Similar to class_shadowed, but for IDENTIFIER_TYPE_VALUE, and        is used for all binding levels. In addition the TREE_VALUE is the        IDENTIFIER_TYPE_VALUE before we entered the class.  */
+expr_stmt|;
+comment|/* Similar to class_shadowed, but for IDENTIFIER_TYPE_VALUE, and        is used for all binding levels. The TREE_PURPOSE is the name of        the entity, the TREE_TYPE is the associated type.  In addition        the TREE_VALUE is the IDENTIFIER_TYPE_VALUE before we entered        the class.  */
 name|tree
 name|type_shadowed
 decl_stmt|;
@@ -488,11 +568,15 @@ comment|/* List of VAR_DECLS saved from a previous for statement.        These w
 name|tree
 name|dead_vars_from_for
 decl_stmt|;
+comment|/* STATEMENT_LIST for statements in this binding contour.        Only used at present for SK_CLEANUP temporary bindings.  */
+name|tree
+name|statement_list
+decl_stmt|;
 comment|/* Binding depth at which this level began.  */
 name|int
 name|binding_depth
 decl_stmt|;
-comment|/* The kind of scope that this object represents.  However, a        SK_TEMPLATE_SPEC scope is represented with KIND set to        SK_TEMPALTE_PARMS and EXPLICIT_SPEC_P set to true.  */
+comment|/* The kind of scope that this object represents.  However, a        SK_TEMPLATE_SPEC scope is represented with KIND set to        SK_TEMPLATE_PARMS and EXPLICIT_SPEC_P set to true.  */
 name|ENUM_BITFIELD
 argument_list|(
 argument|scope_kind
@@ -524,7 +608,13 @@ name|have_cleanups
 range|:
 literal|1
 decl_stmt|;
-comment|/* 22 bits left to fill a 32-bit word.  */
+comment|/* Nonzero if this level has associated visibility which we should pop        when leaving the scope. */
+name|unsigned
+name|has_visibility
+range|:
+literal|1
+decl_stmt|;
+comment|/* 23 bits left to fill a 32-bit word.  */
 block|}
 end_decl_stmt
 
@@ -708,17 +798,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|print_binding_level
-parameter_list|(
-name|cxx_scope
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|push_to_top_level
 parameter_list|(
 name|void
@@ -770,7 +849,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|bool
+name|tree
 name|push_scope
 parameter_list|(
 name|tree
@@ -788,6 +867,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|tree
+name|push_inner_scope
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|pop_inner_scope
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|push_binding_level
+parameter_list|(
+name|struct
+name|cp_binding_level
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_escape
 end_escape
 
@@ -796,6 +909,18 @@ specifier|extern
 name|void
 name|push_namespace
 parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|push_namespace_with_attribs
+parameter_list|(
+name|tree
+parameter_list|,
 name|tree
 parameter_list|)
 function_decl|;
@@ -860,6 +985,8 @@ name|tree
 parameter_list|,
 name|cxx_scope
 modifier|*
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -867,37 +994,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|tree
-name|lookup_tag
-parameter_list|(
-name|enum
-name|tree_code
-parameter_list|,
-name|tree
-parameter_list|,
-name|cxx_scope
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|tree
-name|lookup_tag_reverse
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|tree
-name|lookup_name
+name|lookup_name_prefer_type
 parameter_list|(
 name|tree
 parameter_list|,
@@ -917,9 +1014,23 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
+name|bool
+parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|lookup_type_scope
+parameter_list|(
+name|tree
+parameter_list|,
+name|tag_scope
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -952,11 +1063,19 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|tree
-name|lookup_namespace_name
+name|bool
+name|hidden_name_p
 parameter_list|(
 name|tree
-parameter_list|,
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|remove_hidden_names
+parameter_list|(
 name|tree
 parameter_list|)
 function_decl|;
@@ -996,6 +1115,8 @@ parameter_list|(
 name|tree
 parameter_list|,
 name|tree
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1016,18 +1137,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|push_class_binding
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|bool
 name|pushdecl_class_level
 parameter_list|(
@@ -1042,6 +1151,8 @@ name|tree
 name|pushdecl_namespace_level
 parameter_list|(
 name|tree
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1053,16 +1164,6 @@ name|push_class_level_binding
 parameter_list|(
 name|tree
 parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|storetags
-parameter_list|(
 name|tree
 parameter_list|)
 function_decl|;
@@ -1091,16 +1192,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|set_class_shadows
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|set_decl_namespace
 parameter_list|(
 name|tree
@@ -1108,16 +1199,6 @@ parameter_list|,
 name|tree
 parameter_list|,
 name|bool
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|tree
-name|current_decl_namespace
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1188,6 +1269,8 @@ name|tree
 name|do_class_using_decl
 parameter_list|(
 name|tree
+parameter_list|,
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1232,6 +1315,44 @@ begin_function_decl
 specifier|extern
 name|void
 name|parse_using_directive
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|innermost_non_namespace_value
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|cxx_binding
+modifier|*
+name|outer_binding
+parameter_list|(
+name|tree
+parameter_list|,
+name|cxx_binding
+modifier|*
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|cp_emit_debug_info_for_using
 parameter_list|(
 name|tree
 parameter_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for Advanced RISC Machines    ARM compilation, AOF Assembler.    Copyright (C) 1995, 1996, 1997, 2000, 2003 Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rearnsha@armltd.co.uk)     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for Advanced RISC Machines    ARM compilation, AOF Assembler.    Copyright (C) 1995, 1996, 1997, 2000, 2003, 2004    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rearnsha@armltd.co.uk)     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street, Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_escape
@@ -50,7 +50,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"%{g -g} -arch 4 \ -apcs 3%{mapcs-32:/32bit}%{mapcs-26:/26bit}%{!mapcs-26:%{!macps-32:/26bit}}"
+value|"%{g -g} -arch 4 -apcs 3/32bit"
 end_define
 
 begin_endif
@@ -81,63 +81,6 @@ define|#
 directive|define
 name|LIBGCC_SPEC
 value|"libgcc.a%s"
-end_define
-
-begin_comment
-comment|/* Dividing the Output into Sections (Text, Data, ...) */
-end_comment
-
-begin_comment
-comment|/* AOF Assembler syntax is a nightmare when it comes to areas, since once    we change from one area to another, we can't go back again.  Instead,    we must create a new area with the same attributes and add the new output    to that.  Unfortunately, there is nothing we can do here to guarantee that    two areas with the same attributes will be linked adjacently in the    resulting executable, so we have to be careful not to do pc-relative     addressing across such boundaries.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TEXT_SECTION_ASM_OP
-value|aof_text_section ()
-end_define
-
-begin_define
-define|#
-directive|define
-name|DATA_SECTION_ASM_OP
-value|aof_data_section ()
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTIONS
-value|in_zero_init, in_common
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTION_FUNCTIONS
-define|\
-value|ZERO_INIT_SECTION		\   COMMON_SECTION
-end_define
-
-begin_define
-define|#
-directive|define
-name|ZERO_INIT_SECTION
-define|\
-value|void								\   zero_init_section ()						\   {								\     static int zero_init_count = 1;				\ 								\     if (in_section != in_zero_init)				\       {								\         fprintf (asm_out_file, "\tAREA |C$$zidata%d|,NOINIT\n",	\ 	         zero_init_count++);				\         in_section = in_zero_init;				\       }								\   }
-end_define
-
-begin_comment
-comment|/* Used by ASM_OUTPUT_COMMON (below) to tell varasm.c that we've    changed areas.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COMMON_SECTION
-define|\
-value|void								\   common_section ()						\   {								\     if (in_section != in_common)				\       in_section = in_common;					\   }
 end_define
 
 begin_define
@@ -197,6 +140,13 @@ define|#
 directive|define
 name|JUMP_TABLES_IN_TEXT_SECTION
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_INIT_SECTIONS
+value|aof_asm_init_sections
 end_define
 
 begin_comment
@@ -281,7 +231,7 @@ parameter_list|,
 name|ROUNDED
 parameter_list|)
 define|\
-value|(common_section (),						\    fprintf ((STREAM), "\tAREA "),				\    assemble_name ((STREAM), (NAME)),				\    fprintf ((STREAM), ", DATA, COMMON\n\t%% %d\t%s size=%d\n",	\ 	    (int)(ROUNDED), ASM_COMMENT_START, (int)(SIZE)))
+value|(in_section = NULL,						\    fprintf ((STREAM), "\tAREA "),				\    assemble_name ((STREAM), (NAME)),				\    fprintf ((STREAM), ", DATA, COMMON\n\t%% %d\t%s size=%d\n",	\ 	    (int)(ROUNDED), ASM_COMMENT_START, (int)(SIZE)))
 end_define
 
 begin_define
@@ -449,7 +399,7 @@ define|#
 directive|define
 name|REGISTER_NAMES
 define|\
-value|{						\   "a1", "a2", "a3", "a4",			\   "v1", "v2", "v3", "v4",			\   "v5", "v6", "sl", "fp",			\   "ip", "sp", "lr", "pc",			\   "f0", "f1", "f2", "f3",			\   "f4", "f5", "f6", "f7",			\   "cc", "sfp", "afp",				\   "mv0",   "mv1",   "mv2",   "mv3",		\   "mv4",   "mv5",   "mv6",   "mv7",		\   "mv8",   "mv9",   "mv10",  "mv11",		\   "mv12",  "mv13",  "mv14",  "mv15",		\   "wcgr0", "wcgr1", "wcgr2", "wcgr3",		\   "wr0",   "wr1",   "wr2",   "wr3",		\   "wr4",   "wr5",   "wr6",   "wr7",		\   "wr8",   "wr9",   "wr10",  "wr11",		\   "wr12",  "wr13",  "wr14",  "wr15"		\ }
+value|{						\   "a1", "a2", "a3", "a4",			\   "v1", "v2", "v3", "v4",			\   "v5", "v6", "sl", "fp",			\   "ip", "sp", "lr", "pc",			\   "f0", "f1", "f2", "f3",			\   "f4", "f5", "f6", "f7",			\   "cc", "sfp", "afp",				\   "mv0",   "mv1",   "mv2",   "mv3",		\   "mv4",   "mv5",   "mv6",   "mv7",		\   "mv8",   "mv9",   "mv10",  "mv11",		\   "mv12",  "mv13",  "mv14",  "mv15",		\   "wcgr0", "wcgr1", "wcgr2", "wcgr3",		\   "wr0",   "wr1",   "wr2",   "wr3",		\   "wr4",   "wr5",   "wr6",   "wr7",		\   "wr8",   "wr9",   "wr10",  "wr11",		\   "wr12",  "wr13",  "wr14",  "wr15",		\   "s0",  "s1",  "s2",  "s3",  "s4",  "s5",  "s6",  "s7",  \   "s8",  "s9",  "s10", "s11", "s12", "s13", "s14", "s15", \   "s16", "s17", "s18", "s19", "s20", "s21", "s22", "s23", \   "s24", "s25", "s26", "s27", "s28", "s29", "s30", "s31",  \   "vfpcc"					\ }
 end_define
 
 begin_define
@@ -457,7 +407,7 @@ define|#
 directive|define
 name|ADDITIONAL_REGISTER_NAMES
 define|\
-value|{						\   {"r0", 0}, {"a1", 0},				\   {"r1", 1}, {"a2", 1},				\   {"r2", 2}, {"a3", 2},				\   {"r3", 3}, {"a4", 3},		      		\   {"r4", 4}, {"v1", 4},				\   {"r5", 5}, {"v2", 5},				\   {"r6", 6}, {"v3", 6},				\   {"r7", 7}, {"wr", 7},				\   {"r8", 8}, {"v5", 8},				\   {"r9", 9}, {"v6", 9},				\   {"r10", 10}, {"sl", 10}, {"v7", 10},		\   {"r11", 11}, {"fp", 11},			\   {"r12", 12}, {"ip", 12}, 			\   {"r13", 13}, {"sp", 13}, 			\   {"r14", 14}, {"lr", 14},			\   {"r15", 15}, {"pc", 15}			\ }
+value|{						\   {"r0", 0}, {"a1", 0},				\   {"r1", 1}, {"a2", 1},				\   {"r2", 2}, {"a3", 2},				\   {"r3", 3}, {"a4", 3},		      		\   {"r4", 4}, {"v1", 4},				\   {"r5", 5}, {"v2", 5},				\   {"r6", 6}, {"v3", 6},				\   {"r7", 7}, {"wr", 7},				\   {"r8", 8}, {"v5", 8},				\   {"r9", 9}, {"v6", 9},				\   {"r10", 10}, {"sl", 10}, {"v7", 10},		\   {"r11", 11}, {"fp", 11},			\   {"r12", 12}, {"ip", 12}, 			\   {"r13", 13}, {"sp", 13}, 			\   {"r14", 14}, {"lr", 14},			\   {"r15", 15}, {"pc", 15},			\   {"d0", 63},					\   {"d1", 65},					\   {"d2", 67},					\   {"d3", 69},					\   {"d4", 71},					\   {"d5", 73},					\   {"d6", 75},					\   {"d7", 77},					\   {"d8", 79},					\   {"d9", 81},					\   {"d10", 83},					\   {"d11", 85},					\   {"d12", 87},					\   {"d13", 89},					\   {"d14", 91},					\   {"d15", 93}					\ }
 end_define
 
 begin_define

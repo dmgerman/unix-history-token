@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ET-trees data structure implementation.    Contributed by Pavel Nejedly    Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with libiberty; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.    The ET-forest structure is described in:     D. D. Sleator and R. E. Tarjan. A data structure for dynamic trees.     J.  G'omput. System Sci., 26(3):362 381, 1983. */
+comment|/* ET-trees data structure implementation.    Contributed by Pavel Nejedly    Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with libiberty; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.    The ET-forest structure is described in:     D. D. Sleator and R. E. Tarjan. A data structure for dynamic trees.     J.  G'omput. System Sci., 26(3):362 381, 1983. */
 end_comment
 
 begin_include
@@ -67,7 +67,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* The occurence of a node in the et tree.  */
+comment|/* The occurrence of a node in the et tree.  */
 end_comment
 
 begin_struct
@@ -111,7 +111,7 @@ name|et_occ
 modifier|*
 name|min_occ
 decl_stmt|;
-comment|/* The occurence in the subtree with the minimal 				   depth.  */
+comment|/* The occurrence in the subtree with the minimal 				   depth.  */
 block|}
 struct|;
 end_struct
@@ -126,7 +126,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|alloc_pool
-name|et_occurences
+name|et_occurrences
 decl_stmt|;
 end_decl_stmt
 
@@ -238,14 +238,12 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG_ET
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|occ
-operator|==
+operator|!=
 name|t
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -292,14 +290,12 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG_ET
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|occ
-operator|==
+operator|!=
 name|t
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -323,7 +319,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Recompute minimum for occurence OCC.  */
+comment|/* Recompute minimum for occurrence OCC.  */
 end_comment
 
 begin_function
@@ -433,7 +429,7 @@ name|DEBUG_ET
 end_ifdef
 
 begin_comment
-comment|/* Checks whether neighbourhood of OCC seems sane.  */
+comment|/* Checks whether neighborhood of OCC seems sane.  */
 end_comment
 
 begin_function
@@ -453,55 +449,48 @@ operator|!
 name|occ
 condition|)
 return|return;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|occ
 operator|->
 name|parent
-operator|==
+operator|!=
 name|occ
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|occ
 operator|->
 name|prev
-operator|==
+operator|!=
 name|occ
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|occ
 operator|->
 name|next
-operator|==
+operator|!=
 name|occ
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
+operator|!
 name|occ
 operator|->
 name|next
-operator|&&
+operator|||
 name|occ
 operator|->
 name|next
-operator|==
+operator|!=
 name|occ
 operator|->
 name|prev
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -510,31 +499,27 @@ operator|->
 name|next
 condition|)
 block|{
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|occ
 operator|->
 name|next
-operator|==
-name|occ
-operator|->
-name|parent
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|occ
-operator|->
-name|next
-operator|->
-name|parent
 operator|!=
 name|occ
-condition|)
-name|abort
-argument_list|()
+operator|->
+name|parent
+argument_list|)
+expr_stmt|;
+name|gcc_assert
+argument_list|(
+name|occ
+operator|->
+name|next
+operator|->
+name|parent
+operator|==
+name|occ
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -544,57 +529,52 @@ operator|->
 name|prev
 condition|)
 block|{
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|occ
+operator|->
+name|prev
+operator|!=
+name|occ
+operator|->
+name|parent
+argument_list|)
+expr_stmt|;
+name|gcc_assert
+argument_list|(
+name|occ
+operator|->
+name|prev
+operator|->
+name|parent
+operator|==
+name|occ
+argument_list|)
+expr_stmt|;
+block|}
+name|gcc_assert
+argument_list|(
+operator|!
+name|occ
+operator|->
+name|parent
+operator|||
+name|occ
+operator|->
+name|parent
 operator|->
 name|prev
 operator|==
 name|occ
-operator|->
-name|parent
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|occ
-operator|->
-name|prev
-operator|->
-name|parent
-operator|!=
-name|occ
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|occ
-operator|->
-name|parent
-operator|&&
-name|occ
-operator|->
-name|parent
-operator|->
-name|prev
-operator|!=
-name|occ
-operator|&&
+operator|||
 name|occ
 operator|->
 name|parent
 operator|->
 name|next
-operator|!=
+operator|==
 name|occ
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -687,6 +667,17 @@ begin_comment
 comment|/* For recording the paths.  */
 end_comment
 
+begin_comment
+comment|/* An ad-hoc constant; if the function has more blocks, this won't work,    but since it is used for debugging only, it does not matter.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_NODES
+value|100000
+end_define
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -700,7 +691,7 @@ name|void
 modifier|*
 name|datas
 index|[
-literal|100000
+name|MAX_NODES
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -710,7 +701,7 @@ specifier|static
 name|int
 name|depths
 index|[
-literal|100000
+name|MAX_NODES
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -799,6 +790,13 @@ argument_list|,
 name|depth
 argument_list|)
 expr_stmt|;
+name|gcc_assert
+argument_list|(
+name|len
+operator|<
+name|MAX_NODES
+argument_list|)
+expr_stmt|;
 name|depths
 index|[
 name|len
@@ -847,10 +845,10 @@ operator|=
 name|m
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|mn
-operator|!=
+operator|==
 name|occ
 operator|->
 name|min
@@ -860,9 +858,7 @@ operator|-
 name|occ
 operator|->
 name|depth
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 return|return
 name|mn
@@ -983,26 +979,24 @@ block|}
 name|len
 operator|--
 expr_stmt|;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|depths
 index|[
 name|len
 index|]
-operator|!=
+operator|==
 name|depth
-operator|||
+operator|&&
 name|datas
 index|[
 name|len
 index|]
-operator|!=
+operator|==
 name|occ
 operator|->
 name|of
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1033,10 +1027,10 @@ operator|=
 name|m
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|mn
-operator|!=
+operator|==
 name|occ
 operator|->
 name|min
@@ -1046,9 +1040,7 @@ operator|-
 name|occ
 operator|->
 name|depth
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 return|return
 name|mn
@@ -1090,14 +1082,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
+operator|!
 name|len
-operator|!=
-literal|0
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1108,7 +1097,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Splay the occurence OCC to the root of the tree.  */
+comment|/* Splay the occurrence OCC to the root of the tree.  */
 end_comment
 
 begin_function
@@ -1741,7 +1730,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Create a new et tree occurence of NODE.  */
+comment|/* Create a new et tree occurrence of NODE.  */
 end_comment
 
 begin_function
@@ -1765,9 +1754,9 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|et_occurences
+name|et_occurrences
 condition|)
-name|et_occurences
+name|et_occurrences
 operator|=
 name|create_alloc_pool
 argument_list|(
@@ -1786,7 +1775,7 @@ name|nw
 operator|=
 name|pool_alloc
 argument_list|(
-name|et_occurences
+name|et_occurrences
 argument_list|)
 expr_stmt|;
 name|nw
@@ -1975,7 +1964,7 @@ argument_list|)
 expr_stmt|;
 name|pool_free
 argument_list|(
-name|et_occurences
+name|et_occurrences
 argument_list|,
 name|t
 operator|->
@@ -1987,6 +1976,80 @@ argument_list|(
 name|et_nodes
 argument_list|,
 name|t
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Releases et tree T without maintaining other nodes.  */
+end_comment
+
+begin_function
+name|void
+name|et_free_tree_force
+parameter_list|(
+name|struct
+name|et_node
+modifier|*
+name|t
+parameter_list|)
+block|{
+name|pool_free
+argument_list|(
+name|et_occurrences
+argument_list|,
+name|t
+operator|->
+name|rightmost_occ
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|->
+name|parent_occ
+condition|)
+name|pool_free
+argument_list|(
+name|et_occurrences
+argument_list|,
+name|t
+operator|->
+name|parent_occ
+argument_list|)
+expr_stmt|;
+name|pool_free
+argument_list|(
+name|et_nodes
+argument_list|,
+name|t
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Release the alloc pools, if they are empty.  */
+end_comment
+
+begin_function
+name|void
+name|et_free_pools
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|free_alloc_pool_if_empty
+argument_list|(
+operator|&
+name|et_occurrences
+argument_list|)
+expr_stmt|;
+name|free_alloc_pool_if_empty
+argument_list|(
+operator|&
+name|et_nodes
 argument_list|)
 expr_stmt|;
 block|}
@@ -2368,7 +2431,7 @@ literal|0
 expr_stmt|;
 name|pool_free
 argument_list|(
-name|et_occurences
+name|et_occurrences
 argument_list|,
 name|p_occ
 argument_list|)

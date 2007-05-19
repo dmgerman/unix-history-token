@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for    generic System V Release 3 system.    Copyright (C) 1991, 1996, 2000, 2002 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Operating system specific defines to be used when targeting GCC for    generic System V Release 3 system.    Copyright (C) 1991, 1996, 2000, 2002, 2004 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
 end_comment
 
 begin_comment
@@ -97,7 +97,7 @@ parameter_list|,
 name|ROUNDED
 parameter_list|)
 define|\
-value|do {							\     int align = exact_log2 (ROUNDED);			\     if (align> 2) align = 2;				\     data_section ();					\     ASM_OUTPUT_ALIGN ((FILE), align == -1 ? 2 : align);	\     ASM_OUTPUT_LABEL ((FILE), (NAME));			\     fprintf ((FILE), "\t.set .,.+%u\n", (int)(ROUNDED));	\   } while (0)
+value|do {							\     int align = exact_log2 (ROUNDED);			\     if (align> 2) align = 2;				\     switch_to_section (data_section);			\     ASM_OUTPUT_ALIGN ((FILE), align == -1 ? 2 : align);	\     ASM_OUTPUT_LABEL ((FILE), (NAME));			\     fprintf ((FILE), "\t.set .,.+%u\n", (int)(ROUNDED));	\   } while (0)
 end_define
 
 begin_comment
@@ -131,16 +131,6 @@ begin_define
 define|#
 directive|define
 name|NO_DOLLAR_IN_LABEL
-end_define
-
-begin_comment
-comment|/* Implicit library calls should use memcpy, not bcopy, etc.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_MEM_FUNCTIONS
 end_define
 
 begin_comment
@@ -355,49 +345,6 @@ end_endif
 begin_comment
 comment|/* STACK_GROWS_DOWNWARD */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTIONS
-value|in_init, in_fini
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTION_FUNCTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTION_FUNCTIONS
-define|\
-value|INIT_SECTION_FUNCTION						\   FINI_SECTION_FUNCTION
-end_define
-
-begin_define
-define|#
-directive|define
-name|INIT_SECTION_FUNCTION
-define|\
-value|void								\ init_section ()							\ {								\   if (in_section != in_init)					\     {								\       fprintf (asm_out_file, "%s\n", INIT_SECTION_ASM_OP);	\       in_section = in_init;					\     }								\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|FINI_SECTION_FUNCTION
-define|\
-value|void								\ fini_section ()							\ {								\   if (in_section != in_fini)					\     {								\       fprintf (asm_out_file, "%s\n", FINI_SECTION_ASM_OP);	\       in_section = in_fini;					\     }								\ }
-end_define
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running SCO Unix System V 3.2 Version 5.    Copyright (C) 1992, 1995, 1996, 1997, 1998, 1999, 2000, 2002, 2003    Free Software Foundation, Inc.    Contributed by Kean Johnston (jkj@sco.com)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running SCO Unix System V 3.2 Version 5.    Copyright (C) 1992, 1995, 1996, 1997, 1998, 1999, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Kean Johnston (jkj@sco.com)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_undef
@@ -259,12 +259,6 @@ directive|undef
 name|WINT_TYPE
 end_undef
 
-begin_undef
-undef|#
-directive|undef
-name|LONG_DOUBLE_TYPE_SIZE
-end_undef
-
 begin_define
 define|#
 directive|define
@@ -298,13 +292,6 @@ define|#
 directive|define
 name|WINT_TYPE
 value|"long int"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LONG_DOUBLE_TYPE_SIZE
-value|96
 end_define
 
 begin_comment
@@ -467,7 +454,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do								\     {								\ 	builtin_define ("__unix");				\ 	builtin_define ("_SCO_DS");				\ 	builtin_define ("_SCO_DS_LL");				\ 	builtin_define ("_SCO_ELF");				\ 	builtin_define ("_M_I386");				\ 	builtin_define ("_M_XENIX");				\ 	builtin_define ("_M_UNIX");				\ 	builtin_assert ("system=svr3");				\ 	if (flag_iso)						\ 	  cpp_define (pfile, "_STRICT_ANSI");			\ 	if (flag_pic)						\ 	  {							\ 	    builtin_define ("__PIC__");				\ 	    builtin_define ("__pic__");				\ 	  }							\     }								\   while (0)
+value|do								\     {								\ 	builtin_define ("__unix");				\ 	builtin_define ("_SCO_DS");				\ 	builtin_define ("_SCO_DS_LL");				\ 	builtin_define ("_SCO_ELF");				\ 	builtin_define ("_M_I386");				\ 	builtin_define ("_M_XENIX");				\ 	builtin_define ("_M_UNIX");				\ 	builtin_assert ("system=svr3");				\ 	if (flag_iso)						\ 	  cpp_define (pfile, "_STRICT_ANSI");			\     }								\   while (0)
 end_define
 
 begin_undef
@@ -494,7 +481,7 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"%{!shared:%{!symbolic:%{!G:-E%{Xa:a}%{!Xa:%{Xc:c}%{!Xc:%{Xk:k}%{!Xk:%{Xt:t}%{!Xt:a}}}},%{ansi:ansi}%{!ansi:%{posix:posix}%{!posix:%{Xpg4:xpg4}%{!Xpg4:%{Xpg4plus:XPG4PLUS}%{!Xpg4plus:%{Xods30:ods30}%{!Xods30:XPG4PLUS}}}}},ELF}}} \   %{Wl,*:%*} %{YP,*} %{YL,*} %{YU,*} \   %{!YP,*:%{p:-YP,/usr/ccs/libp:/lib/libp:/usr/lib/libp:/usr/ccs/lib:/lib:/usr/lib} \    %{!p:-YP,/usr/ccs/lib:/lib:/usr/lib}} \   %{h*} %{static:-dn -Bstatic %{G:%e-G and -static are mutually exclusive}} \   %{shared:%{!G:-G}} %{G:%{!shared:-G}} %{shared:%{G:-G}} \   %{shared:-dy %{symbolic:-Bsymbolic -G} %{z*}} %{R*} %{Y*} \   %{Qn:} %{!Qy:-Qn} -z alt_resolve"
+value|"%{!shared:%{!symbolic:%{!G:-E%{Xa:a}%{!Xa:%{Xc:c}%{!Xc:%{Xk:k}%{!Xk:%{Xt:t}%{!Xt:a}}}},%{ansi:ansi}%{!ansi:%{posix:posix}%{!posix:%{Xpg4:xpg4}%{!Xpg4:%{Xpg4plus:XPG4PLUS}%{!Xpg4plus:%{Xods30:ods30}%{!Xods30:XPG4PLUS}}}}},ELF}}} \   %{YP,*} %{YL,*} %{YU,*} \   %{!YP,*:%{p:-YP,/usr/ccs/libp:/lib/libp:/usr/lib/libp:/usr/ccs/lib:/lib:/usr/lib} \    %{!p:-YP,/usr/ccs/lib:/lib:/usr/lib}} \   %{h*} %{static:-dn -Bstatic %{G:%e-G and -static are mutually exclusive}} \   %{shared:%{!G:-G}} %{G:%{!shared:-G}} %{shared:%{G:-G}} \   %{shared:-dy %{symbolic:-Bsymbolic -G} %{z*}} %{R*} %{Y*} \   %{Qn:} %{!Qy:-Qn} -z alt_resolve"
 end_define
 
 begin_comment
@@ -527,42 +514,6 @@ directive|define
 name|LIBGCC_SPEC
 define|\
 value|"%{!shared:%{!G:-lgcc}}"
-end_define
-
-begin_comment
-comment|/* Here for legacy support only so we still accept -melf flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_COFF
-value|010000000000
-end_define
-
-begin_comment
-comment|/* Mask for COFF generation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_ELF
-value|(1)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_SWITCHES
-define|\
-value|{ "elf", -MASK_COFF, N_("Generate ELF output")  },
 end_define
 
 begin_comment

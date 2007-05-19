@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Save and restore call-clobbered registers which are live across a call.    Copyright (C) 1989, 1992, 1994, 1995, 1997, 1998,    1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Save and restore call-clobbered registers which are live across a call.    Copyright (C) 1989, 1992, 1994, 1995, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"regs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"insn-config.h"
 end_include
 
@@ -43,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|"flags.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"regs.h"
 end_include
 
 begin_include
@@ -97,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"tm_p.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"addresses.h"
 end_include
 
 begin_ifndef
@@ -245,17 +251,6 @@ begin_decl_stmt
 specifier|static
 name|HARD_REG_SET
 name|referenced_regs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Computed in mark_set_regs, holds all registers set by the current    instruction.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|HARD_REG_SET
-name|this_insn_sets
 decl_stmt|;
 end_decl_stmt
 
@@ -540,7 +535,7 @@ index|[
 operator|(
 name|int
 operator|)
-name|MODE_BASE_REG_CLASS
+name|base_reg_class
 argument_list|(
 name|regno_save_mode
 index|[
@@ -549,6 +544,10 @@ index|]
 index|[
 literal|1
 index|]
+argument_list|,
+name|PLUS
+argument_list|,
+name|CONST_INT
 argument_list|)
 index|]
 argument_list|,
@@ -556,14 +555,12 @@ name|i
 argument_list|)
 condition|)
 break|break;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|i
-operator|==
+operator|<
 name|FIRST_PSEUDO_REGISTER
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|addr_reg
 operator|=
@@ -863,7 +860,7 @@ argument_list|(
 name|restinsn
 argument_list|)
 expr_stmt|;
-comment|/* Now extract both insns and see if we can meet their              constraints.  */
+comment|/* Now extract both insns and see if we can meet their 	     constraints.  */
 name|ok
 operator|=
 operator|(
@@ -1192,10 +1189,11 @@ name|endregno
 init|=
 name|regno
 operator|+
-name|HARD_REGNO_NREGS
-argument_list|(
+name|hard_regno_nregs
+index|[
 name|regno
-argument_list|,
+index|]
+index|[
 name|GET_MODE
 argument_list|(
 name|regno_reg_rtx
@@ -1203,7 +1201,7 @@ index|[
 name|i
 index|]
 argument_list|)
-argument_list|)
+index|]
 decl_stmt|;
 for|for
 control|(
@@ -1536,6 +1534,10 @@ index|[
 name|FIRST_PSEUDO_REGISTER
 index|]
 decl_stmt|;
+comment|/* Computed in mark_set_regs, holds all registers set by the current      instruction.  */
+name|HARD_REG_SET
+name|this_insn_sets
+decl_stmt|;
 name|CLEAR_HARD_REG_SET
 argument_list|(
 name|hard_regs_saved
@@ -1582,23 +1584,20 @@ name|chain
 operator|->
 name|next
 expr_stmt|;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
+operator|!
 name|chain
 operator|->
 name|is_caller_save_insn
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|GET_RTX_CLASS
+name|INSN_P
 argument_list|(
-name|code
+name|insn
 argument_list|)
-operator|==
-literal|'i'
 condition|)
 block|{
 comment|/* If some registers have been saved, see if INSN references 	     any of them.  We must restore them before the insn if so.  */
@@ -1702,11 +1701,14 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|int
+name|unsigned
 name|regno
 decl_stmt|;
 name|HARD_REG_SET
 name|hard_regs_to_save
+decl_stmt|;
+name|reg_set_iterator
+name|rsi
 decl_stmt|;
 comment|/* Use the register life information in CHAIN to compute which 		 regs are live during the call.  */
 name|REG_SET_TO_HARD_REG_SET
@@ -1772,13 +1774,97 @@ argument|FIRST_PSEUDO_REGISTER
 argument_list|,
 argument|regno
 argument_list|,
-argument|{ 		   int r = reg_renumber[regno]; 		   int nregs;  		   if (r>=
-literal|0
-argument|) 		     { 		       enum machine_mode mode;  		       nregs = HARD_REGNO_NREGS (r, PSEUDO_REGNO_MODE (regno)); 		       mode = HARD_REGNO_CALLER_SAVE_MODE 			        (r, nregs, PSEUDO_REGNO_MODE (regno)); 		       if (GET_MODE_BITSIZE (mode)> GET_MODE_BITSIZE (save_mode[r])) 			 save_mode[r] = mode; 		       while (nregs-->
-literal|0
-argument|) 			 SET_HARD_REG_BIT (hard_regs_to_save, r + nregs); 		     } 		   else 		     abort (); 		 }
+argument|rsi
 argument_list|)
-empty_stmt|;
+block|{
+name|int
+name|r
+init|=
+name|reg_renumber
+index|[
+name|regno
+index|]
+decl_stmt|;
+name|int
+name|nregs
+decl_stmt|;
+name|enum
+name|machine_mode
+name|mode
+decl_stmt|;
+name|gcc_assert
+argument_list|(
+name|r
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
+name|nregs
+operator|=
+name|hard_regno_nregs
+index|[
+name|r
+index|]
+index|[
+name|PSEUDO_REGNO_MODE
+argument_list|(
+name|regno
+argument_list|)
+index|]
+expr_stmt|;
+name|mode
+operator|=
+name|HARD_REGNO_CALLER_SAVE_MODE
+argument_list|(
+name|r
+argument_list|,
+name|nregs
+argument_list|,
+name|PSEUDO_REGNO_MODE
+argument_list|(
+name|regno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|GET_MODE_BITSIZE
+argument_list|(
+name|mode
+argument_list|)
+operator|>
+name|GET_MODE_BITSIZE
+argument_list|(
+name|save_mode
+index|[
+name|r
+index|]
+argument_list|)
+condition|)
+name|save_mode
+index|[
+name|r
+index|]
+operator|=
+name|mode
+expr_stmt|;
+while|while
+condition|(
+name|nregs
+operator|--
+operator|>
+literal|0
+condition|)
+name|SET_HARD_REG_BIT
+argument_list|(
+name|hard_regs_to_save
+argument_list|,
+name|r
+operator|+
+name|nregs
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Record all registers set in this call insn.  These don't need 		 to be saved.  N.B. the call insn might set a subreg of a 		 multi-hard-reg pseudo; then the pseudo is considered live 		 during the call, but the subreg that is set isn't.  */
 name|CLEAR_HARD_REG_SET
 argument_list|(
@@ -1794,7 +1880,28 @@ argument_list|)
 argument_list|,
 name|mark_set_regs
 argument_list|,
-name|NULL
+operator|&
+name|this_insn_sets
+argument_list|)
+expr_stmt|;
+comment|/* Sibcalls are considered to set the return value, 		 compare flow.c:propagate_one_insn.  */
+if|if
+condition|(
+name|SIBLING_CALL_P
+argument_list|(
+name|insn
+argument_list|)
+operator|&&
+name|current_function_return_rtx
+condition|)
+name|mark_set_regs
+argument_list|(
+name|current_function_return_rtx
+argument_list|,
+name|NULL_RTX
+argument_list|,
+operator|&
+name|this_insn_sets
 argument_list|)
 expr_stmt|;
 comment|/* Compute which hard regs must be saved before this call.  */
@@ -1951,12 +2058,10 @@ name|insert_restore
 argument_list|(
 name|chain
 argument_list|,
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 argument_list|,
 name|regno
 argument_list|,
@@ -1971,7 +2076,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Here from note_stores when an insn stores a value in a register.    Set the proper bit or bits in this_insn_sets.  All pseudos that have    been assigned hard regs have had their register number changed already,    so we can ignore pseudos.  */
+comment|/* Here from note_stores, or directly from save_call_clobbered_regs, when    an insn stores a value in a register.    Set the proper bit or bits in this_insn_sets.  All pseudos that have    been assigned hard regs have had their register number changed already,    so we can ignore pseudos.  */
 end_comment
 
 begin_function
@@ -1989,7 +2094,6 @@ parameter_list|,
 name|void
 modifier|*
 name|data
-name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 name|int
@@ -2007,6 +2111,12 @@ name|GET_MODE
 argument_list|(
 name|reg
 argument_list|)
+decl_stmt|;
+name|HARD_REG_SET
+modifier|*
+name|this_insn_sets
+init|=
+name|data
 decl_stmt|;
 if|if
 condition|(
@@ -2028,12 +2138,11 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|GET_CODE
+operator|!
+name|REG_P
 argument_list|(
 name|inner
 argument_list|)
-operator|!=
-name|REG
 operator|||
 name|REGNO
 argument_list|(
@@ -2045,23 +2154,19 @@ condition|)
 return|return;
 name|regno
 operator|=
-name|subreg_hard_regno
+name|subreg_regno
 argument_list|(
 name|reg
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
-name|GET_CODE
+name|REG_P
 argument_list|(
 name|reg
 argument_list|)
-operator|==
-name|REG
 operator|&&
 name|REGNO
 argument_list|(
@@ -2083,12 +2188,13 @@ name|endregno
 operator|=
 name|regno
 operator|+
-name|HARD_REGNO_NREGS
-argument_list|(
+name|hard_regno_nregs
+index|[
 name|regno
-argument_list|,
+index|]
+index|[
 name|mode
-argument_list|)
+index|]
 expr_stmt|;
 for|for
 control|(
@@ -2105,6 +2211,7 @@ operator|++
 control|)
 name|SET_HARD_REG_BIT
 argument_list|(
+operator|*
 name|this_insn_sets
 argument_list|,
 name|i
@@ -2173,15 +2280,13 @@ argument_list|)
 operator|==
 name|SUBREG
 operator|&&
-name|GET_CODE
+name|REG_P
 argument_list|(
 name|SUBREG_REG
 argument_list|(
 name|reg
 argument_list|)
 argument_list|)
-operator|==
-name|REG
 condition|)
 block|{
 name|offset
@@ -2225,12 +2330,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|GET_CODE
+operator|!
+name|REG_P
 argument_list|(
 name|reg
 argument_list|)
-operator|!=
-name|REG
 operator|||
 name|REGNO
 argument_list|(
@@ -2253,12 +2357,13 @@ name|endregno
 operator|=
 name|regno
 operator|+
-name|HARD_REGNO_NREGS
-argument_list|(
+name|hard_regno_nregs
+index|[
 name|regno
-argument_list|,
+index|]
+index|[
 name|mode
-argument_list|)
+index|]
 expr_stmt|;
 for|for
 control|(
@@ -2385,15 +2490,13 @@ name|code
 operator|==
 name|SUBREG
 operator|&&
-name|GET_CODE
+name|REG_P
 argument_list|(
 name|SUBREG_REG
 argument_list|(
 name|x
 argument_list|)
 argument_list|)
-operator|==
-name|REG
 operator|&&
 name|REGNO
 argument_list|(
@@ -2516,15 +2619,16 @@ block|{
 name|int
 name|nregs
 init|=
-name|HARD_REGNO_NREGS
-argument_list|(
+name|hard_regno_nregs
+index|[
 name|hardregno
-argument_list|,
+index|]
+index|[
 name|GET_MODE
 argument_list|(
 name|x
 argument_list|)
-argument_list|)
+index|]
 decl_stmt|;
 while|while
 condition|(
@@ -2737,9 +2841,9 @@ decl_stmt|;
 name|rtx
 name|mem
 decl_stmt|;
-comment|/* A common failure mode if register status is not correct in the RTL      is for this routine to be called with a REGNO we didn't expect to      save.  That will cause us to write an insn with a (nil) SET_DEST      or SET_SRC.  Instead of doing so and causing a crash later, check      for this common case and abort here instead.  This will remove one      step in debugging such problems.  */
-if|if
-condition|(
+comment|/* A common failure mode if register status is not correct in the      RTL is for this routine to be called with a REGNO we didn't      expect to save.  That will cause us to write an insn with a (nil)      SET_DEST or SET_SRC.  Instead of doing so and causing a crash      later, check for this common case here instead.  This will remove      one step in debugging such problems.  */
+name|gcc_assert
+argument_list|(
 name|regno_save_mem
 index|[
 name|regno
@@ -2747,11 +2851,7 @@ index|]
 index|[
 literal|1
 index|]
-operator|==
-literal|0
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 comment|/* Get the pattern to emit and update our status.       See if we can restore `maxrestore' registers at once.  Work      backwards to the single register case.  */
 for|for
@@ -2869,15 +2969,16 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|HARD_REGNO_NREGS
-argument_list|(
+name|hard_regno_nregs
+index|[
 name|regno
-argument_list|,
+index|]
+index|[
 name|save_mode
 index|[
 name|regno
 index|]
-argument_list|)
+index|]
 condition|)
 name|mem
 operator|=
@@ -2891,6 +2992,14 @@ name|regno
 index|]
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|mem
+operator|=
+name|copy_rtx
+argument_list|(
+name|mem
 argument_list|)
 expr_stmt|;
 name|pat
@@ -3048,9 +3157,9 @@ decl_stmt|;
 name|rtx
 name|mem
 decl_stmt|;
-comment|/* A common failure mode if register status is not correct in the RTL      is for this routine to be called with a REGNO we didn't expect to      save.  That will cause us to write an insn with a (nil) SET_DEST      or SET_SRC.  Instead of doing so and causing a crash later, check      for this common case and abort here instead.  This will remove one      step in debugging such problems.  */
-if|if
-condition|(
+comment|/* A common failure mode if register status is not correct in the      RTL is for this routine to be called with a REGNO we didn't      expect to save.  That will cause us to write an insn with a (nil)      SET_DEST or SET_SRC.  Instead of doing so and causing a crash      later, check for this common case here.  This will remove one      step in debugging such problems.  */
+name|gcc_assert
+argument_list|(
 name|regno_save_mem
 index|[
 name|regno
@@ -3058,11 +3167,7 @@ index|]
 index|[
 literal|1
 index|]
-operator|==
-literal|0
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 comment|/* Get the pattern to emit and update our status.       See if we can save several registers with a single instruction.      Work backwards to the single register case.  */
 for|for
@@ -3181,15 +3286,16 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|HARD_REGNO_NREGS
-argument_list|(
+name|hard_regno_nregs
+index|[
 name|regno
-argument_list|,
+index|]
+index|[
 name|save_mode
 index|[
 name|regno
 index|]
-argument_list|)
+index|]
 condition|)
 name|mem
 operator|=
@@ -3203,6 +3309,14 @@ name|regno
 index|]
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|mem
+operator|=
+name|copy_rtx
+argument_list|(
+name|mem
 argument_list|)
 expr_stmt|;
 name|pat
@@ -3344,19 +3458,15 @@ comment|/* If INSN references CC0, put our insns in front of the insn that sets 
 if|if
 condition|(
 operator|(
-name|GET_CODE
+name|NONJUMP_INSN_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|INSN
 operator|||
-name|GET_CODE
+name|JUMP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|==
-name|JUMP_INSN
 operator|)
 operator|&&
 name|before_p
@@ -3513,17 +3623,13 @@ name|regno
 decl_stmt|,
 name|i
 decl_stmt|;
-if|if
-condition|(
-name|GET_CODE
+name|gcc_assert
+argument_list|(
+name|REG_P
 argument_list|(
 name|reg
 argument_list|)
-operator|!=
-name|REG
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|regno
 operator|=
@@ -3556,15 +3662,16 @@ for|for
 control|(
 name|i
 operator|=
-name|HARD_REGNO_NREGS
-argument_list|(
+name|hard_regno_nregs
+index|[
 name|regno
-argument_list|,
+index|]
+index|[
 name|GET_MODE
 argument_list|(
 name|reg
 argument_list|)
-argument_list|)
+index|]
 operator|-
 literal|1
 init|;
@@ -3691,7 +3798,7 @@ operator|->
 name|live_throughout
 argument_list|)
 expr_stmt|;
-comment|/* Registers that are set in CHAIN->INSN live in the new insn.          (Unless there is a REG_UNUSED note for them, but we don't 	  look for them here.) */
+comment|/* Registers that are set in CHAIN->INSN live in the new insn. 	 (Unless there is a REG_UNUSED note for them, but we don't 	  look for them here.) */
 name|note_stores
 argument_list|(
 name|PATTERN

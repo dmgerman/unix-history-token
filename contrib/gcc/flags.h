@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Compilation switch flag definitions for GCC.    Copyright (C) 1987, 1988, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2002,    2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Compilation switch flag definitions for GCC.    Copyright (C) 1987, 1988, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2002,    2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,12 @@ directive|define
 name|GCC_FLAGS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"options.h"
+end_include
+
 begin_enum
 enum|enum
 name|debug_info_type
@@ -28,9 +34,6 @@ comment|/* Write BSD .stabs for DBX (using dbxout.c).  */
 name|SDB_DEBUG
 block|,
 comment|/* Write COFF for (old) SDB (using sdbout.c).  */
-name|DWARF_DEBUG
-block|,
-comment|/* Write Dwarf debug info (using dwarfout.c).  */
 name|DWARF2_DEBUG
 block|,
 comment|/* Write Dwarf v2 debug info (using dwarf2out.c).  */
@@ -116,13 +119,82 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means emit debugging information only for symbols which are used.  */
+comment|/* Enumerate visibility settings.  This is deliberately ordered from most    to least visibility.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYMBOL_VISIBILITY_DEFINED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_VISIBILITY_DEFINED
+end_define
+
+begin_enum
+enum|enum
+name|symbol_visibility
+block|{
+name|VISIBILITY_DEFAULT
+block|,
+name|VISIBILITY_PROTECTED
+block|,
+name|VISIBILITY_HIDDEN
+block|,
+name|VISIBILITY_INTERNAL
+block|}
+enum|;
+end_enum
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* The default visibility for all symbols (unless overridden).  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|flag_debug_only_used_symbols
+name|enum
+name|symbol_visibility
+name|default_visibility
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
+struct|struct
+name|visibility_flags
+block|{
+name|unsigned
+name|inpragma
+range|:
+literal|1
+decl_stmt|;
+comment|/* True when in #pragma GCC visibility.  */
+name|unsigned
+name|inlines_hidden
+range|:
+literal|1
+decl_stmt|;
+comment|/* True when -finlineshidden in effect.  */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Global visibility options.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|visibility_flags
+name|visibility_options
 decl_stmt|;
 end_decl_stmt
 
@@ -149,50 +221,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Don't print functions as they are compiled and don't print    times taken by the various passes.  -quiet.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|quiet_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Print memory still in use at end of compilation (which may have little    to do with peak memory consumption).  -fmem-report.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|mem_report
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Don't print warning messages.  -w.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|inhibit_warnings
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Don't suppress warnings from system headers.  -Wsystem-headers.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_system_headers
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Do print extra warnings (such as for uninitialized variables).    -W/-Wextra.  */
 end_comment
 
@@ -200,17 +228,6 @@ begin_decl_stmt
 specifier|extern
 name|bool
 name|extra_warnings
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* If -Werror.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warnings_are_errors
 decl_stmt|;
 end_decl_stmt
 
@@ -228,151 +245,6 @@ name|setting
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_unused_function
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_unused_label
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_unused_parameter
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_unused_variable
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_unused_value
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero to warn about code which is never reached.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_notreached
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means warn if inline function is too large.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_inline
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero to warn about variables used before they are initialized.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|warn_uninitialized
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means warn about all declarations which shadow others.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_shadow
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Warn if a switch on an enum, that does not have a default case,    fails to have a case for every enum value.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_switch
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Warn if a switch does not have a default case.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_switch_default
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Warn if a switch on an enum fails to have a case for every enum    value (regardless of the presence or otherwise of a default case).  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_switch_enum
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means warn about function definitions that default the return type    or that use a null return and have a return-type other than void.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|warn_return_type
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Warn about functions which might be candidates for attribute noreturn.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_missing_noreturn
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means warn about pointer casts that increase the required    alignment of the target type (and might therefore lead to a crash    due to a misaligned access).  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_cast_align
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Nonzero means warn about any objects definitions whose size is larger    than N bytes.  Also want about function definitions whose returned    values are larger than N bytes. The value N is in `larger_than_size'.  */
@@ -393,167 +265,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Warn if a function returns an aggregate,    since there are often incompatible calling conventions for doing this.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_aggregate_return
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Warn if packed attribute on struct is unnecessary and inefficient.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_packed
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Warn when gcc pads a structure to an alignment boundary.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_padded
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Warn when an optimization pass is disabled.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_disabled_optimization
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means warn about uses of __attribute__((deprecated))     declarations.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|warn_deprecated_decl
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Nonzero means warn about constructs which might not be strict    aliasing safe.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|bool
+name|int
 name|warn_strict_aliasing
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero if generating code to do profiling.  */
+comment|/* Nonzero means warn about optimizations which rely on undefined    signed overflow.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|profile_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero if generating code to profile program flow graph arcs.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|profile_arc_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero if value profile should be measured.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_profile_values
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero if generating info for gcov to calculate line test coverage.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_test_coverage
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero indicates that branch taken probabilities should be calculated.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_branch_probabilities
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero if basic blocks should be reordered.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_reorder_blocks
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero if functions should be reordered.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_reorder_functions
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero if registers should be renamed.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_rename_registers
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero for -pedantic switch: warn about anything    that standard C forbids.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|pedantic
+name|warn_strict_overflow
 decl_stmt|;
 end_decl_stmt
 
@@ -598,24 +327,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means give an enum type only as many bytes as it needs.  */
+comment|/* Nonzero means give an enum type only as many bytes as it needs.  A value    of 2 means it has not yet been initialized.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
 name|flag_short_enums
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero for -fcaller-saves: allocate values in regs that need to    be saved across function calls, if that produces overall better code.    Optional now, so people can test it.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_caller_saves
 decl_stmt|;
 end_decl_stmt
 
@@ -631,310 +349,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero for -fforce-mem: load memory value into a register    before arithmetic on it.  This makes better cse but slower compilation.  */
+comment|/* 0 means straightforward implementation of complex divide acceptable.    1 means wide ranges of inputs must work for complex divide.    2 means C99-like requirements for complex multiply and divide.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|flag_force_mem
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero for -fforce-addr: load memory address into a register before    reference to memory.  This makes better cse but slower compilation.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_force_addr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero for -fdefer-pop: don't pop args after each function call;    instead save them up to pop many calls' args with one insns.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_defer_pop
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero for -ffloat-store: don't allocate floats and doubles    in extended-precision registers.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_float_store
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero enables strength-reduction in loop.c.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_strength_reduce
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero enables loop unrolling in unroll.c.  Only loops for which the    number of iterations can be calculated at compile-time (UNROLL_COMPLETELY,    UNROLL_MODULO) or at run-time (preconditioned to be UNROLL_MODULO) are    unrolled.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_old_unroll_loops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero enables loop unrolling in unroll.c.  All loops are unrolled.    This is generally not a win.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_old_unroll_all_loops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero forces all invariant computations in loops to be moved    outside the loop.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_move_all_movables
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero enables prefetch optimizations for arrays in loops.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_prefetch_loop_arrays
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero forces all general induction variables in loops to be    strength reduced.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_reduce_all_givs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero for -fcse-follow-jumps:    have cse follow jumps to do a more extensive job.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_cse_follow_jumps
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero for -fcse-skip-blocks:    have cse follow a branch around a block.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_cse_skip_blocks
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero for -fexpensive-optimizations:    perform miscellaneous relatively-expensive optimizations.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_expensive_optimizations
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero for -fwritable-strings:    store string constants in data segment and don't uniquize them.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_writable_strings
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means don't put addresses of constant functions in registers.    Used for compiling the Unix kernel, where strange substitutions are    done on the assembly output.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_no_function_cse
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero for -fomit-frame-pointer:    don't make a frame pointer in simple functions that don't require one.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_omit_frame_pointer
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero to inhibit use of define_optimization peephole opts.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_no_peephole
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero allows GCC to optimize sibling and tail recursive calls.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_optimize_sibling_calls
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means the front end generally wants `errno' maintained by math    operations, like built-in SQRT.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_errno_math
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means that unsafe floating-point math optimizations are allowed    for the sake of speed.  IEEE compliance is not guaranteed, and operations    are allowed to assume that their arguments and results are "normal"    (e.g., nonnegative for SQRT).  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_unsafe_math_optimizations
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means that no NaNs or +-Infs are expected.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_finite_math_only
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Zero means that floating-point math operations cannot generate a    (user-visible) trap.  This is the case, for example, in nonstop    IEEE 754 arithmetic.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_trapping_math
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means disable transformations that assume default floating    point rounding behavior.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_rounding_math
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 0 means straightforward implementation of complex divide acceptable.    1 means wide ranges of inputs must work for complex divide.    2 means C99-like requirements for complex divide (not yet implemented).  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_complex_divide_method
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means to run loop optimizations twice.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_rerun_loop_opt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means make functions that look like good inline candidates    go inline.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_inline_functions
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero for -fkeep-inline-functions: even if we make a function    go inline everywhere, keep its definition around for debugging    purposes.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_keep_inline_functions
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means that functions declared `inline' will be treated    as `static'.  Prevents generation of zillions of copies of unused    static inline functions; instead, `inlines' are written out    only when actually used.  Used in conjunction with -g.  Also    does the right thing with #pragma interface.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_no_inline
+name|flag_complex_method
 decl_stmt|;
 end_decl_stmt
 
@@ -956,7 +377,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|flag_syntax_only
+name|rtl_dump_and_exit
 decl_stmt|;
 end_decl_stmt
 
@@ -968,132 +389,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_gen_aux_info
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means make the text shared if supported.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_shared_data
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flag_schedule_insns means schedule insns within basic blocks (before    local_alloc).    flag_schedule_insns_after_reload means schedule insns after    global_alloc.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_schedule_insns
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_schedule_insns_after_reload
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_sched2_use_superblocks
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_sched2_use_traces
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The following flags have effect only for scheduling before register    allocation:     flag_schedule_interblock means schedule insns across basic blocks.    flag_schedule_speculative means allow speculative motion of non-load insns.    flag_schedule_speculative_load means allow speculative motion of some    load insns.    flag_schedule_speculative_load_dangerous allows speculative motion of more    load insns.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_schedule_interblock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_schedule_speculative
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_schedule_speculative_load
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_schedule_speculative_load_dangerous
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The following flags have an effect during scheduling after register    allocation:        sched_stalled_insns means that insns can be moved prematurely from the queue    of stalled insns into the ready list.     sched_stalled_insns_dep controls how many recently scheduled cycles will     be examined for a dependency on a stalled insn that is candidate for    premature removal from the queue of stalled insns into the ready list (has     an effect only if the flag 'sched_stalled_insns' is set).  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_sched_stalled_insns
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_sched_stalled_insns_dep
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flag_branch_on_count_reg means try to replace add-1,compare,branch tupple    by a cheaper branch, on a count register.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_branch_on_count_reg
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* This option is set to 1 on -fsingle-precision-constant option which is    used to convert the floating point constants to single precision     constants.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_single_precision_constant
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means put things in delayed-branch slots if supported.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_delayed_branch
 decl_stmt|;
 end_decl_stmt
 
@@ -1120,28 +415,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means generate position-independent code.  1 vs 2 for a     target-dependent "small" or "large" mode.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_pic
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero if we are compiling position independent code for executable.    1 vs 2 for a target-dependent "small" or "large" mode.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_pie
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Nonzero if we are compiling code for a shared library, zero for    executable.  */
 end_comment
 
@@ -1149,94 +422,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_shlib
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means generate extra code for exception handling and enable    exception handling.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_exceptions
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means generate frame unwind info table when supported.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_unwind_tables
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means generate frame unwind info table exact at each insn boundary.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_asynchronous_unwind_tables
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means don't place uninitialized global data in common storage    by default.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_no_common
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -finhibit-size-directive inhibits output of .size for ELF.    This is used only for compiling crtstuff.c,    and it may be extended to other effects    needed for crtstuff.c on other systems.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_inhibit_size_directive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means place each function into its own section on those platforms    which support arbitrary section names and unlimited numbers of sections.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_function_sections
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ... and similar for data.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_data_sections
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -fverbose-asm causes extra commentary information to be produced in    the generated assembly code (to make it more readable).  This option    is generally only of use to those who actually need to read the    generated assembly code (perhaps while debugging the compiler itself).    -fno-verbose-asm, the default, causes the extra information    to not be added and is useful when comparing two assembler files.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_verbose_asm
 decl_stmt|;
 end_decl_stmt
 
@@ -1251,131 +436,21 @@ name|flag_debug_asm
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Generate code for GNU or NeXT Objective-C runtime environment.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_next_runtime
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|flag_dump_rtl_in_asm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Greater than zero if user symbols are prepended by a leading underscore    in generated assembly code.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_leading_underscore
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Tag all structures with __attribute__(packed) */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_pack_struct
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* This flag is only tested if alias checking is enabled.    0 if pointer arguments may alias each other.  True in C.    1 if pointer arguments may not alias each other but may alias    global variables.    2 if pointer arguments may not alias each other and may not    alias global variables.  True in Fortran.    The value is ignored if flag_alias_check is 0.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_argument_noalias
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero if we should do (language-dependent) alias analysis.    Typically, this analysis will assume that expressions of certain    types do not alias expressions of certain other types.  Only used    if alias analysis (in general) is enabled.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_strict_aliasing
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Emit code to probe the stack, to help detect stack overflow; also    may cause large objects to be allocated dynamically.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_stack_check
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Do the full regmove optimization pass.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_regmove
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Instrument functions with calls at entry and exit, for profiling.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_instrument_function_entry_exit
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Perform a peephole pass before sched2.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_peephole2
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Try to guess branch probabilities.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_guess_branch_prob
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -fcheck-bounds causes gcc to generate array bounds checks.    For C, C++ and ObjC: defaults off.    For Java: defaults to on.    For Fortran: defaults to off.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_bounds_check
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* This will attempt to merge constant section constants, if 1 only    string constants and constants from constant pool, if 2 also constant    variables.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_merge_constants
 decl_stmt|;
 end_decl_stmt
 
@@ -1405,28 +480,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|frame_pointer_needed
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero if the generated code should trap on signed overflow    for PLUS / SUB / MULT.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_trapv
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero if the signed arithmetic overflow should wrap around.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_wrapv
 decl_stmt|;
 end_decl_stmt
 
@@ -1467,13 +520,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|align_loops
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|align_loops_log
 decl_stmt|;
 end_decl_stmt
@@ -1482,13 +528,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|align_loops_max_skip
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|align_jumps
 decl_stmt|;
 end_decl_stmt
 
@@ -1509,13 +548,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|align_labels
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|align_labels_log
 decl_stmt|;
 end_decl_stmt
@@ -1524,13 +556,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|align_labels_max_skip
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|align_functions
 decl_stmt|;
 end_decl_stmt
 
@@ -1589,116 +614,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means ignore `#ident' directives.  0 means handle them.    On SVR4 targets, it also controls whether or not to emit a    string identifying the compiler.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_no_ident
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means perform global CSE.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_gcse
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero if we want to perform enhanced load motion during gcse.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_gcse_lm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero if we want to perform store motion after gcse.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_gcse_sm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero if we want to perform redundant load-after-store elimination    in gcse.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_gcse_las
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero if value histograms should be used to optimize code.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_value_profile_transformations
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Perform branch target register optimization before prologue / epilogue    threading.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_branch_target_load_optimize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Perform branch target register optimization after prologue / epilogue    threading and jump2.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_branch_target_load_optimize2
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means we should do dwarf2 duplicate elimination.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_eliminate_dwarf2_dups
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means we should do unused type elimination.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_eliminate_unused_debug_types
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Nonzero means to collect statistics which might be expensive    and to print them when we are done.  */
 end_comment
 
@@ -1706,53 +621,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_detailed_statistics
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means enable synchronous exceptions for non-call instructions.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_non_call_exceptions
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means put zero initialized data in the bss section.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_zero_initialized_in_bss
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means disable transformations observable by signaling NaNs.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_signaling_nans
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_unit_at_a_time
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_web
 decl_stmt|;
 end_decl_stmt
 
@@ -1768,6 +636,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero if we should track variables.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_var_tracking
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* True if flag_speculative_prefetching was set by user.  Used to suppress    warning message in case flag was set by -fprofile-{generate,use}.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|flag_speculative_prefetching_set
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* A string that's used when a random name is required.  NULL means    to make it really random.  */
 end_comment
 
@@ -1777,17 +667,6 @@ specifier|const
 name|char
 modifier|*
 name|flag_random_seed
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  The version of the C++ ABI in use.  The following values are     allowed:      0: The version of the ABI believed most conformant with the         C++ ABI specification.  This ABI may change as bugs are        discovered and fixed.  Therefore, 0 will not necessarily        indicate the same ABI in different versions of G++.      1: The version of the ABI first used in G++ 3.2.      Additional positive integers will be assigned as new versions of     the ABI become the default version of the ABI.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_abi_version
 decl_stmt|;
 end_decl_stmt
 
@@ -1807,7 +686,7 @@ value|(flag_abi_version == 0 || flag_abi_version>= (N))
 end_define
 
 begin_comment
-comment|/* True if the given mode has a NaN representation and the treatment of    NaN operands is important.  Certain optimizations, such as folding    x * 0 into x, are not correct for NaN operands, and are normally    disabled for modes with NaNs.  The user can ask for them to be    done anyway using the -funsafe-math-optimizations switch.  */
+comment|/* True if the given mode has a NaN representation and the treatment of    NaN operands is important.  Certain optimizations, such as folding    x * 0 into 0, are not correct for NaN operands, and are normally    disabled for modes with NaNs.  The user can ask for them to be    done anyway using the -funsafe-math-optimizations switch.  */
 end_comment
 
 begin_define
@@ -1878,6 +757,101 @@ name|MODE
 parameter_list|)
 define|\
 value|(MODE_HAS_SIGN_DEPENDENT_ROUNDING (MODE)&& flag_rounding_math)
+end_define
+
+begin_comment
+comment|/* True if overflow wraps around for the given integral type.  That    is, TYPE_MAX + 1 == TYPE_MIN.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_OVERFLOW_WRAPS
+parameter_list|(
+name|TYPE
+parameter_list|)
+define|\
+value|(TYPE_UNSIGNED (TYPE) || flag_wrapv)
+end_define
+
+begin_comment
+comment|/* True if overflow is undefined for the given integral type.  We may    optimize on the assumption that values in the type never overflow.     IMPORTANT NOTE: Any optimization based on TYPE_OVERFLOW_UNDEFINED    must issue a warning based on warn_strict_overflow.  In some cases    it will be appropriate to issue the warning immediately, and in    other cases it will be appropriate to simply set a flag and let the    caller decide whether a warning is appropriate or not.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_OVERFLOW_UNDEFINED
+parameter_list|(
+name|TYPE
+parameter_list|)
+define|\
+value|(!TYPE_UNSIGNED (TYPE)&& !flag_wrapv&& !flag_trapv&& flag_strict_overflow)
+end_define
+
+begin_comment
+comment|/* True if overflow for the given integral type should issue a    trap.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_OVERFLOW_TRAPS
+parameter_list|(
+name|TYPE
+parameter_list|)
+define|\
+value|(!TYPE_UNSIGNED (TYPE)&& flag_trapv)
+end_define
+
+begin_comment
+comment|/* Names for the different levels of -Wstrict-overflow=N.  The numeric    values here correspond to N.  */
+end_comment
+
+begin_enum
+enum|enum
+name|warn_strict_overflow_code
+block|{
+comment|/* Overflow warning that should be issued with -Wall: a questionable      construct that is easy to avoid even when using macros.  Example:      folding (x + CONSTANT> x) to 1.  */
+name|WARN_STRICT_OVERFLOW_ALL
+init|=
+literal|1
+block|,
+comment|/* Overflow warning about folding a comparison to a constant because      of undefined signed overflow, other than cases covered by      WARN_STRICT_OVERFLOW_ALL.  Example: folding (abs (x)>= 0) to 1      (this is false when x == INT_MIN).  */
+name|WARN_STRICT_OVERFLOW_CONDITIONAL
+init|=
+literal|2
+block|,
+comment|/* Overflow warning about changes to comparisons other than folding      them to a constant.  Example: folding (x + 1> 1) to (x> 0).  */
+name|WARN_STRICT_OVERFLOW_COMPARISON
+init|=
+literal|3
+block|,
+comment|/* Overflow warnings not covered by the above cases.  Example:      folding ((x * 10) / 5) to (x * 2).  */
+name|WARN_STRICT_OVERFLOW_MISC
+init|=
+literal|4
+block|,
+comment|/* Overflow warnings about reducing magnitude of constants in      comparison.  Example: folding (x + 2> y) to (x + 1>= y).  */
+name|WARN_STRICT_OVERFLOW_MAGNITUDE
+init|=
+literal|5
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Whether to emit an overflow warning whose code is C.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|issue_strict_overflow_warning
+parameter_list|(
+name|c
+parameter_list|)
+value|(warn_strict_overflow>= (int) (c))
 end_define
 
 begin_endif

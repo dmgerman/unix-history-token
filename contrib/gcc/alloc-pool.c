@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Functions to support a pool of allocatable objects.    Copyright (C) 1987, 1997, 1998, 1999, 2000, 2001, 2003, 2004    Free Software Foundation, Inc.    Contributed by Daniel Berlin<dan@cgsoftware.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Functions to support a pool of allocatable objects.    Copyright (C) 1987, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.    Contributed by Daniel Berlin<dan@cgsoftware.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -26,37 +26,6 @@ include|#
 directive|include
 file|"hashtab.h"
 end_include
-
-begin_comment
-comment|/* Redefine abort to report an internal error w/o coredump, and    reporting the location of the error in the source file.  This logic    is duplicated in rtl.h and tree.h because every file that needs the    special abort includes one or both.  toplev.h gets too few files,    system.h gets too many.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|fancy_abort
-argument_list|(
-specifier|const
-name|char
-operator|*
-argument_list|,
-name|int
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
-name|ATTRIBUTE_NORETURN
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|abort
-parameter_list|()
-value|fancy_abort (__FILE__, __LINE__, __FUNCTION__)
-end_define
 
 begin_define
 define|#
@@ -174,7 +143,7 @@ name|GATHER_STATISTICS
 end_ifdef
 
 begin_comment
-comment|/* Store infromation about each particular alloc_pool.  */
+comment|/* Store information about each particular alloc_pool.  */
 end_comment
 
 begin_struct
@@ -427,13 +396,10 @@ name|desc
 decl_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-operator|!
+name|gcc_assert
+argument_list|(
 name|name
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 comment|/* Make size large enough to store the list header.  */
 if|if
@@ -478,14 +444,10 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Um, we can't really allocate 0 elements per block.  */
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|num
-operator|==
-literal|0
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 comment|/* Find the size of the pool structure, and the name.  */
 name|pool_size
@@ -661,19 +623,11 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|ENABLE_CHECKING
-if|if
-condition|(
-operator|!
+name|gcc_assert
+argument_list|(
 name|pool
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Free each block allocated to the pool.  */
 for|for
 control|(
@@ -717,7 +671,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* Lastly, free the pool.  */
 ifdef|#
 directive|ifdef
 name|ENABLE_CHECKING
@@ -736,11 +689,57 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Lastly, free the pool.  */
 name|free
 argument_list|(
 name|pool
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Frees the alloc_pool, if it is empty and zero *POOL in this case.  */
+end_comment
+
+begin_function
+name|void
+name|free_alloc_pool_if_empty
+parameter_list|(
+name|alloc_pool
+modifier|*
+name|pool
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+operator|*
+name|pool
+operator|)
+operator|->
+name|elts_free
+operator|==
+operator|(
+operator|*
+name|pool
+operator|)
+operator|->
+name|elts_allocated
+condition|)
+block|{
+name|free_alloc_pool
+argument_list|(
+operator|*
+name|pool
+argument_list|)
+expr_stmt|;
+operator|*
+name|pool
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -789,19 +788,11 @@ name|elt_size
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|ENABLE_CHECKING
-if|if
-condition|(
-operator|!
+name|gcc_assert
+argument_list|(
 name|pool
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* If there are no more free elements, make some more!.  */
 if|if
 condition|(
@@ -820,8 +811,10 @@ decl_stmt|;
 comment|/* Make the block.  */
 name|block
 operator|=
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 name|pool
 operator|->
 name|block_size
@@ -957,7 +950,7 @@ operator|=
 name|header
 expr_stmt|;
 block|}
-comment|/* Also update the number of elements we have free/allocated, and          increment the allocated block count.  */
+comment|/* Also update the number of elements we have free/allocated, and 	 increment the allocated block count.  */
 name|pool
 operator|->
 name|elts_allocated
@@ -1049,17 +1042,14 @@ block|{
 name|alloc_pool_list
 name|header
 decl_stmt|;
+name|gcc_assert
+argument_list|(
+name|ptr
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ENABLE_CHECKING
-if|if
-condition|(
-operator|!
-name|ptr
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
 name|memset
 argument_list|(
 name|ptr
@@ -1081,21 +1071,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Check whether the PTR was allocated from POOL.  */
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|pool
 operator|->
 name|id
-operator|!=
+operator|==
 name|ALLOCATION_OBJECT_PTR_FROM_USER_PTR
 argument_list|(
 name|ptr
 argument_list|)
 operator|->
 name|id
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 comment|/* Mark the element to be free.  */
 name|ALLOCATION_OBJECT_PTR_FROM_USER_PTR
@@ -1110,20 +1098,16 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* Check if we free more than we allocated, which is Bad (TM).  */
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|pool
 operator|->
 name|elts_free
-operator|+
-literal|1
-operator|>
+operator|<
 name|pool
 operator|->
 name|elts_allocated
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1308,6 +1292,12 @@ name|struct
 name|output_info
 name|info
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|alloc_pool_hash
+condition|)
+return|return;
 name|fprintf
 argument_list|(
 name|stderr

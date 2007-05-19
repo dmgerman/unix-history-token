@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine GNU compiler.  IA-64 version.    Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Steve Ellcey<sje@cup.hp.com> and                   Reva Cuthbertson<reva@cup.hp.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine GNU compiler.  IA-64 version.    Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007    Free Software Foundation, Inc.    Contributed by Steve Ellcey<sje@cup.hp.com> and                   Reva Cuthbertson<reva@cup.hp.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -31,6 +31,32 @@ name|TARGET_HPUX
 value|1
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|WCHAR_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|WCHAR_TYPE
+value|"unsigned int"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|WCHAR_TYPE_SIZE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|WCHAR_TYPE_SIZE
+value|32
+end_define
+
 begin_comment
 comment|/* Target OS builtins.  */
 end_comment
@@ -41,7 +67,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do {							\ 	builtin_assert("system=hpux");			\ 	builtin_assert("system=posix");			\ 	builtin_assert("system=unix");			\ 	builtin_define_std("hpux");			\ 	builtin_define_std("unix");			\ 	builtin_define("__IA64__");			\ 	builtin_define("_LONGLONG");			\ 	builtin_define("_INCLUDE_LONGLONG");		\ 	builtin_define("_UINT128_T");			\ 	if (c_dialect_cxx () || !flag_iso)		\ 	  {						\ 	    builtin_define("_HPUX_SOURCE");		\ 	    builtin_define("__STDC_EXT__");		\ 	    builtin_define("__STDCPP__");		\ 	  }						\ 	if (TARGET_ILP32)				\ 	  builtin_define("_ILP32");			\ } while (0)
+value|do {							\ 	builtin_assert("system=hpux");			\ 	builtin_assert("system=posix");			\ 	builtin_assert("system=unix");			\ 	builtin_define_std("hpux");			\ 	builtin_define_std("unix");			\ 	builtin_define("__IA64__");			\ 	builtin_define("_LONGLONG");			\ 	builtin_define("_INCLUDE_LONGLONG");		\ 	builtin_define("_UINT128_T");			\ 	if (c_dialect_cxx () || !flag_iso)		\ 	  {						\ 	    builtin_define("_HPUX_SOURCE");		\ 	    builtin_define("__STDC_EXT__");		\ 	    builtin_define("__STDCPP__");		\ 	    builtin_define("_INCLUDE__STDC_A1_SOURCE");	\ 	  }						\ 	if (TARGET_ILP32)				\ 	  builtin_define("_ILP32");			\ } while (0)
 end_define
 
 begin_undef
@@ -91,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|STARTFILE_SPEC
-value|"%{!shared:%{static:crt0%O%s}}"
+value|"%{!shared:%{static:crt0%O%s} \ 			  %{mlp64:/usr/lib/hpux64/unix98%O%s} \ 			  %{!mlp64:/usr/lib/hpux32/unix98%O%s}}"
 end_define
 
 begin_undef
@@ -105,7 +131,7 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"+Accept TypeMismatch \    %{shared:-b} \    %{!shared: \      -u main \      %{static:-noshared}}"
+value|"-z +Accept TypeMismatch \    %{shared:-b} \    %{!shared: \      -u main \      %{static:-noshared}}"
 end_define
 
 begin_undef
@@ -120,20 +146,6 @@ directive|define
 name|LIB_SPEC
 define|\
 value|"%{!shared: \      %{mt|pthread:-lpthread} \      %{p:%{!mlp64:-L/usr/lib/hpux32/libp} \ 	 %{mlp64:-L/usr/lib/hpux64/libp} -lprof} \      %{pg:%{!mlp64:-L/usr/lib/hpux32/libp} \ 	  %{mlp64:-L/usr/lib/hpux64/libp} -lgprof} \      %{!symbolic:-lc}}"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_SWITCHES
-define|\
-value|{ "ilp32",    MASK_ILP32,     "Generate ILP32 code" }, \   { "lp64",    -MASK_ILP32,     "Generate LP64 code" },
 end_define
 
 begin_define
@@ -171,11 +183,12 @@ begin_define
 define|#
 directive|define
 name|TARGET_DEFAULT
+define|\
 value|(MASK_DWARF2_ASM | MASK_BIG_ENDIAN | MASK_ILP32)
 end_define
 
 begin_comment
-comment|/* This needs to be set to force structure arguments with a single    integer field to be treated as structures and not as the type of    their field.  Without this a structure with a single char will be    returned just like a char variable, instead of being returned at the    top of the register as specified for big-endian IA64.  */
+comment|/* ??? Might not be needed anymore.  */
 end_comment
 
 begin_define
@@ -187,8 +200,7 @@ name|FIELD
 parameter_list|,
 name|MODE
 parameter_list|)
-define|\
-value|(!FLOAT_MODE_P (MODE) || (MODE) == TFmode)
+value|((MODE) == TFmode)
 end_define
 
 begin_comment
@@ -416,53 +428,14 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|TARGET_ASM_SELECT_SECTION
+name|TARGET_ASM_RELOC_RW_MASK
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_ASM_SELECT_SECTION
-value|ia64_rwreloc_select_section
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_ASM_UNIQUE_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TARGET_ASM_UNIQUE_SECTION
-value|ia64_rwreloc_unique_section
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_ASM_SELECT_RTX_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TARGET_ASM_SELECT_RTX_SECTION
-value|ia64_rwreloc_select_rtx_section
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_SECTION_TYPE_FLAGS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TARGET_SECTION_TYPE_FLAGS
-value|ia64_rwreloc_section_type_flags
+name|TARGET_ASM_RELOC_RW_MASK
+value|ia64_hpux_reloc_rw_mask
 end_define
 
 begin_comment
@@ -482,6 +455,12 @@ name|TARGET_C99_FUNCTIONS
 value|1
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|TARGET_INIT_LIBFUNCS
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -499,6 +478,133 @@ parameter_list|,
 name|COMPARISON
 parameter_list|)
 value|((MODE) == TFmode)
+end_define
+
+begin_comment
+comment|/* Put all *xf routines in libgcc, regardless of long double size.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|LIBGCC2_HAS_XF_MODE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LIBGCC2_HAS_XF_MODE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XF_SIZE
+value|64
+end_define
+
+begin_comment
+comment|/* Put all *tf routines in libgcc, regardless of long double size.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|LIBGCC2_HAS_TF_MODE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LIBGCC2_HAS_TF_MODE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TF_SIZE
+value|113
+end_define
+
+begin_comment
+comment|/* HP-UX headers are C++-compatible.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_IMPLICIT_EXTERN_C
+end_define
+
+begin_comment
+comment|/* HP-UX uses PROFILE_HOOK instead of FUNCTION_PROFILER but we need a    FUNCTION_PROFILER defined because its use is not ifdefed.  When using    PROFILE_HOOK, the profile call comes after the prologue.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|FUNCTION_PROFILER
+end_undef
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_PROFILER
+parameter_list|(
+name|FILE
+parameter_list|,
+name|LABELNO
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PROFILE_HOOK
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PROFILE_HOOK
+parameter_list|(
+name|LABEL
+parameter_list|)
+value|ia64_profile_hook (LABEL)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PROFILE_BEFORE_PROLOGUE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|NO_PROFILE_COUNTERS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NO_PROFILE_COUNTERS
+value|0
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|HANDLE_PRAGMA_PACK_PUSH_POP
+end_undef
+
+begin_define
+define|#
+directive|define
+name|HANDLE_PRAGMA_PACK_PUSH_POP
 end_define
 
 end_unit

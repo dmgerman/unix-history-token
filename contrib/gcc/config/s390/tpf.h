@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for target OS TPF for GNU compiler, for IBM S/390 hardware    Copyright (C) 2003 Free Software Foundation, Inc.    Contributed by P.J. Darcy (darcypj@us.ibm.com),                   Hartmut Penner (hpenner@de.ibm.com), and                   Ulrich Weigand (uweigand@de.ibm.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for target OS TPF for GNU compiler, for IBM S/390 hardware    Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by P.J. Darcy (darcypj@us.ibm.com),                   Hartmut Penner (hpenner@de.ibm.com), and                   Ulrich Weigand (uweigand@de.ibm.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,19 @@ end_define
 begin_comment
 comment|/* TPF wants the following macros defined/undefined as follows.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_TPF
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_TPF
+value|1
+end_define
 
 begin_undef
 undef|#
@@ -54,20 +67,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|TARGET_HAS_F_SETLKW
+name|TARGET_POSIX_IO
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|MD_EXEC_PREFIX
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|MD_STARTFILE_PREFIX
-end_undef
 
 begin_undef
 undef|#
@@ -152,11 +153,11 @@ begin_define
 define|#
 directive|define
 name|STACK_POINTER_OFFSET
-value|280
+value|448
 end_define
 
 begin_comment
-comment|/* When building for TPF, set a generic default target that is 64 bits.  */
+comment|/* When building for TPF, set a generic default target that is 64 bits. Also    enable TPF profiling support and the standard backchain by default.  */
 end_comment
 
 begin_undef
@@ -169,7 +170,33 @@ begin_define
 define|#
 directive|define
 name|TARGET_DEFAULT
-value|0x33
+value|(MASK_TPF_PROFILING | MASK_64BIT | MASK_ZARCH \ 			| MASK_HARD_FLOAT | MASK_BACKCHAIN)
+end_define
+
+begin_comment
+comment|/* Exception handling.  */
+end_comment
+
+begin_comment
+comment|/* Select a format to encode pointers in exception handling data.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_PREFERRED_EH_DATA_FORMAT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_PREFERRED_EH_DATA_FORMAT
+parameter_list|(
+name|CODE
+parameter_list|,
+name|GLOBAL
+parameter_list|)
+value|DW_EH_PE_absptr
 end_define
 
 begin_comment
@@ -188,7 +215,15 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do                                            \     {                                           \       builtin_define_std ("tpf");               \       builtin_assert ("system=tpf");            \       builtin_define ("__ELF__");               \       if (flag_pic)                             \         {                                       \           builtin_define ("__PIC__");           \           builtin_define ("__pic__");           \         }                                       \     }                                           \   while (0)
+value|do                                            \     {                                           \       builtin_define_std ("tpf");               \       builtin_assert ("system=tpf");            \       builtin_define ("__ELF__");               \     }                                           \   while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXTRA_SPECS
+define|\
+value|{ "entry_spec", ENTRY_SPEC }
 end_define
 
 begin_comment
@@ -206,7 +241,7 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} \                        %{!p:%{profile:gcrt1.o%s} \                          %{!profile:crt1.o%s}}}} \    crti.o%s %{static:crtbeginT.o%s} \    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
+value|"%{mmain:crt0%O%s} crtbeginS%O%s crt3%O%s"
 end_define
 
 begin_undef
@@ -219,8 +254,20 @@ begin_define
 define|#
 directive|define
 name|ENDFILE_SPEC
-define|\
-value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
+value|"crtendS%O%s"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|CC1_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CC1_SPEC
+value|"%{!fverbose-asm: -fverbose-asm}"
 end_define
 
 begin_comment
@@ -250,8 +297,12 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"%{m31&m64}%{mesa&mzarch}%{march=*}"
+value|"%{m31&m64}%{mesa&mzarch}%{march=*} \                   -alshd=%b.lst"
 end_define
+
+begin_comment
+comment|/* It would be nice to get the system linker script define the ones that it    needed.  */
+end_comment
 
 begin_undef
 undef|#
@@ -263,7 +314,7 @@ begin_define
 define|#
 directive|define
 name|LIB_SPEC
-value|"%{pthread:-lpthread} -lc"
+value|"-lCTIS -lCISO -lCLBM -lCTAL -lCFVS -lCTBX -lCTXO \                   -lCJ00 -lCTDF -lCOMX -lCOMS -lCTHD -lCTAD -lTPFSTUB"
 end_define
 
 begin_undef
@@ -279,6 +330,21 @@ name|TARGET_C99_FUNCTIONS
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|ENTRY_SPEC
+value|"%{mmain:-entry=_start} \                     %{!mmain:-entry=0}"
+end_define
+
+begin_comment
+comment|/* All linking is done shared on TPF-OS.  */
+end_comment
+
+begin_comment
+comment|/* FIXME: When binutils patch for new emulation is committed    then change emulation to elf64_s390_tpf.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -290,7 +356,32 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"-m elf64_s390 \    %{shared:-shared} \    %{!shared: \       %{static:-static} \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker /lib/ld64.so}}}"
+value|"-m elf64_s390 \    %{static:%estatic is not supported on TPF-OS} \    %{shared: -shared} \    %{!shared:-shared} \    %(entry_spec)"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD_UNWIND_SUPPORT
+value|"config/s390/tpf-unwind.h"
+end_define
+
+begin_comment
+comment|/* IBM copies these libraries over with these names.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATH_LIBRARY
+value|"-lCLBM"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIBSTDCXX
+value|"-lCPP1"
 end_define
 
 begin_endif

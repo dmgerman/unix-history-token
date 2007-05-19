@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GCC for IA-32.    Copyright (C) 1988, 1992, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GCC for IA-32.    Copyright (C) 1988, 1992, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -42,7 +42,7 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-comment|/* cost of starting a multiply  				   in QImode, HImode, SImode, DImode, TImode*/
+comment|/* cost of starting a multiply 				   in QImode, HImode, SImode, DImode, TImode*/
 specifier|const
 name|int
 name|mult_bit
@@ -55,7 +55,7 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-comment|/* cost of a divide/mod  				   in QImode, HImode, SImode, DImode, TImode*/
+comment|/* cost of a divide/mod 				   in QImode, HImode, SImode, DImode, TImode*/
 name|int
 name|movsx
 decl_stmt|;
@@ -223,17 +223,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Run-time compilation parameters selecting different hardware subsets.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|target_flags
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Macros used in the machine description to test the flags.  */
 end_comment
 
@@ -247,29 +236,11 @@ directive|ifndef
 name|TARGET_CPU_DEFAULT
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TARGET_64BIT_DEFAULT
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|TARGET_CPU_DEFAULT
-value|TARGET_CPU_DEFAULT_k8
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|TARGET_CPU_DEFAULT
-value|0
+value|TARGET_CPU_DEFAULT_generic
 end_define
 
 begin_endif
@@ -277,430 +248,30 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Masks for the -m switches */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TARGET_FPMATH_DEFAULT
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MASK_80387
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* Hardware floating point */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_RTD
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* Use ret that pops args */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_ALIGN_DOUBLE
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* align doubles to 2 word boundary */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_SVR3_SHLIB
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* Uninit locals into bss */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_IEEE_FP
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* IEEE fp comparisons */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_FLOAT_RETURNS
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* Return float in st(0) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_NO_FANCY_MATH_387
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* Disable sin, cos, sqrt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_OMIT_LEAF_FRAME_POINTER
-value|0x080
-end_define
-
-begin_comment
-comment|/* omit leaf frame pointers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_STACK_PROBE
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* Enable stack probing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_NO_ALIGN_STROPS
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* Enable aligning of string ops.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_INLINE_ALL_STROPS
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* Inline stringops in all cases */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_NO_PUSH_ARGS
-value|0x00000800
-end_define
-
-begin_comment
-comment|/* Use push instructions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_ACCUMULATE_OUTGOING_ARGS
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* Accumulate outgoing args */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_MMX
-value|0x00002000
-end_define
-
-begin_comment
-comment|/* Support MMX regs/builtins */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_SSE
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* Support SSE regs/builtins */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_SSE2
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* Support SSE2 regs/builtins */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_SSE3
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* Support SSE3 regs/builtins */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_3DNOW
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* Support 3Dnow builtins */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_3DNOW_A
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* Support Athlon 3Dnow builtins */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_128BIT_LONG_DOUBLE
-value|0x00080000
-end_define
-
-begin_comment
-comment|/* long double size is 128bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_64BIT
-value|0x00100000
-end_define
-
-begin_comment
-comment|/* Produce 64bit code */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_MS_BITFIELD_LAYOUT
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* Use native (MS) bitfield layout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_TLS_DIRECT_SEG_REFS
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* Avoid adding %gs:0  */
-end_comment
-
-begin_comment
-comment|/* Unused:			0x03e0000	*/
-end_comment
-
-begin_comment
-comment|/* ... overlap with subtarget options starts by 0x04000000.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_NO_RED_ZONE
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* Do not use red zone */
-end_comment
-
-begin_comment
-comment|/* Use the floating point instructions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_80387
-value|(target_flags& MASK_80387)
-end_define
-
-begin_comment
-comment|/* Compile using ret insn that pops args.    This will not work unless you use prototypes at least    for all functions that can take varying numbers of args.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_RTD
-value|(target_flags& MASK_RTD)
-end_define
-
-begin_comment
-comment|/* Align doubles to a two word boundary.  This breaks compatibility with    the published ABI's for structures containing doubles, but produces    faster code on the pentium.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_ALIGN_DOUBLE
-value|(target_flags& MASK_ALIGN_DOUBLE)
-end_define
-
-begin_comment
-comment|/* Use push instructions to save outgoing args.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_PUSH_ARGS
-value|(!(target_flags& MASK_NO_PUSH_ARGS))
-end_define
-
-begin_comment
-comment|/* Accumulate stack adjustments to prologue/epilogue.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_ACCUMULATE_OUTGOING_ARGS
+name|TARGET_FPMATH_DEFAULT
 define|\
-value|(target_flags& MASK_ACCUMULATE_OUTGOING_ARGS)
+value|(TARGET_64BIT&& TARGET_SSE ? FPMATH_SSE : FPMATH_387)
 end_define
 
-begin_comment
-comment|/* Put uninitialized locals into bss, not data.    Meaningful only on svr3.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_SVR3_SHLIB
-value|(target_flags& MASK_SVR3_SHLIB)
-end_define
-
-begin_comment
-comment|/* Use IEEE floating point comparisons.  These handle correctly the cases    where the result of a comparison is unordered.  Normally SIGFPE is    generated in such cases, in which case this isn't needed.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_IEEE_FP
-value|(target_flags& MASK_IEEE_FP)
-end_define
-
-begin_comment
-comment|/* Functions that return a floating point value may return that value    in the 387 FPU or in 386 integer registers.  If set, this flag causes    the 387 to be used, which is compatible with most calling conventions.  */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
 name|TARGET_FLOAT_RETURNS_IN_80387
-value|(target_flags& MASK_FLOAT_RETURNS)
-end_define
-
-begin_comment
-comment|/* Long double is 128bit instead of 96bit, even when only 80bits are used.    This mode wastes cache, but avoid misaligned data accesses and simplifies    address calculations.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_128BIT_LONG_DOUBLE
-value|(target_flags& MASK_128BIT_LONG_DOUBLE)
-end_define
-
-begin_comment
-comment|/* Disable generation of FP sin, cos and sqrt operations for 387.    This is because FreeBSD lacks these in the math-emulator-code */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_NO_FANCY_MATH_387
-value|(target_flags& MASK_NO_FANCY_MATH_387)
-end_define
-
-begin_comment
-comment|/* Don't create frame pointers for leaf functions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_OMIT_LEAF_FRAME_POINTER
-define|\
-value|(target_flags& MASK_OMIT_LEAF_FRAME_POINTER)
-end_define
-
-begin_comment
-comment|/* Debug GO_IF_LEGITIMATE_ADDRESS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_DEBUG_ADDR
-value|(ix86_debug_addr_string != 0)
-end_define
-
-begin_comment
-comment|/* Debug FUNCTION_ARG macros */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_DEBUG_ARG
-value|(ix86_debug_arg_string != 0)
+value|TARGET_FLOAT_RETURNS
 end_define
 
 begin_comment
@@ -712,6 +283,12 @@ ifdef|#
 directive|ifdef
 name|IN_LIBGCC2
 end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_64BIT
+end_undef
 
 begin_ifdef
 ifdef|#
@@ -748,23 +325,17 @@ else|#
 directive|else
 end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|TARGET_BI_ARCH
-end_ifdef
+end_ifndef
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|TARGET_64BIT
-value|(target_flags& MASK_64BIT)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
+end_undef
 
 begin_if
 if|#
@@ -806,15 +377,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Avoid adding %gs:0 in TLS references; use %gs:address directly.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAS_LONG_COND_BRANCH
+value|1
+end_define
 
 begin_define
 define|#
 directive|define
-name|TARGET_TLS_DIRECT_SEG_REFS
-value|(target_flags& MASK_TLS_DIRECT_SEG_REFS)
+name|HAS_LONG_UNCOND_BRANCH
+value|1
 end_define
 
 begin_define
@@ -883,6 +457,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|TARGET_NOCONA
+value|(ix86_tune == PROCESSOR_NOCONA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_GENERIC32
+value|(ix86_tune == PROCESSOR_GENERIC32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_GENERIC64
+value|(ix86_tune == PROCESSOR_GENERIC64)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_GENERIC
+value|(TARGET_GENERIC32 || TARGET_GENERIC64)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TUNEMASK
 value|(1<< ix86_tune)
 end_define
@@ -937,11 +539,9 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|int
-name|x86_use_loop
+name|x86_use_himode_fiop
 decl_stmt|,
-name|x86_use_fiop
-decl_stmt|,
-name|x86_use_mov0
+name|x86_use_simode_fiop
 decl_stmt|;
 end_decl_stmt
 
@@ -949,6 +549,8 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|int
+name|x86_use_mov0
+decl_stmt|,
 name|x86_use_cltd
 decl_stmt|,
 name|x86_read_modify_write
@@ -1059,7 +661,7 @@ specifier|const
 name|int
 name|x86_sse_partial_reg_dependency
 decl_stmt|,
-name|x86_sse_partial_regs
+name|x86_sse_split_regs
 decl_stmt|;
 end_decl_stmt
 
@@ -1078,8 +680,6 @@ specifier|extern
 specifier|const
 name|int
 name|x86_use_ffreep
-decl_stmt|,
-name|x86_sse_partial_regs_for_cvtsd2ss
 decl_stmt|;
 end_decl_stmt
 
@@ -1088,6 +688,54 @@ specifier|extern
 specifier|const
 name|int
 name|x86_inter_unit_moves
+decl_stmt|,
+name|x86_schedule
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|int
+name|x86_use_bt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|int
+name|x86_cmpxchg
+decl_stmt|,
+name|x86_cmpxchg8b
+decl_stmt|,
+name|x86_cmpxchg16b
+decl_stmt|,
+name|x86_xadd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|int
+name|x86_use_incdec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|int
+name|x86_pad_returns
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|int
+name|x86_partial_flag_reg_stall
 decl_stmt|;
 end_decl_stmt
 
@@ -1147,6 +795,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TARGET_FISTTP
+value|(TARGET_SSE3&& TARGET_80387)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TARGET_DEEP_BRANCH_PREDICTION
 value|(x86_deep_branch& TUNEMASK)
 end_define
@@ -1189,15 +844,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|TARGET_USE_LOOP
-value|(x86_use_loop& TUNEMASK)
+name|TARGET_PARTIAL_FLAG_REG_STALL
+value|(x86_partial_flag_reg_stall& TUNEMASK)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TARGET_USE_FIOP
-value|(x86_use_fiop& TUNEMASK)
+name|TARGET_USE_HIMODE_FIOP
+value|(x86_use_himode_fiop& TUNEMASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_USE_SIMODE_FIOP
+value|(x86_use_simode_fiop& TUNEMASK)
 end_define
 
 begin_define
@@ -1337,16 +999,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|TARGET_SSE_PARTIAL_REGS
-value|(x86_sse_partial_regs& TUNEMASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_SSE_PARTIAL_REGS_FOR_CVTSD2SS
-define|\
-value|(x86_sse_partial_regs_for_cvtsd2ss& TUNEMASK)
+name|TARGET_SSE_SPLIT_REGS
+value|(x86_sse_split_regs& TUNEMASK)
 end_define
 
 begin_define
@@ -1354,13 +1008,6 @@ define|#
 directive|define
 name|TARGET_SSE_TYPELESS_STORES
 value|(x86_sse_typeless_stores& TUNEMASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_SSE_TYPELESS_LOAD0
-value|(x86_sse_typeless_load0& TUNEMASK)
 end_define
 
 begin_define
@@ -1389,13 +1036,6 @@ define|#
 directive|define
 name|TARGET_EPILOGUE_USING_MOVE
 value|(x86_epilogue_using_move& TUNEMASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_DECOMPOSE_LEA
-value|(x86_decompose_lea& TUNEMASK)
 end_define
 
 begin_define
@@ -1436,22 +1076,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|TARGET_STACK_PROBE
-value|(target_flags& MASK_STACK_PROBE)
+name|TARGET_FOUR_JUMP_LIMIT
+value|(x86_four_jump_limit& TUNEMASK)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TARGET_ALIGN_STRINGOPS
-value|(!(target_flags& MASK_NO_ALIGN_STROPS))
+name|TARGET_SCHEDULE
+value|(x86_schedule& TUNEMASK)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TARGET_INLINE_ALL_STRINGOPS
-value|(target_flags& MASK_INLINE_ALL_STROPS)
+name|TARGET_USE_BT
+value|(x86_use_bt& TUNEMASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_USE_INCDEC
+value|(x86_use_incdec& TUNEMASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_PAD_RETURNS
+value|(x86_pad_returns& TUNEMASK)
 end_define
 
 begin_define
@@ -1459,27 +1113,6 @@ define|#
 directive|define
 name|ASSEMBLER_DIALECT
 value|(ix86_asm_dialect)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_SSE
-value|((target_flags& MASK_SSE) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_SSE2
-value|((target_flags& MASK_SSE2) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_SSE3
-value|((target_flags& MASK_SSE3) != 0)
 end_define
 
 begin_define
@@ -1499,43 +1132,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|TARGET_MMX
-value|((target_flags& MASK_MMX) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_3DNOW
-value|((target_flags& MASK_3DNOW) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_3DNOW_A
-value|((target_flags& MASK_3DNOW_A) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_RED_ZONE
-value|(!(target_flags& MASK_NO_RED_ZONE))
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_USE_MS_BITFIELD_LAYOUT
-value|(target_flags& MASK_MS_BITFIELD_LAYOUT)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TARGET_GNU_TLS
 value|(ix86_tls_dialect == TLS_DIALECT_GNU)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_GNU2_TLS
+value|(ix86_tls_dialect == TLS_DIALECT_GNU2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ANY_GNU_TLS
+value|(TARGET_GNU_TLS || TARGET_GNU2_TLS)
 end_define
 
 begin_define
@@ -1545,36 +1157,32 @@ name|TARGET_SUN_TLS
 value|(ix86_tls_dialect == TLS_DIALECT_SUN)
 end_define
 
-begin_comment
-comment|/* WARNING: Do not mark empty strings for translation, as calling             gettext on an empty string does NOT return an empty             string.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|TARGET_CMPXCHG
+value|(x86_cmpxchg& (1<< ix86_arch))
+end_define
 
 begin_define
 define|#
 directive|define
-name|TARGET_SWITCHES
-define|\
-value|{ { "80387",			 MASK_80387, N_("Use hardware fp") },	      \   { "no-80387",			-MASK_80387, N_("Do not use hardware fp") },  \   { "hard-float",		 MASK_80387, N_("Use hardware fp") },	      \   { "soft-float",		-MASK_80387, N_("Do not use hardware fp") },  \   { "no-soft-float",		 MASK_80387, N_("Use hardware fp") },	      \   { "386",			 0, ""
-comment|/*Deprecated.*/
-value|},		      \   { "486",			 0, ""
-comment|/*Deprecated.*/
-value|},		      \   { "pentium",			 0, ""
-comment|/*Deprecated.*/
-value|},		      \   { "pentiumpro",		 0, ""
-comment|/*Deprecated.*/
-value|},		      \   { "pni",			 0, ""
-comment|/*Deprecated.*/
-value|},		      \   { "no-pni",			 0, ""
-comment|/*Deprecated.*/
-value|},		      \   { "intel-syntax",		 0, ""
-comment|/*Deprecated.*/
-value|},	 	      \   { "no-intel-syntax",		 0, ""
-comment|/*Deprecated.*/
-value|},	 	      \   { "rtd",			 MASK_RTD,				      \     N_("Alternate calling convention") },				      \   { "no-rtd",			-MASK_RTD,				      \     N_("Use normal calling convention") },				      \   { "align-double",		 MASK_ALIGN_DOUBLE,			      \     N_("Align some doubles on dword boundary") },			      \   { "no-align-double",		-MASK_ALIGN_DOUBLE,			      \     N_("Align doubles on word boundary") },				      \   { "svr3-shlib",		 MASK_SVR3_SHLIB,			      \     N_("Uninitialized locals in .bss")  },				      \   { "no-svr3-shlib",		-MASK_SVR3_SHLIB,			      \     N_("Uninitialized locals in .data") },				      \   { "ieee-fp",			 MASK_IEEE_FP,				      \     N_("Use IEEE math for fp comparisons") },				      \   { "no-ieee-fp",		-MASK_IEEE_FP,				      \     N_("Do not use IEEE math for fp comparisons") },			      \   { "fp-ret-in-387",		 MASK_FLOAT_RETURNS,			      \     N_("Return values of functions in FPU registers") },		      \   { "no-fp-ret-in-387",		-MASK_FLOAT_RETURNS ,			      \     N_("Do not return values of functions in FPU registers")},		      \   { "no-fancy-math-387",	 MASK_NO_FANCY_MATH_387,		      \     N_("Do not generate sin, cos, sqrt for FPU") },			      \   { "fancy-math-387",		-MASK_NO_FANCY_MATH_387,		      \      N_("Generate sin, cos, sqrt for FPU")},				      \   { "omit-leaf-frame-pointer",	 MASK_OMIT_LEAF_FRAME_POINTER,		      \     N_("Omit the frame pointer in leaf functions") },			      \   { "no-omit-leaf-frame-pointer",-MASK_OMIT_LEAF_FRAME_POINTER, "" },	      \   { "stack-arg-probe",		 MASK_STACK_PROBE,			      \     N_("Enable stack probing") },					      \   { "no-stack-arg-probe",	-MASK_STACK_PROBE, "" },		      \   { "windows",			0, 0
-comment|/* undocumented */
-value|},		      \   { "dll",			0,  0
-comment|/* undocumented */
-value|},		      \   { "align-stringops",		-MASK_NO_ALIGN_STROPS,			      \     N_("Align destination of the string operations") },			      \   { "no-align-stringops",	 MASK_NO_ALIGN_STROPS,			      \     N_("Do not align destination of the string operations") },		      \   { "inline-all-stringops",	 MASK_INLINE_ALL_STROPS,		      \     N_("Inline all known string operations") },				      \   { "no-inline-all-stringops",	-MASK_INLINE_ALL_STROPS,		      \     N_("Do not inline all known string operations") },			      \   { "push-args",		-MASK_NO_PUSH_ARGS,			      \     N_("Use push instructions to save outgoing arguments") },		      \   { "no-push-args",		MASK_NO_PUSH_ARGS,			      \     N_("Do not use push instructions to save outgoing arguments") },	      \   { "accumulate-outgoing-args",	MASK_ACCUMULATE_OUTGOING_ARGS,		      \     N_("Use push instructions to save outgoing arguments") },		      \   { "no-accumulate-outgoing-args",-MASK_ACCUMULATE_OUTGOING_ARGS,	      \     N_("Do not use push instructions to save outgoing arguments") },	      \   { "mmx",			 MASK_MMX,				      \     N_("Support MMX built-in functions") },				      \   { "no-mmx",			 -MASK_MMX,				      \     N_("Do not support MMX built-in functions") },			      \   { "3dnow",                     MASK_3DNOW,				      \     N_("Support 3DNow! built-in functions") },				      \   { "no-3dnow",                  -MASK_3DNOW,				      \     N_("Do not support 3DNow! built-in functions") },			      \   { "sse",			 MASK_SSE,				      \     N_("Support MMX and SSE built-in functions and code generation") },	      \   { "no-sse",			 -MASK_SSE,				      \     N_("Do not support MMX and SSE built-in functions and code generation") },\   { "sse2",			 MASK_SSE2,				      \     N_("Support MMX, SSE and SSE2 built-in functions and code generation") }, \   { "no-sse2",			 -MASK_SSE2,				      \     N_("Do not support MMX, SSE and SSE2 built-in functions and code generation") },    \   { "sse3",			 MASK_SSE3,				      \     N_("Support MMX, SSE, SSE2 and SSE3 built-in functions and code generation") },\   { "no-sse3",			 -MASK_SSE3,				      \     N_("Do not support MMX, SSE, SSE2 and SSE3 built-in functions and code generation") },\   { "128bit-long-double",	 MASK_128BIT_LONG_DOUBLE,		      \     N_("sizeof(long double) is 16") },					      \   { "96bit-long-double",	-MASK_128BIT_LONG_DOUBLE,		      \     N_("sizeof(long double) is 12") },					      \   { "64",			MASK_64BIT,				      \     N_("Generate 64bit x86-64 code") },					      \   { "32",			-MASK_64BIT,				      \     N_("Generate 32bit i386 code") },					      \   { "ms-bitfields",		MASK_MS_BITFIELD_LAYOUT,		      \     N_("Use native (MS) bitfield layout") },				      \   { "no-ms-bitfields",		-MASK_MS_BITFIELD_LAYOUT,		      \     N_("Use gcc default bitfield layout") },				      \   { "red-zone",			-MASK_NO_RED_ZONE,			      \     N_("Use red-zone in the x86-64 code") },				      \   { "no-red-zone",		MASK_NO_RED_ZONE,			      \     N_("Do not use red-zone in the x86-64 code") },			      \   { "tls-direct-seg-refs",	MASK_TLS_DIRECT_SEG_REFS,		      \     N_("Use direct references against %gs when accessing tls data") },	      \   { "no-tls-direct-seg-refs",	-MASK_TLS_DIRECT_SEG_REFS,		      \     N_("Do not use direct references against %gs when accessing tls data") }, \   SUBTARGET_SWITCHES							      \   { "",									      \     TARGET_DEFAULT | TARGET_64BIT_DEFAULT | TARGET_SUBTARGET_DEFAULT	      \     | TARGET_TLS_DIRECT_SEG_REFS_DEFAULT, 0 }}
+name|TARGET_CMPXCHG8B
+value|(x86_cmpxchg8b& (1<< ix86_arch))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_CMPXCHG16B
+value|(x86_cmpxchg16b& (1<< ix86_arch))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_XADD
+value|(x86_xadd& (1<< ix86_arch))
 end_define
 
 begin_ifndef
@@ -1647,22 +1255,6 @@ value|0
 end_define
 
 begin_comment
-comment|/* This macro is similar to `TARGET_SWITCHES' but defines names of    command options that have values.  Its definition is an    initializer with a subgrouping for each command option.     Each subgrouping contains a string constant, that defines the    fixed part of the option name, and the address of a variable.  The    variable, type `char *', is set to the variable part of the given    option if the fixed part matches.  The actual option name is made    by appending `-m' to the specified name.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_OPTIONS
-define|\
-value|{ { "tune=",&ix86_tune_string,			\     N_("Schedule code for given CPU"), 0},			\   { "fpmath=",&ix86_fpmath_string,			\     N_("Generate floating point mathematics using given instruction set"), 0},\   { "arch=",&ix86_arch_string,			\     N_("Generate code for given CPU"), 0},			\   { "regparm=",&ix86_regparm_string,			\     N_("Number of registers used to pass integer arguments"), 0},\   { "align-loops=",&ix86_align_loops_string,		\     N_("Loop code aligned to this power of 2"), 0},		\   { "align-jumps=",&ix86_align_jumps_string,		\     N_("Jump targets are aligned to this power of 2"), 0},	\   { "align-functions=",&ix86_align_funcs_string,		\     N_("Function starts are aligned to this power of 2"), 0},	\   { "preferred-stack-boundary=",				\&ix86_preferred_stack_boundary_string,			\     N_("Attempt to keep stack aligned to this power of 2"), 0},	\   { "branch-cost=",&ix86_branch_cost_string,		\     N_("Branches are this expensive (1-5, arbitrary units)"), 0},\   { "cmodel=",&ix86_cmodel_string,				\     N_("Use given x86-64 code model"), 0},			\   { "debug-arg",&ix86_debug_arg_string,			\     ""
-comment|/* Undocumented.  */
-value|, 0},				\   { "debug-addr",&ix86_debug_addr_string,			\     ""
-comment|/* Undocumented.  */
-value|, 0},				\   { "asm=",&ix86_asm_string,					\     N_("Use given assembler dialect"), 0},			\   { "tls-dialect=",&ix86_tls_dialect_string,			\     N_("Use given thread-local storage dialect"), 0},		\   SUBTARGET_OPTIONS						\ }
-end_define
-
-begin_comment
 comment|/* Sometimes certain combinations of command options do not make    sense on a particular target machine.  You can define a macro    `OVERRIDE_OPTIONS' to take account of this.  This macro, if    defined, is executed once just after all the command options have    been parsed.     Don't use this macro to turn on various extra optimizations for    `-O'.  That is what `OPTIMIZATION_OPTIONS' is for.  */
 end_comment
 
@@ -1671,22 +1263,6 @@ define|#
 directive|define
 name|OVERRIDE_OPTIONS
 value|override_options ()
-end_define
-
-begin_comment
-comment|/* These are meant to be redefined in the host dependent files */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_SWITCHES
-end_define
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_OPTIONS
 end_define
 
 begin_comment
@@ -1707,7 +1283,67 @@ value|optimization_options ((LEVEL), (SIZE))
 end_define
 
 begin_comment
-comment|/* Support for configure-time defaults of some command line options.  */
+comment|/* -march=native handling only makes sense with compiler running on    an x86 or x86_64 chip.  If changing this condition, also change    the condition in driver-i386.c.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* In driver-i386.c.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|host_detect_local_cpu
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|EXTRA_SPEC_FUNCTIONS
+define|\
+value|{ "local_cpu_detect", host_detect_local_cpu },
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOCAL_CPU_DETECT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Support for configure-time defaults of some command line options.    The order here is important so that -march doesn't squash the    tune or cpu values.  */
 end_comment
 
 begin_define
@@ -1715,7 +1351,7 @@ define|#
 directive|define
 name|OPTION_DEFAULT_SPECS
 define|\
-value|{"arch", "%{!march=*:-march=%(VALUE)}"}, \   {"tune", "%{!mtune=*:%{!mcpu=*:%{!march=*:-mtune=%(VALUE)}}}" }, \   {"cpu", "%{!mtune=*:%{!mcpu=*:%{!march=*:-mtune=%(VALUE)}}}" }
+value|{"tune", "%{!mtune=*:%{!mcpu=*:%{!march=*:-mtune=%(VALUE)}}}" }, \   {"cpu", "%{!mtune=*:%{!mcpu=*:%{!march=*:-mtune=%(VALUE)}}}" }, \   {"arch", "%{!march=*:-march=%(VALUE)}"}
 end_define
 
 begin_comment
@@ -1731,9 +1367,39 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|CC1_CPU_SPEC
-value|"\ %{!mtune*: \ %{m386:mtune=i386 \ %n`-m386' is deprecated. Use `-march=i386' or `-mtune=i386' instead.\n} \ %{m486:-mtune=i486 \ %n`-m486' is deprecated. Use `-march=i486' or `-mtune=i486' instead.\n} \ %{mpentium:-mtune=pentium \ %n`-mpentium' is deprecated. Use `-march=pentium' or `-mtune=pentium' instead.\n} \ %{mpentiumpro:-mtune=pentiumpro \ %n`-mpentiumpro' is deprecated. Use `-march=pentiumpro' or `-mtune=pentiumpro' instead.\n} \ %{mcpu=*:-mtune=%* \ %n`-mcpu=' is deprecated. Use `-mtune=' or '-march=' inst<mcpu=* \ %{mpni:-msse3 \ %n`-mpni' is deprecated. Use `-msse3' instead.\n} \ %{mno-pni:-mno-sse3 \ %n`-mno-pni' is deprecated. Use `-mno-sse3' instead.\n} \ %{mintel-syntax:-masm=intel \ %n`-mintel-syntax' is deprecated. Use `-masm=intel' instead.\n} \ %{mno-intel-syntax:-masm=att \ %n`-mno-intel-syntax' is deprecated. Use `-masm=att' instead.\n}"
+name|CC1_CPU_SPEC_1
+value|"\ %{!mtune*: \ %{m386:mtune=i386 \ %n`-m386' is deprecated. Use `-march=i386' or `-mtune=i386' instead.\n} \ %{m486:-mtune=i486 \ %n`-m486' is deprecated. Use `-march=i486' or `-mtune=i486' instead.\n} \ %{mpentium:-mtune=pentium \ %n`-mpentium' is deprecated. Use `-march=pentium' or `-mtune=pentium' instead.\n} \ %{mpentiumpro:-mtune=pentiumpro \ %n`-mpentiumpro' is deprecated. Use `-march=pentiumpro' or `-mtune=pentiumpro' instead.\n} \ %{mcpu=*:-mtune=%* \ %n`-mcpu=' is deprecated. Use `-mtune=' or '-march=' inst<mcpu=* \ %{mintel-syntax:-masm=intel \ %n`-mintel-syntax' is deprecated. Use `-masm=intel' instead.\n} \ %{mno-intel-syntax:-masm=att \ %n`-mno-intel-syntax' is deprecated. Use `-masm=att' instead.\n}"
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_LOCAL_CPU_DETECT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CC1_CPU_SPEC
+value|CC1_CPU_SPEC_1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CC1_CPU_SPEC
+value|CC1_CPU_SPEC_1 \ "%{march=native:%<march=native %:local_cpu_detect(arch) \   %{!mtune=*:%<mtune=native %:local_cpu_detect(tune)}} \ %{mtune=native:%<mtune=native %:local_cpu_detect(tune)}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1759,11 +1425,11 @@ value|\       if (TARGET_386)						\ 	builtin_define ("__tune_i386__");			\     
 comment|/* FALLTHRU */
 value|\ 	    case '2':						\ 	      builtin_define ("__tune_pentium2__");		\ 	      break;						\ 	    }							\ 	}							\       else if (TARGET_K6)					\ 	{							\ 	  builtin_define ("__tune_k6__");			\ 	  if (last_tune_char == '2')				\ 	    builtin_define ("__tune_k6_2__");			\ 	  else if (last_tune_char == '3')			\ 	    builtin_define ("__tune_k6_3__");			\ 	}							\       else if (TARGET_ATHLON)					\ 	{							\ 	  builtin_define ("__tune_athlon__");			\
 comment|/* Only plain "athlon" lacks SSE.  */
-value|\ 	  if (last_tune_char != 'n')				\ 	    builtin_define ("__tune_athlon_sse__");		\ 	}							\       else if (TARGET_K8)					\ 	builtin_define ("__tune_k8__");				\       else if (TARGET_PENTIUM4)					\ 	builtin_define ("__tune_pentium4__");			\ 								\       if (TARGET_MMX)						\ 	builtin_define ("__MMX__");				\       if (TARGET_3DNOW)						\ 	builtin_define ("__3dNOW__");				\       if (TARGET_3DNOW_A)					\ 	builtin_define ("__3dNOW_A__");				\       if (TARGET_SSE)						\ 	builtin_define ("__SSE__");				\       if (TARGET_SSE2)						\ 	builtin_define ("__SSE2__");				\       if (TARGET_SSE3)						\ 	{							\ 	  builtin_define ("__SSE3__");				\ 	  builtin_define ("__PNI__");				\ 	}							\       if (TARGET_SSE_MATH&& TARGET_SSE)			\ 	builtin_define ("__SSE_MATH__");			\       if (TARGET_SSE_MATH&& TARGET_SSE2)			\ 	builtin_define ("__SSE2_MATH__");			\ 								\
+value|\ 	  if (last_tune_char != 'n')				\ 	    builtin_define ("__tune_athlon_sse__");		\ 	}							\       else if (TARGET_K8)					\ 	builtin_define ("__tune_k8__");				\       else if (TARGET_PENTIUM4)					\ 	builtin_define ("__tune_pentium4__");			\       else if (TARGET_NOCONA)					\ 	builtin_define ("__tune_nocona__");			\ 								\       if (TARGET_MMX)						\ 	builtin_define ("__MMX__");				\       if (TARGET_3DNOW)						\ 	builtin_define ("__3dNOW__");				\       if (TARGET_3DNOW_A)					\ 	builtin_define ("__3dNOW_A__");				\       if (TARGET_SSE)						\ 	builtin_define ("__SSE__");				\       if (TARGET_SSE2)						\ 	builtin_define ("__SSE2__");				\       if (TARGET_SSE3)						\ 	builtin_define ("__SSE3__");				\       if (TARGET_SSE_MATH&& TARGET_SSE)			\ 	builtin_define ("__SSE_MATH__");			\       if (TARGET_SSE_MATH&& TARGET_SSE2)			\ 	builtin_define ("__SSE2_MATH__");			\ 								\
 comment|/* Built-ins based on -march=.  */
 value|\       if (ix86_arch == PROCESSOR_I486)				\ 	{							\ 	  builtin_define ("__i486");				\ 	  builtin_define ("__i486__");				\ 	}							\       else if (ix86_arch == PROCESSOR_PENTIUM)			\ 	{							\ 	  builtin_define ("__i586");				\ 	  builtin_define ("__i586__");				\ 	  builtin_define ("__pentium");				\ 	  builtin_define ("__pentium__");			\ 	  if (last_arch_char == 'x')				\ 	    builtin_define ("__pentium_mmx__");			\ 	}							\       else if (ix86_arch == PROCESSOR_PENTIUMPRO)		\ 	{							\ 	  builtin_define ("__i686");				\ 	  builtin_define ("__i686__");				\ 	  builtin_define ("__pentiumpro");			\ 	  builtin_define ("__pentiumpro__");			\ 	}							\       else if (ix86_arch == PROCESSOR_K6)			\ 	{							\ 								\ 	  builtin_define ("__k6");				\ 	  builtin_define ("__k6__");				\ 	  if (last_arch_char == '2')				\ 	    builtin_define ("__k6_2__");			\ 	  else if (last_arch_char == '3')			\ 	    builtin_define ("__k6_3__");			\ 	}							\       else if (ix86_arch == PROCESSOR_ATHLON)			\ 	{							\ 	  builtin_define ("__athlon");				\ 	  builtin_define ("__athlon__");			\
 comment|/* Only plain "athlon" lacks SSE.  */
-value|\ 	  if (last_arch_char != 'n')				\ 	    builtin_define ("__athlon_sse__");			\ 	}							\       else if (ix86_arch == PROCESSOR_K8)			\ 	{							\ 	  builtin_define ("__k8");				\ 	  builtin_define ("__k8__");				\ 	}							\       else if (ix86_arch == PROCESSOR_PENTIUM4)			\ 	{							\ 	  builtin_define ("__pentium4");			\ 	  builtin_define ("__pentium4__");			\ 	}							\     }								\   while (0)
+value|\ 	  if (last_arch_char != 'n')				\ 	    builtin_define ("__athlon_sse__");			\ 	}							\       else if (ix86_arch == PROCESSOR_K8)			\ 	{							\ 	  builtin_define ("__k8");				\ 	  builtin_define ("__k8__");				\ 	}							\       else if (ix86_arch == PROCESSOR_PENTIUM4)			\ 	{							\ 	  builtin_define ("__pentium4");			\ 	  builtin_define ("__pentium4__");			\ 	}							\       else if (ix86_arch == PROCESSOR_NOCONA)			\ 	{							\ 	  builtin_define ("__nocona");				\ 	  builtin_define ("__nocona__");			\ 	}							\     }								\   while (0)
 end_define
 
 begin_define
@@ -1888,8 +1554,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|TARGET_CPU_DEFAULT_generic
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
 name|TARGET_CPU_DEFAULT_NAMES
-value|{"i386", "i486", "pentium", "pentium-mmx",\ 				  "pentiumpro", "pentium2", "pentium3", \ 				  "pentium4", "k6", "k6-2", "k6-3",\ 				  "athlon", "athlon-4", "k8", \ 				  "pentium-m", "prescott", "nocona"}
+value|{"i386", "i486", "pentium", "pentium-mmx",\ 				  "pentiumpro", "pentium2", "pentium3", \ 				  "pentium4", "k6", "k6-2", "k6-3",\ 				  "athlon", "athlon-4", "k8", \ 				  "pentium-m", "prescott", "nocona", \ 				  "generic"}
 end_define
 
 begin_ifndef
@@ -1950,7 +1623,7 @@ begin_define
 define|#
 directive|define
 name|LONG_DOUBLE_TYPE_SIZE
-value|96
+value|80
 end_define
 
 begin_comment
@@ -1996,13 +1669,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_WCHAR_TYPE_SIZE
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
 name|DOUBLE_TYPE_SIZE
 value|64
 end_define
@@ -2032,13 +1698,6 @@ name|MAX_BITS_PER_WORD
 value|64
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAX_LONG_TYPE_SIZE
-value|64
-end_define
-
 begin_else
 else|#
 directive|else
@@ -2048,13 +1707,6 @@ begin_define
 define|#
 directive|define
 name|MAX_BITS_PER_WORD
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_LONG_TYPE_SIZE
 value|32
 end_define
 
@@ -2183,7 +1835,7 @@ value|ix86_preferred_stack_boundary
 end_define
 
 begin_comment
-comment|/* As of July 2001, many runtimes to not align the stack properly when    entering main.  This causes expand_main_function to forcibly align    the stack, which results in aligned frames for functions called from    main, though it does nothing for the alignment of main itself.  */
+comment|/* As of July 2001, many runtimes do not align the stack properly when    entering main.  This causes expand_main_function to forcibly align    the stack, which results in aligned frames for functions called from    main, though it does nothing for the alignment of main itself.  */
 end_comment
 
 begin_define
@@ -2250,7 +1902,7 @@ parameter_list|(
 name|MODE
 parameter_list|)
 define|\
-value|((MODE) == XFmode || (MODE) == TFmode || SSE_REG_MODE_P (MODE))
+value|((MODE) == XFmode || SSE_REG_MODE_P (MODE))
 end_define
 
 begin_comment
@@ -2436,11 +2088,10 @@ parameter_list|(
 name|MODE
 parameter_list|)
 define|\
-value|((MODE) == DFmode || (MODE) == SFmode || (MODE) == XFmode)
+value|(((MODE) == SFmode&& (!TARGET_SSE || !TARGET_SSE_MATH))	\    || ((MODE) == DFmode&& (!TARGET_SSE2 || !TARGET_SSE_MATH))  \    || (MODE) == XFmode)
 end_define
 
 begin_comment
-unit|\
 comment|/* Number of actual hardware registers.    The hardware registers are assigned numbers for the compiler    from 0 to just below FIRST_PSEUDO_REGISTER.    All registers that the compiler knows about must be given numbers,    even those that are not normally considered general registers.     In the 80386 we give the 8 general purpose registers the numbers 0-7.    We number the floating point registers 8-15.    Note that registers 0-7 can be accessed as a  short or int,    while only 0-3 may be used with byte `mov' instructions.     Reg 16 does not correspond to any hardware register, but instead    appears in the RTL as an argument pointer prior to reload, and is    eliminated during reloading in favor of either the stack or frame    pointer.  */
 end_comment
 
@@ -2463,7 +2114,7 @@ value|17
 end_define
 
 begin_comment
-comment|/* 1 for registers that have pervasive standard uses    and are not available for the register allocator.    On the 80386, the stack pointer is such, as is the arg pointer.     The value is a mask - bit 1 is set for fixed registers    for 32bit target, while 2 is set for fixed registers for 64bit.    Proper value is computed in the CONDITIONAL_REGISTER_USAGE.  */
+comment|/* 1 for registers that have pervasive standard uses    and are not available for the register allocator.    On the 80386, the stack pointer is such, as is the arg pointer.     The value is zero if the register is not fixed on either 32 or    64 bit targets, one if the register if fixed on both 32 and 64    bit targets, two if it is only fixed on 32bit targets and three    if its only fixed on 64bit targets.    Proper values are computed in the CONDITIONAL_REGISTER_USAGE.  */
 end_comment
 
 begin_define
@@ -2473,21 +2124,21 @@ name|FIXED_REGISTERS
 define|\
 comment|/*ax,dx,cx,bx,si,di,bp,sp,st,st1,st2,st3,st4,st5,st6,st7*/
 define|\
-value|{  0, 0, 0, 0, 0, 0, 0, 3, 0,  0,  0,  0,  0,  0,  0,  0,	\
+value|{  0, 0, 0, 0, 0, 0, 0, 1, 0,  0,  0,  0,  0,  0,  0,  0,	\
 comment|/*arg,flags,fpsr,dir,frame*/
-value|\     3,    3,   3,  3,    3,					\
+value|\     1,    1,   1,  1,    1,					\
 comment|/*xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7*/
 value|\      0,   0,   0,   0,   0,   0,   0,   0,			\
 comment|/*mmx0,mmx1,mmx2,mmx3,mmx4,mmx5,mmx6,mmx7*/
 value|\      0,   0,   0,   0,   0,   0,   0,   0,			\
 comment|/*  r8,  r9, r10, r11, r12, r13, r14, r15*/
-value|\      1,   1,   1,   1,   1,   1,   1,   1,			\
+value|\      2,   2,   2,   2,   2,   2,   2,   2,			\
 comment|/*xmm8,xmm9,xmm10,xmm11,xmm12,xmm13,xmm14,xmm15*/
-value|\      1,   1,    1,    1,    1,    1,    1,    1}
+value|\      2,   2,    2,    2,    2,    2,    2,    2}
 end_define
 
 begin_comment
-comment|/* 1 for registers not available across function calls.    These must include the FIXED_REGISTERS and also any    registers that can be used without being saved.    The latter must include the registers where values are returned    and the register where structure-value addresses are passed.    Aside from that, you can include as many other registers as you like.     The value is a mask - bit 1 is set for call used    for 32bit target, while 2 is set for call used for 64bit.    Proper value is computed in the CONDITIONAL_REGISTER_USAGE. */
+comment|/* 1 for registers not available across function calls.    These must include the FIXED_REGISTERS and also any    registers that can be used without being saved.    The latter must include the registers where values are returned    and the register where structure-value addresses are passed.    Aside from that, you can include as many other registers as you like.     The value is zero if the register is not call used on either 32 or    64 bit targets, one if the register if call used on both 32 and 64    bit targets, two if it is only call used on 32bit targets and three    if its only call used on 64bit targets.    Proper values are computed in the CONDITIONAL_REGISTER_USAGE. */
 end_comment
 
 begin_define
@@ -2497,17 +2148,17 @@ name|CALL_USED_REGISTERS
 define|\
 comment|/*ax,dx,cx,bx,si,di,bp,sp,st,st1,st2,st3,st4,st5,st6,st7*/
 define|\
-value|{  3, 3, 3, 0, 2, 2, 0, 3, 3,  3,  3,  3,  3,  3,  3,  3,	\
+value|{  1, 1, 1, 0, 3, 3, 0, 1, 1,  1,  1,  1,  1,  1,  1,  1,	\
 comment|/*arg,flags,fpsr,dir,frame*/
-value|\      3,   3,   3,  3,    3,					\
+value|\      1,   1,   1,  1,    1,					\
 comment|/*xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7*/
-value|\      3,   3,   3,   3,   3,  3,    3,   3,			\
+value|\      1,   1,   1,   1,   1,  1,    1,   1,			\
 comment|/*mmx0,mmx1,mmx2,mmx3,mmx4,mmx5,mmx6,mmx7*/
-value|\      3,   3,   3,   3,   3,   3,   3,   3,			\
+value|\      1,   1,   1,   1,   1,   1,   1,   1,			\
 comment|/*  r8,  r9, r10, r11, r12, r13, r14, r15*/
-value|\      3,   3,   3,   3,   1,   1,   1,   1,			\
+value|\      1,   1,   1,   1,   2,   2,   2,   2,			\
 comment|/*xmm8,xmm9,xmm10,xmm11,xmm12,xmm13,xmm14,xmm15*/
-value|\      3,   3,    3,    3,    3,    3,    3,    3}
+value|\      1,   1,    1,    1,    1,    1,    1,    1}
 end_define
 
 begin_comment
@@ -2543,7 +2194,7 @@ define|#
 directive|define
 name|CONDITIONAL_REGISTER_USAGE
 define|\
-value|do {									\     int i;								\     for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)				\       {									\         fixed_regs[i] = (fixed_regs[i]& (TARGET_64BIT ? 2 : 1)) != 0;	\         call_used_regs[i] = (call_used_regs[i]				\& (TARGET_64BIT ? 2 : 1)) != 0;		\       }									\     if (PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM)			\       {									\ 	fixed_regs[PIC_OFFSET_TABLE_REGNUM] = 1;			\ 	call_used_regs[PIC_OFFSET_TABLE_REGNUM] = 1;			\       }									\     if (! TARGET_MMX)							\       {									\ 	int i;								\         for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)			\           if (TEST_HARD_REG_BIT (reg_class_contents[(int)MMX_REGS], i))	\ 	    fixed_regs[i] = call_used_regs[i] = 1;		 	\       }									\     if (! TARGET_SSE)							\       {									\ 	int i;								\         for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)			\           if (TEST_HARD_REG_BIT (reg_class_contents[(int)SSE_REGS], i))	\ 	    fixed_regs[i] = call_used_regs[i] = 1;		 	\       }									\     if (! TARGET_80387&& ! TARGET_FLOAT_RETURNS_IN_80387)		\       {									\ 	int i;								\ 	HARD_REG_SET x;							\         COPY_HARD_REG_SET (x, reg_class_contents[(int)FLOAT_REGS]);	\         for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)			\           if (TEST_HARD_REG_BIT (x, i)) 				\ 	    fixed_regs[i] = call_used_regs[i] = 1;			\       }									\   } while (0)
+value|do {									\     int i;								\     for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)				\       {									\ 	if (fixed_regs[i]> 1)						\ 	  fixed_regs[i] = (fixed_regs[i] == (TARGET_64BIT ? 3 : 2));	\ 	if (call_used_regs[i]> 1)					\ 	  call_used_regs[i] = (call_used_regs[i]			\ 			       == (TARGET_64BIT ? 3 : 2));		\       }									\     if (PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM)			\       {									\ 	fixed_regs[PIC_OFFSET_TABLE_REGNUM] = 1;			\ 	call_used_regs[PIC_OFFSET_TABLE_REGNUM] = 1;			\       }									\     if (! TARGET_MMX)							\       {									\ 	int i;								\         for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)			\           if (TEST_HARD_REG_BIT (reg_class_contents[(int)MMX_REGS], i))	\ 	    fixed_regs[i] = call_used_regs[i] = 1, reg_names[i] = "";	\       }									\     if (! TARGET_SSE)							\       {									\ 	int i;								\         for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)			\           if (TEST_HARD_REG_BIT (reg_class_contents[(int)SSE_REGS], i))	\ 	    fixed_regs[i] = call_used_regs[i] = 1, reg_names[i] = "";	\       }									\     if (! TARGET_80387&& ! TARGET_FLOAT_RETURNS_IN_80387)		\       {									\ 	int i;								\ 	HARD_REG_SET x;							\         COPY_HARD_REG_SET (x, reg_class_contents[(int)FLOAT_REGS]);	\         for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)			\           if (TEST_HARD_REG_BIT (x, i)) 				\ 	    fixed_regs[i] = call_used_regs[i] = 1, reg_names[i] = "";	\       }									\     if (! TARGET_64BIT)							\       {									\ 	int i;								\ 	for (i = FIRST_REX_INT_REG; i<= LAST_REX_INT_REG; i++)		\ 	  reg_names[i] = "";						\ 	for (i = FIRST_REX_SSE_REG; i<= LAST_REX_SSE_REG; i++)		\ 	  reg_names[i] = "";						\       }									\   } while (0)
 end_define
 
 begin_comment
@@ -2561,6 +2212,31 @@ name|MODE
 parameter_list|)
 define|\
 value|(FP_REGNO_P (REGNO) || SSE_REGNO_P (REGNO) || MMX_REGNO_P (REGNO)	\    ? (COMPLEX_MODE_P (MODE) ? 2 : 1)					\    : ((MODE) == XFmode							\       ? (TARGET_64BIT ? 2 : 3)						\       : (MODE) == XCmode						\       ? (TARGET_64BIT ? 4 : 6)						\       : ((GET_MODE_SIZE (MODE) + UNITS_PER_WORD - 1) / UNITS_PER_WORD)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|HARD_REGNO_NREGS_HAS_PADDING
+parameter_list|(
+name|REGNO
+parameter_list|,
+name|MODE
+parameter_list|)
+define|\
+value|((TARGET_128BIT_LONG_DOUBLE&& !TARGET_64BIT)				\    ? (FP_REGNO_P (REGNO) || SSE_REGNO_P (REGNO) || MMX_REGNO_P (REGNO)	\       ? 0								\       : ((MODE) == XFmode || (MODE) == XCmode))				\    : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HARD_REGNO_NREGS_WITH_PADDING
+parameter_list|(
+name|REGNO
+parameter_list|,
+name|MODE
+parameter_list|)
+value|((MODE) == XFmode ? 4 : 8)
 end_define
 
 begin_define
@@ -2607,15 +2283,15 @@ define|\
 value|((MODE) == DImode || (MODE) == V8QImode || (MODE) == V4HImode	\      || (MODE) == V2SImode || (MODE) == SImode)
 end_define
 
+begin_comment
+comment|/* ??? No autovectorization into MMX or 3DNOW until we can reliably    place emms and femms instructions.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|VECTOR_MODE_SUPPORTED_P
-parameter_list|(
-name|MODE
-parameter_list|)
-define|\
-value|(VALID_SSE_REG_MODE (MODE)&& TARGET_SSE ? 1			\      : VALID_MMX_REG_MODE (MODE)&& TARGET_MMX ? 1			\      : VALID_MMX_REG_MODE_3DNOW (MODE)&& TARGET_3DNOW ? 1 : 0)
+name|UNITS_PER_SIMD_WORD
+value|(TARGET_SSE ? 16 : UNITS_PER_WORD)
 end_define
 
 begin_define
@@ -2642,21 +2318,6 @@ name|MODE
 parameter_list|)
 define|\
 value|((MODE) == TImode || (MODE) == V16QImode || (MODE) == TFmode		\    || (MODE) == V8HImode || (MODE) == V2DFmode || (MODE) == V2DImode	\    || (MODE) == V4SFmode || (MODE) == V4SImode)
-end_define
-
-begin_comment
-comment|/* Return true for modes passed in MMX registers.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MMX_REG_MODE_P
-parameter_list|(
-name|MODE
-parameter_list|)
-define|\
-value|((MODE) == V8QImode || (MODE) == V4HImode || (MODE) == V2SImode	\    || (MODE) == V2SFmode)
 end_define
 
 begin_comment
@@ -2689,8 +2350,7 @@ name|MODE1
 parameter_list|,
 name|MODE2
 parameter_list|)
-define|\
-value|((MODE1) == (MODE2)						\    || (((MODE1) == HImode || (MODE1) == SImode			\ 	|| ((MODE1) == QImode					\&& (TARGET_64BIT || !TARGET_PARTIAL_REG_STALL))	\         || ((MODE1) == DImode&& TARGET_64BIT))			\&& ((MODE2) == HImode || (MODE2) == SImode		\ 	   || ((MODE2) == QImode				\&& (TARGET_64BIT || !TARGET_PARTIAL_REG_STALL))	\ 	   || ((MODE2) == DImode&& TARGET_64BIT))))
+value|ix86_modes_tieable_p (MODE1, MODE2)
 end_define
 
 begin_comment
@@ -2799,27 +2459,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|FLAGS_REG
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|FPSR_REG
-value|18
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIRFLAG_REG
-value|19
-end_define
-
-begin_define
-define|#
-directive|define
 name|FIRST_SSE_REG
 value|(FRAME_POINTER_REGNUM + 1)
 end_define
@@ -2885,7 +2524,7 @@ value|ix86_frame_pointer_required ()
 end_define
 
 begin_comment
-comment|/* Override this in other tm.h files to cope with various OS losage    requiring a frame pointer.  */
+comment|/* Override this in other tm.h files to cope with various OS lossage    requiring a frame pointer.  */
 end_comment
 
 begin_ifndef
@@ -2956,7 +2595,7 @@ define|#
 directive|define
 name|PIC_OFFSET_TABLE_REGNUM
 define|\
-value|(TARGET_64BIT || !flag_pic ? INVALID_REGNUM		\    : reload_completed ? REGNO (pic_offset_table_rtx)	\    : REAL_PIC_OFFSET_TABLE_REGNUM)
+value|((TARGET_64BIT&& ix86_cmodel == CM_SMALL_PIC)	\    || !flag_pic ? INVALID_REGNUM			\    : reload_completed ? REGNO (pic_offset_table_rtx)	\    : REAL_PIC_OFFSET_TABLE_REGNUM)
 end_define
 
 begin_define
@@ -2964,28 +2603,6 @@ define|#
 directive|define
 name|GOT_SYMBOL_NAME
 value|"_GLOBAL_OFFSET_TABLE_"
-end_define
-
-begin_comment
-comment|/* Register in which address to store a structure value    arrives in the function.  On the 386, the prologue    copies this from the stack to register %eax.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STRUCT_VALUE_INCOMING
-value|0
-end_define
-
-begin_comment
-comment|/* Place in which caller passes the structure value address.    0 means push the value on the stack like an argument.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STRUCT_VALUE
-value|0
 end_define
 
 begin_comment
@@ -3011,6 +2628,17 @@ begin_define
 define|#
 directive|define
 name|MS_AGGREGATE_RETURN
+value|0
+end_define
+
+begin_comment
+comment|/* This is overridden by<netware.h>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEEP_AGGREGATE_RETURN_POINTER
 value|0
 end_define
 
@@ -3124,7 +2752,7 @@ parameter_list|(
 name|CLASS
 parameter_list|)
 define|\
-value|reg_class_subset_p ((CLASS), SSE_REGS)
+value|((CLASS) == SSE_REGS)
 end_define
 
 begin_define
@@ -3135,7 +2763,7 @@ parameter_list|(
 name|CLASS
 parameter_list|)
 define|\
-value|reg_class_subset_p ((CLASS), MMX_REGS)
+value|((CLASS) == MMX_REGS)
 end_define
 
 begin_define
@@ -3538,72 +3166,6 @@ value|GENERAL_REGS
 end_define
 
 begin_comment
-comment|/* Get reg_class from a letter such as appears in the machine description.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REG_CLASS_FROM_LETTER
-parameter_list|(
-name|C
-parameter_list|)
-define|\
-value|((C) == 'r' ? GENERAL_REGS :					\    (C) == 'R' ? LEGACY_REGS :					\    (C) == 'q' ? TARGET_64BIT ? GENERAL_REGS : Q_REGS :		\    (C) == 'Q' ? Q_REGS :					\    (C) == 'f' ? (TARGET_80387 || TARGET_FLOAT_RETURNS_IN_80387	\ 		 ? FLOAT_REGS					\ 		 : NO_REGS) :					\    (C) == 't' ? (TARGET_80387 || TARGET_FLOAT_RETURNS_IN_80387	\ 		 ? FP_TOP_REG					\ 		 : NO_REGS) :					\    (C) == 'u' ? (TARGET_80387 || TARGET_FLOAT_RETURNS_IN_80387	\ 		 ? FP_SECOND_REG				\ 		 : NO_REGS) :					\    (C) == 'a' ? AREG :						\    (C) == 'b' ? BREG :						\    (C) == 'c' ? CREG :						\    (C) == 'd' ? DREG :						\    (C) == 'x' ? TARGET_SSE ? SSE_REGS : NO_REGS :		\    (C) == 'Y' ? TARGET_SSE2? SSE_REGS : NO_REGS :		\    (C) == 'y' ? TARGET_MMX ? MMX_REGS : NO_REGS :		\    (C) == 'A' ? AD_REGS :					\    (C) == 'D' ? DIREG :						\    (C) == 'S' ? SIREG : NO_REGS)
-end_define
-
-begin_comment
-comment|/* The letters I, J, K, L and M in a register constraint string    can be used to stand for particular ranges of immediate operands.    This macro defines what the ranges are.    C is the letter, and VALUE is a constant value.    Return 1 if VALUE is in the range specified by C.     I is for non-DImode shifts.    J is for DImode shifts.    K is for signed imm8 operands.    L is for andsi as zero-extending move.    M is for shifts that can be executed by the "lea" opcode.    N is for immediate operands for out/in instructions (0-255)    */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONST_OK_FOR_LETTER_P
-parameter_list|(
-name|VALUE
-parameter_list|,
-name|C
-parameter_list|)
-define|\
-value|((C) == 'I' ? (VALUE)>= 0&& (VALUE)<= 31			\    : (C) == 'J' ? (VALUE)>= 0&& (VALUE)<= 63			\    : (C) == 'K' ? (VALUE)>= -128&& (VALUE)<= 127		\    : (C) == 'L' ? (VALUE) == 0xff || (VALUE) == 0xffff		\    : (C) == 'M' ? (VALUE)>= 0&& (VALUE)<= 3			\    : (C) == 'N' ? (VALUE)>= 0&& (VALUE)<= 255		\    : 0)
-end_define
-
-begin_comment
-comment|/* Similar, but for floating constants, and defining letters G and H.    Here VALUE is the CONST_DOUBLE rtx itself.  We allow constants even if    TARGET_387 isn't set, because the stack register converter may need to    load 0.0 into the function value register.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONST_DOUBLE_OK_FOR_LETTER_P
-parameter_list|(
-name|VALUE
-parameter_list|,
-name|C
-parameter_list|)
-define|\
-value|((C) == 'G' ? standard_80387_constant_p (VALUE) \    : 0)
-end_define
-
-begin_comment
-comment|/* A C expression that defines the optional machine-dependent    constraint letters that can be used to segregate specific types of    operands, usually memory references, for the target machine.  Any    letter that is not elsewhere defined and not matched by    `REG_CLASS_FROM_LETTER' may be used.  Normally this macro will not    be defined.     If it is required for a particular target machine, it should    return 1 if VALUE corresponds to the operand type represented by    the constraint letter C.  If C is not defined as an extra    constraint, the value returned should be 0 regardless of VALUE.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXTRA_CONSTRAINT
-parameter_list|(
-name|VALUE
-parameter_list|,
-name|D
-parameter_list|)
-define|\
-value|((D) == 'e' ? x86_64_sign_extended_value (VALUE)		\    : (D) == 'Z' ? x86_64_zero_extended_value (VALUE)		\    : (D) == 'C' ? standard_sse_constant_p (VALUE)		\    : 0)
-end_define
-
-begin_comment
 comment|/* Place additional restrictions on the register class to use when it    is necessary to be able to hold a value of mode MODE in a reload    register for which class CLASS would ordinarily be used.  */
 end_comment
 
@@ -3639,6 +3201,23 @@ name|CLASS
 parameter_list|)
 define|\
 value|ix86_preferred_reload_class ((X), (CLASS))
+end_define
+
+begin_comment
+comment|/* Discourage putting floating-point values in SSE registers unless    SSE math is being used, and likewise for the 387 registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PREFERRED_OUTPUT_RELOAD_CLASS
+parameter_list|(
+name|X
+parameter_list|,
+name|CLASS
+parameter_list|)
+define|\
+value|ix86_preferred_output_reload_class ((X), (CLASS))
 end_define
 
 begin_comment
@@ -3716,7 +3295,7 @@ value|(((CLASS) == AREG)							\    || ((CLASS) == DREG)							\    || ((CLASS) 
 end_define
 
 begin_comment
-comment|/* Return a class of registers that cannot change FROM mode to TO mode.       x87 registers can't do subreg as all values are reformated to extended    precision.  XMM registers does not support with nonzero offsets equal    to 4, 8 and 12 otherwise valid for integer registers. Since we can't    determine these, prohibit all nonparadoxical subregs changing size.  */
+comment|/* Return a class of registers that cannot change FROM mode to TO mode.  */
 end_comment
 
 begin_define
@@ -3731,22 +3310,7 @@ parameter_list|,
 name|CLASS
 parameter_list|)
 define|\
-value|(GET_MODE_SIZE (TO)< GET_MODE_SIZE (FROM)		\    ? reg_classes_intersect_p (FLOAT_SSE_REGS, (CLASS))	\      || MAYBE_MMX_CLASS_P (CLASS) 			\    : GET_MODE_SIZE (FROM) != GET_MODE_SIZE (TO)		\    ? reg_classes_intersect_p (FLOAT_REGS, (CLASS)) : 0)
-end_define
-
-begin_comment
-comment|/* A C statement that adds to CLOBBERS any hard regs the port wishes    to automatically clobber for all asms.     We do this in the new i386 backend to maintain source compatibility    with the old cc0-based compiler.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MD_ASM_CLOBBERS
-parameter_list|(
-name|CLOBBERS
-parameter_list|)
-define|\
-value|do {									\     (CLOBBERS) = tree_cons (NULL_TREE, build_string (5, "flags"),	\ 			    (CLOBBERS));				\     (CLOBBERS) = tree_cons (NULL_TREE, build_string (4, "fpsr"),	\ 			    (CLOBBERS));				\     (CLOBBERS) = tree_cons (NULL_TREE, build_string (7, "dirflag"),	\ 			    (CLOBBERS));				\   } while (0)
+value|ix86_cannot_change_mode_class (FROM, TO, CLASS)
 end_define
 
 begin_escape
@@ -3767,13 +3331,14 @@ name|STACK_GROWS_DOWNWARD
 end_define
 
 begin_comment
-comment|/* Define this if the nominal address of the stack frame    is at the high-address end of the local variables;    that is, each additional local variable allocated    goes at a more negative offset in the frame.  */
+comment|/* Define this to nonzero if the nominal address of the stack frame    is at the high-address end of the local variables;    that is, each additional local variable allocated    goes at a more negative offset in the frame.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FRAME_GROWS_DOWNWARD
+value|1
 end_define
 
 begin_comment
@@ -3788,7 +3353,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* If we generate an insn to push BYTES bytes,    this says how many the stack pointer really advances by.    On 386 pushw decrements by exactly 2 no matter what the position was.    On the 386 there is no pushb; we use pushw instead, and this    has the effect of rounding up to 2.     For 64bit ABI we round up to 8 bytes.  */
+comment|/* If we generate an insn to push BYTES bytes,    this says how many the stack pointer really advances by.    On 386, we have pushw instruction that decrements by exactly 2 no    matter what the position was, there is no pushb.    But as CIE data alignment factor on this arch is -4, we need to make    sure all stack pointer adjustments are in multiple of 4.     For 64bit ABI we round up to 8 bytes.  */
 end_comment
 
 begin_define
@@ -3799,7 +3364,7 @@ parameter_list|(
 name|BYTES
 parameter_list|)
 define|\
-value|(TARGET_64BIT		     \    ? (((BYTES) + 7)& (-8))  \    : (((BYTES) + 1)& (-2)))
+value|(TARGET_64BIT		     \    ? (((BYTES) + 7)& (-8))  \    : (((BYTES) + 3)& (-4)))
 end_define
 
 begin_comment
@@ -3864,22 +3429,6 @@ value|0
 end_define
 
 begin_comment
-comment|/* Define as a C expression that evaluates to nonzero if we do not know how    to pass TYPE solely in registers.  The file expr.h defines a    definition that is usually appropriate, refer to expr.h for additional    documentation. If `REG_PARM_STACK_SPACE' is defined, the argument will be    computed in the stack and then loaded into a register.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MUST_PASS_IN_STACK
-parameter_list|(
-name|MODE
-parameter_list|,
-name|TYPE
-parameter_list|)
-value|ix86_must_pass_in_stack ((MODE), (TYPE))
-end_define
-
-begin_comment
 comment|/* Value is the number of bytes of arguments automatically    popped when returning from a subroutine call.    FUNDECL is the declaration node of the function (as a tree),    FUNTYPE is the data type of the function (as a tree),    or for a library call it is an identifier node for the subroutine name.    SIZE is the number of bytes of arguments passed on the stack.     On the 80386, the RTD insn may be used to pop them if the number      of args is fixed, but if the number is variable then the caller      must pop them all.  RTD can't be used for library calls now      because the library is compiled with the Unix compiler.    Use of RTD is a selectable option, since it is incompatible with    standard Unix calling sequences.  If the option is not selected,    the caller must always pop the args.     The attribute stdcall is equivalent to RTD on a per module basis.  */
 end_comment
 
@@ -3896,23 +3445,6 @@ name|SIZE
 parameter_list|)
 define|\
 value|ix86_return_pops_args ((FUNDECL), (FUNTYPE), (SIZE))
-end_define
-
-begin_comment
-comment|/* Define how to find the value returned by a function.    VALTYPE is the data type of the value (as a tree).    If the precise function being called is known, FUNC is its FUNCTION_DECL;    otherwise, FUNC is 0.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_VALUE
-parameter_list|(
-name|VALTYPE
-parameter_list|,
-name|FUNC
-parameter_list|)
-define|\
-value|ix86_function_value (VALTYPE)
 end_define
 
 begin_define
@@ -4027,6 +3559,10 @@ name|int
 name|maybe_vaarg
 decl_stmt|;
 comment|/* true for calls to possibly vardic fncts.  */
+name|int
+name|float_in_sse
+decl_stmt|;
+comment|/* 1 if in 32-bit mode SFmode (2 for DFmode) should 				   be passed in SSE registers.  Otherwise 0.  */
 block|}
 name|CUMULATIVE_ARGS
 typedef|;
@@ -4098,70 +3634,6 @@ value|function_arg (&(CUM), (MODE), (TYPE), (NAMED))
 end_define
 
 begin_comment
-comment|/* For an arg passed partly in registers and partly in memory,    this is the number of registers used.    For args passed entirely in registers or entirely in memory, zero.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_ARG_PARTIAL_NREGS
-parameter_list|(
-name|CUM
-parameter_list|,
-name|MODE
-parameter_list|,
-name|TYPE
-parameter_list|,
-name|NAMED
-parameter_list|)
-value|0
-end_define
-
-begin_comment
-comment|/* A C expression that indicates when an argument must be passed by    reference.  If nonzero for an argument, a copy of that argument is    made in memory and a pointer to the argument is passed instead of    the argument itself.  The pointer is passed in whatever way is    appropriate for passing a pointer to that type.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_ARG_PASS_BY_REFERENCE
-parameter_list|(
-name|CUM
-parameter_list|,
-name|MODE
-parameter_list|,
-name|TYPE
-parameter_list|,
-name|NAMED
-parameter_list|)
-define|\
-value|function_arg_pass_by_reference(&CUM, MODE, TYPE, NAMED)
-end_define
-
-begin_comment
-comment|/* Perform any needed actions needed for a function that is receiving a    variable number of arguments.     CUM is as above.     MODE and TYPE are the mode and type of the current parameter.     PRETEND_SIZE is a variable that should be set to the amount of stack    that must be pushed by the prolog to pretend that our caller pushed    it.     Normally, this macro will push all remaining incoming registers on the    stack and set PRETEND_SIZE to the length of the registers pushed.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SETUP_INCOMING_VARARGS
-parameter_list|(
-name|CUM
-parameter_list|,
-name|MODE
-parameter_list|,
-name|TYPE
-parameter_list|,
-name|PRETEND_SIZE
-parameter_list|,
-name|NO_RTL
-parameter_list|)
-define|\
-value|ix86_setup_incoming_varargs (&(CUM), (MODE), (TYPE),&(PRETEND_SIZE), \ 			       (NO_RTL))
-end_define
-
-begin_comment
 comment|/* Implement `va_start' for varargs and stdarg.  */
 end_comment
 
@@ -4176,23 +3648,6 @@ name|NEXTARG
 parameter_list|)
 define|\
 value|ix86_va_start (VALIST, NEXTARG)
-end_define
-
-begin_comment
-comment|/* Implement `va_arg'.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXPAND_BUILTIN_VA_ARG
-parameter_list|(
-name|VALIST
-parameter_list|,
-name|TYPE
-parameter_list|)
-define|\
-value|ix86_va_arg ((VALIST), (TYPE))
 end_define
 
 begin_define
@@ -4408,7 +3863,7 @@ comment|/* The macros REG_OK_FOR..._P assume that the arg is a REG rtx    and ch
 end_comment
 
 begin_comment
-comment|/* Non strict versions, pseudos are ok */
+comment|/* Non strict versions, pseudos are ok.  */
 end_comment
 
 begin_define
@@ -4685,789 +4140,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Codes for all the SSE/MMX builtins.  */
-end_comment
-
-begin_enum
-enum|enum
-name|ix86_builtins
-block|{
-name|IX86_BUILTIN_ADDPS
-block|,
-name|IX86_BUILTIN_ADDSS
-block|,
-name|IX86_BUILTIN_DIVPS
-block|,
-name|IX86_BUILTIN_DIVSS
-block|,
-name|IX86_BUILTIN_MULPS
-block|,
-name|IX86_BUILTIN_MULSS
-block|,
-name|IX86_BUILTIN_SUBPS
-block|,
-name|IX86_BUILTIN_SUBSS
-block|,
-name|IX86_BUILTIN_CMPEQPS
-block|,
-name|IX86_BUILTIN_CMPLTPS
-block|,
-name|IX86_BUILTIN_CMPLEPS
-block|,
-name|IX86_BUILTIN_CMPGTPS
-block|,
-name|IX86_BUILTIN_CMPGEPS
-block|,
-name|IX86_BUILTIN_CMPNEQPS
-block|,
-name|IX86_BUILTIN_CMPNLTPS
-block|,
-name|IX86_BUILTIN_CMPNLEPS
-block|,
-name|IX86_BUILTIN_CMPNGTPS
-block|,
-name|IX86_BUILTIN_CMPNGEPS
-block|,
-name|IX86_BUILTIN_CMPORDPS
-block|,
-name|IX86_BUILTIN_CMPUNORDPS
-block|,
-name|IX86_BUILTIN_CMPNEPS
-block|,
-name|IX86_BUILTIN_CMPEQSS
-block|,
-name|IX86_BUILTIN_CMPLTSS
-block|,
-name|IX86_BUILTIN_CMPLESS
-block|,
-name|IX86_BUILTIN_CMPNEQSS
-block|,
-name|IX86_BUILTIN_CMPNLTSS
-block|,
-name|IX86_BUILTIN_CMPNLESS
-block|,
-name|IX86_BUILTIN_CMPORDSS
-block|,
-name|IX86_BUILTIN_CMPUNORDSS
-block|,
-name|IX86_BUILTIN_CMPNESS
-block|,
-name|IX86_BUILTIN_COMIEQSS
-block|,
-name|IX86_BUILTIN_COMILTSS
-block|,
-name|IX86_BUILTIN_COMILESS
-block|,
-name|IX86_BUILTIN_COMIGTSS
-block|,
-name|IX86_BUILTIN_COMIGESS
-block|,
-name|IX86_BUILTIN_COMINEQSS
-block|,
-name|IX86_BUILTIN_UCOMIEQSS
-block|,
-name|IX86_BUILTIN_UCOMILTSS
-block|,
-name|IX86_BUILTIN_UCOMILESS
-block|,
-name|IX86_BUILTIN_UCOMIGTSS
-block|,
-name|IX86_BUILTIN_UCOMIGESS
-block|,
-name|IX86_BUILTIN_UCOMINEQSS
-block|,
-name|IX86_BUILTIN_CVTPI2PS
-block|,
-name|IX86_BUILTIN_CVTPS2PI
-block|,
-name|IX86_BUILTIN_CVTSI2SS
-block|,
-name|IX86_BUILTIN_CVTSI642SS
-block|,
-name|IX86_BUILTIN_CVTSS2SI
-block|,
-name|IX86_BUILTIN_CVTSS2SI64
-block|,
-name|IX86_BUILTIN_CVTTPS2PI
-block|,
-name|IX86_BUILTIN_CVTTSS2SI
-block|,
-name|IX86_BUILTIN_CVTTSS2SI64
-block|,
-name|IX86_BUILTIN_MAXPS
-block|,
-name|IX86_BUILTIN_MAXSS
-block|,
-name|IX86_BUILTIN_MINPS
-block|,
-name|IX86_BUILTIN_MINSS
-block|,
-name|IX86_BUILTIN_LOADAPS
-block|,
-name|IX86_BUILTIN_LOADUPS
-block|,
-name|IX86_BUILTIN_STOREAPS
-block|,
-name|IX86_BUILTIN_STOREUPS
-block|,
-name|IX86_BUILTIN_LOADSS
-block|,
-name|IX86_BUILTIN_STORESS
-block|,
-name|IX86_BUILTIN_MOVSS
-block|,
-name|IX86_BUILTIN_MOVHLPS
-block|,
-name|IX86_BUILTIN_MOVLHPS
-block|,
-name|IX86_BUILTIN_LOADHPS
-block|,
-name|IX86_BUILTIN_LOADLPS
-block|,
-name|IX86_BUILTIN_STOREHPS
-block|,
-name|IX86_BUILTIN_STORELPS
-block|,
-name|IX86_BUILTIN_MASKMOVQ
-block|,
-name|IX86_BUILTIN_MOVMSKPS
-block|,
-name|IX86_BUILTIN_PMOVMSKB
-block|,
-name|IX86_BUILTIN_MOVNTPS
-block|,
-name|IX86_BUILTIN_MOVNTQ
-block|,
-name|IX86_BUILTIN_LOADDQA
-block|,
-name|IX86_BUILTIN_LOADDQU
-block|,
-name|IX86_BUILTIN_STOREDQA
-block|,
-name|IX86_BUILTIN_STOREDQU
-block|,
-name|IX86_BUILTIN_MOVQ
-block|,
-name|IX86_BUILTIN_LOADD
-block|,
-name|IX86_BUILTIN_STORED
-block|,
-name|IX86_BUILTIN_CLRTI
-block|,
-name|IX86_BUILTIN_PACKSSWB
-block|,
-name|IX86_BUILTIN_PACKSSDW
-block|,
-name|IX86_BUILTIN_PACKUSWB
-block|,
-name|IX86_BUILTIN_PADDB
-block|,
-name|IX86_BUILTIN_PADDW
-block|,
-name|IX86_BUILTIN_PADDD
-block|,
-name|IX86_BUILTIN_PADDQ
-block|,
-name|IX86_BUILTIN_PADDSB
-block|,
-name|IX86_BUILTIN_PADDSW
-block|,
-name|IX86_BUILTIN_PADDUSB
-block|,
-name|IX86_BUILTIN_PADDUSW
-block|,
-name|IX86_BUILTIN_PSUBB
-block|,
-name|IX86_BUILTIN_PSUBW
-block|,
-name|IX86_BUILTIN_PSUBD
-block|,
-name|IX86_BUILTIN_PSUBQ
-block|,
-name|IX86_BUILTIN_PSUBSB
-block|,
-name|IX86_BUILTIN_PSUBSW
-block|,
-name|IX86_BUILTIN_PSUBUSB
-block|,
-name|IX86_BUILTIN_PSUBUSW
-block|,
-name|IX86_BUILTIN_PAND
-block|,
-name|IX86_BUILTIN_PANDN
-block|,
-name|IX86_BUILTIN_POR
-block|,
-name|IX86_BUILTIN_PXOR
-block|,
-name|IX86_BUILTIN_PAVGB
-block|,
-name|IX86_BUILTIN_PAVGW
-block|,
-name|IX86_BUILTIN_PCMPEQB
-block|,
-name|IX86_BUILTIN_PCMPEQW
-block|,
-name|IX86_BUILTIN_PCMPEQD
-block|,
-name|IX86_BUILTIN_PCMPGTB
-block|,
-name|IX86_BUILTIN_PCMPGTW
-block|,
-name|IX86_BUILTIN_PCMPGTD
-block|,
-name|IX86_BUILTIN_PEXTRW
-block|,
-name|IX86_BUILTIN_PINSRW
-block|,
-name|IX86_BUILTIN_PMADDWD
-block|,
-name|IX86_BUILTIN_PMAXSW
-block|,
-name|IX86_BUILTIN_PMAXUB
-block|,
-name|IX86_BUILTIN_PMINSW
-block|,
-name|IX86_BUILTIN_PMINUB
-block|,
-name|IX86_BUILTIN_PMULHUW
-block|,
-name|IX86_BUILTIN_PMULHW
-block|,
-name|IX86_BUILTIN_PMULLW
-block|,
-name|IX86_BUILTIN_PSADBW
-block|,
-name|IX86_BUILTIN_PSHUFW
-block|,
-name|IX86_BUILTIN_PSLLW
-block|,
-name|IX86_BUILTIN_PSLLD
-block|,
-name|IX86_BUILTIN_PSLLQ
-block|,
-name|IX86_BUILTIN_PSRAW
-block|,
-name|IX86_BUILTIN_PSRAD
-block|,
-name|IX86_BUILTIN_PSRLW
-block|,
-name|IX86_BUILTIN_PSRLD
-block|,
-name|IX86_BUILTIN_PSRLQ
-block|,
-name|IX86_BUILTIN_PSLLWI
-block|,
-name|IX86_BUILTIN_PSLLDI
-block|,
-name|IX86_BUILTIN_PSLLQI
-block|,
-name|IX86_BUILTIN_PSRAWI
-block|,
-name|IX86_BUILTIN_PSRADI
-block|,
-name|IX86_BUILTIN_PSRLWI
-block|,
-name|IX86_BUILTIN_PSRLDI
-block|,
-name|IX86_BUILTIN_PSRLQI
-block|,
-name|IX86_BUILTIN_PUNPCKHBW
-block|,
-name|IX86_BUILTIN_PUNPCKHWD
-block|,
-name|IX86_BUILTIN_PUNPCKHDQ
-block|,
-name|IX86_BUILTIN_PUNPCKLBW
-block|,
-name|IX86_BUILTIN_PUNPCKLWD
-block|,
-name|IX86_BUILTIN_PUNPCKLDQ
-block|,
-name|IX86_BUILTIN_SHUFPS
-block|,
-name|IX86_BUILTIN_RCPPS
-block|,
-name|IX86_BUILTIN_RCPSS
-block|,
-name|IX86_BUILTIN_RSQRTPS
-block|,
-name|IX86_BUILTIN_RSQRTSS
-block|,
-name|IX86_BUILTIN_SQRTPS
-block|,
-name|IX86_BUILTIN_SQRTSS
-block|,
-name|IX86_BUILTIN_UNPCKHPS
-block|,
-name|IX86_BUILTIN_UNPCKLPS
-block|,
-name|IX86_BUILTIN_ANDPS
-block|,
-name|IX86_BUILTIN_ANDNPS
-block|,
-name|IX86_BUILTIN_ORPS
-block|,
-name|IX86_BUILTIN_XORPS
-block|,
-name|IX86_BUILTIN_EMMS
-block|,
-name|IX86_BUILTIN_LDMXCSR
-block|,
-name|IX86_BUILTIN_STMXCSR
-block|,
-name|IX86_BUILTIN_SFENCE
-block|,
-comment|/* 3DNow! Original */
-name|IX86_BUILTIN_FEMMS
-block|,
-name|IX86_BUILTIN_PAVGUSB
-block|,
-name|IX86_BUILTIN_PF2ID
-block|,
-name|IX86_BUILTIN_PFACC
-block|,
-name|IX86_BUILTIN_PFADD
-block|,
-name|IX86_BUILTIN_PFCMPEQ
-block|,
-name|IX86_BUILTIN_PFCMPGE
-block|,
-name|IX86_BUILTIN_PFCMPGT
-block|,
-name|IX86_BUILTIN_PFMAX
-block|,
-name|IX86_BUILTIN_PFMIN
-block|,
-name|IX86_BUILTIN_PFMUL
-block|,
-name|IX86_BUILTIN_PFRCP
-block|,
-name|IX86_BUILTIN_PFRCPIT1
-block|,
-name|IX86_BUILTIN_PFRCPIT2
-block|,
-name|IX86_BUILTIN_PFRSQIT1
-block|,
-name|IX86_BUILTIN_PFRSQRT
-block|,
-name|IX86_BUILTIN_PFSUB
-block|,
-name|IX86_BUILTIN_PFSUBR
-block|,
-name|IX86_BUILTIN_PI2FD
-block|,
-name|IX86_BUILTIN_PMULHRW
-block|,
-comment|/* 3DNow! Athlon Extensions */
-name|IX86_BUILTIN_PF2IW
-block|,
-name|IX86_BUILTIN_PFNACC
-block|,
-name|IX86_BUILTIN_PFPNACC
-block|,
-name|IX86_BUILTIN_PI2FW
-block|,
-name|IX86_BUILTIN_PSWAPDSI
-block|,
-name|IX86_BUILTIN_PSWAPDSF
-block|,
-name|IX86_BUILTIN_SSE_ZERO
-block|,
-name|IX86_BUILTIN_MMX_ZERO
-block|,
-comment|/* SSE2 */
-name|IX86_BUILTIN_ADDPD
-block|,
-name|IX86_BUILTIN_ADDSD
-block|,
-name|IX86_BUILTIN_DIVPD
-block|,
-name|IX86_BUILTIN_DIVSD
-block|,
-name|IX86_BUILTIN_MULPD
-block|,
-name|IX86_BUILTIN_MULSD
-block|,
-name|IX86_BUILTIN_SUBPD
-block|,
-name|IX86_BUILTIN_SUBSD
-block|,
-name|IX86_BUILTIN_CMPEQPD
-block|,
-name|IX86_BUILTIN_CMPLTPD
-block|,
-name|IX86_BUILTIN_CMPLEPD
-block|,
-name|IX86_BUILTIN_CMPGTPD
-block|,
-name|IX86_BUILTIN_CMPGEPD
-block|,
-name|IX86_BUILTIN_CMPNEQPD
-block|,
-name|IX86_BUILTIN_CMPNLTPD
-block|,
-name|IX86_BUILTIN_CMPNLEPD
-block|,
-name|IX86_BUILTIN_CMPNGTPD
-block|,
-name|IX86_BUILTIN_CMPNGEPD
-block|,
-name|IX86_BUILTIN_CMPORDPD
-block|,
-name|IX86_BUILTIN_CMPUNORDPD
-block|,
-name|IX86_BUILTIN_CMPNEPD
-block|,
-name|IX86_BUILTIN_CMPEQSD
-block|,
-name|IX86_BUILTIN_CMPLTSD
-block|,
-name|IX86_BUILTIN_CMPLESD
-block|,
-name|IX86_BUILTIN_CMPNEQSD
-block|,
-name|IX86_BUILTIN_CMPNLTSD
-block|,
-name|IX86_BUILTIN_CMPNLESD
-block|,
-name|IX86_BUILTIN_CMPORDSD
-block|,
-name|IX86_BUILTIN_CMPUNORDSD
-block|,
-name|IX86_BUILTIN_CMPNESD
-block|,
-name|IX86_BUILTIN_COMIEQSD
-block|,
-name|IX86_BUILTIN_COMILTSD
-block|,
-name|IX86_BUILTIN_COMILESD
-block|,
-name|IX86_BUILTIN_COMIGTSD
-block|,
-name|IX86_BUILTIN_COMIGESD
-block|,
-name|IX86_BUILTIN_COMINEQSD
-block|,
-name|IX86_BUILTIN_UCOMIEQSD
-block|,
-name|IX86_BUILTIN_UCOMILTSD
-block|,
-name|IX86_BUILTIN_UCOMILESD
-block|,
-name|IX86_BUILTIN_UCOMIGTSD
-block|,
-name|IX86_BUILTIN_UCOMIGESD
-block|,
-name|IX86_BUILTIN_UCOMINEQSD
-block|,
-name|IX86_BUILTIN_MAXPD
-block|,
-name|IX86_BUILTIN_MAXSD
-block|,
-name|IX86_BUILTIN_MINPD
-block|,
-name|IX86_BUILTIN_MINSD
-block|,
-name|IX86_BUILTIN_ANDPD
-block|,
-name|IX86_BUILTIN_ANDNPD
-block|,
-name|IX86_BUILTIN_ORPD
-block|,
-name|IX86_BUILTIN_XORPD
-block|,
-name|IX86_BUILTIN_SQRTPD
-block|,
-name|IX86_BUILTIN_SQRTSD
-block|,
-name|IX86_BUILTIN_UNPCKHPD
-block|,
-name|IX86_BUILTIN_UNPCKLPD
-block|,
-name|IX86_BUILTIN_SHUFPD
-block|,
-name|IX86_BUILTIN_LOADAPD
-block|,
-name|IX86_BUILTIN_LOADUPD
-block|,
-name|IX86_BUILTIN_STOREAPD
-block|,
-name|IX86_BUILTIN_STOREUPD
-block|,
-name|IX86_BUILTIN_LOADSD
-block|,
-name|IX86_BUILTIN_STORESD
-block|,
-name|IX86_BUILTIN_MOVSD
-block|,
-name|IX86_BUILTIN_LOADHPD
-block|,
-name|IX86_BUILTIN_LOADLPD
-block|,
-name|IX86_BUILTIN_STOREHPD
-block|,
-name|IX86_BUILTIN_STORELPD
-block|,
-name|IX86_BUILTIN_CVTDQ2PD
-block|,
-name|IX86_BUILTIN_CVTDQ2PS
-block|,
-name|IX86_BUILTIN_CVTPD2DQ
-block|,
-name|IX86_BUILTIN_CVTPD2PI
-block|,
-name|IX86_BUILTIN_CVTPD2PS
-block|,
-name|IX86_BUILTIN_CVTTPD2DQ
-block|,
-name|IX86_BUILTIN_CVTTPD2PI
-block|,
-name|IX86_BUILTIN_CVTPI2PD
-block|,
-name|IX86_BUILTIN_CVTSI2SD
-block|,
-name|IX86_BUILTIN_CVTSI642SD
-block|,
-name|IX86_BUILTIN_CVTSD2SI
-block|,
-name|IX86_BUILTIN_CVTSD2SI64
-block|,
-name|IX86_BUILTIN_CVTSD2SS
-block|,
-name|IX86_BUILTIN_CVTSS2SD
-block|,
-name|IX86_BUILTIN_CVTTSD2SI
-block|,
-name|IX86_BUILTIN_CVTTSD2SI64
-block|,
-name|IX86_BUILTIN_CVTPS2DQ
-block|,
-name|IX86_BUILTIN_CVTPS2PD
-block|,
-name|IX86_BUILTIN_CVTTPS2DQ
-block|,
-name|IX86_BUILTIN_MOVNTI
-block|,
-name|IX86_BUILTIN_MOVNTPD
-block|,
-name|IX86_BUILTIN_MOVNTDQ
-block|,
-name|IX86_BUILTIN_SETPD1
-block|,
-name|IX86_BUILTIN_SETPD
-block|,
-name|IX86_BUILTIN_CLRPD
-block|,
-name|IX86_BUILTIN_SETRPD
-block|,
-name|IX86_BUILTIN_LOADPD1
-block|,
-name|IX86_BUILTIN_LOADRPD
-block|,
-name|IX86_BUILTIN_STOREPD1
-block|,
-name|IX86_BUILTIN_STORERPD
-block|,
-comment|/* SSE2 MMX */
-name|IX86_BUILTIN_MASKMOVDQU
-block|,
-name|IX86_BUILTIN_MOVMSKPD
-block|,
-name|IX86_BUILTIN_PMOVMSKB128
-block|,
-name|IX86_BUILTIN_MOVQ2DQ
-block|,
-name|IX86_BUILTIN_MOVDQ2Q
-block|,
-name|IX86_BUILTIN_PACKSSWB128
-block|,
-name|IX86_BUILTIN_PACKSSDW128
-block|,
-name|IX86_BUILTIN_PACKUSWB128
-block|,
-name|IX86_BUILTIN_PADDB128
-block|,
-name|IX86_BUILTIN_PADDW128
-block|,
-name|IX86_BUILTIN_PADDD128
-block|,
-name|IX86_BUILTIN_PADDQ128
-block|,
-name|IX86_BUILTIN_PADDSB128
-block|,
-name|IX86_BUILTIN_PADDSW128
-block|,
-name|IX86_BUILTIN_PADDUSB128
-block|,
-name|IX86_BUILTIN_PADDUSW128
-block|,
-name|IX86_BUILTIN_PSUBB128
-block|,
-name|IX86_BUILTIN_PSUBW128
-block|,
-name|IX86_BUILTIN_PSUBD128
-block|,
-name|IX86_BUILTIN_PSUBQ128
-block|,
-name|IX86_BUILTIN_PSUBSB128
-block|,
-name|IX86_BUILTIN_PSUBSW128
-block|,
-name|IX86_BUILTIN_PSUBUSB128
-block|,
-name|IX86_BUILTIN_PSUBUSW128
-block|,
-name|IX86_BUILTIN_PAND128
-block|,
-name|IX86_BUILTIN_PANDN128
-block|,
-name|IX86_BUILTIN_POR128
-block|,
-name|IX86_BUILTIN_PXOR128
-block|,
-name|IX86_BUILTIN_PAVGB128
-block|,
-name|IX86_BUILTIN_PAVGW128
-block|,
-name|IX86_BUILTIN_PCMPEQB128
-block|,
-name|IX86_BUILTIN_PCMPEQW128
-block|,
-name|IX86_BUILTIN_PCMPEQD128
-block|,
-name|IX86_BUILTIN_PCMPGTB128
-block|,
-name|IX86_BUILTIN_PCMPGTW128
-block|,
-name|IX86_BUILTIN_PCMPGTD128
-block|,
-name|IX86_BUILTIN_PEXTRW128
-block|,
-name|IX86_BUILTIN_PINSRW128
-block|,
-name|IX86_BUILTIN_PMADDWD128
-block|,
-name|IX86_BUILTIN_PMAXSW128
-block|,
-name|IX86_BUILTIN_PMAXUB128
-block|,
-name|IX86_BUILTIN_PMINSW128
-block|,
-name|IX86_BUILTIN_PMINUB128
-block|,
-name|IX86_BUILTIN_PMULUDQ
-block|,
-name|IX86_BUILTIN_PMULUDQ128
-block|,
-name|IX86_BUILTIN_PMULHUW128
-block|,
-name|IX86_BUILTIN_PMULHW128
-block|,
-name|IX86_BUILTIN_PMULLW128
-block|,
-name|IX86_BUILTIN_PSADBW128
-block|,
-name|IX86_BUILTIN_PSHUFHW
-block|,
-name|IX86_BUILTIN_PSHUFLW
-block|,
-name|IX86_BUILTIN_PSHUFD
-block|,
-name|IX86_BUILTIN_PSLLW128
-block|,
-name|IX86_BUILTIN_PSLLD128
-block|,
-name|IX86_BUILTIN_PSLLQ128
-block|,
-name|IX86_BUILTIN_PSRAW128
-block|,
-name|IX86_BUILTIN_PSRAD128
-block|,
-name|IX86_BUILTIN_PSRLW128
-block|,
-name|IX86_BUILTIN_PSRLD128
-block|,
-name|IX86_BUILTIN_PSRLQ128
-block|,
-name|IX86_BUILTIN_PSLLDQI128
-block|,
-name|IX86_BUILTIN_PSLLWI128
-block|,
-name|IX86_BUILTIN_PSLLDI128
-block|,
-name|IX86_BUILTIN_PSLLQI128
-block|,
-name|IX86_BUILTIN_PSRAWI128
-block|,
-name|IX86_BUILTIN_PSRADI128
-block|,
-name|IX86_BUILTIN_PSRLDQI128
-block|,
-name|IX86_BUILTIN_PSRLWI128
-block|,
-name|IX86_BUILTIN_PSRLDI128
-block|,
-name|IX86_BUILTIN_PSRLQI128
-block|,
-name|IX86_BUILTIN_PUNPCKHBW128
-block|,
-name|IX86_BUILTIN_PUNPCKHWD128
-block|,
-name|IX86_BUILTIN_PUNPCKHDQ128
-block|,
-name|IX86_BUILTIN_PUNPCKHQDQ128
-block|,
-name|IX86_BUILTIN_PUNPCKLBW128
-block|,
-name|IX86_BUILTIN_PUNPCKLWD128
-block|,
-name|IX86_BUILTIN_PUNPCKLDQ128
-block|,
-name|IX86_BUILTIN_PUNPCKLQDQ128
-block|,
-name|IX86_BUILTIN_CLFLUSH
-block|,
-name|IX86_BUILTIN_MFENCE
-block|,
-name|IX86_BUILTIN_LFENCE
-block|,
-comment|/* Prescott New Instructions.  */
-name|IX86_BUILTIN_ADDSUBPS
-block|,
-name|IX86_BUILTIN_HADDPS
-block|,
-name|IX86_BUILTIN_HSUBPS
-block|,
-name|IX86_BUILTIN_MOVSHDUP
-block|,
-name|IX86_BUILTIN_MOVSLDUP
-block|,
-name|IX86_BUILTIN_ADDSUBPD
-block|,
-name|IX86_BUILTIN_HADDPD
-block|,
-name|IX86_BUILTIN_HSUBPD
-block|,
-name|IX86_BUILTIN_LOADDDUP
-block|,
-name|IX86_BUILTIN_MOVDDUP
-block|,
-name|IX86_BUILTIN_LDDQU
-block|,
-name|IX86_BUILTIN_MONITOR
-block|,
-name|IX86_BUILTIN_MWAIT
-block|,
-name|IX86_BUILTIN_MAX
-block|}
-enum|;
-end_enum
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* Max number of args passed in registers.  If this is more than 3, we will    have problems with ebx (register #4), since it is a caller save register and    is also used as the pic register in ELF.  So for now, don't allow more than    3 registers to be passed in registers.  */
 end_comment
 
@@ -5505,14 +4177,6 @@ directive|define
 name|CASE_VECTOR_MODE
 value|(!TARGET_64BIT || flag_pic ? SImode : DImode)
 end_define
-
-begin_comment
-comment|/* Define as C expression which evaluates to nonzero if the tablejump    instruction expects the table to contain offsets from the address of the    table.    Do not define this if the table should contain absolute addresses.  */
-end_comment
-
-begin_comment
-comment|/* #define CASE_VECTOR_PC_RELATIVE 1 */
-end_comment
 
 begin_comment
 comment|/* Define this as 1 if `char' should by default be signed; else as 0.  */
@@ -5570,7 +4234,7 @@ value|(TARGET_64BIT ? 8 : 4)
 end_define
 
 begin_comment
-comment|/* If a memory-to-memory move would take MOVE_RATIO or more simple    move-instruction pairs, we will do a movstr or libcall instead.    Increasing the value will always make code faster, but eventually    incurs high cost in increased code size.     If you don't define this, a reasonable default is used.  */
+comment|/* If a memory-to-memory move would take MOVE_RATIO or more simple    move-instruction pairs, we will do a movmem or libcall instead.    Increasing the value will always make code faster, but eventually    incurs high cost in increased code size.     If you don't define this, a reasonable default is used.  */
 end_comment
 
 begin_define
@@ -5578,6 +4242,17 @@ define|#
 directive|define
 name|MOVE_RATIO
 value|(optimize_size ? 3 : ix86_cost->move_ratio)
+end_define
+
+begin_comment
+comment|/* If a clear memory operation would take CLEAR_RATIO or more simple    move-instruction sequences, we will do a clrmem or libcall instead.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLEAR_RATIO
+value|(optimize_size ? 2 \ 		     : ix86_cost->move_ratio> 6 ? 6 : ix86_cost->move_ratio)
 end_define
 
 begin_comment
@@ -5605,17 +4280,6 @@ name|OUTPREC
 parameter_list|,
 name|INPREC
 parameter_list|)
-value|1
-end_define
-
-begin_comment
-comment|/* When a prototype says `char' or `short', really pass an `int'.    (The 386 can't easily push less than an int.)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PROMOTE_PROTOTYPES
 value|1
 end_define
 
@@ -5752,16 +4416,6 @@ directive|define
 name|NO_FUNCTION_CSE
 end_define
 
-begin_comment
-comment|/* Define this macro if it is as good or better for a function to call    itself with an explicit address than to call an address kept in a    register.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO_RECURSIVE_FUNCTION_CSE
-end_define
-
 begin_escape
 end_escape
 
@@ -5810,8 +4464,7 @@ name|CODE
 parameter_list|,
 name|MODE
 parameter_list|)
-define|\
-value|((MODE) != CCFPmode&& (MODE) != CCFPUmode ? reverse_condition (CODE) \    : reverse_condition_maybe_unordered (CODE))
+value|ix86_reverse_condition ((CODE), (MODE))
 end_define
 
 begin_escape
@@ -5826,7 +4479,7 @@ comment|/* How to refer to registers in assembler output.    This sequence is in
 end_comment
 
 begin_comment
-comment|/* In order to refer to the first 8 regs as 32 bit regs prefix an "e"    For non floating point regs, the following are the HImode names.     For float regs, the stack top is sometimes referred to as "%st(0)"    instead of just "%st".  PRINT_OPERAND handles this with the "y" code.  */
+comment|/* In order to refer to the first 8 regs as 32 bit regs, prefix an "e".    For non floating point regs, the following are the HImode names.     For float regs, the stack top is sometimes referred to as "%st(0)"    instead of just "%st".  PRINT_OPERAND handles this with the "y" code.  */
 end_comment
 
 begin_define
@@ -5853,7 +4506,7 @@ define|#
 directive|define
 name|ADDITIONAL_REGISTER_NAMES
 define|\
-value|{ { "eax", 0 }, { "edx", 1 }, { "ecx", 2 }, { "ebx", 3 },	\   { "esi", 4 }, { "edi", 5 }, { "ebp", 6 }, { "esp", 7 },	\   { "rax", 0 }, { "rdx", 1 }, { "rcx", 2 }, { "rbx", 3 },	\   { "rsi", 4 }, { "rdi", 5 }, { "rbp", 6 }, { "rsp", 7 },	\   { "al", 0 }, { "dl", 1 }, { "cl", 2 }, { "bl", 3 },		\   { "ah", 0 }, { "dh", 1 }, { "ch", 2 }, { "bh", 3 },		\   { "mm0", 8},  { "mm1", 9},  { "mm2", 10}, { "mm3", 11},	\   { "mm4", 12}, { "mm5", 13}, { "mm6", 14}, { "mm7", 15} }
+value|{ { "eax", 0 }, { "edx", 1 }, { "ecx", 2 }, { "ebx", 3 },	\   { "esi", 4 }, { "edi", 5 }, { "ebp", 6 }, { "esp", 7 },	\   { "rax", 0 }, { "rdx", 1 }, { "rcx", 2 }, { "rbx", 3 },	\   { "rsi", 4 }, { "rdi", 5 }, { "rbp", 6 }, { "rsp", 7 },	\   { "al", 0 }, { "dl", 1 }, { "cl", 2 }, { "bl", 3 },		\   { "ah", 0 }, { "dh", 1 }, { "ch", 2 }, { "bh", 3 } }
 end_define
 
 begin_comment
@@ -6014,7 +4667,7 @@ parameter_list|,
 name|GLOBAL
 parameter_list|)
 define|\
-value|(flag_pic								\     ? ((GLOBAL) ? DW_EH_PE_indirect : 0) | DW_EH_PE_pcrel | DW_EH_PE_sdata4\    : DW_EH_PE_absptr)
+value|asm_preferred_eh_data_format ((CODE), (GLOBAL))
 end_define
 
 begin_comment
@@ -6090,7 +4743,7 @@ value|ix86_output_addr_diff_elt ((FILE), (VALUE), (REL))
 end_define
 
 begin_comment
-comment|/* Under some conditions we need jump tables in the text section, because    the assembler cannot handle label differences between sections.  */
+comment|/* Under some conditions we need jump tables in the text section,    because the assembler cannot handle label differences between    sections.  This is the case for x86_64 on Mach-O for example.  */
 end_comment
 
 begin_define
@@ -6098,55 +4751,8 @@ define|#
 directive|define
 name|JUMP_TABLES_IN_TEXT_SECTION
 define|\
-value|(!TARGET_64BIT&& flag_pic&& !HAVE_AS_GOTOFF_IN_DATA)
+value|(flag_pic&& ((TARGET_MACHO&& TARGET_64BIT) \    || (!TARGET_64BIT&& !HAVE_AS_GOTOFF_IN_DATA)))
 end_define
-
-begin_comment
-comment|/* A C statement that outputs an address constant appropriate to    for DWARF debugging.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DWARF_ADDR_CONST
-parameter_list|(
-name|FILE
-parameter_list|,
-name|X
-parameter_list|)
-define|\
-value|i386_dwarf_output_addr_const ((FILE), (X))
-end_define
-
-begin_comment
-comment|/* Emit a dtp-relative reference to a TLS variable.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_AS_TLS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DWARF_DTPREL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|SIZE
-parameter_list|,
-name|X
-parameter_list|)
-define|\
-value|i386_output_dwarf_dtprel (FILE, SIZE, X)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Switch to init or fini section via SECTION_OP, emit a call to FUNC,    and switch back.  For x86 we do this only to save a few bytes that    would otherwise be unused in the text section.  */
@@ -6258,33 +4864,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Define the codes that are matched by predicates in i386.c.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PREDICATE_CODES
-define|\
-value|{"x86_64_immediate_operand", {CONST_INT, SUBREG, REG,			\ 				SYMBOL_REF, LABEL_REF, CONST}},		\   {"x86_64_nonmemory_operand", {CONST_INT, SUBREG, REG,			\ 				SYMBOL_REF, LABEL_REF, CONST}},		\   {"x86_64_movabs_operand", {CONST_INT, SUBREG, REG,			\ 				SYMBOL_REF, LABEL_REF, CONST}},		\   {"x86_64_szext_nonmemory_operand", {CONST_INT, SUBREG, REG,		\ 				     SYMBOL_REF, LABEL_REF, CONST}},	\   {"x86_64_general_operand", {CONST_INT, SUBREG, REG, MEM,		\ 			      SYMBOL_REF, LABEL_REF, CONST}},		\   {"x86_64_szext_general_operand", {CONST_INT, SUBREG, REG, MEM,	\ 				   SYMBOL_REF, LABEL_REF, CONST}},	\   {"x86_64_zext_immediate_operand", {CONST_INT, CONST_DOUBLE, CONST,	\ 				       SYMBOL_REF, LABEL_REF}},		\   {"shiftdi_operand", {SUBREG, REG, MEM}},				\   {"const_int_1_31_operand", {CONST_INT}},				\   {"symbolic_operand", {SYMBOL_REF, LABEL_REF, CONST}},			\   {"aligned_operand", {CONST_INT, CONST_DOUBLE, CONST, SYMBOL_REF,	\ 		       LABEL_REF, SUBREG, REG, MEM}},			\   {"pic_symbolic_operand", {CONST}},					\   {"call_insn_operand", {REG, SUBREG, MEM, SYMBOL_REF}},		\   {"sibcall_insn_operand", {REG, SUBREG, SYMBOL_REF}},			\   {"constant_call_address_operand", {SYMBOL_REF, CONST}},		\   {"const0_operand", {CONST_INT, CONST_DOUBLE}},			\   {"const1_operand", {CONST_INT}},					\   {"const248_operand", {CONST_INT}},					\   {"const_0_to_3_operand", {CONST_INT}},				\   {"const_0_to_7_operand", {CONST_INT}},				\   {"const_0_to_15_operand", {CONST_INT}},				\   {"const_0_to_255_operand", {CONST_INT}},				\   {"incdec_operand", {CONST_INT}},					\   {"mmx_reg_operand", {REG}},						\   {"reg_no_sp_operand", {SUBREG, REG}},					\   {"general_no_elim_operand", {CONST_INT, CONST_DOUBLE, CONST,		\ 			SYMBOL_REF, LABEL_REF, SUBREG, REG, MEM}},	\   {"nonmemory_no_elim_operand", {CONST_INT, REG, SUBREG}},		\   {"index_register_operand", {SUBREG, REG}},				\   {"flags_reg_operand", {REG}},						\   {"q_regs_operand", {SUBREG, REG}},					\   {"non_q_regs_operand", {SUBREG, REG}},				\   {"fcmov_comparison_operator", {EQ, NE, LTU, GTU, LEU, GEU, UNORDERED, \ 				 ORDERED, LT, UNLT, GT, UNGT, LE, UNLE,	\ 				 GE, UNGE, LTGT, UNEQ}},		\   {"sse_comparison_operator", {EQ, LT, LE, UNORDERED, NE, UNGE, UNGT,	\ 			       ORDERED, UNEQ, UNLT, UNLE, LTGT, GE, GT	\ 			       }},					\   {"ix86_comparison_operator", {EQ, NE, LE, LT, GE, GT, LEU, LTU, GEU,	\ 			       GTU, UNORDERED, ORDERED, UNLE, UNLT,	\ 			       UNGE, UNGT, LTGT, UNEQ }},		\   {"ix86_carry_flag_operator", {LTU, LT, UNLT, GT, UNGT, LE, UNLE,	\ 				 GE, UNGE, LTGT, UNEQ}},		\   {"cmp_fp_expander_operand", {CONST_DOUBLE, SUBREG, REG, MEM}},	\   {"ext_register_operand", {SUBREG, REG}},				\   {"binary_fp_operator", {PLUS, MINUS, MULT, DIV}},			\   {"mult_operator", {MULT}},						\   {"div_operator", {DIV}},						\   {"arith_or_logical_operator", {PLUS, MULT, AND, IOR, XOR, SMIN, SMAX, \ 				 UMIN, UMAX, COMPARE, MINUS, DIV, MOD,	\ 				 UDIV, UMOD, ASHIFT, ROTATE, ASHIFTRT,	\ 				 LSHIFTRT, ROTATERT}},			\   {"promotable_binary_operator", {PLUS, MULT, AND, IOR, XOR, ASHIFT}},	\   {"memory_displacement_operand", {MEM}},				\   {"cmpsi_operand", {CONST_INT, CONST_DOUBLE, CONST, SYMBOL_REF,	\ 		     LABEL_REF, SUBREG, REG, MEM, AND}},		\   {"long_memory_operand", {MEM}},					\   {"tls_symbolic_operand", {SYMBOL_REF}},				\   {"global_dynamic_symbolic_operand", {SYMBOL_REF}},			\   {"local_dynamic_symbolic_operand", {SYMBOL_REF}},			\   {"initial_exec_symbolic_operand", {SYMBOL_REF}},			\   {"local_exec_symbolic_operand", {SYMBOL_REF}},			\   {"any_fp_register_operand", {REG}},					\   {"register_and_not_any_fp_reg_operand", {REG}},			\   {"fp_register_operand", {REG}},					\   {"register_and_not_fp_reg_operand", {REG}},				\   {"zero_extended_scalar_load_operand", {MEM}},				\   {"vector_move_operand", {CONST_VECTOR, SUBREG, REG, MEM}},		\   {"no_seg_address_operand", {CONST_INT, CONST_DOUBLE, CONST, SYMBOL_REF, \ 			      LABEL_REF, SUBREG, REG, MEM, PLUS, MULT}}, \   {"compare_operator", {COMPARE}},
-end_define
-
-begin_comment
-comment|/* A list of predicates that do special things with modes, and so    should not elicit warnings for VOIDmode match_operand.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPECIAL_MODE_PREDICATES
-define|\
-value|"ext_register_operand",
-end_define
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* Which processor to schedule for. The cpu attribute defines a list that    mirrors this list, so changes to i386.md must be made at the same time.  */
 end_comment
 
@@ -6310,6 +4889,12 @@ name|PROCESSOR_PENTIUM4
 block|,
 name|PROCESSOR_K8
 block|,
+name|PROCESSOR_NOCONA
+block|,
+name|PROCESSOR_GENERIC32
+block|,
+name|PROCESSOR_GENERIC64
+block|,
 name|PROCESSOR_max
 block|}
 enum|;
@@ -6325,27 +4910,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ix86_tune_string
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|enum
 name|processor_type
 name|ix86_arch
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ix86_arch_string
 decl_stmt|;
 end_decl_stmt
 
@@ -6372,20 +4939,13 @@ name|ix86_fpmath
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ix86_fpmath_string
-decl_stmt|;
-end_decl_stmt
-
 begin_enum
 enum|enum
 name|tls_dialect
 block|{
 name|TLS_DIALECT_GNU
+block|,
+name|TLS_DIALECT_GNU2
 block|,
 name|TLS_DIALECT_SUN
 block|}
@@ -6397,15 +4957,6 @@ specifier|extern
 name|enum
 name|tls_dialect
 name|ix86_tls_dialect
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ix86_tls_dialect_string
 decl_stmt|;
 end_decl_stmt
 
@@ -6429,7 +4980,10 @@ name|CM_LARGE
 block|,
 comment|/* No assumptions.  */
 name|CM_SMALL_PIC
+block|,
 comment|/* Assumes code+data+got/plt fits in a 31 bit region.  */
+name|CM_MEDIUM_PIC
+comment|/* Assumes code+got/plt fits in a 31 bit region.  */
 block|}
 enum|;
 end_enum
@@ -6439,15 +4993,6 @@ specifier|extern
 name|enum
 name|cmodel
 name|ix86_cmodel
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ix86_cmodel_string
 decl_stmt|;
 end_decl_stmt
 
@@ -6486,15 +5031,6 @@ end_enum
 
 begin_decl_stmt
 specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ix86_asm_string
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|enum
 name|asm_dialect
 name|ix86_asm_dialect
@@ -6503,22 +5039,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|ix86_regparm
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ix86_regparm_string
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+name|unsigned
 name|int
 name|ix86_preferred_stack_boundary
 decl_stmt|;
@@ -6526,75 +5047,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ix86_preferred_stack_boundary_string
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|ix86_branch_cost
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ix86_branch_cost_string
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ix86_debug_arg_string
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ix86_debug_addr_string
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Obsoleted by -f options.  Remove before 3.2 ships.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ix86_align_loops_string
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ix86_align_jumps_string
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ix86_align_funcs_string
+decl_stmt|,
+name|ix86_section_threshold
 decl_stmt|;
 end_decl_stmt
 
@@ -6636,6 +5092,13 @@ begin_comment
 comment|/* operand 1 for comparisons */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|ix86_compare_emitted
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
@@ -6645,13 +5108,42 @@ end_comment
 
 begin_enum
 enum|enum
-name|fp_cw_mode
+name|ix86_entity
 block|{
-name|FP_CW_STORED
+name|I387_TRUNC
+init|=
+literal|0
 block|,
-name|FP_CW_UNINITIALIZED
+name|I387_FLOOR
 block|,
-name|FP_CW_ANY
+name|I387_CEIL
+block|,
+name|I387_MASK_PM
+block|,
+name|MAX_386_ENTITIES
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|ix86_stack_slot
+block|{
+name|SLOT_TEMP
+init|=
+literal|0
+block|,
+name|SLOT_CW_STORED
+block|,
+name|SLOT_CW_TRUNC
+block|,
+name|SLOT_CW_FLOOR
+block|,
+name|SLOT_CW_CEIL
+block|,
+name|SLOT_CW_MASK_PM
+block|,
+name|MAX_386_STACK_LOCALS
 block|}
 enum|;
 end_enum
@@ -6667,7 +5159,8 @@ name|OPTIMIZE_MODE_SWITCHING
 parameter_list|(
 name|ENTITY
 parameter_list|)
-value|ix86_optimize_mode_switching
+define|\
+value|ix86_optimize_mode_switching[(ENTITY)]
 end_define
 
 begin_comment
@@ -6678,11 +5171,12 @@ begin_define
 define|#
 directive|define
 name|NUM_MODES_FOR_MODE_SWITCHING
-value|{ FP_CW_ANY }
+define|\
+value|{ I387_CW_ANY, I387_CW_ANY, I387_CW_ANY, I387_CW_ANY }
 end_define
 
 begin_comment
-comment|/* ENTITY is an integer specifying a mode-switched entity.  If    `OPTIMIZE_MODE_SWITCHING' is defined, you must define this macro to    return an integer value not larger than the corresponding element    in `NUM_MODES_FOR_MODE_SWITCHING', to denote the mode that ENTITY    must be switched into prior to the execution of INSN.  */
+comment|/* ENTITY is an integer specifying a mode-switched entity.  If    `OPTIMIZE_MODE_SWITCHING' is defined, you must define this macro to    return an integer value not larger than the corresponding element    in `NUM_MODES_FOR_MODE_SWITCHING', to denote the mode that ENTITY    must be switched into prior to the execution of INSN. */
 end_comment
 
 begin_define
@@ -6694,8 +5188,7 @@ name|ENTITY
 parameter_list|,
 name|I
 parameter_list|)
-define|\
-value|(GET_CODE (I) == CALL_INSN						\    || (GET_CODE (I) == INSN&& (asm_noperands (PATTERN (I))>= 0 	\ 				|| GET_CODE (PATTERN (I)) == ASM_INPUT))\    ? FP_CW_UNINITIALIZED						\    : recog_memoized (I)< 0 || get_attr_type (I) != TYPE_FISTP		\    ? FP_CW_ANY								\    : FP_CW_STORED)
+value|ix86_mode_needed ((ENTITY), (I))
 end_define
 
 begin_comment
@@ -6730,7 +5223,7 @@ parameter_list|,
 name|HARD_REGS_LIVE
 parameter_list|)
 define|\
-value|((MODE) == FP_CW_STORED						\    ? emit_i387_cw_initialization (assign_386_stack_local (HImode, 1),	\ 				  assign_386_stack_local (HImode, 2)), 0\    : 0)
+value|((MODE) != I387_CW_ANY&& (MODE) != I387_CW_UNINITIALIZED		\    ? emit_i387_cw_initialization (MODE), 0				\    : 0)
 end_define
 
 begin_escape
@@ -6792,6 +5285,9 @@ name|char
 modifier|*
 name|some_ld_name
 decl_stmt|;
+name|rtx
+name|force_align_arg_pointer
+decl_stmt|;
 name|int
 name|save_varrargs_registers
 decl_stmt|;
@@ -6800,6 +5296,9 @@ name|accesses_prev_frame
 decl_stmt|;
 name|int
 name|optimize_mode_switching
+index|[
+name|MAX_386_ENTITIES
+index|]
 decl_stmt|;
 comment|/* Set by ix86_compute_frame_layout and used by prologue/epilogue expander to      determine the style used.  */
 name|int
@@ -6808,6 +5307,10 @@ decl_stmt|;
 comment|/* Number of saved registers USE_FAST_PROLOGUE_EPILOGUE has been computed      for.  */
 name|int
 name|use_fast_prologue_epilogue_nregs
+decl_stmt|;
+comment|/* If true, the current function needs the default PIC register, not      an alternate register (on x86) and must not use the red zone (on      x86_64), even if it's a leaf function.  We don't want the      function to be regarded as non-leaf because TLS calls need not      affect register allocation.  This flag is set when a TLS call      instruction is expanded within a function, and never reset, even      if all such instructions are optimized away.  Use the      ix86_current_function_calls_tls_descriptor macro for a better      approximation.  */
+name|int
+name|tls_descriptor_call_expanded_p
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -6837,6 +5340,26 @@ name|ix86_optimize_mode_switching
 value|(cfun->machine->optimize_mode_switching)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ix86_tls_descriptor_calls_expanded_in_cfun
+define|\
+value|(cfun->machine->tls_descriptor_call_expanded_p)
+end_define
+
+begin_comment
+comment|/* Since tls_descriptor_call_expanded is not cleared, even if all TLS    calls are optimized away, we try to detect cases in which it was    optimized away.  Since such instructions (use (reg REG_SP)), we can    verify whether there's any such instruction live by testing that    REG_SP is live.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ix86_current_function_calls_tls_descriptor
+define|\
+value|(ix86_tls_descriptor_calls_expanded_in_cfun&& regs_ever_live[SP_REG])
+end_define
+
 begin_comment
 comment|/* Control behavior of x86_file_start.  */
 end_comment
@@ -6853,6 +5376,28 @@ define|#
 directive|define
 name|X86_FILE_START_FLTUSED
 value|false
+end_define
+
+begin_comment
+comment|/* Flag to mark data that is in the large address area.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_FLAG_FAR_ADDR
+value|(SYMBOL_FLAG_MACH_DEP<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_REF_FAR_ADDR_P
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|((SYMBOL_REF_FLAGS (X)& SYMBOL_FLAG_FAR_ADDR) != 0)
 end_define
 
 begin_comment

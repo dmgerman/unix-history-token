@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Machine mode definitions for GCC; included by rtl.h and tree.h.    Copyright (C) 1991, 1993, 1994, 1996, 1998, 1999, 2000, 2001, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Machine mode definitions for GCC; included by rtl.h and tree.h.    Copyright (C) 1991, 1993, 1994, 1996, 1998, 1999, 2000, 2001, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -148,7 +148,7 @@ parameter_list|(
 name|MODE
 parameter_list|)
 define|\
-value|(GET_MODE_CLASS (MODE) == MODE_FLOAT	\    || GET_MODE_CLASS (MODE) == MODE_COMPLEX_FLOAT \    || GET_MODE_CLASS (MODE) == MODE_VECTOR_FLOAT)
+value|(GET_MODE_CLASS (MODE) == MODE_FLOAT	\    || GET_MODE_CLASS (MODE) == MODE_DECIMAL_FLOAT \    || GET_MODE_CLASS (MODE) == MODE_COMPLEX_FLOAT \    || GET_MODE_CLASS (MODE) == MODE_VECTOR_FLOAT)
 end_define
 
 begin_comment
@@ -208,7 +208,37 @@ parameter_list|(
 name|MODE
 parameter_list|)
 define|\
-value|(GET_MODE_CLASS (MODE) == MODE_FLOAT)
+value|(GET_MODE_CLASS (MODE) == MODE_FLOAT		\    || GET_MODE_CLASS (MODE) == MODE_DECIMAL_FLOAT)
+end_define
+
+begin_comment
+comment|/* Nonzero if MODE is a decimal floating point mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECIMAL_FLOAT_MODE_P
+parameter_list|(
+name|MODE
+parameter_list|)
+define|\
+value|(GET_MODE_CLASS (MODE) == MODE_DECIMAL_FLOAT)
+end_define
+
+begin_comment
+comment|/* Nonzero if CLASS modes can be widened.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLASS_HAS_WIDER_MODES_P
+parameter_list|(
+name|CLASS
+parameter_list|)
+define|\
+value|(CLASS == MODE_INT                           \    || CLASS == MODE_FLOAT                      \    || CLASS == MODE_DECIMAL_FLOAT              \    || CLASS == MODE_COMPLEX_FLOAT)
 end_define
 
 begin_comment
@@ -390,6 +420,28 @@ parameter_list|(
 name|MODE
 parameter_list|)
 value|mode_wider[MODE]
+end_define
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|unsigned
+name|char
+name|mode_2xwider
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|GET_MODE_2XWIDER_MODE
+parameter_list|(
+name|MODE
+parameter_list|)
+value|mode_2xwider[MODE]
 end_define
 
 begin_comment

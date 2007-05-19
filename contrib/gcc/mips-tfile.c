@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Update the symbol table (the .T file) in a MIPS object to    contain debugging information specified by the GNU compiler    in the form of comments (the mips assembler does not support    assembly access to debug information).    Copyright (C) 1991, 1993, 1994, 1995, 1997, 1998, 1999, 2000, 2001,    2002, 2003, 2004, 2006 Free Software Foundation, Inc.    Contributed by Michael Meissner (meissner@cygnus.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Update the symbol table (the .T file) in a MIPS object to    contain debugging information specified by the GNU compiler    in the form of comments (the mips assembler does not support    assembly access to debug information).    Copyright (C) 1991, 1993, 1994, 1995, 1997, 1998, 1999, 2000, 2001,    2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.    Contributed by Michael Meissner (meissner@cygnus.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_escape
@@ -161,17 +161,6 @@ argument_list|(
 specifier|const
 name|char
 operator|*
-argument_list|)
-name|ATTRIBUTE_NORETURN
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|fancy_abort
-argument_list|(
-name|void
 argument_list|)
 name|ATTRIBUTE_NORETURN
 decl_stmt|;
@@ -646,7 +635,7 @@ name|st_Number
 init|=
 name|stNumber
 block|,
-comment|/* pure number (ie. 4 NOR 2+2) */
+comment|/* pure number (i.e. 4 NOR 2+2) */
 name|st_Expr
 init|=
 name|stExpr
@@ -5602,7 +5591,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Add a local symbol.  The symbol string starts at STR_START and the    first byte after it is makred by STR_END_P1.  The symbol has type    TYPE and storage class STORAGE and value VALUE.  INDX is an index    to local/aux. symbols.  */
+comment|/* Add a local symbol.  The symbol string starts at STR_START and the    first byte after it is marked by STR_END_P1.  The symbol has type    TYPE and storage class STORAGE and value VALUE.  INDX is an index    to local/aux. symbols.  */
 end_comment
 
 begin_function
@@ -8424,7 +8413,7 @@ name|GLEVEL_2
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HOST_WORDS_BIG_ENDIAN
+name|WORDS_BIG_ENDIAN
 name|init_file
 operator|.
 name|fdr
@@ -15071,9 +15060,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\twarray\tvp = "
-name|HOST_PTR_PRINTF
-literal|", offset = %7lu, size = %7lu, %s\n"
+literal|"\twarray\tvp = %p, offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 operator|(
 name|void
@@ -15265,9 +15252,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n\twrite\tvp = "
-name|HOST_PTR_PRINTF
-literal|", offset = %7u, size = %7lu, %s\n"
+literal|"\n\twrite\tvp = %p, offset = %7u, size = %7lu, %s\n"
 argument_list|,
 operator|(
 name|void
@@ -15407,9 +15392,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\twrite\tvp = "
-name|HOST_PTR_PRINTF
-literal|", offset = %7lu, size = %7lu, %s\n"
+literal|"\twrite\tvp = %p, offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 operator|(
 name|void
@@ -15560,9 +15543,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\twrite\tvp = "
-name|HOST_PTR_PRINTF
-literal|", offset = %7lu, size = %7lu, %s\n"
+literal|"\twrite\tvp = %p, offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 operator|(
 name|void
@@ -15977,9 +15958,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\twrite\tvp = "
-name|HOST_PTR_PRINTF
-literal|", offset = %7lu, size = %7lu, %s\n"
+literal|"\twrite\tvp = %p, offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 operator|(
 name|void
@@ -16135,9 +16114,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\twrite\tvp = "
-name|HOST_PTR_PRINTF
-literal|", offset = %7lu, size = %7lu, %s\n"
+literal|"\twrite\tvp = %p, offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 operator|(
 name|void
@@ -16818,7 +16795,7 @@ argument_list|,
 name|sys_read
 argument_list|)
 expr_stmt|;
-comment|/* Read in each of the sections if they exist in the object file.      We read things in in the order the mips assembler creates the      sections, so in theory no extra seeks are done.       For simplicity sake, round each read up to a page boundary,      we may want to revisit this later....  */
+comment|/* Read in each of the sections if they exist in the object file.      We read things in the order the mips assembler creates the      sections, so in theory no extra seeks are done.       For simplicity sake, round each read up to a page boundary,      we may want to revisit this later....  */
 name|file_offset
 operator|=
 name|orig_file_header
@@ -17197,7 +17174,7 @@ argument_list|,
 literal|"Optimizer symbols"
 argument_list|)
 expr_stmt|;
-comment|/* Abort if the symbol table is not last.  */
+comment|/* The symbol table should be last.  */
 if|if
 condition|(
 name|max_file_offset
@@ -19527,7 +19504,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Procedure to abort with an out of bounds error message.  It has    type int, so it can be used with an ?: expression within the    ORIG_xxx macros, but the function never returns.  */
+comment|/* Procedure to die with an out of bounds error message.  It has    type int, so it can be used with an ?: expression within the    ORIG_xxx macros, but the function never returns.  */
 end_comment
 
 begin_function
@@ -19792,9 +19769,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\talloc\tnpages = %lu, value = "
-name|HOST_PTR_PRINTF
-literal|"\n"
+literal|"\talloc\tnpages = %lu, value = %p\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -21830,19 +21805,36 @@ block|}
 end_function
 
 begin_comment
-comment|/* More 'friendly' abort that prints the line and file.    config.h can #define abort fancy_abort if you like that sort of thing.  */
+comment|/* More 'friendly' abort that prints the line and file.  */
 end_comment
 
 begin_function
 name|void
 name|fancy_abort
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|func
 parameter_list|)
 block|{
 name|fatal
 argument_list|(
-literal|"internal abort"
+literal|"abort in %s, at %s:%d"
+argument_list|,
+name|func
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 block|}

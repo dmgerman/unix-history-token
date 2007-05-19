@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* OS independent definitions for AMD x86-64.    Copyright (C) 2001 Free Software Foundation, Inc.    Contributed by Bo Thorsen<bo@suse.de>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* OS independent definitions for AMD x86-64.    Copyright (C) 2001, 2005 Free Software Foundation, Inc.    Contributed by Bo Thorsen<bo@suse.de>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_undef
@@ -132,8 +132,14 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"%{v:-V} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} \  %{Wa,*:%*} %{m32:--32}"
+value|"%{v:-V} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} \  %{Wa,*:%*} %{m32:--32} %{m64:--64}"
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_ALIGNED_BSS
+end_undef
 
 begin_define
 define|#
@@ -151,12 +157,41 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|asm_output_aligned_bss (FILE, DECL, NAME, SIZE, ALIGN)
+value|x86_output_aligned_bss (FILE, DECL, NAME, SIZE, ALIGN)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_ALIGNED_COMMON
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ALIGNED_COMMON
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|SIZE
+parameter_list|,
+name|ALIGN
+parameter_list|)
+define|\
+value|x86_elf_aligned_common (FILE, NAME, SIZE, ALIGN);
 end_define
 
 begin_comment
 comment|/* This is used to align code labels according to Intel recommendations.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GAS_MAX_SKIP_P2ALIGN
+end_ifdef
 
 begin_define
 define|#
@@ -172,6 +207,11 @@ parameter_list|)
 define|\
 value|do {									\     if ((LOG) != 0) {							\       if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG));	\       else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP));	\     }									\   } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* i386 System V Release 4 uses DWARF debugging info.    x86-64 ABI specifies DWARF2.  */
@@ -191,23 +231,6 @@ name|DWARF2_UNWIND_INFO
 value|1
 end_define
 
-begin_comment
-comment|/* Incorrectly autodetected in cross compilation.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_AS_DWARF2_DEBUG_LINE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|HAVE_AS_DWARF2_DEBUG_LINE
-value|1
-end_define
-
 begin_undef
 undef|#
 directive|undef
@@ -219,6 +242,32 @@ define|#
 directive|define
 name|PREFERRED_DEBUGGING_TYPE
 value|DWARF2_DEBUG
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_ASM_SELECT_SECTION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_SELECT_SECTION
+value|x86_64_elf_select_section
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_ASM_UNIQUE_SECTION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_UNIQUE_SECTION
+value|x86_64_elf_unique_section
 end_define
 
 end_unit

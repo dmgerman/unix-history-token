@@ -1,7 +1,69 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for code generation pass of GNU compiler.    Copyright (C) 1987, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for code generation pass of GNU compiler.    Copyright (C) 1987, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GCC_EXPR_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GCC_EXPR_H
+end_define
+
+begin_comment
+comment|/* For inhibit_defer_pop */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"function.h"
+end_include
+
+begin_comment
+comment|/* For XEXP, GEN_INT, rtx_code */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"rtl.h"
+end_include
+
+begin_comment
+comment|/* For optimize_size */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"flags.h"
+end_include
+
+begin_comment
+comment|/* For host_integerp, tree_low_cst, fold_convert, size_binop, ssize_int,    TREE_CODE, TYPE_SIZE, int_size_in_bytes,    */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"tree.h"
+end_include
+
+begin_comment
+comment|/* For GET_MODE_BITSIZE, word_mode */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"machmode.h"
+end_include
 
 begin_comment
 comment|/* The default branch cost is 1.  */
@@ -26,81 +88,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Macros to access the slots of a QUEUED rtx.    Here rather than in rtl.h because only the expansion pass    should ever encounter a QUEUED.  */
-end_comment
-
-begin_comment
-comment|/* The variable for which an increment is queued.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QUEUED_VAR
-parameter_list|(
-name|P
-parameter_list|)
-value|XEXP (P, 0)
-end_define
-
-begin_comment
-comment|/* If the increment has been emitted, this is the insn    that does the increment.  It is zero before the increment is emitted.    If more than one insn is emitted, this is the first insn.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QUEUED_INSN
-parameter_list|(
-name|P
-parameter_list|)
-value|XEXP (P, 1)
-end_define
-
-begin_comment
-comment|/* If a pre-increment copy has been generated, this is the copy    (it is a temporary reg).  Zero if no copy made yet.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QUEUED_COPY
-parameter_list|(
-name|P
-parameter_list|)
-value|XEXP (P, 2)
-end_define
-
-begin_comment
-comment|/* This is the body to use for the insn to do the increment.    It is used to emit the increment.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QUEUED_BODY
-parameter_list|(
-name|P
-parameter_list|)
-value|XEXP (P, 3)
-end_define
-
-begin_comment
-comment|/* Next QUEUED in the queue.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QUEUED_NEXT
-parameter_list|(
-name|P
-parameter_list|)
-value|XEXP (P, 4)
-end_define
-
-begin_comment
-comment|/* This is the 4th arg to `expand_expr'.    EXPAND_STACK_PARM means we are possibly expanding a call param onto    the stack.  Choosing a value of 2 isn't special;  It just allows    some code optimization in store_expr.    EXPAND_SUM means it is ok to return a PLUS rtx or MULT rtx.    EXPAND_INITIALIZER is similar but also record any labels on forced_labels.    EXPAND_CONST_ADDRESS means it is ok to return a MEM whose address     is a constant that is not a legitimate address.    EXPAND_WRITE means we are only going to write to the resulting rtx.    EXPAND_MEMORY means we are interested in a memory result, even if     the memory is constant and we could have propagated a constant value.  */
+comment|/* This is the 4th arg to `expand_expr'.    EXPAND_STACK_PARM means we are possibly expanding a call param onto    the stack.    EXPAND_SUM means it is ok to return a PLUS rtx or MULT rtx.    EXPAND_INITIALIZER is similar but also record any labels on forced_labels.    EXPAND_CONST_ADDRESS means it is ok to return a MEM whose address     is a constant that is not a legitimate address.    EXPAND_WRITE means we are only going to write to the resulting rtx.    EXPAND_MEMORY means we are interested in a memory result, even if     the memory is constant and we could have propagated a constant value.  */
 end_comment
 
 begin_enum
@@ -112,8 +100,6 @@ init|=
 literal|0
 block|,
 name|EXPAND_STACK_PARM
-init|=
-literal|2
 block|,
 name|EXPAND_SUM
 block|,
@@ -154,7 +140,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* If a memory-to-memory move would take MOVE_RATIO or more simple    move-instruction sequences, we will do a movstr or libcall instead.  */
+comment|/* If a memory-to-memory move would take MOVE_RATIO or more simple    move-instruction sequences, we will do a movmem or libcall instead.  */
 end_comment
 
 begin_ifndef
@@ -168,27 +154,27 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_movstrqi
+name|HAVE_movmemqi
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|HAVE_movstrhi
+name|HAVE_movmemhi
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|HAVE_movstrsi
+name|HAVE_movmemsi
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|HAVE_movstrdi
+name|HAVE_movmemdi
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|HAVE_movstrti
+name|HAVE_movmemti
 argument_list|)
 end_if
 
@@ -226,7 +212,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* If a clear memory operation would take CLEAR_RATIO or more simple    move-instruction sequences, we will do a clrstr or libcall instead.  */
+comment|/* If a clear memory operation would take CLEAR_RATIO or more simple    move-instruction sequences, we will do a setmem or libcall instead.  */
 end_comment
 
 begin_ifndef
@@ -240,27 +226,27 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_clrstrqi
+name|HAVE_setmemqi
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|HAVE_clrstrhi
+name|HAVE_setmemhi
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|HAVE_clrstrsi
+name|HAVE_setmemsi
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|HAVE_clrstrdi
+name|HAVE_setmemdi
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|HAVE_clrstrti
+name|HAVE_setmemti
 argument_list|)
 end_if
 
@@ -364,6 +350,11 @@ name|enum
 name|direction
 name|where_pad
 decl_stmt|;
+comment|/* slot_offset is at least this aligned.  */
+name|unsigned
+name|int
+name|boundary
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -382,7 +373,7 @@ parameter_list|,
 name|INC
 parameter_list|)
 define|\
-value|do {							\   tree inc = (INC);					\   if (host_integerp (inc, 0))				\     (TO).constant += tree_low_cst (inc, 0);		\   else if ((TO).var == 0)				\     (TO).var = convert (ssizetype, inc);		\   else							\     (TO).var = size_binop (PLUS_EXPR, (TO).var,		\ 			   convert (ssizetype, inc));	\ } while (0)
+value|do {								\   tree inc = (INC);						\   if (host_integerp (inc, 0))					\     (TO).constant += tree_low_cst (inc, 0);			\   else if ((TO).var == 0)					\     (TO).var = fold_convert (ssizetype, inc);			\   else								\     (TO).var = size_binop (PLUS_EXPR, (TO).var,			\ 			   fold_convert (ssizetype, inc));	\ } while (0)
 end_define
 
 begin_define
@@ -395,7 +386,7 @@ parameter_list|,
 name|DEC
 parameter_list|)
 define|\
-value|do {							\   tree dec = (DEC);					\   if (host_integerp (dec, 0))				\     (TO).constant -= tree_low_cst (dec, 0);		\   else if ((TO).var == 0)				\     (TO).var = size_binop (MINUS_EXPR, ssize_int (0),	\ 			   convert (ssizetype, dec));	\   else							\     (TO).var = size_binop (MINUS_EXPR, (TO).var,	\ 			   convert (ssizetype, dec));	\ } while (0)
+value|do {								\   tree dec = (DEC);						\   if (host_integerp (dec, 0))					\     (TO).constant -= tree_low_cst (dec, 0);			\   else if ((TO).var == 0)					\     (TO).var = size_binop (MINUS_EXPR, ssize_int (0),		\ 			   fold_convert (ssizetype, dec));	\   else								\     (TO).var = size_binop (MINUS_EXPR, (TO).var,		\ 			   fold_convert (ssizetype, dec));	\ } while (0)
 end_define
 
 begin_comment
@@ -410,7 +401,7 @@ parameter_list|(
 name|SIZE
 parameter_list|)
 define|\
-value|((SIZE).var == 0 ? ssize_int ((SIZE).constant)			\  : size_binop (PLUS_EXPR, convert (ssizetype, (SIZE).var),	\ 	       ssize_int ((SIZE).constant)))
+value|((SIZE).var == 0 ? ssize_int ((SIZE).constant)			\  : size_binop (PLUS_EXPR, fold_convert (ssizetype, (SIZE).var),	\ 	       ssize_int ((SIZE).constant)))
 end_define
 
 begin_comment
@@ -425,7 +416,7 @@ parameter_list|(
 name|SIZE
 parameter_list|)
 define|\
-value|((SIZE).var == 0 ? GEN_INT ((SIZE).constant)			\  : expand_expr (ARGS_SIZE_TREE (SIZE), NULL_RTX, VOIDmode, 0))
+value|((SIZE).var == 0 ? GEN_INT ((SIZE).constant)			\  : expand_normal (ARGS_SIZE_TREE (SIZE)))
 end_define
 
 begin_comment
@@ -489,64 +480,6 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 value|PARM_BOUNDARY
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-name|tree
-name|split_complex_types
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|tree
-name|split_complex_values
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Nonzero if we do not know how to pass TYPE solely in registers.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|bool
-name|default_must_pass_in_stack
-parameter_list|(
-name|enum
-name|machine_mode
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MUST_PASS_IN_STACK
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MUST_PASS_IN_STACK
-parameter_list|(
-name|MODE
-parameter_list|,
-name|TYPE
-parameter_list|)
-value|default_must_pass_in_stack(MODE, TYPE)
 end_define
 
 begin_endif
@@ -872,7 +805,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Create but don't emit one rtl instruction to perform certain operations.    Modes must match; operands must meet the operation's predicates.    Likewise for subtraction and for just copying.    These do not call protect_from_queue; caller must do so.  */
+comment|/* Create but don't emit one rtl instruction to perform certain operations.    Modes must match; operands must meet the operation's predicates.    Likewise for subtraction and for just copying.  */
 end_comment
 
 begin_function_decl
@@ -1005,6 +938,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Generate a conditional trap instruction.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|gen_cond_trap
+parameter_list|(
+name|enum
+name|rtx_code
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_include
+include|#
+directive|include
+file|"insn-config.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1087,6 +1047,81 @@ name|enum
 name|machine_mode
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|rtx
+name|expand_val_compare_and_swap
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|rtx
+name|expand_bool_compare_and_swap
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|rtx
+name|expand_sync_operation
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|enum
+name|rtx_code
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|rtx
+name|expand_sync_fetch_operation
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|enum
+name|rtx_code
+parameter_list|,
+name|bool
+parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|rtx
+name|expand_sync_lock_test_and_set
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1192,75 +1227,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Functions from loop.c:  */
-end_comment
-
-begin_comment
-comment|/* Given an insn and condition, return a canonical description of    the test being made.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|canonicalize_condition
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|int
-parameter_list|,
-name|rtx
-modifier|*
-parameter_list|,
-name|rtx
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Given a JUMP_INSN, return a canonical description of the test    being made.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|get_condition
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Generate a conditional trap instruction.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|gen_cond_trap
-parameter_list|(
-name|enum
-name|rtx_code
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_escape
 end_escape
 
@@ -1312,30 +1278,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|rtx
-name|std_expand_builtin_va_arg
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|expand_builtin_va_arg
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
 name|default_expand_builtin
 parameter_list|(
 name|tree
@@ -1376,18 +1318,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|expand_builtin_longjmp
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|rtx
 name|expand_builtin_saveregs
 parameter_list|(
@@ -1402,73 +1332,6 @@ name|void
 name|expand_builtin_trap
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|HOST_WIDE_INT
-name|get_varargs_alias_set
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|HOST_WIDE_INT
-name|get_frame_alias_set
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|record_base_value
-parameter_list|(
-name|unsigned
-name|int
-parameter_list|,
-name|rtx
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|record_alias_subset
-parameter_list|(
-name|HOST_WIDE_INT
-parameter_list|,
-name|HOST_WIDE_INT
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|HOST_WIDE_INT
-name|new_alias_set
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|can_address_p
-parameter_list|(
-name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1504,64 +1367,6 @@ name|void
 name|init_expr
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* This is run at the end of compiling a function.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|finish_expr_for_function
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Use protect_from_queue to convert a QUEUED expression    into something that you can put immediately into an instruction.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|protect_from_queue
-parameter_list|(
-name|rtx
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Perform all the pending incrementations.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|emit_queue
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Tell if something has a queued subexpression.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|queued_subexp_p
-parameter_list|(
-name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1638,6 +1443,9 @@ block|,
 name|BLOCK_OP_NO_LIBCALL
 block|,
 name|BLOCK_OP_CALL_PARM
+block|,
+comment|/* Like BLOCK_OP_NORMAL, but the libcall can be tail call optimized.  */
+name|BLOCK_OP_TAILCALL
 block|}
 enum|;
 end_enum
@@ -1757,6 +1565,26 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Similarly, but load into new temporaries.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|emit_group_load_into_temps
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|tree
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Move a non-consecutive group of registers represented by a PARALLEL into    a non-consecutive group of registers represented by a PARALLEL.  */
 end_comment
 
@@ -1767,6 +1595,20 @@ name|emit_group_move
 parameter_list|(
 name|rtx
 parameter_list|,
+name|rtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Move a group of registers represented by a PARALLEL into pseudos.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|rtx
+name|emit_group_move_into_temps
+parameter_list|(
 name|rtx
 parameter_list|)
 function_decl|;
@@ -1875,6 +1717,30 @@ parameter_list|(
 name|rtx
 parameter_list|,
 name|rtx
+parameter_list|,
+name|enum
+name|block_op_methods
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Expand a setmem pattern; return true if successful.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|bool
+name|set_storage_via_setmem
+parameter_list|(
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|rtx
+parameter_list|,
+name|unsigned
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2065,14 +1931,12 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|rtx
+name|void
 name|expand_assignment
 parameter_list|(
 name|tree
 parameter_list|,
 name|tree
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2112,42 +1976,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Return an object on the placeholder list that matches EXP, a    PLACEHOLDER_EXPR.  An object "matches" if it is of the type of the    PLACEHOLDER_EXPR or a pointer type to it.  For further information, see    tree.def.  If no such object is found, abort.  If PLIST is nonzero, it is    a location which initially points to a starting location in the    placeholder list (zero means start of the list) and where a pointer into    the placeholder list at which the object is found is placed.  */
+comment|/* Work horse for expand_expr.  */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|tree
-name|find_placeholder
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Generate code for computing expression EXP.    An rtx for the computed value is returned.  The value is never null.    In the case of a void EXP, const0_rtx is returned.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|expand_expr
-parameter_list|(
-name|EXP
-parameter_list|,
-name|TARGET
-parameter_list|,
-name|MODE
-parameter_list|,
-name|MODIFIER
-parameter_list|)
-define|\
-value|expand_expr_real((EXP), (TARGET), (MODE), (MODIFIER), NULL)
-end_define
 
 begin_function_decl
 specifier|extern
@@ -2166,6 +1996,85 @@ name|expand_modifier
 parameter_list|,
 name|rtx
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Generate code for computing expression EXP.    An rtx for the computed value is returned.  The value is never null.    In the case of a void EXP, const0_rtx is returned.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|rtx
+name|expand_expr
+parameter_list|(
+name|tree
+name|exp
+parameter_list|,
+name|rtx
+name|target
+parameter_list|,
+name|enum
+name|machine_mode
+name|mode
+parameter_list|,
+name|enum
+name|expand_modifier
+name|modifier
+parameter_list|)
+block|{
+return|return
+name|expand_expr_real
+argument_list|(
+name|exp
+argument_list|,
+name|target
+argument_list|,
+name|mode
+argument_list|,
+name|modifier
+argument_list|,
+name|NULL
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|rtx
+name|expand_normal
+parameter_list|(
+name|tree
+name|exp
+parameter_list|)
+block|{
+return|return
+name|expand_expr_real
+argument_list|(
+name|exp
+argument_list|,
+name|NULL_RTX
+argument_list|,
+name|VOIDmode
+argument_list|,
+name|EXPAND_NORMAL
+argument_list|,
+name|NULL
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function_decl
+specifier|extern
+name|void
+name|expand_var
+parameter_list|(
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2404,6 +2313,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Functions from alias.c */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"alias.h"
+end_include
+
 begin_escape
 end_escape
 
@@ -2439,46 +2358,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|rtx
-name|lookup_static_chain
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Convert a stack slot address ADDR valid in function FNDECL    into an address valid in this function (using a static chain).  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|fix_lexical_addr
-parameter_list|(
-name|rtx
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Return the address of the trampoline for entering nested fn FUNCTION.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|trampoline_address
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Return an rtx that refers to the value returned by a function    in its original home.  This becomes invalid if any more code is emitted.  */
 end_comment
@@ -2488,6 +2367,8 @@ specifier|extern
 name|rtx
 name|hard_function_value
 parameter_list|(
+name|tree
+parameter_list|,
 name|tree
 parameter_list|,
 name|tree
@@ -2504,7 +2385,7 @@ name|prepare_call_address
 parameter_list|(
 name|rtx
 parameter_list|,
-name|tree
+name|rtx
 parameter_list|,
 name|rtx
 modifier|*
@@ -2512,6 +2393,21 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|shift_return_value
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|,
+name|bool
+parameter_list|,
+name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2526,6 +2422,16 @@ parameter_list|,
 name|rtx
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|fixup_tail_calls
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2610,26 +2516,6 @@ parameter_list|,
 name|struct
 name|locate_and_pad_arg_data
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|expand_inline_function
-parameter_list|(
-name|tree
-parameter_list|,
-name|tree
-parameter_list|,
-name|rtx
-parameter_list|,
-name|int
-parameter_list|,
-name|tree
-parameter_list|,
-name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2719,7 +2605,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Like `memory_address' but pretent `flag_force_addr' is 0.  */
+comment|/* Like `memory_address' but pretend `flag_force_addr' is 0.  */
 end_comment
 
 begin_function_decl
@@ -2729,87 +2615,6 @@ name|memory_address_noforce
 parameter_list|(
 name|enum
 name|machine_mode
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Set the alias set of MEM to SET.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|set_mem_alias_set
-parameter_list|(
-name|rtx
-parameter_list|,
-name|HOST_WIDE_INT
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Set the alignment of MEM to ALIGN bits.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|set_mem_align
-parameter_list|(
-name|rtx
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Set the expr for MEM to EXPR.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|set_mem_expr
-parameter_list|(
-name|rtx
-parameter_list|,
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Set the offset for MEM to OFFSET.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|set_mem_offset
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Set the size for MEM to SIZE.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|set_mem_size
-parameter_list|(
-name|rtx
 parameter_list|,
 name|rtx
 parameter_list|)
@@ -2973,36 +2778,14 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Return a memory reference like MEMREF, but with its address changed to    ADDR.  The caller is asserting that the actual piece of memory pointed    to is the same, just the form of the address is being changed, such as    by putting something into a register.  */
+comment|/* Definitions from emit-rtl.c */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|rtx
-name|replace_equiv_address
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Likewise, but the reference is not required to be valid.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|replace_equiv_address_nv
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"emit-rtl.h"
+end_include
 
 begin_comment
 comment|/* Return a memory reference like MEMREF, but with its mode widened to    MODE and adjusted by OFFSET.  */
@@ -3037,18 +2820,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Given REF, either a MEM or a REG, and T, either the type of X or    the expression corresponding to REF, set RTX_UNCHANGING_P if    appropriate.  */
-end_comment
-
 begin_function_decl
 specifier|extern
-name|void
-name|maybe_set_unchanging
+name|rtx
+name|use_anchored_address
 parameter_list|(
 name|rtx
-parameter_list|,
-name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3101,34 +2878,6 @@ name|rtx
 name|assemble_trampoline_template
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Given rtx, return new rtx whose address won't be affected by    any side effects.  It has been copied to a new temporary reg.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|stabilize
-parameter_list|(
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Given an rtx, copy all regs it refers to into new temps    and return a modified copy that refers to the new temps.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|copy_all_regs
-parameter_list|(
-name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3336,6 +3085,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Invoke emit_stack_save for the nonlocal_goto_save_area.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|update_nonlocal_goto_save_area
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Allocate some space on the stack dynamically and return its address.  An rtx    says how many bytes.  */
 end_comment
 
@@ -3380,20 +3143,6 @@ name|hard_libcall_value
 parameter_list|(
 name|enum
 name|machine_mode
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Given an rtx, return an rtx for a value rounded up to a multiple    of STACK_BOUNDARY / BITS_PER_UNIT.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|round_push
-parameter_list|(
-name|rtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3446,8 +3195,6 @@ name|enum
 name|machine_mode
 parameter_list|,
 name|rtx
-parameter_list|,
-name|HOST_WIDE_INT
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3474,8 +3221,6 @@ name|machine_mode
 parameter_list|,
 name|enum
 name|machine_mode
-parameter_list|,
-name|HOST_WIDE_INT
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3493,46 +3238,6 @@ parameter_list|,
 name|rtx
 parameter_list|,
 name|rtx
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|bool
-name|const_mult_add_overflow_p
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|enum
-name|machine_mode
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|expand_mult_add
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|enum
-name|machine_mode
 parameter_list|,
 name|int
 parameter_list|)
@@ -3627,59 +3332,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|do_jump_by_parts_equality_rtx
-parameter_list|(
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|do_jump_by_parts_greater_rtx
-parameter_list|(
-name|enum
-name|machine_mode
-parameter_list|,
-name|int
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|,
-name|rtx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|mark_seen_cases
-parameter_list|(
-name|tree
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|HOST_WIDE_INT
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|int
 name|vector_mode_valid_p
 parameter_list|(
@@ -3689,12 +3341,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|tree
-name|placeholder_list
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GCC_EXPR_H */
+end_comment
 
 end_unit
 

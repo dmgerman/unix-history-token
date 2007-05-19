@@ -4,7 +4,7 @@ comment|/* Subroutines needed for unwinding stack frames for exception handling.
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Jason Merrill<jason@cygnus.com>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  In addition to the permissions in the GNU General Public License, the Free Software Foundation gives you unlimited permission to link the compiled version of this file into combinations with other programs, and to distribute those combinations without any restriction coming from the use of this file.  (The General Public License restrictions do apply in other respects; for example, they cover modification of the file, and distribution when not linked into a combine executable.)  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Contributed by Jason Merrill<jason@cygnus.com>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  In addition to the permissions in the GNU General Public License, the Free Software Foundation gives you unlimited permission to link the compiled version of this file into combinations with other programs, and to distribute those combinations without any restriction coming from the use of this file.  (The General Public License restrictions do apply in other respects; for example, they cover modification of the file, and distribution when not linked into a combine executable.)  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -589,7 +589,7 @@ comment|/* Called from crtbegin.o to deregister the unwind info for an object.  
 end_comment
 
 begin_comment
-comment|/* ??? Glibc has for a while now exported __register_frame_info and    __deregister_frame_info.  If we call __register_frame_info_bases    from crtbegin (wherein it is declared weak), and this object does    not get pulled from libgcc.a for other reasons, then the    invocation of __deregister_frame_info will be resolved from glibc.    Since the registration did not happen there, we'll abort.     Therefore, declare a new deregistration entry point that does the    exact same thing, but will resolve to the same library as    implements __register_frame_info_bases.  */
+comment|/* ??? Glibc has for a while now exported __register_frame_info and    __deregister_frame_info.  If we call __register_frame_info_bases    from crtbegin (wherein it is declared weak), and this object does    not get pulled from libgcc.a for other reasons, then the    invocation of __deregister_frame_info will be resolved from glibc.    Since the registration did not happen there, we'll die.     Therefore, declare a new deregistration entry point that does the    exact same thing, but will resolve to the same library as    implements __register_frame_info_bases.  */
 end_comment
 
 begin_function
@@ -807,21 +807,17 @@ name|out
 goto|;
 block|}
 block|}
-name|__gthread_mutex_unlock
-argument_list|(
-operator|&
-name|object_mutex
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
 name|out
 label|:
 name|__gthread_mutex_unlock
 argument_list|(
 operator|&
 name|object_mutex
+argument_list|)
+expr_stmt|;
+name|gcc_assert
+argument_list|(
+name|ob
 argument_list|)
 expr_stmt|;
 return|return
@@ -958,10 +954,11 @@ name|ob
 operator|->
 name|dbase
 return|;
-block|}
-name|abort
+default|default:
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1027,6 +1024,11 @@ name|aug
 operator|+
 name|strlen
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|aug
 argument_list|)
 operator|+
@@ -1055,10 +1057,29 @@ name|stmp
 argument_list|)
 expr_stmt|;
 comment|/* Skip data alignment.  */
+if|if
+condition|(
+name|cie
+operator|->
+name|version
+operator|==
+literal|1
+condition|)
+comment|/* Skip return address column.  */
 name|p
 operator|++
 expr_stmt|;
-comment|/* Skip return address column.  */
+else|else
+name|p
+operator|=
+name|read_uleb128
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|utmp
+argument_list|)
+expr_stmt|;
 name|aug
 operator|++
 expr_stmt|;
@@ -1717,15 +1738,15 @@ decl_stmt|,
 name|k
 decl_stmt|;
 comment|/* This should optimize out, but it is wise to make sure this assumption      is correct. Should these have different sizes, we cannot cast between      them and the overlaying onto ERRATIC will not work.  */
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 sizeof|sizeof
 argument_list|(
 specifier|const
 name|fde
 operator|*
 argument_list|)
-operator|!=
+operator|==
 sizeof|sizeof
 argument_list|(
 specifier|const
@@ -1733,9 +1754,7 @@ name|fde
 operator|*
 operator|*
 argument_list|)
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -2368,22 +2387,21 @@ block|{
 name|fde_compare_t
 name|fde_compare
 decl_stmt|;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
+operator|!
 name|accu
 operator|->
 name|linear
-operator|&&
+operator|||
 name|accu
 operator|->
 name|linear
 operator|->
 name|count
-operator|!=
+operator|==
 name|count
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2443,8 +2461,8 @@ operator|->
 name|erratic
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|accu
 operator|->
 name|linear
@@ -2456,11 +2474,9 @@ operator|->
 name|erratic
 operator|->
 name|count
-operator|!=
+operator|==
 name|count
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|frame_heapsort
 argument_list|(
@@ -3470,6 +3486,7 @@ name|_Unwind_Ptr
 name|mask
 decl_stmt|;
 specifier|const
+name|unsigned
 name|char
 modifier|*
 name|p
@@ -3830,6 +3847,7 @@ decl_stmt|,
 name|pc_range
 decl_stmt|;
 specifier|const
+name|unsigned
 name|char
 modifier|*
 name|p
@@ -3987,6 +4005,7 @@ decl_stmt|,
 name|pc_range
 decl_stmt|;
 specifier|const
+name|unsigned
 name|char
 modifier|*
 name|p
@@ -4449,6 +4468,9 @@ block|{
 name|int
 name|encoding
 decl_stmt|;
+name|_Unwind_Ptr
+name|func
+decl_stmt|;
 name|bases
 operator|->
 name|tbase
@@ -4507,15 +4529,19 @@ name|f
 operator|->
 name|pc_begin
 argument_list|,
-operator|(
-name|_Unwind_Ptr
-operator|*
-operator|)
 operator|&
+name|func
+argument_list|)
+expr_stmt|;
 name|bases
 operator|->
 name|func
-argument_list|)
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|func
 expr_stmt|;
 block|}
 return|return

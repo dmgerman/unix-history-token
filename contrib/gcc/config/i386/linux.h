@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running Linux-based GNU systems with ELF format.    Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002    Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running Linux-based GNU systems with ELF format.    Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002, 2004, 2005,    2006 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -188,7 +188,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do						\     {						\ 	LINUX_TARGET_OS_CPP_BUILTINS();		\ 	if (flag_pic)				\ 	  {					\ 	    builtin_define ("__PIC__");		\ 	    builtin_define ("__pic__");		\ 	  }					\     }						\   while (0)
+value|do						\     {						\ 	LINUX_TARGET_OS_CPP_BUILTINS();		\     }						\   while (0)
 end_define
 
 begin_undef
@@ -197,35 +197,12 @@ directive|undef
 name|CPP_SPEC
 end_undef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_GNULIBC_1
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CPP_SPEC
-value|"%{posix:-D_POSIX_SOURCE}"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|CPP_SPEC
 value|"%{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
@@ -248,41 +225,68 @@ begin_comment
 comment|/* If ELF is the default format, we should not use /lib/elf.  */
 end_comment
 
+begin_comment
+comment|/* These macros may be overridden in k*bsd-gnu.h and i386/k*bsd-gnu.h. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINK_EMULATION
+value|"elf_i386"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GLIBC_DYNAMIC_LINKER
+value|"/lib/ld-linux.so.2"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_EXTRA_SPECS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_SPECS
+define|\
+value|{ "link_emulation", LINK_EMULATION },\   { "dynamic_linker", LINUX_DYNAMIC_LINKER }
+end_define
+
 begin_undef
 undef|#
 directive|undef
 name|LINK_SPEC
 end_undef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_GNULIBC_1
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-m elf_i386 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \ 	%{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.1}} \ 	%{static:-static}}}"
+value|"-m %(link_emulation) %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \ 	%{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker %(dynamic_linker)}} \ 	%{static:-static}}}"
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|/* Similar to standard Linux, but adding -ffast-math support.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ENDFILE_SPEC
+end_undef
 
 begin_define
 define|#
 directive|define
-name|LINK_SPEC
-value|"-m elf_i386 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \ 	%{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.2}} \ 	%{static:-static}}}"
+name|ENDFILE_SPEC
+define|\
+value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s} \    %{shared|pie:crtendS.o%s;:crtend.o%s} crtn.o%s"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* A C statement (sans semicolon) to output to the stdio stream    FILE the assembler definition of uninitialized global DECL named    NAME whose size is SIZE bytes and alignment is ALIGN bytes.    Try to use asm_output_aligned_bss to implement this macro.  */
@@ -330,48 +334,6 @@ name|MAX_SKIP
 parameter_list|)
 define|\
 value|do {									\     if ((LOG) != 0) {							\       if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG));	\       else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP));	\     }									\   } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__PIC__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|USE_GNULIBC_1
-argument_list|)
-end_if
-
-begin_comment
-comment|/* This is a kludge. The i386 GNU/Linux dynamic linker needs ___brk_addr,    __environ and atexit.  We have to make sure they are in the .dynsym    section.  We do this by forcing the assembler to create undefined     references to these symbols in the object file.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CRT_CALL_STATIC_FUNCTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CRT_CALL_STATIC_FUNCTION
-parameter_list|(
-name|SECTION_OP
-parameter_list|,
-name|FUNC
-parameter_list|)
-define|\
-value|asm (SECTION_OP "\n\t"				\ 	"call " USER_LABEL_PREFIX #FUNC "\n"		\ 	TEXT_SECTION_ASM_OP "\n\t"			\ 	".extern ___brk_addr\n\t"			\ 	".type ___brk_addr,@object\n\t"			\ 	".extern __environ\n\t"				\ 	".type __environ,@object\n\t"			\ 	".extern atexit\n\t"				\ 	".type atexit,@function");
 end_define
 
 begin_endif
@@ -459,92 +421,48 @@ name|NEED_INDICATE_EXEC_STACK
 value|1
 end_define
 
-begin_comment
-comment|/* Do code reading to identify a signal frame, and set the frame    state data appropriately.  See unwind-dw2.c for the structs.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IN_LIBGCC2
-end_ifdef
+begin_define
+define|#
+directive|define
+name|MD_UNWIND_SUPPORT
+value|"config/i386/linux-unwind.h"
+end_define
 
 begin_comment
-comment|/* There's no sys/ucontext.h for some (all?) libc1, so no    signal-turned-exceptions for them.  There's also no configure-run for    the target, so we can't check on (e.g.) HAVE_SYS_UCONTEXT_H.  Using the    target libc1 macro should be enough.  */
+comment|/* This macro may be overridden in i386/k*bsd-gnu.h.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|USE_GNULIBC_1
-argument_list|)
-operator|||
-operator|(
-name|__GLIBC__
-operator|==
-literal|2
-operator|&&
-name|__GLIBC_MINOR__
-operator|==
-literal|0
-operator|)
-operator|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ucontext.h>
-end_include
 
 begin_define
 define|#
 directive|define
-name|MD_FALLBACK_FRAME_STATE_FOR
+name|REG_NAME
 parameter_list|(
-name|CONTEXT
-parameter_list|,
-name|FS
-parameter_list|,
-name|SUCCESS
+name|reg
 parameter_list|)
-define|\
-value|do {									\     unsigned char *pc_ = (CONTEXT)->ra;					\     struct sigcontext *sc_;						\     long new_cfa_;							\ 									\
-comment|/* popl %eax ; movl $__NR_sigreturn,%eax ; int $0x80  */
-value|\     if (*(unsigned short *)(pc_+0) == 0xb858				\&& *(unsigned int *)(pc_+2) == 119				\&& *(unsigned short *)(pc_+6) == 0x80cd)			\       sc_ = (CONTEXT)->cfa + 4;						\
-comment|/* movl $__NR_rt_sigreturn,%eax ; int $0x80  */
-value|\     else if (*(unsigned char *)(pc_+0) == 0xb8				\&& *(unsigned int *)(pc_+1) == 173				\&& *(unsigned short *)(pc_+5) == 0x80cd)			\       {									\ 	struct rt_sigframe {						\ 	  int sig;							\ 	  struct siginfo *pinfo;					\ 	  void *puc;							\ 	  struct siginfo info;						\ 	  struct ucontext uc;						\ 	} *rt_ = (CONTEXT)->cfa;					\ 	sc_ = (struct sigcontext *)&rt_->uc.uc_mcontext;		\       }									\     else								\       break;								\ 									\     new_cfa_ = sc_->esp;						\     (FS)->cfa_how = CFA_REG_OFFSET;					\     (FS)->cfa_reg = 4;							\     (FS)->cfa_offset = new_cfa_ - (long) (CONTEXT)->cfa;		\ 									\
-comment|/* The SVR4 register numbering macros aren't usable in libgcc.  */
-value|\     (FS)->regs.reg[0].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[0].loc.offset = (long)&sc_->eax - new_cfa_;		\     (FS)->regs.reg[3].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[3].loc.offset = (long)&sc_->ebx - new_cfa_;		\     (FS)->regs.reg[1].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[1].loc.offset = (long)&sc_->ecx - new_cfa_;		\     (FS)->regs.reg[2].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[2].loc.offset = (long)&sc_->edx - new_cfa_;		\     (FS)->regs.reg[6].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[6].loc.offset = (long)&sc_->esi - new_cfa_;		\     (FS)->regs.reg[7].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[7].loc.offset = (long)&sc_->edi - new_cfa_;		\     (FS)->regs.reg[5].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[5].loc.offset = (long)&sc_->ebp - new_cfa_;		\     (FS)->regs.reg[8].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[8].loc.offset = (long)&sc_->eip - new_cfa_;		\     (FS)->retaddr_column = 8;						\     goto SUCCESS;							\   } while (0)
+value|reg
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TARGET_LIBC_PROVIDES_SSP
+end_ifdef
+
+begin_comment
+comment|/* i386 glibc provides __stack_chk_guard in %gs:0x14.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_THREAD_SSP_OFFSET
+value|0x14
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not USE_GNULIBC_1 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IN_LIBGCC2 */
-end_comment
 
 end_unit
 

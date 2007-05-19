@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code from machine description to perform peephole optimizations.    Copyright (C) 1987, 1989, 1992, 1997, 1998,    1999, 2000, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code from machine description to perform peephole optimizations.    Copyright (C) 1987, 1989, 1992, 1997, 1998,    1999, 2000, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -216,12 +216,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  while (GET_CODE (insn) == NOTE\n"
+literal|"  while (NOTE_P (insn)\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t || (GET_CODE (insn) == INSN\n"
+literal|"\t || (NONJUMP_INSN_P (insn)\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -236,7 +236,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  if (GET_CODE (insn) == CODE_LABEL\n\       || GET_CODE (insn) == BARRIER)\n    goto L%d;\n"
+literal|"  if (LABEL_P (insn)\n\       || BARRIER_P (insn))\n    goto L%d;\n"
 argument_list|,
 name|insn_code_number
 argument_list|)
@@ -1584,17 +1584,6 @@ literal|"genpeep"
 expr_stmt|;
 if|if
 condition|(
-name|argc
-operator|<=
-literal|1
-condition|)
-name|fatal
-argument_list|(
-literal|"no input file name"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|init_md_reader_args
 argument_list|(
 name|argc
@@ -1671,12 +1660,27 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#include \"except.h\"\n\n"
+literal|"#include \"except.h\"\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#include \"function.h\"\n\n"
+literal|"#include \"function.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"toplev.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"flags.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"tm-constrs.h\"\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1712,7 +1716,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"&& GET_CODE (NEXT_INSN (ins1)) == BARRIER)\n"
+literal|"&& BARRIER_P (NEXT_INSN (ins1)))\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1854,27 +1858,6 @@ name|FATAL_EXIT_CODE
 else|:
 name|SUCCESS_EXIT_CODE
 operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Define this so we can link with print-rtl.o to get debug_rtx function.  */
-end_comment
-
-begin_function
-specifier|const
-name|char
-modifier|*
-name|get_insn_name
-parameter_list|(
-name|int
-name|code
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-return|return
-name|NULL
 return|;
 block|}
 end_function

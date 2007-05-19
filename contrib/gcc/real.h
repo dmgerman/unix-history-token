@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of floating-point access for GNU compiler.    Copyright (C) 1989, 1991, 1994, 1996, 1997, 1998, 1999,    2000, 2002, 2003 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it under    the terms of the GNU General Public License as published by the Free    Software Foundation; either version 2, or (at your option) any later    version.     GCC is distributed in the hope that it will be useful, but WITHOUT ANY    WARRANTY; without even the implied warranty of MERCHANTABILITY or    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License    for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Definitions of floating-point access for GNU compiler.    Copyright (C) 1989, 1991, 1994, 1996, 1997, 1998, 1999,    2000, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it under    the terms of the GNU General Public License as published by the Free    Software Foundation; either version 2, or (at your option) any later    version.     GCC is distributed in the hope that it will be useful, but WITHOUT ANY    WARRANTY; without even the implied warranty of MERCHANTABILITY or    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License    for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|EXP_BITS
-value|(32 - 5)
+value|(32 - 6)
 end_define
 
 begin_define
@@ -88,14 +88,20 @@ operator|(
 operator|)
 argument_list|)
 block|{
-name|ENUM_BITFIELD
-argument_list|(
-argument|real_value_class
-argument_list|)
-name|class
-label|:
+comment|/* Use the same underlying type for all bit-fields, so as to make      sure they're packed together, otherwise REAL_VALUE_TYPE_SIZE will      be miscomputed.  */
+name|unsigned
+name|int
+comment|/* ENUM_BITFIELD (real_value_class) */
+name|cl
+range|:
 literal|2
-expr_stmt|;
+decl_stmt|;
+name|unsigned
+name|int
+name|decimal
+range|:
+literal|1
+decl_stmt|;
 name|unsigned
 name|int
 name|sign
@@ -114,9 +120,9 @@ name|canonical
 range|:
 literal|1
 decl_stmt|;
-name|signed
+name|unsigned
 name|int
-name|exp
+name|uexp
 range|:
 name|EXP_BITS
 decl_stmt|;
@@ -133,6 +139,30 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_define
+define|#
+directive|define
+name|REAL_EXP
+parameter_list|(
+name|REAL
+parameter_list|)
+define|\
+value|((int)((REAL)->uexp ^ (unsigned int)(1<< (EXP_BITS - 1))) \    - (1<< (EXP_BITS - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_REAL_EXP
+parameter_list|(
+name|REAL
+parameter_list|,
+name|EXP
+parameter_list|)
+define|\
+value|((REAL)->uexp = ((unsigned int)(EXP)& (unsigned int)((1<< EXP_BITS) - 1)))
+end_define
 
 begin_comment
 comment|/* Various headers condition prototypes on #ifdef REAL_VALUE_TYPE, so it    needs to be a macro.  We do need to continue to have a structure tag    so that other headers can forward declare it.  */
@@ -428,9 +458,13 @@ comment|/* The maximum integer, x, such that b**(x-1) is representable.  */
 name|int
 name|emax
 decl_stmt|;
-comment|/* The bit position of the sign bit, or -1 for a complex encoding.  */
+comment|/* The bit position of the sign bit, for determining whether a value      is positive/negative, or -1 for a complex encoding.  */
 name|int
-name|signbit
+name|signbit_ro
+decl_stmt|;
+comment|/* The bit position of the sign bit, for changing the sign of a number,      or -1 for a complex encoding.  */
+name|int
+name|signbit_rw
 decl_stmt|;
 comment|/* Properties of the format.  */
 name|bool
@@ -453,7 +487,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* The target format used for each floating floating point mode.    Indexed by MODE - QFmode.  */
+comment|/* The target format used for each floating point mode.    Float modes are followed by decimal float modes, with entries for    float modes indexed by (MODE - first float mode), and entries for    decimal float modes indexed by (MODE - first decimal float mode) +    the number of float modes.  */
 end_comment
 
 begin_decl_stmt
@@ -469,6 +503,12 @@ operator|-
 name|MIN_MODE_FLOAT
 operator|+
 literal|1
+operator|+
+name|MAX_MODE_DECIMAL_FLOAT
+operator|-
+name|MIN_MODE_DECIMAL_FLOAT
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -480,7 +520,23 @@ name|REAL_MODE_FORMAT
 parameter_list|(
 name|MODE
 parameter_list|)
-value|(real_format_for_mode[(MODE) - MIN_MODE_FLOAT])
+define|\
+value|(real_format_for_mode[DECIMAL_FLOAT_MODE_P (MODE)			\ 			? ((MODE - MIN_MODE_DECIMAL_FLOAT)		\ 			   + (MAX_MODE_FLOAT - MIN_MODE_FLOAT + 1))	\ 			: (MODE - MIN_MODE_FLOAT)])
+end_define
+
+begin_comment
+comment|/* The following macro determines whether the floating point format is    composite, i.e. may contain non-consecutive mantissa bits, in which    case compile-time FP overflow may not model run-time overflow.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL_MODE_FORMAT_COMPOSITE_P
+parameter_list|(
+name|MODE
+parameter_list|)
+define|\
+value|((REAL_MODE_FORMAT(MODE))->pnan< (REAL_MODE_FORMAT (MODE))->p)
 end_define
 
 begin_comment
@@ -493,7 +549,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|void
+name|bool
 name|real_arithmetic
 parameter_list|(
 name|REAL_VALUE_TYPE
@@ -758,6 +814,28 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Wrapper to allow different internal representation for decimal floats. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|real_from_string3
+parameter_list|(
+name|REAL_VALUE_TYPE
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|enum
+name|machine_mode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1120,6 +1198,33 @@ name|real_internal_format
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|real_format
+name|decimal_single_format
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|real_format
+name|decimal_double_format
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|real_format
+name|decimal_quad_format
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* ====================================================================== */
 end_comment
@@ -1316,6 +1421,57 @@ name|mode
 parameter_list|)
 define|\
 value|real_from_integer (&(r), mode, lo, hi, 1)
+end_define
+
+begin_comment
+comment|/* Real values to IEEE 754R decimal floats.  */
+end_comment
+
+begin_comment
+comment|/* IN is a REAL_VALUE_TYPE.  OUT is an array of longs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL_VALUE_TO_TARGET_DECIMAL128
+parameter_list|(
+name|IN
+parameter_list|,
+name|OUT
+parameter_list|)
+define|\
+value|real_to_target (OUT,&(IN), mode_for_size (128, MODE_DECIMAL_FLOAT, 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|REAL_VALUE_TO_TARGET_DECIMAL64
+parameter_list|(
+name|IN
+parameter_list|,
+name|OUT
+parameter_list|)
+define|\
+value|real_to_target (OUT,&(IN), mode_for_size (64, MODE_DECIMAL_FLOAT, 0))
+end_define
+
+begin_comment
+comment|/* IN is a REAL_VALUE_TYPE.  OUT is a long.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL_VALUE_TO_TARGET_DECIMAL32
+parameter_list|(
+name|IN
+parameter_list|,
+name|OUT
+parameter_list|)
+define|\
+value|((OUT) = real_to_target (NULL,&(IN), mode_for_size (32, MODE_DECIMAL_FLOAT, 0)))
 end_define
 
 begin_function_decl
@@ -1622,7 +1778,7 @@ parameter_list|,
 name|from
 parameter_list|)
 define|\
-value|memcpy (&(to),&CONST_DOUBLE_LOW ((from)), sizeof (REAL_VALUE_TYPE))
+value|((to) = *CONST_DOUBLE_REAL_VALUE (from))
 end_define
 
 begin_comment
@@ -1785,6 +1941,43 @@ modifier|*
 parameter_list|,
 name|enum
 name|machine_mode
+parameter_list|,
+specifier|const
+name|REAL_VALUE_TYPE
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|real_round
+parameter_list|(
+name|REAL_VALUE_TYPE
+modifier|*
+parameter_list|,
+name|enum
+name|machine_mode
+parameter_list|,
+specifier|const
+name|REAL_VALUE_TYPE
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Set the sign of R to the sign of X.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|real_copysign
+parameter_list|(
+name|REAL_VALUE_TYPE
+modifier|*
 parameter_list|,
 specifier|const
 name|REAL_VALUE_TYPE

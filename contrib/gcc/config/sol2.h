@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for any    Solaris 2 system.    Copyright 2002, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Operating system specific defines to be used when targeting GCC for any    Solaris 2 system.    Copyright 2002, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -83,7 +83,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HANDLE_PRAGMA_REDEFINE_EXTNAME
+name|TARGET_HANDLE_PRAGMA_REDEFINE_EXTNAME
 value|1
 end_define
 
@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SUBTARGET_SPEC
-value|"\ %{pthreads:-D_REENTRANT -D_PTHREADS} \ %{!pthreads:%{threads:-D_REENTRANT -D_SOLARIS_THREADS}} \ %{compat-bsd:-iwithprefixbefore ucbinclude -I/usr/ucbinclude} \ "
+value|"\ %{pthreads|pthread:-D_REENTRANT -D_PTHREADS} \ %{!pthreads:%{!pthread:%{threads:-D_REENTRANT -D_SOLARIS_THREADS}}} \ %{compat-bsd:-iwithprefixbefore ucbinclude -I/usr/ucbinclude} \ "
 end_define
 
 begin_comment
@@ -121,7 +121,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do {						\ 	builtin_define_std ("unix");			\ 	builtin_define_std ("sun");			\ 	builtin_define ("__svr4__");			\ 	builtin_define ("__SVR4");			\ 	builtin_define ("__PRAGMA_REDEFINE_EXTNAME");	\ 	builtin_assert ("system=unix");			\ 	builtin_assert ("system=svr4");			\
+value|do {						\ 	builtin_define_std ("unix");			\ 	builtin_define_std ("sun");			\ 	builtin_define ("__svr4__");			\ 	builtin_define ("__SVR4");			\ 	builtin_assert ("system=unix");			\ 	builtin_assert ("system=svr4");			\
 comment|/* For C++ we need to add some additional macro	\ 	   definitions required by the C++ standard	\ 	   library.  */
 value|\ 	if (c_dialect_cxx ())				\ 	  {						\ 	    builtin_define ("_XOPEN_SOURCE=500");	\ 	    builtin_define ("_LARGEFILE_SOURCE=1");	\ 	    builtin_define ("_LARGEFILE64_SOURCE=1");	\ 	    builtin_define ("__EXTENSIONS__");		\ 	  }						\ 	TARGET_SUB_OS_CPP_BUILTINS();			\     } while (0)
 end_define
@@ -168,7 +168,7 @@ define|#
 directive|define
 name|LIB_SPEC
 define|\
-value|"%{compat-bsd:-lucb -lsocket -lnsl -lelf -laio} \    %{!shared:\      %{!symbolic:\        %{pthreads:-lpthread} \        %{!pthreads:%{threads:-lthread}} \        %{p|pg:-ldl} -lc}}"
+value|"%{compat-bsd:-lucb -lsocket -lnsl -lelf -laio} \    %{!shared:\      %{!symbolic:\        %{pthreads|pthread:-lpthread} \        %{!pthreads:%{!pthread:%{threads:-lthread}}} \        %{p|pg:-ldl} -lc}}"
 end_define
 
 begin_undef
@@ -282,7 +282,24 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"%{h*} %{v:-V} \    %{b} %{Wl,*:%*} \    %{static:-dn -Bstatic} \    %{shared:-G -dy %{!mimpure-text:-z text}} \    %{symbolic:-Bsymbolic -G -dy -z text} \    %(link_arch) \    %{Qy:} %{!Qn:-Qy}"
+value|"%{h*} %{v:-V} \    %{b} \    %{static:-dn -Bstatic} \    %{shared:-G -dy %{!mimpure-text:-z text}} \    %{symbolic:-Bsymbolic -G -dy -z text} \    %(link_arch) \    %{Qy:} %{!Qn:-Qy}"
+end_define
+
+begin_comment
+comment|/* The Solaris linker doesn't understand constructor priorities.  (The    GNU linker does support constructor priorities, so GNU ld    configuration files for Solaris override this setting.)  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SUPPORTS_INIT_PRIORITY
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUPPORTS_INIT_PRIORITY
+value|0
 end_define
 
 begin_comment
@@ -335,9 +352,119 @@ value|static int need_enable_exec_stack;					\ 									\ static void check_enab
 comment|/* _SC_STACK_PROT */
 value|);			\   if (prot != 7
 comment|/* STACK_PROT_RWX */
-value|)					\     need_enable_exec_stack = 1;						\ }									\ 									\ extern void __enable_execute_stack (void *);				\ void									\ __enable_execute_stack (void *addr)					\ {									\   extern int mprotect (void *, size_t, int);				\   if (!need_enable_exec_stack)						\     return;								\   else {								\     long size = getpagesize ();						\     long mask = ~(size-1);						\     char *page = (char *) (((long) addr)& mask); 			\     char *end  = (char *) ((((long) (addr + TRAMPOLINE_SIZE))& mask) + size); \ 									\     if (mprotect (page, end - page, 7
+value|)					\     need_enable_exec_stack = 1;						\ }									\ 									\ extern void __enable_execute_stack (void *);				\ void									\ __enable_execute_stack (void *addr)					\ {									\   extern int mprotect(void *, size_t, int);				\   if (!need_enable_exec_stack)						\     return;								\   else {								\     long size = getpagesize ();						\     long mask = ~(size-1);						\     char *page = (char *) (((long) addr)& mask); 			\     char *end  = (char *) ((((long) (addr + TRAMPOLINE_SIZE))& mask) + size); \ 									\     if (mprotect (page, end - page, 7
 comment|/* STACK_PROT_RWX */
 value|)< 0)	\       perror ("mprotect of trampoline code");				\   }									\ }
+end_define
+
+begin_comment
+comment|/* Support Solaris-specific format checking for cmn_err.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_N_FORMAT_TYPES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT_TYPES
+value|solaris_format_types
+end_define
+
+begin_comment
+comment|/* #pragma init and #pragma fini are implemented on top of init and    fini attributes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOLARIS_ATTRIBUTE_TABLE
+define|\
+value|{ "init",      0, 0, true,  false,  false, NULL },			\   { "fini",      0, 0, true,  false,  false, NULL }
+end_define
+
+begin_comment
+comment|/* This is how to declare the size of a function.  For Solaris, we output    any .init or .fini entries here.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_DECLARE_FUNCTION_SIZE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_DECLARE_FUNCTION_SIZE
+parameter_list|(
+name|FILE
+parameter_list|,
+name|FNAME
+parameter_list|,
+name|DECL
+parameter_list|)
+define|\
+value|do								\     {								\       if (!flag_inhibit_size_directive)				\ 	ASM_OUTPUT_MEASURED_SIZE (FILE, FNAME);			\       solaris_output_init_fini (FILE, DECL);			\     }								\   while (0)
+end_define
+
+begin_comment
+comment|/* Register the Solaris-specific #pragma directives.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REGISTER_TARGET_PRAGMAS
+parameter_list|()
+value|solaris_register_pragmas ()
+end_define
+
+begin_extern
+extern|extern GTY((
+end_extern
+
+begin_decl_stmt
+unit|))
+name|tree
+name|solaris_pending_aligns
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern GTY((
+end_extern
+
+begin_decl_stmt
+unit|))
+name|tree
+name|solaris_pending_inits
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern GTY((
+end_extern
+
+begin_decl_stmt
+unit|))
+name|tree
+name|solaris_pending_finis
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Allow macro expansion in #pragma pack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HANDLE_PRAGMA_PACK_WITH_EXPANSION
 end_define
 
 end_unit

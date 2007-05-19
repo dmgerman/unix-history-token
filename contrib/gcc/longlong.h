@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* longlong.h -- definitions for mixed size 32/64 bit arithmetic.    Copyright (C) 1991, 1992, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2005 Free Software Foundation, Inc.     This definition file is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public    License as published by the Free Software Foundation; either    version 2, or (at your option) any later version.     This definition file is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* longlong.h -- definitions for mixed size 32/64 bit arithmetic.    Copyright (C) 1991, 1992, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2004,    2005  Free Software Foundation, Inc.     This definition file is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public    License as published by the Free Software Foundation; either    version 2, or (at your option) any later version.     This definition file is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street, Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/* You have to define the following before including this file:     UWtype -- An unsigned type, default type for operations (typically a "word")    UHWtype -- An unsigned type, at least half the size of UWtype.    UDWtype -- An unsigned type, at least twice as large a UWtype    W_TYPE_SIZE -- size in bits of UWtype     UQItype -- Unsigned 8 bit type.    SItype, USItype -- Signed and unsigned 32 bit types.    DItype, UDItype -- Signed and unsigned 64 bit types.     On a 32 bit machine UWtype should typically be USItype;    on a 64 bit machine, UWtype should typically be UDItype. */
+comment|/* You have to define the following before including this file:     UWtype -- An unsigned type, default type for operations (typically a "word")    UHWtype -- An unsigned type, at least half the size of UWtype.    UDWtype -- An unsigned type, at least twice as large a UWtype    W_TYPE_SIZE -- size in bits of UWtype     UQItype -- Unsigned 8 bit type.    SItype, USItype -- Signed and unsigned 32 bit types.    DItype, UDItype -- Signed and unsigned 64 bit types.     On a 32 bit machine UWtype should typically be USItype;    on a 64 bit machine, UWtype should typically be UDItype.  */
 end_comment
 
 begin_define
@@ -80,8 +80,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|UQItype
+name|__clz_tab
+index|[
+literal|256
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* Define auxiliary asm macros.     1) umul_ppmm(high_prod, low_prod, multipler, multiplicand) multiplies two    UWtype integers MULTIPLER and MULTIPLICAND, and generates a two UWtype    word product in HIGH_PROD and LOW_PROD.     2) __umulsidi3(a,b) multiplies two UWtype integers A and B, and returns a    UDWtype product.  This is just a variant of umul_ppmm.     3) udiv_qrnnd(quotient, remainder, high_numerator, low_numerator,    denominator) divides a UDWtype, composed by the UWtype integers    HIGH_NUMERATOR and LOW_NUMERATOR, by DENOMINATOR and places the quotient    in QUOTIENT and the remainder in REMAINDER.  HIGH_NUMERATOR must be less    than DENOMINATOR for correct operation.  If, in addition, the most    significant bit of DENOMINATOR must be 1, then the pre-processor symbol    UDIV_NEEDS_NORMALIZATION is defined to 1.     4) sdiv_qrnnd(quotient, remainder, high_numerator, low_numerator,    denominator).  Like udiv_qrnnd but the numbers are signed.  The quotient    is rounded towards 0.     5) count_leading_zeros(count, x) counts the number of zero-bits from the    msb to the first nonzero bit in the UWtype X.  This is the number of    steps X needs to be shifted left to set the msb.  Undefined for X == 0,    unless the symbol COUNT_LEADING_ZEROS_0 is defined to some value.     6) count_trailing_zeros(count, x) like count_leading_zeros, but counts    from the least significant end.     7) add_ssaaaa(high_sum, low_sum, high_addend_1, low_addend_1,    high_addend_2, low_addend_2) adds two UWtype integers, composed by    HIGH_ADDEND_1 and LOW_ADDEND_1, and HIGH_ADDEND_2 and LOW_ADDEND_2    respectively.  The result is placed in HIGH_SUM and LOW_SUM.  Overflow    (i.e. carry out) is not stored anywhere, and is lost.     8) sub_ddmmss(high_difference, low_difference, high_minuend, low_minuend,    high_subtrahend, low_subtrahend) subtracts two two-word UWtype integers,    composed by HIGH_MINUEND_1 and LOW_MINUEND_1, and HIGH_SUBTRAHEND_2 and    LOW_SUBTRAHEND_2 respectively.  The result is placed in HIGH_DIFFERENCE    and LOW_DIFFERENCE.  Overflow (i.e. carry out) is not stored anywhere,    and is lost.     If any of these macros are left undefined for a particular CPU,    C macros are used.  */
+comment|/* Define auxiliary asm macros.     1) umul_ppmm(high_prod, low_prod, multiplier, multiplicand) multiplies two    UWtype integers MULTIPLIER and MULTIPLICAND, and generates a two UWtype    word product in HIGH_PROD and LOW_PROD.     2) __umulsidi3(a,b) multiplies two UWtype integers A and B, and returns a    UDWtype product.  This is just a variant of umul_ppmm.     3) udiv_qrnnd(quotient, remainder, high_numerator, low_numerator,    denominator) divides a UDWtype, composed by the UWtype integers    HIGH_NUMERATOR and LOW_NUMERATOR, by DENOMINATOR and places the quotient    in QUOTIENT and the remainder in REMAINDER.  HIGH_NUMERATOR must be less    than DENOMINATOR for correct operation.  If, in addition, the most    significant bit of DENOMINATOR must be 1, then the pre-processor symbol    UDIV_NEEDS_NORMALIZATION is defined to 1.     4) sdiv_qrnnd(quotient, remainder, high_numerator, low_numerator,    denominator).  Like udiv_qrnnd but the numbers are signed.  The quotient    is rounded towards 0.     5) count_leading_zeros(count, x) counts the number of zero-bits from the    msb to the first nonzero bit in the UWtype X.  This is the number of    steps X needs to be shifted left to set the msb.  Undefined for X == 0,    unless the symbol COUNT_LEADING_ZEROS_0 is defined to some value.     6) count_trailing_zeros(count, x) like count_leading_zeros, but counts    from the least significant end.     7) add_ssaaaa(high_sum, low_sum, high_addend_1, low_addend_1,    high_addend_2, low_addend_2) adds two UWtype integers, composed by    HIGH_ADDEND_1 and LOW_ADDEND_1, and HIGH_ADDEND_2 and LOW_ADDEND_2    respectively.  The result is placed in HIGH_SUM and LOW_SUM.  Overflow    (i.e. carry out) is not stored anywhere, and is lost.     8) sub_ddmmss(high_difference, low_difference, high_minuend, low_minuend,    high_subtrahend, low_subtrahend) subtracts two two-word UWtype integers,    composed by HIGH_MINUEND_1 and LOW_MINUEND_1, and HIGH_SUBTRAHEND_2 and    LOW_SUBTRAHEND_2 respectively.  The result is placed in HIGH_DIFFERENCE    and LOW_DIFFERENCE.  Overflow (i.e. carry out) is not stored anywhere,    and is lost.     If any of these macros are left undefined for a particular CPU,    C macros are used.  */
 end_comment
 
 begin_comment
@@ -296,16 +307,6 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|UQItype
-name|__clz_tab
-index|[]
-name|ATTRIBUTE_HIDDEN
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -457,6 +458,12 @@ argument_list|(
 name|__arm__
 argument_list|)
 operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__thumb__
+argument_list|)
+operator|&&
 name|W_TYPE_SIZE
 operator|==
 literal|32
@@ -480,7 +487,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("adds	%1, %4, %5\n\tadc	%0, %2, %3"		\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%r" ((USItype) (ah)),					\ 	     "rI" ((USItype) (bh)),					\ 	     "%r" ((USItype) (al)),					\ 	     "rI" ((USItype) (bl)))
+value|__asm__ ("adds	%1, %4, %5\n\tadc	%0, %2, %3"		\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%r" ((USItype) (ah)),					\ 	     "rI" ((USItype) (bh)),					\ 	     "%r" ((USItype) (al)),					\ 	     "rI" ((USItype) (bl)) __CLOBBER_CC)
 end_define
 
 begin_define
@@ -501,7 +508,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("subs	%1, %4, %5\n\tsbc	%0, %2, %3"		\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "r" ((USItype) (ah)),					\ 	     "rI" ((USItype) (bh)),					\ 	     "r" ((USItype) (al)),					\ 	     "rI" ((USItype) (bl)))
+value|__asm__ ("subs	%1, %4, %5\n\tsbc	%0, %2, %3"		\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "r" ((USItype) (ah)),					\ 	     "rI" ((USItype) (bh)),					\ 	     "r" ((USItype) (al)),					\ 	     "rI" ((USItype) (bl)) __CLOBBER_CC)
 end_define
 
 begin_define
@@ -518,7 +525,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|{register USItype __t0, __t1, __t2;					\   __asm__ ("%@ Inlined umul_ppmm\n"					\ 	   "	mov	%2, %5, lsr #16\n"				\ 	   "	mov	%0, %6, lsr #16\n"				\ 	   "	bic	%3, %5, %2, lsl #16\n"				\ 	   "	bic	%4, %6, %0, lsl #16\n"				\ 	   "	mul	%1, %3, %4\n"					\ 	   "	mul	%4, %2, %4\n"					\ 	   "	mul	%3, %0, %3\n"					\ 	   "	mul	%0, %2, %0\n"					\ 	   "	adds	%3, %4, %3\n"					\ 	   "	addcs	%0, %0, #65536\n"				\ 	   "	adds	%1, %1, %3, lsl #16\n"				\ 	   "	adc	%0, %0, %3, lsr #16"				\ 	   : "=&r" ((USItype) (xh)),					\ 	     "=r" ((USItype) (xl)),					\ 	     "=&r" (__t0), "=&r" (__t1), "=r" (__t2)			\ 	   : "r" ((USItype) (a)),					\ 	     "r" ((USItype) (b)));}
+value|{register USItype __t0, __t1, __t2;					\   __asm__ ("%@ Inlined umul_ppmm\n"					\ 	   "	mov	%2, %5, lsr #16\n"				\ 	   "	mov	%0, %6, lsr #16\n"				\ 	   "	bic	%3, %5, %2, lsl #16\n"				\ 	   "	bic	%4, %6, %0, lsl #16\n"				\ 	   "	mul	%1, %3, %4\n"					\ 	   "	mul	%4, %2, %4\n"					\ 	   "	mul	%3, %0, %3\n"					\ 	   "	mul	%0, %2, %0\n"					\ 	   "	adds	%3, %4, %3\n"					\ 	   "	addcs	%0, %0, #65536\n"				\ 	   "	adds	%1, %1, %3, lsl #16\n"				\ 	   "	adc	%0, %0, %3, lsr #16"				\ 	   : "=&r" ((USItype) (xh)),					\ 	     "=r" ((USItype) (xl)),					\ 	     "=&r" (__t0), "=&r" (__t1), "=r" (__t2)			\ 	   : "r" ((USItype) (a)),					\ 	     "r" ((USItype) (b)) __CLOBBER_CC );}
 end_define
 
 begin_define
@@ -1063,54 +1070,24 @@ value|__asm__ ("sub%.l %5,%1\n\tsubx%.l %3,%0"				\ 	   : "=d" ((USItype) (sh)),
 end_define
 
 begin_comment
-comment|/* The '020, '030, '040 and CPU32 have 32x32->64 and 64/32->32q-32r.  */
+comment|/* The '020, '030, '040, '060 and CPU32 have 32x32->64 and 64/32->32q-32r.  */
 end_comment
 
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__mc68020__
 argument_list|)
-operator|||
+operator|&&
+operator|!
 name|defined
 argument_list|(
-name|mc68020
+name|__mc68060__
 argument_list|)
-expr|\
-operator|||
-name|defined
-argument_list|(
-name|__mc68030__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|mc68030
-argument_list|)
-expr|\
-operator|||
-name|defined
-argument_list|(
-name|__mc68040__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|mc68040
-argument_list|)
-expr|\
-operator|||
-name|defined
-argument_list|(
-name|__mcpu32__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|mcpu32
-argument_list|)
+operator|)
 end_if
 
 begin_define
@@ -1182,23 +1159,18 @@ define|\
 value|__asm__ ("divs%.l %4,%1:%0"						\ 	   : "=d" ((USItype) (q)),					\ 	     "=d" ((USItype) (r))					\ 	   : "0" ((USItype) (n0)),					\ 	     "1" ((USItype) (n1)),					\ 	     "dmi" ((USItype) (d)))
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not mc68020 */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__mcoldfire__
 argument_list|)
-end_if
+end_elif
+
+begin_comment
+comment|/* not mc68020 */
+end_comment
 
 begin_define
 define|#
@@ -1281,15 +1253,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not ColdFire */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* not mc68020 */
 end_comment
 
@@ -1300,51 +1263,10 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
 name|__mc68020__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|mc68020
-argument_list|)
-expr|\
-operator|||
-name|defined
-argument_list|(
-name|__mc68030__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|mc68030
-argument_list|)
-expr|\
-operator|||
-name|defined
-argument_list|(
-name|__mc68040__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|mc68040
-argument_list|)
-expr|\
-operator|||
-name|defined
-argument_list|(
-name|__mc68060__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|mc68060
-argument_list|)
-operator|)
-expr|\
 operator|&&
 operator|!
 name|defined
@@ -2306,13 +2228,22 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__sh2__
+name|__sh__
 argument_list|)
+operator|&&
+operator|!
+name|__SHMEDIA__
 operator|&&
 name|W_TYPE_SIZE
 operator|==
 literal|32
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__sh1__
+end_ifndef
 
 begin_define
 define|#
@@ -2328,7 +2259,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|__asm__ (								\        "dmulu.l	%2,%3\n\tsts	macl,%1\n\tsts	mach,%0"		\ 	   : "=r" ((USItype)(w1)),					\ 	     "=r" ((USItype)(w0))					\ 	   : "r" ((USItype)(u)),					\ 	     "r" ((USItype)(v))						\ 	   : "macl", "mach")
+value|__asm__ (								\        "dmulu.l	%2,%3\n\tsts%M1	macl,%1\n\tsts%M0	mach,%0"	\ 	   : "=r<" ((USItype)(w1)),					\ 	     "=r<" ((USItype)(w0))					\ 	   : "r" ((USItype)(u)),					\ 	     "r" ((USItype)(v))						\ 	   : "macl", "mach")
 end_define
 
 begin_define
@@ -2342,6 +2273,77 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* This is the same algorithm as __udiv_qrnnd_c.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDIV_NEEDS_NORMALIZATION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|udiv_qrnnd
+parameter_list|(
+name|q
+parameter_list|,
+name|r
+parameter_list|,
+name|n1
+parameter_list|,
+name|n0
+parameter_list|,
+name|d
+parameter_list|)
+define|\
+value|do {									\     extern UWtype __udiv_qrnnd_16 (UWtype, UWtype)			\                         __attribute__ ((visibility ("hidden")));	\
+comment|/* r0: rn r1: qn */
+comment|/* r0: n1 r4: n0 r5: d r6: d1 */
+comment|/* r2: __m */
+value|\     __asm__ (								\ 	"mov%M4 %4,r5\n"						\ "	swap.w %3,r4\n"							\ "	swap.w r5,r6\n"							\ "	jsr @%5\n"							\ "	shll16 r6\n"							\ "	swap.w r4,r4\n"							\ "	jsr @%5\n"							\ "	swap.w r1,%0\n"							\ "	or r1,%0"							\ 	: "=r" (q), "=&z" (r)						\ 	: "1" (n1), "r" (n0), "rm" (d), "r" (&__udiv_qrnnd_16)		\ 	: "r1", "r2", "r4", "r5", "r6", "pr");				\   } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDIV_TIME
+value|80
+end_define
+
+begin_define
+define|#
+directive|define
+name|sub_ddmmss
+parameter_list|(
+name|sh
+parameter_list|,
+name|sl
+parameter_list|,
+name|ah
+parameter_list|,
+name|al
+parameter_list|,
+name|bh
+parameter_list|,
+name|bl
+parameter_list|)
+define|\
+value|__asm__ ("clrt;subc %5,%1; subc %4,%0"				\ 	   : "=r" (sh), "=r" (sl)					\ 	   : "0" (ah), "1" (al), "r" (bh), "r" (bl))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __sh__ */
+end_comment
 
 begin_if
 if|#
@@ -3283,16 +3285,6 @@ argument_list|(
 name|count_leading_zeros
 argument_list|)
 end_if
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|UQItype
-name|__clz_tab
-index|[]
-name|ATTRIBUTE_HIDDEN
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#

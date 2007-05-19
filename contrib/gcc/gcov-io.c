@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* File format for coverage information    Copyright (C) 1996, 1997, 1998, 2000, 2002,    2003  Free Software Foundation, Inc.    Contributed by Bob Manson<manson@cygnus.com>.    Completely remangled by Nathan Sidwell<nathan@codesourcery.com>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* File format for coverage information    Copyright (C) 1996, 1997, 1998, 2000, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Contributed by Bob Manson<manson@cygnus.com>.    Completely remangled by Nathan Sidwell<nathan@codesourcery.com>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -227,14 +227,13 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
+operator|!
 name|gcov_var
 operator|.
 name|file
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|gcov_var
 operator|.
@@ -901,8 +900,14 @@ name|gcov_unsigned_t
 modifier|*
 name|result
 decl_stmt|;
-name|GCOV_CHECK_WRITING
-argument_list|()
+name|gcc_assert
+argument_list|(
+name|gcov_var
+operator|.
+name|mode
+operator|<
+literal|0
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
@@ -928,7 +933,7 @@ operator|.
 name|offset
 condition|)
 block|{
-name|GCOV_CHECK
+name|gcc_assert
 argument_list|(
 name|gcov_var
 operator|.
@@ -1106,19 +1111,6 @@ literal|1
 index|]
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|value
-operator|<
-literal|0
-condition|)
-name|gcov_var
-operator|.
-name|error
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 block|}
 end_function
@@ -1318,10 +1310,16 @@ name|gcov_unsigned_t
 modifier|*
 name|buffer
 decl_stmt|;
-name|GCOV_CHECK_WRITING
-argument_list|()
+name|gcc_assert
+argument_list|(
+name|gcov_var
+operator|.
+name|mode
+operator|<
+literal|0
+argument_list|)
 expr_stmt|;
-name|GCOV_CHECK
+name|gcc_assert
 argument_list|(
 name|position
 operator|+
@@ -1336,7 +1334,7 @@ operator|.
 name|offset
 argument_list|)
 expr_stmt|;
-name|GCOV_CHECK
+name|gcc_assert
 argument_list|(
 name|position
 operator|>=
@@ -1602,8 +1600,14 @@ name|gcov_var
 operator|.
 name|offset
 decl_stmt|;
-name|GCOV_CHECK_READING
-argument_list|()
+name|gcc_assert
+argument_list|(
+name|gcov_var
+operator|.
+name|mode
+operator|>
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1628,7 +1632,7 @@ condition|(
 name|excess
 condition|)
 block|{
-name|GCOV_CHECK
+name|gcc_assert
 argument_list|(
 name|excess
 operator|==
@@ -1691,7 +1695,7 @@ expr_stmt|;
 if|#
 directive|if
 name|IN_LIBGCOV
-name|GCOV_CHECK
+name|gcc_assert
 argument_list|(
 operator|!
 name|gcov_var
@@ -1965,19 +1969,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|value
-operator|<
-literal|0
-condition|)
-name|gcov_var
-operator|.
-name|error
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 return|return
 name|value
 return|;
@@ -2145,8 +2136,14 @@ name|gcov_unsigned_t
 name|length
 parameter_list|)
 block|{
-name|GCOV_CHECK_READING
-argument_list|()
+name|gcc_assert
+argument_list|(
+name|gcov_var
+operator|.
+name|mode
+operator|>
+literal|0
+argument_list|)
 expr_stmt|;
 name|base
 operator|+=
@@ -2228,7 +2225,7 @@ name|IN_LIBGCOV
 end_if
 
 begin_comment
-comment|/* Move to the a set position in a gcov file.  BASE is zero to move to    the end, and nonzero to move to that position.  */
+comment|/* Move to the a set position in a gcov file.  */
 end_comment
 
 begin_function
@@ -2240,8 +2237,14 @@ name|gcov_position_t
 name|base
 parameter_list|)
 block|{
-name|GCOV_CHECK_WRITING
-argument_list|()
+name|gcc_assert
+argument_list|(
+name|gcov_var
+operator|.
+name|mode
+operator|<
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2266,11 +2269,7 @@ name|base
 operator|<<
 literal|2
 argument_list|,
-name|base
-condition|?
 name|SEEK_SET
-else|:
-name|SEEK_END
 argument_list|)
 expr_stmt|;
 name|gcov_var

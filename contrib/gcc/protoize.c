@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Protoize program - Original version by Ron Guilmette (rfg@segfault.us.com).    Copyright (C) 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Protoize program - Original version by Ron Guilmette (rfg@segfault.us.com).    Copyright (C) 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -94,12 +94,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_undef
-undef|#
-directive|undef
-name|abort
-end_undef
 
 begin_include
 include|#
@@ -331,17 +325,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|fancy_abort
-argument_list|(
-name|void
-argument_list|)
-name|ATTRIBUTE_NORETURN
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1760,6 +1743,10 @@ comment|/* Option flags.  */
 end_comment
 
 begin_comment
+comment|/* ??? The variables are not marked static because some of them have    the same names as gcc variables declared in options.h.  */
+end_comment
+
+begin_comment
 comment|/* ??? These comments should say what the flag mean as well as the options    that set them.  */
 end_comment
 
@@ -1779,7 +1766,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|version_flag
 init|=
@@ -1792,7 +1778,6 @@ comment|/* Print our version number.  */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|quiet_flag
 init|=
@@ -1805,7 +1790,6 @@ comment|/* Don't print messages normally.  */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|nochange_flag
 init|=
@@ -1814,11 +1798,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Don't convert, just say what files 					   we would have converted.  */
+comment|/* Don't convert, just say what files 				   we would have converted.  */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|nosave_flag
 init|=
@@ -1831,7 +1814,6 @@ comment|/* Don't save the old version.  */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|keep_flag
 init|=
@@ -1890,7 +1872,6 @@ comment|/* !defined (UNPROTOIZE) */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|local_flag
 init|=
@@ -1903,7 +1884,6 @@ comment|/* Insert new local decls (when?).  */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|global_flag
 init|=
@@ -1916,7 +1896,6 @@ comment|/* set by -g option */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|cplusplus_flag
 init|=
@@ -2252,7 +2231,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|msgid
+name|cmsgid
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -2264,7 +2243,7 @@ name|va_start
 argument_list|(
 name|ap
 argument_list|,
-name|msgid
+name|cmsgid
 argument_list|)
 expr_stmt|;
 name|vfprintf
@@ -2273,7 +2252,7 @@ name|stderr
 argument_list|,
 name|_
 argument_list|(
-name|msgid
+name|cmsgid
 argument_list|)
 argument_list|,
 name|ap
@@ -2331,32 +2310,6 @@ expr_stmt|;
 return|return
 name|output
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/* More 'friendly' abort that prints the line and file.    config.h can #define abort fancy_abort if you like that sort of thing.  */
-end_comment
-
-begin_function
-name|void
-name|fancy_abort
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|notice
-argument_list|(
-literal|"%s: internal abort\n"
-argument_list|,
-name|pname
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|FATAL_EXIT_CODE
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2586,7 +2539,7 @@ endif|#
 directive|endif
 name|notice
 argument_list|(
-literal|"%s: error writing file `%s': %s\n"
+literal|"%s: error writing file '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -2771,18 +2724,14 @@ name|default_include
 modifier|*
 name|p
 decl_stmt|;
-if|if
-condition|(
-operator|!
+name|gcc_assert
+argument_list|(
 name|IS_ABSOLUTE_PATH
 argument_list|(
 name|path
 argument_list|)
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
-comment|/* Must be an absolutized filename.  */
 for|for
 control|(
 name|p
@@ -2864,12 +2813,7 @@ directive|endif
 end_endif
 
 begin_comment
-unit|if (dir_last_slash)       *dir_last_slash = '\0';     else       abort ();
-comment|/* Should have been an absolutized filename.  */
-end_comment
-
-begin_comment
-unit|}    if (access (path, W_OK))     return 0;    return 1; }
+unit|gcc_assert (dir_last_slash);     *dir_last_slash = '\0';   }    if (access (path, W_OK))     return 0;    return 1; }
 comment|/* Return true if the given filename designates a file that we are allowed    to modify.  Files which we should not attempt to modify are (a) "system"    include files, and (b) files which the user doesn't have write access to,    and (c) files which reside in directories which the user doesn't have    write access to.  Unless requested to be quiet, give warnings about    files that we will not try to convert for one reason or another.  An    exception is made for "system" include files, which we never try to    convert and for which we don't issue the usual warnings.  */
 end_comment
 
@@ -2886,13 +2830,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-unit|if (dir_last_slash)       *dir_last_slash = '\0';     else       abort ();
-comment|/* Should have been an absolutized filename.  */
-end_comment
-
 begin_endif
-unit|}    if (access (path, R_OK))     {       if (!quiet_flag) 	notice ("%s: warning: no read access for file `%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    if (access (path, W_OK))     {       if (!quiet_flag) 	notice ("%s: warning: no write access for file `%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    if (access (dir_name, W_OK))     {       if (!quiet_flag) 	notice ("%s: warning: no write access for dir containing `%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    return 1; }
+unit|gcc_assert (dir_last_slash);     *dir_last_slash = '\0';   }    if (access (path, R_OK))     {       if (!quiet_flag) 	notice ("%s: warning: no read access for file '%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    if (access (path, W_OK))     {       if (!quiet_flag) 	notice ("%s: warning: no write access for file '%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    if (access (dir_name, W_OK))     {       if (!quiet_flag) 	notice ("%s: warning: no write access for dir containing '%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    return 1; }
 endif|#
 directive|endif
 end_endif
@@ -3736,7 +3675,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Unexpand as many macro symbol as we can find.     If the given line must be unexpanded, make a copy of it in the heap and    return a pointer to the unexpanded copy.  Otherwise return NULL.  */
+comment|/* Unexpand as many macro symbols as we can find.     If the given line must be unexpanded, make a copy of it in the heap and    return a pointer to the unexpanded copy.  Otherwise return NULL.  */
 end_comment
 
 begin_function
@@ -6214,7 +6153,7 @@ condition|)
 block|{
 name|notice
 argument_list|(
-literal|"%s:%d: declaration of function `%s' takes different forms\n"
+literal|"%s:%d: declaration of function '%s' takes different forms\n"
 argument_list|,
 name|def_dec_p
 operator|->
@@ -7138,7 +7077,7 @@ name|quiet_flag
 condition|)
 name|notice
 argument_list|(
-literal|"%s: compiling `%s'\n"
+literal|"%s: compiling '%s'\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -7345,7 +7284,7 @@ return|return
 literal|1
 return|;
 block|}
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}
@@ -7478,7 +7417,7 @@ condition|)
 block|{
 name|notice
 argument_list|(
-literal|"%s: warning: missing SYSCALLS file `%s'\n"
+literal|"%s: warning: missing SYSCALLS file '%s'\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -7501,7 +7440,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: can't read aux info file `%s': %s\n"
+literal|"%s: can't read aux info file '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -7572,7 +7511,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: can't read aux info file `%s': %s\n"
+literal|"%s: can't read aux info file '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -7622,7 +7561,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: can't get status of aux info file `%s': %s\n"
+literal|"%s: can't get status of aux info file '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -7693,7 +7632,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: can't get status of aux info file `%s': %s\n"
+literal|"%s: can't get status of aux info file '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -7782,7 +7721,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: can't open aux info file `%s' for reading: %s\n"
+literal|"%s: can't open aux info file '%s' for reading: %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -7847,7 +7786,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: error reading aux info file `%s': %s\n"
+literal|"%s: error reading aux info file '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -7892,7 +7831,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: error closing aux info file `%s': %s\n"
+literal|"%s: error closing aux info file '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -7948,7 +7887,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: can't delete aux info file `%s': %s\n"
+literal|"%s: can't delete aux info file '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -8241,7 +8180,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: can't delete file `%s': %s\n"
+literal|"%s: can't delete file '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -8498,7 +8437,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: warning: can't rename file `%s' to `%s': %s\n"
+literal|"%s: warning: can't rename file '%s' to '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -8992,7 +8931,7 @@ name|quiet_flag
 condition|)
 name|notice
 argument_list|(
-literal|"%s: warning: using formals list from %s(%d) for function `%s'\n"
+literal|"%s: warning: using formals list from %s(%d) for function '%s'\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -9137,7 +9076,7 @@ argument_list|)
 expr_stmt|;
 name|notice
 argument_list|(
-literal|"%s: %d: `%s' used but missing from SYSCALLS\n"
+literal|"%s: %d: '%s' used but missing from SYSCALLS\n"
 argument_list|,
 name|shortpath
 argument_list|(
@@ -9160,7 +9099,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|else 	      notice ("%s: %d: warning: no extern definition for `%s'\n", 		      shortpath (NULL, file), user->line, 		      user->hash_entry->symbol);
+block|else 	      notice ("%s: %d: warning: no extern definition for '%s'\n", 		      shortpath (NULL, file), user->line, 		      user->hash_entry->symbol);
 endif|#
 directive|endif
 block|}
@@ -9277,7 +9216,7 @@ name|quiet_flag
 condition|)
 name|notice
 argument_list|(
-literal|"%s: warning: no static definition for `%s' in file `%s'\n"
+literal|"%s: warning: no static definition for '%s' in file '%s'\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -9312,7 +9251,7 @@ condition|)
 block|{
 name|notice
 argument_list|(
-literal|"%s: multiple static defs of `%s' in file `%s'\n"
+literal|"%s: multiple static defs of '%s' in file '%s'\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -9842,14 +9781,12 @@ name|int
 name|n
 parameter_list|)
 block|{
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|n
-operator|<
+operator|>=
 name|last_known_line_number
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -10381,7 +10318,7 @@ argument_list|()
 expr_stmt|;
 name|notice
 argument_list|(
-literal|"%s: declaration of function `%s' not converted\n"
+literal|"%s: declaration of function '%s' not converted\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -10646,7 +10583,7 @@ name|quiet_flag
 condition|)
 name|notice
 argument_list|(
-literal|"%s: warning: too many parameter lists in declaration of `%s'\n"
+literal|"%s: warning: too many parameter lists in declaration of '%s'\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -10726,7 +10663,7 @@ name|quiet_flag
 condition|)
 name|notice
 argument_list|(
-literal|"\n%s: warning: too few parameter lists in declaration of `%s'\n"
+literal|"\n%s: warning: too few parameter lists in declaration of '%s'\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -11068,7 +11005,7 @@ condition|)
 block|{
 name|notice
 argument_list|(
-literal|"%s: %d: warning: found `%s' but expected `%s'\n"
+literal|"%s: %d: warning: found '%s' but expected '%s'\n"
 argument_list|,
 name|shortpath
 argument_list|(
@@ -11508,7 +11445,7 @@ argument_list|()
 expr_stmt|;
 name|notice
 argument_list|(
-literal|"%s: local declaration for function `%s' not inserted\n"
+literal|"%s: local declaration for function '%s' not inserted\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -11560,7 +11497,7 @@ name|quiet_flag
 condition|)
 name|notice
 argument_list|(
-literal|"\n%s: %d: warning: can't add declaration of `%s' into macro call\n"
+literal|"\n%s: %d: warning: can't add declaration of '%s' into macro call\n"
 argument_list|,
 name|def_dec_p
 operator|->
@@ -11747,7 +11684,7 @@ argument_list|()
 expr_stmt|;
 name|notice
 argument_list|(
-literal|"%s: global declarations for file `%s' not inserted\n"
+literal|"%s: global declarations for file '%s' not inserted\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -12018,6 +11955,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|volatile
 name|clean_text_p
 parameter_list|)
 block|{
@@ -12054,7 +11992,7 @@ argument_list|()
 expr_stmt|;
 name|notice
 argument_list|(
-literal|"%s: definition of function `%s' not converted\n"
+literal|"%s: definition of function '%s' not converted\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -12138,7 +12076,7 @@ argument_list|()
 expr_stmt|;
 name|notice
 argument_list|(
-literal|"%s: definition of function `%s' not converted\n"
+literal|"%s: definition of function '%s' not converted\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -12644,15 +12582,15 @@ name|scan_p
 operator|=
 literal|' '
 expr_stmt|;
-if|if
-condition|(
 operator|++
 name|scan_p
-operator|>=
+expr_stmt|;
+name|gcc_assert
+argument_list|(
+name|scan_p
+operator|<
 name|new_clean_text_limit
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
 operator|*
@@ -12719,15 +12657,15 @@ name|scan_p
 operator|=
 literal|' '
 expr_stmt|;
-if|if
-condition|(
 operator|++
 name|scan_p
-operator|>=
+expr_stmt|;
+name|gcc_assert
+argument_list|(
+name|scan_p
+operator|<
 name|new_clean_text_limit
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
 operator|*
@@ -12811,15 +12749,15 @@ name|scan_p
 operator|=
 literal|' '
 expr_stmt|;
-if|if
-condition|(
 operator|++
 name|scan_p
-operator|>=
+expr_stmt|;
+name|gcc_assert
+argument_list|(
+name|scan_p
+operator|<
 name|new_clean_text_limit
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
 operator|*
@@ -12903,15 +12841,15 @@ name|scan_p
 operator|=
 literal|' '
 expr_stmt|;
-if|if
-condition|(
 operator|++
 name|scan_p
-operator|>=
+expr_stmt|;
+name|gcc_assert
+argument_list|(
+name|scan_p
+operator|<
 name|new_clean_text_limit
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -13461,7 +13399,7 @@ goto|;
 if|#
 directive|if
 literal|0
-block|notice ("%s: found definition of `%s' at %s(%d)\n", 			    pname, 			    func_name, 			    shortpath (NULL, file_p->hash_entry->symbol), 			    identify_lineno (id_start));
+block|notice ("%s: found definition of '%s' at %s(%d)\n", 			    pname, 			    func_name, 			    shortpath (NULL, file_p->hash_entry->symbol), 			    identify_lineno (id_start));
 endif|#
 directive|endif
 comment|/* 0 */
@@ -13500,7 +13438,7 @@ goto|;
 comment|/* If we make it here, then we did not know about this 		       function definition.  */
 name|notice
 argument_list|(
-literal|"%s: %d: warning: `%s' excluded by preprocessing\n"
+literal|"%s: %d: warning: '%s' excluded by preprocessing\n"
 argument_list|,
 name|shortpath
 argument_list|(
@@ -13645,7 +13583,7 @@ comment|/* defined (UNPROTOIZE) */
 condition|)
 name|notice
 argument_list|(
-literal|"%s: `%s' not converted\n"
+literal|"%s: '%s' not converted\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -13666,7 +13604,7 @@ name|nochange_flag
 condition|)
 name|notice
 argument_list|(
-literal|"%s: would convert file `%s'\n"
+literal|"%s: would convert file '%s'\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -13681,7 +13619,7 @@ expr_stmt|;
 else|else
 name|notice
 argument_list|(
-literal|"%s: converting file `%s'\n"
+literal|"%s: converting file '%s'\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -13721,7 +13659,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: can't get status for file `%s': %s\n"
+literal|"%s: can't get status for file '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -13876,7 +13814,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: can't open file `%s' for reading: %s\n"
+literal|"%s: can't open file '%s' for reading: %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -13925,7 +13863,7 @@ argument_list|)
 expr_stmt|;
 name|notice
 argument_list|(
-literal|"\n%s: error reading input file `%s': %s\n"
+literal|"\n%s: error reading input file '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -14004,7 +13942,7 @@ directive|if
 literal|0
 block|{     int clean_file;     size_t clean_size = orig_text_limit - orig_text_base;     char *const clean_filename = alloca (strlen (convert_filename) + 6 + 1);
 comment|/* Open (and create) the clean file.  */
-block|strcpy (clean_filename, convert_filename);     strcat (clean_filename, ".clean");     if ((clean_file = creat (clean_filename, 0666)) == -1)       { 	int errno_val = errno; 	notice ("%s: can't create/open clean file `%s': %s\n", 		pname, shortpath (NULL, clean_filename), 		xstrerror (errno_val)); 	return;       }
+block|strcpy (clean_filename, convert_filename);     strcat (clean_filename, ".clean");     if ((clean_file = creat (clean_filename, 0666)) == -1)       { 	int errno_val = errno; 	notice ("%s: can't create/open clean file '%s': %s\n", 		pname, shortpath (NULL, clean_filename), 		xstrerror (errno_val)); 	return;       }
 comment|/* Write the clean file.  */
 block|safe_write (clean_file, new_clean_text_base, clean_size, clean_filename);      close (clean_file);   }
 endif|#
@@ -14271,7 +14209,7 @@ name|quiet_flag
 condition|)
 name|notice
 argument_list|(
-literal|"%s: warning: file `%s' already saved in `%s'\n"
+literal|"%s: warning: file '%s' already saved in '%s'\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -14312,7 +14250,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: can't link file `%s' to `%s': %s\n"
+literal|"%s: can't link file '%s' to '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -14365,7 +14303,7 @@ condition|)
 block|{
 name|notice
 argument_list|(
-literal|"%s: can't delete file `%s': %s\n"
+literal|"%s: can't delete file '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -14414,7 +14352,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: can't create/open output file `%s': %s\n"
+literal|"%s: can't create/open output file '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -14518,7 +14456,7 @@ name|errno
 decl_stmt|;
 name|notice
 argument_list|(
-literal|"%s: can't change mode of file `%s': %s\n"
+literal|"%s: can't change mode of file '%s': %s\n"
 argument_list|,
 name|pname
 argument_list|,
@@ -15151,6 +15089,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Unlock the stdio streams.  */
+name|unlock_std_streams
+argument_list|()
+expr_stmt|;
 name|gcc_init_libintl
 argument_list|()
 expr_stmt|;

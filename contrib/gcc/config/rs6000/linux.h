@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for PowerPC machines running Linux.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Contributed by Michael Meissner (meissner@cygnus.com).     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for PowerPC machines running Linux.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,    2004, 2005, 2006 Free Software Foundation, Inc.    Contributed by Michael Meissner (meissner@cygnus.com).     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_undef
@@ -27,6 +27,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* We use glibc _mcount for profiling.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_PROFILE_COUNTERS
+value|1
+end_define
+
+begin_comment
 comment|/* glibc has float and long double forms of math functions.  */
 end_comment
 
@@ -40,7 +51,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_C99_FUNCTIONS
-value|1
+value|(OPTION_GLIBC)
 end_define
 
 begin_undef
@@ -55,7 +66,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do                                      \     {                                     \       builtin_define_std ("PPC");         \       builtin_define_std ("powerpc");     \       builtin_assert ("cpu=powerpc");     \       builtin_assert ("machine=powerpc"); \       TARGET_OS_SYSV_CPP_BUILTINS ();	  \     }                                     \   while (0)
+value|do						\     {						\       builtin_define_std ("PPC");		\       builtin_define_std ("powerpc");		\       builtin_assert ("cpu=powerpc");		\       builtin_assert ("machine=powerpc");	\       TARGET_OS_SYSV_CPP_BUILTINS ();		\     }						\   while (0)
 end_define
 
 begin_undef
@@ -174,6 +185,28 @@ define|\
 value|"%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}"
 end_define
 
+begin_comment
+comment|/* Use --as-needed -lgcc_s for eh support.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LD_AS_NEEDED
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|USE_LD_AS_NEEDED
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_undef
 undef|#
 directive|undef
@@ -283,20 +316,60 @@ end_define
 begin_define
 define|#
 directive|define
-name|TARGET_HAS_F_SETLKW
+name|TARGET_POSIX_IO
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD_UNWIND_SUPPORT
+value|"config/rs6000/linux-unwind.h"
 end_define
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IN_LIBGCC2
+name|TARGET_LIBC_PROVIDES_SSP
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|"config/rs6000/linux-unwind.h"
-end_include
+begin_comment
+comment|/* ppc32 glibc provides __stack_chk_guard in -0x7008(2).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_THREAD_SSP_OFFSET
+value|-0x7008
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|POWERPC_LINUX
+end_define
+
+begin_comment
+comment|/* ppc linux has 128-bit long double support in glibc 2.4 and later.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TARGET_DEFAULT_LONG_DOUBLE_128
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RS6000_DEFAULT_LONG_DOUBLE_SIZE
+value|128
+end_define
 
 begin_endif
 endif|#

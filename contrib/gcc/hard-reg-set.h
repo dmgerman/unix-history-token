@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Sets (bit vectors) of hard registers, and operations on them.    Copyright (C) 1987, 1992, 1994, 2000, 2003 Free Software Foundation, Inc.  This file is part of GCC  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Sets (bit vectors) of hard registers, and operations on them.    Copyright (C) 1987, 1992, 1994, 2000, 2003, 2004, 2005    Free Software Foundation, Inc.  This file is part of GCC  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -20,13 +20,13 @@ comment|/* Define the type of a set of hard registers.  */
 end_comment
 
 begin_comment
-comment|/* HARD_REG_ELT_TYPE is a typedef of the unsigned integral type which    will be used for hard reg sets, either alone or in an array.     If HARD_REG_SET is a macro, its definition is HARD_REG_ELT_TYPE,    and it has enough bits to represent all the target machine's hard    registers.  Otherwise, it is a typedef for a suitably sized array    of HARD_REG_ELT_TYPEs.  HARD_REG_SET_LONGS is defined as how many.     Note that lots of code assumes that the first part of a regset is    the same format as a HARD_REG_SET.  To help make sure this is true,    we only try the widest integer mode (HOST_WIDE_INT) instead of all the    smaller types.  This approach loses only if there are a very few    registers and then only in the few cases where we have an array of    HARD_REG_SETs, so it needn't be as complex as it used to be.  */
+comment|/* HARD_REG_ELT_TYPE is a typedef of the unsigned integral type which    will be used for hard reg sets, either alone or in an array.     If HARD_REG_SET is a macro, its definition is HARD_REG_ELT_TYPE,    and it has enough bits to represent all the target machine's hard    registers.  Otherwise, it is a typedef for a suitably sized array    of HARD_REG_ELT_TYPEs.  HARD_REG_SET_LONGS is defined as how many.     Note that lots of code assumes that the first part of a regset is    the same format as a HARD_REG_SET.  To help make sure this is true,    we only try the widest fast integer mode (HOST_WIDEST_FAST_INT)    instead of all the smaller types.  This approach loses only if    there are very few registers and then only in the few cases where    we have an array of HARD_REG_SETs, so it needn't be as complex as    it used to be.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 name|unsigned
-name|HOST_WIDE_INT
+name|HOST_WIDEST_FAST_INT
 name|HARD_REG_ELT_TYPE
 typedef|;
 end_typedef
@@ -36,7 +36,7 @@ if|#
 directive|if
 name|FIRST_PSEUDO_REGISTER
 operator|<=
-name|HOST_BITS_PER_WIDE_INT
+name|HOST_BITS_PER_WIDEST_FAST_INT
 end_if
 
 begin_define
@@ -56,7 +56,7 @@ define|#
 directive|define
 name|HARD_REG_SET_LONGS
 define|\
-value|((FIRST_PSEUDO_REGISTER + HOST_BITS_PER_WIDE_INT - 1)	\   / HOST_BITS_PER_WIDE_INT)
+value|((FIRST_PSEUDO_REGISTER + HOST_BITS_PER_WIDEST_FAST_INT - 1)	\   / HOST_BITS_PER_WIDEST_FAST_INT)
 end_define
 
 begin_typedef
@@ -266,7 +266,7 @@ begin_define
 define|#
 directive|define
 name|UHOST_BITS_PER_WIDE_INT
-value|((unsigned) HOST_BITS_PER_WIDE_INT)
+value|((unsigned) HOST_BITS_PER_WIDEST_FAST_INT)
 end_define
 
 begin_define
@@ -315,7 +315,7 @@ name|FIRST_PSEUDO_REGISTER
 operator|<=
 literal|2
 operator|*
-name|HOST_BITS_PER_WIDE_INT
+name|HOST_BITS_PER_WIDEST_FAST_INT
 end_if
 
 begin_define
@@ -460,7 +460,7 @@ name|FIRST_PSEUDO_REGISTER
 operator|<=
 literal|3
 operator|*
-name|HOST_BITS_PER_WIDE_INT
+name|HOST_BITS_PER_WIDEST_FAST_INT
 end_if
 
 begin_define
@@ -605,7 +605,7 @@ name|FIRST_PSEUDO_REGISTER
 operator|<=
 literal|4
 operator|*
-name|HOST_BITS_PER_WIDE_INT
+name|HOST_BITS_PER_WIDEST_FAST_INT
 end_if
 
 begin_define
@@ -744,7 +744,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* FIRST_PSEUDO_REGISTER> 3*HOST_BITS_PER_WIDE_INT */
+comment|/* FIRST_PSEUDO_REGISTER> 3*HOST_BITS_PER_WIDEST_FAST_INT */
 end_comment
 
 begin_define
@@ -1104,42 +1104,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* For each reg class, table listing all the containing classes.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|enum
-name|reg_class
-name|reg_class_superclasses
-index|[
-name|N_REG_CLASSES
-index|]
-index|[
-name|N_REG_CLASSES
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* For each reg class, table listing all the classes contained in it.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|enum
-name|reg_class
-name|reg_class_subclasses
-index|[
-name|N_REG_CLASSES
-index|]
-index|[
-name|N_REG_CLASSES
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* For each pair of reg classes,    a largest reg class contained in their union.  */
 end_comment
 
@@ -1176,17 +1140,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of non-fixed registers.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|n_non_fixed_regs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Vector indexed by hardware reg giving its name.  */
 end_comment
 
@@ -1199,6 +1152,20 @@ name|reg_names
 index|[
 name|FIRST_PSEUDO_REGISTER
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Vector indexed by reg class giving its name.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|reg_class_names
+index|[]
 decl_stmt|;
 end_decl_stmt
 

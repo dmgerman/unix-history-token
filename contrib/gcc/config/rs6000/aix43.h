@@ -1,25 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for IBM RS/6000 POWER running AIX version 4.3.    Copyright (C) 1998, 1999, 2000, 2001, 2003 Free Software Foundation, Inc.    Contributed by David Edelsohn (edelsohn@gnu.org).     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for IBM RS/6000 POWER running AIX version 4.3.    Copyright (C) 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.    Contributed by David Edelsohn (edelsohn@gnu.org).     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
-
-begin_comment
-comment|/* AIX 4.3 and above support 64-bit executables.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SUBSUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBSUBTARGET_SWITCHES
-define|\
-value|{"aix64", 		MASK_64BIT | MASK_POWERPC64 | MASK_POWERPC,	\    N_("Compile for 64-bit pointers") },					\   {"aix32",		- (MASK_64BIT | MASK_POWERPC64),		\    N_("Compile for 32-bit pointers") },					\   {"pe",		0,						\    N_("Support message passing with the Parallel Environment") },
-end_define
 
 begin_comment
 comment|/* Sometimes certain combinations of command options do not make sense    on a particular target machine.  You can define a macro    `OVERRIDE_OPTIONS' to take account of this.  This macro, if    defined, is executed once just after all the command options have    been parsed.     The macro SUBTARGET_OVERRIDE_OPTIONS is provided for subtargets, to    get control.  */
@@ -37,7 +19,7 @@ define|#
 directive|define
 name|SUBTARGET_OVERRIDE_OPTIONS
 define|\
-value|do {									\   if (TARGET_64BIT&& (target_flags& NON_POWERPC_MASKS))		\     {									\       target_flags&= ~NON_POWERPC_MASKS;				\       warning ("-maix64 and POWER architecture are incompatible");	\     }									\   if (TARGET_64BIT&& ! TARGET_POWERPC64)				\     {									\       target_flags |= MASK_POWERPC64;					\       warning ("-maix64 requires PowerPC64 architecture remain enabled"); \     }									\   if (TARGET_POWERPC64&& ! TARGET_64BIT)				\     {									\       error ("-maix64 required: 64-bit computation with 32-bit addressing not yet supported"); \     }									\ } while (0);
+value|do {									\   if (TARGET_64BIT&& (target_flags& NON_POWERPC_MASKS))		\     {									\       target_flags&= ~NON_POWERPC_MASKS;				\       warning (0, "-maix64 and POWER architecture are incompatible");	\     }									\   if (TARGET_64BIT&& ! TARGET_POWERPC64)				\     {									\       target_flags |= MASK_POWERPC64;					\       warning (0, "-maix64 requires PowerPC64 architecture remain enabled"); \     }									\   if (TARGET_SOFT_FLOAT&& TARGET_LONG_DOUBLE_128)			\     {									\       rs6000_long_double_type_size = 64;				\       if (rs6000_explicit_options.long_double)				\ 	warning (0, "soft-float and long-double-128 are incompatible");	\     }									\   if (TARGET_POWERPC64&& ! TARGET_64BIT)				\     {									\       error ("-maix64 required: 64-bit computation with 32-bit addressing not yet supported"); \     }									\ } while (0);
 end_define
 
 begin_undef
@@ -96,7 +78,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do                                  \     {                                 \       builtin_define ("_IBMR2");      \       builtin_define ("_POWER");      \       builtin_define ("_AIX");        \       builtin_define ("_AIX32");      \       builtin_define ("_AIX41");      \       builtin_define ("_AIX43");      \       builtin_define ("_LONG_LONG");  \       builtin_assert ("system=unix"); \       builtin_assert ("system=aix");  \     }                                 \   while (0)
+value|do                                 \     {                                \       builtin_define ("_AIX43");     \       TARGET_OS_AIX_CPP_BUILTINS (); \     }                                \   while (0)
 end_define
 
 begin_undef
@@ -127,7 +109,7 @@ define|#
 directive|define
 name|CPLUSPLUS_CPP_SPEC
 define|\
-value|"-D_XOPEN_SOURCE=500				\    -D_XOPEN_SOURCE_EXTENDED=1			\    -D_LARGE_FILE_API				\    -D_ALL_SOURCE				\    %{maix64: -D__64BIT__}			\    %{mpe: -I/usr/lpp/ppe.poe/include}		\    %{pthread: -D_THREAD_SAFE}"
+value|"-D_ALL_SOURCE				\    %{maix64: -D__64BIT__}			\    %{mpe: -I/usr/lpp/ppe.poe/include}		\    %{pthread: -D_THREAD_SAFE}"
 end_define
 
 begin_undef
@@ -289,6 +271,17 @@ parameter_list|,
 name|TARGET
 parameter_list|)
 value|true
+end_define
+
+begin_comment
+comment|/* This target uses the aix64.opt file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_USES_AIX64_OPT
+value|1
 end_define
 
 end_unit

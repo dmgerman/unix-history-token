@@ -1,14 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* XCOFF definitions.  These are needed in dbxout.c, final.c,    and xcoffout.h.    Copyright (C) 1998, 2000, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* XCOFF definitions.  These are needed in dbxout.c, final.c,    and xcoffout.h.    Copyright (C) 1998, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_STABS_OP
-value|"\t.stabx\t"
-end_define
 
 begin_comment
 comment|/* Tags and typedefs are C_DECL in XCOFF, not C_LSYM.  */
@@ -25,19 +18,15 @@ begin_comment
 comment|/* Use the XCOFF predefined type numbers.  */
 end_comment
 
-begin_comment
-comment|/* ??? According to metin, typedef stabx must go in text control section,    but he did not make this changes everywhere where such typedef stabx    can be emitted, so it is really needed or not?  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|DBX_OUTPUT_STANDARD_TYPES
+name|DBX_ASSIGN_FUNDAMENTAL_TYPE_NUMBER
 parameter_list|(
-name|SYMS
+name|TYPE
 parameter_list|)
 define|\
-value|{						\   text_section ();				\   xcoff_output_standard_types (SYMS);		\ }
+value|xcoff_assign_fundamental_type_number (TYPE)
 end_define
 
 begin_comment
@@ -128,14 +117,27 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DBX_FINISH_SYMBOL
+name|DBX_FINISH_STABS
 parameter_list|(
 name|SYM
+parameter_list|,
+name|CODE
+parameter_list|,
+name|LINE
+parameter_list|,
+name|ADDR
+parameter_list|,
+name|LABEL
+parameter_list|,
+name|NUMBER
 parameter_list|)
-define|\
-value|{								\   if (current_sym_addr&& current_sym_code == N_FUN)		\     fprintf (asmfile, "\",.");					\   else								\     fprintf (asmfile, "\",");					\
-comment|/* If we are writing a function name, we must ensure that	\      there is no storage-class suffix on the name.  */
-value|\   if (current_sym_addr&& current_sym_code == N_FUN		\&& GET_CODE (current_sym_addr) == SYMBOL_REF)		\     {								\       const char *_p = XSTR (current_sym_addr, 0);		\       if (*_p == '*')						\ 	fprintf (asmfile, "%s", _p+1);				\       else							\ 	for (; *_p != '['&& *_p; _p++)				\ 	  fprintf (asmfile, "%c", *_p);				\     }								\   else if (current_sym_addr)					\     output_addr_const (asmfile, current_sym_addr);		\   else if (current_sym_code == N_GSYM)				\     assemble_name (asmfile, XSTR (XEXP (DECL_RTL (sym), 0), 0)); \   else								\     fprintf (asmfile, "%d", current_sym_value);			\   fprintf (asmfile, ",%d,0\n", stab_to_sclass (current_sym_code)); \ }
+value|do {	\   if (ADDR)								\     {									\
+comment|/* If we are writing a function name, we must emit a dot in	\ 	 order to refer to the function code, not its descriptor.  */
+value|\       if (CODE == N_FUN)						\ 	putc ('.', asm_out_file);					\ 									\
+comment|/* If we are writing a function name, we must ensure that		\ 	 there is no storage-class suffix on the name.  */
+value|\       if (CODE == N_FUN&& GET_CODE (ADDR) == SYMBOL_REF)		\ 	{								\ 	  const char *_p = XSTR (ADDR, 0);				\ 	  if (*_p == '*')						\ 	    fputs (_p+1, asm_out_file);					\ 	  else								\ 	    for (; *_p != '['&& *_p; _p++)				\ 	      putc (*_p, asm_out_file);					\ 	}								\       else								\ 	output_addr_const (asm_out_file, ADDR);				\     }									\
+comment|/* Another special case: N_GSYM always gets the symbol name,		\      whether or not LABEL or NUMBER are set.  */
+value|\   else if (CODE == N_GSYM)						\     assemble_name (asm_out_file, XSTR (XEXP (DECL_RTL (SYM), 0), 0));	\   else if (LABEL)							\     assemble_name (asm_out_file, LABEL);				\   else									\     dbxout_int (NUMBER);						\   putc (',', asm_out_file);						\   dbxout_int (stab_to_sclass (CODE));					\   fputs (",0\n", asm_out_file);						\ } while (0)
 end_define
 
 begin_comment
@@ -247,12 +249,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DBX_OUTPUT_MAIN_SOURCE_DIRECTORY
-parameter_list|(
-name|FILE
-parameter_list|,
-name|FILENAME
-parameter_list|)
+name|NO_DBX_MAIN_SOURCE_DIRECTORY
+value|1
 end_define
 
 begin_comment
@@ -286,18 +284,8 @@ parameter_list|,
 name|FILENAME
 parameter_list|)
 define|\
-value|{							\   if (xcoff_current_include_file)			\     {							\       fputs ("\t.ei\t", (FILE));			\       output_quoted_string ((FILE), xcoff_current_include_file);	\       putc ('\n', (FILE));				\       xcoff_current_include_file = NULL;		\     }							\ }
+value|do {							\   if (xcoff_current_include_file)			\     {							\       fputs ("\t.ei\t", (FILE));			\       output_quoted_string ((FILE), xcoff_current_include_file);	\       putc ('\n', (FILE));				\       xcoff_current_include_file = NULL;		\     }							\ } while (0)
 end_define
-
-begin_comment
-comment|/* .stabx has the type in a different place.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
 
 begin_comment
 comment|/* Do not emit any marker for XCOFF until assembler allows XFT_CV.  */
@@ -306,32 +294,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DBX_OUTPUT_GCC_MARKER
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|fprintf ((FILE), "%s\"%s\",0,%d,0\n", ASM_STABS_OP, STABS_GCC_MARKER, \ 	   stab_to_sclass (N_GSYM))
+name|NO_DBX_GCC_MARKER
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DBX_OUTPUT_GCC_MARKER
-parameter_list|(
-name|FILE
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Do not break .stabs pseudos into continuations.  */
@@ -377,12 +341,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
 
 begin_function_decl
 specifier|extern
@@ -449,36 +407,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BUFSIZ */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TREE_CODE
-end_ifdef
-
 begin_function_decl
 specifier|extern
-name|void
-name|xcoff_output_standard_types
+name|int
+name|xcoff_assign_fundamental_type_number
 parameter_list|(
 name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
 
 begin_function_decl
 specifier|extern
@@ -497,36 +434,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BUFSIZ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TREE_CODE */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RTX_CODE
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
-
 begin_function_decl
 specifier|extern
 name|void
@@ -541,24 +448,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BUFSIZ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* RTX_CODE */
-end_comment
 
 end_unit
 

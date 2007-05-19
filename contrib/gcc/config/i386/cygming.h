@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for    hosting on Windows32, using a Unix style C library and tools.    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Operating system specific defines to be used when targeting GCC for    hosting on Windows32, using a Unix style C library and tools.    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,    2004, 2005    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -30,6 +30,61 @@ name|PREFERRED_DEBUGGING_TYPE
 value|DBX_DEBUG
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GAS_PE_SECREL32_RELOC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DWARF2_DEBUGGING_INFO
+value|1
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|DBX_REGISTER_NUMBER
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DBX_REGISTER_NUMBER
+parameter_list|(
+name|n
+parameter_list|)
+value|(write_symbols == DWARF2_DEBUG   \                                 ? svr4_dbx_register_map[n]      \                                 : dbx_register_map[n])
+end_define
+
+begin_comment
+comment|/* Use section relative relocations for debugging offsets.  Unlike    other targets that fake this by putting the section VMA at 0, PE    won't allow it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_DWARF_OFFSET
+parameter_list|(
+name|FILE
+parameter_list|,
+name|SIZE
+parameter_list|,
+name|LABEL
+parameter_list|,
+name|SECTION
+parameter_list|)
+define|\
+value|do {								\     if (SIZE != 4)						\       abort ();							\ 								\     fputs ("\t.secrel32\t", FILE);				\     assemble_name (FILE, LABEL);				\   } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -37,58 +92,11 @@ name|TARGET_EXECUTABLE_SUFFIX
 value|".exe"
 end_define
 
-begin_define
-define|#
-directive|define
-name|TARGET_IS_PE_COFF
-value|1
-end_define
-
 begin_include
 include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_comment
-comment|/* Masks for subtarget switches used by other files.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_NOP_FUN_DLLIMPORT
-value|0x08000000
-end_define
-
-begin_comment
-comment|/* Ignore dllimport for functions */
-end_comment
-
-begin_comment
-comment|/* Used in winnt.c.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_NOP_FUN_DLLIMPORT
-value|(target_flags& MASK_NOP_FUN_DLLIMPORT)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_SWITCHES
-define|\
-value|{ "cygwin",		  0, N_("Use the Cygwin interface") },	\ { "no-cygwin",		  0, N_("Use the Mingw32 interface") },	\ { "windows",		  0, N_("Create GUI application") },	\ { "no-win32",		  0, N_("Don't set Windows defines") },	\ { "win32",		  0, N_("Set Windows defines") },	\ { "console",		  0, N_("Create console application") },\ { "dll",		  0, N_("Generate code for a DLL") },	\ { "nop-fun-dllimport",	  MASK_NOP_FUN_DLLIMPORT,		\   N_("Ignore dllimport for functions") },			\ { "no-nop-fun-dllimport", -MASK_NOP_FUN_DLLIMPORT, "" },	\ { "threads",		  0, N_("Use Mingw-specific thread support") },
-end_define
 
 begin_define
 define|#
@@ -101,17 +109,15 @@ begin_comment
 comment|/* Nothing.  */
 end_comment
 
-begin_comment
-comment|/* Support the __declspec keyword by turning them into attributes.    We currently only support: dllimport and dllexport.    Note that the current way we do this may result in a collision with    predefined attributes later on.  This can be solved by using one attribute,    say __declspec__, and passing args to it.  The problem with that approach    is that args are not accumulated: each new appearance would clobber any    existing args.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do									\     {									\ 	builtin_define ("_X86_=1");					\ 	builtin_assert ("system=winnt");				\ 	builtin_define ("__stdcall=__attribute__((__stdcall__))");	\ 	builtin_define ("__fastcall=__attribute__((__fastcall__))");	\ 	builtin_define ("__cdecl=__attribute__((__cdecl__))");		\ 	builtin_define ("__declspec(x)=__attribute__((x))");		\ 	if (!flag_iso)							\ 	  {								\ 	    builtin_define ("_stdcall=__attribute__((__stdcall__))");	\ 	    builtin_define ("_fastcall=__attribute__((__fastcall__))");	\ 	    builtin_define ("_cdecl=__attribute__((__cdecl__))");	\ 	  }								\ 	MAYBE_UWIN_CPP_BUILTINS ();					\ 	EXTRA_OS_CPP_BUILTINS ();					\   }									\   while (0)
+value|do									\     {									\ 	builtin_define ("_X86_=1");					\ 	builtin_assert ("system=winnt");				\ 	builtin_define ("__stdcall=__attribute__((__stdcall__))");	\ 	builtin_define ("__fastcall=__attribute__((__fastcall__))");	\ 	builtin_define ("__cdecl=__attribute__((__cdecl__))");		\ 	if (!flag_iso)							\ 	  {								\ 	    builtin_define ("_stdcall=__attribute__((__stdcall__))");	\ 	    builtin_define ("_fastcall=__attribute__((__fastcall__))");	\ 	    builtin_define ("_cdecl=__attribute__((__cdecl__))");	\ 	  }								\
+comment|/* Even though linkonce works with static libs, this is needed 	\ 	    to compare typeinfo symbols across dll boundaries.  */
+value|\ 	builtin_define ("__GXX_MERGED_TYPEINFO_NAMES=0");		\ 	MAYBE_UWIN_CPP_BUILTINS ();					\ 	EXTRA_OS_CPP_BUILTINS ();					\   }									\   while (0)
 end_define
 
 begin_comment
@@ -122,6 +128,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_DLLIMPORT_DECL_ATTRIBUTES
+value|1
 end_define
 
 begin_comment
@@ -213,49 +220,14 @@ end_define
 begin_escape
 end_escape
 
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTIONS
-end_undef
-
 begin_define
 define|#
 directive|define
-name|EXTRA_SECTIONS
-value|in_drectve
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTION_FUNCTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTION_FUNCTIONS
-define|\
-value|DRECTVE_SECTION_FUNCTION					\   SWITCH_TO_SECTION_FUNCTION
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRECTVE_SECTION_FUNCTION
-define|\
-value|void									\ drectve_section (void)							\ {									\   if (in_section != in_drectve)						\     {									\       fprintf (asm_out_file, "%s\n", "\t.section .drectve\n");		\       in_section = in_drectve;						\     }									\ }
-end_define
-
-begin_function_decl
-name|void
 name|drectve_section
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+parameter_list|()
+define|\
+value|(fprintf (asm_out_file, "\t.section .drectve\n"), \    in_section = NULL)
+end_define
 
 begin_comment
 comment|/* Older versions of gas don't handle 'r' as data.    Explicitly set data flag with 'd'.  */
@@ -266,18 +238,6 @@ define|#
 directive|define
 name|READONLY_DATA_SECTION_ASM_OP
 value|"\t.section .rdata,\"dr\""
-end_define
-
-begin_comment
-comment|/* Switch to SECTION (an `enum in_section').     ??? This facility should be provided by GCC proper.    The problem is that we want to temporarily switch sections in    ASM_DECLARE_OBJECT_NAME and then switch back to the original section    afterwards.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SWITCH_TO_SECTION_FUNCTION
-define|\
-value|void switch_to_section (enum in_section, tree);			\ void								\ switch_to_section (enum in_section section, tree decl)		\ {								\   switch (section)						\     {								\       case in_text: text_section (); break;			\       case in_data: data_section (); break;			\       case in_readonly_data: readonly_data_section (); break;	\       case in_named: named_section (decl, NULL, 0); break;	\       case in_drectve: drectve_section (); break;		\       default: abort (); break;				\     }								\ }
 end_define
 
 begin_comment
@@ -295,7 +255,7 @@ define|#
 directive|define
 name|SUBTARGET_OVERRIDE_OPTIONS
 define|\
-value|do {									\   if (flag_pic)								\     {									\       warning ("-f%s ignored for target (all code is position independent)",\ 	       (flag_pic> 1) ? "PIC" : "pic");				\       flag_pic = 0;							\     }									\ } while (0)
+value|do {									\   if (flag_pic)								\     {									\       warning (0, "-f%s ignored for target (all code is position independent)",\ 	       (flag_pic> 1) ? "PIC" : "pic");				\       flag_pic = 0;							\     }									\ } while (0)
 end_define
 
 begin_comment
@@ -306,13 +266,13 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|TARGET_ENCODE_SECTION_INFO
+name|SUBTARGET_ENCODE_SECTION_INFO
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_ENCODE_SECTION_INFO
+name|SUBTARGET_ENCODE_SECTION_INFO
 value|i386_pe_encode_section_info
 end_define
 
@@ -347,6 +307,19 @@ define|#
 directive|define
 name|ASM_OUTPUT_LABELREF
 value|i386_pe_output_labelref
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|COMMON_ASM_OP
+end_undef
+
+begin_define
+define|#
+directive|define
+name|COMMON_ASM_OP
+value|"\t.comm\t"
 end_define
 
 begin_comment
@@ -457,13 +430,14 @@ value|if ((LOG)!=0) fprintf ((FILE), "\t.align %d\n", 1<<(LOG))
 end_define
 
 begin_comment
-comment|/* Define this macro if in some cases global symbols from one translation    unit may not be bound to undefined symbols in another translation unit    without user intervention.  For instance, under Microsoft Windows    symbols must be explicitly imported from shared libraries (DLLs).  */
+comment|/* Windows uses explicit import from shared libraries.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MULTIPLE_SYMBOL_SPACES
+value|1
 end_define
 
 begin_function_decl
@@ -483,6 +457,13 @@ define|#
 directive|define
 name|TARGET_ASM_UNIQUE_SECTION
 value|i386_pe_unique_section
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_FUNCTION_RODATA_SECTION
+value|default_no_function_rodata_section
 end_define
 
 begin_define
@@ -555,7 +536,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do									\     {									\       if (TREE_CODE (DECL) == FUNCTION_DECL)				\ 	i386_pe_record_external_function (NAME);			\     }									\   while (0)
+value|do									\     {									\       if (TREE_CODE (DECL) == FUNCTION_DECL)				\ 	i386_pe_record_external_function ((DECL), (NAME));		\     }									\   while (0)
 end_define
 
 begin_comment
@@ -669,7 +650,7 @@ parameter_list|(
 name|LABEL
 parameter_list|)
 define|\
-value|if (MAIN_NAME_P (DECL_NAME (current_function_decl)))			\     {									\       emit_call_insn (gen_rtx (CALL, VOIDmode,				\ 	gen_rtx_MEM (FUNCTION_MODE,					\ 		     gen_rtx_SYMBOL_REF (Pmode, "_monstartup")),	\ 	const0_rtx));							\     }
+value|if (MAIN_NAME_P (DECL_NAME (current_function_decl)))			\     {									\       emit_call_insn (gen_rtx_CALL (VOIDmode,				\ 	gen_rtx_MEM (FUNCTION_MODE,					\ 		     gen_rtx_SYMBOL_REF (Pmode, "_monstartup")),	\ 	const0_rtx));							\     }
 end_define
 
 begin_comment
@@ -702,6 +683,8 @@ specifier|extern
 name|void
 name|i386_pe_record_external_function
 parameter_list|(
+name|tree
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -826,6 +809,27 @@ value|128
 end_define
 
 begin_comment
+comment|/* Biggest alignment supported by the object file format of this    machine.  Use this macro to limit the alignment which can be    specified using the `__attribute__ ((aligned (N)))' construct.  If    not defined, the default value is `BIGGEST_ALIGNMENT'.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|MAX_OFILE_ALIGNMENT
+end_undef
+
+begin_comment
+comment|/* IMAGE_SCN_ALIGN_8192BYTES is the largest section alignment flag    specified in the PECOFF60 spec.  Native MS compiler also limits    user-specified alignment to 8192 bytes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_OFILE_ALIGNMENT
+value|(8192 * 8)
+end_define
+
+begin_comment
 comment|/* Native complier aligns internal doubles in structures on dword boundaries.  */
 end_comment
 
@@ -911,6 +915,110 @@ name|TARGET
 parameter_list|)
 define|\
 value|do									\     {									\       const char *alias;						\       rtx rtlname = XEXP (DECL_RTL (DECL), 0);				\       if (GET_CODE (rtlname) == SYMBOL_REF)				\ 	alias = XSTR (rtlname, 0);					\       else								\ 	abort ();							\       if (TREE_CODE (DECL) == FUNCTION_DECL)				\ 	i386_pe_declare_function_type (STREAM, alias,			\ 				       TREE_PUBLIC (DECL));		\       ASM_OUTPUT_DEF (STREAM, alias, IDENTIFIER_POINTER (TARGET));	\     } while (0)
+end_define
+
+begin_comment
+comment|/* GNU as supports weak symbols on PECOFF. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GAS_WEAK
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ASM_WEAKEN_LABEL
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|)
+define|\
+value|do                                  \     {                                 \       fputs ("\t.weak\t", (FILE));    \       assemble_name ((FILE), (NAME)); \       fputc ('\n', (FILE));           \     }                                 \   while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_GAS_WEAK */
+end_comment
+
+begin_comment
+comment|/* FIXME: SUPPORTS_WEAK&& TARGET_HAVE_NAMED_SECTIONS is true,    but for .jcr section to work we also need crtbegin and crtend    objects.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_USE_JCR_SECTION
+value|0
+end_define
+
+begin_comment
+comment|/* Decide whether it is safe to use a local alias for a virtual function    when constructing thunks.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_USE_LOCAL_THUNK_ALIAS_P
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_USE_LOCAL_THUNK_ALIAS_P
+parameter_list|(
+name|DECL
+parameter_list|)
+value|(!DECL_ONE_ONLY (DECL))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_ATTRIBUTE_TABLE
+define|\
+comment|/* { name, min_len, max_len, decl_req, type_req, fn_type_req, handler } */
+define|\
+value|{ "selectany", 0, 0, true, false, false, ix86_handle_selectany_attribute }
+end_define
+
+begin_comment
+comment|/*  mcount() does not need a counter variable.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NO_PROFILE_COUNTERS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NO_PROFILE_COUNTERS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_VALID_DLLIMPORT_ATTRIBUTE_P
+value|i386_pe_valid_dllimport_attribute_p
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_CXX_ADJUST_CLASS_AT_DEFINITION
+value|i386_pe_adjust_class_at_definition
 end_define
 
 begin_undef

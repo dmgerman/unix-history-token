@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for GNU compiler for PowerPC running System V.4    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,    2004, 2005 Free Software Foundation, Inc.    Contributed by Cygnus Support.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* Target definitions for GNU compiler for PowerPC running System V.4    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,    2004, 2005, 2006, 2007 Free Software Foundation, Inc.    Contributed by Cygnus Support.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
 comment|/* Header files should be C++ aware in general.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NO_IMPLICIT_EXTERN_C
+end_undef
 
 begin_define
 define|#
@@ -94,154 +100,6 @@ name|rs6000_sdata
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* V.4/eabi switches.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_NO_BITFIELD_TYPE
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* Set PCC_BITFIELD_TYPE_MATTERS to 0.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_STRICT_ALIGN
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* Set STRICT_ALIGNMENT to 1.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_RELOCATABLE
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* GOT pointers are PC relative.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_EABI
-value|0x08000000
-end_define
-
-begin_comment
-comment|/* Adhere to eabi, not System V spec.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_LITTLE_ENDIAN
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* Target is little endian.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_REGNAMES
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* Use alternate register names.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_PROTOTYPE
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* Only prototyped fcns pass variable args.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MASK_NO_BITFIELD_WORD
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* Bitfields cannot cross word boundaries */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_NO_BITFIELD_TYPE
-value|(target_flags& MASK_NO_BITFIELD_TYPE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_STRICT_ALIGN
-value|(target_flags& MASK_STRICT_ALIGN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_RELOCATABLE
-value|(target_flags& MASK_RELOCATABLE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_EABI
-value|(target_flags& MASK_EABI)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_LITTLE_ENDIAN
-value|(target_flags& MASK_LITTLE_ENDIAN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_REGNAMES
-value|(target_flags& MASK_REGNAMES)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_PROTOTYPE
-value|(target_flags& MASK_PROTOTYPE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_NO_BITFIELD_WORD
-value|(target_flags& MASK_NO_BITFIELD_WORD)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -284,9 +142,29 @@ name|TARGET_NO_EABI
 value|(! TARGET_EABI)
 end_define
 
-begin_comment
-comment|/* Strings provided by SUBTARGET_OPTIONS */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_AS_REL16
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_SECURE_PLT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_SECURE_PLT
+value|secure_plt
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -319,61 +197,11 @@ begin_comment
 comment|/* For -mtls-size= */
 end_comment
 
-begin_comment
-comment|/* Override rs6000.h definition.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_OPTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_OPTIONS
-define|\
-value|{ "call-",&rs6000_abi_name, N_("Select ABI calling convention"), 0},	\   { "sdata=",&rs6000_sdata_name, N_("Select method for sdata handling"), 0},	\   { "tls-size=",&rs6000_tls_size_string,					\    N_("Specify bit size of immediate TLS offsets"), 0 }
-end_define
-
 begin_define
 define|#
 directive|define
 name|SDATA_DEFAULT_SIZE
 value|8
-end_define
-
-begin_comment
-comment|/* Note, V.4 no longer uses a normal TOC, so make -mfull-toc, be just    the same as -mminimal-toc.  */
-end_comment
-
-begin_comment
-comment|/* Override rs6000.h definition.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_SWITCHES
-define|\
-value|{ "bit-align",	-MASK_NO_BITFIELD_TYPE,				\     N_("Align to the base type of the bit-field") },			\   { "no-bit-align",	 MASK_NO_BITFIELD_TYPE,				\     N_("Don't align to the base type of the bit-field") },		\   { "strict-align",	 MASK_STRICT_ALIGN,				\     N_("Don't assume that unaligned accesses are handled by the system") }, \   { "no-strict-align",	-MASK_STRICT_ALIGN,				\     N_("Assume that unaligned accesses are handled by the system") },	\   { "relocatable",	 MASK_RELOCATABLE | MASK_MINIMAL_TOC | MASK_NO_FP_IN_TOC, \     N_("Produce code relocatable at runtime") },			\   { "no-relocatable",	-MASK_RELOCATABLE,				\     N_("Don't produce code relocatable at runtime") },			\   { "relocatable-lib",	 MASK_RELOCATABLE | MASK_MINIMAL_TOC | MASK_NO_FP_IN_TOC, \     N_("Produce code relocatable at runtime") },			\   { "no-relocatable-lib", -MASK_RELOCATABLE,				\     N_("Don't produce code relocatable at runtime") },			\   { "little-endian",	 MASK_LITTLE_ENDIAN,				\     N_("Produce little endian code") },					\   { "little",		 MASK_LITTLE_ENDIAN,				\     N_("Produce little endian code") },					\   { "big-endian",	-MASK_LITTLE_ENDIAN,				\     N_("Produce big endian code") },					\   { "big",		-MASK_LITTLE_ENDIAN,				\     N_("Produce big endian code") },					\   { "no-toc",		 0, N_("no description yet") },			\   { "toc",		 MASK_MINIMAL_TOC, N_("no description yet") },	\   { "full-toc",		 MASK_MINIMAL_TOC, N_("no description yet") },	\   { "prototype",	 MASK_PROTOTYPE,				\     N_("Assume all variable arg functions are prototyped") },		\   { "no-prototype",	-MASK_PROTOTYPE,				\     N_("Non-prototyped functions might take a variable number of args") }, \   { "no-traceback",	 0, N_("no description yet") },			\   { "eabi",		 MASK_EABI, N_("Use EABI") },			\   { "no-eabi",		-MASK_EABI, N_("Don't use EABI") },		\   { "bit-word",		-MASK_NO_BITFIELD_WORD, "" },			\   { "no-bit-word",	 MASK_NO_BITFIELD_WORD,				\     N_("Do not allow bit-fields to cross word boundaries") },		\   { "regnames",		  MASK_REGNAMES,				\     N_("Use alternate register names") },				\   { "no-regnames",	 -MASK_REGNAMES,				\     N_("Don't use alternate register names") },				\   { "sdata",		 0, N_("no description yet") },			\   { "no-sdata",		 0, N_("no description yet") },			\   { "sim",		 0,						\     N_("Link with libsim.a, libc.a and sim-crt0.o") },			\   { "ads",		 0,						\     N_("Link with libads.a, libc.a and crt0.o") },			\   { "yellowknife",	 0,						\     N_("Link with libyk.a, libc.a and crt0.o") },			\   { "mvme",		 0,						\     N_("Link with libmvme.a, libc.a and crt0.o") },			\   { "emb",		 0,						\     N_("Set the PPC_EMB bit in the ELF flags header") },		\   { "windiss",           0, N_("Use the WindISS simulator") },          \   { "shlib",		 0, N_("no description yet") },			\   { "64",		 MASK_64BIT | MASK_POWERPC64 | MASK_POWERPC,	\ 			 N_("Generate 64-bit code") },			\   { "32",		 - (MASK_64BIT | MASK_POWERPC64),		\ 			 N_("Generate 32-bit code") },			\   EXTRA_SUBTARGET_SWITCHES						\   { "newlib",		 0, N_("no description yet") },
-end_define
-
-begin_comment
-comment|/* This is meant to be redefined in the host dependent files.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SUBTARGET_SWITCHES
 end_define
 
 begin_comment
@@ -385,9 +213,9 @@ define|#
 directive|define
 name|SUBTARGET_OVERRIDE_OPTIONS
 define|\
-value|do {									\   if (!g_switch_set)							\     g_switch_value = SDATA_DEFAULT_SIZE;				\ 									\   if (rs6000_abi_name == NULL)						\     rs6000_abi_name = RS6000_ABI_NAME;					\ 									\   if (!strcmp (rs6000_abi_name, "sysv"))				\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "sysv-noeabi"))			\     {									\       rs6000_current_abi = ABI_V4;					\       target_flags&= ~ MASK_EABI;					\     }									\   else if (!strcmp (rs6000_abi_name, "sysv-eabi")			\ 	   || !strcmp (rs6000_abi_name, "eabi"))			\     {									\       rs6000_current_abi = ABI_V4;					\       target_flags |= MASK_EABI;					\     }									\   else if (!strcmp (rs6000_abi_name, "aixdesc"))			\     rs6000_current_abi = ABI_AIX;					\   else if (!strcmp (rs6000_abi_name, "freebsd"))			\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "linux"))				\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "gnu"))				\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "netbsd"))				\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "openbsd"))			\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "i960-old"))			\     {									\       rs6000_current_abi = ABI_V4;					\       target_flags |= (MASK_LITTLE_ENDIAN | MASK_EABI			\ 		       | MASK_NO_BITFIELD_WORD);			\       target_flags&= ~MASK_STRICT_ALIGN;				\     }									\   else									\     {									\       rs6000_current_abi = ABI_V4;					\       error ("bad value for -mcall-%s", rs6000_abi_name);		\     }									\ 									\   if (rs6000_sdata_name)						\     {									\       if (!strcmp (rs6000_sdata_name, "none"))				\ 	rs6000_sdata = SDATA_NONE;					\       else if (!strcmp (rs6000_sdata_name, "data"))			\ 	rs6000_sdata = SDATA_DATA;					\       else if (!strcmp (rs6000_sdata_name, "default"))			\ 	rs6000_sdata = (TARGET_EABI) ? SDATA_EABI : SDATA_SYSV;		\       else if (!strcmp (rs6000_sdata_name, "sysv"))			\ 	rs6000_sdata = SDATA_SYSV;					\       else if (!strcmp (rs6000_sdata_name, "eabi"))			\ 	rs6000_sdata = SDATA_EABI;					\       else								\ 	error ("bad value for -msdata=%s", rs6000_sdata_name);		\     }									\   else if (DEFAULT_ABI == ABI_V4)					\     {									\       rs6000_sdata = SDATA_DATA;					\       rs6000_sdata_name = "data";					\     }									\   else									\     {									\       rs6000_sdata = SDATA_NONE;					\       rs6000_sdata_name = "none";					\     }									\ 									\   if (TARGET_RELOCATABLE&&						\       (rs6000_sdata == SDATA_EABI || rs6000_sdata == SDATA_SYSV))	\     {									\       rs6000_sdata = SDATA_DATA;					\       error ("-mrelocatable and -msdata=%s are incompatible",		\ 	     rs6000_sdata_name);					\     }									\ 									\   else if (flag_pic&& DEFAULT_ABI != ABI_AIX				\&& (rs6000_sdata == SDATA_EABI				\ 	       || rs6000_sdata == SDATA_SYSV))				\     {									\       rs6000_sdata = SDATA_DATA;					\       error ("-f%s and -msdata=%s are incompatible",			\ 	     (flag_pic> 1) ? "PIC" : "pic",				\ 	     rs6000_sdata_name);					\     }									\ 									\   if ((rs6000_sdata != SDATA_NONE&& DEFAULT_ABI != ABI_V4)		\       || (rs6000_sdata == SDATA_EABI&& !TARGET_EABI))			\     {									\       rs6000_sdata = SDATA_NONE;					\       error ("-msdata=%s and -mcall-%s are incompatible",		\ 	     rs6000_sdata_name, rs6000_abi_name);			\     }									\ 									\   targetm.have_srodata_section = rs6000_sdata == SDATA_EABI;		\ 									\   if (TARGET_RELOCATABLE&& !TARGET_MINIMAL_TOC)			\     {									\       target_flags |= MASK_MINIMAL_TOC;					\       error ("-mrelocatable and -mno-minimal-toc are incompatible");	\     }									\ 									\   if (TARGET_RELOCATABLE&& rs6000_current_abi == ABI_AIX)		\     {									\       target_flags&= ~MASK_RELOCATABLE;				\       error ("-mrelocatable and -mcall-%s are incompatible",		\ 	     rs6000_abi_name);						\     }									\ 									\   if (!TARGET_64BIT&& flag_pic> 1&& rs6000_current_abi == ABI_AIX)	\     {									\       flag_pic = 0;							\       error ("-fPIC and -mcall-%s are incompatible",			\ 	     rs6000_abi_name);						\     }									\ 									\   if (rs6000_current_abi == ABI_AIX&& TARGET_LITTLE_ENDIAN)		\     {									\       target_flags&= ~MASK_LITTLE_ENDIAN;				\       error ("-mcall-aixdesc must be big endian");			\     }									\ 									\
+value|do {									\   if (!g_switch_set)							\     g_switch_value = SDATA_DEFAULT_SIZE;				\ 									\   if (rs6000_abi_name == NULL)						\     rs6000_abi_name = RS6000_ABI_NAME;					\ 									\   if (!strcmp (rs6000_abi_name, "sysv"))				\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "sysv-noeabi"))			\     {									\       rs6000_current_abi = ABI_V4;					\       target_flags&= ~ MASK_EABI;					\     }									\   else if (!strcmp (rs6000_abi_name, "sysv-eabi")			\ 	   || !strcmp (rs6000_abi_name, "eabi"))			\     {									\       rs6000_current_abi = ABI_V4;					\       target_flags |= MASK_EABI;					\     }									\   else if (!strcmp (rs6000_abi_name, "aixdesc"))			\     rs6000_current_abi = ABI_AIX;					\   else if (!strcmp (rs6000_abi_name, "freebsd"))			\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "linux"))				\     {									\       if (TARGET_64BIT)							\ 	rs6000_current_abi = ABI_AIX;					\       else								\ 	rs6000_current_abi = ABI_V4;					\     }									\   else if (!strcmp (rs6000_abi_name, "gnu"))				\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "netbsd"))				\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "openbsd"))			\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "i960-old"))			\     {									\       rs6000_current_abi = ABI_V4;					\       target_flags |= (MASK_LITTLE_ENDIAN | MASK_EABI			\ 		       | MASK_NO_BITFIELD_WORD);			\       target_flags&= ~MASK_STRICT_ALIGN;				\     }									\   else									\     {									\       rs6000_current_abi = ABI_V4;					\       error ("bad value for -mcall-%s", rs6000_abi_name);		\     }									\ 									\   if (rs6000_sdata_name)						\     {									\       if (!strcmp (rs6000_sdata_name, "none"))				\ 	rs6000_sdata = SDATA_NONE;					\       else if (!strcmp (rs6000_sdata_name, "data"))			\ 	rs6000_sdata = SDATA_DATA;					\       else if (!strcmp (rs6000_sdata_name, "default"))			\ 	rs6000_sdata = (TARGET_EABI) ? SDATA_EABI : SDATA_SYSV;		\       else if (!strcmp (rs6000_sdata_name, "sysv"))			\ 	rs6000_sdata = SDATA_SYSV;					\       else if (!strcmp (rs6000_sdata_name, "eabi"))			\ 	rs6000_sdata = SDATA_EABI;					\       else								\ 	error ("bad value for -msdata=%s", rs6000_sdata_name);		\     }									\   else if (DEFAULT_ABI == ABI_V4)					\     {									\       rs6000_sdata = SDATA_DATA;					\       rs6000_sdata_name = "data";					\     }									\   else									\     {									\       rs6000_sdata = SDATA_NONE;					\       rs6000_sdata_name = "none";					\     }									\ 									\   if (TARGET_RELOCATABLE&&						\       (rs6000_sdata == SDATA_EABI || rs6000_sdata == SDATA_SYSV))	\     {									\       rs6000_sdata = SDATA_DATA;					\       error ("-mrelocatable and -msdata=%s are incompatible",		\ 	     rs6000_sdata_name);					\     }									\ 									\   else if (flag_pic&& DEFAULT_ABI != ABI_AIX				\&& (rs6000_sdata == SDATA_EABI				\ 	       || rs6000_sdata == SDATA_SYSV))				\     {									\       rs6000_sdata = SDATA_DATA;					\       error ("-f%s and -msdata=%s are incompatible",			\ 	     (flag_pic> 1) ? "PIC" : "pic",				\ 	     rs6000_sdata_name);					\     }									\ 									\   if ((rs6000_sdata != SDATA_NONE&& DEFAULT_ABI != ABI_V4)		\       || (rs6000_sdata == SDATA_EABI&& !TARGET_EABI))			\     {									\       rs6000_sdata = SDATA_NONE;					\       error ("-msdata=%s and -mcall-%s are incompatible",		\ 	     rs6000_sdata_name, rs6000_abi_name);			\     }									\ 									\   targetm.have_srodata_section = rs6000_sdata == SDATA_EABI;		\ 									\   if (TARGET_RELOCATABLE&& !TARGET_MINIMAL_TOC)			\     {									\       target_flags |= MASK_MINIMAL_TOC;					\       error ("-mrelocatable and -mno-minimal-toc are incompatible");	\     }									\ 									\   if (TARGET_RELOCATABLE&& rs6000_current_abi == ABI_AIX)		\     {									\       target_flags&= ~MASK_RELOCATABLE;				\       error ("-mrelocatable and -mcall-%s are incompatible",		\ 	     rs6000_abi_name);						\     }									\ 									\   if (!TARGET_64BIT&& flag_pic> 1&& rs6000_current_abi == ABI_AIX)	\     {									\       flag_pic = 0;							\       error ("-fPIC and -mcall-%s are incompatible",			\ 	     rs6000_abi_name);						\     }									\ 									\   if (rs6000_current_abi == ABI_AIX&& TARGET_LITTLE_ENDIAN)		\     {									\       target_flags&= ~MASK_LITTLE_ENDIAN;				\       error ("-mcall-aixdesc must be big endian");			\     }									\ 									\   if (TARGET_SECURE_PLT != secure_plt)					\     {									\       error ("-msecure-plt not supported by your assembler");		\     }									\ 									\
 comment|/* Treat -fPIC the same as -mrelocatable.  */
-value|\   if (flag_pic> 1&& DEFAULT_ABI != ABI_AIX)				\     target_flags |= MASK_RELOCATABLE | MASK_MINIMAL_TOC | MASK_NO_FP_IN_TOC; \ 									\   else if (TARGET_RELOCATABLE)						\     flag_pic = 2;							\ } while (0)
+value|\   if (flag_pic> 1&& DEFAULT_ABI != ABI_AIX)				\     {									\       target_flags |= MASK_RELOCATABLE | MASK_MINIMAL_TOC;		\       TARGET_NO_FP_IN_TOC = 1;						\     }									\ 									\   else if (TARGET_RELOCATABLE)						\     flag_pic = 2;							\ } while (0)
 end_define
 
 begin_ifndef
@@ -443,6 +271,23 @@ name|PROCESSOR_DEFAULT
 value|PROCESSOR_PPC750
 end_define
 
+begin_comment
+comment|/* SVR4 only defined for PowerPC, so short-circuit POWER patterns.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_POWER
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_POWER
+value|0
+end_define
+
 begin_define
 define|#
 directive|define
@@ -459,27 +304,6 @@ define|#
 directive|define
 name|FIXED_R13
 value|1
-end_define
-
-begin_comment
-comment|/* Size of the V.4 varargs area if needed.  */
-end_comment
-
-begin_comment
-comment|/* Override rs6000.h definition.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|RS6000_VARARGS_AREA
-end_undef
-
-begin_define
-define|#
-directive|define
-name|RS6000_VARARGS_AREA
-value|((cfun->machine->sysv_varargs_p) ? RS6000_VARARGS_SIZE : 0)
 end_define
 
 begin_comment
@@ -767,25 +591,6 @@ define|\
 value|((TARGET_ALTIVEC&& TREE_CODE (TREE_TYPE (FIELD)) == VECTOR_TYPE)     \ 	 ? 128 : COMPUTED)
 end_define
 
-begin_comment
-comment|/* Define this macro as an expression for the alignment of a type    (given by TYPE as a tree node) if the alignment computed in the    usual way is COMPUTED and the alignment explicitly specified was    SPECIFIED.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ROUND_TYPE_ALIGN
-parameter_list|(
-name|TYPE
-parameter_list|,
-name|COMPUTED
-parameter_list|,
-name|SPECIFIED
-parameter_list|)
-define|\
-value|((TARGET_ALTIVEC&& TREE_CODE (TYPE) == VECTOR_TYPE)	        \ 	 ? MAX (MAX ((COMPUTED), (SPECIFIED)), 128)                     \          : MAX (COMPUTED, SPECIFIED))
-end_define
-
 begin_undef
 undef|#
 directive|undef
@@ -892,95 +697,28 @@ value|"\t.section\t\".sbss\",\"aw\",@nobits"
 end_define
 
 begin_comment
-comment|/* Besides the usual ELF sections, we need a toc section.  */
-end_comment
-
-begin_comment
-comment|/* Override elfos.h definition.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTIONS
-value|in_toc, in_sdata, in_sdata2, in_sbss, in_init, in_fini
-end_define
-
-begin_comment
-comment|/* Override elfos.h definition.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTION_FUNCTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTION_FUNCTIONS
-define|\
-value|TOC_SECTION_FUNCTION							\   SDATA_SECTION_FUNCTION						\   SDATA2_SECTION_FUNCTION						\   SBSS_SECTION_FUNCTION							\   INIT_SECTION_FUNCTION							\   FINI_SECTION_FUNCTION
-end_define
-
-begin_define
-define|#
-directive|define
-name|TOC_SECTION_FUNCTION
-define|\
-value|void									\ toc_section (void)							\ {									\   if (in_section != in_toc)						\     {									\       in_section = in_toc;						\       if (DEFAULT_ABI == ABI_AIX					\&& TARGET_MINIMAL_TOC						\&& !TARGET_RELOCATABLE)					\ 	{								\ 	  if (! toc_initialized)					\ 	    {								\ 	      toc_initialized = 1;					\ 	      fprintf (asm_out_file, "%s\n", TOC_SECTION_ASM_OP);	\ 	      (*targetm.asm_out.internal_label) (asm_out_file, "LCTOC", 0); \ 	      fprintf (asm_out_file, "\t.tc ");				\ 	      ASM_OUTPUT_INTERNAL_LABEL_PREFIX (asm_out_file, "LCTOC1[TC],"); \ 	      ASM_OUTPUT_INTERNAL_LABEL_PREFIX (asm_out_file, "LCTOC1"); \ 	      fprintf (asm_out_file, "\n");				\ 									\ 	      fprintf (asm_out_file, "%s\n", MINIMAL_TOC_SECTION_ASM_OP); \ 	      ASM_OUTPUT_INTERNAL_LABEL_PREFIX (asm_out_file, "LCTOC1"); \ 	      fprintf (asm_out_file, " = .+32768\n");			\ 	    }								\ 	  else								\ 	    fprintf (asm_out_file, "%s\n", MINIMAL_TOC_SECTION_ASM_OP);	\ 	}								\       else if (DEFAULT_ABI == ABI_AIX&& !TARGET_RELOCATABLE)		\ 	fprintf (asm_out_file, "%s\n", TOC_SECTION_ASM_OP);		\       else								\ 	{								\ 	  fprintf (asm_out_file, "%s\n", MINIMAL_TOC_SECTION_ASM_OP);	\ 	  if (! toc_initialized)					\ 	    {								\ 	      ASM_OUTPUT_INTERNAL_LABEL_PREFIX (asm_out_file, "LCTOC1"); \ 	      fprintf (asm_out_file, " = .+32768\n");			\ 	      toc_initialized = 1;					\ 	    }								\ 	}								\     }									\ }									\ 									\ extern int in_toc_section (void);					\ int in_toc_section (void)						\ {									\   return in_section == in_toc;						\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDATA_SECTION_FUNCTION
-define|\
-value|void									\ sdata_section (void)							\ {									\   if (in_section != in_sdata)						\     {									\       in_section = in_sdata;						\       fprintf (asm_out_file, "%s\n", SDATA_SECTION_ASM_OP);		\     }									\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDATA2_SECTION_FUNCTION
-define|\
-value|void									\ sdata2_section (void)							\ {									\   if (in_section != in_sdata2)						\     {									\       in_section = in_sdata2;						\       fprintf (asm_out_file, "%s\n", SDATA2_SECTION_ASM_OP);		\     }									\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBSS_SECTION_FUNCTION
-define|\
-value|void									\ sbss_section (void)							\ {									\   if (in_section != in_sbss)						\     {									\       in_section = in_sbss;						\       fprintf (asm_out_file, "%s\n", SBSS_SECTION_ASM_OP);		\     }									\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|INIT_SECTION_FUNCTION
-define|\
-value|void									\ init_section (void)							\ {									\   if (in_section != in_init)						\     {									\       in_section = in_init;						\       fprintf (asm_out_file, "%s\n", INIT_SECTION_ASM_OP);		\     }									\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|FINI_SECTION_FUNCTION
-define|\
-value|void									\ fini_section (void)							\ {									\   if (in_section != in_fini)						\     {									\       in_section = in_fini;						\       fprintf (asm_out_file, "%s\n", FINI_SECTION_ASM_OP);		\     }									\ }
-end_define
-
-begin_comment
 comment|/* Override default elf definitions.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_INIT_SECTIONS
+value|rs6000_elf_asm_init_sections
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_ASM_RELOC_RW_MASK
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_RELOC_RW_MASK
+value|rs6000_elf_reloc_rw_mask
+end_define
 
 begin_undef
 undef|#
@@ -993,26 +731,6 @@ define|#
 directive|define
 name|TARGET_ASM_SELECT_RTX_SECTION
 value|rs6000_elf_select_rtx_section
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_ASM_SELECT_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TARGET_ASM_SELECT_SECTION
-value|rs6000_elf_select_section
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_ASM_UNIQUE_SECTION
-value|rs6000_elf_unique_section
 end_define
 
 begin_comment
@@ -1035,7 +753,7 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|(TARGET_TOC								\&& (GET_CODE (X) == SYMBOL_REF					\        || (GET_CODE (X) == CONST&& GET_CODE (XEXP (X, 0)) == PLUS	\&& GET_CODE (XEXP (XEXP (X, 0), 0)) == SYMBOL_REF)		\        || GET_CODE (X) == LABEL_REF					\        || (GET_CODE (X) == CONST_INT 					\&& GET_MODE_BITSIZE (MODE)<= GET_MODE_BITSIZE (Pmode))	\        || (!TARGET_NO_FP_IN_TOC						\&& !TARGET_RELOCATABLE					\&& GET_CODE (X) == CONST_DOUBLE				\&& GET_MODE_CLASS (GET_MODE (X)) == MODE_FLOAT		\&& BITS_PER_WORD == HOST_BITS_PER_INT)))
+value|(TARGET_TOC								\&& (GET_CODE (X) == SYMBOL_REF					\        || (GET_CODE (X) == CONST&& GET_CODE (XEXP (X, 0)) == PLUS	\&& GET_CODE (XEXP (XEXP (X, 0), 0)) == SYMBOL_REF)		\        || GET_CODE (X) == LABEL_REF					\        || (GET_CODE (X) == CONST_INT 					\&& GET_MODE_BITSIZE (MODE)<= GET_MODE_BITSIZE (Pmode))	\        || (!TARGET_NO_FP_IN_TOC						\&& !TARGET_RELOCATABLE					\&& GET_CODE (X) == CONST_DOUBLE				\&& SCALAR_FLOAT_MODE_P (GET_MODE (X))			\&& BITS_PER_WORD == HOST_BITS_PER_INT)))
 end_define
 
 begin_comment
@@ -1143,21 +861,17 @@ value|"\t.lcomm\t"
 end_define
 
 begin_comment
-comment|/* Override elfos.h definition.  */
+comment|/* Describe how to emit uninitialized local items.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_ALIGNED_LOCAL
-end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_ALIGNED_LOCAL
+name|ASM_OUTPUT_ALIGNED_DECL_LOCAL
 parameter_list|(
 name|FILE
+parameter_list|,
+name|DECL
 parameter_list|,
 name|NAME
 parameter_list|,
@@ -1166,7 +880,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   if (rs6000_sdata != SDATA_NONE&& (SIZE)> 0				\&& (SIZE)<= g_switch_value)					\     {									\       sbss_section ();							\       ASM_OUTPUT_ALIGN (FILE, exact_log2 (ALIGN / BITS_PER_UNIT));	\       ASM_OUTPUT_LABEL (FILE, NAME);					\       ASM_OUTPUT_SKIP (FILE, SIZE);					\       if (!flag_inhibit_size_directive&& (SIZE)> 0)			\ 	ASM_OUTPUT_SIZE_DIRECTIVE (FILE, NAME, SIZE);			\     }									\   else									\     {									\       fprintf (FILE, "%s", LCOMM_ASM_OP);				\       assemble_name ((FILE), (NAME));					\       fprintf ((FILE), ","HOST_WIDE_INT_PRINT_UNSIGNED",%u\n",		\ 	       (SIZE), (ALIGN) / BITS_PER_UNIT);			\     }									\   ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "object");			\ } while (0)
+value|do {									\   if ((DECL)&& rs6000_elf_in_small_data_p (DECL))			\     {									\       switch_to_section (sbss_section);					\       ASM_OUTPUT_ALIGN (FILE, exact_log2 (ALIGN / BITS_PER_UNIT));	\       ASM_OUTPUT_LABEL (FILE, NAME);					\       ASM_OUTPUT_SKIP (FILE, SIZE);					\       if (!flag_inhibit_size_directive&& (SIZE)> 0)			\ 	ASM_OUTPUT_SIZE_DIRECTIVE (FILE, NAME, SIZE);			\     }									\   else									\     {									\       fprintf (FILE, "%s", LCOMM_ASM_OP);				\       assemble_name ((FILE), (NAME));					\       fprintf ((FILE), ","HOST_WIDE_INT_PRINT_UNSIGNED",%u\n",		\ 	       (SIZE), (ALIGN) / BITS_PER_UNIT);			\     }									\   ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "object");			\ } while (0)
 end_define
 
 begin_comment
@@ -1189,7 +903,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   ASM_OUTPUT_ALIGNED_LOCAL (FILE, NAME, SIZE, ALIGN);			\ } while (0)
+value|do {									\   ASM_OUTPUT_ALIGNED_DECL_LOCAL (FILE, DECL, NAME, SIZE, ALIGN);	\ } while (0)
 end_define
 
 begin_ifdef
@@ -1341,33 +1055,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DBX_REGISTER_NUMBER
-parameter_list|(
-name|REGNO
-parameter_list|)
-value|rs6000_dbx_register_number (REGNO)
-end_define
-
-begin_comment
-comment|/* Map register numbers held in the call frame info that gcc has    collected using DWARF_FRAME_REGNUM to those that should be output in    .debug_frame and .eh_frame.  We continue to use gcc hard reg numbers    for .eh_frame, but use the numbers mandated by the various ABIs for    .debug_frame.  rs6000_emit_prologue has translated any combination of    CR2, CR3, CR4 saves to a save of CR2.  The actual code emitted saves    the whole of CR, so we map CR2_REGNO to the DWARF reg for CR.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DWARF2_FRAME_REG_OUT
-parameter_list|(
-name|REGNO
-parameter_list|,
-name|FOR_EH
-parameter_list|)
-define|\
-value|((FOR_EH) ? (REGNO)				\    : (REGNO) == CR2_REGNO ? 64			\    : DBX_REGISTER_NUMBER (REGNO))
-end_define
-
-begin_define
-define|#
-directive|define
 name|TARGET_ENCODE_SECTION_INFO
 value|rs6000_elf_encode_section_info
 end_define
@@ -1377,13 +1064,6 @@ define|#
 directive|define
 name|TARGET_IN_SMALL_DATA_P
 value|rs6000_elf_in_small_data_p
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_SECTION_TYPE_FLAGS
-value|rs6000_elf_section_type_flags
 end_define
 
 begin_comment
@@ -1444,7 +1124,7 @@ directive|define
 name|TARGET_OS_SYSV_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do                                      \     {                                     \       if (flag_pic == 1)		  \         {				  \ 	  builtin_define ("__pic__=1");	  \ 	  builtin_define ("__PIC__=1");	  \         }				  \       else if (flag_pic == 2)		  \         {				  \ 	  builtin_define ("__pic__=2");	  \ 	  builtin_define ("__PIC__=2");	  \         }				  \       if (target_flags_explicit		  \& MASK_RELOCATABLE)		  \ 	builtin_define ("_RELOCATABLE");  \     }                                     \   while (0)
+value|do						\     {						\       if (target_flags_explicit			\& MASK_RELOCATABLE)			\ 	builtin_define ("_RELOCATABLE");	\     }						\   while (0)
 end_define
 
 begin_ifndef
@@ -1459,7 +1139,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do                                      \     {                                     \       builtin_define_std ("PPC");         \       builtin_define_std ("unix");        \       builtin_define ("__svr4__");        \       builtin_assert ("system=unix");     \       builtin_assert ("system=svr4");     \       builtin_assert ("cpu=powerpc");     \       builtin_assert ("machine=powerpc"); \       TARGET_OS_SYSV_CPP_BUILTINS ();	  \     }                                     \   while (0)
+value|do						\     {						\       builtin_define_std ("PPC");		\       builtin_define_std ("unix");		\       builtin_define ("__svr4__");		\       builtin_assert ("system=unix");		\       builtin_assert ("system=svr4");		\       builtin_assert ("cpu=powerpc");		\       builtin_assert ("machine=powerpc");	\       TARGET_OS_SYSV_CPP_BUILTINS ();		\     }						\   while (0)
 end_define
 
 begin_endif
@@ -1509,6 +1189,24 @@ name|CC1_ENDIAN_DEFAULT_SPEC
 value|"%(cc1_endian_big)"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CC1_SECURE_PLT_DEFAULT_SPEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CC1_SECURE_PLT_DEFAULT_SPEC
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Pass -G xxx to the compiler and set correct endian mode.  */
 end_comment
@@ -1517,7 +1215,7 @@ begin_define
 define|#
 directive|define
 name|CC1_SPEC
-value|"%{G*} \ %{mlittle|mlittle-endian: %(cc1_endian_little);           \   mbig   |mbig-endian   : %(cc1_endian_big);              \   mcall-aixdesc |					  \   mcall-freebsd |					  \   mcall-netbsd  |					  \   mcall-openbsd |					  \   mcall-linux   |					  \   mcall-gnu             : -mbig %(cc1_endian_big);        \   mcall-i960-old        : -mlittle %(cc1_endian_little);  \                         : %(cc1_endian_default)}          \ %{mno-sdata: -msdata=none } \ %{meabi: %{!mcall-*: -mcall-sysv }} \ %{!meabi: %{!mno-eabi: \     %{mrelocatable: -meabi } \     %{mcall-freebsd: -mno-eabi } \     %{mcall-i960-old: -meabi } \     %{mcall-linux: -mno-eabi } \     %{mcall-gnu: -mno-eabi } \     %{mcall-netbsd: -mno-eabi } \     %{mcall-openbsd: -mno-eabi }}} \ %{msdata: -msdata=default} \ %{mno-sdata: -msdata=none} \ %{profile: -p}"
+value|"%{G*} \ %{mlittle|mlittle-endian: %(cc1_endian_little);           \   mbig   |mbig-endian   : %(cc1_endian_big);              \   mcall-aixdesc |					  \   mcall-freebsd |					  \   mcall-netbsd  |					  \   mcall-openbsd |					  \   mcall-linux   |					  \   mcall-gnu             : -mbig %(cc1_endian_big);        \   mcall-i960-old        : -mlittle %(cc1_endian_little);  \                         : %(cc1_endian_default)}          \ %{meabi: %{!mcall-*: -mcall-sysv }} \ %{!meabi: %{!mno-eabi: \     %{mrelocatable: -meabi } \     %{mcall-freebsd: -mno-eabi } \     %{mcall-i960-old: -meabi } \     %{mcall-linux: -mno-eabi } \     %{mcall-gnu: -mno-eabi } \     %{mcall-netbsd: -mno-eabi } \     %{mcall-openbsd: -mno-eabi }}} \ %{msdata: -msdata=default} \ %{mno-sdata: -msdata=none} \ %{!mbss-plt: %{!msecure-plt: %(cc1_secure_plt_default)}} \ %{profile: -p}"
 end_define
 
 begin_comment
@@ -2007,7 +1705,7 @@ begin_define
 define|#
 directive|define
 name|LINK_OS_FREEBSD_SPEC
-value|"\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1)} \   %{Wl,*:%*} \   %{v:-V} \   %{assert*} %{R*} %{rpath*} %{defsym*} \   %{shared:-Bshareable %{h*} %{soname*}} \   %{!shared: \     %{!static: \       %{rdynamic: -export-dynamic} \       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }} \     %{static:-Bstatic}} \   %{symbolic:-Bsymbolic}"
+value|"\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1)} \   %{v:-V} \   %{assert*} %{R*} %{rpath*} %{defsym*} \   %{shared:-Bshareable %{h*} %{soname*}} \   %{!shared: \     %{!static: \       %{rdynamic: -export-dynamic} \       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }} \     %{static:-Bstatic}} \   %{symbolic:-Bsymbolic}"
 end_define
 
 begin_comment
@@ -2031,7 +1729,7 @@ begin_define
 define|#
 directive|define
 name|STARTFILE_LINUX_SPEC
-value|"\ %{!shared: %{pg|p:gcrt1.o%s;pie:Scrt1.o%s;:crt1.o%s}} \ %{mnewlib:ecrti.o%s;:crti.o%s} \ %{static:crtbeginT.o%s;shared|pie:crtbeginS.o%s;:crtbegin.o%s}"
+value|"\ %{!shared: %{pg|p|profile:gcrt1.o%s;pie:Scrt1.o%s;:crt1.o%s}} \ %{mnewlib:ecrti.o%s;:crti.o%s} \ %{static:crtbeginT.o%s;shared|pie:crtbeginS.o%s;:crtbegin.o%s}"
 end_define
 
 begin_else
@@ -2043,7 +1741,7 @@ begin_define
 define|#
 directive|define
 name|STARTFILE_LINUX_SPEC
-value|"\ %{!shared: %{pg|p:gcrt1.o%s;:crt1.o%s}} \ %{mnewlib:ecrti.o%s;:crti.o%s} \ %{static:crtbeginT.o%s;shared|pie:crtbeginS.o%s;:crtbegin.o%s}"
+value|"\ %{!shared: %{pg|p|profile:gcrt1.o%s;:crt1.o%s}} \ %{mnewlib:ecrti.o%s;:crti.o%s} \ %{static:crtbeginT.o%s;shared|pie:crtbeginS.o%s;:crtbegin.o%s}"
 end_define
 
 begin_endif
@@ -2068,8 +1766,70 @@ end_define
 begin_define
 define|#
 directive|define
+name|GLIBC_DYNAMIC_LINKER
+value|"/lib/ld.so.1"
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCLIBC_DYNAMIC_LINKER
+value|"/lib/ld-uClibc.so.0"
+end_define
+
+begin_if
+if|#
+directive|if
+name|UCLIBC_DEFAULT
+end_if
+
+begin_define
+define|#
+directive|define
+name|CHOOSE_DYNAMIC_LINKER
+parameter_list|(
+name|G
+parameter_list|,
+name|U
+parameter_list|)
+value|"%{mglibc:%{muclibc:%e-mglibc and -muclibc used together}" G ";:" U "}"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CHOOSE_DYNAMIC_LINKER
+parameter_list|(
+name|G
+parameter_list|,
+name|U
+parameter_list|)
+value|"%{muclibc:%{mglibc:%e-mglibc and -muclibc used together}" U ";:" G "}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|LINUX_DYNAMIC_LINKER
+define|\
+value|CHOOSE_DYNAMIC_LINKER (GLIBC_DYNAMIC_LINKER, UCLIBC_DYNAMIC_LINKER)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINK_OS_LINUX_SPEC
-value|"-m elf32ppclinux %{!shared: %{!static: \   %{rdynamic:-export-dynamic} \   %{!dynamic-linker:-dynamic-linker /lib/ld.so.1}}}"
+value|"-m elf32ppclinux %{!shared: %{!static: \   %{rdynamic:-export-dynamic} \   %{!dynamic-linker:-dynamic-linker " LINUX_DYNAMIC_LINKER "}}}"
 end_define
 
 begin_if
@@ -2369,7 +2129,7 @@ define|#
 directive|define
 name|SUBTARGET_EXTRA_SPECS
 define|\
-value|{ "crtsavres_default",        CRTSAVRES_DEFAULT_SPEC },              \   { "lib_ads",			LIB_ADS_SPEC },				\   { "lib_yellowknife",		LIB_YELLOWKNIFE_SPEC },			\   { "lib_mvme",			LIB_MVME_SPEC },			\   { "lib_sim",			LIB_SIM_SPEC },				\   { "lib_freebsd",		LIB_FREEBSD_SPEC },			\   { "lib_gnu",			LIB_GNU_SPEC },				\   { "lib_linux",		LIB_LINUX_SPEC },			\   { "lib_netbsd",		LIB_NETBSD_SPEC },			\   { "lib_openbsd",		LIB_OPENBSD_SPEC },			\   { "lib_windiss",              LIB_WINDISS_SPEC },                     \   { "lib_default",		LIB_DEFAULT_SPEC },			\   { "startfile_ads",		STARTFILE_ADS_SPEC },			\   { "startfile_yellowknife",	STARTFILE_YELLOWKNIFE_SPEC },		\   { "startfile_mvme",		STARTFILE_MVME_SPEC },			\   { "startfile_sim",		STARTFILE_SIM_SPEC },			\   { "startfile_freebsd",	STARTFILE_FREEBSD_SPEC },		\   { "startfile_gnu",		STARTFILE_GNU_SPEC },			\   { "startfile_linux",		STARTFILE_LINUX_SPEC },			\   { "startfile_netbsd",		STARTFILE_NETBSD_SPEC },		\   { "startfile_openbsd",	STARTFILE_OPENBSD_SPEC },		\   { "startfile_windiss",        STARTFILE_WINDISS_SPEC },               \   { "startfile_default",	STARTFILE_DEFAULT_SPEC },		\   { "endfile_ads",		ENDFILE_ADS_SPEC },			\   { "endfile_yellowknife",	ENDFILE_YELLOWKNIFE_SPEC },		\   { "endfile_mvme",		ENDFILE_MVME_SPEC },			\   { "endfile_sim",		ENDFILE_SIM_SPEC },			\   { "endfile_freebsd",		ENDFILE_FREEBSD_SPEC },			\   { "endfile_gnu",		ENDFILE_GNU_SPEC },			\   { "endfile_linux",		ENDFILE_LINUX_SPEC },			\   { "endfile_netbsd",		ENDFILE_NETBSD_SPEC },			\   { "endfile_openbsd",		ENDFILE_OPENBSD_SPEC },			\   { "endfile_windiss",          ENDFILE_WINDISS_SPEC },                 \   { "endfile_default",		ENDFILE_DEFAULT_SPEC },			\   { "link_path",		LINK_PATH_SPEC },			\   { "link_shlib",		LINK_SHLIB_SPEC },			\   { "link_target",		LINK_TARGET_SPEC },			\   { "link_start",		LINK_START_SPEC },			\   { "link_start_ads",		LINK_START_ADS_SPEC },			\   { "link_start_yellowknife",	LINK_START_YELLOWKNIFE_SPEC },		\   { "link_start_mvme",		LINK_START_MVME_SPEC },			\   { "link_start_sim",		LINK_START_SIM_SPEC },			\   { "link_start_freebsd",	LINK_START_FREEBSD_SPEC },		\   { "link_start_gnu",		LINK_START_GNU_SPEC },			\   { "link_start_linux",		LINK_START_LINUX_SPEC },		\   { "link_start_netbsd",	LINK_START_NETBSD_SPEC },		\   { "link_start_openbsd",	LINK_START_OPENBSD_SPEC },		\   { "link_start_windiss",	LINK_START_WINDISS_SPEC },		\   { "link_start_default",	LINK_START_DEFAULT_SPEC },		\   { "link_os",			LINK_OS_SPEC },				\   { "link_os_ads",		LINK_OS_ADS_SPEC },			\   { "link_os_yellowknife",	LINK_OS_YELLOWKNIFE_SPEC },		\   { "link_os_mvme",		LINK_OS_MVME_SPEC },			\   { "link_os_sim",		LINK_OS_SIM_SPEC },			\   { "link_os_freebsd",		LINK_OS_FREEBSD_SPEC },			\   { "link_os_linux",		LINK_OS_LINUX_SPEC },			\   { "link_os_gnu",		LINK_OS_GNU_SPEC },			\   { "link_os_netbsd",		LINK_OS_NETBSD_SPEC },			\   { "link_os_openbsd",		LINK_OS_OPENBSD_SPEC },			\   { "link_os_windiss",		LINK_OS_WINDISS_SPEC },			\   { "link_os_default",		LINK_OS_DEFAULT_SPEC },			\   { "cc1_endian_big",		CC1_ENDIAN_BIG_SPEC },			\   { "cc1_endian_little",	CC1_ENDIAN_LITTLE_SPEC },		\   { "cc1_endian_default",	CC1_ENDIAN_DEFAULT_SPEC },		\   { "cpp_os_ads",		CPP_OS_ADS_SPEC },			\   { "cpp_os_yellowknife",	CPP_OS_YELLOWKNIFE_SPEC },		\   { "cpp_os_mvme",		CPP_OS_MVME_SPEC },			\   { "cpp_os_sim",		CPP_OS_SIM_SPEC },			\   { "cpp_os_freebsd",		CPP_OS_FREEBSD_SPEC },			\   { "cpp_os_gnu",		CPP_OS_GNU_SPEC },			\   { "cpp_os_linux",		CPP_OS_LINUX_SPEC },			\   { "cpp_os_netbsd",		CPP_OS_NETBSD_SPEC },			\   { "cpp_os_openbsd",		CPP_OS_OPENBSD_SPEC },			\   { "cpp_os_windiss",           CPP_OS_WINDISS_SPEC },                  \   { "cpp_os_default",		CPP_OS_DEFAULT_SPEC },			\   { "fbsd_dynamic_linker",	FBSD_DYNAMIC_LINKER },			\   SUBSUBTARGET_EXTRA_SPECS
+value|{ "crtsavres_default",	CRTSAVRES_DEFAULT_SPEC },		\   { "lib_ads",			LIB_ADS_SPEC },				\   { "lib_yellowknife",		LIB_YELLOWKNIFE_SPEC },			\   { "lib_mvme",			LIB_MVME_SPEC },			\   { "lib_sim",			LIB_SIM_SPEC },				\   { "lib_freebsd",		LIB_FREEBSD_SPEC },			\   { "lib_gnu",			LIB_GNU_SPEC },				\   { "lib_linux",		LIB_LINUX_SPEC },			\   { "lib_netbsd",		LIB_NETBSD_SPEC },			\   { "lib_openbsd",		LIB_OPENBSD_SPEC },			\   { "lib_windiss",		LIB_WINDISS_SPEC },			\   { "lib_default",		LIB_DEFAULT_SPEC },			\   { "startfile_ads",		STARTFILE_ADS_SPEC },			\   { "startfile_yellowknife",	STARTFILE_YELLOWKNIFE_SPEC },		\   { "startfile_mvme",		STARTFILE_MVME_SPEC },			\   { "startfile_sim",		STARTFILE_SIM_SPEC },			\   { "startfile_freebsd",	STARTFILE_FREEBSD_SPEC },		\   { "startfile_gnu",		STARTFILE_GNU_SPEC },			\   { "startfile_linux",		STARTFILE_LINUX_SPEC },			\   { "startfile_netbsd",		STARTFILE_NETBSD_SPEC },		\   { "startfile_openbsd",	STARTFILE_OPENBSD_SPEC },		\   { "startfile_windiss",	STARTFILE_WINDISS_SPEC },		\   { "startfile_default",	STARTFILE_DEFAULT_SPEC },		\   { "endfile_ads",		ENDFILE_ADS_SPEC },			\   { "endfile_yellowknife",	ENDFILE_YELLOWKNIFE_SPEC },		\   { "endfile_mvme",		ENDFILE_MVME_SPEC },			\   { "endfile_sim",		ENDFILE_SIM_SPEC },			\   { "endfile_freebsd",		ENDFILE_FREEBSD_SPEC },			\   { "endfile_gnu",		ENDFILE_GNU_SPEC },			\   { "endfile_linux",		ENDFILE_LINUX_SPEC },			\   { "endfile_netbsd",		ENDFILE_NETBSD_SPEC },			\   { "endfile_openbsd",		ENDFILE_OPENBSD_SPEC },			\   { "endfile_windiss",		ENDFILE_WINDISS_SPEC },			\   { "endfile_default",		ENDFILE_DEFAULT_SPEC },			\   { "link_path",		LINK_PATH_SPEC },			\   { "link_shlib",		LINK_SHLIB_SPEC },			\   { "link_target",		LINK_TARGET_SPEC },			\   { "link_start",		LINK_START_SPEC },			\   { "link_start_ads",		LINK_START_ADS_SPEC },			\   { "link_start_yellowknife",	LINK_START_YELLOWKNIFE_SPEC },		\   { "link_start_mvme",		LINK_START_MVME_SPEC },			\   { "link_start_sim",		LINK_START_SIM_SPEC },			\   { "link_start_freebsd",	LINK_START_FREEBSD_SPEC },		\   { "link_start_gnu",		LINK_START_GNU_SPEC },			\   { "link_start_linux",		LINK_START_LINUX_SPEC },		\   { "link_start_netbsd",	LINK_START_NETBSD_SPEC },		\   { "link_start_openbsd",	LINK_START_OPENBSD_SPEC },		\   { "link_start_windiss",	LINK_START_WINDISS_SPEC },		\   { "link_start_default",	LINK_START_DEFAULT_SPEC },		\   { "link_os",			LINK_OS_SPEC },				\   { "link_os_ads",		LINK_OS_ADS_SPEC },			\   { "link_os_yellowknife",	LINK_OS_YELLOWKNIFE_SPEC },		\   { "link_os_mvme",		LINK_OS_MVME_SPEC },			\   { "link_os_sim",		LINK_OS_SIM_SPEC },			\   { "link_os_freebsd",		LINK_OS_FREEBSD_SPEC },			\   { "link_os_linux",		LINK_OS_LINUX_SPEC },			\   { "link_os_gnu",		LINK_OS_GNU_SPEC },			\   { "link_os_netbsd",		LINK_OS_NETBSD_SPEC },			\   { "link_os_openbsd",		LINK_OS_OPENBSD_SPEC },			\   { "link_os_windiss",		LINK_OS_WINDISS_SPEC },			\   { "link_os_default",		LINK_OS_DEFAULT_SPEC },			\   { "cc1_endian_big",		CC1_ENDIAN_BIG_SPEC },			\   { "cc1_endian_little",	CC1_ENDIAN_LITTLE_SPEC },		\   { "cc1_endian_default",	CC1_ENDIAN_DEFAULT_SPEC },		\   { "cc1_secure_plt_default",	CC1_SECURE_PLT_DEFAULT_SPEC },		\   { "cpp_os_ads",		CPP_OS_ADS_SPEC },			\   { "cpp_os_yellowknife",	CPP_OS_YELLOWKNIFE_SPEC },		\   { "cpp_os_mvme",		CPP_OS_MVME_SPEC },			\   { "cpp_os_sim",		CPP_OS_SIM_SPEC },			\   { "cpp_os_freebsd",		CPP_OS_FREEBSD_SPEC },			\   { "cpp_os_gnu",		CPP_OS_GNU_SPEC },			\   { "cpp_os_linux",		CPP_OS_LINUX_SPEC },			\   { "cpp_os_netbsd",		CPP_OS_NETBSD_SPEC },			\   { "cpp_os_openbsd",		CPP_OS_OPENBSD_SPEC },			\   { "cpp_os_windiss",		CPP_OS_WINDISS_SPEC },			\   { "cpp_os_default",		CPP_OS_DEFAULT_SPEC },			\   { "fbsd_dynamic_linker",	FBSD_DYNAMIC_LINKER },			\   SUBSUBTARGET_EXTRA_SPECS
 end_define
 
 begin_define
@@ -2454,6 +2214,17 @@ begin_define
 define|#
 directive|define
 name|RELOCATABLE_NEEDS_FIXUP
+value|1
+end_define
+
+begin_comment
+comment|/* This target uses the sysv4.opt file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_USES_SYSV4_OPT
 value|1
 end_define
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code from machine description to emit insns as rtl.    Copyright (C) 1987, 1988, 1991, 1994, 1995, 1997, 1998, 1999, 2000, 2001,    2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code from machine description to emit insns as rtl.    Copyright (C) 1987, 1988, 1991, 1994, 1995, 1997, 1998, 1999, 2000, 2001,    2003, 2004, 2005 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -775,7 +775,35 @@ name|MATCH_OP_DUP
 case|:
 name|printf
 argument_list|(
-literal|"gen_rtx (GET_CODE (operand%d), "
+literal|"gen_rtx_fmt_"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|XVECLEN
+argument_list|(
+name|x
+argument_list|,
+literal|1
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|"e"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" (GET_CODE (operand%d), "
 argument_list|,
 name|XINT
 argument_list|(
@@ -872,7 +900,35 @@ name|MATCH_OPERATOR
 case|:
 name|printf
 argument_list|(
-literal|"gen_rtx (GET_CODE (operand%d)"
+literal|"gen_rtx_fmt_"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|XVECLEN
+argument_list|(
+name|x
+argument_list|,
+literal|2
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|"e"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" (GET_CODE (operand%d)"
 argument_list|,
 name|XINT
 argument_list|(
@@ -990,6 +1046,53 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
+name|CLOBBER
+case|:
+if|if
+condition|(
+name|REG_P
+argument_list|(
+name|XEXP
+argument_list|(
+name|x
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"gen_hard_reg_clobber (%smode, %i)"
+argument_list|,
+name|GET_MODE_NAME
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|XEXP
+argument_list|(
+name|x
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+argument_list|)
+argument_list|,
+name|REGNO
+argument_list|(
+name|XEXP
+argument_list|(
+name|x
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+break|break;
+case|case
 name|CC0
 case|:
 name|printf
@@ -1049,6 +1152,37 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|-
+name|MAX_SAVED_CONST_INT
+operator|<=
+name|INTVAL
+argument_list|(
+name|x
+argument_list|)
+operator|&&
+name|INTVAL
+argument_list|(
+name|x
+argument_list|)
+operator|<=
+name|MAX_SAVED_CONST_INT
+condition|)
+name|printf
+argument_list|(
+literal|"const_int_rtx[MAX_SAVED_CONST_INT + (%d)]"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|INTVAL
+argument_list|(
+name|x
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|INTVAL
 argument_list|(
 name|x
@@ -1089,7 +1223,7 @@ case|case
 name|CONST_DOUBLE
 case|:
 comment|/* These shouldn't be written in MD files.  Instead, the appropriate 	 routines in varasm.c should be called.  */
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 default|default:
@@ -1161,22 +1295,20 @@ argument_list|(
 literal|",\n\t"
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|fmt
 index|[
 name|i
 index|]
-operator|==
-literal|'e'
-operator|||
-name|fmt
-index|[
-name|i
-index|]
-operator|==
-literal|'u'
 condition|)
+block|{
+case|case
+literal|'e'
+case|:
+case|case
+literal|'u'
+case|:
 name|gen_exp
 argument_list|(
 name|XEXP
@@ -1191,16 +1323,10 @@ argument_list|,
 name|used
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|fmt
-index|[
-name|i
-index|]
-operator|==
+break|break;
+case|case
 literal|'i'
-condition|)
+case|:
 name|printf
 argument_list|(
 literal|"%u"
@@ -1213,16 +1339,10 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|fmt
-index|[
-name|i
-index|]
-operator|==
+break|break;
+case|case
 literal|'s'
-condition|)
+case|:
 name|printf
 argument_list|(
 literal|"\"%s\""
@@ -1235,16 +1355,10 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|fmt
-index|[
-name|i
-index|]
-operator|==
+break|break;
+case|case
 literal|'E'
-condition|)
+case|:
 block|{
 name|int
 name|j
@@ -1307,11 +1421,13 @@ argument_list|(
 literal|")"
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
-else|else
-name|abort
+default|default:
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 name|printf
 argument_list|(
@@ -1402,7 +1518,7 @@ condition|)
 break|break;
 if|if
 condition|(
-name|GET_CODE
+name|REG_P
 argument_list|(
 name|XEXP
 argument_list|(
@@ -1418,8 +1534,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-operator|==
-name|REG
 condition|)
 name|has_hard_reg
 operator|=
@@ -1473,13 +1587,10 @@ name|clobber_ent
 modifier|*
 name|link
 init|=
-name|xmalloc
-argument_list|(
-sizeof|sizeof
+name|XNEW
 argument_list|(
 expr|struct
 name|clobber_ent
-argument_list|)
 argument_list|)
 decl_stmt|;
 name|int
@@ -1624,19 +1735,15 @@ name|MATCH_SCRATCH
 operator|)
 operator|||
 operator|(
-name|GET_CODE
+name|REG_P
 argument_list|(
 name|old
 argument_list|)
-operator|==
-name|REG
 operator|&&
-name|GET_CODE
+name|REG_P
 argument_list|(
 name|new
 argument_list|)
-operator|==
-name|REG
 operator|&&
 name|REGNO
 argument_list|(
@@ -1675,13 +1782,10 @@ condition|)
 block|{
 name|p
 operator|=
-name|xmalloc
-argument_list|(
-sizeof|sizeof
+name|XNEW
 argument_list|(
 expr|struct
 name|clobber_pat
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -2298,6 +2402,16 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|/* Output the special code to be executed before the sequence 	 is generated.  */
+name|print_rtx_ptr_loc
+argument_list|(
+name|XSTR
+argument_list|(
+name|expand
+argument_list|,
+literal|3
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -2613,12 +2727,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|GET_CODE
+name|LABEL_P
 argument_list|(
 name|next
 argument_list|)
-operator|==
-name|CODE_LABEL
 condition|)
 name|printf
 argument_list|(
@@ -2884,9 +2996,9 @@ operator|)
 expr_stmt|;
 name|used
 operator|=
-name|xcalloc
+name|XCNEWVEC
 argument_list|(
-literal|1
+name|char
 argument_list|,
 name|operands
 argument_list|)
@@ -2927,16 +3039,14 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"extern rtx gen_split_%d (rtx *);\n"
+literal|"extern rtx gen_split_%d (rtx, rtx *);\n"
 argument_list|,
 name|insn_code_number
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rtx\ngen_%s_%d (rtx *operands%s)\n"
-argument_list|,
-name|name
+literal|"rtx\ngen_split_%d (rtx curr_insn ATTRIBUTE_UNUSED, rtx *operands%s)\n"
 argument_list|,
 name|insn_code_number
 argument_list|,
@@ -3004,6 +3114,17 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
+block|{
+name|print_rtx_ptr_loc
+argument_list|(
+name|XSTR
+argument_list|(
+name|split
+argument_list|,
+literal|3
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -3016,6 +3137,7 @@ literal|3
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Output code to copy the arguments back out of `operands'  */
 for|for
 control|(
@@ -3244,12 +3366,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|GET_CODE
+name|LABEL_P
 argument_list|(
 name|next
 argument_list|)
-operator|==
-name|CODE_LABEL
 condition|)
 name|printf
 argument_list|(
@@ -3548,7 +3668,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"      abort ();\n"
+literal|"      gcc_unreachable ();\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3568,7 +3688,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Write a function, `added_clobbers_hard_reg_p' this is given an insn_code    number that needs clobbers and returns 1 if they include a clobber of a    hard reg and 0 if they just clobber SCRATCH.  */
+comment|/* Write a function, `added_clobbers_hard_reg_p' that is given an insn_code    number that will have clobbers added (as indicated by `recog') and returns    1 if those include a clobber of a hard reg or 0 if all of them just clobber    SCRATCH.  */
 end_comment
 
 begin_function
@@ -3703,7 +3823,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"      abort ();\n"
+literal|"      gcc_unreachable ();\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3963,17 +4083,6 @@ literal|"genemit"
 expr_stmt|;
 if|if
 condition|(
-name|argc
-operator|<=
-literal|1
-condition|)
-name|fatal
-argument_list|(
-literal|"no input file name"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|init_md_reader_args
 argument_list|(
 name|argc
@@ -4094,7 +4203,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#include \"tm-constrs.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#include \"ggc.h\"\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"basic-block.h\"\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4239,27 +4358,6 @@ name|FATAL_EXIT_CODE
 else|:
 name|SUCCESS_EXIT_CODE
 operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Define this so we can link with print-rtl.o to get debug_rtx function.  */
-end_comment
-
-begin_function
-specifier|const
-name|char
-modifier|*
-name|get_insn_name
-parameter_list|(
-name|int
-name|code
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-return|return
-name|NULL
 return|;
 block|}
 end_function

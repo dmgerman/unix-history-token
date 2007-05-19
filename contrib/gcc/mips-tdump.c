@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Read and manage MIPS symbol tables from object modules.    Copyright (C) 1991, 1994, 1995, 1997, 1998, 1999, 2000, 2001, 2003, 2006    Free Software Foundation, Inc.    Contributed by hartzell@boulder.colorado.edu,    Rewritten by meissner@osf.org.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Read and manage MIPS symbol tables from object modules.    Copyright (C) 1991, 1994, 1995, 1997, 1998, 1999, 2000, 2001, 2003, 2004,    2006 Free Software Foundation, Inc.    Contributed by hartzell@boulder.colorado.edu,    Rewritten by meissner@osf.org.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -475,7 +475,7 @@ name|st_Number
 init|=
 name|stNumber
 block|,
-comment|/* pure number (ie. 4 NOR 2+2) */
+comment|/* pure number (i.e. 4 NOR 2+2) */
 name|st_Expr
 init|=
 name|stExpr
@@ -2889,7 +2889,7 @@ operator|!=
 name|tq_Nil
 condition|)
 block|{
-comment|/*        * Snarf up any array bounds in the correct order.  Arrays        * store 5 successive words in the aux. table:        *	word 0	RNDXR to type of the bounds (ie, int)        *	word 1	Current file descriptor index        *	word 2	low bound        *	word 3	high bound (or -1 if [])        *	word 4	stride size in bits        */
+comment|/*        * Snarf up any array bounds in the correct order.  Arrays        * store 5 successive words in the aux. table:        *	word 0	RNDXR to type of the bounds (i.e., int)        *	word 1	Current file descriptor index        *	word 2	low bound        *	word 3	high bound (or -1 if [])        *	word 4	stride size in bits        */
 for|for
 control|(
 name|i
@@ -3135,7 +3135,7 @@ decl_stmt|;
 name|int
 name|j
 decl_stmt|;
-comment|/* Print array bounds reversed (ie, in the order the C 		   programmer writes them).  C is such a fun language....  */
+comment|/* Print array bounds reversed (i.e., in the order the C 		   programmer writes them).  C is such a fun language....  */
 while|while
 condition|(
 name|i

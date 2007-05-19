@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate from machine description:    - some #define configuration flags.    Copyright (C) 1987, 1991, 1997, 1998, 1999, 2000, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate from machine description:    - some #define configuration flags.    Copyright (C) 1987, 1991, 1997, 1998, 1999, 2000, 2003, 2004    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -360,6 +360,18 @@ argument_list|)
 argument_list|)
 operator|==
 name|MATCH_OPERAND
+operator|||
+name|GET_CODE
+argument_list|(
+name|XEXP
+argument_list|(
+name|part
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+operator|==
+name|MATCH_DUP
 condition|)
 break|break;
 return|return;
@@ -1068,17 +1080,6 @@ literal|"genconfig"
 expr_stmt|;
 if|if
 condition|(
-name|argc
-operator|<=
-literal|1
-condition|)
-name|fatal
-argument_list|(
-literal|"no input file name"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|init_md_reader_args
 argument_list|(
 name|argc
@@ -1272,9 +1273,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* We output CC0_P this way to make sure that X is declared 	 somewhere.  */
 name|printf
 argument_list|(
-literal|"#define CC0_P(X) 0\n"
+literal|"#define CC0_P(X) ((X) ? 0 : 0)\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1359,27 +1361,6 @@ name|FATAL_EXIT_CODE
 return|;
 return|return
 name|SUCCESS_EXIT_CODE
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Define this so we can link with print-rtl.o to get debug_rtx function.  */
-end_comment
-
-begin_function
-specifier|const
-name|char
-modifier|*
-name|get_insn_name
-parameter_list|(
-name|int
-name|code
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-return|return
-name|NULL
 return|;
 block|}
 end_function

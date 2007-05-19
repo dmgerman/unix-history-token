@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Virtual array support.    Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Cygnus Solutions.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    the Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* Virtual array support.    Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006    Free Software Foundation, Inc.    Contributed by Cygnus Solutions.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"errors.h"
 end_include
 
 begin_include
@@ -31,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"tm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"toplev.h"
 end_include
 
 begin_include
@@ -65,7 +65,7 @@ name|GATHER_STATISTICS
 end_ifdef
 
 begin_comment
-comment|/* Store infromation about each particular varray.  */
+comment|/* Store information about each particular varray.  */
 end_comment
 
 begin_struct
@@ -411,6 +411,16 @@ block|,
 block|{
 sizeof|sizeof
 argument_list|(
+name|void
+operator|*
+argument_list|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+sizeof|sizeof
+argument_list|(
 name|char
 operator|*
 argument_list|)
@@ -477,21 +487,11 @@ block|{
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|const_equiv_data
-argument_list|)
-block|,
-literal|0
-block|}
-block|,
-block|{
-sizeof|sizeof
-argument_list|(
-expr|struct
 name|basic_block_def
 operator|*
 argument_list|)
 block|,
-literal|0
+literal|1
 block|}
 block|,
 block|{
@@ -499,6 +499,27 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|elt_list
+operator|*
+argument_list|)
+block|,
+literal|1
+block|}
+block|,
+block|{
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|edge_def
+operator|*
+argument_list|)
+block|,
+literal|1
+block|}
+block|,
+block|{
+sizeof|sizeof
+argument_list|(
+name|tree
 operator|*
 argument_list|)
 block|,
@@ -781,7 +802,7 @@ name|va
 operator|->
 name|data
 operator|.
-name|c
+name|vdt_c
 index|[
 name|old_data_size
 index|]
@@ -850,7 +871,7 @@ name|va
 operator|->
 name|data
 operator|.
-name|c
+name|vdt_c
 argument_list|,
 literal|0
 argument_list|,
@@ -1000,6 +1021,10 @@ directive|ifdef
 name|GATHER_STATISTICS
 end_ifdef
 
+begin_comment
+comment|/* Used to accumulate statistics about varray sizes.  */
+end_comment
+
 begin_struct
 struct|struct
 name|output_info
@@ -1013,6 +1038,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Called via htab_traverse.  Output varray descriptor pointed out by SLOT    and update statistics.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1115,6 +1144,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Output per-varray memory usage statistics.  */
+end_comment
 
 begin_function
 name|void

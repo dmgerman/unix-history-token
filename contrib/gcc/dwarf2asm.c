@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Dwarf2 assembler output helper routines.    Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Dwarf2 assembler output helper routines.    Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -222,6 +222,18 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|op
+init|=
+name|integer_asm_op
+argument_list|(
+name|size
+argument_list|,
+name|FALSE
+argument_list|)
+decl_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -255,14 +267,35 @@ literal|8
 operator|)
 operator|)
 expr_stmt|;
-name|dw2_assemble_integer
+if|if
+condition|(
+name|op
+condition|)
+name|fprintf
 argument_list|(
-name|size
+name|asm_out_file
 argument_list|,
+literal|"%s"
+name|HOST_WIDE_INT_PRINT_HEX
+argument_list|,
+name|op
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+else|else
+name|assemble_integer
+argument_list|(
 name|GEN_INT
 argument_list|(
 name|value
 argument_list|)
+argument_list|,
+name|size
+argument_list|,
+name|BITS_PER_UNIT
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -433,7 +466,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output a section-relative reference to a label.  In general this    can only be done for debugging symbols.  E.g. on most targets with    the GNU linker, this is accomplished with a direct reference and    the knowledge that the debugging section will be placed at VMA 0.    Some targets have special relocations for this that we must use.  */
+comment|/* Output a section-relative reference to a LABEL, which was placed in    BASE.  In general this can only be done for debugging symbols.    E.g. on most targets with the GNU linker, this is accomplished with    a direct reference and the knowledge that the debugging section    will be placed at VMA 0.  Some targets have special relocations for    this that we must use.  */
 end_comment
 
 begin_function
@@ -448,6 +481,11 @@ name|char
 modifier|*
 name|label
 parameter_list|,
+name|section
+modifier|*
+name|base
+name|ATTRIBUTE_UNUSED
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -476,6 +514,8 @@ argument_list|,
 name|size
 argument_list|,
 name|label
+argument_list|,
+name|base
 argument_list|)
 expr_stmt|;
 else|#
@@ -534,118 +574,45 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_comment
 comment|/* Output a self-relative reference to a label, possibly in a    different section or object file.  */
 end_comment
 
-begin_function
-name|void
-name|dw2_asm_output_pcrel
-parameter_list|(
-name|int
-name|size
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|label
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|comment
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|comment
-argument_list|)
-expr_stmt|;
+begin_ifdef
+unit|void dw2_asm_output_pcrel (int size ATTRIBUTE_UNUSED, 		      const char *label ATTRIBUTE_UNUSED, 		      const char *comment, ...) {   va_list ap;    va_start (ap, comment);
 ifdef|#
 directive|ifdef
 name|ASM_OUTPUT_DWARF_PCREL
-name|ASM_OUTPUT_DWARF_PCREL
-argument_list|(
-name|asm_out_file
-argument_list|,
-name|size
-argument_list|,
-name|label
-argument_list|)
-expr_stmt|;
+end_ifdef
+
+begin_else
+unit|ASM_OUTPUT_DWARF_PCREL (asm_out_file, size, label);
 else|#
 directive|else
-name|dw2_assemble_integer
-argument_list|(
-name|size
-argument_list|,
-name|gen_rtx_MINUS
-argument_list|(
-name|Pmode
-argument_list|,
-name|gen_rtx_SYMBOL_REF
-argument_list|(
-name|Pmode
-argument_list|,
-name|label
-argument_list|)
-argument_list|,
-name|pc_rtx
-argument_list|)
-argument_list|)
-expr_stmt|;
+end_else
+
+begin_endif
+unit|dw2_assemble_integer (size, 			gen_rtx_MINUS (Pmode, 				       gen_rtx_SYMBOL_REF (Pmode, label), 				       pc_rtx));
 endif|#
 directive|endif
-if|if
-condition|(
-name|flag_debug_asm
-operator|&&
-name|comment
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|asm_out_file
-argument_list|,
-literal|"\t%s "
-argument_list|,
-name|ASM_COMMENT_START
-argument_list|)
-expr_stmt|;
-name|vfprintf
-argument_list|(
-name|asm_out_file
-argument_list|,
-name|comment
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-block|}
-name|fputc
-argument_list|(
-literal|'\n'
-argument_list|,
-name|asm_out_file
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_endif
+
+begin_endif
+unit|if (flag_debug_asm&& comment)     {       fprintf (asm_out_file, "\t%s ", ASM_COMMENT_START);       vfprintf (asm_out_file, comment, ap);     }   fputc ('\n', asm_out_file);    va_end (ap); }
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 0 */
+end_comment
 
 begin_comment
 comment|/* Output an absolute reference to a label.  */
@@ -1212,10 +1179,11 @@ case|:
 return|return
 literal|8
 return|;
-block|}
-name|abort
+default|default:
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1785,26 +1753,22 @@ directive|if
 name|HAVE_DESIGNATED_INITIALIZERS
 block|}
 empty_stmt|;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
+name|format
+operator|>=
+literal|0
+operator|&&
 name|format
 operator|<
-literal|0
-operator|||
-name|format
-operator|>
-literal|0xff
-operator|||
+literal|0x100
+operator|&&
 name|format_names
 index|[
 name|format
 index|]
-operator|==
-name|NULL
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
+argument_list|)
+block|;
 return|return
 name|format_names
 index|[
@@ -1814,37 +1778,33 @@ return|;
 else|#
 directive|else
 block|}
-end_function
-
-begin_expr_stmt
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/* Output an unsigned LEB128 quantity.  */
 end_comment
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|dw2_asm_output_data_uleb128
-argument_list|(
-argument|unsigned HOST_WIDE_INT value
-argument_list|,
-argument|const char *comment
-argument_list|,
-argument|...
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|unsigned
+name|HOST_WIDE_INT
+name|value
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|comment
+parameter_list|,
+modifier|...
+parameter_list|)
 block|{
 name|va_list
 name|ap
@@ -2059,7 +2019,7 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Output a signed LEB128 quantity.  */
@@ -2393,7 +2353,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 endif|#
@@ -2439,118 +2399,40 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|dw2_asm_output_delta_sleb128
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|lab1
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|lab2
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|comment
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|comment
-argument_list|)
-expr_stmt|;
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_ifdef
+unit|void dw2_asm_output_delta_sleb128 (const char *lab1 ATTRIBUTE_UNUSED, 			      const char *lab2 ATTRIBUTE_UNUSED, 			      const char *comment, ...) {   va_list ap;    va_start (ap, comment);
 ifdef|#
 directive|ifdef
 name|HAVE_AS_LEB128
-name|fputs
-argument_list|(
-literal|"\t.sleb128 "
-argument_list|,
-name|asm_out_file
-argument_list|)
-expr_stmt|;
-name|assemble_name
-argument_list|(
-name|asm_out_file
-argument_list|,
-name|lab1
-argument_list|)
-expr_stmt|;
-name|fputc
-argument_list|(
-literal|'-'
-argument_list|,
-name|asm_out_file
-argument_list|)
-expr_stmt|;
-name|assemble_name
-argument_list|(
-name|asm_out_file
-argument_list|,
-name|lab2
-argument_list|)
-expr_stmt|;
+end_ifdef
+
+begin_else
+unit|fputs ("\t.sleb128 ", asm_out_file);   assemble_name (asm_out_file, lab1);   fputc ('-', asm_out_file);   assemble_name (asm_out_file, lab2);
 else|#
 directive|else
-name|abort
-argument_list|()
-expr_stmt|;
+end_else
+
+begin_endif
+unit|gcc_unreachable ();
 endif|#
 directive|endif
-if|if
-condition|(
-name|flag_debug_asm
-operator|&&
-name|comment
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|asm_out_file
-argument_list|,
-literal|"\t%s "
-argument_list|,
-name|ASM_COMMENT_START
-argument_list|)
-expr_stmt|;
-name|vfprintf
-argument_list|(
-name|asm_out_file
-argument_list|,
-name|comment
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-block|}
-name|fputc
-argument_list|(
-literal|'\n'
-argument_list|,
-name|asm_out_file
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_endif
+
+begin_endif
+unit|if (flag_debug_asm&& comment)     {       fprintf (asm_out_file, "\t%s ", ASM_COMMENT_START);       vfprintf (asm_out_file, comment, ap);     }   fputc ('\n', asm_out_file);    va_end (ap); }
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 0 */
+end_comment
 
 begin_escape
 end_escape
@@ -2561,6 +2443,8 @@ name|rtx
 name|dw2_force_const_mem
 parameter_list|(
 name|rtx
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2639,7 +2523,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Put X, a SYMBOL_REF, in memory.  Return a SYMBOL_REF to the allocated    memory.  Differs from force_const_mem in that a single pool is used for    the entire unit of translation, and the memory is not guaranteed to be    "near" the function in any interesting sense.  */
+comment|/* Put X, a SYMBOL_REF, in memory.  Return a SYMBOL_REF to the allocated    memory.  Differs from force_const_mem in that a single pool is used for    the entire unit of translation, and the memory is not guaranteed to be    "near" the function in any interesting sense.  PUBLIC controls whether    the symbol can be shared across the entire application (or DSO).  */
 end_comment
 
 begin_function
@@ -2649,6 +2533,9 @@ name|dw2_force_const_mem
 parameter_list|(
 name|rtx
 name|x
+parameter_list|,
+name|bool
+name|public
 parameter_list|)
 block|{
 name|splay_tree_node
@@ -2674,26 +2561,21 @@ argument_list|(
 name|splay_tree_compare_pointers
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|GET_CODE
 argument_list|(
 name|x
 argument_list|)
-operator|!=
+operator|==
 name|SYMBOL_REF
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|str
 operator|=
-call|(
-modifier|*
 name|targetm
 operator|.
 name|strip_name_encoding
-call|)
 argument_list|(
 name|XSTR
 argument_list|(
@@ -2735,6 +2617,8 @@ name|id
 decl_stmt|;
 if|if
 condition|(
+name|public
+operator|&&
 name|USE_LINKONCE_INDIRECT
 condition|)
 block|{
@@ -2781,6 +2665,13 @@ name|ptr_type_node
 argument_list|)
 expr_stmt|;
 name|DECL_ARTIFICIAL
+argument_list|(
+name|decl
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+name|DECL_IGNORED_P
 argument_list|(
 name|decl
 argument_list|)
@@ -2846,6 +2737,13 @@ name|ptr_type_node
 argument_list|)
 expr_stmt|;
 name|DECL_ARTIFICIAL
+argument_list|(
+name|decl
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+name|DECL_IGNORED_P
 argument_list|(
 name|decl
 argument_list|)
@@ -2941,6 +2839,9 @@ decl_stmt|;
 name|rtx
 name|sym_ref
 decl_stmt|;
+name|tree
+name|decl
+decl_stmt|;
 name|sym
 operator|=
 operator|(
@@ -2951,6 +2852,15 @@ operator|)
 name|node
 operator|->
 name|key
+expr_stmt|;
+name|decl
+operator|=
+operator|(
+name|tree
+operator|)
+name|node
+operator|->
+name|value
 expr_stmt|;
 name|sym_ref
 operator|=
@@ -2963,6 +2873,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|TREE_PUBLIC
+argument_list|(
+name|decl
+argument_list|)
+operator|&&
 name|USE_LINKONCE_INDIRECT
 condition|)
 name|fprintf
@@ -2978,12 +2893,7 @@ argument_list|)
 expr_stmt|;
 name|assemble_variable
 argument_list|(
-operator|(
-name|tree
-operator|)
-name|node
-operator|->
-name|value
+name|decl
 argument_list|,
 literal|1
 argument_list|,
@@ -3039,7 +2949,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Like dw2_asm_output_addr_rtx, but encode the pointer as directed.  */
+comment|/* Like dw2_asm_output_addr_rtx, but encode the pointer as directed.    If PUBLIC is set and the encoding is DW_EH_PE_indirect, the indirect    reference is shared across the entire application (or DSO).  */
 end_comment
 
 begin_function
@@ -3051,6 +2961,9 @@ name|encoding
 parameter_list|,
 name|rtx
 name|addr
+parameter_list|,
+name|bool
+name|public
 parameter_list|,
 specifier|const
 name|char
@@ -3158,12 +3071,14 @@ operator|&
 name|DW_EH_PE_indirect
 condition|)
 block|{
-comment|/* It is very tempting to use force_const_mem so that we share data 	     with the normal constant pool.  However, we've already emitted 	     the constant pool for this function.  Moreover, we'd like to 	     share these constants across the entire unit of translation, 	     or better, across the entire application (or DSO).  */
+comment|/* It is very tempting to use force_const_mem so that we share data 	     with the normal constant pool.  However, we've already emitted 	     the constant pool for this function.  Moreover, we'd like to 	     share these constants across the entire unit of translation and 	     even, if possible, across the entire application (or DSO).  */
 name|addr
 operator|=
 name|dw2_force_const_mem
 argument_list|(
 name|addr
+argument_list|,
+name|public
 argument_list|)
 expr_stmt|;
 name|encoding
@@ -3196,17 +3111,15 @@ break|break;
 case|case
 name|DW_EH_PE_pcrel
 case|:
-if|if
-condition|(
+name|gcc_assert
+argument_list|(
 name|GET_CODE
 argument_list|(
 name|addr
 argument_list|)
-operator|!=
+operator|==
 name|SYMBOL_REF
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3246,7 +3159,7 @@ directive|endif
 break|break;
 default|default:
 comment|/* Other encodings should have been handled by 	     ASM_MAYBE_OUTPUT_ENCODED_ADDR_RTX.  */
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}

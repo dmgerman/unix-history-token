@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for some generic XCOFF file format    Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for some generic XCOFF file format    Copyright (C) 2001, 2002, 2003, 2004, 2007 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -78,72 +78,14 @@ value|0
 end_define
 
 begin_comment
-comment|/* Define the extra sections we need.  We define three: one is the read-only    data section which is used for constants.  This is a csect whose name is    derived from the name of the input file.  The second is for initialized    global variables.  This is a csect whose name is that of the variable.    The third is the TOC.  */
+comment|/* AIX .align pseudo-op accept value from 0 to 12, corresponding to    log base 2 of the alignment in bytes; 12 = 4096 bytes = 32768 bits.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EXTRA_SECTIONS
-define|\
-value|read_only_data, private_data, read_only_private_data, toc, bss
-end_define
-
-begin_comment
-comment|/* Define the routines to implement these extra sections.    BIGGEST_ALIGNMENT is 64, so align the sections that much.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTION_FUNCTIONS
-define|\
-value|READ_ONLY_DATA_SECTION_FUNCTION			\   PRIVATE_DATA_SECTION_FUNCTION				\   READ_ONLY_PRIVATE_DATA_SECTION_FUNCTION		\   TOC_SECTION_FUNCTION
-end_define
-
-begin_define
-define|#
-directive|define
-name|READ_ONLY_DATA_SECTION_FUNCTION
-define|\
-value|void							\ read_only_data_section (void)				\ {							\   if (in_section != read_only_data)			\     {							\       fprintf (asm_out_file, "\t.csect %s[RO],3\n",	\ 	       xcoff_read_only_section_name);		\       in_section = read_only_data;			\     }							\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRIVATE_DATA_SECTION_FUNCTION
-define|\
-value|void							\ private_data_section (void)				\ {							\   if (in_section != private_data)			\     {							\       fprintf (asm_out_file, "\t.csect %s[RW],3\n",	\ 	       xcoff_private_data_section_name);	\       in_section = private_data;			\     }							\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|READ_ONLY_PRIVATE_DATA_SECTION_FUNCTION
-define|\
-value|void							\ read_only_private_data_section (void)			\ {							\   if (in_section != read_only_private_data)		\     {							\       fprintf (asm_out_file, "\t.csect %s[RO],3\n",	\ 	       xcoff_private_data_section_name);	\       in_section = read_only_private_data;		\     }							\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|TOC_SECTION_FUNCTION
-define|\
-value|void							\ toc_section (void)					\ {							\   if (TARGET_MINIMAL_TOC)				\     {							\
-comment|/* toc_section is always called at least once	\          from rs6000_xcoff_file_start, so this is	\ 	 guaranteed to always be defined once and	\ 	 only once in each file.  */
-value|\       if (! toc_initialized)				\ 	{						\ 	  fputs ("\t.toc\nLCTOC..1:\n", asm_out_file);	\ 	  fputs ("\t.tc toc_table[TC],toc_table[RW]\n", asm_out_file); \ 	  toc_initialized = 1;				\ 	}						\ 							\       if (in_section != toc)				\ 	fprintf (asm_out_file, "\t.csect toc_table[RW]%s\n",	\ 		 (TARGET_32BIT ? "" : ",3"));		\     }							\   else							\     {							\       if (in_section != toc)				\         fputs ("\t.toc\n", asm_out_file);		\     }							\   in_section = toc;					\ }
-end_define
-
-begin_comment
-comment|/* Define the name of our readonly data section.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|READONLY_DATA_SECTION
-value|read_only_data_section
+name|MAX_OFILE_ALIGNMENT
+value|32768
 end_define
 
 begin_comment
@@ -160,7 +102,14 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|(TARGET_TOC								\&& (GET_CODE (X) == SYMBOL_REF					\        || (GET_CODE (X) == CONST&& GET_CODE (XEXP (X, 0)) == PLUS	\&& GET_CODE (XEXP (XEXP (X, 0), 0)) == SYMBOL_REF)		\        || GET_CODE (X) == LABEL_REF					\        || (GET_CODE (X) == CONST_INT 					\&& GET_MODE_BITSIZE (MODE)<= GET_MODE_BITSIZE (Pmode))	\        || (GET_CODE (X) == CONST_DOUBLE					\&& (TARGET_POWERPC64						\ 	       || TARGET_MINIMAL_TOC					\ 	       || (GET_MODE_CLASS (GET_MODE (X)) == MODE_FLOAT		\&& ! TARGET_NO_FP_IN_TOC)))))
+value|(TARGET_TOC								\&& (GET_CODE (X) == SYMBOL_REF					\        || (GET_CODE (X) == CONST&& GET_CODE (XEXP (X, 0)) == PLUS	\&& GET_CODE (XEXP (XEXP (X, 0), 0)) == SYMBOL_REF)		\        || GET_CODE (X) == LABEL_REF					\        || (GET_CODE (X) == CONST_INT 					\&& GET_MODE_BITSIZE (MODE)<= GET_MODE_BITSIZE (Pmode))	\        || (GET_CODE (X) == CONST_DOUBLE					\&& (TARGET_POWERPC64						\ 	       || TARGET_MINIMAL_TOC					\ 	       || (SCALAR_FLOAT_MODE_P (GET_MODE (X))			\&& ! TARGET_NO_FP_IN_TOC)))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_OUTPUT_ANCHOR
+value|rs6000_xcoff_asm_output_anchor
 end_define
 
 begin_define
@@ -168,6 +117,20 @@ define|#
 directive|define
 name|TARGET_ASM_GLOBALIZE_LABEL
 value|rs6000_xcoff_asm_globalize_label
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_INIT_SECTIONS
+value|rs6000_xcoff_asm_init_sections
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_RELOC_RW_MASK
+value|rs6000_xcoff_reloc_rw_mask
 end_define
 
 begin_define
@@ -196,6 +159,13 @@ define|#
 directive|define
 name|TARGET_ASM_UNIQUE_SECTION
 value|rs6000_xcoff_unique_section
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_FUNCTION_RODATA_SECTION
+value|default_no_function_rodata_section
 end_define
 
 begin_define
@@ -344,7 +314,7 @@ value|false
 end_define
 
 begin_comment
-comment|/* This macro produces the initial definition of a function name.    On the RS/6000, we need to place an extra '.' in the function name and    output the function descriptor.     The csect for the function will have already been created by the    `text_section' call previously done.  We do have to go back to that    csect, however.     The third and fourth parameters to the .function pseudo-op (16 and 044)    are placeholders which no longer have any use.  */
+comment|/* This macro produces the initial definition of a function name.    On the RS/6000, we need to place an extra '.' in the function name and    output the function descriptor.     The csect for the function will have already been created when    text_section was selected.  We do have to go back to that csect, however.     The third and fourth parameters to the .function pseudo-op (16 and 044)    are placeholders which no longer have any use.  */
 end_comment
 
 begin_define
@@ -359,7 +329,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|{ if (TREE_PUBLIC (DECL))					\     {								\       if (!RS6000_WEAK || !DECL_WEAK (decl))			\ 	{							\ 	  fputs ("\t.globl .", FILE);				\ 	  RS6000_OUTPUT_BASENAME (FILE, NAME);			\ 	  putc ('\n', FILE);					\ 	}							\     }								\   else								\     {								\       fputs ("\t.lglobl .", FILE);				\       RS6000_OUTPUT_BASENAME (FILE, NAME);			\       putc ('\n', FILE);					\     }								\   fputs ("\t.csect ", FILE);					\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (TARGET_32BIT ? "[DS]\n" : "[DS],3\n", FILE);		\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (":\n", FILE);						\   fputs (TARGET_32BIT ? "\t.long ." : "\t.llong .", FILE);	\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (", TOC[tc0], 0\n", FILE);				\   in_section = no_section;					\   function_section(DECL);					\   putc ('.', FILE);						\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (":\n", FILE);						\   if (write_symbols != NO_DEBUG)				\     xcoffout_declare_function (FILE, DECL, NAME);		\ }
+value|{ if (TREE_PUBLIC (DECL))					\     {								\       if (!RS6000_WEAK || !DECL_WEAK (decl))			\ 	{							\ 	  fputs ("\t.globl .", FILE);				\ 	  RS6000_OUTPUT_BASENAME (FILE, NAME);			\ 	  putc ('\n', FILE);					\ 	}							\     }								\   else								\     {								\       fputs ("\t.lglobl .", FILE);				\       RS6000_OUTPUT_BASENAME (FILE, NAME);			\       putc ('\n', FILE);					\     }								\   fputs ("\t.csect ", FILE);					\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (TARGET_32BIT ? "[DS]\n" : "[DS],3\n", FILE);		\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (":\n", FILE);						\   fputs (TARGET_32BIT ? "\t.long ." : "\t.llong .", FILE);	\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (", TOC[tc0], 0\n", FILE);				\   in_section = NULL;						\   switch_to_section (function_section (DECL));			\   putc ('.', FILE);						\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (":\n", FILE);						\   if (write_symbols != NO_DEBUG)				\     xcoffout_declare_function (FILE, DECL, NAME);		\ }
 end_define
 
 begin_comment
@@ -620,17 +590,6 @@ define|#
 directive|define
 name|DATA_SECTION_ASM_OP
 value|"\t.csect .data[RW],3"
-end_define
-
-begin_comment
-comment|/* Define the name of the section to use for the EH language specific    data areas (.gcc_except_table on most other systems).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_ASM_EXCEPTION_SECTION
-value|data_section
 end_define
 
 begin_comment

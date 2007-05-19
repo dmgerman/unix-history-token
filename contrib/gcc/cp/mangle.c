@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Name mangling for the 3.0 C++ ABI.    Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.    Written by Alex Samuel<sameul@codesourcery.com>     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Name mangling for the 3.0 C++ ABI.    Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Written by Alex Samuel<samuel@codesourcery.com>     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/* This file implements mangling of C++ names according to the IA64    C++ ABI specification.  A mangled name encodes a function or    variable's name, scope, type, and/or template arguments into a text    identifier.  This identifier is used as the function's or    variable's linkage name, to preserve compatibility between C++'s    language features (templates, scoping, and overloading) and C    linkers.     Additionally, g++ uses mangled names internally.  To support this,    mangling of types is allowed, even though the mangled name of a    type should not appear by itself as an exported name.  Ditto for    uninstantiated templates.     The primary entry point for this module is mangle_decl, which    returns an identifier containing the mangled name for a decl.    Additional entry points are provided to build mangled names of    particular constructs when the appropriate decl for that construct    is not available.  These are:       mangle_typeinfo_for_type:        typeinfo data      mangle_typeinfo_string_for_type: typeinfo type name      mangle_vtbl_for_type:            virtual table data      mangle_vtt_for_type:             VTT data      mangle_ctor_vtbl_for_type:       `C-in-B' constructor virtual table data      mangle_thunk:                    thunk function or entry  */
+comment|/* This file implements mangling of C++ names according to the IA64    C++ ABI specification.  A mangled name encodes a function or    variable's name, scope, type, and/or template arguments into a text    identifier.  This identifier is used as the function's or    variable's linkage name, to preserve compatibility between C++'s    language features (templates, scoping, and overloading) and C    linkers.     Additionally, g++ uses mangled names internally.  To support this,    mangling of types is allowed, even though the mangled name of a    type should not appear by itself as an exported name.  Ditto for    uninstantiated templates.     The primary entry point for this module is mangle_decl, which    returns an identifier containing the mangled name for a decl.    Additional entry points are provided to build mangled names of    particular constructs when the appropriate decl for that construct    is not available.  These are:       mangle_typeinfo_for_type:		typeinfo data      mangle_typeinfo_string_for_type:	typeinfo type name      mangle_vtbl_for_type:		virtual table data      mangle_vtt_for_type:		VTT data      mangle_ctor_vtbl_for_type:		`C-in-B' constructor virtual table data      mangle_thunk:			thunk function or entry  */
 end_comment
 
 begin_include
@@ -144,7 +144,7 @@ parameter_list|,
 name|NODE
 parameter_list|)
 define|\
-value|fprintf (stderr, "  %-24s: %-24s (%p)\n", \            (FN), tree_code_name[TREE_CODE (NODE)], (void *) (NODE))
+value|fprintf (stderr, "  %-24s: %-24s (%p)\n", \ 	   (FN), tree_code_name[TREE_CODE (NODE)], (void *) (NODE))
 end_define
 
 begin_else
@@ -198,32 +198,117 @@ begin_comment
 comment|/* Things we only need one of.  This module is not reentrant.  */
 end_comment
 
-begin_struct
-specifier|static
-struct|struct
+begin_typedef
+typedef|typedef
+name|struct
 name|globals
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
-comment|/* The name in which we're building the mangled name.  */
+comment|/* An array of the current substitution candidates, in the order      we've seen them.  */
+name|VEC
+argument_list|(
+name|tree
+argument_list|,
+name|gc
+argument_list|)
+operator|*
+name|substitutions
+expr_stmt|;
+comment|/* The entity that is being mangled.  */
+name|tree
+name|GTY
+argument_list|(
+operator|(
+name|skip
+operator|)
+argument_list|)
+name|entity
+block|;
+comment|/* True if the mangling will be different in a future version of the      ABI.  */
+name|bool
+name|need_abi_warning
+block|; }
+end_typedef
+
+begin_expr_stmt
+name|globals
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
+name|globals
+name|G
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* The obstack on which we build mangled names.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|obstack
+modifier|*
+name|mangle_obstack
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The obstack on which we build mangled names that are not going to    be IDENTIFIER_NODEs.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|obstack
 name|name_obstack
 decl_stmt|;
-comment|/* An array of the current substitution candidates, in the order      we've seen them.  */
-name|varray_type
-name|substitutions
+end_decl_stmt
+
+begin_comment
+comment|/* The first object on the name_obstack; we use this to free memory    allocated on the name_obstack.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|name_base
 decl_stmt|;
-comment|/* The entity that is being mangled.  */
-name|tree
-name|entity
+end_decl_stmt
+
+begin_comment
+comment|/* An incomplete mangled name.  There will be no NUL terminator.  If    there is no incomplete mangled name, this variable is NULL.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|partially_mangled_name
 decl_stmt|;
-comment|/* True if the mangling will be different in a future version of the      ABI.  */
-name|bool
-name|need_abi_warning
+end_decl_stmt
+
+begin_comment
+comment|/* The number of characters in the PARTIALLY_MANGLED_NAME.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|size_t
+name|partially_mangled_name_len
 decl_stmt|;
-block|}
-name|G
-struct|;
-end_struct
+end_decl_stmt
 
 begin_comment
 comment|/* Indices into subst_identifiers.  These are identifiers used in    special substitution rules.  */
@@ -915,6 +1000,8 @@ name|start_mangling
 parameter_list|(
 specifier|const
 name|tree
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -975,7 +1062,7 @@ parameter_list|(
 name|CHAR
 parameter_list|)
 define|\
-value|obstack_1grow (&G.name_obstack, (CHAR))
+value|obstack_1grow (mangle_obstack, (CHAR))
 end_define
 
 begin_comment
@@ -992,7 +1079,7 @@ parameter_list|,
 name|LEN
 parameter_list|)
 define|\
-value|obstack_grow (&G.name_obstack, (CHAR), (LEN))
+value|obstack_grow (mangle_obstack, (CHAR), (LEN))
 end_define
 
 begin_comment
@@ -1007,7 +1094,7 @@ parameter_list|(
 name|STRING
 parameter_list|)
 define|\
-value|obstack_grow (&G.name_obstack, (STRING), strlen (STRING))
+value|obstack_grow (mangle_obstack, (STRING), strlen (STRING))
 end_define
 
 begin_comment
@@ -1024,7 +1111,7 @@ parameter_list|,
 name|NODE2
 parameter_list|)
 define|\
-value|(TREE_CODE (NODE1) == TREE_LIST                                     \&& TREE_CODE (NODE2) == TREE_LIST                                  \&& ((TYPE_P (TREE_PURPOSE (NODE1))                                 \&& same_type_p (TREE_PURPOSE (NODE1), TREE_PURPOSE (NODE2)))\        || TREE_PURPOSE (NODE1) == TREE_PURPOSE (NODE2))             \&& TREE_VALUE (NODE1) == TREE_VALUE (NODE2))
+value|(TREE_CODE (NODE1) == TREE_LIST					\&& TREE_CODE (NODE2) == TREE_LIST					\&& ((TYPE_P (TREE_PURPOSE (NODE1))					\&& same_type_p (TREE_PURPOSE (NODE1), TREE_PURPOSE (NODE2)))	\        || TREE_PURPOSE (NODE1) == TREE_PURPOSE (NODE2))			\&& TREE_VALUE (NODE1) == TREE_VALUE (NODE2))
 end_define
 
 begin_comment
@@ -1043,6 +1130,115 @@ value|write_number ((NUMBER),
 comment|/*unsigned_p=*/
 value|1, 10)
 end_define
+
+begin_comment
+comment|/* Save the current (incomplete) mangled name and release the obstack    storage holding it.  This function should be used during mangling    when making a call that could result in a call to get_identifier,    as such a call will clobber the same obstack being used for    mangling.  This function may not be called twice without an    intervening call to restore_partially_mangled_name.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|save_partially_mangled_name
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|mangle_obstack
+operator|==
+operator|&
+name|ident_hash
+operator|->
+name|stack
+condition|)
+block|{
+name|gcc_assert
+argument_list|(
+operator|!
+name|partially_mangled_name
+argument_list|)
+expr_stmt|;
+name|partially_mangled_name_len
+operator|=
+name|obstack_object_size
+argument_list|(
+name|mangle_obstack
+argument_list|)
+expr_stmt|;
+name|partially_mangled_name
+operator|=
+name|XNEWVEC
+argument_list|(
+name|char
+argument_list|,
+name|partially_mangled_name_len
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|partially_mangled_name
+argument_list|,
+name|obstack_base
+argument_list|(
+name|mangle_obstack
+argument_list|)
+argument_list|,
+name|partially_mangled_name_len
+argument_list|)
+expr_stmt|;
+name|obstack_free
+argument_list|(
+name|mangle_obstack
+argument_list|,
+name|obstack_finish
+argument_list|(
+name|mangle_obstack
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Restore the incomplete mangled name saved with    save_partially_mangled_name.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|restore_partially_mangled_name
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|partially_mangled_name
+condition|)
+block|{
+name|obstack_grow
+argument_list|(
+name|mangle_obstack
+argument_list|,
+name|partially_mangled_name
+argument_list|,
+name|partially_mangled_name_len
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|partially_mangled_name
+argument_list|)
+expr_stmt|;
+name|partially_mangled_name
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/* If DECL is a template instance, return nonzero and, if    TEMPLATE_INFO is non-NULL, set *TEMPLATE_INFO to its template info.    Otherwise return zero.  */
@@ -1191,6 +1387,9 @@ block|{
 name|unsigned
 name|i
 decl_stmt|;
+name|tree
+name|el
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -1204,31 +1403,23 @@ name|i
 operator|=
 literal|0
 init|;
-name|i
-operator|<
-name|VARRAY_ACTIVE_SIZE
+name|VEC_iterate
 argument_list|(
+name|tree
+argument_list|,
 name|G
 operator|.
 name|substitutions
+argument_list|,
+name|i
+argument_list|,
+name|el
 argument_list|)
 condition|;
 operator|++
 name|i
 control|)
 block|{
-name|tree
-name|el
-init|=
-name|VARRAY_TREE
-argument_list|(
-name|G
-operator|.
-name|substitutions
-argument_list|,
-name|i
-argument_list|)
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -1520,39 +1711,35 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|tree
+name|candidate
+decl_stmt|;
 for|for
 control|(
 name|i
 operator|=
-name|VARRAY_ACTIVE_SIZE
-argument_list|(
-name|G
-operator|.
-name|substitutions
-argument_list|)
-init|;
-operator|--
-name|i
-operator|>=
 literal|0
-condition|;
-control|)
-block|{
-specifier|const
-name|tree
-name|candidate
-init|=
-name|VARRAY_TREE
+init|;
+name|VEC_iterate
 argument_list|(
+name|tree
+argument_list|,
 name|G
 operator|.
 name|substitutions
 argument_list|,
 name|i
+argument_list|,
+name|candidate
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|gcc_assert
+argument_list|(
+operator|!
 operator|(
 name|DECL_P
 argument_list|(
@@ -1563,7 +1750,11 @@ name|node
 operator|==
 name|candidate
 operator|)
-operator|||
+argument_list|)
+expr_stmt|;
+name|gcc_assert
+argument_list|(
+operator|!
 operator|(
 name|TYPE_P
 argument_list|(
@@ -1582,9 +1773,7 @@ argument_list|,
 name|candidate
 argument_list|)
 operator|)
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1592,8 +1781,12 @@ endif|#
 directive|endif
 comment|/* ENABLE_CHECKING */
 comment|/* Put the decl onto the varray of substitution candidates.  */
-name|VARRAY_PUSH_TREE
+name|VEC_safe_push
 argument_list|(
+name|tree
+argument_list|,
+name|gc
+argument_list|,
 name|G
 operator|.
 name|substitutions
@@ -1818,7 +2011,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check whether a substitution should be used to represent NODE in    the mangling.     First, check standard special-case substitutions.<substitution> ::= St               # ::std                      ::= Sa      	 # ::std::allocator                      ::= Sb               # ::std::basic_string                      ::= Ss           # ::std::basic_string<char, 			       ::std::char_traits<char>, 			       ::std::allocator<char>>                      ::= Si           # ::std::basic_istream<char, ::std::char_traits<char>>                      ::= So           # ::std::basic_ostream<char, ::std::char_traits<char>>                      ::= Sd           # ::std::basic_iostream<char, ::std::char_traits<char>>        Then examine the stack of currently available substitution    candidates for entities appearing earlier in the same mangling     If a substitution is found, write its mangled representation and    return nonzero.  If none is found, just return zero.  */
+comment|/* Check whether a substitution should be used to represent NODE in    the mangling.     First, check standard special-case substitutions.<substitution> ::= St 	 # ::std  		    ::= Sa 	 # ::std::allocator  		    ::= Sb 	 # ::std::basic_string  		    ::= Ss 	 # ::std::basic_string<char, 			       ::std::char_traits<char>, 			       ::std::allocator<char>>  		    ::= Si 	 # ::std::basic_istream<char, ::std::char_traits<char>>  		    ::= So 	 # ::std::basic_ostream<char, ::std::char_traits<char>>  		    ::= Sd 	 # ::std::basic_iostream<char, ::std::char_traits<char>>     Then examine the stack of currently available substitution    candidates for entities appearing earlier in the same mangling     If a substitution is found, write its mangled representation and    return nonzero.  If none is found, just return zero.  */
 end_comment
 
 begin_function
@@ -1837,8 +2030,10 @@ specifier|const
 name|int
 name|size
 init|=
-name|VARRAY_ACTIVE_SIZE
+name|VEC_length
 argument_list|(
+name|tree
+argument_list|,
 name|G
 operator|.
 name|substitutions
@@ -1964,7 +2159,7 @@ name|node
 argument_list|)
 condition|)
 block|{
-comment|/* If this is a type (i.e. a fully-qualified template-id),  	     check for    	         std::basic_string<char, 		 		    std::char_traits<char>, 				    std::allocator<char>> .  */
+comment|/* If this is a type (i.e. a fully-qualified template-id), 	     check for 		 std::basic_string<char, 				    std::char_traits<char>, 				    std::allocator<char>> .  */
 if|if
 condition|(
 name|cp_type_quals
@@ -2091,7 +2286,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* First, check for the template  	 args<char, std::char_traits<char>> .  */
+comment|/* First, check for the template 	 args<char, std::char_traits<char>> .  */
 name|tree
 name|args
 init|=
@@ -2145,25 +2340,14 @@ argument_list|)
 condition|)
 block|{
 comment|/* Got them.  Is this basic_istream?  */
-name|tree
-name|name
-init|=
-name|DECL_NAME
-argument_list|(
-name|CLASSTYPE_TI_TEMPLATE
-argument_list|(
-name|type
-argument_list|)
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
-name|name
-operator|==
-name|subst_identifiers
-index|[
+name|is_std_substitution
+argument_list|(
+name|decl
+argument_list|,
 name|SUBID_BASIC_ISTREAM
-index|]
+argument_list|)
 condition|)
 block|{
 name|write_string
@@ -2179,12 +2363,12 @@ comment|/* Or basic_ostream?  */
 elseif|else
 if|if
 condition|(
-name|name
-operator|==
-name|subst_identifiers
-index|[
+name|is_std_substitution
+argument_list|(
+name|decl
+argument_list|,
 name|SUBID_BASIC_OSTREAM
-index|]
+argument_list|)
 condition|)
 block|{
 name|write_string
@@ -2200,12 +2384,12 @@ comment|/* Or basic_iostream?  */
 elseif|else
 if|if
 condition|(
-name|name
-operator|==
-name|subst_identifiers
-index|[
+name|is_std_substitution
+argument_list|(
+name|decl
+argument_list|,
 name|SUBID_BASIC_IOSTREAM
-index|]
+argument_list|)
 condition|)
 block|{
 name|write_string
@@ -2257,8 +2441,10 @@ block|{
 name|tree
 name|candidate
 init|=
-name|VARRAY_TREE
+name|VEC_index
 argument_list|(
+name|tree
+argument_list|,
 name|G
 operator|.
 name|substitutions
@@ -2379,7 +2565,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* The standard notes: "The<encoding> of an extern "C"              function is treated like global-scope data, i.e. as its<source-name> without a type."  We cannot write              overloaded operators that way though, because it contains              characters invalid in assembler.  */
+comment|/* The standard notes: "The<encoding> of an extern "C" 	     function is treated like global-scope data, i.e. as its<source-name> without a type."  We cannot write 	     overloaded operators that way though, because it contains 	     characters invalid in assembler.  */
 if|if
 condition|(
 name|abi_version_at_least
@@ -2600,6 +2786,9 @@ name|NULL
 argument_list|)
 condition|)
 block|{
+name|save_partially_mangled_name
+argument_list|()
+expr_stmt|;
 name|fn_type
 operator|=
 name|get_mostly_instantiated_function_type
@@ -2607,6 +2796,10 @@ argument_list|(
 name|decl
 argument_list|)
 expr_stmt|;
+name|restore_partially_mangled_name
+argument_list|()
+expr_stmt|;
+comment|/* FN_TYPE will not have parameter types for in-charge or 	     VTT parameters.  Therefore, we pass NULL_TREE to 	     write_bare_function_type -- otherwise, it will get 	     confused about which artificial parameters to skip.  */
 name|d
 operator|=
 name|NULL_TREE
@@ -2665,7 +2858,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*<name> ::=<unscoped-name>           ::=<unscoped-template-name><template-args> 	  ::=<nested-name> 	  ::=<local-name>       If IGNORE_LOCAL_SCOPE is nonzero, this production of<name> is    called from<local-name>, which mangles the enclosing scope    elsewhere and then uses this function to mangle just the part    underneath the function scope.  So don't use the<local-name>    production, to avoid an infinite recursion.  */
+comment|/*<name> ::=<unscoped-name> 	  ::=<unscoped-template-name><template-args> 	  ::=<nested-name> 	  ::=<local-name>     If IGNORE_LOCAL_SCOPE is nonzero, this production of<name> is    called from<local-name>, which mangles the enclosing scope    elsewhere and then uses this function to mangle just the part    underneath the function scope.  So don't use the<local-name>    production, to avoid an infinite recursion.  */
 end_comment
 
 begin_function
@@ -2819,7 +3012,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Handle local names, unless we asked not to (that is, invoked          under<local-name>, to handle only the part of the name under          the local scope).  */
+comment|/* Handle local names, unless we asked not to (that is, invoked 	 under<local-name>, to handle only the part of the name under 	 the local scope).  */
 if|if
 condition|(
 operator|!
@@ -2911,7 +3104,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*<unscoped-name> ::=<unqualified-name>                    ::= St<unqualified-name>   # ::std::  */
+comment|/*<unscoped-name> ::=<unqualified-name> 		   ::= St<unqualified-name>   # ::std::  */
 end_comment
 
 begin_function
@@ -2959,10 +3152,11 @@ name|decl
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If not, it should be either in the global namespace, or directly      in a local function scope.  */
-elseif|else
-if|if
-condition|(
+else|else
+block|{
+comment|/* If not, it should be either in the global namespace, or directly 	 in a local function scope.  */
+name|gcc_assert
+argument_list|(
 name|context
 operator|==
 name|global_namespace
@@ -2977,21 +3171,19 @@ name|context
 argument_list|)
 operator|==
 name|FUNCTION_DECL
-condition|)
+argument_list|)
+expr_stmt|;
 name|write_unqualified_name
 argument_list|(
 name|decl
 argument_list|)
 expr_stmt|;
-else|else
-name|abort
-argument_list|()
-expr_stmt|;
+block|}
 block|}
 end_function
 
 begin_comment
-comment|/*<unscoped-template-name> ::=<unscoped-name>                             ::=<substitution>  */
+comment|/*<unscoped-template-name> ::=<unscoped-name> 			    ::=<substitution>  */
 end_comment
 
 begin_function
@@ -3033,7 +3225,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Write the nested name, including CV-qualifiers, of DECL.<nested-name> ::= N [<CV-qualifiers>]<prefix><unqualified-name> E                    ::= N [<CV-qualifiers>]<template-prefix><template-args> E<CV-qualifiers> ::= [r] [V] [K]  */
+comment|/* Write the nested name, including CV-qualifiers, of DECL.<nested-name> ::= N [<CV-qualifiers>]<prefix><unqualified-name> E 		 ::= N [<CV-qualifiers>]<template-prefix><template-args> E<CV-qualifiers> ::= [r] [V] [K]  */
 end_comment
 
 begin_function
@@ -3155,7 +3347,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*<prefix> ::=<prefix><unqualified-name>             ::=<template-param>             ::=<template-prefix><template-args> 	    ::= # empty 	    ::=<substitution>  */
+comment|/*<prefix> ::=<prefix><unqualified-name> 	    ::=<template-param> 	    ::=<template-prefix><template-args> 	    ::= # empty 	    ::=<substitution>  */
 end_comment
 
 begin_function
@@ -3350,7 +3542,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*<template-prefix> ::=<prefix><template component>                      ::=<template-param>                      ::=<substitution>  */
+comment|/*<template-prefix> ::=<prefix><template component> 		     ::=<template-param> 		     ::=<substitution>  */
 end_comment
 
 begin_function
@@ -3435,14 +3627,16 @@ argument_list|(
 name|template_info
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
+else|else
+block|{
+name|gcc_assert
+argument_list|(
 name|CLASSTYPE_TEMPLATE_ID_P
 argument_list|(
 name|type
 argument_list|)
-condition|)
+argument_list|)
+expr_stmt|;
 name|template
 operator|=
 name|TYPE_TI_TEMPLATE
@@ -3450,11 +3644,7 @@ argument_list|(
 name|type
 argument_list|)
 expr_stmt|;
-else|else
-comment|/* Oops, not a template.  */
-name|abort
-argument_list|()
-expr_stmt|;
+block|}
 comment|/* For a member template, though, the template name for the      innermost name must have all the outer template levels      instantiated.  For instance, consider         template<typename T> struct Outer { 	 template<typename U> struct Inner {};        };       The template name for `Inner' in `Outer<int>::Inner<float>' is      `Outer<int>::Inner<U>'.  In g++, we don't instantiate the template      levels separately, so there's no TEMPLATE_DECL available for this      (there's only `Outer<T>::Inner<U>').       In order to get the substitutions right, we create a special      TREE_LIST to represent the substitution candidate for a nested      template.  The TREE_PURPOSE is the template's context, fully      instantiated, and the TREE_VALUE is the TEMPLATE_DECL for the inner      template.       So, for the example above, `Outer<int>::Inner' is represented as a      substitution candidate by a TREE_LIST whose purpose is `Outer<int>'      and whose value is `Outer<T>::Inner<U>'.  */
 if|if
 condition|(
@@ -3557,7 +3747,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* We don't need to handle thunks, vtables, or VTTs here.  Those are    mangled through special entry points.<unqualified-name>  ::=<operator-name> 			::=<special-name>   			::=<source-name>  */
+comment|/* We don't need to handle thunks, vtables, or VTTs here.  Those are    mangled through special entry points.<unqualified-name>  ::=<operator-name> 			::=<special-name> 			::=<source-name>  */
 end_comment
 
 begin_function
@@ -3659,12 +3849,20 @@ condition|)
 block|{
 name|tree
 name|fn_type
-init|=
+decl_stmt|;
+name|save_partially_mangled_name
+argument_list|()
+expr_stmt|;
+name|fn_type
+operator|=
 name|get_mostly_instantiated_function_type
 argument_list|(
 name|decl
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+name|restore_partially_mangled_name
+argument_list|()
+expr_stmt|;
 name|type
 operator|=
 name|TREE_TYPE
@@ -4154,17 +4352,19 @@ argument_list|)
 expr_stmt|;
 name|base
 operator|=
-name|build_int_2
+name|build_int_cstu
 argument_list|(
-name|chunk
+name|type
 argument_list|,
-literal|0
+name|chunk
 argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|build_int_2
+name|build_int_cst_wide
 argument_list|(
+name|type
+argument_list|,
 name|TREE_INT_CST_LOW
 argument_list|(
 name|cst
@@ -4175,18 +4375,6 @@ argument_list|(
 name|cst
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|TREE_TYPE
-argument_list|(
-name|n
-argument_list|)
-operator|=
-name|TREE_TYPE
-argument_list|(
-name|base
-argument_list|)
-operator|=
-name|type
 expr_stmt|;
 if|if
 condition|(
@@ -4202,16 +4390,13 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|fold
-argument_list|(
-name|build1
+name|fold_build1
 argument_list|(
 name|NEGATE_EXPR
 argument_list|,
 name|type
 argument_list|,
 name|n
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4220,9 +4405,7 @@ block|{
 name|tree
 name|d
 init|=
-name|fold
-argument_list|(
-name|build
+name|fold_build2
 argument_list|(
 name|FLOOR_DIV_EXPR
 argument_list|,
@@ -4232,14 +4415,11 @@ name|n
 argument_list|,
 name|base
 argument_list|)
-argument_list|)
 decl_stmt|;
 name|tree
 name|tmp
 init|=
-name|fold
-argument_list|(
-name|build
+name|fold_build2
 argument_list|(
 name|MULT_EXPR
 argument_list|,
@@ -4248,7 +4428,6 @@ argument_list|,
 name|d
 argument_list|,
 name|base
-argument_list|)
 argument_list|)
 decl_stmt|;
 name|unsigned
@@ -4263,9 +4442,7 @@ argument_list|)
 expr_stmt|;
 name|tmp
 operator|=
-name|fold
-argument_list|(
-name|build
+name|fold_build2
 argument_list|(
 name|MINUS_EXPR
 argument_list|,
@@ -4274,7 +4451,6 @@ argument_list|,
 name|n
 argument_list|,
 name|tmp
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|c
@@ -4364,7 +4540,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Write out a floating-point literal.            "Floating-point literals are encoded using the bit pattern of the     target processor's internal representation of that number, as a     fixed-length lowercase hexadecimal string, high-order bytes first     (even if the target processor would store low-order bytes first).     The "n" prefix is not used for floating-point literals; the sign     bit is encoded with the rest of the number.      Here are some examples, assuming the IEEE standard representation     for floating point numbers.  (Spaces are for readability, not     part of the encoding.)          1.0f                    Lf 3f80 0000 E        -1.0f                    Lf bf80 0000 E         1.17549435e-38f         Lf 0080 0000 E         1.40129846e-45f         Lf 0000 0001 E         0.0f                    Lf 0000 0000 E"     Caller is responsible for the Lx and the E.  */
+comment|/* Write out a floating-point literal.      "Floating-point literals are encoded using the bit pattern of the     target processor's internal representation of that number, as a     fixed-length lowercase hexadecimal string, high-order bytes first     (even if the target processor would store low-order bytes first).     The "n" prefix is not used for floating-point literals; the sign     bit is encoded with the rest of the number.      Here are some examples, assuming the IEEE standard representation     for floating point numbers.  (Spaces are for readability, not     part of the encoding.)  	1.0f			Lf 3f80 0000 E        -1.0f			Lf bf80 0000 E 	1.17549435e-38f		Lf 0080 0000 E 	1.40129846e-45f		Lf 0000 0001 E 	0.0f			Lf 0000 0000 E"     Caller is responsible for the Lx and the E.  */
 end_comment
 
 begin_function
@@ -4443,7 +4619,7 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* The value in target_real is in the target word order,          so we must write it out backward if that happens to be 	 little-endian.  write_number cannot be used, it will 	 produce uppercase.  */
+comment|/* The value in target_real is in the target word order, 	 so we must write it out backward if that happens to be 	 little-endian.  write_number cannot be used, it will 	 produce uppercase.  */
 if|if
 condition|(
 name|FLOAT_WORDS_BIG_ENDIAN
@@ -4601,7 +4777,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle constructor productions of non-terminal<special-name>.    CTOR is a constructor FUNCTION_DECL.<special-name> ::= C1   # complete object constructor                     ::= C2   # base object constructor                     ::= C3   # complete object allocating constructor     Currently, allocating constructors are never used.      We also need to provide mangled names for the maybe-in-charge    constructor, so we treat it here too.  mangle_decl_string will    append *INTERNAL* to that, to make sure we never emit it.  */
+comment|/* Handle constructor productions of non-terminal<special-name>.    CTOR is a constructor FUNCTION_DECL.<special-name> ::= C1   # complete object constructor 		    ::= C2   # base object constructor 		    ::= C3   # complete object allocating constructor     Currently, allocating constructors are never used.     We also need to provide mangled names for the maybe-in-charge    constructor, so we treat it here too.  mangle_decl_string will    append *INTERNAL* to that, to make sure we never emit it.  */
 end_comment
 
 begin_function
@@ -4616,25 +4792,6 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|DECL_COMPLETE_CONSTRUCTOR_P
-argument_list|(
-name|ctor
-argument_list|)
-comment|/* Even though we don't ever emit a definition of the 	 old-style destructor, we still have to consider entities 	 (like static variables) nested inside it.  */
-operator|||
-name|DECL_MAYBE_IN_CHARGE_CONSTRUCTOR_P
-argument_list|(
-name|ctor
-argument_list|)
-condition|)
-name|write_string
-argument_list|(
-literal|"C1"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|DECL_BASE_CONSTRUCTOR_P
 argument_list|(
 name|ctor
@@ -4646,14 +4803,32 @@ literal|"C2"
 argument_list|)
 expr_stmt|;
 else|else
-name|abort
-argument_list|()
+block|{
+name|gcc_assert
+argument_list|(
+name|DECL_COMPLETE_CONSTRUCTOR_P
+argument_list|(
+name|ctor
+argument_list|)
+comment|/* Even though we don't ever emit a definition of 		     the old-style destructor, we still have to 		     consider entities (like static variables) nested 		     inside it.  */
+operator|||
+name|DECL_MAYBE_IN_CHARGE_CONSTRUCTOR_P
+argument_list|(
+name|ctor
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|write_string
+argument_list|(
+literal|"C1"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
 begin_comment
-comment|/* Handle destructor productions of non-terminal<special-name>.    DTOR is a destructor FUNCTION_DECL.<special-name> ::= D0 # deleting (in-charge) destructor                     ::= D1 # complete object (in-charge) destructor                     ::= D2 # base object (not-in-charge) destructor     We also need to provide mangled names for the maybe-incharge    destructor, so we treat it here too.  mangle_decl_string will    append *INTERNAL* to that, to make sure we never emit it.  */
+comment|/* Handle destructor productions of non-terminal<special-name>.    DTOR is a destructor FUNCTION_DECL.<special-name> ::= D0 # deleting (in-charge) destructor 		    ::= D1 # complete object (in-charge) destructor 		    ::= D2 # base object (not-in-charge) destructor     We also need to provide mangled names for the maybe-incharge    destructor, so we treat it here too.  mangle_decl_string will    append *INTERNAL* to that, to make sure we never emit it.  */
 end_comment
 
 begin_function
@@ -4681,25 +4856,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|DECL_COMPLETE_DESTRUCTOR_P
-argument_list|(
-name|dtor
-argument_list|)
-comment|/* Even though we don't ever emit a definition of the 	      old-style destructor, we still have to consider entities 	      (like static variables) nested inside it.  */
-operator|||
-name|DECL_MAYBE_IN_CHARGE_DESTRUCTOR_P
-argument_list|(
-name|dtor
-argument_list|)
-condition|)
-name|write_string
-argument_list|(
-literal|"D1"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|DECL_BASE_DESTRUCTOR_P
 argument_list|(
 name|dtor
@@ -4711,9 +4867,27 @@ literal|"D2"
 argument_list|)
 expr_stmt|;
 else|else
-name|abort
-argument_list|()
+block|{
+name|gcc_assert
+argument_list|(
+name|DECL_COMPLETE_DESTRUCTOR_P
+argument_list|(
+name|dtor
+argument_list|)
+comment|/* Even though we don't ever emit a definition of 		     the old-style destructor, we still have to 		     consider entities (like static variables) nested 		     inside it.  */
+operator|||
+name|DECL_MAYBE_IN_CHARGE_DESTRUCTOR_P
+argument_list|(
+name|dtor
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|write_string
+argument_list|(
+literal|"D1"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4730,10 +4904,6 @@ name|tree
 name|entity
 parameter_list|)
 block|{
-name|tree
-modifier|*
-name|type
-decl_stmt|;
 comment|/* Assume this is the only local entity with this name.  */
 name|int
 name|discriminator
@@ -4770,6 +4940,9 @@ operator|==
 name|TYPE_DECL
 condition|)
 block|{
+name|int
+name|ix
+decl_stmt|;
 comment|/* Scan the list of local classes.  */
 name|entity
 operator|=
@@ -4780,29 +4953,38 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|type
+name|ix
 operator|=
-operator|&
-name|VARRAY_TREE
+literal|0
+init|;
+condition|;
+name|ix
+operator|++
+control|)
+block|{
+name|tree
+name|type
+init|=
+name|VEC_index
 argument_list|(
+name|tree
+argument_list|,
 name|local_classes
 argument_list|,
-literal|0
+name|ix
 argument_list|)
-init|;
-operator|*
+decl_stmt|;
+if|if
+condition|(
 name|type
-operator|!=
+operator|==
 name|entity
-condition|;
-operator|++
-name|type
-control|)
+condition|)
+break|break;
 if|if
 condition|(
 name|TYPE_IDENTIFIER
 argument_list|(
-operator|*
 name|type
 argument_list|)
 operator|==
@@ -4813,7 +4995,6 @@ argument_list|)
 operator|&&
 name|TYPE_CONTEXT
 argument_list|(
-operator|*
 name|type
 argument_list|)
 operator|==
@@ -4825,6 +5006,7 @@ condition|)
 operator|++
 name|discriminator
 expr_stmt|;
+block|}
 block|}
 return|return
 name|discriminator
@@ -4858,7 +5040,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*<discriminator> := _<number>        The discriminator is used only for the second and later occurrences    of the same name within a single function. In this case<number> is    n - 2, if this is the nth occurrence, in lexical order.  */
+comment|/*<discriminator> := _<number>     The discriminator is used only for the second and later occurrences    of the same name within a single function. In this case<number> is    n - 2, if this is the nth occurrence, in lexical order.  */
 end_comment
 
 begin_function
@@ -4896,7 +5078,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Mangle the name of a function-scope entity.  FUNCTION is the    FUNCTION_DECL for the enclosing function.  ENTITY is the decl for    the entity itself.  LOCAL_ENTITY is the entity that's directly    scoped in FUNCTION_DECL, either ENTITY itself or an enclosing scope    of ENTITY.<local-name> := Z<function encoding> E<entity name> [<discriminator>]                   := Z<function encoding> E s [<discriminator>]  */
+comment|/* Mangle the name of a function-scope entity.  FUNCTION is the    FUNCTION_DECL for the enclosing function.  ENTITY is the decl for    the entity itself.  LOCAL_ENTITY is the entity that's directly    scoped in FUNCTION_DECL, either ENTITY itself or an enclosing scope    of ENTITY.<local-name> := Z<function encoding> E<entity name> [<discriminator>] 		  := Z<function encoding> E s [<discriminator>]  */
 end_comment
 
 begin_function
@@ -4989,7 +5171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Non-terminals<type> and<CV-qualifier>.<type> ::=<builtin-type>             ::=<function-type>             ::=<class-enum-type>             ::=<array-type>             ::=<pointer-to-member-type>             ::=<template-param>             ::=<substitution>             ::=<CV-qualifier>             ::= P<type>    # pointer-to             ::= R<type>    # reference-to             ::= C<type>    # complex pair (C 2000)             ::= G<type>    # imaginary (C 2000)     [not supported]             ::= U<source-name><type>   # vendor extended type qualifier      TYPE is a type node.  */
+comment|/* Non-terminals<type> and<CV-qualifier>.<type> ::=<builtin-type> 	    ::=<function-type> 	    ::=<class-enum-type> 	    ::=<array-type> 	    ::=<pointer-to-member-type> 	    ::=<template-param> 	    ::=<substitution> 	    ::=<CV-qualifier> 	    ::= P<type>    # pointer-to 	    ::= R<type>    # reference-to 	    ::= C<type>    # complex pair (C 2000) 	    ::= G<type>    # imaginary (C 2000)     [not supported] 	    ::= U<source-name><type>   # vendor extended type qualifier     TYPE is a type node.  */
 end_comment
 
 begin_function
@@ -5314,7 +5496,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}
@@ -5352,7 +5534,7 @@ name|num_qualifiers
 init|=
 literal|0
 decl_stmt|;
-comment|/* The order is specified by:         "In cases where multiple order-insensitive qualifiers are        present, they should be ordered 'K' (closest to the base type),        'V', 'r', and 'U' (farthest from the base type) ..."         Note that we do not use cp_type_quals below; given "const      int[3]", the "const" is emitted with the "int", not with the      array.  */
+comment|/* The order is specified by:         "In cases where multiple order-insensitive qualifiers are        present, they should be ordered 'K' (closest to the base type),        'V', 'r', and 'U' (farthest from the base type) ..."       Note that we do not use cp_type_quals below; given "const      int[3]", the "const" is emitted with the "int", not with the      array.  */
 if|if
 condition|(
 name|TYPE_QUALS
@@ -5417,7 +5599,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Non-terminal<builtin-type>.<builtin-type> ::= v   # void                      ::= b   # bool                     ::= w   # wchar_t                     ::= c   # char                     ::= a   # signed char                     ::= h   # unsigned char                     ::= s   # short                     ::= t   # unsigned short                     ::= i   # int                     ::= j   # unsigned int                     ::= l   # long                     ::= m   # unsigned long                     ::= x   # long long, __int64                     ::= y   # unsigned long long, __int64                       ::= n   # __int128                     ::= o   # unsigned __int128                     ::= f   # float                     ::= d   # double                     ::= e   # long double, __float80                      ::= g   # __float128          [not supported]                     ::= u<source-name>  # vendor extended type */
+comment|/* Non-terminal<builtin-type>.<builtin-type> ::= v   # void 		    ::= b   # bool 		    ::= w   # wchar_t 		    ::= c   # char 		    ::= a   # signed char 		    ::= h   # unsigned char 		    ::= s   # short 		    ::= t   # unsigned short 		    ::= i   # int 		    ::= j   # unsigned int 		    ::= l   # long 		    ::= m   # unsigned long 		    ::= x   # long long, __int64 		    ::= y   # unsigned long long, __int64 		    ::= n   # __int128 		    ::= o   # unsigned __int128 		    ::= f   # float 		    ::= d   # double 		    ::= e   # long double, __float80 		    ::= g   # __float128          [not supported] 		    ::= u<source-name>  # vendor extended type */
 end_comment
 
 begin_function
@@ -5557,7 +5739,7 @@ argument_list|(
 name|type
 argument_list|)
 argument_list|,
-name|TREE_UNSIGNED
+name|TYPE_UNSIGNED
 argument_list|(
 name|type
 argument_list|)
@@ -5566,10 +5748,18 @@ decl_stmt|;
 if|if
 condition|(
 name|type
-operator|==
+operator|!=
 name|t
 condition|)
 block|{
+name|type
+operator|=
+name|t
+expr_stmt|;
+goto|goto
+name|iagain
+goto|;
+block|}
 if|if
 condition|(
 name|TYPE_PRECISION
@@ -5581,7 +5771,7 @@ literal|128
 condition|)
 name|write_char
 argument_list|(
-name|TREE_UNSIGNED
+name|TYPE_UNSIGNED
 argument_list|(
 name|type
 argument_list|)
@@ -5592,20 +5782,75 @@ literal|'n'
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* Couldn't find this type.  */
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-else|else
 block|{
-name|type
+comment|/* Allow for cases where TYPE is not one of the shared 		     integer type nodes and write a "vendor extended builtin 		     type" with a name the form intN or uintN, respectively. 		     Situations like this can happen if you have an 		     __attribute__((__mode__(__SI__))) type and use exotic 		     switches like '-mint8' on AVR.  Of course, this is 		     undefined by the C++ ABI (and '-mint8' is not even 		     Standard C conforming), but when using such special 		     options you're pretty much in nowhere land anyway.  */
+specifier|const
+name|char
+modifier|*
+name|prefix
+decl_stmt|;
+name|char
+name|prec
+index|[
+literal|11
+index|]
+decl_stmt|;
+comment|/* up to ten digits for an unsigned */
+name|prefix
 operator|=
-name|t
+name|TYPE_UNSIGNED
+argument_list|(
+name|type
+argument_list|)
+condition|?
+literal|"uint"
+else|:
+literal|"int"
 expr_stmt|;
-goto|goto
-name|iagain
-goto|;
+name|sprintf
+argument_list|(
+name|prec
+argument_list|,
+literal|"%u"
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|TYPE_PRECISION
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|write_char
+argument_list|(
+literal|'u'
+argument_list|)
+expr_stmt|;
+comment|/* "vendor extended builtin type" */
+name|write_unsigned_number
+argument_list|(
+name|strlen
+argument_list|(
+name|prefix
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|prec
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|write_string
+argument_list|(
+name|prefix
+argument_list|)
+expr_stmt|;
+name|write_string
+argument_list|(
+name|prec
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -5657,12 +5902,12 @@ literal|'e'
 argument_list|)
 expr_stmt|;
 else|else
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 break|break;
 default|default:
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}
@@ -5727,7 +5972,7 @@ argument_list|(
 literal|'F'
 argument_list|)
 expr_stmt|;
-comment|/* We don't track whether or not a type is `extern "C"'.  Note that      you can have an `extern "C"' function that does not have      `extern "C"' type, and vice versa:         extern "C" typedef void function_t();        function_t f; // f has C++ linkage, but its type is                      // `extern "C"'         typedef void function_t();        extern "C" function_t f; // Vice versa.       See [dcl.link].  */
+comment|/* We don't track whether or not a type is `extern "C"'.  Note that      you can have an `extern "C"' function that does not have      `extern "C"' type, and vice versa:         extern "C" typedef void function_t();        function_t f; // f has C++ linkage, but its type is 		     // `extern "C"'         typedef void function_t();        extern "C" function_t f; // Vice versa.       See [dcl.link].  */
 name|write_bare_function_type
 argument_list|(
 name|type
@@ -5748,7 +5993,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Non-terminal<bare-function-type>.  TYPE is a FUNCTION_TYPE or    METHOD_TYPE.  If INCLUDE_RETURN_TYPE is nonzero, the return value    is mangled before the parameter types.  If non-NULL, DECL is    FUNCTION_DECL for the function whose type is being emitted.<bare-function-type> ::=</signature/ type>+  */
+comment|/* Non-terminal<bare-function-type>.  TYPE is a FUNCTION_TYPE or    METHOD_TYPE.  If INCLUDE_RETURN_TYPE is nonzero, the return value    is mangled before the parameter types.  If non-NULL, DECL is    FUNCTION_DECL for the function whose type is being emitted.     If DECL is a member of a Java type, then a literal 'J'    is output and the return type is mangled as if INCLUDE_RETURN_TYPE    were nonzero.<bare-function-type> ::= [J]</signature/ type>+  */
 end_comment
 
 begin_function
@@ -5769,6 +6014,9 @@ name|tree
 name|decl
 parameter_list|)
 block|{
+name|int
+name|java_method_p
+decl_stmt|;
 name|MANGLE_TRACE_TREE
 argument_list|(
 literal|"bare-function-type"
@@ -5776,10 +6024,68 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+comment|/* Detect Java methods and emit special encoding.  */
+if|if
+condition|(
+name|decl
+operator|!=
+name|NULL
+operator|&&
+name|DECL_FUNCTION_MEMBER_P
+argument_list|(
+name|decl
+argument_list|)
+operator|&&
+name|TYPE_FOR_JAVA
+argument_list|(
+name|DECL_CONTEXT
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+operator|&&
+operator|!
+name|DECL_CONSTRUCTOR_P
+argument_list|(
+name|decl
+argument_list|)
+operator|&&
+operator|!
+name|DECL_DESTRUCTOR_P
+argument_list|(
+name|decl
+argument_list|)
+operator|&&
+operator|!
+name|DECL_CONV_FN_P
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+block|{
+name|java_method_p
+operator|=
+literal|1
+expr_stmt|;
+name|write_char
+argument_list|(
+literal|'J'
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|java_method_p
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* Mangle the return type, if requested.  */
 if|if
 condition|(
 name|include_return_type_p
+operator|||
+name|java_method_p
 condition|)
 name|write_type
 argument_list|(
@@ -5852,7 +6158,7 @@ name|varargs_p
 init|=
 literal|1
 decl_stmt|;
-comment|/* If this is a member function, skip the first arg, which is the      this pointer.          "Member functions do not encode the type of their implicit this        parameter."           Similarly, there's no need to mangle artificial parameters, like      the VTT parameters for constructors and destructors.  */
+comment|/* If this is a member function, skip the first arg, which is the      this pointer.        "Member functions do not encode the type of their implicit this        parameter."       Similarly, there's no need to mangle artificial parameters, like      the VTT parameters for constructors and destructors.  */
 if|if
 condition|(
 name|method_p
@@ -5951,7 +6257,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* A void type better be the last one.  */
-name|my_friendly_assert
+name|gcc_assert
 argument_list|(
 name|TREE_CHAIN
 argument_list|(
@@ -5959,8 +6265,6 @@ name|parm_types
 argument_list|)
 operator|==
 name|NULL
-argument_list|,
-literal|20000523
 argument_list|)
 expr_stmt|;
 block|}
@@ -6048,13 +6352,11 @@ argument_list|(
 literal|'I'
 argument_list|)
 expr_stmt|;
-name|my_friendly_assert
+name|gcc_assert
 argument_list|(
 name|length
 operator|>
 literal|0
-argument_list|,
-literal|20000422
 argument_list|)
 expr_stmt|;
 if|if
@@ -6124,7 +6426,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*<expression> ::=<unary operator-name><expression> 		::=<binary operator-name><expression><expression> 		::=<expr-primary><expr-primary> ::=<template-param> 		  ::= L<type><value number> E  # literal 		  ::= L<mangled-name> E         # external name                     ::= sr<type><unqualified-name>                   ::= sr<type><unqualified-name><template-args> */
+comment|/*<expression> ::=<unary operator-name><expression> 		::=<binary operator-name><expression><expression> 		::=<expr-primary><expr-primary> ::=<template-param> 		  ::= L<type><value number> E		# literal 		  ::= L<mangled-name> E		# external name 		  ::= sr<type><unqualified-name> 		  ::= sr<type><unqualified-name><template-args> */
 end_comment
 
 begin_function
@@ -6147,44 +6449,6 @@ argument_list|(
 name|expr
 argument_list|)
 expr_stmt|;
-comment|/* Handle pointers-to-members by making them look like expression      nodes.  */
-if|if
-condition|(
-name|code
-operator|==
-name|PTRMEM_CST
-condition|)
-block|{
-name|expr
-operator|=
-name|build_nt
-argument_list|(
-name|ADDR_EXPR
-argument_list|,
-name|build_nt
-argument_list|(
-name|SCOPE_REF
-argument_list|,
-name|PTRMEM_CST_CLASS
-argument_list|(
-name|expr
-argument_list|)
-argument_list|,
-name|PTRMEM_CST_MEMBER
-argument_list|(
-name|expr
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|code
-operator|=
-name|TREE_CODE
-argument_list|(
-name|expr
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Skip NOP_EXPRs.  They can occur when (say) a pointer argument      is converted (via qualification conversions) to another      type.  */
 while|while
 condition|(
@@ -6210,6 +6474,70 @@ argument_list|(
 name|expr
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|code
+operator|=
+name|TREE_CODE
+argument_list|(
+name|expr
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|code
+operator|==
+name|BASELINK
+condition|)
+block|{
+name|expr
+operator|=
+name|BASELINK_FUNCTIONS
+argument_list|(
+name|expr
+argument_list|)
+expr_stmt|;
+name|code
+operator|=
+name|TREE_CODE
+argument_list|(
+name|expr
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Handle pointers-to-members by making them look like expression      nodes.  */
+if|if
+condition|(
+name|code
+operator|==
+name|PTRMEM_CST
+condition|)
+block|{
+name|expr
+operator|=
+name|build_nt
+argument_list|(
+name|ADDR_EXPR
+argument_list|,
+name|build_qualified_name
+argument_list|(
+comment|/*type=*/
+name|NULL_TREE
+argument_list|,
+name|PTRMEM_CST_CLASS
+argument_list|(
+name|expr
+argument_list|)
+argument_list|,
+name|PTRMEM_CST_MEMBER
+argument_list|(
+name|expr
+argument_list|)
+argument_list|,
+comment|/*template_p=*/
+name|false
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|code
@@ -6253,7 +6581,7 @@ argument_list|(
 name|code
 argument_list|)
 operator|==
-literal|'c'
+name|tcc_constant
 operator|||
 operator|(
 name|abi_version_at_least
@@ -6698,6 +7026,24 @@ name|expr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* There is no way to mangle a zero-operand cast like 	     "T()".  */
+if|if
+condition|(
+operator|!
+name|TREE_OPERAND
+argument_list|(
+name|expr
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|sorry
+argument_list|(
+literal|"zero-operand casts cannot be mangled due to a defect "
+literal|"in the C++ ABI"
+argument_list|)
+expr_stmt|;
+else|else
 name|write_expression
 argument_list|(
 name|TREE_VALUE
@@ -6816,7 +7162,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* FIXME: What about operators?  */
-name|my_friendly_assert
+name|gcc_assert
 argument_list|(
 name|TREE_CODE
 argument_list|(
@@ -6824,8 +7170,6 @@ name|name
 argument_list|)
 operator|==
 name|IDENTIFIER_NODE
-argument_list|,
-literal|20030707
 argument_list|)
 expr_stmt|;
 name|write_source_name
@@ -6898,7 +7242,7 @@ argument_list|,
 name|i
 argument_list|)
 decl_stmt|;
-comment|/* As a GNU expression, the middle operand of a 		 conditional may be omitted.  Since expression 		 manglings are supposed to represent the input token 		 stream, there's no good way to mangle such an 		 expression without extending the C++ ABI.  */
+comment|/* As a GNU extension, the middle operand of a 		 conditional may be omitted.  Since expression 		 manglings are supposed to represent the input token 		 stream, there's no good way to mangle such an 		 expression without extending the C++ ABI.  */
 if|if
 condition|(
 name|code
@@ -6915,7 +7259,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"omitted middle operand to `?:' operand "
+literal|"omitted middle operand to %<?:%> operand "
 literal|"cannot be mangled"
 argument_list|)
 expr_stmt|;
@@ -6933,7 +7277,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Literal subcase of non-terminal<template-arg>.         "Literal arguments, e.g. "A<42L>", are encoded with their type      and value. Negative integer values are preceded with "n"; for      example, "A<-42L>" becomes "1AILln42EE". The bool value false is      encoded as 0, true as 1."  */
+comment|/* Literal subcase of non-terminal<template-arg>.       "Literal arguments, e.g. "A<42L>", are encoded with their type      and value. Negative integer values are preceded with "n"; for      example, "A<-42L>" becomes "1AILln42EE". The bool value false is      encoded as 0, true as 1."  */
 end_comment
 
 begin_function
@@ -6946,14 +7290,6 @@ name|tree
 name|value
 parameter_list|)
 block|{
-name|tree
-name|type
-init|=
-name|TREE_TYPE
-argument_list|(
-name|value
-argument_list|)
-decl_stmt|;
 name|write_char
 argument_list|(
 literal|'L'
@@ -6961,18 +7297,23 @@ argument_list|)
 expr_stmt|;
 name|write_type
 argument_list|(
-name|type
+name|TREE_TYPE
+argument_list|(
+name|value
+argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|TREE_CODE
 argument_list|(
 name|value
 argument_list|)
-operator|==
-name|CONST_DECL
 condition|)
+block|{
+case|case
+name|CONST_DECL
+case|:
 name|write_integer_cst
 argument_list|(
 name|DECL_INITIAL
@@ -6981,83 +7322,54 @@ name|value
 argument_list|)
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|TREE_CODE
+break|break;
+case|case
+name|INTEGER_CST
+case|:
+name|gcc_assert
+argument_list|(
+operator|!
+name|same_type_p
+argument_list|(
+name|TREE_TYPE
 argument_list|(
 name|value
 argument_list|)
-operator|==
-name|INTEGER_CST
-condition|)
-block|{
-if|if
-condition|(
-name|same_type_p
-argument_list|(
-name|type
 argument_list|,
 name|boolean_type_node
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+operator|||
 name|integer_zerop
 argument_list|(
 name|value
 argument_list|)
-condition|)
-name|write_unsigned_number
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
+operator|||
 name|integer_onep
 argument_list|(
 name|value
 argument_list|)
-condition|)
-name|write_unsigned_number
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
-else|else
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-else|else
 name|write_integer_cst
 argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|value
-argument_list|)
-operator|==
+break|break;
+case|case
 name|REAL_CST
-condition|)
+case|:
 name|write_real_cst
 argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
-else|else
-name|abort
+break|break;
+default|default:
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
+block|}
 name|write_char
 argument_list|(
 literal|'E'
@@ -7067,7 +7379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Non-terminal<tempalate-arg>.<template-arg> ::=<type>                        # type                     ::= L<type></value/ number> E   # literal                     ::= LZ<name> E                   # external name                     ::= X<expression> E              # expression  */
+comment|/* Non-terminal<template-arg>.<template-arg> ::=<type>				# type 		    ::= L<type></value/ number> E	# literal 		    ::= LZ<name> E			# external name 		    ::= X<expression> E		# expression  */
 end_comment
 
 begin_function
@@ -7095,7 +7407,7 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* A template template parameter's argument list contains TREE_LIST      nodes of which the value field is the the actual argument.  */
+comment|/* A template template parameter's argument list contains TREE_LIST      nodes of which the value field is the actual argument.  */
 if|if
 condition|(
 name|code
@@ -7156,7 +7468,7 @@ name|REFERENCE_TYPE
 condition|)
 block|{
 comment|/* Template parameters can be of reference type. To maintain 	 internal consistency, such arguments use a conversion from 	 address of object to reference type.  */
-name|my_friendly_assert
+name|gcc_assert
 argument_list|(
 name|TREE_CODE
 argument_list|(
@@ -7169,8 +7481,6 @@ argument_list|)
 argument_list|)
 operator|==
 name|ADDR_EXPR
-argument_list|,
-literal|20031215
 argument_list|)
 expr_stmt|;
 if|if
@@ -7236,7 +7546,7 @@ argument_list|(
 name|code
 argument_list|)
 operator|==
-literal|'c'
+name|tcc_constant
 operator|&&
 name|code
 operator|!=
@@ -7268,12 +7578,18 @@ name|node
 argument_list|)
 condition|)
 block|{
-comment|/* G++ 3.2 incorrectly mangled non-type template arguments of 	 enumeration type using their names.  */
+comment|/* Until ABI version 2, non-type template arguments of 	 enumeration type were mangled using their names.  */
 if|if
 condition|(
 name|code
 operator|==
 name|CONST_DECL
+operator|&&
+operator|!
+name|abi_version_at_least
+argument_list|(
+literal|2
+argument_list|)
 condition|)
 name|G
 operator|.
@@ -7286,9 +7602,32 @@ argument_list|(
 literal|'L'
 argument_list|)
 expr_stmt|;
+comment|/* Until ABI version 3, the underscore before the mangled name 	 was incorrectly omitted.  */
+if|if
+condition|(
+operator|!
+name|abi_version_at_least
+argument_list|(
+literal|3
+argument_list|)
+condition|)
+block|{
+name|G
+operator|.
+name|need_abi_warning
+operator|=
+literal|1
+expr_stmt|;
 name|write_char
 argument_list|(
 literal|'Z'
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|write_string
+argument_list|(
+literal|"_Z"
 argument_list|)
 expr_stmt|;
 name|write_encoding
@@ -7370,7 +7709,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Non-terminal<array-type>.  TYPE is an ARRAY_TYPE.<array-type> ::= A [</dimension/ number>] _</element/ type>                     ::= A<expression> _</element/ type>       "Array types encode the dimension (number of elements) and the      element type. For variable length arrays, the dimension (but not      the '_' separator) is omitted."  */
+comment|/* Non-terminal<array-type>.  TYPE is an ARRAY_TYPE.<array-type> ::= A [</dimension/ number>] _</element/ type> 		  ::= A<expression> _</element/ type>       "Array types encode the dimension (number of elements) and the      element type. For variable length arrays, the dimension (but not      the '_' separator) is omitted."  */
 end_comment
 
 begin_function
@@ -7470,7 +7809,7 @@ literal|2
 argument_list|)
 condition|)
 block|{
-comment|/* value_dependent_expression_p presumes nothing is 	         dependent when PROCESSING_TEMPLATE_DECL is zero.  */
+comment|/* value_dependent_expression_p presumes nothing is 		 dependent when PROCESSING_TEMPLATE_DECL is zero.  */
 operator|++
 name|processing_template_decl
 expr_stmt|;
@@ -7646,7 +7985,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}
@@ -7678,7 +8017,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*<template-template-param>                         ::=<template-param>  			::=<substitution>  */
+comment|/*<template-template-param> 			::=<template-param> 			::=<substitution>  */
 end_comment
 
 begin_function
@@ -7745,7 +8084,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Non-terminal<substitution>.<substitution> ::= S<seq-id> _                      ::= S_  */
+comment|/* Non-terminal<substitution>.<substitution> ::= S<seq-id> _ 		     ::= S_  */
 end_comment
 
 begin_function
@@ -7809,6 +8148,10 @@ parameter_list|(
 specifier|const
 name|tree
 name|entity
+parameter_list|,
+specifier|const
+name|bool
+name|ident_p
 parameter_list|)
 block|{
 name|G
@@ -7823,32 +8166,43 @@ name|need_abi_warning
 operator|=
 name|false
 expr_stmt|;
-name|VARRAY_TREE_INIT
-argument_list|(
-name|G
-operator|.
-name|substitutions
-argument_list|,
-literal|1
-argument_list|,
-literal|"mangling substitutions"
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ident_p
+condition|)
+block|{
 name|obstack_free
 argument_list|(
 operator|&
-name|G
-operator|.
 name|name_obstack
 argument_list|,
-name|obstack_base
+name|name_base
+argument_list|)
+expr_stmt|;
+name|mangle_obstack
+operator|=
+operator|&
+name|name_obstack
+expr_stmt|;
+name|name_base
+operator|=
+name|obstack_alloc
 argument_list|(
 operator|&
-name|G
-operator|.
 name|name_obstack
+argument_list|,
+literal|0
 argument_list|)
-argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|mangle_obstack
+operator|=
+operator|&
+name|ident_hash
+operator|->
+name|stack
 expr_stmt|;
 block|}
 end_function
@@ -7882,7 +8236,9 @@ name|need_abi_warning
 condition|)
 name|warning
 argument_list|(
-literal|"the mangled name of `%D' will change in a future "
+name|OPT_Wabi
+argument_list|,
+literal|"the mangled name of %qD will change in a future "
 literal|"version of GCC"
 argument_list|,
 name|G
@@ -7891,11 +8247,16 @@ name|entity
 argument_list|)
 expr_stmt|;
 comment|/* Clear all the substitutions.  */
+name|VEC_truncate
+argument_list|(
+name|tree
+argument_list|,
 name|G
 operator|.
 name|substitutions
-operator|=
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 comment|/* Null-terminate the string.  */
 name|write_char
@@ -7909,12 +8270,9 @@ specifier|const
 name|char
 operator|*
 operator|)
-name|obstack_base
+name|obstack_finish
 argument_list|(
-operator|&
-name|G
-operator|.
-name|name_obstack
+name|mangle_obstack
 argument_list|)
 return|;
 block|}
@@ -7934,10 +8292,24 @@ block|{
 name|gcc_obstack_init
 argument_list|(
 operator|&
-name|G
-operator|.
 name|name_obstack
 argument_list|)
+expr_stmt|;
+name|name_base
+operator|=
+name|obstack_alloc
+argument_list|(
+operator|&
+name|name_obstack
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|G
+operator|.
+name|substitutions
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Cache these identifiers for quick comparison when checking for      standard substitutions.  */
 name|subst_identifiers
@@ -8027,6 +8399,9 @@ decl_stmt|;
 name|start_mangling
 argument_list|(
 name|decl
+argument_list|,
+comment|/*ident_p=*/
+name|true
 argument_list|)
 expr_stmt|;
 if|if
@@ -8082,6 +8457,54 @@ block|}
 end_function
 
 begin_comment
+comment|/* Like get_identifier, except that NAME is assumed to have been    allocated on the obstack used by the identifier hash table.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|tree
+name|get_identifier_nocopy
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+name|hashnode
+name|ht_node
+init|=
+name|ht_lookup
+argument_list|(
+name|ident_hash
+argument_list|,
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
+name|name
+argument_list|,
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+argument_list|,
+name|HT_ALLOCED
+argument_list|)
+decl_stmt|;
+return|return
+name|HT_IDENT_TO_GCC_IDENT
+argument_list|(
+name|ht_node
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Create an identifier for the external mangled name of DECL.  */
 end_comment
 
@@ -8094,22 +8517,17 @@ name|tree
 name|decl
 parameter_list|)
 block|{
-name|tree
-name|id
-init|=
-name|get_identifier
+name|SET_DECL_ASSEMBLER_NAME
+argument_list|(
+name|decl
+argument_list|,
+name|get_identifier_nocopy
 argument_list|(
 name|mangle_decl_string
 argument_list|(
 name|decl
 argument_list|)
 argument_list|)
-decl_stmt|;
-name|SET_DECL_ASSEMBLER_NAME
-argument_list|(
-name|decl
-argument_list|,
-name|id
 argument_list|)
 expr_stmt|;
 block|}
@@ -8138,6 +8556,9 @@ decl_stmt|;
 name|start_mangling
 argument_list|(
 name|type
+argument_list|,
+comment|/*ident_p=*/
+name|false
 argument_list|)
 expr_stmt|;
 name|write_type
@@ -8173,31 +8594,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Create an identifier for the mangled representation of TYPE.  */
-end_comment
-
-begin_function
-name|tree
-name|mangle_type
-parameter_list|(
-specifier|const
-name|tree
-name|type
-parameter_list|)
-block|{
-return|return
-name|get_identifier
-argument_list|(
-name|mangle_type_string
-argument_list|(
-name|type
-argument_list|)
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Create an identifier for the mangled name of a special component    for belonging to TYPE.  CODE is the ABI-specified code for this    component.  */
 end_comment
 
@@ -8225,6 +8621,9 @@ comment|/* We don't have an actual decl here for the special component, so      
 name|start_mangling
 argument_list|(
 name|type
+argument_list|,
+comment|/*ident_p=*/
+name|true
 argument_list|)
 expr_stmt|;
 comment|/* Start the mangling.  */
@@ -8266,7 +8665,7 @@ name|result
 argument_list|)
 expr_stmt|;
 return|return
-name|get_identifier
+name|get_identifier_nocopy
 argument_list|(
 name|result
 argument_list|)
@@ -8371,7 +8770,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return an identifier for a construction vtable group.  TYPE is    the most derived class in the hierarchy; BINFO is the base    subobject for which this construction vtable group will be used.       This mangling isn't part of the ABI specification; in the ABI    specification, the vtable group is dumped in the same COMDAT as the    main vtable, and is referenced only from that vtable, so it doesn't    need an external name.  For binary formats without COMDAT sections,    though, we need external names for the vtable groups.       We use the production<special-name> ::= CT<type><offset number> _<base type>  */
+comment|/* Return an identifier for a construction vtable group.  TYPE is    the most derived class in the hierarchy; BINFO is the base    subobject for which this construction vtable group will be used.     This mangling isn't part of the ABI specification; in the ABI    specification, the vtable group is dumped in the same COMDAT as the    main vtable, and is referenced only from that vtable, so it doesn't    need an external name.  For binary formats without COMDAT sections,    though, we need external names for the vtable groups.     We use the production<special-name> ::= CT<type><offset number> _<base type>  */
 end_comment
 
 begin_function
@@ -8395,6 +8794,9 @@ decl_stmt|;
 name|start_mangling
 argument_list|(
 name|type
+argument_list|,
+comment|/*ident_p=*/
+name|true
 argument_list|)
 expr_stmt|;
 name|write_string
@@ -8455,7 +8857,7 @@ name|result
 argument_list|)
 expr_stmt|;
 return|return
-name|get_identifier
+name|get_identifier_nocopy
 argument_list|(
 name|result
 argument_list|)
@@ -8522,7 +8924,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return an identifier for the mangled name of a this-adjusting or    covariant thunk to FN_DECL.  FIXED_OFFSET is the initial adjustment    to this used to find the vptr.  If VIRTUAL_OFFSET is non-NULL, this    is a virtual thunk, and it is the vtbl offset in    bytes. THIS_ADJUSTING is nonzero for a this adjusting thunk and    zero for a covariant thunk. Note, that FN_DECL might be a covariant    thunk itself. A covariant thunk name always includes the adjustment    for the this pointer, even if there is none.<special-name> ::= T<call-offset><base encoding>                   ::= Tc<this_adjust call-offset><result_adjust call-offset><base encoding> */
+comment|/* Return an identifier for the mangled name of a this-adjusting or    covariant thunk to FN_DECL.  FIXED_OFFSET is the initial adjustment    to this used to find the vptr.  If VIRTUAL_OFFSET is non-NULL, this    is a virtual thunk, and it is the vtbl offset in    bytes. THIS_ADJUSTING is nonzero for a this adjusting thunk and    zero for a covariant thunk. Note, that FN_DECL might be a covariant    thunk itself. A covariant thunk name always includes the adjustment    for the this pointer, even if there is none.<special-name> ::= T<call-offset><base encoding> 		  ::= Tc<this_adjust call-offset><result_adjust call-offset><base encoding>  */
 end_comment
 
 begin_function
@@ -8551,6 +8953,9 @@ decl_stmt|;
 name|start_mangling
 argument_list|(
 name|fn_decl
+argument_list|,
+comment|/*ident_p=*/
+name|true
 argument_list|)
 expr_stmt|;
 name|write_string
@@ -8693,7 +9098,7 @@ name|result
 argument_list|)
 expr_stmt|;
 return|return
-name|get_identifier
+name|get_identifier_nocopy
 argument_list|(
 name|result
 argument_list|)
@@ -8807,6 +9212,15 @@ decl_stmt|;
 name|tree
 name|identifier
 decl_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|error_mark_node
+condition|)
+return|return
+name|error_mark_node
+return|;
 if|if
 condition|(
 name|conv_type_names
@@ -8942,6 +9356,9 @@ block|{
 name|start_mangling
 argument_list|(
 name|variable
+argument_list|,
+comment|/*ident_p=*/
+name|true
 argument_list|)
 expr_stmt|;
 name|write_string
@@ -8992,7 +9409,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
-name|get_identifier
+name|get_identifier_nocopy
 argument_list|(
 name|finish_mangling
 argument_list|(
@@ -9020,6 +9437,9 @@ block|{
 name|start_mangling
 argument_list|(
 name|variable
+argument_list|,
+comment|/*ident_p=*/
+name|true
 argument_list|)
 expr_stmt|;
 name|write_string
@@ -9036,7 +9456,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
-name|get_identifier
+name|get_identifier_nocopy
 argument_list|(
 name|finish_mangling
 argument_list|(
@@ -9141,7 +9561,7 @@ literal|'b'
 argument_list|)
 expr_stmt|;
 else|else
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}

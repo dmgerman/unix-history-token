@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code to initialize optabs from machine description.    Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code to initialize optabs from machine description.    Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -103,6 +103,8 @@ literal|"smul_widen_optab->handlers[$B].insn_code = CODE_FOR_$(mul$a$b3$)$N"
 block|,
 literal|"umul_widen_optab->handlers[$B].insn_code = CODE_FOR_$(umul$a$b3$)$N"
 block|,
+literal|"usmul_widen_optab->handlers[$B].insn_code = CODE_FOR_$(usmul$a$b3$)$N"
+block|,
 literal|"sdiv_optab->handlers[$A].insn_code = CODE_FOR_$(div$a3$)"
 block|,
 literal|"sdivv_optab->handlers[$A].insn_code = CODE_FOR_$(div$V$I$a3$)"
@@ -116,6 +118,10 @@ block|,
 literal|"smod_optab->handlers[$A].insn_code = CODE_FOR_$(mod$a3$)"
 block|,
 literal|"umod_optab->handlers[$A].insn_code = CODE_FOR_$(umod$a3$)"
+block|,
+literal|"fmod_optab->handlers[$A].insn_code = CODE_FOR_$(fmod$a3$)"
+block|,
+literal|"drem_optab->handlers[$A].insn_code = CODE_FOR_$(drem$a3$)"
 block|,
 literal|"ftrunc_optab->handlers[$A].insn_code = CODE_FOR_$(ftrunc$F$a2$)"
 block|,
@@ -135,13 +141,9 @@ literal|"rotl_optab->handlers[$A].insn_code = CODE_FOR_$(rotl$a3$)"
 block|,
 literal|"rotr_optab->handlers[$A].insn_code = CODE_FOR_$(rotr$a3$)"
 block|,
-literal|"smin_optab->handlers[$A].insn_code = CODE_FOR_$(smin$I$a3$)"
+literal|"smin_optab->handlers[$A].insn_code = CODE_FOR_$(smin$a3$)"
 block|,
-literal|"smin_optab->handlers[$A].insn_code = CODE_FOR_$(min$F$a3$)"
-block|,
-literal|"smax_optab->handlers[$A].insn_code = CODE_FOR_$(smax$I$a3$)"
-block|,
-literal|"smax_optab->handlers[$A].insn_code = CODE_FOR_$(max$F$a3$)"
+literal|"smax_optab->handlers[$A].insn_code = CODE_FOR_$(smax$a3$)"
 block|,
 literal|"umin_optab->handlers[$A].insn_code = CODE_FOR_$(umin$I$a3$)"
 block|,
@@ -163,25 +165,59 @@ literal|"absv_optab->handlers[$A].insn_code =\n\     abs_optab->handlers[$A].ins
 block|,
 literal|"absv_optab->handlers[$A].insn_code = CODE_FOR_$(absv$I$a2$)"
 block|,
+literal|"copysign_optab->handlers[$A].insn_code = CODE_FOR_$(copysign$F$a3$)"
+block|,
 literal|"sqrt_optab->handlers[$A].insn_code = CODE_FOR_$(sqrt$a2$)"
 block|,
 literal|"floor_optab->handlers[$A].insn_code = CODE_FOR_$(floor$a2$)"
 block|,
+literal|"lfloor_optab->handlers[$A].insn_code = CODE_FOR_$(lfloor$a2$)"
+block|,
 literal|"ceil_optab->handlers[$A].insn_code = CODE_FOR_$(ceil$a2$)"
+block|,
+literal|"lceil_optab->handlers[$A].insn_code = CODE_FOR_$(lceil$a2$)"
 block|,
 literal|"round_optab->handlers[$A].insn_code = CODE_FOR_$(round$a2$)"
 block|,
-literal|"trunc_optab->handlers[$A].insn_code = CODE_FOR_$(trunc$a2$)"
+literal|"btrunc_optab->handlers[$A].insn_code = CODE_FOR_$(btrunc$a2$)"
 block|,
 literal|"nearbyint_optab->handlers[$A].insn_code = CODE_FOR_$(nearbyint$a2$)"
 block|,
+literal|"rint_optab->handlers[$A].insn_code = CODE_FOR_$(rint$a2$)"
+block|,
+literal|"lrint_optab->handlers[$A].insn_code = CODE_FOR_$(lrint$a2$)"
+block|,
+literal|"sincos_optab->handlers[$A].insn_code = CODE_FOR_$(sincos$a3$)"
+block|,
 literal|"sin_optab->handlers[$A].insn_code = CODE_FOR_$(sin$a2$)"
+block|,
+literal|"asin_optab->handlers[$A].insn_code = CODE_FOR_$(asin$a2$)"
 block|,
 literal|"cos_optab->handlers[$A].insn_code = CODE_FOR_$(cos$a2$)"
 block|,
+literal|"acos_optab->handlers[$A].insn_code = CODE_FOR_$(acos$a2$)"
+block|,
 literal|"exp_optab->handlers[$A].insn_code = CODE_FOR_$(exp$a2$)"
 block|,
+literal|"exp10_optab->handlers[$A].insn_code = CODE_FOR_$(exp10$a2$)"
+block|,
+literal|"exp2_optab->handlers[$A].insn_code = CODE_FOR_$(exp2$a2$)"
+block|,
+literal|"expm1_optab->handlers[$A].insn_code = CODE_FOR_$(expm1$a2$)"
+block|,
+literal|"ldexp_optab->handlers[$A].insn_code = CODE_FOR_$(ldexp$a3$)"
+block|,
+literal|"logb_optab->handlers[$A].insn_code = CODE_FOR_$(logb$a2$)"
+block|,
+literal|"ilogb_optab->handlers[$A].insn_code = CODE_FOR_$(ilogb$a2$)"
+block|,
 literal|"log_optab->handlers[$A].insn_code = CODE_FOR_$(log$a2$)"
+block|,
+literal|"log10_optab->handlers[$A].insn_code = CODE_FOR_$(log10$a2$)"
+block|,
+literal|"log2_optab->handlers[$A].insn_code = CODE_FOR_$(log2$a2$)"
+block|,
+literal|"log1p_optab->handlers[$A].insn_code = CODE_FOR_$(log1p$a2$)"
 block|,
 literal|"tan_optab->handlers[$A].insn_code = CODE_FOR_$(tan$a2$)"
 block|,
@@ -204,6 +240,8 @@ block|,
 literal|"mov_optab->handlers[$A].insn_code = CODE_FOR_$(mov$a$)"
 block|,
 literal|"movstrict_optab->handlers[$A].insn_code = CODE_FOR_$(movstrict$a$)"
+block|,
+literal|"movmisalign_optab->handlers[$A].insn_code = CODE_FOR_$(movmisalign$a$)"
 block|,
 literal|"cmp_optab->handlers[$A].insn_code = CODE_FOR_$(cmp$a$)"
 block|,
@@ -229,19 +267,95 @@ literal|"reload_in_optab[$A] = CODE_FOR_$(reload_in$a$)"
 block|,
 literal|"reload_out_optab[$A] = CODE_FOR_$(reload_out$a$)"
 block|,
-literal|"movstr_optab[$A] = CODE_FOR_$(movstr$a$)"
-block|,
-literal|"clrstr_optab[$A] = CODE_FOR_$(clrstr$a$)"
+literal|"movmem_optab[$A] = CODE_FOR_$(movmem$a$)"
 block|,
 literal|"cmpstr_optab[$A] = CODE_FOR_$(cmpstr$a$)"
 block|,
+literal|"cmpstrn_optab[$A] = CODE_FOR_$(cmpstrn$a$)"
+block|,
 literal|"cmpmem_optab[$A] = CODE_FOR_$(cmpmem$a$)"
+block|,
+literal|"setmem_optab[$A] = CODE_FOR_$(setmem$a$)"
+block|,
+literal|"sync_add_optab[$A] = CODE_FOR_$(sync_add$I$a$)"
+block|,
+literal|"sync_sub_optab[$A] = CODE_FOR_$(sync_sub$I$a$)"
+block|,
+literal|"sync_ior_optab[$A] = CODE_FOR_$(sync_ior$I$a$)"
+block|,
+literal|"sync_and_optab[$A] = CODE_FOR_$(sync_and$I$a$)"
+block|,
+literal|"sync_xor_optab[$A] = CODE_FOR_$(sync_xor$I$a$)"
+block|,
+literal|"sync_nand_optab[$A] = CODE_FOR_$(sync_nand$I$a$)"
+block|,
+literal|"sync_old_add_optab[$A] = CODE_FOR_$(sync_old_add$I$a$)"
+block|,
+literal|"sync_old_sub_optab[$A] = CODE_FOR_$(sync_old_sub$I$a$)"
+block|,
+literal|"sync_old_ior_optab[$A] = CODE_FOR_$(sync_old_ior$I$a$)"
+block|,
+literal|"sync_old_and_optab[$A] = CODE_FOR_$(sync_old_and$I$a$)"
+block|,
+literal|"sync_old_xor_optab[$A] = CODE_FOR_$(sync_old_xor$I$a$)"
+block|,
+literal|"sync_old_nand_optab[$A] = CODE_FOR_$(sync_old_nand$I$a$)"
+block|,
+literal|"sync_new_add_optab[$A] = CODE_FOR_$(sync_new_add$I$a$)"
+block|,
+literal|"sync_new_sub_optab[$A] = CODE_FOR_$(sync_new_sub$I$a$)"
+block|,
+literal|"sync_new_ior_optab[$A] = CODE_FOR_$(sync_new_ior$I$a$)"
+block|,
+literal|"sync_new_and_optab[$A] = CODE_FOR_$(sync_new_and$I$a$)"
+block|,
+literal|"sync_new_xor_optab[$A] = CODE_FOR_$(sync_new_xor$I$a$)"
+block|,
+literal|"sync_new_nand_optab[$A] = CODE_FOR_$(sync_new_nand$I$a$)"
+block|,
+literal|"sync_compare_and_swap[$A] = CODE_FOR_$(sync_compare_and_swap$I$a$)"
+block|,
+literal|"sync_compare_and_swap_cc[$A] = CODE_FOR_$(sync_compare_and_swap_cc$I$a$)"
+block|,
+literal|"sync_lock_test_and_set[$A] = CODE_FOR_$(sync_lock_test_and_set$I$a$)"
+block|,
+literal|"sync_lock_release[$A] = CODE_FOR_$(sync_lock_release$I$a$)"
 block|,
 literal|"vec_set_optab->handlers[$A].insn_code = CODE_FOR_$(vec_set$a$)"
 block|,
 literal|"vec_extract_optab->handlers[$A].insn_code = CODE_FOR_$(vec_extract$a$)"
 block|,
 literal|"vec_init_optab->handlers[$A].insn_code = CODE_FOR_$(vec_init$a$)"
+block|,
+literal|"vec_shl_optab->handlers[$A].insn_code = CODE_FOR_$(vec_shl_$a$)"
+block|,
+literal|"vec_shr_optab->handlers[$A].insn_code = CODE_FOR_$(vec_shr_$a$)"
+block|,
+literal|"vec_realign_load_optab->handlers[$A].insn_code = CODE_FOR_$(vec_realign_load_$a$)"
+block|,
+literal|"vcond_gen_code[$A] = CODE_FOR_$(vcond$a$)"
+block|,
+literal|"vcondu_gen_code[$A] = CODE_FOR_$(vcondu$a$)"
+block|,
+literal|"ssum_widen_optab->handlers[$A].insn_code = CODE_FOR_$(widen_ssum$I$a3$)"
+block|,
+literal|"usum_widen_optab->handlers[$A].insn_code = CODE_FOR_$(widen_usum$I$a3$)"
+block|,
+literal|"udot_prod_optab->handlers[$A].insn_code = CODE_FOR_$(udot_prod$I$a$)"
+block|,
+literal|"sdot_prod_optab->handlers[$A].insn_code = CODE_FOR_$(sdot_prod$I$a$)"
+block|,
+literal|"reduc_smax_optab->handlers[$A].insn_code = CODE_FOR_$(reduc_smax_$a$)"
+block|,
+literal|"reduc_umax_optab->handlers[$A].insn_code = CODE_FOR_$(reduc_umax_$a$)"
+block|,
+literal|"reduc_smin_optab->handlers[$A].insn_code = CODE_FOR_$(reduc_smin_$a$)"
+block|,
+literal|"reduc_umin_optab->handlers[$A].insn_code = CODE_FOR_$(reduc_umin_$a$)"
+block|,
+literal|"reduc_splus_optab->handlers[$A].insn_code = CODE_FOR_$(reduc_splus_$a$)"
+block|,
+literal|"reduc_uplus_optab->handlers[$A].insn_code = CODE_FOR_$(reduc_uplus_$a$)"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -544,12 +658,21 @@ name|q
 operator|==
 literal|0
 operator|&&
+operator|(
 name|GET_RTX_CLASS
 argument_list|(
 name|op
 argument_list|)
 operator|==
-literal|'<'
+name|RTX_COMPARE
+operator|||
+name|GET_RTX_CLASS
+argument_list|(
+name|op
+argument_list|)
+operator|==
+name|RTX_COMM_COMPARE
+operator|)
 condition|)
 break|break;
 block|}
@@ -702,6 +825,20 @@ index|[
 name|i
 index|]
 operator|==
+name|MODE_DECIMAL_FLOAT
+operator|||
+name|mode_class
+index|[
+name|i
+index|]
+operator|==
+name|MODE_COMPLEX_FLOAT
+operator|||
+name|mode_class
+index|[
+name|i
+index|]
+operator|==
 name|MODE_VECTOR_FLOAT
 operator|)
 condition|)
@@ -764,7 +901,7 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|abort
+name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}
@@ -903,12 +1040,10 @@ literal|'V'
 case|:
 if|if
 condition|(
-name|GET_MODE_CLASS
+name|SCALAR_FLOAT_MODE_P
 argument_list|(
 name|m1
 argument_list|)
-operator|==
-name|MODE_FLOAT
 condition|)
 name|printf
 argument_list|(
@@ -1088,17 +1223,6 @@ literal|"genopinit"
 expr_stmt|;
 if|if
 condition|(
-name|argc
-operator|<=
-literal|1
-condition|)
-name|fatal
-argument_list|(
-literal|"no input file name"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|init_md_reader_args
 argument_list|(
 name|argc
@@ -1259,27 +1383,6 @@ name|FATAL_EXIT_CODE
 else|:
 name|SUCCESS_EXIT_CODE
 operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Define this so we can link with print-rtl.o to get debug_rtx function.  */
-end_comment
-
-begin_function
-specifier|const
-name|char
-modifier|*
-name|get_insn_name
-parameter_list|(
-name|int
-name|code
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-return|return
-name|NULL
 return|;
 block|}
 end_function
