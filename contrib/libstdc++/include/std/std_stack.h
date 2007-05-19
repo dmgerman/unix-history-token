@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ comment|/*  *  * Copyright (c) 1994  * Hewlett-Packard Company  *  * Permission 
 end_comment
 
 begin_comment
-comment|/** @file stack  *  This is a Standard C++ Library header.  You should @c #include this header  *  in your programs, rather than any of the "st[dl]_*.h" implementation files.  */
+comment|/** @file include/stack  *  This is a Standard C++ Library header.  */
 end_comment
 
 begin_ifndef

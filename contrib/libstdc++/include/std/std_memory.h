@@ -4,7 +4,7 @@ comment|//<memory> -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ comment|/*  * Copyright (c) 1997-1999  * Silicon Graphics Computer Systems, Inc.
 end_comment
 
 begin_comment
-comment|/** @file memory  *  This is a Standard C++ Library header.  You should @c #include this header  *  in your programs, rather than any of the "st[dl]_*.h" implementation files.  */
+comment|/** @file include/memory  *  This is a Standard C++ Library header.  */
 end_comment
 
 begin_ifndef
@@ -175,11 +175,18 @@ directive|include
 file|<limits>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|/**    *  @if maint    *  This is a helper function.  The unused second parameter exists to    *  permit the real get_temporary_buffer to use template parameter deduction.    *    *  XXX This should perhaps use the pool.    *  @endif    */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -226,6 +233,9 @@ name|__len
 operator|=
 name|__max
 expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|__len
@@ -283,6 +293,9 @@ operator|/=
 literal|2
 expr_stmt|;
 block|}
+end_while
+
+begin_return
 return|return
 name|pair
 operator|<
@@ -304,15 +317,15 @@ operator|,
 literal|0
 operator|)
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/**    *  @brief Allocates a temporary buffer.    *  @param  len  The number of objects of type Tp.    *  @return See full description.    *    *  Reinventing the wheel, but this time with prettier spokes!    *    *  This function tries to obtain storage for @c len adjacent Tp    *  objects.  The objects themselves are not constructed, of course.    *  A pair<> is returned containing "the buffer s address and    *  capacity (in the units of sizeof(Tp)), or a pair of 0 values if    *  no storage can be obtained."  Note that the capacity obtained    *  may be less than that requested if the memory is unavailable;    *  you should compare len with the .second return value.    *    * Provides the nothrow exception guarantee.    */
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|_Tp
@@ -546,7 +559,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**        *  When the %auto_ptr goes out of scope, the object it owns is        *  deleted.  If it no longer owns anything (i.e., @c get() is        *  @c NULL), then this has no effect.        *        *  @if maint        *  The C++ standard says there is supposed to be an empty throw        *  specification here, but omitting it is standard conforming.  Its        *  presence can be detected only if _Tp::~_Tp() throws, but this is        *  prohibited.  [17.4.3.6]/2        *  @end maint        */
+comment|/**        *  When the %auto_ptr goes out of scope, the object it owns is        *  deleted.  If it no longer owns anything (i.e., @c get() is        *  @c NULL), then this has no effect.        *        *  @if maint        *  The C++ standard says there is supposed to be an empty throw        *  specification here, but omitting it is standard conforming.  Its        *  presence can be detected only if _Tp::~_Tp() throws, but this is        *  prohibited.  [17.4.3.6]/2        *  @endif        */
 end_comment
 
 begin_expr_stmt
@@ -696,7 +709,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** @{        *  @brief  Automatic conversions        *        *  These operations convert an %auto_ptr into and from an auto_ptr_ref        *  automatically as needed.  This allows constructs such as        *  @code        *    auto_ptr<Derived>  func_returning_auto_ptr(.....);        *    ...        *    auto_ptr<Base> ptr = func_returning_auto_ptr(.....);        *  @endcode        */
+comment|/**         *  @brief  Automatic conversions        *        *  These operations convert an %auto_ptr into and from an auto_ptr_ref        *  automatically as needed.  This allows constructs such as        *  @code        *    auto_ptr<Derived>  func_returning_auto_ptr(.....);        *    ...        *    auto_ptr<Base> ptr = func_returning_auto_ptr(.....);        *  @endcode        */
 end_comment
 
 begin_macro
@@ -822,14 +835,10 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-comment|/** @}  */
-end_comment
-
-begin_comment
-unit|}; }
-comment|// namespace std
-end_comment
+begin_macro
+unit|};
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

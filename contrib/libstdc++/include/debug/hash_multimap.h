@@ -4,7 +4,7 @@ comment|// Debugging hash_multimap implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2003
+comment|// Copyright (C) 2003, 2005, 2006
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -99,6 +99,10 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
+begin_comment
+comment|/** @file debug/hash_multimap.h  *  This file is a GNU debug extension to the Standard C++ Library.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -126,7 +130,10 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|__gnu_debug_def
+name|__gnu_cxx
+block|{
+name|namespace
+name|__debug
 block|{
 name|template
 operator|<
@@ -170,7 +177,7 @@ name|class
 name|hash_multimap
 operator|:
 name|public
-name|__gnu_cxx
+name|_GLIBCXX_EXT
 operator|::
 name|hash_multimap
 operator|<
@@ -205,7 +212,7 @@ operator|>
 expr|>
 block|{
 typedef|typedef
-name|__gnu_cxx
+name|_GLIBCXX_EXT
 operator|::
 name|hash_multimap
 operator|<
@@ -816,9 +823,6 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|std
 operator|::
 name|pair
@@ -857,9 +861,6 @@ argument_list|(
 name|__key
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|std
 operator|::
@@ -884,17 +885,18 @@ name|this
 argument_list|)
 argument_list|)
 return|;
-end_return
+block|}
+end_decl_stmt
 
-begin_macro
-unit|}        size_type
+begin_function
+name|size_type
 name|erase
-argument_list|(
-argument|const key_type& __key
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+specifier|const
+name|key_type
+modifier|&
+name|__key
+parameter_list|)
 block|{
 name|std
 operator|::
@@ -913,11 +915,13 @@ argument_list|(
 name|__key
 argument_list|)
 expr_stmt|;
+name|std
+operator|::
 name|size_t
 name|__num_victims
-init|=
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 while|while
 condition|(
 name|__victims
@@ -947,7 +951,7 @@ return|return
 name|__num_victims
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -1357,7 +1361,12 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// namespace __gnu_debug_def
+comment|// namespace __debug
+end_comment
+
+begin_comment
+unit|}
+comment|// namespace __gnu_cxx
 end_comment
 
 begin_endif

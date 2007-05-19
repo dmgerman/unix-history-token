@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005, 2006
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,6 +100,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file localefwd.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -109,10 +113,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|/** @file localefwd.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_ifndef
@@ -167,15 +167,28 @@ directive|include
 file|<bits/functexcept.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|// 22.1.1 Locale
+end_comment
+
+begin_decl_stmt
 name|class
 name|locale
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// 22.1.3 Convenience interfaces
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -192,6 +205,9 @@ name|locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -208,6 +224,9 @@ name|locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -224,6 +243,9 @@ name|locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -240,6 +262,9 @@ name|locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -256,6 +281,9 @@ name|locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -272,6 +300,9 @@ name|locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -288,6 +319,9 @@ name|locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -304,6 +338,9 @@ name|locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -320,6 +357,9 @@ name|locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -336,6 +376,9 @@ name|locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -352,6 +395,9 @@ name|locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -368,6 +414,9 @@ name|locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -384,10 +433,19 @@ name|locale
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// 22.2.1 and 22.2.1.3 ctype
+end_comment
+
+begin_decl_stmt
 name|class
 name|ctype_base
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -396,6 +454,9 @@ operator|>
 name|class
 name|ctype
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -405,9 +466,15 @@ operator|<
 name|char
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|_GLIBCXX_USE_WCHAR_T
+end_ifdef
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -417,8 +484,14 @@ operator|<
 name|wchar_t
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -427,13 +500,25 @@ operator|>
 name|class
 name|ctype_byname
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// NB: Specialized for char and wchar_t in locale_facets.h.
+end_comment
+
+begin_decl_stmt
 name|class
 name|codecvt_base
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|class
 name|__enc_traits
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -448,6 +533,9 @@ operator|>
 name|class
 name|codecvt
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -461,9 +549,15 @@ operator|,
 name|mbstate_t
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|_GLIBCXX_USE_WCHAR_T
+end_ifdef
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -477,8 +571,14 @@ operator|,
 name|mbstate_t
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -493,7 +593,14 @@ operator|>
 name|class
 name|codecvt_byname
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// 22.2.2 and 22.2.3 numeric
+end_comment
+
+begin_expr_stmt
+name|_GLIBCXX_BEGIN_LDBL_NAMESPACE
 name|template
 operator|<
 name|typename
@@ -510,6 +617,9 @@ expr|>
 name|class
 name|num_get
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -526,6 +636,10 @@ expr|>
 name|class
 name|num_put
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|_GLIBCXX_END_LDBL_NAMESPACE
 name|template
 operator|<
 name|typename
@@ -534,6 +648,9 @@ operator|>
 name|class
 name|numpunct
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -542,7 +659,13 @@ operator|>
 name|class
 name|numpunct_byname
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// 22.2.4 collation
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -551,6 +674,9 @@ operator|>
 name|class
 name|collate
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -559,10 +685,19 @@ operator|>
 name|class
 name|collate_byname
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// 22.2.5 date and time
+end_comment
+
+begin_decl_stmt
 name|class
 name|time_base
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -579,6 +714,9 @@ expr|>
 name|class
 name|time_get
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -595,6 +733,9 @@ expr|>
 name|class
 name|time_get_byname
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -611,6 +752,9 @@ expr|>
 name|class
 name|time_put
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -627,10 +771,20 @@ expr|>
 name|class
 name|time_put_byname
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// 22.2.6 money
+end_comment
+
+begin_decl_stmt
 name|class
 name|money_base
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|_GLIBCXX_BEGIN_LDBL_NAMESPACE
 name|template
 operator|<
 name|typename
@@ -647,6 +801,9 @@ expr|>
 name|class
 name|money_get
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -663,6 +820,10 @@ expr|>
 name|class
 name|money_put
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|_GLIBCXX_END_LDBL_NAMESPACE
 name|template
 operator|<
 name|typename
@@ -676,6 +837,9 @@ operator|>
 name|class
 name|moneypunct
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -689,10 +853,19 @@ operator|>
 name|class
 name|moneypunct_byname
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// 22.2.7 message retrieval
+end_comment
+
+begin_decl_stmt
 name|class
 name|messages_base
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -701,6 +874,9 @@ operator|>
 name|class
 name|messages
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -709,6 +885,9 @@ operator|>
 name|class
 name|messages_byname
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -722,6 +901,9 @@ argument_list|)
 name|throw
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -738,6 +920,9 @@ operator|&
 name|__loc
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -760,19 +945,17 @@ condition|)
 name|__throw_bad_cast
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|*
 name|__f
 return|;
-block|}
-end_decl_stmt
-
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
+end_return
 
 begin_endif
+unit|}  _GLIBCXX_END_NAMESPACE
 endif|#
 directive|endif
 end_endif

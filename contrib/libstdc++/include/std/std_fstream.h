@@ -4,7 +4,7 @@ comment|// File based streams -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,6 +100,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file fstream  *  This is a Standard C++ Library header.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -109,10 +113,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|/** @file fstream  *  This is a Standard C++ Library header.  You should @c #include this header  *  in your programs, rather than any of the "st[dl]_*.h" implementation files.  */
 end_comment
 
 begin_ifndef
@@ -179,17 +179,42 @@ directive|include
 file|<bits/gthr.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|// [27.8.1.1] template class basic_filebuf
+end_comment
+
+begin_comment
 comment|/**    *  @brief  The actual work of input and output (for files).    *    *  This class associates both its input and output sequence with an    *  external disk file, and maintains a joint file position for both    *  sequences.  Many of its sematics are described in terms of similar    *  behavior in the Standard C Library's @c FILE streams.   */
+end_comment
+
+begin_comment
 comment|// Requirements on traits_type, specific to this class:
+end_comment
+
+begin_comment
 comment|// traits_type::pos_type must be fpos<traits_type::state_type>
+end_comment
+
+begin_comment
 comment|// traits_type::off_type must be streamoff
+end_comment
+
+begin_comment
 comment|// traits_type::state_type must be Assignable and DefaultConstructable,
+end_comment
+
+begin_comment
 comment|// and traits_type::state_type() must be the initial state for codecvt.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -216,10 +241,16 @@ typedef|typedef
 name|_CharT
 name|char_type
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|_Traits
 name|traits_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -227,6 +258,9 @@ operator|::
 name|int_type
 name|int_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -234,6 +268,9 @@ operator|::
 name|pos_type
 name|pos_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -241,8 +278,9 @@ operator|::
 name|off_type
 name|off_type
 expr_stmt|;
-comment|//@{
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|basic_streambuf
 operator|<
@@ -252,6 +290,9 @@ name|traits_type
 operator|>
 name|__streambuf_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|basic_filebuf
 operator|<
@@ -261,6 +302,9 @@ name|traits_type
 operator|>
 name|__filebuf_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|__basic_file
 operator|<
@@ -268,6 +312,9 @@ name|char
 operator|>
 name|__file_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|traits_type
@@ -275,6 +322,9 @@ operator|::
 name|state_type
 name|__state_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|codecvt
 operator|<
@@ -286,113 +336,244 @@ name|__state_type
 operator|>
 name|__codecvt_type
 expr_stmt|;
-comment|//@}
+end_typedef
+
+begin_decl_stmt
 name|friend
 name|class
 name|ios_base
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// For sync_with_stdio.
+end_comment
+
+begin_label
 name|protected
 label|:
+end_label
+
+begin_comment
 comment|// Data Members:
+end_comment
+
+begin_comment
 comment|// MT lock inherited from libio or other low-level io library.
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|__c_lock
 name|_M_lock
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// External buffer.
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|__file_type
 name|_M_file
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @if maint        *  Place to stash in || out || in | out settings for current filebuf.        *  @endif       */
+end_comment
+
+begin_expr_stmt
 name|ios_base
 operator|::
 name|openmode
 name|_M_mode
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Beginning state type for codecvt.
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|__state_type
 name|_M_state_beg
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// During output, the state that corresponds to pptr(),
+end_comment
+
+begin_comment
 comment|// during input, the state that corresponds to egptr() and
+end_comment
+
+begin_comment
 comment|// _M_ext_next.
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|__state_type
 name|_M_state_cur
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Not used for output. During input, the state that corresponds
+end_comment
+
+begin_comment
 comment|// to eback() and _M_ext_buf.
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|__state_type
 name|_M_state_last
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @if maint        *  Pointer to the beginning of internal buffer.        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|char_type
 modifier|*
 name|_M_buf
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @if maint        *  Actual size of internal buffer. This number is equal to the size        *  of the put area + 1 position, reserved for the overflow char of        *  a full area.        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|_M_buf_size
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Set iff _M_buf is allocated memory from _M_allocate_internal_buffer.
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|bool
 name|_M_buf_allocated
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @if maint        *  _M_reading == false&& _M_writing == false for 'uncommitted' mode;          *  _M_reading == true for 'read' mode;        *  _M_writing == true for 'write' mode;        *        *  NB: _M_reading == true&& _M_writing == true is unused.        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|bool
 name|_M_reading
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|_M_writing
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//@{
+end_comment
+
+begin_comment
 comment|/**        *  @if maint        *  Necessary bits for putback buffer management.        *        *  @note pbacks of over one character are not currently supported.        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|char_type
 name|_M_pback
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char_type
 modifier|*
 name|_M_pback_cur_save
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char_type
 modifier|*
 name|_M_pback_end_save
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|_M_pback_init
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//@}
+end_comment
+
+begin_comment
 comment|// Cached codecvt facet.
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|__codecvt_type
 modifier|*
 name|_M_codecvt
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @if maint        *  Buffer for external characters. Used for input when        *  codecvt::always_noconv() == false. When valid, this corresponds        *  to eback().        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|_M_ext_buf
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @if maint        *  Size of buffer held by _M_ext_buf.        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|streamsize
 name|_M_ext_buf_size
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @if maint        *  Pointers into the buffer held by _M_ext_buf that delimit a        *  subsequence of bytes that have been read but not yet converted.        *  When valid, _M_ext_next corresponds to egptr().        *  @endif       */
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|char
 modifier|*
 name|_M_ext_next
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|_M_ext_end
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @if maint        *  Initializes pback buffers, and moves normal buffers to safety.        *  Assumptions:        *  _M_in_cur has already been moved back        *  @endif       */
+end_comment
+
+begin_function
 name|void
 name|_M_create_pback
 parameter_list|()
@@ -439,7 +620,13 @@ name|true
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @if maint        *  Deactivates pback buffer contents, and restores normal buffer.        *  Assumptions:        *  The pback buffer has only moved forward.        *  @endif       */
+end_comment
+
+begin_function
 name|void
 name|_M_destroy_pback
 parameter_list|()
@@ -468,8 +655,6 @@ name|this
 operator|->
 name|setg
 argument_list|(
-name|this
-operator|->
 name|_M_buf
 argument_list|,
 name|_M_pback_cur_save
@@ -483,14 +668,32 @@ name|false
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|// Constructors/destructor:
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Does not open any files.        *        *  The default constructor initializes the parent class using its        *  own default ctor.       */
+end_comment
+
+begin_expr_stmt
 name|basic_filebuf
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  The destructor closes the file first.       */
+end_comment
+
+begin_expr_stmt
 name|virtual
 operator|~
 name|basic_filebuf
@@ -517,7 +720,13 @@ name|is_open
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Opens an external file.        *  @param  s  The name of the file.        *  @param  mode  The open mode flags.        *  @return  @c this on success, NULL on failure        *        *  If a file is already open, this function immediately fails.        *  Otherwise it tries to open the file named @a s using the flags        *  given in @a mode.        *        *  [Table 92 gives the relation between openmode combinations and the        *  equivalent fopen() flags, but the table has not been copied yet.]       */
+end_comment
+
+begin_decl_stmt
 name|__filebuf_type
 modifier|*
 name|open
@@ -533,7 +742,13 @@ name|openmode
 name|__mode
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/**        *  @brief  Closes the currently associated file.        *  @return  @c this on success, NULL on failure        *        *  If no file is currently open, this function immediately fails.        *        *  If a "put buffer area" exists, @c overflow(eof) is called to flush        *  all the characters.  The file is then closed.        *        *  If any operations fail, this function also fails.       */
+end_comment
+
+begin_function_decl
 name|__filebuf_type
 modifier|*
 name|close
@@ -541,38 +756,66 @@ parameter_list|()
 function_decl|throw
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_label
 name|protected
 label|:
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_label
+
+begin_function_decl
 name|void
 name|_M_allocate_internal_buffer
 parameter_list|()
 function_decl|;
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_function_decl
+
+begin_function_decl
 name|void
 name|_M_destroy_internal_buffer
 parameter_list|()
 function_decl|throw
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|// [27.8.1.4] overridden virtual functions
-comment|// [documentation is inherited]
+end_comment
+
+begin_function_decl
 name|virtual
 name|streamsize
 name|showmanyc
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Stroustrup, 1998, p. 628
+end_comment
+
+begin_comment
 comment|// underflow() and uflow() functions are called to get the next
+end_comment
+
+begin_comment
 comment|// charater from the real input source when the buffer is empty.
+end_comment
+
+begin_comment
 comment|// Buffered input uses underflow()
-comment|// [documentation is inherited]
+end_comment
+
+begin_function_decl
 name|virtual
 name|int_type
 name|underflow
 parameter_list|()
 function_decl|;
-comment|// [documentation is inherited]
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|int_type
 name|pbackfail
@@ -586,14 +829,37 @@ name|eof
 argument_list|()
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Stroustrup, 1998, p 648
+end_comment
+
+begin_comment
 comment|// The overflow() function is called to transfer characters to the
+end_comment
+
+begin_comment
 comment|// real output destination when the buffer is full. A call to
+end_comment
+
+begin_comment
 comment|// overflow(c) outputs the contents of the buffer plus the
+end_comment
+
+begin_comment
 comment|// character c.
+end_comment
+
+begin_comment
 comment|// 27.5.2.4.5
+end_comment
+
+begin_comment
 comment|// Consume some sequence of the characters in the pending sequence.
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
+begin_function_decl
 name|virtual
 name|int_type
 name|overflow
@@ -607,9 +873,17 @@ name|eof
 argument_list|()
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Convert internal byte sequence to external, char-based
+end_comment
+
+begin_comment
 comment|// sequence via codecvt.
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
+begin_function_decl
 name|bool
 name|_M_convert_to_external
 parameter_list|(
@@ -619,7 +893,13 @@ parameter_list|,
 name|streamsize
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**        *  @brief  Manipulates the buffer.        *  @param  s  Pointer to a buffer area.        *  @param  n  Size of @a s.        *  @return  @c this        *        *  If no file has been opened, and both @a s and @a n are zero, then        *  the stream becomes unbuffered.  Otherwise, @c s is used as a        *  buffer; see        *  http://gcc.gnu.org/onlinedocs/libstdc++/27_io/howto.html#2        *  for more.       */
+end_comment
+
+begin_function_decl
 name|virtual
 name|__streambuf_type
 modifier|*
@@ -633,7 +913,9 @@ name|streamsize
 name|__n
 parameter_list|)
 function_decl|;
-comment|// [documentation is inherited]
+end_function_decl
+
+begin_decl_stmt
 name|virtual
 name|pos_type
 name|seekoff
@@ -660,7 +942,9 @@ operator|::
 name|out
 argument_list|)
 decl_stmt|;
-comment|// [documentation is inherited]
+end_decl_stmt
+
+begin_decl_stmt
 name|virtual
 name|pos_type
 name|seekpos
@@ -682,8 +966,13 @@ operator|::
 name|out
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Common code for seekoff and seekpos
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
+begin_decl_stmt
 name|pos_type
 name|_M_seek
 argument_list|(
@@ -699,13 +988,17 @@ name|__state_type
 name|__state
 argument_list|)
 decl_stmt|;
-comment|// [documentation is inherited]
+end_decl_stmt
+
+begin_function_decl
 name|virtual
 name|int
 name|sync
 parameter_list|()
 function_decl|;
-comment|// [documentation is inherited]
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|void
 name|imbue
@@ -716,7 +1009,9 @@ modifier|&
 name|__loc
 parameter_list|)
 function_decl|;
-comment|// [documentation is inherited]
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|streamsize
 name|xsgetn
@@ -729,7 +1024,9 @@ name|streamsize
 name|__n
 parameter_list|)
 function_decl|;
-comment|// [documentation is inherited]
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|streamsize
 name|xsputn
@@ -743,13 +1040,24 @@ name|streamsize
 name|__n
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Flushes output buffer, then writes unshift sequence.
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
+begin_function_decl
 name|bool
 name|_M_terminate_output
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**        *  @if maint         *  This function sets the pointers of the internal buffer, both get        *  and put areas. Typically:        *        *   __off == egptr() - eback() upon underflow/uflow ('read' mode);        *   __off == 0 upon overflow ('write' mode);        *   __off == -1 upon open, setbuf, seekoff/pos ('uncommitted' mode).        *         *  NB: epptr() - pbase() == _M_buf_size - 1, since _M_buf_size        *  reflects the actual allocated memory and the last cell is reserved        *  for the overflow char of a full put area.        *  @endif       */
+end_comment
+
+begin_function
 name|void
 name|_M_set_buffer
 parameter_list|(
@@ -761,8 +1069,6 @@ specifier|const
 name|bool
 name|__testin
 init|=
-name|this
-operator|->
 name|_M_mode
 operator|&
 name|ios_base
@@ -773,8 +1079,6 @@ specifier|const
 name|bool
 name|__testout
 init|=
-name|this
-operator|->
 name|_M_mode
 operator|&
 name|ios_base
@@ -793,16 +1097,10 @@ name|this
 operator|->
 name|setg
 argument_list|(
-name|this
-operator|->
 name|_M_buf
 argument_list|,
-name|this
-operator|->
 name|_M_buf
 argument_list|,
-name|this
-operator|->
 name|_M_buf
 operator|+
 name|__off
@@ -813,16 +1111,10 @@ name|this
 operator|->
 name|setg
 argument_list|(
-name|this
-operator|->
 name|_M_buf
 argument_list|,
-name|this
-operator|->
 name|_M_buf
 argument_list|,
-name|this
-operator|->
 name|_M_buf
 argument_list|)
 expr_stmt|;
@@ -834,8 +1126,6 @@ name|__off
 operator|==
 literal|0
 operator|&&
-name|this
-operator|->
 name|_M_buf_size
 operator|>
 literal|1
@@ -844,16 +1134,10 @@ name|this
 operator|->
 name|setp
 argument_list|(
-name|this
-operator|->
 name|_M_buf
 argument_list|,
-name|this
-operator|->
 name|_M_buf
 operator|+
-name|this
-operator|->
 name|_M_buf_size
 operator|-
 literal|1
@@ -870,14 +1154,10 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
+unit|};
 comment|// [27.8.1.5] Template class basic_ifstream
 end_comment
 
@@ -983,10 +1263,6 @@ begin_label
 name|private
 label|:
 end_label
-
-begin_comment
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
-end_comment
 
 begin_decl_stmt
 name|__filebuf_type
@@ -1103,6 +1379,29 @@ block|}
 end_function
 
 begin_comment
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
+
+begin_comment
+comment|// 365. Lack of const-qualification in clause 27
+end_comment
+
+begin_expr_stmt
+name|bool
+name|is_open
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_M_filebuf
+operator|.
+name|is_open
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Opens an external file.        *  @param  s  The name of the file.        *  @param  mode  The open mode flags.        *        *  Calls @c std::basic_filebuf::open(s,mode|in).  If that function        *  fails, @c failbit is set in the stream's error state.        *        *  Tip:  When using std::string to hold the filename, you must use        *  .c_str() before passing it to this constructor.       */
 end_comment
 
@@ -1149,6 +1448,14 @@ name|ios_base
 operator|::
 name|failbit
 argument_list|)
+expr_stmt|;
+else|else
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 409. Closing an fstream should clear error state
+name|this
+operator|->
+name|clear
+argument_list|()
 expr_stmt|;
 block|}
 end_decl_stmt
@@ -1290,10 +1597,6 @@ name|private
 label|:
 end_label
 
-begin_comment
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
-end_comment
-
 begin_decl_stmt
 name|__filebuf_type
 name|_M_filebuf
@@ -1409,6 +1712,29 @@ block|}
 end_function
 
 begin_comment
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
+
+begin_comment
+comment|// 365. Lack of const-qualification in clause 27
+end_comment
+
+begin_expr_stmt
+name|bool
+name|is_open
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_M_filebuf
+operator|.
+name|is_open
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Opens an external file.        *  @param  s  The name of the file.        *  @param  mode  The open mode flags.        *        *  Calls @c std::basic_filebuf::open(s,mode|out|trunc).  If that        *  function fails, @c failbit is set in the stream's error state.        *        *  Tip:  When using std::string to hold the filename, you must use        *  .c_str() before passing it to this constructor.       */
 end_comment
 
@@ -1459,6 +1785,14 @@ name|ios_base
 operator|::
 name|failbit
 argument_list|)
+expr_stmt|;
+else|else
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 409. Closing an fstream should clear error state
+name|this
+operator|->
+name|clear
+argument_list|()
 expr_stmt|;
 block|}
 end_decl_stmt
@@ -1612,10 +1946,6 @@ name|private
 label|:
 end_label
 
-begin_comment
-comment|/**        *  @if maint        *  @doctodo        *  @endif       */
-end_comment
-
 begin_decl_stmt
 name|__filebuf_type
 name|_M_filebuf
@@ -1733,6 +2063,29 @@ block|}
 end_function
 
 begin_comment
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
+
+begin_comment
+comment|// 365. Lack of const-qualification in clause 27
+end_comment
+
+begin_expr_stmt
+name|bool
+name|is_open
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_M_filebuf
+operator|.
+name|is_open
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Opens an external file.        *  @param  s  The name of the file.        *  @param  mode  The open mode flags.        *        *  Calls @c std::basic_filebuf::open(s,mode).  If that        *  function fails, @c failbit is set in the stream's error state.        *        *  Tip:  When using std::string to hold the filename, you must use        *  .c_str() before passing it to this constructor.       */
 end_comment
 
@@ -1780,6 +2133,14 @@ operator|::
 name|failbit
 argument_list|)
 expr_stmt|;
+else|else
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 409. Closing an fstream should clear error state
+name|this
+operator|->
+name|clear
+argument_list|()
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -1812,10 +2173,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-unit|}; }
-comment|// namespace std
-end_comment
+begin_macro
+unit|};
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_ifndef
 ifndef|#

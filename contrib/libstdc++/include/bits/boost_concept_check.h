@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// Copyright (C) 2004 Free Software Foundation, Inc.
+comment|// -*- C++ -*-
+end_comment
+
+begin_comment
+comment|// Copyright (C) 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -52,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -116,11 +120,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// GCC Note:  based on version 1.12.0 of the Boost library.
+comment|/** @file boost_concept_check.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_comment
-comment|/** @file boost_concept_check.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+comment|// GCC Note:  based on version 1.12.0 of the Boost library.
 end_comment
 
 begin_ifndef
@@ -173,17 +177,33 @@ begin_comment
 comment|// for pair<>
 end_comment
 
-begin_decl_stmt
-name|namespace
-name|__gnu_cxx
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|__gnu_cxx
+argument_list|)
+end_macro
+
+begin_define
 define|#
 directive|define
 name|_IsUnused
 value|__attribute__ ((__unused__))
+end_define
+
+begin_comment
 comment|// When the C-C code is in use, we would like this function to do as little
+end_comment
+
+begin_comment
 comment|// as possible at runtime, use as few resources as possible, and hopefully
+end_comment
+
+begin_comment
 comment|// be elided out of existence... hmmm.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -214,15 +234,27 @@ name|void
 name|__error_type_must_be_an_integer_type
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
 name|void
 name|__error_type_must_be_an_unsigned_integer_type
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|__error_type_must_be_a_signed_integer_type
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|// ??? Should the "concept_checking*" structs begin with more than _ ?
+end_comment
+
+begin_define
 define|#
 directive|define
 name|_GLIBCXX_CLASS_REQUIRES
@@ -235,6 +267,9 @@ name|_concept
 parameter_list|)
 define|\
 value|typedef void (_ns::_concept<_type_var>::* _func##_type_var##_concept)(); \   template<_func##_type_var##_concept _Tp1> \   struct _concept_checking##_type_var##_concept { }; \   typedef _concept_checking##_type_var##_concept< \&_ns::_concept<_type_var>::__constraints> \     _concept_checking_typedef##_type_var##_concept
+end_define
+
+begin_define
 define|#
 directive|define
 name|_GLIBCXX_CLASS_REQUIRES2
@@ -249,6 +284,9 @@ name|_concept
 parameter_list|)
 define|\
 value|typedef void (_ns::_concept<_type_var1,_type_var2>::* _func##_type_var1##_type_var2##_concept)(); \   template<_func##_type_var1##_type_var2##_concept _Tp1> \   struct _concept_checking##_type_var1##_type_var2##_concept { }; \   typedef _concept_checking##_type_var1##_type_var2##_concept< \&_ns::_concept<_type_var1,_type_var2>::__constraints> \     _concept_checking_typedef##_type_var1##_type_var2##_concept
+end_define
+
+begin_define
 define|#
 directive|define
 name|_GLIBCXX_CLASS_REQUIRES3
@@ -265,6 +303,9 @@ name|_concept
 parameter_list|)
 define|\
 value|typedef void (_ns::_concept<_type_var1,_type_var2,_type_var3>::* _func##_type_var1##_type_var2##_type_var3##_concept)(); \   template<_func##_type_var1##_type_var2##_type_var3##_concept _Tp1> \   struct _concept_checking##_type_var1##_type_var2##_type_var3##_concept { }; \   typedef _concept_checking##_type_var1##_type_var2##_type_var3##_concept< \&_ns::_concept<_type_var1,_type_var2,_type_var3>::__constraints>  \   _concept_checking_typedef##_type_var1##_type_var2##_type_var3##_concept
+end_define
+
+begin_define
 define|#
 directive|define
 name|_GLIBCXX_CLASS_REQUIRES4
@@ -283,6 +324,9 @@ name|_concept
 parameter_list|)
 define|\
 value|typedef void (_ns::_concept<_type_var1,_type_var2,_type_var3,_type_var4>::* _func##_type_var1##_type_var2##_type_var3##_type_var4##_concept)(); \   template<_func##_type_var1##_type_var2##_type_var3##_type_var4##_concept _Tp1> \   struct _concept_checking##_type_var1##_type_var2##_type_var3##_type_var4##_concept { }; \   typedef _concept_checking##_type_var1##_type_var2##_type_var3##_type_var4##_concept< \&_ns::_concept<_type_var1,_type_var2,_type_var3,_type_var4>::__constraints> \     _concept_checking_typedef##_type_var1##_type_var2##_type_var3##_type_var4##_concept
+end_define
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -295,6 +339,9 @@ expr|struct
 name|_Aux_require_same
 block|{ }
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -313,7 +360,13 @@ name|_Tp
 name|_Type
 typedef|;
 block|}
+end_expr_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -342,8 +395,10 @@ name|_Type
 name|_Required
 expr_stmt|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|class
@@ -360,7 +415,10 @@ name|__error_type_must_be_an_integer_type
 argument_list|()
 block|;     }
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -375,7 +433,10 @@ name|__constraints
 argument_list|()
 block|{}
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -391,7 +452,10 @@ name|__constraints
 argument_list|()
 block|{}
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -406,7 +470,10 @@ name|__constraints
 argument_list|()
 block|{}
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -422,7 +489,10 @@ name|__constraints
 argument_list|()
 block|{}
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -437,39 +507,10 @@ name|__constraints
 argument_list|()
 block|{}
 block|}
-block|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|_IntegerConcept
-operator|<
-name|unsigned
-name|long
-operator|>
-block|{
-name|void
-name|__constraints
-argument_list|()
-block|{}
-block|}
-block|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|_IntegerConcept
-operator|<
-name|long
-name|long
-operator|>
-block|{
-name|void
-name|__constraints
-argument_list|()
-block|{}
-block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -478,6 +519,24 @@ name|_IntegerConcept
 operator|<
 name|unsigned
 name|long
+operator|>
+block|{
+name|void
+name|__constraints
+argument_list|()
+block|{}
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|_IntegerConcept
+operator|<
+name|long
 name|long
 operator|>
 block|{
@@ -486,7 +545,30 @@ name|__constraints
 argument_list|()
 block|{}
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|_IntegerConcept
+operator|<
+name|unsigned
+name|long
+name|long
+operator|>
+block|{
+name|void
+name|__constraints
+argument_list|()
+block|{}
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -503,7 +585,10 @@ name|__error_type_must_be_a_signed_integer_type
 argument_list|()
 block|;     }
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -518,7 +603,10 @@ name|__constraints
 argument_list|()
 block|{}
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -533,7 +621,10 @@ name|__constraints
 argument_list|()
 block|{}
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -548,7 +639,10 @@ name|__constraints
 argument_list|()
 block|{}
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -564,7 +658,10 @@ name|__constraints
 argument_list|()
 block|{}
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -581,7 +678,10 @@ name|__error_type_must_be_an_unsigned_integer_type
 argument_list|()
 block|;     }
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -597,7 +697,10 @@ name|__constraints
 argument_list|()
 block|{}
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -613,7 +716,10 @@ name|__constraints
 argument_list|()
 block|{}
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -629,7 +735,10 @@ name|__constraints
 argument_list|()
 block|{}
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -646,9 +755,18 @@ name|__constraints
 argument_list|()
 block|{}
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//===========================================================================
+end_comment
+
+begin_comment
 comment|// Basic Concepts
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -668,7 +786,10 @@ block|;
 comment|// require default constructor
 block|}
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -709,7 +830,10 @@ block|;
 comment|// possibly should be "Tp* a;" and then dereference "a" in constraint
 comment|// functions?  present way would require a default ctor, i think...
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -771,8 +895,14 @@ block|}
 name|_Tp
 name|__b
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// The SGI STL version of Assignable requires copy constructor and operator=
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -824,12 +954,15 @@ block|}
 name|_Tp
 name|__a
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
 name|_From
-block|,
+operator|,
 name|class
 name|_To
 operator|>
@@ -849,16 +982,46 @@ block|;     }
 name|_From
 name|__x
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// The C++ standard requirements for many concepts talk about return
+end_comment
+
+begin_comment
 comment|// types that must be "convertible to bool".  The problem with this
+end_comment
+
+begin_comment
 comment|// requirement is that it leaves the door open for evil proxies that
+end_comment
+
+begin_comment
 comment|// define things like operator|| with strange return types.  Two
+end_comment
+
+begin_comment
 comment|// possible solutions are:
+end_comment
+
+begin_comment
 comment|// 1) require the return type to be exactly bool
+end_comment
+
+begin_comment
 comment|// 2) stay with convertible to bool, and also
+end_comment
+
+begin_comment
 comment|//    specify stuff about all the logical operators.
+end_comment
+
+begin_comment
 comment|// For now we just test for convertible to bool.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -901,7 +1064,10 @@ name|__a
 block|,
 name|__b
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -926,8 +1092,14 @@ name|__a
 block|,
 name|__b
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// This is equivalent to SGI STL's LessThanComparable.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -973,7 +1145,10 @@ name|__a
 block|,
 name|__b
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_define
 define|#
 directive|define
 name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
@@ -984,6 +1159,9 @@ name|_NAME
 parameter_list|)
 define|\
 value|template<class _First, class _Second> \   struct _NAME { \     void __constraints() { (void)__constraints_(); } \     bool __constraints_() {  \       return  __a _OP __b; \     } \     _First __a; \     _Second __b; \   }
+end_define
+
+begin_define
 define|#
 directive|define
 name|_GLIBCXX_DEFINE_BINARY_OPERATOR_CONSTRAINT
@@ -994,96 +1172,144 @@ name|_NAME
 parameter_list|)
 define|\
 value|template<class _Ret, class _First, class _Second> \   struct _NAME { \     void __constraints() { (void)__constraints_(); } \     _Ret __constraints_() {  \       return __a _OP __b; \     } \     _First __a; \     _Second __b; \   }
+end_define
+
+begin_expr_stmt
 name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
 argument_list|(
 operator|==
 argument_list|,
 name|_EqualOpConcept
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
 argument_list|(
 operator|!=
 argument_list|,
 name|_NotEqualOpConcept
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
 argument_list|(
 operator|<
 argument_list|,
 name|_LessThanOpConcept
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
 argument_list|(
 operator|<=
 argument_list|,
 name|_LessEqualOpConcept
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
 argument_list|(
 operator|>
 argument_list|,
 name|_GreaterThanOpConcept
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
 argument_list|(
 operator|>=
 argument_list|,
 name|_GreaterEqualOpConcept
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_GLIBCXX_DEFINE_BINARY_OPERATOR_CONSTRAINT
 argument_list|(
 operator|+
 argument_list|,
 name|_PlusOpConcept
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_GLIBCXX_DEFINE_BINARY_OPERATOR_CONSTRAINT
 argument_list|(
 operator|*
 argument_list|,
 name|_TimesOpConcept
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_GLIBCXX_DEFINE_BINARY_OPERATOR_CONSTRAINT
 argument_list|(
 operator|/
 argument_list|,
 name|_DivideOpConcept
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_GLIBCXX_DEFINE_BINARY_OPERATOR_CONSTRAINT
 argument_list|(
 operator|-
 argument_list|,
 name|_SubtractOpConcept
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_GLIBCXX_DEFINE_BINARY_OPERATOR_CONSTRAINT
 argument_list|(
 operator|%
 argument_list|,
 name|_ModOpConcept
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_undef
 undef|#
 directive|undef
 name|_GLIBCXX_DEFINE_BINARY_PREDICATE_OP_CONSTRAINT
+end_undef
+
+begin_undef
 undef|#
 directive|undef
 name|_GLIBCXX_DEFINE_BINARY_OPERATOR_CONSTRAINT
+end_undef
+
+begin_comment
 comment|//===========================================================================
+end_comment
+
+begin_comment
 comment|// Function Object Concepts
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
 name|_Func
-block|,
+operator|,
 name|class
 name|_Return
 operator|>
@@ -1108,7 +1334,10 @@ block|}
 name|_Func
 name|__f
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1118,7 +1347,7 @@ expr|struct
 name|_GeneratorConcept
 operator|<
 name|_Func
-block|,
+operator|,
 name|void
 operator|>
 block|{
@@ -1134,15 +1363,18 @@ block|}
 name|_Func
 name|__f
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
 name|_Func
-block|,
+operator|,
 name|class
 name|_Return
-block|,
+operator|,
 name|class
 name|_Arg
 operator|>
@@ -1171,12 +1403,15 @@ block|;
 name|_Return
 name|__r
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
 name|_Func
-block|,
+operator|,
 name|class
 name|_Arg
 operator|>
@@ -1184,9 +1419,9 @@ expr|struct
 name|_UnaryFunctionConcept
 operator|<
 name|_Func
-block|,
+operator|,
 name|void
-block|,
+operator|,
 name|_Arg
 operator|>
 block|{
@@ -1207,18 +1442,21 @@ block|;
 name|_Arg
 name|__arg
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
 name|_Func
-block|,
+operator|,
 name|class
 name|_Return
-block|,
+operator|,
 name|class
 name|_First
-block|,
+operator|,
 name|class
 name|_Second
 operator|>
@@ -1252,15 +1490,18 @@ block|;
 name|_Return
 name|__r
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
 name|_Func
-block|,
+operator|,
 name|class
 name|_First
-block|,
+operator|,
 name|class
 name|_Second
 operator|>
@@ -1268,11 +1509,11 @@ expr|struct
 name|_BinaryFunctionConcept
 operator|<
 name|_Func
-block|,
+operator|,
 name|void
-block|,
+operator|,
 name|_First
-block|,
+operator|,
 name|_Second
 operator|>
 block|{
@@ -1298,12 +1539,15 @@ block|;
 name|_Second
 name|__second
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
 name|_Func
-block|,
+operator|,
 name|class
 name|_Arg
 operator|>
@@ -1330,15 +1574,18 @@ block|;
 name|_Arg
 name|__arg
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
 name|_Func
-block|,
+operator|,
 name|class
 name|_First
-block|,
+operator|,
 name|class
 name|_Second
 operator|>
@@ -1370,16 +1617,22 @@ block|;
 name|_Second
 name|__b
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// use this when functor is used inside a container class like std::set
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
 name|_Func
-block|,
+operator|,
 name|class
 name|_First
-block|,
+operator|,
 name|class
 name|_Second
 operator|>
@@ -1435,9 +1688,18 @@ block|;
 name|_Second
 name|__b
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//===========================================================================
+end_comment
+
+begin_comment
 comment|// Iterator Concepts
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1483,7 +1745,10 @@ block|}
 name|_Tp
 name|__i
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1519,7 +1784,10 @@ name|__i
 block|,
 name|__j
 block|;   }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1568,6 +1836,9 @@ operator|::
 name|reference
 name|_Ref
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|typename
 name|std
@@ -1580,6 +1851,9 @@ operator|::
 name|pointer
 name|_Pt
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|std
@@ -1592,6 +1866,9 @@ operator|::
 name|iterator_category
 name|_Cat
 expr_stmt|;
+end_typedef
+
+begin_expr_stmt
 name|__function_requires
 operator|<
 name|_ConvertibleConcept
@@ -1614,22 +1891,33 @@ expr|>
 operator|(
 operator|)
 expr_stmt|;
-operator|++
-name|__i
-expr_stmt|;
-comment|// require preincrement operator
-name|__i
-operator|++
-expr_stmt|;
-comment|// require postincrement operator
-block|}
-end_decl_stmt
+end_expr_stmt
 
-begin_decl_stmt
-name|_Tp
+begin_expr_stmt
+operator|++
 name|__i
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// require preincrement operator
+end_comment
+
+begin_expr_stmt
+name|__i
+operator|++
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// require postincrement operator
+end_comment
+
+begin_expr_stmt
+unit|}     _Tp
+name|__i
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 unit|};
@@ -4001,10 +4289,9 @@ unit|};
 comment|// HashedAssociativeContainer
 end_comment
 
-begin_comment
-unit|}
-comment|// namespace __gnu_cxx
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_undef
 undef|#

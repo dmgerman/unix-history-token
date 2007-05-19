@@ -4,7 +4,7 @@ comment|// Safe sequence implementation  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2003, 2004
+comment|// Copyright (C) 2003, 2004, 2005, 2006
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -99,6 +99,10 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
+begin_comment
+comment|/** @file debug/safe_sequence.h  *  This file is a GNU debug extension to the Standard C++ Library.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -116,6 +120,18 @@ begin_include
 include|#
 directive|include
 file|<debug/debug.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<debug/macros.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<debug/functions.h>
 end_include
 
 begin_include
@@ -341,6 +357,17 @@ operator|::
 name|const_iterator
 name|const_iterator
 expr_stmt|;
+name|__gnu_cxx
+operator|::
+name|__scoped_lock
+name|sentry
+argument_list|(
+name|this
+operator|->
+name|_M_get_mutex
+argument_list|()
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|_Safe_iterator_base
@@ -393,7 +420,7 @@ argument_list|)
 condition|)
 name|__victim
 operator|->
-name|_M_invalidate
+name|_M_invalidate_single
 argument_list|()
 expr_stmt|;
 block|}
@@ -450,7 +477,7 @@ argument_list|)
 condition|)
 name|__victim
 operator|->
-name|_M_invalidate
+name|_M_invalidate_single
 argument_list|()
 expr_stmt|;
 block|}
@@ -518,6 +545,20 @@ name|const_iterator
 expr_stmt|;
 end_typedef
 
+begin_expr_stmt
+name|__gnu_cxx
+operator|::
+name|__scoped_lock
+name|sentry
+argument_list|(
+name|this
+operator|->
+name|_M_get_mutex
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_for
 for|for
 control|(
@@ -572,7 +613,7 @@ argument_list|()
 condition|)
 name|__victim
 operator|->
-name|_M_attach
+name|_M_attach_single
 argument_list|(
 name|static_cast
 operator|<
@@ -641,7 +682,7 @@ argument_list|()
 condition|)
 name|__victim
 operator|->
-name|_M_attach
+name|_M_attach_single
 argument_list|(
 name|static_cast
 operator|<

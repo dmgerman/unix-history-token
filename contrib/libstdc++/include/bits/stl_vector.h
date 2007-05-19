@@ -4,7 +4,11 @@ comment|// Vector implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -134,11 +138,20 @@ directive|include
 file|<bits/concept_check.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|_GLIBCXX_STD
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NESTED_NAMESPACE
+argument_list|(
+argument|std
+argument_list|,
+argument|_GLIBCXX_STD
+argument_list|)
+end_macro
+
+begin_comment
 comment|/**    *  @if maint    *  See bits/stl_deque.h's _Deque_base for an explanation.    *  @endif   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -149,11 +162,25 @@ name|_Alloc
 operator|>
 expr|struct
 name|_Vector_base
-block|{       struct
+block|{
+typedef|typedef
+name|typename
+name|_Alloc
+operator|::
+name|template
+name|rebind
+operator|<
+name|_Tp
+operator|>
+operator|::
+name|other
+name|_Tp_alloc_type
+expr_stmt|;
+block|struct
 name|_Vector_impl
 operator|:
 name|public
-name|_Alloc
+name|_Tp_alloc_type
 block|{
 name|_Tp
 operator|*
@@ -169,13 +196,13 @@ name|_M_end_of_storage
 block|;
 name|_Vector_impl
 argument_list|(
-name|_Alloc
+name|_Tp_alloc_type
 specifier|const
 operator|&
 name|__a
 argument_list|)
 operator|:
-name|_Alloc
+name|_Tp_alloc_type
 argument_list|(
 name|__a
 argument_list|)
@@ -196,24 +223,32 @@ literal|0
 argument_list|)
 block|{ }
 block|}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|public
-operator|:
+label|:
+end_label
+
+begin_typedef
 typedef|typedef
 name|_Alloc
 name|allocator_type
 typedef|;
-name|allocator_type
-name|get_allocator
-argument_list|()
-specifier|const
+end_typedef
+
+begin_function
+name|_Tp_alloc_type
+modifier|&
+name|_M_get_Tp_allocator
+parameter_list|()
 block|{
 return|return
 operator|*
 name|static_cast
 operator|<
-specifier|const
-name|_Alloc
+name|_Tp_alloc_type
 operator|*
 operator|>
 operator|(
@@ -224,6 +259,51 @@ name|_M_impl
 operator|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
+specifier|const
+name|_Tp_alloc_type
+operator|&
+name|_M_get_Tp_allocator
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|static_cast
+operator|<
+specifier|const
+name|_Tp_alloc_type
+operator|*
+operator|>
+operator|(
+operator|&
+name|this
+operator|->
+name|_M_impl
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|allocator_type
+name|get_allocator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|allocator_type
+argument_list|(
+name|_M_get_Tp_allocator
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|_Vector_base
 argument_list|(
 specifier|const
@@ -318,6 +398,9 @@ operator|:
 name|_Vector_impl
 name|_M_impl
 expr_stmt|;
+end_expr_stmt
+
+begin_function
 name|_Tp
 modifier|*
 name|_M_allocate
@@ -335,6 +418,9 @@ name|__n
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|_M_deallocate
 parameter_list|(
@@ -360,14 +446,10 @@ name|__n
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
+unit|};
 comment|/**    *  @brief A standard container which offers fixed time access to    *  individual elements in any order.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  Meets the requirements of a<a href="tables.html#65">container</a>, a    *<a href="tables.html#66">reversible container</a>, and a    *<a href="tables.html#67">sequence</a>, including the    *<a href="tables.html#68">optional sequence requirements</a> with the    *  %exception of @c push_front and @c pop_front.    *    *  In some terminology a %vector can be described as a dynamic    *  C-style array, it offers fast and efficient access to individual    *  elements in any order and saves the user from worrying about    *  memory and size allocation.  Subscripting ( @c [] ) access is    *  also provided as with C-style arrays.   */
 end_comment
 
@@ -380,6 +462,8 @@ operator|,
 name|typename
 name|_Alloc
 operator|=
+name|std
+operator|::
 name|allocator
 operator|<
 name|_Tp
@@ -397,12 +481,30 @@ name|_Alloc
 operator|>
 block|{
 comment|// Concept requirements.
+typedef|typedef
+name|typename
+name|_Alloc
+operator|::
+name|value_type
+name|_Alloc_value_type
+expr_stmt|;
 name|__glibcxx_class_requires
 argument_list|(
 argument|_Tp
 argument_list|,
 argument|_SGIAssignableConcept
 argument_list|)
+name|__glibcxx_class_requires2
+argument_list|(
+argument|_Tp
+argument_list|,
+argument|_Alloc_value_type
+argument_list|,
+argument|_SameTypeConcept
+argument_list|)
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|_Vector_base
 operator|<
@@ -412,7 +514,7 @@ name|_Alloc
 operator|>
 name|_Base
 expr_stmt|;
-end_expr_stmt
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -423,6 +525,16 @@ operator|,
 name|_Alloc
 operator|>
 name|vector_type
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|typename
+name|_Base
+operator|::
+name|_Tp_alloc_type
+name|_Tp_alloc_type
 expr_stmt|;
 end_typedef
 
@@ -441,7 +553,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_Tp_alloc_type
 operator|::
 name|pointer
 name|pointer
@@ -451,7 +563,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_Tp_alloc_type
 operator|::
 name|const_pointer
 name|const_pointer
@@ -461,7 +573,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_Tp_alloc_type
 operator|::
 name|reference
 name|reference
@@ -471,7 +583,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|_Alloc
+name|_Tp_alloc_type
 operator|::
 name|const_reference
 name|const_reference
@@ -546,22 +658,15 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|typename
-name|_Base
-operator|::
+name|_Alloc
 name|allocator_type
-name|allocator_type
-expr_stmt|;
+typedef|;
 end_typedef
 
 begin_label
 name|protected
 label|:
 end_label
-
-begin_comment
-comment|/** @if maint        *  These two functions and three data members are all from the        *  base class.  They should be pretty self-explanatory, as        *  %vector uses a simple contiguous allocation scheme.  @endif        */
-end_comment
 
 begin_expr_stmt
 name|using
@@ -584,6 +689,14 @@ name|using
 name|_Base
 operator|::
 name|_M_impl
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|using
+name|_Base
+operator|::
+name|_M_get_Tp_allocator
 expr_stmt|;
 end_expr_stmt
 
@@ -626,11 +739,12 @@ argument|__a
 argument_list|)
 block|{ }
 comment|/**        *  @brief  Create a %vector with copies of an exemplar element.        *  @param  n  The number of elements to initially create.        *  @param  value  An element to copy.        *        *  This constructor fills the %vector with @a n copies of @a value.        */
+name|explicit
 name|vector
 argument_list|(
 argument|size_type __n
 argument_list|,
-argument|const value_type& __value
+argument|const value_type& __value = value_type()
 argument_list|,
 argument|const allocator_type& __a = allocator_type()
 argument_list|)
@@ -642,15 +756,9 @@ argument_list|,
 argument|__a
 argument_list|)
 block|{
-name|this
-operator|->
-name|_M_impl
-operator|.
-name|_M_finish
-operator|=
 name|std
 operator|::
-name|uninitialized_fill_n
+name|__uninitialized_fill_n_a
 argument_list|(
 name|this
 operator|->
@@ -661,44 +769,25 @@ argument_list|,
 name|__n
 argument_list|,
 name|__value
-argument_list|)
-block|; }
-comment|/**        *  @brief  Create a %vector with default elements.        *  @param  n  The number of elements to initially create.        *        *  This constructor fills the %vector with @a n copies of a        *  default-constructed element.        */
-name|explicit
-name|vector
-argument_list|(
-argument|size_type __n
-argument_list|)
-operator|:
-name|_Base
-argument_list|(
-argument|__n
 argument_list|,
-argument|allocator_type()
+name|_M_get_Tp_allocator
+argument_list|()
 argument_list|)
-block|{
+block|;
 name|this
 operator|->
 name|_M_impl
 operator|.
 name|_M_finish
 operator|=
-name|std
-operator|::
-name|uninitialized_fill_n
-argument_list|(
 name|this
 operator|->
 name|_M_impl
 operator|.
 name|_M_start
-argument_list|,
+operator|+
 name|__n
-argument_list|,
-name|value_type
-argument_list|()
-argument_list|)
-block|; }
+block|;       }
 comment|/**        *  @brief  %Vector copy constructor.        *  @param  x  A %vector of identical element and allocator types.        *        *  The newly-created %vector uses a copy of the allocation        *  object used by @a x.  All the elements of @a x are copied,        *  but any extra memory in        *  @a x (for fast expansion) will not be copied.        */
 name|vector
 argument_list|(
@@ -712,7 +801,7 @@ name|_Base
 argument_list|(
 argument|__x.size()
 argument_list|,
-argument|__x.get_allocator()
+argument|__x._M_get_Tp_allocator()
 argument_list|)
 block|{
 name|this
@@ -723,7 +812,7 @@ name|_M_finish
 operator|=
 name|std
 operator|::
-name|uninitialized_copy
+name|__uninitialized_copy_a
 argument_list|(
 name|__x
 operator|.
@@ -740,6 +829,9 @@ operator|->
 name|_M_impl
 operator|.
 name|_M_start
+argument_list|,
+name|_M_get_Tp_allocator
+argument_list|()
 argument_list|)
 block|;       }
 comment|/**        *  @brief  Builds a %vector from a range.        *  @param  first  An input iterator.        *  @param  last  An input iterator.        *        *  Create a %vector consisting of copies of the elements from        *  [first,last).        *        *  If the iterators are forward, bidirectional, or        *  random-access, then this will call the elements' copy        *  constructor N times (where N is distance(first,last)) and do        *  no memory reallocation.  But if only input iterators are        *  used, then this will do at most 2N calls to the copy        *  constructor, and logN memory reallocations.        */
@@ -765,12 +857,14 @@ block|{
 comment|// Check whether it's an integral type.  If so, it's not an iterator.
 typedef|typedef
 name|typename
-name|_Is_integer
+name|std
+operator|::
+name|__is_integer
 operator|<
 name|_InputIterator
 operator|>
 operator|::
-name|_Integral
+name|__type
 name|_Integral
 expr_stmt|;
 name|_M_initialize_dispatch
@@ -813,6 +907,9 @@ operator|->
 name|_M_impl
 operator|.
 name|_M_finish
+argument_list|,
+name|_M_get_Tp_allocator
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -884,12 +981,14 @@ block|{
 comment|// Check whether it's an integral type.  If so, it's not an iterator.
 typedef|typedef
 name|typename
-name|_Is_integer
+name|std
+operator|::
+name|__is_integer
 operator|<
 name|_InputIterator
 operator|>
 operator|::
-name|_Integral
+name|__type
 name|_Integral
 expr_stmt|;
 name|_M_assign_dispatch
@@ -1106,11 +1205,17 @@ block|{
 return|return
 name|size_type
 argument_list|(
-name|end
-argument_list|()
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_finish
 operator|-
-name|begin
-argument_list|()
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_start
 argument_list|)
 return|;
 block|}
@@ -1127,16 +1232,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|size_type
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|value_type
-argument_list|)
+name|_M_get_Tp_allocator
+argument_list|()
+operator|.
+name|max_size
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -1152,10 +1252,11 @@ parameter_list|(
 name|size_type
 name|__new_size
 parameter_list|,
-specifier|const
 name|value_type
-modifier|&
 name|__x
+init|=
+name|value_type
+argument_list|()
 parameter_list|)
 block|{
 if|if
@@ -1165,15 +1266,15 @@ operator|<
 name|size
 argument_list|()
 condition|)
-name|erase
+name|_M_erase_at_end
 argument_list|(
-name|begin
-argument_list|()
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_start
 operator|+
 name|__new_size
-argument_list|,
-name|end
-argument_list|()
 argument_list|)
 expr_stmt|;
 else|else
@@ -1194,29 +1295,6 @@ block|}
 end_function
 
 begin_comment
-comment|/**        *  @brief  Resizes the %vector to the specified number of elements.        *  @param  new_size  Number of elements the %vector should contain.        *        *  This function will resize the %vector to the specified        *  number of elements.  If the number is smaller than the        *  %vector's current size the %vector is truncated, otherwise        *  the %vector is extended and new elements are        *  default-constructed.        */
-end_comment
-
-begin_function
-name|void
-name|resize
-parameter_list|(
-name|size_type
-name|__new_size
-parameter_list|)
-block|{
-name|resize
-argument_list|(
-name|__new_size
-argument_list|,
-name|value_type
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/**        *  Returns the total number of elements that the %vector can        *  hold before needing to allocate more memory.        */
 end_comment
 
@@ -1229,17 +1307,17 @@ block|{
 return|return
 name|size_type
 argument_list|(
-name|const_iterator
-argument_list|(
 name|this
 operator|->
 name|_M_impl
 operator|.
 name|_M_end_of_storage
-argument_list|)
 operator|-
-name|begin
-argument_list|()
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_start
 argument_list|)
 return|;
 block|}
@@ -1299,8 +1377,11 @@ block|{
 return|return
 operator|*
 operator|(
-name|begin
-argument_list|()
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_start
 operator|+
 name|__n
 operator|)
@@ -1325,8 +1406,11 @@ block|{
 return|return
 operator|*
 operator|(
-name|begin
-argument_list|()
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_start
 operator|+
 name|__n
 operator|)
@@ -1515,6 +1599,59 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
+
+begin_comment
+comment|// DR 464. Suggestion for new member functions in standard containers.
+end_comment
+
+begin_comment
+comment|// data access
+end_comment
+
+begin_comment
+comment|/**        *   Returns a pointer such that [data(), data() + size()) is a valid        *   range.  For a non-empty %vector, data() ==&front().        */
+end_comment
+
+begin_function
+name|pointer
+name|data
+parameter_list|()
+block|{
+return|return
+name|pointer
+argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_start
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|const_pointer
+name|data
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_pointer
+argument_list|(
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_start
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|// [23.2.4.3] modifiers
 end_comment
 
@@ -1547,9 +1684,11 @@ operator|.
 name|_M_end_of_storage
 condition|)
 block|{
-name|std
-operator|::
-name|_Construct
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|construct
 argument_list|(
 name|this
 operator|->
@@ -1596,9 +1735,11 @@ name|_M_impl
 operator|.
 name|_M_finish
 expr_stmt|;
-name|std
-operator|::
-name|_Destroy
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|destroy
 argument_list|(
 name|this
 operator|->
@@ -1684,12 +1825,14 @@ block|{
 comment|// Check whether it's an integral type.  If so, it's not an iterator.
 typedef|typedef
 name|typename
-name|_Is_integer
+name|std
+operator|::
+name|__is_integer
 operator|<
 name|_InputIterator
 operator|>
 operator|::
-name|_Integral
+name|__type
 name|_Integral
 expr_stmt|;
 name|_M_insert_dispatch
@@ -1804,6 +1947,26 @@ operator|.
 name|_M_end_of_storage
 argument_list|)
 expr_stmt|;
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 431. Swapping containers with unequal allocators.
+name|std
+operator|::
+name|__alloc_swap
+operator|<
+name|_Tp_alloc_type
+operator|>
+operator|::
+name|_S_do_it
+argument_list|(
+name|_M_get_Tp_allocator
+argument_list|()
+argument_list|,
+name|__x
+operator|.
+name|_M_get_Tp_allocator
+argument_list|()
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1816,13 +1979,13 @@ name|void
 name|clear
 parameter_list|()
 block|{
-name|erase
+name|_M_erase_at_end
 argument_list|(
-name|begin
-argument_list|()
-argument_list|,
-name|end
-argument_list|()
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_start
 argument_list|)
 expr_stmt|;
 block|}
@@ -1867,13 +2030,16 @@ name|try
 block|{
 name|std
 operator|::
-name|uninitialized_copy
+name|__uninitialized_copy_a
 argument_list|(
 name|__first
 argument_list|,
 name|__last
 argument_list|,
 name|__result
+argument_list|,
+name|_M_get_Tp_allocator
+argument_list|()
 argument_list|)
 block|;
 return|return
@@ -1946,15 +2112,9 @@ name|_M_start
 operator|+
 name|__n
 block|;
-name|this
-operator|->
-name|_M_impl
-operator|.
-name|_M_finish
-operator|=
 name|std
 operator|::
-name|uninitialized_fill_n
+name|__uninitialized_fill_n_a
 argument_list|(
 name|this
 operator|->
@@ -1965,7 +2125,22 @@ argument_list|,
 name|__n
 argument_list|,
 name|__value
+argument_list|,
+name|_M_get_Tp_allocator
+argument_list|()
 argument_list|)
+block|;
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_finish
+operator|=
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_end_of_storage
 block|; 	}
 comment|// Called by the range constructor to implement [23.1.1]/9
 name|template
@@ -1985,6 +2160,8 @@ argument_list|)
 block|{
 typedef|typedef
 name|typename
+name|std
+operator|::
 name|iterator_traits
 operator|<
 name|_InputIterator
@@ -2023,7 +2200,7 @@ argument|_InputIterator __first
 argument_list|,
 argument|_InputIterator __last
 argument_list|,
-argument|input_iterator_tag
+argument|std::input_iterator_tag
 argument_list|)
 block|{
 for|for
@@ -2062,9 +2239,10 @@ argument|_ForwardIterator __first
 argument_list|,
 argument|_ForwardIterator __last
 argument_list|,
-argument|forward_iterator_tag
+argument|std::forward_iterator_tag
 argument_list|)
 block|{
+specifier|const
 name|size_type
 name|__n
 operator|=
@@ -2112,7 +2290,7 @@ name|_M_finish
 operator|=
 name|std
 operator|::
-name|uninitialized_copy
+name|__uninitialized_copy_a
 argument_list|(
 name|__first
 argument_list|,
@@ -2123,6 +2301,9 @@ operator|->
 name|_M_impl
 operator|.
 name|_M_start
+argument_list|,
+name|_M_get_Tp_allocator
+argument_list|()
 argument_list|)
 block|; 	}
 comment|// Internal assign functions follow.  The *_aux functions do the actual
@@ -2180,6 +2361,8 @@ argument_list|)
 block|{
 typedef|typedef
 name|typename
+name|std
+operator|::
 name|iterator_traits
 operator|<
 name|_InputIterator
@@ -2218,7 +2401,7 @@ argument|_InputIterator __first
 argument_list|,
 argument|_InputIterator __last
 argument_list|,
-argument|input_iterator_tag
+argument|std::input_iterator_tag
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2240,7 +2423,7 @@ argument|_ForwardIterator __first
 argument_list|,
 argument|_ForwardIterator __last
 argument_list|,
-argument|forward_iterator_tag
+argument|std::forward_iterator_tag
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2335,6 +2518,8 @@ argument_list|)
 block|{
 typedef|typedef
 name|typename
+name|std
+operator|::
 name|iterator_traits
 operator|<
 name|_InputIterator
@@ -2377,7 +2562,7 @@ argument|_InputIterator __first
 argument_list|,
 argument|_InputIterator __last
 argument_list|,
-argument|input_iterator_tag
+argument|std::input_iterator_tag
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2401,7 +2586,7 @@ argument|_ForwardIterator __first
 argument_list|,
 argument|_ForwardIterator __last
 argument_list|,
-argument|forward_iterator_tag
+argument|std::forward_iterator_tag
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2452,6 +2637,53 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|// Internal erase functions follow.
+end_comment
+
+begin_comment
+comment|// Called by erase(q1,q2), clear(), resize(), _M_fill_assign,
+end_comment
+
+begin_comment
+comment|// _M_assign_aux.
+end_comment
+
+begin_function
+name|void
+name|_M_erase_at_end
+parameter_list|(
+name|pointer
+name|__pos
+parameter_list|)
+block|{
+name|std
+operator|::
+name|_Destroy
+argument_list|(
+name|__pos
+argument_list|,
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_finish
+argument_list|,
+name|_M_get_Tp_allocator
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|this
+operator|->
+name|_M_impl
+operator|.
+name|_M_finish
+operator|=
+name|__pos
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 unit|};
 comment|/**    *  @brief  Vector equality comparison.    *  @param  x  A %vector.    *  @param  y  A %vector of the same type as @a x.    *  @return  True iff the size and elements of the vectors are equal.    *    *  This is an equivalence relation.  It is linear in the size of the    *  vectors.  Vectors are considered equivalent if their sizes are equal,    *  and if corresponding elements compare equal.   */
 end_comment
@@ -2492,6 +2724,7 @@ name|__y
 operator|)
 block|{
 return|return
+operator|(
 name|__x
 operator|.
 name|size
@@ -2521,6 +2754,7 @@ operator|.
 name|begin
 argument_list|()
 argument_list|)
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -2823,12 +3057,8 @@ argument_list|(
 name|__y
 argument_list|)
 block|; }
+name|_GLIBCXX_END_NESTED_NAMESPACE
 end_expr_stmt
-
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
 
 begin_endif
 endif|#

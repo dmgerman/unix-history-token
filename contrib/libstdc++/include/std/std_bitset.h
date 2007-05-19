@@ -4,7 +4,11 @@ comment|//<bitset> -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,7 +104,7 @@ comment|/*  * Copyright (c) 1998  * Silicon Graphics Computer Systems, Inc.  *  
 end_comment
 
 begin_comment
-comment|/** @file bitset  *  This is a Standard C++ Library header.  You should @c #include this header  *  in your programs, rather than any of the "st[dl]_*.h" implementation files.  */
+comment|/** @file include/bitset  *  This is a Standard C++ Library header.  */
 end_comment
 
 begin_ifndef
@@ -208,14 +212,23 @@ parameter_list|(
 name|__n
 parameter_list|)
 define|\
-value|((__n)< 1 ? 0 : ((__n) + _GLIBCXX_BITSET_BITS_PER_WORD - 1)/_GLIBCXX_BITSET_BITS_PER_WORD)
+value|((__n)< 1 ? 0 : ((__n) + _GLIBCXX_BITSET_BITS_PER_WORD - 1) \                   / _GLIBCXX_BITSET_BITS_PER_WORD)
 end_define
 
-begin_decl_stmt
-name|namespace
-name|_GLIBCXX_STD
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NESTED_NAMESPACE
+argument_list|(
+argument|std
+argument_list|,
+argument|_GLIBCXX_STD
+argument_list|)
+end_macro
+
+begin_comment
 comment|/**    *  @if maint    *  Base class, general case.  It is a class inveriant that _Nw will be    *  nonnegative.    *    *  See documentation for bitset.    *  @endif   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|size_t
@@ -236,17 +249,29 @@ index|[
 name|_Nw
 index|]
 expr_stmt|;
+end_expr_stmt
+
+begin_macro
 name|_Base_bitset
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|_M_do_reset
 argument_list|()
 expr_stmt|;
 block|}
+end_block
+
+begin_macro
 name|_Base_bitset
 argument_list|(
 argument|unsigned long __val
 argument_list|)
+end_macro
+
+begin_block
 block|{
 name|_M_do_reset
 argument_list|()
@@ -259,6 +284,9 @@ operator|=
 name|__val
 expr_stmt|;
 block|}
+end_block
+
+begin_function
 specifier|static
 name|size_t
 name|_S_whichword
@@ -273,6 +301,9 @@ operator|/
 name|_GLIBCXX_BITSET_BITS_PER_WORD
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|size_t
 name|_S_whichbyte
@@ -291,6 +322,9 @@ operator|/
 name|__CHAR_BIT__
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|size_t
 name|_S_whichbit
@@ -305,6 +339,9 @@ operator|%
 name|_GLIBCXX_BITSET_BITS_PER_WORD
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|_WordT
 name|_S_maskbit
@@ -330,6 +367,9 @@ name|__pos
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 name|_WordT
 modifier|&
 name|_M_getword
@@ -348,6 +388,9 @@ argument_list|)
 index|]
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 name|_WordT
 name|_M_getword
 argument_list|(
@@ -366,6 +409,9 @@ argument_list|)
 index|]
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|_WordT
 modifier|&
 name|_M_hiword
@@ -380,6 +426,9 @@ literal|1
 index|]
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|_WordT
 name|_M_hiword
 argument_list|()
@@ -394,6 +443,9 @@ literal|1
 index|]
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|_M_do_and
 argument_list|(
@@ -433,6 +485,9 @@ name|__i
 index|]
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|_M_do_or
 argument_list|(
@@ -472,6 +527,9 @@ name|__i
 index|]
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|_M_do_xor
 argument_list|(
@@ -511,6 +569,9 @@ name|__i
 index|]
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_function_decl
 name|void
 name|_M_do_left_shift
 parameter_list|(
@@ -518,6 +579,9 @@ name|size_t
 name|__shift
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|_M_do_right_shift
 parameter_list|(
@@ -525,6 +589,9 @@ name|size_t
 name|__shift
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function
 name|void
 name|_M_do_flip
 parameter_list|()
@@ -555,6 +622,9 @@ name|__i
 index|]
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|_M_do_set
 parameter_list|()
@@ -588,10 +658,15 @@ literal|0
 operator|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|_M_do_reset
 parameter_list|()
 block|{
+name|std
+operator|::
 name|memset
 argument_list|(
 name|_M_w
@@ -607,6 +682,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_decl_stmt
 name|bool
 name|_M_is_equal
 argument_list|(
@@ -657,6 +735,9 @@ return|return
 name|true
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|bool
 name|_M_is_any
 argument_list|()
@@ -696,13 +777,21 @@ return|return
 name|true
 return|;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-name|size_t
+end_return
+
+begin_macro
+unit|}        size_t
 name|_M_do_count
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 name|size_t
@@ -734,14 +823,16 @@ name|__i
 index|]
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|__result
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_expr_stmt
-name|unsigned
+unit|}        unsigned
 name|long
 name|_M_do_to_ulong
 argument_list|()
@@ -872,9 +963,11 @@ specifier|const
 name|size_t
 name|__sub_offset
 init|=
+operator|(
 name|_GLIBCXX_BITSET_BITS_PER_WORD
 operator|-
 name|__offset
+operator|)
 decl_stmt|;
 for|for
 control|(
@@ -898,6 +991,7 @@ name|__n
 index|]
 operator|=
 operator|(
+operator|(
 name|_M_w
 index|[
 name|__n
@@ -919,6 +1013,7 @@ literal|1
 index|]
 operator|>>
 name|__sub_offset
+operator|)
 operator|)
 expr_stmt|;
 name|_M_w
@@ -1051,9 +1146,11 @@ specifier|const
 name|size_t
 name|__sub_offset
 init|=
+operator|(
 name|_GLIBCXX_BITSET_BITS_PER_WORD
 operator|-
 name|__offset
+operator|)
 decl_stmt|;
 for|for
 control|(
@@ -1074,6 +1171,7 @@ index|[
 name|__n
 index|]
 operator|=
+operator|(
 operator|(
 name|_M_w
 index|[
@@ -1096,6 +1194,7 @@ literal|1
 index|]
 operator|<<
 name|__sub_offset
+operator|)
 operator|)
 expr_stmt|;
 name|_M_w
@@ -1250,6 +1349,7 @@ literal|0
 operator|)
 condition|)
 return|return
+operator|(
 name|__i
 operator|*
 name|_GLIBCXX_BITSET_BITS_PER_WORD
@@ -1258,6 +1358,7 @@ name|__builtin_ctzl
 argument_list|(
 name|__thisword
 argument_list|)
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -1369,6 +1470,7 @@ literal|0
 operator|)
 condition|)
 return|return
+operator|(
 name|__i
 operator|*
 name|_GLIBCXX_BITSET_BITS_PER_WORD
@@ -1377,6 +1479,7 @@ name|__builtin_ctzl
 argument_list|(
 name|__thisword
 argument_list|)
+operator|)
 return|;
 end_if
 
@@ -1422,6 +1525,7 @@ literal|0
 operator|)
 condition|)
 return|return
+operator|(
 name|__i
 operator|*
 name|_GLIBCXX_BITSET_BITS_PER_WORD
@@ -1430,6 +1534,7 @@ name|__builtin_ctzl
 argument_list|(
 name|__thisword
 argument_list|)
+operator|)
 return|;
 block|}
 end_for
@@ -1483,7 +1588,7 @@ name|_M_w
 argument_list|(
 literal|0
 argument_list|)
-block|{}
+block|{ }
 name|_Base_bitset
 argument_list|(
 argument|unsigned long __val
@@ -1493,7 +1598,7 @@ name|_M_w
 argument_list|(
 argument|__val
 argument_list|)
-block|{}
+block|{ }
 specifier|static
 name|size_t
 name|_S_whichword
@@ -1944,12 +2049,12 @@ name|_WordT
 typedef|;
 name|_Base_bitset
 argument_list|()
-block|{}
+block|{ }
 name|_Base_bitset
 argument_list|(
 argument|unsigned long
 argument_list|)
-block|{}
+block|{ }
 specifier|static
 name|size_t
 name|_S_whichword
@@ -2343,7 +2448,7 @@ name|_S_do_sanitize
 argument_list|(
 argument|unsigned long
 argument_list|)
-block|{ }
+block|{}
 block|}
 expr_stmt|;
 end_expr_stmt
@@ -2421,7 +2526,7 @@ label|:
 end_label
 
 begin_comment
-comment|/**      *  This encapsulates the concept of a single bit.  An instance of this      *  class is a proxy for an actual bit; this way the individual bit      *  operations are done as faster word-size bitwise instructions.      *      *  Most users will never need to use this class directly; conversions      *  to and from bool are automatic and should be transparent.  Overloaded      *  operators help to preserve the illusion.      *      *  (On a typical system, this "bit %reference" is 64 times the size of      *  an actual bit.  Ha.)     */
+comment|/**        *  This encapsulates the concept of a single bit.  An instance of this        *  class is a proxy for an actual bit; this way the individual bit        *  operations are done as faster word-size bitwise instructions.        *        *  Most users will never need to use this class directly; conversions        *  to and from bool are automatic and should be transparent.  Overloaded        *  operators help to preserve the illusion.        *        *  (On a typical system, this "bit %reference" is 64 times the size of        *  an actual bit.  Ha.)        */
 end_comment
 
 begin_decl_stmt
@@ -2729,7 +2834,7 @@ block|}
 end_block
 
 begin_comment
-comment|/**      *  @brief  Use a subset of a string.      *  @param  s  A string of '0' and '1' characters.      *  @param  position  Index of the first character in @a s to use; defaults      *               to zero.      *  @throw  std::out_of_range  If @a pos is bigger the size of @a s.      *  @throw  std::invalid_argument  If a character appears in the string      *                                 which is neither '0' nor '1'.     */
+comment|/**        *  @brief  Use a subset of a string.        *  @param  s  A string of '0' and '1' characters.        *  @param  position  Index of the first character in @a s to use;        *                    defaults to zero.        *  @throw  std::out_of_range  If @a pos is bigger the size of @a s.        *  @throw  std::invalid_argument  If a character appears in the string        *                                 which is neither '0' nor '1'.        */
 end_comment
 
 begin_expr_stmt
@@ -2747,7 +2852,7 @@ operator|>
 name|explicit
 name|bitset
 argument_list|(
-argument|const basic_string<_CharT
+argument|const std::basic_string<_CharT
 argument_list|,
 argument|_Traits
 argument_list|,
@@ -2784,6 +2889,8 @@ name|__s
 argument_list|,
 name|__position
 argument_list|,
+name|std
+operator|::
 name|basic_string
 operator|<
 name|_CharT
@@ -2800,7 +2907,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/**      *  @brief  Use a subset of a string.      *  @param  s  A string of '0' and '1' characters.      *  @param  position  Index of the first character in @a s to use.      *  @param  n    The number of characters to copy.      *  @throw  std::out_of_range  If @a pos is bigger the size of @a s.      *  @throw  std::invalid_argument  If a character appears in the string      *                                 which is neither '0' nor '1'.     */
+comment|/**        *  @brief  Use a subset of a string.        *  @param  s  A string of '0' and '1' characters.        *  @param  position  Index of the first character in @a s to use.        *  @param  n    The number of characters to copy.        *  @throw  std::out_of_range  If @a pos is bigger the size of @a s.        *  @throw  std::invalid_argument  If a character appears in the string        *                                 which is neither '0' nor '1'.        */
 end_comment
 
 begin_expr_stmt
@@ -2817,7 +2924,7 @@ name|_Alloc
 operator|>
 name|bitset
 argument_list|(
-argument|const basic_string<_CharT
+argument|const std::basic_string<_CharT
 argument_list|,
 argument|_Traits
 argument_list|,
@@ -2870,7 +2977,7 @@ comment|//@{
 end_comment
 
 begin_comment
-comment|/**      *  @brief  Operations on bitsets.      *  @param  rhs  A same-sized bitset.      *      *  These should be self-explanatory.     */
+comment|/**        *  @brief  Operations on bitsets.        *  @param  rhs  A same-sized bitset.        *        *  These should be self-explanatory.        */
 end_comment
 
 begin_expr_stmt
@@ -2978,7 +3085,7 @@ comment|//@{
 end_comment
 
 begin_comment
-comment|/**      *  @brief  Operations on bitsets.      *  @param  position  The number of places to shift.      *      *  These should be self-explanatory.     */
+comment|/**        *  @brief  Operations on bitsets.        *  @param  position  The number of places to shift.        *        *  These should be self-explanatory.        */
 end_comment
 
 begin_expr_stmt
@@ -3038,7 +3145,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}      bitset
+unit|}        bitset
 operator|<
 name|_Nb
 operator|>
@@ -3103,7 +3210,7 @@ comment|//@{
 end_comment
 
 begin_comment
-comment|/**      *  These versions of single-bit set, reset, flip, and test are      *  extensions from the SGI version.  They do no range checking.      *  @ingroup SGIextensions     */
+comment|/**        *  These versions of single-bit set, reset, flip, and test are        *  extensions from the SGI version.  They do no range checking.        *  @ingroup SGIextensions        */
 end_comment
 
 begin_expr_stmt
@@ -3195,7 +3302,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}      bitset
+unit|}        bitset
 operator|<
 name|_Nb
 operator|>
@@ -3270,6 +3377,7 @@ decl|const
 block|{
 return|return
 operator|(
+operator|(
 name|this
 operator|->
 name|_M_getword
@@ -3292,6 +3400,7 @@ operator|>
 operator|(
 literal|0
 operator|)
+operator|)
 return|;
 block|}
 end_decl_stmt
@@ -3305,7 +3414,7 @@ comment|// Set, reset, and flip.
 end_comment
 
 begin_comment
-comment|/**      *  @brief Sets every bit to true.     */
+comment|/**        *  @brief Sets every bit to true.        */
 end_comment
 
 begin_expr_stmt
@@ -3335,7 +3444,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  @brief Sets a given bit to a particular value.      *  @param  position  The index of the bit.      *  @param  val  Either true or false, defaults to true.      *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.     */
+comment|/**        *  @brief Sets a given bit to a particular value.        *  @param  position  The index of the bit.        *  @param  val  Either true or false, defaults to true.        *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.        */
 end_comment
 
 begin_expr_stmt
@@ -3380,7 +3489,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/**      *  @brief Sets every bit to false.     */
+comment|/**        *  @brief Sets every bit to false.        */
 end_comment
 
 begin_expr_stmt
@@ -3405,7 +3514,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  @brief Sets a given bit to false.      *  @param  position  The index of the bit.      *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.      *      *  Same as writing @c set(pos,false).     */
+comment|/**        *  @brief Sets a given bit to false.        *  @param  position  The index of the bit.        *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.        *        *  Same as writing @c set(pos,false).        */
 end_comment
 
 begin_expr_stmt
@@ -3446,7 +3555,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/**      *  @brief Toggles every bit to its opposite value.     */
+comment|/**        *  @brief Toggles every bit to its opposite value.        */
 end_comment
 
 begin_expr_stmt
@@ -3476,7 +3585,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  @brief Toggles a given bit to its opposite value.      *  @param  position  The index of the bit.      *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.     */
+comment|/**        *  @brief Toggles a given bit to its opposite value.        *  @param  position  The index of the bit.        *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.        */
 end_comment
 
 begin_expr_stmt
@@ -3552,7 +3661,7 @@ comment|//@{
 end_comment
 
 begin_comment
-comment|/**      *  @brief  Array-indexing support.      *  @param  position  Index into the %bitset.      *  @return  A bool for a 'const %bitset'.  For non-const bitsets, an      *           instance of the reference proxy class.      *  @note  These operators do no range checking and throw no exceptions,      *         as required by DR 11 to the standard.      *      *  @if maint      *  _GLIBCXX_RESOLVE_LIB_DEFECTS Note that this implementation already      *  resolves DR 11 (items 1 and 2), but does not do the range-checking      *  required by that DR's resolution.  -pme      *  The DR has since been changed:  range-checking is a precondition      *  (users' responsibility), and these functions must not throw.  -pme      *  @endif     */
+comment|/**        *  @brief  Array-indexing support.        *  @param  position  Index into the %bitset.        *  @return  A bool for a 'const %bitset'.  For non-const bitsets, an        *           instance of the reference proxy class.        *  @note  These operators do no range checking and throw no exceptions,        *         as required by DR 11 to the standard.        *        *  @if maint        *  _GLIBCXX_RESOLVE_LIB_DEFECTS Note that this implementation already        *  resolves DR 11 (items 1 and 2), but does not do the range-checking        *  required by that DR's resolution.  -pme        *  The DR has since been changed:  range-checking is a precondition        *  (users' responsibility), and these functions must not throw.  -pme        *  @endif        */
 end_comment
 
 begin_function
@@ -3600,7 +3709,7 @@ comment|//@}
 end_comment
 
 begin_comment
-comment|/**      *  @brief Retuns a numerical interpretation of the %bitset.      *  @return  The integral equivalent of the bits.      *  @throw  std::overflow_error  If there are too many bits to be      *                               represented in an @c unsigned @c long.     */
+comment|/**        *  @brief Retuns a numerical interpretation of the %bitset.        *  @return  The integral equivalent of the bits.        *  @throw  std::overflow_error  If there are too many bits to be        *                               represented in an @c unsigned @c long.        */
 end_comment
 
 begin_expr_stmt
@@ -3620,7 +3729,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  @brief Retuns a character interpretation of the %bitset.      *  @return  The string equivalent of the bits.      *      *  Note the ordering of the bits:  decreasing character positions      *  correspond to increasing bit positions (see the main class notes for      *  an example).      *      *  Also note that you must specify the string's template parameters      *  explicitly.  Given a bitset @c bs and a string @s:      *  @code      *     s = bs.to_string<char,char_traits<char>,allocator<char>>();      *  @endcode     */
+comment|/**        *  @brief Retuns a character interpretation of the %bitset.        *  @return  The string equivalent of the bits.        *        *  Note the ordering of the bits:  decreasing character positions        *  correspond to increasing bit positions (see the main class notes for        *  an example).        */
 end_comment
 
 begin_expr_stmt
@@ -3635,6 +3744,8 @@ operator|,
 name|class
 name|_Alloc
 operator|>
+name|std
+operator|::
 name|basic_string
 operator|<
 name|_CharT
@@ -3647,6 +3758,8 @@ name|to_string
 argument_list|()
 specifier|const
 block|{
+name|std
+operator|::
 name|basic_string
 operator|<
 name|_CharT
@@ -3664,6 +3777,167 @@ argument_list|)
 block|;
 return|return
 name|__result
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
+
+begin_comment
+comment|// 434. bitset::to_string() hard to use.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|_CharT
+operator|,
+name|class
+name|_Traits
+operator|>
+name|std
+operator|::
+name|basic_string
+operator|<
+name|_CharT
+operator|,
+name|_Traits
+operator|,
+name|std
+operator|::
+name|allocator
+operator|<
+name|_CharT
+operator|>
+expr|>
+name|to_string
+argument_list|()
+specifier|const
+block|{
+return|return
+name|to_string
+operator|<
+name|_CharT
+operator|,
+name|_Traits
+operator|,
+name|std
+operator|::
+name|allocator
+operator|<
+name|_CharT
+operator|>
+expr|>
+operator|(
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|_CharT
+operator|>
+name|std
+operator|::
+name|basic_string
+operator|<
+name|_CharT
+operator|,
+name|std
+operator|::
+name|char_traits
+operator|<
+name|_CharT
+operator|>
+operator|,
+name|std
+operator|::
+name|allocator
+operator|<
+name|_CharT
+operator|>
+expr|>
+name|to_string
+argument_list|()
+specifier|const
+block|{
+return|return
+name|to_string
+operator|<
+name|_CharT
+operator|,
+name|std
+operator|::
+name|char_traits
+operator|<
+name|_CharT
+operator|>
+operator|,
+name|std
+operator|::
+name|allocator
+operator|<
+name|_CharT
+operator|>
+expr|>
+operator|(
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|basic_string
+operator|<
+name|char
+operator|,
+name|std
+operator|::
+name|char_traits
+operator|<
+name|char
+operator|>
+operator|,
+name|std
+operator|::
+name|allocator
+operator|<
+name|char
+operator|>
+expr|>
+name|to_string
+argument_list|()
+specifier|const
+block|{
+return|return
+name|to_string
+operator|<
+name|char
+operator|,
+name|std
+operator|::
+name|char_traits
+operator|<
+name|char
+operator|>
+operator|,
+name|std
+operator|::
+name|allocator
+operator|<
+name|char
+operator|>
+expr|>
+operator|(
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -3688,6 +3962,8 @@ name|void
 name|_M_copy_from_string
 argument_list|(
 specifier|const
+name|std
+operator|::
 name|basic_string
 operator|<
 name|_CharT
@@ -3721,7 +3997,7 @@ operator|>
 name|void
 name|_M_copy_to_string
 argument_list|(
-argument|basic_string<_CharT
+argument|std::basic_string<_CharT
 argument_list|,
 argument|_Traits
 argument_list|,
@@ -3832,7 +4108,7 @@ comment|//@}
 end_comment
 
 begin_comment
-comment|/**      *  @brief Tests the value of a bit.      *  @param  position  The index of a bit.      *  @return  The value at @a pos.      *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.     */
+comment|/**        *  @brief Tests the value of a bit.        *  @param  position  The index of a bit.        *  @return  The value at @a pos.        *  @throw  std::out_of_range  If @a pos is bigger the size of the %set.        */
 end_comment
 
 begin_decl_stmt
@@ -3868,7 +4144,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/**      *  @brief Tests whether any of the bits are on.      *  @return  True if at least one bit is set.     */
+comment|/**        *  @brief Tests whether any of the bits are on.        *  @return  True if at least one bit is set.        */
 end_comment
 
 begin_expr_stmt
@@ -3887,7 +4163,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  @brief Tests whether any of the bits are on.      *  @return  True if none of the bits are set.     */
+comment|/**        *  @brief Tests whether any of the bits are on.        *  @return  True if none of the bits are set.        */
 end_comment
 
 begin_expr_stmt
@@ -3975,7 +4251,7 @@ comment|//@}
 end_comment
 
 begin_comment
-comment|/**      *  @brief  Finds the index of the first "on" bit.      *  @return  The index of the first bit set, or size() if not found.      *  @ingroup SGIextensions      *  @sa  _Find_next     */
+comment|/**        *  @brief  Finds the index of the first "on" bit.        *  @return  The index of the first bit set, or size() if not found.        *  @ingroup SGIextensions        *  @sa  _Find_next        */
 end_comment
 
 begin_expr_stmt
@@ -3996,7 +4272,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  @brief  Finds the index of the next "on" bit after prev.      *  @return  The index of the next bit set, or size() if not found.      *  @param  prev  Where to start searching.      *  @ingroup SGIextensions      *  @sa  _Find_first     */
+comment|/**        *  @brief  Finds the index of the next "on" bit after prev.        *  @return  The index of the next bit set, or size() if not found.        *  @param  prev  Where to start searching.        *  @ingroup SGIextensions        *  @sa  _Find_first        */
 end_comment
 
 begin_decl_stmt
@@ -4051,7 +4327,7 @@ operator|>
 operator|::
 name|_M_copy_from_string
 argument_list|(
-argument|const basic_string<_CharT
+argument|const std::basic_string<_CharT
 argument_list|,
 argument|_Traits
 argument_list|,
@@ -4095,13 +4371,13 @@ control|(
 name|size_t
 name|__i
 init|=
-literal|0
+name|__nbits
 init|;
 name|__i
-operator|<
-name|__nbits
+operator|>
+literal|0
 condition|;
-operator|++
+operator|--
 name|__i
 control|)
 block|{
@@ -4114,8 +4390,6 @@ operator|+
 name|__nbits
 operator|-
 name|__i
-operator|-
-literal|1
 index|]
 condition|)
 block|{
@@ -4126,9 +4400,11 @@ break|break;
 case|case
 literal|'1'
 case|:
-name|set
+name|_Unchecked_set
 argument_list|(
 name|__i
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4145,7 +4421,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}     }
+unit|}       }
 name|template
 operator|<
 name|size_t
@@ -4170,7 +4446,7 @@ operator|>
 operator|::
 name|_M_copy_to_string
 argument_list|(
-argument|basic_string<_CharT
+argument|std::basic_string<_CharT
 argument_list|,
 argument|_Traits
 argument_list|,
@@ -4192,13 +4468,13 @@ control|(
 name|size_t
 name|__i
 init|=
-literal|0
+name|_Nb
 init|;
 name|__i
-operator|<
-name|_Nb
+operator|>
+literal|0
 condition|;
-operator|++
+operator|--
 name|__i
 control|)
 if|if
@@ -4206,13 +4482,13 @@ condition|(
 name|_Unchecked_test
 argument_list|(
 name|__i
+operator|-
+literal|1
 argument_list|)
 condition|)
 name|__s
 index|[
 name|_Nb
-operator|-
-literal|1
 operator|-
 name|__i
 index|]
@@ -4405,6 +4681,8 @@ operator|,
 name|size_t
 name|_Nb
 operator|>
+name|std
+operator|::
 name|basic_istream
 operator|<
 name|_CharT
@@ -4415,6 +4693,8 @@ operator|&
 name|operator
 operator|>>
 operator|(
+name|std
+operator|::
 name|basic_istream
 operator|<
 name|_CharT
@@ -4439,6 +4719,8 @@ operator|::
 name|char_type
 name|char_type
 expr_stmt|;
+name|std
+operator|::
 name|basic_string
 operator|<
 name|_CharT
@@ -4460,11 +4742,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|std
+operator|::
 name|ios_base
 operator|::
 name|iostate
 name|__state
 operator|=
+name|std
+operator|::
 name|ios_base
 operator|::
 name|goodbit
@@ -4473,6 +4759,8 @@ end_expr_stmt
 
 begin_expr_stmt
 name|typename
+name|std
+operator|::
 name|basic_istream
 operator|<
 name|_CharT
@@ -4539,13 +4827,13 @@ control|(
 name|size_t
 name|__i
 init|=
-literal|0
+name|_Nb
 init|;
 name|__i
-operator|<
-name|_Nb
+operator|>
+literal|0
 condition|;
-operator|++
+operator|--
 name|__i
 control|)
 block|{
@@ -4586,6 +4874,8 @@ condition|)
 block|{
 name|__state
 operator||=
+name|std
+operator|::
 name|ios_base
 operator|::
 name|eofbit
@@ -4594,6 +4884,7 @@ break|break;
 block|}
 else|else
 block|{
+specifier|const
 name|char_type
 name|__c2
 init|=
@@ -4651,6 +4942,8 @@ condition|)
 block|{
 name|__state
 operator||=
+name|std
+operator|::
 name|ios_base
 operator|::
 name|failbit
@@ -4669,6 +4962,8 @@ name|__is
 operator|.
 name|_M_setstate
 argument_list|(
+name|std
+operator|::
 name|ios_base
 operator|::
 name|badbit
@@ -4690,6 +4985,8 @@ name|_Nb
 condition|)
 name|__state
 operator||=
+name|std
+operator|::
 name|ios_base
 operator|::
 name|failbit
@@ -4746,6 +5043,8 @@ operator|,
 name|size_t
 name|_Nb
 operator|>
+name|std
+operator|::
 name|basic_ostream
 operator|<
 name|_CharT
@@ -4756,6 +5055,8 @@ operator|&
 name|operator
 operator|<<
 operator|(
+name|std
+operator|::
 name|basic_ostream
 operator|<
 name|_CharT
@@ -4774,6 +5075,8 @@ operator|&
 name|__x
 operator|)
 block|{
+name|std
+operator|::
 name|basic_string
 operator|<
 name|_CharT
@@ -4798,13 +5101,158 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|//@}
+comment|// Specializations for zero-sized bitsets, to avoid "unsigned comparison
 end_comment
 
 begin_comment
-unit|}
-comment|// namespace std
+comment|// with zero" warnings.
 end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+specifier|inline
+name|bitset
+operator|<
+literal|0
+operator|>
+operator|&
+name|bitset
+operator|<
+literal|0
+operator|>
+operator|::
+name|set
+argument_list|(
+argument|size_t
+argument_list|,
+argument|bool
+argument_list|)
+block|{
+name|__throw_out_of_range
+argument_list|(
+name|__N
+argument_list|(
+literal|"bitset::set"
+argument_list|)
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+specifier|inline
+name|bitset
+operator|<
+literal|0
+operator|>
+operator|&
+name|bitset
+operator|<
+literal|0
+operator|>
+operator|::
+name|reset
+argument_list|(
+argument|size_t
+argument_list|)
+block|{
+name|__throw_out_of_range
+argument_list|(
+name|__N
+argument_list|(
+literal|"bitset::reset"
+argument_list|)
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+specifier|inline
+name|bitset
+operator|<
+literal|0
+operator|>
+operator|&
+name|bitset
+operator|<
+literal|0
+operator|>
+operator|::
+name|flip
+argument_list|(
+argument|size_t
+argument_list|)
+block|{
+name|__throw_out_of_range
+argument_list|(
+name|__N
+argument_list|(
+literal|"bitset::flip"
+argument_list|)
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+specifier|inline
+name|bool
+name|bitset
+operator|<
+literal|0
+operator|>
+operator|::
+name|test
+argument_list|(
+argument|size_t
+argument_list|)
+specifier|const
+block|{
+name|__throw_out_of_range
+argument_list|(
+name|__N
+argument_list|(
+literal|"bitset::test"
+argument_list|)
+argument_list|)
+block|;
+return|return
+name|false
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|//@}
+end_comment
+
+begin_macro
+name|_GLIBCXX_END_NESTED_NAMESPACE
+end_macro
 
 begin_undef
 undef|#

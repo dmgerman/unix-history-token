@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -116,11 +116,18 @@ name|_STL_RAW_STORAGE_ITERATOR_H
 value|1
 end_define
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|/**    *  This iterator class lets algorithms store their results into    *  uninitialized memory.   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -203,10 +210,13 @@ operator|*
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|raw_storage_iterator
 operator|<
 name|_ForwardIterator
-block|,
+operator|,
 name|_Tp
 operator|>
 operator|&
@@ -223,10 +233,13 @@ operator|*
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|raw_storage_iterator
 operator|<
 name|_ForwardIterator
-block|,
+operator|,
 name|_Tp
 operator|>
 name|operator
@@ -253,30 +266,17 @@ return|return
 name|__tmp
 return|;
 block|}
-expr|}
-block|; }
-end_decl_stmt
+end_expr_stmt
 
-begin_comment
-comment|// namespace std
-end_comment
+begin_macro
+unit|};
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:C++
-end_comment
-
-begin_comment
-comment|// End:
-end_comment
 
 end_unit
 

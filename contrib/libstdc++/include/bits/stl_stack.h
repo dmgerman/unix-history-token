@@ -4,7 +4,11 @@ comment|// Stack implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -128,12 +132,18 @@ directive|include
 file|<debug/debug.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
-comment|// Forward declarations of operators == and<, needed for friend
-comment|// declaration.
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
+comment|/**    *  @brief  A standard container giving FILO behavior.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  Meets many of the requirements of a    *<a href="tables.html#65">container</a>,    *  but does not define anything to do with iterators.  Very few of the    *  other standard container interfaces are defined.    *    *  This is not a true container, but an @e adaptor.  It holds    *  another container, and provides a wrapper interface to that    *  container.  The wrapper is what enforces strict    *  first-in-last-out %stack behavior.    *    *  The second template parameter defines the type of the underlying    *  sequence/container.  It defaults to std::deque, but it can be    *  any type that supports @c back, @c push_back, and @c pop_front,    *  such as std::list, std::vector, or an appropriate user-defined    *  type.    *    *  Members not found in "normal" containers are @c container_type,    *  which is a typedef for the second Sequence parameter, and @c    *  push, @c pop, and @c top, which are standard %stack/FILO    *  operations.   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -147,86 +157,6 @@ operator|<
 name|_Tp
 operator|>
 expr|>
-name|class
-name|stack
-expr_stmt|;
-name|template
-operator|<
-name|typename
-name|_Tp
-operator|,
-name|typename
-name|_Seq
-operator|>
-specifier|inline
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|stack
-operator|<
-name|_Tp
-operator|,
-name|_Seq
-operator|>
-operator|&
-name|__x
-operator|,
-specifier|const
-name|stack
-operator|<
-name|_Tp
-operator|,
-name|_Seq
-operator|>
-operator|&
-name|__y
-operator|)
-expr_stmt|;
-name|template
-operator|<
-name|typename
-name|_Tp
-operator|,
-name|typename
-name|_Seq
-operator|>
-specifier|inline
-name|bool
-name|operator
-operator|<
-operator|(
-specifier|const
-name|stack
-operator|<
-name|_Tp
-operator|,
-name|_Seq
-operator|>
-operator|&
-name|__x
-operator|,
-specifier|const
-name|stack
-operator|<
-name|_Tp
-operator|,
-name|_Seq
-operator|>
-operator|&
-name|__y
-operator|)
-expr_stmt|;
-comment|/**    *  @brief  A standard container giving FILO behavior.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  Meets many of the requirements of a    *<a href="tables.html#65">container</a>,    *  but does not define anything to do with iterators.  Very few of the    *  other standard container interfaces are defined.    *    *  This is not a true container, but an @e adaptor.  It holds    *  another container, and provides a wrapper interface to that    *  container.  The wrapper is what enforces strict    *  first-in-last-out %stack behavior.    *    *  The second template parameter defines the type of the underlying    *  sequence/container.  It defaults to std::deque, but it can be    *  any type that supports @c back, @c push_back, and @c pop_front,    *  such as std::list, std::vector, or an appropriate user-defined    *  type.    *    *  Members not found in "normal" containers are @c container_type,    *  which is a typedef for the second Sequence parameter, and @c    *  push, @c pop, and @c top, which are standard %stack/FILO    *  operations.   */
-name|template
-operator|<
-name|typename
-name|_Tp
-operator|,
-name|typename
-name|_Sequence
-operator|>
 name|class
 name|stack
 block|{
@@ -290,6 +220,9 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -322,8 +255,14 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Sequence
@@ -331,6 +270,9 @@ operator|::
 name|value_type
 name|value_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Sequence
@@ -338,6 +280,9 @@ operator|::
 name|reference
 name|reference
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Sequence
@@ -345,6 +290,9 @@ operator|::
 name|const_reference
 name|const_reference
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Sequence
@@ -352,21 +300,48 @@ operator|::
 name|size_type
 name|size_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|_Sequence
 name|container_type
 typedef|;
+end_typedef
+
+begin_label
 name|protected
 label|:
+end_label
+
+begin_comment
 comment|//  See queue::c for notes on this name.
+end_comment
+
+begin_decl_stmt
 name|_Sequence
 name|c
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|// XXX removed old def ctor, added def arg to this one to match 14882
+end_comment
+
+begin_comment
 comment|/**        *  @brief  Default constructor creates no elements.        */
+end_comment
+
+begin_macro
 name|explicit
+end_macro
+
+begin_expr_stmt
 name|stack
 argument_list|(
 specifier|const
@@ -382,7 +357,7 @@ name|c
 argument_list|(
 argument|__c
 argument_list|)
-block|{}
+block|{ }
 comment|/**        *  Returns true if the %stack is empty.        */
 name|bool
 name|empty
@@ -396,7 +371,13 @@ name|empty
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**  Returns the number of elements in the %stack.  */
+end_comment
+
+begin_expr_stmt
 name|size_type
 name|size
 argument_list|()
@@ -409,7 +390,13 @@ name|size
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  Returns a read/write reference to the data at the first        *  element of the %stack.        */
+end_comment
+
+begin_function
 name|reference
 name|top
 parameter_list|()
@@ -424,7 +411,13 @@ name|back
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  Returns a read-only (constant) reference to the data at the first        *  element of the %stack.        */
+end_comment
+
+begin_expr_stmt
 name|const_reference
 name|top
 argument_list|()
@@ -440,7 +433,13 @@ name|back
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**        *  @brief  Add data to the top of the %stack.        *  @param  x  Data to be added.        *        *  This is a typical %stack operation.  The function creates an        *  element at the top of the %stack and assigns the given data        *  to it.  The time complexity of the operation depends on the        *  underlying sequence.        */
+end_comment
+
+begin_function
 name|void
 name|push
 parameter_list|(
@@ -458,7 +457,13 @@ name|__x
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/**        *  @brief  Removes first element.        *        *  This is a typical %stack operation.  It shrinks the %stack        *  by one.  The time complexity of the operation depends on the        *  underlying sequence.        *        *  Note that no data is returned, and if the first element's        *  data is needed, it should be retrieved before pop() is        *  called.        */
+end_comment
+
+begin_function
 name|void
 name|pop
 parameter_list|()
@@ -472,14 +477,10 @@ name|pop_back
 argument_list|()
 expr_stmt|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
+unit|};
 comment|/**    *  @brief  Stack equality comparison.    *  @param  x  A %stack.    *  @param  y  A %stack of the same type as @a x.    *  @return  True iff the size and elements of the stacks are equal.    *    *  This is an equivalence relation.  Complexity and semantics    *  depend on the underlying sequence type, but the expected rules    *  are: this relation is linear in the size of the sequences, and    *  stacks are considered equivalent if their sequences compare    *  equal.   */
 end_comment
 
@@ -778,10 +779,9 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

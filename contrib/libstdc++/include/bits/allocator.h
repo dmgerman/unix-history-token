@@ -4,7 +4,11 @@ comment|// Allocators -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -126,10 +130,24 @@ directive|include
 file|<bits/c++allocator.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_include
+include|#
+directive|include
+file|<bits/cpp_type_traits.h>
+end_include
+
+begin_comment
+comment|// for __is_empty
+end_comment
+
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -138,6 +156,13 @@ operator|>
 name|class
 name|allocator
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// allocator<void> specialization.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -153,25 +178,40 @@ typedef|typedef
 name|size_t
 name|size_type
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|ptrdiff_t
 name|difference_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|void
 modifier|*
 name|pointer
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 specifier|const
 name|void
 modifier|*
 name|const_pointer
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|void
 name|value_type
 typedef|;
+end_typedef
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -188,16 +228,15 @@ operator|>
 name|other
 expr_stmt|;
 block|}
-empty_stmt|;
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/**    *  @brief  The "standard" allocator, as per [20.4].    *    *  (See @link Allocators allocators info @endlink for more.)    */
+unit|};
+comment|/**    * @brief  The "standard" allocator, as per [20.4].    *    *  Further details:    *  http://gcc.gnu.org/onlinedocs/libstdc++/20_util/allocator.html    */
 end_comment
 
 begin_expr_stmt
@@ -210,7 +249,7 @@ name|class
 name|allocator
 operator|:
 name|public
-name|___glibcxx_base_allocator
+name|__glibcxx_base_allocator
 operator|<
 name|_Tp
 operator|>
@@ -311,7 +350,7 @@ end_block
 begin_macro
 name|allocator
 argument_list|(
-argument|const allocator& a
+argument|const allocator& __a
 argument_list|)
 end_macro
 
@@ -319,12 +358,12 @@ begin_expr_stmt
 name|throw
 argument_list|()
 operator|:
-name|___glibcxx_base_allocator
+name|__glibcxx_base_allocator
 operator|<
 name|_Tp
 operator|>
 operator|(
-name|a
+name|__a
 operator|)
 block|{ }
 name|template
@@ -460,13 +499,90 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|___glibcxx_base_allocator
+name|__glibcxx_base_allocator
 end_undef
 
 begin_comment
-unit|}
-comment|// namespace std
+comment|// To implement Option 3 of DR 431.
 end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Alloc
+operator|,
+name|bool
+operator|=
+name|std
+operator|::
+name|__is_empty
+operator|<
+name|_Alloc
+operator|>
+operator|::
+name|__value
+operator|>
+expr|struct
+name|__alloc_swap
+block|{
+specifier|static
+name|void
+name|_S_do_it
+argument_list|(
+argument|_Alloc&
+argument_list|,
+argument|_Alloc&
+argument_list|)
+block|{ }
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Alloc
+operator|>
+expr|struct
+name|__alloc_swap
+operator|<
+name|_Alloc
+operator|,
+name|false
+operator|>
+block|{
+specifier|static
+name|void
+name|_S_do_it
+argument_list|(
+argument|_Alloc& __one
+argument_list|,
+argument|_Alloc& __two
+argument_list|)
+block|{
+comment|// Precondition: swappable allocators.
+if|if
+condition|(
+name|__one
+operator|!=
+name|__two
+condition|)
+name|swap
+argument_list|(
+name|__one
+argument_list|,
+name|__two
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_macro
+unit|};
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

@@ -4,7 +4,7 @@ comment|// new abi support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -68,11 +68,11 @@ comment|// along with GCC; see the file COPYING.  If not, write to
 end_comment
 
 begin_comment
-comment|// the Free Software Foundation, 59 Temple Place - Suite 330,
+comment|// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 end_comment
 
 begin_comment
-comment|// Boston, MA 02111-1307, USA.
+comment|// Boston, MA 02110-1301, USA.
 end_comment
 
 begin_comment
@@ -115,6 +115,10 @@ begin_comment
 comment|/* This file declares the new abi entry points into the runtime. It is not    normally necessary for user programs to include this header, or use the    entry points directly. However, this header is available should that be    needed.        Some of the entry points are intended for both C and C++, thus this header    is includable from both C and C++. Though the C++ specific parts are not    available in C, naturally enough.  */
 end_comment
 
+begin_comment
+comment|/** @file cxxabi.h  *  The header provides an interface to the C++ ABI.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -128,10 +132,27 @@ name|_CXXABI_H
 value|1
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|visibility
+name|push
+name|(
+name|default
+name|)
+end_pragma
+
 begin_include
 include|#
 directive|include
 file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<bits/cxxabi_tweaks.h>
 end_include
 
 begin_ifdef
@@ -149,6 +170,17 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+typedef|typedef
+name|__cxa_cdtor_return_type
+function_decl|(
+modifier|*
+name|__cxa_cdtor_type
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 comment|// Allocate array.
 name|void
 modifier|*
@@ -163,25 +195,11 @@ parameter_list|,
 name|size_t
 name|__padding_size
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|__constructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
+name|__cxa_cdtor_type
+name|constructor
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|__destructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
+name|__cxa_cdtor_type
+name|destructor
 parameter_list|)
 function_decl|;
 name|void
@@ -197,25 +215,11 @@ parameter_list|,
 name|size_t
 name|__padding_size
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|__constructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
+name|__cxa_cdtor_type
+name|constructor
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|__destructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
+name|__cxa_cdtor_type
+name|destructor
 parameter_list|,
 name|void
 modifier|*
@@ -251,25 +255,11 @@ parameter_list|,
 name|size_t
 name|__padding_size
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|__constructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
+name|__cxa_cdtor_type
+name|constructor
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|__destructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
+name|__cxa_cdtor_type
+name|destructor
 parameter_list|,
 name|void
 modifier|*
@@ -295,7 +285,7 @@ parameter_list|)
 parameter_list|)
 function_decl|;
 comment|// Construct array.
-name|void
+name|__cxa_vec_ctor_return_type
 name|__cxa_vec_ctor
 parameter_list|(
 name|void
@@ -308,28 +298,14 @@ parameter_list|,
 name|size_t
 name|__element_size
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|__constructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
+name|__cxa_cdtor_type
+name|constructor
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|__destructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
+name|__cxa_cdtor_type
+name|destructor
 parameter_list|)
 function_decl|;
-name|void
+name|__cxa_vec_ctor_return_type
 name|__cxa_vec_cctor
 parameter_list|(
 name|void
@@ -346,7 +322,7 @@ parameter_list|,
 name|size_t
 name|element_size
 parameter_list|,
-name|void
+name|__cxa_cdtor_return_type
 function_decl|(
 modifier|*
 name|constructor
@@ -359,15 +335,8 @@ name|void
 modifier|*
 parameter_list|)
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
+name|__cxa_cdtor_type
 name|destructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
 parameter_list|)
 function_decl|;
 comment|// Destruct array.
@@ -384,15 +353,8 @@ parameter_list|,
 name|size_t
 name|__element_size
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|__destructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
+name|__cxa_cdtor_type
+name|destructor
 parameter_list|)
 function_decl|;
 name|void
@@ -408,15 +370,8 @@ parameter_list|,
 name|size_t
 name|__element_size
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|__destructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
+name|__cxa_cdtor_type
+name|destructor
 parameter_list|)
 function_decl|;
 comment|// Destruct and release array.
@@ -433,15 +388,8 @@ parameter_list|,
 name|size_t
 name|__padding_size
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|__destructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
+name|__cxa_cdtor_type
+name|destructor
 parameter_list|)
 function_decl|;
 name|void
@@ -457,15 +405,8 @@ parameter_list|,
 name|size_t
 name|__padding_size
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|__destructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
+name|__cxa_cdtor_type
+name|destructor
 parameter_list|,
 name|void
 function_decl|(
@@ -491,15 +432,8 @@ parameter_list|,
 name|size_t
 name|__padding_size
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|__destructor
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
+name|__cxa_cdtor_type
+name|destructor
 parameter_list|,
 name|void
 function_decl|(
@@ -514,17 +448,6 @@ name|size_t
 parameter_list|)
 parameter_list|)
 function_decl|;
-comment|// The ABI requires a 64-bit type.
-name|__extension__
-typedef|typedef
-name|int
-name|__guard
-name|__attribute__
-typedef|((
-name|mode
-typedef|(
-name|__DI__
-typedef|)));
 name|int
 name|__cxa_guard_acquire
 parameter_list|(
@@ -1453,7 +1376,7 @@ name|unsigned
 name|int
 name|__base_count
 block|;
-comment|// Dumber of direct bases.
+comment|// Number of direct bases.
 comment|// The array of bases uses the trailing array struct hack so this
 comment|// class is not constructable with a normal constructor. It is
 comment|// internally generated by the compiler.
@@ -1635,6 +1558,14 @@ end_endif
 begin_comment
 comment|// __cplusplus
 end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|visibility
+name|pop
+end_pragma
 
 begin_endif
 endif|#

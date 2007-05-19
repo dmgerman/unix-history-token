@@ -4,7 +4,7 @@ comment|// Allocators -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -119,14 +119,29 @@ end_define
 begin_include
 include|#
 directive|include
-file|<cstdlib>
+file|<stdexcept>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|__gnu_cxx
-block|{
-comment|/**    *  @brief  A meta-allocator with debugging bits, as per [20.4].    *    *  This is precisely the allocator defined in the C++ Standard.     *    - all allocation calls operator new    *    - all deallocation calls operator delete    *    *  (See @link Allocators allocators info @endlink for more.)    */
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|__gnu_cxx
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|using
+name|std
+operator|::
+name|size_t
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/**    *  @brief  A meta-allocator with debugging bits, as per [20.4].    *    *  This is precisely the allocator defined in the C++ Standard.     *    - all allocation calls operator new    *    - all deallocation calls operator delete    */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -144,6 +159,9 @@ operator|::
 name|size_type
 name|size_type
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Alloc
@@ -151,6 +169,9 @@ operator|::
 name|difference_type
 name|difference_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Alloc
@@ -158,6 +179,9 @@ operator|::
 name|pointer
 name|pointer
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Alloc
@@ -165,6 +189,9 @@ operator|::
 name|const_pointer
 name|const_pointer
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Alloc
@@ -172,6 +199,9 @@ operator|::
 name|reference
 name|reference
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Alloc
@@ -179,6 +209,9 @@ operator|::
 name|const_reference
 name|const_reference
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|typename
 name|_Alloc
@@ -186,20 +219,44 @@ operator|::
 name|value_type
 name|value_type
 expr_stmt|;
+end_typedef
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
 comment|// _M_extra is the number of objects that correspond to the
+end_comment
+
+begin_comment
 comment|// extra space where debug information is stored.
+end_comment
+
+begin_decl_stmt
 name|size_type
 name|_M_extra
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|_Alloc
 name|_M_allocator
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_macro
 name|debug_allocator
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|const
 name|size_t
@@ -226,6 +283,9 @@ operator|/
 name|__obj_size
 expr_stmt|;
 block|}
+end_block
+
+begin_function
 name|pointer
 name|allocate
 parameter_list|(
@@ -269,6 +329,9 @@ operator|+
 name|_M_extra
 return|;
 block|}
+end_function
+
+begin_function
 name|pointer
 name|allocate
 parameter_list|(
@@ -319,6 +382,9 @@ operator|+
 name|_M_extra
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|deallocate
 parameter_list|(
@@ -331,12 +397,9 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
 name|__p
 condition|)
-name|abort
-argument_list|()
-expr_stmt|;
+block|{
 name|pointer
 name|__real_p
 init|=
@@ -358,9 +421,17 @@ operator|)
 operator|!=
 name|__n
 condition|)
-name|abort
-argument_list|()
+block|{
+name|throw
+name|std
+operator|::
+name|runtime_error
+argument_list|(
+literal|"debug_allocator::deallocate"
+literal|" wrong size"
+argument_list|)
 expr_stmt|;
+block|}
 name|_M_allocator
 operator|.
 name|deallocate
@@ -373,17 +444,22 @@ name|_M_extra
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|throw
+name|std
+operator|::
+name|runtime_error
+argument_list|(
+literal|"debug_allocator::deallocate null pointer"
+argument_list|)
+expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-unit|}
-comment|// namespace __gnu_cxx
-end_comment
+begin_macro
+unit|};
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

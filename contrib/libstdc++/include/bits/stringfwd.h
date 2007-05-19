@@ -4,7 +4,7 @@ comment|// String support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -96,6 +96,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file stringfwd.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -105,10 +109,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|/** @file stringfwd.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_ifndef
@@ -137,10 +137,14 @@ directive|include
 file|<bits/c++config.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -149,6 +153,9 @@ operator|>
 name|class
 name|allocator
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -157,6 +164,9 @@ operator|>
 expr|struct
 name|char_traits
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -181,6 +191,9 @@ expr|>
 name|class
 name|basic_string
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -190,6 +203,9 @@ operator|<
 name|char
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|basic_string
 operator|<
@@ -197,9 +213,15 @@ name|char
 operator|>
 name|string
 expr_stmt|;
+end_typedef
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|_GLIBCXX_USE_WCHAR_T
+end_ifdef
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -209,6 +231,9 @@ operator|<
 name|wchar_t
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|basic_string
 operator|<
@@ -216,14 +241,16 @@ name|wchar_t
 operator|>
 name|wstring
 expr_stmt|;
+end_typedef
+
+begin_endif
 endif|#
 directive|endif
-block|}
-end_decl_stmt
+end_endif
 
-begin_comment
-comment|// namespace std
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

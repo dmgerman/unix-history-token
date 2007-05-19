@@ -4,7 +4,7 @@ comment|// The template and inlines for the -*- C++ -*- gslice_array class.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2004
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2004, 2005
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,11 +100,11 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
-comment|// Written by Gabriel Dos Reis<Gabriel.Dos-Reis@DPTMaths.ENS-Cachan.Fr>
+comment|/** @file gslice_array.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_comment
-comment|/** @file gslice_array.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+comment|// Written by Gabriel Dos Reis<Gabriel.Dos-Reis@DPTMaths.ENS-Cachan.Fr>
 end_comment
 
 begin_ifndef
@@ -127,11 +127,18 @@ name|GCC
 name|system_header
 end_pragma
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|/**    *  @brief  Reference to multi-dimensional subset of an array.    *    *  A gslice_array is a reference to the actual elements of an array    *  specified by a gslice.  The way to get a gslice_array is to call    *  operator[](gslice) on a valarray.  The returned gslice_array then    *  permits carrying operations out on the referenced subset of elements in    *  the original valarray.  For example, operator+=(valarray) will add    *  values to the subset of elements in the underlying valarray this    *  gslice_array refers to.    *    *  @param  Tp  Element type.    */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -156,8 +163,17 @@ name|gslice_array
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Assignment operator.  Assigns slice elements to corresponding
+end_comment
+
+begin_comment
 comment|///  elements of @a a.
+end_comment
+
+begin_decl_stmt
 name|gslice_array
 modifier|&
 name|operator
@@ -168,7 +184,13 @@ name|gslice_array
 operator|&
 operator|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///  Assign slice elements to corresponding elements of @a v.
+end_comment
+
+begin_decl_stmt
 name|void
 name|operator
 init|=
@@ -182,7 +204,13 @@ operator|&
 operator|)
 specifier|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///  Multiply slice elements by corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|*=
@@ -196,7 +224,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Divide slice elements by corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|/=
@@ -210,7 +244,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Modulo slice elements by corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|%=
@@ -224,7 +264,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Add corresponding elements of @a v to slice elements.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|+=
@@ -238,7 +284,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Subtract corresponding elements of @a v from slice elements.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|-=
@@ -252,7 +304,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Logical xor slice elements with corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|^=
@@ -266,7 +324,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Logical and slice elements with corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|&=
@@ -280,7 +344,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Logical or slice elements with corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator||=
@@ -294,7 +364,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Left shift slice elements by corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|<<=
@@ -308,7 +384,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Right shift slice elements by corresponding elements of @a v.
+end_comment
+
+begin_expr_stmt
 name|void
 name|operator
 operator|>>=
@@ -322,7 +404,13 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///  Assign all slice elements to @a t.
+end_comment
+
+begin_decl_stmt
 name|void
 name|operator
 init|=
@@ -333,6 +421,9 @@ operator|&
 operator|)
 specifier|const
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -353,6 +444,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -373,6 +467,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -393,6 +490,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -413,6 +513,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -433,6 +536,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -453,6 +559,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -473,6 +582,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -493,6 +605,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -513,6 +628,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -533,6 +651,9 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -553,14 +674,23 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_expr_stmt
 name|_Array
 operator|<
 name|_Tp
 operator|>
 name|_M_array
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|valarray
 operator|<
@@ -569,6 +699,9 @@ operator|>
 operator|&
 name|_M_index
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|friend
 name|class
 name|valarray
@@ -576,6 +709,9 @@ operator|<
 name|_Tp
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|gslice_array
 argument_list|(
 name|_Array
@@ -591,18 +727,20 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// not implemented
+end_comment
+
+begin_expr_stmt
 name|gslice_array
 argument_list|()
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -914,7 +1052,7 @@ parameter_list|,
 name|_Name
 parameter_list|)
 define|\
-value|template<typename _Tp>						\     inline void								\     gslice_array<_Tp>::operator _Op##=(const valarray<_Tp>& __v) const	\     {									\       _Array_augmented_##_Name(_M_array, _Array<size_t>(_M_index),	\ 			      _Array<_Tp>(__v), __v.size());		\     }									\ 									\   template<typename _Tp>                                                \     template<class _Dom>				                \       inline void							\       gslice_array<_Tp>::operator _Op##= (const _Expr<_Dom, _Tp>& __e) const\       {									\ 	_Array_augmented_##_Name(_M_array, _Array<size_t>(_M_index), __e,\ 				 _M_index.size());			\       }
+value|template<typename _Tp>						\     inline void								\     gslice_array<_Tp>::operator _Op##=(const valarray<_Tp>& __v) const	\     {									\       _Array_augmented_##_Name(_M_array, _Array<size_t>(_M_index),	\ 			       _Array<_Tp>(__v), __v.size());		\     }									\ 									\   template<typename _Tp>                                                \     template<class _Dom>				                \       inline void							\       gslice_array<_Tp>::operator _Op##= (const _Expr<_Dom, _Tp>& __e) const\       {									\ 	_Array_augmented_##_Name(_M_array, _Array<size_t>(_M_index), __e,\ 				 _M_index.size());			\       }
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|*
@@ -975,18 +1113,11 @@ argument|>>
 argument_list|,
 argument|__shift_right
 argument_list|)
-end_expr_stmt
-
-begin_undef
 undef|#
 directive|undef
 name|_DEFINE_VALARRAY_OPERATOR
-end_undef
-
-begin_comment
-unit|}
-comment|// std::
-end_comment
+name|_GLIBCXX_END_NAMESPACE
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -995,18 +1126,6 @@ end_endif
 
 begin_comment
 comment|/* _GSLICE_ARRAY_H */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:c++
-end_comment
-
-begin_comment
-comment|// End:
 end_comment
 
 end_unit

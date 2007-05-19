@@ -4,7 +4,7 @@ comment|// Iostreams base classes -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,6 +100,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file ios_base.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -109,10 +113,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|/** @file ios_base.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_ifndef
@@ -138,7 +138,7 @@ end_pragma
 begin_include
 include|#
 directive|include
-file|<bits/atomicity.h>
+file|<ext/atomicity.h>
 end_include
 
 begin_include
@@ -153,109 +153,110 @@ directive|include
 file|<bits/locale_classes.h>
 end_include
 
-begin_decl_stmt
-name|namespace
+begin_expr_stmt
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
 name|std
-block|{
+argument_list|)
 comment|// The following definitions of bitmask types are enums, not ints,
 comment|// as permitted (but not required) in the standard, in order to provide
 comment|// better type safety in iostream calls.  A side effect is that
 comment|// expressions involving them are no longer compile-time constants.
-enum|enum
+expr|enum
 name|_Ios_Fmtflags
 block|{
 name|_S_boolalpha
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|0
 block|,
 name|_S_dec
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|1
 block|,
 name|_S_fixed
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|2
 block|,
 name|_S_hex
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|3
 block|,
 name|_S_internal
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|4
 block|,
 name|_S_left
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|5
 block|,
 name|_S_oct
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|6
 block|,
 name|_S_right
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|7
 block|,
 name|_S_scientific
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|8
 block|,
 name|_S_showbase
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|9
 block|,
 name|_S_showpoint
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|10
 block|,
 name|_S_showpos
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|11
 block|,
 name|_S_skipws
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|12
 block|,
 name|_S_unitbuf
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|13
 block|,
 name|_S_uppercase
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|14
 block|,
 name|_S_adjustfield
-init|=
+operator|=
 name|_S_left
 operator||
 name|_S_right
@@ -263,7 +264,7 @@ operator||
 name|_S_internal
 block|,
 name|_S_basefield
-init|=
+operator|=
 name|_S_dec
 operator||
 name|_S_oct
@@ -271,18 +272,21 @@ operator||
 name|_S_hex
 block|,
 name|_S_floatfield
-init|=
+operator|=
 name|_S_scientific
 operator||
 name|_S_fixed
 block|,
 name|_S_ios_fmtflags_end
-init|=
+operator|=
 literal|1L
 operator|<<
 literal|16
 block|}
-enum|;
+expr_stmt|;
+end_expr_stmt
+
+begin_function
 specifier|inline
 name|_Ios_Fmtflags
 name|operator
@@ -292,7 +296,10 @@ name|__a
 function|,
 name|_Ios_Fmtflags
 function|__b
-block|)
+end_function
+
+begin_block
+unit|)
 block|{
 return|return
 name|_Ios_Fmtflags
@@ -315,7 +322,7 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_block
 
 begin_expr_stmt
 specifier|inline
@@ -1026,7 +1033,7 @@ comment|// 27.4.2  Class ios_base
 end_comment
 
 begin_comment
-comment|/**    *  @brief  The very top of the I/O class hierarchy.    *    *  This class defines everything that can be defined about I/O that does    *  not depend on the type of characters being input or output.  Most    *  people will only see @c ios_base when they need to specify the full    *  name of the various I/O flags (e.g., the openmodes).   */
+comment|/**    *  @brief  The base of the I/O class hierarchy.    *    *  This class defines everything that can be defined about I/O that does    *  not depend on the type of characters being input or output.  Most    *  people will only see @c ios_base when they need to specify the full    *  name of the various I/O flags (e.g., the openmodes).   */
 end_comment
 
 begin_decl_stmt
@@ -1092,12 +1099,7 @@ specifier|const
 name|fmtflags
 name|boolalpha
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_boolalpha
-argument_list|)
 decl_stmt|;
 comment|/// Converts integer input or generates integer output in decimal base.
 specifier|static
@@ -1105,12 +1107,7 @@ specifier|const
 name|fmtflags
 name|dec
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_dec
-argument_list|)
 decl_stmt|;
 comment|/// Generate floating-point output in fixed-point notation.
 specifier|static
@@ -1118,12 +1115,7 @@ specifier|const
 name|fmtflags
 name|fixed
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_fixed
-argument_list|)
 decl_stmt|;
 comment|/// Converts integer input or generates integer output in hexadecimal base.
 specifier|static
@@ -1131,12 +1123,7 @@ specifier|const
 name|fmtflags
 name|hex
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_hex
-argument_list|)
 decl_stmt|;
 comment|/// Adds fill characters at a designated internal point in certain
 comment|/// generated output, or identical to @c right if no such point is
@@ -1146,12 +1133,7 @@ specifier|const
 name|fmtflags
 name|internal
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_internal
-argument_list|)
 decl_stmt|;
 comment|/// Adds fill characters on the right (final positions) of certain
 comment|/// generated output.  (I.e., the thing you print is flush left.)
@@ -1160,12 +1142,7 @@ specifier|const
 name|fmtflags
 name|left
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_left
-argument_list|)
 decl_stmt|;
 comment|/// Converts integer input or generates integer output in octal base.
 specifier|static
@@ -1173,12 +1150,7 @@ specifier|const
 name|fmtflags
 name|oct
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_oct
-argument_list|)
 decl_stmt|;
 comment|/// Adds fill characters on the left (initial positions) of certain
 comment|/// generated output.  (I.e., the thing you print is flush right.)
@@ -1187,12 +1159,7 @@ specifier|const
 name|fmtflags
 name|right
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_right
-argument_list|)
 decl_stmt|;
 comment|/// Generates floating-point output in scientific notation.
 specifier|static
@@ -1200,12 +1167,7 @@ specifier|const
 name|fmtflags
 name|scientific
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_scientific
-argument_list|)
 decl_stmt|;
 comment|/// Generates a prefix indicating the numeric base of generated integer
 comment|/// output.
@@ -1214,12 +1176,7 @@ specifier|const
 name|fmtflags
 name|showbase
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_showbase
-argument_list|)
 decl_stmt|;
 comment|/// Generates a decimal-point character unconditionally in generated
 comment|/// floating-point output.
@@ -1228,12 +1185,7 @@ specifier|const
 name|fmtflags
 name|showpoint
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_showpoint
-argument_list|)
 decl_stmt|;
 comment|/// Generates a + sign in non-negative generated numeric output.
 specifier|static
@@ -1241,12 +1193,7 @@ specifier|const
 name|fmtflags
 name|showpos
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_showpos
-argument_list|)
 decl_stmt|;
 comment|/// Skips leading white space before certain input operations.
 specifier|static
@@ -1254,12 +1201,7 @@ specifier|const
 name|fmtflags
 name|skipws
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_skipws
-argument_list|)
 decl_stmt|;
 comment|/// Flushes output after each output operation.
 specifier|static
@@ -1267,12 +1209,7 @@ specifier|const
 name|fmtflags
 name|unitbuf
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_unitbuf
-argument_list|)
 decl_stmt|;
 comment|/// Replaces certain lowercase letters with their uppercase equivalents
 comment|/// in generated output.
@@ -1281,12 +1218,7 @@ specifier|const
 name|fmtflags
 name|uppercase
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_uppercase
-argument_list|)
 decl_stmt|;
 comment|/// A mask of left|right|internal.  Useful for the 2-arg form of @c setf.
 specifier|static
@@ -1294,12 +1226,7 @@ specifier|const
 name|fmtflags
 name|adjustfield
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_adjustfield
-argument_list|)
 decl_stmt|;
 comment|/// A mask of dec|oct|hex.  Useful for the 2-arg form of @c setf.
 specifier|static
@@ -1307,12 +1234,7 @@ specifier|const
 name|fmtflags
 name|basefield
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_basefield
-argument_list|)
 decl_stmt|;
 comment|/// A mask of scientific|fixed.  Useful for the 2-arg form of @c setf.
 specifier|static
@@ -1320,12 +1242,7 @@ specifier|const
 name|fmtflags
 name|floatfield
 init|=
-name|fmtflags
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_floatfield
-argument_list|)
 decl_stmt|;
 comment|// 27.4.2.1.3  Type ios_base::iostate
 comment|/**      *  @brief This is a bitmask type.      *      *  @c "_Ios_Iostate" is implementation-defined, but it is valid to      *  perform bitwise operations on these values and expect the Right      *  Thing to happen.  Defined objects of type iostate are:      *  - badbit      *  - eofbit      *  - failbit      *  - goodbit     */
@@ -1340,12 +1257,7 @@ specifier|const
 name|iostate
 name|badbit
 init|=
-name|iostate
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_badbit
-argument_list|)
 decl_stmt|;
 comment|/// Indicates that an input operation reached the end of an input sequence.
 specifier|static
@@ -1353,12 +1265,7 @@ specifier|const
 name|iostate
 name|eofbit
 init|=
-name|iostate
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_eofbit
-argument_list|)
 decl_stmt|;
 comment|/// Indicates that an input operation failed to read the expected
 comment|/// characters, or that an output operation failed to generate the
@@ -1368,12 +1275,7 @@ specifier|const
 name|iostate
 name|failbit
 init|=
-name|iostate
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_failbit
-argument_list|)
 decl_stmt|;
 comment|/// Indicates all is well.
 specifier|static
@@ -1381,10 +1283,7 @@ specifier|const
 name|iostate
 name|goodbit
 init|=
-name|iostate
-argument_list|(
-literal|0
-argument_list|)
+name|_S_goodbit
 decl_stmt|;
 comment|// 27.4.2.1.4  Type ios_base::openmode
 comment|/**      *  @brief This is a bitmask type.      *      *  @c "_Ios_Openmode" is implementation-defined, but it is valid to      *  perform bitwise operations on these values and expect the Right      *  Thing to happen.  Defined objects of type openmode are:      *  - app      *  - ate      *  - binary      *  - in      *  - out      *  - trunc     */
@@ -1398,12 +1297,7 @@ specifier|const
 name|openmode
 name|app
 init|=
-name|openmode
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_app
-argument_list|)
 decl_stmt|;
 comment|/// Open and seek to end immediately after opening.
 specifier|static
@@ -1411,12 +1305,7 @@ specifier|const
 name|openmode
 name|ate
 init|=
-name|openmode
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_ate
-argument_list|)
 decl_stmt|;
 comment|/// Perform input and output in binary mode (as opposed to text mode).
 comment|/// This is probably not what you think it is; see
@@ -1427,12 +1316,7 @@ specifier|const
 name|openmode
 name|binary
 init|=
-name|openmode
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_bin
-argument_list|)
 decl_stmt|;
 comment|/// Open for input.  Default for @c ifstream and fstream.
 specifier|static
@@ -1440,12 +1324,7 @@ specifier|const
 name|openmode
 name|in
 init|=
-name|openmode
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_in
-argument_list|)
 decl_stmt|;
 comment|/// Open for output.  Default for @c ofstream and fstream.
 specifier|static
@@ -1453,12 +1332,7 @@ specifier|const
 name|openmode
 name|out
 init|=
-name|openmode
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_out
-argument_list|)
 decl_stmt|;
 comment|/// Open for input.  Default for @c ofstream.
 specifier|static
@@ -1466,12 +1340,7 @@ specifier|const
 name|openmode
 name|trunc
 init|=
-name|openmode
-argument_list|(
-name|__ios_flags
-operator|::
 name|_S_trunc
-argument_list|)
 decl_stmt|;
 comment|// 27.4.2.1.5  Type ios_base::seekdir
 comment|/**      *  @brief This is an enumerated type.      *      *  @c "_Ios_Seekdir" is implementation-defined.  Defined values      *  of type seekdir are:      *  - beg      *  - cur, equivalent to @c SEEK_CUR in the C standard library.      *  - end, equivalent to @c SEEK_END in the C standard library.     */
@@ -1485,10 +1354,7 @@ specifier|const
 name|seekdir
 name|beg
 init|=
-name|seekdir
-argument_list|(
-literal|0
-argument_list|)
+name|_S_beg
 decl_stmt|;
 comment|/// Request a seek relative to the current position within the sequence.
 specifier|static
@@ -1496,10 +1362,7 @@ specifier|const
 name|seekdir
 name|cur
 init|=
-name|seekdir
-argument_list|(
-name|SEEK_CUR
-argument_list|)
+name|_S_cur
 decl_stmt|;
 comment|/// Request a seek relative to the current end of the sequence.
 specifier|static
@@ -1507,14 +1370,8 @@ specifier|const
 name|seekdir
 name|end
 init|=
-name|seekdir
-argument_list|(
-name|SEEK_END
-argument_list|)
+name|_S_end
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|_GLIBCXX_DEPRECATED
 comment|// Annex D.6
 typedef|typedef
 name|int
@@ -1540,8 +1397,6 @@ operator|::
 name|streamoff
 name|streamoff
 expr_stmt|;
-endif|#
-directive|endif
 comment|// Callbacks;
 comment|/**      *  @brief  The set of events that may be passed to an event callback.      *      *  erase_event is used during ~ios() and copyfmt().  imbue_event is used      *  during imbue().  copyfmt_event is used during copyfmt().     */
 enum|enum
@@ -1658,7 +1513,7 @@ argument_list|()
 block|{
 name|__gnu_cxx
 operator|::
-name|__atomic_add
+name|__atomic_add_dispatch
 argument_list|(
 operator|&
 name|_M_refcount
@@ -1674,7 +1529,7 @@ block|{
 return|return
 name|__gnu_cxx
 operator|::
-name|__exchange_and_add
+name|__exchange_and_add_dispatch
 argument_list|(
 operator|&
 name|_M_refcount
@@ -1737,13 +1592,13 @@ name|_M_word_zero
 decl_stmt|;
 comment|// Guaranteed storage.
 comment|// The first 5 iword and pword slots are reserved for internal use.
-specifier|static
-specifier|const
-name|int
+enum|enum
+block|{
 name|_S_local_word_size
 init|=
 literal|8
-decl_stmt|;
+block|}
+enum|;
 name|_Words
 name|_M_local_word
 index|[
@@ -2863,10 +2718,9 @@ return|;
 block|}
 end_function
 
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

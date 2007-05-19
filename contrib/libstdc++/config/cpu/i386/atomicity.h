@@ -4,7 +4,7 @@ comment|// Low-level functions for atomic operations: x86, x>= 3 version  -*- C+
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -98,13 +98,17 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<bits/atomicity.h>
+file|<ext/atomicity.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|__gnu_cxx
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|__gnu_cxx
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|template
 operator|<
 name|int
@@ -119,6 +123,9 @@ name|_Atomic_word
 name|_S_atomicity_lock
 block|;     }
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|int
@@ -135,6 +142,9 @@ name|_S_atomicity_lock
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 specifier|volatile
 name|_Atomic_word
@@ -145,6 +155,9 @@ operator|>
 operator|::
 name|_S_atomicity_lock
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|_Atomic_word
 name|__attribute__
 argument_list|(
@@ -207,6 +220,9 @@ return|return
 name|__result
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|__attribute__
 argument_list|(
@@ -233,12 +249,11 @@ name|__val
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_decl_stmt
 
-begin_comment
-comment|// namespace __gnu_cxx
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 end_unit
 

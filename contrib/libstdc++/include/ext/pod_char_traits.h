@@ -4,7 +4,7 @@ comment|// POD character, std::char_traits specialization -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+comment|// Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -96,6 +96,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file ext/pod_char_traits.h  *  This file is a GNU extension to the Standard C++ Library.  */
+end_comment
+
+begin_comment
 comment|// Gabriel Dos Reis<gdr@integrable-solutions.net>
 end_comment
 
@@ -122,10 +126,34 @@ directive|include
 file|<string>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|__gnu_cxx
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|__gnu_cxx
+argument_list|)
+end_macro
+
+begin_comment
+comment|// POD character abstraction.
+end_comment
+
+begin_comment
+comment|// NB: The char_type parameter is a subset of int_type, as to allow
+end_comment
+
+begin_comment
+comment|// int_type to properly hold the full range of char_type values as
+end_comment
+
+begin_comment
+comment|// well as EOF.
+end_comment
+
+begin_comment
+comment|/// @brief A POD class that serves as a character abstraction class.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -146,25 +174,110 @@ typedef|typedef
 name|V
 name|value_type
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|I
 name|int_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|S
 name|state_type
 typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|character
+operator|<
+name|V
+operator|,
+name|I
+operator|,
+name|S
+operator|>
+name|char_type
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
 name|value_type
 name|value
 decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|V2
+operator|>
+specifier|static
+name|char_type
+name|from
+argument_list|(
+argument|const V2& v
+argument_list|)
+block|{
+name|char_type
+name|ret
+operator|=
+block|{
+name|static_cast
+operator|<
+name|value_type
+operator|>
+operator|(
+name|v
+operator|)
+block|}
+block|;
+return|return
+name|ret
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|V2
+operator|>
+specifier|static
+name|V2
+name|to
+argument_list|(
+argument|const char_type& c
+argument_list|)
+block|{
+name|V2
+name|ret
+operator|=
+block|{
+name|static_cast
+operator|<
+name|V2
+operator|>
+operator|(
+name|c
+operator|.
+name|value
+operator|)
+block|}
+block|;
+return|return
+name|ret
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -172,6 +285,9 @@ name|V
 operator|,
 name|typename
 name|I
+operator|,
+name|typename
+name|S
 operator|>
 specifier|inline
 name|bool
@@ -184,6 +300,8 @@ operator|<
 name|V
 operator|,
 name|I
+operator|,
+name|S
 operator|>
 operator|&
 name|lhs
@@ -194,6 +312,8 @@ operator|<
 name|V
 operator|,
 name|I
+operator|,
+name|S
 operator|>
 operator|&
 name|rhs
@@ -219,6 +339,9 @@ name|V
 operator|,
 name|typename
 name|I
+operator|,
+name|typename
+name|S
 operator|>
 specifier|inline
 name|bool
@@ -231,6 +354,8 @@ operator|<
 name|V
 operator|,
 name|I
+operator|,
+name|S
 operator|>
 operator|&
 name|lhs
@@ -241,6 +366,8 @@ operator|<
 name|V
 operator|,
 name|I
+operator|,
+name|S
 operator|>
 operator|&
 name|rhs
@@ -258,44 +385,36 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|}
-comment|// namespace __gnu_cxx
-end_comment
-
-begin_macro
-unit|namespace
+begin_decl_stmt
+name|_GLIBCXX_END_NAMESPACE
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
 name|std
-end_macro
-
-begin_block
-block|{
-comment|// Provide std::char_traits specialization.
+argument_list|)
+comment|/// char_traits<__gnu_cxx::character> specialization.
 name|template
-operator|<
+decl|<
 name|typename
 name|V
-operator|,
+decl_stmt|,
 name|typename
 name|I
-operator|,
+decl_stmt|,
 name|typename
 name|S
-operator|>
-expr|struct
+decl|>     struct
 name|char_traits
-operator|<
+decl|<
 name|__gnu_cxx
-operator|::
+decl|::
 name|character
-operator|<
+decl|<
 name|V
-operator|,
+decl_stmt|,
 name|I
-operator|,
+decl_stmt|,
 name|S
-operator|>
-expr|>
+decl|>>
 block|{
 typedef|typedef
 name|__gnu_cxx
@@ -310,12 +429,6 @@ name|S
 operator|>
 name|char_type
 expr_stmt|;
-comment|// NB: This type should be bigger than char_type, so as to
-comment|// properly hold EOF values in addition to the full range of
-comment|// char_type values.
-comment|// Also, assumes
-comment|// int_type(value_type) is valid.
-comment|// int_type(-1) is possible.
 typedef|typedef
 name|typename
 name|char_type
@@ -581,10 +694,14 @@ name|__n
 parameter_list|)
 block|{
 return|return
-operator|(
+name|static_cast
+operator|<
 name|char_type
 operator|*
-operator|)
+operator|>
+operator|(
+name|std
+operator|::
 name|memmove
 argument_list|(
 name|__s1
@@ -598,6 +715,7 @@ argument_list|(
 name|char_type
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 specifier|static
@@ -618,24 +736,21 @@ name|size_t
 name|__n
 parameter_list|)
 block|{
-return|return
-operator|(
-name|char_type
-operator|*
-operator|)
-name|memcpy
+name|std
+operator|::
+name|copy
 argument_list|(
-name|__s1
-argument_list|,
 name|__s2
 argument_list|,
+name|__s2
+operator|+
 name|__n
-operator|*
-sizeof|sizeof
-argument_list|(
-name|char_type
+argument_list|,
+name|__s1
 argument_list|)
-argument_list|)
+expr_stmt|;
+return|return
+name|__s1
 return|;
 block|}
 specifier|static
@@ -654,27 +769,13 @@ name|char_type
 name|__a
 parameter_list|)
 block|{
-for|for
-control|(
-name|char_type
-modifier|*
-name|__p
-init|=
-name|__s
-init|;
-name|__p
-operator|<
-name|__s
-operator|+
-name|__n
-condition|;
-operator|++
-name|__p
-control|)
-name|assign
+name|std
+operator|::
+name|fill_n
 argument_list|(
-operator|*
-name|__p
+name|__s
+argument_list|,
+name|__n
 argument_list|,
 name|__a
 argument_list|)
@@ -690,18 +791,17 @@ parameter_list|(
 specifier|const
 name|int_type
 modifier|&
-name|__c
+name|__i
 parameter_list|)
 block|{
-name|char_type
-name|__r
-init|=
-block|{
-name|__c
-block|}
-decl_stmt|;
 return|return
-name|__r
+name|char_type
+operator|::
+name|template
+name|from
+argument_list|(
+name|__i
+argument_list|)
 return|;
 block|}
 specifier|static
@@ -715,12 +815,16 @@ name|__c
 parameter_list|)
 block|{
 return|return
+name|char_type
+operator|::
+name|template
+name|to
+operator|<
 name|int_type
-argument_list|(
+operator|>
+operator|(
 name|__c
-operator|.
-name|value
-argument_list|)
+operator|)
 return|;
 block|}
 specifier|static
@@ -749,15 +853,16 @@ name|int_type
 name|eof
 parameter_list|()
 block|{
-return|return
-name|static_cast
-operator|<
 name|int_type
-operator|>
-operator|(
+name|__r
+init|=
+block|{
 operator|-
 literal|1
-operator|)
+block|}
+decl_stmt|;
+return|return
+name|__r
 return|;
 block|}
 specifier|static
@@ -780,22 +885,23 @@ argument_list|()
 argument_list|)
 condition|?
 name|int_type
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 else|:
 name|__c
 return|;
 block|}
 block|}
-end_block
+end_decl_stmt
 
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
+
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

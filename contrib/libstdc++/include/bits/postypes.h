@@ -4,7 +4,7 @@ comment|// Position types -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,6 +100,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file postypes.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -113,10 +117,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|/** @file postypes.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_ifndef
@@ -170,39 +170,88 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|// The types streamoff, streampos and wstreampos and the class
+end_comment
+
+begin_comment
 comment|// template fpos<> are described in clauses 21.1.2, 21.1.3, 27.1.2,
+end_comment
+
+begin_comment
 comment|// 27.2, 27.4.1, 27.4.3 and D.6. Despite all this verbage, the
+end_comment
+
+begin_comment
 comment|// behaviour of these types is mostly implementation defined or
+end_comment
+
+begin_comment
 comment|// unspecified. The behaviour in this implementation is as noted
+end_comment
+
+begin_comment
 comment|// below.
+end_comment
+
+begin_comment
 comment|/**    *  @brief  Type used by fpos, char_traits<char>, and char_traits<wchar_t>.    *    *  @if maint    *  In clauses 21.1.3.1 and 27.4.1 streamoff is described as an    *  implementation defined type.    *  Note: In versions of GCC up to and including GCC 3.3, streamoff    *  was typedef long.    *  @endif   */
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|_GLIBCXX_HAVE_INT64_T
+end_ifdef
+
+begin_typedef
 typedef|typedef
 name|int64_t
 name|streamoff
 typedef|;
+end_typedef
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_typedef
 typedef|typedef
 name|long
 name|long
 name|streamoff
 typedef|;
+end_typedef
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/// Integral type for I/O operation counts and buffer sizes.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|ptrdiff_t
 name|streamsize
 typedef|;
+end_typedef
+
+begin_comment
 comment|// Signed integral type
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -211,7 +260,13 @@ operator|>
 name|class
 name|fpos
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/**    *  @brief  Class representing stream positions.    *    *  The standard places no requirements upon the template parameter StateT.    *  In this implementation StateT must be DefaultConstructible,    *  CopyConstructible and Assignable.  The standard only requires that fpos    *  should contain a member of type StateT. In this implementation it also    *  contains an offset stored as a signed integer.    *    *  @param  StateT  Type passed to and returned from state().    */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -296,54 +351,25 @@ return|return
 name|_M_state
 return|;
 block|}
-comment|// The standard only requires that operator== must be an
-comment|// equivalence relation. In this implementation two fpos<StateT>
-comment|// objects belong to the same equivalence class if the contained
-comment|// offsets compare equal.
-comment|/// Test if equivalent to another position.
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|fpos
-operator|&
-name|__other
-operator|)
-specifier|const
-block|{
-return|return
-name|_M_off
-operator|==
-name|__other
-operator|.
-name|_M_off
-return|;
-block|}
-comment|/// Test if not equivalent to another position.
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|fpos
-operator|&
-name|__other
-operator|)
-specifier|const
-block|{
-return|return
-name|_M_off
-operator|!=
-name|__other
-operator|.
-name|_M_off
-return|;
-block|}
+end_expr_stmt
+
+begin_comment
 comment|// The standard requires that this operator must be defined, but
+end_comment
+
+begin_comment
 comment|// gives no semantics. In this implemenation it just adds it's
+end_comment
+
+begin_comment
 comment|// argument to the stored offset and returns *this.
+end_comment
+
+begin_comment
 comment|/// Add offset to this position.
+end_comment
+
+begin_expr_stmt
 name|fpos
 operator|&
 name|operator
@@ -362,10 +388,25 @@ operator|*
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// The standard requires that this operator must be defined, but
+end_comment
+
+begin_comment
 comment|// gives no semantics. In this implemenation it just subtracts
+end_comment
+
+begin_comment
 comment|// it's argument from the stored offset and returns *this.
+end_comment
+
+begin_comment
 comment|/// Subtract offset from this position.
+end_comment
+
+begin_expr_stmt
 name|fpos
 operator|&
 name|operator
@@ -384,12 +425,33 @@ operator|*
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// The standard requires that this operator must be defined, but
+end_comment
+
+begin_comment
 comment|// defines it's semantics only in terms of operator-. In this
+end_comment
+
+begin_comment
 comment|// implementation it constructs a copy of *this, adds the
+end_comment
+
+begin_comment
 comment|// argument to that copy using operator+= and then returns the
+end_comment
+
+begin_comment
 comment|// copy.
+end_comment
+
+begin_comment
 comment|/// Add position and offset.
+end_comment
+
+begin_expr_stmt
 name|fpos
 name|operator
 operator|+
@@ -414,12 +476,33 @@ return|return
 name|__pos
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// The standard requires that this operator must be defined, but
+end_comment
+
+begin_comment
 comment|// defines it's semantics only in terms of operator+. In this
+end_comment
+
+begin_comment
 comment|// implementation it constructs a copy of *this, subtracts the
+end_comment
+
+begin_comment
 comment|// argument from that copy using operator-= and then returns the
+end_comment
+
+begin_comment
 comment|// copy.
+end_comment
+
+begin_comment
 comment|/// Subtract offset from position.
+end_comment
+
+begin_expr_stmt
 name|fpos
 name|operator
 operator|-
@@ -444,11 +527,29 @@ return|return
 name|__pos
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// The standard requires that this operator must be defined, but
+end_comment
+
+begin_comment
 comment|// defines it's semantics only in terms of operator+. In this
+end_comment
+
+begin_comment
 comment|// implementation it returns the difference between the offset
+end_comment
+
+begin_comment
 comment|// stored in *this and in the argument.
+end_comment
+
+begin_comment
 comment|/// Subtract position to return offset.
+end_comment
+
+begin_expr_stmt
 name|streamoff
 name|operator
 operator|-
@@ -468,12 +569,130 @@ operator|.
 name|_M_off
 return|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|// The standard only requires that operator== must be an
+end_comment
+
+begin_comment
+comment|// equivalence relation. In this implementation two fpos<StateT>
+end_comment
+
+begin_comment
+comment|// objects belong to the same equivalence class if the contained
+end_comment
+
+begin_comment
+comment|// offsets compare equal.
+end_comment
+
+begin_comment
+comment|/// Test if equivalent to another position.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_StateT
+operator|>
+specifier|inline
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|fpos
+operator|<
+name|_StateT
+operator|>
+operator|&
+name|__lhs
+operator|,
+specifier|const
+name|fpos
+operator|<
+name|_StateT
+operator|>
+operator|&
+name|__rhs
+operator|)
+block|{
+return|return
+name|streamoff
+argument_list|(
+name|__lhs
+argument_list|)
+operator|==
+name|streamoff
+argument_list|(
+name|__rhs
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_StateT
+operator|>
+specifier|inline
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|fpos
+operator|<
+name|_StateT
+operator|>
+operator|&
+name|__lhs
+operator|,
+specifier|const
+name|fpos
+operator|<
+name|_StateT
+operator|>
+operator|&
+name|__rhs
+operator|)
+block|{
+return|return
+name|streamoff
+argument_list|(
+name|__lhs
+argument_list|)
+operator|!=
+name|streamoff
+argument_list|(
+name|__rhs
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|// Clauses 21.1.3.1 and 21.1.3.2 describe streampos and wstreampos
+end_comment
+
+begin_comment
 comment|// as implementation defined types, but clause 27.2 requires that
+end_comment
+
+begin_comment
 comment|// they must both be typedefs for fpos<mbstate_t>
+end_comment
+
+begin_comment
 comment|/// File position for char streams.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|fpos
 operator|<
@@ -481,7 +700,13 @@ name|mbstate_t
 operator|>
 name|streampos
 expr_stmt|;
+end_typedef
+
+begin_comment
 comment|/// File position for wchar_t streams.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|fpos
 operator|<
@@ -489,12 +714,11 @@ name|mbstate_t
 operator|>
 name|wstreampos
 expr_stmt|;
-block|}
-end_decl_stmt
+end_typedef
 
-begin_comment
-comment|// namespace std
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

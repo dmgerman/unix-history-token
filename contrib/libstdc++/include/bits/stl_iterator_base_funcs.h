@@ -4,7 +4,11 @@ comment|// Functions used by iterators -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -129,10 +133,14 @@ directive|include
 file|<bits/concept_check.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -185,11 +193,16 @@ operator|++
 name|__n
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|__n
 return|;
-block|}
-name|template
+end_return
+
+begin_expr_stmt
+unit|}    template
 operator|<
 name|typename
 name|_RandomAccessIterator
@@ -222,7 +235,13 @@ operator|-
 name|__first
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/**    *  @brief A generalization of pointer arithmetic.    *  @param  first  An input iterator.    *  @param  last  An input iterator.    *  @return  The distance between them.    *    *  Returns @c n such that first + n == last.  This requires that @p last    *  must be reachable from @p first.  Note that @c n may be negative.    *    *  For random access iterators, this uses their @c + and @c - operations    *  and are constant time.  For other %iterator classes they are linear time.   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -262,6 +281,9 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -295,6 +317,9 @@ operator|++
 name|__i
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -343,6 +368,9 @@ operator|--
 name|__i
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -390,13 +418,24 @@ argument|_Distance __n
 argument_list|)
 block|{
 comment|// concept requirements -- taken care of in __advance
+name|typename
+name|iterator_traits
+operator|<
+name|_InputIterator
+operator|>
+operator|::
+name|difference_type
+name|__d
+operator|=
+name|__n
+block|;
 name|std
 operator|::
 name|__advance
 argument_list|(
 name|__i
 argument_list|,
-name|__n
+name|__d
 argument_list|,
 name|std
 operator|::
@@ -406,12 +445,8 @@ name|__i
 argument_list|)
 argument_list|)
 block|;     }
-block|}
-end_decl_stmt
-
-begin_comment
-comment|// namespace std
-end_comment
+name|_GLIBCXX_END_NAMESPACE
+end_expr_stmt
 
 begin_endif
 endif|#

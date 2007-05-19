@@ -4,7 +4,7 @@ comment|// Standard stream manipulators -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003
+comment|// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003, 2005
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,6 +100,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file iomanip  *  This is a Standard C++ Library header.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -109,10 +113,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|/** @file iomanip  *  This is a Standard C++ Library header.  You should @c #include this header  *  in your programs, rather than any of the "st[dl]_*.h" implementation files.  */
 end_comment
 
 begin_ifndef
@@ -153,12 +153,22 @@ directive|include
 file|<functional>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|// [27.6.3] standard manipulators
+end_comment
+
+begin_comment
 comment|// Also see DR 183.
+end_comment
+
+begin_struct
 struct|struct
 name|_Resetiosflags
 block|{
@@ -169,7 +179,13 @@ name|_M_mask
 expr_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/**    *  @brief  Manipulator for @c setf.    *  @param  mask  A format flags mask.    *    *  Sent to a stream object, this manipulator resets the specified flags,    *  via @e stream.setf(0,mask).   */
+end_comment
+
+begin_decl_stmt
 specifier|inline
 name|_Resetiosflags
 name|resetiosflags
@@ -193,6 +209,9 @@ return|return
 name|__x
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -245,6 +264,9 @@ return|return
 name|__is
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -297,6 +319,9 @@ return|return
 name|__os
 return|;
 block|}
+end_expr_stmt
+
+begin_struct
 struct|struct
 name|_Setiosflags
 block|{
@@ -307,7 +332,13 @@ name|_M_mask
 expr_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/**    *  @brief  Manipulator for @c setf.    *  @param  mask  A format flags mask.    *    *  Sent to a stream object, this manipulator sets the format flags    *  to @a mask.   */
+end_comment
+
+begin_decl_stmt
 specifier|inline
 name|_Setiosflags
 name|setiosflags
@@ -331,6 +362,9 @@ return|return
 name|__x
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -376,6 +410,9 @@ return|return
 name|__is
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -421,6 +458,9 @@ return|return
 name|__os
 return|;
 block|}
+end_expr_stmt
+
+begin_struct
 struct|struct
 name|_Setbase
 block|{
@@ -429,7 +469,13 @@ name|_M_base
 decl_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/**    *  @brief  Manipulator for @c setf.    *  @param  base  A numeric base.    *    *  Sent to a stream object, this manipulator changes the    *  @c ios_base::basefield flags to @c oct, @c dec, or @c hex when @a base    *  is 8, 10, or 16, accordingly, and to 0 if @a base is any other value.   */
+end_comment
+
+begin_function
 specifier|inline
 name|_Setbase
 name|setbase
@@ -451,6 +497,9 @@ return|return
 name|__x
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -533,6 +582,9 @@ return|return
 name|__is
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -615,6 +667,9 @@ return|return
 name|__os
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -627,7 +682,13 @@ name|_CharT
 name|_M_c
 block|; }
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/**    *  @brief  Manipulator for @c fill.    *  @param  c  The new fill character.    *    *  Sent to a stream object, this manipulator calls @c fill(c) for that    *  object.   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -659,6 +720,9 @@ return|return
 name|__x
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -707,6 +771,9 @@ return|return
 name|__is
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -755,6 +822,9 @@ return|return
 name|__os
 return|;
 block|}
+end_expr_stmt
+
+begin_struct
 struct|struct
 name|_Setprecision
 block|{
@@ -763,7 +833,13 @@ name|_M_n
 decl_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/**    *  @brief  Manipulator for @c precision.    *  @param  n  The new precision.    *    *  Sent to a stream object, this manipulator calls @c precision(n) for    *  that object.   */
+end_comment
+
+begin_function
 specifier|inline
 name|_Setprecision
 name|setprecision
@@ -785,6 +861,9 @@ return|return
 name|__x
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -830,6 +909,9 @@ return|return
 name|__is
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -875,6 +957,9 @@ return|return
 name|__os
 return|;
 block|}
+end_expr_stmt
+
+begin_struct
 struct|struct
 name|_Setw
 block|{
@@ -883,7 +968,13 @@ name|_M_n
 decl_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/**    *  @brief  Manipulator for @c width.    *  @param  n  The new width.    *    *  Sent to a stream object, this manipulator calls @c width(n) for    *  that object.   */
+end_comment
+
+begin_function
 specifier|inline
 name|_Setw
 name|setw
@@ -905,6 +996,9 @@ return|return
 name|__x
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -950,6 +1044,9 @@ return|return
 name|__is
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -995,18 +1092,36 @@ return|return
 name|__os
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Inhibit implicit instantiations for required instantiations,
+end_comment
+
+begin_comment
 comment|// which are defined via explicit instantiations elsewhere.
+end_comment
+
+begin_comment
 comment|// NB:  This syntax is a GNU extension.
+end_comment
+
+begin_if
 if|#
 directive|if
 name|_GLIBCXX_EXTERN_TEMPLATE
+end_if
+
+begin_extern
 extern|extern template ostream& operator<<(ostream&
 operator|,
 extern|_Setfill<char>
-block|)
-decl_stmt|;
-end_decl_stmt
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_extern
 extern|extern template ostream& operator<<(ostream&
@@ -1277,10 +1392,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

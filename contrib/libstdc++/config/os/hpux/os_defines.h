@@ -4,7 +4,7 @@ comment|// Specific definitions for HPUX  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2002, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2002, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -95,6 +95,10 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
+begin_comment
+comment|/** @file os_defines.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -115,27 +119,6 @@ end_comment
 begin_comment
 comment|// file will come before all others.
 end_comment
-
-begin_define
-define|#
-directive|define
-name|__off_t
-value|off_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|__off64_t
-value|off64_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|__ssize_t
-value|ssize_t
-end_define
 
 begin_comment
 comment|// Use macro form of ctype functions to ensure __SB_masks is defined.

@@ -4,7 +4,7 @@ comment|// Types used in iterator implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -123,23 +123,48 @@ name|GCC
 name|system_header
 end_pragma
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|//@{
+end_comment
+
+begin_comment
 comment|/**    *  @defgroup iterator_tags Iterator Tags    *  These are empty types, used to distinguish different iterators.  The    *  distinction is not made by what they contain, but simply by what they    *  are.  Different underlying algorithms can then be used based on the    *  different operations supporetd by different iterator types.   */
+end_comment
+
+begin_comment
 comment|///  Marking input iterators.
+end_comment
+
+begin_struct
 struct|struct
 name|input_iterator_tag
 block|{}
 struct|;
+end_struct
+
+begin_comment
 comment|///  Marking output iterators.
+end_comment
+
+begin_struct
 struct|struct
 name|output_iterator_tag
 block|{}
 struct|;
+end_struct
+
+begin_comment
 comment|/// Forward iterators support a superset of input iterator operations.
+end_comment
+
+begin_decl_stmt
 name|struct
 name|forward_iterator_tag
 range|:
@@ -147,8 +172,17 @@ name|public
 name|input_iterator_tag
 block|{}
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Bidirectional iterators support a superset of forward iterator
+end_comment
+
+begin_comment
 comment|/// operations.
+end_comment
+
+begin_decl_stmt
 name|struct
 name|bidirectional_iterator_tag
 range|:
@@ -156,8 +190,17 @@ name|public
 name|forward_iterator_tag
 block|{}
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Random-access iterators support a superset of bidirectional iterator
+end_comment
+
+begin_comment
 comment|/// operations.
+end_comment
+
+begin_decl_stmt
 name|struct
 name|random_access_iterator_tag
 range|:
@@ -165,8 +208,17 @@ name|public
 name|bidirectional_iterator_tag
 block|{}
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//@}
+end_comment
+
+begin_comment
 comment|/**    *  @brief  Common %iterator class.    *    *  This class does nothing but define nested typedefs.  %Iterator classes    *  can inherit from this class to save some work.  The typedefs are then    *  used in specializations and overloading.    *    *  In particular, there are no default implementations of requirements    *  such as @c operator++ and the like.  (How could there be?)   */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -200,34 +252,54 @@ typedef|typedef
 name|_Category
 name|iterator_category
 typedef|;
+end_expr_stmt
+
+begin_comment
 comment|/// The type "pointed to" by the iterator.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|_Tp
 name|value_type
 typedef|;
+end_typedef
+
+begin_comment
 comment|/// Distance between iterators is represented as this type.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|_Distance
 name|difference_type
 typedef|;
+end_typedef
+
+begin_comment
 comment|/// This type represents a pointer-to-value_type.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|_Pointer
 name|pointer
 typedef|;
+end_typedef
+
+begin_comment
 comment|/// This type represents a reference-to-value_type.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|_Reference
 name|reference
 typedef|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_typedef
 
 begin_comment
+unit|};
 comment|/**    *  This class does nothing but define nested typedefs.  The general    *  version simply "forwards" the nested typedefs from the Iterator    *  argument.  Specialized versions for pointers and pointers-to-const    *  provide tighter, more correct semantics.   */
 end_comment
 
@@ -429,10 +501,9 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

@@ -4,7 +4,7 @@ comment|// -*- C++ -*- forwarding header.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,6 +100,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file cstring  *  This is a Standard C++ Library file.  You should @c #include this file  *  in your programs, rather than any of the "*.h" implementation files.  *  *  This is the C++ version of the Standard C Library header @c string.h,  *  and its contents are (mostly) the same as that header, but are all  *  contained in the namespace @c std (except for names which are defined  *  as macros in C).  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -109,10 +113,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|/** @file cstring  *  This is a Standard C++ Library file.  You should @c #include this file  *  in your programs, rather than any of the "*.h" implementation files.  *  *  This is the C++ version of the Standard C Library header @c string.h,  *  and its contents are (mostly) the same as that header, but are all  *  contained in the namespace @c std.  */
 end_comment
 
 begin_ifndef
@@ -134,6 +134,12 @@ directive|pragma
 name|GCC
 name|system_header
 end_pragma
+
+begin_include
+include|#
+directive|include
+file|<bits/c++config.h>
+end_include
 
 begin_include
 include|#
@@ -283,82 +289,140 @@ directive|undef
 name|strlen
 end_undef
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|using
 operator|::
 name|memcpy
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|memmove
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|strcpy
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|strncpy
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|strcat
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|strncat
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|memcmp
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|strcmp
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|strcoll
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|strncmp
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|strxfrm
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|strcspn
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|strspn
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|strtok
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|memset
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|strerror
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|strlen
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|using
 operator|::
 name|memchr
 expr_stmt|;
+end_expr_stmt
+
+begin_function
 specifier|inline
 name|void
 modifier|*
@@ -394,10 +458,16 @@ name|__n
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|using
 operator|::
 name|strchr
 expr_stmt|;
+end_expr_stmt
+
+begin_function
 specifier|inline
 name|char
 modifier|*
@@ -428,10 +498,16 @@ name|__n
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|using
 operator|::
 name|strpbrk
 expr_stmt|;
+end_expr_stmt
+
+begin_function
 specifier|inline
 name|char
 modifier|*
@@ -464,10 +540,16 @@ name|__s2
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|using
 operator|::
 name|strrchr
 expr_stmt|;
+end_expr_stmt
+
+begin_function
 specifier|inline
 name|char
 modifier|*
@@ -498,10 +580,16 @@ name|__n
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|using
 operator|::
 name|strstr
 expr_stmt|;
+end_expr_stmt
+
+begin_function
 specifier|inline
 name|char
 modifier|*
@@ -534,8 +622,11 @@ name|__s2
 argument_list|)
 return|;
 block|}
-block|}
-end_decl_stmt
+end_function
+
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

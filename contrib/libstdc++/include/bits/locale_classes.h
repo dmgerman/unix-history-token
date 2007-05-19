@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,6 +100,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file locale_classes.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -109,10 +113,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|/** @file localefwd.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_ifndef
@@ -160,21 +160,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bits/atomicity.h>
+file|<ext/atomicity.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<bits/gthr.h>
-end_include
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
+comment|// 22.1.1 Class locale
+end_comment
+
+begin_comment
+comment|/**    *  @brief  Container class for localization functionality.    *    *  The locale class is first a class wrapper for C library locales.  It is    *  also an extensible container for user-defined localization.  A locale is    *  a collection of facets that implement various localization features such    *  as money, time, and number printing.    *    *  Constructing C++ locales does not change the C library locale.    *    *  This library supports efficient construction and copying of locales    *  through a reference counting implementation of the locale class.   */
+end_comment
 
 begin_decl_stmt
-name|namespace
-name|std
-block|{
-comment|// 22.1.1 Class locale
-comment|/**    *  @brief  Container class for localization functionality.    *    *  The locale class is first a class wrapper for C library locales.  It is    *  also an extensible container for user-defined localization.  A locale is    *  a collection of facets that implement various localization features such    *  as money, time, and number printing.    *    *  Constructing C++ locales does not change the C library locale.    *    *  This library supports efficient construction and copying of locales    *  through a reference counting implementation of the locale class.   */
 name|class
 name|locale
 block|{
@@ -576,15 +580,15 @@ comment|// operating system is allowed to define extra LC_*
 comment|// macros. For GNU systems, the following are also valid:
 comment|// LC_PAPER, LC_NAME, LC_ADDRESS, LC_TELEPHONE, LC_MEASUREMENT,
 comment|// and LC_IDENTIFICATION.
-specifier|static
-specifier|const
-name|size_t
+enum|enum
+block|{
 name|_S_categories_size
 init|=
 literal|6
 operator|+
 name|_GLIBCXX_NUM_CATEGORIES
-decl_stmt|;
+block|}
+enum|;
 ifdef|#
 directive|ifdef
 name|__GTHREADS
@@ -638,9 +642,21 @@ name|__cat
 parameter_list|)
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// 22.1.1.1.2  Class locale::facet
+end_comment
+
+begin_comment
 comment|/**    *  @brief  Localization functionality base class.    *    *  The facet class is the base class for a localization feature, such as    *  money, time, and number printing.  It provides common support for facets    *  and reference management.    *    *  Facets may not be copied or assigned.   */
+end_comment
+
+begin_expr_stmt
 name|class
 name|locale
 operator|::
@@ -772,7 +788,7 @@ argument_list|()
 block|{
 name|__gnu_cxx
 operator|::
-name|__atomic_add
+name|__atomic_add_dispatch
 argument_list|(
 operator|&
 name|_M_refcount
@@ -792,7 +808,7 @@ if|if
 condition|(
 name|__gnu_cxx
 operator|::
-name|__exchange_and_add
+name|__exchange_and_add_dispatch
 argument_list|(
 operator|&
 name|_M_refcount
@@ -814,18 +830,25 @@ name|catch
 argument_list|(
 argument|...
 argument_list|)
-block|{
+block|{ }
 block|}
-block|}
-block|}
-name|facet
-argument_list|(
+end_expr_stmt
+
+begin_expr_stmt
+unit|}      facet
+operator|(
 specifier|const
 name|facet
 operator|&
-argument_list|)
+operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Not defined.
+end_comment
+
+begin_decl_stmt
 name|facet
 modifier|&
 name|operator
@@ -836,15 +859,14 @@ name|facet
 operator|&
 operator|)
 decl_stmt|;
-comment|// Not defined.
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_comment
+comment|// Not defined.
+end_comment
 
 begin_comment
+unit|};
 comment|// 22.1.1.1.3 Class locale::id
 end_comment
 
@@ -1115,7 +1137,7 @@ argument_list|()
 block|{
 name|__gnu_cxx
 operator|::
-name|__atomic_add
+name|__atomic_add_dispatch
 argument_list|(
 operator|&
 name|_M_refcount
@@ -1134,7 +1156,7 @@ if|if
 condition|(
 name|__gnu_cxx
 operator|::
-name|__exchange_and_add
+name|__exchange_and_add_dispatch
 argument_list|(
 operator|&
 name|_M_refcount
@@ -1247,6 +1269,14 @@ name|__ret
 init|=
 name|true
 decl_stmt|;
+if|if
+condition|(
+name|_M_names
+index|[
+literal|1
+index|]
+condition|)
+comment|// We must actually compare all the _M_names: can be all equal!
 for|for
 control|(
 name|size_t
@@ -1384,25 +1414,13 @@ block|; }
 name|void
 name|_M_install_cache
 argument_list|(
-argument|const facet* __cache
+specifier|const
+name|facet
+operator|*
 argument_list|,
-argument|size_t __index
+name|size_t
 argument_list|)
-name|throw
-argument_list|()
-block|{
-name|__cache
-operator|->
-name|_M_add_reference
-argument_list|()
-block|;
-name|_M_caches
-index|[
-name|__index
-index|]
-operator|=
-name|__cache
-block|;     }
+expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
@@ -1434,55 +1452,8 @@ argument_list|,
 literal|1
 argument_list|)
 block|;
-name|char
-operator|*
-name|_M_tmp_names
-index|[
-name|_S_categories_size
-index|]
-block|;
-name|size_t
-name|__i
-operator|=
-literal|0
-block|;
 name|try
 block|{
-for|for
-control|(
-init|;
-name|__i
-operator|<
-name|_S_categories_size
-condition|;
-operator|++
-name|__i
-control|)
-block|{
-name|_M_tmp_names
-index|[
-name|__i
-index|]
-operator|=
-name|new
-name|char
-index|[
-literal|2
-index|]
-expr_stmt|;
-name|std
-operator|::
-name|strcpy
-argument_list|(
-name|_M_tmp_names
-index|[
-name|__i
-index|]
-argument_list|,
-literal|"*"
-argument_list|)
-expr_stmt|;
-block|}
 name|_M_impl
 operator|->
 name|_M_install_facet
@@ -1494,7 +1465,7 @@ name|id
 argument_list|,
 name|__f
 argument_list|)
-block|; 	}
+block|; }
 name|catch
 argument_list|(
 argument|...
@@ -1505,74 +1476,30 @@ operator|->
 name|_M_remove_reference
 argument_list|()
 block|;
-for|for
-control|(
-name|size_t
-name|__j
-init|=
-literal|0
-init|;
-name|__j
-operator|<
-name|__i
-condition|;
-operator|++
-name|__j
-control|)
-name|delete
-index|[]
-name|_M_tmp_names
-index|[
-name|__j
-index|]
-decl_stmt|;
 name|__throw_exception_again
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|}        for
-operator|(
-name|size_t
-name|__k
-operator|=
-literal|0
-expr|;
-name|__k
-operator|<
-name|_S_categories_size
-expr|;
-operator|++
-name|__k
-operator|)
-block|{
+block|; 	}
 name|delete
 index|[]
 name|_M_impl
 operator|->
 name|_M_names
 index|[
-name|__k
+literal|0
 index|]
 block|;
 name|_M_impl
 operator|->
 name|_M_names
 index|[
-name|__k
+literal|0
 index|]
 operator|=
-name|_M_tmp_names
-index|[
-name|__k
-index|]
-block|; 	}
+literal|0
+block|;
+comment|// Unnamed.
+block|}
+name|_GLIBCXX_END_NAMESPACE
 end_expr_stmt
-
-begin_comment
-unit|} }
-comment|// namespace std
-end_comment
 
 begin_endif
 endif|#

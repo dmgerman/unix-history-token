@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -109,6 +109,17 @@ end_comment
 
 begin_comment
 comment|// Information as gleaned from /usr/include/ctype.h, for solaris2.5.1
+end_comment
+
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
+comment|/// @brief  Base class for ctype.
 end_comment
 
 begin_struct
@@ -229,6 +240,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 end_unit
 

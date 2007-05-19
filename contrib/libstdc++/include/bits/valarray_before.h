@@ -4,7 +4,11 @@ comment|// The template and inlines for the -*- C++ -*- internal _Meta class.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -96,11 +100,11 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
-comment|// Written by Gabriel Dos Reis<Gabriel.Dos-Reis@cmla.ens-cachan.fr>
+comment|/** @file valarray_before.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_comment
-comment|/** @file valarray_meta.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+comment|// Written by Gabriel Dos Reis<Gabriel.Dos-Reis@cmla.ens-cachan.fr>
 end_comment
 
 begin_ifndef
@@ -129,19 +133,50 @@ directive|include
 file|<bits/slice_array.h>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// Implementing a loosened valarray return value is tricky.
+end_comment
+
+begin_comment
 comment|// First we need to meet 26.3.1/3: we should not add more than
+end_comment
+
+begin_comment
 comment|// two levels of template nesting. Therefore we resort to template
+end_comment
+
+begin_comment
 comment|// template to "flatten" loosened return value types.
+end_comment
+
+begin_comment
 comment|// At some point we use partial specialization to remove one level
+end_comment
+
+begin_comment
 comment|// template nesting due to _Expr<>
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// This class is NOT defined. It doesn't need to.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -153,13 +188,37 @@ operator|>
 name|class
 name|_Constant
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Implementations of unary functions applied to valarray<>s.
+end_comment
+
+begin_comment
 comment|// I use hard-coded object functions here instead of a generic
+end_comment
+
+begin_comment
 comment|// approach like pointers to function:
+end_comment
+
+begin_comment
 comment|//    1) correctness: some functions take references, others values.
+end_comment
+
+begin_comment
 comment|//       we can't deduce the correct type afterwards.
+end_comment
+
+begin_comment
 comment|//    2) efficiency -- object functions can be easily inlined
+end_comment
+
+begin_comment
 comment|//    3) be Koenig-lookup-friendly
+end_comment
+
+begin_struct
 struct|struct
 name|__abs
 block|{
@@ -188,6 +247,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__cos
 block|{
@@ -216,6 +278,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__acos
 block|{
@@ -244,6 +309,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__cosh
 block|{
@@ -272,6 +340,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__sin
 block|{
@@ -300,6 +371,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__asin
 block|{
@@ -328,6 +402,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__sinh
 block|{
@@ -356,6 +433,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__tan
 block|{
@@ -384,6 +464,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__atan
 block|{
@@ -412,6 +495,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__tanh
 block|{
@@ -440,6 +526,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__exp
 block|{
@@ -468,6 +557,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__log
 block|{
@@ -496,6 +588,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__log10
 block|{
@@ -524,6 +619,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__sqrt
 block|{
@@ -552,9 +650,21 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|// In the past, we used to tailor operator applications semantics
+end_comment
+
+begin_comment
 comment|// to the specialization of standard function objects (i.e. plus<>, etc.)
+end_comment
+
+begin_comment
 comment|// That is incorrect.  Therefore we provide our own surrogates.
+end_comment
+
+begin_struct
 struct|struct
 name|__unary_plus
 block|{
@@ -581,6 +691,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__negate
 block|{
@@ -607,6 +720,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__bitwise_not
 block|{
@@ -633,6 +749,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__plus
 block|{
@@ -665,6 +784,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__minus
 block|{
@@ -697,6 +819,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__multiplies
 block|{
@@ -729,6 +854,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__divides
 block|{
@@ -761,6 +889,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__modulus
 block|{
@@ -793,6 +924,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__bitwise_xor
 block|{
@@ -825,6 +959,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__bitwise_and
 block|{
@@ -857,6 +994,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__bitwise_or
 block|{
@@ -889,6 +1029,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__shift_left
 block|{
@@ -921,6 +1064,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__shift_right
 block|{
@@ -953,6 +1099,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__logical_and
 block|{
@@ -985,6 +1134,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__logical_or
 block|{
@@ -1017,6 +1169,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__logical_not
 block|{
@@ -1043,6 +1198,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__equal_to
 block|{
@@ -1075,6 +1233,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__not_equal_to
 block|{
@@ -1107,6 +1268,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__less
 block|{
@@ -1139,6 +1303,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__greater
 block|{
@@ -1171,6 +1338,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__less_equal
 block|{
@@ -1203,6 +1373,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__greater_equal
 block|{
@@ -1235,7 +1408,13 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|// The few binary functions we miss.
+end_comment
+
+begin_struct
 struct|struct
 name|__atan2
 block|{
@@ -1271,6 +1450,9 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_struct
 struct|struct
 name|__pow
 block|{
@@ -1306,9 +1488,21 @@ return|;
 block|}
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|// We need these bits in order to recover the return type of
+end_comment
+
+begin_comment
 comment|// some functions/operators now that we're no longer using
+end_comment
+
+begin_comment
 comment|// function templates.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1324,8 +1518,17 @@ name|_Tp
 name|result_type
 typedef|;
 block|}
+end_expr_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// several specializations for relational operators.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1344,7 +1547,13 @@ name|bool
 name|result_type
 typedef|;
 block|}
+end_expr_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1363,7 +1572,13 @@ name|bool
 name|result_type
 typedef|;
 block|}
+end_expr_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1382,7 +1597,13 @@ name|bool
 name|result_type
 typedef|;
 block|}
+end_expr_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1401,7 +1622,13 @@ name|bool
 name|result_type
 typedef|;
 block|}
+end_expr_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1420,7 +1647,13 @@ name|bool
 name|result_type
 typedef|;
 block|}
+end_expr_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1439,7 +1672,13 @@ name|bool
 name|result_type
 typedef|;
 block|}
+end_expr_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1458,7 +1697,13 @@ name|bool
 name|result_type
 typedef|;
 block|}
+end_expr_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1477,7 +1722,13 @@ name|bool
 name|result_type
 typedef|;
 block|}
+end_expr_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1496,10 +1747,25 @@ name|bool
 name|result_type
 typedef|;
 block|}
+end_expr_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// Apply function taking a value/const reference closure
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1556,6 +1822,9 @@ index|]
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|size_t
 name|size
 argument_list|()
@@ -1568,13 +1837,22 @@ name|size
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_decl_stmt
 specifier|const
 name|_Dom
 modifier|&
 name|_M_expr
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|value_type
 function_decl|(
 modifier|*
@@ -1584,14 +1862,10 @@ parameter_list|(
 name|_Arg
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function_decl
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|class
@@ -2689,9 +2963,12 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|_Tp
+name|typename
+name|_Base
+operator|::
 name|value_type
-typedef|;
+name|value_type
+expr_stmt|;
 end_typedef
 
 begin_expr_stmt
@@ -3645,10 +3922,10 @@ argument_list|)
 block|{}
 end_expr_stmt
 
-begin_comment
-unit|};  }
-comment|// std::
-end_comment
+begin_macro
+unit|};
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#
@@ -3657,18 +3934,6 @@ end_endif
 
 begin_comment
 comment|/* _CPP_VALARRAY_BEFORE_H */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:c++
-end_comment
-
-begin_comment
-comment|// End:
 end_comment
 
 end_unit

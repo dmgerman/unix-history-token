@@ -4,7 +4,7 @@ comment|// Safe sequence/iterator base implementation  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2003, 2004
+comment|// Copyright (C) 2003, 2004, 2005, 2006
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -99,6 +99,10 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
+begin_comment
+comment|/** @file debug/safe_base.h  *  This file is a GNU debug extension to the Standard C++ Library.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -111,6 +115,12 @@ directive|define
 name|_GLIBCXX_DEBUG_SAFE_BASE_H
 value|1
 end_define
+
+begin_include
+include|#
+directive|include
+file|<ext/concurrence.h>
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -281,20 +291,48 @@ operator|->
 name|_M_detach
 argument_list|()
 block|; }
+comment|/** For use in _Safe_iterator. */
+name|__gnu_cxx
+operator|::
+name|__mutex
+operator|&
+name|_M_get_mutex
+argument_list|()
+expr_stmt|;
 name|public
-operator|:
+label|:
 comment|/** Attaches this iterator to the given sequence, detaching it      *	from whatever sequence it was attached to originally. If the      *	new sequence is the NULL pointer, the iterator is left      *	unattached.      */
 name|void
 name|_M_attach
-argument_list|(
-argument|_Safe_sequence_base* __seq
-argument_list|,
-argument|bool __constant
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|_Safe_sequence_base
+modifier|*
+name|__seq
+parameter_list|,
+name|bool
+name|__constant
+parameter_list|)
+function_decl|;
+comment|/** Likewise, but not thread-safe. */
+name|void
+name|_M_attach_single
+parameter_list|(
+name|_Safe_sequence_base
+modifier|*
+name|__seq
+parameter_list|,
+name|bool
+name|__constant
+parameter_list|)
+function_decl|;
 comment|/** Detach the iterator for whatever sequence it is attached to,      *	if any.     */
 name|void
 name|_M_detach
+parameter_list|()
+function_decl|;
+comment|/** Likewise, but not thread-safe. */
+name|void
+name|_M_detach_single
 parameter_list|()
 function_decl|;
 comment|/** Determines if we are attached to the given sequence. */
@@ -410,6 +448,14 @@ modifier|&
 name|__x
 parameter_list|)
 function_decl|;
+comment|/** For use in _Safe_sequence. */
+name|__gnu_cxx
+operator|::
+name|__mutex
+operator|&
+name|_M_get_mutex
+argument_list|()
+expr_stmt|;
 name|public
 label|:
 comment|/** Invalidates all iterators. */

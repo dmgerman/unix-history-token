@@ -4,7 +4,11 @@ comment|// The  -*- C++ -*- type traits classes for internal use in libstdc++
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -96,11 +100,11 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
-comment|// Written by Gabriel Dos Reis<dosreis@cmla.ens-cachan.fr>
+comment|/** @file cpp_type_traits.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_comment
-comment|/** @file cpp_type_traits.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+comment|// Written by Gabriel Dos Reis<dosreis@cmla.ens-cachan.fr>
 end_comment
 
 begin_ifndef
@@ -123,6 +127,12 @@ name|GCC
 name|system_header
 end_pragma
 
+begin_include
+include|#
+directive|include
+file|<bits/c++config.h>
+end_include
+
 begin_comment
 comment|//
 end_comment
@@ -136,7 +146,7 @@ comment|// These representations were designed, on purpose, to be constant-expre
 end_comment
 
 begin_comment
-comment|// and not types as found in<stl/bits/type_traits.h>.  In particular, they
+comment|// and not types as found in<bits/type_traits.h>.  In particular, they
 end_comment
 
 begin_comment
@@ -220,21 +230,57 @@ comment|//
 end_comment
 
 begin_comment
-comment|// NB: g++ can not compile these if declared within the class
+comment|// Update 2005: types are also provided and<bits/type_traits.h> has been
 end_comment
 
 begin_comment
-comment|// __is_pod itself.
+comment|// removed.
 end_comment
 
-begin_decl_stmt
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Forward declaration hack, should really include this from somewhere.
+end_comment
+
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|__gnu_cxx
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Iterator
+operator|,
+name|typename
+name|_Container
+operator|>
+name|class
+name|__normal_iterator
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+name|_GLIBCXX_END_NAMESPACE
+name|_GLIBCXX_BEGIN_NAMESPACE
+parameter_list|(
+name|std
+parameter_list|)
 name|namespace
-name|__gnu_internal
-block|{
-typedef|typedef
-name|char
-name|__one
-typedef|;
+name|__detail
+decl_stmt|{
+comment|// NB: g++ can not compile these if declared within the class
+comment|// __is_pod itself.
+decl_stmt|typedef char __one;
+end_function
+
+begin_typedef
 typedef|typedef
 name|char
 name|__two
@@ -242,6 +288,9 @@ index|[
 literal|2
 index|]
 typedef|;
+end_typedef
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -253,6 +302,9 @@ argument_list|(
 argument|int _Tp::*
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -265,85 +317,193 @@ argument_list|(
 operator|...
 argument_list|)
 expr_stmt|;
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
-comment|// namespace __gnu_internal
+unit|}
+comment|// namespace __detail
 end_comment
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
-comment|// Compare for equality of types.
+begin_macro
+unit|struct
+name|__true_type
+end_macro
+
+begin_block
+block|{ }
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_struct
+struct|struct
+name|__false_type
+block|{ }
+struct|;
+end_struct
+
+begin_expr_stmt
 name|template
 operator|<
-name|typename
-operator|,
-name|typename
-operator|>
-expr|struct
-name|__are_same
-block|{       enum
-block|{
-name|_M_type
-operator|=
-literal|0
-block|}
-block|;     }
-expr_stmt|;
-name|template
-operator|<
-name|typename
-name|_Tp
-operator|>
-expr|struct
-name|__are_same
-operator|<
-name|_Tp
-operator|,
-name|_Tp
-operator|>
-block|{       enum
-block|{
-name|_M_type
-operator|=
-literal|1
-block|}
-block|;     }
-expr_stmt|;
-comment|// Define a nested type if some predicate holds.
-name|template
-operator|<
-name|typename
-operator|,
 name|bool
 operator|>
 expr|struct
-name|__enable_if
-block|{     }
-expr_stmt|;
+name|__truth_type
+block|{
+typedef|typedef
+name|__false_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
-name|typename
-name|_Tp
 operator|>
 expr|struct
-name|__enable_if
+name|__truth_type
 operator|<
-name|_Tp
-operator|,
 name|true
 operator|>
 block|{
 typedef|typedef
-name|_Tp
-name|_M_type
+name|__true_type
+name|__type
 typedef|;
 block|}
+end_expr_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// N.B. The conversions to bool are needed due to the issue
+end_comment
+
+begin_comment
+comment|// explained in c++/19404.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|_Sp
+operator|,
+name|class
+name|_Tp
+operator|>
+expr|struct
+name|__traitor
+block|{       enum
+block|{
+name|__value
+operator|=
+name|bool
+argument_list|(
+name|_Sp
+operator|::
+name|__value
+argument_list|)
+operator|||
+name|bool
+argument_list|(
+argument|_Tp::__value
+argument_list|)
+block|}
+block|;
+typedef|typedef
+name|typename
+name|__truth_type
+operator|<
+name|__value
+operator|>
+operator|::
+name|__type
+name|__type
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// Compare for equality of types.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+operator|,
+name|typename
+operator|>
+expr|struct
+name|__are_same
+block|{       enum
+block|{
+name|__value
+operator|=
+literal|0
+block|}
+block|;
+typedef|typedef
+name|__false_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+expr|struct
+name|__are_same
+operator|<
+name|_Tp
+operator|,
+name|_Tp
+operator|>
+block|{       enum
+block|{
+name|__value
+operator|=
+literal|1
+block|}
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// Holds if the template-argument is a void type.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -353,12 +513,23 @@ expr|struct
 name|__is_void
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|0
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__false_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -369,15 +540,35 @@ name|void
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// Integer types
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -387,15 +578,35 @@ expr|struct
 name|__is_integer
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|0
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__false_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// Thirteen specializations (yes there are eleven standard integer
+end_comment
+
+begin_comment
 comment|// types; 'long long' and 'unsigned long long' are supported as
+end_comment
+
+begin_comment
 comment|// extensions)
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -406,12 +617,23 @@ name|bool
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -422,12 +644,23 @@ name|char
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -439,12 +672,23 @@ name|char
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -456,15 +700,29 @@ name|char
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|_GLIBCXX_USE_WCHAR_T
+end_ifdef
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -475,14 +733,28 @@ name|wchar_t
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -493,12 +765,23 @@ name|short
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -510,12 +793,23 @@ name|short
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -526,12 +820,23 @@ name|int
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -543,12 +848,23 @@ name|int
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -559,46 +875,23 @@ name|long
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|__is_integer
-operator|<
-name|unsigned
-name|long
-operator|>
-block|{       enum
-block|{
-name|_M_type
-operator|=
-literal|1
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
 block|}
-block|;     }
-expr_stmt|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|__is_integer
-operator|<
-name|long
-name|long
-operator|>
-block|{       enum
-block|{
-name|_M_type
-operator|=
-literal|1
-block|}
-block|;     }
-expr_stmt|;
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -607,19 +900,95 @@ name|__is_integer
 operator|<
 name|unsigned
 name|long
+operator|>
+block|{       enum
+block|{
+name|__value
+operator|=
+literal|1
+block|}
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|__is_integer
+operator|<
+name|long
 name|long
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|__is_integer
+operator|<
+name|unsigned
+name|long
+name|long
+operator|>
+block|{       enum
+block|{
+name|__value
+operator|=
+literal|1
+block|}
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// Floating point types
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -629,13 +998,27 @@ expr|struct
 name|__is_floating
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|0
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__false_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// three specializations (float, double and 'long double')
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -646,12 +1029,23 @@ name|float
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -662,12 +1056,23 @@ name|double
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -679,15 +1084,180 @@ name|double
 operator|>
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 literal|1
 block|}
-block|;     }
-expr_stmt|;
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// Pointer types
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+expr|struct
+name|__is_pointer
+block|{       enum
+block|{
+name|__value
+operator|=
+literal|0
+block|}
+block|;
+typedef|typedef
+name|__false_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+expr|struct
+name|__is_pointer
+operator|<
+name|_Tp
+operator|*
+operator|>
+block|{       enum
+block|{
+name|__value
+operator|=
+literal|1
+block|}
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Normal iterator type
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+expr|struct
+name|__is_normal_iterator
+block|{       enum
+block|{
+name|__value
+operator|=
+literal|0
+block|}
+block|;
+typedef|typedef
+name|__false_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Iterator
+operator|,
+name|typename
+name|_Container
+operator|>
+expr|struct
+name|__is_normal_iterator
+operator|<
+name|__gnu_cxx
+operator|::
+name|__normal_iterator
+operator|<
+name|_Iterator
+operator|,
+name|_Container
+operator|>
+expr|>
+block|{       enum
+block|{
+name|__value
+operator|=
+literal|1
+block|}
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// An arithmetic type is an integer type or a floating point type
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -695,29 +1265,37 @@ name|_Tp
 operator|>
 expr|struct
 name|__is_arithmetic
-block|{       enum
-block|{
-name|_M_type
-operator|=
+operator|:
+name|public
+name|__traitor
+operator|<
 name|__is_integer
 operator|<
 name|_Tp
 operator|>
-operator|::
-name|_M_type
-operator|||
+operator|,
 name|__is_floating
 operator|<
 name|_Tp
 operator|>
-operator|::
-name|_M_type
-block|}
-block|;     }
+expr|>
+block|{ }
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// A fundamental type is `void' or and arithmetic type
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -725,29 +1303,67 @@ name|_Tp
 operator|>
 expr|struct
 name|__is_fundamental
-block|{       enum
-block|{
-name|_M_type
-operator|=
+operator|:
+name|public
+name|__traitor
+operator|<
 name|__is_void
 operator|<
 name|_Tp
 operator|>
-operator|::
-name|_M_type
-operator|||
+operator|,
 name|__is_arithmetic
 operator|<
 name|_Tp
 operator|>
-operator|::
-name|_M_type
-block|}
-block|;     }
+expr|>
+block|{ }
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//
-comment|// For the immediate use, the following is a good approximation
+end_comment
+
+begin_comment
+comment|// A scalar type is an arithmetic type or a pointer type
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+expr|struct
+name|__is_scalar
+operator|:
+name|public
+name|__traitor
+operator|<
+name|__is_arithmetic
+operator|<
+name|_Tp
+operator|>
+operator|,
+name|__is_pointer
+operator|<
+name|_Tp
+operator|>
+expr|>
+block|{ }
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// For the immediate use, the following is a good approximation.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -757,12 +1373,12 @@ expr|struct
 name|__is_pod
 block|{       enum
 block|{
-name|_M_type
+name|__value
 operator|=
 operator|(
 sizeof|sizeof
 argument_list|(
-name|__gnu_internal
+name|__detail
 operator|::
 name|__test_type
 operator|<
@@ -775,7 +1391,7 @@ argument_list|)
 operator|!=
 sizeof|sizeof
 argument_list|(
-name|__gnu_internal
+name|__detail
 operator|::
 name|__one
 argument_list|)
@@ -783,12 +1399,183 @@ operator|)
 block|}
 block|;     }
 expr_stmt|;
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
-comment|// namespace std
+comment|//
 end_comment
+
+begin_comment
+comment|// A stripped-down version of std::tr1::is_empty
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+expr|struct
+name|__is_empty
+block|{
+name|private
+operator|:
+name|template
+operator|<
+name|typename
+operator|>
+expr|struct
+name|__first
+block|{ }
+block|;
+name|template
+operator|<
+name|typename
+name|_Up
+operator|>
+expr|struct
+name|__second
+operator|:
+name|public
+name|_Up
+block|{ }
+block|;
+name|public
+operator|:
+expr|enum
+block|{
+name|__value
+operator|=
+sizeof|sizeof
+argument_list|(
+name|__first
+operator|<
+name|_Tp
+operator|>
+argument_list|)
+operator|==
+expr|sizeof
+operator|(
+name|__second
+operator|<
+name|_Tp
+operator|>
+operator|)
+block|}
+block|;     }
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// For use in std::copy and std::find overloads for streambuf iterators.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+expr|struct
+name|__is_char
+block|{       enum
+block|{
+name|__value
+operator|=
+literal|0
+block|}
+block|;
+typedef|typedef
+name|__false_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|__is_char
+operator|<
+name|char
+operator|>
+block|{       enum
+block|{
+name|__value
+operator|=
+literal|1
+block|}
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_GLIBCXX_USE_WCHAR_T
+end_ifdef
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|__is_char
+operator|<
+name|wchar_t
+operator|>
+block|{       enum
+block|{
+name|__value
+operator|=
+literal|1
+block|}
+block|;
+typedef|typedef
+name|__true_type
+name|__type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

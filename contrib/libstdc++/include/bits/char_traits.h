@@ -4,7 +4,7 @@ comment|// Character Traits for use by standard string and iostream -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -100,6 +100,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file char_traits.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -109,10 +113,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|/** @file char_traits.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
 begin_ifndef
@@ -165,11 +165,18 @@ begin_comment
 comment|// For streampos
 end_comment
 
-begin_decl_stmt
-name|namespace
-name|__gnu_cxx
-block|{
-comment|/**    *  @brief  Mapping from character type to associated types.    *    *    *  @note This is an implementation class for the generic version    *  of char_traits.  It defines int_type, off_type, pos_type, and    *  state_type.  By default these are unsigned long, streamoff,    *  streampos, and mbstate_t.  Users who need a different set of    *  types, but who don't need to change the definitions of any function    *  defined in char_traits, can specialize __gnu_cxx::_Char_types    *  while leaving __gnu_cxx::char_traits alone. */
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|__gnu_cxx
+argument_list|)
+end_macro
+
+begin_comment
+comment|/**    *  @brief  Mapping from character type to associated types.    *    *  @note This is an implementation class for the generic version    *  of char_traits.  It defines int_type, off_type, pos_type, and    *  state_type.  By default these are unsigned long, streamoff,    *  streampos, and mbstate_t.  Users who need a different set of    *  types, but who don't need to change the definitions of any function    *  defined in char_traits, can specialize __gnu_cxx::_Char_types    *  while leaving __gnu_cxx::char_traits alone. */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -183,33 +190,38 @@ name|unsigned
 name|long
 name|int_type
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
 name|streampos
 name|pos_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
 name|streamoff
 name|off_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
 name|mbstate_t
 name|state_type
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_typedef
 
 begin_comment
-comment|/**    *  @brief  Base class used to implement std::char_traits.    *    *  @note For any given actual character type, this definition is    *  probably wrong.  (Most of the member functions are likely to be    *  right, but the int_type and state_type typedefs, and the eof()    *  member function, are likely to be wrong.)  The reason this class    *  exists is so users can specialize it.  Classes in namespace std    *  may not be specialized for fundamentl types, but classes in    *  namespace __gnu_cxx may be.    *    *  See http://gcc.gnu.org/onlinedocs/libstdc++/21_strings/howto.html#5    *  for advice on how to make use of this class for "unusual" character    *  types. Also, check out include/ext/pod_char_traits.h.  */
+unit|};
+comment|/**    *  @brief  Base class used to implement std::char_traits.    *    *  @note For any given actual character type, this definition is    *  probably wrong.  (Most of the member functions are likely to be    *  right, but the int_type and state_type typedefs, and the eof()    *  member function, are likely to be wrong.)  The reason this class    *  exists is so users can specialize it.  Classes in namespace std    *  may not be specialized for fundamentl types, but classes in    *  namespace __gnu_cxx may be.    *    *  See http://gcc.gnu.org/onlinedocs/libstdc++/21_strings/howto.html#5    *  for advice on how to make use of this class for "unusual" character    *  types. Also, check out include/ext/pod_char_traits.h.      */
 end_comment
 
 begin_expr_stmt
@@ -623,9 +635,11 @@ argument_list|)
 block|{
 for|for
 control|(
+name|std
+operator|::
 name|size_t
 name|__i
-init|=
+operator|=
 literal|0
 init|;
 name|__i
@@ -949,23 +963,21 @@ return|;
 block|}
 end_expr_stmt
 
-begin_macro
-unit|}  namespace
+begin_decl_stmt
+name|_GLIBCXX_END_NAMESPACE
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
 name|std
-end_macro
-
-begin_block
-block|{
+argument_list|)
 comment|// 21.1
 comment|/**    *  @brief  Basis for explicit traits specializations.    *    *  @note  For any given actual character type, this definition is    *  probably wrong.  Since this is just a thin wrapper around    *  __gnu_cxx::char_traits, it is possible to achieve a more    *  appropriate definition by specializing __gnu_cxx::char_traits.    *    *  See http://gcc.gnu.org/onlinedocs/libstdc++/21_strings/howto.html#5    *  for advice on how to make use of this class for "unusual" character    *  types. Also, check out include/ext/pod_char_traits.h.   */
 name|template
-operator|<
+decl|<
 name|class
 name|_CharT
-operator|>
-expr|struct
+decl|>     struct
 name|char_traits
-operator|:
+range|:
 name|public
 name|__gnu_cxx
 operator|::
@@ -974,8 +986,14 @@ operator|<
 name|_CharT
 operator|>
 block|{ }
-expr_stmt|;
-comment|/// 21.1.3.1  char_traits specializations
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// @brief  21.1.3.1  char_traits specializations
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -989,22 +1007,37 @@ typedef|typedef
 name|char
 name|char_type
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|int
 name|int_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|streampos
 name|pos_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|streamoff
 name|off_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|mbstate_t
 name|state_type
 typedef|;
+end_typedef
+
+begin_function
 specifier|static
 name|void
 name|assign
@@ -1024,6 +1057,9 @@ operator|=
 name|__c2
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|eq
@@ -1045,6 +1081,9 @@ operator|==
 name|__c2
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|lt
@@ -1066,6 +1105,9 @@ operator|<
 name|__c2
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|compare
@@ -1095,6 +1137,9 @@ name|__n
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|size_t
 name|length
@@ -1112,6 +1157,9 @@ name|__s
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 specifier|const
 name|char_type
@@ -1151,6 +1199,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|char_type
 modifier|*
@@ -1187,6 +1238,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|char_type
 modifier|*
@@ -1223,6 +1277,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|char_type
 modifier|*
@@ -1257,6 +1314,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|char_type
 name|to_char_type
@@ -1277,8 +1337,17 @@ name|__c
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// To keep both the byte 0xff and the eof symbol 0xffffffff
+end_comment
+
+begin_comment
 comment|// from ending up as 0xffffffff.
+end_comment
+
+begin_function
 specifier|static
 name|int_type
 name|to_int_type
@@ -1306,6 +1375,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|eq_int_type
@@ -1327,6 +1399,9 @@ operator|==
 name|__c2
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int_type
 name|eof
@@ -1342,6 +1417,9 @@ name|EOF
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int_type
 name|not_eof
@@ -1365,21 +1443,17 @@ else|:
 name|__c
 return|;
 block|}
-block|}
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_ifdef
+unit|};
 ifdef|#
 directive|ifdef
 name|_GLIBCXX_USE_WCHAR_T
 end_ifdef
 
 begin_comment
-comment|/// 21.1.3.2  char_traits specializations
+comment|/// @brief  21.1.3.2  char_traits specializations
 end_comment
 
 begin_expr_stmt
@@ -1795,61 +1869,9 @@ begin_comment
 comment|//_GLIBCXX_USE_WCHAR_T
 end_comment
 
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|_CharT
-operator|,
-name|typename
-name|_Traits
-operator|>
-expr|struct
-name|_Char_traits_match
-block|{
-name|_CharT
-name|_M_c
-block|;
-name|_Char_traits_match
-argument_list|(
-name|_CharT
-specifier|const
-operator|&
-name|__c
-argument_list|)
-operator|:
-name|_M_c
-argument_list|(
-argument|__c
-argument_list|)
-block|{ }
-name|bool
-name|operator
-argument_list|()
-operator|(
-name|_CharT
-specifier|const
-operator|&
-name|__a
-operator|)
-block|{
-return|return
-name|_Traits
-operator|::
-name|eq
-argument_list|(
-name|_M_c
-argument_list|,
-name|__a
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-unit|}; }
-comment|// namespace std
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

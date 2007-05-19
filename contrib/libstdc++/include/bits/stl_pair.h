@@ -4,7 +4,7 @@ comment|// Pair implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2004 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -116,11 +116,18 @@ name|_PAIR_H
 value|1
 end_define
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|/// pair holds two objects of arbitrary type.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -136,23 +143,56 @@ typedef|typedef
 name|_T1
 name|first_type
 typedef|;
+end_expr_stmt
+
+begin_comment
 comment|///<  @c first_type is the first bound type
+end_comment
+
+begin_typedef
 typedef|typedef
 name|_T2
 name|second_type
 typedef|;
+end_typedef
+
+begin_comment
 comment|///<  @c second_type is the second bound type
+end_comment
+
+begin_decl_stmt
 name|_T1
 name|first
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< @c first is a copy of the first object
+end_comment
+
+begin_decl_stmt
 name|_T2
 name|second
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< @c second is a copy of the second object
+end_comment
+
+begin_comment
 comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
+
+begin_comment
 comment|// 265.  std::pair::pair() effects overly restrictive
+end_comment
+
+begin_comment
 comment|/** The default constructor creates @c first and @c second using their        *  respective default constructors.  */
+end_comment
+
+begin_expr_stmt
 name|pair
 argument_list|()
 operator|:
@@ -220,14 +260,10 @@ argument_list|(
 argument|__p.second
 argument_list|)
 block|{ }
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|/// Two pairs of the same type are equal iff their members are equal.
 end_comment
 
@@ -606,10 +642,9 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|}
-comment|// namespace std
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

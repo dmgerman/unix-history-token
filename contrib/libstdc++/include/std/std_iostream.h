@@ -4,7 +4,11 @@ comment|// Standard iostream objects -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2005
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -96,6 +100,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file iostream  *  This is a Standard C++ Library header.   */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -105,10 +113,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|/** @file iostream  *  This is a Standard C++ Library header.  You should @c #include this header  *  in your programs, rather than any of the "st[dl]_*.h" implementation files.  */
 end_comment
 
 begin_ifndef
@@ -149,71 +153,140 @@ directive|include
 file|<istream>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
+
+begin_comment
 comment|/**    *  @name Standard Stream Objects    *    *  The&lt;iostream&gt; header declares the eight<em>standard stream    *  objects</em>.  For other declarations, see    *  http://gcc.gnu.org/onlinedocs/libstdc++/27_io/howto.html#10 and the    *  @link s27_2_iosfwd I/O forward declarations @endlink    *    *  They are required by default to cooperate with the global C library's    *  @c FILE streams, and to be available during program startup and    *  termination.  For more information, see the HOWTO linked to above.   */
+end_comment
+
+begin_comment
 comment|//@{
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|istream
 name|cin
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< Linked to standard input
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|ostream
 name|cout
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< Linked to standard output
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|ostream
 name|cerr
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< Linked to standard error (unbuffered)
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|ostream
 name|clog
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< Linked to standard error (buffered)
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|_GLIBCXX_USE_WCHAR_T
+end_ifdef
+
+begin_decl_stmt
 specifier|extern
 name|wistream
 name|wcin
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< Linked to standard input
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|wostream
 name|wcout
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< Linked to standard output
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|wostream
 name|wcerr
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< Linked to standard error (unbuffered)
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|wostream
 name|wclog
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< Linked to standard error (buffered)
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|//@}
+end_comment
+
+begin_comment
 comment|// For construction of filebuffers for cout, cin, cerr, clog et. al.
+end_comment
+
+begin_expr_stmt
 specifier|static
 name|ios_base
 operator|::
 name|Init
 name|__ioinit
 expr_stmt|;
-block|}
-end_decl_stmt
+end_expr_stmt
 
-begin_comment
-comment|// namespace std
-end_comment
+begin_macro
+name|_GLIBCXX_END_NAMESPACE
+end_macro
 
 begin_endif
 endif|#

@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2003 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2003, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -96,6 +96,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file ctype_inline.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -114,6 +118,13 @@ end_comment
 begin_comment
 comment|// functions go in ctype.cc
 end_comment
+
+begin_macro
+name|_GLIBCXX_BEGIN_NAMESPACE
+argument_list|(
+argument|std
+argument_list|)
+end_macro
 
 begin_expr_stmt
 name|bool
@@ -610,6 +621,209 @@ name|__low
 return|;
 end_return
 
+begin_ifdef
 unit|}
+ifdef|#
+directive|ifdef
+name|_GLIBCXX_USE_WCHAR_T
+end_ifdef
+
+begin_expr_stmt
+unit|inline
+name|bool
+name|ctype
+operator|<
+name|wchar_t
+operator|>
+operator|::
+name|do_is
+argument_list|(
+argument|mask __m
+argument_list|,
+argument|wchar_t __c
+argument_list|)
+specifier|const
+block|{
+return|return
+name|__istype
+argument_list|(
+name|__c
+argument_list|,
+name|__m
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+specifier|const
+name|wchar_t
+operator|*
+name|ctype
+operator|<
+name|wchar_t
+operator|>
+operator|::
+name|do_is
+argument_list|(
+argument|const wchar_t* __lo
+argument_list|,
+argument|const wchar_t* __hi
+argument_list|,
+argument|mask* __vec
+argument_list|)
+specifier|const
+block|{
+for|for
+control|(
+init|;
+name|__lo
+operator|<
+name|__hi
+condition|;
+operator|++
+name|__vec
+operator|,
+operator|++
+name|__lo
+control|)
+operator|*
+name|__vec
+operator|=
+name|__maskrune
+argument_list|(
+operator|*
+name|__lo
+argument_list|,
+name|upper
+operator||
+name|lower
+operator||
+name|alpha
+operator||
+name|digit
+operator||
+name|xdigit
+operator||
+name|space
+operator||
+name|print
+operator||
+name|graph
+operator||
+name|cntrl
+operator||
+name|punct
+operator||
+name|alnum
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|__hi
+return|;
+end_return
+
+begin_expr_stmt
+unit|}      inline
+specifier|const
+name|wchar_t
+operator|*
+name|ctype
+operator|<
+name|wchar_t
+operator|>
+operator|::
+name|do_scan_is
+argument_list|(
+argument|mask __m
+argument_list|,
+argument|const wchar_t* __lo
+argument_list|,
+argument|const wchar_t* __hi
+argument_list|)
+specifier|const
+block|{
+while|while
+condition|(
+name|__lo
+operator|<
+name|__hi
+operator|&&
+operator|!
+name|__istype
+argument_list|(
+operator|*
+name|__lo
+argument_list|,
+name|__m
+argument_list|)
+condition|)
+operator|++
+name|__lo
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|__lo
+return|;
+end_return
+
+begin_expr_stmt
+unit|}    inline
+specifier|const
+name|wchar_t
+operator|*
+name|ctype
+operator|<
+name|wchar_t
+operator|>
+operator|::
+name|do_scan_not
+argument_list|(
+argument|mask __m
+argument_list|,
+argument|const char_type* __lo
+argument_list|,
+argument|const char_type* __hi
+argument_list|)
+specifier|const
+block|{
+while|while
+condition|(
+name|__lo
+operator|<
+name|__hi
+operator|&&
+name|__istype
+argument_list|(
+operator|*
+name|__lo
+argument_list|,
+name|__m
+argument_list|)
+condition|)
+operator|++
+name|__lo
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|__lo
+return|;
+end_return
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
+
+unit|_GLIBCXX_END_NAMESPACE
 end_unit
 

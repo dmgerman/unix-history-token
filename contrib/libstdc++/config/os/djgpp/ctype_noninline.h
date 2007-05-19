@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// with this library; see the file COPYING.  If not, write to the Free
 end_comment
 
 begin_comment
-comment|// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+comment|// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 end_comment
 
 begin_comment
@@ -96,6 +96,10 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
+comment|/** @file ctype_noninline.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -128,7 +132,9 @@ name|throw
 argument_list|()
 block|{
 return|return
-literal|0
+name|__dj_ctype_flags
+operator|+
+literal|1
 return|;
 block|}
 end_expr_stmt
@@ -176,7 +182,7 @@ argument_list|)
 operator|,
 name|_M_table
 argument_list|(
-argument|__table ? __table : __dj_ctype_flags
+argument|__table ? __table : classic_table()
 argument_list|)
 block|{
 name|memset
@@ -251,7 +257,7 @@ argument_list|)
 operator|,
 name|_M_table
 argument_list|(
-argument|__table ? __table : __dj_ctype_flags
+argument|__table ? __table : classic_table()
 argument_list|)
 block|{
 name|memset
@@ -303,13 +309,12 @@ name|_M_toupper
 index|[
 name|static_cast
 operator|<
-name|int
+name|unsigned
+name|char
 operator|>
 operator|(
 name|__c
 operator|)
-operator|+
-literal|1
 index|]
 return|;
 block|}
@@ -342,18 +347,18 @@ block|{
 operator|*
 name|__low
 operator|=
-operator|::
-name|toupper
-argument_list|(
+name|_M_toupper
+index|[
 name|static_cast
 operator|<
-name|int
+name|unsigned
+name|char
 operator|>
 operator|(
 operator|*
 name|__low
 operator|)
-argument_list|)
+index|]
 expr_stmt|;
 operator|++
 name|__low
@@ -385,13 +390,12 @@ name|_M_tolower
 index|[
 name|static_cast
 operator|<
-name|int
+name|unsigned
+name|char
 operator|>
 operator|(
 name|__c
 operator|)
-operator|+
-literal|1
 index|]
 return|;
 block|}
@@ -424,18 +428,18 @@ block|{
 operator|*
 name|__low
 operator|=
-operator|::
-name|tolower
-argument_list|(
+name|_M_tolower
+index|[
 name|static_cast
 operator|<
-name|int
+name|unsigned
+name|char
 operator|>
 operator|(
 operator|*
 name|__low
 operator|)
-argument_list|)
+index|]
 expr_stmt|;
 operator|++
 name|__low
