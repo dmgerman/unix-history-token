@@ -518,6 +518,8 @@ operator||
 name|SX_DUPOK
 operator||
 name|SX_NOPROFILE
+operator||
+name|SX_ADAPTIVESPIN
 operator|)
 operator|)
 operator|==
