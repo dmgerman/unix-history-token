@@ -2008,8 +2008,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KERN_MAXID
+name|KERN_ARND
 value|37
+end_define
+
+begin_comment
+comment|/* int: from arc4rand() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_MAXID
+value|38
 end_define
 
 begin_comment
