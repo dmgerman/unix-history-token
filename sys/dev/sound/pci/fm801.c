@@ -49,6 +49,10 @@ name|PCI_DEVICE_FORTEMEDIA1
 value|0x08011319
 end_define
 
+begin_comment
+comment|/* Audio controller */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -57,7 +61,7 @@ value|0x08021319
 end_define
 
 begin_comment
-comment|/* ??? have no idea what's this... */
+comment|/* Joystick controller */
 end_comment
 
 begin_define
@@ -2000,6 +2004,7 @@ name|ch
 operator|->
 name|parent
 decl_stmt|;
+comment|/* 	 * Don't mind for play_flip, set the blocksize to the 	 * desired values in any case - otherwise sound playback 	 * breaks here. 	 */
 if|if
 condition|(
 name|ch
@@ -2008,25 +2013,12 @@ name|dir
 operator|==
 name|PCMDIR_PLAY
 condition|)
-block|{
-if|if
-condition|(
-name|fm801
-operator|->
-name|play_flip
-condition|)
-return|return
-name|fm801
-operator|->
-name|play_blksize
-return|;
 name|fm801
 operator|->
 name|play_blksize
 operator|=
 name|blocksize
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ch
@@ -2035,25 +2027,12 @@ name|dir
 operator|==
 name|PCMDIR_REC
 condition|)
-block|{
-if|if
-condition|(
-name|fm801
-operator|->
-name|rec_flip
-condition|)
-return|return
-name|fm801
-operator|->
-name|rec_blksize
-return|;
 name|fm801
 operator|->
 name|rec_blksize
 operator|=
 name|blocksize
 expr_stmt|;
-block|}
 name|DPRINT
 argument_list|(
 literal|"fm801ch_setblocksize %d (dir %d)\n"
