@@ -204,7 +204,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Argument area used to pass data to non-boot processors as they start up.  * This must be statically initialized with a known invalid upa module id,  * since the other processors will use it before the boot cpu enters the  * kernel.  */
+comment|/*  * Argument area used to pass data to non-boot processors as they start up.  * This must be statically initialized with a known invalid CPU module ID,  * since the other processors will use it before the boot CPU enters the  * kernel.  */
 end_comment
 
 begin_decl_stmt
@@ -266,12 +266,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
-name|mp_boot_mid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|u_int
 name|cpuid_to_mid
@@ -290,11 +284,61 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
+name|void
+name|cpu_ipi_send
+parameter_list|(
+name|u_int
+name|mid
+parameter_list|,
+name|u_long
+name|d0
+parameter_list|,
+name|u_long
+name|d1
+parameter_list|,
+name|u_long
+name|d2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|cpu_mp_unleash
 parameter_list|(
 name|void
 modifier|*
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|sun4u_startcpu
+parameter_list|(
+name|phandle_t
+name|cpu
+parameter_list|,
+name|void
+modifier|*
+name|func
+parameter_list|,
+name|u_long
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|sun4u_stopself
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -353,7 +397,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"mp_tramp_alloc"
+literal|"%s"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -506,7 +552,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Probe for other cpus.  */
+comment|/*  * Probe for other CPUs.  */
 end_comment
 
 begin_function
@@ -516,17 +562,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|phandle_t
-name|child
-decl_stmt|;
-name|phandle_t
-name|root
-decl_stmt|;
 name|char
 name|buf
 index|[
 literal|128
 index|]
+decl_stmt|;
+name|phandle_t
+name|child
+decl_stmt|;
+name|phandle_t
+name|root
 decl_stmt|;
 name|int
 name|cpus
@@ -535,17 +581,7 @@ name|all_cpus
 operator|=
 literal|1
 operator|<<
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-expr_stmt|;
-name|mp_boot_mid
-operator|=
-name|PCPU_GET
-argument_list|(
-name|mid
-argument_list|)
+name|curcpu
 expr_stmt|;
 name|mp_ncpus
 operator|=
@@ -776,7 +812,9 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"sun4u_stopself: failed."
+literal|"%s: failed."
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -793,6 +831,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|char
+name|buf
+index|[
+literal|128
+index|]
+decl_stmt|;
 specifier|volatile
 name|struct
 name|cpu_start_args
@@ -804,32 +848,26 @@ name|pcpu
 modifier|*
 name|pc
 decl_stmt|;
+name|register_t
+name|s
+decl_stmt|;
+name|vm_offset_t
+name|va
+decl_stmt|;
 name|phandle_t
 name|child
 decl_stmt|;
 name|phandle_t
 name|root
 decl_stmt|;
-name|vm_offset_t
-name|va
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|128
-index|]
-decl_stmt|;
 name|u_int
 name|clock
-decl_stmt|;
-name|int
-name|cpuid
 decl_stmt|;
 name|u_int
 name|mid
 decl_stmt|;
-name|u_long
-name|s
+name|int
+name|cpuid
 decl_stmt|;
 name|mtx_init
 argument_list|(
@@ -891,13 +929,13 @@ argument_list|)
 expr_stmt|;
 name|cpuid_to_mid
 index|[
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 index|]
 operator|=
-name|mp_boot_mid
+name|PCPU_GET
+argument_list|(
+name|mid
+argument_list|)
 expr_stmt|;
 name|root
 operator|=
@@ -998,14 +1036,19 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"cpu_mp_start: can't get module id"
+literal|"%s: can't get module ID"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|mid
 operator|==
-name|mp_boot_mid
+name|PCPU_GET
+argument_list|(
+name|mid
+argument_list|)
 condition|)
 continue|continue;
 if|if
@@ -1029,7 +1072,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"cpu_mp_start: can't get clock"
+literal|"%s: can't get clock"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|csa
@@ -1200,10 +1245,7 @@ operator|~
 operator|(
 literal|1
 operator|<<
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1220,10 +1262,11 @@ name|cpu_mp_announce
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
+specifier|static
 name|void
 name|cpu_mp_unleash
 parameter_list|(
@@ -1243,6 +1286,9 @@ name|pcpu
 modifier|*
 name|pc
 decl_stmt|;
+name|register_t
+name|s
+decl_stmt|;
 name|vm_offset_t
 name|va
 decl_stmt|;
@@ -1254,9 +1300,6 @@ name|ctx_min
 decl_stmt|;
 name|u_int
 name|ctx_inc
-decl_stmt|;
-name|u_long
-name|s
 decl_stmt|;
 name|int
 name|i
@@ -1325,10 +1368,7 @@ name|pc
 operator|->
 name|pc_cpuid
 operator|==
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 condition|)
 continue|continue;
 name|KASSERT
@@ -1340,7 +1380,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"cpu_mp_unleash: idlethread"
+literal|"%s: idlethread"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1401,7 +1443,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"cpu_mp_unleash: pmap_kextract\n"
+literal|"%s: pmap_kextract"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|csa
@@ -1551,7 +1595,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"cpu_mp_bootstrap: curthread"
+literal|"%s: curthread"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1565,10 +1611,7 @@ operator|~
 operator|(
 literal|1
 operator|<<
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1576,10 +1619,7 @@ name|printf
 argument_list|(
 literal|"SMP: AP CPU #%d Launched!\n"
 argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 argument_list|)
 expr_stmt|;
 name|csa
@@ -1733,7 +1773,7 @@ name|trapframe
 modifier|*
 name|tf
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -1747,16 +1787,15 @@ modifier|*
 name|tf
 parameter_list|)
 block|{
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_SMP
 argument_list|,
-literal|"cpu_ipi_stop: stopped %d"
+literal|"%s: stopped %d"
 argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|__func__
+argument_list|,
+name|curcpu
 argument_list|)
 expr_stmt|;
 name|savectx
@@ -1764,10 +1803,7 @@ argument_list|(
 operator|&
 name|stoppcbs
 index|[
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 index|]
 argument_list|)
 expr_stmt|;
@@ -1848,16 +1884,15 @@ name|cpumask
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_SMP
 argument_list|,
-literal|"cpu_ipi_stop: restarted %d"
+literal|"%s: restarted %d"
 argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|__func__
+argument_list|,
+name|curcpu
 argument_list|)
 expr_stmt|;
 block|}
@@ -1925,6 +1960,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|cpu_ipi_send
 parameter_list|(
@@ -1941,11 +1977,11 @@ name|u_long
 name|d2
 parameter_list|)
 block|{
-name|u_long
-name|ids
+name|register_t
+name|s
 decl_stmt|;
 name|u_long
-name|s
+name|ids
 decl_stmt|;
 name|int
 name|i
@@ -1966,7 +2002,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"cpu_ipi_send: outstanding dispatch"
+literal|"%s: outstanding dispatch"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2023,7 +2061,7 @@ operator||
 operator|(
 name|mid
 operator|<<
-literal|14
+name|IDC_ITID_SHIFT
 operator|)
 argument_list|,
 name|ASI_SDB_INTR_W
@@ -2055,6 +2093,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
+operator|(
 name|ids
 operator|=
 name|ldxa
@@ -2066,6 +2105,9 @@ argument_list|)
 operator|)
 operator|&
 name|IDR_BUSY
+operator|)
+operator|!=
+literal|0
 condition|)
 empty_stmt|;
 name|intr_restore
@@ -2106,7 +2148,9 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"cpu_ipi_send: couldn't send ipi to module %u\n"
+literal|"%s: couldn't send IPI to module 0x%u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|mid
 argument_list|)
@@ -2114,7 +2158,9 @@ expr_stmt|;
 else|else
 name|panic
 argument_list|(
-literal|"cpu_ipi_send: couldn't send ipi"
+literal|"%s: couldn't send IPI"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -2158,7 +2204,9 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"ipi_all"
+literal|"%s"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
