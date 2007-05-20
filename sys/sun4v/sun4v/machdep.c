@@ -404,12 +404,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ver.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/hv_api.h>
 end_include
 

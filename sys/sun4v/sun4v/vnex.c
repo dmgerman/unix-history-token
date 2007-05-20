@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ver.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/mdesc_bus.h>
 end_include
 

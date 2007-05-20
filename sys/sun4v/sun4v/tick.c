@@ -95,12 +95,6 @@ directive|include
 file|<machine/tick.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/ver.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
