@@ -263,6 +263,18 @@ begin_comment
 comment|/* system tune hint */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|time_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* time lock for profiling */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

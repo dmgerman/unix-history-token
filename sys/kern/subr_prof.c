@@ -2080,7 +2080,7 @@ expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|sched_lock
+name|time_lock
 argument_list|)
 expr_stmt|;
 name|upp
@@ -2118,7 +2118,7 @@ expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|sched_lock
+name|time_lock
 argument_list|)
 expr_stmt|;
 name|startprofclock
@@ -2211,7 +2211,7 @@ expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|sched_lock
+name|time_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -2241,7 +2241,7 @@ block|{
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|sched_lock
+name|time_lock
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2258,7 +2258,7 @@ expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|sched_lock
+name|time_lock
 argument_list|)
 expr_stmt|;
 if|if

@@ -1890,6 +1890,13 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
+block|{
+literal|"time lock"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
 comment|/* 	 * leaf locks 	 */
 block|{
 literal|"allpmaps"
