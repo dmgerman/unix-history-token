@@ -250,6 +250,27 @@ name|CPU_IMPL_ULTRASPARCIIIi
 value|0x16
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_IMPL_ULTRASPARCIV
+value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_IMPL_ULTRASPARCIVp
+value|0x19
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_IMPL_ULTRASPARCIIIip
+value|0x22
+end_define
+
 begin_endif
 endif|#
 directive|endif

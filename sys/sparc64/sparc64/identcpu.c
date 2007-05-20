@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Initial implementation:  * Copyright (c) 2001 Robert Drehmel  * All rights reserved.  *  * As long as the above copyright statement and this notice remain  * unchanged, you can do what ever you want with this file.  *  * $FreeBSD$  */
+comment|/*-  * Initial implementation:  * Copyright (c) 2001 Robert Drehmel  * All rights reserved.  *  * As long as the above copyright statement and this notice remain  * unchanged, you can do what ever you want with this file.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -104,22 +118,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SUN4V
-end_ifndef
-
 begin_decl_stmt
 name|int
 name|cpu_impl
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -310,6 +313,30 @@ case|:
 name|impls
 operator|=
 literal|"UltraSparc-IIIi"
+expr_stmt|;
+break|break;
+case|case
+name|CPU_IMPL_ULTRASPARCIV
+case|:
+name|impls
+operator|=
+literal|"UltraSparc-IV"
+expr_stmt|;
+break|break;
+case|case
+name|CPU_IMPL_ULTRASPARCIVp
+case|:
+name|impls
+operator|=
+literal|"UltraSparc-IV+"
+expr_stmt|;
+break|break;
+case|case
+name|CPU_IMPL_ULTRASPARCIIIip
+case|:
+name|impls
+operator|=
+literal|"UltraSparc-IIIi+"
 expr_stmt|;
 break|break;
 default|default:
