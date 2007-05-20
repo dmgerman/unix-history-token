@@ -578,8 +578,12 @@ condition|)
 block|{
 name|int
 name|controller
+init|=
+literal|0
 decl_stmt|,
 name|channel
+init|=
+literal|0
 decl_stmt|;
 name|get_disk_location
 argument_list|(
