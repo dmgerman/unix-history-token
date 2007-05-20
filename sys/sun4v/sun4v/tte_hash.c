@@ -963,7 +963,7 @@ operator|->
 name|wire_count
 operator|--
 expr_stmt|;
-name|VMCNT_GET
+name|VMCNT_DEC
 argument_list|(
 name|wire_count
 argument_list|,
