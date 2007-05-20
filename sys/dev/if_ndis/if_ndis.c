@@ -5178,6 +5178,8 @@ name|block
 decl_stmt|;
 name|uint8_t
 name|irql
+init|=
+literal|0
 decl_stmt|;
 name|uint32_t
 name|status
