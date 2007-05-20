@@ -3959,6 +3959,13 @@ name|first
 operator|=
 literal|1
 expr_stmt|;
+name|lastaddr
+operator|=
+operator|(
+name|bus_addr_t
+operator|)
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
