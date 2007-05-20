@@ -5846,6 +5846,12 @@ argument_list|(
 name|_udatasel
 argument_list|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|td
@@ -5859,6 +5865,12 @@ condition|)
 name|user_ldt_free
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|dt_lock
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -6194,6 +6206,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* table descriptors */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|dt_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* lock for GDT and LDT */
 end_comment
 
 begin_if
@@ -9420,6 +9443,18 @@ operator|(
 name|int
 operator|)
 name|gdt
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|,
+literal|"descriptor tables"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_SPIN
+argument_list|)
 expr_stmt|;
 name|lgdt
 argument_list|(

@@ -46,7 +46,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Machine-dependent part of the proc structure for i386.  */
+comment|/*  * Machine-dependent part of the proc structure for i386.  * Table of MD locks:  *       t - Descriptor tables lock  */
 end_comment
 
 begin_struct
@@ -74,7 +74,7 @@ name|proc_ldt
 modifier|*
 name|md_ldt
 decl_stmt|;
-comment|/* (j) per-process ldt */
+comment|/* (t) per-process ldt */
 block|}
 struct|;
 end_struct
@@ -121,6 +121,14 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|dt_lock
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

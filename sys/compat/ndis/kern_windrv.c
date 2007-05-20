@@ -3467,15 +3467,15 @@ decl_stmt|;
 name|uint16_t
 name|ltable
 decl_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|t
 operator|=
 name|curthread
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
 expr_stmt|;
 comment|/* Grab location of existing GDT. */
 name|x86_getldt
@@ -3526,7 +3526,7 @@ expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|sched_lock
+name|dt_lock
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3562,15 +3562,15 @@ name|thread
 modifier|*
 name|t
 decl_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|t
 operator|=
 name|curthread
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
 expr_stmt|;
 comment|/* Grab location of existing GDT. */
 name|x86_getldt
@@ -3729,7 +3729,7 @@ expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|sched_lock
+name|dt_lock
 argument_list|)
 expr_stmt|;
 comment|/* Whew. */

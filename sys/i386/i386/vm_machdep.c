@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/refcount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sf_buf.h>
 end_include
 
@@ -582,15 +588,23 @@ name|proc_ldt
 modifier|*
 name|pldt
 decl_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
 name|pldt
 operator|=
 name|mdp1
 operator|->
 name|md_ldt
-expr_stmt|;
-if|if
-condition|(
-name|pldt
+operator|)
+operator|!=
+name|NULL
 operator|&&
 name|pldt
 operator|->
@@ -638,6 +652,12 @@ name|td1
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
+expr_stmt|;
 block|}
 return|return;
 block|}
@@ -965,7 +985,7 @@ comment|/* Copy the LDT, if necessary. */
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|sched_lock
+name|dt_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -984,12 +1004,15 @@ operator|&
 name|RFMEM
 condition|)
 block|{
+name|refcount_acquire
+argument_list|(
+operator|&
 name|mdp2
 operator|->
 name|md_ldt
 operator|->
 name|ldt_refcnt
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1027,7 +1050,7 @@ block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|sched_lock
+name|dt_lock
 argument_list|)
 expr_stmt|;
 comment|/* Setup to release sched_lock in fork_exit(). */
@@ -1135,6 +1158,12 @@ name|td
 parameter_list|)
 block|{
 comment|/* 	 * If this process has a custom LDT, release it.  Reset pc->pcb_gs 	 * and %gs before we free it in case they refer to an LDT entry. 	 */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|td
@@ -1165,6 +1194,12 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -5853,12 +5853,6 @@ operator|==
 literal|1
 condition|)
 return|return;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|atomic_store_rel_int
 argument_list|(
 operator|&
@@ -5875,12 +5869,6 @@ literal|0
 condition|)
 name|ia32_pause
 argument_list|()
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
 expr_stmt|;
 block|}
 end_function
