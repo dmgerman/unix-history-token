@@ -194,12 +194,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cache.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/frame.h>
 end_include
 
@@ -341,34 +335,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|cache_enable_t
-modifier|*
-name|cache_enable
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|cache_flush_t
-modifier|*
-name|cache_flush
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|dcache_page_inval_t
-modifier|*
-name|dcache_page_inval
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|icache_page_inval_t
-modifier|*
-name|icache_page_inval
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Virtual and physical address of message buffer.  */

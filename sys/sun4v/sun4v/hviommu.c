@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/iommureg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pmap.h>
 end_include
 

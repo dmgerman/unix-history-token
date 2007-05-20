@@ -107,16 +107,16 @@ directive|include
 file|<machine/cache.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|<machine/iommureg.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
