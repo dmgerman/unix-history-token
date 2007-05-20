@@ -278,7 +278,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VMCNT_DEC
+name|VMCNT_SUB
 parameter_list|(
 name|member
 parameter_list|,

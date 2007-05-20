@@ -4119,7 +4119,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|VMCNT_DEC
+name|VMCNT_SUB
 argument_list|(
 name|wire_count
 argument_list|,

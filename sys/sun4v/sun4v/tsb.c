@@ -427,7 +427,7 @@ operator|->
 name|wire_count
 operator|--
 expr_stmt|;
-name|VMCNT_DEC
+name|VMCNT_SUB
 argument_list|(
 name|wire_count
 argument_list|,
