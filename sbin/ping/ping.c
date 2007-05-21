@@ -1245,6 +1245,10 @@ name|packet
 index|[
 name|IP_MAXPACKET
 index|]
+name|__aligned
+argument_list|(
+literal|4
+argument_list|)
 decl_stmt|;
 name|char
 modifier|*
