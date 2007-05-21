@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1003,6 +1009,7 @@ name|kvm_t
 modifier|*
 name|kvm
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|kvm_pointer
@@ -1041,11 +1048,12 @@ name|kvm_read
 argument_list|(
 name|kvm
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|kvm_pointer
+name|__DECONST
+argument_list|(
+argument|unsigned long
+argument_list|,
+argument|kvm_pointer
+argument_list|)
 operator|+
 name|i
 argument_list|,
