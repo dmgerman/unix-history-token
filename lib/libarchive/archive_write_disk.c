@@ -5521,15 +5521,6 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
-name|base
-operator|=
-name|strrchr
-argument_list|(
-name|path
-argument_list|,
-literal|'/'
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|slash
