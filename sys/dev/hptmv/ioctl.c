@@ -275,6 +275,14 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+operator|*
+name|controller
+operator|=
+operator|*
+name|channel
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -310,6 +318,7 @@ condition|;
 name|j
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|pDev
@@ -338,6 +347,7 @@ operator|=
 name|j
 expr_stmt|;
 return|return;
+block|}
 block|}
 block|}
 block|}
@@ -578,12 +588,8 @@ condition|)
 block|{
 name|int
 name|controller
-init|=
-literal|0
 decl_stmt|,
 name|channel
-init|=
-literal|0
 decl_stmt|;
 name|get_disk_location
 argument_list|(
