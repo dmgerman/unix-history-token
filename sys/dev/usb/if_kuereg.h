@@ -570,17 +570,10 @@ name|struct
 name|ue_cdata
 name|kue_cdata
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|struct
 name|mtx
 name|kue_mtx
 decl_stmt|;
-endif|#
-directive|endif
 name|char
 name|kue_dying
 decl_stmt|;

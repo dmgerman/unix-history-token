@@ -867,17 +867,10 @@ name|struct
 name|callout_handle
 name|rue_stat_ch
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|struct
 name|mtx
 name|rue_mtx
 decl_stmt|;
-endif|#
-directive|endif
 name|char
 name|rue_dying
 decl_stmt|;
