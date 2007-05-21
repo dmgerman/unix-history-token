@@ -1027,9 +1027,9 @@ name|sprintf
 argument_list|(
 name|uuid
 argument_list|,
-literal|"%02X%02X%02X%02X-"
-literal|"%02X%02X-%02X%02X-%02X%02X-"
-literal|"%02X%02X%02X%02X%02X%02X"
+literal|"%02x%02x%02x%02x-"
+literal|"%02x%02x-%02x%02x-%02x%02x-"
+literal|"%02x%02x%02x%02x%02x%02x"
 argument_list|,
 name|idp
 index|[
