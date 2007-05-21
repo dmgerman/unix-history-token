@@ -17620,7 +17620,9 @@ argument|; 	struct mbuf		*m = *m0; 	struct ip6_hdr		*h = NULL;
 comment|/* make the compiler happy */
 argument|struct pf_rule		*a = NULL, *r =&pf_default_rule, *tr, *nr; 	struct pf_state		*s = NULL; 	struct pf_ruleset	*ruleset = NULL; 	struct pf_pdesc		 pd; 	int			 off, terminal =
 literal|0
-argument|, dirndx;
+argument|, dirndx, rh_cnt =
+literal|0
+argument|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -17689,9 +17691,35 @@ argument|, sizeof(pd)); 	if (m->m_pkthdr.len< (int)sizeof(*h)) { 		action = PF_D
 literal|1
 argument|; 		goto done; 	}
 comment|/* We do IP header normalization and packet reassembly here */
-argument|if (pf_normalize_ip6(m0, dir, kif,&reason,&pd) != PF_PASS) { 		action = PF_DROP; 		goto done; 	} 	m = *m0; 	h = mtod(m, struct ip6_hdr *);  	pd.src = (struct pf_addr *)&h->ip6_src; 	pd.dst = (struct pf_addr *)&h->ip6_dst; 	PF_ACPY(&pd.baddr, dir == PF_OUT ? pd.src : pd.dst, AF_INET6); 	pd.ip_sum = NULL; 	pd.af = AF_INET6; 	pd.tos =
+argument|if (pf_normalize_ip6(m0, dir, kif,&reason,&pd) != PF_PASS) { 		action = PF_DROP; 		goto done; 	} 	m = *m0; 	h = mtod(m, struct ip6_hdr *);
+if|#
+directive|if
+literal|1
+comment|/* 	 * we do not support jumbogram yet.  if we keep going, zero ip6_plen 	 * will do something bad, so drop the packet for now. 	 */
+argument|if (htons(h->ip6_plen) ==
 literal|0
-argument|; 	pd.tot_len = ntohs(h->ip6_plen) + sizeof(struct ip6_hdr); 	pd.eh = eh;  	off = ((caddr_t)h - m->m_data) + sizeof(struct ip6_hdr); 	pd.proto = h->ip6_nxt; 	do { 		switch (pd.proto) { 		case IPPROTO_FRAGMENT: 			action = pf_test_fragment(&r, dir, kif, m, h,&pd,&a,&ruleset); 			if (action == PF_DROP) 				REASON_SET(&reason, PFRES_FRAG); 			goto done; 		case IPPROTO_AH: 		case IPPROTO_HOPOPTS: 		case IPPROTO_ROUTING: 		case IPPROTO_DSTOPTS: {
+argument|) { 		action = PF_DROP; 		REASON_SET(&reason, PFRES_NORM);
+comment|/*XXX*/
+argument|goto done; 	}
+endif|#
+directive|endif
+argument|pd.src = (struct pf_addr *)&h->ip6_src; 	pd.dst = (struct pf_addr *)&h->ip6_dst; 	PF_ACPY(&pd.baddr, dir == PF_OUT ? pd.src : pd.dst, AF_INET6); 	pd.ip_sum = NULL; 	pd.af = AF_INET6; 	pd.tos =
+literal|0
+argument|; 	pd.tot_len = ntohs(h->ip6_plen) + sizeof(struct ip6_hdr); 	pd.eh = eh;  	off = ((caddr_t)h - m->m_data) + sizeof(struct ip6_hdr); 	pd.proto = h->ip6_nxt; 	do { 		switch (pd.proto) { 		case IPPROTO_FRAGMENT: 			action = pf_test_fragment(&r, dir, kif, m, h,&pd,&a,&ruleset); 			if (action == PF_DROP) 				REASON_SET(&reason, PFRES_FRAG); 			goto done; 		case IPPROTO_ROUTING: { 			struct ip6_rthdr rthdr;  			if (rh_cnt++) { 				DPFPRINTF(PF_DEBUG_MISC, 				    (
+literal|"pf: IPv6 more than one rthdr\n"
+argument|)); 				action = PF_DROP; 				REASON_SET(&reason, PFRES_IPOPTIONS); 				log =
+literal|1
+argument|; 				goto done; 			} 			if (!pf_pull_hdr(m, off,&rthdr, sizeof(rthdr), NULL,&reason, pd.af)) { 				DPFPRINTF(PF_DEBUG_MISC, 				    (
+literal|"pf: IPv6 short rthdr\n"
+argument|)); 				action = PF_DROP; 				REASON_SET(&reason, PFRES_SHORT); 				log =
+literal|1
+argument|; 				goto done; 			} 			if (rthdr.ip6r_type == IPV6_RTHDR_TYPE_0) { 				DPFPRINTF(PF_DEBUG_MISC, 				    (
+literal|"pf: IPv6 rthdr0\n"
+argument|)); 				action = PF_DROP; 				REASON_SET(&reason, PFRES_IPOPTIONS); 				log =
+literal|1
+argument|; 				goto done; 			}
+comment|/* fallthrough */
+argument|} 		case IPPROTO_AH: 		case IPPROTO_HOPOPTS: 		case IPPROTO_DSTOPTS: {
 comment|/* get next header and header length */
 argument|struct ip6_ext	opt6;  			if (!pf_pull_hdr(m, off,&opt6, sizeof(opt6), 			    NULL,&reason, pd.af)) { 				DPFPRINTF(PF_DEBUG_MISC, 				    (
 literal|"pf: IPv6 short opt\n"
@@ -17786,8 +17814,12 @@ argument|action = pf_test_other(&r,&s, dir, kif, m, off, h,&pd,&a,&ruleset,&ip6i
 endif|#
 directive|endif
 argument|break; 	}  done:
-comment|/* XXX handle IPv6 options, if not allowed. not implemented. */
-argument|if (s&& s->tag) 		pf_tag_packet(m, pf_get_tag(m), s->tag);
+comment|/* handle dangerous IPv6 extension headers. */
+argument|if (action == PF_PASS&& rh_cnt&& 	    !((s&& s->allow_opts) || r->allow_opts)) { 		action = PF_DROP; 		REASON_SET(&reason, PFRES_IPOPTIONS); 		log =
+literal|1
+argument|; 		DPFPRINTF(PF_DEBUG_MISC, 		    (
+literal|"pf: dropping packet with dangerous v6 headers\n"
+argument|)); 	}  	if (s&& s->tag) 		pf_tag_packet(m, pf_get_tag(m), s->tag);
 ifdef|#
 directive|ifdef
 name|ALTQ
