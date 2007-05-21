@@ -5946,10 +5946,6 @@ name|wp
 operator|==
 literal|L'
 expr|\0'
-operator|||
-name|wp
-operator|==
-name|NULL
 condition|)
 block|{
 name|archive_set_error
