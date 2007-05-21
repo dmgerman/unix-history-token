@@ -8950,6 +8950,10 @@ name|buf
 index|[
 literal|1024
 index|]
+name|__aligned
+argument_list|(
+literal|4
+argument_list|)
 decl_stmt|;
 name|struct
 name|in6_defrouter
@@ -9169,6 +9173,10 @@ name|buf
 index|[
 literal|1024
 index|]
+name|__aligned
+argument_list|(
+literal|4
+argument_list|)
 decl_stmt|;
 name|struct
 name|in6_prefix
