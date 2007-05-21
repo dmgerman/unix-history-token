@@ -238,5 +238,18 @@ define|\
 value|do									\   {									\     extern int sysarch(int number, void *args);				\     struct								\       {									\ 	unsigned int addr;						\ 	int          len;						\       } s;								\     s.addr = (unsigned int)(BEG);					\     s.len = (END) - (BEG);						\     (void) sysarch (0,&s);						\   }									\ while (0)
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|FPUTYPE_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|FPUTYPE_DEFAULT
+value|FPUTYPE_VFP
+end_define
+
 end_unit
 
