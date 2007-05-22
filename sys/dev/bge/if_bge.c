@@ -6248,25 +6248,6 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__brokenalpha__
-comment|/* 	 * Must insure that we do not cross an 8K (bytes) boundary 	 * for DMA reads.  Our highest limit is 1K bytes.  This is a 	 * restriction on some ALPHA platforms with early revision 	 * 21174 PCI chipsets, such as the AlphaPC 164lx 	 */
-name|PCI_SETBIT
-argument_list|(
-name|sc
-operator|->
-name|bge_dev
-argument_list|,
-name|BGE_PCI_DMA_RW_CTL
-argument_list|,
-name|BGE_PCI_READ_BNDRY_1024BYTES
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Set the timer prescaler (always 66Mhz) */
 name|CSR_WRITE_4
 argument_list|(
