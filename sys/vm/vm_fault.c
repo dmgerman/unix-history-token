@@ -3396,6 +3396,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|VM_PAGE_INQUEUE1
 argument_list|(
 name|m
@@ -3403,11 +3404,6 @@ argument_list|,
 name|PQ_CACHE
 argument_list|)
 condition|)
-name|vm_page_deactivate
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|pmap_enter_quick
 argument_list|(
 name|pmap

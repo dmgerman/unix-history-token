@@ -5400,7 +5400,7 @@ value|96
 end_define
 
 begin_comment
-comment|/*  *	vm_map_pmap_enter:  *  *	Preload read-only mappings for the given object into the specified  *	map.  This eliminates the soft faults on process startup and  *	immediately after an mmap(2).  */
+comment|/*  *	vm_map_pmap_enter:  *  *	Preload read-only mappings for the given object's resident pages into  *	the given map.  This eliminates the soft faults on process startup and  *	immediately after an mmap(2).  Unless the given flags include  *	MAP_PREFAULT_MADVISE, cached pages are not reactivated and mapped.  */
 end_comment
 
 begin_function
@@ -5765,11 +5765,56 @@ argument_list|,
 name|PQ_CACHE
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|MAP_PREFAULT_MADVISE
+operator|)
+operator|!=
+literal|0
+condition|)
 name|vm_page_deactivate
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|p_start
+operator|!=
+name|NULL
+condition|)
+block|{
+name|pmap_enter_object
+argument_list|(
+name|map
+operator|->
+name|pmap
+argument_list|,
+name|start
+argument_list|,
+name|addr
+operator|+
+name|ptoa
+argument_list|(
+name|tmpidx
+argument_list|)
+argument_list|,
+name|p_start
+argument_list|,
+name|prot
+argument_list|)
+expr_stmt|;
+name|p_start
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
 block|}
 elseif|else
 if|if
