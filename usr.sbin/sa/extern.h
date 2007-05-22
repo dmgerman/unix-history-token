@@ -25,6 +25,10 @@ begin_comment
 comment|/* structures */
 end_comment
 
+begin_comment
+comment|/* All times are stored in 1e-6s units. */
+end_comment
+
 begin_struct
 struct|struct
 name|cmdinfo
@@ -38,7 +42,7 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* command name (+ '*') */
-name|u_long
+name|uid_t
 name|ci_uid
 decl_stmt|;
 comment|/* user id */
@@ -46,23 +50,23 @@ name|u_quad_t
 name|ci_calls
 decl_stmt|;
 comment|/* number of calls */
-name|u_quad_t
+name|double
 name|ci_etime
 decl_stmt|;
 comment|/* elapsed time */
-name|u_quad_t
+name|double
 name|ci_utime
 decl_stmt|;
 comment|/* user time */
-name|u_quad_t
+name|double
 name|ci_stime
 decl_stmt|;
 comment|/* system time */
-name|u_quad_t
+name|double
 name|ci_mem
 decl_stmt|;
 comment|/* memory use */
-name|u_quad_t
+name|double
 name|ci_io
 decl_stmt|;
 comment|/* number of disk i/o ops */
@@ -89,7 +93,7 @@ begin_struct
 struct|struct
 name|userinfo
 block|{
-name|u_long
+name|uid_t
 name|ui_uid
 decl_stmt|;
 comment|/* user id; for consistency */
@@ -97,19 +101,19 @@ name|u_quad_t
 name|ui_calls
 decl_stmt|;
 comment|/* number of invocations */
-name|u_quad_t
+name|double
 name|ui_utime
 decl_stmt|;
 comment|/* user time */
-name|u_quad_t
+name|double
 name|ui_stime
 decl_stmt|;
 comment|/* system time */
-name|u_quad_t
+name|double
 name|ui_mem
 decl_stmt|;
 comment|/* memory use */
-name|u_quad_t
+name|double
 name|ui_io
 decl_stmt|;
 comment|/* number of disk i/o ops */
@@ -139,6 +143,92 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|/* external functions in db.c */
+end_comment
+
+begin_function_decl
+name|int
+name|db_copy_in
+parameter_list|(
+name|DB
+modifier|*
+modifier|*
+name|mdb
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|dbname
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|BTREEINFO
+modifier|*
+name|bti
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|v1_to_v2
+function_decl|)
+parameter_list|(
+name|DBT
+modifier|*
+name|key
+parameter_list|,
+name|DBT
+modifier|*
+name|data
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|db_copy_out
+parameter_list|(
+name|DB
+modifier|*
+name|mdb
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|dbname
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|BTREEINFO
+modifier|*
+name|bti
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|db_destroy
+parameter_list|(
+name|DB
+modifier|*
+name|db
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|uname
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* external functions in pdb.c */
@@ -188,6 +278,26 @@ name|void
 name|pacct_print
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* external functions in readrec.c */
+end_comment
+
+begin_function_decl
+name|int
+name|readrec_forward
+parameter_list|(
+name|FILE
+modifier|*
+name|f
+parameter_list|,
+name|struct
+name|acctv2
+modifier|*
+name|av2
 parameter_list|)
 function_decl|;
 end_function_decl
