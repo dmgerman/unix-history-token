@@ -63,12 +63,8 @@ begin_define
 define|#
 directive|define
 name|MXGE_MAX_SEND_DESC
-value|64
+value|128
 end_define
-
-begin_comment
-comment|/* should be large enough for 				 any TSO packet */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -108,6 +104,9 @@ name|cnt
 decl_stmt|;
 name|int
 name|idx
+decl_stmt|;
+name|int
+name|mask
 decl_stmt|;
 block|}
 name|mxge_rx_done_t
@@ -177,12 +176,6 @@ modifier|*
 name|lanai
 decl_stmt|;
 comment|/* lanai ptr for recv ring */
-specifier|volatile
-name|uint8_t
-modifier|*
-name|wc_fifo
-decl_stmt|;
-comment|/* w/c rx dma addr fifo address */
 name|mcp_kreq_ether_recv_t
 modifier|*
 name|shadow
@@ -230,12 +223,6 @@ modifier|*
 name|lanai
 decl_stmt|;
 comment|/* lanai ptr for sendq	*/
-specifier|volatile
-name|uint8_t
-modifier|*
-name|wc_fifo
-decl_stmt|;
-comment|/* w/c send fifo address */
 name|mcp_kreq_ether_send_t
 modifier|*
 name|req_list
@@ -277,6 +264,10 @@ name|int
 name|boundary
 decl_stmt|;
 comment|/* boundary transmits cannot cross*/
+name|int
+name|max_desc
+decl_stmt|;
+comment|/* max descriptors per xmit */
 name|int
 name|stall
 decl_stmt|;
@@ -402,13 +393,6 @@ name|int
 name|csum_flag
 decl_stmt|;
 comment|/* rx_csums? 		*/
-name|uint8_t
-name|mac_addr
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* eeprom mac address */
 name|mxge_tx_buf_t
 name|tx
 decl_stmt|;
@@ -599,6 +583,9 @@ decl_stmt|;
 name|int
 name|max_mtu
 decl_stmt|;
+name|int
+name|tx_defrag
+decl_stmt|;
 name|mxge_dma_t
 name|dmabench_dma
 decl_stmt|;
@@ -610,6 +597,13 @@ name|char
 modifier|*
 name|mac_addr_string
 decl_stmt|;
+name|uint8_t
+name|mac_addr
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* eeprom mac address */
 name|char
 name|product_code_string
 index|[
