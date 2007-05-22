@@ -1169,7 +1169,7 @@ modifier|*
 name|ih
 decl_stmt|;
 name|int
-name|error
+name|fast
 decl_stmt|,
 name|thread
 decl_stmt|;
@@ -1197,6 +1197,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|fast
+operator|=
 name|thread
 operator|=
 literal|0
@@ -1230,7 +1232,7 @@ argument_list|(
 name|ih
 operator|->
 name|ih_filter
-operator|==
+operator|!=
 name|NULL
 operator|&&
 name|ih
@@ -1266,23 +1268,22 @@ operator|->
 name|ih_argument
 argument_list|)
 expr_stmt|;
+name|fast
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* Schedule a heavyweight interrupt process. */
 if|if
 condition|(
 name|thread
 condition|)
-block|{
-name|error
-operator|=
 name|intr_event_schedule_thread
 argument_list|(
 name|ie
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -1298,7 +1299,10 @@ argument_list|(
 name|iv
 argument_list|)
 expr_stmt|;
-else|else
+if|if
+condition|(
+name|fast
+condition|)
 name|hv_intr_setstate
 argument_list|(
 name|iv
@@ -1309,12 +1313,11 @@ name|HV_INTR_IDLE_STATE
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ithread_wrapper
 parameter_list|(
 name|void
@@ -1353,11 +1356,6 @@ argument_list|,
 name|HV_INTR_IDLE_STATE
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|FILTER_HANDLED
-operator|)
-return|;
 block|}
 end_function
 
@@ -1436,11 +1434,18 @@ name|handler
 operator|!=
 name|NULL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"both filt and handler set is not valid\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 comment|/* 	 * Work around a race where more than one CPU may be registering 	 * handlers on the same IRQ at the same time. 	 */
 name|iv
 operator|=
@@ -1565,7 +1570,7 @@ block|}
 if|if
 condition|(
 name|filt
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
@@ -1597,7 +1602,7 @@ operator|(
 name|driver_intr_t
 operator|*
 operator|)
-name|filt
+name|handler
 expr_stmt|;
 name|ivh
 operator|->
@@ -1619,9 +1624,9 @@ name|ie
 argument_list|,
 name|name
 argument_list|,
-name|ithread_wrapper
-argument_list|,
 name|NULL
+argument_list|,
+name|ithread_wrapper
 argument_list|,
 name|ivh
 argument_list|,
@@ -1650,9 +1655,9 @@ name|ie
 argument_list|,
 name|name
 argument_list|,
-name|NULL
+name|filt
 argument_list|,
-name|handler
+name|NULL
 argument_list|,
 name|arg
 argument_list|,
