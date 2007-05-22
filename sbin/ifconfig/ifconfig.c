@@ -299,6 +299,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|noload
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|supmedia
 init|=
 literal|0
@@ -638,6 +644,8 @@ name|uponly
 operator|=
 name|namesonly
 operator|=
+name|noload
+operator|=
 name|verbose
 operator|=
 literal|0
@@ -647,7 +655,7 @@ name|strlcpy
 argument_list|(
 name|options
 argument_list|,
-literal|"adklmuv"
+literal|"adklmnuv"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -747,6 +755,14 @@ comment|/* show media choices in status */
 name|supmedia
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+comment|/* suppress module loading */
+name|noload
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -4554,6 +4570,12 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+comment|/* loading suppressed by the user */
+if|if
+condition|(
+name|noload
+condition|)
+return|return;
 comment|/* turn interface and unit into module name */
 name|strcpy
 argument_list|(
