@@ -1558,7 +1558,21 @@ begin_define
 define|#
 directive|define
 name|BGE_PCIDMARWCTL_ONEDMA_ATONCE
+value|0x0000C000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_PCIDMARWCTL_ONEDMA_ATONCE_GLOBAL
 value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_PCIDMARWCTL_ONEDMA_ATONCE_LOCAL
+value|0x00008000
 end_define
 
 begin_define
@@ -11636,20 +11650,6 @@ define|#
 directive|define
 name|BGE_MEDIA_FIBER
 value|0x00000020
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_PCI_READ_CMD
-value|0x06000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_PCI_WRITE_CMD
-value|0x70000000
 end_define
 
 begin_define
