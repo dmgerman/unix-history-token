@@ -533,7 +533,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|type *PEM_read_##name(FILE *fp, type **x, pem_password_cb *cb, void *u)\ { \ return(((type *(*)(D2I_OF(type),char *,FILE *,type **,pem_password_cb *,void *))openssl_fcast(PEM_ASN1_read))(d2i_##asn1, str,fp,x,cb,u)); \ }
+value|type *PEM_read_##name(FILE *fp, type **x, pem_password_cb *cb, void *u)\ { \ return((type *)PEM_ASN1_read( \ 	(d2i_of_void *)d2i_##asn1,str,fp,(void **)x,cb,u)); \ }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_fp
@@ -547,7 +547,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_##name(FILE *fp, type *x) \ { \ return(((int (*)(I2D_OF(type),const char *,FILE *,type *, const EVP_CIPHER *,unsigned char *,int, pem_password_cb *,void *))openssl_fcast(PEM_ASN1_write))(i2d_##asn1,str,fp,x,NULL,NULL,0,NULL,NULL)); \ }
+value|int PEM_write_##name(FILE *fp, type *x) \ { \ return(PEM_ASN1_write((i2d_of_void *)i2d_##asn1,str,fp,(char *)x,NULL,NULL,0,NULL,NULL)); \ }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_fp_const
@@ -561,7 +561,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_##name(FILE *fp, const type *x) \ { \ return(((int (*)(I2D_OF_const(type),const char *,FILE *, const type *, const EVP_CIPHER *,unsigned char *,int, pem_password_cb *,void *))openssl_fcast(PEM_ASN1_write))(i2d_##asn1,str,fp,x,NULL,NULL,0,NULL,NULL)); \ }
+value|int PEM_write_##name(FILE *fp, const type *x) \ { \ return(PEM_ASN1_write((i2d_of_void *)i2d_##asn1,str,fp,(char *)x,NULL,NULL,0,NULL,NULL)); \ }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_cb_fp
@@ -575,7 +575,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, \ 		  void *u) \ 	{ \ 	return(((int (*)(I2D_OF(type),const char *,FILE *,type *, const EVP_CIPHER *,unsigned char *,int, pem_password_cb *,void *))openssl_fcast(PEM_ASN1_write))(i2d_##asn1,str,fp,x,enc,kstr,klen,cb,u)); \ 	}
+value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, \ 		  void *u) \ 	{ \ 	return(PEM_ASN1_write((i2d_of_void *)i2d_##asn1,str,fp,(char *)x,enc,kstr,klen,cb,u)); \ 	}
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_cb_fp_const
@@ -589,7 +589,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, \ 		  void *u) \ 	{ \ 	return(((int (*)(I2D_OF_const(type),const char *,FILE *,type *, const EVP_CIPHER *,unsigned char *,int, pem_password_cb *,void *))openssl_fcast(PEM_ASN1_write))(i2d_##asn1,str,fp,x,enc,kstr,klen,cb,u)); \ 	}
+value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, \ 		  void *u) \ 	{ \ 	return(PEM_ASN1_write((i2d_of_void *)i2d_##asn1,str,fp,(char *)x,enc,kstr,klen,cb,u)); \ 	}
 endif|#
 directive|endif
 define|#
@@ -605,7 +605,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|type *PEM_read_bio_##name(BIO *bp, type **x, pem_password_cb *cb, void *u)\ { \ return(((type *(*)(D2I_OF(type),const char *,BIO *,type **,pem_password_cb *,void *))openssl_fcast(PEM_ASN1_read_bio))(d2i_##asn1, str,bp,x,cb,u)); \ }
+value|type *PEM_read_bio_##name(BIO *bp, type **x, pem_password_cb *cb, void *u)\ { \ return((type *)PEM_ASN1_read_bio( \ 	(d2i_of_void *)d2i_##asn1,str,bp,(void **)x,cb,u)); \ }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_bio
@@ -619,7 +619,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_bio_##name(BIO *bp, type *x) \ { \ return(((int (*)(I2D_OF(type),const char *,BIO *,type *, const EVP_CIPHER *,unsigned char *,int, pem_password_cb *,void *))openssl_fcast(PEM_ASN1_write_bio))(i2d_##asn1,str,bp,x,NULL,NULL,0,NULL,NULL)); \ }
+value|int PEM_write_bio_##name(BIO *bp, type *x) \ { \ return(PEM_ASN1_write_bio((i2d_of_void *)i2d_##asn1,str,bp,(char *)x,NULL,NULL,0,NULL,NULL)); \ }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_bio_const
@@ -633,7 +633,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_bio_##name(BIO *bp, const type *x) \ { \ return(((int (*)(I2D_OF_const(type),const char *,BIO *,const type *, const EVP_CIPHER *,unsigned char *,int, pem_password_cb *,void *))openssl_fcast(PEM_ASN1_write_bio))(i2d_##asn1,str,bp,x,NULL,NULL,0,NULL,NULL)); \ }
+value|int PEM_write_bio_##name(BIO *bp, const type *x) \ { \ return(PEM_ASN1_write_bio((i2d_of_void *)i2d_##asn1,str,bp,(char *)x,NULL,NULL,0,NULL,NULL)); \ }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_cb_bio
@@ -647,7 +647,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, void *u) \ 	{ \ 	return(((int (*)(I2D_OF(type),const char *,BIO *,type *,const EVP_CIPHER *,unsigned char *,int,pem_password_cb *,void *))openssl_fcast(PEM_ASN1_write_bio))(i2d_##asn1,str,bp,x,enc,kstr,klen,cb,u)); \ 	}
+value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, void *u) \ 	{ \ 	return(PEM_ASN1_write_bio((i2d_of_void *)i2d_##asn1,str,bp,(char *)x,enc,kstr,klen,cb,u)); \ 	}
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_cb_bio_const
@@ -661,7 +661,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, void *u) \ 	{ \ 	return(((int (*)(I2D_OF_const(type),const char *,BIO *,type *,const EVP_CIPHER *,unsigned char *,int,pem_password_cb *,void *))openssl_fcast(PEM_ASN1_write_bio))(i2d_##asn1,str,bp,x,enc,kstr,klen,cb,u)); \ 	}
+value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, void *u) \ 	{ \ 	return(PEM_ASN1_write_bio((i2d_of_void *)i2d_##asn1,str,bp,(char *)x,enc,kstr,klen,cb,u)); \ 	}
 define|#
 directive|define
 name|IMPLEMENT_PEM_write
@@ -1794,7 +1794,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|((type *(*)(D2I_OF(type),const char *,BIO *,type **,pem_password_cb *,void *))openssl_fcast(PEM_ASN1_read_bio))(d2i,name,bp,x,cb,u)
+value|((type *)PEM_ASN1_read_bio((d2i_of_void *)d2i,name,bp,(void **)x,cb,u))
 name|int
 name|PEM_ASN1_write_bio
 parameter_list|(
@@ -1862,7 +1862,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|((int (*)(I2D_OF(type),const char *,BIO *,type *, const EVP_CIPHER *,unsigned char *,int, pem_password_cb *,void *))openssl_fcast(PEM_ASN1_write_bio))(i2d,name,bp,x,enc,kstr,klen,cb,u)
+value|(PEM_ASN1_write_bio)((i2d_of_void *)i2d,name,bp,(char *)x,enc,kstr,klen,cb,u)
 name|STACK_OF
 argument_list|(
 name|X509_INFO

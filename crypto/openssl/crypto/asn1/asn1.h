@@ -3181,7 +3181,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((type *(*)(I2D_OF(type),D2I_OF(type),type *))openssl_fcast(ASN1_dup))(i2d,d2i,x)
+value|((type *)ASN1_dup((i2d_of_void *)(i2d), (d2i_of_void *)(d2i), (char *)(x)))
 define|#
 directive|define
 name|ASN1_dup_of_const
@@ -3195,7 +3195,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((type *(*)(I2D_OF_const(type),D2I_OF(type),type *))openssl_fcast(ASN1_dup))(i2d,d2i,x)
+value|((type *)ASN1_dup((i2d_of_void *)(i2d), (d2i_of_void *)(d2i), (char *)(x)))
 name|void
 modifier|*
 name|ASN1_item_dup
@@ -3256,7 +3256,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((type *(*)(type *(*)(void),D2I_OF(type),FILE *,type **))openssl_fcast(ASN1_d2i_fp))(xnew,d2i,in,x)
+value|((type *)ASN1_d2i_fp((void *(*)(void))(xnew), (d2i_of_void *)(d2i), (in), (void **)(x)))
 name|void
 modifier|*
 name|ASN1_item_d2i_fp
@@ -3304,7 +3304,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((int (*)(I2D_OF(type),FILE *,type *))openssl_fcast(ASN1_i2d_fp))(i2d,out,x)
+value|(ASN1_i2d_fp((i2d_of_void *)(i2d), (out), (x)))
 define|#
 directive|define
 name|ASN1_i2d_fp_of_const
@@ -3318,7 +3318,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((int (*)(I2D_OF_const(type),FILE *,type *))openssl_fcast(ASN1_i2d_fp))(i2d,out,x)
+value|(ASN1_i2d_fp((i2d_of_void *)(i2d), (out), (x)))
 name|int
 name|ASN1_item_i2d_fp
 parameter_list|(
@@ -3414,7 +3414,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((type *(*)(type *(*)(void),D2I_OF(type),BIO *,type **))openssl_fcast(ASN1_d2i_bio))(xnew,d2i,in,x)
+value|((type *)ASN1_d2i_bio( (void *(*)(void))(xnew), (d2i_of_void *)(d2i), (in), (void **)(x)))
 name|void
 modifier|*
 name|ASN1_item_d2i_bio
@@ -3463,7 +3463,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((int (*)(I2D_OF(type),BIO *,type *))openssl_fcast(ASN1_i2d_bio))(i2d,out,x)
+value|(ASN1_i2d_bio((i2d_of_void *)(i2d), (out), (void *)(x)))
 define|#
 directive|define
 name|ASN1_i2d_bio_of_const
@@ -3477,7 +3477,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((int (*)(I2D_OF_const(type),BIO *,const type *))openssl_fcast(ASN1_i2d_bio))(i2d,out,x)
+value|(ASN1_i2d_bio((i2d_of_void *)(i2d), (out), (void *)(x)))
 name|int
 name|ASN1_item_i2d_bio
 parameter_list|(
@@ -3881,7 +3881,7 @@ parameter_list|,
 name|oct
 parameter_list|)
 define|\
-value|((ASN1_STRING *(*)(type *,I2D_OF(type),ASN1_OCTET_STRING **))openssl_fcast(ASN1_pack_string))(obj,i2d,oct)
+value|(ASN1_pack_string((obj), (i2d_of_void *)(i2d), (oct)))
 name|ASN1_STRING
 modifier|*
 name|ASN1_item_pack

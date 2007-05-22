@@ -1299,7 +1299,7 @@ parameter_list|,
 name|sk
 parameter_list|)
 define|\
-value|((ASN1_STRING *(*)(ASN1_STRING *,I2D_OF(type),type *,STACK_OF(ASN1_OBJECT) *))openssl_fcast(ASN1_STRING_encode))(s,i2d,data,sk)
+value|(ASN1_STRING_encode((s), (i2d_of_void *)(i2d), (data), (STACK_OF(ASN1_OBJECT) *)(sk)))
 name|X509_EXTENSION
 modifier|*
 name|OCSP_crlID_new
